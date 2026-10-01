@@ -17,5 +17,18 @@ import { defineConfig } from 'vite';
  * it with the same SITE_URL and snapshot the build used.
  */
 export default defineConfig({
-  plugins: [vinext({ prerender: { routes: '*' } })],
+  plugins: [
+    vinext({
+      prerender: { routes: '*' },
+      /**
+       * `vinext start` compresses rendered responses on the fly but serves /_next/static/** only
+       * from build-time .br/.gz/.zst siblings, and writes none by default, so without this every
+       * hashed JS and CSS file went out uncompressed (no Content-Encoding, no Vary) where `next
+       * start` gzips them (measured: a 39125-byte stylesheet sent at 39125 bytes for gzip, br and
+       * identity alike). vinext's `precompress` option (dist/index.d.ts) is "not useful" only on
+       * edge platforms that compress at the CDN; this is the Node target.
+       */
+      precompress: true,
+    }),
+  ],
 });

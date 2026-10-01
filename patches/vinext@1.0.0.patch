@@ -1,3 +1,51 @@
+diff --git a/dist/build/prerender.js b/dist/build/prerender.js
+index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043d4c29bdf 100644
+--- a/dist/build/prerender.js
++++ b/dist/build/prerender.js
+@@ -944,6 +944,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 				const htmlRender = await runWithHeadersContext(headersContextFromRequest(htmlRequest), async () => {
+ 					const response = await rscHandler(htmlRequest);
+ 					const cacheControl = response.headers.get("cache-control") ?? "";
++					// Patched (scvalfh): the page's own policy, before next.config headers() (see
++					// applyPrerenderPageCacheControlHeader in server/app-page-response.js).
++					const pageCacheControl = response.headers.get(VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER);
+ 					const linkHeader = response.headers.get("link");
+ 					const responseCacheLife = readPrerenderCacheLifeHeader(response.headers);
+ 					const cacheTags = readPrerenderCacheTagsHeader(response.headers);
+@@ -952,6 +955,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 						await response.body?.cancel();
+ 						return {
+ 							cacheControl,
++							pageCacheControl,
+ 							linkHeader,
+ 							html: null,
+ 							ok: response.ok,
+@@ -965,6 +969,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 					const processCacheLife = _consumeRequestScopedCacheLife();
+ 					return {
+ 						cacheControl,
++						pageCacheControl,
+ 						linkHeader,
+ 						html,
+ 						ok: true,
+@@ -1030,7 +1035,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 				fs.mkdirSync(path.dirname(rscFullPath), { recursive: true });
+ 				fs.writeFileSync(rscFullPath, rscData);
+ 				outputFiles.push(rscOutputPath);
+-				const renderedCacheControl = resolveRenderedCacheControl(htmlRender.requestCacheLife ?? {}, htmlCacheControl, config.expireTime);
++				const renderedCacheControl = resolveRenderedCacheControl(htmlRender.requestCacheLife ?? {}, htmlRender.pageCacheControl ?? htmlCacheControl, config.expireTime);
+ 				const renderedRevalidate = typeof revalidate === "number" ? renderedCacheControl.revalidate === void 0 ? revalidate : Math.min(revalidate, renderedCacheControl.revalidate) : renderedCacheControl.revalidate ?? revalidate;
+ 				const renderedStale = resolveClientStaleTimeSeconds(htmlRender.requestCacheLife);
+ 				return {
+@@ -1119,6 +1124,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 		}
+ 	}
+ }
++/** Patched (scvalfh): see applyPrerenderPageCacheControlHeader in server/app-page-response.js. */
++const VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER = "x-vinext-prerender-page-cache-control";
+ function resolveRenderedCacheControl(requestCacheLife, cacheControl, fallbackExpireSeconds) {
+ 	const sMaxage = parseCacheControlSeconds(cacheControl, "s-maxage");
+ 	const staleWhileRevalidate = parseCacheControlSeconds(cacheControl, "stale-while-revalidate");
 diff --git a/dist/config/config-matchers.js b/dist/config/config-matchers.js
 index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fad11fd034 100644
 --- a/dist/config/config-matchers.js
@@ -41,6 +89,97 @@ index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fa
  	let result = "";
  	const re = new RegExp(`${S}G(\\d+)${S}|:[\\w-]+|[.+?*]|[^.+?*:\\uE000]+`, "g");
  	let m;
+diff --git a/dist/server/app-page-response.js b/dist/server/app-page-response.js
+index d4220c799e1bc3661407dadf2006600bc0addcc7..d9b27c263226b159f15be6f247eec0d977e9e108 100644
+--- a/dist/server/app-page-response.js
++++ b/dist/server/app-page-response.js
+@@ -26,6 +26,21 @@ function applyClientStaleTimeHeader(headers, staleTimeSeconds) {
+ 	if (staleTimeSeconds === void 0) return;
+ 	headers.set(NEXT_ROUTER_STALE_TIME_HEADER, String(Math.floor(staleTimeSeconds)));
+ }
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): during a build prerender, record the page's own
++* Cache-Control policy. The prerender used to derive the cache entry's `revalidate` from the FINAL
++* response Cache-Control, after next.config `headers()` had overwritten it, so a header rule such as
++* `public, s-maxage=300, stale-while-revalidate=86400` turned every static page into ISR with
++* revalidate=300 and `vinext start` re-rendered it at request time. Next.js derives a page's
++* revalidate from its segment config / fetch / cacheLife only, never from config headers
++* (`.next/prerender-manifest.json` keeps `initialRevalidateSeconds: false`).
++*/
++// Defined here and in build/prerender.js rather than in server/headers.js: that module's constant
++// table ships in the client bundle, and a server-only side channel has no business changing it.
++const VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER = "x-vinext-prerender-page-cache-control";
++function applyPrerenderPageCacheControlHeader(headers, policy) {
++	if (process.env.VINEXT_PRERENDER === "1") headers.set(VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER, policy.cacheControl ?? "");
++}
+ function applyPrerenderCacheTagsHeader(headers, cacheTags) {
+ 	if (cacheTags && cacheTags.length > 0) headers.set(NEXT_CACHE_TAGS_HEADER, cacheTags.join(","));
+ }
+@@ -129,6 +144,7 @@ function buildAppPageRscResponse(body, options) {
+ 	applyRscCompatibilityIdHeader(headers);
+ 	applyRscDeploymentIdHeader(headers);
+ 	applyPrerenderCacheLifeHeader(headers, options.requestCacheLife);
++	applyPrerenderPageCacheControlHeader(headers, options.policy);
+ 	applyPrerenderCacheTagsHeader(headers, options.cacheTags);
+ 	applyTimingHeader(headers, options.timing);
+ 	return new Response(body, {
+@@ -148,6 +164,7 @@ function buildAppPageHtmlResponse(body, options) {
+ 	mergeMiddlewareResponseHeaders(headers, options.middlewareContext.headers);
+ 	if (options.linkHeader) headers.append("Link", options.linkHeader);
+ 	applyPrerenderCacheLifeHeader(headers, options.requestCacheLife);
++	applyPrerenderPageCacheControlHeader(headers, options.policy);
+ 	applyPrerenderCacheTagsHeader(headers, options.cacheTags);
+ 	applyTimingHeader(headers, options.timing);
+ 	const response = new Response(body, {
+diff --git a/dist/server/app-rsc-response-finalizer.js b/dist/server/app-rsc-response-finalizer.js
+index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb64616080 100644
+--- a/dist/server/app-rsc-response-finalizer.js
++++ b/dist/server/app-rsc-response-finalizer.js
+@@ -5,7 +5,7 @@ import { isStaticFileSignal } from "./static-file-signal.js";
+ import { normalizeDefaultLocalePathname } from "./pages-i18n.js";
+ import { isNonCacheableCacheControl } from "../shims/cdn-cache.js";
+ import { captureRouteCacheabilityResponsePolicy } from "../shims/cacheability-classification.js";
+-import { NO_STORE_CACHE_CONTROL, applyCdnResponseHeaders, captureCdnResponsePolicyHeaders, hasExplicitNonCacheableResponsePolicy, isCdnResponsePolicyHeader } from "./cache-control.js";
++import { NEVER_CACHE_CONTROL, NO_STORE_CACHE_CONTROL, applyCdnResponseHeaders, captureCdnResponsePolicyHeaders, hasExplicitNonCacheableResponsePolicy, isCdnResponsePolicyHeader } from "./cache-control.js";
+ import "./app-rsc-cache-busting.js";
+ import { mergeVaryHeader } from "./middleware-response-headers.js";
+ import { hasPostConfigLinkHeaders } from "./app-response-header-provenance.js";
+@@ -17,6 +17,22 @@ function normalizeExplicitNonCacheablePolicy(headers) {
+ 	const cacheControl = headers.get("Cache-Control");
+ 	applyCdnResponseHeaders(headers, { cacheControl: cacheControl && isNonCacheableCacheControl(cacheControl) ? cacheControl : NO_STORE_CACHE_CONTROL });
+ }
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): a 404 rendered by the App Router (not-found
++* boundary HTML or its RSC payload: an unmatched path, a `dynamicParams = false` miss, `notFound()`)
++* is never cacheable, whatever next.config `headers()` set. Next.js answers these with
++* `private, no-cache, no-store, max-age=0, must-revalidate` (next/dist/server/lib/router-server.js
++* sets it for the 404 case after custom headers; base-server.js does the same in renderErrorImpl),
++* while vinext let a matching `Cache-Control` rule overwrite it, so a shared cache could keep a 404
++* for its s-maxage and serve it stale long after the path became valid. Route Handler and metadata
++* route 404s (no HTML/RSC body) keep the config header, as they do on Next.js.
++*/
++function applyNotFoundPagePolicy(response) {
++	if (response.status !== 404) return;
++	const baseType = (response.headers.get("Content-Type") ?? "").split(";")[0].trim().toLowerCase();
++	if (baseType !== "text/html" && baseType !== "text/x-component") return;
++	applyCdnResponseHeaders(response.headers, { cacheControl: NEVER_CACHE_CONTROL });
++}
+ /** Mark a response whose final target pipeline has already applied config headers. */
+ function markAppRscResponseConfigHeadersApplied(response) {
+ 	configHeadersAlreadyApplied.add(response);
+@@ -70,10 +86,12 @@ async function finalizeAppRscResponse(response, request, options) {
+ 	}
+ 	if (configHeadersAlreadyApplied.has(response)) {
+ 		normalizeExplicitNonCacheablePolicy(response.headers);
++		applyNotFoundPagePolicy(response);
+ 		return response;
+ 	}
+ 	await applyAppRscConfigHeaders(response.headers, request, options);
+ 	normalizeExplicitNonCacheablePolicy(response.headers);
++	applyNotFoundPagePolicy(response);
+ 	if (response.status === 405 && response.headers.get("Allow") === "GET, HEAD") sanitizeMethodNotAllowedHeaders(response.headers, "GET, HEAD");
+ 	return response;
+ }
 diff --git a/dist/server/metadata-route-response.js b/dist/server/metadata-route-response.js
 index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df6519318c6a4b4 100644
 --- a/dist/server/metadata-route-response.js
@@ -91,3 +230,94 @@ index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df65193
  	if (result instanceof Response) return withMetadataRouteCacheHeader(result, route);
  	let body;
  	if (route.type === "sitemap") {
+diff --git a/dist/server/prod-server.js b/dist/server/prod-server.js
+index af6cb4c6986e801b4afcae4115410547d975a0ba..280c9332ea36e9c81aaeae069a3d142cf9fd613b 100644
+--- a/dist/server/prod-server.js
++++ b/dist/server/prod-server.js
+@@ -12,7 +12,7 @@ import { isOpenRedirectShaped } from "./open-redirect.js";
+ import { readStaticFileSignal } from "./static-file-signal.js";
+ import { canonicalizeRequestPathname, filterInternalHeaders } from "./request-pipeline.js";
+ import { parseHttpDate } from "./http-date.js";
+-import { evaluateStaticPreconditions } from "./http-conditional.js";
++import { evaluateStaticPreconditions, matchesIfNoneMatch } from "./http-conditional.js";
+ import { buildNextDataNotFoundResponse, encodeUrlParserIgnoredCharacters, isNextDataPathname, normalizeNextDataPagePathname, parseNextDataPathname, shouldAddTrailingSlashToPagesDataPath, urlParserCreatesPagesDataPath } from "./pages-data-route.js";
+ import { setPagesClientAssets } from "./pages-client-assets.js";
+ import { resolveRequestHost, resolveRequestProtocol, trustProxy, trustedHosts } from "./proxy-trust.js";
+@@ -760,10 +760,77 @@ function nodeToWebRequest(req, urlOverride, prerenderSecret, i18nConfig, authori
+ 	return new Request(url, init);
+ }
+ /**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): Next.js's FNV-1a 52-bit hash and ETag format
++* (next/dist/server/lib/etag.js), so a byte-identical page gets the same validator on both servers.
++*/
++function fnv1a52(str) {
++	const len = str.length;
++	let i = 0, t0 = 0, v0 = 8997, t1 = 0, v1 = 33826, t2 = 0, v2 = 40164, t3 = 0, v3 = 52210;
++	while (i < len) {
++		v0 ^= str.charCodeAt(i++);
++		t0 = v0 * 435;
++		t1 = v1 * 435;
++		t2 = v2 * 435;
++		t3 = v3 * 435;
++		t2 += v0 << 8;
++		t3 += v1 << 8;
++		t1 += t0 >>> 16;
++		v0 = t0 & 65535;
++		t2 += t1 >>> 16;
++		v1 = t1 & 65535;
++		v3 = t3 + (t2 >>> 16) & 65535;
++		v2 = t2 & 65535;
++	}
++	return (v3 & 15) * 281474976710656 + v2 * 4294967296 + v1 * 65536 + (v0 ^ v3 >> 4);
++}
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): ETag + 304 for responses served whole from the
++* ISR cache (`X-Vinext-Cache: HIT`/`STALE`, e.g. every prerendered page). vinext sent no validator
++* on them at all, so a CDN or browser revalidating after `s-maxage` always refetched the full body.
++* Next.js's sendRenderResult (next/dist/server/send-payload.js) sets an ETag on every non-streamed
++* payload (`generateEtags` defaults to true) and answers a matching If-None-Match with a bodiless
++* 304 via `fresh`, which also treats a request `Cache-Control: no-cache` as never fresh. Streamed
++* renders keep no ETag, as on Next.js.
++*/
++async function withCachedResponseEtag(webResponse, req, compress) {
++	if (req.method !== "GET" && req.method !== "HEAD") return webResponse;
++	if (webResponse.status !== 200 || !webResponse.body) return webResponse;
++	const cacheState = webResponse.headers.get("x-vinext-cache");
++	if (cacheState !== "HIT" && cacheState !== "STALE") return webResponse;
++	if (webResponse.headers.has("etag") || webResponse.headers.has("content-encoding")) return webResponse;
++	const body = new Uint8Array(await webResponse.arrayBuffer());
++	const payload = new TextDecoder().decode(body);
++	const etag = `"${fnv1a52(payload).toString(36)}${payload.length.toString(36)}"`;
++	const headers = new Headers(webResponse.headers);
++	headers.set("ETag", etag);
++	const requestCacheControl = req.headers["cache-control"];
++	const noCache = typeof requestCacheControl === "string" && /(?:^|,)\s*no-cache\s*(?:,|$)/i.test(requestCacheControl);
++	const ifNoneMatch = req.headers["if-none-match"];
++	if (!noCache && typeof ifNoneMatch === "string" && matchesIfNoneMatch(ifNoneMatch, etag)) {
++		// A 304 repeats the 200's Vary (RFC 9110 15.4.5); sendWebResponse adds Accept-Encoding only
++		// when it has a body to compress.
++		const baseType = (headers.get("content-type") ?? "").split(";")[0].trim();
++		const vary = headers.get("vary");
++		if (compress && COMPRESSIBLE_TYPES.has(baseType) && !/(?:^|,)\s*accept-encoding\s*(?:,|$)/i.test(vary ?? "")) headers.set("Vary", vary ? `${vary}, Accept-Encoding` : "Accept-Encoding");
++		headers.delete("content-type");
++		headers.delete("content-length");
++		return new Response(null, {
++			status: 304,
++			headers
++		});
++	}
++	return new Response(body, {
++		status: webResponse.status,
++		statusText: webResponse.statusText,
++		headers
++	});
++}
++/**
+ * Stream a Web Response back to a Node.js ServerResponse.
+ * Supports streaming compression for SSR responses.
+ */
+ async function sendWebResponse(webResponse, req, res, compress) {
++	webResponse = await withCachedResponseEtag(webResponse, req, compress);
+ 	const status = webResponse.status;
+ 	const statusText = webResponse.statusText || void 0;
+ 	const writeHead = (headers) => {

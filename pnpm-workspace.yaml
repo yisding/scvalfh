@@ -2,10 +2,15 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
-# Two vinext 1.0.0 bugs, each fixed where it lives (see the comments inside the patch); drop the
-# patch once upstream ships both fixes:
+# Five vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
+# patch once upstream ships all five fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed, so the
 #    `/:path((?!_next/static/).*)` Cache-Control rule matched nothing under `vinext start`;
-#  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404.
+#  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404;
+#  - the prerender read that same Cache-Control rule back as the page's ISR lifetime
+#    (revalidate=300 in dist/server/vinext-prerender.json), so `vinext start` re-rendered every
+#    "static" page at request time after five minutes; Next keeps them `revalidate: false`;
+#  - the rule also overwrote the no-store header on 404 pages, so a CDN could cache a 404;
+#  - pages served from the cache carried no ETag, so revalidation never got a 304 (Next sends one).
 patchedDependencies:
   vinext@1.0.0: patches/vinext@1.0.0.patch
