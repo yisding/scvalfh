@@ -15,6 +15,17 @@
 # like `next start` does: status codes, content types, the next.config headers() cache rule,
 # immutable precompressed assets, the root not-found, ETags. Then it runs the same axe pass. It
 # runs beside `gates`, not after it, so a vinext regression is reported even when Next is red too.
+#
+# The cloudflare job does the same for the third deploy, vinext's Cloudflare Workers target: it
+# validates the deploy setup with a dry run (no credentials needed), builds the Worker, checks
+# that every prerendered route was packaged into its Static Assets upload, and runs the Worker
+# locally in workerd (`vite preview`) for the smoke and axe passes. The upload itself is
+# deploy-cloudflare.yml's job, and needs the account's secrets.
+#
+# All three servers — `next start` in a11y, `vinext start` in vinext, workerd in cloudflare — are
+# held to one response contract by the same script, scripts/smoke-server.sh, which names the few
+# checks that differ by deploy and why. scripts/assert-vinext-prerender.mjs is the prerender check
+# both vinext builds share.
 
 name: ci
 
@@ -157,6 +168,11 @@ jobs:
           done
           echo "server did not come up"; exit 1
 
+      # The response contract the two vinext servers below are held to, checked against Next
+      # itself: the reference they are compared with must pass it too.
+      - name: Smoke the production server
+        run: bash scripts/smoke-server.sh http://127.0.0.1:3117 next
+
       - name: axe (serious and critical only)
         run: node scripts/a11y-axe.mjs
 
@@ -190,7 +206,8 @@ jobs:
 
       # Same pin as the Next build (components/layout/build-instant.ts): the instant the "stale
       # snapshot" warning is measured against comes from the event payload, not the runner's
-      # clock, so a rerun is byte-identical and both builds stamp the same instant.
+      # clock, so a rerun is byte-identical and both builds stamp the same instant. cloudflare.config.ts
+      # is present, so this also fails if the patch stops letting a Node build run beside it.
       - name: Build with vinext
         run: pnpm build:vinext
         env:
@@ -200,38 +217,10 @@ jobs:
       # route to be prerendered; vinext records each one in vinext-prerender.json and writes the
       # pages (.html) and the metadata routes and Route Handlers (.route) under prerendered-routes,
       # which `vinext start` seeds its cache from. A skipped or errored route, or one with a
-      # revalidate lifetime, would be rendered on demand by the server instead.
+      # revalidate lifetime, would be rendered on demand by the server instead; and the prerendered
+      # sitemap must list exactly the prerendered pages.
       - name: Assert every route is prerendered
-        run: |
-          set -euo pipefail
-          node -e '
-            const fs = require("fs");
-            const dir = "dist/server/prerendered-routes";
-            const { routes } = JSON.parse(fs.readFileSync("dist/server/vinext-prerender.json", "utf8"));
-            const notRendered = routes.filter((r) => r.status !== "rendered");
-            if (notRendered.length) throw new Error("not prerendered: " + notRendered.map((r) => `${r.route} (${r.status})`).join(", "));
-            const revalidating = routes.filter((r) => r.revalidate !== false);
-            if (revalidating.length) throw new Error("revalidates at runtime: " + revalidating.map((r) => `${r.route} (${r.revalidate})`).join(", "));
-            const pages = ["index", "about", "standings", "schedule", "playoffs", "teams", "history/2025-26"];
-            const metadata = ["icon", "apple-icon", "icon-192", "icon-512", "opengraph-image", "standings/opengraph-image",
-              "manifest.webmanifest", "sitemap.xml", "robots.txt"];
-            const missing = [
-              ...pages.map((p) => `${p}.html`).filter((f) => !fs.existsSync(`${dir}/${f}`)),
-              ...metadata.map((m) => `${m}.route`).filter((f) => !fs.existsSync(`${dir}/${f}`)),
-            ];
-            if (missing.length) throw new Error("not prerendered: " + missing.join(", "));
-            const count = (sub, test) => fs.readdirSync(`${dir}/${sub}`, { recursive: true }).filter(test).length;
-            const html = (f) => f.endsWith(".html");
-            const og = (f) => f.endsWith("/opengraph-image.route");
-            const games = count("game", html), dates = count("scores", html), teams = count("teams", html);
-            const gameCards = count("game", og), dateCards = count("scores", og), teamCards = count("teams", og);
-            console.log(`prerendered: ${routes.length} routes; ${games} game, ${dates} date, ${teams} team pages; ` +
-              `${gameCards} game, ${dateCards} date, ${teamCards} team OG images`);
-            if (games < 100 || dates < 30 || teams < 16) throw new Error("a generateStaticParams route came back short");
-            if (gameCards < 100 || dateCards < 30 || teamCards < 16) throw new Error("an opengraph-image below a dynamic segment came back short");
-            // Every game, date and team page has exactly one OG image beside it, so the two counts must agree.
-            if (gameCards !== games || dateCards !== dates || teamCards !== teams) throw new Error("page and opengraph-image counts disagree");
-          '
+        run: node scripts/assert-vinext-prerender.mjs
 
       # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped
       # node_modules could swap the patched vinext for a stock one under the server.
@@ -255,70 +244,118 @@ jobs:
           done
           echo "server did not come up"; exit 1
 
-      # What `next start` answers, checked on one URL of every kind: pages and metadata routes
-      # carry the next.config headers() cache rule; hashed assets keep the immutable cache and
-      # are served precompressed; an unknown URL or param is a no-store 404 with the root
-      # not-found page; pages answer a revalidation with 304; and poweredByHeader stays off.
-      # Every mismatch, and every request that fails or times out, is listed before the step fails.
+      # What `next start` answers (the a11y job runs the same script against it): every page the
+      # sitemap lists, the metadata routes and Route Handlers, with the next.config headers() cache
+      # rule; hashed assets keep the immutable cache and are served precompressed; an unknown URL
+      # or param is a no-store 404 with the root not-found page; pages answer a revalidation with
+      # 304; poweredByHeader stays off, and vinext's internal cache marker never leaks. Every
+      # mismatch, and every request that fails or times out, is listed before the step fails.
       - name: Smoke the vinext server
-        run: |
-          set -euo pipefail
-          base=http://127.0.0.1:3118
-          public='public, s-maxage=300, stale-while-revalidate=86400'
-          nostore='private, no-cache, no-store, max-age=0, must-revalidate'
-          immutable='public, max-age=31536000, immutable'
-          failed=0
-          tmp=$(mktemp -d)
-          header() { awk -v k="$1" 'tolower($0) ~ "^" k ":" { sub(/^[^:]*: */, ""); print; exit }' "$tmp/h"; }
-          fail() { echo "FAIL $1: $2"; failed=1; }
-          # expect PATH STATUS TYPE CACHE [curl args...] — TYPE is a prefix, so text/html matches
-          # "text/html; charset=utf-8"; the body is left in $tmp/b and the headers in $tmp/h.
-          expect() {
-            local path=$1 status=$2 type=$3 cache=$4; shift 4
-            : > "$tmp/b"; : > "$tmp/h"
-            if ! curl -sS --max-time 20 -o "$tmp/b" -D "$tmp/h" "$@" "$base$path"; then
-              fail "$path" "request failed"; return 0
-            fi
-            tr -d '\r' < "$tmp/h" > "$tmp/h2" && mv "$tmp/h2" "$tmp/h"
-            local got; got=$(awk 'NR == 1 { print $2 }' "$tmp/h")
-            [ "$got" = "$status" ] || fail "$path" "status $got, expected $status"
-            [ -z "$type" ] || [[ "$(header content-type)" == "$type"* ]] || fail "$path" "content-type '$(header content-type)', expected $type"
-            [ -z "$cache" ] || [ "$(header cache-control)" = "$cache" ] || fail "$path" "cache-control '$(header cache-control)', expected '$cache'"
-            [ -z "$(header x-powered-by)" ] || fail "$path" "sends x-powered-by"
-            echo "$got $path"
-          }
-
-          for path in / /standings; do expect "$path" 200 text/html "$public"; done
-          # One page of each generateStaticParams family, whichever the sitemap lists first.
-          paths=$(curl -fsS --max-time 20 "$base/sitemap.xml" | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g; s#^https?://[^/]+##' || true)
-          for family in /game/ /scores/ /teams/; do
-            path=$(grep -m1 "^$family" <<< "$paths" || true)
-            if [ -z "$path" ]; then fail /sitemap.xml "no $family URL"; else expect "$path" 200 text/html "$public"; fi
-          done
-          for path in /opengraph-image /icon /icon-192; do expect "$path" 200 image/png "$public"; done
-          expect /manifest.webmanifest 200 application/manifest+json "$public"
-          expect /sitemap.xml 200 application/xml "$public"
-          expect /robots.txt 200 text/plain "$public"
-
-          css=$(curl -fsS --max-time 20 "$base/" | grep -oE '/_next/static/[^"]+\.css' | sed -n 1p || true)
-          if [ -z "$css" ]; then fail / "no /_next/static stylesheet in the HTML"; else
-            expect "$css" 200 text/css "$immutable" -H 'Accept-Encoding: gzip'
-            [ "$(header content-encoding)" = gzip ] || fail "$css" "content-encoding '$(header content-encoding)', expected gzip"
-          fi
-
-          for path in /no-such-page /game/not-a-real-id; do
-            expect "$path" 404 text/html "$nostore"
-            grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
-          done
-          expect /game/not-a-real-id/opengraph-image 404 '' ''
-
-          expect / 200 text/html "$public"
-          etag=$(header etag)
-          if [ -z "$etag" ]; then fail / "no ETag"; else expect / 304 '' '' -H "If-None-Match: $etag"; fi
-
-          exit "$failed"
+        run: bash scripts/smoke-server.sh http://127.0.0.1:3118 node
 
       - name: axe (serious and critical only)
         run: node scripts/a11y-axe.mjs
         env:
           SCVAL_BASE_URL: http://127.0.0.1:3118
+
+  cloudflare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      # This applies both patches (patchedDependencies in pnpm-workspace.yaml): vinext's, as in
+      # the vinext job, and @vinext/cloudflare's, without which the Worker renders /icon-192 and
+      # /icon-512 on every request. It also runs workerd's postinstall (allowBuilds), which checks
+      # the platform binary `vite preview` runs the Worker in below.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # What `pnpm deploy:cloudflare` checks before it builds or uploads anything: the Vite config
+      # wires in cloudflare() and the Worker config resolves. It needs no credentials, so it runs
+      # first and a broken setup fails in seconds rather than after the build.
+      - name: Validate the deploy setup (dry run)
+        run: pnpm exec vinext-cloudflare deploy --env cloudflare --dry-run
+
+      # The same build `pnpm deploy:cloudflare` uploads, in mode `cloudflare` (vite.config.ts):
+      # the Worker bundle and its Static Assets in .cloudflare/output, every route prerendered in
+      # Node first. SCVAL_BUILD_AT is pinned as in the other builds. SITE_URL is set to an origin
+      # that is not the localhost default, because vite.config.ts inlines it at build time: the
+      # smoke below then proves that the prerendered pages and the 404s the Worker renders on
+      # request agree on it (.invalid is reserved, so nothing ever resolves it).
+      - name: Build the Worker
+        run: pnpm build:cloudflare
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+          SITE_URL: https://scvalfh.example.invalid
+
+      # The Workers counterpart of the vinext job's assertion. A Worker has no filesystem to seed a
+      # cache from: what it serves without rendering is what staticAssetsAdapter() packaged under
+      # /_vinext/static-cache/ in the Static Assets upload. So on top of the prerender check, every
+      # prerendered page, RSC payload and .route body must be listed in its index.json, kind for
+      # kind (the counts follow the snapshot, so they are compared with the prerender, never
+      # hardcoded); `_headers` must give /_next/static/* the immutable cache; and no precompressed
+      # copy may ship. And nothing that can hold a secret is in the output: the plugin reads
+      # .dev.vars and .env* for local runs only, and anything under .cloudflare/output is uploaded.
+      - name: Assert every route is prerendered and packaged
+        run: |
+          set -euo pipefail
+          node scripts/assert-vinext-prerender.mjs --cloudflare
+          test -f .cloudflare/output/v0/config.json || { echo "no Build Output config in .cloudflare/output"; exit 1; }
+          leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)
+          if [ -n "$leaked" ]; then echo "env files in the Worker output:"; echo "$leaked"; exit 1; fi
+
+      # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped
+      # node_modules could swap the patched vinext or @vinext/cloudflare for a stock one.
+      - name: Install axe-core and Chromium
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/axe"
+          cd "$RUNNER_TEMP/axe"
+          npm init -y >/dev/null
+          npm install --no-save --no-audit --no-fund axe-core playwright
+          npx playwright install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
+
+      # The built Worker in workerd, the runtime Cloudflare runs it on, through the Cloudflare Vite
+      # plugin's preview server: it serves .cloudflare/output as built (no rebuild) with the
+      # bindings cloudflare.config.ts declares. Its log is printed if it never answers.
+      - name: Start the Worker (workerd)
+        run: |
+          set -euo pipefail
+          pnpm exec vite preview --mode cloudflare --port 3119 --strictPort --host 127.0.0.1 > "$RUNNER_TEMP/preview.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3119/; then echo "up"; exit 0; fi
+            sleep 1
+          done
+          echo "Worker did not come up"; cat "$RUNNER_TEMP/preview.log"; exit 1
+
+      # The contract the other two servers pass, held to the Worker. scripts/smoke-server.sh names
+      # the checks that differ on `workers` and why: no gzip on the CSS (workerd preview compresses
+      # nothing; in production Cloudflare's edge does, after the Worker), and the bare
+      # If-None-Match 304 (`vite preview` forwards a conditional request with Cache-Control:
+      # no-cache, so revalidation is checked as a browser sends it, with max-age=0). It adds that
+      # the static cache's raw files are not public and that the emitted Worker config is the one
+      # cloudflare.config.ts declares.
+      - name: Smoke the Worker
+        run: bash scripts/smoke-server.sh http://127.0.0.1:3119 workers
+
+      - name: axe (serious and critical only)
+        run: node scripts/a11y-axe.mjs
+        env:
+          SCVAL_BASE_URL: http://127.0.0.1:3119

@@ -1,0 +1,165 @@
+# Deploy the vinext Cloudflare Workers build (README "Cloudflare Workers") to the account the repo's
+# secrets name. It is the third deploy beside `next start` and `vinext start`, and the one a
+# workflow can own end to end: `pnpm run deploy:cloudflare` builds in mode `cloudflare`, prerenders
+# every route and uploads the Worker and its Static Assets with `cf deploy`.
+#
+# When it runs. Like the hosting rebuild the README describes ("Deploy notes"), a new commit on
+# main is what redeploys — including update-data.yml's snapshot commit, which is the whole point of
+# that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
+# `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
+# the two workflows that put commits on main:
+#   - ci, after a green run on main (never a pull_request run): deploys the commit ci tested, so
+#     a red build is never shipped;
+#   - update-data, after a green run: deploys main's tip if that run committed a new snapshot (the
+#     data was tested before it was pushed; ci never runs on it), and nothing if it did not.
+# A run whose commit is no longer main's tip by the time it starts skips itself: the run for the
+# newer commit deploys that one, and an older build must never overwrite it (a human commit's ci
+# can finish after the data refresh that was rebased on top of it). workflow_dispatch deploys
+# main's tip by hand, e.g. once the secrets are first set.
+#
+# Configuration (repository Settings → Secrets and variables → Actions):
+#   - secret CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template;
+#   - variable CLOUDFLARE_ACCOUNT_ID (or a secret of that name; it is not secret): the account the
+#     Worker 'scvalfh' (cloudflare.config.ts) is deployed to;
+#   - variable SITE_URL: the Worker's public origin (https://scvalfh.<subdomain>.workers.dev, or the
+#     custom domain routed to it). vite.config.ts inlines it at build time into every canonical
+#     URL, og:image, the sitemap and robots.txt; unset it would fall back to http://localhost:3000
+#     (components/layout/site-url.ts), so it is required here rather than defaulted.
+# With no CLOUDFLARE_API_TOKEN the run is a green no-op with a notice saying so: a fork, or this
+# repo before an account is connected, is not a failure. A token without the account ID or
+# SITE_URL is a half-done setup, and fails naming what is missing.
+#
+# SCVAL_BUILD_AT is deliberately NOT pinned as in ci.yml: a production build should stamp the
+# instant it really ran (vite.config.ts takes the clock once per build), because that is what the
+# footer's stale-snapshot notice measures the snapshot's age against; ci pins it only so its
+# builds are reproducible.
+
+name: deploy-cloudflare
+
+on:
+  workflow_run:
+    workflows: [ci, update-data]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deploy at a time, and never cancelled halfway through an upload. Two data refreshes (or a
+# refresh and a human commit) landing close together queue here instead of racing; the queued run
+# then finds main's tip itself, so the last deploy to finish is always the newest commit.
+concurrency:
+  group: deploy-cloudflare
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # A failed or cancelled ci/update-data run deploys nothing; a pull_request run of ci never does
+    # (`branches` matches the head branch, which can be a fork's main).
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Non-secret settings for every step. The API token is passed only to the two steps that need
+    # it (the check below and the deploy), not to the install's postinstall scripts.
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
+      SITE_URL: ${{ vars.SITE_URL }}
+
+    steps:
+      # Decides whether this run deploys, and which commit. `ready` gates every later step, so a
+      # skip leaves the run green; a broken setup fails here, before anything is installed.
+      - name: Check the configuration and pick the commit
+        id: gate
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          SOURCE: ${{ github.event.workflow_run.name }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          skip() { echo "::notice title=deploy-cloudflare skipped::$1"; echo "ready=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            skip "skipped: no CLOUDFLARE_API_TOKEN secret, so nothing is deployed. Add it, the CLOUDFLARE_ACCOUNT_ID variable and the SITE_URL variable to deploy (README \"Cloudflare Workers\")."
+          fi
+          missing=''
+          [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing+=' CLOUDFLARE_ACCOUNT_ID'
+          [ -n "$SITE_URL" ] || missing+=' SITE_URL'
+          if [ -n "$missing" ]; then
+            echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; README \"Cloudflare Workers\")"
+            exit 1
+          fi
+          # An origin, as site-url.ts expects (it drops one trailing slash): a path would end up
+          # in front of every canonical URL and the sitemap.
+          if [[ ! "$SITE_URL" =~ ^https?://[^/]+/?$ ]]; then
+            echo "::error title=deploy-cloudflare misconfigured::SITE_URL '$SITE_URL' must be an origin such as https://scvalfh.example.workers.dev (scheme and host, no path)"
+            exit 1
+          fi
+          if [ "$EVENT" = workflow_dispatch ] && [ "$REF" != refs/heads/main ]; then
+            echo "::error title=deploy-cloudflare::production deploys come from main; run this workflow on main, not $REF"
+            exit 1
+          fi
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [ "$EVENT" = workflow_run ] && [ "$SOURCE" = ci ] && [ "$SOURCE_SHA" != "$tip" ]; then
+            skip "skipped: ci passed on $SOURCE_SHA, but main is now at $tip; the run for that commit deploys it."
+          fi
+          if [ "$EVENT" = workflow_run ] && [ "$SOURCE" = update-data ] && [ "$SOURCE_SHA" = "$tip" ]; then
+            skip "skipped: update-data committed no new snapshot, so the deployed build is current."
+          fi
+          echo "deploying $tip"
+          echo "sha=$tip" >> "$GITHUB_OUTPUT"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Check out
+        if: steps.gate.outputs.ready == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.gate.outputs.sha }}
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        if: steps.gate.outputs.ready == 'true'
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        if: steps.gate.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      # Applies both patches (pnpm-workspace.yaml); the build below depends on them as ci's
+      # cloudflare job does.
+      - name: Install dependencies
+        if: steps.gate.outputs.ready == 'true'
+        run: pnpm install --frozen-lockfile
+
+      # Build, prerender and upload in one: `vinext-cloudflare deploy --env cloudflare` builds in
+      # mode `cloudflare`, which `cf deploy` requires of the output it uploads. Through `pnpm run`
+      # because bare `pnpm deploy` is pnpm's own command. SITE_URL comes from the job env above.
+      # NODE_ENV=production as the `vite build` CLI would set it: the deploy command loads
+      # vite.config.ts, builds and prerenders in-process, where nothing else sets it.
+      - name: Build and deploy the Worker
+        if: steps.gate.outputs.ready == 'true'
+        run: pnpm run deploy:cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          NODE_ENV: production
+
+      - name: Summary
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          {
+            echo "### deploy-cloudflare"
+            echo ""
+            echo "- commit: \`${{ steps.gate.outputs.sha }}\`"
+            echo "- site: $SITE_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
