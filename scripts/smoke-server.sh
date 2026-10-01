@@ -17,9 +17,10 @@
 # What it checks: every page the sitemap lists answers 200 with its own content (a <main>, one <h1>
 # and the canonical URL of that path) and the next.config headers() cache rule, as do the metadata
 # routes and Route Handlers, whose images must be real PNGs of the declared size; hashed assets keep
-# the immutable cache (and a missing one is a no-store 404); an unknown URL, or an unknown param in
+# the immutable cache (a stylesheet, a script chunk and a font; a missing one is a no-store 404);
+# the manifest names the site and its icons and robots.txt allows everything; an unknown URL, or an unknown param in
 # any dynamic family, is a no-store 404 with the root not-found page (its OG card an empty 404),
-# rendered with the same SITE_URL and build instant as the prerendered pages; pages carry an ETag
+# rendered with the same SITE_URL and build instant as the prerendered pages and marked noindex; pages carry an ETag
 # and answer a revalidation with 304; HEAD, POST and a trailing slash get the framework's answers;
 # poweredByHeader stays off; and vinext's internal x-vinext-app-page-cache marker never leaves the
 # server (checked on every response above, 304s included).
@@ -160,9 +161,20 @@ for family in /game/ /scores/ /teams/; do
 done
 expect /manifest.webmanifest 200 application/manifest+json "$public"
 from_build /manifest.webmanifest
+# app/manifest.ts: a name and the four icon routes checked above, or Chromium's install prompt has
+# nothing to offer.
+manifest=$(node -e '
+  const m = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")), p = [];
+  if (typeof m.name !== "string" || !m.name) p.push("no name");
+  const src = (m.icons || []).map((i) => i.src);
+  for (const want of ["/icon", "/apple-icon", "/icon-192", "/icon-512"]) if (!src.includes(want)) p.push("icons miss " + want);
+  console.log(p.join("; "));' "$tmp/b" 2>&1 || echo "not JSON")
+[ -z "$manifest" ] || fail /manifest.webmanifest "$manifest"
 expect /robots.txt 200 text/plain "$public"
 from_build /robots.txt
 grep -qxF "Sitemap: $origin/sitemap.xml" "$tmp/b" || fail /robots.txt "no 'Sitemap: $origin/sitemap.xml' line"
+grep -qxF 'User-Agent: *' "$tmp/b" || grep -qxF 'User-agent: *' "$tmp/b" || fail /robots.txt "no 'User-agent: *' line"
+grep -qxF 'Allow: /' "$tmp/b" || fail /robots.txt "no 'Allow: /' line"
 
 if [ "$target" != next ]; then
   expect /standings.rsc 200 text/x-component "$public"
@@ -172,12 +184,20 @@ fi
 
 expect / 200 text/html "$public"
 css=$(grep -oE '/_next/static/[^"]+\.css' "$tmp/b" | sed -n 1p || true)
+# Read from the HTML now: the fetches below overwrite the body.
+js=$(grep -oE '/_next/static/[^"]+\.js' "$tmp/b" | sed -n 1p || true)
+font=$(grep -oE '/_next/static/[^"]+\.woff2' "$tmp/b" | sed -n 1p || true)
 if [ -z "$css" ]; then fail / "no /_next/static stylesheet in the HTML"; else
   expect "$css" 200 text/css "$immutable" -H 'Accept-Encoding: gzip'
   if [ "$target" != workers ]; then
     [ "$(header content-encoding)" = gzip ] || fail "$css" "content-encoding '$(header content-encoding)', expected gzip"
   fi
 fi
+# The immutable cache is what the headers() rule's negative lookahead protects, and it covers every
+# hashed asset, not only the stylesheet: a script chunk and a self-hosted font (next/font puts them
+# under /_next/static/ on both toolchains) are held to it as well.
+if [ -z "$js" ]; then fail / "no /_next/static script in the HTML"; else expect "$js" 200 '' "$immutable"; fi
+if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect "$font" 200 font/woff2 "$immutable"; fi
 
 # An unknown URL, an unknown param in each generateStaticParams family (all dynamicParams=false,
 # and on Workers each family is its own render path), another season's history page, and a favicon
@@ -189,6 +209,10 @@ for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /hi
   [ "$got_og" = "$og" ] || fail "$path" "og:image '${got_og#*content=\"}', expected '${og#*content=\"}' as on /"
   got_stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
   [ "$got_stale" = "$stale" ] || fail "$path" "stale-snapshot notice shown $got_stale time(s), / shows it $stale"
+  # One robots directive, noindex: app/layout.tsx deliberately sets none, so the 404's own is not
+  # contradicted by an "index, follow" beside it (two tags were measured before that was removed).
+  robots=$(grep -oE '<meta name="robots" content="[^"]*"' "$tmp/b" | sed -E 's/.*content="//; s/"$//' | tr '\n' '|' || true)
+  [ "$robots" = "noindex|" ] || fail "$path" "robots meta '${robots%|}', expected exactly one: noindex"
 done
 # An OG card for an unknown param is notFound() in the metadata route: an empty 404 that keeps the
 # headers() cache rule, as `next start` sends it (Next gives only page 404s the no-store header).
