@@ -21,5 +21,12 @@ allowBuilds:
 #    og:image/twitter:image pointed at that segment's OG image for the bad param (itself a 404);
 #    Next treats it as a route miss and serves the root not-found (server/app-page-dispatch.js,
 #    server/app-fallback-renderer.js).
+# Security backports the resolved versions do not reach on their own (`pnpm audit` is clean with
+# these; drop each once the dependant moves past the vulnerable range):
+#  - satori (next/og's renderer, via vinext -> @vercel/og) pins fflate 0.7.3 exactly;
+#    GHSA-px8p-9vwx-vf98 (unzipSync infinite loop on malformed ZIP64) is fixed in 0.7.5, the
+#    backport on the 0.7 line, and satori does not call unzipSync, so the override is API-neutral.
+overrides:
+  'fflate@<0.7.5': 0.7.5
 patchedDependencies:
   vinext@1.0.0: patches/vinext@1.0.0.patch
