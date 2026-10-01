@@ -2,8 +2,8 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
-# Five vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
-# patch once upstream ships all five fixes:
+# Six vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
+# patch once upstream ships all six fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed, so the
 #    `/:path((?!_next/static/).*)` Cache-Control rule matched nothing under `vinext start`;
 #  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404;
@@ -11,6 +11,10 @@ allowBuilds:
 #    (revalidate=300 in dist/server/vinext-prerender.json), so `vinext start` re-rendered every
 #    "static" page at request time after five minutes; Next keeps them `revalidate: false`;
 #  - the rule also overwrote the no-store header on 404 pages, so a CDN could cache a 404;
-#  - pages served from the cache carried no ETag, so revalidation never got a 304 (Next sends one).
+#  - pages served from the cache carried no ETag, so revalidation never got a 304 (Next sends one;
+#    like Next, cached metadata route and Route Handler bodies get none);
+#  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered, so
+#    the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
+#    prerenders all of them (build/prerender.js, server/metadata-route-response.js, seed-cache.js).
 patchedDependencies:
   vinext@1.0.0: patches/vinext@1.0.0.patch

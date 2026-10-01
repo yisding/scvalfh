@@ -9,12 +9,14 @@ import { defineConfig } from 'vite';
  * time — all ten families, the dynamic ones from their `generateStaticParams` — and `vinext start`
  * serves them from that cache, the counterpart of `next build`'s static HTML.
  *
- * Unlike `next build`, vinext 1.0.0 does NOT prerender metadata routes (the OG images, icon,
- * apple-icon, manifest, sitemap, robots) or Route Handlers (/icon-192, /icon-512): it only
- * prerenders a metadata route whose default export is `"use cache"`, which needs
- * `cacheComponents` (off here — see next.config.ts), and it skips Route Handlers outright. They
- * render per request, from data/snapshot.json and SITE_URL as `vinext start` sees them, so start
- * it with the same SITE_URL and snapshot the build used.
+ * The metadata routes (icon, apple-icon, manifest, sitemap, robots, the root and standings OG
+ * images, and one OG image per game, date and team from each segment's `generateStaticParams`) and
+ * the two `force-static` Route Handlers (/icon-192, /icon-512) are prerendered as well, one
+ * `.route` file per URL, as `next build` writes its `.body` files under .next/server/app. Stock
+ * vinext 1.0.0 prerenders a metadata route only when its default export is `"use cache"` (which
+ * needs `cacheComponents`, off here — see next.config.ts) and skips every Route Handler, so each
+ * one rendered per request, the images through satori/resvg; patches/vinext@1.0.0.patch closes
+ * that gap (see pnpm-workspace.yaml).
  */
 export default defineConfig({
   plugins: [

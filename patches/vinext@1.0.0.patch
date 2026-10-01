@@ -1,8 +1,96 @@
 diff --git a/dist/build/prerender.js b/dist/build/prerender.js
-index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043d4c29bdf 100644
+index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d43c602ef0 100644
 --- a/dist/build/prerender.js
 +++ b/dist/build/prerender.js
-@@ -944,6 +944,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -4,7 +4,7 @@ import { BLOCKED_PAGES } from "../shims/constants.js";
+ import { VINEXT_PRERENDER_ROUTE_PARAMS_HEADER, VINEXT_PRERENDER_SECRET_HEADER, VINEXT_PRERENDER_SPECULATIVE_HEADER } from "../utils/protocol-headers.js";
+ import { appRouteLayoutStaticParamsGroups } from "../routing/app-router.js";
+ import { NEXT_CACHE_TAGS_HEADER, VINEXT_METADATA_ROUTE_CACHE_HEADER, VINEXT_PRERENDER_CACHE_LIFE_HEADER, VINEXT_PRERENDER_METADATA_ROUTES_PATH, VINEXT_PRERENDER_RENDER_ERROR_HEADER } from "../server/headers.js";
+-import { classifyAppRoute, classifyPagesRoute, getAppRouteRenderEntryPath } from "./report.js";
++import { classifyAppRoute, classifyAppRouteHandler, classifyPagesRoute, getAppRouteRenderEntryPath } from "./report.js";
+ import { resolveClientStaleTimeSeconds } from "../utils/cache-control-metadata.js";
+ import { NoOpCacheHandler, getCacheHandler, setCacheHandler } from "../shims/cache-handler.js";
+ import { headersContextFromRequest, runWithHeadersContext } from "../shims/headers.js";
+@@ -706,6 +706,25 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 		for (const route of routes) {
+ 			const renderEntryPath = getAppRouteRenderEntryPath(route);
+ 			if (!renderEntryPath && route.routePath) {
++				// Patched (scvalfh, patches/vinext@1.0.0.patch): `next build` prerenders a GET Route
++				// Handler that opts into static generation (`dynamic = 'force-static'`, a `revalidate`,
++				// or `generateStaticParams`) and has no other method; vinext 1.0.0 skipped every Route
++				// Handler as "api", so /icon-192 and /icon-512 rendered per request. Render the
++				// non-dynamic ones here, with the same eligibility check vinext's own path discovery
++				// uses (classifyAppRouteHandler, ported from Next's is-static-gen-enabled.ts).
++				const handlerClassification = mode === "export" || route.isDynamic ? null : classifyAppRouteHandler(route.routePath);
++				if (handlerClassification?.hasGet && handlerClassification.staticGenerationEnabled) {
++					urlsToRender.push({
++						kind: "route",
++						metadataRouteSegments: route.routeSegments ?? [],
++						urlPath: route.pattern,
++						routePattern: route.pattern,
++						prerenderRouteParams: null,
++						revalidate: false,
++						isSpeculative: false
++					});
++					continue;
++				}
+ 				results.push({
+ 					route: route.pattern,
+ 					status: "skipped",
+@@ -866,6 +885,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 				if (typeof metadataEntry !== "object" || metadataEntry === null || typeof Reflect.get(metadataEntry, "path") !== "string" || typeof Reflect.get(metadataEntry, "routePattern") !== "string" || !Array.isArray(Reflect.get(metadataEntry, "routeSegments"))) continue;
+ 				const { path: metadataPath, routePattern, routeSegments } = metadataEntry;
+ 				if (!metadataPath.startsWith("/") || !routePattern.startsWith("/") || routeSegments.some((segment) => typeof segment !== "string") || queuedMetadataPaths.has(metadataPath)) continue;
++				// Patched (scvalfh): the static-by-default metadata routes added in
++				// server/metadata-route-response.js are for the server's cache, not `output: "export"`.
++				if (mode === "export" && Reflect.get(metadataEntry, "staticByDefault") === true) continue;
+ 				queuedMetadataPaths.add(metadataPath);
+ 				urlsToRender.push({
+ 					kind: "metadata",
+@@ -886,7 +908,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 		*/
+ 		async function renderUrl({ kind, metadataRouteSegments, urlPath, routePattern, prerenderRouteParams, revalidate, isSpeculative, isFallback }) {
+ 			try {
+-				if (kind === "metadata") {
++				if (kind === "metadata" || kind === "route") {
+ 					const request = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`);
+ 					const response = await runWithHeadersContext(headersContextFromRequest(request), () => rscHandler(request));
+ 					if (!response.ok) {
+@@ -899,8 +921,12 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 							...fatal ? { fatal: true } : {}
+ 						};
+ 					}
+-					const cacheControl = response.headers.get("cache-control") ?? "";
+-					if (!isMetadataResponseCacheable(response)) {
++					// Patched (scvalfh): judge the route by its own policy, not the one next.config
++					// headers() put on the response (see applyPrerenderPageCacheControlHeader in
++					// server/app-page-response.js); a config `s-maxage=300` must not become an ISR
++					// lifetime, and a private/no-store handler stays dynamic.
++					const cacheControl = response.headers.get(VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER) ?? response.headers.get("cache-control") ?? "";
++					if (!isMetadataResponseCacheable(response) || /(?:^|,)\s*(?:no-store|no-cache|private)\s*(?:[,=]|$)/i.test(cacheControl)) {
+ 						await response.body?.cancel();
+ 						return {
+ 							route: routePattern,
+@@ -911,7 +937,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 					const requestCacheLife = readPrerenderCacheLifeHeader(response.headers);
+ 					const collectedTags = readPrerenderCacheTagsHeader(response.headers);
+ 					const cacheValue = await buildAppRouteCacheValue(response);
+-					cacheValue.headers[VINEXT_METADATA_ROUTE_CACHE_HEADER] = "1";
++					delete cacheValue.headers[VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER];
++					if (kind === "metadata") cacheValue.headers[VINEXT_METADATA_ROUTE_CACHE_HEADER] = "1";
+ 					const outputPath = getAppRouteOutputPath(urlPath);
+ 					const fullPath = path.join(outDir, outputPath);
+ 					fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+@@ -927,7 +954,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 						revalidate: renderedRevalidate,
+ 						...typeof renderedRevalidate === "number" ? { expire: renderedCacheControl.expire } : {},
+ 						...renderedStale === void 0 ? {} : { stale: renderedStale },
+-						router: "metadata",
++						router: kind === "route" ? "route" : "metadata",
+ 						headers: cacheValue.headers,
+ 						responseStatus: cacheValue.status,
+ 						routeSegments: metadataRouteSegments ?? [],
+@@ -944,6 +971,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  				const htmlRender = await runWithHeadersContext(headersContextFromRequest(htmlRequest), async () => {
  					const response = await rscHandler(htmlRequest);
  					const cacheControl = response.headers.get("cache-control") ?? "";
@@ -12,7 +100,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043
  					const linkHeader = response.headers.get("link");
  					const responseCacheLife = readPrerenderCacheLifeHeader(response.headers);
  					const cacheTags = readPrerenderCacheTagsHeader(response.headers);
-@@ -952,6 +955,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -952,6 +982,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  						await response.body?.cancel();
  						return {
  							cacheControl,
@@ -20,7 +108,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043
  							linkHeader,
  							html: null,
  							ok: response.ok,
-@@ -965,6 +969,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -965,6 +996,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  					const processCacheLife = _consumeRequestScopedCacheLife();
  					return {
  						cacheControl,
@@ -28,7 +116,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043
  						linkHeader,
  						html,
  						ok: true,
-@@ -1030,7 +1035,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -1030,7 +1062,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  				fs.mkdirSync(path.dirname(rscFullPath), { recursive: true });
  				fs.writeFileSync(rscFullPath, rscData);
  				outputFiles.push(rscOutputPath);
@@ -37,7 +125,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..43e0a4487cf5ab9eea896e9df106d043
  				const renderedRevalidate = typeof revalidate === "number" ? renderedCacheControl.revalidate === void 0 ? revalidate : Math.min(revalidate, renderedCacheControl.revalidate) : renderedCacheControl.revalidate ?? revalidate;
  				const renderedStale = resolveClientStaleTimeSeconds(htmlRender.requestCacheLife);
  				return {
-@@ -1119,6 +1124,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -1119,6 +1151,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  		}
  	}
  }
@@ -131,6 +219,53 @@ index d4220c799e1bc3661407dadf2006600bc0addcc7..d9b27c263226b159f15be6f247eec0d9
  	applyPrerenderCacheTagsHeader(headers, options.cacheTags);
  	applyTimingHeader(headers, options.timing);
  	const response = new Response(body, {
+diff --git a/dist/server/app-route-handler-dispatch.js b/dist/server/app-route-handler-dispatch.js
+index f65182b2fdb453e0137033a342614c82118f05f5..993c737c9080ded535561f6c28c59143764c0135 100644
+--- a/dist/server/app-route-handler-dispatch.js
++++ b/dist/server/app-route-handler-dispatch.js
+@@ -59,7 +59,20 @@ async function runInRouteHandlerRevalidationContext(options, renderFn) {
+ 	}
+ }
+ async function dispatchAppRouteHandler(options) {
+-	return traceResponseStart(await dispatchAppRouteHandlerImpl(options));
++	return traceResponseStart(recordPrerenderRouteHandlerCacheControl(await dispatchAppRouteHandlerImpl(options)));
++}
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): during a build prerender, record the handler's own
++* Cache-Control (static, ISR, or private after a request API) before next.config headers() replace
++* it, so build/prerender.js can tell a static GET handler from a dynamic one. Same side channel as
++* applyPrerenderPageCacheControlHeader in app-page-response.js.
++*/
++function recordPrerenderRouteHandlerCacheControl(response) {
++	if (process.env.VINEXT_PRERENDER !== "1") return response;
++	try {
++		response.headers.set("x-vinext-prerender-page-cache-control", response.headers.get("Cache-Control") ?? "");
++	} catch {}
++	return response;
+ }
+ async function dispatchAppRouteHandlerImpl(options) {
+ 	const { route } = options;
+diff --git a/dist/server/app-route-handler-policy.js b/dist/server/app-route-handler-policy.js
+index 9f57ea56dd090fa5b00524eb387399f463992622..9ce36a951b25b2affc15e0b451379b33f7d7b39d 100644
+--- a/dist/server/app-route-handler-policy.js
++++ b/dist/server/app-route-handler-policy.js
+@@ -35,8 +35,15 @@ function resolveAppRouteHandlerMethod(handler, method) {
+ 		shouldAutoRespondToOptions
+ 	};
+ }
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): a static handler (`revalidate` Infinity, i.e.
++* `dynamic = 'force-static'`, `revalidate = false` or `generateStaticParams`) also reads the cache,
++* where build/prerender.js now seeds its build-time response. Nothing writes one at request time
++* (shouldWriteAppRouteHandlerCache still excludes Infinity), so without a prerendered entry this is
++* a cache miss and the handler runs as before.
++*/
+ function shouldReadAppRouteHandlerCache(options) {
+-	return options.isProduction && options.revalidateSeconds !== null && options.revalidateSeconds > 0 && options.revalidateSeconds !== Infinity && options.dynamicConfig !== "force-dynamic" && !options.isDraftMode && !options.isKnownDynamic && (options.method === "GET" || options.isAutoHead) && typeof options.handlerFn === "function";
++	return options.isProduction && options.revalidateSeconds !== null && options.revalidateSeconds > 0 && options.dynamicConfig !== "force-dynamic" && !options.isDraftMode && !options.isKnownDynamic && (options.method === "GET" || options.isAutoHead) && typeof options.handlerFn === "function";
+ }
+ function shouldApplyAppRouteHandlerRevalidateHeader(options) {
+ 	return options.revalidateSeconds !== null && !options.isDraftMode && !options.dynamicUsedInHandler && (options.method === "GET" || options.isAutoHead) && !options.handlerSetCachePolicy;
 diff --git a/dist/server/app-rsc-response-finalizer.js b/dist/server/app-rsc-response-finalizer.js
 index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb64616080 100644
 --- a/dist/server/app-rsc-response-finalizer.js
@@ -181,7 +316,7 @@ index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb
  	return response;
  }
 diff --git a/dist/server/metadata-route-response.js b/dist/server/metadata-route-response.js
-index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df6519318c6a4b4 100644
+index d21f40e34522c379c8970cc49a553d4dee781a3e..eba1d6f9dbbca11ba50227144bae8773c71566b4 100644
 --- a/dist/server/metadata-route-response.js
 +++ b/dist/server/metadata-route-response.js
 @@ -4,6 +4,7 @@ import { decodeMatchedParams } from "../routing/utils.js";
@@ -192,7 +327,123 @@ index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df65193
  import { beginRouteCacheability, markRouteCacheabilityExplicitResponsePolicy } from "../shims/cacheability-classification.js";
  import { hasCdnResponsePolicy, hasExplicitNonCacheableResponsePolicy } from "./cache-control.js";
  import { isrCacheControl } from "./isr-cache.js";
-@@ -357,16 +358,27 @@ async function callDynamicMetadataRoute(route, match, makeThenableParams, functi
+@@ -11,6 +12,8 @@ import { resolveClientStaleTimeSeconds } from "../utils/cache-control-metadata.j
+ import { _consumeRequestScopedCacheLife, cacheLifeProfiles } from "../shims/cache-request-state.js";
+ import { ensureFetchPatch, getCollectedFetchTags, setCurrentFetchSoftTags } from "../shims/fetch-cache.js";
+ import { isValidMetadataImageId, manifestToJson, matchMetadataRoutePattern, robotsToText, sitemapToXml } from "./metadata-routes.js";
++import { peekDynamicUsage } from "../shims/headers.js";
++import { fillRoutePatternSegments } from "../routing/route-pattern.js";
+ import { applyPrerenderCacheLifeHeader, applyPrerenderCacheTagsHeader } from "./prerender-cache-life-header.js";
+ import { canonicalizeAppPageParams } from "./app-page-segment-state.js";
+ import { buildPageCacheTags } from "./implicit-tags.js";
+@@ -85,21 +88,75 @@ function isUseCacheFunction(value) {
+ 	return value !== null && Reflect.get(value, USE_CACHE_FUNCTION_SYMBOL) === true;
+ }
+ /**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): whether a code-generated metadata route is static
++* by default the way Next.js treats it. Next compiles icon/opengraph-image/sitemap/robots/manifest
++* files to App Route handlers that `next build` prerenders unless they opt out with segment config
++* or touch a request API (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/
++* 01-metadata/opengraph-image.md: "Generated images are statically optimized (generated at build
++* time and cached) unless they use Request-time APIs or uncached data"; sitemap.md says the same).
++* vinext 1.0.0 prerendered only a `"use cache"` default export, which in Next needs
++* `cacheComponents`, so every other metadata route rendered per request. A route that exports a
++* numeric `revalidate` is left to request time (its ISR lifetime is not carried by this path), as is
++* one that uses request APIs while prerendering (see captureRenderedMetadataRoute).
++*/
++function isStaticByDefaultMetadataRoute(route, functions) {
++	if (typeof functions.defaultExport !== "function" || functions.hasGeneratedImageMetadata) return false;
++	const dynamic = route.module?.dynamic;
++	const revalidate = route.module?.revalidate;
++	return dynamic !== "force-dynamic" && (revalidate === void 0 || revalidate === false);
++}
++/**
++* Patched (scvalfh): the concrete URLs of a metadata route below a dynamic segment, from the
++* route's own `generateStaticParams` (what Next.js prerenders it with). A param set that does not
++* fill every segment is skipped and keeps rendering at request time.
++*/
++async function getMetadataRouteStaticParamPaths(route, functions) {
++	if (!functions.generateStaticParams) return [];
++	const paramSets = await functions.generateStaticParams({ params: {} });
++	if (!Array.isArray(paramSets)) return [];
++	const paths = [];
++	for (const params of paramSets) {
++		if (!isObject(params)) continue;
++		const encoded = {};
++		for (const [key, value] of Object.entries(params)) encoded[key] = Array.isArray(value) ? value.map((entry) => encodeURIComponent(String(entry))) : typeof value === "string" ? encodeURIComponent(value) : value;
++		const pathname = fillRoutePatternSegments(route.servedUrl, encoded);
++		if (pathname && !pathname.includes("[") && !paths.includes(pathname)) paths.push(pathname);
++	}
++	return paths;
++}
++/**
+ * Enumerate metadata URLs whose default export is an explicit public
+ * `"use cache"` function. These are safe to invoke during prerendering and the
+ * resulting response can be seeded as an App Route artifact.
++*
++* Patched (scvalfh): also every metadata route that is static by default
++* (isStaticByDefaultMetadataRoute), including the ones below a dynamic segment, once per
++* `generateStaticParams` entry. Those entries carry `staticByDefault: true`.
+ */
+ async function getPrerenderableMetadataRoutePaths(metadataRoutes) {
+ 	const paths = [];
+ 	for (const route of metadataRoutes) {
+-		if (!route.isDynamic || route.servedUrl.includes("[")) continue;
++		if (!route.isDynamic) continue;
+ 		const functions = getMetadataRouteFunctions(route);
+-		if (!isUseCacheFunction(functions.defaultExport)) continue;
++		const isUseCache = isUseCacheFunction(functions.defaultExport);
++		if (!isUseCache && !isStaticByDefaultMetadataRoute(route, functions)) continue;
++		const extra = isUseCache ? {} : { staticByDefault: true };
++		if (route.patternParts) {
++			if (route.type === "sitemap" && functions.generateSitemaps) continue;
++			for (const pathname of await getMetadataRouteStaticParamPaths(route, functions)) paths.push({
++				path: pathname,
++				routePattern: route.servedUrl,
++				routeSegments: route.routeSegments ?? [],
++				...extra
++			});
++			continue;
++		}
+ 		if (route.type !== "sitemap" || !functions.generateSitemaps) {
+ 			paths.push({
+ 				path: route.servedUrl,
+ 				routePattern: route.servedUrl,
+-				routeSegments: route.routeSegments ?? []
++				routeSegments: route.routeSegments ?? [],
++				...extra
+ 			});
+ 			continue;
+ 		}
+@@ -113,12 +170,15 @@ async function getPrerenderableMetadataRoutePaths(metadataRoutes) {
+ 			paths.push({
+ 				path: `${sitemapPrefix}/${encodeURIComponent(id)}.xml`,
+ 				routePattern: route.servedUrl,
+-				routeSegments: route.routeSegments ?? []
++				routeSegments: route.routeSegments ?? [],
++				...extra
+ 			});
+ 		}
+ 	}
+ 	return paths;
+ }
++/** Patched (scvalfh): see applyPrerenderPageCacheControlHeader in app-page-response.js. */
++const VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER = "x-vinext-prerender-page-cache-control";
+ function getCachedMetadataRouteValue(entry) {
+ 	const value = entry?.value.value;
+ 	if (!value || value.kind !== "APP_ROUTE") return null;
+@@ -143,6 +203,10 @@ function captureRenderedMetadataRoute(response) {
+ 	if (process.env.VINEXT_PRERENDER === "1") {
+ 		applyPrerenderCacheLifeHeader(response.headers, cacheLife);
+ 		applyPrerenderCacheTagsHeader(response.headers, collectedTags);
++		// Patched (scvalfh): the route's own Cache-Control, before next.config headers() replace it
++		// (same side channel as applyPrerenderPageCacheControlHeader in app-page-response.js), or
++		// `no-store` when it read a request API, which in Next makes it dynamic.
++		response.headers.set(VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER, peekDynamicUsage() ? "no-store" : response.headers.get("Cache-Control") ?? "");
+ 	}
+ 	return {
+ 		cacheLife,
+@@ -357,16 +421,27 @@ async function callDynamicMetadataRoute(route, match, makeThenableParams, functi
  	}
  	const paramsThenable = makeThenableParams(match.params ?? {});
  	let result;
@@ -231,7 +482,7 @@ index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df65193
  	let body;
  	if (route.type === "sitemap") {
 diff --git a/dist/server/prod-server.js b/dist/server/prod-server.js
-index af6cb4c6986e801b4afcae4115410547d975a0ba..280c9332ea36e9c81aaeae069a3d142cf9fd613b 100644
+index af6cb4c6986e801b4afcae4115410547d975a0ba..a37016a335a49c0a54dc806f2249f9e84d568c28 100644
 --- a/dist/server/prod-server.js
 +++ b/dist/server/prod-server.js
 @@ -12,7 +12,7 @@ import { isOpenRedirectShaped } from "./open-redirect.js";
@@ -243,7 +494,7 @@ index af6cb4c6986e801b4afcae4115410547d975a0ba..280c9332ea36e9c81aaeae069a3d142c
  import { buildNextDataNotFoundResponse, encodeUrlParserIgnoredCharacters, isNextDataPathname, normalizeNextDataPagePathname, parseNextDataPathname, shouldAddTrailingSlashToPagesDataPath, urlParserCreatesPagesDataPath } from "./pages-data-route.js";
  import { setPagesClientAssets } from "./pages-client-assets.js";
  import { resolveRequestHost, resolveRequestProtocol, trustProxy, trustedHosts } from "./proxy-trust.js";
-@@ -760,10 +760,77 @@ function nodeToWebRequest(req, urlOverride, prerenderSecret, i18nConfig, authori
+@@ -760,10 +760,82 @@ function nodeToWebRequest(req, urlOverride, prerenderSecret, i18nConfig, authori
  	return new Request(url, init);
  }
  /**
@@ -277,13 +528,18 @@ index af6cb4c6986e801b4afcae4115410547d975a0ba..280c9332ea36e9c81aaeae069a3d142c
 +* Next.js's sendRenderResult (next/dist/server/send-payload.js) sets an ETag on every non-streamed
 +* payload (`generateEtags` defaults to true) and answers a matching If-None-Match with a bodiless
 +* 304 via `fresh`, which also treats a request `Cache-Control: no-cache` as never fresh. Streamed
-+* renders keep no ETag, as on Next.js.
++* renders keep no ETag, as on Next.js. So do cached Route Handler and metadata route bodies
++* (/sitemap.xml, the icons and OG images): Next's app-route template sends those through
++* sendResponse (next/dist/build/templates/app-route.js, server/send-response.js), which sets none,
++* so only the App Router page payloads (HTML and RSC) get one.
 +*/
 +async function withCachedResponseEtag(webResponse, req, compress) {
 +	if (req.method !== "GET" && req.method !== "HEAD") return webResponse;
 +	if (webResponse.status !== 200 || !webResponse.body) return webResponse;
 +	const cacheState = webResponse.headers.get("x-vinext-cache");
 +	if (cacheState !== "HIT" && cacheState !== "STALE") return webResponse;
++	const pageType = (webResponse.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
++	if (pageType !== "text/html" && pageType !== "text/x-component") return webResponse;
 +	if (webResponse.headers.has("etag") || webResponse.headers.has("content-encoding")) return webResponse;
 +	const body = new Uint8Array(await webResponse.arrayBuffer());
 +	const payload = new TextDecoder().decode(body);
@@ -321,3 +577,18 @@ index af6cb4c6986e801b4afcae4115410547d975a0ba..280c9332ea36e9c81aaeae069a3d142c
  	const status = webResponse.status;
  	const statusText = webResponse.statusText || void 0;
  	const writeHead = (headers) => {
+diff --git a/dist/server/seed-cache.js b/dist/server/seed-cache.js
+index c26c2d48d142e4fba085037d0f6ad4825c6348a7..c8e33b43c9f896d22b7ead257c8c672f72a11032 100644
+--- a/dist/server/seed-cache.js
++++ b/dist/server/seed-cache.js
+@@ -75,7 +75,9 @@ async function seedMemoryCacheFromPrerender(serverDir, options) {
+ 			seeded++;
+ 		}
+ 	}
+-	for (const route of getRenderedMetadataRoutes(routes)) {
++	// Patched (scvalfh, patches/vinext@1.0.0.patch): prerendered Route Handlers (`router: "route"`,
++	// written by build/prerender.js) are App Route artifacts with the same shape and cache key.
++	for (const route of [...getRenderedMetadataRoutes(routes), ...routes.filter((r) => r.status === "rendered" && r.router === "route")]) {
+ 		const artifactPathname = route.path ?? route.route;
+ 		const cachePathname = normalizePregeneratedPathname(artifactPathname);
+ 		const artifactPath = path.join(prerenderDir, getAppRouteOutputPath(artifactPathname));
