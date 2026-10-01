@@ -1,0 +1,438 @@
+# Data sources — SCVAL girls field hockey (season "26-27")
+
+Condensed from the build-time research spec. Confidence tags: **[V]** independently verified
+against a live response or document; **[U]** claimed but not independently re-verified;
+**[TODO]** open item. Values below were captured/verified 2026-09-28/29.
+
+See also `docs/BYLAWS-2026-27.md` (standings/points/tiebreak authority, overrides anything
+below that touches ordering) and `lib/season.ts` (the constants as shipped).
+
+## 1. Sources, ranked
+
+### 1.1 PRIMARY — MaxPreps "ghost API" (`https://production.api.maxpreps.com`)
+
+Unauthenticated, CORS-open JSON, no key/cookie/Referer required **[V]**.
+`robots.txt` = `User-agent: *\nAllow: /` **[V]**. No Swagger/OpenAPI; routes were recovered by
+grepping the Next.js asset bundle (module 176360) for `production.api` **[V]**.
+
+**(a) League standings** — `GET /leagues/{leagueId}/standings/v1?sportseasonid={sportSeasonId}`.
+Envelope `{status, message, cacheResult, data, warnings, errors}`. Per row: `schoolId` (primary
+key, same GUID as `teamId` elsewhere), `schoolName`, `schoolNameAcronym`, `teamCanonicalUrl`,
+`schoolColor1/2`, `conferenceWins/Losses/Ties`, `overallWins/Losses/Ties`,
+`conferencePoints/PointsAgainst`, `points/pointsAgainst`, `conferenceStandingPlacement`,
+`conferenceWinningPercentage`/`winningPercentage`, `streak`+`streakResult`, home/away/neutral
+splits, `overallContestsPlayed`/`conferenceContestsPlayed`, `modifiedOn`. `b1`…`b30` are opaque
+stat slots — ignored. **[V]**
+
+**(b) Team schedule + scores** — `GET /gatewayweb/react/schedule-calculated/v1?teamId={id}&sportSeasonId={ssid}`.
+Envelope `{status, message, cacheResult, data}`; each row `{contest, calculatedFields, hudlInfo,
+goFanUrl, nfhsStreamUrl}`. Key paths: `contest.contestId` (dedupe key), `contest.date` (naive
+local `America/Los_Angeles`), `calculatedFields.contestDateInGMT` (UTC twin),
+`calculatedFields.contestState` (see enum below), `calculatedFields.canonicalUrl` (null on
+deleted rows), `calculatedFields.description` (ready-made recap prose, `""` on deleted rows),
+`calculatedFields.overtimePeriodsPlayed`, `calculatedFields.bracketName/bracketGameIndex/
+bracketIsPublished/tournamentName/tournamentCanonicalUrl` (all null in the regular season — this
+is how CCS playoff games will arrive). `contest.teams[]` is always 2 entries: `.score` (null
+before the game), `.result` (`W`/`L`/`T`, null before), `.homeAwayType`, `.contestType`,
+`.isForfeit`/`.isTeamTBA`/`.dnp`/`.isDeleted`, `.teamId`, `.teamCanonicalUrl`. Display string
+for a team's result comes from `calculatedFields.teamsCalculated[]` (`.resultString`, e.g.
+`"L 2-1"`) — `contest.teams[].resultString` is usually null. **[V]**
+
+**(c) Contest ids grouped by date** — `GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=league&id={leagueId}&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25`.
+Cheap cron driver / same-day scoreboard. `data.contestIdsByDate[]`,
+`data.scoreboardCanonicalUrlToday`/`UrlTomorrow`/`UrlYesterday`. **[V]**
+
+**(d) Scoreboard contests by ids** — `POST /gatewayweb/react/scoreboard-contests-by-ids/basic/v2`,
+body a bare JSON array of contest ids. Batch score refresh, no auth. ⚠️ `teams[0]` is **not**
+confirmed to be the home team — derive home/away only from `schedule-calculated`'s
+`teams[].homeAwayType` **[U]**.
+
+**(e) Team context** — `GET /gatewayweb/react/team-context/v1?teamId={id}&sportSeasonId={ssid}`
+→ ~738 KB (carries the school's whole sport-season history — never parse it wholesale; use (f)
+for standings). `data.teamData.leagueId/leagueName/sectionId/sectionName/allSeasonId/
+sportSeasonId/year/season/level/stateCode`, plus freshness probes
+`data.teamSettings.scheduleUpdatedOn`/`.standingsUpdatedOn`. **[V]**
+
+**(f) League metadata & small helpers**
+- `GET /leagues/{leagueId}/v1` → `{leagueId, name, sportSeasonId, sportSeasonName, year, season,
+  sectionId, sectionName, canonicalUrl, ...}` — used to assert the season key still matches
+  before trusting anything else.
+- `GET /gatewayweb/react/team-standings/v1?teamId=&sportSeasonId=` → **rejected**, only a 3-row
+  window (`data.maxCount === 3`), not the full table.
+- `GET /gatewayweb/react/menus/league-links/v1?leagueid=`, `/gatewayweb/react/jsonld/team/v1`
+  (string-encoded JSON, needs a second parse).
+
+**(g) Enum meanings**
+
+| Field | Value | Meaning | Confidence |
+|---|---|---|---|
+| `teams[].homeAwayType` | `0` | home | **[V]** |
+| | `1` | away | **[V]** |
+| | `2` | neutral | **[U]** never observed |
+| `teams[].contestType` | `0` | league/conference game | **[V]** 21/21 agreement with prose |
+| | `1` | non-conference | **[V]** |
+| `calculatedFields.contestState` | `0` | unknown | **[U]** not observed |
+| | `1` | **Deleted** — `canonicalUrl` null, may still carry a real score (observed: a scrimmage with a 0-4 score) — **must be dropped before constructing a `Game`** | **[V]** |
+| | `2` | Pregame / scheduled | **[V]** |
+| | `3` | ContestInProgress (live) | **[U]** not observed |
+| | `4` | Boxscore / final | **[V]** |
+| | `5` | ScoreNotReported | **[V]** |
+| `contest.dateCode` | `0` | date+time known | **[V]** |
+| | nonzero | one of DateTBA/TimeTBA/DateTimeTBA, mapping unconfirmed — always trust `calculatedFields.isDateTba`/`.isTimeTba` instead | **[U]** |
+
+**(h) Season-bootstrap recipe** (run once per season — `scripts/discover-season.ts`, never
+hardcode): fetch `https://www.maxpreps.com/ca/field-hockey/`, extract `__NEXT_DATA__` (⚠️ the
+tag has `crossorigin="anonymous"` **between** `id` and `type` — a naive regex assuming `type=`
+follows `id=` immediately will fail); read `.query.ssid`/`.query.allSeasonId`/
+`.query.gendersport`/`.query.teamLevel`. Resolve both leagueIds via `team-context/v1` on one
+known team per division. Assert `leagues/{id}/v1.sportSeasonId` and `.year` match. Fallback team
+enumeration: `https://www.maxpreps.com/ca/field-hockey/schools/` →
+`__NEXT_DATA__.props.pageProps.groupings[]` (all-time list, not current-season). ⚠️ The year
+segment of a MaxPreps league URL is cosmetic — `/25-26/league/...` still serves the current
+26-27 table. Historical seasons come only from scval.com PDFs or `teamContext.teamSeasonPickerData[]`.
+
+**(i) HTML fallbacks** (only if the ghost API is withdrawn): league standings pages
+(`props.pageProps.layoutProps.tableData[]`), team schedule pages (positional-array contest/team
+tuples, schema recovered from webpack module `deserializeContestList` — pin behind an adapter
+with loud assertions), rendered `table tbody tr` (stable selectors: `span.hat/.name/.result/.score`
+— never styled-components class hashes), legacy scoreboard pages, individual game pages
+(`application/ld+json`, `@type: SportsEvent` — the only source of a game's street address; fetch
+lazily, one request per game, never in the nightly sweep).
+
+### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
+
+⚠️ All `scorebooklive.com` URLs now 301-redirect to `si.com` — target si.com directly (a
+non-redirect-following fetch fails silently). ⚠️ The `data-react-props` payload's top-level keys
+are `{query, variables, application}` — there is **no** top-level `props` key.
+
+Extraction (uniform across pages): match `data-react-class="<CLASS>" ... data-react-props="([^"]*)"`,
+decode HTML entities, `JSON.parse`.
+
+| Purpose | URL form | React class | Path |
+|---|---|---|---|
+| Team schedule + results | `.../teams/{sbliveId}-{slug}/games` | `teams/Games` | `query.team.games.nodes[]`, `.standing` |
+| League standings | `.../leagues/4242-santa-clara-valley-de-anza/standings`, `.../4243-...-el-camino/standings` | `organizations/Standings` | `query.organization.teamStandings[]` |
+| Statewide daily scoreboard | `.../scores?date=YYYY-MM-DD` | `games/GenderSportIndex` | `query.scoreboardDate.games.nodes[]` (not `query.games.nodes[]`) |
+| League-scoped scoreboard | `.../leagues/4242-.../scores` | `organizations/Scores` | `query.organization.scoreboardDate.games.nodes[]` |
+| Single game detail | `.../games/{id}-{slug}` | `games/Show` | `query.game.{id,date,contest,gameTeams[]}` |
+
+Game-node fields: `id`, `date` (ISO **with offset**, better than MaxPreps' naive local),
+`featured.{locationDescriptor,isHome,result,scoreText,standing}`, `opponent.{scoreText,isHome,
+team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = upcoming).
+
+**Caveats — why this is strictly secondary:**
+1. ⚠️ **SBLive's league buckets are wrong for 2026-27.** Its "De Anza" (4242) holds only 5 teams
+   (Mitty and Los Gatos misfiled in — they're El Camino); its "El Camino" (4243) misfiles 5 De
+   Anza schools and omits Los Gatos, Mitty and Santa Clara entirely. Santa Clara appears in
+   **neither** standings page. **Never take division membership or `leagueRecord` from SBLive.**
+2. `gameTypeLabel` is unreliable — derive league-vs-non-league from MaxPreps `contestType` +
+   the SCVAL PDF grid instead.
+3. Wilcox has 1 scheduled game, 0 played — effectively no coverage.
+4. `variables.level` is hardcoded `VARSITY` — no JV from this source.
+5. Team slugs must be recovered from `teamStandings[].team.webPath` or `opponent.team.webPath` —
+   never guessed.
+
+**Role in this project:** score cross-check and a same-day scoreboard with timezone-correct
+timestamps. Nothing else.
+
+### 1.3 OFFICIAL — scval.com PDFs
+
+Domain is **scval.com** (`.org` does not resolve). `http://` 302s to `https://` — follow
+redirects.
+
+| Document | URL |
+|---|---|
+| 2026-27 De Anza schedule grid | `https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf` |
+| 2026-27 El Camino schedule grid | `https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf` |
+| Fall index (file discovery) | `https://scval.com/fallSports/Fall_index.html` |
+| Standings index | `https://www.scval.com/standings/` |
+| 2025-26 final standings (historical baseline) | `https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf` |
+| 2025-26 all-league awards | `https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf` |
+| 26-27 By-Laws (settles standings/points/tiebreaks) | `https://scval.com/fallSports/1%2026-27%20SCVAL%20Field%20Hockey%20By-Laws.pdf` — see `docs/BYLAWS-2026-27.md` |
+
+`pdftotext -layout` recipes:
+- **Schedule grids:** column-major, three date-columns per band (naive line reading interleaves
+  three different dates). Header regex (global, up to 3 hits/line):
+  `/(MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY)[, ]+([A-Z]+)\s+(\d+)/g`. Matchup regex (verified
+  56/56 rows), group 1 = **AWAY**, group 2 = **HOME**:
+  `/([A-Z][A-Z. ]*?[A-Z.])\s{1,}@\s{1,}([A-Z][A-Z. ]*?[A-Z.])(?=\s{2,}|\s*$)/g`. ⚠️ Splitting on
+  2+ spaces and re-pairing on `@` shatters cells like `ST. FRANCIS   @   FREMONT` — do not do
+  that. ⚠️ Special-case the Oct 30 crossover row (`DE ANZA #4 VS EL CAMINO #4`, `#1 v. #1` — `VS`/
+  `v.` as alternate separators). Grid names are UPPERCASE/abbreviated; the prose Teams line uses
+  mixed case (`Saint Ignatius`) — a normalization map is required. Windows: DA Mon/Wed Sep 9 →
+  Oct 26; EC Tue/Thu Sep 10 → Oct 27; plus the Fri Oct 30 crossover.
+- **Standings PDF:** 4 stacked blocks (DeAnza V, El Camino V, DeAnza JV, El Camino JV), row regex
+  `/([A-Za-z .]+?)\s{2,}(\d+-\d+(?:-\d+)?)\s*$/`. ⚠️ The "Overall record" column is empty in the
+  25-26 file. 2025-26 varsity final: DA — St. Ignatius 11-0-1, St. Francis 10-1-1, Los Altos
+  6-4-2, Valley Christian 6-5-1, Homestead 2-9-1, Fremont 2-10, Cupertino 1-9-2 (**7 teams — no
+  Wilcox**). EC — Los Gatos 14-0, Mitty 11-2-1, Palo Alto 8-5-1, Saratoga 7-5-2, Presentation
+  7-6-1, Santa Clara 4-9-1, Lynbrook 1-13, Monta Vista 1-13.
+- **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
+  rather than hardcoding a URL.
+
+Rest of scval.com (legacy `fieldhockey_TR.html`, `schedules.html`, homepage ticker) is 9+ years
+stale — dead weight, not used.
+
+### 1.4 PLAYOFFS — CIF-CCS (cifccs.org, PrestoSports)
+
+⚠️ **CloudFront indirection.** Every document path on cifccs.org returns 200/`text/html` (a ~31 KB
+SPA shell), never the PDF directly. Fetch the cifccs.org page, regex
+`https?://[a-z0-9]+\.cloudfront\.net/[^"'\s>)]*` out of the HTML, then fetch that — the CloudFront
+path segments are content hashes that change on every re-upload; never hardcode them.
+
+Human-facing paths: `https://www.cifccs.org/calendar/2026-27/2026-27_CCS_Playoff_Dates.pdf`,
+`https://www.cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf`.
+
+**Verified playoff facts:** entries due Mon Nov 2 2026 noon; seeding meeting 1:00pm same day;
+Quarterfinals Sat Nov 7; Semifinals Wed Nov 11; Finals Sat Nov 14; evaluation meeting Thu Nov 19
+4:00pm. Single-elimination, two divisions of 8 (1-8 → D1, 9-16 → D2). Auto-qualifier allocation:
+SCVAL 7, BVAL 4, PCAL 2, at-large 3 = 16 total. High seed hosts through semifinals. (Selection
+committee and at-large criteria are the **playoff** tiebreak, distinct from the league-standings
+tiebreak in `docs/BYLAWS-2026-27.md`.)
+
+**Machine-readable calendar:** `https://cifccs.org/calendar/Field_Hockey?print=ical` (⚠️ the
+`?print=ical` query form is required — the bare `.ics` path 404s). Exactly 5 all-day VEVENTs
+(Nov 2/7/11/14/19). ⚠️ Live typo: the semifinals SUMMARY reads **`"CCS Semfinals"`** — match on
+the misspelling. RSS twin at `?print=rss`.
+
+⚠️ **CCS bracket pages are not programmatically usable** — 0 `__NEXT_DATA__`, 0 ld+json, no API
+URL; the page is rendered client-side by PrestoSports' RequireJS bundle. A headless browser would
+be required.
+
+**Preferred playoff bracket source once published:** MaxPreps' tournament page
+(`https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm`),
+which currently shows `<div class="not-published">…`. **Best-supported plan:** once brackets
+publish, playoff games should surface in each qualifying team's `schedule-calculated` feed via
+`calculatedFields.bracketName/bracketGameIndex/bracketIsPublished/tournamentName/
+tournamentCanonicalUrl` (untested — those fields are null in the regular season; verify on Nov 7).
+Poll both from Nov 2. Fallback: CCS posts results as plain text on X/Twitter.
+
+### 1.5 SCHEDULE TIMES — VNN / PlayOn "Mascot Media Bolt" `.ics`
+
+`https://mmboltapi.azurewebsites.net/api/v2/events/calendar/{siteId}/0/calendar.ics` (the `0`
+means whole-school; team-scoped variants return an empty calendar).
+
+Known siteIds: Palo Alto `2635290`, Los Gatos `2634860`. Discover others via the school's
+athletics `/calendar` page, grepping for `mmboltapi.azurewebsites.net/api/v2/events/calendar/[0-9]+/[0-9]+/calendar.ics`
+(the site root does not carry the link).
+
+Corrected SUMMARY regex (the naive `Junior Varsity` pattern misses `JV`-worded events, ~42% loss):
+```
+/^(Girls (Varsity|JV) Field Hockey) (vs|at) (.+)$/
+```
+`DTSTART`/`DTEND` are UTC Zulu. `LOCATION` holds the venue. `UID` = `<eventId>@mmboltapi.azurewebsites.net`
+(stable upsert key). Requires standard RFC 5545 line-unfolding before parsing. ⚠️ **No scores** —
+schedule/venue/time only. Opponent-name formatting differs per school — normalize.
+
+This is also the **only verified JV source** (MaxPreps has JV team pages but no JV pipeline was
+tested end to end).
+
+### 1.6 Rejected sources (one line each)
+
+- MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
+  section, not league) — use `contest-ids-grouped-by-date-by-context/v2` instead.
+- `team-standings/v1` — only a 3-row window; use `leagues/{id}/standings/v1`.
+- `/ca/field-hockey/standings/`, `/ca/field-hockey/leagues/`, `/_next/data/{buildId}/…` — 404.
+- SBLive league-scoped scoreboard — inherits the wrong league membership.
+- SCVAL DigitalSports site (`78929.digitalsports.com`) — populated with nothing, all AJAX
+  endpoints return empty state; SCVAL never used it for field hockey.
+- CCS bracket pages — client-rendered, no server-side data at all.
+- ArbiterLive — real API, but no valid entity id exists for any SCVAL school; carries no scores
+  anyway.
+- rSchoolToday / Monta Vista, newer Los Altos PlayOn build, assorted one-off school sites
+  (Squarespace/Elementor/Finalsite with no feed).
+- palyathletics.com schedule table — results column always blank; the ICS is strictly better.
+- Palo Alto Online, Paly Voice, Prep2Prep, USA Field Hockey — no field-hockey content, editorial
+  colour only, or out of scope.
+- scval.com legacy HTML pages — years stale.
+
+## 2. Verified constants for 2026-27
+
+```ts
+SEASON_YEAR        = "26-27"
+SEASON_LABEL        = "Girls Varsity Field Hockey Fall 26-27"
+SPORT_SEASON_ID      = "e302eb3e-1a32-4f2d-934b-6f9d454f721e"
+ALL_SEASON_ID       = "bfacc9ec-145e-4659-ba7e-0824d163d5fc"
+GENDER_SPORT       = "girls,fieldhockey"
+TEAM_LEVEL         = "Varsity"
+SECTION_ID (CCS)     = "d9a9ef9c-db12-4669-888b-40ac8462a575"
+LEAGUE_IDS.deAnza     = "ea062dfe-9fb9-45c7-9839-0801993d6ac6"   (MaxPreps: 7 teams)
+LEAGUE_IDS.elCamino    = "7bdfb2a7-8dde-4a21-88c9-832f1593554d"   (MaxPreps: 8 teams)
+```
+
+Shipped verbatim in `lib/season.ts`, re-asserted on every fetch run (§5), never hardcoded
+elsewhere.
+
+### 2.1 The 15 MaxPreps teams + Wilcox
+
+Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read directly from the live
+standings responses — see `lib/teams.ts` for the full roster (id, slug, acronym, colors, SBLive
+id). Team, division, colors and canonical URLs all come from the API; **slugs are ours**
+(kebab-case short names).
+
+⚠️ **Do not use the Presentation HTML schedule page** — it 200s but serves Los Gatos data
+(MaxPreps routing/canonical bug). This is the single strongest argument for keying everything on
+the `teamId` GUID and the ghost API, never on slug URLs.
+
+### 2.2 Non-SCVAL opponents
+
+Prospect, and Blossom Valley / out-of-area opponents (Branham, Christopher, Leland, Gilroy, Live
+Oak, Willow Glen, Leigh, Stevenson, etc.) appear as fixtures but are **excluded from both
+standings tables** — modeled as `division: null`, `isScvalMember: false`. Their GUIDs, where
+harvested, are seeded in the alias table so fixtures render without inventing Team records.
+
+### 2.3 Name normalization
+
+Every display name is an alias (MaxPreps `schoolName`, SCVAL PDF grid ALL-CAPS abbreviation,
+SCVAL prose, SBLive/si.com name, ICS feed name) — the join key is always the MaxPreps GUID. The
+2025-26 all-league PDF is inconsistent even within itself (`St Ignatius` vs `Saint Ignatius`).
+
+## 3. Division membership — official vs MaxPreps
+
+**Official (SCVAL PDFs, the authority for alignment):**
+- **De Anza — 8 teams:** Cupertino, Fremont, Homestead, Los Altos, Saint Francis, Saint Ignatius,
+  Valley Christian, **Wilcox**.
+- **El Camino — 8 teams:** Los Gatos, Lynbrook, Mitty, Monta Vista, Palo Alto, Presentation,
+  Santa Clara, Saratoga.
+
+**MaxPreps:** De Anza returns only **7** rows — Wilcox is absent, not 0-0-0. Wilcox's own MaxPreps
+schedule page returns a valid season context but `contests === []` — zero games published.
+SBLive's Wilcox has 1 scheduled game, 0 played.
+
+**Resolution rules:**
+1. Division membership comes **exclusively** from the two SCVAL PDFs — MaxPreps' 7-team De Anza
+   and SBLive's (differently) wrong buckets are never authoritative for membership.
+2. Wilcox is a full De Anza member on paper. Render it in the standings table with an explicit
+   "no results reported" state — **never** as 0-0-0 as if it had played. (Wilcox was also absent
+   from the 2025-26 DA varsity standings — it may be a genuinely new/non-fielding program.)
+3. De Anza 8-vs-7 (official vs MaxPreps) is a real asymmetry, not a parsing artifact. El Camino
+   is 8 in both.
+
+The league absorbs five WCAL/private programs (St. Ignatius, Saint Francis, Valley Christian,
+Archbishop Mitty, Presentation) because CCS has too few field-hockey programs for separate
+leagues.
+
+## 4. Data model
+
+The normalized TypeScript model (`Team`, `Game`, `Standing`, `Playoffs`, `Snapshot`, `SourceId`
+etc.) lives in `lib/types.ts`. Load-bearing rules baked into it:
+
+- `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-SCVAL opponents — every
+  fixture is renderable without inventing a Team record.
+- `contestState === 1` rows are **dropped before** a `Game` is constructed (they are not
+  "canceled" — one observed row is a scrimmage with a real 0-4 score; storing it would leak a
+  scrimmage into the standings).
+- `venue.text` (raw `contest.location`, often a note like `"Scrimmage"` or `"Too be rescheduled"`)
+  is kept separate from `venue.name` (only ever populated from a game page's ld+json `Place`,
+  fetched lazily, never in the sweep).
+- `Standing.computed` (ours, from game rows) is the display source of truth; `Standing.reported`
+  (MaxPreps' own numbers) is kept for cross-check and freshness display — see §6 below and
+  `docs/BYLAWS-2026-27.md` for the ordering rule itself.
+
+## 5. Daily cron fetch plan
+
+**Core sweep — 20 requests, run by `scripts/fetch-data.ts` / `.github/workflows/update-data.yml`:**
+1 bootstrap page + 2 league-metadata assertions + 2 league standings + 15 per-team schedule
+pulls (one per MaxPreps team) = every game, including non-league fixtures, because the schedule
+feed is per-team, not per-league. 293 team-rows dedupe to ~174 unique contests (158 in the
+current live snapshot, after the `contestState === 1` drop).
+
+**Order:** bootstrap + assertions run first and sequentially; if `sportSeasonId`/`year` ever
+changed, or a league returns 0 rows, the run **aborts and keeps the previous snapshot** — never
+publish a half-migrated season. Standings pulls at concurrency 2. Team schedule pulls at
+concurrency ≤3, ~500ms between request starts (~8s wall clock for 15 requests) — a deliberate
+courtesy ceiling well below the parallelism observed to work without any 429/403.
+
+**Retries:** 429/5xx only, 3 attempts, exponential backoff 1s→2s→4s ±20% jitter, honor
+`Retry-After`. Never retry another 4xx. Per-request timeout 15s, whole-run budget 120s. A
+descriptive User-Agent identifies the site and a contact address on every request. **A partial
+run still publishes** — each failed request becomes a `SourceStatus {status:"error"}` row and the
+previous snapshot's rows for that team carry forward.
+
+**Backfill:** because `schedule-calculated` returns a team's entire season in one request, every
+run **re-ingests all 15 feeds in full** and upserts on `contestId` — coaches enter results by
+hand with real lag, and MaxPreps corrections do happen, so nothing is ever treated as immutable.
+
+**Conditional/weekly extras** (not part of the core 20): score-only refresh via
+`contest-ids-grouped-by-date` + `scoreboard-contests-by-ids` (hourly-scale, optional); si.com
+score cross-check (weekly); the two SCVAL schedule PDFs + `Fall_index.html` (weekly, revision
+detection); `scval.com/standings/` poll (weekly); the two VNN `.ics` feeds (weekly — start
+times/venues/JV); CCS calendar + MaxPreps tournament page (**daily from Nov 2**, twice daily on
+Nov 7/11/14). Game venue addresses are fetched lazily, one request per game, only from a
+game-detail route — never in the sweep.
+
+**Normalization rules:** dedupe on `contest.contestId`; drop `contestState === 1` before
+anything else; a missing score renders `pending`, **never `0-0`** (a genuine 0-0 final is
+distinguishable because both scores are `0` *and* both results are `"T"`); home/away from
+`teams[].homeAwayType` only (never `contestType`, never `scoreboard-contests-by-ids`' `teams[0]`
+ordering); league flag from `contestType === 0`, corroborated against the SCVAL PDF grid (log any
+disagreement rather than silently picking one); store both naive-local and UTC timestamps;
+opponent identity by GUID, display name by the alias table.
+
+### MaxPreps vs SBLive reconciliation
+
+**Rule: prefer MaxPreps. Flag disagreements; never average, never silently overwrite.** Match
+games across sources on `(date, {home.teamId, away.teamId} unordered pair)` via the `Team.external`
+map. On a numeric disagreement: keep MaxPreps' score, record the SBLive value + a note in
+`provenance.scoreConflict`, surface a small "sources disagree" marker in the UI. On MaxPreps
+`null` + SBLive scored: do **not** backfill from SBLive by default (it's a different manual-entry
+pipeline, not a more-authoritative one) — record the value in `scoreConflict`, leave the game
+`score-pending`. Never take `leagueRecord`, `gameTypeLabel` or division from SBLive.
+
+### Playoff polling from Nov 2
+
+Before Nov 2, render the playoff section from the by-laws-derived dates and the SCVAL-7
+auto-qualifier allocation, no polling. From Nov 2 daily (twice daily on Nov 7/11/14): fetch the
+CCS `?print=ical` calendar (match the `"CCS Semfinals"` typo), poll the MaxPreps tournament page
+for `bracketPublished` flipping true, and continue the 15 `schedule-calculated` calls, watching
+for populated `bracketName`/`bracketGameIndex`/`tournamentName` fields (untested — verify live on
+Nov 7). Re-derive the CCS CloudFront PDF URLs each time; never poll the CCS bracket page itself
+expecting data.
+
+## 6. Legal / robots posture and attribution
+
+`production.api.maxpreps.com/robots.txt` allows everything used here. `www.maxpreps.com/robots.txt`
+disallows `/team/`, `/school/`, `/scores/` (with narrow `Allow:` carve-outs), among others — these
+are root-anchored prefixes and do **not** match the paths this project uses (e.g.
+`/ca/los-altos/los-altos-eagles/field-hockey/schedule/` is not under `/team/`). Field hockey is
+not in the Googlebot sport-exclusion list. No `Crawl-delay` is published anywhere; the
+≤3-concurrency / 500ms / once-or-twice-daily budget is entirely self-imposed. scval.com,
+cifccs.org, si.com and mmboltapi robots.txt were not independently re-verified before this build —
+check before a first production run.
+
+**Terms — robots is not a licence.** MaxPreps (CBS Interactive/Paramount) and SBLive/si.com both
+restrict republishing and publish no reuse licence. Posture adopted: store our own **derived**
+records (normalized scores, computed standings), not verbatim page copies; deep-link back to the
+source page on every row; attribute visibly on every page that shows the data; keep the cron to
+1-2 runs/day; send an identifying User-Agent with a contact address; cache aggressively and serve
+the static snapshot, never proxy a live upstream request per visitor; honor a takedown request
+immediately.
+
+**Attribution text**, rendered in the site footer and on every scores/standings page:
+
+> Scores, schedules and standings via **MaxPreps** (maxpreps.com), with cross-checks from **High
+> School on SI / Scorebook Live** (si.com/high-school). Division alignment and the official
+> league schedule from the **Santa Clara Valley Athletic League** (scval.com). Playoff dates,
+> format and qualifier allocation from **CIF Central Coast Section** (cifccs.org). Start times
+> and venues for some schools from school athletics calendars (VNN / PlayOn). This is an
+> unofficial fan site, not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated. Records
+> are computed from published game results and may differ from official standings. Last updated
+> {fetchedAt}.
+
+## 7. Known open risks (carried into README "Known limitations")
+
+- MaxPreps' own De Anza standings arithmetic looked internally inconsistent at capture time
+  (e.g. two teams reporting zero league goals scored *and* against across a full slate) — this
+  project recomputes independently from game rows and prefers the computed values; `reported` is
+  kept only for cross-check.
+- `dateCode` nonzero semantics, `contestState` 0/3, and `homeAwayType === 2` (neutral) were never
+  observed in the wild — treat any future occurrence as unverified territory.
+- `scoreboard-contests-by-ids`' `teams[0]`-is-home assumption is unverified — never relied on.
+- CCS CloudFront PDF hashes change on every re-upload — always re-derive at fetch time, never
+  hardcode.
+- League-game-count-per-team (double round robin, 2 meetings per division mate) was not verified
+  pairing-by-pairing — any "games remaining"/clinch logic should treat this as an assumption.
+- JV is out of scope for v1: SCVAL JV membership differs from varsity, and no JV pipeline was
+  verified end to end even though the VNN `.ics` feeds carry some JV events.
+- Prior-season data has exactly one route (`teamSeasonPickerData[]`, unverified) besides the
+  scval.com PDFs, since a MaxPreps league URL's year segment is cosmetic.

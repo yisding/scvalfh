@@ -1,0 +1,1413 @@
+{
+  "divisions": [
+    {
+      "awards": {
+        "jv": {
+          "division": "de-anza",
+          "firstTeam": [
+            {
+              "player": "Reagan Ferrari",
+              "position": "Defense",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 9
+            },
+            {
+              "player": "Taylor Scheuer",
+              "position": "Midfield",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 10
+            },
+            {
+              "player": "Annie Boyd",
+              "position": "Midfield",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 10
+            },
+            {
+              "player": "Sidney DeBenedetti",
+              "position": "Forward",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 9
+            },
+            {
+              "player": "Stella Kwok",
+              "position": "Midfield",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 9
+            },
+            {
+              "player": "Kaitlyn Kirk",
+              "position": "Forward",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Ibby Fair",
+              "position": "Defense",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Renee Lam",
+              "position": "Midfield",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 9
+            },
+            {
+              "player": "Kaia McNeill",
+              "position": "Forward",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 9
+            },
+            {
+              "player": "Sahana Gopinath",
+              "position": "Midfield",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 10
+            },
+            {
+              "player": "Kaila Scott",
+              "position": "Midfield",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 9
+            },
+            {
+              "player": "Charlotte Painter",
+              "position": "Goalie",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 10
+            },
+            {
+              "player": "Madison Louie",
+              "position": "Defender",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 10
+            },
+            {
+              "player": "Sasha Grebene",
+              "position": "Midfielder",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 9
+            }
+          ],
+          "honorableMention": [
+            {
+              "player": "Elizabeth Rodriguez",
+              "position": "Forward",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 10
+            },
+            {
+              "player": "Leyla Iskander",
+              "position": "Defense",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 10
+            },
+            {
+              "player": "Sam Brunsell",
+              "position": "Defense",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Sophie Mandia",
+              "position": "Midfield",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 9
+            },
+            {
+              "player": "Emry Borges",
+              "position": "Forward",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 9
+            }
+          ],
+          "level": "jv",
+          "overall": [],
+          "secondTeam": [
+            {
+              "player": "Emily Cargill",
+              "position": "Defense",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 10
+            },
+            {
+              "player": "Emersyn Manion",
+              "position": "Forward",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 9
+            },
+            {
+              "player": "Neha Silvamurthy",
+              "position": "Forward",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 10
+            },
+            {
+              "player": "Quinn Gossett",
+              "position": "Defense",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 9
+            },
+            {
+              "player": "Mika Nejasmich",
+              "position": "Forward",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 9
+            },
+            {
+              "player": "Paige Ferguson",
+              "position": "Defense",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Beatrice Hom",
+              "position": "Midfield",
+              "school": "St. Ignatius",
+              "slug": "st-ignatius",
+              "year": 9
+            },
+            {
+              "player": "Raspreet Kaur",
+              "position": "Midfield",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 10
+            },
+            {
+              "player": "Tara Deolalikar",
+              "position": "Defense",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 9
+            },
+            {
+              "player": "Elle Correia",
+              "position": "Defense",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 9
+            },
+            {
+              "player": "Sarah Chang",
+              "position": "Midfield",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 10
+            },
+            {
+              "player": "Trinity Largo",
+              "position": "Defense",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 9
+            },
+            {
+              "player": "Emma Li",
+              "position": "Forward",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 9
+            },
+            {
+              "player": "Luciana Muscarella",
+              "position": "Defender",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 10
+            }
+          ]
+        },
+        "varsity": {
+          "division": "de-anza",
+          "firstTeam": [
+            {
+              "player": "Sophie Ghosh",
+              "position": "Midfield",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 12
+            },
+            {
+              "player": "Storey Lewis",
+              "position": "Forward",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 11
+            },
+            {
+              "player": "Hazel Stang",
+              "position": "Defender",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Carolyn Cordoni",
+              "position": "Forward",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 11
+            },
+            {
+              "player": "Ashley Henderson",
+              "position": "Midfield",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 12
+            },
+            {
+              "player": "Emma O’Boyle",
+              "position": "Defender",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 12
+            },
+            {
+              "player": "Maya Dutta",
+              "position": "Defender",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 12
+            },
+            {
+              "player": "Gwen Mello",
+              "position": "Midfield",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 12
+            },
+            {
+              "player": "Keira Le",
+              "position": "Midfield",
+              "school": "Valley Christian",
+              "slug": "valley-christian",
+              "year": 12
+            },
+            {
+              "player": "Ryan Miller",
+              "position": "Midfield",
+              "school": "Valley Christian",
+              "slug": "valley-christian",
+              "year": 12
+            },
+            {
+              "player": "Kenzie Murray",
+              "position": "Defense",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 12
+            },
+            {
+              "player": "Gabby Moll",
+              "position": "Midfield",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 11
+            },
+            {
+              "player": "Jessica Shaffer",
+              "position": "Midfield",
+              "school": "Cupertino",
+              "slug": "cupertino",
+              "year": 12
+            },
+            {
+              "player": "Katie Furey",
+              "position": "Defender",
+              "school": "Cupertino",
+              "slug": "cupertino",
+              "year": 12
+            },
+            {
+              "player": "Tehya Williamson",
+              "position": "Midfield",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 11
+            },
+            {
+              "player": "Arsh Ruprah",
+              "position": "Midfield",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 10
+            }
+          ],
+          "honorableMention": [
+            {
+              "player": "Morgan Harvey",
+              "position": "Defender",
+              "school": "Valley Christian",
+              "slug": "valley-christian",
+              "year": 11
+            },
+            {
+              "player": "Verna Pickett",
+              "position": "Midfield/Defense",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 9
+            },
+            {
+              "player": "Nora Baca",
+              "position": "Midfield/Defense",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 10
+            },
+            {
+              "player": "Gigi Colant",
+              "position": "Defender",
+              "school": "St Ignatius",
+              "slug": "st-ignatius",
+              "year": 11
+            },
+            {
+              "player": "Sofia Zuniga",
+              "position": "Defender",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 12
+            },
+            {
+              "player": "Sakurako Kawakami",
+              "position": "Forward",
+              "school": "Cupertino",
+              "slug": "cupertino",
+              "year": 12
+            },
+            {
+              "player": "Lacey Sebastian-Carattini",
+              "position": "Goalie",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 10
+            }
+          ],
+          "level": "varsity",
+          "overall": [
+            {
+              "award": "Offensive Player",
+              "value": "St Ignatius- Olivia Van de Braak"
+            },
+            {
+              "award": "Defensive Player",
+              "value": "Los Altos- Alison Wilson"
+            },
+            {
+              "award": "Senior of the Year",
+              "value": "Fremont- Maddie Dhillon"
+            },
+            {
+              "award": "Junior of the Year",
+              "value": "St Francis- Genevieve Ferrini"
+            },
+            {
+              "award": "Sophomore of the Year",
+              "value": "Valley Christian- Grace Frieder"
+            },
+            {
+              "award": "Freshman of the Year",
+              "value": "Los Altos- Quinley McCarroll"
+            },
+            {
+              "award": "GK of the Year",
+              "value": "Valley Christian- Shyla Paredes"
+            }
+          ],
+          "secondTeam": [
+            {
+              "player": "Ezaura Bisaillon",
+              "position": "Midfield",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 12
+            },
+            {
+              "player": "Maggie Magnano",
+              "position": "Defender",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 11
+            },
+            {
+              "player": "Caityln Hughes",
+              "position": "Midfield",
+              "school": "Saint Ignatius",
+              "slug": "st-ignatius",
+              "year": 10
+            },
+            {
+              "player": "Samantha Enerio",
+              "position": "Defender",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 12
+            },
+            {
+              "player": "Nikki Kalina",
+              "position": "GK",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 11
+            },
+            {
+              "player": "Katherine Tsiagkas",
+              "position": "Midfielder",
+              "school": "Saint Francis",
+              "slug": "saint-francis",
+              "year": 11
+            },
+            {
+              "player": "Einav Garten",
+              "position": "Midfielder",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 11
+            },
+            {
+              "player": "Riya Mehrotra",
+              "position": "GK",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 11
+            },
+            {
+              "player": "Katarina Smith",
+              "position": "Defender",
+              "school": "Los Altos",
+              "slug": "los-altos",
+              "year": 11
+            },
+            {
+              "player": "Audrey Graham",
+              "position": "Defender",
+              "school": "Valley Christian",
+              "slug": "valley-christian",
+              "year": 12
+            },
+            {
+              "player": "Giuliana Borello",
+              "position": "Midfield",
+              "school": "Valley Christian",
+              "slug": "valley-christian",
+              "year": 10
+            },
+            {
+              "player": "Sanae Nambu",
+              "position": "Defense",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 11
+            },
+            {
+              "player": "Sarah Anton",
+              "position": "Midfield",
+              "school": "Homestead",
+              "slug": "homestead",
+              "year": 11
+            },
+            {
+              "player": "Eva Hansen",
+              "position": "Defense",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 11
+            },
+            {
+              "player": "Julia Keinath",
+              "position": "Forward",
+              "school": "Fremont",
+              "slug": "fremont",
+              "year": 10
+            },
+            {
+              "player": "Kiana Vooshoogi",
+              "position": "Defender",
+              "school": "Cupertino",
+              "slug": "cupertino",
+              "year": 12
+            }
+          ]
+        }
+      },
+      "division": "de-anza",
+      "label": "De Anza",
+      "standings": {
+        "jv": [
+          {
+            "l": 0,
+            "leagueRecord": "9-0-1",
+            "name": "St. Francis",
+            "overallRecord": null,
+            "place": 1,
+            "slug": "saint-francis",
+            "t": 1,
+            "w": 9
+          },
+          {
+            "l": 1,
+            "leagueRecord": "8-1-1",
+            "name": "St. Ignatius",
+            "overallRecord": null,
+            "place": 2,
+            "slug": "st-ignatius",
+            "t": 1,
+            "w": 8
+          },
+          {
+            "l": 4,
+            "leagueRecord": "5-4-1",
+            "name": "Homestead",
+            "overallRecord": null,
+            "place": 3,
+            "slug": "homestead",
+            "t": 1,
+            "w": 5
+          },
+          {
+            "l": 6,
+            "leagueRecord": "1-6-3",
+            "name": "Fremont",
+            "overallRecord": null,
+            "place": 4,
+            "slug": "fremont",
+            "t": 3,
+            "w": 1
+          },
+          {
+            "l": 5,
+            "leagueRecord": "0-5-5",
+            "name": "Los Altos",
+            "overallRecord": null,
+            "place": 5,
+            "slug": "los-altos",
+            "t": 5,
+            "w": 0
+          },
+          {
+            "l": 7,
+            "leagueRecord": "0-7-3",
+            "name": "Cupertino",
+            "overallRecord": null,
+            "place": 6,
+            "slug": "cupertino",
+            "t": 3,
+            "w": 0
+          }
+        ],
+        "varsity": [
+          {
+            "l": 0,
+            "leagueRecord": "11-0-1",
+            "name": "St. Ignatius",
+            "overallRecord": null,
+            "place": 1,
+            "slug": "st-ignatius",
+            "t": 1,
+            "w": 11
+          },
+          {
+            "l": 1,
+            "leagueRecord": "10-1-1",
+            "name": "St. Francis",
+            "overallRecord": null,
+            "place": 2,
+            "slug": "saint-francis",
+            "t": 1,
+            "w": 10
+          },
+          {
+            "l": 4,
+            "leagueRecord": "6-4-2",
+            "name": "Los Altos",
+            "overallRecord": null,
+            "place": 3,
+            "slug": "los-altos",
+            "t": 2,
+            "w": 6
+          },
+          {
+            "l": 5,
+            "leagueRecord": "6-5-1",
+            "name": "Valley Christian",
+            "overallRecord": null,
+            "place": 4,
+            "slug": "valley-christian",
+            "t": 1,
+            "w": 6
+          },
+          {
+            "l": 9,
+            "leagueRecord": "2-9-1",
+            "name": "Homestead",
+            "overallRecord": null,
+            "place": 5,
+            "slug": "homestead",
+            "t": 1,
+            "w": 2
+          },
+          {
+            "l": 10,
+            "leagueRecord": "2-10",
+            "name": "Fremont",
+            "overallRecord": null,
+            "place": 6,
+            "slug": "fremont",
+            "t": 0,
+            "w": 2
+          },
+          {
+            "l": 9,
+            "leagueRecord": "1-9-2",
+            "name": "Cupertino",
+            "overallRecord": null,
+            "place": 7,
+            "slug": "cupertino",
+            "t": 2,
+            "w": 1
+          }
+        ]
+      }
+    },
+    {
+      "awards": {
+        "jv": {
+          "division": "el-camino",
+          "firstTeam": [
+            {
+              "player": "Caroline Farley",
+              "position": "Midfield",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Harper Hyland",
+              "position": "Defense",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 9
+            },
+            {
+              "player": "Elle Navarrette",
+              "position": "Midfield",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Collette Von Klemperer",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 9
+            },
+            {
+              "player": "Jihyung Hong",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Laurel Collins",
+              "position": "Midfield",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Noumi van Eeden",
+              "position": "Midfield",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 9
+            },
+            {
+              "player": "Emma Lodes",
+              "position": "Forward",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 10
+            },
+            {
+              "player": "Olivia Park",
+              "position": "Forward/ D",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 10
+            },
+            {
+              "player": "Helen Kao",
+              "position": "F, M",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 10
+            },
+            {
+              "player": "Rishika Gajjar",
+              "position": "Goalie",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 10
+            },
+            {
+              "player": "Nishitha Bharani",
+              "position": "Forward",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 10
+            },
+            {
+              "player": "Emilie Chan",
+              "position": "Defense",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 11
+            },
+            {
+              "player": "Shravya Doddabommannavar",
+              "position": "Midfield",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 10
+            }
+          ],
+          "honorableMention": [
+            {
+              "player": "Penelope Pulles",
+              "position": "Forward",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 9
+            },
+            {
+              "player": "Kendall Welsh",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Mrunmayee Kulkarni",
+              "position": "Forward",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 9
+            },
+            {
+              "player": "Elizabeth Weafer",
+              "position": "Defense",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 10
+            },
+            {
+              "player": "Anh Nguyenle",
+              "position": "Defense",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 11
+            }
+          ],
+          "level": "jv",
+          "overall": [],
+          "secondTeam": [
+            {
+              "player": "Lucy Zanni",
+              "position": "Midfield",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Chaska Cloe",
+              "position": "Midfiled",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Izzy Aguerria",
+              "position": "Forward",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Mila Maletec",
+              "position": "Midfield",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Kiera Faye",
+              "position": "Defense",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Scarlett Schaffer",
+              "position": "Defense",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 10
+            },
+            {
+              "player": "Abby Neumann",
+              "position": "Defense",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 10
+            },
+            {
+              "player": "Nova Westin",
+              "position": "Midfield",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 10
+            },
+            {
+              "player": "Mahati Srinivasan",
+              "position": "Forward",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 10
+            },
+            {
+              "player": "Jacqueline Savage",
+              "position": "Defense",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 10
+            },
+            {
+              "player": "Wenhe (Angela) Zhang",
+              "position": "Defense",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 11
+            },
+            {
+              "player": "Sahana Rajamani",
+              "position": "D, Goalie",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 9
+            },
+            {
+              "player": "Seraphima Jenssen",
+              "position": "Forward",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 10
+            },
+            {
+              "player": "Medhavi Modi",
+              "position": "Mid",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 10
+            }
+          ]
+        },
+        "varsity": {
+          "division": "el-camino",
+          "firstTeam": [
+            {
+              "player": "Kendall Sutherland",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            },
+            {
+              "player": "Jisoo Hong",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            },
+            {
+              "player": "Emma Jackson",
+              "position": "Midfield",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            },
+            {
+              "player": "Ashton Allard",
+              "position": "Defense",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 12
+            },
+            {
+              "player": "Maya Cedergren",
+              "position": "Forward",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 12
+            },
+            {
+              "player": "Caleigh Clarke",
+              "position": "Midfield",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 12
+            },
+            {
+              "player": "Hannah Neibuhr",
+              "position": "Forward",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 11
+            },
+            {
+              "player": "Sarah Thieman",
+              "position": "Midfield",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 12
+            },
+            {
+              "player": "Annelise Sailer",
+              "position": "Midfield/Defense",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 12
+            },
+            {
+              "player": "Sophia Faraone",
+              "position": "Midfield",
+              "school": "Saratoga",
+              "slug": "saratoga",
+              "year": 12
+            },
+            {
+              "player": "Giselle Adams",
+              "position": "Midfield",
+              "school": "Saratoga",
+              "slug": "saratoga",
+              "year": 11
+            },
+            {
+              "player": "Juliana Yurko",
+              "position": "Forward",
+              "school": "Presentation",
+              "slug": "presentation",
+              "year": 11
+            },
+            {
+              "player": "Joana Shinners",
+              "position": "Defense",
+              "school": "Presentation",
+              "slug": "presentation",
+              "year": 12
+            },
+            {
+              "player": "Natalie Da Silva",
+              "position": "Goalie",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 12
+            },
+            {
+              "player": "Trishna Sinha",
+              "position": "Goalie",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 11
+            },
+            {
+              "player": "Monisha Preetham",
+              "position": "Midfield",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 12
+            }
+          ],
+          "honorableMention": [
+            {
+              "player": "Sora Pham",
+              "position": "Defense",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 12
+            },
+            {
+              "player": "Lauren Hong",
+              "position": "Goalie",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 12
+            },
+            {
+              "player": "Camille Renn",
+              "position": "Forward",
+              "school": "Presentation HS",
+              "slug": "presentation",
+              "year": 11
+            },
+            {
+              "player": "Caroline Williams",
+              "position": "Goalie",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 11
+            },
+            {
+              "player": "Isabella Guzman",
+              "position": "Defense",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 12
+            },
+            {
+              "player": "Allie Imperato",
+              "position": "Midfield",
+              "school": "MItty",
+              "slug": "mitty",
+              "year": 12
+            },
+            {
+              "player": "Rowan Landis",
+              "position": "Defense",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            }
+          ],
+          "level": "varsity",
+          "overall": [
+            {
+              "award": "Offensive Player",
+              "value": "Leaya Cleary Los Gatos 12"
+            },
+            {
+              "award": "Defensive Player",
+              "value": "Leighton Osawa Los Gatos 12"
+            },
+            {
+              "award": "Senior of the Year",
+              "value": "Monisha Preetham, Monta Vista"
+            },
+            {
+              "award": "Junior of the Year",
+              "value": "Trishna Sinha, Goalie, Lynbrook"
+            },
+            {
+              "award": "Sophomore of the Year",
+              "value": "Bella Lenao, Forward, Santa Clara"
+            },
+            {
+              "award": "Freshman of the Year",
+              "value": "Hana Mercado, Midfield, Archbishop Mitty"
+            },
+            {
+              "award": "GK of the Year",
+              "value": "Brooklyn Barnard, Goalie, Presentation HS"
+            }
+          ],
+          "secondTeam": [
+            {
+              "player": "Zoe Shyba",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            },
+            {
+              "player": "Stella Musser",
+              "position": "Defense",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 11
+            },
+            {
+              "player": "Kaja McCullough",
+              "position": "Forward",
+              "school": "Los Gatos",
+              "slug": "los-gatos",
+              "year": 12
+            },
+            {
+              "player": "Lilly Jones",
+              "position": "Midfield/F",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 10
+            },
+            {
+              "player": "Nala Opulencia",
+              "position": "Goalie",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 12
+            },
+            {
+              "player": "Bridget Schilb",
+              "position": "Midfield/F",
+              "school": "Archbishop Mitty",
+              "slug": "mitty",
+              "year": 11
+            },
+            {
+              "player": "Nina Faust",
+              "position": "Defense",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 12
+            },
+            {
+              "player": "Camille Trimbur",
+              "position": "Midfield",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 12
+            },
+            {
+              "player": "Ela Aba",
+              "position": "Forward",
+              "school": "Palo Alto",
+              "slug": "palo-alto",
+              "year": 10
+            },
+            {
+              "player": "Tatiana Steinhoff",
+              "position": "Attack",
+              "school": "Presentation",
+              "slug": "presentation",
+              "year": 12
+            },
+            {
+              "player": "Ainslie Tighe",
+              "position": "Defense",
+              "school": "Presentation",
+              "slug": "presentation",
+              "year": 11
+            },
+            {
+              "player": "Alva Kerely",
+              "position": "Midfield",
+              "school": "Santa Clara",
+              "slug": "santa-clara",
+              "year": 12
+            },
+            {
+              "player": "Anika Sinha",
+              "position": "Midfield",
+              "school": "Lynbrook",
+              "slug": "lynbrook",
+              "year": 12
+            },
+            {
+              "player": "Ella Yao",
+              "position": "Defense",
+              "school": "Monta Vista",
+              "slug": "monta-vista",
+              "year": 11
+            }
+          ]
+        }
+      },
+      "division": "el-camino",
+      "label": "El Camino",
+      "standings": {
+        "jv": [
+          {
+            "l": 0,
+            "leagueRecord": "10-0",
+            "name": "Mitty",
+            "overallRecord": null,
+            "place": 1,
+            "slug": "mitty",
+            "t": 0,
+            "w": 10
+          },
+          {
+            "l": 2,
+            "leagueRecord": "8-2",
+            "name": "Los Gatos",
+            "overallRecord": null,
+            "place": 2,
+            "slug": "los-gatos",
+            "t": 0,
+            "w": 8
+          },
+          {
+            "l": 4,
+            "leagueRecord": "4-4",
+            "name": "Palo Alto",
+            "overallRecord": null,
+            "place": 3,
+            "slug": "palo-alto",
+            "t": 0,
+            "w": 4
+          },
+          {
+            "l": 5,
+            "leagueRecord": "4-5",
+            "name": "Santa Clara",
+            "overallRecord": null,
+            "place": 4,
+            "slug": "santa-clara",
+            "t": 0,
+            "w": 4
+          },
+          {
+            "l": 8,
+            "leagueRecord": "1-8-1",
+            "name": "Lynbrook",
+            "overallRecord": null,
+            "place": 5,
+            "slug": "lynbrook",
+            "t": 1,
+            "w": 1
+          },
+          {
+            "l": 9,
+            "leagueRecord": "0-9-1",
+            "name": "Monta Vista",
+            "overallRecord": null,
+            "place": 6,
+            "slug": "monta-vista",
+            "t": 1,
+            "w": 0
+          }
+        ],
+        "varsity": [
+          {
+            "l": 0,
+            "leagueRecord": "14-0",
+            "name": "Los Gatos",
+            "overallRecord": null,
+            "place": 1,
+            "slug": "los-gatos",
+            "t": 0,
+            "w": 14
+          },
+          {
+            "l": 2,
+            "leagueRecord": "11-2-1",
+            "name": "Mitty",
+            "overallRecord": null,
+            "place": 2,
+            "slug": "mitty",
+            "t": 1,
+            "w": 11
+          },
+          {
+            "l": 5,
+            "leagueRecord": "8-5-1",
+            "name": "Palo Alto",
+            "overallRecord": null,
+            "place": 3,
+            "slug": "palo-alto",
+            "t": 1,
+            "w": 8
+          },
+          {
+            "l": 5,
+            "leagueRecord": "7-5-2",
+            "name": "Saratoga",
+            "overallRecord": null,
+            "place": 4,
+            "slug": "saratoga",
+            "t": 2,
+            "w": 7
+          },
+          {
+            "l": 6,
+            "leagueRecord": "7-6-1",
+            "name": "Presentation",
+            "overallRecord": null,
+            "place": 5,
+            "slug": "presentation",
+            "t": 1,
+            "w": 7
+          },
+          {
+            "l": 9,
+            "leagueRecord": "4-9-1",
+            "name": "Santa Clara",
+            "overallRecord": null,
+            "place": 6,
+            "slug": "santa-clara",
+            "t": 1,
+            "w": 4
+          },
+          {
+            "l": 13,
+            "leagueRecord": "1-13",
+            "name": "Lynbrook",
+            "overallRecord": null,
+            "place": 7,
+            "slug": "lynbrook",
+            "t": 0,
+            "w": 1
+          },
+          {
+            "l": 13,
+            "leagueRecord": "1-13",
+            "name": "Monta Vista",
+            "overallRecord": null,
+            "place": 8,
+            "slug": "monta-vista",
+            "t": 0,
+            "w": 1
+          }
+        ]
+      }
+    }
+  ],
+  "league": "Santa Clara Valley Athletic League",
+  "provenance": {
+    "allLeaguePdf": "https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf",
+    "builtBy": "scripts/build-history.ts",
+    "extraction": "pdftotext -layout",
+    "notes": [
+      "Rows are in the PDF's own \"SCHOOL by finish\" order. We do not recompute a ranking: the PDF carries no game-level data.",
+      "The PDF's \"Overall record\" column is EMPTY in the 2025-26 file, so every overallRecord is null.",
+      "No points column: the 3-points-a-win system is only assumed for 2025-26 (SCVAL By-Laws revision history), and the PDF prints W-L-T alone.",
+      "JV membership differs from varsity: De Anza JV has 6 teams (no Valley Christian, no Wilcox) and El Camino JV has 6 (no Saratoga, no Presentation).",
+      "De Anza varsity had SEVEN teams in 2025-26 — Wilcox is new to the 2026-27 grid.",
+      "School spellings are the PDFs' own and are inconsistent even within one file (\"St Ignatius\" in the awards block, \"Saint Ignatius\" in the team table). `slug` is the join key.",
+      "Overall-award values are stored verbatim: De Anza writes \"School- Player\", El Camino writes \"Player School Year\" and \"Player, Position, School\". Splitting all three shapes would mean guessing."
+    ],
+    "source": "scval-pdf",
+    "standingsPdf": "https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf"
+  },
+  "season": "2025-26",
+  "sport": "Girls Field Hockey"
+}

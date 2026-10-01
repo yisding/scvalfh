@@ -1,0 +1,229 @@
+{
+  "contentHash": "13b50d5d521a5ac6f66948d7f8e808389ce08bbe106ea1f226ebd9d9f09582ba",
+  "counts": {
+    "finals": 86,
+    "games": 158,
+    "leagueGames": 96,
+    "mismatches": 0,
+    "pending": 1,
+    "teams": 16
+  },
+  "crossCheck": {
+    "agreements": 24,
+    "compared": 29,
+    "conflicts": 1,
+    "sbliveOnlyScored": 0
+  },
+  "fetchedAt": "2026-09-30T07:47:24.193Z",
+  "officialFixturesUnmatched": 16,
+  "officialStandingsPdfUrl": null,
+  "sources": [
+    {
+      "label": "season bootstrap",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "de-anza league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "de-anza reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino reported standings",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "st-ignatius schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "los-altos schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "saint-francis schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "valley-christian schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "cupertino schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "fremont schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "los-gatos schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "homestead schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "mitty schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "presentation schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "palo-alto schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "santa-clara schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "monta-vista schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "lynbrook schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "saratoga schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "wilcox schedule",
+      "rowCount": null,
+      "status": "skipped"
+    },
+    {
+      "label": "de-anza official schedule PDF",
+      "rowCount": 56,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino official schedule PDF",
+      "rowCount": 56,
+      "status": "ok"
+    },
+    {
+      "label": "scval standings index",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-16",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-17",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-18",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-19",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-21",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-22",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-23",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-24",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-25",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-28",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-29",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-09-30",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "palo-alto school calendar",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "los-gatos school calendar",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "ccs calendar",
+      "rowCount": null,
+      "status": "skipped"
+    },
+    {
+      "label": "ccs bracket",
+      "rowCount": null,
+      "status": "skipped"
+    }
+  ],
+  "today": "2026-09-30",
+  "warnings": 14,
+  "window": {
+    "firstGame": "2026-08-24T16:00:00",
+    "lastGame": "2026-10-28T18:00:00",
+    "lastLeagueGame": "2026-10-28T18:00:00"
+  }
+}

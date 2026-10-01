@@ -1,0 +1,147 @@
+# The build gate: the four checks every change has to pass, plus the accessibility pass that
+# DESIGN §10.9 asks for and that a headless browser is needed to run.
+#
+# This is deliberately separate from update-data.yml, which refreshes data/snapshot.json twice a
+# day and runs only `pnpm test` on the snapshot it just wrote. That job must stay narrow — it
+# commits to the default branch — while this one must fail loudly on anything a human changed.
+#
+# The a11y job runs axe-core against the real production build over one page of every route
+# family, in both themes, and fails on a serious or critical violation. It is the automatable
+# part of §10.9; the grayscale and forced-colors comparisons in (b) and (c) are still done by eye.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer commit on the same ref makes the in-flight run pointless; PR runs are cancelled, and
+# pushes to main are not, so main keeps a complete history of what passed.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      # SCVAL_BUILD_AT pins the instant the "stale snapshot" warning is measured against
+      # (components/layout/build-instant.ts), so two builds of one commit are byte-identical.
+      - name: Build
+        run: pnpm build
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      # Every route is prerendered from the snapshot, so a dynamic route here means something
+      # lost its generateStaticParams — the site would start rendering on demand.
+      - name: Assert every route is static
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("fs");
+            const pages = ["index", "about", "standings", "schedule", "playoffs", "teams", "history/2025-26"];
+            const missing = pages.filter((p) => !fs.existsSync(`.next/server/app/${p}.html`));
+            if (missing.length) throw new Error("not prerendered: " + missing.join(", "));
+            const count = (dir) => fs.readdirSync(dir, { recursive: true }).filter((f) => f.endsWith(".html")).length;
+            const games = count(".next/server/app/game");
+            const dates = count(".next/server/app/scores");
+            const teams = count(".next/server/app/teams");
+            console.log(`prerendered: ${games} game pages, ${dates} date pages, ${teams} team pages`);
+            if (games < 100 || dates < 30 || teams < 16) throw new Error("a generateStaticParams route came back short");
+          '
+
+      - name: Upload the build
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: .next
+          retention-days: 3
+          include-hidden-files: true
+
+  a11y:
+    needs: gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download the build
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next
+
+      # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
+      # BUILD-BRIEF's no-new-dependency rule is about what ships.
+      - name: Install axe-core and Chromium
+        run: |
+          set -euo pipefail
+          npm init -y --scope=@ci >/dev/null 2>&1 || true
+          npm install --no-save --no-audit --no-fund axe-core playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start the production server
+        run: |
+          set -euo pipefail
+          pnpm exec next start -p 3117 &
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3117/; then echo "up"; exit 0; fi
+            sleep 1
+          done
+          echo "server did not come up"; exit 1
+
+      - name: axe (serious and critical only)
+        run: node scripts/a11y-axe.mjs

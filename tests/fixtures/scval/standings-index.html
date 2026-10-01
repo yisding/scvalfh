@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<!-- this is the Standings page -->
+<html lang="en">
+	<head>
+	<title>Standings</title>
+		<meta charset="utf-8">
+		<link href="http://scval.com/test/wrk/main/StyleSheet.css" rel="stylesheet" />
+<style>
+
+	header {
+		background-image: url(../images/SCVALBackground.gif);
+		background-repeat: no-repeat;
+		width: 1250px;
+		height: 243px;
+		padding-bottom: 0em;
+	}
+
+	div.statement {
+		width: 46%;
+		float: right;
+		color: blue;
+		font-size: 100%;
+	}
+
+	h3 {
+		text-decoration: underline;
+		font-style: italic;
+	}
+
+	nav{
+		padding-top: 0em;
+		width: 93%;
+	}
+
+	ul.ticker{
+		width: 93%;
+	}
+
+	ul.standings {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		background-color: #555;
+}
+
+
+</style>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js "></script>
+</head>
+<header>
+	<div class="statement">
+		<h3>
+			SCVAL Belief Statement for the Student/Athlete
+		</h3>
+		<p>
+			<em>
+				Athletic participation is in place to enrich the mental, physical and emotional well-being of all student/athletes by providing competitive opportunities through which the lifelong values of sportsmanship, individual effort, teamwork, dedication, integrity, and total commitment are emphasized.<p>
+			<em>
+		</p>
+	</div>
+</header>
+	<nav>
+		<ul>
+			<li class = "menu"><a href="../index.html">Home</a></li>
+			<li class = "menu"><a href="../leadership/index.html">Leadership</a></li>
+			<li class = "menu"><a href="../constitution/index.html">Constitution</a></li>
+			<li class="dropdown">
+				<a href="javascript:void(0)" class="dropbtn" onclick="myFunction()">Sports</a>
+				<div class="dropdown-content" id="myDropdown">
+				  <a href="../fallSports/Fall_index.html">Fall</a>
+				  <a href="../winterSports/Winter_index.html">Winter</a>
+				  <a href="../springSports/Spring_index.html">Spring</a>
+				</div>
+			</li>
+			<li class = "menu"><a href="../standings/index.html">Standings</a></li>
+			<li class = "menu"><a href="../history/index.html">History</a></li>
+			<li class = "menu"><a href="../documents/index.html">Documents</a></li>
+			<li class = "menu"><a href="../openings/index.html">Openings</a></li>
+	</ul>
+	</nav>
+
+<script>
+/* When the user clicks on the button, toggle between hiding and showing the dropdown content */
+
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(e) {
+  if (!e.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var d = 0; d < dropdowns.length; d++) {
+      var openDropdown = dropdowns[d];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+<div id="content">
+  <h1>2025-2026 Awards and Accomplishments</h1>
+<div>
+<table id="schedules" width="100%">
+	<tr>
+		<td><h2>Fall 2025</h2></td>
+	</tr>
+	<tr>
+		<th scope="col">Standings</th>
+		<th scope="col">All League</th>
+		<th scope="col">Sportsmanship</a></th>
+		<th scope="col">Coach of the Year</th>
+	</tr>
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 DA Cross Country standings.pdf">Cross Country</a> (De Anza)<br>
+			<a href="SCVAL 2025-26 EC Cross Coutry standings.pdf">Cross Country</a> (El Camino)
+			</td>
+		<td>De Anza: <br>
+			<a href="SCVAL 2025-26 Cross Country DA V.pdf">Varsity</a> &nbsp; 
+			<a href="SCVAL 2025-26 Cross Country DA JV.pdf">JV</a>
+			<br><br>El Camino:<br>
+			<a href="SCVAL 2025-26 Cross Country EC V.pdf">Varsity</a> &nbsp; 
+			<a href="SCVAL 2025-26 Cross Country EC JV.pdf">&nbsp; JV</a>			
+		</td>
+			<td>Monta Vista<br>Gunn</td>
+			<td>Bernie Ramos (Lynbrook)<br>Johnathan Hubbs (Mtn View)</td>
+	</tr>
+<!--	
+	<tr>
+		<td>All League:
+			<a href="22-23 SCVAL Cross Country Standings.pdf">Cross Country</a> (girls)</td>
+			<a href="22-23 SCVAL Girls' Cross Country DA-EC all league.pdf">All</a>					
+		</td>
+
+		<td></td>
+		<td></td>
+-->
+	</tr> 
+	
+	<tr>
+		<td><a href="2025-26 Field Hockey standings.pdf">Field Hockey</a><br></td>
+		
+		<td>
+			<a href="SCVAL 2025-26 Field Hockey all league.pdf">All League</a> &nbsp; 
+		</td>
+
+			<td>Valley Christian<br>Santa Clara</td>
+			<td>Michelle Van de Braak (St. Ignatius)<br>Henry Reyes (Los Gatos)</td>		 
+	</tr>
+	
+	<tr bgcolor="#c5d2f7">
+	<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<!--		<td><a href="SCVAL.PAL 23-24 Varsity Football Standings.pdf"></a>Football</td>
+		<td><a href="https://www.smcoe.org/assets/files/About_FIL/Peninsula%20Athletic%20League_FIL/All%20League%20Teams_FIL/footballeague">All</a>
+			<a href="21-22 SCVAL 1 Football DA Frosh-soph.pdf">FS</a>
+			<br>
+			El Camino:
+			<a href="22-23 SCVAL Football EC all League.pdf">Var</a>
+			<a href="21-22 SCVAL 1 Football EC Frosh-soph.pdf">FS</a>
+		</td>
+		<td>Wilcox<br>Mtn. View</td>
+	<td>Dante Perez(Kings Academy)<br>Nick Lotti (Terra Nova)</td>
+</td>
+	</tr>
+-->	 
+
+	<tr>
+		<td><a href="2025-26 Girls Flag football standings.pdf">Flag Football</a><br></td>
+		
+		<td>De Anza:
+			<a href="SCVAL 2025-26 G DA Flag Football All-league.pdf">Varsity</a><br>
+			El Camino:
+			<a href="SCVAL 2025-26 G EC Flag Football  All-league.pdf">Varsity</a>
+		</td>
+			<td>Los Altos<br>Monta Vista</td>
+			<td>Jaye Reinman (Los Gatos)<br>David Sciplin (Monta Vista)</td>		 
+	</tr>
+	
+	
+	
+	
+	
+	
+	
+
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 Girls' Golf standings.pdf">Golf</a> (girls)</td>
+		<!--21-22 SCVAL 1 Girls' Golf top ten.pdf-->
+		<td>De Anza:
+			<a href="SCVAL 2025-26 Girls Golf All League.pdf">Varsity</a>
+		<!--	<br>
+			Golf Finals:
+			<a href="22-23 SCVAL Girls' Golf Finals.pdf">Var</a> -->
+		</td>
+
+		<td>Milpitas<br>Santa Clara</td>
+		<td>Ken Gan (Monta Vista) <br>Aaron Eeg (Cupertino)</td>
+
+	</tr>
+	<tr>
+
+		<td><a href="SCVAL 2025-26 Girls' Tennis standings.pdf">Tennis</a> (girls)</td>
+		<td>All League:
+			<a href="SCVAL 2025-26 Girls' Tennis All League.pdf">Varsity</a>
+		</td>
+		<td>Los Gatos<br>Wilcox</td>
+		<td>Justin Stenger (Los Gatos)<br>Florin Marcia (Saratoga)</td>
+	</tr>
+	
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-25 Volleyball Girls' standings.pdf">Volleyball</a> (girls)</td>
+		<td>
+			De Anza: <a href="2025-26 SCVAL All League GVB DeAnza Varsity.pdf">Varsity</a>
+			&nbsp; <a href="2025-26 SCVAL All-league GVB DeAnza JV.pdf">JV</a><br>
+			El Camino: <a href="2025-26 SCVAL All-league GVB El Camino Varsity.pdf">Varsity</a>
+			&nbsp; <a href="2025-26 SCVAL All-league GVB El Camino JV.pdf">JV</a><br>
+			
+		</td>
+		<td>Los Gatos<br>Santa Clara</td>
+		<td>Peter Kim (Los Altos)<br>Ed Mattson (Cupertino)</td>
+	</tr> 
+
+	
+	<tr>
+		<td><a href="2025-26 Boys' Water polo standings.pdf">Water Polo (boys)</a></td>
+		<td>De Anza:
+			<a href="SCVAL 2025-26 Boys Water Polo V DA_revDec10.pdf">Varsity</a>
+			<a href="SCVAL 2025-26 Boys' Water Polo JV  DA.pdf">FS</a>			
+			<br>
+			El Camino:
+			<a href="SCVAL 2025-26 Boys' EC V Water Polo.pdf">Varsity</a>
+			<a href="SCVAL 2025-26 Boys' EC JV Water Polo.pdf">FS</a>
+		</td>
+		<td>Palo Alto<br>Monta Vista</td>
+		<td>Davor Koret (Los Gatos)<br>Kyler Van Swol (Milpitas)</td>
+	</tr>
+	
+	<tr bgcolor="#c5d2f7">
+		<td><a href="2025-26 Girls' Water Polo Standings.pdf">Water Polo (girls)</a>
+		<td>De Anza:
+			<a href="SCVAL 2025-26 Girls' Water Polo V DA all league.pdf">Varsity</a> &nbsp 
+			<a href="SCVAL 2025-26 Girls' Water Polo JV DA all league.pdf">JV</a>
+			<br>
+			El Camino:
+			<a href="SCVAL 2025-26 Girls' Water Polo V EC_rev1.pdf">Varsity</a> &nbsp 
+			<a href="SCVAL 2025-26 Girls' Water Polo JV EC.pdf">JV</a>
+		</td> 
+
+		<td>Castilleja<br>Homestead</td>
+		<td>Don Appleton (Los Gatos)<br>Mike Fleming (Homestead)</td></tr>
+
+
+
+<tr><td><h2>Winter 2025/2026</h2></td></tr>	
+<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 Boys' Basketball standings.pdf">Basketball (boys)</a></td>
+			<td>De Anza: 
+				<a href="25-26 SCVAL DA V Boys' All-league.pdf">Var</a>
+				<a href="2025-26 SCVAL DA JV Boys' BB all-league.pdf">JV</a>
+				<br>
+				El Camino:
+				<a href="25-26 El Camino Boys Varsity All League Basketball.pdf">Var</a>
+				<a href="25-26 SCVAL EC JV Boys' BasketballAll all League.pdf">JV</a>
+			</td>
+			<td>Monta Vista<br>MacDonald</td>
+			<td>Champ Wrencher (Milpitas)<br>Branden Williams (Gunn)</td>
+	</tr>
+	<tr>
+		<td><a href="SCVAL 2025-26 Girls' Basketball Standings.pdf">Basketball (girls)</a></td>
+
+			<td>De Anza: 
+				<a href="25-26 V Girls' DA basketball.pdf">Var</a>
+				<a href="25-26 SCVAL DA JV Girls' BB All League.pdf">JV</a>
+				<br>
+				El Camino:
+				<a href="25-26 SCVAL EC V Girls' BB all league.pdf">Var</a>
+				<a href="25-26 SCVAL EC Girls Basketball all league.pdf">JV</a>
+			</td>
+			<td>Gunn<br>MacDonald</td>
+			<td>Miguel Castillo (Fremont)<br>Megan Fong (Homestead)</td>
+	</tr>
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 Boys' Soccer standings.pdf">Soccer (boys)</a></td>
+			<td>De Anza:
+				<a href="2025-26 SCVAL DA Boys All League_mar17.pdf">All</a> &nbsp;
+		<!--	<a href="24-25 SCVAL Boys Soccer DA JV all league_mar18.pdf">FS</a> -->
+				<br>
+				El Camino:
+				<a href="SCVAL All League - El Camino Boys Soccer 2025-26 SY.pdf">All</a> &nbsp;
+		<!--	<a href="24-25 SCVAL Boys Soccer EC JV all league_mar18.pdf">FS</a> -->
+			</td>
+			<td>Saratoga<br>Lynbrook</td>
+			<td>Roberto Magellan (Los Altos)<br>Eibad Ghori(MacDonald)</td>
+	</tr>
+	<tr>
+		<td><a href="SCVAL 2025-26 Girls' Soccer Standings.pdf">Soccer (girls)</a></td>
+			<td>De Anza:
+			<a href="2025-26 SCVAL DA Girls' all LeagueAll League 2026.pdf">All</a> &nbsp;
+		<!--<a href="24-25 SCVAL Girls Soccer DA JV all league_mar18.pdf">JV</a> -->
+			<br>
+				El Camino:
+			<a href="2025-26 SCVAL EC Girls all League.pdf">All</a> &nbsp;
+	<!--	<a href="24-25 SCVAL Girls Soccer EC JV all league_mar26.pdf">JV</a> -->
+			</td>
+			<td>Fremont<br>Lynbrook</td>
+			<td>Lisa Mitchell(Los Gatos)<br>Adam Clarke (Fremont)</td>
+</tr>
+	
+<tr bgcolor="#c5d2f7">
+		<td><a href="25-26 SCVAL Wrestling Standings.pdf"></a>Wrestling
+		</td>
+			<td>All League: <a href="25-26 SCVAL DA Wrestling Boys all league.pdf">boys</a> &nbsp; 
+			<a href="25-26 SCVAL DA Wrestling  Girls'all  league.pdf">girls</a>
+			</td>
+
+			<td>Lynbrook<br>Cupertino</td>
+			<td>Eric Duus (Fremont) / G.Nhiem Nguyen(Mt. View)<br>Tyler Calderon (Los Altos)</td>
+	</tr>
+
+
+
+
+
+<tr><td><h2>Spring 2026</h2></td></tr>
+
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 Badminton standings.pdf">Badminton</a></td>
+			<td><a href="SCVAL 2025-26 Badminton All-league.pdf">All League</a></td>
+			<td>Wilcox<br>Fremont</td>
+			<td>Nat Nguyen (Lynbrook)<br>Marc Tsukakoshi (Gunn)</td>
+
+	</tr>
+	
+	<tr><td><a href="2025-26 Baseball standings.pdf">Baseball</a></td>
+			<td>
+				<a href="25-26 SCVAL V DA Baseball all league.pdf">De Anza</a>
+				<br>
+				<a href="25-26 SCVAL EC V Baseball all league.pdf">El Camino</a>
+			</td>
+
+			<td>Santa Clara<br>Monta Vista</td>
+			<td>Mike Minkel (Los Gatos)<br>Joe Garvin (Monta Vists)</td>
+	</tr>
+	
+	
+	<tr bgcolor="#c5d2f7"><td><a href="2025-26 SCVAL Boys' Golf standings.pdf">Golf (boys)</a>
+			<!--<a href="22-23 SCVAL Boys Golf Finals.pdf">Finals</td>-->
+			<td>
+				<a href="25-26 SCVAL Boys' Golf all league.pdf">All League</a>
+			</td>
+	
+			<td>Los Gatos<br>MacDonald</td>
+			<td>Dave Leftivich (Gunn)<br>Vito Cangemi (Milpitas)</td>
+	</tr>
+	
+	
+	<tr>
+		<td ><a href="2025-26 Gymnastics stanings.pdf">Gymnastics</a></td>
+	
+			</td>
+			<td><a href="25-26 Gymnastics V All-league.pdf">Varsity</a>
+			 &nbsp; &nbsp;<a href="25-26 JV All-league.pdf">JV</a><br>
+		<!--	  <a href="21-22 SCVAL  Gymnastics Floor all league.pdf">Floor</a><br>
+		&nbsp; &nbsp; <a href="21-22 SCVAL 3 Gymnastics Varsity Results Individual.pdf">Individual</a>
+			  <a href="21-22 SCVAL Gymnastics Vault all league.pdf">Vault</a><br>
+		-->	</td>
+		<td>Los Altos</td>
+		<td>Gary DeGuzman (Lynbrook)</td>
+	</tr>	
+
+	
+	<tr bgcolor="#c5d2f7">
+		<td><a href="25-26 SCVAL Girls' Lacrosse all League.pdf">Lacrosse (girls)</a></td>
+			<td><a href="25-26 SCVAL Girls' Lacrosse all League.pdf">All League</a></td>
+			<td>Mountain View</td>
+			<td>Andrea Davis (Gunn)</td>
+	</tr>	
+	
+	
+	<tr ><td><a href="2025-26 SCVAL DA EC V Softball.pdf">Softball<a> &nbsp <a href="2025-26 SCVAL JV DA EC Softball standings.pdf"</a>(jv)</td>
+
+			<td>De Anza: <a href="25-26 SCVAL DA Softball all League.pdf">var</a> 
+			<br>
+			El Camino: <a href="25-26 SCVAL EC Softball All League.pdf">var</a>
+			<br>
+			JV: <a href="25-26 SCVAL JV DA EC softball All league.pdf">both</a>
+		</td>
+		
+			<td>Saratoga<br>Fremont</td>
+			<td>Randy Frey (Los Gatos)<br>Hector Zuno (Fremont)</td>
+	</tr>
+
+	
+	<tr bgcolor="#c5d2f7" >
+		<td>Swimming:</td>
+<!--	<td>
+         &nbsp; &nbsp; <a href="2025 SCVAL De Anza Swimming League Results - Finals.pdf"> De Anza </a>&nbsp;&nbsp;
+		<a href="2025 SCVAL EC Swimming League Results.pdf"> El Camino </a>
+
+		<td>
+		De Anza:<br>
+
+			&nbsp;&nbsp;&nbsp;<a href="SCVAL DA Finals Results.pdf">League Meet</a>&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;<a href="22-23 SCVAL Boys' Swimming V DA All-league.pdf">Var boys</a><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<a href="21-22 SCVAL 3 swimming DA all league.pdf">JV girls</a>&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;<a href="21-22 SCVAL 3 swimming DA all league.pdf">FS boys</a><br>
+			El Camino:<br>
+			&nbsp;&nbsp;&nbsp;<a href="SCVAL EL CAMINO SWIMMING AND DIVING RESULTS Girls'2023-2024.pdf">Var girls</a> &nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;<a href="SCVAL EL CAMINO SWIMMING AND DIVING RESULTS BOYS 2023-2024.pdf">Var boys</a><br>
+			&nbsp;&nbsp;&nbsp;&nbsp; <a href="22-23 SCVAL Girls' Swimming JV DA All-league.pdf">JV girls</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="22-23 SCVAL Boys' Swimming FS DA All-league.pdf">FS boys</a><br>
+		</td>
+-->
+	<td> </td>
+
+		<td>Los Altos<br>Cupertino</td>
+		<td>Danny Dye (Palo Alto)<br>Kyler Van Swol (Milpitas)</td>
+	</tr>	
+	
+	<tr>
+		<td><a href="SCVAL 2025-26 Boys' Tennis Standings.pdf">Tennis (boys)</a></td>
+			<td>
+				<a href="SCVAL 2025-26 Boys' Tennis All-league standings.pdf">All League</a>
+			</td>
+			<td>Cupertino<br>Los Gatos</td>
+			<td>Florin Marica (Saratoga)<br>Julian Ong (Mountain View)</td>	
+	</tr>
+	
+	
+	<tr bgcolor="#c5d2f7">
+		<td>Track&nbsp;
+			&nbsp;<a href="SCVAL2025-26 DA Track Standings.pdf">De Anza</a>&nbsp; 
+			&nbsp;<a href="SCVAL 2025-26 EC Track standings.pdf">El Camino</a>
+		</td>
+		<td><a href="SCVAL De Anza Track ALL League Champs 2026 Finals Results.pdf">Final Results</a></td>
+
+			<td>Lynbrook<br>Santa Clara</td>
+			<td>Bernie Ramos (Lynbrook)<br>Kirk Flatow (Monta Vista)<br></td>
+	</tr>
+
+	
+	<tr bgcolor="#c5d2f7">
+		<td><a href="SCVAL 2025-26 Boys' Volleyball standings.doc">Volleyball (boys)</a></td>
+			<td>
+				De Anza: <a href="SCVAL 2025-26 DA  V Boys' Volleyball all league.pdf"> var</a> &nbsp;&nbsp;<a href="SCVAL 2025-26 DA JV Boys' Volleyball all league.pdf">jv</a>
+			<br>
+				El Camino: <a href="SCVAL 2025-26 EC V Boys' Volleyball all league.pdf"> var</a> &nbsp;&nbsp;<a href="SCVAL 2025-26 EC JV BVB All-league template.pdf">jv</a>
+			<br>
+			Foothill: <a href="2025-26 SCVAL FH V BVB all league.pdf"> var</a> &nbsp;&nbsp;<a href="2025-26 SCVAL FH JV BVB all league.pdf">jv</a>
+			<br>
+		</td>
+			<td>Los Gatos<br>Eastside College Prep<br>Fremont</td>
+			<td>Jackson Duper (Harker)<br>Tiffany Anderson (Wilcox)<br>Naomi Lacuzong (Milpitas)</td>
+	</tr>
+	
+</table>
+</div>
+ 
+<br>
+	
+
+<a href="Team Sportmanship 2025-26.pdf">25-26 Team Sportsmanship Winners</a><br>
+<a href="25-26 SCVAL Coach of the Year.pdf">25-26 Coach Of the Year Winners</a><br>
+
+<br>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+import { notFound } from 'next/navigation';
+import { ImageResponse } from 'next/og';
+
+import {
+  buildTeamPageView,
+  gameHeadline,
+  nextOfficialFixture,
+  officialFixtureHeadline,
+} from '@/components/teams/team-view';
+import { getFetchedAt, getTeamSlugs } from '@/lib/data';
+import {
+  EM_DASH,
+  formatStamp,
+  ordinal,
+  recordString,
+  signedGd,
+  streakString,
+} from '@/lib/format';
+
+/**
+ * The per-team OG card (DESIGN §1.1, §3.7).
+ *
+ * TEXT ONLY, like the root card: no logo file, no mascot image, no third-party request. The one
+ * school-color concession is the monogram square, drawn with the cron's measured `onPrimary` ink —
+ * the same guardrail TeamMonogram uses, never a hue picked by eye (DESIGN §7.1, §12.4).
+ *
+ * The card carries the facts a link preview can usefully hold: place, league record, points, goals,
+ * streak, the last result and the next game. A team with no reported results says so instead of
+ * showing `0-0-0` — a shared link is the most damaging place to get the never-0-0 rule wrong
+ * (DESIGN §5.3). Both game lines come from `gameHeadline`, which is built on `describeGame`, so
+ * this image cannot disagree with the page it belongs to.
+ */
+/**
+ * `alt` is a static export, so it describes what every card CONTAINS rather than naming one team;
+ * the per-team fact is in the OG title that sits beside it. A per-team alt would need
+ * `generateImageMetadata`, which changes the image URL shape.
+ */
+export const alt =
+  'Team card: league record, division place, points, goals for and against, streak, last result and next game';
+export const size = { width: 1200, height: 630 };
+export const contentType = 'image/png';
+
+export function generateStaticParams() {
+  return getTeamSlugs().map((slug) => ({ slug }));
+}
+
+const INK = '#f2f5f8';
+const MUTED = '#aab4bf';
+const FAINT = '#919ba5';
+const RULE = '#3d444d';
+
+function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <div
+        style={{
+          display: 'flex',
+          fontSize: 20,
+          letterSpacing: 3,
+          textTransform: 'uppercase',
+          color: FAINT,
+        }}
+      >
+        {label}
+      </div>
+      <div style={{ display: 'flex', marginTop: 8, fontSize: 38, fontWeight: 600, color: INK }}>
+        {value}
+      </div>
+      {note ? (
+        <div style={{ display: 'flex', marginTop: 4, fontSize: 20, color: MUTED }}>{note}</div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * `dynamicParams` cannot reach a metadata route — Next's metadata-route loader filters it out of
+ * the re-exported config — so an unknown param still reaches this handler. It answers the way the
+ * page beside it does, with a 404: rendering a generic card instead handed crawlers an unbounded
+ * set of 200-OK image URLs whose pages do not exist.
+ */
+export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
+  const { slug } = await params;
+  const view = buildTeamPageView(slug);
+  if (!view) notFound();
+
+  const { team, standing, hasResults, last, next } = view;
+  const known = hasResults && standing ? standing : null;
+  const record = known ? recordString(known.computed) : EM_DASH;
+  const place = known ? `${ordinal(known.computed.place)} of ${view.divisionSize}` : EM_DASH;
+  // A shared place is a real Article VI §7 outcome, so it is a note under the figure rather than a
+  // parenthetical that wraps the stat row onto two lines.
+  const placeNote = known?.tiebreak.shared ? 'tied' : undefined;
+  const points = known ? `${known.computed.pts}` : EM_DASH;
+  const goals = known ? `${known.computed.gf} / ${known.computed.ga}` : EM_DASH;
+  const diff = known ? signedGd(known.computed.gd) : EM_DASH;
+  const streak = known ? streakString(known.computed.streak) : EM_DASH;
+  const lastLine = last ? gameHeadline(last, team) : 'No results reported';
+  const upcomingFixture = next ? null : nextOfficialFixture(view.officialFixtures, view.today);
+  const nextLine = next
+    ? gameHeadline(next, team)
+    : upcomingFixture
+      ? officialFixtureHeadline(upcomingFixture, team)
+      : 'No games left on the published schedule';
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: 72,
+          background: '#0b0d10',
+          color: INK,
+          fontFamily: 'sans-serif',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 118,
+              height: 118,
+              borderRadius: 16,
+              background: `#${team.colors.primary}`,
+              color: team.colors.onPrimary,
+              border: `2px solid ${RULE}`,
+              fontSize: 50,
+              fontWeight: 600,
+            }}
+          >
+            {team.abbr}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', fontSize: 58, fontWeight: 600 }}>{team.name}</div>
+            <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: MUTED }}>
+              {team.mascot} &middot; {view.divisionLabel} &middot; {team.city}, CA
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${RULE}`, paddingTop: 24 }}>
+          <Stat label="League" value={record} />
+          <Stat label="Place" value={place} note={placeNote} />
+          <Stat label="Pts" value={points} />
+          <Stat label="Goals F / A" value={goals} />
+          <Stat label="Diff" value={diff} />
+          <Stat label="Streak" value={streak} />
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', fontSize: 30, color: INK }}>Last: {lastLine}</div>
+          <div style={{ display: 'flex', fontSize: 30, color: MUTED }}>Next: {nextLine}</div>
+        </div>
+
+        <div style={{ display: 'flex', fontSize: 22, color: FAINT }}>
+          As of {formatStamp(getFetchedAt())} &middot; league games only &middot; unofficial
+          &middot; data from MaxPreps
+        </div>
+      </div>
+    ),
+    { ...size },
+  );
+}

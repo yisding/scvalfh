@@ -1,0 +1,163 @@
+# Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then commit
+# data/snapshot.json only if its CONTENT actually changed.
+#
+# Schedule (SPEC §5.2 — one to two runs a day, never more):
+#   0 5  UTC = 10:00 PM Pacific during PDT — catches the evening's results once coaches enter them
+#   0 14 UTC =  7:00 AM Pacific during PDT — catches everything entered overnight
+# The month field is UTC while the script's season guard is PACIFIC, and Pacific is BEHIND UTC
+# (UTC-7/-8) — never ahead. So the disagreement is one-sided: it needs a month at the DECEMBER end,
+# where the Nov 30 evening run is 2026-12-01T05:00Z, and none at the August end, where the earliest
+# Pacific-August instant (Aug 1 00:00 PDT) is already 2026-08-01T07:00Z. A UTC-July fire is always
+# Pacific July, which `inSeasonWindow` (scripts/fetch-data.ts, Pacific months 8-11) rejects every
+# time — 62 runs a season that each did a checkout, an apt install, `pnpm install --frozen-lockfile`
+# and the whole test suite before correctly writing nothing. Hence 8-12, with the script's own
+# Aug 1 – Nov 30 Pacific guard still the single source of truth for the window: an out-of-season
+# cron fires, the script exits 0 and writes nothing.
+#
+# The push deliberately does NOT carry [skip ci]: the commit is what triggers the hosting
+# provider's rebuild, which is the entire point of the job.
+
+name: update-data
+
+on:
+  schedule:
+    - cron: '0 14 * 8-12 *'
+    - cron: '0 5 * 8-12 *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even outside the Aug 1 - Nov 30 season window'
+        type: boolean
+        default: false
+      skip_sblive:
+        description: 'Skip the SBLive score cross-check'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Never let two refreshes race on the same branch; a queued run would only rewrite what the
+# in-flight one is about to commit.
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          # A shallow clone is enough; we only ever add one commit on top of the default branch.
+          fetch-depth: 1
+
+      # pdftotext, for the two official SCVAL schedule PDFs. Without it lib/sources/scval-pdf.ts
+      # reports SourceStatus 'skipped' rather than failing and the previous run's fixtures are
+      # carried forward, so a bad apt mirror must NOT take the whole day's score refresh with it.
+      - name: Install poppler-utils (pdftotext)
+        continue-on-error: true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftotext -v
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      # Pinned to the version this repo is developed and tested on, so a CI-only Node difference
+      # cannot be the reason a snapshot fails to build.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch data
+        run: pnpm fetch-data ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '--force' || '' }} ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_sblive) && '--no-sblive' || '' }}
+
+      # The suite validates the snapshot that was just written: the schema invariants, the
+      # never-0-0 rule and the standings arithmetic. A bad snapshot must not be committed.
+      - name: Test
+        run: pnpm test
+
+      - name: Commit the snapshot if its content changed
+        id: commit
+        run: |
+          set -euo pipefail
+          # `git diff --quiet` on snapshot.json can never be quiet: the run's timestamp is written
+          # into the top-level `fetchedAt` AND into every game's provenance, so two runs over
+          # identical upstream data differ by ~370 lines of pure stamp. Committing that would push
+          # a no-op diff and trigger a hosting rebuild twice a day for nothing, and `git log` would
+          # stop telling anyone which refresh actually moved a score.
+          #
+          # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every
+          # `fetchedAt` stripped (lib/snapshot-schema.ts). That is what "changed" means here.
+          PREV="${RUNNER_TEMP:-/tmp}/previous-snapshot-meta.json"
+          git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || true
+          CHANGED=$(node -e '
+            const fs = require("node:fs");
+            const hashOf = (p) => {
+              try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
+              catch { return null; }
+            };
+            const next = hashOf("data/snapshot.meta.json");
+            const prev = hashOf(process.argv[1]);
+            // No hash on either side ⇒ treat it as changed rather than silently skipping.
+            process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
+          ' "$PREV")
+          if [ "$CHANGED" != "true" ]; then
+            echo "no snapshot change — only the run timestamp moved"
+            # Drop the timestamp-only churn so the working tree matches HEAD exactly.
+            git checkout -- data/snapshot.json data/snapshot.meta.json
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          SUMMARY=$(node -e '
+            const meta = require("./data/snapshot.meta.json");
+            // meta.today is the PACIFIC date; meta.fetchedAt is UTC and would read as tomorrow
+            // for the 10 PM Pacific run.
+            const day = meta.today ?? meta.fetchedAt.slice(0, 10);
+            const c = meta.counts;
+            process.stdout.write(`${day} (${c.games} games, ${c.finals} finals)`);
+          ')
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshot.json data/snapshot.meta.json
+          git commit -m "data: refresh snapshot ${SUMMARY}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Rebase-then-push so a commit landed by a human between checkout and push is not clobbered.
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-data"
+            echo ""
+            echo "- snapshot changed: \`${{ steps.commit.outputs.changed || 'false' }}\`"
+            if [ -f data/snapshot.meta.json ]; then
+              echo ""
+              echo '```json'
+              cat data/snapshot.meta.json
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

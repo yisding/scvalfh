@@ -1,0 +1,74 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Mascot Media//DigitalSuite Composite Schedule//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Palo Alto High School Athletics
+NAME:Palo Alto High School Athletics
+BEGIN:VEVENT
+UID:4836426@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20260929T230000Z
+DTEND:20260930T020000Z
+SUMMARY:Girls Varsity Field Hockey at Santa Clara High School
+DESCRIPTION:Girls Varsity Field Hockey at Santa Clara High School
+LOCATION:Santa Clara High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:4836427@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20261001T230000Z
+DTEND:20261002T020000Z
+SUMMARY:Girls Varsity Field Hockey vs Monta Vista High School
+DESCRIPTION:Girls Varsity Field Hockey vs Monta Vista High School
+LOCATION:Palo Alto High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:4836428@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20261005T230000Z
+DTEND:20261006T020000Z
+SUMMARY:Girls Varsity Field Hockey at Valley Christian High School
+DESCRIPTION:Girls Varsity Field Hockey at Valley Christian High School
+LOCATION:Valley Christian High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:4836429@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20261006T230000Z
+DTEND:20261007T020000Z
+SUMMARY:Girls Varsity Field Hockey vs Los Gatos High School
+DESCRIPTION:Girls Varsity Field Hockey vs Los Gatos High School
+LOCATION:Palo Alto High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:4836385@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20260930T002000Z
+DTEND:20260930T032000Z
+SUMMARY:Girls JV Field Hockey at Santa Clara High School
+DESCRIPTION:Girls JV Field Hockey at Santa Clara High School
+LOCATION:Santa Clara High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+BEGIN:VEVENT
+UID:4836386@mmboltapi.azurewebsites.net
+DTSTAMP:20260930T015859Z
+DTSTART:20261002T001500Z
+DTEND:20261002T031500Z
+SUMMARY:Girls JV Field Hockey vs Monta Vista High School
+DESCRIPTION:Girls JV Field Hockey vs Monta Vista High School
+LOCATION:Palo Alto High School
+URL:https://mmboltapi.azurewebsites.net/api/v2/events/androiddownload/2635290/0
+PRIORITY:3
+END:VEVENT
+END:VCALENDAR
