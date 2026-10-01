@@ -5,6 +5,15 @@ allowBuilds:
   # workerd (the Workers runtime, via @cloudflare/vite-plugin -> miniflare) runs `node install.js`
   # to check its platform binary; `pnpm preview:cloudflare` runs the Worker in it.
   workerd: true
+# The Workers target runs on pre-release Cloudflare tooling, pinned exactly in package.json:
+# @cloudflare/vite-plugin 2.0.0-beta.sha-ad79608dd (the `beta` dist-tag; the 1.x `latest` line is
+# wrangler-based and does not read cloudflare.config.ts) and cf 1.0.0-beta.6, what `vinext init
+# --platform=cloudflare` installs (@cloudflare/vite-plugin@beta, cf@latest). cf beta.6 is the
+# release built on the same internals as that plugin build (miniflare 5.20260926.0-alpha,
+# @cloudflare/config 0.20.0, build-output-utils 0.8.2, runtime-types 0.1.4); later cf betas move
+# all four, so bump the two together and re-run the Workers build, preview and `--dry-run` deploy.
+# cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile pins
+# the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
 # Ten vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
 # comments inside the two patches); drop each patch once upstream ships all of its fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
