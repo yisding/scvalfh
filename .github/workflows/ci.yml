@@ -236,6 +236,11 @@ jobs:
           npx playwright install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
 
+      # vite.config.ts inlines SCVAL_BUILD_AT into the build (define), so the 404s this server renders
+      # on request measure the snapshot's age against the same instant as every prerendered page
+      # whatever the server's environment says (README, "Deploy notes"); the smoke checks that they
+      # agree on the stale-snapshot notice. The pin is passed anyway so the step matches the build
+      # step, as a server that read it at run time would need.
       - name: Start the vinext server
         run: |
           set -euo pipefail
@@ -245,6 +250,8 @@ jobs:
             sleep 1
           done
           echo "server did not come up"; exit 1
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # What `next start` answers (the a11y job runs the same script against it): every page the
       # sitemap lists, the metadata routes and Route Handlers, with the next.config headers() cache
