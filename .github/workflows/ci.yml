@@ -8,6 +8,13 @@
 # The a11y job runs axe-core against the real production build over one page of every route
 # family, in both themes, and fails on a serious or critical violation. It is the automatable
 # part of §10.9; the grayscale and forced-colors comparisons in (b) and (c) are still done by eye.
+#
+# The vinext job builds the same app with vinext (Vite) instead of Next and serves it with
+# `vinext start`, the second toolchain package.json carries alongside Next. It proves what the
+# Next build proves — every route prerendered at build time — and then that the server answers
+# like `next start` does: status codes, content types, the next.config headers() cache rule,
+# immutable precompressed assets, the root not-found, ETags. Then it runs the same axe pass. It
+# runs beside `gates`, not after it, so a vinext regression is reported even when Next is red too.
 
 name: ci
 
@@ -145,3 +152,164 @@ jobs:
 
       - name: axe (serious and critical only)
         run: node scripts/a11y-axe.mjs
+
+  vinext:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+      # corepack shims installed for the runner's default Node are not guaranteed to still be on
+      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # package.json, so the pnpm version is still pinned by the repo.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
+      # which lists the gaps it closes). Without it the build below still succeeds, but pages
+      # revalidate after five minutes and the icons, OG images and Route Handlers render on
+      # every request — the assertions after it are what catch a patch that no longer takes effect.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Same pin as the Next build: the "stale snapshot" warning in the prerendered pages is
+      # measured against the commit, not the runner's clock (components/layout/build-instant.ts).
+      - name: Build with vinext
+        run: pnpm build:vinext
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      # The vinext counterpart of "Assert every route is static". vite.config.ts asks for every
+      # route to be prerendered; vinext records each one in vinext-prerender.json and writes the
+      # pages (.html) and the metadata routes and Route Handlers (.route) under prerendered-routes,
+      # which `vinext start` seeds its cache from. A skipped or errored route, or one with a
+      # revalidate lifetime, would be rendered on demand by the server instead.
+      - name: Assert every route is prerendered
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("fs");
+            const dir = "dist/server/prerendered-routes";
+            const { routes } = JSON.parse(fs.readFileSync("dist/server/vinext-prerender.json", "utf8"));
+            const notRendered = routes.filter((r) => r.status !== "rendered");
+            if (notRendered.length) throw new Error("not prerendered: " + notRendered.map((r) => `${r.route} (${r.status})`).join(", "));
+            const revalidating = routes.filter((r) => r.revalidate !== false);
+            if (revalidating.length) throw new Error("revalidates at runtime: " + revalidating.map((r) => `${r.route} (${r.revalidate})`).join(", "));
+            const pages = ["index", "about", "standings", "schedule", "playoffs", "teams", "history/2025-26"];
+            const metadata = ["icon", "apple-icon", "icon-192", "icon-512", "opengraph-image", "standings/opengraph-image",
+              "manifest.webmanifest", "sitemap.xml", "robots.txt"];
+            const missing = [
+              ...pages.map((p) => `${p}.html`).filter((f) => !fs.existsSync(`${dir}/${f}`)),
+              ...metadata.map((m) => `${m}.route`).filter((f) => !fs.existsSync(`${dir}/${f}`)),
+            ];
+            if (missing.length) throw new Error("not prerendered: " + missing.join(", "));
+            const count = (sub, test) => fs.readdirSync(`${dir}/${sub}`, { recursive: true }).filter(test).length;
+            const html = (f) => f.endsWith(".html");
+            const og = (f) => f.endsWith("/opengraph-image.route");
+            const games = count("game", html), dates = count("scores", html), teams = count("teams", html);
+            const gameCards = count("game", og), dateCards = count("scores", og), teamCards = count("teams", og);
+            console.log(`prerendered: ${routes.length} routes; ${games} game, ${dates} date, ${teams} team pages; ` +
+              `${gameCards} game, ${dateCards} date, ${teamCards} team OG images`);
+            if (games < 100 || dates < 30 || teams < 16) throw new Error("a generateStaticParams route came back short");
+            if (gameCards < 100 || dateCards < 30 || teamCards < 16) throw new Error("an opengraph-image below a dynamic segment came back short");
+          '
+
+      # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
+      # BUILD-BRIEF's no-new-dependency rule is about what ships. They go in a directory of their
+      # own, not the checkout: npm cannot install into the symlinked tree pnpm wrote (npm 10 and
+      # 11 both abort with "Cannot read properties of null (reading 'matches')"), and a reshaped
+      # node_modules could swap the patched vinext for a stock one under the server. The axe
+      # script resolves both packages with require(), which honours NODE_PATH.
+      - name: Install axe-core and Chromium
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/axe"
+          cd "$RUNNER_TEMP/axe"
+          npm init -y >/dev/null
+          npm install --no-save --no-audit --no-fund axe-core playwright
+          npx playwright install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
+
+      - name: Start the vinext server
+        run: |
+          set -euo pipefail
+          pnpm exec vinext start --port 3118 &
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3118/; then echo "up"; exit 0; fi
+            sleep 1
+          done
+          echo "server did not come up"; exit 1
+
+      # What `next start` answers, checked on one URL of every kind: pages and metadata routes
+      # carry the next.config headers() cache rule; hashed assets keep the immutable cache and
+      # are served precompressed; an unknown URL or param is a no-store 404 with the root
+      # not-found page; pages answer a revalidation with 304; and poweredByHeader stays off.
+      # Every mismatch is listed before the step fails.
+      - name: Smoke the vinext server
+        run: |
+          set -euo pipefail
+          base=http://127.0.0.1:3118
+          public='public, s-maxage=300, stale-while-revalidate=86400'
+          nostore='private, no-cache, no-store, max-age=0, must-revalidate'
+          immutable='public, max-age=31536000, immutable'
+          failed=0
+          tmp=$(mktemp -d)
+          header() { awk -v k="$1" 'tolower($0) ~ "^" k ":" { sub(/^[^:]*: */, ""); print; exit }' "$tmp/h"; }
+          fail() { echo "FAIL $1: $2"; failed=1; }
+          # expect PATH STATUS TYPE CACHE [curl args...] — TYPE is a prefix, so text/html matches
+          # "text/html; charset=utf-8"; the body is left in $tmp/b and the headers in $tmp/h.
+          expect() {
+            local path=$1 status=$2 type=$3 cache=$4; shift 4
+            curl -sS -o "$tmp/b" -D "$tmp/h" "$@" "$base$path"
+            tr -d '\r' < "$tmp/h" > "$tmp/h2" && mv "$tmp/h2" "$tmp/h"
+            local got; got=$(awk 'NR == 1 { print $2 }' "$tmp/h")
+            [ "$got" = "$status" ] || fail "$path" "status $got, expected $status"
+            [ -z "$type" ] || [[ "$(header content-type)" == "$type"* ]] || fail "$path" "content-type '$(header content-type)', expected $type"
+            [ -z "$cache" ] || [ "$(header cache-control)" = "$cache" ] || fail "$path" "cache-control '$(header cache-control)', expected '$cache'"
+            [ -z "$(header x-powered-by)" ] || fail "$path" "sends x-powered-by"
+            echo "$got $path"
+          }
+
+          for path in / /standings; do expect "$path" 200 text/html "$public"; done
+          # One page of each generateStaticParams family, whichever the sitemap lists first.
+          paths=$(curl -fsS "$base/sitemap.xml" | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g; s#^https?://[^/]+##' || true)
+          for family in /game/ /scores/ /teams/; do
+            path=$(grep -m1 "^$family" <<< "$paths" || true)
+            if [ -z "$path" ]; then fail /sitemap.xml "no $family URL"; else expect "$path" 200 text/html "$public"; fi
+          done
+          for path in /opengraph-image /icon /icon-192; do expect "$path" 200 image/png "$public"; done
+          expect /manifest.webmanifest 200 application/manifest+json "$public"
+          expect /sitemap.xml 200 application/xml "$public"
+          expect /robots.txt 200 text/plain "$public"
+
+          css=$(curl -fsS "$base/" | grep -oE '/_next/static/[^"]+\.css' | sed -n 1p || true)
+          if [ -z "$css" ]; then fail / "no /_next/static stylesheet in the HTML"; else
+            expect "$css" 200 text/css "$immutable" -H 'Accept-Encoding: gzip'
+            [ "$(header content-encoding)" = gzip ] || fail "$css" "content-encoding '$(header content-encoding)', expected gzip"
+          fi
+
+          for path in /no-such-page /game/not-a-real-id; do
+            expect "$path" 404 text/html "$nostore"
+            grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
+          done
+          expect /game/not-a-real-id/opengraph-image 404 '' ''
+
+          expect / 200 text/html "$public"
+          etag=$(header etag)
+          if [ -z "$etag" ]; then fail / "no ETag"; else expect / 304 '' '' -H "If-None-Match: $etag"; fi
+
+          exit "$failed"
+
+      - name: axe (serious and critical only)
+        run: node scripts/a11y-axe.mjs
+        env:
+          SCVAL_BASE_URL: http://127.0.0.1:3118
