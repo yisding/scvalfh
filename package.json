@@ -14,9 +14,13 @@
     "build-history": "tsx scripts/build-history.ts",
     "dev:vinext": "vite dev --port 3001",
     "build:vinext": "vite build",
-    "start:vinext": "vinext start"
+    "start:vinext": "vinext start",
+    "build:cloudflare": "vite build --mode cloudflare",
+    "preview:cloudflare": "vite preview --mode cloudflare",
+    "deploy:cloudflare": "vinext-cloudflare deploy --env cloudflare"
   },
   "dependencies": {
+    "@vinext/cloudflare": "1.0.0",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -25,12 +29,14 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "2.0.0-beta.sha-ad79608dd",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitejs/plugin-rsc": "^0.5.35",
+    "cf": "1.0.0-beta.6",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",

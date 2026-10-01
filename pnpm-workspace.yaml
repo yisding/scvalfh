@@ -2,8 +2,11 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
-# Seven vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
-# patch once upstream ships all seven fixes:
+  # workerd (the Workers runtime, via @cloudflare/vite-plugin -> miniflare) runs `node install.js`
+  # to check its platform binary; `pnpm preview:cloudflare` runs the Worker in it.
+  workerd: true
+# Ten vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
+# comments inside the two patches); drop each patch once upstream ships all of its fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
 #    `\..*`), so the `/:path((?!_next/static/).*)` Cache-Control rule matched only paths starting
 #    with `/.` under `vinext start`, none of this site's routes;
@@ -20,6 +23,19 @@ allowBuilds:
 #  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so its
 #    og:image/twitter:image pointed at that segment's OG image for the bad param (itself a 404);
 #    Next treats it as a route miss and serves the root not-found (server/app-page-dispatch.js,
-#    server/app-fallback-renderer.js).
+#    server/app-fallback-renderer.js);
+#  - vinext refused every build without the cloudflare() plugin whenever cloudflare.config.ts
+#    exists, so `pnpm build:vinext` (Node) could not run beside the Workers target; a Vite config
+#    that imports @cloudflare/vite-plugin now chooses per build (index.js);
+#  - a Cloudflare build's prerender, which runs the Worker bundle in Node, could not import
+#    next/og's .wasm the workerd way and died on the first OG image or icon
+#    (build/prerender-cloudflare-loader.js);
+#  - on Workers the internal x-vinext-app-page-cache marker leaked on every cached page, and cached
+#    pages carried no ETag, so revalidation never got the 304 it gets on Node
+#    (server/app-router-entry.js);
+#  - @vinext/cloudflare's staticAssetsAdapter packaged prerendered pages and metadata routes but not
+#    Route Handlers, so the Worker rendered /icon-192 and /icon-512 per request
+#    (patches/@vinext__cloudflare@1.0.0.patch, dist/cache/static-assets-adapter.build.js).
 patchedDependencies:
+  '@vinext/cloudflare@1.0.0': patches/@vinext__cloudflare@1.0.0.patch
   vinext@1.0.0: patches/vinext@1.0.0.patch

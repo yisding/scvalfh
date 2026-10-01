@@ -6,14 +6,14 @@
  * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
  * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
  *
- * Loaded and validated once at module scope, like lib/data.ts, so a bad file fails at import time
- * rather than half-way through a render.
+ * Loaded and validated once at module scope, like lib/data.ts (and bundled at build time the same
+ * way), so a bad file fails at import time rather than half-way through a render.
  */
 
 import { readFileSync } from 'node:fs';
-import path from 'node:path';
 
 import { z } from 'zod';
+import bundledHistory from '../data/history-2025-26.json';
 import type { Division, TeamSlug } from './types';
 
 const teamSlug = z.enum([
@@ -101,33 +101,28 @@ export type HistoryAwards = z.infer<typeof HistoryAwardsSchema>;
 export type History = z.infer<typeof HistorySchema>;
 export type HistoryLevel = 'varsity' | 'jv';
 
-/** Overridable so a test can point at another file. */
-export const HISTORY_PATH =
-  process.env.SCVAL_HISTORY ?? path.join(process.cwd(), 'data', 'history-2025-26.json');
-
 /**
- * Same shape as `lib/data.ts`'s reader, and for the same reason: a single variable path makes the
- * read opaque to Turbopack's file tracing, which then traces the whole project into the server
- * bundle. The default branch is a literal `path.join(process.cwd(), …)`; the env override is its
- * own call.
+ * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
+ * lib/data.ts: a Worker has no project filesystem, and this module loads on the first
+ * /history/2025-26 request in every Worker instance, cached page or not (the route's modules load
+ * before the cache read). A missing file is a build error: run `pnpm build-history`. SCVAL_HISTORY
+ * still swaps in another file through node:fs (Node only; never set it on a Worker).
  */
-function readHistoryFile(): string {
-  const override = process.env.SCVAL_HISTORY;
-  if (override) return readFileSync(override, 'utf8');
-  return readFileSync(path.join(process.cwd(), 'data', 'history-2025-26.json'), 'utf8');
-}
-
 function load(): History {
-  let raw: string;
-  try {
-    raw = readHistoryFile();
-  } catch (err) {
-    throw new Error(
-      `lib/history.ts: cannot read ${HISTORY_PATH} — run \`pnpm exec tsx scripts/build-history.ts\` ` +
-        `(${(err as Error).message})`,
-    );
+  const override = process.env.SCVAL_HISTORY;
+  let raw: unknown = bundledHistory;
+  if (override) {
+    let text: string;
+    try {
+      text = readFileSync(override, 'utf8');
+    } catch (err) {
+      throw new Error(
+        `lib/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
+      );
+    }
+    raw = JSON.parse(text) as unknown;
   }
-  const parsed = HistorySchema.safeParse(JSON.parse(raw) as unknown);
+  const parsed = HistorySchema.safeParse(raw);
   if (!parsed.success) {
     const lines = parsed.error.issues
       .slice(0, 10)
