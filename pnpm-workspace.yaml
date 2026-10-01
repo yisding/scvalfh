@@ -2,8 +2,8 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
-# Six vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
-# patch once upstream ships all six fixes:
+# Seven vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
+# patch once upstream ships all seven fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed, so the
 #    `/:path((?!_next/static/).*)` Cache-Control rule matched nothing under `vinext start`;
 #  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404;
@@ -16,5 +16,9 @@ allowBuilds:
 #  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered, so
 #    the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
 #    prerenders all of them (build/prerender.js, server/metadata-route-response.js, seed-cache.js).
+#  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so its
+#    og:image/twitter:image pointed at that segment's OG image for the bad param (itself a 404);
+#    Next treats it as a route miss and serves the root not-found (server/app-page-dispatch.js,
+#    server/app-fallback-renderer.js).
 patchedDependencies:
   vinext@1.0.0: patches/vinext@1.0.0.patch

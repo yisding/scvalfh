@@ -177,6 +177,54 @@ index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fa
  	let result = "";
  	const re = new RegExp(`${S}G(\\d+)${S}|:[\\w-]+|[.+?*]|[^.+?*:\\uE000]+`, "g");
  	let m;
+diff --git a/dist/server/app-fallback-renderer.js b/dist/server/app-fallback-renderer.js
+index ed8fb10d6cd048381471b08cced0d060883cd653..3c2e76a4b741177a34fc27579b701522da06511a 100644
+--- a/dist/server/app-fallback-renderer.js
++++ b/dist/server/app-fallback-renderer.js
+@@ -22,6 +22,13 @@ function createAppFallbackRenderer(options) {
+ 	}
+ 	return {
+ 		async renderHttpAccessFallback(route, statusCode, isRscRequest, request, opts, scriptNonce, middlewareContext, callContext) {
++			// Patched (scvalfh, patches/vinext@1.0.0.patch): see app-page-dispatch.js — a
++			// `dynamicParams = false` miss renders exactly as a request no route matched does
++			// (app-rsc-handler.js passes `route: null`): root layouts, root not-found, no params.
++			if (opts?.routeMiss) {
++				route = null;
++				opts = { ...opts, intercept: null, layouts: void 0, matchedParams: {} };
++			}
+ 			const serveStreamingMetadata = shouldServeStreamingMetadata(request.headers.get("user-agent") ?? "", htmlLimitedBots);
+ 			const useGlobalNotFound = statusCode === 404 && globalNotFoundEnabled && !route && !opts?.boundaryComponent;
+ 			if (useGlobalNotFound && loadGlobalNotFoundModule) {
+diff --git a/dist/server/app-page-dispatch.js b/dist/server/app-page-dispatch.js
+index aa2784ea2a8d632cd3d496dcc8d6fbdd0b2f35a6..343c1f0873a187512732b7c539e7af7ddec5e270 100644
+--- a/dist/server/app-page-dispatch.js
++++ b/dist/server/app-page-dispatch.js
+@@ -463,7 +463,24 @@ async function dispatchAppPageInner(options) {
+ 			params: options.staticParamsValidationParams ?? options.params
+ 		});
+ 		if (dynamicParamsResponse) {
+-			const renderedNotFound = await options.renderHttpAccessFallbackPage(404, { matchedParams: options.params }, options.middlewareContext);
++			// Patched (scvalfh, patches/vinext@1.0.0.patch): an unknown param under
++			// `dynamicParams = false` is a route MISS in Next (NoFallbackError -> the root
++			// /_not-found page, one document for every such URL), not a render of this route's
++			// not-found boundary. vinext 1.0.0 rendered it inside the matched route, so the 404's
++			// file-based metadata resolved the segment's own opengraph-image for the bad param
++			// (og:image -> /teams/nope/opengraph-image, itself a 404) where Next points at the
++			// root card. `routeMiss` makes the fallback renderer treat it as the route-miss 404,
++			// and the navigation context drops the bad params the way app-rsc-handler.js does for
++			// a request no route matched (`params: {}`), so they are not serialized into the page.
++			options.setNavigationContext({
++				pathname: options.displayPathname ?? options.cleanPathname,
++				searchParams: options.searchParams,
++				params: {}
++			});
++			const renderedNotFound = await options.renderHttpAccessFallbackPage(404, {
++				matchedParams: options.params,
++				routeMiss: true
++			}, options.middlewareContext);
+ 			const cachePolicy = {
+ 				isDraftMode,
+ 				isDynamicError,
 diff --git a/dist/server/app-page-response.js b/dist/server/app-page-response.js
 index d4220c799e1bc3661407dadf2006600bc0addcc7..d9b27c263226b159f15be6f247eec0d977e9e108 100644
 --- a/dist/server/app-page-response.js
