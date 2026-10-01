@@ -311,25 +311,29 @@ been set up in this repo.
 
 `patches/vinext@1.0.0.patch` is applied by pnpm at install (`patchedDependencies` in
 `pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes seven
-vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start`; each hunk
+vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start`; each fix
 carries a comment citing the Next.js behaviour it matches, and `pnpm-workspace.yaml` lists them
 (file paths below are under `node_modules/vinext/dist/`):
 
 - **Header source parsing** (`config/config-matchers.js`): a nested group such as
-  `/:path((?!_next/static/).*)` was mis-parsed, so the Cache-Control rule matched nothing.
+  `/:path((?!_next/static/).*)` was mis-parsed, so the Cache-Control rule matched only paths
+  starting with `/.`, none of this site's routes.
 - **`notFound()` in a metadata route** (`server/metadata-route-response.js`): the per-game, date
   and team OG images answered an unknown param with a 500 instead of a 404.
 - **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`): the prerender read the
   `s-maxage=300` rule back as each page's revalidate time, so `vinext start` re-rendered every
   "static" page after five minutes; pages are `revalidate: false`, as on Next.
-- **404 caching** (`server/app-rsc-response-finalizer.js`): the same rule overwrote the no-store
-  header on 404 pages, so a CDN could cache a 404.
-- **ETags** (`server/prod-server.js`): pages served from the cache had no validator, so
-  revalidation never got a 304; they now carry Next's FNV-1a ETag.
+- **404 caching** (`server/app-rsc-response-finalizer.js`, `server/app-fallback-renderer.js`):
+  the same rule overwrote the no-store header on 404 pages, so a CDN could cache a 404. A Route
+  Handler's own 404 keeps its headers, as on Next.
+- **ETags** (`server/prod-server.js`, `server/app-page-cache.js`): pages served from the cache
+  had no validator, so revalidation never got a 304; they now carry Next's FNV-1a ETag. Cached
+  Route Handler and metadata route bodies get none, as on Next.
 - **Metadata and Route Handler prerendering** (`build/prerender.js`,
   `server/metadata-route-response.js`, `server/app-route-handler-*.js`, `server/seed-cache.js`):
   only `"use cache"` metadata routes were prerendered and no Route Handler was, so the icons,
-  every OG image, the manifest, sitemap and robots rendered per request.
+  every OG image, the manifest, sitemap and robots rendered per request. A Route Handler with a
+  numeric `revalidate` keeps it as its ISR lifetime, as on Next.
 - **`dynamicParams = false` misses** (`server/app-page-dispatch.js`,
   `server/app-fallback-renderer.js`): an unknown param rendered the 404 inside the matched route,
   pointing its `og:image` at that segment's OG image for the bad param (itself a 404); it now gets

@@ -1,5 +1,5 @@
 diff --git a/dist/build/prerender.js b/dist/build/prerender.js
-index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d43c602ef0 100644
+index 9869b968ec5e16908e495165dcd89d761927412c..2244d1a5411e33624a926b5780eccb5da758a426 100644
 --- a/dist/build/prerender.js
 +++ b/dist/build/prerender.js
 @@ -4,7 +4,7 @@ import { BLOCKED_PAGES } from "../shims/constants.js";
@@ -7,11 +7,11 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  import { appRouteLayoutStaticParamsGroups } from "../routing/app-router.js";
  import { NEXT_CACHE_TAGS_HEADER, VINEXT_METADATA_ROUTE_CACHE_HEADER, VINEXT_PRERENDER_CACHE_LIFE_HEADER, VINEXT_PRERENDER_METADATA_ROUTES_PATH, VINEXT_PRERENDER_RENDER_ERROR_HEADER } from "../server/headers.js";
 -import { classifyAppRoute, classifyPagesRoute, getAppRouteRenderEntryPath } from "./report.js";
-+import { classifyAppRoute, classifyAppRouteHandler, classifyPagesRoute, getAppRouteRenderEntryPath } from "./report.js";
++import { classifyAppRoute, classifyAppRouteHandler, classifyPagesRoute, extractExportConstNumber, getAppRouteRenderEntryPath } from "./report.js";
  import { resolveClientStaleTimeSeconds } from "../utils/cache-control-metadata.js";
  import { NoOpCacheHandler, getCacheHandler, setCacheHandler } from "../shims/cache-handler.js";
  import { headersContextFromRequest, runWithHeadersContext } from "../shims/headers.js";
-@@ -706,6 +706,25 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -706,6 +706,29 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  		for (const route of routes) {
  			const renderEntryPath = getAppRouteRenderEntryPath(route);
  			if (!renderEntryPath && route.routePath) {
@@ -20,16 +20,20 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
 +				// or `generateStaticParams`) and has no other method; vinext 1.0.0 skipped every Route
 +				// Handler as "api", so /icon-192 and /icon-512 rendered per request. Render the
 +				// non-dynamic ones here, with the same eligibility check vinext's own path discovery
-+				// uses (classifyAppRouteHandler, ported from Next's is-static-gen-enabled.ts).
++				// uses (classifyAppRouteHandler, ported from Next's is-static-gen-enabled.ts). A
++				// handler that exports a positive numeric `revalidate` keeps it as the cache entry's
++				// ISR lifetime, as Next does (export/routes/app-route.js: `revalidate =
++				// collectedRevalidate`); every other one is cached with `revalidate: false`.
 +				const handlerClassification = mode === "export" || route.isDynamic ? null : classifyAppRouteHandler(route.routePath);
 +				if (handlerClassification?.hasGet && handlerClassification.staticGenerationEnabled) {
++					const handlerRevalidate = extractExportConstNumber(fs.readFileSync(route.routePath, "utf8"), "revalidate");
 +					urlsToRender.push({
 +						kind: "route",
 +						metadataRouteSegments: route.routeSegments ?? [],
 +						urlPath: route.pattern,
 +						routePattern: route.pattern,
 +						prerenderRouteParams: null,
-+						revalidate: false,
++						revalidate: typeof handlerRevalidate === "number" && Number.isFinite(handlerRevalidate) && handlerRevalidate > 0 ? handlerRevalidate : false,
 +						isSpeculative: false
 +					});
 +					continue;
@@ -37,7 +41,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  				results.push({
  					route: route.pattern,
  					status: "skipped",
-@@ -866,6 +885,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -866,6 +889,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  				if (typeof metadataEntry !== "object" || metadataEntry === null || typeof Reflect.get(metadataEntry, "path") !== "string" || typeof Reflect.get(metadataEntry, "routePattern") !== "string" || !Array.isArray(Reflect.get(metadataEntry, "routeSegments"))) continue;
  				const { path: metadataPath, routePattern, routeSegments } = metadataEntry;
  				if (!metadataPath.startsWith("/") || !routePattern.startsWith("/") || routeSegments.some((segment) => typeof segment !== "string") || queuedMetadataPaths.has(metadataPath)) continue;
@@ -47,7 +51,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  				queuedMetadataPaths.add(metadataPath);
  				urlsToRender.push({
  					kind: "metadata",
-@@ -886,7 +908,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -886,21 +912,28 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  		*/
  		async function renderUrl({ kind, metadataRouteSegments, urlPath, routePattern, prerenderRouteParams, revalidate, isSpeculative, isFallback }) {
  			try {
@@ -55,8 +59,18 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
 +				if (kind === "metadata" || kind === "route") {
  					const request = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`);
  					const response = await runWithHeadersContext(headersContextFromRequest(request), () => rscHandler(request));
- 					if (!response.ok) {
-@@ -899,8 +921,12 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+-					if (!response.ok) {
++					// Patched (scvalfh): a Route Handler's own 404 is a valid prerender result, cached
++					// and served with its status, as on Next (export/routes/app-route.js: `isValidStatus
++					// = response.status < 400 || response.status === 404`).
++					if (!response.ok && !(kind === "route" && response.status === 404)) {
+ 						const fatal = response.headers.get(VINEXT_PRERENDER_RENDER_ERROR_HEADER) === "1";
+ 						await response.body?.cancel();
+ 						return {
+ 							route: routePattern,
+ 							status: "error",
+-							error: `Metadata route returned ${response.status}`,
++							error: `${kind === "route" ? "Route handler" : "Metadata route"} returned ${response.status}`,
  							...fatal ? { fatal: true } : {}
  						};
  					}
@@ -71,7 +85,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  						await response.body?.cancel();
  						return {
  							route: routePattern,
-@@ -911,7 +937,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -911,13 +944,16 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  					const requestCacheLife = readPrerenderCacheLifeHeader(response.headers);
  					const collectedTags = readPrerenderCacheTagsHeader(response.headers);
  					const cacheValue = await buildAppRouteCacheValue(response);
@@ -81,7 +95,16 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  					const outputPath = getAppRouteOutputPath(urlPath);
  					const fullPath = path.join(outDir, outputPath);
  					fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-@@ -927,7 +954,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+ 					fs.writeFileSync(fullPath, new Uint8Array(cacheValue.body));
+ 					const renderedCacheControl = resolveRenderedCacheControl(requestCacheLife ?? {}, cacheControl, config.expireTime);
+-					const renderedRevalidate = renderedCacheControl.revalidate ?? false;
++					// Patched (scvalfh): a Route Handler's segment `revalidate` (queued above), capped by
++					// a shorter cacheLife, as the page path below does.
++					const renderedRevalidate = kind === "route" && typeof revalidate === "number" ? renderedCacheControl.revalidate === void 0 ? revalidate : Math.min(revalidate, renderedCacheControl.revalidate) : renderedCacheControl.revalidate ?? false;
+ 					const renderedStale = resolveClientStaleTimeSeconds(requestCacheLife ?? void 0);
+ 					return {
+ 						route: routePattern,
+@@ -927,7 +963,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  						revalidate: renderedRevalidate,
  						...typeof renderedRevalidate === "number" ? { expire: renderedCacheControl.expire } : {},
  						...renderedStale === void 0 ? {} : { stale: renderedStale },
@@ -90,7 +113,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  						headers: cacheValue.headers,
  						responseStatus: cacheValue.status,
  						routeSegments: metadataRouteSegments ?? [],
-@@ -944,6 +971,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -944,6 +980,9 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  				const htmlRender = await runWithHeadersContext(headersContextFromRequest(htmlRequest), async () => {
  					const response = await rscHandler(htmlRequest);
  					const cacheControl = response.headers.get("cache-control") ?? "";
@@ -100,7 +123,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  					const linkHeader = response.headers.get("link");
  					const responseCacheLife = readPrerenderCacheLifeHeader(response.headers);
  					const cacheTags = readPrerenderCacheTagsHeader(response.headers);
-@@ -952,6 +982,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -952,6 +991,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  						await response.body?.cancel();
  						return {
  							cacheControl,
@@ -108,7 +131,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  							linkHeader,
  							html: null,
  							ok: response.ok,
-@@ -965,6 +996,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -965,6 +1005,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  					const processCacheLife = _consumeRequestScopedCacheLife();
  					return {
  						cacheControl,
@@ -116,7 +139,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  						linkHeader,
  						html,
  						ok: true,
-@@ -1030,7 +1062,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -1030,7 +1071,7 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  				fs.mkdirSync(path.dirname(rscFullPath), { recursive: true });
  				fs.writeFileSync(rscFullPath, rscData);
  				outputFiles.push(rscOutputPath);
@@ -125,7 +148,7 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  				const renderedRevalidate = typeof revalidate === "number" ? renderedCacheControl.revalidate === void 0 ? revalidate : Math.min(revalidate, renderedCacheControl.revalidate) : renderedCacheControl.revalidate ?? revalidate;
  				const renderedStale = resolveClientStaleTimeSeconds(htmlRender.requestCacheLife);
  				return {
-@@ -1119,6 +1151,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
+@@ -1119,6 +1160,8 @@ async function prerenderApp({ routes, metadataRoutes = [], outDir, config, mode,
  		}
  	}
  }
@@ -135,10 +158,10 @@ index 9869b968ec5e16908e495165dcd89d761927412c..f7a307f69ef91993d7ef6518135d69d4
  	const sMaxage = parseCacheControlSeconds(cacheControl, "s-maxage");
  	const staleWhileRevalidate = parseCacheControlSeconds(cacheControl, "stale-while-revalidate");
 diff --git a/dist/config/config-matchers.js b/dist/config/config-matchers.js
-index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fad11fd034 100644
+index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..3dad0bb2cfa8a8a0bda7bc032be0251adbc5e836 100644
 --- a/dist/config/config-matchers.js
 +++ b/dist/config/config-matchers.js
-@@ -231,10 +231,34 @@ function safeRegExp(pattern, flags) {
+@@ -231,10 +231,35 @@ function safeRegExp(pattern, flags) {
  function escapeHeaderSource(source) {
  	const S = "";
  	const groups = [];
@@ -149,7 +172,8 @@ index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fa
 +	// Patched (scvalfh, patches/vinext@1.0.0.patch): the shipped `/\(([^)]+)\)/g` stops a group
 +	// at its FIRST `)`, so a group that itself contains a group -- the negative lookahead in
 +	// `/:path((?!_next/static/).*)`, path-to-regexp syntax Next.js accepts -- was split in two and
-+	// its trailing `.*` escaped to a literal `\.`, leaving the header rule matching nothing.
++	// its trailing `.*` turned into `\..*`, so the rule matched only paths starting with `/.`
++	// (/.well-known/..., none of a typical site's pages).
 +	// Scan for the balanced closing paren instead (skipping backslash escapes); a group with no
 +	// content or no closing paren stays literal, as before.
 +	let withPlaceholders = "";
@@ -178,10 +202,30 @@ index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fa
  	const re = new RegExp(`${S}G(\\d+)${S}|:[\\w-]+|[.+?*]|[^.+?*:\\uE000]+`, "g");
  	let m;
 diff --git a/dist/server/app-fallback-renderer.js b/dist/server/app-fallback-renderer.js
-index ed8fb10d6cd048381471b08cced0d060883cd653..3c2e76a4b741177a34fc27579b701522da06511a 100644
+index ed8fb10d6cd048381471b08cced0d060883cd653..ea047ac2305fb30ae7ddca5f217c7e72a25c193f 100644
 --- a/dist/server/app-fallback-renderer.js
 +++ b/dist/server/app-fallback-renderer.js
-@@ -22,6 +22,13 @@ function createAppFallbackRenderer(options) {
+@@ -9,6 +9,19 @@ const EMPTY_MW_CTX = {
+ 	headers: null,
+ 	status: null
+ };
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): marks a 404 rendered by the App Router not-found
++* boundary (route miss, `dynamicParams = false` miss, `notFound()`), so finalizeAppRscResponse in
++* app-rsc-response-finalizer.js can give it Next's never-cache header and strip the marker. Same
++* name defined there; a Route Handler's or metadata route's own 404 never passes through here.
++*/
++const VINEXT_NOT_FOUND_PAGE_HEADER = "x-vinext-not-found-page";
++function markNotFoundPageResponse(response) {
++	if (response?.status === 404) try {
++		response.headers.set(VINEXT_NOT_FOUND_PAGE_HEADER, "1");
++	} catch {}
++	return response;
++}
+ function createAppFallbackRenderer(options) {
+ 	const { applyFileBasedMetadata, basePath = "", htmlLimitedBots, clearRequestContext, createRscOnErrorHandler: buildRscOnErrorHandler, fontProviders, getAndClearPendingCookies, getNavigationContext, globalErrorModule, globalNotFoundEnabled = false, loadGlobalNotFoundModule, makeThenableParams, metadataRoutes, resolveChildSegments, rootBoundaries, rscRenderer, sanitizer, ssrLoader, trailingSlash } = options;
+ 	const { rootForbiddenModule, rootLayouts, rootNotFoundModule, rootUnauthorizedModule } = rootBoundaries;
+@@ -22,12 +35,19 @@ function createAppFallbackRenderer(options) {
  	}
  	return {
  		async renderHttpAccessFallback(route, statusCode, isRscRequest, request, opts, scriptNonce, middlewareContext, callContext) {
@@ -195,6 +239,59 @@ index ed8fb10d6cd048381471b08cced0d060883cd653..3c2e76a4b741177a34fc27579b701522
  			const serveStreamingMetadata = shouldServeStreamingMetadata(request.headers.get("user-agent") ?? "", htmlLimitedBots);
  			const useGlobalNotFound = statusCode === 404 && globalNotFoundEnabled && !route && !opts?.boundaryComponent;
  			if (useGlobalNotFound && loadGlobalNotFoundModule) {
+ 				const globalNotFoundModule = await resolveGlobalNotFoundModule();
+ 				const globalNotFoundComponent = globalNotFoundModule?.default ?? null;
+-				if (globalNotFoundComponent) return renderAppPageHttpAccessFallback({
++				if (globalNotFoundComponent) return markNotFoundPageResponse(await renderAppPageHttpAccessFallback({
+ 					applyFileBasedMetadata,
+ 					basePath,
+ 					trailingSlash,
+@@ -65,10 +85,10 @@ function createAppFallbackRenderer(options) {
+ 					serveStreamingMetadata,
+ 					skipLayoutWrapping: true,
+ 					statusCode
+-				});
++				}));
+ 			}
+ 			const routeMissRootNotFoundModule = useGlobalNotFound ? DEFAULT_GLOBAL_NOT_FOUND_MODULE : effectiveRootNotFoundModule;
+-			return renderAppPageHttpAccessFallback({
++			return markNotFoundPageResponse(await renderAppPageHttpAccessFallback({
+ 				applyFileBasedMetadata,
+ 				basePath,
+ 				trailingSlash,
+@@ -109,7 +129,7 @@ function createAppFallbackRenderer(options) {
+ 				skipLayoutWrapping: useGlobalNotFound,
+ 				sourcePageSegments: callContext?.sourcePageSegments,
+ 				statusCode
+-			});
++			}));
+ 		},
+ 		renderNotFound(route, isRscRequest, request, matchedParams, scriptNonce, middlewareContext, callContext) {
+ 			return this.renderHttpAccessFallback(route, 404, isRscRequest, request, { matchedParams }, scriptNonce, middlewareContext, callContext);
+diff --git a/dist/server/app-page-cache.js b/dist/server/app-page-cache.js
+index 9136fb3f1409a960c2f4c3c40e2b0409fc50ccb1..05571736417d9909d87cc365f477f5d90c8aef05 100644
+--- a/dist/server/app-page-cache.js
++++ b/dist/server/app-page-cache.js
+@@ -42,11 +42,19 @@ function buildAppPageCacheTags(pathname, extraTags) {
+ function buildAppRouteCacheTags(pathname, extraTags, routeSegments) {
+ 	return buildPageCacheTags(pathname, [...extraTags], [...routeSegments], "route");
+ }
++/**
++* Patched (scvalfh, patches/vinext@1.0.0.patch): marks a page payload (HTML or RSC) served from the
++* APP_PAGE cache, so the Node server (withCachedResponseEtag in prod-server.js, which removes it)
++* gives it an ETag and a cached Route Handler or metadata route body, whatever its Content-Type,
++* gets none, as on Next.js. Also read by applyNotFoundPagePolicy in app-rsc-response-finalizer.js.
++*/
++const VINEXT_APP_PAGE_CACHE_HEADER = "x-vinext-app-page-cache";
+ function buildAppPageCachedHeaders(options) {
+ 	const headers = new Headers({
+ 		"Content-Type": options.contentType,
+ 		Vary: VINEXT_RSC_VARY_HEADER
+ 	});
++	headers.set(VINEXT_APP_PAGE_CACHE_HEADER, "1");
+ 	applyCdnResponseHeaders(headers, { cacheControl: options.cacheControl });
+ 	setCacheStateHeaders(headers, options.cacheState);
+ 	applyEdgeRuntimeHeader(headers, options.isEdgeRuntime);
 diff --git a/dist/server/app-page-dispatch.js b/dist/server/app-page-dispatch.js
 index aa2784ea2a8d632cd3d496dcc8d6fbdd0b2f35a6..343c1f0873a187512732b7c539e7af7ddec5e270 100644
 --- a/dist/server/app-page-dispatch.js
@@ -315,7 +412,7 @@ index 9f57ea56dd090fa5b00524eb387399f463992622..9ce36a951b25b2affc15e0b451379b33
  function shouldApplyAppRouteHandlerRevalidateHeader(options) {
  	return options.revalidateSeconds !== null && !options.isDraftMode && !options.dynamicUsedInHandler && (options.method === "GET" || options.isAutoHead) && !options.handlerSetCachePolicy;
 diff --git a/dist/server/app-rsc-response-finalizer.js b/dist/server/app-rsc-response-finalizer.js
-index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb64616080 100644
+index 3f0f855a3c17dae235e914faad653c752f014847..d35e414a6598d464f86b1bc8091175c5c49e5de6 100644
 --- a/dist/server/app-rsc-response-finalizer.js
 +++ b/dist/server/app-rsc-response-finalizer.js
 @@ -5,7 +5,7 @@ import { isStaticFileSignal } from "./static-file-signal.js";
@@ -327,7 +424,7 @@ index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb
  import "./app-rsc-cache-busting.js";
  import { mergeVaryHeader } from "./middleware-response-headers.js";
  import { hasPostConfigLinkHeaders } from "./app-response-header-provenance.js";
-@@ -17,6 +17,22 @@ function normalizeExplicitNonCacheablePolicy(headers) {
+@@ -17,6 +17,27 @@ function normalizeExplicitNonCacheablePolicy(headers) {
  	const cacheControl = headers.get("Cache-Control");
  	applyCdnResponseHeaders(headers, { cacheControl: cacheControl && isNonCacheableCacheControl(cacheControl) ? cacheControl : NO_STORE_CACHE_CONTROL });
  }
@@ -338,19 +435,24 @@ index 3f0f855a3c17dae235e914faad653c752f014847..ad6eb68978f6a5793198ed15e026f2fb
 +* `private, no-cache, no-store, max-age=0, must-revalidate` (next/dist/server/lib/router-server.js
 +* sets it for the 404 case after custom headers; base-server.js does the same in renderErrorImpl),
 +* while vinext let a matching `Cache-Control` rule overwrite it, so a shared cache could keep a 404
-+* for its s-maxage and serve it stale long after the path became valid. Route Handler and metadata
-+* route 404s (no HTML/RSC body) keep the config header, as they do on Next.js.
++* for its s-maxage and serve it stale long after the path became valid. Such a 404 is recognised by
++* how it was made, not by its Content-Type: app-fallback-renderer.js marks every not-found render
++* (VINEXT_NOT_FOUND_PAGE_HEADER, removed here), and a 404 page served from the ISR cache carries
++* app-page-cache.js's VINEXT_APP_PAGE_CACHE_HEADER. A Route Handler's or metadata route's own 404,
++* whatever its body, keeps its headers and the config rule, as on Next.js.
 +*/
++const VINEXT_NOT_FOUND_PAGE_HEADER = "x-vinext-not-found-page";
++const VINEXT_APP_PAGE_CACHE_HEADER = "x-vinext-app-page-cache";
 +function applyNotFoundPagePolicy(response) {
-+	if (response.status !== 404) return;
-+	const baseType = (response.headers.get("Content-Type") ?? "").split(";")[0].trim().toLowerCase();
-+	if (baseType !== "text/html" && baseType !== "text/x-component") return;
++	const rendered = response.headers.has(VINEXT_NOT_FOUND_PAGE_HEADER);
++	if (rendered) response.headers.delete(VINEXT_NOT_FOUND_PAGE_HEADER);
++	if (response.status !== 404 || !rendered && !response.headers.has(VINEXT_APP_PAGE_CACHE_HEADER)) return;
 +	applyCdnResponseHeaders(response.headers, { cacheControl: NEVER_CACHE_CONTROL });
 +}
  /** Mark a response whose final target pipeline has already applied config headers. */
  function markAppRscResponseConfigHeadersApplied(response) {
  	configHeadersAlreadyApplied.add(response);
-@@ -70,10 +86,12 @@ async function finalizeAppRscResponse(response, request, options) {
+@@ -70,10 +91,12 @@ async function finalizeAppRscResponse(response, request, options) {
  	}
  	if (configHeadersAlreadyApplied.has(response)) {
  		normalizeExplicitNonCacheablePolicy(response.headers);
@@ -530,7 +632,7 @@ index d21f40e34522c379c8970cc49a553d4dee781a3e..eba1d6f9dbbca11ba50227144bae8773
  	let body;
  	if (route.type === "sitemap") {
 diff --git a/dist/server/prod-server.js b/dist/server/prod-server.js
-index af6cb4c6986e801b4afcae4115410547d975a0ba..a37016a335a49c0a54dc806f2249f9e84d568c28 100644
+index af6cb4c6986e801b4afcae4115410547d975a0ba..34e3d7350da18bc4fa26a6371d81468e9430707d 100644
 --- a/dist/server/prod-server.js
 +++ b/dist/server/prod-server.js
 @@ -12,7 +12,7 @@ import { isOpenRedirectShaped } from "./open-redirect.js";
@@ -542,7 +644,7 @@ index af6cb4c6986e801b4afcae4115410547d975a0ba..a37016a335a49c0a54dc806f2249f9e8
  import { buildNextDataNotFoundResponse, encodeUrlParserIgnoredCharacters, isNextDataPathname, normalizeNextDataPagePathname, parseNextDataPathname, shouldAddTrailingSlashToPagesDataPath, urlParserCreatesPagesDataPath } from "./pages-data-route.js";
  import { setPagesClientAssets } from "./pages-client-assets.js";
  import { resolveRequestHost, resolveRequestProtocol, trustProxy, trustedHosts } from "./proxy-trust.js";
-@@ -760,10 +760,82 @@ function nodeToWebRequest(req, urlOverride, prerenderSecret, i18nConfig, authori
+@@ -760,10 +760,85 @@ function nodeToWebRequest(req, urlOverride, prerenderSecret, i18nConfig, authori
  	return new Request(url, init);
  }
  /**
@@ -577,22 +679,25 @@ index af6cb4c6986e801b4afcae4115410547d975a0ba..a37016a335a49c0a54dc806f2249f9e8
 +* payload (`generateEtags` defaults to true) and answers a matching If-None-Match with a bodiless
 +* 304 via `fresh`, which also treats a request `Cache-Control: no-cache` as never fresh. Streamed
 +* renders keep no ETag, as on Next.js. So do cached Route Handler and metadata route bodies
-+* (/sitemap.xml, the icons and OG images): Next's app-route template sends those through
-+* sendResponse (next/dist/build/templates/app-route.js, server/send-response.js), which sets none,
-+* so only the App Router page payloads (HTML and RSC) get one.
++* (/sitemap.xml, the icons and OG images), whatever their Content-Type: Next's app-route template
++* sends those through sendResponse (next/dist/build/templates/app-route.js, server/send-response.js),
++* which sets none. So only App Router page payloads (HTML and RSC) served from the APP_PAGE cache
++* get one; app-page-cache.js marks them with VINEXT_APP_PAGE_CACHE_HEADER, removed here.
 +*/
++const VINEXT_APP_PAGE_CACHE_HEADER = "x-vinext-app-page-cache";
 +async function withCachedResponseEtag(webResponse, req, compress) {
-+	if (req.method !== "GET" && req.method !== "HEAD") return webResponse;
-+	if (webResponse.status !== 200 || !webResponse.body) return webResponse;
-+	const cacheState = webResponse.headers.get("x-vinext-cache");
-+	if (cacheState !== "HIT" && cacheState !== "STALE") return webResponse;
-+	const pageType = (webResponse.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
-+	if (pageType !== "text/html" && pageType !== "text/x-component") return webResponse;
-+	if (webResponse.headers.has("etag") || webResponse.headers.has("content-encoding")) return webResponse;
++	if (!webResponse.headers.has(VINEXT_APP_PAGE_CACHE_HEADER)) return webResponse;
++	const headers = new Headers(webResponse.headers);
++	headers.delete(VINEXT_APP_PAGE_CACHE_HEADER);
++	const cacheState = headers.get("x-vinext-cache");
++	if (req.method !== "GET" && req.method !== "HEAD" || webResponse.status !== 200 || !webResponse.body || cacheState !== "HIT" && cacheState !== "STALE" || headers.has("etag") || headers.has("content-encoding")) return new Response(webResponse.body, {
++		status: webResponse.status,
++		statusText: webResponse.statusText,
++		headers
++	});
 +	const body = new Uint8Array(await webResponse.arrayBuffer());
 +	const payload = new TextDecoder().decode(body);
 +	const etag = `"${fnv1a52(payload).toString(36)}${payload.length.toString(36)}"`;
-+	const headers = new Headers(webResponse.headers);
 +	headers.set("ETag", etag);
 +	const requestCacheControl = req.headers["cache-control"];
 +	const noCache = typeof requestCacheControl === "string" && /(?:^|,)\s*no-cache\s*(?:,|$)/i.test(requestCacheControl);

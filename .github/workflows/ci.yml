@@ -132,13 +132,20 @@ jobs:
           path: .next
 
       # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
-      # BUILD-BRIEF's no-new-dependency rule is about what ships.
+      # BUILD-BRIEF's no-new-dependency rule is about what ships. They go in a directory of their
+      # own, not the checkout: npm cannot install into the symlinked tree pnpm wrote (npm 10 and
+      # 11 both abort with "Cannot read properties of null (reading 'matches')"), and a reshaped
+      # node_modules could change what the server runs. The axe script resolves both packages
+      # with require(), which honours NODE_PATH.
       - name: Install axe-core and Chromium
         run: |
           set -euo pipefail
-          npm init -y --scope=@ci >/dev/null 2>&1 || true
+          mkdir -p "$RUNNER_TEMP/axe"
+          cd "$RUNNER_TEMP/axe"
+          npm init -y >/dev/null
           npm install --no-save --no-audit --no-fund axe-core playwright
           npx playwright install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
 
       - name: Start the production server
         run: |
@@ -181,8 +188,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Same pin as the Next build: the "stale snapshot" warning in the prerendered pages is
-      # measured against the commit, not the runner's clock (components/layout/build-instant.ts).
+      # Same pin as the Next build (components/layout/build-instant.ts): the instant the "stale
+      # snapshot" warning is measured against comes from the event payload, not the runner's
+      # clock, so a rerun is byte-identical and both builds stamp the same instant.
       - name: Build with vinext
         run: pnpm build:vinext
         env:
@@ -223,12 +231,8 @@ jobs:
             if (gameCards < 100 || dateCards < 30 || teamCards < 16) throw new Error("an opengraph-image below a dynamic segment came back short");
           '
 
-      # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
-      # BUILD-BRIEF's no-new-dependency rule is about what ships. They go in a directory of their
-      # own, not the checkout: npm cannot install into the symlinked tree pnpm wrote (npm 10 and
-      # 11 both abort with "Cannot read properties of null (reading 'matches')"), and a reshaped
-      # node_modules could swap the patched vinext for a stock one under the server. The axe
-      # script resolves both packages with require(), which honours NODE_PATH.
+      # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped
+      # node_modules could swap the patched vinext for a stock one under the server.
       - name: Install axe-core and Chromium
         run: |
           set -euo pipefail
@@ -253,7 +257,7 @@ jobs:
       # carry the next.config headers() cache rule; hashed assets keep the immutable cache and
       # are served precompressed; an unknown URL or param is a no-store 404 with the root
       # not-found page; pages answer a revalidation with 304; and poweredByHeader stays off.
-      # Every mismatch is listed before the step fails.
+      # Every mismatch, and every request that fails or times out, is listed before the step fails.
       - name: Smoke the vinext server
         run: |
           set -euo pipefail
@@ -269,7 +273,10 @@ jobs:
           # "text/html; charset=utf-8"; the body is left in $tmp/b and the headers in $tmp/h.
           expect() {
             local path=$1 status=$2 type=$3 cache=$4; shift 4
-            curl -sS -o "$tmp/b" -D "$tmp/h" "$@" "$base$path"
+            : > "$tmp/b"; : > "$tmp/h"
+            if ! curl -sS --max-time 20 -o "$tmp/b" -D "$tmp/h" "$@" "$base$path"; then
+              fail "$path" "request failed"; return 0
+            fi
             tr -d '\r' < "$tmp/h" > "$tmp/h2" && mv "$tmp/h2" "$tmp/h"
             local got; got=$(awk 'NR == 1 { print $2 }' "$tmp/h")
             [ "$got" = "$status" ] || fail "$path" "status $got, expected $status"
@@ -281,7 +288,7 @@ jobs:
 
           for path in / /standings; do expect "$path" 200 text/html "$public"; done
           # One page of each generateStaticParams family, whichever the sitemap lists first.
-          paths=$(curl -fsS "$base/sitemap.xml" | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g; s#^https?://[^/]+##' || true)
+          paths=$(curl -fsS --max-time 20 "$base/sitemap.xml" | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g; s#^https?://[^/]+##' || true)
           for family in /game/ /scores/ /teams/; do
             path=$(grep -m1 "^$family" <<< "$paths" || true)
             if [ -z "$path" ]; then fail /sitemap.xml "no $family URL"; else expect "$path" 200 text/html "$public"; fi
@@ -291,7 +298,7 @@ jobs:
           expect /sitemap.xml 200 application/xml "$public"
           expect /robots.txt 200 text/plain "$public"
 
-          css=$(curl -fsS "$base/" | grep -oE '/_next/static/[^"]+\.css' | sed -n 1p || true)
+          css=$(curl -fsS --max-time 20 "$base/" | grep -oE '/_next/static/[^"]+\.css' | sed -n 1p || true)
           if [ -z "$css" ]; then fail / "no /_next/static stylesheet in the HTML"; else
             expect "$css" 200 text/css "$immutable" -H 'Accept-Encoding: gzip'
             [ "$(header content-encoding)" = gzip ] || fail "$css" "content-encoding '$(header content-encoding)', expected gzip"

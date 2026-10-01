@@ -4,8 +4,9 @@ allowBuilds:
   unrs-resolver: false
 # Seven vinext 1.0.0 gaps, each fixed where it lives (see the comments inside the patch); drop the
 # patch once upstream ships all seven fixes:
-#  - a nested group in a next.config `headers()` source is mis-parsed, so the
-#    `/:path((?!_next/static/).*)` Cache-Control rule matched nothing under `vinext start`;
+#  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
+#    `\..*`), so the `/:path((?!_next/static/).*)` Cache-Control rule matched only paths starting
+#    with `/.` under `vinext start`, none of this site's routes;
 #  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404;
 #  - the prerender read that same Cache-Control rule back as the page's ISR lifetime
 #    (revalidate=300 in dist/server/vinext-prerender.json), so `vinext start` re-rendered every
