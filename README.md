@@ -2,7 +2,8 @@
 
 Scores, standings, schedules and the CCS playoff picture for the 16 De Anza and El Camino girls
 varsity field hockey teams (Santa Clara Valley Athletic League). A static Next.js site rebuilt
-from one JSON snapshot, refreshed nightly by a scheduled GitHub Actions job.
+from one JSON snapshot, refreshed nightly by a scheduled GitHub Actions job. The same source also
+builds and serves on vinext (Vite); see "Deploy notes".
 
 Unofficial. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated. See
 "Attribution and legal posture" below.
@@ -32,7 +33,7 @@ site publishes `sitemap.xml`, `robots.txt` and a web manifest (`app/sitemap.ts`,
 MaxPreps ghost API  ──┐
 si.com (SBLive)      ──┼──► scripts/fetch-data.ts ──► data/snapshot.json ──► next build ──► static site
 scval.com PDFs        ──┤        (lib/sources/*)        data/snapshot.meta.json
-cifccs.org / VNN .ics ──┘
+cifccs.org / VNN .ics ──┘                                                      or vite build (vinext)
 ```
 
 1. **`scripts/fetch-data.ts`** is the cron entry point (see `docs/DATA-SOURCES.md` for every
@@ -46,10 +47,11 @@ cifccs.org / VNN .ics ──┘
 2. It writes **`data/snapshot.json`** (the full normalized `Team[]`/`Game[]`/`Standing[]`/
    `Playoffs`/`SourceStatus[]`) and **`data/snapshot.meta.json`** (counts, timestamps, a short
    summary — what the update-data workflow uses for its commit message and job summary).
-3. **`next build`** reads only `data/snapshot.json` (`lib/data.ts`) and prerenders every route —
-   there is no request-time fetch, no database and no `searchParams` anywhere. "Today" for
-   rendering purposes is always derived from the snapshot's `fetchedAt`, never `Date.now()`, so a
-   given commit builds byte-identically no matter when `next build` runs.
+3. **`next build`** (or `vite build` under vinext) reads only `data/snapshot.json` (`lib/data.ts`)
+   and prerenders every route — there is no request-time fetch, no database and no
+   `searchParams` anywhere. "Today" for rendering purposes is always derived from the snapshot's
+   `fetchedAt`, never `Date.now()`, so a given commit builds byte-identically no matter when
+   `next build` runs.
 4. Standings are **computed from game rows**, not taken from MaxPreps' own numbers — see "How
    standings are computed" below. MaxPreps' reported row is kept alongside for cross-check and
    shown as a flagged mismatch when the two disagree (visible on `/about#cross-check` and on the
@@ -88,6 +90,7 @@ Or by hand, any time:
 pnpm fetch-data   # refresh data/snapshot.json + data/snapshot.meta.json
 pnpm build        # rebuild the static site from the new snapshot
 pnpm start         # or redeploy the .next output to your host
+                   # (vinext: pnpm build:vinext && pnpm start:vinext, see "Deploy notes")
 ```
 
 Useful flags on `fetch-data` (see the header of `scripts/fetch-data.ts` for the full list):
@@ -99,24 +102,45 @@ reports without writing; `--force` bypasses the season-window guard; `--no-sbliv
 
 ```bash
 pnpm install
-pnpm dev            # next dev
-pnpm typecheck       # tsc --noEmit
+pnpm dev            # next dev (port 3000)
+pnpm typecheck      # next typegen, then tsc --noEmit
 pnpm lint           # eslint
-pnpm test            # vitest run
+pnpm test           # vitest run
 pnpm build          # next build — prerenders every route from data/snapshot.json
+pnpm start          # next start — serves .next/ on port 3000
+
+pnpm dev:vinext     # vite dev (vinext) on port 3001, so it can run beside `pnpm dev`
+pnpm build:vinext   # vite build into dist/ — prerenders every route, as `pnpm build` does
+pnpm start:vinext   # vinext start — serves dist/ on port 3000 (-p/--port <n>, or PORT)
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. To point at a different snapshot file
-(e.g. a fixture-built one), set `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the
-same for `data/history-2025-26.json`.
+develop and build without ever calling a live upstream API. The vinext scripts read the same
+`app/`, `next.config.ts` and `data/snapshot.json`; vinext adds `vite.config.ts`, a patch (see "The
+vinext patch") and its own outputs, `dist/` and `.vinext/`, both gitignored and skipped by
+`eslint.config.mjs`. To point at a different snapshot file (e.g. a fixture-built one), set
+`SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
+`data/history-2025-26.json`.
+
+`pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
+by the dynamic pages, their OG images and `app/layout.tsx` are generated into
+`.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
+overwrites with its own declarations; Next stays the type authority.
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test,
 build, and an assertion that every route family actually prerendered (no route should ever fall
 back to dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores/[date]`
 and `/teams/[slug]`). A second job runs `axe-core` against the production build
 (`scripts/a11y-axe.mjs`) across every route family, both themes, both a phone and a desktop
-viewport, and fails on any serious/critical accessibility violation.
+viewport, and fails on any serious/critical accessibility violation. A third job, `vinext`, runs
+beside them (not after `gates`, so a vinext regression shows even when Next is red): it builds
+with `pnpm build:vinext`, asserts from `dist/server/vinext-prerender.json` that every route
+rendered with `revalidate: false`, that the static pages and metadata routes are on disk and that
+the game, date and team pages and their OG images clear the same minimum counts as the Next
+build, then starts `vinext start`, smoke-tests one URL of every kind (status, content type, the
+Cache-Control rule, gzip-encoded immutable assets, the no-store root not-found for an unknown path
+and an unknown param, an ETag/304 round trip, no `X-Powered-By`) and runs the same
+`scripts/a11y-axe.mjs` pass against it.
 
 ## Tests
 
@@ -218,9 +242,10 @@ attribution text rendered in the footer.
 
 Every route is prerendered at build time — no database, no request-time data fetching, and no API
 routes beyond the OG-image generators, which are prerendered too. It is NOT `output: 'export'`,
-though: serving it needs Next.js's own server or a host adapter that provides one, because the
-404s for unknown dynamic params and the metadata routes (`/icon`, `/apple-icon`,
-`/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the framework.
+though: serving it needs Next.js's own server, a host adapter that provides one, or `vinext start`
+(see "vinext" below), because the 404s for unknown dynamic params and the metadata routes
+(`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
+framework.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.
@@ -233,13 +258,87 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   redeploys automatically on a push to `main`, which is exactly what `update-data.yml`'s commit
   triggers.
 - **Self-host:** `pnpm build && pnpm start` runs Next.js's own production server behind any
-  reverse proxy that can talk to a Node process. Set `SITE_URL` the same way. Pair with the cron line under "Self-hosting the cron" above to keep data fresh
-  without GitHub Actions at all.
+  reverse proxy that can talk to a Node process. Set `SITE_URL` the same way. Pair with the cron
+  line under "Self-hosting the cron" above to keep data fresh without GitHub Actions at all.
 
 `SITE_URL` defaults to `http://localhost:3000` (`components/layout/site-url.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
 it and the two optional variables; copy it to `.env` for a local production build.
+
+### vinext
+
+The same source also builds and serves on [vinext](https://github.com/cloudflare/vinext) 1.0.0, a
+reimplementation of the Next.js API surface on Vite 8, wired in by `vite.config.ts`. It runs
+beside the Next toolchain, not instead of it, and targets vinext's Node server:
+
+```bash
+pnpm build:vinext && pnpm start:vinext   # vite build into dist/, then vinext start on port 3000
+```
+
+Run it behind any reverse proxy that can talk to a Node process, as with `next start`. `dist/` is
+the whole build output, but `vinext start` is not a static file server: run it from the repo root
+with `data/` present, because the server bundle still carries `lib/data.ts`, which reads
+`data/snapshot.json` relative to the working directory for whatever is rendered on request rather
+than served from the prerendered cache (every 404, for one). Run it with the same `SITE_URL`, and
+`SCVAL_BUILD_AT` if you pin it, as the build: the prerendered HTML has both baked in, and a page
+rendered on request would otherwise disagree with it. `vite build` and `vinext start` both load
+`.env` the way Next does.
+
+`vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
+`next build` does — 463 routes with the current snapshot, all `revalidate: false` in
+`dist/server/vinext-prerender.json`: all 230 pages (HTML and RSC payload) plus a 404 page, and
+every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per game, date
+and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under
+`dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at startup
+("Seeded 463 pre-rendered routes into memory cache") and serves each one as built; none renders
+per request.
+
+The response-header contract is the same on both servers: every page, metadata route and OG image
+carries the `next.config.ts` `headers()` rule,
+`public, s-maxage=300, stale-while-revalidate=86400`; hashed `/_next/static/**` assets keep
+`public, max-age=31536000, immutable` (served from build-time gzip/brotli files under vinext,
+`precompress: true` in `vite.config.ts`, because `vinext start` does not compress them on the
+fly); 404 pages are `private, no-cache, no-store, max-age=0, must-revalidate`, so no shared cache
+keeps one; HTML pages carry an ETag and answer a matching `If-None-Match` with 304; and neither
+server sends `X-Powered-By`. One known difference: `OPTIONS` on a Route Handler (`/icon-192`,
+`/icon-512`) is a 204 under vinext and a 405 under Next.
+
+`vinext init --platform=cloudflare` is vinext's documented path to Cloudflare Workers; it has not
+been set up in this repo.
+
+### The vinext patch
+
+`patches/vinext@1.0.0.patch` is applied by pnpm at install (`patchedDependencies` in
+`pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes seven
+vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start`; each hunk
+carries a comment citing the Next.js behaviour it matches, and `pnpm-workspace.yaml` lists them
+(file paths below are under `node_modules/vinext/dist/`):
+
+- **Header source parsing** (`config/config-matchers.js`): a nested group such as
+  `/:path((?!_next/static/).*)` was mis-parsed, so the Cache-Control rule matched nothing.
+- **`notFound()` in a metadata route** (`server/metadata-route-response.js`): the per-game, date
+  and team OG images answered an unknown param with a 500 instead of a 404.
+- **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`): the prerender read the
+  `s-maxage=300` rule back as each page's revalidate time, so `vinext start` re-rendered every
+  "static" page after five minutes; pages are `revalidate: false`, as on Next.
+- **404 caching** (`server/app-rsc-response-finalizer.js`): the same rule overwrote the no-store
+  header on 404 pages, so a CDN could cache a 404.
+- **ETags** (`server/prod-server.js`): pages served from the cache had no validator, so
+  revalidation never got a 304; they now carry Next's FNV-1a ETag.
+- **Metadata and Route Handler prerendering** (`build/prerender.js`,
+  `server/metadata-route-response.js`, `server/app-route-handler-*.js`, `server/seed-cache.js`):
+  only `"use cache"` metadata routes were prerendered and no Route Handler was, so the icons,
+  every OG image, the manifest, sitemap and robots rendered per request.
+- **`dynamicParams = false` misses** (`server/app-page-dispatch.js`,
+  `server/app-fallback-renderer.js`): an unknown param rendered the 404 inside the matched route,
+  pointing its `og:image` at that segment's OG image for the bad param (itself a 404); it now gets
+  the root not-found, as on Next.
+
+The patch is pinned to exactly vinext 1.0.0 (`package.json` pins the version and the
+`patchedDependencies` key names it), so a version bump means re-checking each hunk against
+upstream: drop the ones upstream has fixed and re-port the rest. Drop the patch entirely once
+upstream ships all seven.
 
 ## Further reading
 
