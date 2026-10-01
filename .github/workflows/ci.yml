@@ -245,6 +245,11 @@ jobs:
           npx playwright install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
 
+      # Started with the build's SCVAL_BUILD_AT: components/layout/build-instant.ts reads it once at
+      # module scope, in the prerender and again in this server, which renders every 404 on request
+      # (README, "Deploy notes"). Without it those 404s would measure the snapshot's age against the
+      # runner's clock while every prerendered page measures it against the pinned instant, and the
+      # two could disagree on whether the snapshot is stale; the smoke below checks that they agree.
       - name: Start the vinext server
         run: |
           set -euo pipefail
@@ -254,6 +259,8 @@ jobs:
             sleep 1
           done
           echo "server did not come up"; exit 1
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # What `next start` answers, checked on one URL of every kind: pages and metadata routes
       # carry the next.config headers() cache rule; hashed assets keep the immutable cache and
@@ -306,9 +313,15 @@ jobs:
             [ "$(header content-encoding)" = gzip ] || fail "$css" "content-encoding '$(header content-encoding)', expected gzip"
           fi
 
+          # A 404 is rendered on request with the server's build instant, / was prerendered with the
+          # build's: both must agree on whether the snapshot is stale (the footer notice).
+          expect / 200 text/html "$public"
+          stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
           for path in /no-such-page /game/not-a-real-id; do
             expect "$path" 404 text/html "$nostore"
             grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
+            got_stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
+            [ "$got_stale" = "$stale" ] || fail "$path" "stale-snapshot notice shown $got_stale time(s), / shows it $stale"
           done
           expect /game/not-a-real-id/opengraph-image 404 '' ''
 

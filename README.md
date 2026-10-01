@@ -291,8 +291,9 @@ rendered on request would otherwise disagree with it. `vite build` and `vinext s
 every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per game, date
 and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under
 `dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at startup
-("Seeded 463 pre-rendered routes into memory cache") and serves each one as built; none renders
-per request.
+("Seeded 463 pre-rendered routes into memory cache") and serves each one as built. None of them
+renders per request; a 404, which no prerendered route covers, is what the server renders on
+request (see above).
 
 The response-header contract is the same on both servers: every page, metadata route and OG image
 carries the `next.config.ts` `headers()` rule,
