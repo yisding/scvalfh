@@ -17,7 +17,8 @@
 # What it checks: every page the sitemap lists answers 200 with its own content (a <main>, one <h1>
 # and the canonical URL of that path) and the next.config headers() cache rule, as do the metadata
 # routes and Route Handlers, whose images must be real PNGs of the declared size; hashed assets keep
-# the immutable cache; an unknown URL or param is a no-store 404 with the root not-found page,
+# the immutable cache (and a missing one is a no-store 404); an unknown URL, or an unknown param in
+# any dynamic family, is a no-store 404 with the root not-found page (its OG card an empty 404),
 # rendered with the same SITE_URL and build instant as the prerendered pages; pages carry an ETag
 # and answer a revalidation with 304; HEAD, POST and a trailing slash get the framework's answers;
 # poweredByHeader stays off; and vinext's internal x-vinext-app-page-cache marker never leaves the
@@ -177,7 +178,10 @@ if [ -z "$css" ]; then fail / "no /_next/static stylesheet in the HTML"; else
   fi
 fi
 
-for path in /no-such-page /game/not-a-real-id; do
+# An unknown URL, an unknown param in each generateStaticParams family (all dynamicParams=false,
+# and on Workers each family is its own render path), another season's history page, and a favicon
+# the site does not have: each is the root not-found page as a no-store 404.
+for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico; do
   expect "$path" 404 text/html "$nostore"
   grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)
@@ -188,7 +192,11 @@ done
 # An OG card for an unknown param is notFound() in the metadata route: an empty 404 that keeps the
 # headers() cache rule, as `next start` sends it (Next gives only page 404s the no-store header).
 # The 404 is as stable as any 200 here, both changing only with a new snapshot and deploy.
-expect /game/not-a-real-id/opengraph-image 404 '' "$public"
+for path in /game/not-a-real-id /scores/1999-01-01 /teams/nope; do
+  expect "$path/opengraph-image" 404 '' "$public"
+done
+# A hashed-asset URL that is not in the build is a no-store 404, never a 200 or the immutable cache.
+expect /_next/static/chunks/no-such-file.css 404 '' "$nostore"
 
 # The framework's answers to the other request shapes: HEAD as GET without a body, a POST to a page
 # refused, and a trailing slash redirected to the canonical path.
@@ -202,6 +210,24 @@ if [ "$target" = workers ]; then
   # And a file that is really there, when this tree holds the build being served.
   cached=$(find .cloudflare/output -path '*/_vinext/static-cache/*.html' 2>/dev/null | sed -n 1p || true)
   if [ -n "$cached" ]; then expect "/_vinext/static-cache/${cached##*/}" 404 '' ''; fi
+  # The Worker config the build emitted from cloudflare.config.ts, when this tree holds it: the
+  # typed config is only proven parsed here (`vinext-cloudflare deploy --dry-run` echoes nothing
+  # but the project name). Checks the settings the response contract above relies on.
+  config=.cloudflare/output/v0/workers/default/worker.config.json
+  if [ -f "$config" ]; then
+    date=$(grep -oE "compatibilityDate: '[0-9-]+'" cloudflare.config.ts | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+    problems=$(node -e '
+      const c = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")), p = [];
+      if (c.name !== "scvalfh") p.push(`name ${JSON.stringify(c.name)}`);
+      if (c.compatibilityDate !== process.argv[2]) p.push(`compatibilityDate ${c.compatibilityDate}, cloudflare.config.ts has ${process.argv[2]}`);
+      if (!c.compatibilityFlags?.includes("nodejs_compat")) p.push("no nodejs_compat flag");
+      if (c.assets?.notFoundHandling !== "none") p.push(`assets.notFoundHandling ${c.assets?.notFoundHandling}`);
+      if (!c.assets?.runWorkerFirst?.includes("/_vinext/static-cache/*")) p.push("assets.runWorkerFirst misses /_vinext/static-cache/*");
+      if (c.env?.ASSETS?.type !== "assets") p.push("no ASSETS binding");
+      if (Object.keys(c.vars ?? {}).length) p.push(`vars ${Object.keys(c.vars).join(",")} (expected none)`);
+      console.log(p.join("; "));' "$config" "$date")
+    if [ -n "$problems" ]; then fail "$config" "$problems"; else echo "ok $config"; fi
+  fi
 fi
 
 # Revalidation, on a fixed page and a generated one. `Cache-Control: max-age=0` is what a browser
