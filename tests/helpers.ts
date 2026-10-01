@@ -9,7 +9,7 @@ import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxprep
 import { resolveTeam } from '../lib/teams';
 import type { Division, Game, GameStatus } from '../lib/types';
 
-export const REPO = path.resolve(__dirname, '..');
+export const REPO = path.resolve(import.meta.dirname, '..');
 export const FIXTURE_DIR = path.join(REPO, 'tests', 'fixtures', 'maxpreps');
 
 /** Every captured schedule row, exactly as the 15 live requests would return them. */

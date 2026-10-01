@@ -1,0 +1,93 @@
+diff --git a/dist/config/config-matchers.js b/dist/config/config-matchers.js
+index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..96a6847cfddea1507a295b1c529dd6fad11fd034 100644
+--- a/dist/config/config-matchers.js
++++ b/dist/config/config-matchers.js
+@@ -231,10 +231,34 @@ function safeRegExp(pattern, flags) {
+ function escapeHeaderSource(source) {
+ 	const S = "";
+ 	const groups = [];
+-	const withPlaceholders = source.replace(/\(([^)]+)\)/g, (_m, inner) => {
+-		groups.push(inner);
+-		return `${S}G${groups.length - 1}${S}`;
+-	});
++	// Patched (scvalfh, patches/vinext@1.0.0.patch): the shipped `/\(([^)]+)\)/g` stops a group
++	// at its FIRST `)`, so a group that itself contains a group -- the negative lookahead in
++	// `/:path((?!_next/static/).*)`, path-to-regexp syntax Next.js accepts -- was split in two and
++	// its trailing `.*` escaped to a literal `\.`, leaving the header rule matching nothing.
++	// Scan for the balanced closing paren instead (skipping backslash escapes); a group with no
++	// content or no closing paren stays literal, as before.
++	let withPlaceholders = "";
++	for (let i = 0; i < source.length; i++) {
++		if (source[i] === "(") {
++			let depth = 1;
++			let j = i + 1;
++			for (; j < source.length; j++) {
++				if (source[j] === "\\") {
++					j++;
++					continue;
++				}
++				if (source[j] === "(") depth++;
++				else if (source[j] === ")" && --depth === 0) break;
++			}
++			if (depth === 0 && j > i + 1) {
++				groups.push(source.slice(i + 1, j));
++				withPlaceholders += `${S}G${groups.length - 1}${S}`;
++				i = j;
++				continue;
++			}
++		}
++		withPlaceholders += source[i];
++	}
+ 	let result = "";
+ 	const re = new RegExp(`${S}G(\\d+)${S}|:[\\w-]+|[.+?*]|[^.+?*:\\uE000]+`, "g");
+ 	let m;
+diff --git a/dist/server/metadata-route-response.js b/dist/server/metadata-route-response.js
+index d21f40e34522c379c8970cc49a553d4dee781a3e..832a40fa40880507ec9a76a57df6519318c6a4b4 100644
+--- a/dist/server/metadata-route-response.js
++++ b/dist/server/metadata-route-response.js
+@@ -4,6 +4,7 @@ import { decodeMatchedParams } from "../routing/utils.js";
+ import { getRequestExecutionContext } from "../shims/request-context.js";
+ import { VINEXT_METADATA_ROUTE_CACHE_HEADER } from "./headers.js";
+ import { notFoundResponse } from "./http-error-responses.js";
++import { getNextErrorDigest, parseNextHttpErrorDigest } from "./next-error-digest.js";
+ import { beginRouteCacheability, markRouteCacheabilityExplicitResponsePolicy } from "../shims/cacheability-classification.js";
+ import { hasCdnResponsePolicy, hasExplicitNonCacheableResponsePolicy } from "./cache-control.js";
+ import { isrCacheControl } from "./isr-cache.js";
+@@ -357,16 +358,27 @@ async function callDynamicMetadataRoute(route, match, makeThenableParams, functi
+ 	}
+ 	const paramsThenable = makeThenableParams(match.params ?? {});
+ 	let result;
+-	if (functions.hasGeneratedImageMetadata) {
+-		if (match.imageId === null || !isValidMetadataImageId(match.imageId)) return notFoundResponse();
+-		if (!functions.generateImageMetadata) return notFoundResponse();
+-		const matchedImageId = findGeneratedImageId(await functions.generateImageMetadata({ params: paramsThenable }), match.imageId, route.servedUrl);
+-		if (!matchedImageId) return notFoundResponse();
+-		result = await functions.defaultExport({
+-			params: paramsThenable,
+-			id: makeThenableMetadataRouteId(matchedImageId)
+-		});
+-	} else result = await functions.defaultExport({ params: paramsThenable });
++	// Patched (scvalfh, patches/vinext@1.0.0.patch): `notFound()` (or forbidden()/unauthorized())
++	// thrown from a metadata route escaped as an uncaught error and became a 500. Next.js compiles a
++	// metadata route to an App Route handler, which answers that digest with its HTTP status and an
++	// empty body; do the same.
++	try {
++		if (functions.hasGeneratedImageMetadata) {
++			if (match.imageId === null || !isValidMetadataImageId(match.imageId)) return notFoundResponse();
++			if (!functions.generateImageMetadata) return notFoundResponse();
++			const matchedImageId = findGeneratedImageId(await functions.generateImageMetadata({ params: paramsThenable }), match.imageId, route.servedUrl);
++			if (!matchedImageId) return notFoundResponse();
++			result = await functions.defaultExport({
++				params: paramsThenable,
++				id: makeThenableMetadataRouteId(matchedImageId)
++			});
++		} else result = await functions.defaultExport({ params: paramsThenable });
++	} catch (error) {
++		const digest = getNextErrorDigest(error);
++		const httpError = digest === null ? null : parseNextHttpErrorDigest(digest);
++		if (httpError) return new Response(null, { status: httpError.status });
++		throw error;
++	}
+ 	if (result instanceof Response) return withMetadataRouteCacheHeader(result, route);
+ 	let body;
+ 	if (route.type === "sitemap") {

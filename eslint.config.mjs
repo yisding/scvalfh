@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // vinext build output (`pnpm build:vinext`) and its dev/build cache.
+    "dist/**",
+    ".vinext/**",
   ]),
 ]);
 

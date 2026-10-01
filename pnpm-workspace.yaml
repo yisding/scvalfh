@@ -2,3 +2,10 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
+# Two vinext 1.0.0 bugs, each fixed where it lives (see the comments inside the patch); drop the
+# patch once upstream ships both fixes:
+#  - a nested group in a next.config `headers()` source is mis-parsed, so the
+#    `/:path((?!_next/static/).*)` Cache-Control rule matched nothing under `vinext start`;
+#  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404.
+patchedDependencies:
+  vinext@1.0.0: patches/vinext@1.0.0.patch

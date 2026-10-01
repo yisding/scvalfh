@@ -25,7 +25,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-const ROOT = path.resolve(__dirname, '..', '..');
+const ROOT = path.resolve(import.meta.dirname, '..', '..');
 
 function sources(dir: string): string[] {
   const out: string[] = [];
