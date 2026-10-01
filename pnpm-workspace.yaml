@@ -56,8 +56,14 @@ allowBuilds:
 #  - satori (next/og's renderer, via vinext -> @vercel/og) pins fflate 0.7.3 exactly;
 #    GHSA-px8p-9vwx-vf98 (unzipSync infinite loop on malformed ZIP64) is fixed in 0.7.5, the
 #    backport on the 0.7 line, and satori does not call unzipSync, so the override is API-neutral.
+#  - miniflare 5.20260926.0-alpha (the Workers runtime `vite preview --mode cloudflare` and
+#    `cf deploy` run) pins undici 7.29.0 exactly; eleven advisories on it, two high
+#    (GHSA-rfgv-xxqx-mfg5, GHSA-w293-vg96-wgc3), are fixed in 7.29.1, a patch release. undici is
+#    dev-time only here (the deployed Worker uses workerd's own fetch), but Sourcery blocks the PR
+#    on it.
 overrides:
   'fflate@<0.7.5': 0.7.5
+  'undici@<7.29.1': 7.29.1
 patchedDependencies:
   '@vinext/cloudflare@1.0.0': patches/@vinext__cloudflare@1.0.0.patch
   vinext@1.0.0: patches/vinext@1.0.0.patch
