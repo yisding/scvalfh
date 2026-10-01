@@ -1,20 +1,20 @@
 {
-  "contentHash": "13b50d5d521a5ac6f66948d7f8e808389ce08bbe106ea1f226ebd9d9f09582ba",
+  "contentHash": "16b7005f1a97e5a795dd5ff20a3dda4d5f9949e4049e34174c2e1b091855b829",
   "counts": {
-    "finals": 86,
+    "finals": 87,
     "games": 158,
     "leagueGames": 96,
     "mismatches": 0,
-    "pending": 1,
+    "pending": 3,
     "teams": 16
   },
   "crossCheck": {
-    "agreements": 24,
-    "compared": 29,
+    "agreements": 23,
+    "compared": 31,
     "conflicts": 1,
     "sbliveOnlyScored": 0
   },
-  "fetchedAt": "2026-09-30T07:47:24.193Z",
+  "fetchedAt": "2026-10-01T19:16:35.059Z",
   "officialFixturesUnmatched": 16,
   "officialStandingsPdfUrl": null,
   "sources": [
@@ -49,13 +49,13 @@
       "status": "ok"
     },
     {
-      "label": "los-altos schedule",
-      "rowCount": 21,
+      "label": "saint-francis schedule",
+      "rowCount": 23,
       "status": "ok"
     },
     {
-      "label": "saint-francis schedule",
-      "rowCount": 23,
+      "label": "los-altos schedule",
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -64,18 +64,13 @@
       "status": "ok"
     },
     {
-      "label": "cupertino schedule",
-      "rowCount": 16,
-      "status": "ok"
-    },
-    {
       "label": "fremont schedule",
       "rowCount": 22,
       "status": "ok"
     },
     {
-      "label": "los-gatos schedule",
-      "rowCount": 19,
+      "label": "cupertino schedule",
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -89,7 +84,7 @@
       "status": "ok"
     },
     {
-      "label": "presentation schedule",
+      "label": "los-gatos schedule",
       "rowCount": 19,
       "status": "ok"
     },
@@ -99,13 +94,18 @@
       "status": "ok"
     },
     {
+      "label": "presentation schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
       "label": "santa-clara schedule",
       "rowCount": 19,
       "status": "ok"
     },
     {
-      "label": "monta-vista schedule",
-      "rowCount": 18,
+      "label": "saratoga schedule",
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -114,8 +114,8 @@
       "status": "ok"
     },
     {
-      "label": "saratoga schedule",
-      "rowCount": 17,
+      "label": "monta-vista schedule",
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -136,11 +136,6 @@
     {
       "label": "scval standings index",
       "rowCount": 2,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-09-16",
-      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -199,6 +194,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-01",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
       "label": "palo-alto school calendar",
       "rowCount": 17,
       "status": "ok"
@@ -219,7 +219,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-09-30",
+  "today": "2026-10-01",
   "warnings": 14,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
