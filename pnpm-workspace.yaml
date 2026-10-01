@@ -12,10 +12,11 @@ allowBuilds:
 # release built on the same internals as that plugin build (miniflare 5.20260926.0-alpha,
 # @cloudflare/config 0.20.0, build-output-utils 0.8.2, runtime-types 0.1.4); later cf betas move
 # all four, so bump the two together and re-run the Workers build, preview and `--dry-run` deploy.
-# cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile pins
-# the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
+# cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile
+# pins the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
 # Ten vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
-# comments inside the two patches); drop each patch once upstream ships all of its fixes:
+# comments inside the two patches and README "The vinext patch"); drop each patch once upstream
+# ships all of its fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
 #    `\..*`), so the `/:path((?!_next/static/).*)` Cache-Control rule matched only paths starting
 #    with `/.` under `vinext start`, none of this site's routes;
@@ -26,13 +27,14 @@ allowBuilds:
 #  - the rule also overwrote the no-store header on 404 pages, so a CDN could cache a 404;
 #  - pages served from the cache carried no ETag, so revalidation never got a 304 (Next sends one;
 #    like Next, cached metadata route and Route Handler bodies get none);
-#  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered, so
-#    the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
-#    prerenders all of them (build/prerender.js, server/metadata-route-response.js, server/seed-cache.js);
-#  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so its
-#    og:image/twitter:image pointed at that segment's OG image for the bad param (itself a 404);
-#    Next treats it as a route miss and serves the root not-found (server/app-page-dispatch.js,
-#    server/app-fallback-renderer.js);
+#  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered,
+#    so the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
+#    prerenders all of them (build/prerender.js, server/metadata-route-response.js,
+#    server/seed-cache.js);
+#  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so
+#    its og:image/twitter:image pointed at that segment's OG image for the bad param (itself a
+#    404); Next treats it as a route miss and serves the root not-found
+#    (server/app-page-dispatch.js, server/app-fallback-renderer.js);
 #  - vinext refused every build without the cloudflare() plugin whenever cloudflare.config.ts
 #    exists, so `pnpm build:vinext` (Node) could not run beside the Workers target; a Vite config
 #    that imports @cloudflare/vite-plugin now chooses per build (index.js);
@@ -42,8 +44,8 @@ allowBuilds:
 #  - on Workers the internal x-vinext-app-page-cache marker leaked on every cached page, and cached
 #    pages carried no ETag, so revalidation never got the 304 it gets on Node
 #    (server/app-router-entry.js);
-#  - @vinext/cloudflare's staticAssetsAdapter packaged prerendered pages and metadata routes but not
-#    Route Handlers, so the Worker rendered /icon-192 and /icon-512 per request
+#  - @vinext/cloudflare's staticAssetsAdapter packaged prerendered pages and metadata routes but
+#    not Route Handlers, so the Worker rendered /icon-192 and /icon-512 per request
 #    (patches/@vinext__cloudflare@1.0.0.patch, dist/cache/static-assets-adapter.build.js).
 patchedDependencies:
   '@vinext/cloudflare@1.0.0': patches/@vinext__cloudflare@1.0.0.patch
