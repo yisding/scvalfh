@@ -14,7 +14,7 @@ allowBuilds:
 # all four, so bump the two together and re-run the Workers build, preview and `--dry-run` deploy.
 # cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile
 # pins the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
-# Ten vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
+# Eleven vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
 # comments inside the two patches and README "The vinext patch"); drop each patch once upstream
 # ships all of its fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
@@ -37,7 +37,11 @@ allowBuilds:
 #    (server/app-page-dispatch.js, server/app-fallback-renderer.js);
 #  - vinext refused every build without the cloudflare() plugin whenever cloudflare.config.ts
 #    exists, so `pnpm build:vinext` (Node) could not run beside the Workers target; a Vite config
-#    that imports @cloudflare/vite-plugin now chooses per build (index.js);
+#    that imports and calls cloudflare() (the text scan `vinext-cloudflare deploy` uses) now
+#    chooses per build, except under `vinext-cloudflare deploy`, which must build for Workers
+#    (`--env cloudflare`) or `cf deploy` would upload a stale build (index.js);
+#  - vinext's generated .assetsignore listed only `.vite`, so Workers Static Assets served the
+#    build-only vinext-client-entry-manifest.json publicly; it is listed too (index.js);
 #  - a Cloudflare build's prerender, which runs the Worker bundle in Node, could not import
 #    next/og's .wasm the workerd way and died on the first OG image or icon
 #    (build/prerender-cloudflare-loader.js);

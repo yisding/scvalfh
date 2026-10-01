@@ -198,9 +198,11 @@ jobs:
           cache: pnpm
 
       # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
-      # which lists the gaps it closes). Without it the build below still succeeds, but pages
-      # revalidate after five minutes and the icons, OG images and Route Handlers render on
-      # every request — the assertions after it are what catch a patch that no longer takes effect.
+      # which lists the gaps it closes). Without it the build below is refused outright: stock
+      # vinext stops any build that lacks the cloudflare() plugin while cloudflare.config.ts
+      # exists. A patch that applies only in part is caught after the build: the assertions fail
+      # on pages that revalidate after five minutes, and the smoke on icons, OG images and Route
+      # Handlers rendered on every request.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -286,9 +288,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # What `pnpm deploy:cloudflare` checks before it builds or uploads anything: the Vite config
-      # wires in cloudflare() and the Worker config resolves. It needs no credentials, so it runs
-      # first and a broken setup fails in seconds rather than after the build.
+      # What `pnpm deploy:cloudflare` checks before it builds or uploads anything, all of it by
+      # existence or text scan: cloudflare.config.ts is there, the deploy dependencies (cf,
+      # @cloudflare/vite-plugin) are installed, and vite.config.ts imports and calls cloudflare().
+      # It needs no credentials, so it runs first and a missing piece fails in seconds. It never
+      # loads cloudflare.config.ts: the build below is the first to parse it, and the smoke checks
+      # the Worker config the build emitted from it.
       - name: Validate the deploy setup (dry run)
         run: pnpm exec vinext-cloudflare deploy --env cloudflare --dry-run
 
@@ -309,8 +314,10 @@ jobs:
       # /_vinext/static-cache/ in the Static Assets upload. So on top of the prerender check, every
       # prerendered page, RSC payload and .route body must be listed in its index.json, kind for
       # kind (the counts follow the snapshot, so they are compared with the prerender, never
-      # hardcoded); `_headers` must give /_next/static/* the immutable cache; and no precompressed
-      # copy may ship. And nothing that can hold a secret is in the output: the plugin reads
+      # hardcoded), and every file the index lists must be there; `_headers` must give
+      # /_next/static/* the immutable cache; no precompressed copy may ship, and nothing may sit at
+      # the top level of the upload but `_headers`, `_next/` and `_vinext/` (build metadata is kept
+      # out by .assetsignore). And nothing that can hold a secret is in the output: the plugin reads
       # .dev.vars and .env* for local runs only, and anything under .cloudflare/output is uploaded.
       - name: Assert every route is prerendered and packaged
         run: |

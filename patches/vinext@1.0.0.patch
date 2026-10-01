@@ -253,44 +253,96 @@ index ce4d2608ba0b4cbbcde3c06a71c39c31cc7674ca..3dad0bb2cfa8a8a0bda7bc032be0251a
  	const re = new RegExp(`${S}G(\\d+)${S}|:[\\w-]+|[.+?*]|[^.+?*:\\uE000]+`, "g");
  	let m;
 diff --git a/dist/index.js b/dist/index.js
-index e938d35fc6dc19c52441c23306b33c670a8a1bac..cf7166946477dc736f8429bad690021262f0c000 100644
+index e938d35fc6dc19c52441c23306b33c670a8a1bac..9a44d5391d58cae8afb2671b3c7258571bfc9123 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -164,6 +164,25 @@ if (earlyViteCliInvocation) {
+@@ -60,7 +60,7 @@ import { VINEXT_PRERENDER_CONFIG_PLUGIN_PROPERTY, VINEXT_ROUTE_ROOT_CONFIG_PLUGI
+ import { PAGES_CLIENT_ASSETS_MODULE, buildPagesClientAssetsModule, writePagesClientAssetsModuleIfMissing } from "./build/pages-client-assets-module.js";
+ import { createPreviewBuildCredentials, getPreviewBuildCredentials } from "./build/preview-credentials.js";
+ import { VINEXT_BUILD_LIFECYCLE_CONFIG, createBuildLifecyclePlugins } from "./build/lifecycle.js";
+-import { ensureAssetsIgnore } from "./build/assets-ignore.js";
++import { DEFAULT_VINEXT_ASSET_IGNORE_PATTERNS, ensureAssetsIgnore } from "./build/assets-ignore.js";
+ import { emitNextClientRuntimeManifests } from "./build/next-client-runtime-manifests.js";
+ import { collectInlineCssManifest, injectInlineCssManifestGlobal } from "./build/inline-css.js";
+ import { readTrustedRevalidationHostname } from "./server/revalidation-host.js";
+@@ -164,6 +164,51 @@ if (earlyViteCliInvocation) {
  	});
  }
  installSocketErrorBackstop();
 +/**
 +* Patched (scvalfh, patches/vinext@1.0.0.patch): whether the Vite config file imports
-+* @cloudflare/vite-plugin, by the same comment-stripped text scan `vinext-cloudflare deploy` uses
-+* (@vinext/cloudflare dist/deploy-config.js viteConfigHasCloudflarePlugin). The build guard below
-+* refused every build without the cloudflare() plugin whenever cloudflare.config.ts or a wrangler
-+* config exists, so a project that targets both Node and Workers from one config (cloudflare() only
-+* under `--mode cloudflare`, as in this repo's vite.config.ts) could not build for Node at all. A
-+* config that imports the plugin and leaves it out of this build chose its target; the guard still
-+* fires for a project with a Cloudflare config that never wired the plugin in.
++* `cloudflare` from @cloudflare/vite-plugin (a named import, or a destructured require) and calls
++* that binding, by the same comment-stripped text scan `vinext-cloudflare deploy` uses
++* (@vinext/cloudflare dist/deploy-config.js viteConfigHasCloudflarePlugin, ported here line for
++* line). The build guard below refused every build without the cloudflare() plugin whenever
++* cloudflare.config.ts or a wrangler config exists, so a project that targets both Node and Workers
++* from one config (cloudflare() only under `--mode cloudflare`, as in this repo's vite.config.ts)
++* could not build for Node at all. A config that calls the plugin but leaves it out of this build
++* chose its target. The guard still fires for a project with a Cloudflare config that never wired
++* the plugin in (no import, a type-only import, or an imported binding that is never called).
 +*/
-+function viteConfigImportsCloudflarePlugin(configFile) {
++function viteConfigCallsCloudflarePlugin(configFile) {
 +	if (!configFile) return false;
++	const escapeRegExp = (value) => value.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
 +	try {
 +		const content = fs.readFileSync(configFile, "utf-8").replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
-+		return /\bfrom\s*["']@cloudflare\/vite-plugin["']|\brequire\s*\(\s*["']@cloudflare\/vite-plugin["']\s*\)/.test(content);
++		const requireBinding = content.match(/(?:const|let|var)\s*{([^}]*)}\s*=\s*require\s*\(\s*["']@cloudflare\/vite-plugin["']\s*\)/)?.[1];
++		if (requireBinding) {
++			const requireMatch = requireBinding.match(/(?:^|,)\s*cloudflare\s*(?::\s*([A-Za-z_$][\w$]*))?\s*(?:,|$)/);
++			if (requireMatch) {
++				const binding = requireMatch[1] ?? "cloudflare";
++				return new RegExp(`\\b${escapeRegExp(binding)}\\s*\\(`).test(content);
++			}
++		}
++		const namedImports = content.match(/import\s*{([^}]*)}\s*from\s*["']@cloudflare\/vite-plugin["']/)?.[1];
++		if (!namedImports) return false;
++		const importMatch = namedImports.match(/(?:^|,)\s*cloudflare\s*(?:as\s+([A-Za-z_$][\w$]*))?\s*(?:,|$)/);
++		if (!importMatch) return false;
++		const binding = importMatch[1] ?? "cloudflare";
++		return new RegExp(`\\b${escapeRegExp(binding)}\\s*\\(`).test(content);
 +	} catch {
 +		return false;
 +	}
 +}
++/**
++* Patched (scvalfh): the error for a `vinext-cloudflare deploy` whose build left cloudflare() out.
++* The deploy passes its own build-lifecycle object (VINEXT_BUILD_LIFECYCLE_CONFIG) and always
++* uploads a Workers build, so a config that only adds the plugin in one mode must be deployed in
++* that mode (`--env <mode>`); without this the deploy built the Node target and then ran
++* `cf deploy --prebuilt` with no `--mode`, which uploads whatever .cloudflare/output was left over.
++*/
++function formatDeployWithoutCloudflarePluginError(mode, configFile) {
++	return `[vinext] vinext-cloudflare deploy built in Vite mode "${mode}", but ${configFile ?? "the Vite config"} adds the cloudflare() plugin only in another mode, so this build would be the Node target.\n\n         Fix: pass the mode that adds cloudflare(), e.g. \`vinext-cloudflare deploy --env cloudflare\`.`;
++}
  function hasServerOnlyMarkerImport(code) {
  	if (!code.includes("server-only")) return false;
  	let ast;
-@@ -1947,7 +1966,7 @@ function vinext(options = {}) {
+@@ -1947,7 +1992,8 @@ function vinext(options = {}) {
  				if (rscPluginPromise) {
  					if (config.plugins.filter((p) => p && typeof p === "object" && "name" in p && p.name === "rsc").length > 1) throw new Error("[vinext] Duplicate @vitejs/plugin-rsc detected.\n         vinext auto-registers @vitejs/plugin-rsc when app/ is detected.\n         Your config also registers it manually, which doubles build time.\n\n         Fix: remove the explicit rsc() call from your plugins array.\n         Or: pass rsc: false to vinext() if you want to configure rsc() yourself.");
  				}
 -				if (config.command === "build" && !hasCloudflarePlugin && !hasNitroPlugin && hasWranglerConfig(root) && !options.disableAppRouter) throw new Error(formatMissingCloudflarePluginError({
-+				if (config.command === "build" && !hasCloudflarePlugin && !hasNitroPlugin && hasWranglerConfig(root) && !options.disableAppRouter && !viteConfigImportsCloudflarePlugin(config.configFile)) throw new Error(formatMissingCloudflarePluginError({
++				if (config.command === "build" && !hasCloudflarePlugin && !hasNitroPlugin && hasWranglerConfig(root) && !options.disableAppRouter && viteConfigCallsCloudflarePlugin(config.configFile) && buildLifecycleInvocation !== void 0) throw new Error(formatDeployWithoutCloudflarePluginError(config.mode, config.configFile));
++				if (config.command === "build" && !hasCloudflarePlugin && !hasNitroPlugin && hasWranglerConfig(root) && !options.disableAppRouter && !viteConfigCallsCloudflarePlugin(config.configFile)) throw new Error(formatMissingCloudflarePluginError({
  					isAppRouter: hasAppDir,
  					configFile: config.configFile
  				}));
+@@ -3948,7 +3994,14 @@ export const loadServerActionClient = ${hasServerActions ? `() => import(${JSON.
+ 						fs.mkdirSync(clientDir, { recursive: true });
+ 						fs.writeFileSync(headersPath, headersContent);
+ 					}
+-					ensureAssetsIgnore(clientDir);
++					/**
++					* Patched (scvalfh, patches/vinext@1.0.0.patch): also keep the client-entry manifest
++					* out of the upload. It is build metadata like .vite/ (read back from the client
++					* output only by the build, utils/client-runtime-metadata.js); listed only as `.vite`,
++					* Workers Static Assets served it publicly at /vinext-client-entry-manifest.json,
++					* where `vinext start` answers 404.
++					*/
++					ensureAssetsIgnore(clientDir, [...DEFAULT_VINEXT_ASSET_IGNORE_PATTERNS, VINEXT_CLIENT_ENTRY_MANIFEST]);
+ 				}
+ 			}
+ 		},
 diff --git a/dist/server/app-fallback-renderer.js b/dist/server/app-fallback-renderer.js
 index ed8fb10d6cd048381471b08cced0d060883cd653..ea047ac2305fb30ae7ddca5f217c7e72a25c193f 100644
 --- a/dist/server/app-fallback-renderer.js

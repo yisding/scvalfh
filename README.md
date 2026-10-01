@@ -60,9 +60,11 @@ cifccs.org / VNN .ics ──┘                                                 
 ### The cron
 
 `.github/workflows/update-data.yml` runs `pnpm fetch-data` on a schedule, **twice a day, only in
-season** (cron `0 14 * 8-11 *` and `0 5 * 8-11 *` — 7:00 AM and 10:00 PM Pacific during PDT,
-restricted to Aug-Nov so it never fires out of season; `fetch-data.ts` also has its own Aug 1 -
-Nov 30 window guard as a second line of defense). It runs the test suite against the snapshot it
+season** (cron `0 14 * 8-12 *` and `0 5 * 8-12 *` — 7:00 AM and 10:00 PM Pacific during PDT,
+restricted to Aug-Dec so it rarely fires out of season; the cron's months are UTC, and December
+is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
+season itself is bounded by `fetch-data.ts`'s own Aug 1 - Nov 30 Pacific window guard: a run
+outside it exits without writing anything. It runs the test suite against the snapshot it
 just wrote, and commits `data/snapshot.json` + `data/snapshot.meta.json` **only if they changed**.
 The commit is what triggers your hosting provider's rebuild — that's the entire point of the job,
 so it deliberately does not carry `[skip ci]`.
@@ -152,14 +154,16 @@ against it (`scripts/a11y-axe.mjs`) across every route family, both themes, both
 desktop viewport, failing on any serious/critical accessibility violation. Two more jobs, one per
 vinext target, run beside them (not after `gates`, so a vinext regression shows even when Next is
 red). `vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup
-with `vinext-cloudflare deploy --dry-run`, which needs no credentials, then builds with
-`pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
+with `vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then
+builds with `pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
 `scripts/assert-vinext-prerender.mjs` that every route rendered with `revalidate: false`, that
 the static pages, metadata routes and Route Handlers are on disk, that the game, date and team
 pages and their OG images clear the same minimum counts as the Next build and that the
 prerendered sitemap lists exactly the prerendered pages; for the Worker it also checks that every
-one of them is packaged into the static-assets cache, that `_headers` is there, and that no
-precompressed copy or env file ships. Then each starts its server (`vinext start`, or the Worker
+one of them is packaged into the static-assets cache and every file its index lists is there,
+that `_headers` is there, and that nothing else ships: no precompressed copy, and nothing at the
+top level of the upload but `_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it
+out. Then each starts its server (`vinext start`, or the Worker
 in workerd through `vite preview`) and runs the same `scripts/smoke-server.sh` and axe passes
 against it. Uploading the Worker is `.github/workflows/deploy-cloudflare.yml`'s job (see
 "Cloudflare Workers").
@@ -394,7 +398,13 @@ above holds there, ETag and 304 included (the patched Worker entry computes them
 **Deploying.** `pnpm deploy:cloudflare` loads `vite.config.ts` in mode `cloudflare`, builds and
 prerenders, then runs `cf deploy --prebuilt --mode cloudflare`, which uploads the Worker and its
 Static Assets (about 730 files, 45 MB) and promotes the new version. `--dry-run` validates the
-setup without building or uploading; `--skip-build` uploads the existing `.cloudflare/output/`.
+setup without building or uploading, by existence and text checks only: `cloudflare.config.ts`
+is there, `cf` and the plugin are installed, and `vite.config.ts` imports and calls
+`cloudflare()` (the config is first parsed by the build); `--skip-build` uploads the existing
+`.cloudflare/output/`. Always deploy through `pnpm deploy:cloudflare` (or pass
+`--env cloudflare`): a bare `vinext-cloudflare deploy` builds in mode `production`, where
+`vite.config.ts` leaves `cloudflare()` out, and the patched vinext refuses that build rather than
+let `cf deploy` upload a stale `.cloudflare/output/` (see "The vinext patch").
 A real deploy needs:
 
 - a Cloudflare account with a workers.dev subdomain (the Worker is then served at
@@ -410,10 +420,16 @@ A real deploy needs:
 `.github/workflows/deploy-cloudflare.yml` runs that deploy from GitHub Actions. It follows the `ci`
 and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, because `update-data`
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
-`push` workflow. It deploys the commit after a green `ci` run on `main` (never a pull request's),
-and `main`'s tip after an `update-data` run that committed a new snapshot; a run whose commit is no
-longer `main`'s tip skips itself, so an older build never overwrites a newer one, and
-`workflow_dispatch` deploys `main`'s tip by hand. It needs the `CLOUDFLARE_API_TOKEN` secret, a
+`push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
+`main`: it walks down from the tip past `update-data`'s snapshot commits (by the bot, data files
+only, tested by that job before it pushed) to the commit whose code ships, and deploys only if
+that commit has a successful `ci` run on `main` and nothing but the data changed above it.
+Otherwise it skips, and that commit's own `ci` run deploys once it passes; a red one never
+ships, even when a data refresh is rebased on top of it. A green `ci` run on `main` (never a pull
+request's) thus deploys the commit it tested, plus any snapshot since; an `update-data` run
+deploys its new snapshot, and nothing if it committed none and `main` did not move. Deploying the
+tip means an older build never overwrites a newer one, and `workflow_dispatch` deploys `main`'s
+tip by hand under the same check. It needs the `CLOUDFLARE_API_TOKEN` secret, a
 `CLOUDFLARE_ACCOUNT_ID` variable (or secret) and a `SITE_URL` variable holding a bare origin
 (Settings → Secrets and variables → Actions). Without the token every run is a green no-op with a
 notice saying so; a token without the other two fails, naming what is missing. Its build does not
@@ -430,7 +446,7 @@ authentication token found". CI's `cloudflare` job checks the same without crede
 ### The vinext patch
 
 `patches/vinext@1.0.0.patch` is applied by pnpm at install (`patchedDependencies` in
-`pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes ten
+`pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes eleven
 vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start` or kept one of
 the two vinext targets from building or serving it; each fix carries a comment citing the
 behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are under
@@ -461,9 +477,14 @@ behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are
   the root not-found, as on Next.
 - **One config, two targets** (`index.js`): with `cloudflare.config.ts` in the repo, vinext
   refused every build that lacked the `cloudflare()` plugin, so `pnpm build:vinext` could not run
-  at all. A Vite config that imports `@cloudflare/vite-plugin` now chooses per build (found by the
-  same text scan `vinext-cloudflare deploy` uses); the guard still stops a project whose
-  Cloudflare config never wired the plugin in.
+  at all. A Vite config that imports `cloudflare` from `@cloudflare/vite-plugin` and calls it now
+  chooses per build (found by the same text scan `vinext-cloudflare deploy` uses); the guard still
+  stops a project whose Cloudflare config never wired the plugin in (no import, a type-only import,
+  or a binding never called). A `vinext-cloudflare deploy` build that leaves the plugin out (no
+  `--env cloudflare`) is refused too, since `cf deploy` would then upload a stale Workers build.
+- **Build metadata in the Workers upload** (`index.js`): vinext's `.assetsignore` listed only
+  `.vite`, so Workers Static Assets served `vinext-client-entry-manifest.json` (build-only
+  metadata) publicly, where `vinext start` and Next answer 404. It is now listed too.
 - **`.wasm` in the Cloudflare prerender** (`build/prerender-cloudflare-loader.js`): the
   prerender runs the Worker bundle in Node, which could not import next/og's `.wasm` modules the
   workerd way, so `pnpm build:cloudflare` died on the first OG image or icon. A loader hook now

@@ -7,15 +7,24 @@
 # main is what redeploys — including update-data.yml's snapshot commit, which is the whole point of
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
 # `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
-# the two workflows that put commits on main:
-#   - ci, after a green run on main (never a pull_request run): deploys the commit ci tested, so
-#     a red build is never shipped;
-#   - update-data, after a green run: deploys main's tip if that run committed a new snapshot (the
-#     data was tested before it was pushed; ci never runs on it), and nothing if it did not.
-# A run whose commit is no longer main's tip by the time it starts skips itself: the run for the
-# newer commit deploys that one, and an older build must never overwrite it (a human commit's ci
-# can finish after the data refresh that was rebased on top of it). workflow_dispatch deploys
-# main's tip by hand, e.g. once the secrets are first set.
+# the two workflows that put commits on main, ci (a green run on main, never a pull_request run)
+# and update-data (a green run), and every run deploys main's tip as it is when the run starts.
+#
+# What may ship. The code that ships must have passed ci on main; update-data's snapshot commits
+# only replace data/snapshot.json and its meta file, after running the suite on them, and ci never
+# runs on them. So the gate walks down from main's tip past the snapshot commits (by the bot, one
+# parent, "data: refresh snapshot ...") to the newest other commit, the one whose code ships,
+# requires a successful ci run on main for exactly that commit, and requires that nothing but the
+# two data files changed above it. Otherwise it skips: the ci run of that commit deploys main once
+# it passes, and a red one never ships, whichever workflow happened to finish first. Thus:
+#   - after ci: main's tip, whose code is the commit ci just passed (or, if a human commit landed
+#     since, main's tip only once that commit's own ci has passed);
+#   - after update-data: main's tip if main moved since the run started (its new snapshot, or
+#     commits whose ci has passed), and nothing if update-data committed nothing and main did not
+#     move. A snapshot rebased onto a human commit whose ci is still running waits for that ci.
+# Deploying the tip, never the triggering commit, means an older build never overwrites a newer
+# one. workflow_dispatch deploys main's tip by hand under the same check (it fails, rather than
+# skips, when the tip's code has not passed ci), e.g. once the secrets are first set.
 #
 # Configuration (repository Settings → Secrets and variables → Actions):
 #   - secret CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template;
@@ -43,12 +52,18 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# actions: read for the gate's lookup of ci runs (the API that lists a workflow's runs).
 permissions:
   contents: read
+  actions: read
 
 # One deploy at a time, and never cancelled halfway through an upload. Two data refreshes (or a
 # refresh and a human commit) landing close together queue here instead of racing; the queued run
-# then finds main's tip itself, so the last deploy to finish is always the newest commit.
+# then finds main's tip itself, so the last deploy to finish is always the newest commit. GitHub
+# keeps only one pending run per group (a newer one cancels it); that loses nothing, since the
+# newer run deploys the same tip under the same check. The one gap: a pending ci deploy replaced
+# by an update-data run that committed nothing and started from that same commit (that run
+# skips); the next commit or a workflow_dispatch deploys it.
 concurrency:
   group: deploy-cloudflare
   cancel-in-progress: false
@@ -94,22 +109,56 @@ jobs:
             echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; README \"Cloudflare Workers\")"
             exit 1
           fi
-          # An origin, as site-url.ts expects (it drops one trailing slash): a path would end up
-          # in front of every canonical URL and the sitemap.
-          if [[ ! "$SITE_URL" =~ ^https?://[^/]+/?$ ]]; then
-            echo "::error title=deploy-cloudflare misconfigured::SITE_URL '$SITE_URL' must be an origin such as https://scvalfh.example.workers.dev (scheme and host, no path)"
+          # An origin, as site-url.ts expects (it drops one trailing slash): a path, query string or
+          # stray whitespace would end up in front of every canonical URL and the sitemap. Host
+          # characters only, an optional port, nothing after but one slash.
+          origin_re='^https?://[A-Za-z0-9.-]+(:[0-9]+)?/?$'
+          if [[ ! "$SITE_URL" =~ $origin_re ]]; then
+            echo "::error title=deploy-cloudflare misconfigured::SITE_URL '$SITE_URL' must be an origin such as https://scvalfh.example.workers.dev (scheme, host and optional port; no path, query or spaces)"
             exit 1
           fi
           if [ "$EVENT" = workflow_dispatch ] && [ "$REF" != refs/heads/main ]; then
             echo "::error title=deploy-cloudflare::production deploys come from main; run this workflow on main, not $REF"
             exit 1
           fi
+          # Not deploying is a green skip after a workflow_run, and a failure when asked by hand.
+          refuse() {
+            if [ "$EVENT" = workflow_dispatch ]; then echo "::error title=deploy-cloudflare::$1"; exit 1; fi
+            skip "skipped: $1"
+          }
           tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
-          if [ "$EVENT" = workflow_run ] && [ "$SOURCE" = ci ] && [ "$SOURCE_SHA" != "$tip" ]; then
-            skip "skipped: ci passed on $SOURCE_SHA, but main is now at $tip; the run for that commit deploys it."
-          fi
           if [ "$EVENT" = workflow_run ] && [ "$SOURCE" = update-data ] && [ "$SOURCE_SHA" = "$tip" ]; then
-            skip "skipped: update-data committed no new snapshot, so the deployed build is current."
+            skip "skipped: update-data committed no new snapshot and main has not moved, so the deployed build is current."
+          fi
+          # base: the newest commit at or below main's tip that is not an update-data snapshot
+          # commit (update-data.yml "Commit the snapshot": by the bot, one parent, that message).
+          # Its code is the code that ships; the snapshot commits above it only replace the data,
+          # which update-data ran the suite on before it pushed (ci never runs on them: they are
+          # pushed with GITHUB_TOKEN).
+          base=''
+          for page in 1 2 3 4 5; do
+            base=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$tip&per_page=100&page=$page" --jq '
+              first(.[] | select(((.author.login // "") == "github-actions[bot]"
+                and (.commit.message | startswith("data: refresh snapshot"))
+                and (.parents | length) == 1) | not) | .sha) // ""')
+            [ -z "$base" ] || break
+          done
+          [ -n "$base" ] || refuse "main ($tip) sits on more than 500 snapshot commits; deploy by hand after checking it."
+          # Between base and the tip only the two data files may change, so the tree that ships is
+          # base's tree with a newer snapshot.
+          others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
+            if .status == "identical" or .status == "ahead"
+            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json"] | join(" ")
+            else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
+          [ -z "$others" ] || refuse "main ($tip) changes more than the snapshot above $base: $others"
+          # And base must have passed ci on main: a successful ci run for that exact commit, other
+          # than a pull_request run (a fork's branch can be called main too). For a ci run that
+          # is the run that triggered this one, unless main has gained a commit since; then that
+          # commit's own ci run decides, and a red one never ships.
+          if [ "$EVENT" != workflow_run ] || [ "$SOURCE" != ci ] || [ "$SOURCE_SHA" != "$base" ]; then
+            passed=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$base&branch=main&status=success" \
+              --jq '[.workflow_runs[] | select(.event != "pull_request")] | length')
+            [ "$passed" -gt 0 ] || refuse "main is at $tip, whose code is $base's, and ci has not passed on $base on main (yet); its ci run deploys main once it does."
           fi
           echo "deploying $tip"
           echo "sha=$tip" >> "$GITHUB_OUTPUT"

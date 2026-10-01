@@ -19,10 +19,14 @@
  * seed a cache from: staticAssetsAdapter() (vite.config.ts) copies each prerendered file into the
  * Workers Static Assets output under /_vinext/static-cache/ and lists it in index.json, and the
  * Worker reads only what is listed. So every staged file must be listed, kind for kind (a Route
- * Handler body left out was rendered per request, see patches/@vinext__cloudflare@1.0.0.patch);
- * `_headers` must hold a /_next/static/* rule giving it the immutable Cache-Control (no Node
- * server sets it on Workers); and no .br/.gz/.zst copy may ship, since precompress is the Node
- * target's option and those files would be public assets with no Content-Type.
+ * Handler body left out was rendered per request, see patches/@vinext__cloudflare@1.0.0.patch),
+ * and every listed file must be there beside index.json, and nothing unlisted (a listed file that
+ * is missing is a payload the Worker renders on request); `_headers` must hold a /_next/static/*
+ * rule giving it the immutable Cache-Control (no Node server sets it on Workers); no .br/.gz/.zst
+ * copy may ship, since precompress is the Node target's option and those files would be public
+ * assets with no Content-Type; and nothing else may sit at the top level of the upload, where
+ * Static Assets serves it before the Worker runs: only `_headers`, `_next/` and `_vinext/`, plus
+ * what `.assetsignore` keeps out (vinext lists `.vite` and its client-entry manifest there).
  */
 
 import fs from 'node:fs';
@@ -77,7 +81,8 @@ if (cloudflare) {
     .map((f) => f.split(path.sep).join('/')).filter((f) => f === index || f.endsWith(`/${index}`));
   if (found.length !== 1) throw new Error(`expected one ${index} under .cloudflare/output, found ${found.length}`);
   const assets = path.join('.cloudflare/output', found[0].slice(0, -index.length));
-  const listed = Object.values(JSON.parse(fs.readFileSync(path.join(assets, index), 'utf8')));
+  const indexed = JSON.parse(fs.readFileSync(path.join(assets, index), 'utf8'));
+  const listed = Object.values(indexed);
   const kinds = ['html', 'rsc', 'route'];
   const packaged = Object.fromEntries(kinds.map((k) => [k, listed.filter((e) => e.kind === k).length]));
   const staged = Object.fromEntries(kinds.map((k) => [k, count('.', (f) => f.endsWith(`.${k}`))]));
@@ -85,6 +90,13 @@ if (cloudflare) {
     `staged: ${kinds.map((k) => `${k} ${staged[k]}`).join(', ')}`);
   const short = kinds.filter((k) => packaged[k] !== staged[k]);
   if (short.length) throw new Error('static cache does not match the prerender: ' + short.map((k) => `${k} ${packaged[k]} of ${staged[k]}`).join(', '));
+  // Each index entry is the file <key>.<kind> beside index.json (static-assets-adapter.build.js).
+  const cacheDir = path.join(assets, path.dirname(index));
+  const listedFiles = new Set(Object.entries(indexed).map(([key, entry]) => `${key}.${entry.kind}`));
+  const absent = [...listedFiles].filter((f) => !fs.existsSync(path.join(cacheDir, f)));
+  if (absent.length) throw new Error(`${absent.length} files listed in ${index} are missing: ${absent.slice(0, 5).join(', ')}`);
+  const strays = fs.readdirSync(cacheDir).filter((f) => f !== 'index.json' && !listedFiles.has(f));
+  if (strays.length) throw new Error(`${strays.length} files in ${path.dirname(index)} are not in its index: ${strays.slice(0, 5).join(', ')}`);
   // _headers is a list of rules: an unindented URL pattern, then its indented `Name: value` lines.
   const rules = new Map();
   let rule;
@@ -98,4 +110,12 @@ if (cloudflare) {
   }
   const compressed = fs.readdirSync(assets, { recursive: true }).filter((f) => /\.(br|gz|zst)$/.test(f));
   if (compressed.length) throw new Error(`precompressed copies would ship as assets: ${compressed.slice(0, 5).map((f) => path.join(assets, f)).join(', ')}`);
+  // Top-level names .assetsignore keeps out of the upload (gitignore syntax; vinext writes bare
+  // names, and the file itself is never uploaded).
+  const ignorePath = path.join(assets, '.assetsignore');
+  const ignored = new Set(['.assetsignore', ...(fs.existsSync(ignorePath) ? fs.readFileSync(ignorePath, 'utf8').split(/\r?\n/) : [])
+    .map((l) => l.trim()).filter((l) => l && !l.startsWith('#')).map((l) => l.replace(/^\/|\/$/g, ''))]);
+  const shipped = fs.readdirSync(assets).filter((f) => !ignored.has(f) && !['_headers', '_next', '_vinext'].includes(f));
+  if (shipped.length) throw new Error(`would be served publicly from the top level of ${assets}: ${shipped.join(', ')}`);
+  console.log(`assets: top level ${fs.readdirSync(assets).filter((f) => !ignored.has(f)).join(', ')}; kept out by .assetsignore: ${[...ignored].join(', ')}`);
 }

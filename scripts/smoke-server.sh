@@ -36,6 +36,7 @@
 #   navigation) is served from the build with the page's cache rule. Next's flight requests carry
 #   a hash of the router-state headers in `_rsc` (any other value is a 307), so none is made here.
 # - workers: the raw static-cache files the Worker reads through its ASSETS binding are not public.
+#   (Build metadata, /.vite/ and vinext's client-entry manifest, is a 404 on all three.)
 
 set -euo pipefail
 
@@ -204,6 +205,12 @@ expect /standings 200 text/html "$public" --head
 expect / 405 '' '' -X POST
 expect /standings/ 308 '' ''
 [ "$(header location)" = /standings ] || fail /standings/ "location '$(header location)', expected /standings"
+
+# Build metadata the vinext builds leave beside their assets is never public: Vite's manifest
+# (vinext start refuses /.vite/; the Workers upload leaves it out through .assetsignore) and
+# vinext's client-entry manifest (left out of the Workers upload by patches/vinext@1.0.0.patch,
+# index.js). On Next both are plain misses.
+for path in /.vite/manifest.json /vinext-client-entry-manifest.json; do expect "$path" 404 '' ''; done
 
 if [ "$target" = workers ]; then
   expect /_vinext/static-cache/index.json 404 '' ''
