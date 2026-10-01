@@ -19,12 +19,16 @@
 # it passes, and a red one never ships, whichever workflow happened to finish first. Thus:
 #   - after ci: main's tip, whose code is the commit ci just passed (or, if a human commit landed
 #     since, main's tip only once that commit's own ci has passed);
-#   - after update-data: main's tip if main moved since the run started (its new snapshot, or
-#     commits whose ci has passed), and nothing if update-data committed nothing and main did not
-#     move. A snapshot rebased onto a human commit whose ci is still running waits for that ci.
-# Deploying the tip, never the triggering commit, means an older build never overwrites a newer
-# one. workflow_dispatch deploys main's tip by hand under the same check (it fails, rather than
-# skips, when the tip's code has not passed ci), e.g. once the secrets are first set.
+#   - after update-data: main's tip (its new snapshot, or commits whose ci has passed). A snapshot
+#     rebased onto a human commit whose ci is still running waits for that ci.
+# Every successful deploy is recorded as a GitHub Deployment (environment "cloudflare") for the
+# commit it shipped, and a workflow_run deploy skips a tip that already has one. That record, not
+# the triggering run, decides: a run that finds the tip undeployed deploys it, whichever workflow
+# finished first and whatever happened to the run queued before it. Deploying the tip, never the
+# triggering commit, means an older build never overwrites a newer one. workflow_dispatch deploys
+# main's tip by hand under the same ci check (it fails, rather than skips, when the tip's code has
+# not passed ci) and redeploys it even when it is recorded as deployed, e.g. once the secrets are
+# first set or after SITE_URL changes.
 #
 # Configuration (repository Settings → Secrets and variables → Actions):
 #   - secret CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template;
@@ -52,18 +56,19 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# actions: read for the gate's lookup of ci runs (the API that lists a workflow's runs).
+# actions: read for the gate's lookup of ci runs (the API that lists a workflow's runs);
+# deployments: write to record each deploy as a GitHub Deployment, which the gate reads.
 permissions:
   contents: read
   actions: read
+  deployments: write
 
 # One deploy at a time, and never cancelled halfway through an upload. Two data refreshes (or a
 # refresh and a human commit) landing close together queue here instead of racing; the queued run
 # then finds main's tip itself, so the last deploy to finish is always the newest commit. GitHub
-# keeps only one pending run per group (a newer one cancels it); that loses nothing, since the
-# newer run deploys the same tip under the same check. The one gap: a pending ci deploy replaced
-# by an update-data run that committed nothing and started from that same commit (that run
-# skips); the next commit or a workflow_dispatch deploys it.
+# keeps only one pending run per group (a newer one replaces it); that loses nothing: the run
+# that replaces it deploys the same tip unless a Deployment already records it, so a tested commit
+# whose pending deploy was displaced (by a refresh that committed nothing, say) still ships.
 concurrency:
   group: deploy-cloudflare
   cancel-in-progress: false
@@ -127,8 +132,14 @@ jobs:
             skip "skipped: $1"
           }
           tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
-          if [ "$EVENT" = workflow_run ] && [ "$SOURCE" = update-data ] && [ "$SOURCE_SHA" = "$tip" ]; then
-            skip "skipped: update-data committed no new snapshot and main has not moved, so the deployed build is current."
+          # Already shipped? The record step below creates a GitHub Deployment for the commit it
+          # deployed, only after cf deploy succeeded, so one for the tip means the live Worker is
+          # this build. A run that finds none deploys, whichever run came before it; by hand, a
+          # redeploy of the same tip is wanted (new SITE_URL, a failed promotion), so only a
+          # workflow_run skips.
+          deployed=$(gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$tip&environment=cloudflare&per_page=1" --jq length)
+          if [ "$EVENT" = workflow_run ] && [ "$deployed" != 0 ]; then
+            skip "skipped: main's tip $tip is already deployed (a GitHub Deployment records it), so the live Worker is current."
           fi
           # base: the newest commit at or below main's tip that is not an update-data snapshot
           # commit (update-data.yml "Commit the snapshot": by the bot, one parent, that message).
@@ -202,6 +213,28 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           NODE_ENV: production
+
+      # Only reached when the step above succeeded (a failed deploy stops the job, and the next run
+      # finds the tip unrecorded and tries again). The Deployment is what the gate reads; its
+      # status carries the site URL to the commit's and the repository's deployment views.
+      - name: Record the deployment
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.gate.outputs.sha }}
+        run: |
+          set -euo pipefail
+          id=$(gh api -X POST "repos/$GITHUB_REPOSITORY/deployments" --input - --jq .id <<JSON
+          {"ref": "$SHA", "environment": "cloudflare", "production_environment": true,
+           "auto_merge": false, "required_contexts": [],
+           "description": "vinext Cloudflare Worker, by deploy-cloudflare.yml"}
+          JSON
+          )
+          gh api -X POST "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" --input - >/dev/null <<JSON
+          {"state": "success", "environment_url": "$SITE_URL", "auto_inactive": true,
+           "description": "deployed $SHA"}
+          JSON
+          echo "recorded deployment $id for $SHA"
 
       - name: Summary
         if: steps.gate.outputs.ready == 'true'

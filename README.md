@@ -425,11 +425,14 @@ pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOK
 only, tested by that job before it pushed) to the commit whose code ships, and deploys only if
 that commit has a successful `ci` run on `main` and nothing but the data changed above it.
 Otherwise it skips, and that commit's own `ci` run deploys once it passes; a red one never
-ships, even when a data refresh is rebased on top of it. A green `ci` run on `main` (never a pull
-request's) thus deploys the commit it tested, plus any snapshot since; an `update-data` run
-deploys its new snapshot, and nothing if it committed none and `main` did not move. Deploying the
-tip means an older build never overwrites a newer one, and `workflow_dispatch` deploys `main`'s
-tip by hand under the same check. It needs the `CLOUDFLARE_API_TOKEN` secret, a
+ships, even when a data refresh is rebased on top of it. Each successful deploy is recorded as a
+GitHub Deployment (environment `cloudflare`) for the commit it shipped, and a run skips a tip that
+already has one: so a green `ci` run on `main` (never a pull request's) deploys the commit it
+tested, plus any snapshot since, an `update-data` run deploys its new snapshot, and a run that
+finds the tip undeployed deploys it whatever happened to the run queued before it (GitHub keeps
+one pending run per workflow, so a displaced run loses nothing). Deploying the tip means an older
+build never overwrites a newer one, and `workflow_dispatch` deploys `main`'s tip by hand under the
+same `ci` check, recorded or not. It needs the `CLOUDFLARE_API_TOKEN` secret, a
 `CLOUDFLARE_ACCOUNT_ID` variable (or secret) and a `SITE_URL` variable holding a bare origin
 (Settings → Secrets and variables → Actions). Without the token every run is a green no-op with a
 notice saying so; a token without the other two fails, naming what is missing. Its build does not
