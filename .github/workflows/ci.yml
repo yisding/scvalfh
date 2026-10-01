@@ -229,6 +229,8 @@ jobs:
               `${gameCards} game, ${dateCards} date, ${teamCards} team OG images`);
             if (games < 100 || dates < 30 || teams < 16) throw new Error("a generateStaticParams route came back short");
             if (gameCards < 100 || dateCards < 30 || teamCards < 16) throw new Error("an opengraph-image below a dynamic segment came back short");
+            // Every game, date and team page has exactly one OG image beside it, so the two counts must agree.
+            if (gameCards !== games || dateCards !== dates || teamCards !== teams) throw new Error("page and opengraph-image counts disagree");
           '
 
       # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped

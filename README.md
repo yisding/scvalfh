@@ -33,7 +33,7 @@ site publishes `sitemap.xml`, `robots.txt` and a web manifest (`app/sitemap.ts`,
 MaxPreps ghost API  ──┐
 si.com (SBLive)      ──┼──► scripts/fetch-data.ts ──► data/snapshot.json ──► next build ──► static site
 scval.com PDFs        ──┤        (lib/sources/*)        data/snapshot.meta.json
-cifccs.org / VNN .ics ──┘                                                      or vite build (vinext)
+cifccs.org / VNN .ics ──┘                                                 or vite build (vinext)
 ```
 
 1. **`scripts/fetch-data.ts`** is the cron entry point (see `docs/DATA-SOURCES.md` for every
@@ -297,7 +297,7 @@ per request.
 The response-header contract is the same on both servers: every page, metadata route and OG image
 carries the `next.config.ts` `headers()` rule,
 `public, s-maxage=300, stale-while-revalidate=86400`; hashed `/_next/static/**` assets keep
-`public, max-age=31536000, immutable` (served from build-time gzip/brotli files under vinext,
+`public, max-age=31536000, immutable` (served from build-time gzip/brotli/zstd files under vinext,
 `precompress: true` in `vite.config.ts`, because `vinext start` does not compress them on the
 fly); 404 pages are `private, no-cache, no-store, max-age=0, must-revalidate`, so no shared cache
 keeps one; HTML pages carry an ETag and answer a matching `If-None-Match` with 304; and neither

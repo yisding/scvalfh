@@ -16,7 +16,7 @@ allowBuilds:
 #    like Next, cached metadata route and Route Handler bodies get none);
 #  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered, so
 #    the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
-#    prerenders all of them (build/prerender.js, server/metadata-route-response.js, seed-cache.js).
+#    prerenders all of them (build/prerender.js, server/metadata-route-response.js, server/seed-cache.js);
 #  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so its
 #    og:image/twitter:image pointed at that segment's OG image for the bad param (itself a 404);
 #    Next treats it as a route miss and serves the root not-found (server/app-page-dispatch.js,

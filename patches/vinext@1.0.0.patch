@@ -1,3 +1,18 @@
+diff --git a/dist/build/prerender.d.ts b/dist/build/prerender.d.ts
+index b487280e7f7a2b3bb113521657b5e838826f69bb..65ea4f083bf13c20c366b4414ff139273f6f4c6d 100644
+--- a/dist/build/prerender.d.ts
++++ b/dist/build/prerender.d.ts
+@@ -27,7 +27,9 @@ export type PrerenderRouteResult = {
+    */
+   path?: string;
+   /** Which router produced this route. Used by cache seeding. */
+-  router: "app" | "pages" | "metadata";
++  // "route": Patched (scvalfh, patches/vinext@1.0.0.patch) — a static GET Route Handler
++  // prerendered by build/prerender.js and seeded by server/seed-cache.js.
++  router: "app" | "pages" | "metadata" | "route";
+   /** Response headers that must be replayed with the prerendered artifact. */
+   headers?: Record<string, string | string[]>;
+   /** Original HTTP status for prerendered App Route-style responses. */
 diff --git a/dist/build/prerender.js b/dist/build/prerender.js
 index 9869b968ec5e16908e495165dcd89d761927412c..2244d1a5411e33624a926b5780eccb5da758a426 100644
 --- a/dist/build/prerender.js
@@ -293,10 +308,10 @@ index 9136fb3f1409a960c2f4c3c40e2b0409fc50ccb1..05571736417d9909d87cc365f477f5d9
  	setCacheStateHeaders(headers, options.cacheState);
  	applyEdgeRuntimeHeader(headers, options.isEdgeRuntime);
 diff --git a/dist/server/app-page-dispatch.js b/dist/server/app-page-dispatch.js
-index aa2784ea2a8d632cd3d496dcc8d6fbdd0b2f35a6..343c1f0873a187512732b7c539e7af7ddec5e270 100644
+index aa2784ea2a8d632cd3d496dcc8d6fbdd0b2f35a6..23d50277006a8489634d07fa5c23f8a7188c165a 100644
 --- a/dist/server/app-page-dispatch.js
 +++ b/dist/server/app-page-dispatch.js
-@@ -463,7 +463,24 @@ async function dispatchAppPageInner(options) {
+@@ -463,7 +463,21 @@ async function dispatchAppPageInner(options) {
  			params: options.staticParamsValidationParams ?? options.params
  		});
  		if (dynamicParamsResponse) {
@@ -315,10 +330,7 @@ index aa2784ea2a8d632cd3d496dcc8d6fbdd0b2f35a6..343c1f0873a187512732b7c539e7af7d
 +				searchParams: options.searchParams,
 +				params: {}
 +			});
-+			const renderedNotFound = await options.renderHttpAccessFallbackPage(404, {
-+				matchedParams: options.params,
-+				routeMiss: true
-+			}, options.middlewareContext);
++			const renderedNotFound = await options.renderHttpAccessFallbackPage(404, { routeMiss: true }, options.middlewareContext);
  			const cachePolicy = {
  				isDraftMode,
  				isDynamicError,
@@ -365,10 +377,10 @@ index d4220c799e1bc3661407dadf2006600bc0addcc7..d9b27c263226b159f15be6f247eec0d9
  	applyTimingHeader(headers, options.timing);
  	const response = new Response(body, {
 diff --git a/dist/server/app-route-handler-dispatch.js b/dist/server/app-route-handler-dispatch.js
-index f65182b2fdb453e0137033a342614c82118f05f5..993c737c9080ded535561f6c28c59143764c0135 100644
+index f65182b2fdb453e0137033a342614c82118f05f5..9beb4987abd94d262dd694279fa789b497b8a656 100644
 --- a/dist/server/app-route-handler-dispatch.js
 +++ b/dist/server/app-route-handler-dispatch.js
-@@ -59,7 +59,20 @@ async function runInRouteHandlerRevalidationContext(options, renderFn) {
+@@ -59,7 +59,21 @@ async function runInRouteHandlerRevalidationContext(options, renderFn) {
  	}
  }
  async function dispatchAppRouteHandler(options) {
@@ -381,10 +393,11 @@ index f65182b2fdb453e0137033a342614c82118f05f5..993c737c9080ded535561f6c28c59143
 +* it, so build/prerender.js can tell a static GET handler from a dynamic one. Same side channel as
 +* applyPrerenderPageCacheControlHeader in app-page-response.js.
 +*/
++const VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER = "x-vinext-prerender-page-cache-control";
 +function recordPrerenderRouteHandlerCacheControl(response) {
 +	if (process.env.VINEXT_PRERENDER !== "1") return response;
 +	try {
-+		response.headers.set("x-vinext-prerender-page-cache-control", response.headers.get("Cache-Control") ?? "");
++		response.headers.set(VINEXT_PRERENDER_PAGE_CACHE_CONTROL_HEADER, response.headers.get("Cache-Control") ?? "");
 +	} catch {}
 +	return response;
  }
