@@ -248,15 +248,13 @@ Gotchas, all **[V]**:
   **FieldLevel** profiles are mostly behind a login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
   roster has no class year to check, so only the NCSA profile (under Homestead) is linked.
 
-**Recall is partial.** NCSA can only be found through search, and both passes ended when the
-session's search budget (200 searches) ran out. Every school got NCSA sweeps by school, class year
-and position. A name search (NCSA and Hudl together) ran for nearly every junior, senior and
-no-grade player on all 15 teams (a few who already had a link were skipped), and for the varsity freshmen and sophomores at Saint Francis, Valley
-Christian, Fremont and most of Cupertino. About 35 varsity freshmen and sophomores were never
-searched by name (Saratoga 11, Mitty 6, Palo Alto 4, Presentation 4, Cupertino 3, Los Altos 3,
-Lynbrook 2, Homestead 1, Santa Clara 1). Every player on every roster was looked up directly on
-SportsRecruits; FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else
-could exist and not be linked.
+**Recall is partial.** NCSA can only be found through search, and its pages cannot be fetched, so
+a profile the search index does not surface stays unfound. Every school got NCSA sweeps by school,
+class year and position. A name search (NCSA and Hudl together) ran for nearly every varsity player
+on all 15 teams (a few who already had a link were skipped; JV rows, which the page does not show,
+were not searched). Every player on every roster was looked up directly on SportsRecruits;
+FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else could exist and not
+be linked.
 Like the first sweep, this one is research, not a script.
 
 **(k) Player stats** — `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
