@@ -1,10 +1,10 @@
 {
   "counts": {
-    "finals": 91,
+    "finals": 92,
     "games": 158,
     "leagueGames": 96,
     "mismatches": 0,
-    "pending": 3,
+    "pending": 2,
     "teams": 15
   },
   "crossCheck": [
@@ -30,7 +30,7 @@
       "url": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--el-camino/?leagueid=7bdfb2a7-8dde-4a21-88c9-832f1593554d"
     }
   ],
-  "fetchedAt": "2026-10-02T10:48:51.206Z",
+  "fetchedAt": "2026-10-02T18:58:12.408Z",
   "games": [
     {
       "away": {
@@ -63,7 +63,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:30:58",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -112,7 +112,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:49:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -161,7 +161,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T19:03:33",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -210,7 +210,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -259,7 +259,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:33:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -308,7 +308,7 @@
       "leagueDivision": "de-anza",
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-01T18:44:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -357,7 +357,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -406,7 +406,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -455,7 +455,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -504,7 +504,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T07:32:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -553,7 +553,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T18:58:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -602,7 +602,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-02T20:44:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -651,7 +651,7 @@
       "leagueDivision": null,
       "otPeriods": 1,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -700,7 +700,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:49:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -749,7 +749,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -798,7 +798,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:22:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -847,7 +847,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -896,7 +896,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-08T17:01:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -945,7 +945,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-15T20:50:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -994,7 +994,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1043,7 +1043,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:49:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1092,7 +1092,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-04T03:57:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1141,7 +1141,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1190,7 +1190,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T19:41:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1239,7 +1239,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T21:02:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1288,7 +1288,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T05:02:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1337,7 +1337,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T21:02:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1386,7 +1386,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T19:08:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1435,7 +1435,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-09T04:50:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1484,7 +1484,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:52:57",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1533,7 +1533,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-15T20:51:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1582,7 +1582,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:49:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1635,7 +1635,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T01:32:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1684,7 +1684,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-19T05:44:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1733,7 +1733,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T16:42:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1786,7 +1786,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T06:24:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1839,7 +1839,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T17:59:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1892,7 +1892,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-14T22:10:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1945,7 +1945,7 @@
       },
       "otPeriods": 1,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T06:45:48",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1994,7 +1994,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-14T18:48:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2043,7 +2043,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-15T03:03:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2096,7 +2096,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-15T05:05:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2149,7 +2149,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:40:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2202,7 +2202,7 @@
       },
       "otPeriods": 1,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-17T16:03:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2255,7 +2255,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-17T15:00:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2308,7 +2308,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-24T07:07:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2361,7 +2361,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-16T16:18:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2414,7 +2414,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T14:01:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2463,7 +2463,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:41:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2516,7 +2516,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-17T19:11:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2569,7 +2569,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-17T16:36:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2622,7 +2622,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T17:08:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2675,7 +2675,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T01:18:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2728,7 +2728,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T04:06:33",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2781,7 +2781,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-18T00:52:57",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2834,7 +2834,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T04:55:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2883,7 +2883,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T12:21:02",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2932,7 +2932,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T22:47:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2981,7 +2981,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T03:12:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3030,7 +3030,7 @@
       "leagueDivision": "de-anza",
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-20T03:20:49",
         "schedule": "maxpreps-api",
         "scoreConflict": {
@@ -3086,7 +3086,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T03:16:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3139,7 +3139,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-22T19:25:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3192,7 +3192,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-22T04:01:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3245,7 +3245,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-22T16:54:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3294,7 +3294,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-23T17:35:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3347,7 +3347,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-23T03:06:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3400,7 +3400,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T04:59:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3453,7 +3453,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-23T03:06:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3506,7 +3506,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-23T01:18:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3555,7 +3555,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-24T16:37:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3608,7 +3608,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-24T22:09:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3661,7 +3661,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-24T20:12:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3714,7 +3714,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-24T02:07:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3763,7 +3763,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T17:18:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3816,7 +3816,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T17:25:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3869,7 +3869,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T13:43:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3918,7 +3918,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T04:30:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3971,7 +3971,7 @@
       },
       "otPeriods": 1,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T07:08:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4024,7 +4024,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-10-01T18:09:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4073,7 +4073,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-26T22:04:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4126,7 +4126,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T05:55:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4179,7 +4179,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-29T18:46:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4232,7 +4232,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-29T18:46:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4285,7 +4285,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T07:05:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4338,7 +4338,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-10-01T18:10:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4391,7 +4391,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T02:09:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4444,7 +4444,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T04:06:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4497,7 +4497,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-04T13:44:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4550,7 +4550,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-10-01T19:17:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4603,7 +4603,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-10-01T19:29:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4625,8 +4625,8 @@
       "away": {
         "city": "Cupertino",
         "name": "Monta Vista",
-        "result": null,
-        "score": null,
+        "result": "L",
+        "score": 0,
         "slug": "monta-vista",
         "teamId": "405614ad-a015-4270-b527-18e899c90824"
       },
@@ -4634,13 +4634,13 @@
       "dateKey": "2026-10-01",
       "dateLocal": "2026-10-01T16:00:00",
       "dateUtc": "2026-10-01T23:00:00Z",
-      "decider": null,
+      "decider": "REG",
       "forfeitBy": null,
       "home": {
         "city": "Palo Alto",
         "name": "Palo Alto",
-        "result": null,
-        "score": null,
+        "result": "W",
+        "score": 9,
         "slug": "palo-alto",
         "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
       },
@@ -4656,15 +4656,15 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
-        "maxprepsModifiedOn": "2026-09-12T19:41:53",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
+        "maxprepsModifiedOn": "2026-10-02T13:08:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
+      "recap": "Monta Vista lost their away conference game against Palo Alto by a score of 9-0.",
       "shootout": null,
       "site": "home",
-      "status": "score-pending",
+      "status": "final",
       "urls": {
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/monta-vista-cupertino-vs-palo-alto/10-1-2026/?c=69ad6399-f0bb-4351-88fa-8d32fca526e9",
@@ -4709,9 +4709,9 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "hostConflict": "the official El Camino grid has Lynbrook hosting; MaxPreps has Santa Clara, and MaxPreps is the only source of the two that states home and away.",
-        "maxprepsModifiedOn": "2026-10-02T02:08:17",
+        "maxprepsModifiedOn": "2026-10-02T16:36:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
@@ -4763,8 +4763,8 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
-        "maxprepsModifiedOn": "2026-10-02T01:13:13",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
+        "maxprepsModifiedOn": "2026-10-02T16:11:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
@@ -4816,7 +4816,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-10-02T06:36:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4865,7 +4865,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-29T20:12:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4914,7 +4914,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T19:40:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4963,7 +4963,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T19:40:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5012,7 +5012,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-30T16:57:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5066,7 +5066,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:55:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5119,7 +5119,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:55:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5168,7 +5168,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:28:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5223,7 +5223,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:55:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5276,7 +5276,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-02T11:24:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5329,7 +5329,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:55:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5384,7 +5384,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T00:48:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5437,7 +5437,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:29:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5490,7 +5490,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5543,7 +5543,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5596,7 +5596,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5649,7 +5649,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5704,7 +5704,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-14T21:15:02",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5757,7 +5757,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-20T16:45:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5812,7 +5812,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-24T07:07:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5865,7 +5865,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5918,7 +5918,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:29:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5971,7 +5971,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T19:42:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6025,7 +6025,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:50:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6078,7 +6078,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-14T11:41:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6133,7 +6133,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T00:48:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6186,7 +6186,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T21:26:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6239,7 +6239,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:30:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6292,7 +6292,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6345,7 +6345,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-20T16:46:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6398,7 +6398,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6452,7 +6452,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-11T00:48:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6506,7 +6506,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-27T21:17:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6559,7 +6559,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:50:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6608,7 +6608,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-28T21:07:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6657,7 +6657,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:20:57",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6706,7 +6706,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-21T22:47:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6755,7 +6755,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-28T21:07:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6804,7 +6804,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-28T21:07:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6857,7 +6857,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6906,7 +6906,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-27T14:13:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6961,7 +6961,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:31:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7014,7 +7014,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7067,7 +7067,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-25T18:28:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7120,7 +7120,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7175,7 +7175,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7229,7 +7229,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-14T21:13:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7282,7 +7282,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-27T14:14:24",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7331,7 +7331,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-14T13:34:58",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7384,7 +7384,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7437,7 +7437,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-29T16:19:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7490,7 +7490,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T06:51:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7544,7 +7544,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7597,7 +7597,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7648,7 +7648,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-09T01:31:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7701,7 +7701,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-07-02T11:25:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7750,7 +7750,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-09T20:03:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7799,7 +7799,7 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7852,7 +7852,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-04T13:46:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7905,7 +7905,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-29T15:22:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7958,7 +7958,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-08-20T16:48:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8011,7 +8011,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "hostConflict": "the official El Camino grid has Santa Clara hosting; MaxPreps has Lynbrook, and MaxPreps is the only source of the two that states home and away.",
         "maxprepsModifiedOn": "2026-09-10T19:21:40",
         "schedule": "maxpreps-api",
@@ -8065,7 +8065,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-10T19:21:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8119,7 +8119,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-12T19:42:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8173,7 +8173,7 @@
       },
       "otPeriods": 0,
       "provenance": {
-        "fetchedAt": "2026-10-02T10:48:51.206Z",
+        "fetchedAt": "2026-10-02T18:58:12.408Z",
         "maxprepsModifiedOn": "2026-09-14T16:16:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8276,7 +8276,7 @@
         "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/games/6648655-homestead-vs-fremont"
       }
     ],
-    "sbliveFetchedAt": "2026-10-02T10:48:51.206Z",
+    "sbliveFetchedAt": "2026-10-02T18:58:12.408Z",
     "sbliveOnlyScored": []
   },
   "season": {
@@ -8306,7 +8306,7 @@
   },
   "sources": [
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "maxpreps-html",
       "label": "season bootstrap",
@@ -8314,7 +8314,7 @@
       "url": "https://www.maxpreps.com/ca/field-hockey/"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "label": "de-anza league metadata",
@@ -8322,7 +8322,7 @@
       "url": "https://production.api.maxpreps.com/leagues/ea062dfe-9fb9-45c7-9839-0801993d6ac6/v1"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "label": "el-camino league metadata",
@@ -8330,7 +8330,7 @@
       "url": "https://production.api.maxpreps.com/leagues/7bdfb2a7-8dde-4a21-88c9-832f1593554d/v1"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "de-anza reported standings",
       "rowCount": 7,
@@ -8339,16 +8339,16 @@
       "url": "https://production.api.maxpreps.com/leagues/ea062dfe-9fb9-45c7-9839-0801993d6ac6/standings/v1?sportseasonid=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "el-camino reported standings",
       "rowCount": 8,
       "status": "ok",
-      "upstreamModifiedOn": "2026-10-02T06:36:14",
+      "upstreamModifiedOn": "2026-10-02T16:47:44",
       "url": "https://production.api.maxpreps.com/leagues/7bdfb2a7-8dde-4a21-88c9-832f1593554d/standings/v1?sportseasonid=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "st-ignatius schedule",
       "rowCount": 18,
@@ -8356,7 +8356,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1dc4836b-4daf-4573-b525-27b474bd5366&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "saint-francis schedule",
       "rowCount": 23,
@@ -8364,7 +8364,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=de6d3780-e8f6-4a2a-93f2-b5d89499f9b0&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "los-altos schedule",
       "rowCount": 21,
@@ -8372,7 +8372,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0279f2de-d5ce-484d-b210-2286ded42058&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "valley-christian schedule",
       "rowCount": 22,
@@ -8380,7 +8380,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8a8c04d2-5606-44cf-9993-34db55474240&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "fremont schedule",
       "rowCount": 22,
@@ -8388,7 +8388,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a97c219c-2fbe-4fa4-9a0c-cc18502a8d24&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "cupertino schedule",
       "rowCount": 16,
@@ -8396,7 +8396,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=97ffffbe-54ba-4c25-86bb-41332627f64e&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "homestead schedule",
       "rowCount": 18,
@@ -8404,7 +8404,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=738a2432-7acb-4ad6-b041-115ec0f331c2&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "mitty schedule",
       "rowCount": 21,
@@ -8412,7 +8412,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0f63870a-34f3-4d5b-9dbf-653c8410f969&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "los-gatos schedule",
       "rowCount": 19,
@@ -8420,7 +8420,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "palo-alto schedule",
       "rowCount": 20,
@@ -8428,7 +8428,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a38a628c-c65f-487f-a65e-7264b6804ce0&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "presentation schedule",
       "rowCount": 19,
@@ -8436,7 +8436,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e1db3a4f-3bcf-4281-a574-d313212296a1&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "santa-clara schedule",
       "rowCount": 19,
@@ -8444,7 +8444,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=17fad4fb-c82b-4b5a-8a31-3ce13c0ede13&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "saratoga schedule",
       "rowCount": 17,
@@ -8452,7 +8452,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=12a470ab-e17d-4e5a-b74b-055d1f46d46b&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "lynbrook schedule",
       "rowCount": 20,
@@ -8460,7 +8460,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=d7c7f7a1-06be-44fb-a4a2-64599519aa4c&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-api",
       "label": "monta-vista schedule",
       "rowCount": 18,
@@ -8468,7 +8468,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=405614ad-a015-4270-b527-18e899c90824&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "label": "de-anza official schedule PDF",
@@ -8477,7 +8477,7 @@
       "url": "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "label": "el-camino official schedule PDF",
@@ -8486,7 +8486,7 @@
       "url": "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "label": "scval standings index",
@@ -8495,7 +8495,7 @@
       "url": "https://www.scval.com/standings/"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-18",
@@ -8504,7 +8504,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-18"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-19",
@@ -8513,7 +8513,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-19"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-21",
@@ -8522,7 +8522,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-21"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-22",
@@ -8531,7 +8531,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-22"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-23",
@@ -8540,7 +8540,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-23"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-24",
@@ -8549,7 +8549,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-24"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-25",
@@ -8558,7 +8558,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-25"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-28",
@@ -8567,7 +8567,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-28"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-29",
@@ -8576,7 +8576,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-29"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-09-30",
@@ -8585,7 +8585,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-09-30"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-10-01",
@@ -8594,7 +8594,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-10-01"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "sblive",
       "label": "sblive scoreboard 2026-10-02",
@@ -8603,7 +8603,7 @@
       "url": "https://www.si.com/high-school/stats/california/field-hockey/scores?date=2026-10-02"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "vnn-ics",
       "label": "palo-alto school calendar",
@@ -8612,7 +8612,7 @@
       "url": "https://mmboltapi.azurewebsites.net/api/v2/events/calendar/2635290/0/calendar.ics"
     },
     {
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "httpStatus": 200,
       "id": "vnn-ics",
       "label": "los-gatos school calendar",
@@ -8622,7 +8622,7 @@
     },
     {
       "error": "season gate: polling opens 2026-10-25 (today 2026-10-02)",
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "ccs-ical",
       "label": "ccs calendar",
       "status": "skipped",
@@ -8630,7 +8630,7 @@
     },
     {
       "error": "season gate: polling opens 2026-10-25 (today 2026-10-02)",
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
+      "fetchedAt": "2026-10-02T18:58:12.408Z",
       "id": "maxpreps-html",
       "label": "ccs bracket",
       "status": "skipped",
@@ -9565,7 +9565,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 6,
-        "modifiedOn": "2026-10-02T01:13:13",
+        "modifiedOn": "2026-10-02T16:25:12",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -9715,58 +9715,17 @@
           "w": 3
         },
         "ga": 8,
-        "gd": 12,
-        "gf": 20,
-        "gp": 6,
+        "gd": 21,
+        "gf": 29,
+        "gp": 7,
         "homeRecord": {
           "l": 1,
-          "t": 0,
-          "w": 1
-        },
-        "l": 2,
-        "last5": [
-          "L",
-          "W",
-          "W",
-          "W",
-          "W"
-        ],
-        "neutralRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "place": 3,
-        "pts": 12,
-        "streak": {
-          "count": 4,
-          "result": "W"
-        },
-        "t": 0,
-        "w": 4,
-        "winPct": 0.6666666666666666
-      },
-      "division": "el-camino",
-      "hasReportedResults": true,
-      "mismatch": false,
-      "overall": {
-        "awayRecord": {
-          "l": 1,
-          "t": 0,
-          "w": 3
-        },
-        "ga": 12,
-        "gd": 14,
-        "gf": 26,
-        "gp": 8,
-        "homeRecord": {
-          "l": 2,
           "t": 0,
           "w": 2
         },
-        "l": 3,
+        "l": 2,
         "last5": [
-          "L",
+          "W",
           "W",
           "W",
           "W",
@@ -9780,47 +9739,88 @@
         "place": 3,
         "pts": 15,
         "streak": {
-          "count": 4,
+          "count": 5,
           "result": "W"
         },
         "t": 0,
         "w": 5,
-        "winPct": 0.625
+        "winPct": 0.7142857142857143
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 12,
+        "gd": 23,
+        "gf": 35,
+        "gp": 9,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 3
+        },
+        "l": 3,
+        "last5": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 3,
+        "pts": 18,
+        "streak": {
+          "count": 5,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 6,
+        "winPct": 0.6666666666666666
       },
       "playoffStatus": "aq",
       "reported": {
         "awayLosses": 1,
         "awayTies": 0,
         "awayWins": 3,
-        "conferenceContestsPlayed": 6,
+        "conferenceContestsPlayed": 7,
         "conferenceLosses": 2,
-        "conferencePoints": 20,
+        "conferencePoints": 29,
         "conferencePointsAgainst": 8,
         "conferenceStandingPlacement": 3,
         "conferenceTies": 0,
-        "conferenceWinningPercentage": 0.667,
-        "conferenceWins": 4,
+        "conferenceWinningPercentage": 0.714,
+        "conferenceWins": 5,
         "homeLosses": 2,
         "homeTies": 0,
-        "homeWins": 2,
-        "modifiedOn": "2026-10-01T18:10:22",
+        "homeWins": 3,
+        "modifiedOn": "2026-10-02T13:19:58",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
-        "overallContestsPlayed": 8,
+        "overallContestsPlayed": 9,
         "overallLosses": 3,
         "overallTies": 0,
-        "overallWins": 5,
-        "points": 26,
+        "overallWins": 6,
+        "points": 35,
         "pointsAgainst": 12,
-        "streak": 4,
+        "streak": 5,
         "streakResult": "W",
-        "winningPercentage": 0.625
+        "winningPercentage": 0.667
       },
       "slug": "palo-alto",
       "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "tiebreak": {
-        "note": "12 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "note": "15 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
         "resolvedBy": "points",
         "shared": false,
         "tiedWith": []
@@ -9922,7 +9922,7 @@
         "homeLosses": 3,
         "homeTies": 1,
         "homeWins": 2,
-        "modifiedOn": "2026-10-02T02:08:18",
+        "modifiedOn": "2026-10-02T16:47:44",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -10160,7 +10160,7 @@
         "homeLosses": 3,
         "homeTies": 0,
         "homeWins": 1,
-        "modifiedOn": "2026-10-02T01:13:13",
+        "modifiedOn": "2026-10-02T16:11:08",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -10279,7 +10279,7 @@
         "homeLosses": 5,
         "homeTies": 0,
         "homeWins": 1,
-        "modifiedOn": "2026-10-02T02:08:18",
+        "modifiedOn": "2026-10-02T16:36:18",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -10307,20 +10307,20 @@
     {
       "computed": {
         "awayRecord": {
-          "l": 2,
+          "l": 3,
           "t": 0,
           "w": 0
         },
-        "ga": 52,
-        "gd": -52,
+        "ga": 61,
+        "gd": -61,
         "gf": 0,
-        "gp": 5,
+        "gp": 6,
         "homeRecord": {
           "l": 3,
           "t": 0,
           "w": 0
         },
-        "l": 5,
+        "l": 6,
         "last5": [
           "L",
           "L",
@@ -10336,7 +10336,7 @@
         "place": 7,
         "pts": 0,
         "streak": {
-          "count": 5,
+          "count": 6,
           "result": "L"
         },
         "t": 0,
@@ -10348,20 +10348,20 @@
       "mismatch": false,
       "overall": {
         "awayRecord": {
-          "l": 4,
+          "l": 5,
           "t": 1,
           "w": 0
         },
-        "ga": 72,
-        "gd": -71,
+        "ga": 81,
+        "gd": -80,
         "gf": 1,
-        "gp": 9,
+        "gp": 10,
         "homeRecord": {
           "l": 4,
           "t": 0,
           "w": 0
         },
-        "l": 8,
+        "l": 9,
         "last5": [
           "L",
           "L",
@@ -10377,22 +10377,22 @@
         "place": 7,
         "pts": 1,
         "streak": {
-          "count": 8,
+          "count": 9,
           "result": "L"
         },
         "t": 1,
         "w": 0,
-        "winPct": 0.05555555555555555
+        "winPct": 0.05
       },
       "playoffStatus": "out",
       "reported": {
-        "awayLosses": 4,
+        "awayLosses": 5,
         "awayTies": 1,
         "awayWins": 0,
-        "conferenceContestsPlayed": 5,
-        "conferenceLosses": 5,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 6,
         "conferencePoints": 0,
-        "conferencePointsAgainst": 52,
+        "conferencePointsAgainst": 61,
         "conferenceStandingPlacement": 8,
         "conferenceTies": 0,
         "conferenceWinningPercentage": 0,
@@ -10400,17 +10400,17 @@
         "homeLosses": 4,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-09-30T02:09:56",
+        "modifiedOn": "2026-10-02T13:08:20",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
-        "overallContestsPlayed": 9,
-        "overallLosses": 8,
+        "overallContestsPlayed": 10,
+        "overallLosses": 9,
         "overallTies": 1,
         "overallWins": 0,
         "points": 1,
-        "pointsAgainst": 72,
-        "streak": 8,
+        "pointsAgainst": 81,
+        "streak": 9,
         "streakResult": "L",
         "winningPercentage": 0
       },

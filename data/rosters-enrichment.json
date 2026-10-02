@@ -5,7 +5,8 @@
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays.",
     "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season.",
     "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV.",
-    "si.com rosters were rejected: names only, and for several teams a different or prior-season list."
+    "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
+    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02. A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so NCSA profiles were matched on the search result (title, the school in the URL path, class year). A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete: see docs/DATA-SOURCES.md."
   ],
   "season": "26-27",
   "teams": [
@@ -42,6 +43,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/storey_lewis3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178210"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -62,6 +77,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/olivia_van_de_braak1"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576478"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -82,6 +111,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/gabriella_colant3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576483"
+            }
+          ],
           "sourceName": "Gabriella Colant"
         },
         {
@@ -111,6 +154,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/stella_kwok3"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -131,6 +182,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/gianna_monge4"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -151,6 +210,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/margaret_magnano"
+            },
+            {
+              "classOf": null,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178201"
+            }
+          ],
           "sourceName": "Margaret Magnano"
         },
         {
@@ -171,6 +244,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/dylan_powell3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178226"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -191,6 +278,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/scarlett_gammack2"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -211,6 +306,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/beatrice_hom3"
+            }
+          ],
           "sourceName": "Beatrice Hom"
         },
         {
@@ -231,6 +334,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/violet_hesslein"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799454"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -251,6 +368,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/caitlyn_hughes3"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists other sports.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576479"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -271,6 +402,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/quinn_fisher5"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799397"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -291,6 +436,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/samantha_brunsell2"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -311,6 +464,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/andria_spink2"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799413"
+            }
+          ],
           "sourceName": "Andria Spink"
         },
         {
@@ -331,6 +498,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/sofie_stiefel2"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -351,6 +526,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/hazel_stang"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576473"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -371,6 +560,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/lila_lamb3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799442"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -391,6 +594,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/catherine_cecchini2"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -411,6 +622,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/kaye_zilinskas3"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -431,6 +650,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The page names no school; St. Ignatius' team page on SportsRecruits links it.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/clara_brunello2"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799478"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -451,6 +684,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/margaret_brown4"
+            }
+          ],
           "sourceName": "Margaret Brown"
         },
         {
@@ -471,6 +712,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/marina_jones2"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -491,6 +740,20 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/stella_strain"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists other sports.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576481"
+            }
+          ],
           "sourceName": null
         }
       ],
@@ -547,6 +810,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -560,7 +824,120 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/nora_langenfeld"
+            }
+          ],
           "sourceName": "Nora Langenfeld"
+        },
+        {
+          "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
+          "conflicts": [],
+          "fullName": "Carolyn Cordoni",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/carolyn_cordoni"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+          "conflicts": [],
+          "fullName": "Melanie Henderson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/melanie_henderson4"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
+          "conflicts": [],
+          "fullName": "Evie Ferrini",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Listed as Genevieve (Evie) Ferrini. NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/genevieve-evie-ferrini"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ef2c3b82-6eb6-488e-ad0e-69f126804da1",
+          "conflicts": [],
+          "fullName": "Aadya Shivan Kumar",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Listed as Aadya Kumar, Forward/Midfielder, 5'5\" (the roster's F, M and 5'5\"). NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/aadya-kumar1"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "2e36cd4f-ec3c-4686-84c4-2505ed1f4864",
+          "conflicts": [],
+          "fullName": "Katie Tsiagkas",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Saint Francis' varsity field hockey team on Hudl (SFHS Girls Varsity Field Hockey, Mountain View).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21970981"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "saint-francis",
@@ -623,6 +1000,7 @@
           "levelSource": null,
           "note": "Katie=Kaitlyn",
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -643,6 +1021,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -663,6 +1042,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -683,6 +1063,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -703,6 +1084,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -723,6 +1105,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -743,6 +1126,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -763,6 +1147,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -783,6 +1168,14 @@
           "levelSource": null,
           "note": "Kat=Katarina",
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/katarina_smith"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -803,6 +1196,28 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "54b3e7a5-82eb-4dd9-ba08-f876c5c49410",
+          "conflicts": [],
+          "fullName": "Riya Mehrotra",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title, the school in the URL path and class of 2027.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-altos/los-altos-high-school1/riya-mehrotra"
+            }
+          ],
           "sourceName": null
         }
       ],
@@ -882,7 +1297,29 @@
       "notes": [
         "MaxPreps is complete except height; no school roster was sought."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "6523e0ef-d011-4582-8aca-3f50dd2020a9",
+          "conflicts": [],
+          "fullName": "Sophie Dhillon",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "The page names no school; matched on name, field hockey, class of 2030 and Sunnyvale, CA.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/sophie_dhillon"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "fremont",
       "sources": [
         {
@@ -934,6 +1371,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -954,6 +1392,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -974,6 +1413,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -994,6 +1434,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1014,6 +1455,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1034,6 +1476,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1054,6 +1497,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1074,6 +1518,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1094,6 +1539,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1114,6 +1560,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1134,6 +1581,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1154,6 +1602,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1174,6 +1623,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1194,6 +1644,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1214,6 +1665,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -1271,6 +1723,28 @@
           "levelSource": null,
           "note": "same careerid ahnjq9l9q2b11 on JV page (fetched/homestead_mp_jv_roster.html)",
           "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d1ed916b-9d92-4a2d-b32e-b0e5cbe8fafa",
+          "conflicts": [],
+          "fullName": "Gabrielle Moll",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title, the school in the URL path and class of 2027.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/homestead-high-school2/gabrielle-moll"
+            }
+          ],
           "sourceName": null
         }
       ],
@@ -1304,7 +1778,92 @@
       "notes": [
         "No school roster was sought: MaxPreps is nearly complete. The si.com list is empty."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
+          "conflicts": [],
+          "fullName": "Emma Traverso",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/emma_traverso"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
+          "conflicts": [],
+          "fullName": "Bridget Schilb",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/bridget_schilb2"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7bdcdcb3-f704-47a8-a8ac-740429b27160",
+          "conflicts": [],
+          "fullName": "Hana Mercado",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/hana_mercado"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ee0e3680-d827-4afe-a5a8-38148b94d56c",
+          "conflicts": [],
+          "fullName": "Payton Burton",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27822294/payton-burton"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "mitty",
       "sources": []
     },
@@ -1359,6 +1918,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1379,6 +1939,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1399,6 +1960,14 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/stiene_bastien"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -1419,6 +1988,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1439,6 +2009,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1459,6 +2030,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1479,6 +2051,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1499,6 +2072,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1519,6 +2093,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1539,6 +2114,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1559,6 +2135,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1579,6 +2156,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1599,6 +2177,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1619,6 +2198,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1639,6 +2219,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1659,6 +2240,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1679,6 +2261,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1699,6 +2282,20 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title, the school in the URL path and class of 2028. Listed as Mary Elizabeth Moorehouse; the SportsRecruits page gives Lizzie as the name used.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-gatos/los-gatos-high-school1/mary-elizabeth-moorehouse"
+            },
+            {
+              "classOf": 2028,
+              "note": "The page names no school; matched on name, field hockey, class of 2028 and Los Gatos, CA.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/lizzie_moorehouse"
+            }
+          ],
           "sourceName": "Mary Moorehouse"
         },
         {
@@ -1719,6 +2316,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1739,6 +2337,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1759,6 +2358,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1779,6 +2379,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1799,6 +2400,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1819,6 +2421,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster%20(also%20listed%20on%20the%20school%20JV%20roster;%20kept%20as%20Varsity)",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1839,6 +2442,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1859,6 +2463,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1879,6 +2484,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1899,6 +2505,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1919,6 +2526,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1939,6 +2547,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1959,6 +2568,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1979,6 +2589,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -1999,6 +2610,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2019,6 +2631,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2039,6 +2652,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2059,6 +2673,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2079,6 +2694,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2099,6 +2715,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2119,6 +2736,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2139,6 +2757,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2159,6 +2778,14 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/beatrix_monk"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2179,6 +2806,14 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "The page names no school; matched on name, field hockey, class of 2030 and Los Gatos, CA.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2199,6 +2834,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2219,6 +2855,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2239,6 +2876,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2259,6 +2897,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2279,6 +2918,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2299,6 +2939,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2319,6 +2960,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2339,6 +2981,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2359,6 +3002,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2379,6 +3023,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2399,6 +3044,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2419,6 +3065,14 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": null,
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/colette_von_klemperer"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2439,6 +3093,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2459,6 +3114,7 @@
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -2541,6 +3197,28 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7f64bbaf-a0d0-4ec3-9217-7500194a7df4",
+          "conflicts": [],
+          "fullName": "Ela Aba",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path; it states no class year.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/palo-alto/palo-alto-high-school/ela-aba"
+            }
+          ],
           "sourceName": null
         }
       ],
@@ -2609,6 +3287,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -2651,6 +3330,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2671,6 +3351,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2691,6 +3372,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2711,6 +3393,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2731,6 +3414,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923751"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2751,6 +3442,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2771,6 +3463,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2784,6 +3477,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": "Ysabella Leano"
         },
         {
@@ -2804,6 +3498,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2824,6 +3519,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923747"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2844,6 +3547,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2864,6 +3568,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2884,6 +3589,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2904,6 +3610,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -2924,6 +3631,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923757"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2944,6 +3659,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -3010,6 +3726,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030216/giselle-adams"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3030,6 +3754,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3050,6 +3775,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030213/dyuthi-boinepalli"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3070,6 +3803,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3090,6 +3824,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030217/katherine-bui"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3110,6 +3852,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030206/clara-choi"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3130,6 +3880,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3150,6 +3901,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3170,6 +3922,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030205/alma-garniek"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3199,6 +3959,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030208/elise-hubert"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3219,6 +3987,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3239,6 +4008,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3259,6 +4029,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3279,6 +4050,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3299,6 +4071,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030210/devika-nair"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3319,6 +4099,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3339,6 +4120,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3359,6 +4141,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3379,6 +4162,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030212/emma-williams"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3399,6 +4190,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Saratoga's 2024 varsity team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24030221/evelyn-williams"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3419,6 +4218,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -3488,6 +4288,7 @@
               "M"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3508,6 +4309,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3537,6 +4339,14 @@
               "F"
             ]
           },
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The page names no school; matched on name, field hockey, class of 2028 and Cupertino, CA.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/junali_dutta"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3557,6 +4367,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3577,6 +4388,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3597,6 +4409,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3617,6 +4430,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3637,6 +4451,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3657,6 +4472,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3677,6 +4493,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3706,6 +4523,7 @@
               "M"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3726,6 +4544,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3746,6 +4565,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3774,6 +4594,7 @@
               "F"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3794,6 +4615,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -3856,6 +4678,7 @@
               "D"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3877,6 +4700,7 @@
               "F"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3899,6 +4723,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3920,6 +4745,7 @@
               "M"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3942,6 +4768,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3963,6 +4790,7 @@
               "M"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -3985,6 +4813,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -4007,6 +4836,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -4037,6 +4867,7 @@
               "F"
             ]
           },
+          "profiles": [],
           "sourceName": null
         },
         {
@@ -4059,6 +4890,7 @@
           "levelSource": null,
           "note": null,
           "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],

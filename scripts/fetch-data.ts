@@ -77,6 +77,7 @@ import {
   SEASON_YEAR,
   SPORT_SEASON_ID,
   buildSeason,
+  inSeasonWindow,
 } from '../lib/season';
 import { FETCHABLE_TEAMS, TEAMS, resolveTeam } from '../lib/teams';
 import {
@@ -148,16 +149,6 @@ function parseArgs(argv: readonly string[]): Args {
     else throw new Error(`unknown flag: ${arg}`);
   }
   return out;
-}
-
-// ---------------------------------------------------------------- season window guard
-
-/** Months the season can touch: Aug 1 (first scrimmage Aug 21) – Nov 30 (CCS finals Nov 14). */
-export const SEASON_MONTHS = { first: 8, last: 11 } as const;
-
-export function inSeasonWindow(todayKey: string): boolean {
-  const month = Number(todayKey.slice(5, 7));
-  return month >= SEASON_MONTHS.first && month <= SEASON_MONTHS.last;
 }
 
 /** Trailing window re-examined for corrections and retro-entered results (SPEC §5.4). */

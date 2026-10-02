@@ -293,16 +293,23 @@ export class MaxPrepsError extends Error {
   readonly url: string;
   readonly httpStatus?: number;
   readonly retryable: boolean;
+  /**
+   * The first 4 KB of a non-2xx response's body, when it could be read. Some endpoints say why in
+   * it: the player stats rollup's 400 is "No data was found" for a team with no stats, and that
+   * must be told apart from a 400 for a bad parameter (lib/sources/maxpreps-player-stats.ts).
+   */
+  readonly body?: string;
 
   constructor(
     message: string,
-    opts: { url: string; httpStatus?: number; retryable?: boolean },
+    opts: { url: string; httpStatus?: number; retryable?: boolean; body?: string },
   ) {
     super(message);
     this.name = 'MaxPrepsError';
     this.url = opts.url;
     this.httpStatus = opts.httpStatus;
     this.retryable = opts.retryable ?? false;
+    this.body = opts.body;
   }
 }
 
@@ -470,10 +477,19 @@ export class MaxPrepsClient {
           // Retry 429 and 5xx only; never retry another 4xx — a 404 means the URL is wrong
           // and retrying it just adds load (SPEC §5.3).
           const retryable = res.status === 429 || res.status >= 500;
+          // Best effort, inside the timer like a 2xx body: a body that cannot be read (or stalls
+          // until the abort) leaves `body` empty rather than turning a 4xx into a retry.
+          let body = '';
+          try {
+            body = (await res.text()).slice(0, 4096);
+          } catch {
+            body = '';
+          }
           lastError = new MaxPrepsError(`HTTP ${res.status}`, {
             url,
             httpStatus: res.status,
             retryable,
+            body,
           });
           if (!retryable) throw lastError;
           // Guarded like the network-error branch: the last attempt throws immediately rather

@@ -6,10 +6,14 @@ import TeamGameLog from '@/components/teams/TeamGameLog';
 import TeamIdentity from '@/components/teams/TeamIdentity';
 import TeamNextGame from '@/components/teams/TeamNextGame';
 import TeamOfficialFixtures from '@/components/teams/TeamOfficialFixtures';
+import TeamPlayerStats from '@/components/teams/TeamPlayerStats';
 import TeamPlayoffLine from '@/components/teams/TeamPlayoffLine';
+import TeamRoster from '@/components/teams/TeamRoster';
 import TeamSplits from '@/components/teams/TeamSplits';
 import TeamStatTiles from '@/components/teams/TeamStatTiles';
 import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
+import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
+import { buildRosterView } from '@/components/teams/roster-view';
 import { buildTeamPageView } from '@/components/teams/team-view';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
@@ -52,7 +56,9 @@ import { DIVISION_LABELS } from '@/lib/season';
  *     CCS picture    | Who we haven't beaten
  *     League log (2) | On SCVAL's schedule only
  *        ″           | Non-league
- *     Elsewhere (both columns)
+ *     Elsewhere (both columns, or under Non-league — see `logOutweighs` below)
+ *     Player stats (both columns)
+ *     Roster (both columns)
  *
  * The League log spans only when the official-only fixtures card exists and there are league
  * results. Without results the log is a short empty state and the official-fixtures list
@@ -71,6 +77,10 @@ import { DIVISION_LABELS } from '@/lib/season';
  *
  * A team with no results still gets this whole page: identity, links, the CCS line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
+ *
+ * The player stats and the roster come after every game section: they answer "who is on this
+ * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
+ * rows each they would push those below the fold. Stats lead, since they change after every game.
  */
 
 /** All 15 prerendered; anything else is a 404 rather than a runtime render. */
@@ -91,7 +101,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       : `${view.divisionLabel} division — no results reported`;
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins and CCS picture. Unofficial, rebuilt nightly from MaxPreps.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins, CCS picture, player stats and roster. Unofficial, rebuilt nightly from MaxPreps.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -123,6 +133,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
   const sblive = team.external.sbliveGamesUrl;
+  const roster = buildRosterView(team.slug);
+  const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
+  const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
@@ -359,6 +372,26 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             ) : null}
           </section>
         </div>
+
+        {/* Player stats, then the roster, after every game section (see the docblock). Both take
+            both columns at every width from 768px: a 30-row table in half a column is not a table
+            anyone scans. */}
+        {playerStats ? (
+          <section className="min-w-0 md:col-span-2" id="player-stats">
+            <SectionHeader kicker="Player stats" meta="This season, from MaxPreps" />
+            <TeamPlayerStats view={playerStats} />
+          </section>
+        ) : null}
+
+        {roster ? (
+          <section className="min-w-0 md:col-span-2" id="roster">
+            <SectionHeader
+              kicker="Roster"
+              meta={rosterCount > 0 ? `${rosterCount} player${rosterCount === 1 ? '' : 's'}` : undefined}
+            />
+            <TeamRoster view={roster} />
+          </section>
+        ) : null}
       </div>
     </div>
   );

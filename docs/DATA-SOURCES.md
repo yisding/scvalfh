@@ -200,6 +200,111 @@ MaxPreps' per-level pages (`/jv/roster/`, `/freshman/roster/`) and prior-season 
 (`/25-26/roster/`) were empty for every team checked except Homestead JV (25), Palo Alto JV (25),
 Monta Vista JV (12) and Los Gatos JV (2). This sweep is not a script: re-running it is research.
 
+**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`).** A second sweep on
+2026-10-02 looked for each rostered player's own recruiting profile, in two passes the same day.
+It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
+Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
+
+| Team | Found | How it was tied to the player |
+|---|---|---|
+| St. Ignatius | 23 SportsRecruits (every rostered player), 13 Hudl | The school's SportsRecruits team page (`nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey`) links all 23; class years and numbers agree. About 14 are bare team-created pages. The 13 Hudl profiles carry the school's varsity field hockey team (SICP Women's Field Hockey Varsity, Hudl team 409165); several list soccer first. |
+| Saratoga | 9 Hudl | Created from Saratoga's 2024 varsity team (Hudl team 777233, ids 24030203-24030221). They name school and sport but no class year; all 9 players are juniors or seniors now. |
+| Los Gatos | 1 NCSA, 5 SportsRecruits (3 JV) | Lizzie Moorehouse's NCSA profile is under the legal name, Mary Elizabeth; the SportsRecruits bio gives Lizzie as the name used. |
+| Mitty | 3 SportsRecruits, 1 Hudl | Each page names Archbishop Mitty. |
+| Saint Francis | 3 SportsRecruits, 2 NCSA, 1 Hudl | Each SportsRecruits bio names Saint Francis. NCSA lists Genevieve (Evie) Ferrini, and Aadya Kumar (the roster's Aadya Shivan Kumar; position and height agree). The Hudl profile is on SFHS Girls Varsity Field Hockey (team 26559). |
+| Santa Clara | 3 Hudl | Created from Santa Clara's varsity field hockey team on Hudl (ids 23923742-23923757); no class year. The block's other names are not on the roster. |
+| Los Altos | 1 NCSA, 1 SportsRecruits | |
+| Homestead, Palo Alto, Lynbrook, Fremont | 1 NCSA; 1 NCSA; 1 SportsRecruits; 1 SportsRecruits | The Lynbrook and Fremont pages name no school: matched on class year plus hometown (Cupertino, Sunnyvale). |
+| Cupertino, Valley Christian, Presentation, Monta Vista | none found | |
+
+The rule: a page is linked only when it names the player (or the school's spelling, `sourceName`)
+and field hockey, and either names this school or shows the class year the roster shows plus a
+California hometown. A stated class year must agree with the row's grade; `lib/rosters.ts` refuses
+the file at load otherwise. Social media, news stories and profiles for other sports are not
+linked; several rostered players have lacrosse or softball profiles on SportsRecruits, instead
+of or beside a field hockey one.
+
+Gotchas, all **[V]**:
+- **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
+  answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
+  profiles were matched on the search result alone: the title, the school in the URL path, and the
+  class year in the result summary where it gave one. Several schools have two NCSA school slugs: Los Altos
+  (`los-altos-high-school1` and `los-altos-high-school-los-altos`), Fremont
+  (`fremont-high-school-sunnyvale` and `fremont-high-school6`) and Monta Vista (`monta-vista-high-school`
+  and `monte-vista-high-school-cupertino`). Every other field hockey profile the searches surfaced
+  under these schools belongs to a graduate or someone not on the roster.
+- **SportsRecruits** answers a missing athlete with HTTP 200 and the title "Page Not Found". A slug
+  (`first_last`, `first_last2` …) is shared across sports; field hockey profiles redirect from
+  `my.` to `nfhca.sportsrecruits.com`, which is stored. The body loads client-side, so the evidence
+  is the title, meta description and JSON-LD. Bare "11v11 Roster Member" pages show a class year
+  (sometimes a position) and no school or state; about a dozen such pages whose name, sport and
+  class year agree with a rostered player (Saint Francis, Los Altos, Mitty, Palo Alto,
+  Presentation, Fremont) were **not** linked.
+- **Hudl** profile ids are numeric and cannot be guessed. A profile lists every team the athlete is
+  on, but its meta description names only one (often soccer or basketball), so what was checked is
+  the page's team list: a team with `sportName: "Field Hockey"` at this school. Profiles created
+  from one team's roster import have consecutive ids, so scanning the ids around one known profile
+  found teammates (St. Ignatius, Santa Clara); Mitty's and Saint Francis's did not cluster.
+  **FieldLevel** profiles are mostly behind a login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
+  roster has no class year to check, so only the NCSA profile (under Homestead) is linked.
+
+**Recall is partial.** NCSA can only be found through search, and its pages cannot be fetched, so
+a profile the search index does not surface stays unfound. Every school got NCSA sweeps by school,
+class year and position. A name search (NCSA and Hudl together) ran for nearly every varsity player
+on all 15 teams (a few who already had a link were skipped; JV rows, which the page does not show,
+were not searched). Every player on every roster was looked up directly on SportsRecruits;
+FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else could exist and not
+be linked.
+Like the first sweep, this one is research, not a script.
+
+**(k) Player stats** — `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
+on the ghost API (JSON; captured and verified 2026-10-02, all 15 teams). This is the call the team's
+`/stats/` page makes from the browser (page `/team/stats`, function `eM` in that build); the page
+itself server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
+(`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
+the same chunk, not used: `team-season-stats/rollup/v1`, `team-season-game-stats/rollup/v1`,
+`team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the rollup to league games.
+`lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
+`data/player-stats.json`.
+
+Shape **[V]**: `data.groups[]` = "Field Stats" and "Goaltending Stats", each with `subgroups[]` (a
+second "… (2)" subgroup carries the overflow columns), each a table: `stats.columns[]`
+`{name, header, displayName, overallValue, columnType}` and `stats.rows[].columns[i]`
+`{value, href, caption}` lined up with `stats.columns[i]`. The `Name` cell's `href` is the athlete's
+career URL — its `?careerid=` joins to `data/rosters.json` (121/121 rows on 2026-10-02) — and its
+`caption` is the class (`(Sr)`). Column names (MaxPreps' own): field `Jersey, Name, GamesPlayed,
+FieldMinutesPlayed, Goals, GoalsPerGame, Assists, AssistsPerGame, Points, PointsPerGame, Steals` and
+`Shots, ShotsPerGame, ShotsOnGoal, ShotsOnGoalPerGame, ShotsOnGoalPercentage, GameWinningGoal`;
+goalkeeping `GamesPlayed, MinutesPlayed, OvertimeMinutesPlayed, OpponentShotsOnGoal, GoalsAgainst,
+Saves, SavesPerGame, SavePercentage, GoalsAgainstAverage` and `ShutOuts, Win, Loss, Tie`.
+`data.lastUpdated.timeStamp` is when the coach last entered stats (naive local time).
+
+Gotchas, all **[V]**:
+- A team whose coach has entered nothing answers **HTTP 400** `{status: 400, message: "No data was
+  found for this request.", data: null}`. On 2026-10-02 that is Cupertino, Los Altos, Los Gatos,
+  Lynbrook and Saratoga — exactly the five whose roster pages flag no athlete `hasStats` (roster
+  column 15). It means "no stats", not a failure.
+- Every cell is a string, `"0"` included, whether or not the coach tracks that stat (`Min` is `"0"`
+  for every player on most teams). So a stat is **tracked** when the team's `overallValue` is above
+  zero, and only then are its cells read: a tracked 0 is a real zero, an untracked stat is null.
+  A team that tracks a stat but has a team total of 0 (no assists all season) reads as untracked.
+- Points are MaxPreps' 2 per goal + 1 per assist, on every row of every team.
+- A player can be in one subgroup and not the other (Palo Alto lists two players in the overflow
+  table only): their stats from the missing table are null, shown as a dash.
+- `Goals` and `GamesPlayed` appear in both field subgroups and always agree; the parser throws if
+  they ever do not.
+- Coverage on 2026-10-02: 10 of 15 teams, 121 players, 13 goalkeepers. Every team with stats
+  tracks games, goals and points; 8 track assists; shots / shots on goal, game-winning goals,
+  steals and minutes are each tracked by two to three teams; goalkeeping ranges from saves only
+  to the full ten columns (Valley Christian). Some teams stop entering: Presentation's last update
+  was Sep 10, Monta Vista's Sep 12.
+- Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
+  Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
+- Budget: 15 calls of 0.2–35 KB, twice a day in season: `.github/workflows/update-data.yml` runs
+  `pnpm fetch-player-stats` right after the core sweep (non-fatal) and commits
+  `data/player-stats.json` with the snapshot when its content changed; the script leaves the file
+  untouched when only its `fetchedAt` stamps would move.
+
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
 ⚠️ All `scorebooklive.com` URLs now 301-redirect to `si.com` — target si.com directly (a
