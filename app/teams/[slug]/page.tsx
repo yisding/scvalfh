@@ -5,11 +5,13 @@ import TeamGameLog from '@/components/teams/TeamGameLog';
 import TeamIdentity from '@/components/teams/TeamIdentity';
 import TeamNextGame from '@/components/teams/TeamNextGame';
 import TeamOfficialFixtures from '@/components/teams/TeamOfficialFixtures';
+import TeamPlayerStats from '@/components/teams/TeamPlayerStats';
 import TeamPlayoffLine from '@/components/teams/TeamPlayoffLine';
 import TeamRoster from '@/components/teams/TeamRoster';
 import TeamSplits from '@/components/teams/TeamSplits';
 import TeamStatTiles from '@/components/teams/TeamStatTiles';
 import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
+import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
 import { buildRosterView } from '@/components/teams/roster-view';
 import { buildTeamPageView, nextOfficialFixture } from '@/components/teams/team-view';
 import EmptyState from '@/components/ui/EmptyState';
@@ -46,6 +48,7 @@ import { DIVISION_LABELS } from '@/lib/season';
  *     CCS picture    | Who we haven't beaten
  *     League log (2) | Scheduled, not reported
  *        ″           | Non-league
+ *     Player stats (both columns)
  *     Roster (both columns)
  *     Elsewhere (both columns)
  *
@@ -57,8 +60,9 @@ import { DIVISION_LABELS } from '@/lib/season';
  * A team with no results still gets this whole page: identity, links, the CCS line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
  *
- * The roster comes after every game section: it answers "who is on this team?", which is not one
- * of the parent's three questions, and at up to 30 rows it would push them below the fold.
+ * The player stats and the roster come after every game section: they answer "who is on this
+ * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
+ * rows each they would push those below the fold. Stats lead, since they change after every game.
  */
 
 /** All 15 prerendered; anything else is a 404 rather than a runtime render. */
@@ -79,7 +83,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       : `${view.divisionLabel} division — no results reported`;
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins, CCS picture and roster. Unofficial, rebuilt nightly from MaxPreps.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins, CCS picture, player stats and roster. Unofficial, rebuilt nightly from MaxPreps.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -109,6 +113,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   } = view;
   const sblive = team.external.sbliveGamesUrl;
   const roster = buildRosterView(team.slug);
+  const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
@@ -269,6 +274,13 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             emptyBody="Every game on their schedule counts toward the division record."
           />
         </section>
+
+        {playerStats ? (
+          <section className="min-w-0 lg:col-span-2" id="player-stats">
+            <SectionHeader kicker="Player stats" meta="This season, from MaxPreps" />
+            <TeamPlayerStats view={playerStats} />
+          </section>
+        ) : null}
 
         {roster ? (
           <section className="min-w-0 lg:col-span-2" id="roster">

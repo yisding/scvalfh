@@ -131,6 +131,29 @@ pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the capt
 pnpm fetch-rosters --dry-run                            # parse and report, write nothing
 ```
 
+### Player stats
+
+`data/player-stats.json` holds each team's season player stats as the coach entered them on
+MaxPreps — games, goals, assists, points, and where the coach tracks them shots, shots on goal,
+game-winning goals, steals, minutes and goalkeeping — built by `pnpm fetch-player-stats` from the
+JSON behind each team's MaxPreps `/stats/` page and joined to `data/rosters.json` on the career id
+in each row's player link. A stat is kept only where the team tracks it (its team total is above
+zero), so a 0 is a real zero and an untracked stat is null; per-game and percentage columns are
+dropped. 10 of the 15 teams publish stats; for the other five MaxPreps answers "No data was found"
+and the file says `status: "none"`. `lib/player-stats.ts` is the read API; each team page renders it
+in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
+`components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
+the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
+
+Stats change after every game but, like the rosters, this is not in the twice-daily cron yet: run it
+by hand (adding it to `update-data.yml` also means widening the deploy gate's two-file allowlist).
+
+```bash
+pnpm fetch-player-stats                                      # live: 15 rollups → data/player-stats.json
+pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON
+pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
+```
+
 ## Local development
 
 ```bash
@@ -285,6 +308,11 @@ computed one; see `/about#cross-check`.
   a few heights, but **no current-season public source lists positions for 7 of the 15
   programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
+- **Player stats exist only where a coach enters them.** As of 2026-10-02, 10 of 15 teams publish
+  stats on MaxPreps (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none, and no
+  school site or si.com page has them either), what each tracks varies by coach, and some stop
+  entering mid-season (Presentation's last update was Sep 10). The team page says so rather than
+  showing a short table as if it were complete.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and SBLive-only games that MaxPreps never published are surfaced as warnings rather than
