@@ -101,6 +101,26 @@ Useful flags on `fetch-data` (see the header of `scripts/fetch-data.ts` for the 
 reports without writing; `--force` bypasses the season-window guard; `--no-sblive`/`--no-scval`/
 `--no-ccs`/`--no-vnn` skip individual secondary sources.
 
+### Rosters
+
+`data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
+height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
+from the 16 MaxPreps roster pages and committed, like the history file, rather than refreshed by
+the cron (rosters change a few times a season; run it by hand or weekly). The page encodes each
+athlete as a 37-element positional array, so `lib/sources/maxpreps-roster.ts` decodes it with
+MaxPreps' own column list and cross-checks every row against the page's rendered table, failing
+the team rather than publishing a wrong grade beside a name. Blanks are `null`, never guessed;
+soft-deleted rows are dropped; a team whose fetch fails keeps its previous rows with
+`status: "carried-forward"`. `lib/rosters.ts` is the read API (`getTeamRoster(slug)`,
+`sortedPlayers(team)`); no page renders it yet. See `docs/DATA-SOURCES.md` §1.1j for the column
+map and the per-program coverage.
+
+```bash
+pnpm fetch-rosters                                      # live: 16 roster pages → data/rosters.json
+pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the captured pages
+pnpm fetch-rosters --dry-run                            # parse and report, write nothing
+```
+
 ## Local development
 
 ```bash
@@ -248,6 +268,11 @@ computed one; see `/about#cross-check`.
   published bracket; until CCS actually publishes one, the bracket section stays in its seeded
   projection state (it has never been exercised against a real published bracket — only against
   synthetic test data).
+- **Roster detail depends on the coach.** As of 2026-10-02 five programs publish grade, position
+  and number on MaxPreps, three publish grade and number only, seven publish names only (Los
+  Gatos' 58 names look like the whole program, not just varsity), and Wilcox publishes no roster
+  at all. The file stores exactly that — a blank is `null`, never a guess — and si.com's rosters
+  were rejected as a fill-in source (names only, and often a different list of names).
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and SBLive-only games that MaxPreps never published are surfaced as warnings rather than

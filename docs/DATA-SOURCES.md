@@ -99,6 +99,66 @@ with loud assertions), rendered `table tbody tr` (stable selectors: `span.hat/.n
 (`application/ld+json`, `@type: SportsEvent` — the only source of a game's street address; fetch
 lazily, one request per game, never in the nightly sweep).
 
+**(j) Team rosters** — `GET https://www.maxpreps.com/<teamCanonicalUrl path>/roster/` (HTML; captured
+and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb/react/team-roster/v1`,
+`roster/v1` and `team-roster/v2` all 404 **[V]**. The page's `__NEXT_DATA__` → `props.pageProps` carries
+`countData {teamId, sportSeasonId, athleteCount, staffCount}`, `schoolId`, `canonicalUrl` and
+`athleteData`: an array of **37-element positional arrays**, one per athlete — the same tuple encoding
+as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
+(`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
+
+The column names are MaxPreps' own **[V]**: the roster page component (build `77480dfe-046b5bf4`,
+`asset.maxpreps.io/_next/static/chunks/1x2mehrsrg-g8.js`, found via `_buildManifest.js` →
+`/team/roster`) does `deserializeArray(GSSP_ROSTER_SERIALIZE_KEYS, athleteData)` with
+`obj[KEYS[i]] = row[i]`. KEYS, verbatim:
+
+```
+ 0 linkedAthlete       8 jersey            16 isCaptain          24 hasPhoto           32 formattedPositions
+ 1 linkedParents       9 heightInches      17 isDeleted          25 rosterId           33 formattedName
+ 2 canStartChat       10 heightFeet        18 photoUrl           26 schoolId           34 formattedHeight
+ 3 accountInformation 11 weight            19 secondaryPhotoUrl  27 sportSeasonId      35 calculatedHeight
+ 4 athleteId          12 position1         20 weightClass        28 sportSeasonName    36 formattedClassYear
+ 5 firstName          13 position2         21 isPlayerOfTheGame  29 careerProfileId
+ 6 lastName           14 position3         22 isFemale           30 createdOn
+ 7 classYear          15 hasStats          23 bio                31 canonicalUrl
+```
+
+Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
+- `isDeleted` rows are soft-deleted: the public table hides them (`useRosterAthletes` →
+  `.filter(a => !a.isDeleted)`) and `athleteCount` excludes them. **Drop them first.** One exists
+  (Santa Clara: 17 rows, 16 shown).
+- `classYear` is the grade (9–12 here; 5–8 exist for middle school), `formattedClassYear` its label
+  (`Fr.`/`So.`/`Jr.`/`Sr.`, `""` when blank; the table prints `-`). `jersey` is a **string** (`"00"`,
+  `"21/88"` occur). Position is `position1..3` joined with `", "` = `formattedPositions` (e.g. `F, M`).
+  Height is `heightFeet`'`heightInches`" (table: `5'7"`; `formattedHeight` has a space: `5' 7"`;
+  `calculatedHeight` is total inches). `isCaptain` renders the Captain badge. `createdOn` is when the
+  row was created — there is no modified stamp. `isFemale` is `false` on every girls' row: meaningless.
+- Ids: `athleteId` and `rosterId` are **per-season**; `careerProfileId` is the stable person id, and
+  the `?careerid=` in `canonicalUrl` is its short form. `schoolId` == `countData.teamId` == the
+  team GUID. `sportSeasonId` is the season assertion.
+- The server-rendered `<table>` (`#`, `Player`, `Grade`, `Position`, `Height`; the Player cell is an
+  `a.name` link to `canonicalUrl`) is the human-facing rendering of the same rows and is the
+  cross-check: `parseRosterPage` throws on any disagreement. **Match rows by career link, not
+  order** — the table sorts by jersey with blanks first, so its order differs from `athleteData`'s
+  on some teams (Mitty).
+- Coverage is whatever the coach entered. 2026-10-02: 5 programs publish grade + position + number
+  (St. Ignatius, Saint Francis, Fremont, Mitty, Palo Alto), 3 publish grade + number only (Valley
+  Christian, Presentation, Monta Vista), 7 publish names only (Cupertino, Homestead, Los Altos, Los
+  Gatos — 58 names, likely the whole program — Lynbrook, Santa Clara, Saratoga), Wilcox publishes
+  nothing (`athleteCount 0`, no table). Only Saint Francis (25) and one Palo Alto row carry a height.
+  `staffCount` is non-zero on most pages but the coaches are **not** in `pageProps` (they load
+  client-side on `/team/staff`; untested).
+- Budget: one 180–340 KB page per team, 16 requests, under the primary client's courtesy ceiling.
+  Not in the twice-daily cron — rosters change a few times a season; run `pnpm fetch-rosters` by
+  hand or weekly.
+
+**si.com rosters (`.../teams/{id}-{slug}/players`, react class `teamPlayers/Index`)** were captured
+alongside and **rejected as a source**: `query.team.teamPlayers.nodes[]` carries names only (no
+jersey/position/class on any node for any SCVAL team), is paginated 24 at a time with a client-side
+"load more" that the `?page=`/`?after=` query forms do not drive, 404s for Valley Christian, and on
+several teams lists a **different set of names** from MaxPreps (0/24 overlap for St. Ignatius and
+Fremont; 17/17 for Los Altos). Useful only as a name cross-check.
+
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
 ⚠️ All `scorebooklive.com` URLs now 301-redirect to `si.com` — target si.com directly (a
