@@ -18,7 +18,7 @@ import type { Division, TeamSlug } from './types';
 
 const teamSlug = z.enum([
   'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian', 'wilcox',
+  'st-ignatius', 'valley-christian',
   'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
   'palo-alto', 'presentation', 'santa-clara', 'saratoga',
 ]);

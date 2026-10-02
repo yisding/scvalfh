@@ -1,13 +1,15 @@
 /**
- * The 16-team SCVAL membership registry.
+ * The 15-team SCVAL membership registry.
  *
- * THIS is the league, not the feed. MaxPreps' De Anza standings table has SEVEN rows —
- * Wilcox is absent, not 0-0-0 (SPEC §3, DESIGN §12.1) — so every table is built from this
- * constant and left-joined against the feed.
+ * THIS is the league, not the feed: every table is built from this constant and left-joined
+ * against the feed (SPEC §3, DESIGN §12.1).
  *
  * Division membership comes exclusively from the two official SCVAL PDFs (SPEC §3):
  *   De Anza  : https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf
  *   El Camino: https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf
+ *
+ * The De Anza grid still lists Wilcox, but Wilcox is not fielding a team this season, so it is
+ * not a member here: see WITHDRAWN_SCHOOL_NAMES.
  *
  * ids are MaxPreps GUIDs re-read from the captured league standings payloads (SPEC §2.1).
  * Slugs and 2-letter abbrs are OURS and are never derived by string munging (DESIGN §12.9).
@@ -61,7 +63,7 @@ interface Seed {
   aliases: string[];
   sbliveTeamId?: string;
   /**
-   * si.com URL slug. Never guessed (SPEC §2.1 / §7.3). All 16 were harvested on 2026-09-29 from
+   * si.com URL slug. Never guessed (SPEC §2.1 / §7.3). All 15 were harvested on 2026-09-29 from
    * live payloads: `query.organization.teamStandings[].team.webPath` on the two si.com league
    * standings pages, plus `opponent.team.webPath` on the Los Altos and Saratoga team pages
    * (Santa Clara 496839 is absent from both standings pages and came from Saratoga's).
@@ -75,7 +77,7 @@ interface Seed {
  * standings PDF forms, SBLive / si.com names, and the VNN ICS "X High School" forms (SPEC §2.3).
  */
 const SEEDS: readonly Seed[] = [
-  // ----- De Anza (official 8; MaxPreps has 7) -----
+  // ----- De Anza (7; Wilcox is on the official grid but not fielding a team) -----
   {
     id: '1dc4836b-4daf-4573-b525-27b474bd5366',
     slug: 'st-ignatius',
@@ -213,31 +215,6 @@ const SEEDS: readonly Seed[] = [
     aliases: ['Homestead', 'HOMESTEAD', 'Homestead Mustangs', 'Homestead High School'],
     sbliveTeamId: '458667',
     sbliveSlug: '458667-homestead-mustangs',
-  },
-  {
-    // In the official De Anza grid (e.g. "WILCOX @ VALLEY CHRISTIAN", Wed Sep 9) but absent
-    // from MaxPreps' standings AND from every captured payload, so no GUID exists yet.
-    // Stable placeholder id; dataCoverage 'none' (SPEC §3.2, ADDENDUM §4).
-    id: 'wilcox',
-    slug: 'wilcox',
-    name: 'Wilcox',
-    shortName: 'Wilcox',
-    abbr: 'WX',
-    acronym: 'WHS',
-    mascot: 'Chargers',
-    city: 'Santa Clara',
-    division: 'de-anza',
-    dataCoverage: 'none',
-    // No upstream row exists; a neutral placeholder, explicitly flagged, beats an invented hue.
-    colors: ['454444', 'FFFFFF'],
-    colorSource: 'placeholder',
-    maxprepsPath: '/ca/santa-clara/wilcox-chargers/field-hockey/',
-    aliases: [
-      'Wilcox', 'WILCOX', 'Wilcox Chargers', 'Wilcox High School', 'Adrian Wilcox',
-      'Adrian Wilcox High School',
-    ],
-    sbliveTeamId: '485528',
-    sbliveSlug: '485528-wilcox-chargers',
   },
 
   // ----- El Camino (official 8; MaxPreps 8) -----
@@ -438,7 +415,7 @@ function toTeam(s: Seed): Team {
   };
 }
 
-/** The registry, in official-PDF order: De Anza 8 then El Camino 8. */
+/** The registry, in official-PDF order: De Anza 7 then El Camino 8. */
 export const TEAMS: readonly Team[] = SEEDS.map(toTeam);
 
 /** Teams whose games MaxPreps actually publishes — the 15 schedule requests (SPEC §5.1). */
@@ -452,7 +429,7 @@ function assertRegistry(): void {
   const fail = (m: string): never => {
     throw new Error(`lib/teams.ts: ${m}`);
   };
-  if (TEAMS.length !== 16) fail(`expected 16 teams, got ${TEAMS.length}`);
+  if (TEAMS.length !== 15) fail(`expected 15 teams, got ${TEAMS.length}`);
   const columns: Array<[string, string[]]> = [
     ['id', TEAMS.map((t) => t.id)],
     ['slug', TEAMS.map((t) => t.slug as string)],
@@ -463,10 +440,10 @@ function assertRegistry(): void {
     const dupes = values.filter((v, i) => values.indexOf(v) !== i);
     if (dupes.length) fail(`duplicate ${label}: ${[...new Set(dupes)].join(', ')}`);
   }
-  for (const d of ['de-anza', 'el-camino'] as const) {
+  for (const [d, expected] of [['de-anza', 7], ['el-camino', 8]] as const) {
     const n = TEAMS.filter((t) => t.division === d).length;
-    // Official SCVAL alignment is 8 + 8 (SPEC §3).
-    if (n !== 8) fail(`${d} has ${n} teams, expected 8`);
+    // Official SCVAL alignment is 8 + 8 (SPEC §3), less Wilcox, which is not fielding a team.
+    if (n !== expected) fail(`${d} has ${n} teams, expected ${expected}`);
   }
   if (FETCHABLE_TEAMS.length !== 15) {
     fail(`expected 15 fetchable teams, got ${FETCHABLE_TEAMS.length}`);
@@ -516,6 +493,22 @@ export function resolveTeam(nameOrId: string | null | undefined): Team | undefin
 
 export function isScvalTeamId(id: string | null | undefined): boolean {
   return !!id && BY_ID.has(id);
+}
+
+/**
+ * Schools the official grid still lists that are NOT fielding a team this season. Their grid
+ * fixtures are dropped at parse time and their roster-line entries are not membership warnings:
+ * they are not in the registry, so they appear nowhere on the site.
+ */
+export const WITHDRAWN_SCHOOL_NAMES: readonly string[] = [
+  'Wilcox', 'WILCOX', 'Wilcox Chargers', 'Wilcox High School', 'Adrian Wilcox',
+  'Adrian Wilcox High School',
+];
+
+const WITHDRAWN_KEYS = new Set(WITHDRAWN_SCHOOL_NAMES.map(normalizeTeamKey));
+
+export function isWithdrawnSchool(name: string | null | undefined): boolean {
+  return !!name && WITHDRAWN_KEYS.has(normalizeTeamKey(name));
 }
 
 export function teamsInDivision(division: Division): readonly Team[] {

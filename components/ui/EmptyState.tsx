@@ -21,9 +21,9 @@ export function EmptyState({ heading, children, action, className }: EmptyStateP
       {action ? (
         /* `sx-action`: the one action of an empty state is alone in its own paragraph, so it is not
            a word in a sentence and WCAG 2.5.8's inline exception does not reach it. At `text-meta`
-           the anchor's own box is 17px; `sx-action` gives it the 24px floor. It matters most on
-           /teams/wilcox, where every section is an empty state and these are the only links on the
-           page. */
+           the anchor's own box is 17px; `sx-action` gives it the 24px floor. It matters most on a
+           team page with no results, where every section is an empty state and these are the only
+           links on the page. */
         <p className="mt-3 mb-0 text-meta">
           {action.external ? (
             <a

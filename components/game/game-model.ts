@@ -45,7 +45,7 @@ export interface GameSideModel {
    * a whole title on its own). Everything in the page body uses `name`.
    */
   label: string;
-  /** Present only for one of the 16 SCVAL schools; a non-SCVAL opponent is a name (DESIGN §8). */
+  /** Present only for one of the 15 SCVAL schools; a non-SCVAL opponent is a name (DESIGN §8). */
   team: Team | undefined;
   standing: Standing | undefined;
   /** "4-1-0 De Anza", or the honest no-results line. `null` for a non-SCVAL opponent. */
@@ -123,7 +123,7 @@ function subFor(standing: Standing | undefined, team: Team | undefined): string 
   if (!team) return null;
   const division = DIVISION_LABELS[team.division];
   if (!standing || !standing.hasReportedResults) {
-    // Never 0-0-0 for a team the sources have no results for (DESIGN §8, Wilcox).
+    // Never 0-0-0 for a team the sources have no results for (DESIGN §8).
     return `No league results reported · ${division}`;
   }
   return `${recordString(standing.computed)} ${division}`;

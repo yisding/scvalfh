@@ -24,17 +24,16 @@ import { DIVISION_LABELS } from '@/lib/season';
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
  *
- * Sixteen static pages, one per member of the official SCVAL alignment. Source order is the phone
+ * Fifteen static pages, one per member of the official SCVAL alignment. Source order is the phone
  * order of the §3.7 wireframe, so the DOM order matches the visual order at every breakpoint
  * (DESIGN §10.5) and the parent's three questions — where do we stand, what just happened, when is
  * the next one — are all answered above the fold.
  *
- * Wilcox gets this whole page with no results: identity, links, the CCS line, the official-schedule
- * fixtures and every empty state, because a team with no data still gets a complete, useful page
- * (DESIGN §8).
+ * A team with no results still gets this whole page: identity, links, the CCS line, the
+ * official-schedule fixtures and every empty state (DESIGN §8).
  */
 
-/** All 16 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 15 prerendered; anything else is a 404 rather than a runtime render. */
 /**
  * The row lists are capped at a 46rem measure on desktop. DESIGN §3.7 puts NEXT / LAST / FORM /
  * SPLITS / WHO WE HAVEN'T BEATEN in a 2fr right rail beside a 3fr column; this page is one column

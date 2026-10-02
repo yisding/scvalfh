@@ -3,7 +3,7 @@ import type { Team } from '../../lib/types';
 /**
  * A school's color square (DESIGN §7.1, §12.4).
  *
- * School colors are decoration with a guardrail, never a data encoding: sixteen uncontrolled
+ * School colors are decoration with a guardrail, never a data encoding: fifteen uncontrolled
  * brand hues blow past every categorical ceiling, so they appear ONLY here. The letters use
  * `colors.onPrimary`, which the cron computed by measured WCAG contrast on `colors.primary`
  * — never picked by eye. No third-party image request is ever made: the source's mascot URL is

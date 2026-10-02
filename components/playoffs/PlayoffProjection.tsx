@@ -24,7 +24,7 @@ import {
  *  - **The 2px rule after the last automatic berth is the redundant cue**, never the only one.
  *  - **Shared places render level** — `6=` with an sr-only "tied for 6th" — and every tied group
  *    gets `tiebreak.note` verbatim in the footnotes, which already carries its Article citation.
- *  - **A team with nothing reported (Wilcox) is never 0-0-0**: place `—`, record `—`, and the
+ *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
  *    written status "No results reported". It is still a link to its team page.
  *  - The whole row is one block link whose hit area is exactly the row (WCAG 2.5.8), the same
  *    mechanism `StandingsTable` uses. Its sentence carries the place and the record; the status
@@ -143,7 +143,7 @@ export function PlayoffProjection({
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and the two projection tables together are
-                      sixteen stretched row links. Navigation still fetches on click. */}
+                      fifteen stretched row links. Navigation still fetches on click. */}
                   <Link
                     href={`/teams/${row.team.slug}`}
                     prefetch={false}

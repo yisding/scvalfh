@@ -29,8 +29,8 @@ beforeAll(() => {
 describe('fetch-data --fixtures', () => {
   it('writes a snapshot that passes the schema', () => {
     expect(snapshot.fetchedAt).toBe('2026-09-29T15:00:00.000Z');
-    expect(snapshot.teams.length).toBe(16);
-    expect(snapshot.standings.length).toBe(16);
+    expect(snapshot.teams.length).toBe(15);
+    expect(snapshot.standings.length).toBe(15);
     expect(snapshot.games.length).toBe(158);
     expect(snapshot.counts.finals).toBe(80);
     expect(snapshot.counts.pending).toBe(3);
@@ -51,10 +51,8 @@ describe('fetch-data --fixtures', () => {
     const labels = snapshot.sources.map((s) => s.label);
     expect(labels).toContain('de-anza reported standings');
     expect(labels).toContain('el-camino reported standings');
-    expect(labels.filter((l) => l.endsWith(' schedule')).length).toBe(16);
-    const wilcox = snapshot.sources.find((s) => s.label === 'wilcox schedule');
-    expect(wilcox?.status).toBe('skipped');
-    expect(wilcox?.error).toMatch(/official SCVAL grid/);
+    expect(labels.filter((l) => l.endsWith(' schedule')).length).toBe(15);
+    expect(labels).not.toContain('wilcox schedule');
   });
 
   it('writes stable, key-sorted JSON so a re-run produces an identical file', () => {
@@ -163,7 +161,7 @@ describe('fetch-data: the season-window guard', () => {
   it('runs anyway with --force', () => {
     const out = run([...december, '--force', '--fixtures', FIXTURE_DIR, '--dry-run']);
     expect(out).not.toMatch(/out of season/);
-    expect(out).toMatch(/summary: teams 16/);
+    expect(out).toMatch(/summary: teams 15/);
   });
 
   it('is in season through the whole league and playoff calendar', () => {

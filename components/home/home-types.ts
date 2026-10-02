@@ -58,8 +58,8 @@ export interface HomeNextGame {
 
 /**
  * The next fixture from the OFFICIAL SCVAL schedule grid for a team MaxPreps does not cover.
- * Wilcox's whole 14-game slate lives here (SPEC §1.3): the games are real, the results are not
- * reported anywhere, and nothing is backfilled or invented.
+ * The games are real (SPEC §1.3), the results are not reported anywhere, and nothing is
+ * backfilled or invented.
  */
 export interface HomeOfficialFixture {
   dateLabel: string;
@@ -74,7 +74,7 @@ export interface HomeTeamView {
   team: HomeTeamIdentity;
   /** 'Mustangs · De Anza · 7th' — one line, already assembled. */
   meta: string;
-  /** false ⇒ Wilcox: no record is invented, and the card says so (DESIGN §8). */
+  /** false ⇒ nothing reported: no record is invented, and the card says so (DESIGN §8). */
   hasResults: boolean;
   /** '0-4-0' league and overall, or an em dash when nothing is reported. */
   leagueRecord: string;

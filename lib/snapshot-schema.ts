@@ -6,7 +6,7 @@
  *   2. a non-final game carries no numbers  → "a missing score is never 0-0"
  *   3. a decider exists exactly when the game is final
  *   4. shootout data exists exactly when decider === 'SO' (so: never, in this league)
- *   5. exactly 16 teams, with unique slugs and unique abbrs
+ *   5. exactly 15 teams (De Anza 7, El Camino 8), with unique slugs and unique abbrs
  *   6. games are deduped on contestId
  *   7. one standings row per registry team
  */
@@ -30,7 +30,7 @@ const sourceId = z.enum([
 ]);
 const teamSlug = z.enum([
   'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian', 'wilcox',
+  'st-ignatius', 'valley-christian',
   'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
   'palo-alto', 'presentation', 'santa-clara', 'saratoga',
 ]);
@@ -398,8 +398,8 @@ export const SnapshotSchema = z
       mismatches: z.number().int(),
     }),
   })
-  // 5. Exactly 16 teams, slugs and abbrs unique (DESIGN §12.1, §12.9).
-  .refine((s) => s.teams.length === 16, 'expected exactly 16 teams')
+  // 5. Exactly 15 teams, slugs and abbrs unique (DESIGN §12.1, §12.9).
+  .refine((s) => s.teams.length === 15, 'expected exactly 15 teams')
   .refine(
     (s) => new Set(s.teams.map((t) => t.slug)).size === s.teams.length,
     'duplicate team slug',
@@ -409,8 +409,8 @@ export const SnapshotSchema = z
     'duplicate team abbr',
   )
   .refine(
-    (s) => s.teams.filter((t) => t.division === 'de-anza').length === 8,
-    'De Anza must have 8 teams',
+    (s) => s.teams.filter((t) => t.division === 'de-anza').length === 7,
+    'De Anza must have 7 teams',
   )
   .refine(
     (s) => s.teams.filter((t) => t.division === 'el-camino').length === 8,

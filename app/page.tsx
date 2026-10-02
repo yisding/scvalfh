@@ -26,7 +26,7 @@ import { longDate, shortDate } from '@/lib/format';
  */
 export const metadata: Metadata = {
   description:
-    'Scores, standings and CCS playoff picture for the 16 SCVAL girls varsity field hockey teams — De Anza and El Camino divisions. Unofficial, updated nightly.',
+    'Scores, standings and CCS playoff picture for the 15 SCVAL girls varsity field hockey teams — De Anza and El Camino divisions. Unofficial, updated nightly.',
   alternates: { canonical: '/' },
   openGraph: { ...OG_BASE, url: '/' },
 };

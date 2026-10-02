@@ -4,7 +4,8 @@
  * `tests/fixtures/scval/{da,ec}-pdftotext.txt` are the REAL `pdftotext -layout` output of
  * https://scval.com/fallSports/26-27%20SCVAL%20FH%20{DA,EC}%20Final.pdf, and
  * `standings-index.html` is the real https://www.scval.com/standings/ page. The grid parser has to
- * reproduce 56 fixtures per division from them: 8 teams × 7 opponents, home and away.
+ * reproduce 56 fixtures per division from them: 8 teams × 7 opponents, home and away — less, in
+ * De Anza, the 14 involving Wilcox, which is on the grid but not fielding a team.
  */
 
 import { readFileSync } from 'node:fs';
@@ -45,31 +46,37 @@ describe('scval-pdf: the day-header grid', () => {
     expect(da.yearLabel).toBe('2026 - 2027');
     expect(da.officialTeamNames).toEqual([
       'Cupertino', 'Fremont', 'Homestead', 'Los Altos',
-      'Saint Francis', 'Saint Ignatius', 'Valley Christian', 'Wilcox',
+      'Saint Francis', 'Saint Ignatius', 'Valley Christian',
     ]);
     expect(ec.officialTeamNames).toEqual([
       'Los Gatos', 'Lynbrook', 'Mitty', 'Monta Vista',
       'Palo Alto', 'Presentation', 'Santa Clara', 'Saratoga',
     ]);
-    // Grid prose spellings are aliases, so all 16 resolve.
+    // Grid prose spellings are aliases, so all 15 resolve.
     expect(da.officialTeamSlugs).not.toContain(null);
     expect(ec.officialTeamSlugs).not.toContain(null);
   });
 
-  it('extracts a complete double round robin: 56 fixtures over 14 dates, no bad rows', () => {
-    for (const schedule of [da, ec]) {
-      expect(schedule.fixtures).toHaveLength(56);
+  it('extracts a complete double round robin over 14 dates, no bad rows', () => {
+    // El Camino: 8 teams, 56 fixtures, 4 a day. De Anza: the grid's 56 less Wilcox's 14.
+    for (const [schedule, teams] of [[da, 7], [ec, 8]] as const) {
+      const total = teams * (teams - 1);
+      expect(schedule.fixtures).toHaveLength(total);
       expect(new Set(schedule.fixtures.map((f) => f.dateKey)).size).toBe(14);
       expect(schedule.fixtures.every((f) => f.awaySlug !== null && f.homeSlug !== null)).toBe(true);
-      // 4 games a day, every day.
       const byDate = new Map<string, number>();
       for (const f of schedule.fixtures) byDate.set(f.dateKey, (byDate.get(f.dateKey) ?? 0) + 1);
-      expect([...new Set(byDate.values())]).toEqual([4]);
-      // Every ordered pair exactly once ⇒ home and away against all seven opponents.
+      expect([...new Set(byDate.values())]).toEqual([Math.floor(teams / 2)]);
+      // Every ordered pair exactly once ⇒ home and away against every opponent.
       const keys = schedule.fixtures.map((f) => `${f.awaySlug}@${f.homeSlug}`);
-      expect(new Set(keys).size).toBe(56);
+      expect(new Set(keys).size).toBe(total);
       expect(schedule.warnings).toEqual([]);
     }
+  });
+
+  it('drops every fixture of a school that is not fielding a team', () => {
+    expect(daText).toMatch(/WILCOX\s+@\s+VALLEY CHRISTIAN/);
+    expect(da.fixtures.some((f) => /WILCOX/.test(f.awayName) || /WILCOX/.test(f.homeName))).toBe(false);
   });
 
   it('assigns each matchup to its own COLUMN, not to the line it shares', () => {
@@ -80,10 +87,9 @@ describe('scval-pdf: the day-header grid', () => {
       'HOMESTEAD @ CUPERTINO',
       'ST. FRANCIS @ FREMONT',
       'ST. IGNATIUS @ LOS ALTOS',
-      'WILCOX @ VALLEY CHRISTIAN',
     ]);
-    expect(da.fixtures.filter((f) => f.dateKey === '2026-09-14')).toHaveLength(4);
-    expect(da.fixtures.filter((f) => f.dateKey === '2026-09-16')).toHaveLength(4);
+    expect(da.fixtures.filter((f) => f.dateKey === '2026-09-14')).toHaveLength(3);
+    expect(da.fixtures.filter((f) => f.dateKey === '2026-09-16')).toHaveLength(3);
   });
 
   it('survives the irregular spacing that broke the split-on-2-spaces approach', () => {
@@ -100,8 +106,8 @@ describe('scval-pdf: the day-header grid', () => {
   });
 
   it('reads group 1 as AWAY and group 2 as HOME', () => {
-    const wilcox = da.fixtures.find((f) => f.dateKey === '2026-09-09' && f.awaySlug === 'wilcox');
-    expect(wilcox?.homeSlug).toBe('valley-christian');
+    const row = da.fixtures.find((f) => f.dateKey === '2026-09-09' && f.awaySlug === 'homestead');
+    expect(row?.homeSlug).toBe('cupertino');
   });
 
   it('covers the verified windows: DA Mon/Wed Sep 9 – Oct 26, EC Tue/Thu Sep 10 – Oct 27', () => {
@@ -122,7 +128,7 @@ describe('scval-pdf: the day-header grid', () => {
   });
 
   it('handles the day header with no comma ("MONDAY OCTOBER 26")', () => {
-    expect(da.fixtures.filter((f) => f.dateKey === '2026-10-26')).toHaveLength(4);
+    expect(da.fixtures.filter((f) => f.dateKey === '2026-10-26')).toHaveLength(3);
     expect(ec.fixtures.filter((f) => f.dateKey === '2026-10-22')).toHaveLength(4);
   });
 
@@ -143,9 +149,12 @@ describe('scval-pdf: membership diff', () => {
     }
   });
 
-  it('includes Wilcox — the official De Anza is EIGHT teams, MaxPreps has seven', () => {
-    expect(da.officialTeamSlugs).toContain('wilcox');
-    expect(teamsInDivision('de-anza')).toHaveLength(8);
+  it('leaves Wilcox out of De Anza membership without a warning', () => {
+    expect(teamsInDivision('de-anza')).toHaveLength(7);
+    const diff = diffMembership(da);
+    expect(diff.unknownOfficialNames).toEqual([]);
+    expect(diff.missingFromOfficial).toEqual([]);
+    expect(diff.warnings).toEqual([]);
   });
 
   it('warns rather than rewriting when the official roster disagrees', () => {
@@ -156,7 +165,7 @@ describe('scval-pdf: membership diff', () => {
     });
     expect(diff.unknownOfficialNames).toEqual(['Somewhere Else']);
     expect(diff.wrongDivision).toEqual([{ slug: 'mitty', registryDivision: 'el-camino' }]);
-    expect(diff.missingFromOfficial).toContain('wilcox');
+    expect(diff.missingFromOfficial).toContain('fremont');
     expect(diff.warnings.length).toBeGreaterThan(0);
   });
 });
@@ -173,34 +182,34 @@ describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
   });
 
   it('attaches game.official on an exact date + ordering match', () => {
-    const g = game({ home: 'valley-christian', away: 'wilcox', hs: 1, as: 0, date: '2026-09-09' });
-    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'wilcox', 'valley-christian')]);
+    const g = game({ home: 'valley-christian', away: 'homestead', hs: 1, as: 0, date: '2026-09-09' });
+    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'homestead', 'valley-christian')]);
     expect(res.matched).toBe(1);
     expect(res.unmatched).toHaveLength(0);
     expect(res.games[0].official).toEqual({ scheduledDate: '2026-09-09', source: 'scval-pdf' });
   });
 
-  it('lists a fixture with no contest — which is every Wilcox game today', () => {
-    const wilcoxFixtures = da.fixtures.filter(
-      (f) => f.awaySlug === 'wilcox' || f.homeSlug === 'wilcox',
+  it('lists a fixture with no contest', () => {
+    const homesteadFixtures = da.fixtures.filter(
+      (f) => f.awaySlug === 'homestead' || f.homeSlug === 'homestead',
     );
-    expect(wilcoxFixtures).toHaveLength(14);
-    const res = applyOfficialFixtures([], wilcoxFixtures);
+    expect(homesteadFixtures).toHaveLength(12);
+    const res = applyOfficialFixtures([], homesteadFixtures);
     expect(res.matched).toBe(0);
-    expect(res.unmatched).toHaveLength(14);
-    expect(res.unmatched[0].dateKey <= res.unmatched[13].dateKey).toBe(true);
+    expect(res.unmatched).toHaveLength(12);
+    expect(res.unmatched[0].dateKey <= res.unmatched[11].dateKey).toBe(true);
   });
 
   it('flags a contest the official grid calls a league game but MaxPreps does not', () => {
     const g = game({
       home: 'valley-christian',
-      away: 'wilcox',
+      away: 'homestead',
       hs: 1,
       as: 0,
       date: '2026-09-09',
       league: false,
     });
-    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'wilcox', 'valley-christian')]);
+    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'homestead', 'valley-christian')]);
     expect(res.leagueDisagreements).toHaveLength(1);
     expect(res.leagueDisagreements[0]).toMatch(/official De Anza grid/);
     // isLeague itself is NOT rewritten — the disagreement is logged, not resolved.
@@ -252,16 +261,16 @@ describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
   });
 
   it('warns when MaxPreps has the host the other way round, and publishes the disagreement', () => {
-    const g = game({ home: 'wilcox', away: 'valley-christian', hs: 0, as: 2, date: '2026-09-09' });
-    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'wilcox', 'valley-christian')]);
+    const g = game({ home: 'homestead', away: 'valley-christian', hs: 0, as: 2, date: '2026-09-09' });
+    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'homestead', 'valley-christian')]);
     expect(res.matched).toBe(1);
     expect(res.warnings.some((w) => /host the other way round/.test(w))).toBe(true);
     // Home/away is NOT rewritten — SPEC §5.5.4 takes it only from MaxPreps' homeAwayType …
-    expect(res.games[0].home.slug).toBe('wilcox');
+    expect(res.games[0].home.slug).toBe('homestead');
     // … but the disagreement survives the run on the game, like a league-flag disagreement does.
     const note = res.games[0].provenance.hostConflict ?? '';
     expect(note).toMatch(
-      /official De Anza grid has Valley Christian hosting; MaxPreps has Wilcox/,
+      /official De Anza grid has Valley Christian hosting; MaxPreps has Homestead/,
     );
     // It is PROSE, not a log line: GameDetails prints it verbatim in the WHERE block, so it uses
     // the display name rather than the grid's UPPERCASE spelling, and carries no raw ISO date
@@ -309,8 +318,8 @@ describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
   });
 
   it('matches a rescheduled game and keeps the OFFICIAL date in scheduledDate', () => {
-    const g = game({ home: 'valley-christian', away: 'wilcox', hs: 1, as: 0, date: '2026-09-11' });
-    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'wilcox', 'valley-christian')]);
+    const g = game({ home: 'valley-christian', away: 'homestead', hs: 1, as: 0, date: '2026-09-11' });
+    const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'homestead', 'valley-christian')]);
     expect(res.matched).toBe(1);
     expect(res.games[0].official?.scheduledDate).toBe('2026-09-09');
     expect(res.games[0].dateKey).toBe('2026-09-11');
@@ -318,13 +327,13 @@ describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
   });
 
   it('never gives two fixtures the same contest, so the two legs stay distinct', () => {
-    const leg1 = game({ home: 'valley-christian', away: 'wilcox', hs: 1, as: 0, date: '2026-09-09' });
-    const leg2 = game({ home: 'wilcox', away: 'valley-christian', hs: 0, as: 3, date: '2026-10-05' });
+    const leg1 = game({ home: 'valley-christian', away: 'homestead', hs: 1, as: 0, date: '2026-09-09' });
+    const leg2 = game({ home: 'homestead', away: 'valley-christian', hs: 0, as: 3, date: '2026-10-05' });
     const res = applyOfficialFixtures(
       [leg1, leg2],
       [
-        fixture('2026-09-09', 'wilcox', 'valley-christian'),
-        fixture('2026-10-05', 'valley-christian', 'wilcox'),
+        fixture('2026-09-09', 'homestead', 'valley-christian'),
+        fixture('2026-10-05', 'valley-christian', 'homestead'),
       ],
     );
     expect(res.matched).toBe(2);
@@ -370,7 +379,7 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
 
   const previous = {
     officialFixtures: [
-      fixture('de-anza', '2026-09-16', 'homestead', 'wilcox'),
+      fixture('de-anza', '2026-09-16', 'homestead', 'cupertino'),
       fixture('el-camino', '2026-10-05', 'mitty', 'presentation'),
     ],
     games: previousGames,
@@ -381,7 +390,7 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
     expect(res.fixtures.map((f) => f.division)).toEqual(['de-anza']);
     expect(res.carried).toBe(1);
     const byDivision = new Map(res.games.map((g) => [g.leagueDivision, g.official]));
-    // Wilcox's whole team page and De Anza's markers survive one failed PDF …
+    // De Anza's unmatched fixtures and markers survive one failed PDF …
     expect(byDivision.get('de-anza')).toEqual({ scheduledDate: '2026-09-23', source: 'scval-pdf' });
     // … and El Camino, which WAS read this run, keeps exactly what this run said about it.
     expect(byDivision.get('el-camino')).toBeUndefined();

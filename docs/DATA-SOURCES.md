@@ -302,9 +302,10 @@ SBLive's Wilcox has 1 scheduled game, 0 played.
 **Resolution rules:**
 1. Division membership comes **exclusively** from the two SCVAL PDFs — MaxPreps' 7-team De Anza
    and SBLive's (differently) wrong buckets are never authoritative for membership.
-2. Wilcox is a full De Anza member on paper. Render it in the standings table with an explicit
-   "no results reported" state — **never** as 0-0-0 as if it had played. (Wilcox was also absent
-   from the 2025-26 DA varsity standings — it may be a genuinely new/non-fielding program.)
+2. Wilcox is a De Anza member on paper but is **not fielding a team this season**, so it is not in
+   the registry: its grid fixtures are dropped at parse time and De Anza has 7 teams
+   (`WITHDRAWN_SCHOOL_NAMES` in `lib/teams.ts`). A team that IS fielded but has no results still
+   renders with an explicit "no results reported" state — **never** as 0-0-0.
 3. De Anza 8-vs-7 (official vs MaxPreps) is a real asymmetry, not a parsing artifact. El Camino
    is 8 in both.
 

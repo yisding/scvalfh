@@ -8,11 +8,10 @@ import type { TeamTileData } from './team-view';
  * One tile on /teams (DESIGN §3.6): 116px tall, a 40px monogram, the school name at 13px/600
  * over at most two lines, and the LEAGUE record in 13px mono. The whole tile is the link.
  *
- * Wilcox's record is an em dash, never `0-0-0`: it is a full De Anza member in the official
- * SCVAL grid and absent from every data source, and a zeroed record would read as "played and
- * lost nothing" (DESIGN §8, BYLAWS-ADDENDUM §4).
+ * A team with no reported results shows an em dash, never `0-0-0`: a zeroed record would read as
+ * "played and lost nothing" (DESIGN §8, BYLAWS-ADDENDUM §4).
  *
- * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx): sixteen
+ * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx): fifteen
  * static team routes in one viewport is 16 full route payloads nobody asked for.
  */
 export function TeamTile({ data }: { data: TeamTileData }) {

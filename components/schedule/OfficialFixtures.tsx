@@ -8,9 +8,8 @@ import ExternalLink from '../ui/ExternalLink';
  * Fixtures the official SCVAL schedule grids publish and MaxPreps has no contest for
  * (`snapshot.officialFixtures`, SPEC §1.3).
  *
- * This is not "the Wilcox list" — it is 16 rows today: Wilcox's whole 14-game De Anza slate plus
- * BOTH Homestead–Cupertino legs, which MaxPreps has never published at all even though SBLive has
- * the September one as a played 5-5. So the array is rendered as data, never hard-coded, and the
+ * Today that is BOTH Homestead–Cupertino legs, which MaxPreps has never published at all even
+ * though SBLive has the September one as a played 5-5. So the array is rendered as data, never hard-coded, and the
  * sentence says exactly what is true: SCVAL scheduled it, MaxPreps reported nothing, and we do not
  * invent a score for it (SPEC §5.7 forbids backfilling from a secondary source).
  *
