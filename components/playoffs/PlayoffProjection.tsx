@@ -71,12 +71,22 @@ const QUALIFYING =
  * The footnotes every division shares, said once for the page in a labelled disclosure (brief
  * §4.22). Division-specific facts (tie notes, no-results teams) stay visible under their own table.
  */
-export function ProjectionKey({ className }: { className?: string }) {
+export function ProjectionKey({
+  className,
+  showRule = true,
+}: {
+  className?: string;
+  /** false when no table draws the 2px rule (nobody is in automatic position yet). */
+  showRule?: boolean;
+}) {
   return (
     <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
       <summary>How to read the projection</summary>
       <div className="max-w-prose space-y-3 text-meta text-ink-2">
-        <p className="m-0">The 2px rule marks the last automatic berth. {QUALIFYING}</p>
+        <p className="m-0">
+          {showRule ? 'The 2px rule marks the last automatic berth. ' : ''}
+          {QUALIFYING}
+        </p>
         <p className="m-0">
           Every status in the tables is a written word. There are no probabilities on this page, because
           there is no model behind it &mdash; only the league points played so far.
@@ -118,6 +128,7 @@ export function PlayoffProjection({
       <SectionHeader
         as="h3"
         kicker={divisionLabel}
+        meta={`${asOfLabel} · unofficial`}
         action={{ href: standingsHref, label: 'Full table' }}
       />
       <BerthMeter
@@ -134,7 +145,7 @@ export function PlayoffProjection({
           </caption>
           <thead>
             <tr>
-              <th scope="col" className="w-10 pr-2 pl-4">
+              <th scope="col" className="w-8 pr-1 pl-3 sm:w-10 sm:pr-2 sm:pl-4">
                 #
               </th>
               <th scope="col">Team</th>
@@ -154,7 +165,7 @@ export function PlayoffProjection({
                     : { height: 56 }
                 }
               >
-                <td className="w-10 pr-2 pl-4 align-middle">
+                <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
                 <th scope="row" className="font-normal">
@@ -176,15 +187,22 @@ export function PlayoffProjection({
                       <span className="block truncate text-body text-ink">
                         {row.team.shortName}
                       </span>
-                      <span className="sx-num block text-cell text-ink-2">
-                        {recordLine(row.standing)}
+                      {/* Record and points wrap as two whole units, never "pts" alone. */}
+                      <span className="sx-num flex flex-wrap gap-x-2 text-cell text-ink-2">
+                        {recordLine(row.standing)
+                          .split(' · ')
+                          .map((part) => (
+                            <span key={part} className="whitespace-nowrap">
+                              {part}
+                            </span>
+                          ))}
                       </span>
                     </span>
                   </span>
                 </th>
                 {/* The status is the whole point of the page, so it stays in the a11y tree and
                     the row link's sentence deliberately does not repeat it. */}
-                <td className="pr-4 align-middle">
+                <td className="pr-3 pl-3 align-middle sm:pr-4">
                   {(() => {
                     const [head, ...tail] = row.label.split(' — ');
                     return (
@@ -194,7 +212,7 @@ export function PlayoffProjection({
                             kept for the 1–2 word codes a `Tag` is for (brief §1). The tones are
                             Tag's: accent-ink on the wash only for a sole AQ. */}
                         <span
-                          className={`inline-block rounded-tag px-2 py-1 text-micro font-semibold ${
+                          className={`box-decoration-clone rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
                             row.status === 'aq' && row.statuses.length === 1
                               ? 'bg-accent-wash text-accent-ink'
                               : 'bg-surface-3 text-ink-2'

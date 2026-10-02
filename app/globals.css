@@ -113,8 +113,10 @@
     --sx-zero:          #3d444d;
     --sx-focus:         #4f95ee;
     --sx-select:        #213043;
-    /* shadows do not read on #0b0d10 — the ring does the work */
-    --sx-shadow-raised: none;
+    /* shadows do not read on #0b0d10 — the ring does the work. A transparent zero layer, NOT
+       `none`: this token is composed into shadow LISTS (`var(--sx-ring), var(--sx-shadow-raised)`),
+       and `none` inside a list invalidates the whole declaration (no ring, no pinned rule). */
+    --sx-shadow-raised: 0 0 0 0 transparent;
     --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
     --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
   }
@@ -148,7 +150,7 @@
   --sx-zero:          #3d444d;
   --sx-focus:         #4f95ee;
   --sx-select:        #213043;
-  --sx-shadow-raised: none;
+  --sx-shadow-raised: 0 0 0 0 transparent;   /* never `none`: it sits inside shadow lists */
   --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
   --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
@@ -415,6 +417,10 @@
     transition: rotate var(--sx-dur-ui) var(--sx-ease);
   }
   .sx-disclosure[open] > summary::before { rotate: 45deg; }
+  /* The body hangs under the summary TEXT, not under the chevron: 0.5rem chevron + 0.375rem of
+     margin + the 0.625rem gap = 1.5rem. A table (MarginStrip's "Show as table") keeps the full
+     width. Padding, not margin, so an `m-0` utility on the child cannot cancel it. */
+  .sx-disclosure > :not(summary, table) { padding-inline-start: 1.5rem; }
   .sx-inset.sx-disclosure { padding-block: 0.25rem; }
   .sx-inset.sx-disclosure[open] { padding-bottom: 1rem; }
 
@@ -606,8 +612,17 @@
   :where(a, button, select, summary, [role="tab"], [tabindex]):focus-visible {
     outline: 2px solid var(--sx-focus);
     outline-offset: 2px;
+  }
+  /* The ring's 6px corner is a DEFAULT for elements that have no shape of their own (inline links,
+     bare buttons), so it carries zero specificity: a pill (999px), a badge or a card (16px) keeps
+     its own radius on focus and the ring follows it instead of squaring it off. */
+  :where(a, button, select, summary, [role="tab"], [tabindex]):where(:focus-visible) {
     border-radius: var(--sx-r-tag);
   }
+  /* TopNav: the 44px link is the target, the 36px capsule inside it is what you see, so the ring
+     is drawn on the capsule rather than as a rectangle around it. */
+  .sx-navtop:focus-visible { outline: none; }
+  .sx-navtop:focus-visible > .sx-indicator { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
   /* A sticky table header clips an outer ring — use an inset one there. */
   :where(thead th, .sx-sticky-head):focus-visible { outline-offset: -2px; }
   /* On a colored fill, a surface-colored inner ring keeps the outline readable. */
@@ -648,6 +663,10 @@
     .sx-card, .sx-inset, .sx-pill, .sx-badge { border: 1px solid CanvasText; }
     .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
     [aria-current="page"] .sx-indicator { outline: 2px solid Highlight; outline-offset: -2px; }
+    /* The sticky/fixed chrome is edged by a box-shadow too: give it a real line, or content
+       scrolls under a bar with no visible boundary. */
+    .sx-chrome-top { border-bottom: 1px solid CanvasText; }
+    .sx-chrome-bottom { border-top: 1px solid CanvasText; }
   }
 }
 

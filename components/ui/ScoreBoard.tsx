@@ -86,7 +86,9 @@ export function ScoreBoard({ game, perspective, home, away, className }: ScoreBo
   const display = describeGame(game, perspective);
   return (
     <section
-      className={`sx-card sx-board p-5 md:p-8${className ? ` ${className}` : ''}`}
+      // Joined, not glued: Tailwind's scanner skips a candidate that runs straight into `${`, so
+      // `md:p-8${…}` was never generated and the board kept 20px of padding on desktop.
+      className={['sx-card sx-board p-5 md:p-8', className].filter(Boolean).join(' ')}
       aria-label="Scoreboard"
     >
       <p className="sr-only">{display.sentence}</p>

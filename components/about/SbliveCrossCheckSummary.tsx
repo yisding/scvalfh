@@ -37,10 +37,9 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
           : ''}
       </p>
       {conflicts.length > 0 ? (
-        <div className="sx-card sx-flush mt-4 max-w-3xl">
-          {/* `sx-table-wide` puts a gutter BETWEEN the columns: without it the two right-aligned
-              source headers have no padding of their own and render as one run-together string,
-              "MAXPREPSSBLIVE/SI". */}
+        <div className="sx-card sx-flush mt-4 max-w-[66ch]">
+          {/* The `px-2` on the middle column puts a gutter BETWEEN the two right-aligned source
+              heads: without it they render as one run-together string, "MAXPREPSSBLIVE/SI". */}
           <table className="sx-table text-meta">
             <caption className="sr-only">
               Games where MaxPreps and SBLive/SI publish different scores
@@ -87,7 +86,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
             scores from a secondary source, so these stay unreported on this site until MaxPreps
             publishes them:
           </p>
-          <ul className="sx-list mt-2 max-w-3xl">
+          <ul className="sx-list mt-2 max-w-[66ch]">
             {sbliveOnlyScored.map((row) => (
               <li
                 key={row.contestId}

@@ -13,9 +13,9 @@ import TopNav from './TopNav';
  * The stamp lives INSIDE the bar rather than occupying its own row, which returns that row's
  * height to the fold on every page.
  *
- * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–1279 drops the stamp so
- * the nav fits; from 1024 the wordmark spells out "Field Hockey", and from 1280 the stamp comes
- * back. The accessible name of the home link is always "SCVAL Field Hockey". Content is capped at
+ * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–1023 drops the stamp so
+ * the nav fits; it comes back from 1024, where the freshness fact outranks the spelled-out
+ * wordmark, which waits until 1280 ("Field Hockey" plus the stamp left 4px of slack at 1024). The accessible name of the home link is always "SCVAL Field Hockey". Content is capped at
  * 1200px, with the same 16 / 24 / 32px gutter as <main>.
  */
 export interface SiteHeaderProps {
@@ -25,11 +25,11 @@ export interface SiteHeaderProps {
 
 export function SiteHeader({ snapshotAt }: SiteHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 bg-surface shadow-sticky">
+    <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">
       <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
         {/* The wordmark is the home link. `h-full` makes it the height of the bar, so the whole
             left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
-            1024px (it overflowed the 768–843 nav), so the accessible name never changes; its
+            1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp), so the accessible name never changes; its
             leading space keeps the computed name from reading "SCVALField Hockey". */}
         <Link
           href="/"
@@ -43,20 +43,20 @@ export function SiteHeader({ snapshotAt }: SiteHeaderProps) {
             FH
           </span>
           <span className="text-body font-bold tracking-[-0.01em]">SCVAL</span>
-          <span className="sr-only lg:not-sr-only lg:text-body lg:font-medium lg:tracking-[-0.01em] lg:text-ink-2">
+          <span className="sr-only xl:not-sr-only xl:text-body xl:font-medium xl:tracking-[-0.01em] xl:text-ink-2">
             {' '}
             Field Hockey
           </span>
         </Link>
         <TopNav className="ml-4 hidden md:block lg:ml-6" />
         <span className="ml-auto flex shrink-0 items-center gap-2">
-          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–1279
-              where the seven nav links need the room (at 1024 the spelled-out wordmark, the nav
-              and the stamp left 0px of slack); back from 1280. */}
+          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–1023
+              where the seven nav links need the room; back from 1024 (about 100px of slack
+              there with the short wordmark). */}
           <LastUpdated
             at={snapshotAt}
             variant="compact"
-            className="hidden min-[360px]:inline md:hidden xl:inline"
+            className="hidden min-[360px]:inline md:hidden lg:inline"
           />
           <ThemeToggle />
         </span>

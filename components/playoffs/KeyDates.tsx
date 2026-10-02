@@ -1,12 +1,10 @@
-import Tag from '../ui/Tag';
-
 import { keyDateRows, type KeyDateRow } from './playoff-view';
 import type { PlayoffKeyDates } from '../../lib/types';
 
 /**
  * Every published CCS key date as ONE chronological list in a card (brief §5.8). The three round
- * dates carry a "Round" tag; the rest are the same row without it, so nothing is printed twice and
- * nothing is dropped.
+ * dates (quarterfinals, semifinals, final) are set in ink and semibold so the tournament's own dates
+ * stand out from the administrative ones; nothing is printed twice and nothing is dropped.
  *
  * `playoffs.keyDates` is the single source. Times are printed only where the source gives one
  * (entries due 12:00 PM, seeding meeting 1:00 PM, evaluation meeting 4:00 PM); the round dates are
@@ -24,15 +22,15 @@ export interface KeyDatesProps {
 const ROUND_KEYS = new Set(['quarterfinals', 'semifinals', 'finals']);
 
 function DateItem({ row }: { row: KeyDateRow }) {
+  const isRound = ROUND_KEYS.has(row.key);
   return (
     <li className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-3 px-5 py-3">
-      <span className="sx-num text-cell text-ink-2">
+      <span className={`sx-num text-cell ${isRound ? 'font-medium text-ink' : 'text-ink-2'}`}>
         <time dateTime={row.dateKey}>{row.date}</time>
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span className="text-body text-ink">{row.label}</span>
-          {ROUND_KEYS.has(row.key) ? <Tag>Round</Tag> : null}
+          <span className={`text-body text-ink${isRound ? ' font-semibold' : ''}`}>{row.label}</span>
           {row.time ? <span className="sx-num text-cell text-ink-2">{row.time}</span> : null}
         </span>
         {row.detail ? <span className="mt-0.5 block text-meta text-ink-2">{row.detail}</span> : null}

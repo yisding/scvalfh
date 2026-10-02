@@ -27,7 +27,11 @@ export interface AttributionProps {
 
 export function Attribution({ snapshotAt, now, links, extraCredit, className }: AttributionProps) {
   return (
-    <footer className={`mt-section-lg border-t border-hairline md:mt-16${className ? ` ${className}` : ''}`}>
+    <footer
+      className={['mt-section-lg border-t border-hairline md:mt-16', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {/* The padding lives INSIDE the max-w-content box, so the footer's left edge lines up with
           <main> and the header at every width. From 768px: sources on the left, the stamp and
           the actions on the right, the disclaimer across both under a divider. */}
@@ -56,11 +60,14 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
             </div>
           ) : null}
         </div>
-        <p className="mt-6 mb-0 max-w-prose border-t border-divider pt-4 text-meta text-ink-3 md:col-span-2">
-          Unofficial fan site. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated.
-          Records are computed from published game results and may differ from official standings.
-          {extraCredit ? ` ${extraCredit}` : ''}
-        </p>
+        {/* The divider spans the whole footer grid; only the sentence is capped at 65ch. */}
+        <div className="mt-6 border-t border-divider pt-4 md:col-span-2">
+          <p className="m-0 max-w-prose text-meta text-ink-3">
+            Unofficial fan site. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated.
+            Records are computed from published game results and may differ from official standings.
+            {extraCredit ? ` ${extraCredit}` : ''}
+          </p>
+        </div>
       </div>
     </footer>
   );

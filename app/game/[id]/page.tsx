@@ -108,9 +108,12 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           <SourceDisagreement model={model} className="mt-4" />
         </div>
 
+        {/* Sticky only when the viewport is tall enough to hold it: the card is up to ~510px,
+            +80px of offset, and a sticky box taller than the viewport can never scroll its last
+            links into view (a focused "MaxPreps box score" sat below a 488px-tall window). */}
         <GameDetails
           model={model}
-          className="mt-section md:sticky md:top-[5rem] md:col-start-2 md:row-span-4 md:row-start-2 md:mt-6 md:self-start"
+          className="mt-section md:col-start-2 md:row-span-4 md:row-start-2 md:mt-6 md:self-start [@media(min-width:768px)_and_(min-height:40rem)]:sticky [@media(min-width:768px)_and_(min-height:40rem)]:top-[5rem]"
         />
 
         <FormGoingIn

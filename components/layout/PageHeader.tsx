@@ -9,6 +9,10 @@
  *
  * The first block after a PageHeader takes `mt-8 md:mt-10`; later sections take
  * `mt-section md:mt-section-lg`.
+ *
+ * Class strings are built with `[…].filter(Boolean).join(' ')`, never `md:pt-10${…}`: Tailwind's
+ * scanner does not extract a candidate that runs straight into a template interpolation, so the
+ * glued class is silently never generated.
  */
 export interface PageHeaderProps {
   title: React.ReactNode;
@@ -39,9 +43,9 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <header
-      className={`pt-6 md:flex md:items-end md:justify-between md:gap-8 md:pt-10${
-        className ? ` ${className}` : ''
-      }`}
+      className={['pt-6 md:flex md:items-end md:justify-between md:gap-8 md:pt-10', className]
+        .filter(Boolean)
+        .join(' ')}
     >
       <div className="min-w-0">
         {eyebrow ? <p className="m-0 mb-1 text-meta font-medium text-ink-3">{eyebrow}</p> : null}
@@ -55,7 +59,7 @@ export function PageHeader({
         {meta ? <div className="mt-3 flex flex-wrap items-center gap-2">{meta}</div> : null}
       </div>
       {aside ? (
-        <div className={`mt-4 shrink-0 md:mt-0${asideClassName ? ` ${asideClassName}` : ''}`}>
+        <div className={['mt-4 shrink-0 md:mt-0', asideClassName].filter(Boolean).join(' ')}>
           {aside}
         </div>
       ) : null}

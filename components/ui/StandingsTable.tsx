@@ -23,9 +23,10 @@ import TeamMonogram from './TeamMonogram';
  * article) goes into the footnotes. On the live snapshot that means De Anza has two 6th places
  * and El Camino has two 4th places and therefore NO 5th place and no at-large row.
  *
- * A row with `hasReportedResults === false` (Wilcox) sorts last, renders its rank as an em dash,
- * every numeric cell as an em dash and its GD as a `·` on the zero rule — never `0-0-0`, never
- * `.000`, never a rank by merit — and it is still a link.
+ * A row with `hasReportedResults === false` (Wilcox) sorts last, renders its rank as an em dash
+ * and, in the phone and desktop tables, ONE "No results yet" cell across the data columns (the
+ * mini table, which only ever shows the top four, keeps em dashes and a `·` on the zero rule) —
+ * never `0-0-0`, never `.000`, never a rank by merit — and it is still a link.
  *
  * No client-side sorting: the table has one correct order and re-sorting it is a coach's
  * affordance that costs a client component and a whole `aria-sort` surface.
@@ -136,9 +137,9 @@ function dash(value: number | null, hasResults: boolean, render = (v: number) =>
  * — measured at 97 KB on the wire and 876 KB decoded on /standings, against a 35 KB document.
  * Navigation still fetches on click.
  */
-function RowLink({ href, label }: { href: string; label: string }) {
+function RowLink({ href, label, className }: { href: string; label: string; className?: string }) {
   return (
-    <Link href={href} prefetch={false} className="absolute inset-0">
+    <Link href={href} prefetch={false} className={className ? `absolute inset-0 ${className}` : 'absolute inset-0'}>
       <span className="sr-only">
         {/* Only the pinned row's copy is displayed (app/globals.css), so the accent rule beside
             it is never the only thing saying "this is your team". */}
@@ -320,14 +321,36 @@ export function StandingsTable(props: StandingsTableProps) {
                   <th scope="col" className="w-8 text-right">
                     Pts
                   </th>
-                  <th scope="col" className="w-[56px] pl-1 min-[390px]:w-[60px] min-[390px]:pl-2 text-right">
+                  {/* The League head (52px of 12px caps) is wider than its numerals (40px), and
+                      the numerals carry 8px of right padding so they never run into the GD track
+                      (or, below 375, into the GD numeral). From 390 there is room for the head to
+                      take the same 8px; below it the head keeps the cell edge and drops its
+                      letter-spacing, so it still clears "PTS" by about 7px. */}
+                  <th
+                    scope="col"
+                    className="w-[56px] pl-1 text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
+                  >
                     League
                   </th>
-                  {/* Column budget at 390: 44 (#) + 154 (Team) + 32 (PTS) + 60 (League: 8px of air
-                      so "PTS" and "LEAGUE" never touch, then 52) + 100 (GD: 56 track + 4 + 24
-                      numeral, three 13px mono glyphs, + 16 gutter). Below 390 League gives up 4px,
-                      and below 375 GD keeps only its numeral, so a flagged "Monta Vista" stays
-                      whole at 320 and at 375.
+                  {/* 768-1023: the phone table spans a 720px card, so it shows four more of the
+                      desktop columns instead of a 480px team cell with nothing in it. */}
+                  <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
+                    Pct
+                  </th>
+                  <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
+                    GF
+                  </th>
+                  <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
+                    GA
+                  </th>
+                  <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
+                    Stk
+                  </th>
+                  {/* Column budget at 390: 44 (#) + 146 (Team) + 32 (PTS) + 68 (League: 8 + 52
+                      + 8) + 100 (GD: 56 track + 4 + 24 numeral, three 13px mono glyphs, + 16
+                      gutter). Below 390 League gives up 12px of head padding, and below 375 GD
+                      keeps only its numeral, so a flagged "Monta Vista" stays whole at 320 and
+                      at 375 (it ends 1-2px short of the team cell there).
                       The GD plot is the one thing that can afford to go. Below 375px the fixed
                       columns starved the team cell and long school names truncated to fragments,
                       against DESIGN §10.8's "reflow at 320px with no loss of content". The plot is
@@ -368,7 +391,10 @@ export function StandingsTable(props: StandingsTableProps) {
                         aria-label={row.team.name}
                         className="max-w-0 pt-2.5 text-left align-top font-normal"
                       >
-                        <RowLink href={hrefOf(row)} label={rowLabel(row)} />
+                        {/* `scroll-mt-9`: html's scroll-padding clears the 48px top bar and the
+                            48px division bar, but not this table's own 36px sticky head, which
+                            would otherwise cover half of a row focused by Shift+Tab. */}
+                        <RowLink href={hrefOf(row)} label={rowLabel(row)} className="max-md:scroll-mt-9" />
                         <span className="flex items-center gap-2">
                           <TeamMonogram team={row.team} size={24} />
                           {/* shortName, not name: the phone team cell is ~158px at 390, so "St.
@@ -386,43 +412,65 @@ export function StandingsTable(props: StandingsTableProps) {
                             variant), hence `pointer-events-none`: the row link stays whole.
                             Budget at 320: 44 + 116 (five 20px chips, 4px apart) + 8 + ~101
                             ("10-1-0 overall" at 13px mono) = 269 of 304. */}
-                        <span className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center gap-2 pl-[2.75rem] pr-gutter text-meta text-ink-3">
-                          {has ? (
-                            <>
-                              <FormStrip
-                                entries={toFormEntries(s.computed.last5)}
-                                size={20}
-                                label={formLabel(row)}
-                              />
-                              <span className="sx-num text-cell text-ink-3">
-                                {recordString(s.overall)} overall
-                              </span>
-                            </>
-                          ) : (
-                            <span>no results reported yet</span>
-                          )}
-                        </span>
-                      </th>
-                      <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink">
-                        {has ? s.computed.pts : EM_DASH}
-                      </td>
-                      <td className="sx-num w-[56px] pt-3 pl-1 min-[390px]:w-[60px] min-[390px]:pl-2 text-right align-top font-medium text-ink">
-                        {has ? recordString(s.computed) : EM_DASH}
-                      </td>
-                      <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[375px]:w-[100px]">
                         {has ? (
-                          <GoalDiffCell
-                            value={s.computed.gd}
-                            domain={gdDomain}
-                            track={56}
-                            numberWidth={24}
-                            numberClassName="text-cell"
-                            barClassName="hidden min-[375px]:block"
-                          />
-                        ) : (
-                          <NoGoalDiff />
-                        )}
-                      </td>
+                          <span className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center gap-2 pl-[2.75rem] pr-gutter text-meta text-ink-3">
+                            <FormStrip
+                              entries={toFormEntries(s.computed.last5)}
+                              size={20}
+                              label={formLabel(row)}
+                            />
+                            <span className="sx-num text-cell text-ink-3">
+                              {recordString(s.overall)} overall
+                            </span>
+                          </span>
+                        ) : null}
+                      </th>
+                      {has ? (
+                        <>
+                          <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink">
+                            {s.computed.pts}
+                          </td>
+                          <td className="sx-num w-[56px] pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
+                            {recordString(s.computed)}
+                          </td>
+                          <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
+                            {winPct(s.computed.winPct)}
+                          </td>
+                          <td className="sx-num hidden w-14 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
+                            {dash(s.computed.gf, has)}
+                          </td>
+                          <td className="sx-num hidden w-14 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
+                            {dash(s.computed.ga, has)}
+                          </td>
+                          <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
+                            {streakString(s.computed.streak)}
+                          </td>
+                          <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[375px]:w-[100px]">
+                            <GoalDiffCell
+                              value={s.computed.gd}
+                              domain={gdDomain}
+                              track={56}
+                              numberWidth={24}
+                              numberClassName="text-cell"
+                              barClassName="hidden min-[375px]:block"
+                            />
+                          </td>
+                        </>
+                      ) : (
+                        /* No results (Wilcox): one sentence across the data columns, as on the
+                           desktop table, instead of a row of em dashes and a stray `·`. The span
+                           differs at md, where four more columns show; only one of the two cells
+                           is ever displayed. The rank cell and the row link already say "not
+                           ranked" / "no results reported yet" to a screen reader. */
+                        <>
+                          <td colSpan={3} className="pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:hidden">
+                            No results yet
+                          </td>
+                          <td colSpan={7} className="hidden pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:table-cell">
+                            No results yet
+                          </td>
+                        </>
+                      )}
                     </tr>
                   );
                 })}

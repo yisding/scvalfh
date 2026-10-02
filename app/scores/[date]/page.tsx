@@ -176,12 +176,17 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </section>
       ) : null}
 
-      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
+      {/* Always visible (brief §4.22: "not official" sentences never collapse), once, under the
+          day's games: the zone every time on this page is in, and whose numbers these are. */}
+      <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
+        All times Pacific. Scores are computed from what MaxPreps publishes and are unofficial.
+      </p>
+
+      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
         <summary>How scores are shown</summary>
         <p className="mt-2 mb-0">
-          All times Pacific. A real <span className="sx-num">0</span> shows as{' '}
-          <span className="sx-num">0</span>; a score we do not have shows as a dash. Scores are
-          computed from what MaxPreps publishes and are unofficial &mdash;{' '}
+          A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span>; a
+          score we do not have shows as a dash &mdash;{' '}
           <Link href="/about#conventions" className="text-accent">
             how every state is rendered
           </Link>

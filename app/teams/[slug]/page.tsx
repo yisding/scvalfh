@@ -29,10 +29,27 @@ import { DIVISION_LABELS } from '@/lib/season';
  * (DESIGN §10.5) and the parent's three questions — where do we stand, what just happened, when is
  * the next one — are answered first.
  *
- * Layout (modernization brief §5.7): the identity hero card, the stat tiles, then ONE paired grid
- * whose children stay in that DOM order — one column on a phone and at 768px, two from 1024px,
- * where each row pairs two sections (Last | Next, Form | Margin, Splits | CCS picture, …). Rows
- * are separated by space, never by a rule.
+ * Layout (modernization brief §5.7): the identity hero card, the stat tiles, then ONE grid whose
+ * children stay in that DOM order — one column on a phone and at 768px, two from 1024px. Rows are
+ * separated by space, never by a rule.
+ *
+ * At 1024px+ a strict pairing left 250–350px holes beside every tall section (Form beside Margin,
+ * Who we haven't beaten beside the League game log). So the two tallest sections SPAN two rows
+ * and the short ones stack beside them, still by plain auto-placement (no `dense`, no explicit
+ * order), so reading order = DOM order = row-major visual order:
+ *
+ *     Last           | Next
+ *     Form           | Margin (2 rows)
+ *     Splits         |   ″
+ *     CCS picture    | Who we haven't beaten
+ *     League log (2) | Scheduled, not reported
+ *        ″           | Non-league
+ *     Elsewhere (both columns)
+ *
+ * The League log spans only when the "Scheduled, not reported" card exists and there are league
+ * results. Without results (Wilcox) the log is a short empty state and the official-fixtures list
+ * is the long one (14 rows), so a list of more than six fixtures takes BOTH columns instead of
+ * leaving a ~600px hole beside it; the short Non-league card then sits under it.
  *
  * Wilcox gets this whole page with no results: identity, links, the CCS line, the official-schedule
  * fixtures and every empty state, because a team with no data still gets a complete, useful page
@@ -90,6 +107,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
 
+  const leagueLogSpans = hasPlayedLeagueGames && officialFixtures.length > 0;
+  const fixturesSpan = !leagueLogSpans && officialFixtures.length > 6;
+
   const maxprepsAction = team.external.maxprepsScheduleUrl
     ? { href: team.external.maxprepsScheduleUrl, label: 'Check MaxPreps', external: true }
     : undefined;
@@ -135,19 +155,26 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <>
             <section className="min-w-0">
               <SectionHeader kicker="Form" meta="League, oldest to newest" />
+              {/* 24px chips fill more of their 40px tap boxes, so the five read as one sequence;
+                  the direction is in the heading's meta, and the non-league count gets its own
+                  line instead of trailing off the end of the strip. */}
               <div className="sx-card p-4 md:p-5">
                 <div className="flex min-h-11 items-center">
                   <FormStrip
                     entries={formEntries}
+                    size={24}
                     label={`${team.name} last ${formEntries.length} league games`}
-                    showDirection
-                    nonLeagueCount={nonLeagueLog.length || undefined}
                   />
                 </div>
+                {nonLeagueLog.length > 0 ? (
+                  <p className="mt-2 mb-0 text-meta text-ink-3">
+                    {`+ ${nonLeagueLog.length} non-league ${nonLeagueLog.length === 1 ? 'game' : 'games'}, not counted here`}
+                  </p>
+                ) : null}
               </div>
             </section>
 
-            <section className="min-w-0">
+            <section className="min-w-0 lg:row-span-2">
               <SectionHeader kicker="Margin by league game" meta={`${leaguePlayed} played`} />
               <div className="sx-card p-4 md:p-5">
                 <MarginStrip
@@ -156,7 +183,12 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   className="hidden md:block"
                   height={200}
                 />
-                <MarginStrip entries={marginEntries} teamName={team.name} className="md:hidden" />
+                <MarginStrip
+                  entries={marginEntries}
+                  teamName={team.name}
+                  className="md:hidden"
+                  height={160}
+                />
               </div>
             </section>
           </>
@@ -191,7 +223,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <TeamUnbeaten view={view} />
         </section>
 
-        <section className="min-w-0">
+        <section
+          className={leagueLogSpans ? 'min-w-0 lg:row-span-2' : 'min-w-0'}
+        >
           <SectionHeader
             kicker="League game log"
             meta={`${leaguePlayed} of ${leagueScheduled}`}
@@ -206,7 +240,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         </section>
 
         {officialFixtures.length > 0 ? (
-          <section className="min-w-0">
+          <section className={fixturesSpan ? 'min-w-0 lg:col-span-2' : 'min-w-0'}>
             <SectionHeader
               kicker="Scheduled, not reported"
               meta={`${officialFixtures.length} fixture${officialFixtures.length === 1 ? '' : 's'}`}

@@ -39,12 +39,13 @@ export function NavLink({ href, variant, label, glyph }: NavLinkProps) {
   if (variant === 'top') {
     // The 44px link box is the target; the 36px capsule inside it is the visible state. The
     // active capsule is accent-wash with accent-ink (6.5 / 7.55), never accent on the wash.
+    // `.sx-navtop` moves the focus ring from the link box onto the capsule (globals.css).
     return (
       <Link
         href={href}
         prefetch={false}
         aria-current={active ? 'page' : undefined}
-        className="group inline-flex h-11 items-center no-underline"
+        className="sx-navtop group inline-flex h-11 items-center no-underline"
       >
         <span
           className={`sx-indicator inline-flex h-9 items-center rounded-full px-2.5 text-meta lg:px-3 ${

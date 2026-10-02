@@ -28,7 +28,9 @@ export function PlayoffsCard({ playoffs, phase, crossover, className }: Playoffs
   return (
     <section className={className}>
       <SectionHeader kicker="CCS playoffs" action={{ href: '/playoffs', label: 'Playoffs' }} />
-      <div className="sx-card p-5 md:p-6">
+      {/* `sx-bleed`: a full-width band below 768px like every other card on the home page, an
+          inset rounded card from there. */}
+      <div className="sx-card sx-bleed p-5 md:p-6">
         <p className="m-0 text-meta text-ink-2">
           {beforeCrossover
             ? `Crossover and the 4-vs-4 play-in ${shortDate(crossover.date)}. Seeding meeting ${shortDate(keyDates.seedingMeeting)}.`

@@ -42,9 +42,10 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
   return (
     <div className="flex flex-col gap-stack">
       {groups.map(({ team, detail, rows }) => (
-        // `max-w-3xl` on the group, not only the card, so the header's right-aligned link lines
-        // up with the card edge below it.
-        <div key={team.id} className="max-w-3xl">
+        // The group is capped at the prose measure (66ch, the same cap as `.sx-prose`), so the
+        // header's right-aligned link lines up with the card edge below it and the card's right
+        // edge lines up with the paragraphs above.
+        <div key={team.id} className="max-w-[66ch]">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <TeamMonogram team={team} size={24} />
             {/* `prefetch={false}` for the reason the nav and the standings rows carry it
@@ -74,18 +75,27 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
           </div>
           {detail ? <p className="mt-1 mb-0 max-w-prose text-meta text-ink-2">{detail}</p> : null}
           {rows.length > 0 ? (
-            <div className="sx-card sx-flush mt-3 max-w-3xl">
-              <table className="sx-table text-meta">
+            <div className="sx-card sx-flush mt-3">
+              {/* `table-layout: fixed` from a <colgroup>: the two right-hand heads wrap ("We /
+                  compute", "MaxPreps / shows") instead of setting a 138px nowrap minimum, so the
+                  table is exactly the card's width at 320px and the MaxPreps value is never
+                  clipped (DESIGN R-8). The Field column takes the rest. */}
+              <table className="sx-table table-fixed text-meta">
+                <colgroup>
+                  <col />
+                  <col className="w-[5.5rem]" />
+                  <col className="w-24" />
+                </colgroup>
                 <caption className="sr-only">{team.name} MaxPreps cross-check</caption>
                 <thead>
                   <tr>
                     <th scope="col" className="pl-4">
                       Field
                     </th>
-                    <th scope="col" className="px-2 text-right">
+                    <th scope="col" className="whitespace-normal px-2 text-right leading-4">
                       We compute
                     </th>
-                    <th scope="col" className="pr-4 text-right">
+                    <th scope="col" className="whitespace-normal pl-2 pr-4 text-right leading-4">
                       MaxPreps shows
                     </th>
                   </tr>
@@ -95,7 +105,7 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
                     <tr key={row.field}>
                       <td className="py-3 pl-4 text-ink-2">{row.field}</td>
                       <td className="sx-num px-2 py-3 text-right text-cell font-semibold text-ink">{row.ours}</td>
-                      <td className="sx-num py-3 pr-4 text-right text-cell text-ink-2">{row.theirs}</td>
+                      <td className="sx-num py-3 pl-2 pr-4 text-right text-cell text-ink-2">{row.theirs}</td>
                     </tr>
                   ))}
                 </tbody>

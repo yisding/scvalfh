@@ -22,7 +22,8 @@ import { signedMargin } from './game-view';
  * column at a 24px pitch needs 362px, and shrinking the pitch would make the 24px spacing circles of
  * WCAG 2.5.8 overlap, which DESIGN §4.4 forbids. The desktop variant's columns ARE links, so their
  * floor is 24px; on phone the table twin and the League game log carry the same navigation.
- * Height 128 includes a 16px glyph band, so each arm is floor((128 − 16 − 1) / 2) = 55px.
+ * Phone height 160 (it was 128, and the ±4 plot was ~100px tall inside a much larger card) includes
+ * a 16px glyph band, so each arm is floor((160 − 16 − 1) / 2) = 71px; desktop 200 gives 91px.
  *
  * Unplayed games get a `?` tick and NO column, and the axis continues to game 14, so the reader
  * sees how much season is left. Forfeits are excluded entirely — they have no goal margin — and
@@ -36,7 +37,7 @@ export interface MarginStripProps {
   /** Default 14 — the full double-round-robin league season. */
   slots?: number;
   /** Phone / desktop, INCLUDING the axis band. */
-  height?: 128 | 200;
+  height?: 160 | 200;
   className?: string;
 }
 
@@ -46,7 +47,7 @@ export function MarginStrip({
   entries,
   teamName,
   slots = 14,
-  height = 128,
+  height = 160,
   className,
 }: MarginStripProps) {
   const played = entries.filter((e) => e.margin !== null && !e.excludedFromMargin);
@@ -62,7 +63,7 @@ export function MarginStrip({
     );
   }
 
-  const isPhone = height === 128;
+  const isPhone = height !== 200;
   // Columns are fluid between a floor and a 56px cap. The phone floor is 12px (a chart mark; see
   // the geometry note above); the desktop floor is 24px because those marks are links (WCAG
   // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px.
@@ -103,7 +104,8 @@ export function MarginStrip({
           </span>
           <span className="absolute right-0 bottom-0">{signedMargin(-domain)}</span>
         </div>
-        {/* The plot is as wide as its card, and the columns are FLUID (18px floor, 56px cap), so
+        {/* The plot is as wide as its card, and the columns are FLUID (12px floor on phone, 24px on
+            desktop, 56px cap), so
             the strip fills the card at every width without a nested scrollbar; the zero rule and the
             columns share ONE box, so they start and end together. From 768px the wrapper is `overflow-visible`, so
             the CSS tooltips above the marks are never clipped. Below 768px it is `overflow-x-clip`,

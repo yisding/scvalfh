@@ -16,8 +16,12 @@ import type { MismatchNote, UnreportedFixtures } from './standings-view';
  *  3. Official SCVAL fixtures that MaxPreps has never published a contest for. We do not invent a
  *     result for them, and we do not let the absence read as a team that did not play.
  *  4. Division-specific footnotes (league games played with no score; no league results yet).
- *  5. One row of links to the primary sources. They are standalone actions (`sx-action`, a 24px
- *     floor), with no `·` text nodes between them.
+ *  5. One row of links: the cross-check log and the primary sources. They are standalone actions
+ *     (`sx-action`, a 24px floor), with no `·` text nodes between them. "How standings are
+ *     computed" is NOT repeated here: the page foot carries it once, as a pill.
+ *
+ * It shares an `lg` row with the CCS card, so it takes the card's padding, radius and `text-lead`
+ * h3 and the two read as one row; the inset surface stays, because this is commentary.
  *
  * It sits OUTSIDE the two table variants so it renders once, not once per breakpoint.
  */
@@ -36,11 +40,8 @@ export interface StandingsNotesProps {
   className?: string;
 }
 
-/** The two in-site explanations every division's notes point at. */
-const ABOUT_LINKS = [
-  { href: '/about#standings', label: 'How standings are computed' },
-  { href: '/about#cross-check', label: 'Cross-check log' },
-] as const;
+/** The in-site explanation every division's notes point at. */
+const ABOUT_LINKS = [{ href: '/about#cross-check', label: 'Cross-check log' }] as const;
 
 interface FlagLine {
   slug: string;
@@ -73,9 +74,9 @@ export function StandingsNotes({
 }: StandingsNotesProps) {
   const flags = byTeam(mismatches);
   return (
-    <div className={`sx-inset${className ? ` ${className}` : ''}`}>
-      <h3 className="m-0 text-meta font-semibold text-ink">Notes</h3>
-      <ul className="m-0 max-w-prose list-none space-y-2 p-0">
+    <div className={`sx-inset rounded-card-lg p-5 md:p-6${className ? ` ${className}` : ''}`}>
+      <h3 className="m-0 text-lead text-ink">Notes</h3>
+      <ul className="mt-3 mb-0 max-w-prose list-none space-y-2 p-0">
         {tableNotes.map((note, i) => (
           <li key={`table-${i}`}>{note}</li>
         ))}

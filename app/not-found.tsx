@@ -2,44 +2,47 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
-import EmptyState from '@/components/ui/EmptyState';
 
 export const metadata: Metadata = {
   title: 'Page not found',
 };
 
-const LINKS: Array<{ href: string; label: string }> = [
-  { href: '/', label: 'Home — what just happened, and when the next game is' },
-  { href: '/standings', label: 'Standings — both divisions' },
-  { href: '/schedule', label: 'Schedule & results — the whole season' },
-  { href: '/teams', label: 'Teams — find your school' },
-  { href: '/playoffs', label: 'CCS playoffs' },
-  { href: '/about', label: 'About — where this data comes from' },
+const LINKS: Array<{ href: string; name: string; description: string }> = [
+  { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
+  { href: '/standings', name: 'Standings', description: 'Both divisions' },
+  { href: '/schedule', name: 'Schedule & results', description: 'The whole season' },
+  { href: '/teams', name: 'Teams', description: 'Find your school' },
+  { href: '/playoffs', name: 'CCS playoffs', description: 'Who is in, and the key dates' },
+  { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
- * links are the real navigation rather than a single "go home".
+ * links are the real navigation rather than a single "go home": one card per page, with its
+ * name over a one-line description, so nothing is a sentence squeezed into a pill.
  */
 export default function NotFound() {
   return (
-    <div>
-      <PageHeader eyebrow="404" title="That page is not here." />
-      <div className="mt-8 md:mt-10">
-        <EmptyState heading="Nothing lives at this address.">
-          The link may be old, or the game or date may not exist in this season&rsquo;s data. Every
-          page on this site is one of the links below.
-        </EmptyState>
-        <ul className="mt-stack flex list-none flex-wrap gap-2 p-0">
-          {LINKS.map((l) => (
-            <li key={l.href}>
-              <Link href={l.href} prefetch={false} className="sx-pill min-h-11 py-2">
-                {l.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="pb-section-lg">
+      <PageHeader
+        eyebrow="404"
+        title="That page is not here."
+        description="The link may be old, or the game or date may not exist in this season’s data. Every page on this site is one of the links below."
+      />
+      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
+        {LINKS.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              prefetch={false}
+              className="sx-card sx-lift block min-h-11 p-4 no-underline"
+            >
+              <span className="block text-body font-semibold text-ink">{l.name}</span>
+              <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

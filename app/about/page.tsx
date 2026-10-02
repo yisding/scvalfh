@@ -4,7 +4,6 @@ import Link from 'next/link';
 import PageHeader from '@/components/layout/PageHeader';
 import CrossCheckTable, { type CrossCheckGroup } from '@/components/about/CrossCheckTable';
 import SbliveCrossCheckSummary from '@/components/about/SbliveCrossCheckSummary';
-import Tag from '@/components/ui/Tag';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -40,6 +39,14 @@ export const metadata: Metadata = {
   alternates: { canonical: '/about' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/about' },
 };
+
+/**
+ * A quoted by-law: a card with a straight 3px rule down its left edge. The rule is a pseudo-element
+ * inset 16px from the top and bottom (the card's corner radius), so it stays straight; an inset
+ * box-shadow would curve around the corners like a bracket.
+ */
+const QUOTE =
+  "sx-card relative not-italic p-5 pl-6 text-body text-ink-2 before:absolute before:inset-y-4 before:left-0 before:w-[3px] before:rounded-r-full before:bg-rule before:content-['']";
 
 const TOC = [
   { id: 'sources', label: 'Data sources' },
@@ -102,14 +109,16 @@ export default function AboutPage() {
     // (DESIGN §10.5): the title and lede, then the jump list, then the sections. On a phone the
     // reader meets the page before its table of contents; at `md` the list moves into the right
     // rail spanning both rows, which is the tall containing block its `sticky` needs.
-    <div className="md:grid md:grid-cols-[minmax(0,1fr)_16rem] md:items-start md:gap-x-10">
+    // The rail starts at `lg`, not `md`: at 768 it left a 424px column and squeezed the source
+    // cards to ~205px. Below `lg` the "On this page" disclosure carries the jump list instead.
+    <div className="pb-section-lg lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-x-10">
       <PageHeader
-        className="md:col-start-1 md:row-start-1 md:block"
+        className="lg:col-start-1 lg:row-start-1"
         title="About & sources"
         description="This is an unofficial, fan-built scoreboard for the 16 De Anza and El Camino girls varsity field hockey teams. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved."
       />
 
-      <details className="sx-inset sx-disclosure mt-8 md:hidden">
+      <details className="sx-inset sx-disclosure mt-8 lg:hidden">
         <summary>On this page</summary>
         <nav aria-label="On this page">
           <ul className="m-0 list-none p-0">
@@ -126,7 +135,7 @@ export default function AboutPage() {
 
       <nav
         aria-label="Sections on this page"
-        className="hidden md:col-start-2 md:row-span-2 md:row-start-1 md:mt-10 md:block md:sticky md:top-[5rem]"
+        className="hidden lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-10 lg:block lg:sticky lg:top-[5rem]"
       >
         <div className="sx-card p-4">
           <p className="m-0 text-micro font-medium text-ink-3">On this page</p>
@@ -145,19 +154,20 @@ export default function AboutPage() {
         </div>
       </nav>
 
-      <div className="mt-8 md:col-start-1 md:row-start-2 md:mt-10">
+      <div className="mt-8 md:mt-10 lg:col-start-1 lg:row-start-2">
         {/* ---------------------------------------------------------------- sources */}
-        <section id="sources" className="mt-10">
+        <section id="sources">
           <SectionHeader size="lg" kicker="Data sources" />
           <p className="sx-prose">
             This snapshot covers all {counts.teams} SCVAL teams and {counts.games} games (
             {counts.leagueGames} of them league games): {counts.finals} final,{' '}
             {counts.pending} not yet reported.
           </p>
-          <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2">
+          <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2 md:items-start">
             <div className="sx-card p-5">
-              <dt className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead text-ink">
-                MaxPreps <Tag>Primary</Tag>
+              <dt>
+                <span className="block text-lead text-ink">MaxPreps</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Primary source</span>
               </dt>
               <dd className="m-0 mt-2 text-body text-ink-2">
                 Team schedules, scores, league standings tables and school colors come from
@@ -174,8 +184,9 @@ export default function AboutPage() {
               </dd>
             </div>
             <div className="sx-card p-5">
-              <dt className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead text-ink">
-                SBLive / SI <Tag>Cross-check only</Tag>
+              <dt>
+                <span className="block text-lead text-ink">SBLive / SI</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check only</span>
               </dt>
               <dd className="m-0 mt-2 text-body text-ink-2">
                 Sports Illustrated&rsquo;s high-school stats site (formerly Scorebook
@@ -195,8 +206,9 @@ export default function AboutPage() {
               </dd>
             </div>
             <div className="sx-card p-5">
-              <dt className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead text-ink">
-                Official SCVAL PDFs <Tag>The league itself</Tag>
+              <dt>
+                <span className="block text-lead text-ink">Official SCVAL PDFs</span>
+                <span className="mt-0.5 block text-meta text-ink-3">The league itself</span>
               </dt>
               <dd className="m-0 mt-2 text-body text-ink-2">
                 SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
@@ -234,8 +246,9 @@ export default function AboutPage() {
               </dd>
             </div>
             <div className="sx-card p-5">
-              <dt className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead text-ink">
-                CIF-CCS <Tag>Playoff dates &amp; format</Tag>
+              <dt>
+                <span className="block text-lead text-ink">CIF-CCS</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Playoff dates &amp; format</span>
               </dt>
               <dd className="m-0 mt-2 text-body text-ink-2">
                 The Central Coast Section publishes the playoff calendar and format. See{' '}
@@ -276,7 +289,7 @@ export default function AboutPage() {
           </p>
 
           <h3>Points &amp; standings order</h3>
-          <blockquote className="sx-card not-italic p-5 text-body text-ink-2 shadow-[inset_3px_0_0_var(--sx-border-strong),var(--sx-ring),var(--sx-shadow-raised)]">
+          <blockquote className={QUOTE}>
             &ldquo;A team shall be awarded 3 points for a win, 1 point for a tie. The division
             placement/standings will be the order of team points. The team with the greatest
             number of points will be declared the champion and higher in the standings. If there
@@ -313,7 +326,7 @@ export default function AboutPage() {
           </p>
 
           <h3>Overtime</h3>
-          <blockquote className="sx-card not-italic p-5 text-body text-ink-2 shadow-[inset_3px_0_0_var(--sx-border-strong),var(--sx-ring),var(--sx-shadow-raised)]">
+          <blockquote className={QUOTE}>
             &ldquo;Varsity: four 15-minute quarters. After a regulation tie (league AND
             non-league varsity games): ONE 7-minute sudden-victory period, 7-a-side. If still
             tied after that one period, the game ends in a tie (no shootout in league
@@ -450,11 +463,11 @@ export default function AboutPage() {
         <section id="playoffs" className="mt-16">
           <SectionHeader size="lg" kicker="CCS playoffs" />
           <div className="sx-prose">
-          <blockquote className="sx-card not-italic p-5 text-body text-ink-2 shadow-[inset_3px_0_0_var(--sx-border-strong),var(--sx-ring),var(--sx-shadow-raised)]">
+          <blockquote className={QUOTE}>
             &ldquo;16-team CCS tournament: SCVAL 7, BVAL 4, PCAL 2, at-large 3.&rdquo;{' '}
             <cite className="not-italic text-ink-3">&mdash; Article VII, Section 1</cite>
           </blockquote>
-          <blockquote className="sx-card not-italic p-5 text-body text-ink-2 shadow-[inset_3px_0_0_var(--sx-border-strong),var(--sx-ring),var(--sx-shadow-raised)]">
+          <blockquote className={QUOTE}>
             &ldquo;The first three teams in each division are awarded automatic qualifiers (AQ)
             to CCS playoffs (ties broken by Article VI, Sections 2-7). Fourth place teams play a
             play-in game; the winner receives the SCVAL 7th AQ. The losing 4th-place team and

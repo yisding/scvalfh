@@ -52,7 +52,10 @@ export function PinControl({
         type="button"
         onClick={() => toggle(slug)}
         aria-pressed={isPinned}
-        className={`sx-pill sx-tap min-h-11 justify-center font-semibold${
+        // Pressed reads as pressed: accent-ink on the accent wash (6.5 / 7.55), the
+        // `.sx-pill-accent` pairing, held on hover too (a utility outranks the base hover rule).
+        // Unpressed stays the neutral grey pill. The words change as well ("Pinned").
+        className={`sx-pill sx-tap min-h-11 justify-center font-semibold aria-pressed:bg-accent-wash aria-pressed:text-accent-ink${
           variant === 'button' ? ' w-full md:w-auto' : ''
         }`}
       >
@@ -63,7 +66,7 @@ export function PinControl({
           height="16"
           viewBox="0 0 16 16"
           aria-hidden="true"
-          className={isPinned ? 'text-accent' : 'text-ink-2'}
+          className={isPinned ? 'text-accent-ink' : 'text-ink-2'}
           fill={isPinned ? 'currentColor' : 'none'}
           stroke="currentColor"
           strokeWidth="1.4"

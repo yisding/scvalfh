@@ -18,9 +18,9 @@ import { longDate, shortDate } from '@/lib/format';
  *
  * Phone source order is the DOM order. From 768px the same nodes sit in a two-column grid (the two
  * division tables side by side, everything else full width), and from 1024px the grid becomes a
- * main column plus a 22–26rem side column, re-placed with explicit row/column starts. A screen
- * reader and a 400%-zoom reader both get the phone order: my team → what just happened → the
- * tables → what's next → CCS (DESIGN §10.5).
+ * main column plus a side column, re-placed with explicit row/column starts. A screen reader and a
+ * 400%-zoom reader both get the phone order: my team → what just happened → the tables → what's
+ * next → CCS (DESIGN §10.5).
  *
  * Space separates the sections (40px phone, 56px from 768px); the page title and a one-line data
  * status open the page, so the as-of fact is read first rather than in a closing footnote.
@@ -37,16 +37,40 @@ export const metadata: Metadata = {
   openGraph: { ...OG_BASE, url: '/' },
 };
 
-/** Literal class strings, so Tailwind's scanner sees every placement it has to generate. */
-const ROW = [
-  'lg:row-start-1',
-  'lg:row-start-2',
-  'lg:row-start-3',
-  'lg:row-start-4',
-] as const;
-const LEFT = 'lg:col-start-1';
-const RIGHT = 'lg:col-start-2';
-/** Full width in the md two-column grid, back to one column at lg. */
+/**
+ * The grid. Every class string is a whole literal (joined, never glued to a `${…}`), so Tailwind's
+ * scanner sees each one.
+ *
+ * The side column is 24rem at 1024–1279 and 22–26rem from 1280: at 1024 a 26rem side column left
+ * the main one 520px, which made the two latest-score cards 252px each and wrapped their time and
+ * status lines ("4:00 / PM", "SCORE NOT / REPORTED"). At 24rem the main column is 552px (cards
+ * 268px) and the side one keeps the 375px the mini tables need to draw their GD bars.
+ */
+const GRID = [
+  'mt-8 flex flex-col gap-y-section md:mt-10 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-section-lg',
+  'lg:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-10',
+  'xl:grid-cols-[minmax(0,1fr)_minmax(22rem,26rem)]',
+].join(' ');
+
+/**
+ * The two lg column stacks. Below lg each wrapper is `display: contents`, so its sections are
+ * ordinary items of the md grid (and of the phone flex column); from lg each is ONE grid item that
+ * stacks its sections at the section gap. That keeps the two columns' rhythms independent: with
+ * every section a separate grid item, De Anza shared a row with My team and sat 127px above El
+ * Camino instead of 56. The DOM order is unchanged.
+ *
+ * lg placement: rows are `auto auto 1fr`. Row 1 is the division tables (the side stack), row 3 is
+ * Next; my team + latest span rows 1–2, CCS spans 2–3. Row 2 has no item of its own, so the main
+ * stack's overhang goes to it alone (an empty auto track has no growth limit yet when spanning
+ * items are placed) and row 1 stays the side stack's height: CCS starts one section gap under El
+ * Camino and Next one gap under the latest scores. Row 3 is the flexible one: CCS crosses it, so
+ * CCS is sized in the flex step and a CCS card taller than Next lengthens row 3 BELOW Next instead
+ * of pushing Next down (it is about 500px at 1024, where the side column is narrow).
+ */
+const MAIN_STACK =
+  'contents lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col lg:gap-y-section-lg';
+const SIDE_STACK = 'contents lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:gap-y-section-lg';
+/** Full width in the md two-column grid, one column again at lg. */
 const WIDE = 'md:col-span-2 lg:col-span-1';
 
 export default function HomePage() {
@@ -54,16 +78,6 @@ export default function HomePage() {
   const { latest, unreported, slate, divisions, teamViews } = data;
   const [deAnza, elCamino] = divisions;
 
-  // lg placement. The side column (De Anza, El Camino, CCS) is much shorter than the main one,
-  // so the scores block spans two rows and CCS starts in the second of them, right under El
-  // Camino, instead of waiting below the scores. The third row is `1fr`: an item that spans a
-  // flexible track is sized in the flex step, so the spans grow that row only and never pad the
-  // El Camino row. A played day that reported nothing pushes the scores down a row (DESIGN §8);
-  // CCS then starts beside them.
-  const latestRow = unreported ? ROW[2] : `${ROW[1]} lg:row-span-2`;
-  const nextRow = ROW[3];
-  const ccsRow = `${ROW[2]} lg:row-span-2`;
-  const rows = unreported ? '' : ' lg:grid-rows-[auto_auto_1fr_auto]';
   // The latest day ANY result was reported, across both divisions — which is what the status line
   // under the title is about. The two standings captions do NOT use it; each mini table names its own
   // division's last league result (components/home/MiniStandings.tsx).
@@ -92,68 +106,68 @@ export default function HomePage() {
         keyDates={data.playoffs.keyDates}
       />
 
-      <div
-        className={`mt-8 flex flex-col gap-y-section md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-section-lg lg:grid-cols-[minmax(0,1fr)_minmax(22rem,26rem)] lg:items-start lg:gap-x-10${rows}`}
-      >
-        {/* 1 — my team, or the picker. Same reserved height in every state, so CLS is 0. */}
-        <section className={`${WIDE} ${LEFT} ${ROW[0]}`}>
-          {/* The heading is MyTeamCard's own: only it knows whether a team is pinned, and the
-              action link's wording depends on that (components/home/MyTeamCard.tsx). */}
-          <MyTeamCard views={teamViews} />
-        </section>
-
-        {/* 2 — a day that was played and reported nothing is shown, not hidden (DESIGN §8). */}
-        {unreported ? (
-          <LatestScores
-            className={`${WIDE} ${LEFT} ${ROW[1]}`}
-            kicker="Played, not reported"
-            date={unreported.date}
-            games={unreported.games}
-            total={unreported.total}
-            note={`${unreported.total} ${
-              unreported.total === 1 ? 'game was' : 'games were'
-            } on the schedule for ${longDate(
-              unreported.date,
-            )} and no score has been reported ${
-              unreported.total === 1 ? 'for it' : 'for any of them'
-            }. Scores usually appear the next morning. The results below are from ${
-              latest ? longDate(latest.date) : 'an earlier day'
-            }.`}
-          />
-        ) : null}
-
-        {/* 3 — the most recent day that actually has results, always named by its date. */}
-        {latest ? (
-          <LatestScores
-            className={`${WIDE} ${LEFT} ${latestRow}`}
-            date={latest.date}
-            games={latest.games}
-            total={latest.total}
-          />
-        ) : (
-          <section className={`${WIDE} ${LEFT} ${latestRow}`}>
-            <SectionHeader
-              kicker="Latest scores"
-              action={{ href: '/schedule', label: 'Full schedule' }}
-            />
-            <EmptyState
-              heading="No results yet."
-              action={{ href: '/schedule', label: 'Full schedule' }}
-            >
-              {data.firstGame
-                ? `The first games are ${longDate(data.firstGame)}. Scores appear here the morning after they are played.`
-                : 'Scores appear here the morning after a game is played.'}
-            </EmptyState>
+      <div className={GRID}>
+        <div className={MAIN_STACK}>
+          {/* 1 — my team, or the picker. Same reserved height in every state, so CLS is 0. */}
+          <section className={WIDE}>
+            {/* The heading is MyTeamCard's own: only it knows whether a team is pinned, and the
+                action link's wording depends on that (components/home/MyTeamCard.tsx). */}
+            <MyTeamCard views={teamViews} />
           </section>
-        )}
+
+          {/* 2 — a day that was played and reported nothing is shown, not hidden (DESIGN §8). */}
+          {unreported ? (
+            <LatestScores
+              className={WIDE}
+              kicker="Played, not reported"
+              date={unreported.date}
+              games={unreported.games}
+              total={unreported.total}
+              note={`${unreported.total} ${
+                unreported.total === 1 ? 'game was' : 'games were'
+              } on the schedule for ${longDate(unreported.date)} and no score has been reported ${
+                unreported.total === 1 ? 'for it' : 'for any of them'
+              }. Scores usually appear the next morning. The results below are from ${
+                latest ? longDate(latest.date) : 'an earlier day'
+              }.`}
+            />
+          ) : null}
+
+          {/* 3 — the most recent day that actually has results, always named by its date. */}
+          {latest ? (
+            <LatestScores
+              className={WIDE}
+              date={latest.date}
+              games={latest.games}
+              total={latest.total}
+            />
+          ) : (
+            <section className={WIDE}>
+              <SectionHeader
+                kicker="Latest scores"
+                action={{ href: '/schedule', label: 'Full schedule' }}
+              />
+              <EmptyState
+                heading="No results yet."
+                action={{ href: '/schedule', label: 'Full schedule' }}
+              >
+                {data.firstGame
+                  ? `The first games are ${longDate(data.firstGame)}. Scores appear here the morning after they are played.`
+                  : 'Scores appear here the morning after a game is played.'}
+              </EmptyState>
+            </section>
+          )}
+        </div>
 
         {/* 4 & 5 — both divisions, top four each, side by side at md. De Anza first. */}
-        <MiniStandings className={`${RIGHT} ${ROW[0]}`} division={deAnza} />
-        <MiniStandings className={`${RIGHT} ${ROW[1]}`} division={elCamino} showLegend />
+        <div className={SIDE_STACK}>
+          <MiniStandings division={deAnza} />
+          <MiniStandings division={elCamino} showLegend />
+        </div>
 
         {/* 6 — today's remaining slate, or the next day that has one. */}
         <NextSlate
-          className={`${WIDE} ${LEFT} ${nextRow}`}
+          className={`${WIDE} lg:col-start-1 lg:row-start-3`}
           date={slate?.date ?? null}
           games={slate?.games ?? []}
           total={slate?.total ?? 0}
@@ -163,7 +177,7 @@ export default function HomePage() {
 
         {/* 7 — the CCS berth math, with no model and no percentages. */}
         <PlayoffsCard
-          className={`${WIDE} ${RIGHT} ${ccsRow}`}
+          className={`${WIDE} lg:col-start-2 lg:row-span-2 lg:row-start-2`}
           playoffs={data.playoffs}
           phase={data.phase}
           crossover={data.crossover}

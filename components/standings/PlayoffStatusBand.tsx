@@ -47,14 +47,14 @@ export function PlayoffStatusBand({
         <span className="sr-only">{divisionLabel}: </span>CCS qualifying, as things stand
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
-        {/* Two columns (status | teams) where the band spans the content width (768-1023); from
-            lg the band shares its row with the Notes inset, and an 11rem term column there wrapped
-            "5th place — submitted to CCS for at-large consideration" onto five lines, so the
-            term sits above its teams instead. */}
+        {/* Two columns (status | teams) where the band spans the content width (768-1023). The
+            term column is 22rem there: at 11rem "4th place — play-in Fri Oct 30 for the SCVAL
+            7th berth" broke into five lines beside a mostly empty pill column. From lg the band
+            shares its row with the Notes inset, so the term sits above its teams instead. */}
         {groups.map((group) => (
           <div
             key={group.status}
-            className="grid gap-3 py-3 md:grid-cols-[minmax(0,11rem)_1fr] lg:grid-cols-1 lg:gap-2"
+            className="grid gap-3 py-3 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex items-baseline gap-2">
               <Tag size="md" tone={group.status === 'aq' ? 'accent' : 'neutral'}>

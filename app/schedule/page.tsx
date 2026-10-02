@@ -60,11 +60,20 @@ export default function SchedulePage() {
     dates.length > 0 ? `${monthDay(dates[0])} – ${monthDay(dates[dates.length - 1])}` : null;
 
   return (
-    <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)]">
+    // `scroll-behavior: auto` on <html> while this page is mounted: a smooth scroll to a date
+    // anchor renders the `content-visibility` groups it passes, their real heights replace the
+    // estimates mid-flight, and the target slid out of view ("Today" landed on Oct 5 at 1280).
+    // An instant jump lands exactly, as it already did for reduced-motion users.
+    <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)] [html:has(&)]:[scroll-behavior:auto]">
       <PageHeader
         title="Schedule & results"
         description={
-          span ? <>{span} &middot; every contest, league and non-league, oldest first</> : undefined
+          span ? (
+            <>
+              {span} &middot; every contest, league and non-league, oldest first &middot; all
+              times Pacific
+            </>
+          ) : undefined
         }
       />
 
@@ -87,7 +96,9 @@ export default function SchedulePage() {
         </section>
       ) : null}
 
-      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
+      {/* The same width as the fixtures card above it, so the two end-of-page disclosures read
+          as one kind of thing. */}
+      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
         <summary>How to read this page (4 notes)</summary>
         <ul className="m-0 mt-2 list-disc space-y-2 pl-5">
           <li>

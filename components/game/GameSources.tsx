@@ -60,34 +60,64 @@ export interface GameElsewhereProps {
 export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const { game, away, home } = model;
   const sides = [away, home].flatMap((side) =>
-    side.team ? [{ name: side.name, team: side.team, sbliveUrl: side.sbliveUrl }] : [],
+    side.team
+      ? [{ name: side.name, maxprepsUrl: side.team.external.maxprepsTeamUrl, sbliveUrl: side.sbliveUrl }]
+      : [],
   );
+  const teamRows = sides.filter((side) => side.maxprepsUrl || side.sbliveUrl);
 
-  const links: Array<{ href: string; label: string }> = [];
+  // This contest first — the box score is the one accent pill — then one row per school, so the
+  // links scan by team instead of repeating each school's name in four equal-weight pills.
+  const gameLinks: Array<{ href: string; label: string; accent?: boolean }> = [];
   if (game.urls.maxpreps) {
-    links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score for this game' });
+    gameLinks.push({ href: game.urls.maxpreps, label: 'MaxPreps box score for this game', accent: true });
   }
-  if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'SBLive/SI page for this game' });
-  for (const side of sides) {
-    if (side.team.external.maxprepsTeamUrl) {
-      links.push({ href: side.team.external.maxprepsTeamUrl, label: `${side.name} on MaxPreps` });
-    }
-    if (side.sbliveUrl) links.push({ href: side.sbliveUrl, label: `${side.name} on SBLive/SI` });
-  }
+  if (game.urls.sblive) gameLinks.push({ href: game.urls.sblive, label: 'SBLive/SI page for this game' });
 
   return (
     <section className={className} aria-labelledby="game-sources-kicker">
       <SectionHeader kicker="Elsewhere" as="h2" id="game-sources-kicker" />
-      {links.length > 0 ? (
+      {gameLinks.length > 0 ? (
         <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-          {links.map((link) => (
+          {gameLinks.map((link) => (
             <li key={link.href}>
-              <ExternalLink href={link.href} className="sx-pill">
+              <ExternalLink
+                href={link.href}
+                // ExternalLink adds a `text-accent` utility, which would beat the pill's
+                // accent-ink (accent on the wash is 4.37:1 in dark); `!` keeps accent-ink.
+                className={link.accent ? 'sx-pill sx-pill-accent text-accent-ink!' : 'sx-pill'}
+              >
                 {link.label}
               </ExternalLink>
             </li>
           ))}
         </ul>
+      ) : null}
+      {teamRows.length > 0 ? (
+        <div className={`sx-card sx-flush sx-bleed${gameLinks.length > 0 ? ' mt-4' : ''}`}>
+          <ul className="sx-list">
+            {teamRows.map((side) => (
+              <li
+                key={side.name}
+                className="flex min-h-row-1 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2"
+              >
+                <span className="mr-auto min-w-0 text-body text-ink">{side.name}</span>
+                <span className="flex flex-wrap gap-2">
+                  {side.maxprepsUrl ? (
+                    <ExternalLink href={side.maxprepsUrl} className="sx-pill">
+                      <span className="sr-only">{side.name} on </span>MaxPreps
+                    </ExternalLink>
+                  ) : null}
+                  {side.sbliveUrl ? (
+                    <ExternalLink href={side.sbliveUrl} className="sx-pill">
+                      <span className="sr-only">{side.name} on </span>SBLive/SI
+                    </ExternalLink>
+                  ) : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         Scores come from MaxPreps and are cross-checked against SBLive/SI. When the two disagree we

@@ -10,7 +10,9 @@
  *
  * Two variants, and only one is ever displayed:
  *  - `bar` (phone): a 48px band that sticks directly under the 48px top bar, so the table head
- *    parks under both (the page sets `--sx-sticky-top: 6rem`). Hidden from 768px.
+ *    parks under both (the page sets `--sx-sticky-top: 6rem`). Hidden from 768px. `sx-chrome-top`
+ *    gives it the same 1px CanvasText edge as the top bar under forced colours, where the
+ *    box-shadow edge is dropped.
  *  - `inline` (≥768px): static, right-aligned in the page title row via PageHeader's `aside`.
  *
  * Each pill is a 36px capsule inside a 44px anchor, so the target is the full 44px (DESIGN §10.9).
@@ -25,7 +27,7 @@ export interface DivisionTabsProps {
 }
 
 const VARIANT = {
-  bar: 'sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] md:hidden',
+  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] md:hidden',
   inline: 'hidden md:flex items-center gap-2',
 } as const;
 

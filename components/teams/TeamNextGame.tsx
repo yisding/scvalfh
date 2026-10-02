@@ -60,9 +60,9 @@ export function TeamNextGame({
     const opponentSlug = mineIsHome ? nextOfficial.awaySlug : nextOfficial.homeSlug;
     const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
     return (
-      <section>
+      <section className="flex min-w-0 flex-col">
         <SectionHeader kicker="Next" meta="League" />
-        <div className="sx-card p-5">
+        <div className="sx-card flex-1 p-5">
           <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="text-lead text-ink">{shortDate(nextOfficial.dateKey)}</span>
             <span className="text-meta text-ink-2">No start time published</span>
@@ -70,7 +70,7 @@ export function TeamNextGame({
           <p className="mt-3 mb-0 flex items-center gap-3 text-body">
             {opponent ? <TeamMonogram team={opponent} size={32} /> : null}
             <span className="min-w-0 text-ink">
-              <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'} </span>
+              <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'}</span>{' '}
               {opponent ? opponent.name : mineIsHome ? nextOfficial.awayName : nextOfficial.homeName}
             </span>
           </p>
@@ -86,7 +86,7 @@ export function TeamNextGame({
 
   if (!game) {
     return (
-      <section>
+      <section className="min-w-0">
         <SectionHeader kicker="Next" />
         <EmptyState heading={`No more games on ${teamName}'s published schedule.`}>
           The league season ends Oct 28 and the SCVAL crossover is Fri Oct 30. We will list a
@@ -101,26 +101,31 @@ export function TeamNextGame({
   const opponentSide = mineIsHome ? game.away : game.home;
   const opponent = opponentSide.slug ? getTeamBySlug(opponentSide.slug) : undefined;
   const chips = chipsFor(game);
-  // A scheduled game's status label IS its time, which the date line already carries in mono;
-  // anything else (LIVE, POSTPONED, CANCELLED with its struck time, SCORE NOT REPORTED) is the
-  // written status in that slot instead, so the word is never dropped (DESIGN §5.2).
+  // The start time is always shown when the date is known (struck through when the game is
+  // postponed or cancelled, as everywhere else). A scheduled game's status label IS that time, so
+  // it adds nothing; anything else (LIVE, POSTPONED, CANCELLED, SCORE NOT REPORTED) follows the
+  // time as the written status, so neither the word nor the time is dropped (DESIGN §5.2).
   const scheduled = display.kind === 'scheduled';
+  const timeClass = ['sx-num text-cell text-ink-2', display.strikeTime ? 'line-through' : null]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <section>
+    <section className="flex min-w-0 flex-col">
       <SectionHeader kicker="Next" meta={game.isLeague ? 'League' : 'Non-league'} />
-      <div className="sx-card p-5">
+      {/* `flex-1`: in the two-column grid the card fills its row beside the taller Last card,
+          with the link pills pinned to its bottom edge, so the pair ends level. */}
+      <div className="sx-card flex flex-1 flex-col p-5">
         <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <time dateTime={dateTimeAttr(game)} className="text-lead text-ink">
             {game.isDateTba ? 'Date TBA' : shortDate(game.dateLocal)}
           </time>
-          {scheduled ? (
-            game.isDateTba ? null : (
-              <span className="sx-num text-cell text-ink-2">
-                {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
-              </span>
-            )
-          ) : (
+          {game.isDateTba ? null : (
+            <span className={timeClass}>
+              {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
+            </span>
+          )}
+          {scheduled ? null : (
             <StatusLabel display={display} showNonLeague={false} className="shrink-0" />
           )}
         </p>
@@ -130,7 +135,9 @@ export function TeamNextGame({
             href={`/game/${game.contestId}`}
             className="min-w-0 text-ink no-underline hover:underline"
           >
-            <span className="text-ink-2">{display.versus ?? 'vs'} </span>
+            {/* The space sits OUTSIDE the span: Chrome drops a trailing space inside an inline
+                child when it builds the link's name, which read "atSt. Ignatius…". */}
+            <span className="text-ink-2">{display.versus ?? 'vs'}</span>{' '}
             {opponent ? opponent.name : opponentSide.name}
           </Link>
         </p>
@@ -143,7 +150,7 @@ export function TeamNextGame({
           </p>
         ) : null}
         {chips.length > 0 ? (
-          <p className="mt-4 mb-0 flex flex-wrap gap-2">
+          <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
             {chips.map((chip) => (
               <ExternalLink key={chip.href} href={chip.href} className="sx-pill">
                 {chip.label}

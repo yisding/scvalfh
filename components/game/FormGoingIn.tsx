@@ -29,14 +29,17 @@ function FormRow({ side }: { side: GameSideModel }) {
         <span className="truncate text-body text-ink">{side.name}</span>
       </span>
       {side.team ? (
-        <>
+        // The strip and "→ then [chip]" are ONE unit that never splits: when it does not fit
+        // beside the name it moves whole, so the outcome chip never sits alone on a line. Below
+        // 360px it always takes its own line, aligned under the name.
+        <span className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap max-[359px]:ml-0 max-[359px]:basis-full max-[359px]:pl-[2.125rem]">
           <FormStrip
             entries={side.formBefore}
             size={20}
             label={`${side.name} going into this game`}
           />
           {side.outcome ? (
-            <span className="ml-auto flex items-center gap-2 text-meta text-ink-3">
+            <span className="flex items-center gap-2 text-meta text-ink-3">
               <span aria-hidden="true">&rarr;</span>
               <span>then</span>
               {/* `aria-hidden` on the chip, as every other ResultChip consumer does (GameRow,
@@ -52,7 +55,7 @@ function FormRow({ side }: { side: GameSideModel }) {
               </span>
             </span>
           ) : null}
-        </>
+        </span>
       ) : (
         <span className="text-meta text-ink-3">
           Not an SCVAL school — this site keeps no record for {side.name}.

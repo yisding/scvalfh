@@ -39,7 +39,9 @@ function FixtureRows({ fixtures }: { fixtures: readonly OfficialFixture[] }) {
           <time dateTime={fixture.dateKey} className="sx-num w-[5.25rem] shrink-0 text-cell text-ink-2">
             {shortDate(fixture.dateKey)}
           </time>
-          <span className="min-w-0 flex-1 text-body text-ink">
+          {/* The division follows the matchup instead of sitting flush right, where it was
+              ~800px from it on a 1280 row. */}
+          <span className="min-w-0 text-body text-ink">
             {name(fixture.awaySlug, fixture.awayName)} at {name(fixture.homeSlug, fixture.homeName)}
           </span>
           <span className="shrink-0 text-meta text-ink-3">{DIVISION_LABELS[fixture.division]}</span>
@@ -69,7 +71,7 @@ export function OfficialFixtures({
     return (
       <div className={className}>
         {sentence}
-        <div className="sx-card sx-flush sx-bleed">
+        <div className="sx-card sx-flush sx-bleed md:max-w-3xl">
           <FixtureRows fixtures={fixtures} />
         </div>
       </div>
@@ -79,7 +81,8 @@ export function OfficialFixtures({
   return (
     <div className={className}>
       {sentence}
-      <details className="sx-card sx-flush sx-bleed">
+      {/* Capped at the width of the "How to read" disclosure that follows it. */}
+      <details className="sx-card sx-flush sx-bleed md:max-w-3xl">
         <summary className="sx-tap flex min-h-row-1 cursor-pointer list-none items-center gap-2.5 px-gutter py-2 text-body font-medium text-ink [&::-webkit-details-marker]:hidden">
           <svg
             className="sx-chevron shrink-0 text-ink-3"

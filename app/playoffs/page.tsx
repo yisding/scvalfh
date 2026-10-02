@@ -48,7 +48,7 @@ import type { CrossoverSeat, Division, PlayoffProjection as Projection } from '@
  * never `Date.now()`, so the build is reproducible and the "as of" label is true.
  */
 
-const PAGE_TITLE = 'CCS Playoffs';
+const PAGE_TITLE = 'CCS playoffs';
 
 function projectionRows(projection: Projection, division: Division): ProjectionRow[] {
   return projection.byDivision[division].flatMap((row) => {
@@ -167,12 +167,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function PlayoffsPage() {
   const playoffs = getPlayoffs();
   const projection = getPlayoffProjection();
-  // Per division for each table's own caption, and the later of the two for the section header that
-  // covers both.
+  // Per division, for each table's own header and caption: the two divisions are not always
+  // current through the same day.
   const asOfBy = Object.fromEntries(
     DIVISIONS.map((d) => [d, getLastLeagueResultDate(d)]),
   ) as Record<Division, string | null>;
-  const asOfOverall = getLastLeagueResultDate();
   const { keyDates, format, bracketUrl, bracketPublished } = playoffs;
   const auto = format.autoQualifiers;
 
@@ -238,7 +237,7 @@ export default function PlayoffsPage() {
           </div>
         </section>
       ) : (
-        <div className="mt-8 md:mt-10 sx-card p-5 shadow-[inset_4px_0_0_var(--sx-accent),var(--sx-ring),var(--sx-shadow-raised)] md:p-6">
+        <div className="mt-8 md:mt-10 sx-card max-w-3xl p-5 shadow-[inset_4px_0_0_var(--sx-accent),var(--sx-ring),var(--sx-shadow-raised)] md:p-6">
           <p className="m-0 text-lead text-ink">Not seeded yet</p>
           <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">
             The CCS seeding meeting is{' '}
@@ -251,8 +250,8 @@ export default function PlayoffsPage() {
         </div>
       )}
 
-      <div className="mt-section md:mt-section-lg lg:grid lg:grid-cols-2 lg:gap-x-10">
-      <section id="berths">
+      <div className="mt-section md:mt-section-lg lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-10">
+      <section id="berths" className="lg:col-start-1 lg:row-start-1">
         <SectionHeader kicker="SCVAL's share of the field" />
         <div className="sx-card p-5">
           <BerthMeter
@@ -268,13 +267,7 @@ export default function PlayoffsPage() {
         </p>
       </section>
 
-      <section id="dates" className="mt-section md:mt-section-lg lg:mt-0">
-        <SectionHeader kicker="Key dates" meta="all times PT" />
-        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
-      </section>
-      </div>
-
-      <section id="format" className="mt-section md:mt-section-lg">
+            <section id="format" className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-2">
         <SectionHeader kicker="How it works" />
         <div className="sx-prose">
           <p>
@@ -306,14 +299,19 @@ export default function PlayoffsPage() {
         </div>
       </section>
 
+      <section id="dates" className="mt-section md:mt-section-lg lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:mt-0">
+        <SectionHeader kicker="Key dates" meta="all times PT" />
+        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
+      </section>
+      </div>
+
       {seeded ? null : (
         <section id="projection" className="mt-section md:mt-section-lg">
           <SectionHeader
             kicker="Projection · not official"
-            meta={asOfPhrase(asOfOverall).replace(/^so far$/, 'no league results yet')}
           />
           <p className="m-0 max-w-prose text-meta text-ink-2">
-            Ordered by league points {asOfPhrase(asOfOverall)} only, per Article VI. No
+            Ordered by league points only, per Article VI. Each table says how far its own division has been played. No
             probabilities &mdash; we have no model, so every status below is a written word.
           </p>
           <div className="mt-stack space-y-section lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
@@ -327,10 +325,16 @@ export default function PlayoffsPage() {
               />
             ))}
           </div>
-          <ProjectionKey className="mt-stack max-w-prose" />
+          <ProjectionKey
+            className="mt-stack max-w-prose"
+            showRule={divisions.some((d) => d.berthRuleAfter > 0)}
+          />
           <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
             Berths are assigned by the CCS committee. Nothing here is official until{' '}
-            {shortDate(keyDates.seedingMeeting)}.
+            {shortDate(keyDates.seedingMeeting)}.{' '}
+            <Link href="/about#standings" className="sx-action text-accent hover:underline">
+              How these places are computed
+            </Link>
           </p>
         </section>
       )}
@@ -355,7 +359,7 @@ export default function PlayoffsPage() {
         </section>
       )}
 
-      <section id="crossover" className="mt-section md:mt-section-lg">
+      <section id="crossover" className="mt-section md:mt-section-lg max-w-3xl">
         <SectionHeader
           kicker="Crossover and play-in"
           meta={shortDate(keyDates.crossover)}

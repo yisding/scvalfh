@@ -5,7 +5,8 @@ import { placeSub } from './team-view';
 
 /**
  * The headline numbers (DESIGN §3.7, §7.7): six card tiles, 2-up on a phone, 3-up from 768px and
- * one 6-up band from 1024px (modernization brief §5.7).
+ * one 6-up band from 1280px. (The brief's 6-up from 1024px left 151px tiles whose subs all wrapped
+ * to two lines; two rows of three fit them on one.)
  *
  * Every tile keeps its full footprint when the value is missing, so the row never reflows, and a
  * team with no reported results shows an em dash in every tile rather than a zero — `0` and
@@ -27,7 +28,7 @@ export function TeamStatTiles({ view }: { view: TeamPageView }) {
 
   return (
     <div className="mt-6">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-6">
         <StatTile
           label="Place"
           value={league ? ordinal(league.place) : null}

@@ -126,19 +126,23 @@ function Chevron() {
   );
 }
 
+// A disabled select (the static fallback, which is all a reader without JavaScript ever sees)
+// LOOKS disabled: dead controls that look live are worse than none.
 const SELECT =
-  'h-11 w-full appearance-none rounded-full border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:opacity-100';
+  'h-11 w-full appearance-none rounded-full border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:cursor-not-allowed disabled:text-ink-3';
 
 function PillGroup<T extends string>({
   legend,
   value,
   options,
   onPick,
+  disabled = false,
 }: {
   legend: string;
   value: T;
   options: Option<T>[];
   onPick: (value: T) => void;
+  disabled?: boolean;
 }) {
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
@@ -151,11 +155,14 @@ function PillGroup<T extends string>({
               key={option.value}
               type="button"
               aria-pressed={active}
+              disabled={disabled}
               onClick={() => onPick(option.value)}
-              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-full px-4 text-meta ${
+              // box-shadow is dropped in forced colours, so each pill gets a real border there and
+              // the pressed one a Highlight ring: the state is never reduced to font weight.
+              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-full px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
                 active
-                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)]'
-                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 md:bg-surface-2 md:shadow-none'
+                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
+                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:disabled:hover:bg-surface-2'
               }`}
             >
               {option.label}
@@ -184,105 +191,119 @@ interface PanelProps {
 function FiltersPanel({ teams, filters, countLine, moreActive, update, className }: PanelProps) {
   const inert = !update;
   return (
+    // One wrapping row of items. On a 390 phone that is the two selects, then "More filters" with
+    // the count beside it (right-aligned, at most two lines) — a ~120px closed panel instead of
+    // four stacked rows. From 768px everything sits on one line with the count pushed right.
     <div
-      className={`sx-card p-3 md:flex md:flex-wrap md:items-center md:gap-3 md:p-4${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        'sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
-          <span className="sr-only">Team</span>
-          <select
-            value={filters.team}
-            disabled={inert}
-            onChange={(event) => update?.({ team: event.target.value })}
-            className={SELECT}
+      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+        <span className="sr-only">Team</span>
+        <select
+          value={filters.team}
+          disabled={inert}
+          onChange={(event) => update?.({ team: event.target.value })}
+          className={SELECT}
+        >
+          <option value="all">All teams</option>
+          {DIVISION_OPTIONS.slice(1).map((division) => (
+            <optgroup key={division.value} label={`${division.label} Division`}>
+              {teams
+                .filter((team) => team.division === division.value)
+                .slice()
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((team) => (
+                  <option key={team.slug} value={team.slug}>
+                    {team.name}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
+        </select>
+        <Chevron />
+      </label>
+      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+        <span className="sr-only">Division</span>
+        <select
+          value={filters.division}
+          disabled={inert}
+          onChange={(event) =>
+            update?.({ division: event.target.value as FilterState['division'] })
+          }
+          className={SELECT}
+        >
+          <option value="all">Both divisions</option>
+          {DIVISION_OPTIONS.slice(1).map((division) => (
+            <option key={division.value} value={division.value}>
+              {division.label}
+            </option>
+          ))}
+        </select>
+        <Chevron />
+      </label>
+      {/* A real `<details>`, so the panel opens with JavaScript off too. Open on a phone, it
+          takes the whole row so its tray is full width, and the count drops below it. */}
+      <details className="peer relative max-md:open:basis-full">
+        <summary className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          More filters
+          {moreActive > 0 ? (
+            <span className="sx-badge sx-num h-6 bg-surface px-2 text-ink">
+              {moreActive}
+              <span className="sr-only"> active</span>
+            </span>
+          ) : null}
+          <svg
+            className="sx-chevron text-ink-3"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <option value="all">All teams</option>
-            {DIVISION_OPTIONS.slice(1).map((division) => (
-              <optgroup key={division.value} label={`${division.label} Division`}>
-                {teams
-                  .filter((team) => team.division === division.value)
-                  .slice()
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((team) => (
-                    <option key={team.slug} value={team.slug}>
-                      {team.name}
-                    </option>
-                  ))}
-              </optgroup>
-            ))}
-          </select>
-          <Chevron />
-        </label>
-        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
-          <span className="sr-only">Division</span>
-          <select
-            value={filters.division}
+            <path d="m4 6 4 4 4-4" />
+          </svg>
+        </summary>
+        {/* Phone: an inset tray inside the panel. From 768px: a floating card over the list. */}
+        <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-md:rounded-card max-md:bg-surface-2 max-md:shadow-none md:absolute md:left-0 md:z-20 md:w-max md:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
+          <PillGroup
+            legend="Game type"
+            value={filters.type}
+            options={TYPE_OPTIONS}
+            onPick={(type) => update?.({ type })}
             disabled={inert}
-            onChange={(event) =>
-              update?.({ division: event.target.value as FilterState['division'] })
-            }
-            className={SELECT}
-          >
-            <option value="all">Both divisions</option>
-            {DIVISION_OPTIONS.slice(1).map((division) => (
-              <option key={division.value} value={division.value}>
-                {division.label}
-              </option>
-            ))}
-          </select>
-          <Chevron />
-        </label>
-        {/* A real `<details>`, so the panel opens with JavaScript off too. */}
-        <details className="relative">
-          <summary className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-            More filters
-            {moreActive > 0 ? (
-              <span className="sx-badge sx-num h-6 bg-surface px-2 text-ink">
-                {moreActive}
-                <span className="sr-only"> active</span>
-              </span>
-            ) : null}
-            <svg
-              className="sx-chevron text-ink-3"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="m4 6 4 4 4-4" />
-            </svg>
-          </summary>
-          {/* Phone: an inset tray inside the panel. From 768px: a floating card over the list. */}
-          <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-md:rounded-card max-md:bg-surface-2 max-md:shadow-none md:absolute md:left-0 md:z-20 md:w-max md:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
-            <PillGroup
-              legend="Game type"
-              value={filters.type}
-              options={TYPE_OPTIONS}
-              onPick={(type) => update?.({ type })}
-            />
-            <PillGroup
-              legend="Status"
-              value={filters.state}
-              options={STATE_OPTIONS}
-              onPick={(state) => update?.({ state })}
-            />
-          </div>
-        </details>
-      </div>
-      <p aria-live="polite" className="sx-num m-0 mt-2 px-1 text-meta text-ink-2 md:mt-0 md:ml-auto">
-        {/* Each "N word" part stays on one line, so a phone wrap never strands "3" from
-            "not reported". The text content is unchanged. */}
-        {countLine.split(' · ').map((part, i) => (
+          />
+          <PillGroup
+            legend="Status"
+            value={filters.state}
+            options={STATE_OPTIONS}
+            onPick={(state) => update?.({ state })}
+            disabled={inert}
+          />
+        </div>
+      </details>
+      <p
+        aria-live="polite"
+        className="m-0 min-w-0 flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left md:flex-none md:ml-auto"
+      >
+        {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
+            never strands "3" from "not reported" or opens a line on "·". The text content is
+            unchanged. */}
+        {countLine.split(' · ').map((part, i, parts) => (
           <span key={part}>
-            {i > 0 ? ' · ' : null}
-            <span className="whitespace-nowrap">{part}</span>
+            {i > 0 ? ' ' : null}
+            <span className="whitespace-nowrap">
+              {part}
+              {i < parts.length - 1 ? ' ·' : null}
+            </span>
           </span>
         ))}
       </p>
@@ -304,6 +325,14 @@ export function ScheduleFiltersFallback({
         countLine={unfilteredCountLine(counts)}
         moreActive={0}
       />
+      {/* The prerendered page leaves this boundary pending, so WITHOUT JavaScript this fallback is
+          what stays on screen: its controls are disabled, and the note saying why lives here. */}
+      <noscript>
+        <p className="mt-3 mb-0 text-meta text-ink-3">
+          Filtering needs JavaScript. The complete season — all {counts.total}{' '}
+          {contestWord(counts.total)}, oldest first — is listed below either way.
+        </p>
+      </noscript>
     </div>
   );
 }

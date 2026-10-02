@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { EM_DASH, clockTime, monthDay, shortDate, timeOfDay } from '../../lib/format';
+import { EM_DASH, monthDay, shortDate, timeOfDay } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 
@@ -62,14 +62,23 @@ function ghostInitials(name: string): string {
     .join('');
 }
 
-function TeamLine({ side, showScore }: { side: SideView; showScore: boolean }) {
+function TeamLine({
+  side,
+  showScore,
+  chipSlot = true,
+}: {
+  side: SideView;
+  showScore: boolean;
+  /** false drops the chip column entirely (a GameCard where neither side has a chip). */
+  chipSlot?: boolean;
+}) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   return (
-    // One line per side: chip 20 · monogram 24 · name · score 32, 8px apart. The status label
+    // One 24px line per side: chip 20 · monogram 24 · name · score 32, 8px apart. The status label
     // lives in the row's lead column now, so nothing trails the score and the name keeps
-    // everything that is left (≥ 88px at 320, DESIGN brief §4.15) without a floor or a wrap.
-    <span className="flex items-center gap-2">
-      <ResultChip kind={side.chip} size={20} />
+    // everything that is left (≥ 86px at 320, DESIGN brief §4.15) without a floor or a wrap.
+    <span className="flex h-6 items-center gap-2">
+      {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
       {team ? (
         <TeamMonogram team={team} size={24} />
       ) : (
@@ -90,8 +99,10 @@ function TeamLine({ side, showScore }: { side: SideView; showScore: boolean }) {
             reader. */}
         {side.shortName}
       </span>
+      {/* The 22px glyph's 28px line box is centred in the 24px line, so two team lines are
+          52px and the row keeps its 76px height. */}
       {showScore ? (
-        <span className="w-8 shrink-0 text-right">
+        <span className="flex h-6 w-8 shrink-0 items-center justify-end">
           <ScoreGlyph side={side} size="score" />
         </span>
       ) : null}
@@ -142,9 +153,11 @@ function GameLinks({ game }: { game: Game }) {
 
 function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean }) {
   return (
-    // Indented to the team column (gutter + the 70px lead column + its 8px gap), so the panel
-    // reads as belonging to the two names above it.
-    <div className="space-y-3 border-t border-divider bg-surface-2 pr-gutter pb-4 pt-3 pl-[calc(var(--spacing-gutter)+4.875rem)] text-meta">
+    // From 768px (the team page's Last card) the panel is indented to the team column — gutter +
+    // the 80px lead column + its 8px gap — so it reads as belonging to the two names above it.
+    // On a phone that indent cost 94px of a 358px row and stacked every pill on its own line, so
+    // the panel starts at the gutter there.
+    <div className="space-y-3 border-t border-divider bg-surface-2 px-gutter pb-4 pt-3 text-meta md:pl-[calc(var(--spacing-gutter)+5.5rem)]">
       {showRecap && game.recap ? <p className="m-0 text-ink-2">{game.recap}</p> : null}
       {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
       {/* `contest.location` is a NOTE field, not a venue field — live values include
@@ -166,12 +179,16 @@ export function GameRow({
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
-  // The clock face alone (DESIGN §3.3's wireframe writes `5:30`): the lead column is 64px, and
-  // `display.sentence` and the status label below the time both still carry the full `4:00 PM PT`.
-  const when = game.isTimeTba ? 'TBA' : clockTime(game.dateLocal);
-  // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so the clock line
-  // above it would only repeat it.
+  // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a final
+  // and the upcoming game under it no longer switch between `4:00` and a sans-caps `4:00 PM`.
+  // "12:00 PM" is 63px at 13px mono, inside the 70px lead column. `display.sentence` carries PT.
+  const when = game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal);
+  // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so under the clock line
+  // it would only repeat it: only the NL tag is left to say there (GameCard does the same).
   const statusIsTime = statusLabelIsTime(game, display.statusLabel);
+  const timeLine = showTime;
+  const nonLeagueTag =
+    showNonLeague && display.isNonLeague ? <Tag label="non-league">NL</Tag> : null;
   return (
     <details
       open={defaultExpanded || undefined}
@@ -180,23 +197,38 @@ export function GameRow({
       }`}
     >
       {/* Three columns — lead (date · time · status), the two team lines, the chevron — so the
-          status word never pushes a team line onto a third row. */}
-      <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[4.375rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 [&::-webkit-details-marker]:hidden">
+          status word never pushes a team line onto a third row. The lead column is 80px from
+          360px: "SCORE NOT REPORTED" then breaks into two 14px lines ("SCORE NOT" is 73px) and
+          POSTPONED (78px) fits, so the lead stack is no taller than the 52px team block. At 320
+          it stays 70px, which keeps the name column at the brief's floor. */}
+      {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
+          by the screen edge (or by a /schedule date group's paint containment). */}
+      <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[4.375rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 min-[360px]:grid-cols-[5rem_minmax(0,1fr)_1rem] [&::-webkit-details-marker]:hidden">
         <span className="sr-only">{display.sentence}</span>
-        <span className="flex min-w-0 flex-col gap-1 self-start pt-0.5" aria-hidden="true">
+        <span className="flex min-w-0 flex-col gap-1 self-start" aria-hidden="true">
           {showDate ? (
             <span className="sx-num text-cell text-ink-2">{monthDay(game.dateLocal)}</span>
           ) : null}
-          {showTime && !statusIsTime ? (
+          {timeLine ? (
             <span
               className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}
             >
               {when}
             </span>
           ) : null}
-          <StatusLabel display={display} showNonLeague={showNonLeague} />
+          {statusIsTime && timeLine ? (
+            nonLeagueTag ? <span className="flex">{nonLeagueTag}</span> : null
+          ) : (
+            // The status word and the NL tag share one wrapping line, 4px apart: FINAL (38px) +
+            // NL (26px) fits 70px, so a final non-league row is two lines, not three. Tracking is
+            // normal and the line 14px here only, so a long label takes two tight lines.
+            <span className="flex flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
+              <StatusLabel display={display} showNonLeague={false} />
+              {nonLeagueTag}
+            </span>
+          )}
         </span>
-        <span className="min-w-0 space-y-1.5" aria-hidden="true">
+        <span className="min-w-0 space-y-1" aria-hidden="true">
           <TeamLine side={display.away} showScore={display.showScores} />
           <TeamLine side={display.home} showScore={display.showScores} />
         </span>
@@ -234,13 +266,25 @@ export function GameCard({
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
+  // An upcoming card has no chip on either side; an invisible 28px slot there pushed both team
+  // lines right of the time above them. Rows keep the slot (cross-row alignment), cards drop it.
+  const chipSlot = display.away.chip !== 'none' || display.home.chip !== 'none';
+  const sentenceId = `game-card-${game.contestId}`;
   return (
     <div
-      className={`sx-card sx-lift relative flex flex-col gap-3 p-4 md:p-5${
-        className ? ` ${className}` : ''
-      }`}
+      // The stretched "Game page" link covers the card, so its focus ring is drawn on the card:
+      // a keyboard user sees the same target a pointer gets. Inset, because a /schedule date
+      // group is `content-visibility: auto` (paint containment) and clips anything outside it.
+      className={[
+        'sx-card sx-lift relative flex flex-col gap-3 p-4 md:p-5 has-[>div>a[data-stretched]:focus-visible]:outline-2 has-[>div>a[data-stretched]:focus-visible]:-outline-offset-2 has-[>div>a[data-stretched]:focus-visible]:outline-[var(--sx-focus)]',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      <span className="sr-only">{display.sentence}</span>
+      <span id={sentenceId} className="sr-only">
+        {display.sentence}
+      </span>
       <div className="flex items-center justify-between gap-2" aria-hidden="true">
         <span className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}>
           {game.isTimeTba ? 'Time TBA' : timeOfDay(game.dateLocal)}
@@ -256,8 +300,8 @@ export function GameCard({
         )}
       </div>
       <div className="space-y-2" aria-hidden="true">
-        <TeamLine side={display.away} showScore={display.showScores} />
-        <TeamLine side={display.home} showScore={display.showScores} />
+        <TeamLine side={display.away} showScore={display.showScores} chipSlot={chipSlot} />
+        <TeamLine side={display.home} showScore={display.showScores} chipSlot={chipSlot} />
       </div>
       {showRecap && game.recap ? (
         <p className="sx-clamp-2 m-0 text-meta text-ink-2">{game.recap}</p>
@@ -267,13 +311,19 @@ export function GameCard({
         <Link
           href={`/game/${game.contestId}`}
           prefetch={false}
-          className="sx-action font-medium text-accent no-underline hover:underline after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)]"
+          data-stretched=""
+          aria-describedby={sentenceId}
+          className="sx-action font-medium text-accent no-underline hover:underline after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)] focus-visible:outline-none"
         >
           Game page
         </Link>
+        {/* The same face as its neighbour: sentence case, 500 weight, underline on hover only. */}
         {game.urls.maxpreps ? (
-          <ExternalLink href={game.urls.maxpreps} className="sx-action relative z-10 gap-1">
-            box
+          <ExternalLink
+            href={game.urls.maxpreps}
+            className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
+          >
+            Box score
           </ExternalLink>
         ) : null}
       </div>
@@ -374,7 +424,10 @@ export function GameLogRow({
         aria-hidden="true"
       >
         <span className="line-clamp-2 min-w-[6.5rem] flex-1 text-ink">
-          {display.versus ?? 'vs'} {opponentTeam ? opponentTeam.name : opponent.name}
+          {/* The short name, as every game row prints it: "St. Ignatius College Preparatory"
+              was clamped to "at St. Ignatius College…" in a 320px log. The sr-only sentence
+              keeps the full name. */}
+          {display.versus ?? 'vs'} {opponentTeam ? opponentTeam.shortName : opponent.name}
         </span>
         <StatusLabel display={display} showNonLeague={showNonLeague} className="max-w-full" />
       </span>

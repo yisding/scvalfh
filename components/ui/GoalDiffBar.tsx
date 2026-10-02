@@ -8,8 +8,9 @@ import { signedGd } from '../../lib/format';
  * on, so a hued bar would make the CVD failure load-bearing, and a blue/red diverging pair would
  * mean "blue = good" on a page where "green = win". One ink, `--sx-bar`, 7.69 light / 8.55 dark.
  *
- * Each arm sits on a faint `surface-2` track with a rounded outer cap, so a short bar still reads
- * as a share of a fixed length rather than as a stray tick. The track is decoration only: it is
+ * Each arm sits on a faint `surface-3` track with a rounded outer cap, so a short bar still reads
+ * as a share of a fixed length rather than as a stray tick. Not `surface-2`: that is the table's
+ * row hover and focus fill, so the track vanished exactly on the row the reader was pointing at. The track is decoration only: it is
  * not `.sx-bar`/`.sx-zero`, so forced colours (which rewrite backgrounds to Canvas) simply drop it
  * while the bar and the zero rule keep their own CanvasText fallback from app/globals.css.
  *
@@ -52,7 +53,7 @@ export function GoalDiffBar({
     >
       {/* Left arm: the track's rounded cap is on the OUTER (left) end; the bar grows from the rule. */}
       <span
-        className="flex justify-end bg-surface-2"
+        className="flex justify-end bg-surface-3"
         style={{ width: arm, height: thickness, borderRadius: `${cap}px 0 0 ${cap}px` }}
       >
         {value !== null && value < 0 ? (
@@ -69,7 +70,7 @@ export function GoalDiffBar({
       {/* The zero line is the hairline: solid, neutral, never dashed and never a hue. */}
       <span className="sx-zero shrink-0" style={{ width: 1, height: thickness + 8 }} />
       <span
-        className="flex items-center bg-surface-2"
+        className="flex items-center bg-surface-3"
         style={{ width: arm, height: thickness, borderRadius: `0 ${cap}px ${cap}px 0` }}
       >
         {value !== null && value > 0 ? (

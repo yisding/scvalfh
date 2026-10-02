@@ -55,7 +55,7 @@ function OpponentRow({ opponent }: { opponent: UnbeatenOpponent }) {
         href={`/teams/${opponent.slug}`}
         prefetch={false}
         aria-label={sentenceFor(opponent)}
-        className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline md:px-5"
+        className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline"
       >
         <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-3">
           {team ? <TeamMonogram team={team} size={24} /> : null}

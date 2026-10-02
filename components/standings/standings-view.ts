@@ -254,6 +254,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     legendNotes.push(
       `The 2px rule after ${ordinal(berthRuleAfter)} place is the automatic-qualifier cut — ${BYLAW_CITATIONS.qualifiers}.`,
     );
+  } else {
+    // No cut is drawn (no ranked team yet, e.g. before the first league result), but the
+    // qualifying rule still has to be stated somewhere on /standings.
+    legendNotes.push(`CCS qualifying: ${BYLAW_CITATIONS.qualifiers}.`);
   }
   legendNotes.push(
     'This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to SCVAL.',

@@ -23,6 +23,13 @@ export interface GameListProps {
   perspective?: TeamSlug | null;
   /** Default true on /schedule and /scores/[date]; the recap is never the only place a score is. */
   showRecap?: boolean;
+  /**
+   * `bleed` (default): the phone band pulls itself out to the screen edge (`.sx-bleed`) and draws
+   * its own line above and below. `grouped`: the HOST is already full-bleed (a /schedule date
+   * group, which must be, because `content-visibility: auto` clips paint to its own box) and its
+   * sticky date header draws the line above, so the list adds only the line below.
+   */
+  variant?: 'bleed' | 'grouped';
   className?: string;
   id?: string;
 }
@@ -31,6 +38,7 @@ export function GameList({
   games,
   perspective = null,
   showRecap = true,
+  variant = 'bleed',
   className,
   id,
 }: GameListProps) {
@@ -40,7 +48,10 @@ export function GameList({
       // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
       // interpolation stays out of the literal.
       className={[
-        'sx-list sx-bleed max-md:bg-surface max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)] md:grid md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] md:items-stretch md:gap-4',
+        'sx-list max-md:bg-surface md:grid md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] md:items-stretch md:gap-4',
+        variant === 'bleed'
+          ? 'sx-bleed max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]'
+          : 'max-md:shadow-[0_1px_0_var(--sx-border)]',
         className,
       ]
         .filter(Boolean)

@@ -41,7 +41,7 @@ export function TeamOfficialFixtures({ fixtures, slug, division }: TeamOfficialF
             return (
               <li
                 key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
-                className="flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta md:px-5"
+                className="flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta"
               >
                 <span className="sr-only">
                   {mineIsHome ? 'Home' : 'Away'} against{' '}

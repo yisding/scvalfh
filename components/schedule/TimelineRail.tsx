@@ -121,7 +121,8 @@ export function TimelineRail({ dates, today, className }: TimelineRailProps) {
           <li key={marker.date} className="flex h-11 shrink-0 items-center">
             <a
               href={`#${marker.date}`}
-              className={`relative inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] ${
+              // `forced-colors:border`: the ring is a box-shadow, which forced colours drop.
+              className={`relative inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] forced-colors:border forced-colors:border-[CanvasText] ${
                 marker.current
                   ? 'bg-accent-wash text-accent-ink'
                   : 'bg-surface text-ink-2 hover:text-ink'
@@ -136,7 +137,7 @@ export function TimelineRail({ dates, today, className }: TimelineRailProps) {
         <li className="flex h-11 shrink-0 items-center">
           <Link
             href="/playoffs"
-            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:text-ink"
+            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:text-ink forced-colors:border forced-colors:border-[CanvasText]"
           >
             <span aria-hidden="true">{ccsLabel()}</span>
             <span aria-hidden="true">&rarr;</span>

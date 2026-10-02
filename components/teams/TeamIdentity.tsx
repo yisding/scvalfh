@@ -12,6 +12,14 @@ import type { TeamPageView } from './team-view';
  * ("4th" over "of 8 in De Anza", with "(tied)" when it is level), so a third copy one line above
  * it was noise.
  *
+ * `data-team-slug` lets the pinned-team marker (PinnedTeamMarks and the head script) stamp
+ * `data-pinned` on this card when it is the pinned team, so the hero gets the same 3px accent rule
+ * as the pinned tile on /teams — the pin is in localStorage, so the server cannot draw it. The
+ * card holds no `.sx-pin-note`: the pressed Pin button already says "Pinned" in words.
+ *
+ * Phone padding is 16px and the row gap 12px (20 / 16 from 768px) to keep the Last result on the
+ * first phone screen.
+ *
  * The monogram is the ONLY place a school color appears anywhere on the site: sixteen
  * uncontrolled brand hues blow past every categorical ceiling, so they are decoration with a
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
@@ -27,7 +35,10 @@ export function TeamIdentity({
   const { team, divisionLabel } = view;
 
   return (
-    <header className="sx-card mt-6 flex flex-wrap items-center gap-4 p-5 md:gap-5 md:p-6">
+    <header
+      data-team-slug={team.slug}
+      className="sx-card mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 p-4 md:gap-5 md:p-6"
+    >
       {/* Two decorative monograms, one per breakpoint. Each sits in its own wrapper because the
           monogram's own `inline-flex` would otherwise compete with `hidden` in the cascade. */}
       <span className="flex shrink-0 md:hidden">
