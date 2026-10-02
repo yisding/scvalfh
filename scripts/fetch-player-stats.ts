@@ -9,12 +9,18 @@
  *   pnpm fetch-player-stats --out <path>        write somewhere else
  *   pnpm fetch-player-stats --dry-run           parse and report, write nothing
  *   pnpm fetch-player-stats --fetched-at <iso>  pin the stamp (reproducible fixture builds)
+ *   pnpm fetch-player-stats --force             run even outside the Aug 1 – Nov 30 season window
  *
- * Stats move after every game, so this is meant to run as often as the scores do; each call is
- * 10–35 KB. The budget is the MaxPreps client's own (concurrency <= 3, 500 ms between request
- * starts, 15 s timeout, retry 429/5xx only). Run `pnpm fetch-rosters` first when the rosters have
- * changed: a stats row whose player is not on the roster is still published, under the stats
- * sheet's own short name, with a warning.
+ * Stats move after every game, so .github/workflows/update-data.yml runs this right after
+ * `pnpm fetch-data`, twice a day in season; each call is 0.2–35 KB. The budget is the MaxPreps
+ * client's own (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
+ * Run `pnpm fetch-rosters` first when the rosters have changed: a stats row whose player is not on
+ * the roster is still published, under the stats sheet's own short name, with a warning.
+ *
+ * Two guards keep the scheduled run from churning the repository. Outside the season window
+ * (lib/season.ts, Pacific, the date of `--fetched-at`) it fetches and writes nothing. And when the
+ * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
+ * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *
  * A partial run still publishes: a team whose call fails or does not parse keeps the previous
  * file's rows with status 'carried-forward' (or 'error' when there is nothing to carry), and the
@@ -25,9 +31,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { localDateKey } from '../lib/format';
 import {
   PlayerStatsFileSchema,
   countPlayerStats,
+  playerStatsContentKey,
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from '../lib/player-stats-schema';
@@ -41,7 +49,7 @@ import {
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
-import { SEASON_YEAR } from '../lib/season';
+import { SEASON_YEAR, inSeasonWindow } from '../lib/season';
 import { TEAMS } from '../lib/teams';
 
 interface Args {
@@ -50,6 +58,7 @@ interface Args {
   out: string;
   dryRun: boolean;
   fetchedAt: string | null;
+  force: boolean;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -59,6 +68,7 @@ function parseArgs(argv: readonly string[]): Args {
     out: path.join(process.cwd(), 'data', 'player-stats.json'),
     dryRun: false,
     fetchedAt: null,
+    force: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -73,6 +83,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--out') out.out = path.resolve(next());
     else if (arg === '--dry-run') out.dryRun = true;
     else if (arg === '--fetched-at') out.fetchedAt = next();
+    else if (arg === '--force') out.force = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
   return out;
@@ -116,6 +127,14 @@ const NOTES = [
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
+  const today = localDateKey(fetchedAt);
+  if (!args.force && !inSeasonWindow(today)) {
+    console.log(
+      `out of season: ${today} is outside Aug 1 – Nov 30 Pacific. ` +
+        'Nothing fetched, nothing written. Re-run with --force to override.',
+    );
+    return 0;
+  }
   const previous = loadPrevious(args.out);
   const rosters = RostersSchema.parse(JSON.parse(readFileSync(args.rosters, 'utf8')) as unknown);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
@@ -245,6 +264,12 @@ async function main(): Promise<number> {
 
   if (args.dryRun) {
     console.log('\ndry run: nothing written');
+    return c.errors ? 1 : 0;
+  }
+  if (previous && playerStatsContentKey(previous) === playerStatsContentKey(validated.data)) {
+    console.log(
+      `\nno change since ${previous.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
+    );
     return c.errors ? 1 : 0;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });

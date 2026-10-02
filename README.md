@@ -63,9 +63,12 @@ cifccs.org / VNN .ics ──┘                                                 
 season** (cron `0 14 * 8-12 *` and `0 5 * 8-12 *` — 7:00 AM and 10:00 PM Pacific during PDT,
 restricted to Aug-Dec so it rarely fires out of season; the cron's months are UTC, and December
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
-season itself is bounded by `fetch-data.ts`'s own Aug 1 - Nov 30 Pacific window guard: a run
-outside it exits without writing anything. It runs the test suite against the snapshot it
-just wrote, and commits `data/snapshot.json` + `data/snapshot.meta.json` **only if they changed**.
+season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
+(`inSeasonWindow` in `lib/season.ts`): a run outside it exits without writing anything. Right after
+`fetch-data` it runs `pnpm fetch-player-stats` (see "Player stats" below), which is allowed to fail
+without stopping the run. It runs the test suite against what it just wrote, and commits
+`data/snapshot.json` + `data/snapshot.meta.json` and `data/player-stats.json` **only where they
+changed**, in one commit.
 The commit is what triggers your hosting provider's rebuild — that's the entire point of the job,
 so it deliberately does not carry `[skip ci]`.
 
@@ -83,7 +86,7 @@ If you're not using GitHub Actions, run the same two commands from any scheduler
 the internet on your host, twice a day during the season:
 
 ```cron
-0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && pnpm build
+0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && pnpm build
 ```
 
 Or by hand, any time:
@@ -145,8 +148,12 @@ in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
-Stats change after every game but, like the rosters, this is not in the twice-daily cron yet: run it
-by hand (adding it to `update-data.yml` also means widening the deploy gate's two-file allowlist).
+Stats change after every game, so `update-data.yml` runs this twice a day in season, right after
+`fetch-data`, and commits the file with the snapshot when it changed. A failed stats fetch never
+stops the score refresh: the step may fail, and a team whose call failed keeps its previous rows
+(`carried-forward`). When nothing but the run's stamp would change, the script leaves the file
+exactly as it was, so there is nothing to commit. Like `fetch-data`, it writes nothing outside the
+Aug 1 - Nov 30 Pacific window unless given `--force`.
 
 ```bash
 pnpm fetch-player-stats                                      # live: 15 rollups → data/player-stats.json
@@ -487,9 +494,12 @@ A real deploy needs:
 and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, because `update-data`
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
-`main`: it walks down from the tip past `update-data`'s snapshot commits (by the bot, data files
-only, tested by that job before it pushed) to the commit whose code ships, and deploys only if
-that commit has a successful `ci` run on `main` and nothing but the data changed above it.
+`main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a
+`data: refresh snapshot` or `data: refresh player stats` message, nothing but the snapshot, its
+meta file and `data/player-stats.json`, tested by that job before it pushed) to the commit whose
+code ships, and deploys only if that commit has a successful `ci` run on `main` and nothing but the
+data changed above it. `tests/workflows.test.ts` holds the two workflows to the same messages and
+files.
 Otherwise it skips, and that commit's own `ci` run deploys once it passes; a red one never
 ships, even when a data refresh is rebased on top of it. Each successful deploy is recorded as a
 GitHub Deployment (environment `cloudflare`) for the commit it shipped, and a run skips a tip that

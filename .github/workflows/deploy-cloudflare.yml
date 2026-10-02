@@ -10,16 +10,17 @@
 # the two workflows that put commits on main, ci (a green run on main, never a pull_request run)
 # and update-data (a green run), and every run deploys main's tip as it is when the run starts.
 #
-# What may ship. The code that ships must have passed ci on main; update-data's snapshot commits
-# only replace data/snapshot.json and its meta file, after running the suite on them, and ci never
-# runs on them. So the gate walks down from main's tip past the snapshot commits (by the bot, one
-# parent, "data: refresh snapshot ...") to the newest other commit, the one whose code ships,
-# requires a successful ci run on main for exactly that commit, and requires that nothing but the
-# two data files changed above it. Otherwise it skips: the ci run of that commit deploys main once
-# it passes, and a red one never ships, whichever workflow happened to finish first. Thus:
+# What may ship. The code that ships must have passed ci on main; update-data's data commits only
+# replace data/snapshot.json, its meta file and data/player-stats.json, after running the suite on
+# them, and ci never runs on them. So the gate walks down from main's tip past the data commits (by
+# the bot, one parent, "data: refresh snapshot ..." or "data: refresh player stats ...") to the
+# newest other commit, the one whose code ships, requires a successful ci run on main for exactly
+# that commit, and requires that nothing but those three data files changed above it. Otherwise it
+# skips: the ci run of that commit deploys main once it passes, and a red one never ships,
+# whichever workflow happened to finish first. Thus:
 #   - after ci: main's tip, whose code is the commit ci just passed (or, if a human commit landed
 #     since, main's tip only once that commit's own ci has passed);
-#   - after update-data: main's tip (its new snapshot, or commits whose ci has passed). A snapshot
+#   - after update-data: main's tip (its new data, or commits whose ci has passed). A data commit
 #     rebased onto a human commit whose ci is still running waits for that ci.
 # Every successful deploy is recorded as a GitHub Deployment (environment "cloudflare") for the
 # commit it shipped, and a workflow_run deploy skips a tip that already has one. That record, not
@@ -141,27 +142,29 @@ jobs:
           if [ "$EVENT" = workflow_run ] && [ "$deployed" != 0 ]; then
             skip "skipped: main's tip $tip is already deployed (a GitHub Deployment records it), so the live Worker is current."
           fi
-          # base: the newest commit at or below main's tip that is not an update-data snapshot
-          # commit (update-data.yml "Commit the snapshot": by the bot, one parent, that message).
-          # Its code is the code that ships; the snapshot commits above it only replace the data,
-          # which update-data ran the suite on before it pushed (ci never runs on them: they are
-          # pushed with GITHUB_TOKEN).
+          # base: the newest commit at or below main's tip that is not an update-data data commit
+          # (update-data.yml "Commit the data that changed": by the bot, one parent, one of those
+          # two messages). Its code is the code that ships; the data commits above it only replace
+          # the data, which update-data ran the suite on before it pushed (ci never runs on them:
+          # they are pushed with GITHUB_TOKEN). tests/workflows.test.ts holds the messages and the
+          # file list below to what update-data.yml commits.
           base=''
           for page in 1 2 3 4 5; do
             base=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$tip&per_page=100&page=$page" --jq '
               first(.[] | select(((.author.login // "") == "github-actions[bot]"
-                and (.commit.message | startswith("data: refresh snapshot"))
+                and ((.commit.message | startswith("data: refresh snapshot"))
+                  or (.commit.message | startswith("data: refresh player stats")))
                 and (.parents | length) == 1) | not) | .sha) // ""')
             [ -z "$base" ] || break
           done
-          [ -n "$base" ] || refuse "main ($tip) sits on more than 500 snapshot commits; deploy by hand after checking it."
-          # Between base and the tip only the two data files may change, so the tree that ships is
-          # base's tree with a newer snapshot.
+          [ -n "$base" ] || refuse "main ($tip) sits on more than 500 data commits; deploy by hand after checking it."
+          # Between base and the tip only the three data files may change, so the tree that ships is
+          # base's tree with newer data.
           others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
             if .status == "identical" or .status == "ahead"
-            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json"] | join(" ")
+            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json", "data/player-stats.json"] | join(" ")
             else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
-          [ -z "$others" ] || refuse "main ($tip) changes more than the snapshot above $base: $others"
+          [ -z "$others" ] || refuse "main ($tip) changes more than the data above $base: $others"
           # And base must have passed ci on main: a successful ci run for that exact commit, other
           # than a pull_request run (a fork's branch can be called main too). For a ci run that
           # is the run that triggered this one, unless main has gained a commit since; then that

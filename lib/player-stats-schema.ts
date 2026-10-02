@@ -184,3 +184,26 @@ export function countPlayerStats(teams: readonly TeamPlayerStats[]): PlayerStats
     errors: teams.filter((t) => t.status === 'carried-forward' || t.status === 'error').length,
   };
 }
+
+/**
+ * The file's content with every `fetchedAt` dropped and keys sorted. Two files with the same key
+ * differ only in when they were read, so scripts/fetch-player-stats.ts leaves the old one in place
+ * and the scheduled refresh (.github/workflows/update-data.yml) has nothing to commit — the same
+ * job data/snapshot.meta.json's `contentHash` does for the snapshot.
+ */
+export function playerStatsContentKey(file: PlayerStatsFile): string {
+  const normalize = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(normalize);
+    if (node && typeof node === 'object') {
+      const out: Record<string, unknown> = {};
+      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
+        if (key === 'fetchedAt') continue;
+        const v = (node as Record<string, unknown>)[key];
+        if (v !== undefined) out[key] = normalize(v);
+      }
+      return out;
+    }
+    return node;
+  };
+  return JSON.stringify(normalize(file));
+}
