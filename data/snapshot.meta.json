@@ -1,7 +1,7 @@
 {
-  "contentHash": "16b7005f1a97e5a795dd5ff20a3dda4d5f9949e4049e34174c2e1b091855b829",
+  "contentHash": "10466390c9dea8bae746051e186ee80c00aa4bcd89da8ee905c8dd547ad178d2",
   "counts": {
-    "finals": 87,
+    "finals": 91,
     "games": 158,
     "leagueGames": 96,
     "mismatches": 0,
@@ -9,12 +9,12 @@
     "teams": 16
   },
   "crossCheck": {
-    "agreements": 23,
-    "compared": 31,
+    "agreements": 24,
+    "compared": 29,
     "conflicts": 1,
     "sbliveOnlyScored": 0
   },
-  "fetchedAt": "2026-10-01T19:16:35.059Z",
+  "fetchedAt": "2026-10-02T10:48:51.206Z",
   "officialFixturesUnmatched": 16,
   "officialStandingsPdfUrl": null,
   "sources": [
@@ -139,11 +139,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-09-17",
-      "rowCount": 13,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-09-18",
       "rowCount": 17,
       "status": "ok"
@@ -160,7 +155,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-22",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -180,7 +175,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-28",
-      "rowCount": 15,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -195,17 +190,22 @@
     },
     {
       "label": "sblive scoreboard 2026-10-01",
-      "rowCount": 18,
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-10-02",
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "palo-alto school calendar",
-      "rowCount": 17,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 13,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -219,7 +219,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-01",
+  "today": "2026-10-02",
   "warnings": 14,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
