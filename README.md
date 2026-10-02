@@ -277,10 +277,10 @@ computed one; see `/about#cross-check`.
   synthetic test data).
 - **Roster detail depends on the coach.** As of 2026-10-02 five programs publish grade, position
   and number on MaxPreps, three publish grade and number only, seven publish names only (Los
-  Gatos' 58 names are the whole program, varsity and JV), and Wilcox publishes no roster at all.
+  Gatos' 58 names are the whole program, varsity and JV).
   The MaxPreps file stores exactly that — a blank is `null`, never a guess. The schools' own
   sites fill most of the grades (303 of 341 players once the enrichment overlay is applied) and
-  a few heights, but **no current-season public source lists positions for 8 of the 16
+  a few heights, but **no current-season public source lists positions for 7 of the 15
   programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current

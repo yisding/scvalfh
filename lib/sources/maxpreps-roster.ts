@@ -208,7 +208,7 @@ const urlPath = (u: string): string => u.replace(/^https?:\/\/[^/]+/i, '');
  * The page's server-rendered roster table. Selectors are structural only (`th`, `td`, and the
  * `name` anchor class) — never the styled-components hashes (SPEC §1.1i).
  *
- * Returns null when the page has no table at all, which is what an empty roster renders (Wilcox).
+ * Returns null when the page has no table at all, which is what an empty roster renders.
  */
 export function parseRosterTable(html: string): RosterTableRow[] | null {
   const table = /<table[\s>][\s\S]*?<\/table>/.exec(html);

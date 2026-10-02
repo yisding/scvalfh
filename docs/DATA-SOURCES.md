@@ -144,11 +144,12 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
 - Coverage is whatever the coach entered. 2026-10-02: 5 programs publish grade + position + number
   (St. Ignatius, Saint Francis, Fremont, Mitty, Palo Alto), 3 publish grade + number only (Valley
   Christian, Presentation, Monta Vista), 7 publish names only (Cupertino, Homestead, Los Altos, Los
-  Gatos — 58 names, likely the whole program — Lynbrook, Santa Clara, Saratoga), Wilcox publishes
-  nothing (`athleteCount 0`, no table). Only Saint Francis (25) and one Palo Alto row carry a height.
+  Gatos — 58 names, likely the whole program — Lynbrook, Santa Clara, Saratoga), Wilcox published
+  nothing (`athleteCount 0`, no table) and has since been dropped from the registry as not fielding
+  a team. Only Saint Francis (25) and one Palo Alto row carry a height.
   `staffCount` is non-zero on most pages but the coaches are **not** in `pageProps` (they load
   client-side on `/team/staff`; untested).
-- Budget: one 180–340 KB page per team, 16 requests, under the primary client's courtesy ceiling.
+- Budget: one 180–340 KB page per team, 15 requests, under the primary client's courtesy ceiling.
   Not in the twice-daily cron — rosters change a few times a season; run `pnpm fetch-rosters` by
   hand or weekly.
 
@@ -182,7 +183,7 @@ found these, all **[V]** against the page on that date:
 | Homestead | `homesteadmustangs.com/sport/girls-field-hockey/roster?team=…&year=2026-2027` (PlayOn) | "No roster" for both levels; MaxPreps' JV page carries one varsity player's grade |
 | Palo Alto | `palyathletics.com/sport/field%20hockey/girls/?tab=roster` (VNN) | names only; `palyvoice.com` preview names the captain |
 | Fremont, Mitty | not sought | MaxPreps already complete bar height |
-| Wilcox | `wilcox.santaclarausd.org/athletics` | field hockey absent from the fall sports list; no roster anywhere |
+| Wilcox | `wilcox.santaclarausd.org/athletics` | field hockey absent from the fall sports list; no roster anywhere (not fielding a team; since dropped from the registry and both roster files) |
 
 Rules of the overlay, enforced by `lib/rosters-schema.ts` and re-checked against the base file in
 `lib/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is

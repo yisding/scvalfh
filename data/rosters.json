@@ -3,7 +3,7 @@
     "captains": 13,
     "errors": 0,
     "players": 341,
-    "teams": 16,
+    "teams": 15,
     "withGrade": 170,
     "withHeight": 26,
     "withJersey": 167,
@@ -3266,22 +3266,6 @@
       "staffCount": 1,
       "status": "ok",
       "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
-      "warnings": []
-    },
-    {
-      "athleteCount": 0,
-      "deletedRows": 0,
-      "division": "de-anza",
-      "error": null,
-      "fetchedAt": "2026-10-02T05:30:00.000Z",
-      "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
-      "name": "Wilcox",
-      "players": [],
-      "rosterUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/field-hockey/roster/",
-      "slug": "wilcox",
-      "staffCount": 1,
-      "status": "empty",
-      "teamId": "wilcox",
       "warnings": []
     },
     {

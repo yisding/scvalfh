@@ -63,7 +63,7 @@ describe('data/rosters.json', () => {
   it('every team was read this run — nothing carried forward, nothing failed', () => {
     expect(raw.teams.every((t) => t.status === 'ok' || t.status === 'empty')).toBe(true);
     expect(raw.counts.errors).toBe(0);
-    expect(raw.teams.find((t) => t.slug === 'wilcox')!.status).toBe('empty');
+    expect(raw.teams).toHaveLength(15);
   });
 
   it('never stores an invented value: a blank upstream is null', () => {
@@ -94,7 +94,6 @@ describe('lib/rosters.ts', () => {
   it('serves the bundled file', () => {
     expect(getRosters().counts).toEqual(raw.counts);
     expect(getTeamRoster('st-ignatius')!.players.length).toBe(23);
-    expect(getTeamRoster('wilcox')!.players).toEqual([]);
   });
 
   it('sorts a numbered roster by jersey, blanks last, and a names-only roster by last name', () => {

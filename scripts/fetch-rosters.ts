@@ -2,7 +2,7 @@
 /**
  * Fetch every SCVAL team's MaxPreps roster page into data/rosters.json (SPEC §1.1j).
  *
- *   pnpm fetch-rosters                     live: 16 roster pages, one per registry team
+ *   pnpm fetch-rosters                     live: 15 roster pages, one per registry team
  *   pnpm fetch-rosters --fixtures <dir>    offline: read roster-<slug>.html captures
  *   pnpm fetch-rosters --out <path>        write somewhere else
  *   pnpm fetch-rosters --dry-run           parse and report, write nothing
@@ -128,8 +128,8 @@ async function main(): Promise<number> {
           if (!url) throw new Error('no MaxPreps team URL in the registry');
           html = (await client.text(url)).data;
         }
-        // Wilcox's registry id is a placeholder (no standings row to read a GUID from), so the
-        // page's own id cannot be asserted against it; every other team's must match.
+        // A team with no data coverage has a placeholder registry id (no standings row to read a
+        // GUID from), so the page's own id cannot be asserted against it; every other must match.
         const page = parseRosterPage(html, {
           expectedTeamId: team.dataCoverage === 'none' ? undefined : team.id,
           url: url ?? team.slug,

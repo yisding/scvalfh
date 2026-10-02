@@ -37,7 +37,7 @@ describe('data/rosters-enrichment.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('covers the 16 registry teams and the same season as the MaxPreps file', () => {
+  it('covers the 15 registry teams and the same season as the MaxPreps file', () => {
     expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
     expect(raw.season).toBe(base.season);
     expect(raw.capturedAt).toBe(base.fetchedAt.slice(0, 10));
@@ -115,7 +115,6 @@ describe('data/rosters-enrichment.json', () => {
     for (const t of raw.teams) {
       for (const c of t.coaches) expect(c.source).not.toMatch(/si\.com/);
     }
-    expect(raw.teams.find((t) => t.slug === 'wilcox')!.coaches).toEqual([]);
   });
 
   it('refuses a record that would overwrite MaxPreps (asserted at load, not just by the schema)', () => {
@@ -187,7 +186,6 @@ describe('lib/rosters.ts merged view', () => {
     expect(lg.players.filter((p) => p.level === 'jv').length).toBe(29);
     expect(lg.players.filter((p) => p.level === null).length).toBe(2);
     expect(lg.coaches.map((c) => c.role)).toContain('Head Coach');
-    expect(getEnrichedTeamRoster('wilcox')!.players).toEqual([]);
   });
 
   it('coverage after the overlay', () => {
@@ -196,6 +194,6 @@ describe('lib/rosters.ts merged view', () => {
     expect(all.filter((p) => p.grade !== null).length).toBe(getRosters().counts.withGrade + 133);
     expect(all.filter((p) => p.position !== null).length).toBe(getRosters().counts.withPosition + 9);
     expect(all.filter((p) => p.height !== null).length).toBe(getRosters().counts.withHeight + 23);
-    expect(getRosterEnrichment().teams.length).toBe(16);
+    expect(getRosterEnrichment().teams.length).toBe(15);
   });
 });

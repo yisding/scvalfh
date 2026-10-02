@@ -100,7 +100,7 @@ jobs:
             const dates = count(".next/server/app/scores");
             const teams = count(".next/server/app/teams");
             console.log(`prerendered: ${games} game pages, ${dates} date pages, ${teams} team pages`);
-            if (games < 100 || dates < 30 || teams < 16) throw new Error("a generateStaticParams route came back short");
+            if (games < 100 || dates < 30 || teams < 15) throw new Error("a generateStaticParams route came back short");
           '
 
       - name: Upload the build
