@@ -1,0 +1,253 @@
+/**
+ * lib/sources/maxpreps-player-stats.ts — the team-season-player-stats rollup, over the 15
+ * captures in tests/fixtures/maxpreps/stats-<slug>.json (2026-10-02).
+ *
+ * The adapter's promises: a team with no stats is null (not an error), a stat the team does not
+ * track is null while a tracked 0 stays 0, every row joins to the roster on the career id, and
+ * anything it cannot read with certainty throws.
+ */
+
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+import { describe, expect, it, vi } from 'vitest';
+
+import { getRosters } from '../lib/rosters';
+import { MaxPrepsClient, NEXT_DATA_RE } from '../lib/sources/maxpreps';
+import {
+  fetchPlayerStats,
+  joinToRoster,
+  parsePlayerStats,
+  playerStatsUrl,
+  teamStatsPageUrl,
+} from '../lib/sources/maxpreps-player-stats';
+import { HISTORY_LEAGUE } from '../lib/leagues';
+import { SPORT_SEASON_ID } from '../lib/season';
+import { teamsInLeague } from '../lib/teams';
+import { FIXTURE_DIR } from './helpers';
+
+/** Player stats are SCVAL-only (SPEC §0.2 item 12): the 15 captures are the HISTORY_LEAGUE teams'. */
+const TEAMS = teamsInLeague(HISTORY_LEAGUE);
+
+const raw = (slug: string): unknown =>
+  JSON.parse(readFileSync(path.join(FIXTURE_DIR, `stats-${slug}.json`), 'utf8')) as unknown;
+const rosterOf = (slug: string) => getRosters().teams.find((t) => t.slug === slug)!;
+const parse = (slug: string) =>
+  parsePlayerStats(raw(slug), { expectedTeamId: rosterOf(slug).maxprepsTeamId! });
+
+/** A deep copy of a fixture's `data`, for building drift cases. */
+function mutable(slug: string) {
+  return structuredClone(raw(slug)) as {
+    data: {
+      teamId: string;
+      sportSeasonId: string;
+      groups: Array<{
+        name: string;
+        subgroups: Array<{
+          name: string;
+          stats: {
+            columns: Array<{ name: string; overallValue: string | null }>;
+            rows: Array<{ columns: Array<{ value: string | null; href?: string | null }> }>;
+          };
+        }>;
+      }>;
+    };
+  };
+}
+
+describe('parsePlayerStats over the captures', () => {
+  const NONE = ['cupertino', 'los-altos', 'los-gatos', 'lynbrook', 'saratoga'];
+
+  it('reads ten teams and returns null for the five MaxPreps has no stats for', () => {
+    for (const team of TEAMS) {
+      const page = parse(team.slug);
+      if (NONE.includes(team.slug)) expect(page, team.slug).toBeNull();
+      else expect(page?.players.length, team.slug).toBeGreaterThan(0);
+    }
+  });
+
+  it('agrees with the roster pages: the no-stats teams are exactly those with no hasStats athlete', () => {
+    for (const team of TEAMS) {
+      const html = readFileSync(path.join(FIXTURE_DIR, `roster-${team.slug}.html`), 'utf8');
+      const rows = (
+        JSON.parse(NEXT_DATA_RE.exec(html)![1]) as { props: { pageProps: { athleteData: unknown[][] } } }
+      ).props.pageProps.athleteData;
+      // athleteData index 15 is hasStats, 17 isDeleted (lib/sources/maxpreps-roster.ts ROSTER_KEYS).
+      const flagged = rows.some((r) => r[15] === true && r[17] !== true);
+      expect(parse(team.slug) !== null, team.slug).toBe(flagged);
+    }
+  });
+
+  it('keeps a stat only where the team tracks it: untracked is null, a tracked 0 is 0', () => {
+    for (const team of TEAMS) {
+      const page = parse(team.slug);
+      if (!page) continue;
+      for (const p of page.players) {
+        for (const [k, v] of Object.entries(p.field ?? {})) {
+          if (!page.tracked.field.includes(k as never)) expect(v, `${team.slug} ${p.shortName} ${k}`).toBeNull();
+        }
+        for (const [k, v] of Object.entries(p.goalkeeping ?? {})) {
+          if (!page.tracked.goalkeeping.includes(k as never)) expect(v, `${team.slug} ${p.shortName} ${k}`).toBeNull();
+        }
+      }
+    }
+    // Homestead's coach enters goals but no assists: the column is not tracked, so null, not 0.
+    const homestead = parse('homestead')!;
+    expect(homestead.tracked.field).not.toContain('assists');
+    expect(homestead.players.every((p) => p.field?.assists === null)).toBe(true);
+    // Valley Christian tracks goals; a defender with none has a real 0.
+    const traas = parse('valley-christian')!.players.find((p) => p.shortName === 'E. Traas')!;
+    expect(traas.field).toMatchObject({ goals: 0, assists: 3, points: 3, gamesPlayed: 6 });
+  });
+
+  it('merges the overflow subgroup and the goalkeeping table into one line per player', () => {
+    const sf = parse('saint-francis')!;
+    const keys = sf.players.map((p) => p.careerId);
+    expect(new Set(keys).size).toBe(keys.length);
+    const goalies = sf.players.filter((p) => p.goalkeeping !== null);
+    expect(goalies.map((g) => g.shortName).sort()).toEqual(['N. Kalina', 'N. Lagenfeld']);
+    expect(goalies.find((g) => g.shortName === 'N. Kalina')!.goalkeeping!.saves).toBe(9);
+  });
+
+  it('points are 2 per goal + 1 per assist on every team, so no warning fires', () => {
+    for (const team of TEAMS) {
+      const page = parse(team.slug);
+      if (!page) continue;
+      expect(page.warnings, team.slug).toEqual([]);
+      for (const p of page.players) {
+        const f = p.field;
+        if (f?.points != null && f.goals != null) {
+          expect(f.points, `${team.slug} ${p.shortName}`).toBe(2 * f.goals + (f.assists ?? 0));
+        }
+      }
+    }
+  });
+
+  it('joins every row to the roster on the career id', () => {
+    for (const team of TEAMS) {
+      const page = parse(team.slug);
+      if (!page) continue;
+      const { lines, warnings } = joinToRoster(page, rosterOf(team.slug).players);
+      expect(warnings, team.slug).toEqual([]);
+      for (const l of lines) {
+        expect(l.onRoster, `${team.slug} ${l.shortName}`).toBe(true);
+        const last = l.shortName.split(' ').slice(1).join(' ');
+        expect(l.fullName, `${team.slug} ${l.shortName}`).toContain(last);
+      }
+    }
+  });
+});
+
+describe('joinToRoster', () => {
+  it('publishes a player the roster lacks under the stats sheet name, with a warning', () => {
+    const page = parse('fremont')!;
+    const roster = rosterOf('fremont').players.slice(1);
+    const { lines, warnings } = joinToRoster(page, roster);
+    const missing = lines.filter((l) => !l.onRoster);
+    expect(missing.length).toBe(warnings.length);
+    for (const l of missing) {
+      expect(l.fullName).toBe(l.shortName);
+      expect(l.athleteId).toBeNull();
+    }
+  });
+});
+
+describe('parsePlayerStats: loud on drift', () => {
+  const teamId = rosterOf('palo-alto').maxprepsTeamId!;
+  const run = (body: unknown) => () => parsePlayerStats(body, { expectedTeamId: teamId });
+
+  it('throws on a different season or team', () => {
+    const season = mutable('palo-alto');
+    season.data.sportSeasonId = 'another-season';
+    expect(run(season)).toThrow(/sportSeasonId/);
+    expect(() => parsePlayerStats(raw('palo-alto'), { expectedTeamId: 'someone-else' })).toThrow(/teamId/);
+  });
+
+  it('throws when the Name column is gone or a row is the wrong width', () => {
+    const noName = mutable('palo-alto');
+    noName.data.groups[0].subgroups[0].stats.columns[1].name = 'Player';
+    expect(run(noName)).toThrow(/no Name column/);
+    const short = mutable('palo-alto');
+    short.data.groups[0].subgroups[0].stats.rows[0].columns.pop();
+    expect(run(short)).toThrow(/cells for/);
+  });
+
+  it('throws on a count that is not a whole number, and on two tables disagreeing', () => {
+    const cols = mutable('palo-alto').data.groups[0].subgroups[0].stats.columns.map((c) => c.name);
+    const goalsAt = cols.indexOf('Goals');
+    const bad = mutable('palo-alto');
+    bad.data.groups[0].subgroups[0].stats.rows[0].columns[goalsAt].value = 'n/a';
+    expect(run(bad)).toThrow(/not a count/);
+    const half = mutable('palo-alto');
+    half.data.groups[0].subgroups[0].stats.rows[0].columns[goalsAt].value = '1.5';
+    expect(run(half)).toThrow(/whole count/);
+    // Goals also appears in the overflow subgroup: change it there only.
+    const split = mutable('palo-alto');
+    const sub2 = split.data.groups[0].subgroups[1];
+    const g2 = sub2.stats.columns.findIndex((c) => c.name === 'Goals');
+    const row = sub2.stats.rows.find((r) => Number(r.columns[g2].value) > 0)!;
+    row.columns[g2].value = String(Number(row.columns[g2].value) + 1);
+    expect(run(split)).toThrow(/in another table/);
+  });
+
+  it('treats only the 400 "no data" envelope as no stats', () => {
+    expect(parsePlayerStats(raw('cupertino'))).toBeNull();
+    expect(() => parsePlayerStats({ status: 500, data: null })).toThrow(/no data and status 500/);
+    expect(() => parsePlayerStats({ status: 200, data: { teamId: 1 } })).toThrow(/schema drift/);
+    // A 400 for any other reason (a stale season id, a bad team id) is a failure, not "no stats".
+    expect(() =>
+      parsePlayerStats({ status: 400, message: 'Invalid sportSeasonId.', data: null, errors: ['Invalid sportSeasonId.'] }),
+    ).toThrow(/no data and status 400: Invalid sportSeasonId/);
+    expect(() => parsePlayerStats({ status: 400, data: null })).toThrow(/no data and status 400/);
+    // The message may come only in errors[].
+    expect(parsePlayerStats({ status: 400, data: null, errors: ['No data was found for this request.'] })).toBeNull();
+  });
+});
+
+describe('fetchPlayerStats', () => {
+  const noSleep = async () => {};
+  const teamId = rosterOf('saint-francis').maxprepsTeamId!;
+
+  it('hits the rollup URL and parses it', async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify(raw('saint-francis')), { status: 200 }));
+    const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+    const page = await fetchPlayerStats(client, teamId);
+    expect(fetchImpl).toHaveBeenCalledWith(playerStatsUrl(teamId), expect.anything());
+    expect(playerStatsUrl(teamId)).toBe(
+      `https://production.api.maxpreps.com/gatewayweb/react/team-season-player-stats/rollup/v1?teamId=${teamId}&sportSeasonId=${SPORT_SEASON_ID}`,
+    );
+    expect(page?.players.length).toBeGreaterThan(0);
+  });
+
+  it('returns null on the 400 MaxPreps sends for a team with no stats, without retrying', async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify(raw('cupertino')), { status: 400 }));
+    const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+    expect(await fetchPlayerStats(client, teamId)).toBeNull();
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails on any other 400, so the fetch script carries the previous rows forward', async () => {
+    const other = JSON.stringify({ status: 400, message: 'Invalid teamId.', data: null, errors: ['Invalid teamId.'] });
+    for (const body of [other, '', '<html>Bad Request</html>']) {
+      const fetchImpl = vi.fn(async () => new Response(body, { status: 400 }));
+      const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+      await expect(fetchPlayerStats(client, teamId), JSON.stringify(body)).rejects.toThrow(/400/);
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('still fails on a server error', async () => {
+    const fetchImpl = vi.fn(async () => new Response('oops', { status: 503 }));
+    const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+    await expect(fetchPlayerStats(client, teamId)).rejects.toThrow(/HTTP 503/);
+  });
+});
+
+describe('teamStatsPageUrl', () => {
+  it('appends stats/ to the team URL', () => {
+    expect(teamStatsPageUrl('https://www.maxpreps.com/ca/x/y/field-hockey/')).toBe(
+      'https://www.maxpreps.com/ca/x/y/field-hockey/stats/',
+    );
+    expect(teamStatsPageUrl(null)).toBeNull();
+  });
+});

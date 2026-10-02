@@ -1,5 +1,6 @@
-# Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then commit
-# data/snapshot.json only if its CONTENT actually changed.
+# Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
+# stats (SCVAL only), and commit data/snapshot.json and data/player-stats.json only where the
+# CONTENT actually changed.
 #
 # Schedule (SPEC §5.2 — one to two runs a day, never more):
 #   0 5  UTC = 10:00 PM Pacific during PDT — catches the evening's results once coaches enter them
@@ -11,9 +12,17 @@
 # Pacific July, which the season-window guard (lib/pipeline/steps/window.ts: the sections' season
 # windows, Aug 1 – Nov 30 Pacific) rejects every time — 62 runs a season that each did a checkout,
 # an apt install, `pnpm install --frozen-lockfile` and the whole test suite before correctly
-# writing nothing. Hence 8-12, with the script's own
+# writing nothing. Hence 8-12, with the scripts' own
 # Aug 1 – Nov 30 Pacific guard still the single source of truth for the window: an out-of-season
-# cron fires, the script exits 0 and writes nothing.
+# cron fires, both scripts exit 0 and write nothing (fetch-player-stats imports the same
+# `inSeasonWindow` from lib/pipeline/steps/window.ts).
+#
+# Player stats ride the same run because they move after every game, as the scores do, and the
+# same commit, so a refresh is still one deploy. They are SCVAL-only (the 15 teams in
+# lib/rosters.ts; SPEC §0.2 item 12). Their fetch is allowed to fail: a MaxPreps hiccup on the
+# stats endpoint must never cost the day's scores. deploy-cloudflare.yml ships these commits
+# without a ci run of its own only because it recognises them; the commit step below says how, and
+# tests/workflows.test.ts holds the two files to it.
 #
 # The push deliberately does NOT carry [skip ci]: the commit is what triggers the hosting
 # provider's rebuild, which is the entire point of the job.
@@ -119,8 +128,21 @@ jobs:
           fi
           pnpm fetch-data "${args[@]}"
 
-      # The suite validates the snapshot that was just written: the schema invariants, the
-      # never-0-0 rule and the standings arithmetic. A bad snapshot must not be committed.
+      # Never fatal. The script exits 1 when a team's call failed, having still written the file
+      # with that team's previous rows carried forward (status 'carried-forward'), which is worth
+      # committing; a crash before it writes leaves the committed file as it was. Either way the
+      # snapshot above still ships. It writes nothing when only its fetchedAt stamps would change.
+      # Its own timeout keeps a hung stats endpoint from eating the job's budget (15 SCVAL teams,
+      # one request each at the MaxPreps politeness gate's pace, take well under a minute).
+      - name: Fetch player stats
+        id: stats
+        continue-on-error: true
+        timeout-minutes: 10
+        run: pnpm fetch-player-stats ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '--force' || '' }}
+
+      # The suite validates what was just written: the snapshot's schema invariants, the never-0-0
+      # rule and the standings arithmetic, and the player-stats contract and its join to the
+      # rosters. A bad file must not be committed.
       - name: Test
         run: pnpm test
 
@@ -185,21 +207,21 @@ jobs:
             fi
           done
 
-      - name: Commit the snapshot if its content changed
+      - name: Commit the data that changed
         id: commit
         run: |
           set -euo pipefail
-          # `git diff --quiet` on snapshot.json can never be quiet: the run's timestamp is written
-          # into the top-level `fetchedAt` AND into every game's provenance, so two runs over
-          # identical upstream data differ by ~370 lines of pure stamp. Committing that would push
-          # a no-op diff and trigger a hosting rebuild twice a day for nothing, and `git log` would
-          # stop telling anyone which refresh actually moved a score.
+          # The snapshot. `git diff --quiet` on snapshot.json can never be quiet: the run's
+          # timestamp is written into the top-level `fetchedAt` AND into every game's provenance, so
+          # two runs over identical upstream data differ by ~370 lines of pure stamp. Committing that
+          # would push a no-op diff and trigger a hosting rebuild twice a day for nothing, and
+          # `git log` would stop telling anyone which refresh actually moved a score.
           #
           # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every
           # `fetchedAt` stripped (lib/snapshot-schema.ts). That is what "changed" means here.
           PREV="${RUNNER_TEMP:-/tmp}/previous-snapshot-meta.json"
           git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || true
-          CHANGED=$(node -e '
+          SNAPSHOT=$(node -e '
             const fs = require("node:fs");
             const hashOf = (p) => {
               try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
@@ -210,30 +232,56 @@ jobs:
             // No hash on either side ⇒ treat it as changed rather than silently skipping.
             process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
           ' "$PREV")
-          if [ "$CHANGED" != "true" ]; then
+          if [ "$SNAPSHOT" != "true" ]; then
             echo "no snapshot change — only the run timestamp moved"
             # Drop the timestamp-only churn so the working tree matches HEAD exactly.
             git checkout -- data/snapshot.json data/snapshot.meta.json
+          fi
+          # The player stats. fetch-player-stats leaves the file untouched when only its stamps
+          # would change (playerStatsContentKey in lib/player-stats-schema.ts), so a plain diff is
+          # the content check.
+          if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi
+          echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
+          echo "stats=$STATS" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ]; then
+            echo "nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          SUMMARY=$(node -e '
-            const meta = require("./data/snapshot.meta.json");
-            // meta.today is the PACIFIC date; meta.fetchedAt is UTC and would read as tomorrow
-            // for the 10 PM Pacific run. commitSummary is per league, e.g.
-            // "SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4".
-            const day = meta.today ?? meta.fetchedAt.slice(0, 10);
-            const c = meta.counts;
-            const summary = meta.commitSummary ?? `${c.games} games, ${c.finals} finals`;
-            process.stdout.write(`${day} · ${summary}`);
+          STATS_SUMMARY=$(node -e '
+            const c = require("./data/player-stats.json").counts;
+            process.stdout.write(`${c.players} players on ${c.teamsWithStats} teams`);
           ')
           # deploy-cloudflare.yml ships this commit without a ci run of its own only because it is
           # recognisably this one: author github-actions[bot], one parent, a message starting
-          # "data: refresh snapshot", nothing but the two data files. Keep the four in step.
+          # "data: refresh snapshot" or "data: refresh player stats", nothing but data/snapshot.json,
+          # data/snapshot.meta.json and data/player-stats.json. Keep the four in step
+          # (tests/workflows.test.ts checks the messages and files against the gate).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/snapshot.meta.json
-          git commit -m "data: refresh snapshot ${SUMMARY}"
+          if [ "$SNAPSHOT" = "true" ]; then
+            SUMMARY=$(node -e '
+              const meta = require("./data/snapshot.meta.json");
+              // meta.today is the PACIFIC date; meta.fetchedAt is UTC and would read as tomorrow
+              // for the 10 PM Pacific run. commitSummary is per league, e.g.
+              // "SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4".
+              const day = meta.today ?? meta.fetchedAt.slice(0, 10);
+              const c = meta.counts;
+              const summary = meta.commitSummary ?? `${c.games} games, ${c.finals} finals`;
+              process.stdout.write(`${day} · ${summary}`);
+            ')
+            if [ "$STATS" = "true" ]; then
+              git add data/snapshot.json data/snapshot.meta.json data/player-stats.json
+              git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})"
+            else
+              git add data/snapshot.json data/snapshot.meta.json
+              git commit -m "data: refresh snapshot ${SUMMARY}"
+            fi
+          else
+            DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
+            git add data/player-stats.json
+            git commit -m "data: refresh player stats ${DAY} (${STATS_SUMMARY})"
+          fi
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       # Rebase-then-push so a commit landed by a human between checkout and push is not clobbered.
@@ -252,7 +300,9 @@ jobs:
           {
             echo "### update-data"
             echo ""
-            echo "- snapshot changed: \`${{ steps.commit.outputs.changed || 'false' }}\`"
+            echo "- snapshot changed: \`${{ steps.commit.outputs.snapshot || 'false' }}\`"
+            echo "- player stats changed: \`${{ steps.commit.outputs.stats || 'false' }}\`"
+            echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
             if [ -f data/snapshot.meta.json ]; then
               echo ""
               echo '```json'

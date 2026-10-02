@@ -109,9 +109,13 @@ cifccs.org / VNN .ics ──┘
 season** (cron `0 14 * 8-12 *` and `0 5 * 8-12 *` — 7:00 AM and 10:00 PM Pacific during PDT,
 restricted to Aug-Dec so it rarely fires out of season; the cron's months are UTC, and December
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
-season itself is bounded by `fetch-data.ts`'s own Aug 1 - Nov 30 Pacific window guard: a run
-outside it exits without writing anything. It runs the test suite against the snapshot it
-just wrote, and commits `data/snapshot.json` + `data/snapshot.meta.json` **only if they changed**.
+season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
+(`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
+`lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
+writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (SCVAL only; see
+"Player stats" below), which is allowed to fail without stopping the run. It runs the test suite against what it just wrote, and commits
+`data/snapshot.json` + `data/snapshot.meta.json` and `data/player-stats.json` **only where they
+changed**, in one commit.
 The commit is what triggers your hosting provider's rebuild — that's the entire point of the job,
 so it deliberately does not carry `[skip ci]`. The job fails, and commits nothing, only on a run
 abort; a frozen or partial league still publishes (with its reasons on the site). After a
@@ -132,7 +136,7 @@ If you're not using GitHub Actions, run the same two commands from any scheduler
 the internet on your host, twice a day during the season:
 
 ```cron
-0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && pnpm build
+0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && pnpm build
 ```
 
 Or by hand, any time:
@@ -190,8 +194,8 @@ them (the runbook is in `docs/DATA-SOURCES.md`).
 
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
-from the 16 MaxPreps roster pages (the SCVAL teams; rosters are SCVAL-only) and committed, like the history file, rather than refreshed by
-the cron (rosters change a few times a season; run it by hand or weekly). The page encodes each
+from the 15 MaxPreps roster pages (the SCVAL teams; rosters are SCVAL-only) and committed, like
+the history file, rather than refreshed by the cron (rosters change a few times a season; run it by hand or weekly). The page encodes each
 athlete as a 37-element positional array, so `lib/sources/maxpreps-roster.ts` decodes it with
 MaxPreps' own column list and cross-checks every row against the page's rendered table, failing
 the team rather than publishing a wrong grade beside a name. Blanks are `null`, never guessed;
@@ -204,14 +208,56 @@ by hand once (2026-10-02) and joined on the MaxPreps athlete id. It only ever fi
 a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded; every value
 carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
-per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. No page
-renders it yet. See `docs/DATA-SOURCES.md` §1.1j for the column map, the per-school sources and
-the overlay's rules.
+per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Each SCVAL
+team page renders it in a Roster section (`components/teams/TeamRoster.tsx`, built by
+`components/teams/roster-view.ts`): varsity only, a † on every value that did not come from
+MaxPreps, the coaches, every recorded disagreement and a link to each source. BVAL, PCAL and MCAL
+team pages have no Roster section at all (`buildRosterView` returns `null` outside SCVAL), rather
+than an empty one.
+
+The same overlay links players' own recruiting pages (SCVAL only) — NCSA, SportsRecruits and Hudl
+profiles (`profiles` on each record; 70 for 56 players as of 2026-10-02, 67 of them on varsity rows). A
+page is linked only when it names the player and field hockey and either names the school or shows
+the class year the roster shows plus a California hometown, and a stated class year must agree with
+the row's grade (checked at load). The roster shows them as a line of links under the player's
+facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map, the
+per-school sources and the overlay's rules.
 
 ```bash
-pnpm fetch-rosters                                      # live: 16 roster pages → data/rosters.json
+pnpm fetch-rosters                                      # live: 15 roster pages → data/rosters.json
 pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the captured pages
 pnpm fetch-rosters --dry-run                            # parse and report, write nothing
+```
+
+### Player stats
+
+SCVAL only, like the rosters it joins to: `fetch-player-stats` iterates
+`teamsInLeague(HISTORY_LEAGUE)` (the 15 SCVAL teams), and BVAL, PCAL and MCAL team pages have no
+Player stats section (`buildPlayerStatsView` returns `null` there).
+
+`data/player-stats.json` holds each SCVAL team's season player stats as the coach entered them on
+MaxPreps — games, goals, assists, points, and where the coach tracks them shots, shots on goal,
+game-winning goals, steals, minutes and goalkeeping — built by `pnpm fetch-player-stats` from the
+JSON behind each team's MaxPreps `/stats/` page and joined to `data/rosters.json` on the career id
+in each row's player link. A stat is kept only where the team tracks it (its team total is above
+zero), so a 0 is a real zero and an untracked stat is null; per-game and percentage columns are
+dropped. 10 of the 15 SCVAL teams publish stats; for the other five MaxPreps answers "No data was found"
+and the file says `status: "none"`. `lib/player-stats.ts` is the read API; each SCVAL team page renders it
+in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
+`components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
+the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
+
+Stats change after every game, so `update-data.yml` runs this twice a day in season, right after
+`fetch-data`, and commits the file with the snapshot when it changed. A failed stats fetch never
+stops the score refresh: the step may fail, and a team whose call failed keeps its previous rows
+(`carried-forward`). When nothing but the run's stamp would change, the script leaves the file
+exactly as it was, so there is nothing to commit. Like `fetch-data`, it writes nothing outside the
+Aug 1 - Nov 30 Pacific window unless given `--force`.
+
+```bash
+pnpm fetch-player-stats                                      # live: 15 SCVAL rollups → data/player-stats.json
+pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON
+pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
 ```
 
 ## Local development
@@ -477,6 +523,12 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   a few heights, but **no current-season public source lists positions for 7 of the 15
   SCVAL programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
+- **Player stats are SCVAL-only, and exist only where a coach enters them.** BVAL, PCAL and MCAL
+  teams have no player stats or roster on the site. As of 2026-10-02, 10 of the 15 SCVAL teams publish
+  stats on MaxPreps (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none, and no
+  school site or si.com page has them either), what each tracks varies by coach, and some stop
+  entering mid-season (Presentation's last update was Sep 10). The team page says so rather than
+  showing a short table as if it were complete.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -652,9 +704,12 @@ A real deploy needs:
 and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, because `update-data`
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
-`main`: it walks down from the tip past `update-data`'s snapshot commits (by the bot, data files
-only, tested by that job before it pushed) to the commit whose code ships, and deploys only if
-that commit has a successful `ci` run on `main` and nothing but the data changed above it.
+`main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a
+`data: refresh snapshot` or `data: refresh player stats` message, nothing but the snapshot, its
+meta file and `data/player-stats.json`, tested by that job before it pushed) to the commit whose
+code ships, and deploys only if that commit has a successful `ci` run on `main` and nothing but the
+data changed above it. `tests/workflows.test.ts` holds the two workflows to the same messages and
+files.
 Otherwise it skips, and that commit's own `ci` run deploys once it passes; a red one never
 ships, even when a data refresh is rebased on top of it. Each successful deploy is recorded as a
 GitHub Deployment (environment `cloudflare`) for the commit it shipped, and a run skips a tip that

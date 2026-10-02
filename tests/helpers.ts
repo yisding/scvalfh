@@ -1,12 +1,13 @@
 /** Shared test helpers: the offline fixture corpora, the cron run over them, and the synthetic Game builder. */
 
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, renameSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { readManifest } from '../lib/pipeline/corpus';
+import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { DivisionId, LeagueId } from '../lib/types';
@@ -189,6 +190,29 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
   }
   corpusSnapshotMemo.set(key, target);
   return target;
+}
+
+/**
+ * Build data/player-stats.json from the 2026-10-02 stats captures by running the real script, and
+ * return it. Tests that assert specific numbers read this, never the committed file, which the
+ * scheduled refresh rewrites whenever a coach enters a game.
+ */
+export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'): PlayerStatsFile {
+  const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
+  execFileSync(
+    path.join(REPO, 'node_modules', '.bin', 'tsx'),
+    [
+      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
+      '--fixtures',
+      FIXTURE_DIR,
+      '--out',
+      out,
+      '--fetched-at',
+      fetchedAt,
+    ],
+    { cwd: REPO, stdio: 'pipe' },
+  );
+  return PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
 }
 
 // ---------------------------------------------------------------- synthetic games

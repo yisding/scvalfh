@@ -6,10 +6,17 @@ import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
+import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
 import TeamPlayoffLine from '../../../components/teams/TeamPlayoffLine';
+import TeamRoster from '../../../components/teams/TeamRoster';
 import TeamSplits from '../../../components/teams/TeamSplits';
 import TeamStatTiles from '../../../components/teams/TeamStatTiles';
 import TeamUnbeaten from '../../../components/teams/TeamUnbeaten';
+import {
+  buildPlayerStatsView,
+  type PlayerStatsView,
+} from '../../../components/teams/player-stats-view';
+import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import {
   buildTeamPageView,
   nextOfficialFixture,
@@ -49,6 +56,8 @@ import { formatStamp, recordString, shortDate } from '../../../lib/format';
  *     Postseason     | Who we haven't beaten
  *     League log (2) | Scheduled, not reported
  *        ″           | Non-league
+ *     Player stats (both columns)
+ *     Roster (both columns)
  *     Elsewhere (both columns)
  *
  * The League log spans only when the "Scheduled, not reported" card exists and there are league
@@ -58,6 +67,15 @@ import { formatStamp, recordString, shortDate } from '../../../lib/format';
  *
  * A team with no results still gets this whole page: identity, links, the postseason line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
+ *
+ * The player stats and the roster come after every game section: they answer "who is on this
+ * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
+ * rows each they would push those below the fold. Stats lead, since they change after every game.
+ * Both are SCVAL-only (SPEC §0.2 item 12): `buildPlayerStatsView` / `buildRosterView` return null
+ * for a team lib/rosters.ts and data/player-stats.json do not hold, and then the section is not
+ * rendered at all — a BVAL, PCAL or MCAL page shows no empty state about a roster or stats nobody
+ * collected for it. The meta description names player stats and the roster only for a team whose
+ * page shows them.
  *
  * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
  * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
@@ -83,9 +101,13 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
     hasResults && standing
       ? `${recordString(standing.computed)} in ${view.scopeLabel} (${standing.computed.pts} pts)`
       : `${view.scopeLabel} — no results reported`;
+  const extras = rosterExtras(
+    buildPlayerStatsView(team.slug, [...view.leagueLog, ...view.nonLeagueLog]),
+    buildRosterView(team.slug),
+  );
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, goal margins and ${postseasonKicker(view)}.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonKicker(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -94,6 +116,18 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       url: `/teams/${team.slug}`,
     },
   };
+}
+
+/**
+ * `player stats, roster, ` for the description, naming only what this page shows: stats when the
+ * coach has entered some, the roster when it lists players. Empty for every team outside the
+ * rosters' league (both views are null there), so those descriptions are unchanged.
+ */
+function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null): string {
+  const parts: string[] = [];
+  if (stats && (stats.scoring || stats.more || stats.goalies.length > 0)) parts.push('player stats');
+  if (roster && roster.rows.length > 0) parts.push('roster');
+  return parts.map((p) => `${p}, `).join('');
 }
 
 /** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` (MCAL), by `postseason.kind`. */
@@ -121,6 +155,10 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leagueScheduled,
   } = view;
   const sblive = team.external.sbliveGamesUrl;
+  // Both null outside the rosters' league (SCVAL only): no section, no empty state.
+  const roster = buildRosterView(team.slug);
+  const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
+  const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
@@ -303,6 +341,23 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             emptyBody={`Every game on their schedule counts toward the ${view.scopeLabel} table.`}
           />
         </section>
+
+        {playerStats ? (
+          <section className="min-w-0 lg:col-span-2" id="player-stats">
+            <SectionHeader kicker="Player stats" meta="This season, from MaxPreps" />
+            <TeamPlayerStats view={playerStats} />
+          </section>
+        ) : null}
+
+        {roster ? (
+          <section className="min-w-0 lg:col-span-2" id="roster">
+            <SectionHeader
+              kicker="Roster"
+              meta={rosterCount > 0 ? `${rosterCount} player${rosterCount === 1 ? '' : 's'}` : undefined}
+            />
+            <TeamRoster view={roster} />
+          </section>
+        ) : null}
 
         <section className="min-w-0 lg:col-span-2">
           <SectionHeader kicker="Elsewhere" />
