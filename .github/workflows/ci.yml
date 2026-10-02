@@ -143,20 +143,10 @@ jobs:
           path: .next
 
       # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
-      # BUILD-BRIEF's no-new-dependency rule is about what ships. They go in a directory of their
-      # own, not the checkout: npm cannot install into the symlinked tree pnpm wrote (npm 10 and
-      # 11 both abort with "Cannot read properties of null (reading 'matches')"), and a reshaped
-      # node_modules could change what the server runs. The axe script resolves both packages
-      # with require(), which honours NODE_PATH.
+      # BUILD-BRIEF's no-new-dependency rule is about what ships. The action installs them in a
+      # directory of their own and points NODE_PATH at it (see .github/actions/install-axe).
       - name: Install axe-core and Chromium
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/axe"
-          cd "$RUNNER_TEMP/axe"
-          npm init -y >/dev/null
-          npm install --no-save --no-audit --no-fund axe-core playwright
-          npx playwright install --with-deps chromium
-          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
+        uses: ./.github/actions/install-axe
 
       - name: Start the production server
         run: |
@@ -224,17 +214,10 @@ jobs:
       - name: Assert every route is prerendered
         run: node scripts/assert-vinext-prerender.mjs
 
-      # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped
-      # node_modules could swap the patched vinext for a stock one under the server.
+      # Installed outside the checkout, as in the a11y job: here a reshaped node_modules could
+      # swap the patched vinext for a stock one under the server (see .github/actions/install-axe).
       - name: Install axe-core and Chromium
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/axe"
-          cd "$RUNNER_TEMP/axe"
-          npm init -y >/dev/null
-          npm install --no-save --no-audit --no-fund axe-core playwright
-          npx playwright install --with-deps chromium
-          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
+        uses: ./.github/actions/install-axe
 
       # vite.config.ts inlines SCVAL_BUILD_AT into the build (define), so the 404s this server renders
       # on request measure the snapshot's age against the same instant as every prerendered page
@@ -334,17 +317,10 @@ jobs:
           leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)
           if [ -n "$leaked" ]; then echo "env files in the Worker output:"; echo "$leaked"; exit 1; fi
 
-      # Installed outside the checkout, as in the a11y job (see the note there): here a reshaped
-      # node_modules could swap the patched vinext or @vinext/cloudflare for a stock one.
+      # Installed outside the checkout, as in the a11y job: here a reshaped node_modules could swap
+      # the patched vinext or @vinext/cloudflare for a stock one (see .github/actions/install-axe).
       - name: Install axe-core and Chromium
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/axe"
-          cd "$RUNNER_TEMP/axe"
-          npm init -y >/dev/null
-          npm install --no-save --no-audit --no-fund axe-core playwright
-          npx playwright install --with-deps chromium
-          echo "NODE_PATH=$RUNNER_TEMP/axe/node_modules" >> "$GITHUB_ENV"
+        uses: ./.github/actions/install-axe
 
       # The built Worker in workerd, the runtime Cloudflare runs it on, through the Cloudflare Vite
       # plugin's preview server: it serves .cloudflare/output as built (no rebuild) with the

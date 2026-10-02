@@ -379,7 +379,7 @@ environment or in `.env.cloudflare`.
 `pnpm preview:cloudflare` serves `.cloudflare/output/` as built, without rebuilding, in workerd
 (the runtime Cloudflare runs Workers on) through the Cloudflare Vite plugin, with the `ASSETS`
 binding; it takes `vite preview`'s `--port`, `--strictPort` and `--host`. The response contract
-above holds there, ETag and 304 included (the patched Worker entry computes them as
+above holds there, ETag and 304 included (the patched Worker entry answers the 304 as
 `vinext start` does), with these intended differences:
 
 - **Compression is the edge's.** The Worker compresses nothing and ships no precompressed copies
@@ -493,10 +493,11 @@ behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are
   prerender runs the Worker bundle in Node, which could not import next/og's `.wasm` modules the
   workerd way, so `pnpm build:cloudflare` died on the first OG image or icon. A loader hook now
   loads each one as a compiled `WebAssembly.Module`, as workerd does.
-- **The Worker's cache marker and ETags** (`server/app-router-entry.js`): only the Node server
-  removed the internal `x-vinext-app-page-cache` header, so the Worker sent it on every cached
-  page, and those pages had no ETag. The Worker entry now strips it and adds the same ETag, and
-  304, as `vinext start`.
+- **The Worker's cache marker and 304s** (`server/app-rsc-response-finalizer.js`,
+  `server/app-router-entry.js`): only the Node server removed the internal
+  `x-vinext-app-page-cache` header and answered a revalidation, so the Worker sent the header on
+  every cached page and never a 304. The shared finalizer now strips it on every target, and the
+  Worker entry answers a matching `If-None-Match` with 304, as `vinext start`.
 
 `patches/@vinext__cloudflare@1.0.0.patch` makes one change, in
 `node_modules/@vinext/cloudflare/dist/cache/static-assets-adapter.build.js`:
