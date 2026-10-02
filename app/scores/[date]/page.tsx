@@ -146,7 +146,9 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
 
       <div className="mt-8 md:mt-10">
         {games.length > 0 ? (
-          <GameList games={games} />
+          // Two or more cards fill the row, so they end where the pager, the fixtures card and
+          // the disclosure below end; a lone card stays card-sized rather than 1200px wide.
+          <GameList games={games} tracks={games.length > 1 ? 'fit' : 'fill'} />
         ) : (
           <EmptyState heading="No contests on this date." />
         )}
@@ -182,9 +184,9 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         All times Pacific. Scores are computed from what MaxPreps publishes and are unofficial.
       </p>
 
-      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
+      <details className="sx-inset sx-disclosure mt-section md:mt-section-lg">
         <summary>How scores are shown</summary>
-        <p className="mt-2 mb-0">
+        <p className="mt-2 mb-0 max-w-prose">
           A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span>; a
           score we do not have shows as a dash &mdash;{' '}
           <Link href="/about#conventions" className="text-accent">

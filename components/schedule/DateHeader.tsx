@@ -42,10 +42,12 @@ export function DateHeader({
       // Sticky on a phone, the header sits inside a full-bleed date group (ScheduleList), so it
       // pads itself back to the gutter rather than pulling out of it, and its 1px line is the top
       // edge of the band below at rest and the edge rows scroll under once it is stuck.
+      // z-15: above a GameCard's z-10 "Box score" link (which otherwise painted over the stuck
+      // band and took its clicks), below the z-20 top bar and the "More filters" tray.
       className={[
         'flex min-h-12 items-center gap-2',
         sticky
-          ? 'sticky z-[5] bg-bg max-md:px-gutter max-md:shadow-[0_1px_0_var(--sx-border)]'
+          ? 'sticky z-[15] bg-bg max-md:px-gutter max-md:shadow-[0_1px_0_var(--sx-border)]'
           : '',
         className,
       ]

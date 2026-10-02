@@ -74,10 +74,13 @@ function TeamLine({
 }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   return (
-    // One 24px line per side: chip 20 · monogram 24 · name · score 32, 8px apart. The status label
-    // lives in the row's lead column now, so nothing trails the score and the name keeps
-    // everything that is left (≥ 86px at 320, DESIGN brief §4.15) without a floor or a wrap.
-    <span className="flex h-6 items-center gap-2">
+    // One 24px line per side: chip 20 · monogram 24 · name · score, 8px apart. The status label
+    // lives in the row's lead column, so nothing trails the score. The score column is sized to
+    // its glyph (one digit is ~13px), not reserved for two: right-aligned, the scores still line
+    // up down a list, and the name gets the slack (≈ 95px at 320, enough for "Monta Vista").
+    // A name that still does not fit wraps to a second line instead of losing its end; below
+    // 360px it also steps down to 15px so that stays rare.
+    <span className="flex min-h-6 items-center gap-2">
       {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
       {team ? (
         <TeamMonogram team={team} size={24} />
@@ -90,7 +93,7 @@ function TeamLine({
         </span>
       )}
       <span
-        className={`min-w-0 flex-1 truncate text-body ${
+        className={`line-clamp-2 min-w-0 flex-1 break-words text-body max-[359px]:text-[0.9375rem] max-[359px]:leading-5 ${
           side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
         }`}
       >
@@ -102,7 +105,7 @@ function TeamLine({
       {/* The 22px glyph's 28px line box is centred in the 24px line, so two team lines are
           52px and the row keeps its 76px height. */}
       {showScore ? (
-        <span className="flex h-6 w-8 shrink-0 items-center justify-end">
+        <span className="flex h-6 shrink-0 items-center justify-end">
           <ScoreGlyph side={side} size="score" />
         </span>
       ) : null}
@@ -157,7 +160,9 @@ function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean })
     // the 80px lead column + its 8px gap — so it reads as belonging to the two names above it.
     // On a phone that indent cost 94px of a 358px row and stacked every pill on its own line, so
     // the panel starts at the gutter there.
-    <div className="space-y-3 border-t border-divider bg-surface-2 px-gutter pb-4 pt-3 text-meta md:pl-[calc(var(--spacing-gutter)+5.5rem)]">
+    // A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so each
+    // child's `m-0` cancelled it and the recap sat on the pill row.
+    <div className="flex flex-col gap-3 border-t border-divider bg-surface-2 px-gutter pb-4 pt-3 text-meta md:pl-[calc(var(--spacing-gutter)+5.5rem)]">
       {showRecap && game.recap ? <p className="m-0 text-ink-2">{game.recap}</p> : null}
       {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
       {/* `contest.location` is a NOTE field, not a venue field — live values include
@@ -181,7 +186,7 @@ export function GameRow({
   const display = describeGame(game, perspective);
   // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a final
   // and the upcoming game under it no longer switch between `4:00` and a sans-caps `4:00 PM`.
-  // "12:00 PM" is 63px at 13px mono, inside the 70px lead column. `display.sentence` carries PT.
+  // "12:00 PM" is 63px at 13px mono, inside the 80px lead column. `display.sentence` carries PT.
   const when = game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal);
   // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so under the clock line
   // it would only repeat it: only the NL tag is left to say there (GameCard does the same).
@@ -197,13 +202,14 @@ export function GameRow({
       }`}
     >
       {/* Three columns — lead (date · time · status), the two team lines, the chevron — so the
-          status word never pushes a team line onto a third row. The lead column is 80px from
-          360px: "SCORE NOT REPORTED" then breaks into two 14px lines ("SCORE NOT" is 73px) and
-          POSTPONED (78px) fits, so the lead stack is no taller than the 52px team block. At 320
-          it stays 70px, which keeps the name column at the brief's floor. */}
+          status word never pushes a team line onto a third row. The lead column is 80px at every
+          phone width: "SCORE NOT REPORTED" breaks into two 14px lines ("SCORE NOT" is 73px) and
+          POSTPONED (78px) fits, so the lead stack is no taller than the 52px team block. At 320 a
+          70px column broke it into three lines and grew the row to 90px; the 10px comes back
+          from the score column, which is now sized to its glyph. */}
       {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
           by the screen edge (or by a /schedule date group's paint containment). */}
-      <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[4.375rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 min-[360px]:grid-cols-[5rem_minmax(0,1fr)_1rem] [&::-webkit-details-marker]:hidden">
+      <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[5rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
         <span className="sr-only">{display.sentence}</span>
         <span className="flex min-w-0 flex-col gap-1 self-start" aria-hidden="true">
           {showDate ? (
@@ -220,7 +226,7 @@ export function GameRow({
             nonLeagueTag ? <span className="flex">{nonLeagueTag}</span> : null
           ) : (
             // The status word and the NL tag share one wrapping line, 4px apart: FINAL (38px) +
-            // NL (26px) fits 70px, so a final non-league row is two lines, not three. Tracking is
+            // NL (26px) fits 80px, so a final non-league row is two lines, not three. Tracking is
             // normal and the line 14px here only, so a long label takes two tight lines.
             <span className="flex flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
               <StatusLabel display={display} showNonLeague={false} />
@@ -304,7 +310,10 @@ export function GameCard({
         <TeamLine side={display.home} showScore={display.showScores} chipSlot={chipSlot} />
       </div>
       {showRecap && game.recap ? (
-        <p className="sx-clamp-2 m-0 text-meta text-ink-2">{game.recap}</p>
+        // Not clamped: in a 17rem card the generated recap needs 3–4 lines, and a two-line clamp
+        // cut every one mid-name ("…against Palo Alt…"). The grid row is `items-stretch`, so the
+        // cards in a row still share one height.
+        <p className="m-0 text-meta text-ink-2">{game.recap}</p>
       ) : null}
       {display.note ? <p className="m-0 text-meta text-ink-3">{display.note}</p> : null}
       <div className="mt-auto flex items-center gap-4 text-meta">

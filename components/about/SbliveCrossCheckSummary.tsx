@@ -38,8 +38,11 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
       </p>
       {conflicts.length > 0 ? (
         <div className="sx-card sx-flush mt-4 max-w-[66ch]">
-          {/* The `px-2` on the middle column puts a gutter BETWEEN the two right-aligned source
-              heads: without it they render as one run-together string, "MAXPREPSSBLIVE/SI". */}
+          {/* The `px-3` on the middle column puts a gutter BETWEEN the two right-aligned source
+              heads: without it they render as one run-together string, "MAXPREPSSBLIVE/SI".
+              The score columns are shrink-wrapped (`w-px` + nowrap) so the Game text gets the
+              rest of the card, and their heads drop the caps tracking, which would otherwise
+              trail after the last letter of a right-aligned head. */}
           <table className="sx-table text-meta">
             <caption className="sr-only">
               Games where MaxPreps and SBLive/SI publish different scores
@@ -49,10 +52,10 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
                 <th scope="col" className="pl-4">
                   Game
                 </th>
-                <th scope="col" className="px-2 text-right">
+                <th scope="col" className="w-px px-3 text-right tracking-normal">
                   MaxPreps
                 </th>
-                <th scope="col" className="pr-4 text-right">
+                <th scope="col" className="w-px pl-3 pr-4 text-right tracking-normal">
                   SBLive/SI
                 </th>
               </tr>
@@ -60,16 +63,16 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
             <tbody>
               {conflicts.map((row) => (
                 <tr key={row.contestId}>
-                  <td className="pl-4">
+                  <td className="py-3 pl-4">
                     {row.label}
                     <span className="block text-ink-3">
                       {row.dateKey} &middot; {row.note}
                     </span>
                   </td>
-                  <td className="sx-num px-2 py-3 text-right text-cell font-semibold text-ink">
+                  <td className="sx-num whitespace-nowrap px-3 py-3 text-right text-cell font-semibold text-ink">
                     {row.maxpreps.away}&ndash;{row.maxpreps.home}
                   </td>
-                  <td className="sx-num py-3 pr-4 text-right text-cell text-ink-2">
+                  <td className="sx-num whitespace-nowrap py-3 pl-3 pr-4 text-right text-cell text-ink-2">
                     {row.sblive.away}&ndash;{row.sblive.home}
                   </td>
                 </tr>

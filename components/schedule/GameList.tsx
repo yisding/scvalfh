@@ -30,6 +30,12 @@ export interface GameListProps {
    * sticky date header draws the line above, so the list adds only the line below.
    */
   variant?: 'bleed' | 'grouped';
+  /**
+   * The ≥768px grid's track rule. `fill` (default) keeps empty tracks, so a /schedule day with
+   * one game shows one card-sized card. `fit` collapses them, so a single-day page's two or
+   * three cards run to the same right edge as everything else under its h1.
+   */
+  tracks?: 'fill' | 'fit';
   className?: string;
   id?: string;
 }
@@ -39,6 +45,7 @@ export function GameList({
   perspective = null,
   showRecap = true,
   variant = 'bleed',
+  tracks = 'fill',
   className,
   id,
 }: GameListProps) {
@@ -48,7 +55,10 @@ export function GameList({
       // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
       // interpolation stays out of the literal.
       className={[
-        'sx-list max-md:bg-surface md:grid md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] md:items-stretch md:gap-4',
+        'sx-list max-md:bg-surface md:grid md:items-stretch md:gap-4',
+        tracks === 'fit'
+          ? 'md:grid-cols-[repeat(auto-fit,minmax(17rem,1fr))]'
+          : 'md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))]',
         variant === 'bleed'
           ? 'sx-bleed max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]'
           : 'max-md:shadow-[0_1px_0_var(--sx-border)]',

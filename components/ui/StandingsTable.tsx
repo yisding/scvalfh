@@ -737,7 +737,9 @@ export function StandingsTable(props: StandingsTableProps) {
       </div>
 
       {notes && notes.legend.length + notes.specific.length > 0 ? (
-        <div className="mt-3 max-w-prose space-y-2 text-meta text-ink-3">
+        // `flex-col gap-2`, not `space-y-2`: the list carries `m-0`, which outranks v4's
+        // zero-specificity space-y rule and would leave no gap above the link row.
+        <div className="mt-3 flex max-w-prose flex-col gap-2 text-meta text-ink-3">
           <ul className="m-0 list-none space-y-1.5 p-0">
             {[...notes.specific, ...notes.legend].map((note, i) => (
               <li key={i}>{note}</li>

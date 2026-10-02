@@ -59,8 +59,18 @@ export function SectionHeader({
       }`}
       id={id}
     >
-      <Heading className={headingClass}>{kicker}</Heading>
-      {meta ? <span className="text-meta font-normal tracking-normal text-ink-3">{meta}</span> : null}
+      {/* The heading and its meta wrap TOGETHER, inside their own box, and the action sits beside
+          that box on a row that never wraps. When heading + meta + action overflow a phone row,
+          the meta drops under the heading and the action stays on the heading's line (it used to
+          fall alone onto a second line, right-aligned and orphaned). The box's first baseline is
+          the heading's, so the action still lines up with the heading text. DOM order is
+          unchanged: heading, meta, action. */}
+      <div className="flex min-w-0 flex-[1_1_auto] flex-wrap items-baseline gap-x-3 gap-y-0.5">
+        <Heading className={headingClass}>{kicker}</Heading>
+        {meta ? (
+          <span className="text-meta font-normal tracking-normal text-ink-3">{meta}</span>
+        ) : null}
+      </div>
       <span className="sx-kicker-rule" aria-hidden="true" />
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is

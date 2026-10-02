@@ -71,7 +71,9 @@ export function OfficialFixtures({
     return (
       <div className={className}>
         {sentence}
-        <div className="sx-card sx-flush sx-bleed md:max-w-3xl">
+        {/* Full content width: on /scores/[date] it shares the right edge of the day's cards,
+            the pager and the disclosure. */}
+        <div className="sx-card sx-flush sx-bleed">
           <FixtureRows fixtures={fixtures} />
         </div>
       </div>

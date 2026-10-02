@@ -139,7 +139,7 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
             />
           ))}
         </ol>
-        <div className="space-y-1 border-t border-divider px-4 py-3 text-meta text-ink-3">
+        <div className="flex flex-col gap-1 border-t border-divider px-4 py-3 text-meta text-ink-3">
           <p className="m-0 text-ink-2">{series.summary}</p>
           {series.meetings.length > 1 && series.perspective.team ? (
             <p className="m-0">

@@ -220,7 +220,9 @@ export default function PlayoffsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4 space-y-2 text-meta text-ink-2">
+          {/* `flex-col gap-2`, not `space-y-2`: the children carry `m-0`, which outranks v4's
+              zero-specificity space-y rule and would collapse the gap to nothing. */}
+          <div className="mt-4 flex flex-col gap-2 text-meta text-ink-2">
             {pending.length > 0 ? (
               <p className="m-0">
                 {joinNames(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
@@ -326,7 +328,7 @@ export default function PlayoffsPage() {
             ))}
           </div>
           <ProjectionKey
-            className="mt-stack max-w-prose"
+            className="mt-stack"
             showRule={divisions.some((d) => d.berthRuleAfter > 0)}
           />
           <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
@@ -359,7 +361,7 @@ export default function PlayoffsPage() {
         </section>
       )}
 
-      <section id="crossover" className="mt-section md:mt-section-lg max-w-3xl">
+      <section id="crossover" className="mt-section md:mt-section-lg max-w-3xl lg:max-w-none">
         <SectionHeader
           kicker="Crossover and play-in"
           meta={shortDate(keyDates.crossover)}

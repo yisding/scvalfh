@@ -343,9 +343,13 @@
   /* ── Section header. The class keeps its historical name (tests assert it), but it is no
         longer a rule with an 11px mono kicker on it: it is an 18→20px sans heading sitting on
         clear space. Space separates sections; lines only separate rows. ─────────────────── */
+  /* `nowrap`: the heading and its meta wrap together inside their own box (SectionHeader), so
+     the action link always stays on the heading's line instead of dropping onto a row alone.
+     No column gap: the action pill's own 12px padding is the space before its text, and two
+     gaps around the spacer would cost a 320px row 24px of heading. */
   .sx-kicker {
-    display: flex; flex-wrap: wrap; align-items: baseline;
-    column-gap: 0.75rem; row-gap: 0.125rem;
+    display: flex; flex-wrap: nowrap; align-items: baseline;
+    column-gap: 0; row-gap: 0.125rem;
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--text-section); line-height: 1.75rem; font-weight: 600;
     letter-spacing: -0.012em; text-transform: none;

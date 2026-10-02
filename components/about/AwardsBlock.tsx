@@ -19,12 +19,16 @@ export interface AwardsBlockProps {
 function PlayerList({
   title,
   players,
-  columns = false,
+  columns,
 }: {
   title: string;
   players: HistoryPlayer[];
-  /** Two columns from `sm` to `md`, one from `lg` (a division column is only ~470px there). */
-  columns?: boolean;
+  /**
+   * Where the card's rows flow into two columns: `sm` for a list that has the full division
+   * width from `sm` up (honorable mention), `lg` for First/Second team, which sit side by side
+   * from `sm` to `md` and stack from `lg`, where each gets the whole ~470-550px division column.
+   */
+  columns: 'sm' | 'lg';
 }) {
   if (players.length === 0) return null;
   return (
@@ -32,21 +36,31 @@ function PlayerList({
       <dt className="text-micro font-semibold text-ink-3">
         {title}
       </dt>
-      <dd className={columns ? 'm-0 mt-1.5 sm:grid sm:grid-cols-2 sm:gap-x-8 lg:block' : 'm-0 mt-1.5'}>
+      {/* The roster is data, so it sits in a card (the plane rule) with divider rows. Two
+          columns are a row-major grid with no gap: a grid row's two cells share one height and
+          the dividers run straight across, like a two-column table. Reading order is the DOM
+          order (left, then right, then down). */}
+      <dd
+        className={`sx-card m-0 mt-2 grid ${
+          columns === 'sm' ? 'sm:grid-cols-2' : 'lg:grid-cols-2'
+        }`}
+      >
         {players.map((p, i) => {
           const team = p.slug ? getTeamBySlug(p.slug) : undefined;
           return (
             <div
               key={i}
-              // In the two-column layout the last row of the left column keeps its rule, so only
-              // the single-column layouts drop the final one.
-              className={`border-b border-divider py-2 ${
-                columns ? 'lg:last:border-b-0' : 'last:border-b-0'
+              // A rule on top of every row but the first in each column: one row in a single
+              // column, the first two once the grid has two columns.
+              className={`min-w-0 border-t border-divider px-4 py-2 first:border-t-0 ${
+                columns === 'sm' ? 'sm:[&:nth-child(2)]:border-t-0' : 'lg:[&:nth-child(2)]:border-t-0'
               }`}
             >
               <span className="block text-body text-ink">{p.player}</span>
               <span className="block text-meta text-ink-2">
-                {p.position} &middot; {ordinal(p.year)} grade &middot;{' '}
+                {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and
+                    never starts a line with one ("· Cupertino"), nor splits "12th grade". */}
+                {p.position}&nbsp;&middot; {ordinal(p.year)}&nbsp;grade&nbsp;&middot;{' '}
                 {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads
                     the whole linked route the moment the link scrolls into view, and every award
                     names a school, so one block is dozens of these. Navigation still fetches on
@@ -95,12 +109,12 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
         </dl>
       ) : null}
       <dl className="m-0 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-1">
-        <PlayerList title="First team" players={awards.firstTeam} />
-        <PlayerList title="Second team" players={awards.secondTeam} />
+        <PlayerList title="First team" players={awards.firstTeam} columns="lg" />
+        <PlayerList title="Second team" players={awards.secondTeam} columns="lg" />
       </dl>
       {awards.honorableMention.length > 0 ? (
         <dl className="m-0">
-          <PlayerList title="Honorable mention" players={awards.honorableMention} columns />
+          <PlayerList title="Honorable mention" players={awards.honorableMention} columns="sm" />
         </dl>
       ) : null}
     </div>

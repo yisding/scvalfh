@@ -163,73 +163,84 @@ export default function AboutPage() {
             {counts.leagueGames} of them league games): {counts.finals} final,{' '}
             {counts.pending} not yet reported.
           </p>
-          <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2 md:items-start">
-            <div className="sx-card p-5">
+          {/* Rows stretch, so the two cards in a row end level and each card's link row sits on its
+              bottom edge (`mt-auto`). The long SCVAL card and the two-line CIF-CCS card are
+              not paired: each spans both columns from md (the SCVAL text set in two columns,
+              which keeps its measure near the other cards'), so no row has a short card next
+              to a tall one. */}
+          <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2">
+            <div className="sx-card flex flex-col p-5">
               <dt>
                 <span className="block text-lead text-ink">MaxPreps</span>
                 <span className="mt-0.5 block text-meta text-ink-3">Primary source</span>
               </dt>
-              <dd className="m-0 mt-2 text-body text-ink-2">
-                Team schedules, scores, league standings tables and school colors come from
-                MaxPreps&rsquo; own public data feed, the same one that powers its team and league
-                pages. We read it, never write to it, and never hotlink its mascot images &mdash;
-                the feed carries a mascot picture URL for every school, and this site reads that
-                field and discards it: each school is shown as a color monogram instead, built
-                from the two colors the feed reports.
-                <span className="mt-3 flex flex-wrap gap-2">
+              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                <span className="block">
+                  Team schedules, scores, league standings tables and school colors come from
+                  MaxPreps&rsquo; own public data feed, the same one that powers its team and league
+                  pages. We read it, never write to it, and never hotlink its mascot images &mdash;
+                  the feed carries a mascot picture URL for every school, and this site reads that
+                  field and discards it: each school is shown as a color monogram instead, built
+                  from the two colors the feed reports.
+                </span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">
                     MaxPreps field hockey
                   </ExternalLink>
                 </span>
               </dd>
             </div>
-            <div className="sx-card p-5">
+            <div className="sx-card flex flex-col p-5">
               <dt>
                 <span className="block text-lead text-ink">SBLive / SI</span>
                 <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check only</span>
               </dt>
-              <dd className="m-0 mt-2 text-body text-ink-2">
-                Sports Illustrated&rsquo;s high-school stats site (formerly Scorebook
-                Live/SBLive) publishes its own scoreboard. We use it for exactly one thing: to
-                check whether it agrees with MaxPreps on final scores. It is never used for
-                division membership, records or standings &mdash; its own league groupings for
-                2026-27 do not match SCVAL&rsquo;s. See{' '}
-                <a href="#cross-check" className="text-accent hover:underline">
-                  the cross-check log
-                </a>{' '}
-                below.
-                <span className="mt-3 flex flex-wrap gap-2">
+              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                <span className="block">
+                  Sports Illustrated&rsquo;s high-school stats site (formerly Scorebook
+                  Live/SBLive) publishes its own scoreboard. We use it for exactly one thing: to
+                  check whether it agrees with MaxPreps on final scores. It is never used for
+                  division membership, records or standings &mdash; its own league groupings for
+                  2026-27 do not match SCVAL&rsquo;s. See{' '}
+                  <a href="#cross-check" className="text-accent hover:underline">
+                    the cross-check log
+                  </a>{' '}
+                  below.
+                </span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.sblive} className="sx-pill">
                     SBLive/SI field hockey
                   </ExternalLink>
                 </span>
               </dd>
             </div>
-            <div className="sx-card p-5">
+            <div className="sx-card flex flex-col p-5 md:col-span-2">
               <dt>
                 <span className="block text-lead text-ink">Official SCVAL PDFs</span>
                 <span className="mt-0.5 block text-meta text-ink-3">The league itself</span>
               </dt>
-              <dd className="m-0 mt-2 text-body text-ink-2">
-                SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
-                scval.com. League membership (which 16 schools are in which division), the
-                points/tiebreak rules quoted below, and every scheduled matchup come from these
-                documents, not from MaxPreps. When MaxPreps has never published a result for a
-                game that the official grid says was scheduled &mdash; today that is{' '}
-                {officialFixtures.length} game{officialFixtures.length === 1 ? '' : 's'},{' '}
-                {wilcoxFixtures} of them Wilcox&rsquo;s{otherFixtures > 0 ? ` and ${otherFixtures} involving other schools` : ''}{' '}
-                &mdash; it is listed as scheduled per SCVAL rather than silently dropped.{' '}
-                {officialStandingsPdfUrl === null ? (
-                  <>SCVAL has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
-                ) : officialStandingsPdfUrl ? (
-                  <>
-                    SCVAL has posted a 2026-27 standings PDF:{' '}
-                    <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
-                  </>
-                ) : (
-                  <>We have not yet checked scval.com for a 2026-27 standings PDF.</>
-                )}
-                <span className="mt-3 flex flex-wrap gap-2">
+              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                <span className="block md:columns-2 md:gap-x-8">
+                  SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
+                  scval.com. League membership (which 16 schools are in which division), the
+                  points/tiebreak rules quoted below, and every scheduled matchup come from these
+                  documents, not from MaxPreps. When MaxPreps has never published a result for a
+                  game that the official grid says was scheduled &mdash; today that is{' '}
+                  {officialFixtures.length} game{officialFixtures.length === 1 ? '' : 's'},{' '}
+                  {wilcoxFixtures} of them Wilcox&rsquo;s{otherFixtures > 0 ? ` and ${otherFixtures} involving other schools` : ''}{' '}
+                  &mdash; it is listed as scheduled per SCVAL rather than silently dropped.{' '}
+                  {officialStandingsPdfUrl === null ? (
+                    <>SCVAL has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
+                  ) : officialStandingsPdfUrl ? (
+                    <>
+                      SCVAL has posted a 2026-27 standings PDF:{' '}
+                      <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
+                    </>
+                  ) : (
+                    <>We have not yet checked scval.com for a 2026-27 standings PDF.</>
+                  )}
+                </span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.scval} className="sx-pill">
                     SCVAL fall sports
                   </ExternalLink>
@@ -245,18 +256,20 @@ export default function AboutPage() {
                 </span>
               </dd>
             </div>
-            <div className="sx-card p-5">
+            <div className="sx-card flex flex-col p-5 md:col-span-2">
               <dt>
                 <span className="block text-lead text-ink">CIF-CCS</span>
                 <span className="mt-0.5 block text-meta text-ink-3">Playoff dates &amp; format</span>
               </dt>
-              <dd className="m-0 mt-2 text-body text-ink-2">
-                The Central Coast Section publishes the playoff calendar and format. See{' '}
-                <a href="#playoffs" className="text-accent hover:underline">
-                  CCS playoffs
-                </a>{' '}
-                below.
-                <span className="mt-3 flex flex-wrap gap-2">
+              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                <span className="block">
+                  The Central Coast Section publishes the playoff calendar and format. See{' '}
+                  <a href="#playoffs" className="text-accent hover:underline">
+                    CCS playoffs
+                  </a>{' '}
+                  below.
+                </span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.ccs} className="sx-pill">
                     CCS field hockey
                   </ExternalLink>

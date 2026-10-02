@@ -193,7 +193,9 @@ function FiltersPanel({ teams, filters, countLine, moreActive, update, className
   return (
     // One wrapping row of items. On a 390 phone that is the two selects, then "More filters" with
     // the count beside it (right-aligned, at most two lines) — a ~120px closed panel instead of
-    // four stacked rows. From 768px everything sits on one line with the count pushed right.
+    // four stacked rows. Below 390 the space beside the pill is too narrow (124px at 320 wrapped
+    // the count into four ragged lines), so the count takes its own left-aligned row under it.
+    // From 768px everything sits on one line with the count pushed right.
     <div
       className={[
         'sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
@@ -292,7 +294,7 @@ function FiltersPanel({ teams, filters, countLine, moreActive, update, className
       </details>
       <p
         aria-live="polite"
-        className="m-0 min-w-0 flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left md:flex-none md:ml-auto"
+        className="m-0 min-w-0 flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left max-[389px]:basis-full max-[389px]:text-left md:flex-none md:ml-auto"
       >
         {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
             never strands "3" from "not reported" or opens a line on "·". The text content is

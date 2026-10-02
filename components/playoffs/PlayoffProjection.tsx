@@ -62,6 +62,33 @@ function PlaceCell({ row }: { row: ProjectionRow }) {
   return <span className="sx-num text-ink">{place}</span>;
 }
 
+/**
+ * The written status: one tinted capsule in 12px SANS, sentence case. These are phrases ("At-large
+ * consideration or no automatic path"), and mono caps are kept for the 1–2 word codes a `Tag` is
+ * for (brief §1). The tones are Tag's: accent-ink on the wash only for a sole AQ. The capsule is
+ * `inline-block`, so a long phrase grows into ONE taller capsule instead of breaking into a cloned
+ * pill per line. Any " — " tail (the coin-flip note) is plain text under it.
+ */
+function StatusBadge({ row }: { row: ProjectionRow }) {
+  const [head, ...tail] = row.label.split(' — ');
+  return (
+    <>
+      <span
+        className={`inline-block max-w-full rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
+          row.status === 'aq' && row.statuses.length === 1
+            ? 'bg-accent-wash text-accent-ink'
+            : 'bg-surface-3 text-ink-2'
+        }`}
+      >
+        {head}
+      </span>
+      {tail.length > 0 ? (
+        <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail.join(' — ')}</span>
+      ) : null}
+    </>
+  );
+}
+
 const QUALIFYING =
   'The first three in each division qualify automatically (Article VII §2). The two ' +
   'fourth-place teams meet in the Oct 30 play-in for the seventh SCVAL berth, and the play-in ' +
@@ -82,7 +109,9 @@ export function ProjectionKey({
   return (
     <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
       <summary>How to read the projection</summary>
-      <div className="max-w-prose space-y-3 text-meta text-ink-2">
+      {/* A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so the
+          children's `m-0` would win and the paragraphs would touch. */}
+      <div className="flex max-w-prose flex-col gap-3 text-meta text-ink-2">
         <p className="m-0">
           {showRule ? 'The 2px rule marks the last automatic berth. ' : ''}
           {QUALIFYING}
@@ -149,7 +178,7 @@ export function PlayoffProjection({
                 #
               </th>
               <th scope="col">Team</th>
-              <th scope="col" className="w-[8.5rem] pr-4 md:w-52">
+              <th scope="col" className="hidden pr-4 md:table-cell md:w-52">
                 Status
               </th>
             </tr>
@@ -168,7 +197,7 @@ export function PlayoffProjection({
                 <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
-                <th scope="row" className="font-normal">
+                <th scope="row" className="pr-3 font-normal sm:pr-4 md:pr-0">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
@@ -181,51 +210,42 @@ export function PlayoffProjection({
                   >
                     <span className="sr-only">{projectionRowLabel(row, divisionLabel)}</span>
                   </Link>
-                  <span className="flex items-center gap-3" aria-hidden="true">
+                  <span className="flex items-center gap-3">
                     <TeamMonogram team={row.team} size={28} />
-                    <span className="min-w-0">
-                      <span className="block truncate text-body text-ink">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-body text-ink" aria-hidden="true">
                         {row.team.shortName}
                       </span>
-                      {/* Record and points wrap as two whole units, never "pts" alone. */}
-                      <span className="sx-num flex flex-wrap gap-x-2 text-cell text-ink-2">
-                        {recordLine(row.standing)
-                          .split(' · ')
-                          .map((part) => (
-                            <span key={part} className="whitespace-nowrap">
-                              {part}
-                            </span>
-                          ))}
+                      {/* Record and points wrap as two whole units, never "pts" alone. Below md
+                          the status capsule follows them on the same line (it wraps under them
+                          when the row is too narrow); from md it has its own column. */}
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span
+                          className="sx-num flex flex-wrap gap-x-2 text-cell text-ink-2"
+                          aria-hidden="true"
+                        >
+                          {recordLine(row.standing)
+                            .split(' · ')
+                            .map((part) => (
+                              <span key={part} className="whitespace-nowrap">
+                                {part}
+                              </span>
+                            ))}
+                        </span>
+                        <span className="contents md:hidden">
+                          <StatusBadge row={row} />
+                        </span>
                       </span>
                     </span>
                   </span>
                 </th>
                 {/* The status is the whole point of the page, so it stays in the a11y tree and
-                    the row link's sentence deliberately does not repeat it. */}
-                <td className="pr-3 pl-3 align-middle sm:pr-4">
-                  {(() => {
-                    const [head, ...tail] = row.label.split(' — ');
-                    return (
-                      <>
-                        {/* A tinted chip in 12px SANS, sentence case: these are phrases
-                            ("At-large consideration or no automatic path"), and mono caps are
-                            kept for the 1–2 word codes a `Tag` is for (brief §1). The tones are
-                            Tag's: accent-ink on the wash only for a sole AQ. */}
-                        <span
-                          className={`box-decoration-clone rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
-                            row.status === 'aq' && row.statuses.length === 1
-                              ? 'bg-accent-wash text-accent-ink'
-                              : 'bg-surface-3 text-ink-2'
-                          }`}
-                        >
-                          {head}
-                        </span>
-                        {tail.length > 0 ? (
-                          <span className="mt-1 block text-micro text-ink-2">{tail.join(' — ')}</span>
-                        ) : null}
-                      </>
-                    );
-                  })()}
+                    the row link's sentence deliberately does not repeat it. Below md it sits under
+                    the record in the team cell (above), where it has the card's width; this
+                    column only exists from md. `display: none` keeps it out of the a11y tree, so
+                    exactly one copy is ever read. */}
+                <td className="hidden pr-3 pl-3 align-middle sm:pr-4 md:table-cell">
+                  <StatusBadge row={row} />
                 </td>
               </tr>
             ))}

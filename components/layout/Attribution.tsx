@@ -27,8 +27,11 @@ export interface AttributionProps {
 
 export function Attribution({ snapshotAt, now, links, extraCredit, className }: AttributionProps) {
   return (
+    // No top margin on phone: every page wrapper already ends with `pb-section-lg` (56px), and a
+    // second 56px here left a 112px blank band that read like the page had stopped loading.
+    // From 768px a modest extra 32px lets the footer read as the end of the page, not a section.
     <footer
-      className={['mt-section-lg border-t border-hairline md:mt-16', className]
+      className={['border-t border-hairline md:mt-8', className]
         .filter(Boolean)
         .join(' ')}
     >

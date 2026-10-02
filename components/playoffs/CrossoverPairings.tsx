@@ -70,10 +70,11 @@ function Side({
         </span>
         <span className="sx-num block text-meta text-ink-2">
           {divisionLabel} #{seed}
-          {/* On a phone the half-width side cannot hold both on one line, and a free wrap left
-              "·" at the start of a line; the record takes its own line there instead. */}
-          <span className="max-md:hidden"> &middot;</span>{' '}
-          <span className="whitespace-nowrap max-md:block">
+          {/* On a phone, and in the two-up grid from lg until xl, the half-width side cannot hold
+              both on one line, and a free wrap left "·" at the start of a line; the record takes
+              its own line there instead. */}
+          <span className="max-md:hidden lg:max-xl:hidden"> &middot;</span>{' '}
+          <span className="whitespace-nowrap max-md:block lg:max-xl:block">
             {rest.length === 0 ? recordString(first.standing.computed) : 'not settled'}
           </span>
         </span>
@@ -104,7 +105,9 @@ export function CrossoverPairings({
   id,
 }: CrossoverPairingsProps) {
   return (
-    <div className={`max-w-3xl${className ? ` ${className}` : ''}`} id={id}>
+    // One column capped at 48rem below lg; from lg the four cards sit two by two at full width, so the
+    // row is filled and each pairing's names stay close enough to read as a pair.
+    <div className={`max-w-3xl lg:max-w-none${className ? ` ${className}` : ''}`} id={id}>
       <p className="m-0 max-w-prose text-body text-ink-2">
         Played on{' '}
         <time dateTime={date} className="text-ink">
@@ -116,7 +119,7 @@ export function CrossoverPairings({
         site is decided by a coin flip and these games do not count toward a team&rsquo;s maximum
         contests (Article VII §2).
       </p>
-      <ol className="m-0 mt-stack list-none space-y-3 p-0">
+      <ol className="m-0 mt-stack list-none space-y-3 p-0 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
         {rows.map((row) => (
           <li
             key={row.seed}
