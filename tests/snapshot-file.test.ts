@@ -77,7 +77,8 @@ describeIfPresent('the committed snapshot', () => {
     expect(snapshot.counts.games).toBe(snapshot.games.length);
     expect(snapshot.counts.finals).toBe(snapshot.games.filter((g) => g.status === 'final').length);
     expect(snapshot.counts.leagueGames).toBe(snapshot.games.filter((g) => g.countsFor !== null).length);
-    expect(Object.keys(snapshot.counts.byLeague)).toEqual(LEAGUES.map((l) => l.id));
+    // stableStringify sorts keys on disk, so compare as a set rather than in config order.
+    expect([...Object.keys(snapshot.counts.byLeague)].sort()).toEqual(LEAGUES.map((l) => l.id).sort());
   });
 
   it('gives SCVAL real counted finals', () => {
