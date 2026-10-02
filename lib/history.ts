@@ -14,14 +14,25 @@ import { readFileSync } from 'node:fs';
 
 import { z } from 'zod';
 import bundledHistory from '../data/history-2025-26.json';
-import type { Division, TeamSlug } from './types';
+import { HISTORY_LEAGUE, divisionsOf } from './leagues';
+import { teamsInLeague } from './teams';
+import type { DivisionId, TeamSlug } from './types';
 
-const teamSlug = z.enum([
-  'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian',
-  'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
-  'palo-alto', 'presentation', 'santa-clara', 'saratoga',
-]);
+/** The archive is SCVAL-only (SPEC §0.2 #12): slugs and divisions are those of HISTORY_LEAGUE. */
+const HISTORY_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
+const HISTORY_DIVISIONS: ReadonlySet<string> = new Set(divisionsOf(HISTORY_LEAGUE).map((d) => d.id));
+
+const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+
+const teamSlug = id.refine(
+  (slug) => HISTORY_SLUGS.has(slug),
+  `not a registry slug of league ${HISTORY_LEAGUE}`,
+);
+
+const division = id.refine(
+  (d) => HISTORY_DIVISIONS.has(d),
+  `not a division of league ${HISTORY_LEAGUE}`,
+);
 
 const HistoryRowSchema = z.object({
   /** The PDF's own "SCHOOL by finish" order. Not a recomputed ranking. */
@@ -46,7 +57,7 @@ const HistoryPlayerSchema = z.object({
 });
 
 const HistoryAwardsSchema = z.object({
-  division: z.enum(['de-anza', 'el-camino']),
+  division,
   level: z.enum(['varsity', 'jv']),
   /** `value` is the PDF's right-hand side VERBATIM — the three divisions write it differently. */
   overall: z.array(z.object({ award: z.string().min(1), value: z.string().min(1) })),
@@ -70,7 +81,7 @@ export const HistorySchema = z
     }),
     divisions: z.array(
       z.object({
-        division: z.enum(['de-anza', 'el-camino']),
+        division,
         label: z.string(),
         standings: z.object({
           varsity: z.array(HistoryRowSchema),
@@ -150,13 +161,13 @@ export function getHistorySources(): { standingsPdf: string; allLeaguePdf: strin
   };
 }
 
-export function getHistoryStandings(division: Division, level: HistoryLevel = 'varsity'): HistoryRow[] {
+export function getHistoryStandings(division: DivisionId, level: HistoryLevel = 'varsity'): HistoryRow[] {
   const entry = history.divisions.find((d) => d.division === division);
   return entry ? entry.standings[level] : [];
 }
 
 export function getHistoryAwards(
-  division: Division,
+  division: DivisionId,
   level: HistoryLevel = 'varsity',
 ): HistoryAwards | null {
   return history.divisions.find((d) => d.division === division)?.awards[level] ?? null;
@@ -164,11 +175,11 @@ export function getHistoryAwards(
 
 /** Every 2025-26 row for one school, across divisions and levels. */
 export function getHistoryFor(slug: TeamSlug): Array<{
-  division: Division;
+  division: DivisionId;
   level: HistoryLevel;
   row: HistoryRow;
 }> {
-  const out: Array<{ division: Division; level: HistoryLevel; row: HistoryRow }> = [];
+  const out: Array<{ division: DivisionId; level: HistoryLevel; row: HistoryRow }> = [];
   for (const d of history.divisions) {
     for (const level of ['varsity', 'jv'] as const) {
       const row = d.standings[level].find((r) => r.slug === slug);
@@ -179,8 +190,8 @@ export function getHistoryFor(slug: TeamSlug): Array<{
 }
 
 /** The champions, for a one-line archive summary. */
-export function getHistoryChampions(): Array<{ division: Division; row: HistoryRow }> {
+export function getHistoryChampions(): Array<{ division: DivisionId; row: HistoryRow }> {
   return history.divisions
     .map((d) => ({ division: d.division, row: d.standings.varsity[0] }))
-    .filter((x): x is { division: Division; row: HistoryRow } => !!x.row);
+    .filter((x): x is { division: DivisionId; row: HistoryRow } => !!x.row);
 }

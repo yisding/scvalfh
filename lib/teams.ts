@@ -1,21 +1,21 @@
 /**
- * The 15-team SCVAL membership registry.
+ * The 43-team membership registry: SCVAL 15, BVAL 12, PCAL 7, MCAL 9 (SPEC §3).
  *
- * THIS is the league, not the feed: every table is built from this constant and left-joined
- * against the feed (SPEC §3, DESIGN §12.1).
+ * THIS is the set of leagues, not the feed: every table is built from this constant and
+ * left-joined against the feed. Seeds live in lib/registry/{scval,bval,pcal,mcal}.ts; TEAMS is
+ * assembled here in LEAGUES order (lib/leagues.ts).
  *
- * Division membership comes exclusively from the two official SCVAL PDFs (SPEC §3):
- *   De Anza  : https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf
- *   El Camino: https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf
- *
- * The De Anza grid still lists Wilcox, but Wilcox is not fielding a team this season, so it is
- * not a member here: see WITHDRAWN_SCHOOL_NAMES.
- *
- * ids are MaxPreps GUIDs re-read from the captured league standings payloads (SPEC §2.1).
- * Slugs and 2-letter abbrs are OURS and are never derived by string munging (DESIGN §12.9).
+ * ids are MaxPreps GUIDs. Slugs and 2-letter abbrs are OURS and are never derived by string
+ * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
  */
 
-import type { Division, Team, TeamId, TeamSlug } from './types';
+import { LEAGUES, findLeague, getLeague } from './leagues';
+import { BVAL_SEEDS } from './registry/bval';
+import { MCAL_SEEDS } from './registry/mcal';
+import { PCAL_SEEDS } from './registry/pcal';
+import { SCVAL_SEEDS } from './registry/scval';
+import type { Seed } from './registry/seed';
+import type { DivisionId, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
 const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
@@ -45,341 +45,6 @@ export function onPrimaryInk(hex: string): '#0e1116' | '#ffffff' {
   return dark >= light ? '#0e1116' : '#ffffff';
 }
 
-interface Seed {
-  id: TeamId;
-  slug: TeamSlug;
-  name: string;
-  shortName: string;
-  abbr: string;
-  acronym: string;
-  mascot: string;
-  city: string;
-  division: Division;
-  dataCoverage: Team['dataCoverage'];
-  /** hex without '#', from the standings payload's schoolColor1 / schoolColor2. */
-  colors: [string, string];
-  colorSource: Team['colors']['source'];
-  maxprepsPath: string | null;
-  aliases: string[];
-  sbliveTeamId?: string;
-  /**
-   * si.com URL slug. Never guessed (SPEC §2.1 / §7.3). All 15 were harvested on 2026-09-29 from
-   * live payloads: `query.organization.teamStandings[].team.webPath` on the two si.com league
-   * standings pages, plus `opponent.team.webPath` on the Los Altos and Saratoga team pages
-   * (Santa Clara 496839 is absent from both standings pages and came from Saratoga's).
-   */
-  sbliveSlug?: string;
-  vnnSiteId?: string;
-}
-
-/**
- * Aliases cover: MaxPreps `schoolName`, the SCVAL PDF grid UPPERCASE forms, the SCVAL prose /
- * standings PDF forms, SBLive / si.com names, and the VNN ICS "X High School" forms (SPEC §2.3).
- */
-const SEEDS: readonly Seed[] = [
-  // ----- De Anza (7; Wilcox is on the official grid but not fielding a team) -----
-  {
-    id: '1dc4836b-4daf-4573-b525-27b474bd5366',
-    slug: 'st-ignatius',
-    name: 'St. Ignatius College Preparatory',
-    shortName: 'St Ignatius',
-    abbr: 'SI',
-    acronym: 'SICP',
-    mascot: 'Wildcats',
-    city: 'San Francisco',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['CC0022', '034CB2'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/',
-    aliases: [
-      'St. Ignatius College Preparatory', 'ST. IGNATIUS', 'Saint Ignatius', 'St. Ignatius',
-      'St Ignatius', 'SICP', 'St. Ignatius College Prep', 'St. Ignatius Wildcats',
-      'St. Ignatius College Preparatory High School',
-    ],
-    sbliveTeamId: '456831',
-    sbliveSlug: '456831-st-ignatius-wildcats',
-  },
-  {
-    id: 'de6d3780-e8f6-4a2a-93f2-b5d89499f9b0',
-    slug: 'saint-francis',
-    name: 'Saint Francis',
-    shortName: 'St Francis',
-    abbr: 'SF',
-    acronym: 'SFHS',
-    mascot: 'Lancers',
-    city: 'Mountain View',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['503604', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/mountain-view/saint-francis-lancers/field-hockey/',
-    aliases: [
-      'Saint Francis', 'ST. FRANCIS', 'St. Francis', 'St Francis', 'Saint Francis Lancers',
-      'Saint Francis High School', 'Saint Francis (Mountain View)',
-    ],
-    sbliveTeamId: '457982',
-    sbliveSlug: '457982-saint-francis-lancers',
-  },
-  {
-    id: '0279f2de-d5ce-484d-b210-2286ded42058',
-    slug: 'los-altos',
-    name: 'Los Altos',
-    shortName: 'Los Altos',
-    abbr: 'LA',
-    acronym: 'LAHS',
-    mascot: 'Eagles',
-    city: 'Los Altos',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['034CB2', '454444'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/los-altos/los-altos-eagles/field-hockey/',
-    aliases: ['Los Altos', 'LOS ALTOS', 'Los Altos Eagles', 'Los Altos High School'],
-    sbliveTeamId: '458850',
-    sbliveSlug: '458850-los-altos-eagles',
-  },
-  {
-    id: '8a8c04d2-5606-44cf-9993-34db55474240',
-    slug: 'valley-christian',
-    name: 'Valley Christian',
-    shortName: 'Valley Chr.',
-    abbr: 'VC',
-    acronym: 'VCHS',
-    mascot: 'Warriors',
-    city: 'San Jose',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['022C66', '046DFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/san-jose/valley-christian-warriors/field-hockey/',
-    aliases: [
-      'Valley Christian', 'VALLEY CHRISTIAN', 'Valley Christian Warriors',
-      'Valley Christian High School', 'Valley Christian (San Jose)',
-    ],
-    sbliveTeamId: '480709',
-    sbliveSlug: '480709-valley-christian-warriors',
-  },
-  {
-    id: 'a97c219c-2fbe-4fa4-9a0c-cc18502a8d24',
-    slug: 'fremont',
-    name: 'Fremont',
-    shortName: 'Fremont',
-    abbr: 'FR',
-    acronym: 'FHS',
-    mascot: 'Firebirds',
-    city: 'Sunnyvale',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['CC0022', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/sunnyvale/fremont-firebirds/field-hockey/',
-    aliases: [
-      'Fremont', 'FREMONT', 'Fremont Firebirds', 'Fremont High School', 'Fremont (Sunnyvale)',
-    ],
-    sbliveTeamId: '496836',
-    sbliveSlug: '496836-fremont-firebirds',
-  },
-  {
-    id: '97ffffbe-54ba-4c25-86bb-41332627f64e',
-    slug: 'cupertino',
-    name: 'Cupertino',
-    shortName: 'Cupertino',
-    abbr: 'CU',
-    acronym: 'CHS',
-    mascot: 'Pioneers',
-    city: 'Cupertino',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['CC0022', '454444'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/cupertino/cupertino-pioneers/field-hockey/',
-    aliases: ['Cupertino', 'CUPERTINO', 'Cupertino Pioneers', 'Cupertino High School'],
-    sbliveTeamId: '458665',
-    sbliveSlug: '458665-cupertino-pioneers',
-  },
-  {
-    id: '738a2432-7acb-4ad6-b041-115ec0f331c2',
-    slug: 'homestead',
-    name: 'Homestead',
-    shortName: 'Homestead',
-    abbr: 'HM',
-    acronym: 'HHS',
-    mascot: 'Mustangs',
-    city: 'Cupertino',
-    division: 'de-anza',
-    dataCoverage: 'full',
-    colors: ['00824B', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/cupertino/homestead-mustangs/field-hockey/',
-    aliases: ['Homestead', 'HOMESTEAD', 'Homestead Mustangs', 'Homestead High School'],
-    sbliveTeamId: '458667',
-    sbliveSlug: '458667-homestead-mustangs',
-  },
-
-  // ----- El Camino (official 8; MaxPreps 8) -----
-  {
-    id: '0f63870a-34f3-4d5b-9dbf-653c8410f969',
-    slug: 'mitty',
-    name: 'Archbishop Mitty',
-    shortName: 'Mitty',
-    abbr: 'MI',
-    acronym: 'AMHS',
-    mascot: 'Monarchs',
-    city: 'San Jose',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['222222', 'C8880A'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/san-jose/archbishop-mitty-monarchs/field-hockey/',
-    aliases: [
-      'Archbishop Mitty', 'MITTY', 'Mitty', 'Archbishop Mitty Monarchs',
-      'Archbishop Mitty High School', 'Mitty High School',
-    ],
-    sbliveTeamId: '464806',
-    sbliveSlug: '464806-archbishop-mitty-monarchs',
-  },
-  {
-    id: 'bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7',
-    slug: 'los-gatos',
-    name: 'Los Gatos',
-    shortName: 'Los Gatos',
-    abbr: 'LG',
-    acronym: 'LGHS',
-    mascot: 'Wildcats',
-    city: 'Los Gatos',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['D5350B', '222222'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/los-gatos/los-gatos-wildcats/field-hockey/',
-    aliases: ['Los Gatos', 'LOS GATOS', 'Los Gatos Wildcats', 'Los Gatos High School'],
-    sbliveTeamId: '458802',
-    sbliveSlug: '458802-los-gatos-wildcats',
-    vnnSiteId: '2634860',
-  },
-  {
-    id: 'a38a628c-c65f-487f-a65e-7264b6804ce0',
-    slug: 'palo-alto',
-    name: 'Palo Alto',
-    shortName: 'Palo Alto',
-    abbr: 'PA',
-    acronym: 'PAHS',
-    mascot: 'Vikings',
-    city: 'Palo Alto',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['005B34', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/palo-alto/palo-alto-vikings/field-hockey/',
-    aliases: [
-      'Palo Alto', 'PALO ALTO', 'Paly', 'Palo Alto Vikings', 'Palo Alto High School',
-    ],
-    sbliveTeamId: '480707',
-    sbliveSlug: '480707-palo-alto-vikings',
-    vnnSiteId: '2635290',
-  },
-  {
-    id: 'e1db3a4f-3bcf-4281-a574-d313212296a1',
-    slug: 'presentation',
-    name: 'Presentation',
-    shortName: 'Presentation',
-    abbr: 'PR',
-    acronym: 'PHS',
-    mascot: 'Panthers',
-    city: 'San Jose',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['034CB2', 'C8880A'],
-    colorSource: 'maxpreps-standings',
-    // NB: the HTML schedule page under this path serves LOS GATOS data (SPEC §2.1, verdict 30).
-    // We only ever read this team through the API, keyed on the GUID.
-    maxprepsPath: '/ca/san-jose/presentation-panthers/field-hockey/',
-    aliases: [
-      'Presentation', 'PRESENTATION', 'Presentation Panthers', 'Presentation High School',
-      // The 2025-26 all-league PDF writes "Presentation HS" in two places.
-      'Presentation HS',
-    ],
-    sbliveTeamId: '457986',
-    sbliveSlug: '457986-presentation-panthers',
-  },
-  {
-    id: '17fad4fb-c82b-4b5a-8a31-3ce13c0ede13',
-    slug: 'santa-clara',
-    name: 'Santa Clara',
-    shortName: 'Santa Clara',
-    abbr: 'SC',
-    acronym: 'SCHS',
-    mascot: 'Bruins',
-    city: 'Santa Clara',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['034CB2', 'FFC005'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/santa-clara/santa-clara-bruins/field-hockey/',
-    aliases: [
-      'Santa Clara', 'SANTA CLARA', 'Santa Clara Bruins', 'Santa Clara High School',
-    ],
-    sbliveTeamId: '496839',
-    sbliveSlug: '496839-santa-clara-bruins',
-  },
-  {
-    id: '12a470ab-e17d-4e5a-b74b-055d1f46d46b',
-    slug: 'saratoga',
-    name: 'Saratoga',
-    shortName: 'Saratoga',
-    // 'SG', not 'SA' or 'SC': the one abbr collision that needed resolving (DESIGN §12.9).
-    abbr: 'SG',
-    acronym: 'SHS',
-    mascot: 'Falcons',
-    city: 'Saratoga',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['CC0022', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/saratoga/saratoga-falcons/field-hockey/',
-    aliases: ['Saratoga', 'SARATOGA', 'Saratoga Falcons', 'Saratoga High School'],
-    sbliveTeamId: '458805',
-    sbliveSlug: '458805-saratoga-falcons',
-  },
-  {
-    id: 'd7c7f7a1-06be-44fb-a4a2-64599519aa4c',
-    slug: 'lynbrook',
-    name: 'Lynbrook',
-    shortName: 'Lynbrook',
-    abbr: 'LY',
-    acronym: 'LHS',
-    mascot: 'Vikings',
-    city: 'San Jose',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['022C66', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/san-jose/lynbrook-vikings/field-hockey/',
-    aliases: ['Lynbrook', 'LYNBROOK', 'Lynbrook Vikings', 'Lynbrook High School'],
-    sbliveTeamId: '458669',
-    sbliveSlug: '458669-lynbrook-vikings',
-  },
-  {
-    id: '405614ad-a015-4270-b527-18e899c90824',
-    slug: 'monta-vista',
-    name: 'Monta Vista',
-    shortName: 'Monta Vista',
-    abbr: 'MV',
-    acronym: 'MVHS',
-    mascot: 'Matadors',
-    city: 'Cupertino',
-    division: 'el-camino',
-    dataCoverage: 'full',
-    colors: ['754ACC', 'C8880A'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/cupertino/monta-vista-matadors/field-hockey/',
-    aliases: ['Monta Vista', 'MONTA VISTA', 'Monta Vista Matadors', 'Monta Vista High School'],
-    sbliveTeamId: '458672',
-    sbliveSlug: '458672-monta-vista-matadors',
-  },
-];
-
 function toTeam(s: Seed): Team {
   return {
     id: s.id,
@@ -391,8 +56,9 @@ function toTeam(s: Seed): Team {
     mascot: s.mascot,
     city: s.city,
     aliases: s.aliases,
+    section: s.section,
+    league: s.league,
     division: s.division,
-    isScvalMember: true,
     dataCoverage: s.dataCoverage,
     colors: {
       primary: s.colors[0],
@@ -407,6 +73,7 @@ function toTeam(s: Seed): Team {
       maxprepsTeamUrl: s.maxprepsPath ? MP + s.maxprepsPath : null,
       maxprepsScheduleUrl: s.maxprepsPath ? `${MP + s.maxprepsPath}schedule/` : null,
       ...(s.sbliveTeamId ? { sbliveTeamId: s.sbliveTeamId } : {}),
+      ...(s.sbliveSchoolId ? { sbliveSchoolId: s.sbliveSchoolId } : {}),
       ...(s.sbliveSlug ? { sbliveGamesUrl: `${SI}/teams/${s.sbliveSlug}/games` } : {}),
       ...(s.vnnSiteId
         ? { vnnSiteId: s.vnnSiteId, vnnIcsUrl: `${VNN}/${s.vnnSiteId}/0/calendar.ics` }
@@ -415,41 +82,20 @@ function toTeam(s: Seed): Team {
   };
 }
 
-/** The registry, in official-PDF order: De Anza 7 then El Camino 8. */
-export const TEAMS: readonly Team[] = SEEDS.map(toTeam);
+const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = {
+  scval: SCVAL_SEEDS,
+  bval: BVAL_SEEDS,
+  pcal: PCAL_SEEDS,
+  mcal: MCAL_SEEDS,
+};
 
-/** Teams whose games MaxPreps actually publishes — the 15 schedule requests (SPEC §5.1). */
+/** The registry (43), in LEAGUES order; within a league, the seed file's order. */
+export const TEAMS: readonly Team[] = LEAGUES.flatMap((l) => SEEDS_BY_LEAGUE[l.id] ?? []).map(toTeam);
+
+/** Teams whose games MaxPreps actually publishes — one schedule request each (all 43 today). */
 export const FETCHABLE_TEAMS: readonly Team[] = TEAMS.filter(
   (t) => t.dataCoverage !== 'none',
 );
-
-// ---------- build-time asserts ----------
-
-function assertRegistry(): void {
-  const fail = (m: string): never => {
-    throw new Error(`lib/teams.ts: ${m}`);
-  };
-  if (TEAMS.length !== 15) fail(`expected 15 teams, got ${TEAMS.length}`);
-  const columns: Array<[string, string[]]> = [
-    ['id', TEAMS.map((t) => t.id)],
-    ['slug', TEAMS.map((t) => t.slug as string)],
-    ['acronym', TEAMS.map((t) => t.acronym)],
-    ['abbr', TEAMS.map((t) => t.abbr)],
-  ];
-  for (const [label, values] of columns) {
-    const dupes = values.filter((v, i) => values.indexOf(v) !== i);
-    if (dupes.length) fail(`duplicate ${label}: ${[...new Set(dupes)].join(', ')}`);
-  }
-  for (const [d, expected] of [['de-anza', 7], ['el-camino', 8]] as const) {
-    const n = TEAMS.filter((t) => t.division === d).length;
-    // Official SCVAL alignment is 8 + 8 (SPEC §3), less Wilcox, which is not fielding a team.
-    if (n !== expected) fail(`${d} has ${n} teams, expected ${expected}`);
-  }
-  if (FETCHABLE_TEAMS.length !== 15) {
-    fail(`expected 15 fetchable teams, got ${FETCHABLE_TEAMS.length}`);
-  }
-}
-assertRegistry();
 
 // ---------- lookups ----------
 
@@ -462,9 +108,34 @@ export function normalizeTeamKey(input: string): string {
 const BY_ID = new Map<string, Team>(TEAMS.map((t) => [t.id, t]));
 const BY_SLUG = new Map<string, Team>(TEAMS.map((t) => [t.slug, t]));
 
+/** Normalized acronyms carried by two or more teams. */
+function collidingAcronymKeys(): Set<string> {
+  const counts = new Map<string, number>();
+  for (const t of TEAMS) {
+    const key = normalizeTeamKey(t.acronym);
+    if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return new Set([...counts].filter(([, n]) => n > 1).map(([key]) => key));
+}
+
+const COLLIDING_ACRONYM_KEYS = collidingAcronymKeys();
+
+/** Acronyms shared by ≥ 2 teams. Display only: they are NOT indexed for resolution. Sorted. */
+export const ACRONYM_COLLISIONS: readonly string[] = [
+  ...new Set(
+    TEAMS.filter((t) => COLLIDING_ACRONYM_KEYS.has(normalizeTeamKey(t.acronym))).map((t) => t.acronym),
+  ),
+].sort();
+
+/**
+ * The alias index: [id, slug, name, shortName, ...aliases] plus `acronym` ONLY when no other
+ * team has the same normalized acronym. Any other collision throws at module load.
+ */
 const BY_KEY = new Map<string, Team>();
 for (const t of TEAMS) {
-  for (const raw of [t.id, t.slug, t.name, t.shortName, t.acronym, ...t.aliases]) {
+  const spellings = [t.id, t.slug, t.name, t.shortName, ...t.aliases];
+  if (!COLLIDING_ACRONYM_KEYS.has(normalizeTeamKey(t.acronym))) spellings.push(t.acronym);
+  for (const raw of spellings) {
     const key = normalizeTeamKey(raw);
     if (!key) continue;
     const prior = BY_KEY.get(key);
@@ -485,32 +156,153 @@ export function getTeamBySlug(slug: string): Team | undefined {
   return BY_SLUG.get(slug);
 }
 
-/** Resolve a MaxPreps GUID, our slug, an acronym or ANY known spelling to a Team. */
+/**
+ * Resolve a MaxPreps GUID, our slug, a name, a shortName, an alias, or an acronym that is
+ * globally unique, to a Team.
+ */
 export function resolveTeam(nameOrId: string | null | undefined): Team | undefined {
   if (!nameOrId) return undefined;
   return BY_ID.get(nameOrId) ?? BY_KEY.get(normalizeTeamKey(nameOrId));
 }
 
-export function isScvalTeamId(id: string | null | undefined): boolean {
+/**
+ * League-scoped official-grid token or spelling: the league's `officialCodes` (exact token, then
+ * case-insensitive), its `officialNames`, then the global resolver restricted to that league.
+ * Grid codes never enter the global resolver.
+ */
+export function resolveOfficialName(leagueId: LeagueId, token: string): Team | undefined {
+  const league = findLeague(leagueId);
+  const raw = token.trim();
+  if (!league || !raw) return undefined;
+  const scoped = (slug: string | undefined): Team | undefined => {
+    const t = slug ? BY_SLUG.get(slug) : undefined;
+    return t && t.league === league.id ? t : undefined;
+  };
+  const exact = scoped(league.officialCodes[raw] ?? league.officialNames[raw]);
+  if (exact) return exact;
+  const upper = raw.toUpperCase();
+  for (const [code, slug] of Object.entries(league.officialCodes)) {
+    if (code.toUpperCase() === upper) return scoped(slug);
+  }
+  const key = normalizeTeamKey(raw);
+  for (const [name, slug] of Object.entries(league.officialNames)) {
+    if (normalizeTeamKey(name) === key) return scoped(slug);
+  }
+  const t = resolveTeam(raw);
+  return t && t.league === league.id ? t : undefined;
+}
+
+/** True for a MaxPreps GUID of any registry team (replaces isScvalTeamId). */
+export function isRegistryTeamId(id: string | null | undefined): boolean {
   return !!id && BY_ID.has(id);
 }
 
+const WITHDRAWN_KEYS: ReadonlyMap<LeagueId, ReadonlySet<string>> = new Map(
+  LEAGUES.map((l) => [l.id, new Set(l.withdrawnNames.map(normalizeTeamKey))]),
+);
+
 /**
- * Schools the official grid still lists that are NOT fielding a team this season. Their grid
- * fixtures are dropped at parse time and their roster-line entries are not membership warnings:
- * they are not in the registry, so they appear nowhere on the site.
+ * Schools a league's official grid still lists that are NOT fielding a varsity team (Wilcox in
+ * SCVAL, York in PCAL). Their grid fixtures are dropped at parse time; they are not in the
+ * registry, so they appear nowhere on the site. Reads every league's `withdrawnNames` when
+ * `leagueId` is omitted.
  */
-export const WITHDRAWN_SCHOOL_NAMES: readonly string[] = [
-  'Wilcox', 'WILCOX', 'Wilcox Chargers', 'Wilcox High School', 'Adrian Wilcox',
-  'Adrian Wilcox High School',
-];
-
-const WITHDRAWN_KEYS = new Set(WITHDRAWN_SCHOOL_NAMES.map(normalizeTeamKey));
-
-export function isWithdrawnSchool(name: string | null | undefined): boolean {
-  return !!name && WITHDRAWN_KEYS.has(normalizeTeamKey(name));
+export function isWithdrawnSchool(name: string | null | undefined, leagueId?: LeagueId): boolean {
+  if (!name) return false;
+  const key = normalizeTeamKey(name);
+  if (!key) return false;
+  if (leagueId !== undefined) return WITHDRAWN_KEYS.get(leagueId)?.has(key) ?? false;
+  for (const keys of WITHDRAWN_KEYS.values()) if (keys.has(key)) return true;
+  return false;
 }
 
-export function teamsInDivision(division: Division): readonly Team[] {
+export function teamsInDivision(division: DivisionId): readonly Team[] {
   return TEAMS.filter((t) => t.division === division);
 }
+
+export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
+  return TEAMS.filter((t) => t.league === leagueId);
+}
+
+// ---------- build-time asserts ----------
+
+const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const EXPECTED_ACRONYM_COLLISIONS = ['BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'PHS', 'SCHS', 'SHS'];
+
+function assertRegistry(): void {
+  const fail = (m: string): never => {
+    throw new Error(`lib/teams.ts: ${m}`);
+  };
+
+  // 1. unique ids, slugs, abbrs; slug shape
+  const columns: Array<[string, string[]]> = [
+    ['id', TEAMS.map((t) => t.id)],
+    ['slug', TEAMS.map((t) => t.slug)],
+    ['abbr', TEAMS.map((t) => t.abbr)],
+  ];
+  for (const [label, values] of columns) {
+    const dupes = values.filter((v, i) => values.indexOf(v) !== i);
+    if (dupes.length) fail(`duplicate ${label}: ${[...new Set(dupes)].join(', ')}`);
+  }
+  for (const t of TEAMS) {
+    if (!SLUG_RE.test(t.slug)) fail(`bad slug "${t.slug}"`);
+    if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
+    if (t.shortName.length > 14) fail(`${t.slug}: shortName longer than 14 characters`);
+  }
+
+  // 2. league, division and section agree with the config
+  for (const t of TEAMS) {
+    const league = findLeague(t.league);
+    if (!league) fail(`${t.slug}: unknown league ${t.league}`);
+    else {
+      if (!league.divisions.some((d) => d.id === t.division)) {
+        fail(`${t.slug}: division ${t.division} is not in ${t.league}`);
+      }
+      if (t.section !== league.sectionId) fail(`${t.slug}: section ${t.section}, league ${t.league} is ${league.sectionId}`);
+    }
+  }
+
+  // 3. counts
+  for (const l of LEAGUES) {
+    for (const d of l.divisions) {
+      const n = teamsInDivision(d.id).length;
+      if (n !== d.expectedTeams) fail(`${d.id} has ${n} teams, expected ${d.expectedTeams}`);
+    }
+  }
+  const expectedTotal = LEAGUES.reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
+  if (TEAMS.length !== expectedTotal || TEAMS.length !== 43) {
+    fail(`expected 43 teams, got ${TEAMS.length}`);
+  }
+  if (FETCHABLE_TEAMS.length !== TEAMS.length) {
+    fail(`expected ${TEAMS.length} fetchable teams, got ${FETCHABLE_TEAMS.length}`);
+  }
+
+  // 4. config values that name slugs (lib/leagues.ts invariants 5 and 7, checked here to avoid a cycle)
+  for (const l of LEAGUES) {
+    const slugs = new Set(teamsInLeague(l.id).map((t) => t.slug));
+    for (const [field, map] of [['officialCodes', l.officialCodes], ['officialNames', l.officialNames]] as const) {
+      for (const [token, slug] of Object.entries(map)) {
+        if (!slugs.has(slug)) fail(`${l.id}.${field}["${token}"] = ${slug} is not a ${l.id} slug`);
+      }
+    }
+    const draw = getLeague(l.id).rules.drawNumbers;
+    if (draw) {
+      const keys = Object.keys(draw).sort();
+      if (keys.join() !== [...slugs].sort().join()) fail(`${l.id}.drawNumbers keys do not equal its slugs`);
+    }
+    if (l.postseason.kind === 'league-tournament' && !slugs.has(l.postseason.finalSite.slug)) {
+      fail(`${l.id}: finalSite ${l.postseason.finalSite.slug} is not a ${l.id} slug`);
+    }
+    for (const d of l.divisions) {
+      for (const slug of d.maxprepsMissing) {
+        if (BY_SLUG.get(slug)?.division !== d.id) fail(`${d.id}.maxprepsMissing: ${slug} is not a member`);
+      }
+    }
+  }
+
+  // 5. the alias index (built above; collisions already throw) and the acronym rule
+  if (ACRONYM_COLLISIONS.join() !== EXPECTED_ACRONYM_COLLISIONS.join()) {
+    fail(`ACRONYM_COLLISIONS is [${ACRONYM_COLLISIONS.join(', ')}], expected [${EXPECTED_ACRONYM_COLLISIONS.join(', ')}]`);
+  }
+}
+assertRegistry();

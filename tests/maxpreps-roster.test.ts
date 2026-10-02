@@ -17,7 +17,7 @@ import {
   rosterUrl,
 } from '../lib/sources/maxpreps-roster';
 import { SPORT_SEASON_ID } from '../lib/season';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';
 
 const fixture = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');
@@ -119,7 +119,7 @@ describe('maxpreps roster: the 15 captures of 2026-10-02', () => {
   });
 
   it('every registry team has a fixture and the fixture is for that team', () => {
-    for (const team of TEAMS) {
+    for (const team of teamsInLeague('scval')) {
       const page = parse(team.slug);
       if (team.dataCoverage !== 'none') expect(page.teamId).toBe(team.id);
     }

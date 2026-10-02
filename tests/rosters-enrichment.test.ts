@@ -23,7 +23,10 @@ import {
   getRosters,
   getTeamRoster,
 } from '../lib/rosters';
-import { TEAMS } from '../lib/teams';
+import { teamsInLeague } from '../lib/teams';
+
+/** Rosters stay SCVAL-only (SPEC §0.2 #12, §4.2). */
+const SCVAL_TEAMS = teamsInLeague('scval');
 import { REPO } from './helpers';
 
 const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
@@ -37,8 +40,15 @@ describe('data/rosters-enrichment.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('covers the 15 registry teams and the same season as the MaxPreps file', () => {
-    expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
+  it('refuses a team outside SCVAL', () => {
+    const foreign = structuredClone(raw);
+    foreign.teams[0].slug = 'leigh';
+    expect(RosterEnrichmentSchema.safeParse(foreign).success).toBe(false);
+  });
+
+  it('covers the 15 SCVAL registry teams and the same season as the MaxPreps file', () => {
+    expect(SCVAL_TEAMS).toHaveLength(15);
+    expect(raw.teams.map((t) => t.slug).sort()).toEqual(SCVAL_TEAMS.map((t) => t.slug).sort());
     expect(raw.season).toBe(base.season);
     expect(raw.capturedAt).toBe(base.fetchedAt.slice(0, 10));
   });
@@ -194,6 +204,6 @@ describe('lib/rosters.ts merged view', () => {
     expect(all.filter((p) => p.grade !== null).length).toBe(getRosters().counts.withGrade + 133);
     expect(all.filter((p) => p.position !== null).length).toBe(getRosters().counts.withPosition + 9);
     expect(all.filter((p) => p.height !== null).length).toBe(getRosters().counts.withHeight + 23);
-    expect(getRosterEnrichment().teams.length).toBe(15);
+    expect(getRosterEnrichment().teams.length).toBe(SCVAL_TEAMS.length);
   });
 });

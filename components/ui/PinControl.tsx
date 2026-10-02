@@ -3,10 +3,15 @@
 import { usePinnedTeam } from './use-pinned-team';
 
 /**
- * Pin / unpin a team (DESIGN §7.12). One of the app's nine client modules: five interactive
- * components (this, ThemeToggle, MyTeamCard, ScheduleFilters and NavLink), two storage modules they
- * share (local-store, use-pinned-team), the pinned-row marker (PinnedTeamMarks) and app/error.tsx,
- * which React requires to be one. DESIGN §7's "four" predates NavLink and the marker.
+ * Pin / unpin a team (DESIGN §7.12; SPEC §8.2, §10.2). Pinning also remembers the team's league
+ * (`leagueId`), which is one of the three writes of `scvalfh.league` the spec allows.
+ *
+ * `label` is the team's pin label, built by the caller with `pinLabel()` from lib/pin-label.ts
+ * (`Pin Leigh, Mt. Hamilton · BVAL`, `Pin Tamalpais, MCAL`), so this module never reaches the
+ * registry or the league config (the client boundary, SPEC §0.4). It names the team in the
+ * accessible name of both variants: the compact star reads exactly `label` (or `Unpin …` when
+ * pinned); the full button keeps its visible words first ("Pin this team" / "Pinned", WCAG 2.5.3)
+ * followed by the team in an sr-only suffix.
  *
  * The button reserves its footprint server-side, so swapping in the stored state after hydration
  * costs no layout shift. When `localStorage` is unavailable the control is replaced by one sentence
@@ -15,22 +20,34 @@ import { usePinnedTeam } from './use-pinned-team';
  */
 export interface PinControlProps {
   slug: string;
-  name: string;
+  /** The team's league: pinning remembers it (SPEC §8.2). */
+  leagueId: string;
+  /** `pinLabel(…)` from lib/pin-label.ts: 'Pin Leigh, Mt. Hamilton · BVAL'. */
+  label: string;
+  /** Today's prop, now unused: `label` carries the team's name. Optional, so passing it is harmless. */
+  name?: string;
   /** Every slug in the snapshot, so a stale pin can be detected and cleared. */
   knownSlugs?: readonly string[];
   variant?: 'button' | 'compact';
   className?: string;
 }
 
+/** 'Pin Leigh, Mt. Hamilton · BVAL' → 'Leigh, Mt. Hamilton · BVAL'. */
+function teamPart(label: string): string {
+  return label.replace(/^Pin\s+/, '');
+}
+
 export function PinControl({
   slug,
-  name,
+  leagueId,
+  label,
   knownSlugs,
   variant = 'button',
   className,
 }: PinControlProps) {
   const { pinned, ready, available, stalePin, toggle } = usePinnedTeam(knownSlugs);
   const isPinned = ready && pinned === slug;
+  const team = teamPart(label);
 
   if (ready && !available) {
     return (
@@ -50,7 +67,7 @@ export function PinControl({
     >
       <button
         type="button"
-        onClick={() => toggle(slug)}
+        onClick={() => toggle(slug, leagueId)}
         aria-pressed={isPinned}
         // Pressed reads as pressed: accent-ink on the accent wash (6.5 / 7.55), the
         // `.sx-pill-accent` pairing, held on hover too (a utility outranks the base hover rule).
@@ -75,12 +92,12 @@ export function PinControl({
           <path d="M8 1.6l1.95 4.02 4.43.6-3.23 3.08.8 4.4L8 11.6l-3.95 2.1.8-4.4L1.62 6.22l4.43-.6z" />
         </svg>
         {variant === 'compact' ? (
-          <span className="sr-only">{isPinned ? `Unpin ${name}` : `Pin ${name}`}</span>
+          <span className="sr-only">{isPinned ? `Unpin ${team}` : `Pin ${team}`}</span>
         ) : (
           <span>{isPinned ? 'Pinned' : 'Pin this team'}</span>
         )}
         {variant === 'button' ? (
-          <span className="sr-only"> &mdash; {name}, saved in this browser only</span>
+          <span className="sr-only"> &mdash; {team}, saved in this browser only</span>
         ) : null}
       </button>
       {stalePin ? (

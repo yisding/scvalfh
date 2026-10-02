@@ -1,0 +1,7 @@
+{
+  "id": "leland-feed-503",
+  "note": "Leland's schedule feed answers HTTP 503.",
+  "files": {
+    "maxpreps/schedule/leland": 503
+  }
+}

@@ -1,27 +1,30 @@
 /**
- * lib/crosscheck.ts — MaxPreps ↔ SBLive score reconciliation (SPEC §5.7).
+ * lib/crosscheck.ts — MaxPreps ↔ si.com score reconciliation (SPEC §7.9, owner decision D2).
  *
  * The rules under test, in the order they matter:
- *   1. MaxPreps is NEVER overwritten.
- *   2. A disagreement is published, never averaged and never silently resolved.
- *   3. A score that exists only on SBLive is NOT backfilled — the game stays unreported.
- *   4. The join is (local date, unordered team pair), because the SBLive scoreboard exposes no
- *      home/away and no team ids.
+ *   1. reconcile never writes a si.com score onto a game: publishing one is lib/backfill.ts's job
+ *      (D2 rules 2-4, tests/backfill.test.ts), and a game it already published is not compared again.
+ *   2. A plain disagreement (D2 rule 5) is published, never averaged and never silently resolved: MaxPreps stays.
+ *   3. A si.com score D2 did not publish is listed with a note naming why; the game stays unreported.
+ *   4. The join is (local date, unordered team pair), because the si.com scoreboard exposes no
+ *      home/away and no web paths.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { gameJoinKey, gamePairKey, reconcile, emptyCrossCheck } from '../lib/crosscheck';
+import { NOT_PUBLISHED, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '../lib/crosscheck';
 import type { SbliveGame, SbliveSide } from '../lib/sources/sblive';
 import { resolveTeam } from '../lib/teams';
+import type { BackfillRow, SbliveOnlyRow } from '../lib/types';
 import { game } from './helpers';
 
-function side(ref: string, score: number | null): SbliveSide {
+function side(ref: string, score: number | null, via: SbliveSide['via'] = 'team-id'): SbliveSide {
   const team = resolveTeam(ref);
   return {
     name: team ? team.name : ref,
     sbliveTeamId: team?.external.sbliveTeamId ?? null,
     slug: team?.slug ?? null,
+    via: team ? via : null,
     score,
   };
 }
@@ -58,13 +61,13 @@ describe('crosscheck: the join key', () => {
     expect(gameJoinKey(a)).toBe('2026-09-23|cupertino~los-altos');
   });
 
-  it('falls back to a normalized name for a non-SCVAL opponent', () => {
+  it('falls back to a normalized name for an opponent that is not one of our teams', () => {
     const g = game({ home: 'los-altos', away: 'cupertino', hs: 1, as: 0 });
     const outside = {
       ...g,
-      away: { ...g.away, teamId: null, slug: null, name: 'Leigh (San Jose)' },
+      away: { ...g.away, teamId: null, slug: null, name: "Bishop's" },
     };
-    expect(gamePairKey(outside)).toBe('los-altos~name:leighsanjose');
+    expect(gamePairKey(outside)).toBe('los-altos~name:bishops');
   });
 });
 
@@ -107,12 +110,12 @@ describe('crosscheck: disagreement', () => {
     expect(row.maxpreps).toEqual({ home: 0, away: 7 });
     expect(row.sblive).toEqual({ home: 1, away: 7 });
     expect(row.aligned).toBe(true);
-    expect(row.note).toMatch(/never overwritten/);
+    expect(row.note).toMatch(/MaxPreps’ score stands/);
     // AWAY first, the same orientation the row's own cells use ("<away> at <home>"), so one
     // result is never printed as both "0-7" and "7–0" inside a single row.
     expect(row.note).toContain("we show MaxPreps' 7-0 (Saint Francis–Homestead)");
-    expect(row.note).toContain('SBLive reports 7-1');
-    // 1. MaxPreps is never overwritten.
+    expect(row.note).toContain('si.com reports 7-1');
+    // 2. A plain disagreement never overwrites MaxPreps (D2 rule 5).
     expect(res.games[0].home.score).toBe(0);
     expect(res.games[0].away.score).toBe(7);
     // 2. The disagreement is on the game, for the UI's "sources disagree" marker.
@@ -130,32 +133,81 @@ describe('crosscheck: disagreement', () => {
   });
 });
 
-describe('crosscheck: SBLive-only scores are never backfilled', () => {
-  it('leaves the game unreported and publishes the SBLive value as a disagreement', () => {
-    const g = game({
-      home: 'los-gatos',
-      away: 'saratoga',
-      status: 'score-pending',
-      date: '2026-09-28',
-    });
-    const res = reconcile([g], [sbGame('2026-09-28', side('los-gatos', 3), side('saratoga', 1))], {
-      sbliveFetchedAt: AT,
-    });
+describe('crosscheck: si.com scores D2 did not publish', () => {
+  it('lists a si.com score on a contest MaxPreps left unscored, says why, and fills nothing', () => {
+    // Resolved by name only: D2 never fills from such a row (lib/backfill.ts did not), so reconcile reports it.
+    const g = game({ home: 'los-gatos', away: 'saratoga', status: 'score-pending', date: '2026-09-28' });
+    const res = reconcile(
+      [g],
+      [sbGame('2026-09-28', side('los-gatos', 3, 'name'), side('saratoga', 1))],
+      { sbliveFetchedAt: AT, today: '2026-10-02' },
+    );
     expect(res.report.sbliveOnlyScored).toHaveLength(1);
     expect(res.report.conflicts).toHaveLength(0);
     expect(res.report.agreements).toBe(0);
     const row = res.report.sbliveOnlyScored[0];
     expect(row.sblive).toEqual({ home: 3, away: 1 });
     expect(row.status).toBe('score-pending');
-    expect(row.note).toMatch(/stays unreported/);
-    // 3. The scoreline stays null — a missing score is never filled from a secondary source.
+    expect(row.note).toBe(NOT_PUBLISHED.nameOnly);
+    // 3. The scoreline stays null — reconcile never fills a missing score, and never as 0-0.
     expect(res.games[0].home.score).toBeNull();
     expect(res.games[0].away.score).toBeNull();
     expect(res.games[0].status).toBe('score-pending');
+    expect(res.games[0].provenance.scores).not.toBe('sblive');
     expect(res.games[0].provenance.scoreConflict?.sblive).toEqual({ home: 3, away: 1 });
+    expect(res.games[0].provenance.scoreConflict?.note).toMatch(/stays unreported\. Resolved by name only\.$/);
   });
 
-  it('ignores an SBLive row that is itself unscored', () => {
+  it('names the reason: not our team, not final, dated today, not marked played', () => {
+    const outside = game({ home: 'los-altos', away: 'cupertino', status: 'score-pending', date: '2026-09-28' });
+    const notOurs = { ...outside, away: { ...outside.away, teamId: null, slug: null, name: "Bishop's" } };
+    const cases: Array<[ReturnType<typeof game>, SbliveGame, string]> = [
+      [notOurs, sbGame('2026-09-28', side('los-altos', 2), side("Bishop's", 1)), NOT_PUBLISHED.notOurTeam],
+      [
+        game({ home: 'fremont', away: 'homestead', status: 'score-pending', date: '2026-09-28' }),
+        sbGame('2026-09-28', side('fremont', 2), side('homestead', 1), { isFinal: false }),
+        NOT_PUBLISHED.notFinal,
+      ],
+      [
+        game({ home: 'palo-alto', away: 'lynbrook', status: 'score-pending', date: '2026-10-02' }),
+        sbGame('2026-10-02', side('palo-alto', 2), side('lynbrook', 1)),
+        NOT_PUBLISHED.notPast,
+      ],
+      [
+        game({ home: 'saint-francis', away: 'valley-christian', status: 'scheduled', date: '2026-09-30' }),
+        sbGame('2026-09-30', side('saint-francis', 7), side('valley-christian', 0)),
+        NOT_PUBLISHED.notPending,
+      ],
+    ];
+    for (const [g, sb, note] of cases) {
+      const res = reconcile([g], [sb], { sbliveFetchedAt: AT, today: '2026-10-02' });
+      expect(res.report.sbliveOnlyScored.map((r) => r.note), note).toEqual([note]);
+      expect(res.games[0].home.score).toBeNull();
+    }
+  });
+
+  it('lists a si.com Final MaxPreps has no contest for, without claiming a host', () => {
+    const res = reconcile(
+      [game({ home: 'los-altos', away: 'cupertino', hs: 4, as: 0, date: '2026-09-23' })],
+      [
+        sbGame('2026-09-25', side('fremont', 2), side('homestead', 1), { sbliveGameId: '6600001' }),
+        sbGame('2026-09-26', side('palo-alto', 3), side("Bishop's", 0), { sbliveGameId: '6600002' }),
+        // Same pair as a MaxPreps contest two days away: a date difference, not a si.com-only score.
+        sbGame('2026-09-25', side('los-altos', 4), side('cupertino', 0), { sbliveGameId: '6600003' }),
+        // Not one of our teams on either side: never listed.
+        sbGame('2026-09-25', side('Woodbridge', 1), side('Irvine', 0), { sbliveGameId: '6600004' }),
+      ],
+      { sbliveFetchedAt: AT, today: '2026-10-02' },
+    );
+    expect(res.report.sbliveOnlyScored.map((r) => [r.contestId, r.note, r.aligned, r.maxprepsUrl])).toEqual([
+      ['sblive:6600001', NOT_PUBLISHED.notOfficial, false, null],
+      ['sblive:6600002', NOT_PUBLISHED.notOurTeam, false, null],
+    ]);
+    expect(res.report.sbliveOnlyScored[0].label).toBe('Fremont vs Homestead');
+    expect(res.unmatched).toBe(4);
+  });
+
+  it('ignores a si.com row that is itself unscored', () => {
     const g = game({ home: 'los-gatos', away: 'saratoga', status: 'scheduled', date: '2026-10-27' });
     const res = reconcile(
       [g],
@@ -165,6 +217,71 @@ describe('crosscheck: SBLive-only scores are never backfilled', () => {
     expect(res.report.compared).toBe(1);
     expect(res.report.sbliveOnlyScored).toHaveLength(0);
     expect(res.games[0].provenance.scoreConflict).toBeUndefined();
+  });
+
+  it('does not compare a game D2 already published from si.com', () => {
+    const g = game({ home: 'stevenson', away: 'carmel', hs: 9, as: 0, date: '2026-09-29' });
+    const filled = {
+      ...g,
+      provenance: {
+        ...g.provenance,
+        scores: 'sblive' as const,
+        backfill: { rule: 'score-pending' as const, sbliveGameId: '6499423', maxpreps: null, note: 'x' },
+      },
+    };
+    const res = reconcile([filled], [sbGame('2026-09-29', side('stevenson', 9), side('carmel', 0))], { sbliveFetchedAt: AT });
+    expect(res.report.compared).toBe(0);
+    expect(res.report.agreements).toBe(0);
+    expect(res.report.sbliveOnlyScored).toEqual([]);
+    expect(res.unmatched).toBe(0);
+    expect(res.games[0]).toBe(filled);
+  });
+});
+
+describe('crosscheck: withBackfill', () => {
+  const published: BackfillRow = {
+    contestId: 'c-1',
+    dateKey: '2026-09-29',
+    label: 'Carmel at Stevenson',
+    rule: 'score-pending',
+    sblive: { home: 9, away: 0 },
+    maxpreps: null,
+    sbliveUrl: 'https://www.si.com/high-school/stats/california/field-hockey/games/6499423-carmel-vs-stevenson',
+    maxprepsUrl: null,
+    note: 'MaxPreps lists this game without a score, so the score is si.com’s.',
+  };
+  const only = (contestId: string, note: string, dateKey = '2026-09-20'): SbliveOnlyRow => ({
+    contestId,
+    dateKey,
+    label: 'A at B',
+    sblive: { home: 1, away: 0 },
+    aligned: true,
+    sbliveUrl: null,
+    maxprepsUrl: null,
+    status: 'score-pending',
+    note,
+  });
+
+  it('adds the published rows, lets D2’s precise reasons win, and never lists a published game as unpublished', () => {
+    const report = {
+      ...emptyCrossCheck(AT),
+      sbliveOnlyScored: [only('c-1', NOT_PUBLISHED.other), only('c-2', NOT_PUBLISHED.other)],
+    };
+    const merged = withBackfill(report, {
+      rows: [published],
+      skipped: [only('c-2', 'si.com has two different scores for this game.'), only('sblive:7', 'Resolved by name only.', '2026-09-01')],
+    });
+    expect(merged.backfilled).toEqual([published]);
+    // The same si.com game, already explained by D2 under a MaxPreps contest id, is not listed again.
+    const dup = withBackfill(
+      { ...emptyCrossCheck(AT), sbliveOnlyScored: [{ ...only('sblive:9', NOT_PUBLISHED.notOfficial), sbliveUrl: 'https://www.si.com/g/9' }] },
+      { rows: [], skipped: [{ ...only('c-9', 'MaxPreps has this game (c-9) but it is not counted: MaxPreps marks it contestType 4.'), sbliveUrl: 'https://www.si.com/g/9' }] },
+    );
+    expect(dup.sbliveOnlyScored.map((r) => r.contestId)).toEqual(['c-9']);
+    expect(merged.sbliveOnlyScored.map((r) => [r.contestId, r.note])).toEqual([
+      ['sblive:7', 'Resolved by name only.'],
+      ['c-2', 'si.com has two different scores for this game.'],
+    ]);
   });
 });
 
@@ -193,6 +310,7 @@ describe('crosscheck: report shape', () => {
       agreements: 0,
       conflicts: [],
       sbliveOnlyScored: [],
+      backfilled: [],
     });
   });
 });

@@ -1,0 +1,7 @@
+{
+  "id": "pcal-standings-empty",
+  "note": "MaxPreps answers the PCAL standings request with 200 and zero rows.",
+  "files": {
+    "maxpreps/standings/pcal": "maxpreps/standings/pcal.json"
+  }
+}

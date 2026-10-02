@@ -5,7 +5,11 @@
  * carry no scores and no times beyond the footer's "Varsity 4:00".
  *
  * The De Anza grid still lists Wilcox, which is not fielding a team this season: its fixtures are
- * dropped here and its roster-line entry is not a membership warning (WITHDRAWN_SCHOOL_NAMES).
+ * dropped here and its roster-line entry is not a membership warning (`isWithdrawnSchool(name,
+ * league)`, config `withdrawnNames`). Grid spellings resolve through the league scope only
+ * (`resolveOfficialName`). The URLs come from config (`getDivision(d).official.scheduleUrl`), and
+ * only the live-PDF divisions are parsed (`scvalPdfDivisions()`). The fixture matcher moved to
+ * lib/official/match.ts (`matchOfficialFixtures`, matcher 'legacy').
  *
  * Extraction facts, all verified against the live files:
  *   - `http://` 302s to `https://`; redirects must be followed.
@@ -25,15 +29,25 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { DIVISION_LABELS } from '../season';
-import { isWithdrawnSchool, resolveTeam, teamsInDivision } from '../teams';
-import type { Division, Game, OfficialFixture, TeamSlug } from '../types';
+import { ALL_DIVISIONS, getDivision, leagueOfDivision } from '../leagues';
+import { officialFixtureId } from '../official/schema';
+import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '../teams';
+import type { DivisionId, Game, OfficialFixture, TeamSlug } from '../types';
 import { HttpClient, type HttpClientOptions } from './http';
 
-export const SCVAL_SCHEDULE_PDFS: Record<Division, string> = {
-  'de-anza': 'https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf',
-  'el-camino': 'https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf',
-};
+/**
+ * The divisions whose official schedule is a live scval.com grid PDF (config: `official.source`
+ * 'scval-pdf', mode 'live-pdf'), config order. Every loop in this module and in the official step
+ * iterates these ONLY, so a bundled BVAL/PCAL/MCAL division can never be counted as a missing grid.
+ */
+export function scvalPdfDivisions(): DivisionId[] {
+  return ALL_DIVISIONS.filter((d) => d.official.source === 'scval-pdf' && d.official.mode === 'live-pdf').map((d) => d.id);
+}
+
+/** The grid PDF of a division, from config (`getDivision(d).official.scheduleUrl`). */
+export function scvalScheduleUrl(division: DivisionId): string {
+  return getDivision(division).official.scheduleUrl;
+}
 
 export const SCVAL_FALL_INDEX = 'https://scval.com/fallSports/Fall_index.html';
 export const SCVAL_STANDINGS_INDEX = 'https://www.scval.com/standings/';
@@ -104,13 +118,14 @@ const MATCHUP_RE = /([A-Z][A-Z. ]*?[A-Z.])\s{1,}@\s{1,}([A-Z][A-Z. ]*?[A-Z.])(?=
 /** `Teams: Cupertino, Fremont, …` — the official roster line. */
 const TEAMS_LINE_RE = /^\s*Teams:\s*(.+)$/;
 
-const DIVISION_HEADERS: Record<Division, RegExp> = {
-  'de-anza': /DE\s+ANZA\s+DIVISION/i,
-  'el-camino': /EL\s+CAMINO\s+DIVISION/i,
-};
+/** `DE ANZA DIVISION`, `EL CAMINO DIVISION` — built from the division's config label. */
+function divisionHeaderRe(division: DivisionId): RegExp {
+  const words = getDivision(division).label.split(/\s+/).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  return new RegExp(`${words.join('\\s+')}\\s+DIVISION`, 'i');
+}
 
 export interface OfficialSchedule {
-  division: Division;
+  division: DivisionId;
   /** "2026 - 2027" from the page header, when present. */
   yearLabel: string | null;
   /** The `Teams:` line, verbatim entries, less any school not fielding a team. */
@@ -141,11 +156,12 @@ function columnFor(offset: number, headerOffsets: readonly number[]): number {
   return headerOffsets.length - 1;
 }
 
-export function parseSchedulePdfText(text: string, division: Division): OfficialSchedule {
+export function parseSchedulePdfText(text: string, division: DivisionId): OfficialSchedule {
   const warnings: string[] = [];
+  const leagueId = leagueOfDivision(division).id;
   const lines = text.replace(/\r\n?/g, '\n').split('\n');
 
-  if (!lines.some((l) => DIVISION_HEADERS[division].test(l))) {
+  if (!lines.some((l) => divisionHeaderRe(division).test(l))) {
     warnings.push(`the PDF text has no "${division}" division header — is this the right file?`);
   }
 
@@ -159,7 +175,7 @@ export function parseSchedulePdfText(text: string, division: Division): Official
     ? (TEAMS_LINE_RE.exec(teamsLine)?.[1] ?? '')
         .split(',')
         .map((s) => s.trim())
-        .filter((s) => s && !isWithdrawnSchool(s))
+        .filter((s) => s && !isWithdrawnSchool(s, leagueId))
     : [];
   if (officialTeamNames.length === 0) warnings.push('no "Teams:" roster line found');
 
@@ -196,18 +212,24 @@ export function parseSchedulePdfText(text: string, division: Division): Official
       const awayName = mm[1].trim();
       const homeName = mm[2].trim();
       // A school that is not fielding a team plays none of its grid fixtures.
-      if (isWithdrawnSchool(awayName) || isWithdrawnSchool(homeName)) continue;
-      const away = resolveTeam(awayName);
-      const home = resolveTeam(homeName);
+      if (isWithdrawnSchool(awayName, leagueId) || isWithdrawnSchool(homeName, leagueId)) continue;
+      const away = resolveOfficialName(leagueId, awayName);
+      const home = resolveOfficialName(leagueId, homeName);
       if (!away) warnings.push(`official grid name "${awayName}" resolves to no registry team`);
       if (!home) warnings.push(`official grid name "${homeName}" resolves to no registry team`);
+      const awaySlug = away?.slug ?? null;
+      const homeSlug = home?.slug ?? null;
       fixtures.push({
+        id: officialFixtureId(division, col.dateKey, { slug: awaySlug, name: awayName }, { slug: homeSlug, name: homeName }),
+        league: leagueId,
         division,
         dateKey: col.dateKey,
+        // The grid prints only a footer "Varsity 4:00", never a per-game time.
+        time: null,
         awayName,
         homeName,
-        awaySlug: away?.slug ?? null,
-        homeSlug: home?.slug ?? null,
+        awaySlug,
+        homeSlug,
         source: 'scval-pdf',
       });
     }
@@ -223,7 +245,7 @@ export function parseSchedulePdfText(text: string, division: Division): Official
     division,
     yearLabel,
     officialTeamNames,
-    officialTeamSlugs: officialTeamNames.map((n) => resolveTeam(n)?.slug ?? null),
+    officialTeamSlugs: officialTeamNames.map((n) => resolveOfficialName(leagueId, n)?.slug ?? null),
     fixtures,
     crossoverDate,
     warnings,
@@ -233,13 +255,13 @@ export function parseSchedulePdfText(text: string, division: Division): Official
 // ---------------------------------------------------------------- membership diff
 
 export interface MembershipDiff {
-  division: Division;
+  division: DivisionId;
   /** Official names the registry does not know. */
   unknownOfficialNames: string[];
   /** Registry slugs the official roster line omits. */
   missingFromOfficial: TeamSlug[];
   /** Official slugs the registry puts in the other division. */
-  wrongDivision: Array<{ slug: TeamSlug; registryDivision: Division }>;
+  wrongDivision: Array<{ slug: TeamSlug; registryDivision: DivisionId }>;
   warnings: string[];
 }
 
@@ -247,7 +269,7 @@ export interface MembershipDiff {
 export function diffMembership(schedule: OfficialSchedule): MembershipDiff {
   const warnings: string[] = [];
   const unknownOfficialNames: string[] = [];
-  const wrongDivision: Array<{ slug: TeamSlug; registryDivision: Division }> = [];
+  const wrongDivision: Array<{ slug: TeamSlug; registryDivision: DivisionId }> = [];
   const officialSlugs = new Set<TeamSlug>();
 
   for (const name of schedule.officialTeamNames) {
@@ -286,201 +308,9 @@ export function diffMembership(schedule: OfficialSchedule): MembershipDiff {
 }
 
 // ---------------------------------------------------------------- fixture matching
-
-export interface ApplyFixturesResult {
-  games: Game[];
-  /** Fixtures matched to a MaxPreps contest. */
-  matched: number;
-  /** Fixtures with no MaxPreps contest. */
-  unmatched: OfficialFixture[];
-  /** Matched contests MaxPreps does NOT flag as league games. */
-  leagueDisagreements: string[];
-  warnings: string[];
-}
-
-function orderedKey(away: string, home: string): string {
-  return `${away}@${home}`;
-}
-
-function unorderedKey(a: string, b: string): string {
-  return [a, b].sort().join('~');
-}
-
-function sideKeyOf(side: { slug: TeamSlug | null; name: string }): string {
-  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
-}
-
-/**
- * How far a NON-LEAGUE contest may be from the grid's date and still be read as the same,
- * rescheduled, game.
- *
- * The cap exists for exactly one shape: a pair of schools that also meet in an August friendly.
- * An unbounded search could stamp an official league fixture onto that preseason game and then
- * report the real league leg as "scheduled per SCVAL, no result reported". A contest MaxPreps
- * itself flags `isLeague` cannot be that friendly, so it is not distance-capped at all — the
- * published De Anza grid moved ST. IGNATIUS @ LOS ALTOS from Sep 9 to Oct 8, twenty-nine days,
- * and a two-week cap dropped the "Moved" note off a game the site already lists while publishing
- * the empty Sep 9 slot as an unplayed fixture. The ordered AWAY@HOME key plus one-game-per-fixture
- * consumption are what keep the two legs of the round robin apart; the cap never was.
- */
-const RESCHEDULE_WINDOW_DAYS = 14;
-
-/**
- * (b) of the brief: corroborate `isLeague` against the official grid and attach
- * `game.official = {scheduledDate, source:'scval-pdf'}` to every matched contest.
- *
- * Three passes, each consuming at most one game per fixture:
- *   1. same date, same AWAY@HOME ordering  — the normal case
- *   2. same date, home/away swapped        — matched, and WARNED. The grid is NOT the authority on
- *      the host: SPEC §5.5.4 derives home/away only from schedule-calculated's
- *      `teams[].homeAwayType`, so a swap is never applied to the contest. It is carried onto the
- *      game as `provenance.hostConflict`, exactly as a league-flag disagreement is carried as
- *      `provenance.leagueFlagConflict`, so the disagreement is published data rather than a log
- *      line that dies with the run.
- *   3. same AWAY@HOME, league games first then nearest date — a rescheduled game; `scheduledDate`
- *      then differs from `dateKey`, which is how the UI can say "moved from …". A NON-LEAGUE
- *      candidate is capped at ±RESCHEDULE_WINDOW_DAYS; a league one is not.
- */
-export function applyOfficialFixtures(
-  games: readonly Game[],
-  fixtures: readonly OfficialFixture[],
-): ApplyFixturesResult {
-  const warnings: string[] = [];
-  const leagueDisagreements: string[] = [];
-  /** contestId → the sentence the game itself will carry. */
-  const disagreed = new Map<string, string>();
-  /** contestId → "the grid has X hosting, MaxPreps has Y". Published, not just logged. */
-  const hostDisagreed = new Map<string, string>();
-  const official = new Map<string, OfficialFixture>();
-  const consumed = new Set<string>();
-
-  const byDateOrdered = new Map<string, Game[]>();
-  const byDateUnordered = new Map<string, Game[]>();
-  const byOrdered = new Map<string, Game[]>();
-  const push = (map: Map<string, Game[]>, key: string, game: Game) => {
-    const list = map.get(key);
-    if (list) list.push(game);
-    else map.set(key, [game]);
-  };
-  for (const g of games) {
-    const away = sideKeyOf(g.away);
-    const home = sideKeyOf(g.home);
-    push(byDateOrdered, `${g.dateKey}|${orderedKey(away, home)}`, g);
-    push(byDateUnordered, `${g.dateKey}|${unorderedKey(away, home)}`, g);
-    push(byOrdered, orderedKey(away, home), g);
-  }
-
-  const take = (list: Game[] | undefined): Game | null => {
-    if (!list) return null;
-    for (const g of list) if (!consumed.has(g.contestId)) return g;
-    return null;
-  };
-
-  const unmatched: OfficialFixture[] = [];
-  let matched = 0;
-
-  for (const fixture of fixtures) {
-    if (!fixture.awaySlug || !fixture.homeSlug) {
-      unmatched.push(fixture);
-      continue;
-    }
-    const ordered = orderedKey(fixture.awaySlug, fixture.homeSlug);
-    let game = take(byDateOrdered.get(`${fixture.dateKey}|${ordered}`));
-    if (!game) {
-      const swapped = take(byDateUnordered.get(`${fixture.dateKey}|${unorderedKey(fixture.awaySlug, fixture.homeSlug)}`));
-      if (swapped) {
-        warnings.push(
-          `${fixture.dateKey} ${fixture.awayName} @ ${fixture.homeName}: ` +
-            'MaxPreps has the host the other way round',
-        );
-        // Home/away stays MaxPreps' (SPEC §5.5.4) — but the disagreement is PUBLISHED on the
-        // game, not only warned about, so the venue claim is not the only surviving record of it.
-        // The sentence is read by a human on the game page (GameDetails' WHERE block), so it uses
-        // the display name rather than the grid's UPPERCASE spelling, and carries no date: this is
-        // the same-date pass, so the date is the one the page already states two lines above.
-        const gridHost = resolveTeam(fixture.homeSlug)?.name ?? fixture.homeName;
-        hostDisagreed.set(
-          swapped.contestId,
-          `the official ${DIVISION_LABELS[fixture.division]} grid has ${gridHost} hosting; ` +
-            `MaxPreps has ${swapped.home.name}, and MaxPreps is the only source of the two that ` +
-            'states home and away.',
-        );
-        game = swapped;
-      }
-    }
-    if (!game) {
-      // A rescheduled leg. League games first, then nearest date, so the two legs of the round
-      // robin cannot cross over. The distance cap applies ONLY to a candidate MaxPreps does not
-      // flag as a league game: these schools meet three times in a season (both league legs plus
-      // a non-league preseason friendly), and an unbounded search could stamp the official league
-      // fixture onto that August friendly and then report the real league game as "scheduled per
-      // SCVAL, no result reported". A real league leg can move much further than two weeks —
-      // see RESCHEDULE_WINDOW_DAYS.
-      const days = (a: string, b: string) =>
-        Math.abs(Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86_400_000;
-      const candidates = (byOrdered.get(ordered) ?? []).filter(
-        (g) =>
-          !consumed.has(g.contestId) &&
-          (g.isLeague || days(g.dateKey, fixture.dateKey) <= RESCHEDULE_WINDOW_DAYS),
-      );
-      candidates.sort(
-        (a, b) =>
-          Number(b.isLeague) - Number(a.isLeague) ||
-          days(a.dateKey, fixture.dateKey) - days(b.dateKey, fixture.dateKey),
-      );
-      game = candidates[0] ?? null;
-      if (game) {
-        warnings.push(
-          `${fixture.awayName} @ ${fixture.homeName}: official ${fixture.dateKey}, ` +
-            `MaxPreps ${game.dateKey}`,
-        );
-      }
-    }
-    if (!game) {
-      unmatched.push(fixture);
-      continue;
-    }
-    consumed.add(game.contestId);
-    official.set(game.contestId, fixture);
-    matched += 1;
-    if (!game.isLeague) {
-      const note =
-        `the official ${DIVISION_LABELS[fixture.division]} grid has this as a league fixture ` +
-        `on ${fixture.dateKey}; MaxPreps flags it non-league`;
-      leagueDisagreements.push(`${game.contestId} (${fixture.awayName} @ ${fixture.homeName}) — ${note}`);
-      // Carried on the GAME, not just into a log line: the standings tally on `isLeague`, so a
-      // MaxPreps contestType mis-flag drops a real league result from the table, and MaxPreps'
-      // own reported table cannot catch it — it uses the same flag. This is the only published
-      // signal that the two sources disagree about what counts.
-      disagreed.set(game.contestId, note);
-    }
-  }
-
-  const out = games.map((g) => {
-    const fixture = official.get(g.contestId);
-    if (!fixture) return g;
-    const note = disagreed.get(g.contestId);
-    const hostNote = hostDisagreed.get(g.contestId);
-    const provenance = {
-      ...g.provenance,
-      ...(note && !g.provenance.leagueFlagConflict ? { leagueFlagConflict: note } : {}),
-      ...(hostNote ? { hostConflict: hostNote } : {}),
-    };
-    return {
-      ...g,
-      official: { scheduledDate: fixture.dateKey, source: 'scval-pdf' as const },
-      provenance,
-    };
-  });
-
-  unmatched.sort((a, b) =>
-    a.dateKey === b.dateKey
-      ? `${a.awayName}@${a.homeName}`.localeCompare(`${b.awayName}@${b.homeName}`)
-      : a.dateKey.localeCompare(b.dateKey),
-  );
-
-  return { games: out, matched, unmatched, leagueDisagreements, warnings };
-}
+//
+// The matcher (formerly `applyOfficialFixtures`) lives in lib/official/match.ts as
+// `matchOfficialFixtures(games, fixtures, { matcher: 'legacy', … })` (SPEC §7.8).
 
 export interface CarryOfficialResult {
   /** The previous snapshot's unmatched fixtures for the divisions that were not read. */
@@ -506,7 +336,7 @@ export interface CarryOfficialResult {
  * always wins.
  */
 export function carryOfficialForward(
-  missing: readonly Division[],
+  missing: readonly DivisionId[],
   previous: { officialFixtures?: readonly OfficialFixture[]; games: readonly Game[] },
   games: readonly Game[],
 ): CarryOfficialResult {
@@ -557,7 +387,7 @@ export interface HistoryStandingRow {
 }
 
 export interface HistoryStandingsBlock {
-  division: Division;
+  division: DivisionId;
   level: ScvalLevel;
   rows: HistoryStandingRow[];
 }
@@ -635,7 +465,7 @@ export interface AllLeagueAward {
 }
 
 export interface AllLeagueBlock {
-  division: Division;
+  division: DivisionId;
   level: ScvalLevel;
   overall: AllLeagueAward[];
   firstTeam: AllLeaguePlayer[];
@@ -764,13 +594,13 @@ export class ScvalClient {
     this.http = new HttpClient(opts);
   }
 
-  async getSchedule(division: Division): Promise<{
+  async getSchedule(division: DivisionId): Promise<{
     schedule: OfficialSchedule;
     url: string;
     httpStatus: number;
     bytes: number;
   }> {
-    const url = SCVAL_SCHEDULE_PDFS[division];
+    const url = scvalScheduleUrl(division);
     const res = await this.http.bytes(url);
     const text = pdfToText(res.body);
     return {

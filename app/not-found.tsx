@@ -2,17 +2,24 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
+import { LEAGUES } from '@/lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
 };
 
+/** 'SCVAL, BVAL, PCAL and MCAL', from the config (never a literal list). */
+const LEAGUE_LIST = LEAGUES.map((l) => l.shortName).reduce(
+  (acc, name, i, all) => (i === 0 ? name : `${acc}${i === all.length - 1 ? ' and ' : ', '}${name}`),
+  '',
+);
+
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
-  { href: '/standings', name: 'Standings', description: 'Both divisions' },
-  { href: '/schedule', name: 'Schedule & results', description: 'The whole season' },
-  { href: '/teams', name: 'Teams', description: 'Find your school' },
-  { href: '/playoffs', name: 'CCS playoffs', description: 'Who is in, and the key dates' },
+  { href: '/standings', name: 'Standings — every league', description: `${LEAGUE_LIST} tables` },
+  { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
+  { href: '/teams', name: 'Find a team', description: 'Search by school, city or mascot' },
+  { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 

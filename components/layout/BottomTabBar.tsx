@@ -1,11 +1,20 @@
+import type { LeagueId, TeamSlug } from '../../lib/types';
+
 import NavLink from './NavLink';
+import { navLeagueHrefs } from './TopNav';
 
 /**
  * The phone bottom bar (DESIGN §1.3, §3.1, R-3). FIVE tabs, because "find my school" was a
  * top-three task with no phone nav entry. The bar is 56px tall plus the safe-area inset; each tab
  * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
- * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤6 characters at
- * 12px, so they do not truncate at any supported width.
+ * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
+ * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
+ * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
+ * fails any label over 56px, so none truncates at any supported width.
+ *
+ * After hydration Scores, Table and Playoffs follow the page's league, else the remembered one
+ * (`/schedule/<id>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
+ * static HTML keeps the index hrefs.
  *
  * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current="page"`, accent
  * ink, a wash capsule behind its glyph AND a heavier label — never color alone.
@@ -21,7 +30,7 @@ const ICON_PROPS = {
   strokeLinejoin: 'round' as const,
 };
 
-const TABS = [
+export const TABS = [
   {
     href: '/',
     label: 'Home',
@@ -65,7 +74,7 @@ const TABS = [
   },
   {
     href: '/playoffs',
-    label: 'CCS',
+    label: 'Playoffs',
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
         <path d="M4 4v8a6 6 0 0 0 12 0V4z" />
@@ -75,7 +84,13 @@ const TABS = [
   },
 ];
 
-export function BottomTabBar() {
+export function BottomTabBar({
+  slugLeague,
+}: {
+  /** `{ slug: league }` for every team (the same map the prefs script embeds). */
+  slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
+}) {
+  const hrefs = navLeagueHrefs();
   return (
     <nav
       aria-label="Sections"
@@ -85,7 +100,14 @@ export function BottomTabBar() {
       <ul className="mx-auto flex w-full max-w-md list-none p-0">
         {TABS.map((tab) => (
           <li key={tab.href} className="min-w-0 flex-1">
-            <NavLink href={tab.href} variant="tab" label={tab.label} glyph={tab.glyph} />
+            <NavLink
+              href={tab.href}
+              variant="tab"
+              label={tab.label}
+              glyph={tab.glyph}
+              leagueHrefs={hrefs[tab.href]}
+              slugLeague={hrefs[tab.href] ? slugLeague : undefined}
+            />
           </li>
         ))}
       </ul>

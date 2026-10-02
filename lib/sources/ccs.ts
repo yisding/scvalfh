@@ -14,7 +14,7 @@
  * pages (rendered client-side; no bracket content in the server HTML at all).
  */
 
-import { PLAYOFF_KEY_DATES } from '../season';
+import { CCS } from '../leagues';
 import type { CcsCalendarEvent, CcsEventKind } from '../types';
 import { HttpClient, type HttpClientOptions, icsLine, unfoldIcs } from './http';
 
@@ -23,10 +23,11 @@ export const CCS_SPORT_HUB = 'https://cifccs.org/sports/fh/index';
 
 /**
  * Both CCS reads are gated to the run-up to the playoffs: nothing changes before the league season
- * ends, and the bylaws-derived dates already render the section (SPEC §5.9). Oct 25 is two days
- * before the last league game and five before the Oct 30 crossover.
+ * ends, and the bylaws-derived dates already render the section (SPEC §5.9). The date lives in
+ * `CCS.pollFrom` (lib/leagues.ts): it opens before the last league games (BVAL Oct 30), the BVAL
+ * play-in (Oct 31) and CCS entries (Nov 2).
  */
-export const CCS_POLL_FROM = '2026-10-25';
+export const CCS_POLL_FROM: string = CCS.pollFrom;
 
 export function ccsPollingOpen(todayKey: string, from = CCS_POLL_FROM): boolean {
   return todayKey >= from;
@@ -111,10 +112,10 @@ export interface KeyDateCheck {
   events: CcsCalendarEvent[];
 }
 
-/** Compare the calendar against `PLAYOFF_KEY_DATES` — confirmation only, never a rewrite. */
+/** Compare the calendar against `CCS.keyDates` — confirmation only, never a rewrite. */
 export function confirmKeyDates(
   events: readonly CcsCalendarEvent[],
-  expected = PLAYOFF_KEY_DATES,
+  expected = CCS.keyDates,
 ): KeyDateCheck {
   const byKind = new Map<CcsEventKind, string>();
   for (const e of events) if (!byKind.has(e.kind)) byKind.set(e.kind, e.date);

@@ -20,7 +20,7 @@ import {
   parseCcsIcal,
   readBracketPublished,
 } from '../lib/sources/ccs';
-import { PLAYOFF_KEY_DATES } from '../lib/season';
+import { CCS } from '../lib/leagues';
 import { REPO } from './helpers';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');
@@ -104,9 +104,9 @@ describe('ccs: key-date confirmation', () => {
     const check = confirmKeyDates(events);
     expect(check.differences).toEqual([]);
     expect(check.confirmed).toBe(true);
-    expect(PLAYOFF_KEY_DATES.quarterfinals).toBe('2026-11-07');
-    expect(PLAYOFF_KEY_DATES.semifinals).toBe('2026-11-11');
-    expect(PLAYOFF_KEY_DATES.finals).toBe('2026-11-14');
+    expect(CCS.keyDates.quarterfinals).toBe('2026-11-07');
+    expect(CCS.keyDates.semifinals).toBe('2026-11-11');
+    expect(CCS.keyDates.finals).toBe('2026-11-14');
   });
 
   it('reports a difference instead of silently adopting the feed', () => {

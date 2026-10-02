@@ -1,0 +1,7 @@
+{
+  "id": "bval-revised",
+  "note": "The Mt. Hamilton schedule document's sha256 differs from the bundled copy's (revised upstream).",
+  "files": {
+    "official/revision/mt-hamilton": "official/revision/mt-hamilton.txt"
+  }
+}

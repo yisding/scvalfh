@@ -1,6 +1,7 @@
 /**
- * Standings computed from game rows, per the SCVAL Field Hockey By-Laws 2026-27.
+ * Standings computed from game rows: a stage interpreter driven by lib/leagues.ts (SPEC §5.2-§5.8).
  *
+ * SCVAL (SCVAL Field Hockey By-Laws 2026-27) is the reference and is golden-gated byte for byte:
  * Article VI §1: the divisions play a double round robin; DIVISION GAMES ONLY count to the
  *   division record.
  * Article VI §2: 3 points for a win, 1 for a tie. "The division placement/standings will be the
@@ -15,20 +16,38 @@
  * Article VII §2: places 1-3 are automatic qualifiers; 4th plays in on Oct 30 for the SCVAL 7th
  *   AQ; the play-in loser and both 5th-place teams go to CCS for at-large consideration.
  *
+ * Every other league is the same body with its own config: points, the tiebreak chain (keyed by
+ * where the tied points bucket starts), the multi-team procedure (`partition-restart` for SCVAL and
+ * PCAL, `seed-one-restart` for BVAL and MCAL), MCAL's last tournament place, citations and ladder.
+ *
  * MaxPreps' own row is kept verbatim on every Standing for the published cross-check: its De Anza
  * arithmetic is internally suspect (Homestead and Cupertino both report 0 league goals for),
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { BYLAW_CITATIONS, DIVISIONS, DIVISION_LABELS, leagueStandingsUrl } from './season';
+import { shortDate } from './format';
+import {
+  LEAGUES,
+  divisionLabel,
+  getDivision,
+  getLeague,
+  ladderFor,
+  ladderRung,
+  leagueOfDivision,
+  leagueStandingsUrl,
+  tiebreakChainFor,
+} from './leagues';
+import type { LadderRung, LeagueConfig, LeagueRules } from './leagues';
 import { TEAMS, getTeamById, teamsInDivision } from './teams';
 import type {
   ComputedRecord,
   CrossCheckRow,
-  CrossoverPairing,
   CrossoverSeat,
-  Division,
+  DivisionId,
   Game,
+  LeagueId,
+  LeaguePairing,
+  OfficialFixture,
   Outcome,
   PlayoffStatus,
   Record3,
@@ -36,6 +55,7 @@ import type {
   Standing,
   Team,
   TeamId,
+  TeamSlug,
   TiebreakInfo,
   TiebreakStage,
 } from './types';
@@ -117,8 +137,10 @@ function accumulate(tally: Tally, game: Game, teamId: TeamId): void {
   tally.results.push(view.outcome);
 }
 
+type Points = LeagueRules['points'];
+
 /** Tally → the published record. `place` is filled in once the order is known. */
-function toComputed(tally: Tally, place: number): ComputedRecord {
+function toComputed(tally: Tally, place: number, points: Points): ComputedRecord {
   const { gp, w, l, t } = tally;
   const last5 = tally.results.slice(-5);
   let streak: ComputedRecord['streak'] = null;
@@ -135,8 +157,8 @@ function toComputed(tally: Tally, place: number): ComputedRecord {
     t,
     // CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6).
     winPct: gp > 0 ? (w + t / 2) / gp : 0,
-    // Article VI §2.
-    pts: 3 * w + t,
+    // The league's points (3-1-0 in all four leagues; SCVAL Article VI §2).
+    pts: points.win * w + points.tie * t + points.loss * l,
     gf: tally.gf,
     ga: tally.ga,
     gd: tally.gf - tally.ga,
@@ -149,12 +171,10 @@ function toComputed(tally: Tally, place: number): ComputedRecord {
   };
 }
 
-/** Division games only, final only (Article VI §1). */
-export function divisionGames(games: readonly Game[], division: Division): Game[] {
+/** countsFor === division && status === 'final', sorted by dateLocal (SCVAL Article VI §1). */
+export function divisionGames(games: readonly Game[], division: DivisionId): Game[] {
   return games
-    .filter(
-      (g) => g.isLeague && g.leagueDivision === division && g.status === 'final',
-    )
+    .filter((g) => g.countsFor === division && g.status === 'final')
     .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
 }
 
@@ -196,63 +216,196 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
   return out;
 }
 
-const STAGES: readonly Exclude<TiebreakStage, 'points' | 'coin-flip'>[] = [
-  'head-to-head',
-  'division-wins',
-  'h2h-goals-against',
-  'h2h-goal-diff',
-];
+/** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
+const UNCOMPUTABLE: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
+  'coin-flip',
+  'ccs-points',
+  'no-rule',
+]);
 
-const STAGE_CITATION: Record<TiebreakStage, string> = {
-  points: BYLAW_CITATIONS.order,
-  'head-to-head': BYLAW_CITATIONS.headToHead,
-  'division-wins': BYLAW_CITATIONS.divisionWins,
-  'h2h-goals-against': BYLAW_CITATIONS.h2hGoalsAgainst,
-  'h2h-goal-diff': BYLAW_CITATIONS.h2hGoalDiff,
-  'coin-flip': BYLAW_CITATIONS.coinFlip,
-};
+/** Everything a stage key may read for one division. */
+interface DivisionCtx {
+  division: DivisionId;
+  league: LeagueConfig;
+  rules: LeagueRules;
+  /** The division's counted finals. */
+  games: readonly Game[];
+  computed: Map<TeamId, ComputedRecord>;
+  resolvedBy: Map<TeamId, TiebreakStage>;
+  /** The lower points buckets, final order, as clusters (filled bucket by bucket). */
+  placedBelowOf: (bucketIndex: number) => TeamId[][];
+}
 
-/** Higher is better for every stage. */
-function stageKey(
-  stage: (typeof STAGES)[number],
-  id: TeamId,
-  h2h: Map<TeamId, H2H>,
-  computed: Map<TeamId, ComputedRecord>,
-  allEqualGp: boolean,
-): number {
-  const row = h2h.get(id) ?? emptyH2H();
+/** Points team `id` earned in its meetings with `other` (win·w + tie·t over their counted games). */
+function pointsVs(ctx: DivisionCtx, id: TeamId, other: TeamId): { pts: number; gp: number } {
+  let pts = 0;
+  let gp = 0;
+  for (const g of ctx.games) {
+    const ids = [g.home.teamId, g.away.teamId];
+    if (!ids.includes(id) || !ids.includes(other)) continue;
+    const view = perspective(g, id);
+    if (!view) continue;
+    gp += 1;
+    if (view.outcome === 'W') pts += ctx.rules.points.win;
+    else if (view.outcome === 'T') pts += ctx.rules.points.tie;
+    else pts += ctx.rules.points.loss;
+  }
+  return { pts, gp };
+}
+
+const allEqual = (values: readonly number[]): boolean => values.every((v) => v === values[0]);
+
+/**
+ * Stage keys, higher is better; `null` = the stage is skipped for this group (SPEC §5.5).
+ * `head-to-head`, `division-wins`, `h2h-goals-against` and `h2h-goal-diff` are today's SCVAL code.
+ */
+function stageKeys(
+  stage: TiebreakStage,
+  group: readonly TeamId[],
+  above: readonly TeamId[],
+  below: readonly TeamId[][],
+  ctx: DivisionCtx,
+): Map<TeamId, number> | null {
+  const { rules } = ctx;
+  const out = new Map<TeamId, number>();
   switch (stage) {
     case 'head-to-head':
-      // "Better head-to-head record". With an equal number of head-to-head games the by-laws'
-      // own currency (points) ranks them; with an unequal number (mid-season, or an unplayed
-      // fixture) points would reward the team that simply played more, so use win percentage.
-      return allEqualGp ? 3 * row.w + row.t : row.gp > 0 ? (row.w + row.t / 2) / row.gp : 0;
-    case 'division-wins':
-      return computed.get(id)?.w ?? 0;
     case 'h2h-goals-against':
-      // "Least goals given up between head to head teams tied" — fewer is better.
-      return -row.ga;
     case 'h2h-goal-diff':
-      return row.gf - row.ga;
+    case 'h2h-win-pct': {
+      const h2h = headToHead(group, ctx.games);
+      const gps = group.map((id) => h2h.get(id)?.gp ?? 0);
+      const allEqualGp = gps.every((g) => g === gps[0]);
+      if (stage === 'h2h-win-pct' && gps.some((g) => g === 0)) return null;
+      if (stage === 'head-to-head' && rules.h2hUnmet === 'skip' && gps.some((g) => g === 0)) return null;
+      for (const id of group) {
+        const row = h2h.get(id) ?? emptyH2H();
+        let key: number;
+        if (stage === 'head-to-head') {
+          // "Better head-to-head record". With an equal number of head-to-head games the by-laws'
+          // own currency (points) ranks them; with an unequal number (mid-season, or an unplayed
+          // fixture) points would reward the team that simply played more, so use win percentage.
+          key = allEqualGp
+            ? rules.points.win * row.w + rules.points.tie * row.t
+            : row.gp > 0
+              ? (row.w + row.t / 2) / row.gp
+              : 0;
+        } else if (stage === 'h2h-goals-against') {
+          // "Least goals given up between head to head teams tied" — fewer is better.
+          key = -row.ga;
+        } else if (stage === 'h2h-goal-diff') {
+          key = row.gf - row.ga;
+        } else {
+          key = (row.w + row.t / 2) / row.gp;
+        }
+        out.set(id, key);
+      }
+      return out;
+    }
+    case 'division-wins':
+      for (const id of group) out.set(id, ctx.computed.get(id)?.w ?? 0);
+      return out;
+    case 'division-goals-against':
+      for (const id of group) out.set(id, -(ctx.computed.get(id)?.ga ?? 0));
+      return out;
+    case 'record-above-tie': {
+      if (above.length === 0) return null;
+      for (const id of group) {
+        let w = 0;
+        let t = 0;
+        let gp = 0;
+        for (const g of ctx.games) {
+          const ids = [g.home.teamId, g.away.teamId];
+          if (!ids.includes(id)) continue;
+          const other = g.home.teamId === id ? g.away.teamId : g.home.teamId;
+          if (!other || !above.includes(other)) continue;
+          const view = perspective(g, id);
+          if (!view) continue;
+          gp += 1;
+          if (view.outcome === 'W') w += 1;
+          else if (view.outcome === 'T') t += 1;
+        }
+        if (gp === 0) return null;
+        out.set(id, (w + t / 2) / gp);
+      }
+      return out;
+    }
+    case 'record-vs-higher-placed': {
+      for (const target of above) {
+        const k = group.map((id) => pointsVs(ctx, id, target).pts);
+        if (allEqual(k)) continue;
+        group.forEach((id, i) => out.set(id, k[i]));
+        return out;
+      }
+      return null;
+    }
+    case 'record-vs-lower-placed': {
+      for (const cluster of below) {
+        if (cluster.length === 1) {
+          const k = group.map((id) => pointsVs(ctx, id, cluster[0]).pts);
+          if (allEqual(k)) continue;
+          group.forEach((id, i) => out.set(id, k[i]));
+          return out;
+        }
+        // A shared lower cluster: its internal order is undefined, so it can only be passed over
+        // when every member of it gives the tied teams equal points.
+        for (const member of cluster) {
+          const k = group.map((id) => pointsVs(ctx, id, member).pts);
+          if (!allEqual(k)) return null;
+        }
+      }
+      return null;
+    }
+    case 'draw-number': {
+      const draws = rules.drawNumbers;
+      if (!draws) return null;
+      for (const id of group) {
+        const slug = getTeamById(id)?.slug;
+        const n = slug === undefined ? undefined : draws[slug];
+        if (n === undefined) return null;
+        out.set(id, -n);
+      }
+      return out;
+    }
+    default:
+      // 'points', 'ccs-points', 'coin-flip', 'no-rule', 'play-in': never keyed.
+      return null;
   }
 }
 
+/** The chain split into its computable stages and its terminal uncomputable stage (if any). */
+function splitChain(chain: readonly TiebreakStage[]): {
+  stages: TiebreakStage[];
+  terminal: TiebreakStage | null;
+} {
+  const last = chain[chain.length - 1];
+  if (last !== undefined && UNCOMPUTABLE.has(last)) {
+    return { stages: chain.slice(0, -1), terminal: last };
+  }
+  return { stages: [...chain], terminal: null };
+}
+
+// ---------------------------------------------------------------- partition-restart (SCVAL, PCAL)
+
+/**
+ * Today's `resolveGroup`, parameterized (SPEC §5.3): `chain` is the chain of the ORIGINAL points
+ * bucket; a stage key of `null` skips the stage; the terminal uncomputable stage replaces the
+ * literal 'coin-flip'.
+ */
 function resolveGroup(
   group: readonly TeamId[],
-  games: readonly Game[],
-  computed: Map<TeamId, ComputedRecord>,
-  resolvedBy: Map<TeamId, TiebreakStage>,
-  startStage = 0,
+  chain: readonly TiebreakStage[],
+  above: readonly TeamId[],
+  below: readonly TeamId[][],
+  ctx: DivisionCtx,
 ): TeamId[][] {
   if (group.length <= 1) return [[...group]];
+  const { stages, terminal } = splitChain(chain);
 
-  const h2h = headToHead(group, games);
-  const gps = group.map((id) => h2h.get(id)?.gp ?? 0);
-  const allEqualGp = gps.every((g) => g === gps[0]);
-
-  for (let s = startStage; s < STAGES.length; s += 1) {
-    const stage = STAGES[s];
-    const keyed = group.map((id) => ({ id, key: stageKey(stage, id, h2h, computed, allEqualGp) }));
+  for (const stage of stages) {
+    const keys = stageKeys(stage, group, above, below, ctx);
+    if (keys === null) continue;
+    const keyed = group.map((id) => ({ id, key: keys.get(id) as number }));
     const distinct = new Set(keyed.map((k) => k.key));
     if (distinct.size === 1) continue;
 
@@ -265,15 +418,134 @@ function resolveGroup(
     for (const bucket of buckets) {
       // Recorded now and overwritten by a deeper stage if this bucket splits again, so the note
       // always names the step that actually separated the team from its last tie-mates.
-      for (const id of bucket) resolvedBy.set(id, stage);
-      out.push(...resolveGroup(bucket, games, computed, resolvedBy, 0));
+      for (const id of bucket) ctx.resolvedBy.set(id, stage);
+      out.push(...resolveGroup(bucket, chain, [...above, ...out.flat()], below, ctx));
     }
     return out;
   }
 
-  // Article VI §7: unresolved ⇒ a coin flip we cannot compute. The teams stay tied.
-  for (const id of group) resolvedBy.set(id, 'coin-flip');
+  // Unresolved ⇒ an uncomputable last step (SCVAL Article VI §7's coin flip). The teams stay tied.
+  for (const id of group) ctx.resolvedBy.set(id, terminal ?? 'coin-flip');
   return [[...group].sort((a, b) => nameOf(a).localeCompare(nameOf(b)))];
+}
+
+// ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
+
+interface SeedCtx extends DivisionCtx {
+  bucketStart: number;
+  below: TeamId[][];
+}
+
+const byName = (ids: readonly TeamId[]): TeamId[] =>
+  [...ids].sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
+
+/**
+ * Bring the first team (or a shared first cluster) out of `group` with `chain` (SPEC §5.4).
+ * `narrow` decides among several teams level on the deciding stage's best key.
+ */
+function pickFirst(
+  group: readonly TeamId[],
+  chain: readonly TiebreakStage[],
+  above: readonly TeamId[],
+  ctx: SeedCtx,
+  narrow: (best: TeamId[]) => TeamId[],
+): { cluster: TeamId[]; terminal: boolean } {
+  for (const stage of chain) {
+    if (UNCOMPUTABLE.has(stage)) {
+      for (const id of group) ctx.resolvedBy.set(id, stage);
+      return { cluster: byName(group), terminal: true };
+    }
+    const keys = stageKeys(stage, group, above, ctx.below, ctx);
+    if (keys === null) continue;
+    const values = group.map((id) => keys.get(id) as number);
+    if (allEqual(values)) continue;
+    const max = Math.max(...values);
+    const best = group.filter((id) => keys.get(id) === max);
+    // Every team of the group was separated from the leader by this stage; deeper stages overwrite.
+    for (const id of group) ctx.resolvedBy.set(id, stage);
+    if (best.length === 1) return { cluster: best, terminal: false };
+    return { cluster: narrow(best), terminal: false };
+  }
+  // Chain exhausted without a terminal (only possible if config is wrong): shared.
+  return { cluster: byName(group), terminal: true };
+}
+
+/** seed-one-restart: place one team, then restart the whole chain among the rest. */
+function seedOne(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: SeedCtx): TeamId[][] {
+  if (group.length === 0) return [];
+  if (group.length === 1) return [[group[0]]];
+  const ps = ctx.league.postseason;
+  if (ps.kind === 'league-tournament') {
+    const L = ps.lastSpot.place;
+    if (place <= L && L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx);
+  }
+  const chain = tiebreakChainFor(ctx.division, ctx.bucketStart);
+  const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx)[0]);
+  if (head.terminal) return [head.cluster];
+  const rest = group.filter((id) => !head.cluster.includes(id));
+  return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx)];
+}
+
+/** MCAL Tie-Breaking Criteria for the play-in pair: criteria 1-2, then draw numbers. */
+const PLAY_IN_CHAIN: readonly TiebreakStage[] = ['h2h-win-pct', 'record-above-tie', 'draw-number'];
+
+/** MCAL's last tournament place (SPEC §5.4b): a play-in decides it unless one team swept 2-0. */
+function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: SeedCtx): TeamId[][] {
+  const ps = ctx.league.postseason;
+  if (ps.kind !== 'league-tournament') return seedOne(group, place, above, ctx);
+  const L = ps.lastSpot.place;
+
+  if (place < L) {
+    if (group.length === 3 && place === L - 1) {
+      // "tie breaking numbers will be used for placing #5"
+      const draws = ctx.rules.drawNumbers ?? {};
+      const drawOf = (id: TeamId): number => draws[getTeamById(id)?.slug ?? ''] ?? Number.MAX_SAFE_INTEGER;
+      const first = [...group].sort((a, b) => drawOf(a) - drawOf(b))[0];
+      ctx.resolvedBy.set(first, 'draw-number');
+      const rest = group.filter((id) => id !== first);
+      return [[first], ...seedOne(rest, L, [...above, first], ctx)];
+    }
+    const chain = tiebreakChainFor(ctx.division, ctx.bucketStart);
+    const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx)[0]);
+    if (head.terminal) return [head.cluster];
+    const rest = group.filter((id) => !head.cluster.includes(id));
+    return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx)];
+  }
+
+  // place === L
+  if (group.length === 2) {
+    const [a, b] = group;
+    const meetings = ctx.games.filter((g) => {
+      const ids = [g.home.teamId, g.away.teamId];
+      return ids.includes(a) && ids.includes(b);
+    });
+    const aWins = meetings.filter((g) => perspective(g, a)?.outcome === 'W').length;
+    const bWins = meetings.filter((g) => perspective(g, b)?.outcome === 'W').length;
+    if (meetings.length >= 2 && (aWins === meetings.length || bWins === meetings.length)) {
+      const winner = aWins === meetings.length ? a : b;
+      const loser = winner === a ? b : a;
+      ctx.resolvedBy.set(winner, 'h2h-win-pct');
+      ctx.resolvedBy.set(loser, 'h2h-win-pct');
+      return [[winner], [loser]];
+    }
+    // A split, a tie or an unplayed meeting: a play-in decides it.
+    ctx.resolvedBy.set(a, 'play-in');
+    ctx.resolvedBy.set(b, 'play-in');
+    return [byName(group)];
+  }
+
+  // Three or more level at L: "1 & 2 above … to qualify the first play in team … The criteria will
+  // start OVER to determine the second".
+  const pickPlayIn = (pool: readonly TeamId[], pickAbove: readonly TeamId[]): TeamId => {
+    const narrow = (best: TeamId[]): TeamId[] => pickFirst(best, PLAY_IN_CHAIN, pickAbove, ctx, narrow).cluster;
+    return pickFirst(pool, PLAY_IN_CHAIN, pickAbove, ctx, narrow).cluster[0];
+  };
+  const p1 = pickPlayIn(group, above);
+  const p2 = pickPlayIn(group.filter((id) => id !== p1), [...above, p1]);
+  ctx.resolvedBy.set(p1, 'play-in');
+  ctx.resolvedBy.set(p2, 'play-in');
+  const rest = group.filter((id) => id !== p1 && id !== p2);
+  return [byName([p1, p2]), ...seedOne(rest, L + 2, [...above, p1, p2], ctx)];
 }
 
 function nameOf(id: TeamId): string {
@@ -320,123 +592,190 @@ function recordString(w: number, l: number, t: number): string {
 
 export interface ComputeOptions {
   /** MaxPreps' reported rows, keyed on schoolId. */
-  reported?: Map<TeamId, ReportedRecord>;
+  reported?: ReadonlyMap<TeamId, ReportedRecord>;
 }
 
+const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
+  'record-vs-higher-placed',
+  'record-vs-lower-placed',
+]);
+
+/** Loops LEAGUES → divisions → teamsInDivision; per division: today's body, with rules from config. */
 export function computeStandings(
   games: readonly Game[],
   opts: ComputeOptions = {},
 ): Standing[] {
   const out: Standing[] = [];
-
-  for (const division of DIVISIONS) {
-    const teams = teamsInDivision(division);
-    const league = divisionGames(games, division);
-    const allFinals = games.filter((g) => g.status === 'final');
-
-    const tallies = new Map<TeamId, Tally>();
-    const overallTallies = new Map<TeamId, Tally>();
-    for (const team of teams) {
-      const t = emptyTally();
-      const o = emptyTally();
-      for (const g of league) accumulate(t, g, team.id);
-      for (const g of allFinals) accumulate(o, g, team.id);
-      tallies.set(team.id, t);
-      overallTallies.set(team.id, o);
-    }
-
-    const computed = new Map<TeamId, ComputedRecord>(
-      teams.map((team) => [team.id, toComputed(tallies.get(team.id)!, 0)]),
-    );
-
-    // Article VI §2: order by points. Teams with no reported results sort last (DESIGN §8).
-    const played = teams.filter((t) => computed.get(t.id)!.gp > 0).map((t) => t.id);
-    const unplayed = teams
-      .filter((t) => computed.get(t.id)!.gp === 0)
-      .map((t) => t.id)
-      .sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
-
-    const byPoints = new Map<number, TeamId[]>();
-    for (const id of played) {
-      const pts = computed.get(id)!.pts;
-      const bucket = byPoints.get(pts);
-      if (bucket) bucket.push(id);
-      else byPoints.set(pts, [id]);
-    }
-
-    const resolvedBy = new Map<TeamId, TiebreakStage>();
-    const clusters: TeamId[][] = [];
-    for (const pts of [...byPoints.keys()].sort((a, b) => b - a)) {
-      const group = byPoints.get(pts)!;
-      if (group.length === 1) resolvedBy.set(group[0], 'points');
-      clusters.push(...resolveGroup(group, league, computed, resolvedBy));
-    }
-
-    // Standard competition ranking: a shared place consumes its own slots.
-    let place = 0;
-    const order: Array<{ id: TeamId; place: number; cluster: TeamId[] }> = [];
-    for (const cluster of clusters) {
-      place += 1;
-      for (const id of cluster) order.push({ id, place, cluster });
-      place += cluster.length - 1;
-    }
-    for (const id of unplayed) {
-      place += 1;
-      order.push({ id, place, cluster: [id] });
-      resolvedBy.set(id, 'points');
-    }
-
-    for (const entry of order) {
-      const team = getTeamById(entry.id)!;
-      const record = toComputed(tallies.get(entry.id)!, entry.place);
-      const overall = toComputed(overallTallies.get(entry.id)!, entry.place);
-      const reported = opts.reported?.get(entry.id) ?? null;
-      const shared = entry.cluster.length > 1;
-      const stage = resolvedBy.get(entry.id) ?? 'points';
-      const tiebreak: TiebreakInfo = {
-        resolvedBy: stage,
-        note: tiebreakNote(team, record, stage, entry.cluster),
-        tiedWith: shared ? entry.cluster.filter((id) => id !== entry.id) : [],
-        shared,
-      };
-      const { mismatch, detail } = compareToReported(record, overall, reported);
-      out.push({
-        teamId: entry.id,
-        slug: team.slug,
-        division,
-        computed: record,
-        overall,
-        reported,
-        mismatch,
-        ...(detail ? { mismatchDetail: detail } : {}),
-        tiebreak,
-        playoffStatus: playoffStatus(entry.place),
-        hasReportedResults: record.gp > 0,
-      });
+  const allFinals = games.filter((g) => g.status === 'final');
+  for (const league of LEAGUES) {
+    for (const div of league.divisions) {
+      out.push(...computeDivision(league, div.id, games, allFinals, opts));
     }
   }
-
   return out;
 }
 
+function computeDivision(
+  league: LeagueConfig,
+  division: DivisionId,
+  games: readonly Game[],
+  allFinals: readonly Game[],
+  opts: ComputeOptions,
+): Standing[] {
+  const { rules } = league;
+  const teams = teamsInDivision(division);
+  const counted = divisionGames(games, division);
+
+  const tallies = new Map<TeamId, Tally>();
+  const overallTallies = new Map<TeamId, Tally>();
+  for (const team of teams) {
+    const t = emptyTally();
+    const o = emptyTally();
+    for (const g of counted) accumulate(t, g, team.id);
+    for (const g of allFinals) accumulate(o, g, team.id);
+    tallies.set(team.id, t);
+    overallTallies.set(team.id, o);
+  }
+
+  const computed = new Map<TeamId, ComputedRecord>(
+    teams.map((team) => [team.id, toComputed(tallies.get(team.id)!, 0, rules.points)]),
+  );
+
+  // Order by points. Teams with no reported results sort last (DESIGN §8).
+  const played = teams.filter((t) => computed.get(t.id)!.gp > 0).map((t) => t.id);
+  const unplayed = teams
+    .filter((t) => computed.get(t.id)!.gp === 0)
+    .map((t) => t.id)
+    .sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
+
+  const byPoints = new Map<number, TeamId[]>();
+  for (const id of played) {
+    const pts = computed.get(id)!.pts;
+    const bucket = byPoints.get(pts);
+    if (bucket) bucket.push(id);
+    else byPoints.set(pts, [id]);
+  }
+
+  // Points buckets, top-down, with the place each one starts at.
+  const buckets: Array<{ group: TeamId[]; start: number; chain: readonly TiebreakStage[] }> = [];
+  let start = 1;
+  for (const pts of [...byPoints.keys()].sort((a, b) => b - a)) {
+    const group = byPoints.get(pts)!;
+    buckets.push({ group, start, chain: tiebreakChainFor(division, start) });
+    start += group.length;
+  }
+
+  const resolvedBy = new Map<TeamId, TiebreakStage>();
+  const resolved: Array<TeamId[][] | null> = buckets.map(() => null);
+  const ctx: DivisionCtx = {
+    division,
+    league,
+    rules,
+    games: counted,
+    computed,
+    resolvedBy,
+    placedBelowOf: (i) => resolved.slice(i + 1).flatMap((r) => r ?? []),
+  };
+
+  const resolveBucket = (i: number): void => {
+    const { group, start: bucketStart, chain } = buckets[i];
+    if (group.length === 1) {
+      resolvedBy.set(group[0], 'points');
+      resolved[i] = [[group[0]]];
+      return;
+    }
+    const above = resolved.slice(0, i).flatMap((r) => (r ?? []).flat());
+    const below = ctx.placedBelowOf(i);
+    if (rules.multiTeam === 'partition-restart') {
+      resolved[i] = resolveGroup(group, chain, above, below, ctx);
+    } else {
+      resolved[i] = seedOne(group, bucketStart, above, { ...ctx, bucketStart, below });
+    }
+  };
+
+  // Two passes (SPEC §5.4a): buckets whose chain reads other places go last, so the places they
+  // read are settled. For SCVAL every bucket is pass 1 and the order is today's.
+  const pass2 = (i: number): boolean =>
+    buckets[i].group.length > 1 && buckets[i].chain.some((s) => PLACE_VS_STAGES.has(s));
+  buckets.forEach((_, i) => {
+    if (!pass2(i)) resolveBucket(i);
+  });
+  buckets.forEach((_, i) => {
+    if (pass2(i)) resolveBucket(i);
+  });
+
+  const clusters: TeamId[][] = resolved.flatMap((r) => r ?? []);
+
+  // Standard competition ranking: a shared place consumes its own slots.
+  let place = 0;
+  const order: Array<{ id: TeamId; place: number; cluster: TeamId[] }> = [];
+  for (const cluster of clusters) {
+    place += 1;
+    for (const id of cluster) order.push({ id, place, cluster });
+    place += cluster.length - 1;
+  }
+  for (const id of unplayed) {
+    place += 1;
+    order.push({ id, place, cluster: [id] });
+    resolvedBy.set(id, 'points');
+  }
+
+  const rows: Standing[] = [];
+  for (const entry of order) {
+    const team = getTeamById(entry.id)!;
+    const record = toComputed(tallies.get(entry.id)!, entry.place, rules.points);
+    const overall = toComputed(overallTallies.get(entry.id)!, entry.place, rules.points);
+    const reported = opts.reported?.get(entry.id) ?? null;
+    const shared = entry.cluster.length > 1;
+    const stage = resolvedBy.get(entry.id) ?? 'points';
+    const tiebreak: TiebreakInfo = {
+      resolvedBy: stage,
+      note: tiebreakNote(team, record, stage, entry.cluster, rules),
+      tiedWith: shared ? entry.cluster.filter((id) => id !== entry.id) : [],
+      shared,
+    };
+    const { mismatch, detail } = compareToReported(record, overall, reported);
+    rows.push({
+      teamId: entry.id,
+      slug: team.slug,
+      division,
+      computed: record,
+      overall,
+      reported,
+      mismatch,
+      ...(detail ? { mismatchDetail: detail } : {}),
+      tiebreak,
+      playoffStatus: playoffStatusFor(division, entry.place),
+      hasReportedResults: record.gp > 0,
+    });
+  }
+  return rows;
+}
+
+/** Notes (SPEC §5.6), rendered verbatim. SCVAL's are today's exact strings. */
 function tiebreakNote(
   team: Team,
   record: ComputedRecord,
   stage: TiebreakStage,
   cluster: readonly TeamId[],
+  rules: LeagueRules,
 ): string {
+  const { citations, points } = rules;
   if (record.gp === 0) {
-    return `No division results reported for ${team.name}, so it is listed last; ${DIVISION_LABELS[team.division]} order is the order of team points (${BYLAW_CITATIONS.order}).`;
+    return `No ${rules.gamesWord} results reported for ${team.name}, so it is listed last; ${divisionLabel(team.division)} order is the order of team points (${citations.order}).`;
   }
   if (stage === 'points') {
-    return `${record.pts} points (3 per win, 1 per tie) — placed on points alone, ${BYLAW_CITATIONS.order}.`;
+    return `${record.pts} points (${points.win} per win, ${points.tie} per tie) — placed on points alone, ${citations.order}.`;
   }
   const others = cluster.filter((id) => id !== team.id).map(nameOf);
   const tiedWith = others.length ? ` with ${others.join(', ')}` : '';
-  if (stage === 'coin-flip') {
-    return `Tied on ${record.pts} points${tiedWith} and unresolved by every criterion — ${BYLAW_CITATIONS.coinFlip}. We show them level.`;
+  if (stage === 'play-in') {
+    return `Tied on ${record.pts} points${tiedWith} for the last tournament place — ${citations.stages['play-in'] ?? ''}. We show them level.`;
   }
-  return `Tied on ${record.pts} points; separated by ${STAGE_CITATION[stage]}.`;
+  if (UNCOMPUTABLE.has(stage)) {
+    return `Tied on ${record.pts} points${tiedWith} and unresolved by every criterion — ${citations.stages[stage] ?? ''}. We show them level.`;
+  }
+  return `Tied on ${record.pts} points; separated by ${citations.stages[stage] ?? stage}.`;
 }
 
 function compareToReported(
@@ -475,21 +814,36 @@ function compareToReported(
   return diffs.length ? { mismatch: true, detail: diffs.join('; ') } : { mismatch: false };
 }
 
-/** Field-by-field cross-check rows for /about#cross-check (DESIGN §9). */
+/**
+ * Field-by-field cross-check rows for /about#cross-check (DESIGN §9), by the division's
+ * `reportedTrust` (SPEC §5.8): 'full' = today's six fields; 'records-only' = records and league
+ * goals; 'informational' = league record only. Rows of a division with a known cause carry it.
+ */
 export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[] {
   const rows: CrossCheckRow[] = [];
   for (const s of standings) {
     const r = s.reported;
     if (!r) continue;
+    const div = getDivision(s.division);
+    const trust = div.reportedTrust;
     const url = leagueStandingsUrl(s.division);
     const push = (field: string, ours: string, theirs: string) => {
-      if (ours !== theirs) rows.push({ slug: s.slug, field, ours, theirs, url });
+      if (ours === theirs) return;
+      rows.push({
+        slug: s.slug,
+        field,
+        ours,
+        theirs,
+        url,
+        ...(div.knownCause ? { knownCause: div.knownCause } : {}),
+      });
     };
     push(
       'league record',
       recordString(s.computed.w, s.computed.l, s.computed.t),
       recordString(r.conferenceWins, r.conferenceLosses, r.conferenceTies),
     );
+    if (trust === 'informational') continue;
     push(
       'overall record',
       recordString(s.overall.w, s.overall.l, s.overall.t),
@@ -497,6 +851,7 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     );
     push('league goals for', String(s.computed.gf), String(r.conferencePoints));
     push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));
+    if (trust === 'records-only') continue;
     push(
       'place (we order on points, Art. VI §2; MaxPreps orders on win pct)',
       String(s.computed.place),
@@ -511,32 +866,105 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
   return rows;
 }
 
-// ---------------------------------------------------------------- projections
+// ---------------------------------------------------------------- missing official results
 
-/** Article VII §2, for ONE finishing slot. */
-export function playoffStatus(place: number): PlayoffStatus {
-  if (place >= 1 && place <= 3) return 'aq';
-  if (place === 4) return 'play-in';
-  if (place === 5) return 'at-large';
-  return 'out';
+export interface MissingOfficialRow {
+  kind: 'missing' | 'postponed';
+  dateKey: string;
+  awayName: string;
+  homeName: string;
+  awaySlug: TeamSlug | null;
+  homeSlug: TeamSlug | null;
+  game: Game | null;
+}
+
+const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
+  'scheduled',
+  'live',
+  'score-pending',
+]);
+
+/**
+ * THE single definition of "official result missing" (used by the pipeline's DivisionHealth.official.missingPast
+ * AND by lib/data getMissingOfficialResults/getStandingContext). Pure. Rows: unmatched fixtures of `division`
+ * dated before `today` (kind 'missing', game null), plus matched contests (official.division === division,
+ * official.scheduledDate < today) with status 'scheduled' | 'live' | 'score-pending' (kind 'missing') or
+ * 'postponed' (kind 'postponed', never counted as missing). Sorted by dateKey, then fixture id.
+ */
+export function missingOfficialResults(
+  games: readonly Game[],
+  unmatched: readonly OfficialFixture[],
+  division: DivisionId,
+  today: string,
+): MissingOfficialRow[] {
+  const rows: Array<MissingOfficialRow & { fixtureId: string }> = [];
+  for (const f of unmatched) {
+    if (f.division !== division || !(f.dateKey < today)) continue;
+    rows.push({
+      kind: 'missing',
+      dateKey: f.dateKey,
+      awayName: f.awayName,
+      homeName: f.homeName,
+      awaySlug: f.awaySlug,
+      homeSlug: f.homeSlug,
+      game: null,
+      fixtureId: f.id,
+    });
+  }
+  for (const g of games) {
+    const o = g.official;
+    if (!o || o.division !== division || !(o.scheduledDate < today)) continue;
+    let kind: MissingOfficialRow['kind'];
+    if (g.status === 'postponed') kind = 'postponed';
+    else if (NOT_YET_REPORTED.has(g.status)) kind = 'missing';
+    else continue;
+    rows.push({
+      kind,
+      dateKey: o.scheduledDate,
+      awayName: g.away.name,
+      homeName: g.home.name,
+      awaySlug: g.away.slug,
+      homeSlug: g.home.slug,
+      game: g,
+      fixtureId: o.fixtureId,
+    });
+  }
+  rows.sort((a, b) =>
+    a.dateKey === b.dateKey ? a.fixtureId.localeCompare(b.fixtureId) : a.dateKey.localeCompare(b.dateKey),
+  );
+  return rows.map((row) => ({
+    kind: row.kind,
+    dateKey: row.dateKey,
+    awayName: row.awayName,
+    homeName: row.homeName,
+    awaySlug: row.awaySlug,
+    homeSlug: row.homeSlug,
+    game: row.game,
+  }));
+}
+
+// ---------------------------------------------------------------- ladder (SPEC §5.7)
+
+/** The rung of `ladderFor(division)` whose places cover `place`. */
+export function playoffStatusFor(division: DivisionId, place: number): PlayoffStatus {
+  return ladderRung(division, place).status;
 }
 
 /**
  * Every status a team could still take, best first.
  *
  * Places use standard competition ranking, so `place` is the team's 1-based finishing SLOT and a
- * cluster left level by Article VI §7's coin flip spans as many slots as it has teams. Two teams
+ * cluster left level by an uncomputable step spans as many slots as it has teams. Two SCVAL teams
  * level on 3rd therefore hold the third automatic berth AND the 4th-place play-in spot between
  * them: reading `place` alone would label both of them "AQ" and make the play-in slot — and the
- * Oct 30 pairing built from it — disappear from the division. The same straddle at 4th would
- * swallow the 5th-place at-large submission. Neither slot is ever dropped here; the tied teams
- * carry both possibilities until the league flips the coin.
+ * Oct 30 pairing built from it — disappear from the division. Neither slot is ever dropped here;
+ * the tied teams carry both possibilities until the league decides.
  */
-export function playoffOutcomes(place: number, clusterSize = 1): PlayoffStatus[] {
+export function playoffOutcomes(division: DivisionId, place: number, clusterSize = 1): PlayoffStatus[] {
   const size = Math.max(1, clusterSize);
   const out: PlayoffStatus[] = [];
   for (let slot = place; slot < place + size; slot += 1) {
-    const status = playoffStatus(slot);
+    const status = playoffStatusFor(division, slot);
     if (!out.includes(status)) out.push(status);
   }
   return out;
@@ -544,47 +972,68 @@ export function playoffOutcomes(place: number, clusterSize = 1): PlayoffStatus[]
 
 /** `playoffOutcomes` for a ranked row: the cluster size is the tied group it belongs to. */
 export function outcomesFor(row: Standing): PlayoffStatus[] {
-  return playoffOutcomes(row.computed.place, row.tiebreak.tiedWith.length + 1);
+  return playoffOutcomes(row.division, row.computed.place, row.tiebreak.tiedWith.length + 1);
 }
 
-export const PLAYOFF_STATUS_LABELS: Record<PlayoffStatus, string> = {
-  aq: 'Automatic qualifier',
-  'play-in': 'Play-in game Oct 30',
-  'at-large': 'At-large consideration',
-  out: 'No automatic path',
-};
-
-/** Lower-case continuations, so a union reads as one sentence rather than two headings. */
-const OUTCOME_PHRASES: Record<PlayoffStatus, string> = {
-  aq: 'automatic qualifier',
-  'play-in': 'the Oct 30 play-in',
-  'at-large': 'at-large consideration',
-  out: 'no automatic path',
-};
+/** The division's rung for a status (falling back to the league's ladder); throws when none exists. */
+function rungFor(division: DivisionId, status: PlayoffStatus): LadderRung {
+  const rung =
+    ladderFor(division).find((r) => r.status === status) ??
+    leagueOfDivision(division).postseason.ladder.find((r) => r.status === status);
+  if (!rung) throw new Error(`lib/standings.ts: no ladder rung ${status} for ${division}`);
+  return rung;
+}
 
 /**
- * 'Automatic qualifier', or 'Automatic qualifier or the Oct 30 play-in — decided by the Article
- * VI §7 coin flip' when a level place straddles a by-law boundary.
+ * 'Automatic qualifier', or '<label> or <phrase> <unresolvedSuffix>' when a level place straddles
+ * rungs (SCVAL: 'Automatic qualifier or the Oct 30 play-in — Article VI §7 decides it with a coin flip').
  */
-export function playoffOutcomeLabel(outcomes: readonly PlayoffStatus[]): string {
+export function playoffOutcomeLabel(division: DivisionId, outcomes: readonly PlayoffStatus[]): string {
   const [first, ...rest] = outcomes;
-  if (first === undefined) return PLAYOFF_STATUS_LABELS.out;
-  if (rest.length === 0) return PLAYOFF_STATUS_LABELS[first];
-  const tail = rest.map((status) => OUTCOME_PHRASES[status]).join(' or ');
-  return `${PLAYOFF_STATUS_LABELS[first]} or ${tail} — Article VI §7 decides it with a coin flip`;
+  if (first === undefined) {
+    const ladder = ladderFor(division);
+    return ladder[ladder.length - 1].label;
+  }
+  const label = rungFor(division, first).label;
+  if (rest.length === 0) return label;
+  const tail = rest.map((status) => rungFor(division, status).phrase).join(' or ');
+  const suffix = leagueOfDivision(division).rules.unresolvedSuffix;
+  return suffix ? `${label} or ${tail} ${suffix}` : `${label} or ${tail}`;
 }
 
+/** The first pairing date of the league (the `{date}` in ladder legends), if it has pairings. */
+function firstPairingDate(league: LeagueConfig): string | null {
+  return league.postseason.kind === 'ccs-ladder' ? (league.postseason.pairings[0]?.date ?? null) : null;
+}
+
+/** The rung's legend with '{date}' replaced by shortDate(first pairing date of the league). */
+export function statusLegend(division: DivisionId, status: PlayoffStatus): string {
+  const legend = rungFor(division, status).legend;
+  const date = firstPairingDate(leagueOfDivision(division));
+  return date ? legend.replace('{date}', shortDate(date)) : legend;
+}
+
+export function statusBadge(division: DivisionId, status: PlayoffStatus): string {
+  return rungFor(division, status).badge;
+}
+
+// ---------------------------------------------------------------- pairings (SPEC §5.7)
+
 /**
- * The Oct 30 crossover: #1 v #1, #2 v #2, #3 v #3 (CCS ordering help) and #4 v #4, whose winner
- * takes the SCVAL 7th automatic qualifier (Article VII §2).
- *
- * A seed is filled by the team whose cluster COVERS that slot, not by an exact `place ===` match:
+ * Generalized crossoverPairings(): the league's config pairings (SCVAL crossover ×4, BVAL play-in),
+ * each seat filled by the team whose cluster COVERS that slot, not by an exact `place ===` match:
  * with two teams level on 3rd nobody carries place 4, and an exact match would quietly render the
  * play-in pairing as empty. Such a seat returns every contender for it, and the UI says in words
- * that the coin flip has not been run.
+ * that the tie has not been decided. `game` is the matched contest once MaxPreps has it.
  */
-export function crossoverPairings(standings: readonly Standing[]): CrossoverPairing[] {
-  const at = (division: Division, seed: number): CrossoverSeat =>
+export function leaguePairings(
+  standings: readonly Standing[],
+  games: readonly Game[],
+  leagueId: LeagueId,
+): LeaguePairing[] {
+  const league = getLeague(leagueId);
+  if (league.postseason.kind !== 'ccs-ladder') return [];
+  const at = (division: DivisionId, seed: number): CrossoverSeat =>
     standings
       .filter(
         (row) =>
@@ -594,19 +1043,36 @@ export function crossoverPairings(standings: readonly Standing[]): CrossoverPair
           seed < row.computed.place + row.tiebreak.tiedWith.length + 1,
       )
       .map((row) => ({ teamId: row.teamId, slug: row.slug }));
-  return [1, 2, 3, 4].map((seed) => ({
-    seed,
-    deAnza: at('de-anza', seed),
-    elCamino: at('el-camino', seed),
-    isPlayIn: seed === 4,
-    label:
-      seed === 4
-        ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
-        : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
-  }));
+  return league.postseason.pairings.map((p) => {
+    const seats: [CrossoverSeat, CrossoverSeat] = [
+      at(p.seats[0].division, p.seats[0].place),
+      at(p.seats[1].division, p.seats[1].place),
+    ];
+    const ids0 = new Set(seats[0].map((s) => s.teamId));
+    const ids1 = new Set(seats[1].map((s) => s.teamId));
+    const game =
+      games.find((g) => {
+        if (g.postseason?.kind !== p.tag || g.dateKey !== p.date) return false;
+        const h = g.home.teamId ?? '';
+        const a = g.away.teamId ?? '';
+        return (ids0.has(h) && ids1.has(a)) || (ids0.has(a) && ids1.has(h));
+      }) ?? null;
+    return {
+      id: p.id,
+      leagueId,
+      date: p.date,
+      time: p.time,
+      seats,
+      seatLabels: [p.seatLabels[0], p.seatLabels[1]],
+      host: p.host,
+      isPlayIn: p.isPlayIn,
+      label: p.label,
+      game,
+    };
+  });
 }
 
-/** Sort helper for the UI: division order, then place, then name. */
+/** Sort helper for the UI: place, then name. */
 export function sortStandings(rows: readonly Standing[]): Standing[] {
   return [...rows].sort(
     (a, b) =>

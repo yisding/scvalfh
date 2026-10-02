@@ -11,10 +11,15 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { LEAGUES } from '../lib/leagues';
+import * as sblive from '../lib/sources/sblive';
 import {
+  SBLIVE_HTTP_OPTIONS,
+  SBLIVE_LEAGUE_SLUGS,
   dedupeSbliveGames,
   extractReactProps,
   harvestTeamWebPaths,
+  isCaliforniaGameRow,
   parseJsonPrefix,
   parseScoresPage,
   parseStandingsTeamRefs,
@@ -24,7 +29,7 @@ import {
   sbliveScoresUrl,
   sbliveTeamGamesUrl,
 } from '../lib/sources/sblive';
-import { htmlUnescape } from '../lib/sources/http';
+import { CHROME_USER_AGENT, htmlUnescape } from '../lib/sources/http';
 
 /** The escaping si.com actually applies to the attribute value. */
 function escapeAttr(json: string): string {
@@ -82,6 +87,25 @@ const teamGamesProps = (nodes: unknown[]) => ({
   },
   variables: { id: '458850', schoolYear: '2026-2027', paginating: false },
   application: { env: 'production' },
+});
+
+describe('sblive: the frozen exports (SPEC §7.3) and the live HTTP options', () => {
+  it('keeps every Stage-B frozen export', () => {
+    for (const name of ['sbliveScoresUrl', 'sbliveTeamGamesUrl', 'parseScoresPage', 'parseTeamGamesPage', 'dedupeSbliveGames'] as const) {
+      expect(typeof sblive[name], name).toBe('function');
+    }
+  });
+
+  it('exports SBLIVE_HTTP_OPTIONS with the Chrome UA si.com requires and its own serial spacing', () => {
+    expect(SBLIVE_HTTP_OPTIONS.userAgent).toBe(CHROME_USER_AGENT);
+    expect(SBLIVE_HTTP_OPTIONS.concurrency).toBe(1);
+    expect(SBLIVE_HTTP_OPTIONS.spacingMs).toBeGreaterThanOrEqual(500);
+  });
+
+  it('takes the league standings slugs from config (harvest only)', () => {
+    expect(SBLIVE_LEAGUE_SLUGS).toEqual(LEAGUES.flatMap((l) => l.sblive.leagueSlugs));
+    expect(SBLIVE_LEAGUE_SLUGS).toContain('4242-santa-clara-valley-de-anza');
+  });
 });
 
 describe('sblive: urls', () => {
@@ -146,6 +170,8 @@ describe('sblive: team /games page', () => {
     expect(game.sides.map((s) => s.slug)).toEqual(['cupertino', 'los-altos']);
     expect(game.sides.map((s) => s.score)).toEqual([0, 4]);
     expect(game.sides.map((s) => s.sbliveTeamId)).toEqual(['458665', '458850']);
+    // Both sides resolve by their si.com team id (the web path), never by name.
+    expect(game.sides.map((s) => s.via)).toEqual(['team-id', 'team-id']);
     expect(game.url).toBe(
       'https://www.si.com/high-school/stats/california/field-hockey/games/6528121-cupertino-vs-los-altos',
     );
@@ -178,7 +204,24 @@ describe('sblive: team /games page', () => {
     expect(game.sides.map((s) => s.score)).toEqual([null, null]);
   });
 
-  it('leaves a non-SCVAL opponent as a name with no slug', () => {
+  it('leaves a non-member opponent as a name with no slug', () => {
+    const node = teamNode({
+      opponent: {
+        scoreText: '2',
+        isHome: false,
+        team: { name: 'Scripps Ranch', webPath: '/california/field-hockey/teams/459120-scripps-ranch-falcons' },
+      },
+    });
+    const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
+    const outsider = game.sides.find((s) => s.name === 'Scripps Ranch');
+    expect(outsider?.slug).toBeNull();
+    expect(outsider?.via).toBeNull();
+    expect(outsider?.refused).toBe('unknown');
+    expect(outsider?.sbliveTeamId).toBe('459120');
+    expect(sbliveGameKey(game)).toBe('2026-09-23|los-altos~name:scrippsranch');
+  });
+
+  it('resolves a BVAL member by its si.com team id (Leigh is one of our teams now)', () => {
     const node = teamNode({
       opponent: {
         scoreText: '2',
@@ -188,22 +231,35 @@ describe('sblive: team /games page', () => {
     });
     const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
     const leigh = game.sides.find((s) => s.name === 'Leigh');
-    expect(leigh?.slug).toBeNull();
-    expect(leigh?.sbliveTeamId).toBe('458515');
-    expect(sbliveGameKey(game)).toBe('2026-09-23|los-altos~name:leigh');
+    expect(leigh?.slug).toBe('leigh');
+    expect(leigh?.via).toBe('team-id');
+    expect(sbliveGameKey(game)).toBe('2026-09-23|leigh~los-altos');
   });
 
   it('resolves every registry alias spelling si.com uses', () => {
-    const names = ['St. Ignatius', 'Saint Francis', 'Archbishop Mitty', 'Santa Clara'];
-    const nodes = names.map((name, i) =>
+    // Santa Clara is a statewide namesake (Oxnard's Santa Clara is another si.com team): it resolves
+    // only through its si.com id, so its row carries the web path si.com publishes for it.
+    const names: Array<[string, string | null]> = [
+      ['St. Ignatius', null],
+      ['Saint Francis', null],
+      ['Archbishop Mitty', null],
+      ['Santa Clara', '/california/field-hockey/teams/496839-santa-clara-bruins'],
+    ];
+    const nodes = names.map(([name, webPath], i) =>
       teamNode({
         id: `900${i}`,
-        opponent: { scoreText: '1', isHome: false, team: { name, webPath: null } },
+        opponent: { scoreText: '1', isHome: false, team: { name, webPath } },
       }),
     );
     const games = parseTeamGamesPage(page('teams/Games', teamGamesProps(nodes)));
-    const slugs = games.map((g) => g.sides.find((s) => s.name === names[games.indexOf(g)])?.slug);
+    const slugs = games.map((g) => g.sides.find((s) => s.name === names[games.indexOf(g)][0])?.slug);
     expect(slugs).toEqual(['st-ignatius', 'saint-francis', 'mitty', 'santa-clara']);
+    expect(games.map((g) => g.sides.find((s) => s.name === names[games.indexOf(g)][0])?.via)).toEqual([
+      'name',
+      'name',
+      'name',
+      'team-id',
+    ]);
   });
 });
 
@@ -224,8 +280,14 @@ describe('sblive: statewide scoreboard', () => {
               titleText: 'Los Altos vs Cupertino',
               webPath: '/california/field-hockey/games/6528121-cupertino-vs-los-altos',
               gameTeams: [
-                { scoreText: '0', isWinner: false, isLoser: true, isTbd: false, team: { name: 'Cupertino', state: { abbrev: 'CA' } } },
-                { scoreText: '4', isWinner: true, isLoser: false, isTbd: false, team: { name: 'Los Altos', state: { abbrev: 'CA' } } },
+                {
+                  scoreText: '0', isWinner: false, isLoser: true, isTbd: false,
+                  team: { name: 'Cupertino', image: 'https://assets.scorebooklive.com/uploads/production/school/11002/image/x.png', state: { abbrev: 'CA' } },
+                },
+                {
+                  scoreText: '4', isWinner: true, isLoser: false, isTbd: false,
+                  team: { name: 'Los Altos', image: 'https://assets.scorebooklive.com/uploads/production/team/458850-v3/image/Los_Altos__CA__Eagles_Logo.png', state: { abbrev: 'CA' } },
+                },
               ],
             },
             {
@@ -255,6 +317,18 @@ describe('sblive: statewide scoreboard', () => {
     const scval = games.find((g) => g.sides.some((s) => s.slug === 'los-altos'));
     expect(scval?.sides.map((s) => s.score)).toEqual([0, 4]);
     expect(scval?.dateKey).toBe('2026-09-23');
+    // The scoreboard has no web paths: identity comes from the logo URLs (school id, team id).
+    expect(scval?.sides.map((s) => s.via)).toEqual(['school-id', 'team-id']);
+    expect(scval?.sides.map((s) => s.sbliveSchoolId)).toEqual(['11002', null]);
+  });
+
+  it('never resolves the Los Altos namesake by name when the logo is missing', () => {
+    const bare = JSON.parse(JSON.stringify(scoresProps)) as typeof scoresProps;
+    for (const gt of bare.query.scoreboardDate.games.nodes[0].gameTeams) delete (gt.team as { image?: string }).image;
+    const [game] = parseScoresPage(page('games/GenderSportIndex', bare)).filter((g) => g.sbliveGameId === '6528121');
+    expect(game.sides.find((s) => s.name === 'Los Altos')).toMatchObject({ slug: null, refused: 'ambiguous-name' });
+    // Cupertino is not a namesake: name resolution still works, and says so.
+    expect(game.sides.find((s) => s.name === 'Cupertino')).toMatchObject({ slug: 'cupertino', via: 'name' });
   });
 
   it('keeps out-of-area games, with no slugs, so they simply never join', () => {
@@ -310,6 +384,18 @@ describe('sblive: slug harvesting (never guessing)', () => {
     const refs = harvestTeamWebPaths(page('teams/Games', teamGamesProps(nodes)));
     expect(refs.map((r) => r.sbliveTeamId).sort()).toEqual(['458665', '458850', '496839']);
     expect(refs.find((r) => r.sbliveTeamId === '496839')?.slug).toBe('santa-clara');
+  });
+});
+
+describe('sblive: junk-row guard (D2 rule 7)', () => {
+  it('accepts only /california/field-hockey/games/ rows', () => {
+    const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([teamNode()])));
+    expect(isCaliforniaGameRow(game)).toBe(true);
+    const ny = parseTeamGamesPage(
+      page('teams/Games', teamGamesProps([teamNode({ id: '6642005', webPath: '/new-york/field-hockey/games/6642005-salinas-vs-stevenson' })])),
+    )[0];
+    expect(isCaliforniaGameRow(ny)).toBe(false);
+    expect(isCaliforniaGameRow({ url: null })).toBe(false);
   });
 });
 

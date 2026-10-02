@@ -1,15 +1,23 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
+import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
 import {
+  applyExclusions,
   cleanRecap,
   dateKeyOf,
+  dedupePhantomPairs,
   normalizeGames,
   seasonWindowOf,
   splitLocation,
   toUtcIso,
 } from '../lib/normalize';
-import { resolveTeam } from '../lib/teams';
-import { allScheduleRows } from './helpers';
+import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
+import { getTeamBySlug, resolveTeam } from '../lib/teams';
+import type { Game } from '../lib/types';
+import { REPO, allScheduleRows } from './helpers';
 
 const rows = allScheduleRows();
 const result = normalizeGames(rows, { fetchedAt: '2026-09-29T15:00:00.000Z' });
@@ -89,16 +97,21 @@ describe('normalize: scores are never invented (SPEC §5.5.3)', () => {
 
 describe('normalize: home/away and site (SPEC §5.5.4)', () => {
   it('maps homeAwayType 0 to home and 1 to away', () => {
-    // Leigh @ Los Altos, 2026-08-28: Los Altos is homeAwayType 0 and lost 1-2.
+    // Leigh @ Los Altos, 2026-08-28: Los Altos is homeAwayType 0 and lost 1-2. Leigh is a registry
+    // member now (BVAL Mt. Hamilton), so the side carries its slug — but it is still not a league
+    // game: the two schools are in different divisions.
     const g = byId.get('e5110a4c-40e5-4d3d-8c69-409de720f633');
     expect(g).toBeDefined();
     expect(g!.home.slug).toBe('los-altos');
     expect(g!.home.score).toBe(1);
     expect(g!.away.name).toBe('Leigh');
-    expect(g!.away.slug).toBeNull();
+    expect(g!.away.slug).toBe('leigh');
+    expect(g!.away.teamId).toBe(getTeamBySlug('leigh')!.id);
     expect(g!.away.score).toBe(2);
     expect(g!.site).toBe('home');
     expect(g!.isLeague).toBe(false);
+    expect(g!.leagueDivision).toBeNull();
+    expect(g!.contestTypes).toEqual({ home: 1, away: 1 });
   });
 
   it('marks a 2/2 pair as a neutral site instead of guessing a host', () => {
@@ -257,5 +270,325 @@ describe('normalize: contest.location is a 50-char free-text field', () => {
     for (const game of games) {
       if (game.venue.text) expect(game.venue.text).not.toMatch(/^Location\s*:/i);
     }
+  });
+});
+
+// ---------------------------------------------------------------- SPEC §7.6 (multi-league corpus)
+
+const CORPUS_SCHEDULES = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'schedule');
+const FETCHED_AT = '2026-10-02T15:00:00.000Z';
+
+/** Every row of the 43 all-2026-10-02 schedule feeds, keyed by our slug (the file stem). */
+function corpusFeeds(): Map<string, ScheduleRow[]> {
+  const feeds = new Map<string, ScheduleRow[]>();
+  for (const file of readdirSync(CORPUS_SCHEDULES).filter((f) => f.endsWith('.json')).sort()) {
+    const raw = JSON.parse(readFileSync(path.join(CORPUS_SCHEDULES, file), 'utf8')) as unknown;
+    feeds.set(file.replace(/\.json$/, ''), ScheduleResponseSchema.parse(raw).data);
+  }
+  return feeds;
+}
+
+const feeds = corpusFeeds();
+const corpusRows = [...feeds.values()].flat();
+const corpus = normalizeGames(corpusRows, { fetchedAt: FETCHED_AT });
+const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
+
+const TBA_CONTESTS = [
+  '64c8188b-db94-44ff-8477-d60b4e3db218', // Ann Sobrato, 2026-09-12
+  '55207683-8dd2-41c6-aa1b-02919d6bb261', // Stevenson, 2026-10-03
+  '64e0b2e5-abef-4db0-97e9-54c8c4bb9af0', // University, 2026-10-03
+];
+
+/** A copy of a game with some fields replaced (the copy's provenance is its own object). */
+function variant(g: Game, patch: Partial<Game> & { modifiedOn?: string }): Game {
+  const { modifiedOn, ...rest } = patch;
+  return {
+    ...g,
+    ...rest,
+    provenance: {
+      ...g.provenance,
+      ...(modifiedOn !== undefined ? { maxprepsModifiedOn: modifiedOn } : {}),
+    },
+  };
+}
+
+/** A row copy whose contest.teams are rebuilt by `edit`. */
+function editTeams(
+  row: ScheduleRow,
+  edit: (t: ScheduleRow['contest']['teams'][number], i: number) => Partial<ScheduleRow['contest']['teams'][number]>,
+): ScheduleRow {
+  return {
+    ...row,
+    contest: { ...row.contest, teams: row.contest.teams.map((t, i) => ({ ...t, ...edit(t, i) })) },
+  };
+}
+
+describe('normalize: the 43-feed corpus (SPEC §7.6)', () => {
+  it('reads all 43 feeds, including the three that carry a TBA row', () => {
+    expect(feeds.size).toBe(43);
+    for (const slug of ['sobrato', 'stevenson', 'university-sf']) {
+      expect(feeds.get(slug)!.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('drops exactly the TBA rows, each recorded once as tba-opponent', () => {
+    const tbaRows = corpusRows.filter((r) => r.contest.teams.some((t) => t.teamId === null || t.name === null));
+    expect(tbaRows.map((r) => r.contest.contestId).sort()).toEqual([...TBA_CONTESTS].sort());
+    expect(corpus.dropped.map((d) => d.contestId).sort()).toEqual([...TBA_CONTESTS].sort());
+    expect(corpus.stats.dropped.tba).toBe(3);
+    for (const d of corpus.dropped) {
+      expect(d.reason).toBe('tba-opponent');
+      expect(d.teams).toHaveLength(1);
+      expect(corpusById.has(d.contestId)).toBe(false);
+    }
+    expect(corpus.dropped.find((d) => d.contestId === TBA_CONTESTS[0])).toEqual({
+      contestId: TBA_CONTESTS[0],
+      reason: 'tba-opponent',
+      note: 'MaxPreps lists Ann Sobrato against an opponent it has not named yet (TBA).',
+      dateKey: '2026-09-12',
+      teams: ['Ann Sobrato'],
+    });
+  });
+
+  it('drops nothing else: every other non-deleted contest becomes one game', () => {
+    const live = new Set(
+      corpusRows
+        .filter((r) => r.calculatedFields.contestState !== 1)
+        .map((r) => r.contest.contestId)
+        .filter((id) => !TBA_CONTESTS.includes(id)),
+    );
+    expect(corpus.stats.dropped.malformed).toBe(0);
+    expect(new Set(corpus.games.map((g) => g.contestId))).toEqual(live);
+  });
+
+  it('records nothing when the caller already split the TBA rows off per feed', () => {
+    const perFeed = [...feeds.values()].map((rows) => splitTbaRows(rows));
+    expect(perFeed.flatMap((s) => s.dropped)).toHaveLength(3);
+    const again = normalizeGames(perFeed.flatMap((s) => s.rows), { fetchedAt: FETCHED_AT });
+    expect(again.dropped).toEqual([]);
+    expect(again.stats.dropped.tba).toBe(0);
+    expect(again.games).toEqual(corpus.games);
+  });
+
+  it('does not list a contest as dropped when another feed names both sides', () => {
+    const row = corpusRows.find((r) => corpusById.get(r.contest.contestId)?.status === 'final')!;
+    const tbaCopy = editTeams(row, (_t, i) => (i === 1 ? { teamId: null, name: null } : {}));
+    const res = normalizeGames([tbaCopy, row], { fetchedAt: FETCHED_AT });
+    expect(res.games.map((g) => g.contestId)).toEqual([row.contest.contestId]);
+    expect(res.dropped).toEqual([]);
+    expect(res.warnings.some((w) => w.includes('TBA copy was ignored'))).toBe(true);
+  });
+
+  it('gives every game the countsFor and postseason placeholders for lib/classify.ts', () => {
+    for (const g of [...corpus.games, ...games]) {
+      expect(g.countsFor, g.contestId).toBeNull();
+      expect(g.postseason, g.contestId).toBeNull();
+    }
+  });
+
+  it('copies contestTypes from the two team rows, in the home/away slots', () => {
+    for (const row of corpusRows) {
+      const g = corpusById.get(row.contest.contestId);
+      if (!g || g.site === 'neutral') continue;
+      const home = row.contest.teams.find((t) => t.homeAwayType === 0)!;
+      const away = row.contest.teams.find((t) => t.homeAwayType === 1)!;
+      expect(g.contestTypes, g.contestId).toEqual({ home: home.contestType, away: away.contestType });
+    }
+    const kinds = new Set(corpus.games.map((g) => `${g.contestTypes.home},${g.contestTypes.away}`));
+    expect(kinds).toEqual(new Set(['0,0', '1,1', '2,2']));
+  });
+
+  it('keeps isLeague exactly "contestType 0 on either row"', () => {
+    for (const g of corpus.games) {
+      expect(g.isLeague).toBe(g.contestTypes.home === 0 || g.contestTypes.away === 0);
+    }
+  });
+
+  it('sets leagueDivision for same-division registry pairs in every league', () => {
+    const divisions = new Set(corpus.games.map((g) => g.leagueDivision).filter((d) => d !== null));
+    expect(divisions).toEqual(
+      new Set(['de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county']),
+    );
+    for (const g of corpus.games) {
+      const h = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
+      const a = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
+      expect(g.leagueDivision).toBe(h && a && h.division === a.division ? h.division : null);
+    }
+  });
+});
+
+describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
+  const finalRow = allScheduleRows().find(
+    (r) =>
+      r.calculatedFields.contestState === 4 &&
+      r.contest.teams.every((t) => t.score !== null) &&
+      r.contest.teams[0].score !== r.contest.teams[1].score,
+  )!;
+  const [a, b] = finalRow.contest.teams;
+  const winnerIdx = a.score! > b.score! ? 0 : 1;
+
+  it('is absent on every consistent final of the SCVAL captures', () => {
+    expect(games.filter((g) => g.provenance.resultConflict)).toEqual([]);
+  });
+
+  it('flags the one corpus final whose flags contradict its 0-0 score', () => {
+    // University v Gilroy, 9/12 tournament: 0-0 with University marked W and Gilroy L in both feeds.
+    const flagged = corpus.games.filter((g) => g.provenance.resultConflict);
+    expect(flagged.map((g) => g.contestId)).toEqual(['747082fd-259d-4fb8-8837-ece21a945993']);
+    expect(flagged[0].provenance.resultConflict).toMatch(/W and Gilroy L on a 0-0 score/);
+    // The score is still published as MaxPreps has it; lib/backfill decides whether si.com overrides.
+    expect(flagged[0].status).toBe('final');
+    expect([flagged[0].home.score, flagged[0].away.score]).toEqual([0, 0]);
+  });
+
+  it('flags a final whose winner is marked L', () => {
+    const flipped = editTeams(finalRow, (t, i) => ({ result: i === winnerIdx ? 'L' : 'W' }));
+    const [g] = normalizeGames([flipped], { fetchedAt: FETCHED_AT }).games;
+    expect(g.status).toBe('final');
+    expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks .+ on a \d+-\d+ score\.$/);
+  });
+
+  it('flags two team feeds that disagree on the score', () => {
+    const other = editTeams(finalRow, (t, i) => (i === winnerIdx ? { score: t.score! + 3 } : {}));
+    const [g] = normalizeGames([finalRow, other], { fetchedAt: FETCHED_AT }).games;
+    expect(g.provenance.resultConflict).toMatch(/two team feeds disagree on the score/);
+  });
+
+  it('never flags a non-final, a final with no flags, or two agreeing copies', () => {
+    const pending = {
+      ...editTeams(finalRow, (t, i) => ({ result: i === winnerIdx ? 'L' : 'W' })),
+      calculatedFields: { ...finalRow.calculatedFields, contestState: 5 },
+    };
+    const unflagged = editTeams(finalRow, () => ({ result: null }));
+    for (const rows of [[pending], [unflagged], [finalRow, finalRow]]) {
+      const [g] = normalizeGames(rows, { fetchedAt: FETCHED_AT }).games;
+      expect(g.provenance.resultConflict).toBeUndefined();
+    }
+  });
+});
+
+describe('applyExclusions (SPEC §7.6 step 3)', () => {
+  const res = applyExclusions(corpus.games, DATA_QUALITY);
+
+  it('drops the Del Norte (Crescent City) ghost contest as ghost-team', () => {
+    const ghost = res.dropped.find((d) => d.reason === 'ghost-team');
+    expect(ghost).toMatchObject({
+      contestId: '5b9ff911-a640-4947-b9fd-8a629e775b33',
+      dateKey: '2026-10-16',
+      teams: ['Tamalpais', 'Del Norte'],
+    });
+    expect(ghost!.note).toBe(DATA_QUALITY.ghostTeamIds['8396a0d3-8021-458d-b592-a5cb2c4a366d']);
+  });
+
+  it('drops 5cf5e3df (Archie Williams at Marin Academy, Aug 18) as excluded-by-config', () => {
+    const excluded = res.dropped.filter((d) => d.reason === 'excluded-by-config');
+    expect(excluded).toEqual([
+      {
+        contestId: '5cf5e3df-6e72-4f44-9b8d-e69da30b85c5',
+        reason: 'excluded-by-config',
+        note: DATA_QUALITY.excludedContestIds['5cf5e3df-6e72-4f44-9b8d-e69da30b85c5'],
+        dateKey: '2026-08-18',
+        teams: ['Marin Academy', 'Archie Williams'],
+      },
+    ]);
+  });
+
+  it('records a contest that is both ghost and excluded once, and drops nothing else', () => {
+    expect(res.dropped).toHaveLength(2);
+    expect(res.games).toHaveLength(corpus.games.length - 2);
+    expect(res.games).toEqual(corpus.games.filter((g) => !res.dropped.some((d) => d.contestId === g.contestId)));
+    expect(res.unused).toEqual([]);
+  });
+
+  it('reports an excluded id that no longer appears, and leaves the input alone', () => {
+    const dq: DataQualityConfig = {
+      ...DATA_QUALITY,
+      ghostTeamIds: {},
+      excludedContestIds: { ...DATA_QUALITY.excludedContestIds, 'gone-0000': 'a contest MaxPreps deleted' },
+    };
+    const before = corpus.games.length;
+    const r = applyExclusions(corpus.games, dq);
+    expect(r.unused).toEqual(['gone-0000']);
+    // Without the ghost list, 5b9ff911 is caught by its own exclusion entry.
+    expect(r.dropped.map((d) => [d.contestId.slice(0, 8), d.reason])).toEqual([
+      ['5cf5e3df', 'excluded-by-config'],
+      ['5b9ff911', 'excluded-by-config'],
+    ]);
+    expect(corpus.games.length).toBe(before);
+  });
+});
+
+describe('dedupePhantomPairs (SPEC §7.6 step 4)', () => {
+  const clean = applyExclusions(corpus.games, DATA_QUALITY).games;
+  // A Mt. Hamilton league game and a non-league game, both from the corpus.
+  const league = clean.find((g) => g.leagueDivision === 'mt-hamilton' && g.status === 'final')!;
+  const crossDivision = clean.find(
+    (g) => g.home.slug && g.away.slug && g.leagueDivision === null && g.status === 'final',
+  )!;
+  const nonMember = clean.find((g) => !g.home.slug || !g.away.slug)!;
+
+  it('drops nothing on the 2026-10-02 corpus', () => {
+    const res = dedupePhantomPairs(clean);
+    expect(res.dropped).toEqual([]);
+    expect(res.games).toEqual(clean);
+  });
+
+  it('keeps the final over a same-day, same-division phantom and records the phantom', () => {
+    const phantom = variant(league, {
+      contestId: 'ffffffff-0000-4000-8000-000000000001',
+      status: 'scheduled',
+      home: { ...league.away, score: null, result: null },
+      away: { ...league.home, score: null, result: null },
+      decider: null,
+    });
+    const res = dedupePhantomPairs([phantom, ...clean]);
+    expect(res.games).toEqual(clean);
+    expect(res.dropped).toEqual([
+      {
+        contestId: phantom.contestId,
+        reason: 'phantom-duplicate',
+        note: `MaxPreps lists ${phantom.home.name} and ${phantom.away.name} twice on ${league.dateKey}; kept contest ${league.contestId}.`,
+        dateKey: league.dateKey,
+        teams: [phantom.home.name, phantom.away.name],
+      },
+    ]);
+  });
+
+  it('prefers score-pending over scheduled, then contestType 0, then the later modifiedOn, then the smaller id', () => {
+    const base = variant(league, {
+      status: 'scheduled',
+      home: { ...league.home, score: null, result: null },
+      away: { ...league.away, score: null, result: null },
+      contestTypes: { home: 1, away: 1 },
+      modifiedOn: '2026-09-01T00:00:00',
+    });
+    const id = (n: number) => `eeeeeeee-0000-4000-8000-00000000000${n}`;
+    const keep = (list: Game[]) => dedupePhantomPairs(list).games.map((g) => g.contestId);
+
+    const pending = variant(base, { contestId: id(2), status: 'score-pending' });
+    expect(keep([variant(base, { contestId: id(1) }), pending])).toEqual([id(2)]);
+
+    const typed = variant(base, { contestId: id(4), contestTypes: { home: 0, away: 1 } });
+    expect(keep([variant(base, { contestId: id(3) }), typed])).toEqual([id(4)]);
+
+    const newer = variant(base, { contestId: id(6), modifiedOn: '2026-09-02T00:00:00' });
+    expect(keep([variant(base, { contestId: id(5) }), newer])).toEqual([id(6)]);
+
+    expect(keep([variant(base, { contestId: id(8) }), variant(base, { contestId: id(7) })])).toEqual([id(7)]);
+  });
+
+  it('never touches a non-league double-header or the same pair on another day', () => {
+    const twins = [crossDivision, nonMember].map((g, i) =>
+      variant(g, { contestId: `dddddddd-0000-4000-8000-00000000000${i}` }),
+    );
+    const otherDay = variant(league, {
+      contestId: 'dddddddd-0000-4000-8000-000000000009',
+      dateKey: '2026-12-31',
+      dateLocal: '2026-12-31T16:00:00',
+    });
+    const input = [...clean, ...twins, otherDay];
+    const res = dedupePhantomPairs(input);
+    expect(res.dropped).toEqual([]);
+    expect(res.games).toEqual(input);
   });
 });

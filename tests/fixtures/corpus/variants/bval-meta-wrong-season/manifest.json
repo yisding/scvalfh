@@ -1,0 +1,7 @@
+{
+  "id": "bval-meta-wrong-season",
+  "note": "The Santa Teresa league metadata answers with the 2025-26 season (sportSeasonId 8ae4cbab…, year 25-26).",
+  "files": {
+    "maxpreps/league-meta/santa-teresa": "maxpreps/league-meta/santa-teresa.json"
+  }
+}

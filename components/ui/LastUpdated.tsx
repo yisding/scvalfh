@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import {
+  dateWithYear,
   formatStamp,
   hoursBetween,
   monthDay,
@@ -21,6 +22,11 @@ import {
  * staleness at view time, so the caller passes the BUILD instant: if the nightly fetch fails but
  * the build still runs, `fetchedAt` is old against a fresh build and the warning appears — which
  * is exactly the failure this state is for.
+ *
+ * `seasonComplete`: once every league's season is over the nightly update stops on purpose, so an
+ * old stamp is not a failure. Then the stale state reads `Season complete — final update <date>.`
+ * in the quiet grey instead of the alarm (SPEC §10.2; Attribution passes
+ * `getSitePhase() === 'complete'`).
  */
 export interface LastUpdatedProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
@@ -29,12 +35,14 @@ export interface LastUpdatedProps {
   now?: string;
   /** 'compact' is the top-bar form: "Sun 5:04 AM". */
   variant?: 'stamp' | 'compact';
+  /** Every league's season is over: an old stamp is the final update, not a failing one. */
+  seasonComplete?: boolean;
   className?: string;
 }
 
 const STALE_AFTER_HOURS = 36;
 
-export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdatedProps) {
+export function LastUpdated({ at, now, variant = 'stamp', seasonComplete = false, className }: LastUpdatedProps) {
   const local = toLocalTimestamp(at);
   const ageHours = now ? hoursBetween(at, now) : 0;
   const stale = ageHours > STALE_AFTER_HOURS;
@@ -54,6 +62,18 @@ export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdat
         <span className="hidden sm:inline">{shortDate(local)}</span> {timeOfDay(local)}
         <span className="sr-only"> Pacific time</span>
       </time>
+    );
+  }
+
+  if (stale && seasonComplete) {
+    return (
+      <span className={`text-meta text-ink-2${className ? ` ${className}` : ''}`}>
+        Season complete &mdash; final update{' '}
+        <time dateTime={at} className="sx-num">
+          {dateWithYear(local)}
+        </time>
+        .
+      </span>
     );
   }
 

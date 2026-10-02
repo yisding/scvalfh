@@ -1,12 +1,13 @@
 /**
- * The Zod contract for data/rosters.json — the 15 teams' MaxPreps rosters (SPEC §1.1j).
+ * The Zod contract for data/rosters.json — the 15 SCVAL teams' MaxPreps rosters (SPEC §1.1j).
+ * Rosters stay SCVAL-only; slugs and divisions are checked against the registry's SCVAL teams.
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
  * same split as lib/snapshot-schema.ts / lib/data.ts.
  *
  * Invariants:
- *   1. exactly 15 teams, unique slugs, one per registry team
+ *   1. exactly one team per SCVAL registry team, unique slugs
  *   2. grade and its label are set together or null together, and agree
  *   3. position is exactly positions joined with ", " (what MaxPreps' table prints)
  *   4. height and heightInches are set together or null together
@@ -17,12 +18,26 @@
 
 import { z } from 'zod';
 
-const teamSlug = z.enum([
-  'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian',
-  'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
-  'palo-alto', 'presentation', 'santa-clara', 'saratoga',
-]);
+import { HISTORY_LEAGUE, divisionsOf } from './leagues';
+import { teamsInLeague } from './teams';
+
+/** Rosters are SCVAL-only (SPEC §0.2 #12): one per registry team of HISTORY_LEAGUE. */
+const ROSTER_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
+const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(divisionsOf(HISTORY_LEAGUE).map((d) => d.id));
+/** How many teams a rosters file holds: teamsInLeague(HISTORY_LEAGUE).length. */
+export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
+
+const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+
+const teamSlug = id.refine(
+  (slug) => ROSTER_SLUGS.has(slug),
+  `not a registry slug of league ${HISTORY_LEAGUE}`,
+);
+
+const division = id.refine(
+  (d) => ROSTER_DIVISIONS.has(d),
+  `not a division of league ${HISTORY_LEAGUE}`,
+);
 
 /** Same scheme check as lib/snapshot-schema.ts: these end up in an href. */
 const httpUrl = z
@@ -85,7 +100,7 @@ export const TeamRosterSchema = z
     /** The GUID the page itself reports; null when the page was not read. */
     maxprepsTeamId: z.string().min(1).nullable(),
     name: z.string().min(1),
-    division: z.enum(['de-anza', 'el-camino']),
+    division,
     rosterUrl: httpUrl.nullable(),
     /**
      * ok              rows were read from the page this run
@@ -139,10 +154,10 @@ export const RostersSchema = z
       builtBy: z.string().min(1),
       notes: z.array(z.string()),
     }),
-    teams: z.array(TeamRosterSchema).length(15),
+    teams: z.array(TeamRosterSchema).length(ROSTER_TEAM_COUNT),
     counts: RosterCountsSchema,
   })
-  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique')
+  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique')
   .refine((r) => {
     const c = countRosters(r.teams);
     return (Object.keys(c) as Array<keyof typeof c>).every((k) => c[k] === r.counts[k]);
@@ -294,9 +309,9 @@ export const RosterEnrichmentSchema = z
     capturedAt: dateOnly,
     builtBy: z.string().min(1),
     notes: z.array(z.string().min(1)),
-    teams: z.array(EnrichedTeamSchema).length(15),
+    teams: z.array(EnrichedTeamSchema).length(ROSTER_TEAM_COUNT),
   })
-  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique');
+  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique');
 
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;

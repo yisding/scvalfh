@@ -1,14 +1,26 @@
 import Link from 'next/link';
 
+import { Fragment } from 'react';
+
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
+import { getSitePhase } from '../../lib/data';
+import { LEAGUES, SECTIONS } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
+
+import { SITE_SCOPE_NOTE } from './site-url';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
- * "Data from MaxPreps and SBLive/SI" with real deep links, the snapshot timestamp in Pacific, a
- * link to /about, and the not-affiliated line. Always visible, never a tooltip. The attribution
+ * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
+ * alignment and rules the site follows (each linked to its official site), the scope note naming
+ * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about, and the
+ * not-affiliated line. The league and section lists are built from lib/leagues.ts in config
+ * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL" and can never drift from the config.
+ *
+ * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
+ * of warning that the nightly update may be failing. Always visible, never a tooltip. The attribution
  * posture in SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back
  * on every row, and say on every page where the numbers came from.
  *
@@ -25,7 +37,23 @@ export interface AttributionProps {
   className?: string;
 }
 
+/** 'A, B, C and D' */
+function joined(items: readonly React.ReactNode[]): React.ReactNode[] {
+  return items.map((item, i) => (
+    <Fragment key={i}>
+      {i === 0 ? null : i === items.length - 1 ? ' and ' : ', '}
+      {item}
+    </Fragment>
+  ));
+}
+
 export function Attribution({ snapshotAt, now, links, extraCredit, className }: AttributionProps) {
+  const seasonComplete = getSitePhase() === 'complete';
+  const notAffiliated = [
+    ...LEAGUES.map((l) => l.shortName),
+    ...SECTIONS.map((s) => `CIF-${s.shortName}`),
+    'MaxPreps',
+  ].join(', ');
   return (
     // No top margin on phone: every page wrapper already ends with `pb-section-lg` (56px), and a
     // second 56px here left a 112px blank band that read like the page had stopped loading.
@@ -39,17 +67,33 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           <main> and the header at every width. From 768px: sources on the left, the stamp and
           the actions on the right, the disclaimer across both under a divider. */}
       <div className="mx-auto max-w-content px-gutter py-10 text-meta text-ink-2 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-12 md:gap-y-4 md:px-gutter-lg md:py-12 xl:px-gutter-xl">
-        <p className="m-0 max-w-prose">
-          Data from <ExternalLink href={SOURCE_LINKS.maxpreps}>MaxPreps</ExternalLink> and{' '}
-          <ExternalLink href={SOURCE_LINKS.sblive}>SBLive/SI</ExternalLink>. Division alignment and
-          the by-laws from <ExternalLink href={SOURCE_LINKS.scval}>SCVAL</ExternalLink>; playoff
-          dates and format from <ExternalLink href={SOURCE_LINKS.ccs}>CIF-CCS</ExternalLink>.
-        </p>
+        <div className="max-w-prose">
+          <p className="m-0">
+            Data from{' '}
+            <ExternalLink href={SOURCE_LINKS.maxpreps} arrow={false}>
+              MaxPreps
+            </ExternalLink>{' '}
+            and{' '}
+            <ExternalLink href={SOURCE_LINKS.sblive} arrow={false}>
+              High School on SI (si.com)
+            </ExternalLink>
+            . League alignment and rules from{' '}
+            {joined(
+              LEAGUES.map((l) => (
+                <ExternalLink key={l.id} href={l.officialUrl} arrow={false}>
+                  {l.shortName}
+                </ExternalLink>
+              )),
+            )}
+            .
+          </p>
+          <p className="mt-2 mb-0">{SITE_SCOPE_NOTE}</p>
+        </div>
         {/* The deep links and "About & sources" are standalone actions, not words in a sentence, so
             each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in the paragraph
             above do not: they sit inside a sentence, which is the case 2.5.8 exempts. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
-          <LastUpdated at={snapshotAt} now={now} />
+          <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
           <Link href="/about" className="sx-action text-accent hover:underline">
             About &amp; sources
           </Link>
@@ -66,8 +110,8 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
         {/* The divider spans the whole footer grid; only the sentence is capped at 65ch. */}
         <div className="mt-6 border-t border-divider pt-4 md:col-span-2">
           <p className="m-0 max-w-prose text-meta text-ink-3">
-            Unofficial fan site. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated.
-            Records are computed from published game results and may differ from official standings.
+            Unofficial; not affiliated with {notAffiliated} or SI. Records are computed from
+            published game results and may differ from official standings.
             {extraCredit ? ` ${extraCredit}` : ''}
           </p>
         </div>
