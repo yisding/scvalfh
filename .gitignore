@@ -41,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/dist/
+.vinext/
+# vinext's Cloudflare Workers build (`pnpm build:cloudflare`): Worker bundle and assets, local workerd state, generated types.
+.cloudflare/

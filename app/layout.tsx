@@ -57,7 +57,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
   },
   twitter: { card: 'summary_large_image' },
-  robots: { index: true, follow: true },
+  // No `robots` here on purpose. `index, follow` is what a crawler assumes when the tag is absent,
+  // so stating it bought nothing on a 200, and on a 404 it was actively wrong: not-found metadata
+  // does not override it, so every 404 shipped the framework's `noindex` AND this `index, follow`
+  // as two contradictory <meta name="robots"> tags (measured on `next start` and `vinext start`
+  // alike). Leaving it unset lets the 404's own `noindex` stand alone.
   other: { 'format-detection': 'telephone=no' },
 };
 

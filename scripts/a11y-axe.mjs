@@ -9,7 +9,13 @@
  *
  * `axe-core` and `playwright` are intentionally NOT repo dependencies — they are needed to check
  * the site, not to build or ship it — so this script resolves them at run time and says plainly
- * what to install when they are missing. The CI workflow installs them with `--no-save`.
+ * what to install when they are missing. Install them in a directory of their own and point
+ * NODE_PATH at it, which `require` honours; npm cannot install into the tree pnpm wrote here (CI
+ * does the same in $RUNNER_TEMP/axe):
+ *
+ *   (mkdir -p /tmp/axe && cd /tmp/axe && npm init -y >/dev/null &&
+ *     npm install --no-save axe-core playwright && npx playwright install --with-deps chromium)
+ *   NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs
  *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
@@ -41,8 +47,11 @@ function load() {
     };
   } catch {
     console.error(
-      'scripts/a11y-axe.mjs needs axe-core and playwright:\n' +
-        '  npm install --no-save axe-core playwright && npx playwright install --with-deps chromium',
+      'scripts/a11y-axe.mjs needs axe-core and playwright. Install them outside this pnpm tree\n' +
+        'and point NODE_PATH at them:\n' +
+        '  (mkdir -p /tmp/axe && cd /tmp/axe && npm init -y >/dev/null &&\n' +
+        '    npm install --no-save axe-core playwright && npx playwright install --with-deps chromium)\n' +
+        '  NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs',
     );
     process.exit(2);
   }

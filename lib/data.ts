@@ -1,15 +1,16 @@
 /**
  * The site-facing read API. Every page and component reads the snapshot through this module.
  *
- * The snapshot is loaded and validated ONCE at module scope: one fs read per process, and a
- * schema failure surfaces at import time rather than half-way through a render.
+ * The snapshot is loaded and validated ONCE at module scope: bundled into the server code at build
+ * time, and a schema failure surfaces at import time rather than half-way through a render.
  *
  * "Today" is ALWAYS derived from `snapshot.fetchedAt` in America/Los_Angeles — never from
  * Date.now() — so a build is reproducible and every "as of" label is honest (BUILD-BRIEF).
  */
 
 import { readFileSync } from 'node:fs';
-import path from 'node:path';
+
+import bundledSnapshot from '../data/snapshot.json';
 
 import { localDateKey, hoursBetween, isoDateKey, recordString } from './format';
 import { CCS_BRACKET_URL, DIVISIONS } from './season';
@@ -41,30 +42,29 @@ import type {
   TeamSlug,
 } from './types';
 
-/** Overridable so tests (and a --out build) can point at another snapshot. */
-export const SNAPSHOT_PATH =
-  process.env.SCVAL_SNAPSHOT ?? path.join(process.cwd(), 'data', 'snapshot.json');
-
 /**
- * The default read is a LITERAL `path.join(process.cwd(), 'data', 'snapshot.json')` on its own
- * branch, and the env override is a second, separate call. Passing one variable path to
- * `readFileSync` makes the read opaque to Turbopack's file tracing, which then falls back to
- * tracing the whole project into the server bundle ("dynamic fs access" build warning). Keeping
- * the common branch statically analysable is what lets the build trace exactly one data file.
+ * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
+ * Turbopack for `next build`, Vite/Rolldown for vinext's Node server and its Cloudflare Worker.
+ * Nothing reads data/ from disk at run time. That is what lets the Worker start at all: workerd's
+ * node:fs sees only /bundle, /tmp and /dev, and this module runs as a Worker instance starts (the
+ * root layout and the dynamic metadata routes import it), so the old
+ * `readFileSync(path.join(process.cwd(), 'data', 'snapshot.json'))` threw before any request was
+ * served. A missing file is now a build error (the import does not resolve): run `pnpm fetch-data`
+ * first.
+ *
+ * SCVAL_SNAPSHOT still swaps in another file (tests, a --out build), read with node:fs when this
+ * module loads. It needs a real filesystem: next start, vinext start, vitest and tsx, never a
+ * Worker.
  */
-function readSnapshotFile(): string {
-  const override = process.env.SCVAL_SNAPSHOT;
-  if (override) return readFileSync(override, 'utf8');
-  return readFileSync(path.join(process.cwd(), 'data', 'snapshot.json'), 'utf8');
-}
-
 function load() {
+  const override = process.env.SCVAL_SNAPSHOT;
+  if (!override) return parseSnapshot(bundledSnapshot as unknown);
   let raw: string;
   try {
-    raw = readSnapshotFile();
+    raw = readFileSync(override, 'utf8');
   } catch (err) {
     throw new Error(
-      `lib/data.ts: cannot read ${SNAPSHOT_PATH} — run \`pnpm fetch-data\` first (${(err as Error).message})`,
+      `lib/data.ts: cannot read SCVAL_SNAPSHOT=${override} (${(err as Error).message})`,
     );
   }
   return parseSnapshot(JSON.parse(raw) as unknown);
