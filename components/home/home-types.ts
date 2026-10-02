@@ -26,7 +26,13 @@ export interface HomeTeamIdentity {
   divisionLabel: string;
 }
 
-/** The pinned team's most recent final. */
+/**
+ * The pinned team's most recent PLAYED game: the newest one dated today or earlier whose status is
+ * `final` or `score-pending`, in kickoff order. A game that was played and has no score yet is
+ * still the team's last game; skipping it left Cupertino's card on "Last · Wed Sep 23" after its
+ * Sep 30 game had been played. Such a game renders the §5.2 unreported row (two en dashes, the
+ * outlined pending chips, SCORE NOT REPORTED and the "we will update" note), never a 0–0.
+ */
 export interface HomeLastGame {
   /** The whole §5.2 rendering decision, resolved server-side. */
   display: GameDisplay;
@@ -36,9 +42,20 @@ export interface HomeLastGame {
   dateLabel: string;
   /** The `<time datetime>` value. */
   dateTime: string;
-  /** Cleaned at build (DESIGN §5.8); clamped to two lines when rendered. */
-  recap: string | null;
   href: string;
+}
+
+/**
+ * The pinned team's written CCS status, for the line under its last final (DESIGN §6.1: words,
+ * never a percentage). Null when the team has no reported results, since there is nothing to
+ * project from, and once the seeding meeting has passed or the official bracket is posted, when a
+ * projection is no longer the useful thing to say.
+ */
+export interface HomeProjection {
+  /** The status alone: 'Automatic qualifier', the label up to its " — " explanation. */
+  head: string;
+  /** The whole label, for the link's accessible name. */
+  label: string;
 }
 
 export interface HomeNextGame {
@@ -83,8 +100,11 @@ export interface HomeTeamView {
   pts: number | null;
   /** The written playoff status (Article VII §2) — never a percentage. */
   playoffLabel: string;
+  /** What the card's CCS line says under a final; see `HomeProjection`. */
+  projection: HomeProjection | null;
   /** Oldest → newest, league only, at most 5. */
   form: FormEntry[];
+  /** Non-league FINALS only: a game still waiting for its score has no result to count. */
   nonLeagueCount: number;
   last: HomeLastGame | null;
   next: HomeNextGame | null;

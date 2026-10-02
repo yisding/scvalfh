@@ -54,9 +54,12 @@ export function PlayoffsCard({ playoffs, phase, crossover, className }: Playoffs
           ).map(([term, date]) => (
             <div key={term} className="min-w-0">
               <dt className="text-micro font-medium text-ink-3">{term}</dt>
-              {/* "Wed Nov 11": when a 3-up column is too narrow (320px) it breaks after the
-                  weekday, never inside "Nov 11". 14px below 640px so 390px keeps one line. */}
-              <dd className="sx-num m-0 text-meta text-ink sm:text-body">
+              {/* Sans with tabular figures, not mono: three dates side by side are not a column
+                  of digits. "Wed Nov 11" is then 78px at 14px and 89px at 16px; the 320px column
+                  is 85px, so the 14px size below 640 is still what keeps it on one line there.
+                  Should a column ever be narrower, it breaks after the weekday, never inside
+                  "Nov 11". */}
+              <dd className="m-0 text-meta text-ink tabular-nums sm:text-body">
                 {shortDate(date).slice(0, 3)}{' '}
                 <span className="whitespace-nowrap">{monthDay(date)}</span>
               </dd>
@@ -64,17 +67,14 @@ export function PlayoffsCard({ playoffs, phase, crossover, className }: Playoffs
           ))}
         </dl>
         <p className="mt-5 mb-0 border-t border-divider pt-4 text-meta text-ink-3">
-          Berths are assigned by the CCS committee. Nothing here is official until the seeding
-          meeting.{' '}
+          Berths are assigned by the CCS committee at the {shortDate(keyDates.seedingMeeting)}{' '}
+          seeding meeting.{' '}
           {bracketPublished ? (
             <ExternalLink href={bracketUrl}>Official bracket</ExternalLink>
           ) : (
-            <>
-              The official bracket is not posted yet.{' '}
-              <Link href="/playoffs" className="text-accent hover:underline">
-                What we know <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </>
+            <Link href="/playoffs" className="text-accent hover:underline">
+              What we know <span aria-hidden="true">&rarr;</span>
+            </Link>
           )}
         </p>
       </div>
