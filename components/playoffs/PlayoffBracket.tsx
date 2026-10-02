@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/teams';
+import { getTeamBySlug } from '../../lib/data';
+import { gameHref } from '../../lib/game-id';
 import type { TeamSlug } from '../../lib/types';
 import GameRow from '../ui/GameRow';
 import { ScoreGlyph } from '../ui/ScoreCell';
@@ -103,7 +104,7 @@ function BracketCard({
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and a full bracket is fourteen game pages. Navigation still fetches on click. */}
       {named ? (
-        <Link href={`/game/${game.contestId}`} prefetch={false} className="block py-1 no-underline">
+        <Link href={gameHref(game.contestId)} prefetch={false} className="block py-1 no-underline">
           <span className="sr-only">{display.sentence}</span>
           <span className="block" aria-hidden="true">
             <BracketLine side={display.away} seed={seeds.away} showScore={display.showScores} />
@@ -150,7 +151,7 @@ export function PlayoffBracket({
             <ol className="sx-list sx-card sx-flush">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
-                  {/* Every CCS game is isLeague=false, so the NL tag would mark the whole
+                  {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
                   <GameRow game={entry.game} showRecap={false} showNonLeague={false} />
                 </li>

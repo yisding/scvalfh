@@ -1,5 +1,9 @@
 > **Note on this copy.** This is the implementation-ready design record produced during the
-> design stage, kept verbatim below for history. One decision in it was later overridden by
+> design stage, kept verbatim below for history. **Sections 1-14 describe the single-league
+> (SCVAL, 15-team) site as designed; the site now covers four leagues and 43 teams, and §15
+> ("Multi-league amendment (2026-10)") at the end of this file records what that changed and
+> which decisions below it reverses. Where §15 and an earlier section disagree, §15 wins.** One
+> decision in it was later overridden by
 > `docs/BYLAWS-2026-27.md` (fetched after this document was written): **§1.2's "No PTS column"
 > is superseded — the by-laws (Article VI §2) make points the official ordering key, so the
 > standings table DOES show a PTS column.** See `README.md` ("How standings are computed") and
@@ -7,9 +11,10 @@
 >
 > **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
 > example below predates the news that Wilcox is not fielding a team this season. The site now
-> has 15 teams (De Anza 7, El Camino 8); Wilcox's grid fixtures are dropped at parse time
-> (`WITHDRAWN_SCHOOL_NAMES` in `lib/teams.ts`). The no-results state itself still applies to any
-> fielded team with nothing reported.
+> had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
+> SCVAL's 15 are four of the site's 43; Wilcox's grid fixtures are dropped at parse time (it is in
+> SCVAL's `withdrawnNames` in `lib/leagues.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
+> no-results state itself still applies to any fielded team with nothing reported.
 >
 > One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
 > fonts". The App Router's own client runtime is ~150 KB gzipped on a page that ships no
@@ -816,7 +821,8 @@ a scheduled window, not a running score."
 `#gaps` — Wilcox's absence from the De Anza source; the empty `NEUT` column; no player names.
 `#corrections` — `mailto:` with a prefilled subject.
 `#a11y` — the contrast floor, the no-color-only rule, the keyboard model, and the statement
-that the site stores nothing but a theme choice and a pinned team, both locally.
+that the site stores nothing but a theme choice, a pinned team and the league the visitor chose
+to see (§15), all locally.
 
 ---
 
@@ -2250,9 +2256,12 @@ Every line is a gate, not an aspiration; §10.9 lists which ones CI enforces.
     through motion alone** — `LIVE` is also a word.
 11. **Language & units.** `lang="en"`, `<time datetime>` on every date, every time labelled
     `PT`, all formatting done server-side in `America/Los_Angeles` so no client reformats a date.
-12. **Privacy, stated on `/about#a11y`.** The site stores exactly two things, both in this
-    browser only: a theme choice and a pinned team. No accounts, no analytics cookies, no
-    third-party requests on any page (no hotlinked images, self-hosted fonts).
+12. **Privacy, stated on `/about#a11y`.** The site stores exactly three things, all in this
+    browser only: a theme choice, a pinned team and the league the visitor chose to see on the home
+    page (`localStorage` keys `scvalfh.theme`, `scvalfh.pinnedTeam`, `scvalfh.league`; the league
+    key is written only by an explicit choice, never by following a link). No accounts, no
+    analytics cookies, no third-party requests on any page (no hotlinked images, self-hosted
+    fonts). *(Amended in §15; this item originally said "exactly two things".)*
 
 ---
 
@@ -2532,3 +2541,168 @@ including fonts. Caching: immutable hashed assets, HTML
 *End of spec. The palette in §6.6 passes `--pairs all` on seven surfaces across both modes with
 `exit=0`; the contrast matrix in §4.1 is measured output, not assertion; and §13 accounts for
 every weakness both judges raised.*
+
+---
+
+## 15. Multi-league amendment (2026-10)
+
+The site was designed (§1-§14) for one league: SCVAL's 15 teams. It now covers **four leagues and
+43 teams**: SCVAL, BVAL and PCAL in the CIF Central Coast Section, and MCAL in the North Coast
+Section. Sections 1-14 are kept as written for history; this section lists what changed and wins
+wherever it disagrees with them. The rule that every other part of the design still stands is
+deliberate: static rendering, no `searchParams`, "today" from the snapshot's `fetchedAt`, the
+rule-and-kicker headers, two data hues, the never-0-0 rule and the phone-first chrome are all
+unchanged.
+
+### 15.1 Decisions this reverses
+
+| Earlier decision | Now | Why |
+|---|---|---|
+| §1.2 "No search. 16 teams, 10 pages; `/teams` beats a search box." | A zero-network team finder (`lib/search.ts`, `components/search/TeamFinder.tsx`) over a pre-serialized 43-team index: it filters the server-rendered list on `/teams` and pins a team from the home page. Results are ordinary links or buttons in DOM order with a polite live region; no combobox. Without JavaScript the full grouped list is the page. | 43 schools across four leagues is too many to scan; "find my school" is the first task of every visitor. |
+| §1.2 "No division sub-routes." | `/standings/[league]` and `/schedule/[league]` (4 pages each) and `/playoffs/[league]` (leagues with their own tournament: MCAL). `/standings` stays an all-league page of compact tables whose `#de-anza` and `#el-camino` anchors still resolve with no JavaScript; `/schedule` becomes a light index that keeps `#YYYY-MM-DD` anchors. | One 500-game schedule page would break the "every list page stays fast" budget; a shared "/standings/bval" link should preview BVAL. |
+| §3.1's wireframe labels the fifth phone tab "CCS" (decision 3 above already calls it Playoffs) | "Playoffs" (still 5 tabs: 78 px each at 390 px, 64 px at 320 px, where the label measures about 47-52 px). | MCAL is in the North Coast Section, which has no field hockey championship, so "CCS" would be false for a quarter of the teams. |
+| §3.1 / §7.12 the 15-tile team picker on the home page | The finder plus per-league team lists inside each league panel (and four league cards on a first visit). | A 43-tile picker does not fit a phone fold; each league's tiles are server-rendered in its own panel. |
+| §10.12 "exactly two things stored" | Three: theme, pinned team and the league (`scvalfh.league`). | See 15.3. |
+| §3.1's 240 px reserved height for the pinned card | The pinned card's height is **measured** at its longest real content and set per breakpoint on the card box. | The built card already exceeded 240 px (up to about 370 px below 390 px wide), and the new postseason line makes it longer. |
+
+### 15.2 Routes
+
+All static; every dynamic route has `generateStaticParams` and `dynamicParams = false`, and an
+unknown param is a 404 (including its OG image).
+
+| URL | Answers | Pages |
+|---|---|---|
+| `/` | "What just happened in **my** league, and when is my team's next game?" | 1 |
+| `/standings` | every division as a compact full table, grouped section → league → division, with `#ccs #ncs #scval #de-anza #el-camino #bval #mt-hamilton #santa-teresa #pcal #mcal #marin-county` | 1 |
+| `/standings/[league]` | "Where do **we** stand?" the full page for one league | 4 |
+| `/schedule` | league cards, recent and next game days grouped by league, and an "Every game day" index of `#YYYY-MM-DD` rows | 1 |
+| `/schedule/[league]` | one league's whole season with the client filters | 4 |
+| `/scores/[date]` | one day grouped by league, then "Non-league" | one per game date |
+| `/game/[id]` | the shareable game (an si.com-sourced id reads `sblive-123`); a game MaxPreps later published is a stub linking to it | one per game |
+| `/teams`, `/teams/[slug]` | find my school (grouped section → league → division); one team | 1 and 43 |
+| `/playoffs` | the CCS picture: `#scval #bval #pcal`, key dates, bracket | 1 |
+| `/playoffs/[league]` | league tournaments: `/playoffs/mcal` | 1 |
+| `/history/2025-26`, `/about` | SCVAL-only history (labelled so); per-league rules, health, sources, backfills, dropped contests | 1 each |
+
+Headings on the grouped pages (`/standings`, `/teams`): a section is an h2 `SectionHeader`
+(kicker `Central Coast Section` or `North Coast Section`), each league an h3, each division a plain
+h4 (omitted for PCAL and MCAL, which have one division and no division label anywhere).
+
+### 15.3 The remembered league and the pre-paint scope
+
+A visitor can choose the league they care about; the home page then shows only that league's panel.
+The choice is `localStorage['scvalfh.league']` (a league id, or `all`) and is written **only** by an
+explicit act: a tap on a home league chip, the "Show <league> here" button on a league card, or
+pinning a team (which writes the team's league). Following a link and tapping a link-mode chip never
+write it, so a pasted `/standings/bval` does not change anyone's home page.
+
+Two separate inline `<head>` scripts run before first paint: the unchanged pinned-team script and a
+new prefs script that stamps `<html data-league data-pin data-js>` (and `data-pin-stale` for a stored
+pin that is no longer a team). Generated CSS then shows only that league's panel and hides the rest
+with `display: none`, so **every league's content is in the static HTML**, switching is a pure
+attribute change, there is no CSS reordering (DOM order is visual order) and layout shift is 0.
+With JavaScript off or storage blocked there is no attribute, the page is the first-visit view
+("Find your team" and four league cards, never an SCVAL default) and every link works. After
+hydration the Scores, Table and Playoffs links follow the page's league, or the remembered one.
+Focus after a write moves to the league panel heading or the My-team heading (WCAG 2.4.3).
+
+### 15.4 LeagueSwitcher
+
+One component, three modes: `scope` (home: buttons that write the league, disabled until
+hydrated, with a polite live region), `link` (`/standings/[league]`, `/schedule/[league]`: plain
+links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links). The chip
+is `text-micro` weight 600, `min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom
+wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
+about **273 px**, inside the 288 px content width. There are no visible section captions: the chips
+sit in two lists labelled for assistive technology ("Central Coast Section" and "North Coast
+Section") separated by a hairline. The selected chip is an accent-wash fill, accent ink, weight 600,
+a 1.5 px ink ring and a ✓ (`aria-hidden`), never color alone, so it survives the §10.9b grayscale
+gate.
+
+### 15.5 Leagues get no hue
+
+§6.4 removed a categorical hue for divisions because a division-orange failed the validator against
+loss-coral and the fix was to need no color at all. That extends to leagues: **the four leagues have
+no color anywhere**, not in chips, bars, badges, the OG cards or the berth meters. A league is named
+in text (`SCVAL`, `BVAL`, `PCAL`, `MCAL`), by the panel it sits in and by its section kicker. The
+two data hues remain win and loss only.
+
+### 15.6 Home page: league panels and the fold
+
+The home page's composition, in DOM order: the page header (visible h1 "NorCal field hockey", with
+the four league names in its sr-only title), the My-team slot (hidden until there is a pin, a league
+or a stale pin), the scope `LeagueSwitcher`, the first-visit "Find your team" block, then one
+`<section data-scope="<league>">` per league (phase lead, latest scores, mini standings, next games,
+the league's team tiles, the postseason card and a one-line strip of the other leagues' leaders),
+and a cross-league "latest" block shown on the first visit.
+
+Mini standings are driven by each division's config, never by a map keyed by division id in the
+component: SCVAL 4 rows, no line; Mt. Hamilton 4 rows with an "AQ line" after 3; Santa Teresa 3 rows
+with a "Play-in host" line after 1; PCAL 7 rows with an "AQ line" after 2; MCAL 7 rows with a
+"Tournament line" after 6. The line is a labelled separator row, never only a rule (WCAG 1.3.1).
+MCAL's postseason card has no berth meter and no CCS date: NCS pages describe no CCS concept.
+
+**Fold targets** (phone, measured in a real browser by `scripts/a11y-axe.mjs`, which prints the
+measured values in CI; this section states the targets, never a measurement):
+
+- pinned team, 390 x 664: the whole pinned card is above the fold;
+- pinned team, 390 x 844: at least 2 Latest rows are above the fold as well;
+- a league chosen but no team pinned, 390 x 664: at least 2 Latest rows are above the fold (the
+  estimate that makes it plausible is top bar 48 + header about 100 + My-team heading 44 + compact
+  slot 128 + switcher 44 + panel heading 44 + Latest heading 44, about 452 px, leaving the rows
+  within the 608 px between the bars).
+
+The pinned card's own height is measured at its longest real content (two-line Next, a team with no
+results, the longest postseason line) at 320, 360, 390 and 768 px and recorded in a comment at the
+component; this supersedes §3.1's 240 px. The pinned card's postseason line is one truncated line
+("If the season ended today: …" during the regular season, "Final place: …" after it); the full
+sentence lives on the team page.
+
+### 15.7 GP, LEFT, MAX and the missing-results line
+
+The standings table gains a **GP** column everywhere (the phone two-line row carries
+`<counted>/<scheduled> GP`) and, on desktop, **LEFT** (league games with no counted result yet:
+still to play, or played and not reported) and **MAX** (the most points a team could reach if it won
+all of them: a ceiling, not a projection). Where teams have played unequal numbers of games a footnote
+says that points favor teams that have played more. Above the table, a single line, "⚑ 1 official
+league result missing — listed below the table" (or "⚑ N official league results missing …"), links to the official
+league games dated in the past with no counted result; they are listed by team and date and never
+counted. A result sourced from si.com carries a † on the row with a footnote (see 15.9). PCAL's and
+BVAL's co-champion label appears only after the league's regular phase.
+
+### 15.8 Copy rules
+
+- **Kickers are sentence case and rendered as written** (`SectionHeader` does not transform case):
+  `Central Coast Section`, `League table`, never an upper-cased label.
+- **No "eliminated"**, anywhere, in any case. BVAL and PCAL places off the ladder read "No
+  automatic-berth route"; SCVAL's read "No automatic path".
+- **MaxPreps' internal label for PCAL's table is never shown.** It is data only (see
+  `docs/DATA-SOURCES.md` §2); the site says "PCAL". The one lowercase slug inside a MaxPreps link
+  is the only allowed occurrence of it in built output.
+- A missing score is never rendered as 0-0.
+- Counts use real plurals; no "result(s)".
+- No CCS concept inside an MCAL page's `<main>` (no "automatic qualifier", "at-large", "CCS
+  Division", "CCS picture"); no division label on PCAL or MCAL pages.
+- "Co-champions" appears only after that league's regular phase.
+- Branding: `NorCal Field Hockey` (phone wordmark `NorCal`), with a scope note naming exactly the
+  four leagues. `scripts/assert-copy.ts` scans the built HTML for the rules above.
+
+### 15.9 si.com and the source line
+
+Owner decision D2 lets si.com backfill MaxPreps under ten mechanical rules (see
+`docs/DATA-SOURCES.md` §5.2). The design consequence is a marker, never a color: a game row's status
+chip carries a † with the accessible text "Score via si.com" for such a score, the game page's source
+line reads "Score via High School on SI (si.com)" with both links, a standings row that includes one
+carries a † and a footnote, and `/about#backfills` lists every one with both values and the rule.
+
+### 15.10 Budgets
+
+Fail CI (`scripts/assert-budgets.ts`), against baselines captured from `main` before the change:
+`data/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
+most 2.0 x baseline; first-load client JS for `/`, `/schedule/<league>`, `/teams` and
+`/standings/<league>` each at most baseline + 20 KB (this catches the config, registry or zod
+leaking into the browser: the client boundary forbids it); `/standings` (overview) at most 1.0 x its
+baseline gzip; each `/standings/<league>` and `/schedule/<league>` at most 1.25 x; the `/schedule`
+index at most 0.5 x; `/teams` at most 3.0 x; `/playoffs` at most 2.0 x; the Cloudflare Worker at
+most baseline + 600 KB. The original §13 budgets (LCP, TBT, CLS, 40 KB of app JS beyond the
+framework) still apply.

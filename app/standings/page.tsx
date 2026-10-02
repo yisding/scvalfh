@@ -1,126 +1,122 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
-import DivisionStandings from '@/components/standings/DivisionStandings';
-import DivisionTabs from '@/components/standings/DivisionTabs';
-import ExternalLink from '@/components/ui/ExternalLink';
-import { OG_BASE } from '@/components/layout/site-url';
-import { shortDate } from '@/lib/format';
-import { DIVISION_LABELS, SOURCE_LINKS } from '@/lib/season';
+import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
+import PageHeader from '../../components/layout/PageHeader';
+import { OG_BASE } from '../../components/layout/site-url';
+import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
+import SectionHeader from '../../components/ui/SectionHeader';
+import { shortDate } from '../../lib/format';
 
-import { getStandingsPageData } from './standings-data';
+import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from './standings-data';
 
 /**
- * /standings — "Where do we stand?" (DESIGN §3.2, amended by BYLAWS-ADDENDUM).
+ * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as
+ * a COMPACT full table (place, team, GP, W-L-T, PTS), grouped section → league → division.
  *
- * Both divisions live on ONE page with `#de-anza` / `#el-camino` anchors: the page's job is
- * comparison, a tab that hides the other division would be a worse deal, and anchors work with
- * JavaScript off and are shareable (DESIGN §1.2).
+ * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
+ * `#el-camino` are real elements here, as are `#ccs`/`#ncs` (sections), every league id and every
+ * division id. A single-division league whose division id equals its league id (PCAL) has ONE
+ * element carrying the id; every id on the page is unique.
  *
- * The phone fold, once the page title has scrolled away: 48px top bar + 48px division bar (both
- * sticky) + 40px section heading + 36px table head = 172px, then 68px two-line rows — about six
- * rows above the fold at 390×844. That is deliberate (brief §5.2): the rows got air, and the title
- * is a real `<h1>` again rather than a visually hidden one.
+ * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each
+ * league an h3 → each division a plain h4 (omitted for a single-division league). Each table
+ * links its league's full page, `/standings/<league>#<division>`.
  *
- * Everything generic (the GD and PTS explanations, the qualifier-cut sentence, "this order is our
- * computation") is printed ONCE, in the "How these tables are computed" disclosure at the foot of
- * the page. Everything division-specific stays visible in that division's Notes block.
- *
- * No `searchParams`, nothing derived from `Date.now()`: the page is fully static and every "as of"
- * label comes from `snapshot.fetchedAt` (DESIGN decision 7, BUILD-BRIEF).
+ * No sticky table head, no GD bars, no form strips, no disclosures: this page is the light index.
+ * Static: no search params, nothing derived from `Date.now()`.
  */
 export function generateMetadata(): Metadata {
-  const { views, leaders } = getStandingsPageData();
+  const { leaders, throughDate } = getStandingsOverviewData();
   const summary = leaders
-    .map((line) =>
-      line.teams.length === 0
-        ? `${line.label}: no results yet`
-        : `${line.label}: ${line.teams
-            .map((team) => `${team.name} ${team.record}, ${team.pts} pts`)
-            .join(' and ')}`,
-    )
+    .map(({ league, lines }) => `${league.shortName}: ${leaderClause(lines)}`)
     .join('. ');
-  const through = views[0]?.throughDate;
-  const description = `Both divisions, ordered on points (3 a win, 1 a tie, By-Laws Article VI §2). ${summary}.${
-    through ? ` League games through ${shortDate(through)}.` : ''
+  const description = `Every division, ordered on points (3 a win, 1 a tie). ${summary}.${
+    throughDate ? ` League games through ${shortDate(throughDate)}.` : ''
   } Computed from published results; unofficial.`;
-
   return {
     title: 'Standings',
     description,
     alternates: { canonical: '/standings' },
-    openGraph: {
-      ...OG_BASE,
-      title: 'Standings — De Anza and El Camino',
-      description,
-      url: '/standings',
-    },
+    openGraph: { ...OG_BASE, title: 'Standings — every league', description, url: '/standings' },
   };
 }
 
-export default function StandingsPage() {
-  const { views, notice } = getStandingsPageData();
-  const tabs = views.map((view) => ({ href: `#${view.division}`, label: view.label }));
+/** 'SCVAL, BVAL, PCAL and MCAL' */
+function listWords(words: readonly string[]): string {
+  if (words.length <= 1) return words.join('');
+  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+}
 
-  // The page disclosure: the GD paragraph (stating every division's own maximum), the PTS
-  // paragraph, then each generic per-division sentence once (they are identical when both
-  // divisions cut after the same place).
-  const gdMaxima = views
-    .map((view) => `${DIVISION_LABELS[view.division]} |GD| max ${view.gdDomain}`)
-    .join(', ');
-  const legend = [
-    `GD = league goals for minus goals against. Bars are scaled to each division alone (${gdMaxima}), so the two divisions' bars are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
-    'PTS is the official ordering key: 3 points for a win, 1 for a tie (SCVAL By-Laws Article VI §2).',
-    ...new Set(views.flatMap((view) => view.legendNotes)),
-  ];
+export default function StandingsPage() {
+  const { leagues, sections } = getStandingsOverviewData();
 
   return (
-    /* The sticky table heads park under the sticky chrome: on phone the 48px top bar plus the 48px
-       division bar (6rem); from md the division pills sit in the title row and do not stick, so
-       only the 64px top bar. `.sx-table thead th` reads this variable, so it is declared once. */
-    <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
+    <div className="pb-section-lg">
       <PageHeader
         title="Standings"
-        description="2026 SCVAL girls varsity field hockey · league games only · computed from published results"
-        aside={<DivisionTabs variant="inline" tabs={tabs} />}
-        asideClassName="hidden md:block"
+        description={`Every division in ${listWords(leagues.map((l) => l.shortName))} · league games only`}
       />
 
-      <DivisionTabs variant="bar" tabs={tabs} className="mt-4" />
+      {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
+      <p className="m-0 mt-4 flex flex-wrap gap-2">
+        {leagues.map((league) => (
+          <a
+            key={league.id}
+            href={`#${league.id}`}
+            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11`}
+          >
+            Jump to {league.shortName} &darr;
+          </a>
+        ))}
+      </p>
 
-      {notice ? (
-        <div className="sx-inset mt-6 max-w-prose">
-          <p className="m-0 text-body font-semibold text-ink">{notice.heading}</p>
-          <p className="mb-0">{notice.body}</p>
-        </div>
-      ) : null}
+      <LeagueSwitcher mode="anchor" label="Leagues" leagues={leagueChips()} hrefs={leagueHrefs(null)} className="mt-4" />
 
-      {views.map((view, index) => (
-        <DivisionStandings
-          key={view.division}
-          view={view}
-          className={index === 0 && !notice ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
-        />
+      {sections.map((section) => (
+        <section
+          key={section.id}
+          aria-labelledby={section.id}
+          className="mt-section md:mt-section-lg"
+        >
+          <SectionHeader id={section.id} kicker={section.name} />
+          {section.leagues.map((league) => (
+            <section key={league.id} aria-labelledby={league.id} className="mt-8">
+              <SectionHeader as="h3" id={league.id} kicker={league.title} />
+              {league.divisions.map((division) => (
+                <div key={division.division} id={division.anchorId ?? undefined} className="mt-6">
+                  {division.heading ? (
+                    <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4>
+                  ) : null}
+                  <CompactStandingsTable
+                    rows={division.rows}
+                    ladderLine={division.ladderLine}
+                    caption={division.caption}
+                  />
+                  <p className="m-0 mt-2">
+                    <Link
+                      href={division.fullHref}
+                      prefetch={false}
+                      className="sx-action text-meta font-medium text-accent hover:underline"
+                    >
+                      {division.fullLabel} &rarr;
+                    </Link>
+                  </p>
+                </div>
+              ))}
+            </section>
+          ))}
+        </section>
       ))}
 
-      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
-        <summary>How these tables are computed ({legend.length} notes)</summary>
-        {legend.map((note) => (
-          <p key={note} className="mb-0">
-            {note}
-          </p>
-        ))}
-      </details>
-
-      <div className="mt-6 flex flex-wrap gap-2">
-        <Link href="/about#standings" prefetch={false} className="sx-pill">
+      <p className="mt-section mb-0 max-w-prose text-meta text-ink-3 md:mt-section-lg">
+        Places, GP and W-L-T count league games only; PTS is 3 for a win and 1 for a tie in every
+        league. Each league&rsquo;s full page has its tiebreak rules, GD, form, and the games still
+        to play.{' '}
+        <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
           How standings are computed
         </Link>
-        <ExternalLink href={SOURCE_LINKS.scvalBylaws} className="sx-pill">
-          SCVAL field hockey by-laws 2026-27 (PDF)
-        </ExternalLink>
-      </div>
+      </p>
     </div>
   );
 }

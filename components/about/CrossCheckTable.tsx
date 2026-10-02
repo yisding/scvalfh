@@ -5,7 +5,10 @@ import TeamMonogram from '../ui/TeamMonogram';
 import type { CrossCheckRow, Team } from '../../lib/types';
 
 /**
- * The published MaxPreps STANDINGS cross-check (DESIGN §9, /about#cross-check).
+ * The published MaxPreps STANDINGS cross-check (DESIGN §9, /about#cross-check), for one scope —
+ * /about renders one per league, and a second one per division whose MaxPreps table differs for a
+ * KNOWN reason (`CrossCheckRow.knownCause`), so expected differences sit in their own sub-list
+ * under the cause sentence instead of reading as alarms.
  *
  * `snapshot.crossCheck` is a direct field-by-field comparison — not a reimplementation — for
  * every team where our computed record disagrees with MaxPreps' own table. We always show our
@@ -28,14 +31,25 @@ export interface CrossCheckGroup {
 
 export interface CrossCheckTableProps {
   groups: CrossCheckGroup[];
+  /** Teams in scope (a league, or the whole site): "all <n> teams" in the agreement sentence. */
+  teamCount: number;
+  /**
+   * Replaces the agreement sentence when the scope has no rows but agreement must NOT be claimed
+   * (a division whose MaxPreps table leaves a team out, or one we compare for information only).
+   */
+  emptyText?: string | null;
 }
 
-export function CrossCheckTable({ groups }: CrossCheckTableProps) {
+export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCheckTableProps) {
   if (groups.length === 0) {
     return (
       <p className="max-w-prose py-1 text-body text-ink-2">
-        No disagreements in the most recent run &mdash; our computed league records match
-        MaxPreps&rsquo; published table exactly for all 15 teams.
+        {emptyText ?? (
+          <>
+            No disagreements in the most recent run &mdash; our computed league records match
+            MaxPreps&rsquo; published table exactly for all {teamCount} teams.
+          </>
+        )}
       </p>
     );
   }

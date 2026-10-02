@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { monthDay } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import ResultChip from '../ui/ResultChip';
 import { ScoreGlyph } from '../ui/ScoreCell';
 import SectionHeader from '../ui/SectionHeader';
@@ -15,9 +16,10 @@ import type { GameModel } from './game-model';
  * THESE TWO THIS SEASON (DESIGN §3.5) — every contest between the same two schools, in date order,
  * with the game being viewed marked rather than linked to itself.
  *
- * Why it earns its place on a per-game page: By-Laws Article VI §3 makes head-to-head record the
- * FIRST tiebreak once two division teams finish level on points, and Article VI §1 schedules a
- * double round robin, so "these two" is a two-game story the standings will eventually turn on.
+ * Why it earns its place on a per-game page: every league here plays a double round robin and
+ * breaks ties on head-to-head (SCVAL Article VI §3, BVAL §6b, MCAL's head-to-head winning
+ * percentage, PCAL §23.3 for its top places), so "these two" is a two-game story the standings may
+ * eventually turn on. The note under the list cites the game's own league.
  *
  * Every score goes through `describeGame` + `ScoreGlyph`, so an unreported meeting renders two en
  * dashes and never `0 – 0` (DESIGN §5.2, §5.3).
@@ -101,7 +103,7 @@ function MeetingRow({
         // STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
         // into view, and the series is one game page per meeting. Navigation still fetches on click.
         <Link
-          href={`/game/${game.contestId}`}
+          href={gameHref(game.contestId)}
           prefetch={false}
           className={`sx-tap ${ROW} no-underline${display.isNonLeague ? ' sx-nonleague' : ''}`}
         >

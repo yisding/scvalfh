@@ -5,7 +5,8 @@ import type { TeamPageView } from './team-view';
 /**
  * The identity hero (DESIGN §3.7, modernization brief §5.7): one card holding the school's
  * monogram (56px on a phone, 64px from 768px), the school name as the page's `h1`, and one meta
- * line of mascot · division · city. The pin control sits under them on a phone (full width) and at
+ * line of mascot · division · league · city (SPEC §10.5: `Pirates · De Anza · SCVAL · San Jose`;
+ * a single-division league has no division label: `Red-Tailed Hawks · MCAL · Mill Valley`). The pin control sits under them on a phone (full width) and at
  * the right edge from 768px.
  *
  * The standings place is NOT repeated here: the Place tile directly below states it twice already
@@ -20,7 +21,9 @@ import type { TeamPageView } from './team-view';
  * Phone padding is 16px and the row gap 12px (20 / 16 from 768px) to keep the Last result on the
  * first phone screen.
  *
- * The monogram is the ONLY place a school color appears anywhere on the site: fifteen
+ * Pinning here also remembers the team's league (`PinControl`'s `leagueId`, SPEC §8.2).
+ *
+ * The monogram is the ONLY place a school color appears anywhere on the site: 43
  * uncontrolled brand hues blow past every categorical ceiling, so they are decoration with a
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
  * requested from a third party.
@@ -32,7 +35,7 @@ export function TeamIdentity({
   view: TeamPageView;
   knownSlugs: readonly string[];
 }) {
-  const { team, divisionLabel } = view;
+  const { team } = view;
 
   return (
     <header
@@ -50,11 +53,13 @@ export function TeamIdentity({
       <div className="min-w-0 flex-1">
         <h1 className="m-0 text-h1 text-ink">{team.name}</h1>
         <p className="mt-1 mb-0 text-meta text-ink-2">
-          {team.mascot} &middot; {divisionLabel} &middot; {team.city}, CA
+          {view.identityLine}
         </p>
       </div>
       <PinControl
         slug={team.slug}
+        leagueId={team.league}
+        label={view.pinLabel}
         name={team.name}
         knownSlugs={knownSlugs}
         className="w-full md:ml-auto md:w-auto"

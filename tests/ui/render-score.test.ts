@@ -5,11 +5,17 @@
  * The contract being pinned: a missing score is NEVER rendered as 0-0, a genuine 0 is
  * indistinguishable from nothing only to a careless reader (here it is full ink, `hasScore: true`),
  * and every state carries a written label plus a letter plus a weight before it carries a hue.
+ *
+ * Multi-league (SPEC §10.4): the chips come from `countsFor` / `postseason` / `provenance.scores`
+ * (`leagueTag`, `postseasonTag`, `sourceMark`), and the never-0-0 rule is walked over every game of
+ * every league in the bundled snapshot (invariants only, SPEC §13.6).
  */
 import { describe, expect, it } from 'vitest';
 
 import { describeCancelled, describeGame, signedMargin } from '../../components/ui/game-view';
+import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
+import { findDivision, findLeague } from '../../lib/leagues';
 import type { Game, GameStatus } from '../../lib/types';
 
 function game(overrides: Partial<Game> = {}): Game {
@@ -38,6 +44,9 @@ function game(overrides: Partial<Game> = {}): Game {
     status: 'scheduled',
     isLeague: true,
     leagueDivision: 'de-anza',
+    contestTypes: { home: 0, away: 0 },
+    countsFor: 'de-anza',
+    postseason: null,
     otPeriods: 0,
     isOt: false,
     isForfeit: false,
@@ -217,10 +226,89 @@ describe('§5.2 row 10 — postponed', () => {
 });
 
 describe('§5.2 row 11 — non-league', () => {
-  it('flags the row for the NL word and the 2px rule, whatever the state', () => {
-    expect(describeGame(final(4, 0, { isLeague: false })).isNonLeague).toBe(true);
-    expect(describeGame(game({ isLeague: false, status: 'score-pending' })).isNonLeague).toBe(true);
+  it('flags the row for the NL word and the 2px rule from countsFor, whatever the state', () => {
+    expect(describeGame(final(4, 0, { isLeague: false, countsFor: null })).isNonLeague).toBe(true);
+    expect(
+      describeGame(game({ isLeague: false, countsFor: null, status: 'score-pending' })).isNonLeague,
+    ).toBe(true);
     expect(describeGame(final(4, 0)).isNonLeague).toBe(false);
+  });
+  it('reads countsFor, not MaxPreps’ contest type: a same-division game the league does not count is NL', () => {
+    expect(describeGame(final(4, 0, { isLeague: true, countsFor: null })).isNonLeague).toBe(true);
+  });
+});
+
+describe('chips — league, postseason and source (SPEC §10.4)', () => {
+  it('gives a counted game its league chip and no NL', () => {
+    const d = describeGame(final(2, 1));
+    expect(d.leagueTag, 'components/ui/game-view.ts leagueTag').toBe('SCVAL');
+    expect(d.isNonLeague).toBe(false);
+    expect(describeGame(final(2, 1, { countsFor: 'mt-hamilton' })).leagueTag).toBe('BVAL');
+    expect(describeGame(final(2, 1, { countsFor: 'pcal' })).leagueTag).toBe('PCAL');
+    expect(describeGame(final(2, 1, { countsFor: 'marin-county' })).leagueTag).toBe('MCAL');
+  });
+  it('gives a non-league game NL and no league chip', () => {
+    const d = describeGame(final(2, 1, { countsFor: null }));
+    expect(d.leagueTag).toBeNull();
+    expect(d.isNonLeague).toBe(true);
+  });
+  it('names each postseason kind, and a postseason game is not NL', () => {
+    const tag = (kind: NonNullable<Game['postseason']>['kind'], leagueId: string | null) =>
+      describeGame(
+        final(2, 1, { countsFor: null, postseason: { kind, leagueId, via: 'config-pairing' } }),
+      );
+    expect(tag('scval-crossover', 'scval').postseasonTag).toBe('SCVAL crossover');
+    expect(tag('bval-play-in', 'bval').postseasonTag).toBe('BVAL play-in');
+    expect(tag('mcal-tournament', 'mcal').postseasonTag).toBe('MCAL tournament');
+    expect(tag('ccs', null).postseasonTag).toBe('CCS');
+    expect(tag('ccs', null).isNonLeague).toBe(false);
+    expect(tag('other', null).postseasonTag).toBeNull();
+  });
+  it('marks a score published from si.com, and only that', () => {
+    const sb = final(3, 1, {
+      contestId: 'sblive:6541425',
+      provenance: { scores: 'sblive', schedule: 'pcal-pdf', fetchedAt: '2026-10-02T15:00:00.000Z' },
+    });
+    expect(describeGame(sb).sourceMark).toBe('si.com');
+    expect(describeGame(final(3, 1)).sourceMark).toBeNull();
+    expect(describeCancelled(game()).sourceMark).toBeNull();
+  });
+});
+
+describe('every league’s games in the bundled snapshot (invariants)', () => {
+  const games = getGames();
+  it('has games in all four leagues', () => {
+    for (const league of getLeagueSummaries()) {
+      expect(
+        games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length,
+        `lib/data.ts: ${league.id} has counted games`,
+      ).toBeGreaterThan(0);
+    }
+  });
+  it('never renders a missing score as 0-0, and renders every real score as published', () => {
+    const offenders: string[] = [];
+    for (const g of games) {
+      const d = describeGame(g);
+      const glyphs = [d.away.glyph, d.home.glyph];
+      if (g.status === 'final') {
+        if (glyphs.join(' ') !== `${String(g.away.score)} ${String(g.home.score)}`) {
+          offenders.push(`${g.contestId} final ${glyphs.join('-')}`);
+        }
+      } else if (glyphs.some((x) => /\d/.test(x))) {
+        offenders.push(`${g.contestId} ${g.status} ${glyphs.join('-')}`);
+      }
+    }
+    expect(offenders, 'components/ui/game-view.ts describeGame').toEqual([]);
+  });
+  it('tags every counted game with its own league and every si.com score with the source mark', () => {
+    for (const g of games) {
+      const d = describeGame(g);
+      const league = g.countsFor ? findLeague(findDivision(g.countsFor)?.leagueId ?? '') : undefined;
+      expect(d.leagueTag, `components/ui/game-view.ts leagueTag ${g.contestId}`).toBe(league?.shortName ?? null);
+      expect(d.sourceMark, `components/ui/game-view.ts sourceMark ${g.contestId}`).toBe(
+        g.provenance.scores === 'sblive' ? 'si.com' : null,
+      );
+    }
   });
 });
 

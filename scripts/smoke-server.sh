@@ -14,12 +14,20 @@
 #   pnpm build:cloudflare && pnpm exec vite preview --mode cloudflare --port 3119 --host 127.0.0.1 &
 #   bash scripts/smoke-server.sh http://127.0.0.1:3119 workers
 #
-# What it checks: every page the sitemap lists answers 200 with its own content (a <main>, one <h1>
+# What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
+# the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
+# schedule, playoffs; the superseded-game stubs are prerendered with a canonical to their MaxPreps
+# game and kept out of the sitemap); the old anchors resolve without JavaScript (/standings
+# #de-anza #el-camino and the other section/league/division ids, /standings/scval, /standings/bval,
+# /playoffs #scval #bval #pcal #key-dates, a /schedule row per game day); every page the sitemap
+# lists answers 200 with its own content (a <main>, one <h1>
 # and the canonical URL of that path) and the next.config headers() cache rule, as do the metadata
 # routes and Route Handlers, whose images must be real PNGs of the declared size; hashed assets keep
 # the immutable cache (a stylesheet, a script chunk and a font; a missing one is a no-store 404);
 # the manifest names the site and its icons and robots.txt allows everything; an unknown URL, or an unknown param in
-# any dynamic family, is a no-store 404 with the root not-found page (its OG card an empty 404),
+# any dynamic family (/standings/nope, /schedule/nope, /playoffs/nope, /playoffs/scval — a league,
+# but not a tournament league — /playoffs/ccs, /teams/nope, …), is a no-store 404 with the root
+# not-found page (its OG card an empty 404, /playoffs/scval/opengraph-image included),
 # rendered with the same SITE_URL and build instant as the prerendered pages and marked noindex; pages carry an ETag
 # and answer a revalidation with 304; HEAD, POST and a trailing slash get the framework's answers;
 # poweredByHeader stays off; and vinext's internal x-vinext-app-page-cache marker never leaves the
@@ -126,27 +134,73 @@ stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
 [ -n "$origin" ] || fail / "no canonical URL naming the site origin"
 [[ "$og" == "<meta property=\"og:image\" content=\"$origin/"* ]] || fail / "og:image '${og#*content=\"}' is not an absolute URL on $origin"
 
-# Every page the sitemap lists: the seven fixed routes, and each generateStaticParams family at
-# least as large as CI's build checks require of the prerender (scripts/assert-vinext-prerender.mjs
+# The counts every family must have, from the snapshot this tree holds (the one the server was
+# built from), never from the server: games (the superseded-game stubs are prerendered but kept
+# out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, and each
+# stub as `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N).
+facts=$(node -e '
+  const s = JSON.parse(require("fs").readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));
+  const param = (id) => id.replace(/^sblive:(\d+)$/, "sblive-$1");
+  console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
+    s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length].join(" "));
+  console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
+  for (const [from, to] of Object.entries(s.supersededGames || {})) console.log(param(from) + " " + param(to));')
+read -r n_games n_dates n_teams n_leagues n_tournaments <<< "$(sed -n 1p <<< "$facts")"
+stubs=$(sed -n '3,$p' <<< "$facts")
+
+# Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
+# generateStaticParams family with EXACTLY the snapshot's count (scripts/assert-vinext-prerender.mjs
 # also matches the sitemap against the prerendered pages one for one).
 expect /sitemap.xml 200 application/xml "$public"
 from_build /sitemap.xml
 locs=$(grep -oE '<loc>[^<]+</loc>' "$tmp/b" | sed -E 's#</?loc>##g' || true)
 paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
-for path in / /about /standings /schedule /playoffs /teams /history/2025-26; do
+for path in / /about /standings /schedule /playoffs /teams /history/2025-26 \
+  /standings/bval /standings/mcal /schedule/scval /schedule/mcal /playoffs/mcal; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done
 families=''
-for family in game:100 scores:30 teams:15; do
+for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_leagues" "schedule:$n_leagues" "playoffs:$n_tournaments"; do
   n=$(grep -cE "^/${family%:*}/[^/]+$" <<< "$paths" || true)
-  [ "$n" -ge "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected at least ${family#*:}"
+  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot)"
   families+=" $n /${family%:*}/"
 done
+while read -r stub _; do
+  [ -z "$stub" ] || ! grep -qxF "/game/$stub" <<< "$paths" || fail /sitemap.xml "lists the superseded-game stub /game/$stub"
+done <<< "$stubs"
 quiet=1
 while read -r path; do [ -z "$path" ] || page "$path"; done <<< "$paths"
 quiet=0
 echo "200 every page in /sitemap.xml ($(grep -c . <<< "$paths"):$families)"
+
+# Superseded si.com games (SPEC §8.1): /game/sblive-<id> stays a prerendered stub page whose
+# canonical URL is the MaxPreps game that replaced it.
+while read -r stub stub_to; do
+  [ -n "$stub" ] || continue
+  expect "/game/$stub" 200 text/html "$public"
+  from_build "/game/$stub"
+  grep -qF "<link rel=\"canonical\" href=\"$origin/game/$stub_to\"" "$tmp/b" || fail "/game/$stub" "canonical is not $origin/game/$stub_to"
+done <<< "$stubs"
+
+# Anchors that old links and the jump links rely on, with no JavaScript (SPEC §8.1).
+expect /standings 200 text/html "$public"
+for id in ccs ncs scval de-anza el-camino bval mt-hamilton santa-teresa pcal mcal marin-county; do
+  grep -qF "id=\"$id\"" "$tmp/b" || fail /standings "no id=\"$id\" (anchor /standings#$id)"
+done
+expect /standings/scval 200 text/html "$public"
+for id in de-anza el-camino; do grep -qF "id=\"$id\"" "$tmp/b" || fail /standings/scval "no id=\"$id\""; done
+expect /standings/bval 200 text/html "$public"
+from_build /standings/bval
+for id in mt-hamilton santa-teresa; do grep -qF "id=\"$id\"" "$tmp/b" || fail /standings/bval "no id=\"$id\""; done
+expect /playoffs 200 text/html "$public"
+for id in scval bval pcal key-dates; do grep -qF "id=\"$id\"" "$tmp/b" || fail /playoffs "no id=\"$id\""; done
+expect /schedule 200 text/html "$public"
+missing_days=0
+while read -r day; do
+  grep -qF "id=\"$day\"" "$tmp/b" || { missing_days=$((missing_days + 1)); [ "$missing_days" -gt 3 ] || fail /schedule "no id=\"$day\" (old /schedule#$day link)"; }
+done < <(grep -oE '^/scores/[0-9-]+$' <<< "$paths" | sed 's#^/scores/##')
+[ "$missing_days" -le 3 ] || fail /schedule "$missing_days game days have no anchor"
 
 png /icon 32 32
 png /apple-icon 180 180
@@ -155,7 +209,7 @@ png /icon-512 512 512
 png /opengraph-image 1200 630
 png /standings/opengraph-image 1200 630
 # One OG card per generateStaticParams family, for the page the sitemap lists first.
-for family in /game/ /scores/ /teams/; do
+for family in /game/ /scores/ /teams/ /standings/ /schedule/ /playoffs/; do
   path=$(grep -m1 "^$family" <<< "$paths" || true)
   [ -z "$path" ] || png "$path/opengraph-image" 1200 630
 done
@@ -202,7 +256,8 @@ if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect 
 # An unknown URL, an unknown param in each generateStaticParams family (all dynamicParams=false,
 # and on Workers each family is its own render path), another season's history page, and a favicon
 # the site does not have: each is the root not-found page as a no-store 404.
-for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico; do
+for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico \
+  /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/ccs /game/sblive-0; do
   expect "$path" 404 text/html "$nostore"
   grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)
@@ -217,7 +272,10 @@ done
 # An OG card for an unknown param is notFound() in the metadata route: an empty 404 that keeps the
 # headers() cache rule, as `next start` sends it (Next gives only page 404s the no-store header).
 # The 404 is as stable as any 200 here, both changing only with a new snapshot and deploy.
-for path in /game/not-a-real-id /scores/1999-01-01 /teams/nope; do
+# The three new families validate their param before any accessor (SPEC §8.1): /playoffs/scval is a
+# real league but not a tournament league, so its card must 404 too.
+for path in /game/not-a-real-id /scores/1999-01-01 /teams/nope \
+  /standings/nope /schedule/nope /playoffs/scval /playoffs/nope; do
   expect "$path/opengraph-image" 404 '' "$public"
 done
 # A hashed-asset URL that is not in the build is a no-store 404, never a 200 or the immutable cache.

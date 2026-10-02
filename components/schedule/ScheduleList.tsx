@@ -1,4 +1,4 @@
-import type { Game } from '../../lib/types';
+import type { Game, LeagueId } from '../../lib/types';
 
 import DateHeader from './DateHeader';
 import GameList from './GameList';
@@ -6,7 +6,7 @@ import GameList from './GameList';
 /**
  * The whole season, date-grouped, server-rendered (DESIGN §3.3).
  *
- * All 158 contests are in the HTML: no pagination, no virtualization, Ctrl-F finds any team on any
+ * Every contest of the league is in the HTML: no pagination, no virtualization, Ctrl-F finds any team on any
  * day. Each date group carries `.sx-dategroup`, i.e. `content-visibility: auto` with
  * `contain-intrinsic-size: auto 480px`, so the browser skips layout and paint for the groups that
  * are off screen while the text stays findable and the anchors stay linkable.
@@ -19,6 +19,8 @@ export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
   /** Renders the Share action on each date header. */
   shareLinks?: boolean;
+  /** A league-scoped list (`/schedule/<league>`): other leagues' sides carry their league's name. */
+  scopeLeague?: LeagueId | null;
   className?: string;
   id?: string;
 }
@@ -42,6 +44,7 @@ function cardEstimate(games: readonly Game[]): string {
 export function ScheduleList({
   groups,
   shareLinks = true,
+  scopeLeague = null,
   className,
   id,
 }: ScheduleListProps) {
@@ -84,7 +87,7 @@ export function ScheduleList({
             shareHref={shareLinks ? `/scores/${group.date}` : undefined}
             sticky
           />
-          <GameList games={group.games} variant="grouped" />
+          <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />
         </section>
       ))}
     </div>

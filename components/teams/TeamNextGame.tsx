@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { dateTimeAttr, shortDate, timeOfDayPT } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, OfficialFixture, TeamSlug } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
@@ -9,6 +10,7 @@ import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame } from '../ui/game-view';
+import type { TeamLeagueCopy } from './team-view';
 
 /**
  * The NEXT block (DESIGN §3.7, modernization brief §5.7). The heading says Next and whether it is a
@@ -24,8 +26,10 @@ export interface TeamNextGameProps {
   game: Game | null;
   perspective: TeamSlug;
   teamName: string;
+  /** The team's league copy (config): the end-of-season and bracket sentences, the short name. */
+  league: TeamLeagueCopy;
   /**
-   * The next fixture that exists only in the official SCVAL grid. A fixture with no contest in any
+   * The next fixture that exists only in the league's official schedule. A fixture with no contest in any
    * source would otherwise make the block claim no games are left when the league schedule says
    * otherwise (SPEC §1.3).
    */
@@ -53,6 +57,7 @@ export function TeamNextGame({
   game,
   perspective,
   teamName,
+  league,
   nextOfficial,
 }: TeamNextGameProps) {
   if (!game && nextOfficial) {
@@ -75,7 +80,7 @@ export function TeamNextGame({
             </span>
           </p>
           <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-            From the official SCVAL schedule. No source has published a contest for this fixture,
+            From the official {league.shortName} schedule. No source has published a contest for this fixture,
             so there is no start time, no venue and no game page for it &mdash; and there will be no
             score unless one is reported.
           </p>
@@ -89,8 +94,7 @@ export function TeamNextGame({
       <section className="min-w-0">
         <SectionHeader kicker="Next" />
         <EmptyState heading={`No more games on ${teamName}'s published schedule.`}>
-          The league season ends Oct 28 and the SCVAL crossover is Fri Oct 30. We will list a
-          playoff game as soon as CCS publishes the bracket.
+          {`${league.seasonEndSentence} ${league.bracketSentence}`}
         </EmptyState>
       </section>
     );
@@ -112,7 +116,10 @@ export function TeamNextGame({
 
   return (
     <section className="flex min-w-0 flex-col">
-      <SectionHeader kicker="Next" meta={game.isLeague ? 'League' : 'Non-league'} />
+      <SectionHeader
+        kicker="Next"
+        meta={game.countsFor !== null ? 'League' : game.postseason !== null ? 'Postseason' : 'Non-league'}
+      />
       {/* `flex-1`: in the two-column grid the card fills its row beside the taller Last card,
           with the link pills pinned to its bottom edge, so the pair ends level. */}
       <div className="sx-card flex flex-1 flex-col p-5">
@@ -132,7 +139,7 @@ export function TeamNextGame({
         <p className="mt-3 mb-0 flex items-center gap-3 text-body">
           {opponent ? <TeamMonogram team={opponent} size={32} /> : null}
           <Link
-            href={`/game/${game.contestId}`}
+            href={gameHref(game.contestId)}
             className="min-w-0 text-ink no-underline hover:underline"
           >
             {/* The space sits OUTSIDE the span: Chrome drops a trailing space inside an inline

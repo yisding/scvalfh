@@ -6,27 +6,35 @@ import Tag from '../ui/Tag';
 import type { StatusGroup } from './standings-view';
 
 /**
- * The Article VII §2 markers AND their legend, in one block under each division's table.
+ * The league ladder's markers AND their legend, in one block under each division's table
+ * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
+ * the CCS picture; for MCAL it is the MCAL tournament line, with no CCS concept at all.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
  * it as term-then-teams also means the legend can never drift out of sync with the markers — they
  * are the same list.
  *
- * Every status is a WORD (`AQ`, `Play-in`, `At-large`, `No AQ`) on a tag, so nothing here is
- * carried by color (DESIGN §6.5, channel 1 and 2). Only AQ takes the accent tag, because there the
- * accent already means "berth". The Article VII §2 text itself is cited once per page, in the
- * standings disclosure, and each status label names its place range.
+ * Every status is a WORD (`AQ`, `Play-in`, `No AQ route`, `Bye`, `Top 6`) on a tag, so nothing
+ * here is carried by color (DESIGN §6.5, channel 1 and 2). Only AQ takes the accent tag, because
+ * there the accent already means "berth". The league's qualification rule is cited once per page,
+ * and each status label names its place range.
  *
  * Each team is a pill link to its page with its place beside the name, so the band reads as a
  * row of facts rather than a `·`-separated sentence.
  *
  * A shared place is rendered `5=` exactly as the table renders it, and `caveat` says in words
- * that the cut is unsettled — Article VI §7's coin flip is the league's to run, not ours.
+ * that the line is unsettled — the league's last step (a coin flip, a draw, a play-in) is the
+ * league's to run, not ours.
  * Teams with no reported results are NAMED but never given a projected place.
  */
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
+  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand`. */
+  heading?: string;
+  /** `/playoffs#<league>` or `/playoffs/<league>`. */
+  href?: string;
+  linkText?: string;
   groups: StatusGroup[];
   caveat: string | null;
   /** Teams with `hasReportedResults === false`. */
@@ -36,6 +44,9 @@ export interface PlayoffStatusBandProps {
 
 export function PlayoffStatusBand({
   divisionLabel,
+  heading = 'CCS qualifying, as things stand',
+  href = '/playoffs',
+  linkText = 'Playoff picture',
   groups,
   caveat,
   unrankedTeams,
@@ -44,12 +55,13 @@ export function PlayoffStatusBand({
   return (
     <div className={className}>
       <h3 className="m-0 text-lead text-ink">
-        <span className="sr-only">{divisionLabel}: </span>CCS qualifying, as things stand
+        <span className="sr-only">{divisionLabel}: </span>
+        {heading}
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
-            term column is 22rem there: at 11rem "4th place — play-in Fri Oct 30 for the SCVAL
-            7th berth" broke into five lines beside a mostly empty pill column. From lg the band
+            term column is 22rem there: at 11rem a legend such as "4th place — play-in Fri Oct 30
+            for the SCVAL 7th berth" broke into five lines beside a mostly empty pill column. From lg the band
             shares its row with the Notes inset, so the term sits above its teams instead. */}
         {groups.map((group) => (
           <div
@@ -97,18 +109,18 @@ export function PlayoffStatusBand({
       {unrankedTeams.length > 0 ? (
         <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
           {unrankedTeams.join(', ')} {unrankedTeams.length === 1 ? 'has' : 'have'} no published
-          result, so no place and no playoff status is projected.
+          result, so no place and no postseason status is projected.
         </p>
       ) : null}
       {/* A standalone action, like the Notes link row beside it: a <div>, so the in-prose
           underline rule (`p a`) does not mark this one alone. */}
       <div className="mt-4">
         <Link
-          href="/playoffs"
+          href={href}
           prefetch={false}
           className="sx-action text-meta font-medium text-accent hover:underline"
         >
-          Playoff picture
+          {linkText}
         </Link>
       </div>
     </div>

@@ -13,12 +13,17 @@
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",
     "discover-season": "tsx scripts/discover-season.ts",
     "build-history": "tsx scripts/build-history.ts",
+    "build-official-fixtures": "tsx scripts/build-official-fixtures.ts",
     "dev:vinext": "vite dev --port 3001",
     "build:vinext": "vite build",
     "start:vinext": "vinext start",
     "build:cloudflare": "vite build --mode cloudflare",
     "preview:cloudflare": "vite preview --mode cloudflare",
-    "deploy:cloudflare": "vinext-cloudflare deploy --env cloudflare"
+    "deploy:cloudflare": "vinext-cloudflare deploy --env cloudflare",
+    "assert:prerender": "tsx scripts/assert-prerender.ts",
+    "assert:budgets": "tsx scripts/assert-budgets.ts",
+    "assert:copy": "tsx scripts/assert-copy.ts",
+    "gate:d": "bash scripts/stage-gate-d.sh"
   },
   "dependencies": {
     "@vinext/cloudflare": "1.0.0",

@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { DIVISION_LABELS } from '../../lib/season';
-import type { Division } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
 
 import {
@@ -17,7 +15,7 @@ import {
 } from './filter-data';
 
 /**
- * `/schedule`'s filters — the only client module this route has (DESIGN §7, §7.13); see
+ * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13); see
  * components/ui/PinControl.tsx for the app's full client-module list.
  *
  * The complete, unfiltered, server-rendered list is ALREADY in the HTML. This component does not
@@ -28,9 +26,9 @@ import {
  *
  *   - the page is complete and useful before hydration and with JavaScript disabled,
  *   - filtering costs zero network requests and zero layout of off-screen groups,
- *   - and no `searchParams` reaches a page signature, so `/schedule` stays fully static
+ *   - and no search params reaches a page signature, so `/schedule` stays fully static
  *     (verified in this repo: docs/01-app/03-api-reference/03-file-conventions/page.md — using
- *     `searchParams` opts a page into dynamic rendering at request time).
+ *     search params opts a page into dynamic rendering at request time).
  *
  * Filter state lives in this component rather than in the URL. The page's own hash space is
  * already spoken for by the date anchors (`#2026-09-24`) that the timeline rail and every
@@ -39,10 +37,17 @@ import {
  *
  * Active filters echo back as removable chips and the live count is announced, so the state is
  * always visible — a filtered list that looks like the whole season is the failure mode here.
+ *
+ * League-aware (SPEC §10.4): the divisions come in as props — no division `<select>` at all for a
+ * single-division league (PCAL, MCAL), and one team `<optgroup>` per division only where there
+ * are several. This module is a CLIENT module, so it imports nothing that reaches the registry or
+ * the league config (SPEC §0.4); the page hands it plain data.
  */
 export interface ScheduleFiltersProps {
-  /** The 15 SCVAL teams, for the native `<select>`. */
-  teams: readonly { slug: string; name: string; division: Division }[];
+  /** The league's teams, for the native `<select>`. `divisionLabel` is null in a one-table league. */
+  teams: ReadonlyArray<{ slug: string; name: string; division: string; divisionLabel: string | null }>;
+  /** The league's divisions; `[]` for a single-division league (no division select). */
+  divisions: ReadonlyArray<{ id: string; label: string }>;
   counts: ScheduleCounts;
   /** The id of the element that holds the `[data-game]` items. */
   listId: string;
@@ -53,12 +58,6 @@ interface Option<T extends string> {
   value: T;
   label: string;
 }
-
-const DIVISION_OPTIONS: Option<FilterState['division']>[] = [
-  { value: 'all', label: 'Both' },
-  { value: 'de-anza', label: DIVISION_LABELS['de-anza'] },
-  { value: 'el-camino', label: DIVISION_LABELS['el-camino'] },
-];
 
 const TYPE_OPTIONS: Option<FilterState['type']>[] = [
   { value: 'all', label: 'All' },
@@ -176,6 +175,7 @@ function PillGroup<T extends string>({
 
 interface PanelProps {
   teams: ScheduleFiltersProps['teams'];
+  divisions: ScheduleFiltersProps['divisions'];
   filters: FilterState;
   countLine: string;
   moreActive: number;
@@ -188,7 +188,11 @@ interface PanelProps {
  * The panel itself: one card holding the two selects, the "More" disclosure and the live count.
  * A plain function of its props, so the Suspense fallback renders the identical shell (no CLS).
  */
-function FiltersPanel({ teams, filters, countLine, moreActive, update, className }: PanelProps) {
+function byName<T extends { name: string }>(rows: readonly T[]): T[] {
+  return rows.slice().sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update, className }: PanelProps) {
   const inert = !update;
   return (
     // One wrapping row of items. On a 390 phone that is the two selects, then "More filters" with
@@ -213,41 +217,44 @@ function FiltersPanel({ teams, filters, countLine, moreActive, update, className
           className={SELECT}
         >
           <option value="all">All teams</option>
-          {DIVISION_OPTIONS.slice(1).map((division) => (
-            <optgroup key={division.value} label={`${division.label} Division`}>
-              {teams
-                .filter((team) => team.division === division.value)
-                .slice()
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((team) => (
-                  <option key={team.slug} value={team.slug}>
-                    {team.name}
-                  </option>
-                ))}
-            </optgroup>
-          ))}
+          {divisions.length > 0
+            ? divisions.map((division) => (
+                <optgroup key={division.id} label={`${division.label} Division`}>
+                  {byName(teams.filter((team) => team.division === division.id)).map((team) => (
+                    <option key={team.slug} value={team.slug}>
+                      {team.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))
+            : byName(teams).map((team) => (
+                <option key={team.slug} value={team.slug}>
+                  {team.name}
+                </option>
+              ))}
         </select>
         <Chevron />
       </label>
-      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
-        <span className="sr-only">Division</span>
-        <select
-          value={filters.division}
-          disabled={inert}
-          onChange={(event) =>
-            update?.({ division: event.target.value as FilterState['division'] })
-          }
-          className={SELECT}
-        >
-          <option value="all">Both divisions</option>
-          {DIVISION_OPTIONS.slice(1).map((division) => (
-            <option key={division.value} value={division.value}>
-              {division.label}
-            </option>
-          ))}
-        </select>
-        <Chevron />
-      </label>
+      {/* No division select for a single-division league: one option would be a dead control. */}
+      {divisions.length > 0 ? (
+        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+          <span className="sr-only">Division</span>
+          <select
+            value={filters.division}
+            disabled={inert}
+            onChange={(event) => update?.({ division: event.target.value })}
+            className={SELECT}
+          >
+            <option value="all">{divisions.length === 2 ? 'Both divisions' : 'All divisions'}</option>
+            {divisions.map((division) => (
+              <option key={division.id} value={division.id}>
+                {division.label}
+              </option>
+            ))}
+          </select>
+          <Chevron />
+        </label>
+      ) : null}
       {/* A real `<details>`, so the panel opens with JavaScript off too. Open on a phone, it
           takes the whole row so its tray is full width, and the count drops below it. */}
       <details className="peer relative max-md:open:basis-full">
@@ -316,13 +323,15 @@ function FiltersPanel({ teams, filters, countLine, moreActive, update, className
 /** The Suspense fallback for `/schedule`: the same panel, inert, so nothing shifts on hydrate. */
 export function ScheduleFiltersFallback({
   teams,
+  divisions,
   counts,
   className,
-}: Pick<ScheduleFiltersProps, 'teams' | 'counts' | 'className'>) {
+}: Pick<ScheduleFiltersProps, 'teams' | 'divisions' | 'counts' | 'className'>) {
   return (
     <div className={className}>
       <FiltersPanel
         teams={teams}
+        divisions={divisions}
         filters={DEFAULT_FILTERS}
         countLine={unfilteredCountLine(counts)}
         moreActive={0}
@@ -339,7 +348,7 @@ export function ScheduleFiltersFallback({
   );
 }
 
-export function ScheduleFilters({ teams, counts, listId, className }: ScheduleFiltersProps) {
+export function ScheduleFilters({ teams, divisions, counts, listId, className }: ScheduleFiltersProps) {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [visible, setVisible] = useState<number>(counts.total);
 
@@ -356,12 +365,9 @@ export function ScheduleFilters({ teams, counts, listId, className }: ScheduleFi
   if (filters.team !== 'all' && teamName) {
     chips.push({ key: 'team', label: teamName, clear: { team: 'all' } });
   }
-  if (filters.division !== 'all') {
-    chips.push({
-      key: 'division',
-      label: DIVISION_LABELS[filters.division],
-      clear: { division: 'all' },
-    });
+  const divisionLabel = divisions.find((d) => d.id === filters.division)?.label;
+  if (filters.division !== 'all' && divisionLabel) {
+    chips.push({ key: 'division', label: divisionLabel, clear: { division: 'all' } });
   }
   if (filters.type !== 'all') {
     chips.push({
@@ -394,6 +400,7 @@ export function ScheduleFilters({ teams, counts, listId, className }: ScheduleFi
           panel is not sticky at any width: the date header is the sticky thing on this page. */}
       <FiltersPanel
         teams={teams}
+        divisions={divisions}
         filters={filters}
         countLine={countLine}
         moreActive={moreActive}

@@ -6,8 +6,10 @@ import {
   gameHeadline,
   nextOfficialFixture,
   officialFixtureHeadline,
-} from '@/components/teams/team-view';
-import { getFetchedAt, getTeamSlugs } from '@/lib/data';
+  placeScope,
+} from '../../../components/teams/team-view';
+import { SITE_NAME } from '../../../components/layout/site-url';
+import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
 import {
   EM_DASH,
   formatStamp,
@@ -15,7 +17,7 @@ import {
   recordString,
   signedGd,
   streakString,
-} from '@/lib/format';
+} from '../../../lib/format';
 
 /**
  * The per-team OG card (DESIGN §1.1, §3.7).
@@ -24,8 +26,9 @@ import {
  * school-color concession is the monogram square, drawn with the cron's measured `onPrimary` ink —
  * the same guardrail TeamMonogram uses, never a hue picked by eye (DESIGN §7.1, §12.4).
  *
- * The card carries the facts a link preview can usefully hold: place, league record, points, goals,
- * streak, the last result and the next game. A team with no reported results says so instead of
+ * The card carries the facts a link preview can usefully hold: the identity line (mascot · division
+ * heading · league · city), the place in the team's table, league record, points, games counted,
+ * goals, streak, the last result and the next game (SPEC §8.4). A team with no reported results says so instead of
  * showing `0-0-0` — a shared link is the most damaging place to get the never-0-0 rule wrong
  * (DESIGN §5.3). Both game lines come from `gameHeadline`, which is built on `describeGame`, so
  * this image cannot disagree with the page it belongs to.
@@ -36,7 +39,7 @@ import {
  * `generateImageMetadata`, which changes the image URL shape.
  */
 export const alt =
-  'Team card: league record, division place, points, goals for and against, streak, last result and next game';
+  'Team card: league and division, place, league record, points, goals for and against, streak, last result and next game';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -87,10 +90,14 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
   const { team, standing, hasResults, last, next } = view;
   const known = hasResults && standing ? standing : null;
   const record = known ? recordString(known.computed) : EM_DASH;
-  const place = known ? `${ordinal(known.computed.place)} of ${view.divisionSize}` : EM_DASH;
-  // A shared place is a real Article VI §7 outcome, so it is a note under the figure rather than a
-  // parenthetical that wraps the stat row onto two lines.
-  const placeNote = known?.tiebreak.shared ? 'tied' : undefined;
+  // `<place> of <N> in <division heading or league short>`; a team with no results is never
+  // placed (SPEC §8.4). A shared place is a real tiebreak outcome, so it says so.
+  const placeLine = known
+    ? `${ordinal(known.computed.place)} ${placeScope(view.divisionSize, view.scopeLabel)}${
+        known.tiebreak.shared ? ' (tied)' : ''
+      }`
+    : 'No results reported yet';
+  const gp = view.context ? `${view.context.counted}/${view.context.scheduled}` : EM_DASH;
   const points = known ? `${known.computed.pts}` : EM_DASH;
   const goals = known ? `${known.computed.gf} / ${known.computed.ga}` : EM_DASH;
   const diff = known ? signedGd(known.computed.gd) : EM_DASH;
@@ -139,15 +146,16 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', fontSize: 58, fontWeight: 600 }}>{team.name}</div>
             <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: MUTED }}>
-              {team.mascot} &middot; {view.divisionLabel} &middot; {team.city}, CA
+              {view.identityLine}
             </div>
+            <div style={{ display: 'flex', marginTop: 8, fontSize: 30, color: INK }}>{placeLine}</div>
           </div>
         </div>
 
         <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${RULE}`, paddingTop: 24 }}>
           <Stat label="League" value={record} />
-          <Stat label="Place" value={place} note={placeNote} />
           <Stat label="Pts" value={points} />
+          <Stat label="GP" value={gp} />
           <Stat label="Goals F / A" value={goals} />
           <Stat label="Diff" value={diff} />
           <Stat label="Streak" value={streak} />
@@ -160,7 +168,7 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
 
         <div style={{ display: 'flex', fontSize: 22, color: FAINT }}>
           As of {formatStamp(getFetchedAt())} &middot; league games only &middot; unofficial
-          &middot; data from MaxPreps
+          &middot; {SITE_NAME}
         </div>
       </div>
     ),

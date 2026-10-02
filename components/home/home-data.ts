@@ -1,10 +1,16 @@
 /**
- * Everything `/` renders, assembled once on the server (DESIGN §3.1).
+ * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts`. "Today" is always `lib/data`'s `getToday()` — derived from `snapshot.fetchedAt` in
- * America/Los_Angeles, never `Date.now()` — so the build is reproducible and the "as of" stamp in
- * the header is honest (BUILD-BRIEF).
+ * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/pin-label.ts`). "Today"
+ * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
+ * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
+ *
+ * The page carries EVERY league's panel in its static HTML; which one shows is decided before first
+ * paint by `<html data-league>` and the scope stylesheet (SPEC §8.2). So every view below is built
+ * for all four leagues, and all 43 pinned-card views are serialized for the client (the pin, and
+ * therefore the league, is known only in the browser). Budget: serialized `teamViews` ≤ 60 KB
+ * (tests/ui/home-weight.test.ts) — each view is a handful of strings, never a `Game`.
  */
 
 import {
@@ -13,170 +19,625 @@ import {
   getGoalDiffDomain,
   getLastLeagueResultDate,
   getLatestResultsDate,
+  getLeagueSummaries,
   getOfficialFixtures,
-  getPlayoffProjection,
   getPlayoffs,
   getSeasonPhase,
+  getStandingContext,
   getStandingFor,
   getStandings,
   getTeamById,
+  getTeamBySlug,
+  getTeamPostseasonLine,
+  getTeamSearchIndex,
   getTeams,
   getToday,
   getUpcoming,
+  type LeagueSummary,
 } from '../../lib/data';
-import { EM_DASH, dateTimeAttr, monthDay, ordinal, recordString, shortDate, timeOfDayPT } from '../../lib/format';
-import { DIVISIONS, DIVISION_LABELS, SOURCE_LINKS, leagueStandingsUrl } from '../../lib/season';
-import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Division, Game, Playoffs, SeasonPhase, Team, TeamSlug } from '../../lib/types';
-import type { FormEntry } from '../ui/FormStrip';
-import type { StandingsRowData } from '../ui/StandingsTable';
-import { describeGame, type GameDisplay } from '../ui/game-view';
+import {
+  EM_DASH,
+  dateTimeAttr,
+  monthDay,
+  ordinal,
+  recordString,
+  shortDate,
+  timeOfDayPT,
+} from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
+import {
+  CCS,
+  HISTORY_LEAGUE,
+  getDivision,
+  getLeague,
+  sectionOf,
+  type DivisionConfig,
+  type LeagueConfig,
+} from '../../lib/leagues';
+import { pickerName, pinLabel } from '../../lib/pin-label';
+import type { SearchIndex } from '../../lib/search';
+import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
+import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
 
-import type { HomeLastGame, HomeNextGame, HomeOfficialFixture, HomeTeamView } from './home-types';
+import type {
+  HomeColors,
+  HomeLastDisplay,
+  HomeLastGame,
+  HomeNextGame,
+  HomeOfficialFixture,
+  HomeTeamView,
+  LeagueCardView,
+  PinTileView,
+} from './home-types';
 
-/** Kickoff order, then away name, so a four-game slate is stable between builds. */
+// ---------------------------------------------------------------- shared helpers
+
+/** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
 }
 
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+function numberWord(n: number): string {
+  return NUMBER_WORDS[n] ?? String(n);
+}
+
+/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
+function clock(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/** 'A', 'A & B', 'A, B & C'. */
+function joinAmp(names: readonly string[]): string {
+  if (names.length <= 1) return names.join('');
+  return `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;
+}
+
+function colorsOf(team: Team): HomeColors {
+  const { primary, secondary, onPrimary } = team.colors;
+  return { primary, secondary, onPrimary };
+}
+
+function shortNameOf(side: Game['home']): string {
+  return (side.slug ? getTeamBySlug(side.slug)?.shortName : undefined) ?? side.name;
+}
+
+/** The league a game is filed under on the home page: its counted division's, else the first side's in config order. */
+function homeLeagueOf(game: Game, leagueIds: readonly LeagueId[]): LeagueId | null {
+  if (game.countsFor !== null) return getDivision(game.countsFor).leagueId;
+  const sides = [game.home, game.away]
+    .map((s) => (s.teamId ? getTeamById(s.teamId) : undefined) ?? (s.slug ? getTeamBySlug(s.slug) : undefined))
+    .filter((t): t is Team => t !== undefined);
+  for (const id of leagueIds) if (sides.some((t) => t.league === id)) return id;
+  return null;
+}
+
+// ---------------------------------------------------------------- days
+
 export interface HomeDay {
   /** 'YYYY-MM-DD' */
   date: string;
-  /** Every contest that day, in kickoff order — a slate, not just the finals. */
+  /** Every contest that day with at least one side in the league, kickoff order. */
   games: Game[];
   total: number;
   isToday: boolean;
 }
 
-export interface HomeDivision {
-  division: Division;
-  label: string;
-  rows: StandingsRowData[];
-  gdDomain: number;
-  sourceUrl: string;
-  /** How many teams the division has, so "top 4 of 8" can be printed. */
-  total: number;
-  /**
-   * The last day THIS division produced a league result, or null. Per division, exactly as
-   * app/standings/standings-data.ts computes it: the two divisions play on different days, so one
-   * "latest scores" date across both of them captioned the De Anza table "through Sep 29" on a day
-   * when every Sep 29 final was El Camino's.
-   */
-  throughDate: string | null;
-}
-
-export interface HomeData {
-  today: string;
-  phase: SeasonPhase;
-  /** 'YYYY-MM-DD' of the first contest and of the first LEAGUE contest. */
-  firstGame: string | null;
-  firstLeagueGame: string | null;
-  /** Non-league finals played so far — the number the Aug 21 – Sep 8 banner needs. */
-  nonLeagueFinals: number;
-  /** The most recent day with at least one reported result. */
-  latest: HomeDay | null;
-  /**
-   * A day whose contests have all come and gone with no reported score at all (DESIGN §8). Only
-   * ever a day STRICTLY before today: a game scheduled for later today has not failed to report
-   * anything yet.
-   */
-  unreported: HomeDay | null;
-  /** Today's remaining slate, or the next day that has one. */
-  slate: HomeDay | null;
-  divisions: HomeDivision[];
-  playoffs: Playoffs;
-  crossover: { date: string; pairings: string[] };
-  teamViews: HomeTeamView[];
-}
-
-function day(date: string, today: string): HomeDay {
-  const games = getGames({ date }).sort(byKickoff);
+function leagueDay(
+  league: LeagueId,
+  date: string,
+  today: string,
+  opts: { playable?: boolean; finalsFirst?: boolean } = {},
+): HomeDay {
+  const all = getGames({ league, date }).sort(byKickoff);
+  const games = opts.playable
+    ? all.filter((g) => g.status !== 'final')
+    : opts.finalsFirst
+      ? // A results block leads with results: an unreported game of the same day follows them.
+        [...all.filter((g) => g.status === 'final'), ...all.filter((g) => g.status !== 'final')]
+      : all;
   return { date, games, total: games.length, isToday: date === today };
 }
 
-/** The same day, minus anything already played — what "today's slate" means after 4pm. */
-function playableDay(date: string, today: string): HomeDay {
-  const games = getGames({ date })
-    .filter((g) => g.status !== 'final')
-    .sort(byKickoff);
-  return { date, games, total: games.length, isToday: date === today };
-}
-
-function firstDateOf(filter: Parameters<typeof getGames>[0]): string | null {
-  const keys = getGames(filter)
-    .map((g) => g.dateKey)
-    .sort();
-  return keys[0] ?? null;
-}
-
-/** The most recent played day with nothing reported, or null (the common case). */
-function unreportedDay(today: string, latestResults: string | null): string | null {
-  const candidates = getGameDates().filter((d) => d < today && (!latestResults || d > latestResults));
+/** The most recent played day with nothing reported for this league, or null (the common case). */
+function unreportedDay(league: LeagueId, today: string, latest: string | null): string | null {
+  const candidates = getGameDates({ league }).filter((d) => d < today && (!latest || d > latest));
   for (let i = candidates.length - 1; i >= 0; i -= 1) {
-    const games = getGames({ date: candidates[i] });
+    const games = getGames({ league, date: candidates[i] });
     if (games.length > 0 && games.every((g) => g.status !== 'final')) return candidates[i];
   }
   return null;
 }
 
-// ---------------------------------------------------------------- my-team views
+// ---------------------------------------------------------------- leaders (strip, OG card)
 
-function formEntries(teamSlug: TeamSlug, division: Division, canonical: readonly string[]): FormEntry[] {
-  // The same filter lib/standings.ts tallies on (league, this division, final), so these entries
-  // line up 1:1 with `standing.computed.last5` and the canonical outcomes stay authoritative.
-  const leagueFinals = getGames({ teamId: teamSlug, leagueOnly: true, status: 'final' })
-    .filter((g) => g.leagueDivision === division)
-    .sort(byKickoff)
-    .slice(-5);
-  return leagueFinals.map((game, i) => {
-    const display = describeGame(game, teamSlug);
-    const mineIsHome = game.home.slug === teamSlug;
-    const mine = mineIsHome ? display.home : display.away;
-    const theirs = mineIsHome ? display.away : display.home;
-    const opponent = (theirs.slug ? getTeamBySlug(theirs.slug)?.shortName : null) ?? theirs.name;
-    const outcome =
-      canonical.length === leagueFinals.length
-        ? (canonical[i] as FormEntry['outcome'])
-        : (display.perspectiveOutcome ?? 'T');
+export interface DivisionLeaders {
+  /** Short names of every team in 1st place (level places included), registry/table order. */
+  names: string[];
+  pts: number;
+}
+
+/** The team(s) in 1st place with at least one counted result, or null before any league result. */
+export function divisionLeaders(division: DivisionId): DivisionLeaders | null {
+  const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
+  if (top.length === 0) return null;
+  return {
+    names: top.map((s) => getTeamById(s.teamId)?.shortName ?? s.slug),
+    pts: top[0].computed.pts,
+  };
+}
+
+/** 'St Ignatius', 'A & B', 'A & B +1'. */
+export function leaderNames(names: readonly string[]): string {
+  if (names.length <= 2) return names.join(' & ');
+  return `${names.slice(0, 2).join(' & ')} +${names.length - 2}`;
+}
+
+/** The root OG card's row text after a league's short name (SPEC §8.4). */
+export function leagueRowText(divisions: ReadonlyArray<{ id: string; heading: string | null }>): string {
+  const clauses = divisions.map((d) => {
+    const leaders = divisionLeaders(d.id);
+    if (!leaders) return null;
+    const who = `${leaderNames(leaders.names)} ${leaders.pts} pts`;
+    return d.heading ? `${d.heading}: ${who}` : who;
+  });
+  if (clauses.every((c) => c === null)) return 'No league results yet';
+  return clauses
+    .map((c, i) => c ?? `${divisions[i].heading ?? ''}: no results yet`)
+    .join(' · ');
+}
+
+// ---------------------------------------------------------------- phase lead
+
+export interface PhaseLeadView {
+  /** The bold opening sentence. */
+  lead: string;
+  /** The rest of the paragraph ('' when none). */
+  body: string;
+  link: { href: string; label: string } | null;
+}
+
+function firstLeagueDate(league: LeagueConfig): string {
+  return league.divisions.map((d) => d.leaguePlay.first).reduce((a, b) => (b < a ? b : a));
+}
+
+/** The PhaseLead copy for a league in a phase on a day (exported for tests/ui/home-view.test.ts). */
+export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: string): PhaseLeadView | null {
+  const short = league.shortName;
+  const firstLeague = firstLeagueDate(league);
+  const ps = league.postseason;
+  const keyDates = CCS.keyDates;
+
+  if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
+    // Games played SO FAR — a non-league final later in the season has not been played yet.
+    const nonLeague = getGames({ league: league.id, status: 'final' }).filter(
+      (g) => g.countsFor === null && g.postseason === null && g.dateKey <= today,
+    ).length;
     return {
-      outcome,
-      contestId: game.contestId,
-      opponent,
-      score: `${mine.glyph}–${theirs.glyph}`,
-      date: monthDay(game.dateLocal),
+      lead: `${short} league play starts ${shortDate(firstLeague)}.`,
+      body:
+        nonLeague > 0
+          ? `These tables count league games only, so the ${nonLeague} non-league ${
+              nonLeague === 1 ? 'game' : 'games'
+            } played so far ${nonLeague === 1 ? 'is' : 'are'} on the schedule and in the overall records, not in the standings.`
+          : 'No games have been played yet, so every record below is empty on purpose.',
+      link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
+    };
+  }
+
+  if (phase === 'regular') return null;
+
+  if (phase === 'crossover' && ps.kind === 'ccs-ladder') {
+    const crossover = ps.pairings[0];
+    return {
+      lead: 'League play is over.',
+      body: `The crossover games and the fourth-place play-in for ${short}’s seventh automatic CCS berth are ${shortDate(
+        crossover?.date ?? keyDates.endOfLeagueSeason,
+      )}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
+      link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
+    };
+  }
+
+  if (phase === 'play-in' && ps.kind === 'ccs-ladder') {
+    const playIn = ps.pairings.find((p) => p.isPlayIn);
+    if (playIn) {
+      const host = getDivision(playIn.seats[0].division).label;
+      return {
+        lead: `${short} league play is over.`,
+        body: `${playIn.seatLabels[1]} plays at the ${host} champion ${shortDate(playIn.date)}${
+          playIn.time ? `, ${clock(playIn.time)}` : ''
+        }, for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth; the CCS seeding meeting is ${shortDate(
+          keyDates.seedingMeeting,
+        )}.`,
+        link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
+      };
+    }
+  }
+
+  if (phase === 'tournament' && ps.kind === 'league-tournament') {
+    const round = (id: string) => ps.rounds.find((r) => r.id === id);
+    const qf = round('qf-1');
+    const playIn = round('play-in');
+    const final = round('final');
+    return {
+      lead: `${short} league play is over.`,
+      body: `Quarterfinals are ${qf ? shortDate(qf.date) : 'to be set'}${
+        playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''
+      }; the final is ${final ? shortDate(final.date) : 'to be set'} at ${ps.finalSite.label}.`,
+      link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
+    };
+  }
+
+  if (phase === 'playoffs') {
+    if (today < keyDates.quarterfinals) {
+      return {
+        lead: `${short} league play is over.`,
+        body: `CCS seeds the ${CCS.autoQualifiers.total}-team field on ${shortDate(
+          keyDates.seedingMeeting,
+        )}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
+        link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
+      };
+    }
+    return {
+      lead: 'The CCS tournament is under way.',
+      body: `Quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${shortDate(
+        keyDates.semifinals,
+      )}, final ${shortDate(keyDates.finals)}. League standings below are final.`,
+      link: { href: `/playoffs#${league.id}`, label: 'Bracket' },
+    };
+  }
+
+  if (phase === 'complete') {
+    return {
+      lead: 'The season is over.',
+      body: 'The tables below are the final league standings.',
+      link: league.id === HISTORY_LEAGUE ? { href: '/history/2025-26', label: 'Last season' } : null,
+    };
+  }
+
+  return null;
+}
+
+const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
+
+function ordinalWord(n: number): string {
+  return ORDINAL_WORDS[n] ?? ordinal(n);
+}
+
+// ---------------------------------------------------------------- mini standings
+
+export interface MiniRow {
+  slug: string;
+  name: string;
+  shortName: string;
+  abbr: string;
+  colors: TeamColors;
+  place: number;
+  shared: boolean;
+  hasResults: boolean;
+  gp: number;
+  record: string;
+  pts: number;
+  gd: number;
+}
+
+export interface MiniDivisionView {
+  id: DivisionId;
+  /** null for a single-division league: no division label anywhere. */
+  heading: string | null;
+  leagueShort: string;
+  /** Every row, table order; the component shows `home.miniRows` of them. */
+  rows: MiniRow[];
+  total: number;
+  gdDomain: number;
+  /** THIS division's last league result day, or null. */
+  throughDate: string | null;
+  /** `/standings/<league>#<division>` */
+  href: string;
+  /** `getDivision(d).home`, never a map keyed by division id. */
+  home: DivisionConfig['home'];
+}
+
+function miniDivision(league: LeagueConfig, division: DivisionConfig, single: boolean): MiniDivisionView {
+  const rows = getStandings(division.id).map((s): MiniRow => {
+    const team = getTeamById(s.teamId);
+    return {
+      slug: s.slug,
+      name: team?.name ?? s.slug,
+      shortName: team?.shortName ?? s.slug,
+      abbr: team?.abbr ?? '',
+      colors: team?.colors ?? { primary: '000000', secondary: '000000', onPrimary: '#ffffff', source: 'placeholder' },
+      place: s.computed.place,
+      shared: s.tiebreak.shared,
+      hasResults: s.hasReportedResults,
+      gp: s.computed.gp,
+      record: recordString(s.computed),
+      pts: s.computed.pts,
+      gd: s.computed.gd,
     };
   });
-}
-
-/**
- * The registry's short name, so a 358px card line reads "St Ignatius" instead of
- * "St. Ignatius College Preparatory". A non-SCVAL opponent keeps the source spelling, and the
- * screen-reader sentence keeps the full names either way.
- */
-function withShortNames(display: GameDisplay): GameDisplay {
-  const rename = (side: GameDisplay['home']): GameDisplay['home'] => {
-    const short = side.slug ? getTeamBySlug(side.slug)?.shortName : undefined;
-    return short ? { ...side, name: short } : side;
-  };
-  return { ...display, home: rename(display.home), away: rename(display.away) };
-}
-
-function lastGameView(game: Game, slug: TeamSlug): HomeLastGame {
   return {
-    display: withShortNames(describeGame(game, slug)),
+    id: division.id,
+    heading: single ? null : division.label,
+    leagueShort: league.shortName,
+    rows,
+    total: rows.length,
+    gdDomain: getGoalDiffDomain(division.id),
+    throughDate: getLastLeagueResultDate({ division: division.id }),
+    href: `/standings/${league.id}#${division.id}`,
+    home: division.home,
+  };
+}
+
+// ---------------------------------------------------------------- postseason card
+
+export type PostseasonView =
+  | {
+      kind: 'ccs-ladder';
+      leagueId: LeagueId;
+      /** One sentence about this league's own pre-CCS games, or the seeding date. */
+      intro: string;
+      meter: { claimed: number; total: number; label: string };
+      dates: Array<{ term: string; date: string }>;
+      bracket: { published: boolean; url: string };
+      link: { href: string; label: string };
+    }
+  | {
+      kind: 'league-tournament';
+      leagueId: LeagueId;
+      /** 'MCAL tournament · Quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed) · …' */
+      line: string;
+      /** The section's no-championship note (NCS). */
+      note: string | null;
+      link: { href: string; label: string };
+    };
+
+function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: string | null): PostseasonView {
+  const ps = league.postseason;
+  const short = league.shortName;
+  if (ps.kind === 'league-tournament') {
+    const round = (id: string) => ps.rounds.find((r) => r.id === id);
+    const qf = round('qf-1');
+    const sf = round('sf-1');
+    const final = round('final');
+    const playIn = round('play-in');
+    const parts = [ps.name];
+    if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
+    if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
+    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+    return {
+      kind: 'league-tournament',
+      leagueId: league.id,
+      line: parts.join(' · '),
+      note: sectionNote,
+      link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
+    };
+  }
+
+  const total = CCS.autoQualifiers.total;
+  const aqRung = ps.ladder.find((r) => r.status === 'aq');
+  const aqTop = aqRung ? aqRung.places[1] : 0;
+  const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
+  const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
+  let label: string;
+  if (crossover) {
+    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: the top ${numberWord(
+      aqTop,
+    )} in each division, plus the winner of the fourth-place play-in (By-Laws Article VII §1–2).`;
+  } else if (playIn) {
+    const aqDivision =
+      aqRung && aqRung.divisions !== '*' && aqRung.divisions.length === 1 ? getDivision(aqRung.divisions[0]).label : null;
+    const host = getDivision(playIn.seats[0].division).label;
+    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: ${
+      aqDivision ? `${aqDivision}’s` : 'the'
+    } top ${numberWord(aqTop)}, plus the winner of the ${monthDay(playIn.date)} play-in (${playIn.seatLabels[1]} at the ${host} champion).`;
+  } else {
+    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: the top ${numberWord(
+      aqTop,
+    )} of the final standings.`;
+  }
+
+  const seeding = shortDate(CCS.keyDates.seedingMeeting);
+  const beforeLeagueGames = phase === 'preseason' || phase === 'regular';
+  let intro: string;
+  if (crossover && beforeLeagueGames) {
+    intro = `Crossover and the 4-vs-4 play-in ${shortDate(crossover.date)}. Seeding meeting ${seeding}.`;
+  } else if (crossover && phase === 'crossover') {
+    intro = `League play is done. Crossover and the play-in are ${shortDate(crossover.date)}; the seeding meeting is ${seeding}.`;
+  } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
+    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
+  } else {
+    intro = `Seeding meeting ${seeding}.`;
+  }
+
+  const playoffs = getPlayoffs();
+  return {
+    kind: 'ccs-ladder',
+    leagueId: league.id,
+    intro,
+    meter: { claimed: ps.autoBerths, total, label },
+    dates: [
+      { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
+      { term: 'Semifinals', date: CCS.keyDates.semifinals },
+      { term: 'Final', date: CCS.keyDates.finals },
+    ],
+    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl },
+    link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
+  };
+}
+
+// ---------------------------------------------------------------- other leagues strip
+
+export interface OtherLeagueLine {
+  id: LeagueId;
+  shortName: string;
+  href: string;
+  /** 'St Ignatius leads De Anza · Los Gatos leads El Camino' | 'Stevenson leads' | 'No league results yet' */
+  text: string;
+}
+
+function leagueLeadersLine(league: LeagueConfig): string {
+  const single = league.divisions.length === 1;
+  const clauses = league.divisions.map((d) => {
+    const leaders = divisionLeaders(d.id);
+    if (!leaders) return single ? null : `no results yet in ${d.label}`;
+    const verb = leaders.names.length === 1 ? 'leads' : 'lead';
+    return `${joinAmp(leaders.names)} ${verb}${single ? '' : ` ${d.label}`}`;
+  });
+  if (clauses.every((c) => c === null || c.startsWith('no results yet'))) return 'No league results yet';
+  return clauses.filter((c): c is string => c !== null).join(' · ');
+}
+
+// ---------------------------------------------------------------- team tiles
+
+export interface LeagueTeamsView {
+  leagueId: LeagueId;
+  shortName: string;
+  singleDivision: boolean;
+  groups: Array<{ id: DivisionId; heading: string | null; tiles: PinTileView[] }>;
+}
+
+function pinTileView(team: Team, leagueShort: string, heading: string | null): PinTileView {
+  return {
+    slug: team.slug,
+    leagueId: team.league,
+    name: team.name,
+    abbr: team.abbr,
+    colors: colorsOf(team),
+    pickerName: pickerName(team),
+    pinLabel: pinLabel({ name: team.name, shortName: team.shortName, divisionHeading: heading, leagueShort }),
+  };
+}
+
+// ---------------------------------------------------------------- the per-league panel
+
+export interface HomeLeaguePanel {
+  id: LeagueId;
+  shortName: string;
+  name: string;
+  phase: SeasonPhase;
+  lead: PhaseLeadView | null;
+  latest: HomeDay | null;
+  unreported: HomeDay | null;
+  slate: HomeDay | null;
+  /** The first league contest of the season, for an empty "Latest scores" block. */
+  firstGame: string | null;
+  divisions: MiniDivisionView[];
+  /** `PTS: ${citations.points}.` */
+  pointsLegend: string;
+  teams: LeagueTeamsView;
+  postseason: PostseasonView;
+  others: OtherLeagueLine[];
+  /** Where an empty "Next" block points: the league's own postseason page. */
+  afterSchedule: { href: string; label: string };
+}
+
+function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today: string): HomeLeaguePanel {
+  const league = getLeague(summary.id);
+  const phase = getSeasonPhase(league.id);
+  const latestDate = getLatestResultsDate(undefined, { league: league.id });
+  const unreported = unreportedDay(league.id, today, latestDate);
+  const slateDate = getUpcoming(1, undefined, { league: league.id })[0]?.dateKey ?? null;
+  const single = league.divisions.length === 1;
+  const firstGame = getGameDates({ league: league.id })[0] ?? null;
+
+  return {
+    id: league.id,
+    shortName: league.shortName,
+    name: league.name,
+    phase,
+    lead: phaseLead(league, phase, today),
+    latest: latestDate ? leagueDay(league.id, latestDate, today, { finalsFirst: true }) : null,
+    unreported: unreported ? leagueDay(league.id, unreported, today) : null,
+    slate: slateDate ? leagueDay(league.id, slateDate, today, { playable: true }) : null,
+    firstGame,
+    divisions: league.divisions.map((d) => miniDivision(league, d, single)),
+    pointsLegend: `PTS: ${league.rules.citations.points}.`,
+    teams: {
+      leagueId: league.id,
+      shortName: league.shortName,
+      singleDivision: single,
+      groups: league.divisions.map((d) => ({
+        id: d.id,
+        heading: single ? null : d.label,
+        tiles: getTeams({ division: d.id }).map((t) => pinTileView(t, league.shortName, single ? null : d.label)),
+      })),
+    },
+    postseason: postseasonView(league, phase, sectionOf(league.id).noChampionshipNote),
+    others: all
+      .filter((s) => s.id !== league.id)
+      .map((s) => ({
+        id: s.id,
+        shortName: s.shortName,
+        href: `/standings/${s.id}`,
+        text: leagueLeadersLine(getLeague(s.id)),
+      })),
+    afterSchedule:
+      league.postseason.kind === 'league-tournament'
+        ? { href: `/playoffs/${league.id}`, label: league.postseason.name }
+        : { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
+  };
+}
+
+// ---------------------------------------------------------------- my-team views
+
+/** A recap longer than this is cut at a word (the card clamps to two lines anyway; keeps the 60 KB budget). */
+const RECAP_MAX = 120;
+
+function capRecap(recap: string | null): string | null {
+  if (!recap) return null;
+  if (recap.length <= RECAP_MAX) return recap;
+  const cut = recap.slice(0, RECAP_MAX);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), 60)).trimEnd()}…`;
+}
+
+/** One score line: the registry short name ("St Ignatius" on a 358px card), glyph, weight, chip. */
+function homeSide(side: SideView): HomeLastDisplay['home'] {
+  return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
+}
+
+/** `describeGame()`'s decision, slimmed to what the card draws (the 60 KB budget). */
+function slimDisplay(display: GameDisplay): HomeLastDisplay {
+  const marks: NonNullable<HomeLastDisplay['marks']> = {};
+  if (display.liveDot) marks.liveDot = true;
+  if (display.strikeTime) marks.strikeTime = true;
+  if (display.isNonLeague) marks.isNonLeague = true;
+  if (display.deciderTag) marks.deciderTag = display.deciderTag;
+  if (display.shootoutText) marks.shootoutText = display.shootoutText;
+  if (display.sourceMark) marks.sourceMark = display.sourceMark;
+  if (display.leagueTag) marks.leagueTag = display.leagueTag;
+  if (display.postseasonTag) marks.postseasonTag = display.postseasonTag;
+  return {
+    statusLabel: display.statusLabel,
+    statusTone: display.statusTone,
+    ...(Object.keys(marks).length > 0 ? { marks } : {}),
+    note: display.note,
+    sentence: display.sentence,
+    home: homeSide(display.home),
+    away: homeSide(display.away),
+  };
+}
+
+function lastGameView(game: Game, slug: string): HomeLastGame {
+  return {
+    display: slimDisplay(describeGame(game, slug)),
     mineIsHome: game.home.slug === slug,
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
-    recap: game.recap,
-    href: `/game/${game.contestId}`,
+    recap: capRecap(game.recap),
+    href: gameHref(game.contestId),
   };
 }
 
-function nextGameView(game: Game, slug: TeamSlug): HomeNextGame {
+function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
-  const opponent = (theirs.slug ? getTeamBySlug(theirs.slug)?.shortName : null) ?? theirs.name;
   const links: HomeNextGame['links'] = [];
   const address = game.venue.address;
   if (address) {
@@ -185,22 +646,21 @@ function nextGameView(game: Game, slug: TeamSlug): HomeNextGame {
       href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
         `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
       )}`,
-      external: true,
     });
   }
-  if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream, external: true });
-  if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan, external: true });
-  links.push({ label: 'Game page', href: `/game/${game.contestId}`, external: false });
+  if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
+  if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan });
   return {
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: game.site === 'neutral' ? 'vs' : mineIsHome ? 'vs' : 'at',
-    opponent,
-    isLeague: game.isLeague,
-    href: `/game/${game.contestId}`,
-    // Three chips at most, so the row's height is the same for every team (no layout shift).
-    links: links.slice(0, 3),
+    opponent: shortNameOf(theirs),
+    kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
+    href: gameHref(game.contestId),
+    // Two external chips at most plus "Game page": three chips, one row, the same height for every
+    // team (no layout shift).
+    links: links.slice(0, 2),
   };
 }
 
@@ -211,12 +671,8 @@ function titleCase(name: string): string {
     .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
 }
 
-/**
- * The next fixture from the official SCVAL grid, for a team MaxPreps has no contest for. Its
- * schedule comes from the PDF and its results stay empty — no record is ever invented
- * (DESIGN §8, §12.1).
- */
-function officialNextView(team: Team, today: string): HomeOfficialFixture | null {
+/** The next fixture from the team's league's official schedule, for a team MaxPreps has no contest for. */
+function officialNextView(team: Team, today: string, leagueShort: string): HomeOfficialFixture | null {
   const fixture = getOfficialFixtures({ slug: team.slug })
     .filter((f) => f.dateKey >= today)
     .sort((a, b) => a.dateKey.localeCompare(b.dateKey))[0];
@@ -229,21 +685,26 @@ function officialNextView(team: Team, today: string): HomeOfficialFixture | null
     dateKey: fixture.dateKey,
     versus: mineIsHome ? 'vs' : 'at',
     opponent: (otherSlug ? getTeamBySlug(otherSlug)?.shortName : null) ?? titleCase(otherName),
-    pdfUrl:
-      fixture.division === 'de-anza'
-        ? SOURCE_LINKS.scvalDeAnzaSchedule
-        : SOURCE_LINKS.scvalElCaminoSchedule,
+    leagueShort,
+    scheduleUrl: getDivision(fixture.division).official.scheduleUrl,
   };
 }
 
+const LATER_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['preseason', 'regular']);
+
 /**
- * All 15 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
- * cannot know which one is wanted; shipping all 15 compact views is the cost of the feature, and
- * each one is a handful of strings rather than a full `Game`.
+ * All 43 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
+ * cannot know which one is wanted; shipping all 43 compact views is the cost of the feature.
  */
 export function buildTeamViews(): HomeTeamView[] {
   const today = getToday();
+  const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
   return getTeams().map((team) => {
+    const league = getLeague(team.league);
+    const single = league.divisions.length === 1;
+    const heading = single ? null : getDivision(team.division).label;
+    if (!contexts.has(team.division)) contexts.set(team.division, getStandingContext(team.division));
+    const context = contexts.get(team.division)?.get(team.id);
     const standing = getStandingFor(team.slug);
     const games = getGames({ teamId: team.id }).sort(byKickoff);
     const finals = games.filter((g) => g.status === 'final');
@@ -260,76 +721,111 @@ export function buildTeamViews(): HomeTeamView[] {
         ? `tied ${ordinal(standing.computed.place)}`
         : ordinal(standing.computed.place)
       : null;
+    const line = getTeamPostseasonLine(team.slug);
+    const prefix = LATER_PHASES.has(getSeasonPhase(league.id)) ? 'If the season ended today:' : 'Final place:';
     return {
       team: {
         abbr: team.abbr,
         name: team.name,
-        colors: team.colors,
+        colors: colorsOf(team),
         slug: team.slug,
         shortName: team.shortName,
-        mascot: team.mascot,
-        division: team.division,
-        divisionLabel: DIVISION_LABELS[team.division],
+        leagueId: team.league,
+        leagueShort: league.shortName,
+        divisionHeading: heading,
       },
-      meta: [team.mascot, DIVISION_LABELS[team.division], hasResults ? place : 'no results yet']
+      meta: [hasResults && place ? place : 'No results yet', heading, league.shortName]
         .filter((part): part is string => !!part)
         .join(' · '),
+      played:
+        context && context.remaining > 0 ? `${context.counted} of ${context.scheduled} played` : null,
+      postseason: line ? `${prefix} ${line.label}` : null,
+      tableHref: `/standings/${league.id}#${team.division}`,
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
       overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
-      pts: hasResults && standing ? standing.computed.pts : null,
-      playoffLabel:
-        hasResults && standing
-          ? playoffOutcomeLabel(outcomesFor(standing))
-          : 'No results reported',
-      form: hasResults ? formEntries(team.slug, team.division, standing?.computed.last5 ?? []) : [],
-      nonLeagueCount: games.filter((g) => !g.isLeague && g.status === 'final').length,
+      form: hasResults && standing ? [...standing.computed.last5] : [],
       last: last ? lastGameView(last, team.slug) : null,
       next: next ? nextGameView(next, team.slug) : null,
-      officialNext: next ? null : officialNextView(team, today),
+      officialNext: next ? null : officialNextView(team, today, league.shortName),
     };
   });
 }
 
+// ---------------------------------------------------------------- cross-league latest
+
+export interface CrossLeagueLatest {
+  date: string;
+  /** Every contest that day. */
+  total: number;
+  groups: Array<{ leagueId: LeagueId; shortName: string; games: Game[]; total: number }>;
+}
+
+/** Rows per league in the first-visit "Latest" block. */
+const CROSS_LEAGUE_ROWS = 2;
+
+function crossLeagueLatest(leagueIds: readonly LeagueId[]): CrossLeagueLatest | null {
+  const date = getLatestResultsDate();
+  if (!date) return null;
+  const games = getGames({ date }).sort(byKickoff);
+  const groups = leagueIds
+    .map((id) => {
+      const mine = games.filter((g) => homeLeagueOf(g, leagueIds) === id);
+      // Finals first: this block is about results.
+      const ordered = [...mine.filter((g) => g.status === 'final'), ...mine.filter((g) => g.status !== 'final')];
+      return { leagueId: id, shortName: getLeague(id).shortName, games: ordered.slice(0, CROSS_LEAGUE_ROWS), total: mine.length };
+    })
+    .filter((g) => g.total > 0);
+  return { date, total: games.length, groups };
+}
+
 // ---------------------------------------------------------------- the page's data
+
+export interface HomeStatus {
+  /** The latest results day across every league, or null before any result. */
+  resultsThrough: string | null;
+  teamCount: number;
+  leagueShorts: string[];
+}
+
+export interface HomeData {
+  today: string;
+  status: HomeStatus;
+  /** All 43, for the My-team slot. */
+  teamViews: HomeTeamView[];
+  searchIndex: SearchIndex;
+  leagueChips: LeagueChip[];
+  leagueCards: LeagueCardView[];
+  panels: HomeLeaguePanel[];
+  crossLeagueLatest: CrossLeagueLatest | null;
+}
 
 export function getHomeData(): HomeData {
   const today = getToday();
-  const latestResults = getLatestResultsDate();
-  const upcoming = getUpcoming(40);
-  const slateDate = upcoming[0]?.dateKey ?? null;
-  const unreported = unreportedDay(today, latestResults);
-  const playoffs = getPlayoffs();
-  const projection = getPlayoffProjection();
-
+  const summaries = getLeagueSummaries();
+  const leagueIds = summaries.map((s) => s.id);
+  const teams = getTeams();
   return {
     today,
-    phase: getSeasonPhase(),
-    firstGame: firstDateOf({}),
-    firstLeagueGame: firstDateOf({ leagueOnly: true }),
-    // Games played SO FAR — a non-league final later in the season has not been played yet.
-    nonLeagueFinals: getGames({ status: 'final' }).filter((g) => !g.isLeague && g.dateKey <= today)
-      .length,
-    latest: latestResults ? day(latestResults, today) : null,
-    unreported: unreported ? day(unreported, today) : null,
-    slate: slateDate ? playableDay(slateDate, today) : null,
-    divisions: DIVISIONS.map((division) => {
-      const standings = getStandings(division);
-      return {
-        division,
-        label: DIVISION_LABELS[division],
-        rows: standings.map((standing) => ({ standing, team: getTeamById(standing.teamId)! })),
-        gdDomain: getGoalDiffDomain(division),
-        sourceUrl: leagueStandingsUrl(division),
-        total: standings.length,
-        throughDate: getLastLeagueResultDate(division),
-      };
-    }),
-    playoffs,
-    crossover: {
-      date: projection.crossover.date,
-      pairings: projection.crossover.pairings.map((p) => p.label),
+    status: {
+      resultsThrough: getLatestResultsDate(),
+      teamCount: teams.length,
+      leagueShorts: summaries.map((s) => s.shortName),
     },
     teamViews: buildTeamViews(),
+    searchIndex: getTeamSearchIndex(),
+    leagueChips: summaries.map((s) => ({ id: s.id, shortName: s.shortName, sectionShort: s.section.shortName })),
+    leagueCards: summaries.map((s) => ({
+      id: s.id,
+      shortName: s.shortName,
+      name: s.name,
+      sectionShort: s.section.shortName,
+      region: s.region,
+      teamsLine: plural(s.teamCount, 'team', 'teams'),
+      divisions: s.singleDivision ? [] : s.divisions.map((d) => d.label),
+      standingsHref: `/standings/${s.id}`,
+    })),
+    panels: summaries.map((s) => buildPanel(s, summaries, today)),
+    crossLeagueLatest: crossLeagueLatest(leagueIds),
   };
 }

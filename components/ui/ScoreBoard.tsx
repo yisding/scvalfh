@@ -20,7 +20,12 @@ import { describeGame, type SideView } from './game-view';
  * Each ScoreGlyph is wrapped in `.sx-board-score`, whose unlayered rule in globals.css sets it at
  * `--text-display`: ScoreGlyph's own class string is frozen (tests/ui/rendered-never-00.test.ts).
  *
- * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza".
+ * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza" or "10-1-1 MCAL".
+ *
+ * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) carries a
+ * `†` with the words `Score via si.com`, never the mark alone (SPEC §10.6): StatusLabel prints the
+ * mark in the status line (it reads `sourceMark`), the line ends with its legend `† Score via
+ * si.com`, and the board's screen-reader sentence ends with the same words.
  */
 export interface ScoreBoardSideMeta {
   sub?: string | null;
@@ -91,7 +96,10 @@ export function ScoreBoard({ game, perspective, home, away, className }: ScoreBo
       className={['sx-card sx-board p-5 md:p-8', className].filter(Boolean).join(' ')}
       aria-label="Scoreboard"
     >
-      <p className="sr-only">{display.sentence}</p>
+      <p className="sr-only">
+        {display.sentence}
+        {display.sourceMark === 'si.com' ? ' Score via si.com.' : ''}
+      </p>
       <p
         className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-ink-3 md:justify-center"
         aria-hidden="true"
@@ -105,6 +113,13 @@ export function ScoreBoard({ game, perspective, home, away, className }: ScoreBo
           <>
             <span>&middot;</span>
             <span>{game.venue.name}</span>
+          </>
+        ) : null}
+        {display.sourceMark === 'si.com' ? (
+          <>
+            <span>&middot;</span>
+            {/* The legend for StatusLabel's † (a footnote mark is never left unexplained). */}
+            <span>&dagger; Score via si.com</span>
           </>
         ) : null}
       </p>

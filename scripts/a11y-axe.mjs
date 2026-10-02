@@ -1,21 +1,37 @@
 /**
- * DESIGN §10.9(a): axe-core over one page of every route family, in both themes and at both
- * widths, against the real production build. Exits non-zero on a serious or critical violation.
+ * DESIGN §10.9(a), SPEC §12.3: axe-core over one page of every route family, in both themes and at
+ * both widths, against the real production build. Exits non-zero on a serious or critical violation.
  *
  * Run it against a server you started yourself:
  *
  *   pnpm build && pnpm exec next start -p 3117 &
- *   node scripts/a11y-axe.mjs
+ *   node scripts/a11y-axe.mjs                       # SCVAL_BASE_URL defaults to http://127.0.0.1:3117
  *
  * `axe-core` and `playwright` are intentionally NOT repo dependencies — they are needed to check
  * the site, not to build or ship it — so this script resolves them at run time and says plainly
  * what to install when they are missing. Install them in a directory of their own and point
  * NODE_PATH at it, which `require` honours; npm cannot install into the tree pnpm wrote here (CI
- * does the same in $RUNNER_TEMP/axe):
+ * does the same in $RUNNER_TEMP/axe, scripts/stage-gate-d.sh in /tmp/axe):
  *
  *   (mkdir -p /tmp/axe && cd /tmp/axe && npm init -y >/dev/null &&
  *     npm install --no-save axe-core playwright && npx playwright install --with-deps chromium)
  *   NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs
+ *
+ * What runs (every run is mandatory: `page.addInitScript` always exists, so nothing is skipped):
+ *  1. Every route below × light/dark × 390/1280: the fixed pages, the per-league pages
+ *     (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL and an MCAL team
+ *     page, and the first /game/, /scores/ and /teams/ page of the sitemap, plus its first
+ *     /game/sblive-* page when it lists one (a si.com-only game).
+ *  2. `/` once per remembered league: an init script sets localStorage['scvalfh.league'] to each
+ *     league id of data/snapshot.json and to 'all' (the no-league run is `/` in 1), and once with
+ *     only scvalfh.pinnedTeam = 'tamalpais'. axe skips `display:none` subtrees, so each league panel
+ *     is checked only in its own run; each run also asserts the pre-paint stamp (html[data-league],
+ *     html[data-pin]) the run was meant to produce.
+ *  3. `/teams` with "mar" typed into the finder (the filtered list and the live region).
+ *  4. A keyboard probe on `/` with no stored league: Tab to "Show BVAL here", press Enter, and
+ *     document.activeElement must be inside [data-scope="bval"] (WCAG 2.4.3; SPEC §8.2).
+ *  5. The SPEC §10.1 fold targets at 390×664 and 390×844 (pinned card; Latest rows), measured and
+ *     PRINTED (`fold:` lines): DESIGN §15 states the targets; a miss is reported, not failed.
  *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
@@ -23,18 +39,38 @@
  */
 
 import { createRequire } from 'node:module';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const BASE = process.env.SCVAL_BASE_URL ?? 'http://127.0.0.1:3117';
 
-/** One page per route family — the families are what differ, not the 158 instances of one. */
+/**
+ * League ids in config order, from the snapshot this tree holds (the server was built from it);
+ * the four ids are the fallback when the script runs outside the repo.
+ */
+function readSnapshot() {
+  const file = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
+  return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+}
+const snapshot = readSnapshot();
+const LEAGUES = snapshot ? snapshot.season.leagues.map((l) => l.id) : ['scval', 'bval', 'pcal', 'mcal'];
+/** The pinned team of the pin run (an MCAL team) and the league the prefs script derives from it. */
+const PIN = 'tamalpais';
+const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal';
+
+/** One page per route family — the families are what differ, not the 364 instances of one. */
 const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/',
   '/standings',
+  '/standings/bval',
+  '/standings/mcal',
   '/schedule',
+  '/schedule/pcal',
   '/teams',
+  '/teams/leigh',
+  '/teams/tamalpais',
   '/playoffs',
+  '/playoffs/mcal',
   '/about',
   '/history/2025-26',
 ];
@@ -55,14 +91,6 @@ function load() {
     );
     process.exit(2);
   }
-}
-
-/** A route that carries a parameter is resolved from the sitemap, so no id is hard-coded here. */
-async function sampleDynamicRoutes() {
-  const xml = await fetch(`${BASE}/sitemap.xml`).then((r) => r.text());
-  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
-  const first = (prefix) => locs.find((p) => p.startsWith(prefix));
-  return [first('/game/'), first('/scores/'), first('/teams/')].filter(Boolean);
 }
 
 /**
@@ -111,82 +139,232 @@ const STANDALONE_TARGET_PROBE = `window.findUndersizedStandaloneTargets = () => 
   return out;
 };`;
 
+/** A route that carries a parameter is resolved from the sitemap, so no id is hard-coded here. */
+async function sampleDynamicRoutes() {
+  const xml = await fetch(`${BASE}/sitemap.xml`).then((r) => r.text());
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+  const first = (prefix) => locs.find((p) => p.startsWith(prefix));
+  return [first('/game/'), first('/scores/'), first('/teams/'), first('/game/sblive-')]
+    .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
+}
+
 const { axeSource, chromium } = load();
 const routes = [...ROUTES, ...(await sampleDynamicRoutes())];
 const browser = await chromium.launch({ args: ['--no-sandbox'] });
 let serious = 0;
 let checked = 0;
 
+/** A context with the theme and the given localStorage entries set before any page script runs. */
+async function newContext({ theme = 'light', width = 390, height = 900, storage = {} } = {}) {
+  const context = await browser.newContext({ viewport: { width, height }, colorScheme: theme });
+  await context.addInitScript((entries) => {
+    try {
+      for (const [k, v] of Object.entries(entries)) localStorage.setItem(k, v);
+    } catch {
+      /* a blocked store is a supported state — the page still renders */
+    }
+  }, { 'scvalfh.theme': theme, ...storage });
+  return context;
+}
+
+async function open(context, route) {
+  const page = await context.newPage();
+  const response = await page.goto(BASE + route, { waitUntil: 'networkidle' });
+  if (!response || response.status() !== 200) {
+    console.error(`FAIL ${route}: HTTP ${response ? response.status() : '??'}`);
+    serious += 1;
+    await page.close();
+    return null;
+  }
+  return page;
+}
+
+/** axe (serious/critical) and the standalone-target probe on the page as it is now. */
+async function check(page, label) {
+  await page.addScriptTag({ content: axeSource });
+  await page.addScriptTag({ content: STANDALONE_TARGET_PROBE });
+  const violations = await page.evaluate(async () => {
+    // `target-size` (WCAG 2.2 SC 2.5.8) ships DISABLED in axe-core, so a run with the defaults
+    // reported zero while standalone action links were 18px tall and the margin-strip columns
+    // were 18px wide with a 2px gap. Enabled explicitly rather than switching to `runOnly`,
+    // which would have narrowed the run to one tag set and dropped rules that are on today.
+    const result = await window.axe.run(document, {
+      resultTypes: ['violations'],
+      rules: { 'target-size': { enabled: true } },
+    });
+    return result.violations.map((v) => ({
+      id: v.id,
+      impact: v.impact,
+      help: v.help,
+      nodes: v.nodes.slice(0, 3).map((n) => ({
+        target: n.target.join(' '),
+        summary: (n.failureSummary ?? '').replace(/\s+/g, ' ').slice(0, 240),
+      })),
+    }));
+  });
+  checked += 1;
+  const bad = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  serious += bad.length;
+  if (violations.length) {
+    console.log(`${label}: ${violations.length} violation(s)`);
+    for (const v of violations) {
+      console.log(`   [${v.impact}] ${v.id} — ${v.help}`);
+      for (const n of v.nodes) console.log(`        ${n.target} :: ${n.summary}`);
+    }
+  }
+  const undersized = await page.evaluate(() => findUndersizedStandaloneTargets());
+  serious += undersized.length;
+  if (undersized.length) {
+    console.log(`${label}: ${undersized.length} standalone target(s) under 24px`);
+    for (const t of undersized) console.log(`   ${t.size} ${t.tag} ${JSON.stringify(t.text)} in <${t.block}>`);
+  }
+}
+
+function failRun(label, why) {
+  console.error(`FAIL ${label}: ${why}`);
+  serious += 1;
+}
+
+// ---------------------------------------------------------------- 1-3: the route families
 for (const theme of ['light', 'dark']) {
   for (const width of [390, 1280]) {
-    const context = await browser.newContext({
-      viewport: { width, height: 900 },
-      colorScheme: theme,
-    });
-    await context.addInitScript((value) => {
-      try {
-        localStorage.setItem('scvalfh.theme', value);
-      } catch {
-        /* a blocked store is a supported state — the page still renders */
-      }
-    }, theme);
-
+    const tag = `${width} ${theme}`;
+    const context = await newContext({ theme, width });
     for (const route of routes) {
-      const page = await context.newPage();
-      const response = await page.goto(BASE + route, { waitUntil: 'networkidle' });
-      if (!response || response.status() !== 200) {
-        console.error(`FAIL ${route} ${width} ${theme}: HTTP ${response ? response.status() : '??'}`);
-        serious += 1;
-        await page.close();
-        continue;
-      }
-      await page.addScriptTag({ content: axeSource });
-      await page.addScriptTag({ content: STANDALONE_TARGET_PROBE });
-      const violations = await page.evaluate(async () => {
-        // `target-size` (WCAG 2.2 SC 2.5.8) ships DISABLED in axe-core, so a run with the defaults
-        // reported zero while standalone action links were 18px tall and the margin-strip columns
-        // were 18px wide with a 2px gap. Enabled explicitly rather than switching to `runOnly`,
-        // which would have narrowed the run to one tag set and dropped rules that are on today.
-        const result = await window.axe.run(document, {
-          resultTypes: ['violations'],
-          rules: { 'target-size': { enabled: true } },
-        });
-        return result.violations.map((v) => ({
-          id: v.id,
-          impact: v.impact,
-          help: v.help,
-          nodes: v.nodes.slice(0, 3).map((n) => ({
-            target: n.target.join(' '),
-            summary: (n.failureSummary ?? '').replace(/\s+/g, ' ').slice(0, 240),
-          })),
-        }));
-      });
-      checked += 1;
-      const bad = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-      serious += bad.length;
-      if (violations.length) {
-        console.log(`${route} ${width} ${theme}: ${violations.length} violation(s)`);
-        for (const v of violations) {
-          console.log(`   [${v.impact}] ${v.id} — ${v.help}`);
-          for (const n of v.nodes) console.log(`        ${n.target} :: ${n.summary}`);
-        }
-      }
-
-      const undersized = await page.evaluate(() => findUndersizedStandaloneTargets());
-      serious += undersized.length;
-      if (undersized.length) {
-        console.log(`${route} ${width} ${theme}: ${undersized.length} standalone target(s) under 24px`);
-        for (const t of undersized) console.log(`   ${t.size} ${t.tag} ${JSON.stringify(t.text)} in <${t.block}>`);
-      }
+      const page = await open(context, route);
+      if (!page) continue;
+      await check(page, `${route} ${tag}`);
       await page.close();
     }
+
+    // /teams with "mar" typed: the in-place filter, its result chips and the live region.
+    const teams = await open(context, '/teams');
+    if (teams) {
+      const input = teams.locator('input[type="search"]').first();
+      if ((await input.count()) === 0) failRun(`/teams ${tag}`, 'no search field');
+      else {
+        await input.fill('mar');
+        await teams.waitForTimeout(400);
+        await check(teams, `/teams (typed "mar") ${tag}`);
+      }
+      await teams.close();
+    }
     await context.close();
+
+    // `/` under each remembered league, 'all', and a pin alone (the prefs script derives the league).
+    const runs = [
+      ...LEAGUES.map((id) => ({ label: `league=${id}`, storage: { 'scvalfh.league': id }, league: id, pin: null })),
+      { label: 'league=all', storage: { 'scvalfh.league': 'all' }, league: null, pin: null },
+      { label: `pinnedTeam=${PIN}`, storage: { 'scvalfh.pinnedTeam': PIN }, league: PIN_LEAGUE, pin: PIN },
+    ];
+    for (const run of runs) {
+      const ctx = await newContext({ theme, width, storage: run.storage });
+      const page = await open(ctx, '/');
+      if (page) {
+        const stamp = await page.evaluate(() => ({
+          league: document.documentElement.getAttribute('data-league'),
+          pin: document.documentElement.getAttribute('data-pin'),
+        }));
+        if (stamp.league !== run.league || stamp.pin !== run.pin) {
+          failRun(`/ (${run.label}) ${tag}`, `stamped data-league=${stamp.league} data-pin=${stamp.pin}, expected ${run.league} / ${run.pin}`);
+        }
+        await check(page, `/ (${run.label}) ${tag}`);
+        await page.close();
+      }
+      await ctx.close();
+    }
   }
+}
+
+// ---------------------------------------------------------------- 4: keyboard focus after "Show BVAL here"
+{
+  const label = 'keyboard: / (no stored league) Tab to "Show BVAL here", Enter';
+  const ctx = await newContext({ width: 390, height: 844 });
+  const page = await open(ctx, '/');
+  if (page) {
+    const button = page.getByRole('button', { name: 'Show BVAL here' });
+    await button.waitFor({ state: 'visible' });
+    await page.waitForFunction(() => [...document.querySelectorAll('button')]
+      .some((b) => b.textContent.trim() === 'Show BVAL here' && !b.disabled));
+    let reached = false;
+    for (let i = 0; i < 300 && !reached; i += 1) {
+      await page.keyboard.press('Tab');
+      reached = await page.evaluate(() => document.activeElement?.textContent?.trim() === 'Show BVAL here');
+    }
+    if (!reached) failRun(label, 'Tab never reached the button');
+    else {
+      await page.keyboard.press('Enter');
+      await page.waitForFunction(() => document.activeElement?.closest('[data-scope="bval"]') != null, null, { timeout: 3000 })
+        .catch(() => undefined);
+      const focus = await page.evaluate(() => ({
+        inside: document.activeElement?.closest('[data-scope="bval"]') != null,
+        what: document.activeElement ? `${document.activeElement.tagName.toLowerCase()}#${document.activeElement.id}` : 'none',
+      }));
+      if (!focus.inside) failRun(label, `focus is on ${focus.what}, not inside [data-scope="bval"]`);
+      else console.log(`${label}: focus moved to ${focus.what} inside [data-scope="bval"]`);
+    }
+    await page.close();
+  }
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------- 5: the SPEC §10.1 fold, measured and printed
+/**
+ * The fold is the top of the fixed bottom tab bar (the viewport bottom where there is none):
+ * content under the bar is not visible without scrolling.
+ */
+async function measureFold(storage, height) {
+  const ctx = await newContext({ width: 390, height, storage });
+  const page = await open(ctx, '/');
+  let out = null;
+  if (page) {
+    out = await page.evaluate(() => {
+      const bar = document.querySelector('nav.sx-chrome-bottom');
+      const barTop = bar && getComputedStyle(bar).display !== 'none' ? bar.getBoundingClientRect().top : window.innerHeight;
+      const league = document.documentElement.getAttribute('data-league');
+      const panel = league ? document.querySelector(`section[data-scope="${league}"]`) : null;
+      let list = null;
+      if (panel) {
+        for (const section of panel.querySelectorAll('section')) {
+          if (/Latest scores/.test(section.querySelector('h2, h3')?.textContent ?? '') && section.querySelector('ol')) {
+            list = section.querySelector('ol');
+            break;
+          }
+        }
+        list ??= panel.querySelector('ol');
+      }
+      const rows = list ? [...list.children].map((li) => li.getBoundingClientRect().bottom) : [];
+      const slot = document.querySelector('.sx-myteam-slot');
+      const slotRect = slot && getComputedStyle(slot).display !== 'none' ? slot.getBoundingClientRect() : null;
+      return {
+        fold: Math.round(barTop),
+        cardBottom: slotRect ? Math.round(slotRect.bottom) : null,
+        rowsAbove: rows.filter((b) => b <= barTop).length,
+        rowBottoms: rows.map((b) => Math.round(b)),
+      };
+    });
+    await page.close();
+  }
+  await ctx.close();
+  return out;
+}
+const foldRuns = [
+  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 664, target: (m) => m.cardBottom != null && m.cardBottom <= m.fold, goal: 'whole pinned card above the fold' },
+  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 844, target: (m) => m.rowsAbove >= 2, goal: '≥ 2 Latest rows above the fold' },
+  { label: 'no pin, league=bval', storage: { 'scvalfh.league': 'bval' }, height: 664, target: (m) => m.rowsAbove >= 2, goal: '≥ 2 Latest rows above the fold' },
+];
+for (const run of foldRuns) {
+  const m = await measureFold(run.storage, run.height);
+  if (!m) continue;
+  console.log(
+    `fold: ${run.label} at 390×${run.height}: fold ${m.fold}px; My-team slot bottom ${m.cardBottom ?? '—'}px; ` +
+      `Latest row bottoms [${m.rowBottoms.join(', ')}] → ${m.rowsAbove} above; target "${run.goal}": ${run.target(m) ? 'met' : 'MISSED'}`,
+  );
 }
 
 await browser.close();
 console.log(
   `axe: ${checked} page loads checked, ${serious} serious/critical violation(s) ` +
-    'including undersized standalone targets',
+    'including undersized standalone targets and failed probes',
 );
 process.exit(serious === 0 ? 0 : 1);

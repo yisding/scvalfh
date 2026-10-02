@@ -2,17 +2,23 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import GameList from '@/components/schedule/GameList';
-import OfficialFixtures from '@/components/schedule/OfficialFixtures';
-import { daySummary } from '@/components/schedule/day-summary';
-import { gameWord } from '@/components/schedule/filter-data';
-import EmptyState from '@/components/ui/EmptyState';
-import SectionHeader from '@/components/ui/SectionHeader';
-import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE } from '@/components/layout/site-url';
-import { getGameDates, getGames, getOfficialFixtures, getToday } from '@/lib/data';
-import { longDate, parseLocal, shortDate } from '@/lib/format';
-import { getTeamBySlug } from '@/lib/teams';
+import GameList from '../../../components/schedule/GameList';
+import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
+import { dayGroups, daySummary } from '../../../components/schedule/day-summary';
+import { gameWord } from '../../../components/schedule/filter-data';
+import EmptyState from '../../../components/ui/EmptyState';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import PageHeader from '../../../components/layout/PageHeader';
+import { OG_BASE, SITE_NAME } from '../../../components/layout/site-url';
+import {
+  getGameDates,
+  getGames,
+  getLeagueSummaries,
+  getOfficialFixtures,
+  getTeamBySlug,
+  getToday,
+} from '../../../lib/data';
+import { longDate, parseLocal, shortDate } from '../../../lib/format';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
@@ -24,8 +30,13 @@ import { getTeamBySlug } from '@/lib/teams';
  *
  * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
  * a link to an empty Sunday would be a dead end.
+ *
+ * Grouped by league (SPEC §10.4): one group per league — its counted league games and its
+ * postseason games, `<SHORT> · <n> league games` — then `Non-league · <n>` for the rest; a game
+ * appears once. The unreported official fixtures of the day are one block per league,
+ * `Scheduled by <SHORT>, not reported`.
  */
-/** A registry team renders by its short name; a non-SCVAL opponent is a name and nothing else. */
+/** A registry team renders by its short name; anyone else is a name and nothing else. */
 function sideName(slug: string | null, fallback: string): string {
   const team = slug ? getTeamBySlug(slug) : undefined;
   return team ? team.shortName : fallback;
@@ -53,7 +64,7 @@ export async function generateMetadata({
     alternates: { canonical: `/scores/${date}` },
     openGraph: {
       ...OG_BASE,
-      title: `${title} — SCVAL Field Hockey`,
+      title: `${title} — ${SITE_NAME}`,
       description: summary.sentence,
       url: `/scores/${date}`,
     },
@@ -73,9 +84,13 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const next = index < dates.length - 1 ? dates[index + 1] : null;
   const today = getToday();
   const fixtures = getOfficialFixtures().filter((fixture) => fixture.dateKey === date);
-  /* `game.official.scheduledDate` is the date on the SCVAL grid. When it differs from the date the
-     game is actually on, the game moved — worth one sentence, because a parent looking at the
-     printed schedule will otherwise think we have the wrong day (SPEC §1.3). */
+  const fixtureLeagues = getLeagueSummaries()
+    .map((league) => ({ league, rows: fixtures.filter((f) => f.league === league.id) }))
+    .filter((block) => block.rows.length > 0);
+  const groups = dayGroups(games);
+  /* `game.official.scheduledDate` is the date on the league's official schedule. When it differs
+     from the date the game is actually on, the game moved — worth one sentence, because a parent
+     looking at the printed schedule will otherwise think we have the wrong day. */
   const moved = games.filter((game) => game.official && game.official.scheduledDate !== date);
 
   /* The day has arrived and not one score has been published. The day still renders in full, with
@@ -144,20 +159,40 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </p>
       ) : null}
 
-      <div className="mt-8 md:mt-10">
-        {games.length > 0 ? (
-          // Two or more cards fill the row, so they end where the pager, the fixtures card and
-          // the disclosure below end; a lone card stays card-sized rather than 1200px wide.
-          <GameList games={games} tracks={games.length > 1 ? 'fit' : 'fill'} />
-        ) : (
+      {groups.length >= 2 ? (
+        <nav aria-label="Leagues on this day" className="mt-6 flex flex-wrap gap-2">
+          {groups.map((group) => (
+            <a key={group.id} href={`#${group.id}`} className="sx-pill min-h-11">
+              {group.kicker}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+
+      {games.length > 0 ? (
+        groups.map((group, index) => (
+          <section
+            key={group.id}
+            id={group.id}
+            aria-labelledby={`${group.id}-heading`}
+            className={index === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+          >
+            <SectionHeader id={`${group.id}-heading`} kicker={group.kicker} />
+            {/* Two or more cards fill the row, so they end where the pager, the fixtures card
+                and the disclosure below end; a lone card stays card-sized rather than 1200px wide. */}
+            <GameList games={group.games} tracks={group.games.length > 1 ? 'fit' : 'fill'} />
+          </section>
+        ))
+      ) : (
+        <div className="mt-8 md:mt-10">
           <EmptyState heading="No contests on this date." />
-        )}
-      </div>
+        </div>
+      )}
 
       {moved.length > 0 ? (
         <p className="sx-inset mt-stack mb-0 max-w-prose">
           {moved.length === 1 ? 'One game here was moved' : `${moved.length} games here were moved`}{' '}
-          from the date on SCVAL&rsquo;s official grid:{' '}
+          from the date on the league&rsquo;s official schedule:{' '}
           {moved
             .map(
               (game) =>
@@ -171,17 +206,18 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </p>
       ) : null}
 
-      {fixtures.length > 0 ? (
-        <section className="mt-section md:mt-section-lg">
-          <SectionHeader kicker="Scheduled by SCVAL, not reported" />
-          <OfficialFixtures fixtures={fixtures} variant="plain" />
+      {fixtureLeagues.map(({ league, rows }) => (
+        <section key={league.id} className="mt-section md:mt-section-lg">
+          <SectionHeader kicker={`Scheduled by ${league.shortName}, not reported`} />
+          <OfficialFixtures fixtures={rows} leagueId={league.id} variant="plain" />
         </section>
-      ) : null}
+      ))}
 
       {/* Always visible (brief §4.22: "not official" sentences never collapse), once, under the
           day's games: the zone every time on this page is in, and whose numbers these are. */}
       <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
-        All times Pacific. Scores are computed from what MaxPreps publishes and are unofficial.
+        All times Pacific. Scores are what MaxPreps publishes (a &dagger; marks one published from
+        si.com under the site&rsquo;s backfill rule) and are unofficial.
       </p>
 
       <details className="sx-inset sx-disclosure mt-section md:mt-section-lg">

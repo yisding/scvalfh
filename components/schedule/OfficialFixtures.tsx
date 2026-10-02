@@ -1,22 +1,25 @@
 import { shortDate } from '../../lib/format';
-import { DIVISION_LABELS, SOURCE_LINKS } from '../../lib/season';
+import { divisionHeading, getLeague } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { OfficialFixture } from '../../lib/types';
+import type { LeagueId, OfficialFixture } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import { officialScheduleLabel } from '../standings/standings-view';
 
 /**
- * Fixtures the official SCVAL schedule grids publish and MaxPreps has no contest for
- * (`snapshot.officialFixtures`, SPEC §1.3).
+ * Fixtures a league's official schedule publishes and no source has a contest for
+ * (`snapshot.officialFixtures`, SPEC §7.8): `Scheduled by <SHORT>, not reported`.
  *
- * Today that is BOTH Homestead–Cupertino legs, which MaxPreps has never published at all even
- * though SBLive has the September one as a played 5-5. So the array is rendered as data, never hard-coded, and the
- * sentence says exactly what is true: SCVAL scheduled it, MaxPreps reported nothing, and we do not
- * invent a score for it (SPEC §5.7 forbids backfilling from a secondary source).
- *
- * Each division's official grid PDF is linked, because these rows are SCVAL's claim, not ours.
+ * Rendered as data, never hard-coded, one block per league; the sentence says exactly what is true:
+ * the league scheduled it, no result was published (MaxPreps has no contest, and si.com's score —
+ * if it has one — did not meet the site's backfill rule), and we do not invent a result for it.
+ * Each row names its division through `divisionHeading()` (nothing for PCAL and MCAL), and the
+ * league's official schedule(s) are linked from config, labelled by source (PDF / Google Doc),
+ * because these rows are the league's claim, not ours.
  */
 export interface OfficialFixturesProps {
   fixtures: readonly OfficialFixture[];
+  /** The league whose fixtures these are (its schedule links and short name). */
+  leagueId: LeagueId;
   /** 'details' collapses the list behind a summary; 'plain' always shows it. */
   variant?: 'details' | 'plain';
   className?: string;
@@ -25,6 +28,20 @@ export interface OfficialFixturesProps {
 function name(slug: string | null, fallback: string): string {
   const team = slug ? getTeamBySlug(slug) : undefined;
   return team ? team.name : fallback;
+}
+
+/** The league's official schedule documents, deduped by URL, labelled by division where there are several. */
+function scheduleLinks(leagueId: LeagueId): Array<{ href: string; label: string }> {
+  const league = getLeague(leagueId);
+  const seen = new Map<string, { href: string; label: string }>();
+  for (const d of league.divisions) {
+    const href = d.official.scheduleUrl;
+    if (seen.has(href)) continue;
+    const kind = officialScheduleLabel(d.official.source);
+    const heading = divisionHeading(d.id);
+    seen.set(href, { href, label: heading ? `${heading} ${kind.replace('Official schedule ', '')}` : kind });
+  }
+  return [...seen.values()];
 }
 
 function FixtureRows({ fixtures }: { fixtures: readonly OfficialFixture[] }) {
@@ -43,7 +60,9 @@ function FixtureRows({ fixtures }: { fixtures: readonly OfficialFixture[] }) {
           <span className="min-w-0 text-body text-ink">
             {name(fixture.awaySlug, fixture.awayName)} at {name(fixture.homeSlug, fixture.homeName)}
           </span>
-          <span className="shrink-0 text-meta text-ink-3">{DIVISION_LABELS[fixture.division]}</span>
+          {divisionHeading(fixture.division) ? (
+            <span className="shrink-0 text-meta text-ink-3">{divisionHeading(fixture.division)}</span>
+          ) : null}
         </li>
       ))}
     </ol>
@@ -52,17 +71,28 @@ function FixtureRows({ fixtures }: { fixtures: readonly OfficialFixture[] }) {
 
 export function OfficialFixtures({
   fixtures,
+  leagueId,
   variant = 'details',
   className,
 }: OfficialFixturesProps) {
   if (fixtures.length === 0) return null;
-  // Always visible, above the list: what these rows are and where SCVAL publishes them.
+  const short = getLeague(leagueId).shortName;
+  const links = scheduleLinks(leagueId);
+  // Always visible, above the list: what these rows are and where the league publishes them.
   const sentence = (
     <p className="m-0 mb-4 max-w-prose text-meta text-ink-2">
-      Scheduled per SCVAL; no result reported by MaxPreps. We do not copy a score in from another
-      source for these, so they carry no result at all. Official grids:{' '}
-      <ExternalLink href={SOURCE_LINKS.scvalDeAnzaSchedule}>De Anza</ExternalLink> ·{' '}
-      <ExternalLink href={SOURCE_LINKS.scvalElCaminoSchedule}>El Camino</ExternalLink>.
+      Scheduled per {short}; no result has been published for these, so they carry no result at
+      all here.{' '}
+      {links.map((link, i) => (
+        <span key={link.href}>
+          {i > 0 ? ' · ' : null}
+          <ExternalLink href={link.href}>
+            {link.label}
+            <span className="sr-only"> ({short})</span>
+          </ExternalLink>
+        </span>
+      ))}
+      .
     </p>
   );
 
@@ -99,8 +129,8 @@ export function OfficialFixtures({
           >
             <path d="m4 6 4 4 4-4" />
           </svg>
-          {fixtures.length} official {fixtures.length === 1 ? 'fixture' : 'fixtures'} with no MaxPreps
-          contest
+          {fixtures.length} official {short} {fixtures.length === 1 ? 'fixture' : 'fixtures'} with no
+          published result
         </summary>
         <div className="border-t border-divider">
           <FixtureRows fixtures={fixtures} />

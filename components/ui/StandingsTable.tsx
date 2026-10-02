@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
+import type { StandingContext } from '../../lib/data';
 import { EM_DASH, ordinal, recordString, streakString, winPct } from '../../lib/format';
-import { DIVISION_LABELS } from '../../lib/season';
-import type { Division, Standing, Team, TeamSlug } from '../../lib/types';
+import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
+import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
@@ -38,6 +39,15 @@ import TeamMonogram from './TeamMonogram';
  * The notes are separable: `notes="none"` renders the table alone, and `collectStandingsNotes()`
  * hands the caller the generic legend (GD, PTS) and the table-specific notes (shared places, the
  * no-results team, mismatch flags, `footnotes`) so a page can place each where it belongs.
+ *
+ * Multi-league (SPEC §10.3, §13.3 — additive only): `context` (`getStandingContext(division)`) and
+ * `columns` add a GP column (every variant but archive; the phone row prints `<counted>/<scheduled>
+ * GP` on its second line) and, on the desktop table, LEFT and MAX after PTS. LEFT is league games
+ * with no counted result yet; MAX the most points a team could still reach — a ceiling, never a
+ * projection. With the two new columns the desktop table drops its Home / Away / Neutral splits,
+ * which the team page carries, so the team column keeps its width. A `†` follows W-L-T for a team
+ * with a counted si.com score (`context.backfilled > 0`); the caller prints the footnote. Without
+ * `context` and `columns` the table renders exactly today's columns.
  */
 export type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
 
@@ -48,8 +58,10 @@ export interface StandingsRowData {
   href?: string;
 }
 
+export type StandingsColumn = 'gp' | 'left' | 'max';
+
 export interface StandingsTableProps {
-  division: Division;
+  division: DivisionId;
   /** Already sorted and ranked by lib/standings.ts. */
   rows: StandingsRowData[];
   /** max |gd| for THIS division — never global (R-2). */
@@ -80,6 +92,35 @@ export interface StandingsTableProps {
   sourceUrl?: string;
   className?: string;
   id?: string;
+  /** Derived per-row facts (`getStandingContext(division)`), keyed by team id. */
+  context?: ReadonlyMap<TeamId, StandingContext>;
+  /** Extra columns read from `context`: GP (all variants but archive), LEFT and MAX (desktop). */
+  columns?: ReadonlyArray<StandingsColumn>;
+}
+
+/** The † after W-L-T: this team's record includes a score published from si.com (SPEC §7.9). */
+function BackfillMark({ context }: { context: StandingContext | undefined }) {
+  if (!context || context.backfilled === 0) return null;
+  return (
+    <>
+      <span aria-hidden="true">&dagger;</span>
+      <span className="sr-only">
+        {context.backfilled === 1
+          ? ', includes 1 score via si.com'
+          : `, includes ${context.backfilled} scores via si.com`}
+      </span>
+    </>
+  );
+}
+
+/** `6/12` games counted of the division's scheduled league games. */
+function gpText(context: StandingContext | undefined): string {
+  return context ? `${context.counted}/${context.scheduled}` : EM_DASH;
+}
+
+/** The division as a reader names it: its heading, or the league's short name for a one-table league. */
+function tableName(division: DivisionId): string {
+  return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
 
 /** The colour comes from the cell (rank is ink-3 in every variant). '1', '6=' for a shared place, an em dash for a team with no reported results. */
@@ -156,7 +197,7 @@ function rowLabel(row: StandingsRowData): string {
   const place = standing.tiebreak.shared
     ? `tied for ${ordinal(standing.computed.place)}`
     : ordinal(standing.computed.place);
-  return `${team.name}, ${place} in ${DIVISION_LABELS[team.division]}, ${recordString(
+  return `${team.name}, ${place} in ${tableName(team.division)}, ${recordString(
     standing.computed,
   )}, ${standing.computed.pts} points`;
 }
@@ -177,13 +218,11 @@ export function collectStandingsNotes(
   const { rows, gdDomain, division, variant } = props;
   if (variant !== 'archive') {
     legend.push(
-      `GD = league goals for minus goals against. Bars are scaled to ${
-        DIVISION_LABELS[division]
-      } only (|GD| max ${gdDomain}), so the two divisions' bars are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
+      `GD = league goals for minus goals against. Bars are scaled per division (${tableName(
+        division,
+      )}: |GD| max ${gdDomain}), so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
     );
-    legend.push(
-      'PTS is the official ordering key: 3 points for a win, 1 for a tie (SCVAL By-Laws Article VI §2).',
-    );
+    legend.push(`PTS: ${leagueOfDivision(division).rules.citations.points}.`);
   }
   // One note per TIED GROUP, not one per team: Cupertino's note and Homestead's note describe
   // the same coin flip. The note already cites Article VI §7, so it renders verbatim.
@@ -203,9 +242,9 @@ export function collectStandingsNotes(
   for (const row of rows) {
     if (!row.standing.hasReportedResults) {
       specific.push(
-        `${row.team.name} is in the official ${
-          DIVISION_LABELS[row.team.division]
-        } alignment but has no results in the source table — no record is invented for them.`,
+        `${row.team.name} is in the official ${tableName(
+          row.team.division,
+        )} alignment but has no results in the source table — no record is invented for them.`,
       );
     }
     if (row.standing.mismatch) {
@@ -249,26 +288,80 @@ function NoGoalDiff() {
  * Every head fits its column at 12px sans caps: "LEAGUE" ≈ 46px and "OVERALL" ≈ 55px are why
  * those two columns are wider than their numerals need.
  */
-const DESKTOP_COLS = [
-  'w-[3rem] xl:w-[3.5rem]', // #
-  '', // Team (auto)
-  'w-[3rem] xl:w-[3.5rem]', // PTS
-  'w-[3.75rem] xl:w-[4.5rem]', // League
-  'w-[3.25rem] xl:w-[4rem]', // Pct
-  'w-[4.25rem] xl:w-[5rem]', // Overall
-  'w-[2.5rem] xl:w-[3rem]', // GF
-  'w-[2.5rem] xl:w-[3rem]', // GA
-  'w-[6.75rem] xl:w-[7.5rem]', // GD: 64 track + 4 + 28 numeral
-  'w-[2.75rem] xl:w-[3.25rem]', // Stk
-  'w-[3.25rem] xl:w-[4rem]', // Home
-  'w-[3.25rem] xl:w-[4rem]', // Away
-  'w-[3.25rem] xl:w-[4rem]', // Neut
-  'w-[8.875rem] xl:w-[9.25rem]', // L5: five 20px chips, 4px apart
-] as const;
+const COL = {
+  place: 'w-[3rem] xl:w-[3.5rem]', // #
+  team: '', // Team (auto)
+  gp: 'w-[3.25rem] xl:w-[3.75rem]', // GP: "12/16" is five 13px mono glyphs
+  pts: 'w-[3rem] xl:w-[3.5rem]', // PTS
+  left: 'w-[3rem] xl:w-[3.5rem]', // LEFT
+  max: 'w-[3rem] xl:w-[3.5rem]', // MAX
+  league: 'w-[3.75rem] xl:w-[4.5rem]', // League (+ 7px for a †)
+  pct: 'w-[3.25rem] xl:w-[4rem]', // Pct
+  overall: 'w-[4.25rem] xl:w-[5rem]', // Overall
+  gf: 'w-[2.5rem] xl:w-[3rem]', // GF
+  ga: 'w-[2.5rem] xl:w-[3rem]', // GA
+  gd: 'w-[6.75rem] xl:w-[7.5rem]', // GD: 64 track + 4 + 28 numeral
+  stk: 'w-[2.75rem] xl:w-[3.25rem]', // Stk
+  home: 'w-[3.25rem] xl:w-[4rem]', // Home
+  away: 'w-[3.25rem] xl:w-[4rem]', // Away
+  neut: 'w-[3.25rem] xl:w-[4rem]', // Neut
+  l5: 'w-[8.875rem] xl:w-[9.25rem]', // L5: five 20px chips, 4px apart
+} as const;
+type DesktopCol = keyof typeof COL;
+
+/**
+ * The desktop columns in order. With GP / LEFT / MAX on, the Home / Away / Neutral splits go (the
+ * team page has them): three 3rem columns in, three 3.25rem out, so Team keeps ≈170px at 1024.
+ */
+function desktopCols(gp: boolean, left: boolean, max: boolean): DesktopCol[] {
+  const extended = gp || left || max;
+  return [
+    'place',
+    'team',
+    ...(gp ? (['gp'] as const) : []),
+    'pts',
+    ...(left ? (['left'] as const) : []),
+    ...(max ? (['max'] as const) : []),
+    'league',
+    'pct',
+    'overall',
+    'gf',
+    'ga',
+    'gd',
+    'stk',
+    ...(extended ? [] : (['home', 'away', 'neut'] as const)),
+    'l5',
+  ];
+}
+
+const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: string }> = {
+  place: { label: '#', right: false },
+  team: { label: 'Team', right: false },
+  gp: { label: 'GP', right: true, title: 'League games counted of those scheduled' },
+  pts: { label: 'Pts', right: true },
+  left: { label: 'Left', right: true, title: 'League games with no counted result yet' },
+  max: { label: 'Max', right: true, title: 'The most points still reachable' },
+  league: { label: 'League', right: true },
+  pct: { label: 'Pct', right: true },
+  overall: { label: 'Overall', right: true },
+  gf: { label: 'GF', right: true },
+  ga: { label: 'GA', right: true },
+  gd: { label: 'GD', right: true },
+  stk: { label: 'Stk', right: true },
+  home: { label: 'Home', right: true },
+  away: { label: 'Away', right: true },
+  neut: { label: 'Neut', right: true },
+  l5: { label: 'L5', right: false },
+};
 
 export function StandingsTable(props: StandingsTableProps) {
   const { variant, caption, highlightSlug, berthRuleAfter, gdDomain, className, id } = props;
   const flagged = new Set<TeamSlug>(props.flaggedSlugs ?? []);
+  const context = props.context;
+  const columns = new Set<StandingsColumn>(context ? (props.columns ?? []) : []);
+  const showGp = columns.has('gp');
+  const ctx = (row: StandingsRowData) => context?.get(row.team.id);
+  const cols = desktopCols(showGp, columns.has('left'), columns.has('max'));
   const rows = variant === 'mini' ? props.rows.slice(0, props.limit ?? 4) : props.rows;
   const showNotes = variant !== 'mini' && (props.notes ?? 'inline') === 'inline';
   const notes = showNotes ? collectStandingsNotes({ ...props, rows }) : null;
@@ -419,7 +512,14 @@ export function StandingsTable(props: StandingsTableProps) {
                               size={20}
                               label={formLabel(row)}
                             />
-                            <span className="sx-num text-cell text-ink-3">
+                            {/* GP leads the overall record; below 375 the record gives way
+                                (44 + 116 + 8 + ~56 "6/12 GP" + 8 + ~101 is 333 of 304 at 320). */}
+                            {showGp ? (
+                              <span className="sx-num shrink-0 text-cell text-ink-3">{gpText(ctx(row))} GP</span>
+                            ) : null}
+                            <span
+                              className={`sx-num text-cell text-ink-3${showGp ? ' max-[374px]:hidden' : ''}`}
+                            >
                               {recordString(s.overall)} overall
                             </span>
                           </span>
@@ -432,6 +532,7 @@ export function StandingsTable(props: StandingsTableProps) {
                           </td>
                           <td className="sx-num w-[56px] pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
                             {recordString(s.computed)}
+                            <BackfillMark context={ctx(row)} />
                           </td>
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
                             {winPct(s.computed.winPct)}
@@ -481,54 +582,103 @@ export function StandingsTable(props: StandingsTableProps) {
           {variant === 'desktop' ? (
             <>
               <colgroup>
-                {DESKTOP_COLS.map((width, i) => (
-                  <col key={i} className={width || undefined} />
+                {cols.map((col) => (
+                  <col key={col} className={COL[col] || undefined} />
                 ))}
               </colgroup>
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Team</th>
-                  <th scope="col" className="text-right">
-                    Pts
-                  </th>
-                  <th scope="col" className="text-right">
-                    League
-                  </th>
-                  <th scope="col" className="text-right">
-                    Pct
-                  </th>
-                  <th scope="col" className="text-right">
-                    Overall
-                  </th>
-                  <th scope="col" className="text-right">
-                    GF
-                  </th>
-                  <th scope="col" className="text-right">
-                    GA
-                  </th>
-                  <th scope="col" className="text-right">
-                    GD
-                  </th>
-                  <th scope="col" className="text-right">
-                    Stk
-                  </th>
-                  <th scope="col" className="text-right">
-                    Home
-                  </th>
-                  <th scope="col" className="text-right">
-                    Away
-                  </th>
-                  <th scope="col" className="text-right">
-                    Neut
-                  </th>
-                  <th scope="col">L5</th>
+                  {cols.map((col) => {
+                    const head = DESKTOP_HEAD[col];
+                    return (
+                      <th
+                        key={col}
+                        scope="col"
+                        title={head.title}
+                        className={head.right ? 'text-right' : undefined}
+                      >
+                        {head.label}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, index) => {
                   const s = row.standing;
                   const has = s.hasReportedResults;
+                  const c = ctx(row);
+                  const cell = (col: DesktopCol): React.ReactNode => {
+                    switch (col) {
+                      case 'gp':
+                        return <td key={col} className="sx-num text-right text-ink-2">{gpText(c)}</td>;
+                      case 'pts':
+                        return (
+                          <td key={col} className="sx-num text-right text-body font-bold text-ink">
+                            {s.computed.pts}
+                          </td>
+                        );
+                      case 'left':
+                        return <td key={col} className="sx-num text-right text-ink-2">{c ? c.remaining : EM_DASH}</td>;
+                      case 'max':
+                        return <td key={col} className="sx-num text-right text-ink-2">{c ? c.maxPts : EM_DASH}</td>;
+                      case 'league':
+                        return (
+                          <td key={col} className="sx-num text-right font-medium text-ink">
+                            {recordString(s.computed)}
+                            <BackfillMark context={c} />
+                          </td>
+                        );
+                      case 'pct':
+                        return (
+                          <td key={col} className="sx-num text-right font-medium text-ink">
+                            {winPct(s.computed.winPct)}
+                          </td>
+                        );
+                      case 'overall':
+                        return <td key={col} className="sx-num text-right text-ink-2">{recordString(s.overall)}</td>;
+                      case 'gf':
+                        return <td key={col} className="sx-num text-right text-ink-2">{dash(s.computed.gf, has)}</td>;
+                      case 'ga':
+                        return <td key={col} className="sx-num text-right text-ink-2">{dash(s.computed.ga, has)}</td>;
+                      case 'gd':
+                        return (
+                          <td key={col} className="text-right">
+                            <GoalDiffCell
+                              value={s.computed.gd}
+                              domain={gdDomain}
+                              track={64}
+                              thickness={8}
+                              numberWidth={28}
+                            />
+                          </td>
+                        );
+                      case 'stk':
+                        return (
+                          <td key={col} className="sx-num text-right text-ink-2">
+                            {streakString(s.computed.streak)}
+                          </td>
+                        );
+                      case 'home':
+                        return <td key={col} className="sx-num text-right text-ink-2">{recordString(s.computed.homeRecord)}</td>;
+                      case 'away':
+                        return <td key={col} className="sx-num text-right text-ink-2">{recordString(s.computed.awayRecord)}</td>;
+                      case 'neut':
+                        return <td key={col} className="sx-num text-right text-ink-2">{recordString(s.computed.neutralRecord)}</td>;
+                      case 'l5':
+                        return (
+                          <td key={col}>
+                            <FormStrip
+                              entries={toFormEntries(s.computed.last5)}
+                              size={20}
+                              label={formLabel(row)}
+                            />
+                          </td>
+                        );
+                      default:
+                        return null;
+                    }
+                  };
                   return (
                     <tr
                       key={row.team.id}
@@ -550,58 +700,19 @@ export function StandingsTable(props: StandingsTableProps) {
                         </span>
                       </th>
                       {has ? (
+                        cols.slice(2).map(cell)
+                      ) : (
+                        /* A team with no reported results gets ONE sentence across the data
+                           columns: no fabricated 0-0-0, no row of em dashes. The place cell and
+                           the row link already say "not ranked" / "no results reported yet" to a
+                           screen reader. GP still reads 0/12 where the column is on: a fact, not
+                           a rank. */
                         <>
-                          <td className="sx-num text-right text-body font-bold text-ink">
-                            {s.computed.pts}
-                          </td>
-                          <td className="sx-num text-right font-medium text-ink">
-                            {recordString(s.computed)}
-                          </td>
-                          <td className="sx-num text-right font-medium text-ink">
-                            {winPct(s.computed.winPct)}
-                          </td>
-                          <td className="sx-num text-right text-ink-2">
-                            {recordString(s.overall)}
-                          </td>
-                          <td className="sx-num text-right text-ink-2">{dash(s.computed.gf, has)}</td>
-                          <td className="sx-num text-right text-ink-2">{dash(s.computed.ga, has)}</td>
-                          <td className="text-right">
-                            <GoalDiffCell
-                              value={s.computed.gd}
-                              domain={gdDomain}
-                              track={64}
-                              thickness={8}
-                              numberWidth={28}
-                            />
-                          </td>
-                          <td className="sx-num text-right text-ink-2">
-                            {streakString(s.computed.streak)}
-                          </td>
-                          <td className="sx-num text-right text-ink-2">
-                            {recordString(s.computed.homeRecord)}
-                          </td>
-                          <td className="sx-num text-right text-ink-2">
-                            {recordString(s.computed.awayRecord)}
-                          </td>
-                          <td className="sx-num text-right text-ink-2">
-                            {recordString(s.computed.neutralRecord)}
-                          </td>
-                          <td>
-                            <FormStrip
-                              entries={toFormEntries(s.computed.last5)}
-                              size={20}
-                              label={formLabel(row)}
-                            />
+                          {showGp ? cell('gp') : null}
+                          <td colSpan={cols.length - (showGp ? 3 : 2)} className="text-ink-3">
+                            No results reported yet
                           </td>
                         </>
-                      ) : (
-                        /* A team with no reported results gets ONE sentence across the
-                           twelve data columns: no fabricated 0-0-0, no row of em dashes. The
-                           place cell and the row link already say "not ranked" / "no results
-                           reported yet" to a screen reader. */
-                        <td colSpan={12} className="text-ink-3">
-                          No results reported yet
-                        </td>
                       )}
                     </tr>
                   );
@@ -624,6 +735,11 @@ export function StandingsTable(props: StandingsTableProps) {
                     #
                   </th>
                   <th scope="col">Team</th>
+                  {showGp ? (
+                    <th scope="col" className="w-9 text-right" title="League games counted of those scheduled">
+                      GP
+                    </th>
+                  ) : null}
                   <th scope="col" className="w-[52px] text-right">
                     League
                   </th>
@@ -661,8 +777,15 @@ export function StandingsTable(props: StandingsTableProps) {
                           </span>
                         </span>
                       </th>
+                      {showGp ? (
+                        // Mono 11px: "12/16" fits the 36px column with its padding.
+                        <td className="sx-num w-9 text-right text-[0.6875rem] text-ink-3">
+                          {gpText(ctx(row))}
+                        </td>
+                      ) : null}
                       <td className="sx-num w-[52px] text-right font-medium text-ink">
                         {has ? recordString(s.computed) : EM_DASH}
+                        {has ? <BackfillMark context={ctx(row)} /> : null}
                       </td>
                       <td className="sx-num w-11 pr-2 text-right text-body font-bold text-ink">
                         {has ? s.computed.pts : EM_DASH}

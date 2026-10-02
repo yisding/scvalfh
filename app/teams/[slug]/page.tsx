@@ -1,30 +1,35 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import TeamGameLog from '@/components/teams/TeamGameLog';
-import TeamIdentity from '@/components/teams/TeamIdentity';
-import TeamNextGame from '@/components/teams/TeamNextGame';
-import TeamOfficialFixtures from '@/components/teams/TeamOfficialFixtures';
-import TeamPlayoffLine from '@/components/teams/TeamPlayoffLine';
-import TeamSplits from '@/components/teams/TeamSplits';
-import TeamStatTiles from '@/components/teams/TeamStatTiles';
-import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
-import { buildTeamPageView, nextOfficialFixture } from '@/components/teams/team-view';
-import EmptyState from '@/components/ui/EmptyState';
-import ExternalLink from '@/components/ui/ExternalLink';
-import FormStrip from '@/components/ui/FormStrip';
-import GameRow from '@/components/ui/GameRow';
-import MarginStrip from '@/components/ui/MarginStrip';
-import SectionHeader from '@/components/ui/SectionHeader';
-import { OG_BASE } from '@/components/layout/site-url';
-import { getFetchedAt, getTeamSlugs } from '@/lib/data';
-import { formatStamp, recordString, shortDate } from '@/lib/format';
-import { DIVISION_LABELS } from '@/lib/season';
+import TeamGameLog from '../../../components/teams/TeamGameLog';
+import TeamIdentity from '../../../components/teams/TeamIdentity';
+import TeamNextGame from '../../../components/teams/TeamNextGame';
+import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
+import TeamPlayoffLine from '../../../components/teams/TeamPlayoffLine';
+import TeamSplits from '../../../components/teams/TeamSplits';
+import TeamStatTiles from '../../../components/teams/TeamStatTiles';
+import TeamUnbeaten from '../../../components/teams/TeamUnbeaten';
+import {
+  buildTeamPageView,
+  nextOfficialFixture,
+  type TeamPageView,
+} from '../../../components/teams/team-view';
+import EmptyState from '../../../components/ui/EmptyState';
+import ExternalLink from '../../../components/ui/ExternalLink';
+import FormStrip from '../../../components/ui/FormStrip';
+import GameRow from '../../../components/ui/GameRow';
+import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
+import MarginStrip from '../../../components/ui/MarginStrip';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import { OG_BASE } from '../../../components/layout/site-url';
+import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
+import { formatStamp, recordString, shortDate } from '../../../lib/format';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
  *
- * Fifteen static pages, one per member of the official SCVAL alignment. Source order is the phone
+ * 43 static pages, one per member of each league's official alignment. Source order is the phone
  * order of the §3.7 wireframe, so the DOM order matches the visual order at every breakpoint
  * (DESIGN §10.5) and the parent's three questions — where do we stand, what just happened, when is
  * the next one — are answered first.
@@ -41,7 +46,7 @@ import { DIVISION_LABELS } from '@/lib/season';
  *     Last           | Next
  *     Form           | Margin (2 rows)
  *     Splits         |   ″
- *     CCS picture    | Who we haven't beaten
+ *     Postseason     | Who we haven't beaten
  *     League log (2) | Scheduled, not reported
  *        ″           | Non-league
  *     Elsewhere (both columns)
@@ -51,11 +56,18 @@ import { DIVISION_LABELS } from '@/lib/season';
  * is the long one (14 rows), so a list of more than six fixtures takes BOTH columns instead of
  * leaving a ~600px hole beside it; the short Non-league card then sits under it.
  *
- * A team with no results still gets this whole page: identity, links, the CCS line, the
+ * A team with no results still gets this whole page: identity, links, the postseason line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
+ *
+ * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
+ * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
+ * description ends `… goal margins and CCS picture.` or `… goal margins and MCAL tournament
+ * picture.` An MCAL page carries no CCS concept inside `<main>` (SPEC §10.9). The standings link
+ * goes to `/standings/<league>#<division>`, and the official-schedule link to the division's own
+ * official schedule (config).
  */
 
-/** All 15 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 43 prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -69,11 +81,11 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   const { team, standing, hasResults } = view;
   const record =
     hasResults && standing
-      ? `${recordString(standing.computed)} in ${view.divisionLabel} (${standing.computed.pts} pts)`
-      : `${view.divisionLabel} division — no results reported`;
+      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${standing.computed.pts} pts)`
+      : `${view.scopeLabel} — no results reported`;
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins and CCS picture. Unofficial, rebuilt nightly from MaxPreps.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, goal margins and ${postseasonKicker(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -82,6 +94,13 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       url: `/teams/${team.slug}`,
     },
   };
+}
+
+/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` (MCAL), by `postseason.kind`. */
+function postseasonKicker(view: TeamPageView): string {
+  return view.league.postseasonKind === 'league-tournament'
+    ? `${view.league.shortName} tournament picture`
+    : 'CCS picture';
 }
 
 export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
@@ -117,7 +136,18 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     <div className="pb-section-lg">
       <TeamIdentity view={view} knownSlugs={getTeamSlugs()} />
 
+      <LeagueHealthNote leagueId={team.league} className="mt-4" />
+
       <TeamStatTiles view={view} />
+
+      <p className="mt-4 mb-0 flex flex-wrap gap-2">
+        <Link href={view.standingsHref} prefetch={false} className="sx-pill text-accent">
+          {view.standingsLabel} &rarr;
+        </Link>
+        <ExternalLink href={view.officialScheduleUrl} className="sx-pill">
+          Official {view.league.shortName} schedule
+        </ExternalLink>
+      </p>
 
       <div className="mt-section grid gap-x-10 gap-y-section md:mt-section-lg lg:grid-cols-2 lg:gap-y-section-lg">
         {/* LAST and NEXT: the two questions a parent on the turf actually has. */}
@@ -126,7 +156,13 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             kicker="Last"
             meta={
               last
-                ? `${shortDate(last.dateLocal)} · ${last.isLeague ? 'League' : 'Non-league'}`
+                ? `${shortDate(last.dateLocal)} · ${
+                    last.countsFor !== null
+                      ? 'League'
+                      : last.postseason !== null
+                        ? 'Postseason'
+                        : 'Non-league'
+                  }`
                 : undefined
             }
           />
@@ -145,6 +181,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           game={next}
           perspective={team.slug}
           teamName={team.name}
+          league={view.league}
           nextOfficial={nextOfficialFixture(officialFixtures, view.today)}
         />
 
@@ -167,7 +204,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </div>
                 {nonLeagueLog.length > 0 ? (
                   <p className="mt-2 mb-0 text-meta text-ink-3">
-                    {`+ ${nonLeagueLog.length} non-league ${nonLeagueLog.length === 1 ? 'game' : 'games'}, not counted here`}
+                    {`+ ${nonLeagueLog.length} other ${nonLeagueLog.length === 1 ? 'game' : 'games'}, not counted here`}
                   </p>
                 ) : null}
               </div>
@@ -210,14 +247,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         </section>
 
         <section className="min-w-0">
-          <SectionHeader kicker="CCS picture" meta="Not official" />
+          <SectionHeader kicker={postseasonKicker(view)} meta="Not official" />
           <TeamPlayoffLine view={view} />
         </section>
 
         <section className="min-w-0">
           <SectionHeader
             kicker="Who we haven't beaten"
-            meta={`${DIVISION_LABELS[team.division]} only`}
+            meta={`${view.scopeLabel} only`}
           />
           <TeamUnbeaten view={view} />
         </section>
@@ -228,13 +265,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <SectionHeader
             kicker="League game log"
             meta={`${leaguePlayed} of ${leagueScheduled}`}
-            action={{ href: `/standings#${team.division}`, label: 'Standings' }}
+            action={{ href: view.standingsHref, label: 'Standings' }}
           />
           <TeamGameLog
             games={leagueLog}
             perspective={team.slug}
             emptyHeading={`No league games are published for ${team.name}.`}
-            emptyBody={`The official ${DIVISION_LABELS[team.division]} schedule has ${leagueScheduled} division games for them; none of those fixtures has a contest in any data source.`}
+            emptyBody={`The official ${view.league.shortName} schedule has ${leagueScheduled} ${view.league.gamesWord} ${
+              leagueScheduled === 1 ? 'game' : 'games'
+            } for them; none of those fixtures has a contest in any data source.`}
           />
         </section>
 
@@ -253,12 +292,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         ) : null}
 
         <section className="min-w-0">
-          <SectionHeader kicker="Non-league" meta={`${nonLeagueLog.length} games`} />
+          <SectionHeader
+            kicker={view.postseasonCount > 0 ? 'Non-league and postseason' : 'Non-league'}
+            meta={`${nonLeagueLog.length} ${nonLeagueLog.length === 1 ? 'game' : 'games'}`}
+          />
           <TeamGameLog
             games={nonLeagueLog}
             perspective={team.slug}
             emptyHeading={`${team.name} has no non-league games this season.`}
-            emptyBody="Every game on their schedule counts toward the division record."
+            emptyBody={`Every game on their schedule counts toward the ${view.scopeLabel} table.`}
           />
         </section>
 
@@ -285,7 +327,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             {sblive ? (
               <li>
                 <ExternalLink href={sblive} className="sx-pill">
-                  SBLive / SI: {team.name}
+                  High School on SI (si.com): {team.name}
                 </ExternalLink>
               </li>
             ) : null}

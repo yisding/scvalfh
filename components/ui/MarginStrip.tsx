@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { monthDay } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import type { FormGame } from '../../lib/data';
 
 import EmptyState from './EmptyState';
@@ -203,7 +204,7 @@ export function MarginStrip({
                       immediately below and a 52px link in the League game log under that. */}
                   {interactive ? (
                     <Link
-                      href={`/game/${entry.contestId}`}
+                      href={gameHref(entry.contestId)}
                       prefetch={false}
                       className="flex w-full flex-col items-center"
                       aria-label={description}

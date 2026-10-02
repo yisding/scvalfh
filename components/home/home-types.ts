@@ -1,42 +1,75 @@
 /**
- * The serializable view model the home page hands to its one client component.
+ * The serializable view models the home page hands to its client components (SPEC §10.1).
  *
- * `MyTeamCard` is `'use client'` (DESIGN §7.12), so it cannot read `lib/data` — that module does an
- * `fs` read at import time. Everything it needs is therefore computed on the server and passed as
- * plain data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already
- * resolved by `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule
- * stays in its single place (`renderScore()` in lib/format.ts).
+ * `MyTeamCard`, `PinTile`, `FindYourTeam` and `SetLeagueButton` are `'use client'`, so they cannot
+ * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/leagues` (SPEC §0.4 client
+ * boundary). Everything they need is computed on the server (`home-data.ts`) and passed as plain
+ * data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already resolved by
+ * `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule stays in its
+ * single place (`renderScore()` in lib/format.ts).
  *
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
-import type { Division, TeamColors } from '../../lib/types';
-import type { FormEntry } from '../ui/FormStrip';
-import type { GameDisplay } from '../ui/game-view';
+import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
+import type { GameDisplay, SideView } from '../ui/game-view';
 
-/** Exactly the identity fields the card and the picker render. `TeamMonogram` needs the first three. */
+/** The colors `TeamMonogram` draws with (no provenance field: it is never rendered). */
+export type HomeColors = Pick<TeamColors, 'primary' | 'secondary' | 'onPrimary'>;
+
+/** Exactly the identity fields the card renders. `TeamMonogram` needs the first three. */
 export interface HomeTeamIdentity {
   abbr: string;
   name: string;
-  colors: TeamColors;
+  colors: HomeColors;
   slug: string;
   shortName: string;
-  mascot: string;
-  division: Division;
-  divisionLabel: string;
+  leagueId: LeagueId;
+  leagueShort: string;
+  /** null for a single-division league (PCAL, MCAL): never a division label there. */
+  divisionHeading: string | null;
+}
+
+/** One side of the last game: what a score line draws (the name is the registry short name). */
+export type HomeSide = Pick<SideView, 'name' | 'glyph' | 'hasScore' | 'weight' | 'chip'>;
+
+/**
+ * The §5.2 rendering decision for the last game, resolved server-side by `describeGame()` and
+ * slimmed to what the card draws: the status label and its chips (only the ones that are set),
+ * the screen-reader sentence and the two sides. The client rebuilds a `GameDisplay` for
+ * `StatusLabel` from it (MyTeamCard.tsx), so no score is ever re-derived on the client.
+ */
+export interface HomeLastDisplay {
+  statusLabel: GameDisplay['statusLabel'];
+  statusTone: GameDisplay['statusTone'];
+  /** The flags and chips that are set; an absent key is false/null. */
+  marks?: Partial<{
+    liveDot: true;
+    strikeTime: true;
+    isNonLeague: true;
+    deciderTag: string;
+    shootoutText: string;
+    sourceMark: 'si.com';
+    leagueTag: string;
+    postseasonTag: string;
+  }>;
+  note: string | null;
+  sentence: string;
+  home: HomeSide;
+  away: HomeSide;
 }
 
 /** The pinned team's most recent final. */
 export interface HomeLastGame {
-  /** The whole §5.2 rendering decision, resolved server-side. */
-  display: GameDisplay;
+  /** The §5.2 rendering decision, resolved server-side and slimmed. */
+  display: HomeLastDisplay;
   /** true ⇒ `display.home` is the pinned team, so it takes the first line. */
   mineIsHome: boolean;
   /** 'Thu Sep 24' */
   dateLabel: string;
   /** The `<time datetime>` value. */
   dateTime: string;
-  /** Cleaned at build (DESIGN §5.8); clamped to two lines when rendered. */
+  /** Cleaned at build (DESIGN §5.8), capped, clamped to two lines when rendered. */
   recap: string | null;
   href: string;
 }
@@ -50,44 +83,79 @@ export interface HomeNextGame {
   /** From the pinned team's point of view. */
   versus: 'vs' | 'at';
   opponent: string;
-  isLeague: boolean;
+  /** 'league' | 'non-league' | the postseason chip ('MCAL tournament', 'BVAL play-in', …). */
+  kindLabel: string;
+  /** The game page; the card also renders it as the last chip. */
   href: string;
-  /** Real links only — a chip is never a dead affordance. */
-  links: Array<{ label: string; href: string; external: boolean }>;
+  /** Real external links only (Directions, Stream, Tickets) — a chip is never a dead affordance. ≤ 2. */
+  links: Array<{ label: string; href: string }>;
 }
 
 /**
- * The next fixture from the OFFICIAL SCVAL schedule grid for a team MaxPreps does not cover.
- * The games are real (SPEC §1.3), the results are not reported anywhere, and nothing is
- * backfilled or invented.
+ * The next fixture from a league's OFFICIAL schedule for a team MaxPreps has no contest for. The
+ * fixture is real (the league published it); nothing is invented, and no result is shown until a
+ * source reports one.
  */
 export interface HomeOfficialFixture {
   dateLabel: string;
   dateKey: string;
   versus: 'vs' | 'at';
   opponent: string;
-  /** The scval.com schedule PDF this fixture came from. */
-  pdfUrl: string;
+  /** The league's short name, for 'per BVAL'. */
+  leagueShort: string;
+  /** The official schedule this fixture came from. */
+  scheduleUrl: string;
 }
 
 export interface HomeTeamView {
   team: HomeTeamIdentity;
-  /** 'Mustangs · De Anza · 7th' — one line, already assembled. */
+  /** '1st · De Anza · SCVAL' | 'tied 1st · Santa Teresa · BVAL' | 'No results yet · MCAL'. */
   meta: string;
+  /** '6 of 12 played' while league games are left, else null. */
+  played: string | null;
+  /**
+   * ONE line: 'If the season ended today: <label>' in the regular phase, 'Final place: <label>'
+   * later; null for a team with no league results (getTeamPostseasonLine returns null).
+   */
+  postseason: string | null;
+  /** `/standings/<league>#<division>` */
+  tableHref: string;
   /** false ⇒ nothing reported: no record is invented, and the card says so (DESIGN §8). */
   hasResults: boolean;
   /** '0-4-0' league and overall, or an em dash when nothing is reported. */
   leagueRecord: string;
   overallRecord: string;
-  /** Article VI §2 points, null when nothing is reported. */
-  pts: number | null;
-  /** The written playoff status (Article VII §2) — never a percentage. */
-  playoffLabel: string;
-  /** Oldest → newest, league only, at most 5. */
-  form: FormEntry[];
-  nonLeagueCount: number;
+  /** Oldest → newest, league only, at most 5 (outcomes only: the card's strip is marks, not links). */
+  form: Outcome[];
   last: HomeLastGame | null;
   next: HomeNextGame | null;
-  /** Used only when `next` is null — the official grid still has a fixture (DESIGN §8). */
+  /** Used only when `next` is null — the official schedule still has a fixture (DESIGN §8). */
   officialNext: HomeOfficialFixture | null;
+}
+
+/** One tile of a league panel's "Teams in <SHORT>" grid (`PinTile`). */
+export interface PinTileView {
+  slug: string;
+  leagueId: LeagueId;
+  name: string;
+  abbr: string;
+  colors: HomeColors;
+  /** The visible tile text, with soft hyphens where it needs them (lib/pin-label.ts `pickerName`). */
+  pickerName: string;
+  /** The pin button's accessible name (lib/pin-label.ts `pinLabel`): 'Pin Leigh, Mt. Hamilton · BVAL'. */
+  pinLabel: string;
+}
+
+/** A league card in "Find your team" (`LeagueCard`). */
+export interface LeagueCardView {
+  id: LeagueId;
+  shortName: string;
+  name: string;
+  sectionShort: 'CCS' | 'NCS';
+  region: string;
+  /** '12 teams' */
+  teamsLine: string;
+  /** Division labels; empty for a single-division league. */
+  divisions: string[];
+  standingsHref: string;
 }

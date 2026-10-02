@@ -6,7 +6,7 @@
 # commits to the default branch — while this one must fail loudly on anything a human changed.
 #
 # The a11y job runs axe-core against the real production build over one page of every route
-# family, in both themes, and fails on a serious or critical violation. It is the automatable
+# family (and the per-league pages), in both themes, and fails on a serious or critical violation. It is the automatable
 # part of §10.9; the grayscale and forced-colors comparisons in (b) and (c) are still done by eye.
 #
 # The vinext job builds the same app with vinext (Vite) instead of Next and serves it with
@@ -24,8 +24,15 @@
 #
 # All three servers — `next start` in a11y, `vinext start` in vinext, workerd in cloudflare — are
 # held to one response contract by the same script, scripts/smoke-server.sh, which names the few
-# checks that differ by deploy and why. scripts/assert-vinext-prerender.mjs is the prerender check
-# both vinext builds share.
+# checks that differ by deploy and why (route families with exact counts from the snapshot, the
+# unknown-param 404s of every dynamic family and their OG images, the old anchors).
+# scripts/assert-vinext-prerender.mjs is the prerender check both vinext builds share;
+# scripts/assert-prerender.ts is the `next build` one. scripts/a11y-axe.mjs also runs `/` once per
+# remembered league and with a pin, /teams with a query typed, a keyboard focus probe, and prints
+# the home-page fold measurements.
+#
+# scripts/stage-gate-d.sh (`pnpm gate:d`) runs this whole job list on one machine, against all three
+# servers in turn.
 
 name: ci
 
@@ -86,22 +93,26 @@ jobs:
           SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # Every route is prerendered from the snapshot, so a dynamic route here means something
-      # lost its generateStaticParams — the site would start rendering on demand.
+      # lost its generateStaticParams — the site would start rendering on demand. The counts are
+      # EXACT and derived from data/snapshot.json and lib/leagues.ts (fixed pages; standings and
+      # schedule per league; playoffs per league-tournament league; every game plus the
+      # superseded-game stubs; every game date; the 43 teams), no prerendered path may contain ':'
+      # (a raw `sblive:` id), and each family with an OG image has page/image parity BY NAME.
       - name: Assert every route is static
-        run: |
-          set -euo pipefail
-          node -e '
-            const fs = require("fs");
-            const pages = ["index", "about", "standings", "schedule", "playoffs", "teams", "history/2025-26"];
-            const missing = pages.filter((p) => !fs.existsSync(`.next/server/app/${p}.html`));
-            if (missing.length) throw new Error("not prerendered: " + missing.join(", "));
-            const count = (dir) => fs.readdirSync(dir, { recursive: true }).filter((f) => f.endsWith(".html")).length;
-            const games = count(".next/server/app/game");
-            const dates = count(".next/server/app/scores");
-            const teams = count(".next/server/app/teams");
-            console.log(`prerendered: ${games} game pages, ${dates} date pages, ${teams} team pages`);
-            if (games < 100 || dates < 30 || teams < 15) throw new Error("a generateStaticParams route came back short");
-          '
+        run: pnpm assert:prerender
+
+      # SPEC §12.4 against the Stage-0 baselines in tests/golden/page-weights-main.json: the snapshot
+      # size, gzip weight of /, /standings, /standings/<league>, /schedule, /schedule/<league>, /teams
+      # and /playoffs, and first-load client JS (which catches config, the registry or zod leaking
+      # into the browser through a 'use client' import).
+      - name: Assert the weight budgets
+        run: pnpm assert:budgets
+
+      # SPEC §10.9 over the built HTML: no "Gabilan" (except the lowercase MaxPreps URL slug), no
+      # "eliminated", no division label on a single-division league, no CCS concept inside <main>
+      # of an MCAL page, and the old /standings#de-anza / #el-camino anchors still there.
+      - name: Assert copy honesty in the built pages
+        run: pnpm assert:copy
 
       - name: Upload the build
         uses: actions/upload-artifact@v4
@@ -313,6 +324,7 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/assert-vinext-prerender.mjs --cloudflare
+          pnpm exec tsx scripts/assert-budgets.ts --worker-only
           test -f .cloudflare/output/v0/config.json || { echo "no Build Output config in .cloudflare/output"; exit 1; }
           leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)
           if [ -n "$leaked" ]; then echo "env files in the Worker output:"; echo "$leaked"; exit 1; fi

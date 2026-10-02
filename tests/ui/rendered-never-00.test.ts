@@ -10,6 +10,10 @@
  * It asserts the rule in BOTH directions, which is the only way it means anything: a non-final
  * game renders no numeric score anywhere, AND a genuine 0-0 final still renders two zeros. A
  * component that suppressed every zero would pass the first assertion and be wrong.
+ *
+ * Multi-league (SPEC §10.4, §13.6): the bundled snapshot holds all four leagues' games, so every
+ * walk below covers SCVAL, BVAL, PCAL and MCAL; the assertions are invariants only (the file is
+ * replaced by live fetch #2). Every assertion message names the module that produced the value.
  */
 
 import { createElement } from 'react';
@@ -19,7 +23,7 @@ import { describe, expect, it } from 'vitest';
 import { buildGameModel, gameDescription, gameKicker, gameTitle } from '../../components/game/game-model';
 import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/GameRow';
 import { ScoreCell } from '../../components/ui/ScoreCell';
-import { getGames } from '../../lib/data';
+import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
 import type { Game } from '../../lib/types';
 
 const games = getGames();
@@ -122,6 +126,61 @@ describe('a real zero is still a zero', () => {
     for (const game of finals) {
       const glyphs = scoreGlyphs(renderToStaticMarkup(createElement(GameRow, { game })));
       expect(glyphs).toEqual([String(game.away.score), String(game.home.score)]);
+    }
+  });
+});
+
+describe('every league, rendered', () => {
+  it('walks games of all four leagues', () => {
+    for (const league of getLeagueSummaries()) {
+      const mine = games.filter((g) =>
+        [g.home.slug, g.away.slug].some((slug) => slug !== null && getTeamBySlug(slug)?.league === league.id),
+      );
+      expect(mine.length, `lib/data.ts: games with a ${league.shortName} side`).toBeGreaterThan(0);
+    }
+  });
+
+  it('marks every si.com score with the † and its words, and no other score', () => {
+    for (const game of finals) {
+      const html = renderToStaticMarkup(createElement(GameRow, { game }));
+      expect(html.includes('Score via si.com'), `components/ui/StatusLabel.tsx ${game.contestId}`).toBe(
+        game.provenance.scores === 'sblive',
+      );
+    }
+  });
+
+  it('prints the league chip of a counted game and NL for a non-league one', () => {
+    for (const game of games) {
+      const text = textOf(renderToStaticMarkup(createElement(GameRow, { game })));
+      if (game.countsFor === null && game.postseason === null) {
+        expect(text, `components/ui/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
+      } else if (game.countsFor !== null) {
+        expect(text, `components/ui/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
+      }
+    }
+  });
+
+  it('tags the other league on a league-scoped list, and only there', () => {
+    const cross = games.find((g) => {
+      const a = g.away.slug ? getTeamBySlug(g.away.slug)?.league : undefined;
+      const h = g.home.slug ? getTeamBySlug(g.home.slug)?.league : undefined;
+      return a !== undefined && h !== undefined && a !== h;
+    });
+    if (!cross) return; // no cross-league game in this snapshot: nothing to tag
+    const homeLeague = getTeamBySlug(cross.home.slug!)!.league;
+    const awayShort = getLeagueSummaries().find((l) => l.id === getTeamBySlug(cross.away.slug!)!.league)!.shortName;
+    const scoped = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
+    expect(scoped, 'components/ui/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
+    const plain = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross })));
+    expect(plain, 'components/ui/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
+  });
+
+  it('links every game through gameHref (sblive ids become sblive-<n>)', () => {
+    for (const game of games) {
+      const html = renderToStaticMarkup(createElement(GameCard, { game }));
+      expect(html, `components/ui/GameRow.tsx ${game.contestId}`).toContain(
+        `href="/game/${game.contestId.replace(/^sblive:/, 'sblive-')}"`,
+      );
     }
   });
 });

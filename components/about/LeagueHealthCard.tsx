@@ -1,0 +1,178 @@
+import { formatStamp } from '../../lib/format';
+import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '../../lib/types';
+import ExternalLink from '../ui/ExternalLink';
+
+/**
+ * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
+ * in words — its state, the MaxPreps league pages and whether their tables were read (with the
+ * division's known cause when MaxPreps' table differs on purpose), the team schedule feeds
+ * (`12 of 12 current`), the official schedule (`<source> · <n> fixtures · <m> matched · upstream
+ * unchanged|revised`), counted results, official results still missing, and contests dropped on
+ * purpose. The pipeline's reasons are plain sentences and render verbatim.
+ *
+ * A server component with plain props: the page reads `getLeagueHealth()`, `getSources({ league })`
+ * and `getDropped()` and hands the numbers down. No hue: the state is a word.
+ */
+export interface HealthDivision {
+  id: string;
+  /** Division heading, or null for a single-division league (no division label). */
+  heading: string | null;
+  /** MaxPreps league standings page. */
+  maxprepsUrl: string;
+  knownCause: string | null;
+  official: {
+    source: OfficialSourceId;
+    url: string;
+    /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
+    mode: 'live-pdf' | 'bundled';
+    revisedOn: string | null;
+  };
+}
+
+export interface LeagueHealthCardProps {
+  shortName: string;
+  name: string;
+  health: LeagueHealth;
+  divisions: readonly HealthDivision[];
+  /** Contests the pipeline removed on purpose that involve this league's teams. */
+  dropped: number;
+  /** Source rows for this league that were stale or failed in the last run. */
+  problems: ReadonlyArray<{ label: string; status: string; error?: string }>;
+  className?: string;
+}
+
+const STATE_WORDS: Readonly<Record<LeagueRunState, string>> = {
+  fresh: 'Current',
+  partial: 'Current, with gaps',
+  frozen: 'Carried from an earlier run',
+  degraded: 'Partly carried from an earlier run',
+};
+
+const TABLE_WORDS = {
+  ok: 'read this run',
+  carried: 'carried from an earlier run',
+  missing: 'could not be read',
+  skipped: 'not requested',
+} as const;
+
+function plural(n: number, one: string, many: string): string {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+/** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. */
+export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {
+  return `${shortName} schedule (${source.endsWith('-docx') ? 'Google Doc' : 'PDF'})`;
+}
+
+export function LeagueHealthCard({ shortName, name, health, divisions, dropped, problems, className }: LeagueHealthCardProps) {
+  const feeds = health.teamFeeds;
+  const counted = health.divisions.reduce((n, d) => n + d.countedFinals, 0);
+  const backfilled = health.divisions.reduce((n, d) => n + d.backfilled, 0);
+  const missing = health.divisions.reduce((n, d) => n + (d.official?.missingPast ?? 0), 0);
+  return (
+    <article className={`sx-card flex flex-col p-5${className ? ` ${className}` : ''}`} aria-label={`${shortName} data health`}>
+      <header>
+        <h3 className="m-0 text-lead text-ink">{shortName}</h3>
+        <p className="m-0 mt-0.5 text-meta text-ink-3">{name}</p>
+      </header>
+      <dl className="m-0 mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-meta">
+        <dt className="text-ink-3">State</dt>
+        <dd className="m-0 text-ink">
+          {STATE_WORDS[health.state]}
+          {health.state !== 'fresh' && health.lastFreshAt ? (
+            <span className="text-ink-2"> &middot; last current {formatStamp(health.lastFreshAt)}</span>
+          ) : null}
+        </dd>
+
+        <dt className="text-ink-3">Team schedules</dt>
+        <dd className="m-0 text-ink-2">
+          {feeds.ok} of {feeds.total} current
+          {feeds.carried > 0 ? ` · ${feeds.carried} carried` : ''}
+          {feeds.failed > 0 ? ` · ${feeds.failed} failed` : ''}
+        </dd>
+
+        <dt className="text-ink-3">Counted results</dt>
+        <dd className="m-0 text-ink-2">
+          {plural(counted, 'league result', 'league results')}
+          {backfilled > 0 ? ` · ${backfilled} from si.com` : ''}
+        </dd>
+
+        <dt className="text-ink-3">Missing</dt>
+        <dd className="m-0 text-ink-2">
+          {missing === 0
+            ? 'No official league result is missing'
+            : `${plural(missing, 'official league result', 'official league results')} past their date with no counted result`}
+        </dd>
+
+        <dt className="text-ink-3">Dropped</dt>
+        <dd className="m-0 text-ink-2">
+          {dropped === 0 ? 'Nothing dropped' : `${plural(dropped, 'contest', 'contests')} dropped on purpose`} (
+          <a href="#dropped" className="text-accent hover:underline">
+            list
+          </a>
+          )
+        </dd>
+      </dl>
+
+      <ul className="m-0 mt-4 list-none space-y-3 p-0 text-meta text-ink-2">
+        {divisions.map((d) => {
+          const h = health.divisions.find((x) => x.divisionId === d.id);
+          const official = h?.official ?? null;
+          const where = d.heading ? `${d.heading}: ` : '';
+          return (
+            <li key={d.id}>
+              <p className="m-0">
+                {where}
+                <ExternalLink href={d.maxprepsUrl}>MaxPreps table</ExternalLink>{' '}
+                {h ? TABLE_WORDS[h.reportedTable] : 'not reported'}
+                {h && h.reportedRows !== null ? ` (${plural(h.reportedRows, 'row', 'rows')})` : ''}.
+              </p>
+              {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
+              <p className="m-0 mt-1">
+                <ExternalLink href={d.official.url}>{officialSourceLabel(shortName, d.official.source)}</ExternalLink>
+                {official ? (
+                  <>
+                    {' '}
+                    &middot; {plural(official.total, 'fixture', 'fixtures')} &middot; {official.matched} matched
+                    &middot;{' '}
+                    {d.official.mode === 'live-pdf'
+                      ? 'read live each run'
+                      : official.revisedUpstream
+                        ? `upstream revised${d.official.revisedOn ? ` since our copy (${d.official.revisedOn})` : ''}`
+                        : 'upstream unchanged'}
+                    {official.carried ? ' · carried from an earlier run' : ''}
+                  </>
+                ) : (
+                  ' · not read this run'
+                )}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+
+      {health.reasons.length > 0 ? (
+        <div className="mt-4 sx-inset text-meta text-ink-2" role="note">
+          {health.reasons.map((reason) => (
+            <p key={reason} className="m-0">
+              {reason}
+            </p>
+          ))}
+        </div>
+      ) : null}
+
+      {problems.length > 0 ? (
+        <ul className="m-0 mt-3 list-disc space-y-1 pl-5 text-meta text-ink-2">
+          {problems.map((p) => (
+            <li key={`${p.label}-${p.status}`}>
+              {p.label}: {p.status}
+              {p.error ? ` (${p.error})` : ''}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </article>
+  );
+}
+
+export default LeagueHealthCard;

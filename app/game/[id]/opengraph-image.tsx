@@ -1,10 +1,14 @@
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
-import { buildGameModel, gameKicker } from '@/components/game/game-model';
-import { SITE_NAME } from '@/components/layout/site-url';
-import { getGames } from '@/lib/data';
-import { dateWithYear, timeOfDayPT } from '@/lib/format';
+import {
+  buildGameModel,
+  buildSupersededStub,
+  gameKicker,
+  gameStaticParams,
+} from '../../../components/game/game-model';
+import { SITE_NAME } from '../../../components/layout/site-url';
+import { dateWithYear, timeOfDayPT } from '../../../lib/format';
 
 /**
  * The per-game OG card (DESIGN §1.1, §3.5).
@@ -17,6 +21,11 @@ import { dateWithYear, timeOfDayPT } from '@/lib/format';
  * The numbers are `SideView.glyph` from the shared model, which comes from `describeGame()`, so a
  * game with no reported score shows two en dashes on the card exactly as it does on the page. A
  * scheduled game shows the start time in the score column instead of a number, never a `0`.
+ *
+ * Params are EXACTLY the page's (`gameStaticParams`: `gameIdToParam`, so a si.com game is
+ * `/game/sblive-<n>/opengraph-image`, never a raw `sblive:<n>` path, plus the superseded stubs,
+ * whose card is the MaxPreps game's). The kicker names the league (`BVAL · Santa Teresa`,
+ * `Non-league`, `MCAL semifinal`), and a si.com score says `Score via si.com` (SPEC §8.4).
  */
 
 export const alt = `${SITE_NAME} — game score card`;
@@ -24,7 +33,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export function generateStaticParams(): Array<{ id: string }> {
-  return getGames().map((game) => ({ id: game.contestId }));
+  return gameStaticParams();
 }
 
 const INK = '#f2f5f8';
@@ -41,7 +50,8 @@ const BG = '#0b0d10';
  */
 export default async function Image({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  const model = buildGameModel(id);
+  // paramToGameId runs inside buildGameModel before any accessor that can throw (SPEC §8.1).
+  const model = buildGameModel(id) ?? buildSupersededStub(id)?.targetModel;
   if (!model) notFound();
 
   const { game, away, home, display } = model;
@@ -136,7 +146,7 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
         <div style={{ display: 'flex', flexDirection: 'column', color: INK_3, fontSize: 22 }}>
           <div style={{ display: 'flex' }}>{when}</div>
           <div style={{ display: 'flex', marginTop: 6 }}>
-            {SITE_NAME} · unofficial · data from MaxPreps
+            {model.source ? `${SITE_NAME} · unofficial · Score via si.com` : `${SITE_NAME} · unofficial · data from MaxPreps`}
           </div>
         </div>
       </div>

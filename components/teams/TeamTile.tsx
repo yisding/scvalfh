@@ -26,8 +26,14 @@ import type { TeamTileData } from './team-view';
  * A team with no reported results shows an em dash, never `0-0-0`: a zeroed record would read as
  * "played and lost nothing" (DESIGN §8, BYLAWS-ADDENDUM §4).
  *
- * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx): fifteen
- * static team routes in one viewport is 16 full route payloads nobody asked for.
+ * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx): 43 static
+ * team routes on one page would be 43 full route payloads nobody asked for.
+ *
+ * The `<li>` carries `data-team-tile={slug}`: /teams' TeamFinder (filter mode) toggles `hidden`
+ * on it, so a filtered-out tile leaves no empty list item behind for a screen reader (SPEC §9.3).
+ * While a search is active (`search[data-searching]` anywhere inside the `[data-teams-page]`
+ * wrapper) the tile also shows a small league chip, because the results then mix leagues; with no
+ * query the section headings already say which league a tile is in, and the chip is not painted.
  */
 export function TeamTile({ data }: { data: TeamTileData }) {
   const { team, standing, hasResults } = data;
@@ -37,7 +43,7 @@ export function TeamTile({ data }: { data: TeamTileData }) {
     : `${team.name}, no results reported`;
 
   return (
-    <li>
+    <li data-team-tile={team.slug}>
       {/* `data-team-slug` sits on the TILE, not the <li>: the tile paints an opaque surface, so
           an inset rule on its parent would be hidden behind it. The end-of-body script in
           app/layout.tsx matches this attribute to draw the pinned-team rule (DESIGN §3.6
@@ -61,8 +67,13 @@ export function TeamTile({ data }: { data: TeamTileData }) {
           >
             {team.shortName}
           </span>
-          <span className="sx-num block text-cell text-ink-2" aria-hidden="true">
-            {record}
+          <span className="flex flex-wrap items-center gap-x-2" aria-hidden="true">
+            <span className="sx-num block text-cell text-ink-2">{record}</span>
+            {data.leagueShort ? (
+              <span className="hidden rounded-tag bg-surface-3 px-1.5 text-micro font-semibold text-ink-2 [[data-teams-page]:has(search[data-searching])_&]:inline-block">
+                {data.leagueShort}
+              </span>
+            ) : null}
           </span>
         </span>
       </Link>

@@ -1,41 +1,57 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
-import CrossCheckTable, { type CrossCheckGroup } from '@/components/about/CrossCheckTable';
-import SbliveCrossCheckSummary from '@/components/about/SbliveCrossCheckSummary';
-import EmptyState from '@/components/ui/EmptyState';
-import ExternalLink from '@/components/ui/ExternalLink';
-import SectionHeader from '@/components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
+import PageHeader from '../../components/layout/PageHeader';
+import BackfillTable from '../../components/about/BackfillTable';
+import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
+import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '../../components/about/LeagueHealthCard';
+import SbliveCrossCheckSummary from '../../components/about/SbliveCrossCheckSummary';
+import EmptyState from '../../components/ui/EmptyState';
+import ExternalLink from '../../components/ui/ExternalLink';
+import SectionHeader from '../../components/ui/SectionHeader';
+import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
   getCcsCalendar,
+  getCcsField,
   getCounts,
   getCrossCheck,
+  getDropped,
   getFetchedAt,
+  getLeagueHealth,
+  getLeagueSummaries,
   getOfficialFixtures,
   getOfficialStandingsPdfUrl,
   getPlayoffs,
   getSbliveCrossCheck,
+  getSections,
   getSources,
   getTeamBySlug,
-} from '@/lib/data';
-import { dateWithYear, formatStamp, longDate, timeOfDayPT } from '@/lib/format';
-import { BYLAW_CITATIONS, PLAYOFF_KEY_DATES, SOURCE_LINKS } from '@/lib/season';
-import type { SourceStatus } from '@/lib/types';
+  getTeams,
+  getTournamentLeagueIds,
+} from '../../lib/data';
+import type { LeagueSummary } from '../../lib/data';
+import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '../../lib/format';
+import { CCS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
+import type { LeagueConfig } from '../../lib/leagues';
+import { SOURCE_LINKS } from '../../lib/season';
+import { statusLegend } from '../../lib/standings';
+import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from '../../lib/types';
 
 /**
- * `/about` (DESIGN §3.10, SPEC §6) — where the data comes from, how standings are computed
- * (verbatim from the by-laws), the published cross-check log, the update cadence, privacy and
- * the not-affiliated disclaimer. Every standings footnote and every stale-snapshot notice on the
- * rest of the site links to an anchor on this page; the anchors below are stable on purpose.
+ * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each
+ * league's standings are computed (SCVAL's by-laws quoted verbatim; BVAL, PCAL and MCAL generated
+ * from their config citations), each league's data health, every si.com backfill, every contest
+ * dropped on purpose, the published cross-checks, the update cadence, privacy and the
+ * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
  */
+const DESCRIPTION =
+  'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
+
 export const metadata: Metadata = {
   title: 'About & sources',
-  description:
-    'Where this site’s scores and standings come from, how SCVAL standings/points/tiebreaks are computed, the published MaxPreps and SBLive cross-checks, update cadence and privacy.',
+  description: DESCRIPTION,
   alternates: { canonical: '/about' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/about' },
 };
@@ -48,17 +64,26 @@ export const metadata: Metadata = {
 const QUOTE =
   "sx-card relative not-italic p-5 pl-6 text-body text-ink-2 before:absolute before:inset-y-4 before:left-0 before:w-[3px] before:rounded-r-full before:bg-rule before:content-['']";
 
-const TOC = [
-  { id: 'sources', label: 'Data sources' },
-  { id: 'standings', label: 'Standings, points & tiebreaks' },
-  { id: 'conventions', label: 'How a score is shown' },
-  { id: 'cross-check', label: 'Cross-check log' },
-  { id: 'freshness', label: 'How often this updates' },
-  { id: 'playoffs', label: 'CCS playoffs' },
-  { id: 'privacy', label: 'Privacy & accessibility' },
-  { id: 'contact', label: 'Corrections & contact' },
-  { id: 'not-affiliated', label: 'Not affiliated' },
-] as const;
+/** A sub-heading inside a league's rules block (the league itself is the h3). */
+const H4 = 'm-0 mt-8 text-body font-semibold text-ink';
+
+function toc(leagues: readonly LeagueSummary[]) {
+  return [
+    { id: 'sources', label: 'Data sources' },
+    { id: 'standings', label: 'Standings, points & tiebreaks' },
+    ...leagues.map((l) => ({ id: `rules-${l.id}`, label: `${l.shortName} rules` })),
+    { id: 'health', label: 'Data health, by league' },
+    { id: 'conventions', label: 'How a score is shown' },
+    { id: 'cross-check', label: 'Cross-check log' },
+    { id: 'backfills', label: 'si.com backfills' },
+    { id: 'dropped', label: 'Dropped contests' },
+    { id: 'freshness', label: 'How often this updates' },
+    { id: 'playoffs', label: 'Postseason' },
+    { id: 'privacy', label: 'Privacy & accessibility' },
+    { id: 'contact', label: 'Corrections & contact' },
+    { id: 'not-affiliated', label: 'Not affiliated' },
+  ];
+}
 
 function statusCounts(sources: readonly SourceStatus[]): Record<SourceStatus['status'], number> {
   const out: Record<SourceStatus['status'], number> = { ok: 0, stale: 0, error: 0, skipped: 0 };
@@ -66,52 +91,343 @@ function statusCounts(sources: readonly SourceStatus[]): Record<SourceStatus['st
   return out;
 }
 
+function plural(n: number, one: string, many: string): string {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+/** 'SCVAL, BVAL, PCAL and MCAL' */
+function listWords(words: readonly string[]): string {
+  if (words.length <= 1) return words[0] ?? '';
+  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+}
+
+const DROP_REASON_WORDS: Readonly<Record<DroppedContest['reason'], string>> = {
+  'ghost-team': 'MaxPreps ghost team',
+  'excluded-by-config': 'not a real game',
+  'tba-opponent': 'opponent not named yet',
+  'phantom-duplicate': 'duplicate row',
+};
+
+/** The cross-check groups (one per team with rows or a flagged standing) for a set of rows. */
+function crossCheckGroups(
+  rows: readonly CrossCheckRow[],
+  flagged: ReadonlyMap<string, string | undefined>,
+): CrossCheckGroup[] {
+  const bySlug = new Map<string, CrossCheckRow[]>();
+  for (const row of rows) bySlug.set(row.slug, [...(bySlug.get(row.slug) ?? []), row]);
+  const slugs = new Set([...bySlug.keys(), ...flagged.keys()]);
+  const out: CrossCheckGroup[] = [];
+  for (const slug of slugs) {
+    const team = getTeamBySlug(slug);
+    if (!team) continue;
+    out.push({ team, rows: bySlug.get(slug) ?? [], detail: flagged.get(slug) });
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- per-league rules (generated)
+
+const MULTI_TEAM_WORDS: Readonly<Record<LeagueConfig['rules']['multiTeam'], string>> = {
+  'partition-restart':
+    'When three or more teams are level, each step is applied to the whole group at once; teams it separates are placed, and the chain restarts from the top for any teams still level.',
+  'seed-one-restart':
+    'When three or more teams are level, the chain places one team at a time — the first step that separates anyone decides the best of the group — and then restarts from the top for the rest.',
+};
+
+function chainItems(league: LeagueConfig, chain: readonly TiebreakStage[]): string[] {
+  return chain.map((stage) => league.rules.citations.stages[stage] ?? stage);
+}
+
+function GeneratedRules({ league }: { league: LeagueConfig }) {
+  const { rules, postseason } = league;
+  const byBucket = rules.tiebreaks.byBucketStart ?? {};
+  const bucketStarts = Object.keys(byBucket)
+    .map(Number)
+    .sort((a, b) => a - b);
+  const counts =
+    rules.classification === 'contest-type'
+      ? 'A game counts when MaxPreps marks it a league game and both teams belong to the same division.'
+      : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${rules.gamesWord === 'division' ? 'division' : 'league'}; tournament and postseason games never count.${
+          rules.postseasonFrom ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are tournament games.` : ''
+        }`;
+  return (
+    <div className="sx-prose">
+      <h4 className={H4}>Points &amp; standings order</h4>
+      <ul className="list-disc">
+        <li>{rules.citations.points}.</li>
+        <li>{rules.citations.order}.</li>
+        <li>{rules.citations.doubleRoundRobin}.</li>
+        <li>{rules.citations.overtime}.</li>
+        <li>{rules.citations.coChampions}.</li>
+      </ul>
+      <p>{counts}</p>
+
+      <h4 className={H4}>If teams are tied on points</h4>
+      {bucketStarts.length > 0 ? (
+        <>
+          {bucketStarts.map((start) => (
+            <div key={start}>
+              <p className="m-0">A tie whose group starts at {start === 1 ? '1st' : start === 2 ? '2nd' : `${start}th`}:</p>
+              <ol className="mt-2 list-decimal">
+                {chainItems(league, byBucket[start] ?? []).map((text) => (
+                  <li key={text}>{text}.</li>
+                ))}
+              </ol>
+            </div>
+          ))}
+          <p>Any other tie: {chainItems(league, rules.tiebreaks.default).join('; ')}.</p>
+        </>
+      ) : (
+        <ol className="list-decimal">
+          {chainItems(league, rules.tiebreaks.default).map((text) => (
+            <li key={text}>{text}.</li>
+          ))}
+        </ol>
+      )}
+      <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p>
+      <p className="text-meta text-ink-3">
+        A step this site cannot compute (a coin flip, a draw, a play-in) leaves the teams level at the
+        same place, with a footnote citing the rule. Our display order is not a league ruling.
+      </p>
+      {rules.citations.incomplete ? <p>If the season ends with games unplayed: {rules.citations.incomplete}.</p> : null}
+
+      <h4 className={H4}>Postseason</h4>
+      {postseason.kind === 'ccs-ladder' ? (
+        <>
+          <p>{postseason.citation}.</p>
+          <ul className="list-disc">
+            {league.divisions.flatMap((d) =>
+              postseason.ladder
+                .filter((r) => r.divisions === '*' || r.divisions.includes(d.id))
+                .filter((r) => r.divisions !== '*' || d === league.divisions[0])
+                .map((r) => (
+                  <li key={`${d.id}-${r.status}-${r.places[0]}`}>
+                    {r.divisions !== '*' && league.divisions.length > 1 ? `${d.label}: ` : ''}
+                    {statusLegend(d.id, r.status)}.
+                  </li>
+                )),
+            )}
+          </ul>
+        </>
+      ) : (
+        <>
+          <ul className="list-disc">
+            <li>{postseason.citations.format}.</li>
+            <li>{postseason.citations.seeding}.</li>
+            <li>{postseason.citations.semifinal}.</li>
+            <li>{postseason.citations.lastSpot}.</li>
+          </ul>
+          <p>{postseason.citations.qualifiersConflict}</p>
+          <p>{postseason.titleNote}</p>
+          <p>
+            <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
+              {postseason.name} &rarr;
+            </Link>
+          </p>
+        </>
+      )}
+      <p className="text-meta text-ink-2">
+        {league.links.map((l, i) => (
+          <span key={l.href}>
+            {i > 0 ? ' · ' : ''}
+            <ExternalLink href={l.href}>{l.label}</ExternalLink>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The league whose by-laws are quoted verbatim below: the one on today's legacy matcher (SCVAL, the
+ * site's original league, whose quotations predate the generated sections and are golden-gated).
+ */
+function isQuotedLeague(league: LeagueConfig): boolean {
+  return league.rules.matcher === 'legacy';
+}
+
+/** SCVAL's by-laws, quoted verbatim (unchanged from the single-league site). */
+function QuotedRules({ league }: { league: LeagueConfig }) {
+  const stages = league.rules.citations.stages;
+  const qualification = league.postseason.kind === 'ccs-ladder' ? league.postseason.citation : '';
+  return (
+    <div className="sx-prose">
+      <p>
+        League membership is a list we maintain from the official {league.shortName} alignment, not
+        whatever happens to appear in the MaxPreps feed that day. De Anza has 7 teams this season:
+        the official grid still lists Wilcox, but Wilcox is not fielding a team, so it is not shown
+        anywhere on the site and its grid fixtures are not counted. The rules are quoted below,
+        verbatim, from the SCVAL Field Hockey By-Laws 2026-27.
+      </p>
+
+      <h4 className={H4}>Points &amp; standings order</h4>
+      <blockquote className={QUOTE}>
+        &ldquo;A team shall be awarded 3 points for a win, 1 point for a tie. The division
+        placement/standings will be the order of team points. The team with the greatest number of
+        points will be declared the champion and higher in the standings. If there is a tie at the
+        top both teams shall be declared division champions.&rdquo;{' '}
+        <cite className="not-italic text-ink-3">&mdash; Article VI, Section 2</cite>
+      </blockquote>
+      <p>
+        We implement that literally: <code>points = 3 &times; wins + 1 &times; ties</code> from
+        league games only (Article VI, Section 1 &mdash; a double round robin, division games only
+        counting to the division record), and the PTS column on every standings table is the actual
+        ordering key, not a secondary stat.
+      </p>
+
+      <h4 className={H4}>If teams are tied on points</h4>
+      <p>
+        The by-laws set out one tiebreak chain, applied by &ldquo;working to bring one team
+        out&rdquo; of the tied group and then restarting the whole chain for whoever is left:
+      </p>
+      <ol className="list-decimal">
+        <li>Better head-to-head record among the tied teams ({stages['head-to-head']}).</li>
+        <li>Greater number of wins in division play ({stages['division-wins']}).</li>
+        <li>Least goals given up between the head-to-head tied teams ({stages['h2h-goals-against']}).</li>
+        <li>Goal differential between the head-to-head tied teams ({stages['h2h-goal-diff']}).</li>
+        <li>
+          A coin flip. This site cannot compute a coin flip, so teams that reach this step render as{' '}
+          <b className="font-semibold text-ink">tied at the same place</b> (a shared &ldquo;6=&rdquo;
+          instead of a 6th and a 7th), with a footnote citing this rule. ({stages['coin-flip']})
+        </li>
+      </ol>
+      <p className="text-meta text-ink-3">
+        Our display order is not a league ruling &mdash; if {league.shortName} settles a coin flip we
+        have no way to know, the official standings remain the source of truth.
+      </p>
+
+      <h4 className={H4}>Overtime</h4>
+      <blockquote className={QUOTE}>
+        &ldquo;Varsity: four 15-minute quarters. After a regulation tie (league AND non-league varsity
+        games): ONE 7-minute sudden-victory period, 7-a-side. If still tied after that one period, the
+        game ends in a tie (no shootout in league play).&rdquo;{' '}
+        <cite className="not-italic text-ink-3">&mdash; Article IV</cite>
+      </blockquote>
+      <p>
+        An overtime win counts as a full win, shown with an OT tag. Because league play never has a
+        shootout, the shootout state our code supports never actually occurs in {league.shortName}{' '}
+        league play &mdash; it exists so the rendering code has somewhere correct to send a shootout if
+        one is ever reported.
+      </p>
+
+      <h4 className={H4}>CCS qualification</h4>
+      <blockquote className={QUOTE}>
+        &ldquo;16-team CCS tournament: SCVAL 7, BVAL 4, PCAL 2, at-large 3.&rdquo;{' '}
+        <cite className="not-italic text-ink-3">&mdash; Article VII, Section 1</cite>
+      </blockquote>
+      <blockquote className={QUOTE}>
+        &ldquo;The first three teams in each division are awarded automatic qualifiers (AQ) to CCS
+        playoffs (ties broken by Article VI, Sections 2-7). Fourth place teams play a play-in game; the
+        winner receives the SCVAL 7th AQ. The losing 4th-place team and both 5th-place teams are
+        submitted to CCS for at-large consideration. #1 v #1, #2 v #2, #3 v #3 crossover games are
+        played after the season to help CCS ordering (home site by coin flip). Per the official
+        schedule PDFs these crossover/play-in games are Friday, October 30, 2026.&rdquo;{' '}
+        <cite className="not-italic text-ink-3">&mdash; Article VII, Section 2</cite>
+      </blockquote>
+      <p>
+        {qualification}. Live, team-by-team status is on the{' '}
+        <Link href={`/playoffs#${league.id}`} prefetch={false} className="text-accent hover:underline">
+          CCS playoffs
+        </Link>{' '}
+        page.
+      </p>
+      <p className="text-meta text-ink-2">
+        {league.links.map((l, i) => (
+          <span key={l.href}>
+            {i > 0 ? ' · ' : ''}
+            <ExternalLink href={l.href}>{l.label}</ExternalLink>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------- page
+
 export default function AboutPage() {
   const counts = getCounts();
   const sources = getSources();
   const counted = statusCounts(sources);
   const erroring = sources.filter((s) => s.status === 'error');
+  const leagues = getLeagueSummaries();
+  const sections = getSections();
+  const allTeams = getTeams();
 
-  const allStandings = [...getAllStandings()['de-anza'], ...getAllStandings()['el-camino']];
-  const crossCheckRows = getCrossCheck();
-  const rowsBySlug = new Map<string, CrossCheckGroup['rows']>();
-  for (const row of crossCheckRows) {
-    rowsBySlug.set(row.slug, [...(rowsBySlug.get(row.slug) ?? []), row]);
-  }
-  const flaggedSlugs = new Set([
-    ...rowsBySlug.keys(),
-    ...allStandings.filter((s) => s.mismatch).map((s) => s.slug as string),
-  ]);
-  const crossCheckGroups: CrossCheckGroup[] = [];
-  for (const slug of flaggedSlugs) {
-    const team = getTeamBySlug(slug);
-    if (!team) continue;
-    const standing = allStandings.find((s) => s.slug === slug);
-    crossCheckGroups.push({ team, rows: rowsBySlug.get(slug) ?? [], detail: standing?.mismatchDetail });
-  }
+  // Standings flattened over every division (no literal division keys).
+  const allStandings = Object.values(getAllStandings()).flat();
 
   const sbliveCross = getSbliveCrossCheck();
-
+  const backfilled = sbliveCross?.backfilled ?? [];
+  const dropped = getDropped();
   const officialFixtures = getOfficialFixtures();
-
   const officialStandingsPdfUrl = getOfficialStandingsPdfUrl();
 
   const ccsCalendar = getCcsCalendar();
   const keyDatesConfirmed = areKeyDatesConfirmed();
   const playoffs = getPlayoffs();
+  const field = getCcsField();
+  const tournamentIds = new Set(getTournamentLeagueIds());
+  const ncs = sections.find((s) => !s.holdsFieldHockeyChampionship);
+
+  const perLeague = leagues.map((summary) => {
+    const config = getLeague(summary.id);
+    const teamNames = new Set(
+      allTeams.filter((t) => t.league === summary.id).flatMap((t) => [t.name.toLowerCase(), t.shortName.toLowerCase()]),
+    );
+    const leagueDropped = dropped.filter((d) => d.teams.some((n) => teamNames.has(n.toLowerCase())));
+    const rows = getCrossCheck({ league: summary.id });
+    const flagged = new Map(
+      allStandings
+        .filter((s) => s.mismatch && summary.divisions.some((d) => d.id === s.division))
+        .map((s) => [s.slug as string, s.mismatchDetail] as const),
+    );
+    const plainRows = rows.filter((r) => !r.knownCause);
+    const causes = [...new Set(rows.filter((r) => r.knownCause).map((r) => r.knownCause as string))];
+    const knownSlugs = new Set(rows.filter((r) => r.knownCause).map((r) => r.slug));
+    const plainFlagged = new Map([...flagged].filter(([slug]) => !knownSlugs.has(slug)));
+    const noClaim = config.divisions.some(
+      (d) => d.reportedTrust === 'informational' || d.maxprepsMissing.length > 0 || d.knownCause !== null,
+    );
+    const healthDivisions: HealthDivision[] = config.divisions.map((d) => ({
+      id: d.id,
+      heading: summary.divisions.find((x) => x.id === d.id)?.heading ?? null,
+      maxprepsUrl: leagueStandingsUrl(d.id),
+      knownCause: d.knownCause,
+      official: { source: d.official.source, url: d.official.scheduleUrl, mode: d.official.mode, revisedOn: d.official.revisedOn },
+    }));
+    return {
+      summary,
+      config,
+      dropped: leagueDropped,
+      plainGroups: crossCheckGroups(plainRows, plainFlagged),
+      causeGroups: causes.map((cause) => ({
+        cause,
+        groups: crossCheckGroups(rows.filter((r) => r.knownCause === cause), new Map()),
+      })),
+      emptyText: noClaim
+        ? `No other disagreements with MaxPreps’ ${summary.shortName} ${summary.singleDivision ? 'table' : 'tables'} in the most recent run.`
+        : null,
+      health: getLeagueHealth(summary.id),
+      healthDivisions,
+      problems: getSources({ league: summary.id })
+        .filter((s) => s.status === 'error' || s.status === 'stale')
+        .map((s) => ({ label: s.label, status: s.status === 'error' ? 'failed' : 'stale', error: s.error })),
+    };
+  });
+
+  const TOC = toc(leagues);
+  const leagueWords = listWords(leagues.map((l) => l.shortName));
 
   return (
     // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
-    // (DESIGN §10.5): the title and lede, then the jump list, then the sections. On a phone the
-    // reader meets the page before its table of contents; at `md` the list moves into the right
-    // rail spanning both rows, which is the tall containing block its `sticky` needs.
-    // The rail starts at `lg`, not `md`: at 768 it left a 424px column and squeezed the source
-    // cards to ~205px. Below `lg` the "On this page" disclosure carries the jump list instead.
+    // (DESIGN §10.5): the title and lede, then the jump list, then the sections. The rail starts at
+    // `lg`; below it the "On this page" disclosure carries the jump list instead.
     <div className="pb-section-lg lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-x-10">
       <PageHeader
         className="lg:col-start-1 lg:row-start-1"
         title="About & sources"
-        description="This is an unofficial, fan-built scoreboard for the 15 De Anza and El Camino girls varsity field hockey teams. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved."
+        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${counts.teams} girls varsity field hockey teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
       />
 
       <details className="sx-inset sx-disclosure mt-8 lg:hidden">
@@ -138,10 +454,7 @@ export default function AboutPage() {
           <ul className="m-0 mt-2 list-none p-0">
             {TOC.map((item) => (
               <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className="sx-action min-h-8 text-meta text-ink-2 hover:text-accent hover:underline"
-                >
+                <a href={`#${item.id}`} className="sx-action min-h-8 text-meta text-ink-2 hover:text-accent hover:underline">
                   {item.label}
                 </a>
               </li>
@@ -155,15 +468,10 @@ export default function AboutPage() {
         <section id="sources">
           <SectionHeader size="lg" kicker="Data sources" />
           <p className="sx-prose">
-            This snapshot covers all {counts.teams} SCVAL teams and {counts.games} games (
-            {counts.leagueGames} of them league games): {counts.finals} final,{' '}
-            {counts.pending} not yet reported.
+            {SITE_SCOPE_NOTE} This snapshot covers all {counts.teams} teams and {counts.games} games (
+            {counts.leagueGames} of them league games): {counts.finals} final, {counts.pending} not yet
+            reported.
           </p>
-          {/* Rows stretch, so the two cards in a row end level and each card's link row sits on its
-              bottom edge (`mt-auto`). The long SCVAL card and the two-line CIF-CCS card are
-              not paired: each spans both columns from md (the SCVAL text set in two columns,
-              which keeps its measure near the other cards'), so no row has a short card next
-              to a tall one. */}
           <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2">
             <div className="sx-card flex flex-col p-5">
               <dt>
@@ -175,9 +483,8 @@ export default function AboutPage() {
                   Team schedules, scores, league standings tables and school colors come from
                   MaxPreps&rsquo; own public data feed, the same one that powers its team and league
                   pages. We read it, never write to it, and never hotlink its mascot images &mdash;
-                  the feed carries a mascot picture URL for every school, and this site reads that
-                  field and discards it: each school is shown as a color monogram instead, built
-                  from the two colors the feed reports.
+                  each school is shown as a color monogram instead, built from the two colors the feed
+                  reports.
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">
@@ -188,69 +495,70 @@ export default function AboutPage() {
             </div>
             <div className="sx-card flex flex-col p-5">
               <dt>
-                <span className="block text-lead text-ink">SBLive / SI</span>
-                <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check only</span>
+                <span className="block text-lead text-ink">High School on SI (si.com)</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check and backfill</span>
               </dt>
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                 <span className="block">
-                  Sports Illustrated&rsquo;s high-school stats site (formerly Scorebook
-                  Live/SBLive) publishes its own scoreboard. We use it for exactly one thing: to
-                  check whether it agrees with MaxPreps on final scores. It is never used for
-                  division membership, records or standings &mdash; its own league groupings for
-                  2026-27 do not match SCVAL&rsquo;s. See{' '}
-                  <a href="#cross-check" className="text-accent hover:underline">
-                    the cross-check log
-                  </a>{' '}
-                  below.
+                  Sports Illustrated&rsquo;s high-school stats site (formerly SBLive) publishes its own
+                  scoreboard. We compare every final score with it, and publish its score only under
+                  the mechanical rules in{' '}
+                  <a href="#backfills" className="text-accent hover:underline">
+                    si.com backfills
+                  </a>
+                  . It is never used for league membership, records or the standings order.
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.sblive} className="sx-pill">
-                    SBLive/SI field hockey
+                    si.com field hockey
                   </ExternalLink>
                 </span>
               </dd>
             </div>
-            <div className="sx-card flex flex-col p-5 md:col-span-2">
-              <dt>
-                <span className="block text-lead text-ink">Official SCVAL PDFs</span>
-                <span className="mt-0.5 block text-meta text-ink-3">The league itself</span>
-              </dt>
-              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
-                <span className="block md:columns-2 md:gap-x-8">
-                  SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
-                  scval.com. League membership (which schools are in which division), the
-                  points/tiebreak rules quoted below, and every scheduled matchup come from these
-                  documents, not from MaxPreps. When MaxPreps has never published a result for a
-                  game that the official grid says was scheduled &mdash; today that is{' '}
-                  {officialFixtures.length} game{officialFixtures.length === 1 ? '' : 's'} &mdash; it is
-                  listed as scheduled per SCVAL rather than silently dropped.{' '}
-                  {officialStandingsPdfUrl === null ? (
-                    <>SCVAL has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
-                  ) : officialStandingsPdfUrl ? (
-                    <>
-                      SCVAL has posted a 2026-27 standings PDF:{' '}
-                      <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
-                    </>
-                  ) : (
-                    <>We have not yet checked scval.com for a 2026-27 standings PDF.</>
-                  )}
-                </span>
-                <span className="mt-auto flex flex-wrap gap-2 pt-3">
-                  <ExternalLink href={SOURCE_LINKS.scval} className="sx-pill">
-                    SCVAL fall sports
-                  </ExternalLink>
-                  <ExternalLink href={SOURCE_LINKS.scvalBylaws} className="sx-pill">
-                    By-laws PDF
-                  </ExternalLink>
-                  <ExternalLink href={SOURCE_LINKS.scvalDeAnzaSchedule} className="sx-pill">
-                    De Anza grid
-                  </ExternalLink>
-                  <ExternalLink href={SOURCE_LINKS.scvalElCaminoSchedule} className="sx-pill">
-                    El Camino grid
-                  </ExternalLink>
-                </span>
-              </dd>
-            </div>
+            {perLeague.map(({ summary, config }) => (
+              <div key={summary.id} className="sx-card flex flex-col p-5">
+                <dt>
+                  <span className="block text-lead text-ink">{summary.shortName}</span>
+                  <span className="mt-0.5 block text-meta text-ink-3">
+                    {summary.name} &middot; {summary.section.shortName}
+                  </span>
+                </dt>
+                <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                  <span className="block">
+                    League membership, the rules quoted under{' '}
+                    <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
+                      {summary.shortName} rules
+                    </a>{' '}
+                    and every scheduled league game come from {summary.shortName}&rsquo;s own documents,
+                    not from MaxPreps.
+                    {isQuotedLeague(config) ? (
+                      officialStandingsPdfUrl === null ? (
+                        <> {summary.shortName} has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
+                      ) : officialStandingsPdfUrl ? (
+                        <>
+                          {' '}
+                          {summary.shortName} has posted a 2026-27 standings PDF:{' '}
+                          <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
+                        </>
+                      ) : null
+                    ) : null}
+                  </span>
+                  <span className="mt-auto flex flex-wrap gap-2 pt-3">
+                    {config.links.map((l) => (
+                      <ExternalLink key={l.href} href={l.href} className="sx-pill">
+                        {l.label}
+                      </ExternalLink>
+                    ))}
+                    {config.divisions.map((d) => (
+                      <ExternalLink key={d.id} href={d.official.scheduleUrl} className="sx-pill">
+                        {officialSourceLabel(summary.shortName, d.official.source)}
+                        {summary.singleDivision ? '' : ` · ${d.label}`}
+                      </ExternalLink>
+                    ))}
+                  </span>
+                </dd>
+              </div>
+            ))}
             <div className="sx-card flex flex-col p-5 md:col-span-2">
               <dt>
                 <span className="block text-lead text-ink">CIF-CCS</span>
@@ -258,9 +566,11 @@ export default function AboutPage() {
               </dt>
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                 <span className="block">
-                  The Central Coast Section publishes the playoff calendar and format. See{' '}
+                  The Central Coast Section publishes the playoff calendar and format for{' '}
+                  {listWords(field.byLeague.map((l) => l.shortName))}.{' '}
+                  {ncs?.noChampionshipNote ?? ''} See{' '}
                   <a href="#playoffs" className="text-accent hover:underline">
-                    CCS playoffs
+                    Postseason
                   </a>{' '}
                   below.
                 </span>
@@ -272,93 +582,56 @@ export default function AboutPage() {
               </dd>
             </div>
           </dl>
+          <p className="mt-stack max-w-prose text-meta text-ink-2">
+            When MaxPreps has never published a result for a game that a league&rsquo;s official
+            schedule says was scheduled &mdash; today that is {plural(officialFixtures.length, 'game', 'games')}{' '}
+            &mdash; it is listed as scheduled per the league rather than silently dropped.
+          </p>
         </section>
 
-        {/* ---------------------------------------------------------------- standings */}
+        {/* ---------------------------------------------------------------- standings / rules */}
         <section id="standings" className="mt-16">
           <SectionHeader size="lg" kicker="Standings, points &amp; tiebreaks" />
           <div className="sx-prose">
-          <p>
-            League membership is a list we maintain from the official SCVAL alignment, not
-            whatever happens to appear in the MaxPreps feed that day. De Anza has 7 teams this
-            season: the official grid still lists Wilcox, but Wilcox is not fielding a team, so it
-            is not shown anywhere on the site and its grid fixtures are not counted. A team with no
-            reported results is never shown as a fabricated 0-0-0 record.
-          </p>
-          <p>
-            Everything else is computed from individual game results, then compared field by
-            field against MaxPreps&rsquo; own published table (see{' '}
-            <a href="#cross-check" className="text-accent hover:underline">
-              the cross-check log
-            </a>
-            ). The rules themselves are quoted below, verbatim, from the SCVAL Field Hockey
-            By-Laws 2026-27.
-          </p>
+            <p>
+              Each league&rsquo;s standings are computed from individual game results by that
+              league&rsquo;s own rules, then compared field by field against MaxPreps&rsquo; own
+              published table (see{' '}
+              <a href="#cross-check" className="text-accent hover:underline">
+                the cross-check log
+              </a>
+              ). A team with no reported results is never shown as a fabricated 0-0-0 record. All four
+              leagues award 3 points for a win and 1 for a tie and order their tables by points; they
+              differ in which games count and how ties are broken.
+            </p>
+          </div>
+          {perLeague.map(({ summary, config }) => (
+            <section key={summary.id} id={`rules-${summary.id}`} className="mt-section" aria-labelledby={`rules-${summary.id}-heading`}>
+              <SectionHeader as="h3" id={`rules-${summary.id}-heading`} kicker={`${summary.shortName} — ${summary.name}`} />
+              {isQuotedLeague(config) ? <QuotedRules league={config} /> : <GeneratedRules league={config} />}
+            </section>
+          ))}
+        </section>
 
-          <h3>Points &amp; standings order</h3>
-          <blockquote className={QUOTE}>
-            &ldquo;A team shall be awarded 3 points for a win, 1 point for a tie. The division
-            placement/standings will be the order of team points. The team with the greatest
-            number of points will be declared the champion and higher in the standings. If there
-            is a tie at the top both teams shall be declared division champions.&rdquo;{' '}
-            <cite className="not-italic text-ink-3">&mdash; Article VI, Section 2</cite>
-          </blockquote>
-          <p>
-            We implement that literally: <code>points = 3 &times; wins + 1 &times; ties</code>{' '}
-            from league games only (Article VI, Section 1 &mdash; a double round robin, division
-            games only counting to the division record), and the PTS column on every standings
-            table is the actual ordering key, not a secondary stat.
+        {/* ---------------------------------------------------------------- health */}
+        <section id="health" className="mt-16">
+          <SectionHeader size="lg" kicker="Data health, by league" />
+          <p className="sx-prose">
+            Each league is fetched and checked on its own, so a problem in one never holds the others
+            back. This is how the most recent run went for each.
           </p>
-
-          <h3>If teams are tied on points</h3>
-          <p>
-            The by-laws set out one tiebreak chain, applied by &ldquo;working to bring one team
-            out&rdquo; of the tied group and then restarting the whole chain for whoever is left:
-          </p>
-          <ol className="list-decimal">
-            <li>Better head-to-head record among the tied teams ({BYLAW_CITATIONS.headToHead}).</li>
-            <li>Greater number of wins in division play ({BYLAW_CITATIONS.divisionWins}).</li>
-            <li>Least goals given up between the head-to-head tied teams ({BYLAW_CITATIONS.h2hGoalsAgainst}).</li>
-            <li>Goal differential between the head-to-head tied teams ({BYLAW_CITATIONS.h2hGoalDiff}).</li>
-            <li>
-              A coin flip. This site cannot compute a coin flip, so teams that reach this step
-              render as <b className="font-semibold text-ink">tied at the same place</b> (a
-              shared &ldquo;6=&rdquo; instead of a 6th and a 7th), with a footnote citing this
-              rule. ({BYLAW_CITATIONS.coinFlip})
-            </li>
-          </ol>
-          <p className="text-meta text-ink-3">
-            Our display order is not a league ruling &mdash; if SCVAL settles a coin flip we have
-            no way to know, the official standings remain the source of truth.
-          </p>
-
-          <h3>Overtime</h3>
-          <blockquote className={QUOTE}>
-            &ldquo;Varsity: four 15-minute quarters. After a regulation tie (league AND
-            non-league varsity games): ONE 7-minute sudden-victory period, 7-a-side. If still
-            tied after that one period, the game ends in a tie (no shootout in league
-            play).&rdquo; <cite className="not-italic text-ink-3">&mdash; Article IV</cite>
-          </blockquote>
-          <p>
-            An overtime win counts as a full win, shown with an OT tag. Because league play never
-            has a shootout, the shootout state our code supports never actually occurs this
-            season &mdash; it exists only so the rendering code has somewhere correct to send a
-            shootout if one is ever reported.
-          </p>
-
-          <h3>CCS qualification</h3>
-          <p>
-            {BYLAW_CITATIONS.qualifiers}. Full detail, dates and today&rsquo;s live picture are
-            under{' '}
-            <a href="#playoffs" className="text-accent hover:underline">
-              CCS playoffs
-            </a>{' '}
-            below and on the{' '}
-            <Link href="/playoffs" className="text-accent hover:underline">
-              Playoffs
-            </Link>{' '}
-            page.
-          </p>
+          <div className="mt-stack grid gap-4 md:grid-cols-2">
+            {perLeague.map((l) => (
+              <LeagueHealthCard
+                key={l.summary.id}
+                shortName={l.summary.shortName}
+                name={l.summary.name}
+                health={l.health}
+                divisions={l.healthDivisions}
+                dropped={l.dropped.length}
+                problems={l.problems}
+              />
+            ))}
           </div>
         </section>
 
@@ -366,30 +639,31 @@ export default function AboutPage() {
         <section id="conventions" className="mt-16">
           <SectionHeader size="lg" kicker="How a score is shown" />
           <div className="sx-prose">
-          <p>
-            One rule governs every score on this site: a game that has not been decided never
-            shows as <span className="sx-num">0&ndash;0</span>. A real final score of 0-0 (it has
-            happened this season) prints as <span className="sx-num">0</span> in full-strength
-            ink; a game with nothing reported yet prints an em dash in muted ink, with a
-            screen-reader label saying so. The two are never visually or semantically confused.
-          </p>
-          <ul className="list-disc">
-            <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
-            <li>
-              A forfeit counts in win-loss-tie but not in goals for/against/differential &mdash;
-              marked with a dagger everywhere a total would otherwise be misleading.
-            </li>
-            <li>A game with no score posted yet shows <b className="font-semibold text-ink">SCORE NOT REPORTED</b> with an empty outline chip, never a blank or a zero.</li>
-            <li>
-              A game MaxPreps marks as in progress shows <b className="font-semibold text-ink">LIVE</b>, but this is a scheduled-window label, not a running score &mdash; see{' '}
-              <a href="#freshness" className="text-accent hover:underline">
-                how often this updates
-              </a>
-              .
-            </li>
-            <li>A postponed game shows <b className="font-semibold text-ink">POSTPONED</b> with the new date when one is known, or &ldquo;TBD&rdquo; when it is not.</li>
-            <li>A non-league game carries a small NL tag everywhere; it counts in a team&rsquo;s overall record and nowhere in the league standings.</li>
-          </ul>
+            <p>
+              One rule governs every score on this site: a game that has not been decided never shows
+              as <span className="sx-num">0&ndash;0</span>. A real final score of 0 prints as{' '}
+              <span className="sx-num">0</span> in full-strength ink; a game with nothing reported yet
+              prints an em dash in muted ink, with a screen-reader label saying so. The two are never
+              visually or semantically confused.
+            </p>
+            <ul className="list-disc">
+              <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
+              <li>
+                A forfeit counts in win-loss-tie but not in goals for/against/differential &mdash; marked
+                with a dagger everywhere a total would otherwise be misleading.
+              </li>
+              <li>A game with no score posted yet shows <b className="font-semibold text-ink">SCORE NOT REPORTED</b> with an empty outline chip, never a blank or a zero.</li>
+              <li>
+                A game MaxPreps marks as in progress shows <b className="font-semibold text-ink">LIVE</b>, but this is a scheduled-window label, not a running score &mdash; see{' '}
+                <a href="#freshness" className="text-accent hover:underline">
+                  how often this updates
+                </a>
+                .
+              </li>
+              <li>A postponed game shows <b className="font-semibold text-ink">POSTPONED</b> with the new date when one is known, or &ldquo;TBD&rdquo; when it is not.</li>
+              <li>A non-league game carries a small NL tag everywhere; it counts in a team&rsquo;s overall record and nowhere in the league standings.</li>
+              <li>A score published from si.com carries a marker and a &ldquo;score via si.com&rdquo; line on its game page.</li>
+            </ul>
           </div>
         </section>
 
@@ -397,24 +671,103 @@ export default function AboutPage() {
         <section id="cross-check" className="mt-16">
           <SectionHeader size="lg" kicker="Cross-check log" />
           <p className="sx-prose">
-            MaxPreps&rsquo; own standings feed already carries its computed record, points, goals
-            and placement for every team, so checking our work is a direct comparison, not a
-            reimplementation: for every team we compare our computed W-L-T, goals and place
-            against MaxPreps&rsquo; published numbers, field by field. Every disagreement is
-            published here and flagged with &#9873; on the standings row &mdash; we always show
-            our own computation and say so, rather than silently picking a side.
+            MaxPreps&rsquo; own standings feed already carries its computed record, points, goals and
+            placement for every team, so checking our work is a direct comparison, not a
+            reimplementation: for every team we compare our computed W-L-T, goals and place against
+            MaxPreps&rsquo; published numbers, field by field. Every disagreement is published here and
+            flagged with &#9873; on the standings row &mdash; we always show our own computation and say
+            so, rather than silently picking a side. Where a league&rsquo;s MaxPreps table differs for a
+            known reason, those rows are listed separately under the reason.
           </p>
-          <h3 className="mt-stack mb-3 text-lead text-ink">vs. MaxPreps&rsquo; standings table</h3>
-          <CrossCheckTable groups={crossCheckGroups} />
+          {perLeague.map((l) => (
+            <div key={l.summary.id} className="mt-section">
+              <h3 className="m-0 mb-3 text-lead text-ink">
+                {l.summary.shortName} vs. MaxPreps&rsquo; {l.summary.singleDivision ? 'table' : 'tables'}
+              </h3>
+              <CrossCheckTable groups={l.plainGroups} teamCount={l.summary.teamCount} emptyText={l.emptyText} />
+              {l.causeGroups.map((c) => (
+                <div key={c.cause} className="mt-stack">
+                  <h4 className="m-0 text-body font-semibold text-ink">Known difference</h4>
+                  <p className="mt-1 mb-3 max-w-prose text-meta text-ink-2">{c.cause}</p>
+                  <CrossCheckTable groups={c.groups} teamCount={l.summary.teamCount} />
+                </div>
+              ))}
+            </div>
+          ))}
 
-          <h3 className="mt-section mb-3 text-lead text-ink">vs. SBLive/SI scores</h3>
+          <h3 className="mt-section mb-3 text-lead text-ink">vs. si.com scores</h3>
           {sbliveCross ? (
             <SbliveCrossCheckSummary cross={sbliveCross} />
           ) : (
-            <EmptyState heading="No SBLive comparison in the most recent run.">
-              This step is optional and failure-tolerant; when it runs, every disagreement and
-              every SBLive-only score appears here.
+            <EmptyState heading="No si.com comparison in the most recent run.">
+              This step is optional and failure-tolerant; when it runs, every disagreement and every
+              si.com-only score appears here.
             </EmptyState>
+          )}
+        </section>
+
+        {/* ---------------------------------------------------------------- backfills */}
+        <section id="backfills" className="mt-16">
+          <SectionHeader
+            size="lg"
+            kicker="si.com backfills"
+            meta={plural(backfilled.length, 'score', 'scores')}
+          />
+          <div className="sx-prose">
+            <p>
+              MaxPreps is our primary source. We publish a score from High School on SI (si.com) only
+              when one of these holds, and only when si.com has the game as final with both teams
+              matched by si.com&rsquo;s own team ids (never by name), on the official date or a day
+              either side of it:
+            </p>
+            <ul className="list-disc">
+              <li>MaxPreps has no contest at all for a game on the league&rsquo;s official schedule;</li>
+              <li>MaxPreps lists the game, its date has passed, and it has no score;</li>
+              <li>
+                MaxPreps&rsquo; row is clearly wrong in a way we can check mechanically: its own win/loss
+                flags contradict its score, the official schedule shows the game was not played on
+                MaxPreps&rsquo; date, or it shows a scoreless tie that si.com reports as decided in a
+                league that plays no overtime.
+              </li>
+            </ul>
+            <p>
+              Any other disagreement keeps MaxPreps&rsquo; score and is listed in the cross-check log.
+              A backfilled score counts in the standings like any other final. si.com never decides
+              league membership, league records or the standings order.
+            </p>
+          </div>
+          <div className="mt-stack">
+            <BackfillTable rows={backfilled} />
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------------- dropped */}
+        <section id="dropped" className="mt-16">
+          <SectionHeader size="lg" kicker="Dropped contests" meta={plural(dropped.length, 'contest', 'contests')} />
+          <p className="sx-prose">
+            Contests the pipeline removed on purpose this run, published so nothing disappears silently.
+          </p>
+          {dropped.length === 0 ? (
+            <p className="mt-stack max-w-prose text-body text-ink-2">Nothing was dropped in the most recent run.</p>
+          ) : (
+            <ul className="sx-list mt-stack max-w-[66ch]">
+              {dropped.map((d) => (
+                <li key={d.contestId} className="py-3 text-meta text-ink-2">
+                  <span className="block text-body text-ink">
+                    {d.teams.join(' vs ') || 'Unknown teams'}
+                    {d.dateKey ? (
+                      <span className="text-meta text-ink-3">
+                        {' '}
+                        &middot; <time dateTime={d.dateKey}>{shortDate(d.dateKey)}</time>
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="block">
+                    {DROP_REASON_WORDS[d.reason]}: {d.note}
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
 
@@ -423,121 +776,112 @@ export default function AboutPage() {
           <span id="updates" className="block" />
           <SectionHeader size="lg" kicker="How often this updates" />
           <div className="sx-prose">
-          <p>
-            This whole site is static: nothing here queries a live API when you load a page.
-            Instead, an automated job re-fetches MaxPreps (and, on most runs, SBLive/SI and the
-            SCVAL and CCS calendars) and rebuilds the site from scratch, roughly twice a day
-            during the season &mdash; once overnight and once in the early morning, Pacific time
-            &mdash; between August and November. A game that finishes at 7 PM Thursday typically
-            appears on the site Friday morning, not that same night.
-          </p>
-          <p>
-            <b className="font-semibold text-ink">Live scores are not collected.</b> A game
-            MaxPreps marks as in progress is shown as a scheduled window with a{' '}
-            <b className="font-semibold text-ink">LIVE</b> label, never a running score, because
-            this site has no mechanism that watches a game while it is being played.
-          </p>
-          <p>
-            The snapshot this page was built from was fetched {formatStamp(getFetchedAt())}. If a
-            page anywhere on the site shows a &ldquo;last updated&rdquo; stamp more than 36 hours
-            old, that is this site telling you its own nightly update may be failing &mdash; not
-            a claim that nothing happened in the league since then.
-          </p>
-          <h3>Most recent run, by source</h3>
-          <p className="text-meta text-ink-2">
-            {counted.ok} source{counted.ok === 1 ? '' : 's'} ok &middot; {counted.stale} stale
-            &middot; {counted.error} failed &middot; {counted.skipped} skipped (season-gated or
-            optional steps, by design).
-          </p>
-          {erroring.length > 0 ? (
-            <ul className="sx-list">
-              {erroring.map((s) => (
-                <li key={`${s.id}-${s.label}`} className="py-2 text-meta text-ink-2">
-                  <b className="font-semibold text-loss-ink">{s.label}</b>
-                  {s.error ? `: ${s.error}` : ''}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-meta text-ink-3">
-              No source failed outright in the most recent run.
+            <p>
+              This whole site is static: nothing here queries a live API when you load a page. Instead,
+              an automated job re-fetches MaxPreps (and, on most runs, si.com, the league documents and
+              the CCS calendar) and rebuilds the site from scratch, roughly twice a day during the
+              season &mdash; once overnight and once in the early morning, Pacific time &mdash; between
+              August and November. A game that finishes at 7 PM Thursday typically appears on the site
+              Friday morning, not that same night.
             </p>
-          )}
+            <p>
+              <b className="font-semibold text-ink">Live scores are not collected.</b> A game MaxPreps
+              marks as in progress is shown as a scheduled window with a{' '}
+              <b className="font-semibold text-ink">LIVE</b> label, never a running score, because this
+              site has no mechanism that watches a game while it is being played.
+            </p>
+            <p>
+              The snapshot this page was built from was fetched {formatStamp(getFetchedAt())}. If a page
+              anywhere on the site shows a &ldquo;last updated&rdquo; stamp more than 36 hours old, that
+              is this site telling you its own update may be failing &mdash; not a claim that nothing
+              happened in the leagues since then. Per-league detail is under{' '}
+              <a href="#health" className="text-accent hover:underline">
+                data health
+              </a>
+              .
+            </p>
+            <h3>Most recent run, by source</h3>
+            <p className="text-meta text-ink-2">
+              {plural(counted.ok, 'source', 'sources')} ok &middot; {counted.stale} stale &middot;{' '}
+              {counted.error} failed &middot; {counted.skipped} skipped (season-gated or optional steps,
+              by design).
+            </p>
+            {erroring.length > 0 ? (
+              <ul className="sx-list">
+                {erroring.map((s) => (
+                  <li key={`${s.id}-${s.label}`} className="py-2 text-meta text-ink-2">
+                    <b className="font-semibold text-loss-ink">{s.label}</b>
+                    {s.error ? `: ${s.error}` : ''}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-meta text-ink-3">No source failed outright in the most recent run.</p>
+            )}
           </div>
         </section>
 
-        {/* ---------------------------------------------------------------- playoffs */}
+        {/* ---------------------------------------------------------------- postseason */}
         <section id="playoffs" className="mt-16">
-          <SectionHeader size="lg" kicker="CCS playoffs" />
+          <SectionHeader size="lg" kicker="Postseason" />
           <div className="sx-prose">
-          <blockquote className={QUOTE}>
-            &ldquo;16-team CCS tournament: SCVAL 7, BVAL 4, PCAL 2, at-large 3.&rdquo;{' '}
-            <cite className="not-italic text-ink-3">&mdash; Article VII, Section 1</cite>
-          </blockquote>
-          <blockquote className={QUOTE}>
-            &ldquo;The first three teams in each division are awarded automatic qualifiers (AQ)
-            to CCS playoffs (ties broken by Article VI, Sections 2-7). Fourth place teams play a
-            play-in game; the winner receives the SCVAL 7th AQ. The losing 4th-place team and
-            both 5th-place teams are submitted to CCS for at-large consideration. #1 v #1, #2 v
-            #2, #3 v #3 crossover games are played after the season to help CCS ordering (home
-            site by coin flip). Per the official schedule PDFs these crossover/play-in games are
-            Friday, October 30, 2026.&rdquo;{' '}
-            <cite className="not-italic text-ink-3">&mdash; Article VII, Section 2</cite>
-          </blockquote>
-          <p>
-            In practice: places 1&ndash;3 in each division qualify automatically, 4th place plays
-            a crossover game on {longDate(PLAYOFF_KEY_DATES.crossover)} for the division&rsquo;s
-            7th automatic berth, and both 5th-place teams go to the CCS committee for at-large
-            consideration &mdash; along with the losing 4th-place team. A shared place changes
-            who those teams are; see the standings footnotes. Live, team-by-team status is on the{' '}
-            <Link href="/playoffs" className="text-accent hover:underline">
-              Playoffs
-            </Link>{' '}
-            page.
-          </p>
-          <h3>Key dates</h3>
-          <ul className="list-disc">
-            <li>
-              Entries due &amp; seeding meeting:{' '}
-              <span className="sx-num">
-                {dateWithYear(PLAYOFF_KEY_DATES.entriesDue)}, {timeOfDayPT(PLAYOFF_KEY_DATES.entriesDue)}
-              </span>{' '}
-              / <span className="sx-num">{timeOfDayPT(PLAYOFF_KEY_DATES.seedingMeeting)}</span>
-            </li>
-            <li>
-              Quarterfinals:{' '}
-              <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.quarterfinals)}</span>
-            </li>
-            <li>
-              Semifinals: <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.semifinals)}</span>
-            </li>
-            <li>
-              Final: <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.finals)}</span>
-            </li>
-            <li>
-              Committee evaluation:{' '}
-              <span className="sx-num">
-                {dateWithYear(PLAYOFF_KEY_DATES.evaluationMeeting)}, {timeOfDayPT(PLAYOFF_KEY_DATES.evaluationMeeting)}
-              </span>
-            </li>
-          </ul>
-          <p className="text-meta text-ink-3">
-            {ccsCalendar === undefined
-              ? 'The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it in late October and will note here whether it confirms the dates above.'
-              : keyDatesConfirmed
-                ? "The CCS office's own calendar confirms every date above."
-                : "The CCS office's own calendar shows at least one difference from the dates above — check it directly."}{' '}
-            <ExternalLink href={SOURCE_LINKS.ccsCalendar}>CCS calendar</ExternalLink>. Official
-            bracket:{' '}
-            {playoffs.bracketPublished ? (
-              <ExternalLink href={playoffs.bracketUrl}>view it</ExternalLink>
-            ) : (
-              <>
-                <ExternalLink href={playoffs.bracketUrl}>not yet published</ExternalLink>
-              </>
-            )}
-            .
-          </p>
+            <p>
+              The CCS field is {field.total} teams: {field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} and{' '}
+              {field.atLarge} at-large ({CCS.citations.allocation}; {CCS.citations.change}). Each
+              league&rsquo;s own route to its automatic berths is under its rules above; the live,
+              team-by-team picture is on the{' '}
+              <Link href="/playoffs" className="text-accent hover:underline">
+                CCS playoffs
+              </Link>{' '}
+              page.
+            </p>
+            {leagues
+              .filter((l) => tournamentIds.has(l.id))
+              .map((l) => {
+                const ps = getLeague(l.id).postseason;
+                return (
+                  <p key={l.id}>
+                    {l.section.name}: {sections.find((s) => s.id === l.section.id)?.noChampionshipNote ?? ''}{' '}
+                    <Link href={`/playoffs/${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
+                      {ps.kind === 'league-tournament' ? ps.name : `${l.shortName} postseason`}
+                    </Link>
+                  </p>
+                );
+              })}
+            <h3>CCS key dates</h3>
+            <ul className="list-disc">
+              <li>
+                Entries due &amp; seeding meeting:{' '}
+                <span className="sx-num">
+                  {dateWithYear(playoffs.keyDates.entriesDue)}, {timeOfDayPT(playoffs.keyDates.entriesDue)}
+                </span>{' '}
+                / <span className="sx-num">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
+              </li>
+              <li>
+                Quarterfinals: <span className="sx-num">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
+              </li>
+              <li>
+                Semifinals: <span className="sx-num">{dateWithYear(playoffs.keyDates.semifinals)}</span>
+              </li>
+              <li>
+                Final: <span className="sx-num">{dateWithYear(playoffs.keyDates.finals)}</span>
+              </li>
+              <li>
+                Committee evaluation:{' '}
+                <span className="sx-num">
+                  {dateWithYear(playoffs.keyDates.evaluationMeeting)}, {timeOfDayPT(playoffs.keyDates.evaluationMeeting)}
+                </span>
+              </li>
+            </ul>
+            <p className="text-meta text-ink-3">
+              {ccsCalendar === undefined
+                ? 'The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it in late October and will note here whether it confirms the dates above.'
+                : keyDatesConfirmed
+                  ? "The CCS office's own calendar confirms every date above."
+                  : "The CCS office's own calendar shows at least one difference from the dates above — check it directly."}{' '}
+              <ExternalLink href={SOURCE_LINKS.ccsCalendar}>CCS calendar</ExternalLink>. Official bracket:{' '}
+              <ExternalLink href={playoffs.bracketUrl}>{playoffs.bracketPublished ? 'view it' : 'not yet published'}</ExternalLink>.
+            </p>
           </div>
         </section>
 
@@ -546,23 +890,21 @@ export default function AboutPage() {
           <span id="privacy" className="block" />
           <SectionHeader size="lg" kicker="Privacy &amp; accessibility" />
           <div className="sx-prose">
-          <p>
-            This site stores exactly two things, and both live only in your own browser:{' '}
-            <b className="font-semibold text-ink">a theme choice</b> (system, light or dark) and{' '}
-            <b className="font-semibold text-ink">a pinned team</b>, both in{' '}
-            <code>localStorage</code>. Neither is ever sent anywhere &mdash; there are no
-            accounts, no analytics, no tracking cookies and no third-party requests of any kind
-            on any page. School colors come from data already in the snapshot, never a hotlinked
-            image, and fonts are bundled with the site rather than loaded from a font host at
-            view time.
-          </p>
-          <p>
-            Accessibility is a floor, not an aspiration: every win/loss/tie is a letter and a
-            written word, never color alone; every score and result has a full sentence for
-            screen readers; contrast is measured against WCAG AA on every ink/surface pair the
-            site actually uses, and a token edit that breaks that floor fails this
-            repository&rsquo;s own tests before it can ship.
-          </p>
+            <p>
+              This site stores exactly three things, all only in your browser: a theme choice, a pinned
+              team and the league you chose to see on the home page. All three live in{' '}
+              <code>localStorage</code> and none is ever sent anywhere &mdash; there are no accounts, no
+              analytics, no tracking cookies and no third-party requests of any kind on any page. School
+              colors come from data already in the snapshot, never a hotlinked image, and fonts are
+              bundled with the site rather than loaded from a font host at view time.
+            </p>
+            <p>
+              Accessibility is a floor, not an aspiration: every win/loss/tie is a letter and a written
+              word, never color alone; every score and result has a full sentence for screen readers;
+              contrast is measured against WCAG AA on every ink/surface pair the site actually uses, and
+              a token edit that breaks that floor fails this repository&rsquo;s own tests before it can
+              ship.
+            </p>
           </div>
         </section>
 
@@ -571,18 +913,18 @@ export default function AboutPage() {
           <span id="corrections" className="block" />
           <SectionHeader size="lg" kicker="Corrections &amp; contact" />
           <div className="sx-prose">
-          <p>
-            This is an independent hobby project with no staffed inbox, so the fastest way to
-            check anything you think looks wrong is to compare it against the primary source
-            directly &mdash; every team, standings and game on this site links back to its
-            MaxPreps page, and the by-laws and schedule grids above link straight to SCVAL&rsquo;s
-            own PDFs. If a number here disagrees with one of those sources, that is exactly what{' '}
-            <a href="#cross-check" className="text-accent hover:underline">
-              the cross-check log
-            </a>{' '}
-            is for, and it is worth checking there first: a real disagreement between sources is
-            published, not hidden.
-          </p>
+            <p>
+              This is an independent hobby project with no staffed inbox, so the fastest way to check
+              anything you think looks wrong is to compare it against the primary source directly
+              &mdash; every team, standings table and game on this site links back to its MaxPreps page,
+              and the league documents above link straight to each league&rsquo;s own files. If a number
+              here disagrees with one of those sources, that is exactly what{' '}
+              <a href="#cross-check" className="text-accent hover:underline">
+                the cross-check log
+              </a>{' '}
+              is for, and it is worth checking there first: a real disagreement between sources is
+              published, not hidden.
+            </p>
           </div>
         </section>
 
@@ -590,16 +932,16 @@ export default function AboutPage() {
         <section id="not-affiliated" className="mt-16 mb-2">
           <SectionHeader size="lg" kicker="Not affiliated" />
           <div className="sx-prose">
-          <p>
-            This is an unofficial fan site. It is not affiliated with, endorsed by, or operated
-            by the Santa Clara Valley Athletic League (SCVAL), the CIF Central Coast Section
-            (CCS), MaxPreps or Sports Illustrated/SBLive. All team names, colors and marks belong
-            to their respective schools. Records here are computed from published game results
-            and, while we cross-check them and publish every disagreement we find, they may
-            differ from an official ruling &mdash; the league&rsquo;s own standings are always
-            the source of truth for anything that matters competitively, such as playoff
-            seeding.
-          </p>
+            <p>
+              This is an unofficial fan site. It is not affiliated with, endorsed by, or operated by{' '}
+              {listWords(leagues.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
+              {listWords(sections.map((s) => `${s.name} (${s.shortName})`))}, MaxPreps or Sports
+              Illustrated. All team names, colors and marks belong to their respective schools. Records
+              here are computed from published game results and, while we cross-check them and publish
+              every disagreement we find, they may differ from an official ruling &mdash; each
+              league&rsquo;s own standings are always the source of truth for anything that matters
+              competitively, such as playoff seeding.
+            </p>
           </div>
         </section>
       </div>

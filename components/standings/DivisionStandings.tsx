@@ -1,34 +1,46 @@
 import { ordinal } from '../../lib/format';
+import { leagueOfDivision } from '../../lib/leagues';
 import type { TeamSlug } from '../../lib/types';
+import LeagueHealthNote from '../ui/LeagueHealthNote';
 import SectionHeader from '../ui/SectionHeader';
 import StandingsTable, { collectStandingsNotes, type StandingsTableProps } from '../ui/StandingsTable';
 
+import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';
 import StandingsNotes from './StandingsNotes';
 import type { DivisionView } from './standings-view';
 
 /**
- * One division's whole section: the heading, the table (in its own card), a one-line legend, then
- * the Notes inset and the CCS qualifying card — side by side from `lg`. The `id` is the
- * `#de-anza` / `#el-camino` anchor target; `html { scroll-padding-top }` clears the sticky stack.
+ * One division's whole section (SPEC §10.3), in this order: the heading (the division heading,
+ * or `League table` for a single-division league — never the league's name twice, never a
+ * MaxPreps table name), the league's health note, the ONE-line missing-results banner, the table
+ * (in its own card), a one-line legend, then the Notes inset and the postseason card — side by
+ * side from `lg`. The `id` is the `#<division>` anchor target; `html { scroll-padding-top }`
+ * clears the sticky stack.
  *
- * The phone and desktop tables are DIFFERENT DOM (a 68px two-line row versus a 14-column row), so
+ * The phone and desktop tables are DIFFERENT DOM (a 68px two-line row versus a wide row), so
  * both render and one is hidden at each breakpoint. That is deliberate rather than a CSS-only
- * reflow: DESIGN §10.8 requires 400% zoom at 320px to reflow with no scrollable data table, which
- * a 14-column table cannot do. The swap is at `lg`: the desktop table's fixed `<colgroup>` needs
- * 806px of columns plus a ≥160px team column, which the 720px content box at `md` cannot give.
+ * reflow: DESIGN §10.8 requires 400% zoom at 320px to reflow with no scrollable data table. The
+ * swap is at `lg`.
  *
  * Both tables pass `notes="none"`; their division-specific notes are collected here once and go
- * into the Notes inset, and the generic legend is printed once per page by app/standings/page.tsx.
+ * into the Notes inset, and the generic legend is printed once per page by the page.
  */
 export interface DivisionStandingsProps {
   view: DivisionView;
   /** The pinned team's 2px accent left rule, when a page above knows it. */
   highlightSlug?: TeamSlug | null;
+  /** Render the league's health note here (the page's first table only, so it is said once). */
+  showHealth?: boolean;
   className?: string;
 }
 
-export function DivisionStandings({ view, highlightSlug = null, className }: DivisionStandingsProps) {
+export function DivisionStandings({
+  view,
+  highlightSlug = null,
+  showHealth = false,
+  className,
+}: DivisionStandingsProps) {
   const table: Omit<StandingsTableProps, 'variant' | 'className'> = {
     division: view.division,
     rows: view.rows,
@@ -38,42 +50,54 @@ export function DivisionStandings({ view, highlightSlug = null, className }: Div
     sourceUrl: view.sourceUrl,
     highlightSlug,
     notes: 'none',
-    // The ⚑ DESIGN §3.2 draws on a row: driven by the published cross-check log, not only by
-    // `standing.mismatch` (which covers W-L-T alone and is false for every team today, while the
-    // log holds real placement disagreements). The Notes block below explains each.
-    flaggedSlugs: view.mismatches.map((m) => m.slug),
+    context: view.context,
+    columns: ['gp', 'left', 'max'],
+    // ⚑ marks a row only in a `full` division (SPEC §5.8): elsewhere MaxPreps differs for a known
+    // reason, which the Notes block states instead of an alarm on every row.
+    flaggedSlugs: view.comparison.flag ? view.mismatches.map((m) => m.slug) : [],
     ...(view.berthRuleAfter === undefined ? {} : { berthRuleAfter: view.berthRuleAfter }),
   };
   // `footnotes` go last in the Notes block, so they are left out of the table's own list here.
   const { specific } = collectStandingsNotes({ ...table, variant: 'phone', footnotes: [] });
+  const points = leagueOfDivision(view.division).rules.citations.points;
 
   return (
-    <section id={view.division} className={className}>
-      <SectionHeader kicker={view.label} meta={`${view.meta} · unofficial`} />
+    <section id={view.division} aria-labelledby={`${view.division}-heading`} className={className}>
+      <SectionHeader id={`${view.division}-heading`} kicker={view.kicker} meta={`${view.meta} · unofficial`} />
+      {showHealth ? <LeagueHealthNote leagueId={view.leagueId} className="mb-4" /> : null}
+      <MissingResultsBanner text={view.missingBanner} targetId={view.missingId} className="mb-3" />
       <StandingsTable {...table} variant="phone" className="lg:hidden" />
       <StandingsTable {...table} variant="desktop" className="hidden lg:block" />
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        PTS: 3 a win, 1 a tie &middot; GD bars scaled to {view.label} (|GD| max {view.gdDomain})
+        PTS: {points}. GD bars are per division ({view.label} |GD| max {view.gdDomain})
         {view.berthRuleAfter ? (
           <>
             {' '}
-            &middot; the heavier line after {ordinal(view.berthRuleAfter)} is the
-            automatic-qualifier cut
+            &middot; the heavier line after {ordinal(view.berthRuleAfter)} is the {view.ladderLineLabel}
           </>
         ) : null}
       </p>
+      {view.backfillFootnote ? <p className="mt-1 mb-0 text-meta text-ink-3">{view.backfillFootnote}</p> : null}
       <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
         <StandingsNotes
           divisionLabel={view.label}
           tableNotes={specific}
           mismatches={view.mismatches}
-          unreported={view.unreported}
+          comparison={view.comparison}
+          missingId={view.missingId}
+          missingIntro={view.missingIntro}
+          missing={view.missing}
+          postponed={view.postponed}
           footnotes={view.footnotes}
           sourceUrl={view.sourceUrl}
-          scheduleUrl={view.scheduleUrl}
+          officialSchedule={view.officialSchedule}
+          scheduledPer={view.scheduledPer}
         />
         <PlayoffStatusBand
           divisionLabel={view.label}
+          heading={view.statusHeading}
+          href={view.playoffsHref}
+          linkText={view.playoffsLinkText}
           groups={view.statusGroups}
           caveat={view.statusCaveat}
           unrankedTeams={view.unrankedTeams}

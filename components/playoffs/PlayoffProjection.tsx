@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import { EM_DASH, ordinal } from '../../lib/format';
 import BerthMeter from '../ui/BerthMeter';
@@ -14,14 +15,16 @@ import {
 } from './playoff-view';
 
 /**
- * One division's projected CCS qualification (DESIGN §3.8, §7.11; BYLAWS-ADDENDUM Article VII §2).
+ * One division's projected CCS qualification (DESIGN §3.8, §7.11; SPEC §10.7), for any CCS league.
  *
  * Rules this table implements literally:
  *
- *  - **Every status is a written word.** `label` comes from `PLAYOFF_STATUS_LABELS` — "Automatic
- *    qualifier", "Play-in game Oct 30", "At-large consideration", "No automatic path", "No results
- *    reported". There are NO percentages anywhere on this page, because there is no model.
- *  - **The 2px rule after the last automatic berth is the redundant cue**, never the only one.
+ *  - **Every status is a written word.** `label` comes from the league's ladder in config —
+ *    "Automatic qualifier", "Play-in game Oct 30", "Hosts the play-in Oct 31", "No automatic-berth
+ *    route", "No results reported". There are NO percentages anywhere on this page, because there is
+ *    no model.
+ *  - **The ladder line is a labelled separator row** ("AQ line", "Play-in host"), as on /standings:
+ *    a 2px rule AND words, so the rule is never the only cue (WCAG 1.3.1).
  *  - **Shared places render level** — `6=` with an sr-only "tied for 6th" — and every tied group
  *    gets `tiebreak.note` verbatim in the footnotes, which already carries its Article citation.
  *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
@@ -32,6 +35,16 @@ import {
  */
 export interface PlayoffProjectionProps {
   projection: DivisionProjection;
+  /**
+   * The h3 kicker: the division heading, or 'League table' for a single-division league (never the
+   * league's name twice, never a division label for PCAL).
+   */
+  heading: string;
+  /**
+   * '3 per division qualify automatically.' — only for a league whose divisions each hold the same
+   * number of automatic berths (SCVAL); null hides the per-division meter.
+   */
+  meterNote?: string | null;
   /** 'through Sep 29', or 'so far' before this division has a league result. */
   asOfLabel: string;
   /** Deep link to this division's full league table. */
@@ -89,29 +102,24 @@ function StatusBadge({ row }: { row: ProjectionRow }) {
   );
 }
 
-/** The by-law sentence, with the play-in date formatted from the snapshot like every other date. */
-function qualifying(playIn: string): string {
-  return (
-    'The first three in each division qualify automatically (Article VII §2). The two ' +
-    `fourth-place teams meet in the ${playIn} play-in for the seventh SCVAL berth, and the play-in ` +
-    'loser plus both fifth-place teams are submitted to CCS for at-large consideration.'
-  );
-}
-
 /**
- * The footnotes every division shares, said once for the page in a labelled disclosure (brief
- * §4.22). Division-specific facts (tie notes, no-results teams) stay visible under their own table.
+ * The footnotes every division of a league shares, said once per league in a labelled disclosure
+ * (brief §4.22). Division-specific facts (tie notes, no-results teams) stay visible under their own
+ * table.
  */
 export function ProjectionKey({
-  playIn,
+  qualification,
   className,
-  showRule = true,
+  showLine = true,
+  rulesHref,
 }: {
-  /** The crossover / play-in date, already formatted ("Fri Oct 30"). */
-  playIn: string;
+  /** The league's qualification sentence (`postseason.citation`, introduced). */
+  qualification: string;
   className?: string;
-  /** false when no table draws the 2px rule (nobody is in automatic position yet). */
-  showRule?: boolean;
+  /** false when no table draws the ladder line (nobody has results yet). */
+  showLine?: boolean;
+  /** '/about#rules-<league>' */
+  rulesHref: string;
 }) {
   return (
     <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
@@ -120,15 +128,15 @@ export function ProjectionKey({
           children's `m-0` would win and the paragraphs would touch. */}
       <div className="flex max-w-prose flex-col gap-3 text-meta text-ink-2">
         <p className="m-0">
-          {showRule ? 'The 2px rule marks the last automatic berth. ' : ''}
-          {qualifying(playIn)}
+          {showLine ? 'The labelled 2px rule marks the end of the division’s automatic or play-in places. ' : ''}
+          {qualification}
         </p>
         <p className="m-0">
           Every status in the tables is a written word. There are no probabilities on this page, because
           there is no model behind it &mdash; only the league points played so far.
         </p>
         <p className="m-0">
-          <Link href="/about#standings" className="sx-action text-accent hover:underline">
+          <Link href={rulesHref} className="sx-action text-accent hover:underline">
             How these places are computed
           </Link>
         </p>
@@ -139,12 +147,14 @@ export function ProjectionKey({
 
 export function PlayoffProjection({
   projection,
+  heading,
+  meterNote = null,
   asOfLabel,
   standingsHref,
   className,
   id,
 }: PlayoffProjectionProps) {
-  const { rows, divisionLabel, berthRuleAfter, autoRows, notes } = projection;
+  const { rows, divisionLabel, lineAfter, lineLabel, autoRows, notes } = projection;
   const footnotes: string[] = [...notes];
   // One footnote for the whole set, not one per team: eight identical sentences would bury the
   // rest. When NO row has results, buildDivisionProjection has already said so.
@@ -163,16 +173,18 @@ export function PlayoffProjection({
     <section className={className} id={id}>
       <SectionHeader
         as="h3"
-        kicker={divisionLabel}
+        kicker={heading}
         meta={`${asOfLabel} · unofficial`}
         action={{ href: standingsHref, label: 'Full table' }}
       />
-      <BerthMeter
-        claimed={autoRows.length}
-        total={rows.length}
-        label={`${autoRows.length} of ${divisionLabel}'s ${rows.length} teams are in automatic-qualifier position today. Three per division qualify automatically (Article VII §2).`}
-        className="mb-4"
-      />
+      {meterNote ? (
+        <BerthMeter
+          claimed={autoRows.length}
+          total={rows.length}
+          label={`${autoRows.length} of ${divisionLabel}’s ${rows.length} teams are in automatic-qualifier position today. ${meterNote}`}
+          className="mb-4"
+        />
+      ) : null}
       <div className="sx-card sx-flush">
         <table className="sx-table text-meta">
           <caption className="sr-only">
@@ -192,15 +204,8 @@ export function PlayoffProjection({
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr
-                key={row.team.slug}
-                className="relative"
-                style={
-                  berthRuleAfter && index + 1 === berthRuleAfter
-                    ? { height: 56, borderBottom: '2px solid var(--sx-border-strong)' }
-                    : { height: 56 }
-                }
-              >
+              <Fragment key={row.team.slug}>
+              <tr className="relative" style={{ height: 56 }}>
                 <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
@@ -255,6 +260,19 @@ export function PlayoffProjection({
                   <StatusBadge row={row} />
                 </td>
               </tr>
+              {lineLabel && index + 1 === lineAfter && index + 1 < rows.length ? (
+                // The ladder line (SPEC §10.3): a labelled separator row, so the 2px rule is never
+                // the only cue. Not a data row: its one cell spans the table.
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="border-t-2 border-rule py-1 pl-3 text-micro text-ink-3 sm:pl-4"
+                  >
+                    {lineLabel}
+                  </td>
+                </tr>
+              ) : null}
+              </Fragment>
             ))}
           </tbody>
         </table>

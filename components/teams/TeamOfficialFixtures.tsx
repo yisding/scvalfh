@@ -1,16 +1,17 @@
 import { monthDay } from '../../lib/format';
-import { SOURCE_LINKS } from '../../lib/season';
+import { getDivision, leagueOfDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Division, OfficialFixture, TeamSlug } from '../../lib/types';
+import type { DivisionId, OfficialFixture, TeamSlug } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
 import TeamMonogram from '../ui/TeamMonogram';
 
 /**
- * Fixtures that exist in the official SCVAL schedule grid and in NO data source (SPEC §1.3).
+ * Fixtures that exist in the league's official schedule and in NO data source (SPEC §1.3, §7.8).
  *
- * This is how the site tells the truth about a hole instead of hiding it. The two
- * Homestead–Cupertino legs MaxPreps has never published live here — and the list is rendered from
- * the data, never hard-coded.
+ * This is how the site tells the truth about a hole instead of hiding it: a fixture MaxPreps never
+ * published (and si.com could not fill under owner decision D2) lives here, rendered from the
+ * data, never hard-coded. The schedule link and the `scheduled per <SHORT>` copy come from config
+ * (lib/leagues.ts), never from a division id in this file.
  *
  * These rows are NOT games: they have no contest, no score slot and no game page, they are
  * excluded from every record, and they are deliberately outside the game log so nothing here can
@@ -19,15 +20,13 @@ import TeamMonogram from '../ui/TeamMonogram';
 export interface TeamOfficialFixturesProps {
   fixtures: OfficialFixture[];
   slug: TeamSlug;
-  division: Division;
+  division: DivisionId;
 }
 
 export function TeamOfficialFixtures({ fixtures, slug, division }: TeamOfficialFixturesProps) {
   if (fixtures.length === 0) return null;
-  const scheduleUrl =
-    division === 'de-anza'
-      ? SOURCE_LINKS.scvalDeAnzaSchedule
-      : SOURCE_LINKS.scvalElCaminoSchedule;
+  const scheduleUrl = getDivision(division).official.scheduleUrl;
+  const short = leagueOfDivision(division).shortName;
 
   return (
     <>
@@ -46,7 +45,7 @@ export function TeamOfficialFixtures({ fixtures, slug, division }: TeamOfficialF
                 <span className="sr-only">
                   {mineIsHome ? 'Home' : 'Away'} against{' '}
                   {opponent ? opponent.name : opponentName} on {monthDay(fixture.dateKey)}: scheduled
-                  per SCVAL, no result reported.
+                  per {short}, no result reported.
                 </span>
                 <span className="sx-num w-14 shrink-0 text-cell text-ink-2" aria-hidden="true">
                   {monthDay(fixture.dateKey)}
@@ -68,10 +67,10 @@ export function TeamOfficialFixtures({ fixtures, slug, division }: TeamOfficialF
         </ul>
       </div>
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-        Scheduled per SCVAL; no result reported by MaxPreps. These fixtures are in the official
-        division schedule and in no data source, so they count for nothing in the records above and
+        Scheduled per {short}; no result reported by MaxPreps. These fixtures are in the official{' '}
+        {short} schedule and in no data source, so they count for nothing in the records above and
         have no score &mdash; not even a zero.{' '}
-        <ExternalLink href={scheduleUrl}>Official schedule (PDF)</ExternalLink>
+        <ExternalLink href={scheduleUrl}>Official {short} schedule</ExternalLink>
       </p>
     </>
   );

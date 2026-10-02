@@ -2,23 +2,28 @@
  * The filter index that makes `/schedule` filterable with ZERO network and zero re-render.
  *
  * The complete, unfiltered season list is server-rendered into the HTML (DESIGN §3.3, decision 7:
- * no `searchParams` in any page signature). `ScheduleFilters` then toggles the `hidden` attribute
+ * no search params in any page signature). `ScheduleFilters` then toggles the `hidden` attribute
  * on `[data-game]` rows and `[data-dategroup]` sections. This module is the single place the
  * contract between the two halves lives: the server writes these attributes, the client reads
  * exactly these names, and nothing else is shared.
  *
  * Every value is padded with a leading and trailing space so a client match can be an exact
  * `includes(' slug ')` test rather than a substring that would let `los-altos` match `altos`.
+ *
+ * CLIENT BOUNDARY (SPEC §0.4, §10.4): the client `ScheduleFilters` imports this module, so it
+ * keeps only client-safe code — types, constants and pure functions over a `Game` — and NEVER
+ * imports lib/teams or any other server module. The registry-dependent writers of the attributes
+ * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
  */
 
-import { getTeamBySlug } from '../../lib/teams';
-import type { Division, Game, TeamSlug } from '../../lib/types';
+import type { Game } from '../../lib/types';
 
 /** What the `state` filter groups games into. */
 export type ScheduleState = 'final' | 'upcoming' | 'pending';
 
 export type FilterTeam = string | 'all';
-export type FilterDivision = Division | 'all';
+/** A division id, or every division. */
+export type FilterDivision = string | 'all';
 export type FilterType = 'all' | 'league' | 'non-league';
 export type FilterStateValue = 'all' | ScheduleState;
 
@@ -56,34 +61,14 @@ export function scheduleState(game: Game): ScheduleState {
   return 'upcoming';
 }
 
-/** The SCVAL divisions a contest touches. A cross-division non-league game touches both. */
-export function gameDivisions(game: Game): Division[] {
-  const out: Division[] = [];
-  for (const side of [game.away, game.home]) {
-    const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-    if (team && !out.includes(team.division)) out.push(team.division);
-  }
-  return out;
-}
-
+/** The `data-*` attributes on a game's list item (written by `filter-data-server.ts`). */
 export interface GameFilterAttrs {
   'data-game': string;
   'data-slugs': string;
   'data-divisions': string;
+  /** '1' when the game counts for a division table (`countsFor`), else '0'. */
   'data-league': '1' | '0';
   'data-state': ScheduleState;
-}
-
-/** The `data-*` attributes to spread onto a game's list item. */
-export function gameFilterAttrs(game: Game): GameFilterAttrs {
-  const slugs = [game.away.slug, game.home.slug].filter((s): s is TeamSlug => s !== null);
-  return {
-    'data-game': game.contestId,
-    'data-slugs': ` ${slugs.join(' ')} `,
-    'data-divisions': ` ${gameDivisions(game).join(' ')} `,
-    'data-league': game.isLeague ? '1' : '0',
-    'data-state': scheduleState(game),
-  };
 }
 
 export interface ScheduleCounts {
