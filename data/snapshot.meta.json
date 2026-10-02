@@ -1,6 +1,6 @@
 {
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0",
-  "contentHash": "00671679ca64173b6c38142b585654f0a907d2bc541752d3c6ba7dd537e28d26",
+  "contentHash": "56d3e64d72326f6652c43d9fd3dcc71eee1a4ff6c827293095bd9ed4af8c27fc",
   "counts": {
     "byLeague": {
       "bval": {
@@ -18,7 +18,7 @@
         "teams": 9
       },
       "pcal": {
-        "backfilled": 3,
+        "backfilled": 2,
         "finals": 38,
         "games": 56,
         "leagueGames": 36,
@@ -35,18 +35,18 @@
     "finals": 203,
     "games": 364,
     "leagueGames": 264,
-    "mismatches": 8,
+    "mismatches": 6,
     "pending": 4,
     "teams": 43
   },
   "crossCheck": {
-    "agreements": 73,
-    "backfilled": 3,
-    "compared": 142,
+    "agreements": 74,
+    "backfilled": 2,
+    "compared": 143,
     "conflicts": 3,
     "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-10-02T20:58:46.007Z",
+  "fetchedAt": "2026-10-02T22:56:42.788Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -67,7 +67,7 @@
       "state": "fresh"
     },
     {
-      "backfilled": 3,
+      "backfilled": 2,
       "countedFinals": 21,
       "finalsDelta": 0,
       "id": "pcal",
