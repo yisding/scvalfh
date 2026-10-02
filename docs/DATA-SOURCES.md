@@ -201,20 +201,21 @@ MaxPreps' per-level pages (`/jv/roster/`, `/freshman/roster/`) and prior-season 
 Monta Vista JV (12) and Los Gatos JV (2). This sweep is not a script: re-running it is research.
 
 **Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`).** A second sweep on
-2026-10-02 looked for each rostered player's own recruiting profile. It found 50 for 49 players:
-37 SportsRecruits, 10 Hudl and 3 NCSA. 47 are on varsity rows; Los Gatos' three are JV and not
-shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
+2026-10-02 looked for each rostered player's own recruiting profile, in two passes the same day.
+It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
+Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
 
 | Team | Found | How it was tied to the player |
 |---|---|---|
-| St. Ignatius | 23 SportsRecruits (every rostered player) | The school's SportsRecruits team page (`nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey`) links all 23; class years and numbers agree. About 14 are bare team-created pages. |
+| St. Ignatius | 23 SportsRecruits (every rostered player), 13 Hudl | The school's SportsRecruits team page (`nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey`) links all 23; class years and numbers agree. About 14 are bare team-created pages. The 13 Hudl profiles carry the school's varsity field hockey team (SICP Women's Field Hockey Varsity, Hudl team 409165); several list soccer first. |
 | Saratoga | 9 Hudl | Created from Saratoga's 2024 varsity team (Hudl team 777233, ids 24030203-24030221). They name school and sport but no class year; all 9 players are juniors or seniors now. |
-| Los Gatos | 1 NCSA, 5 SportsRecruits (3 JV) | Lizzie Moorehouse's NCSA profile is under her legal name, Mary Elizabeth; her SportsRecruits bio says she goes by Lizzie. |
+| Los Gatos | 1 NCSA, 5 SportsRecruits (3 JV) | Lizzie Moorehouse's NCSA profile is under the legal name, Mary Elizabeth; the SportsRecruits bio gives Lizzie as the name used. |
 | Mitty | 3 SportsRecruits, 1 Hudl | Each page names Archbishop Mitty. |
-| Saint Francis | 3 SportsRecruits | Each bio names Saint Francis. |
+| Saint Francis | 3 SportsRecruits, 2 NCSA, 1 Hudl | Each SportsRecruits bio names Saint Francis. NCSA lists Genevieve (Evie) Ferrini, and Aadya Kumar (the roster's Aadya Shivan Kumar; position and height agree). The Hudl profile is on SFHS Girls Varsity Field Hockey (team 26559). |
+| Santa Clara | 3 Hudl | Created from Santa Clara's varsity field hockey team on Hudl (ids 23923742-23923757); no class year. The block's other names are not on the roster. |
 | Los Altos | 1 NCSA, 1 SportsRecruits | |
-| Homestead, Lynbrook, Fremont | 1 NCSA; 1 SportsRecruits; 1 SportsRecruits | The Lynbrook and Fremont pages name no school: matched on class year plus hometown (Cupertino, Sunnyvale). |
-| Cupertino, Valley Christian, Palo Alto, Presentation, Santa Clara, Monta Vista | none found | |
+| Homestead, Palo Alto, Lynbrook, Fremont | 1 NCSA; 1 NCSA; 1 SportsRecruits; 1 SportsRecruits | The Lynbrook and Fremont pages name no school: matched on class year plus hometown (Cupertino, Sunnyvale). |
+| Cupertino, Valley Christian, Presentation, Monta Vista | none found | |
 
 The rule: a page is linked only when it names the player (or the school's spelling, `sourceName`)
 and field hockey, and either names this school or shows the class year the roster shows plus a
@@ -225,9 +226,9 @@ of or beside a field hockey one.
 
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
-  answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its three
+  answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
   profiles were matched on the search result alone: the title, the school in the URL path, and the
-  class year in the result summary. Several schools have two NCSA school slugs: Los Altos
+  class year in the result summary where it gave one. Several schools have two NCSA school slugs: Los Altos
   (`los-altos-high-school1` and `los-altos-high-school-los-altos`), Fremont
   (`fremont-high-school-sunnyvale` and `fremont-high-school6`) and Monta Vista (`monta-vista-high-school`
   and `monte-vista-high-school-cupertino`). Every other field hockey profile the searches surfaced
@@ -239,16 +240,23 @@ Gotchas, all **[V]**:
   (sometimes a position) and no school or state; about a dozen such pages whose name, sport and
   class year agree with a rostered player (Saint Francis, Los Altos, Mitty, Palo Alto,
   Presentation, Fremont) were **not** linked.
-- **Hudl** profile ids are numeric and cannot be guessed; **FieldLevel** profiles are mostly behind a
-  login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
-  roster has no class year to check, so only her NCSA profile (under Homestead) is linked.
+- **Hudl** profile ids are numeric and cannot be guessed. A profile lists every team the athlete is
+  on, but its meta description names only one (often soccer or basketball), so what was checked is
+  the page's team list: a team with `sportName: "Field Hockey"` at this school. Profiles created
+  from one team's roster import have consecutive ids, so scanning the ids around one known profile
+  found teammates (St. Ignatius, Santa Clara); Mitty's and Saint Francis's did not cluster.
+  **FieldLevel** profiles are mostly behind a login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
+  roster has no class year to check, so only the NCSA profile (under Homestead) is linked.
 
-**Recall is partial.** NCSA can only be found through search, and the session's search budget ran
-out before per-player searches were run for most players. Name-by-name searches covered the Los
-Gatos and Saratoga juniors and seniors, some Lynbrook players, seven Mitty players and three Los
-Altos and Homestead names; every school got NCSA sweeps by school, class year and position. Every
-player on every roster was looked up directly on SportsRecruits; FieldLevel lookups covered six
-teams. An NCSA or Hudl profile for anyone else could exist and not be linked.
+**Recall is partial.** NCSA can only be found through search, and both passes ended when the
+session's search budget (200 searches) ran out. Every school got NCSA sweeps by school, class year
+and position. A name search (NCSA and Hudl together) ran for nearly every junior, senior and
+no-grade player on all 15 teams (a few who already had a link were skipped), and for the varsity freshmen and sophomores at Saint Francis, Valley
+Christian, Fremont and most of Cupertino. About 35 varsity freshmen and sophomores were never
+searched by name (Saratoga 11, Mitty 6, Palo Alto 4, Presentation 4, Cupertino 3, Los Altos 3,
+Lynbrook 2, Homestead 1, Santa Clara 1). Every player on every roster was looked up directly on
+SportsRecruits; FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else
+could exist and not be linked.
 Like the first sweep, this one is research, not a script.
 
 **(k) Player stats** — `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`

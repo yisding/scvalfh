@@ -6,7 +6,7 @@
     "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season.",
     "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV.",
     "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
-    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02. A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so NCSA profiles were matched on the search result (title, the school in the URL path, class year). Social media, news and profiles for other sports are not linked. Recall is incomplete: see docs/DATA-SOURCES.md."
+    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02. A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so NCSA profiles were matched on the search result (title, the school in the URL path, class year). A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete: see docs/DATA-SOURCES.md."
   ],
   "season": "26-27",
   "teams": [
@@ -49,6 +49,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/storey_lewis3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178210"
             }
           ],
           "sourceName": null
@@ -77,6 +83,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/olivia_van_de_braak1"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576478"
             }
           ],
           "sourceName": null
@@ -105,6 +117,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/gabriella_colant3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576483"
             }
           ],
           "sourceName": "Gabriella Colant"
@@ -198,6 +216,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/margaret_magnano"
+            },
+            {
+              "classOf": null,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178201"
             }
           ],
           "sourceName": "Margaret Magnano"
@@ -226,6 +250,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/dylan_powell3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20178226"
             }
           ],
           "sourceName": null
@@ -310,6 +340,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/violet_hesslein"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799454"
             }
           ],
           "sourceName": null
@@ -338,6 +374,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/caitlyn_hughes3"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists other sports.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576479"
             }
           ],
           "sourceName": null
@@ -366,6 +408,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/quinn_fisher5"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799397"
             }
           ],
           "sourceName": null
@@ -422,6 +470,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/andria_spink2"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799413"
             }
           ],
           "sourceName": "Andria Spink"
@@ -478,6 +532,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/hazel_stang"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576473"
             }
           ],
           "sourceName": null
@@ -506,6 +566,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/lila_lamb3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists soccer.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799442"
             }
           ],
           "sourceName": null
@@ -590,6 +656,12 @@
               "note": "The page names no school; St. Ignatius' team page on SportsRecruits links it.",
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/clara_brunello2"
+            },
+            {
+              "classOf": 2028,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27799478"
             }
           ],
           "sourceName": null
@@ -674,6 +746,12 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/stella_strain"
+            },
+            {
+              "classOf": 2027,
+              "note": "On St. Ignatius' varsity field hockey team on Hudl (SICP Women's Field Hockey Varsity); the profile also lists other sports.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23576481"
             }
           ],
           "sourceName": null
@@ -794,6 +872,69 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/melanie_henderson4"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
+          "conflicts": [],
+          "fullName": "Evie Ferrini",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Listed as Genevieve (Evie) Ferrini. NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/genevieve-evie-ferrini"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ef2c3b82-6eb6-488e-ad0e-69f126804da1",
+          "conflicts": [],
+          "fullName": "Aadya Shivan Kumar",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Listed as Aadya Kumar, Forward/Midfielder, 5'5\" (the roster's F, M and 5'5\"). NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/aadya-kumar1"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "2e36cd4f-ec3c-4686-84c4-2505ed1f4864",
+          "conflicts": [],
+          "fullName": "Katie Tsiagkas",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Saint Francis' varsity field hockey team on Hudl (SFHS Girls Varsity Field Hockey, Mountain View).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21970981"
             }
           ],
           "sourceName": null
@@ -2144,7 +2285,7 @@
           "profiles": [
             {
               "classOf": 2028,
-              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title, the school in the URL path and class of 2028. Listed as Mary Elizabeth Moorehouse; her SportsRecruits page says she goes by Lizzie.",
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title, the school in the URL path and class of 2028. Listed as Mary Elizabeth Moorehouse; the SportsRecruits page gives Lizzie as the name used.",
               "platform": "ncsa",
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-gatos/los-gatos-high-school1/mary-elizabeth-moorehouse"
             },
@@ -3058,6 +3199,27 @@
           "positions": null,
           "profiles": [],
           "sourceName": null
+        },
+        {
+          "athleteId": "7f64bbaf-a0d0-4ec3-9217-7500194a7df4",
+          "conflicts": [],
+          "fullName": "Ela Aba",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "NCSA pages answer a bot challenge, so this was matched on the search result: its title and the school in the URL path; it states no class year.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/palo-alto/palo-alto-high-school/ela-aba"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "palo-alto",
@@ -3252,7 +3414,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923751"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3350,7 +3519,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923747"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -3455,7 +3631,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "Created from Santa Clara's varsity field hockey team on Hudl; states no class year.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23923757"
+            }
+          ],
           "sourceName": null
         },
         {

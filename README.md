@@ -128,7 +128,7 @@ page renders it in a Roster section (`components/teams/TeamRoster.tsx`, built by
 MaxPreps, the coaches, every recorded disagreement and a link to each source.
 
 The same overlay links players' own recruiting pages — NCSA, SportsRecruits and Hudl profiles
-(`profiles` on each record; 50 for 49 players as of 2026-10-02, 47 of them on varsity rows). A
+(`profiles` on each record; 70 for 56 players as of 2026-10-02, 67 of them on varsity rows). A
 page is linked only when it names the player and field hockey and either names the school or shows
 the class year the roster shows plus a California hometown, and a stated class year must agree with
 the row's grade (checked at load). The roster shows them as a line of links under the player's
