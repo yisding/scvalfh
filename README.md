@@ -119,8 +119,10 @@ by hand once (2026-10-02) and joined on the MaxPreps athlete id. It only ever fi
 a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded; every value
 carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
-per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. No page
-renders it yet. See `docs/DATA-SOURCES.md` §1.1j for the column map, the per-school sources and
+per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Each team
+page renders it in a Roster section (`components/teams/TeamRoster.tsx`, built by
+`components/teams/roster-view.ts`): varsity only, a † on every value that did not come from
+MaxPreps, the coaches, every recorded disagreement and a link to each source. See `docs/DATA-SOURCES.md` §1.1j for the column map, the per-school sources and
 the overlay's rules.
 
 ```bash

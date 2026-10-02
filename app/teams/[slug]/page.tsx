@@ -6,9 +6,11 @@ import TeamIdentity from '@/components/teams/TeamIdentity';
 import TeamNextGame from '@/components/teams/TeamNextGame';
 import TeamOfficialFixtures from '@/components/teams/TeamOfficialFixtures';
 import TeamPlayoffLine from '@/components/teams/TeamPlayoffLine';
+import TeamRoster from '@/components/teams/TeamRoster';
 import TeamSplits from '@/components/teams/TeamSplits';
 import TeamStatTiles from '@/components/teams/TeamStatTiles';
 import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
+import { buildRosterView } from '@/components/teams/roster-view';
 import { buildTeamPageView, nextOfficialFixture } from '@/components/teams/team-view';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
@@ -44,6 +46,7 @@ import { DIVISION_LABELS } from '@/lib/season';
  *     CCS picture    | Who we haven't beaten
  *     League log (2) | Scheduled, not reported
  *        ″           | Non-league
+ *     Roster (both columns)
  *     Elsewhere (both columns)
  *
  * The League log spans only when the "Scheduled, not reported" card exists and there are league
@@ -53,6 +56,9 @@ import { DIVISION_LABELS } from '@/lib/season';
  *
  * A team with no results still gets this whole page: identity, links, the CCS line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
+ *
+ * The roster comes after every game section: it answers "who is on this team?", which is not one
+ * of the parent's three questions, and at up to 30 rows it would push them below the fold.
  */
 
 /** All 15 prerendered; anything else is a 404 rather than a runtime render. */
@@ -73,7 +79,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       : `${view.divisionLabel} division — no results reported`;
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins and CCS picture. Unofficial, rebuilt nightly from MaxPreps.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins, CCS picture and roster. Unofficial, rebuilt nightly from MaxPreps.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -102,6 +108,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leagueScheduled,
   } = view;
   const sblive = team.external.sbliveGamesUrl;
+  const roster = buildRosterView(team.slug);
+  const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
@@ -261,6 +269,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             emptyBody="Every game on their schedule counts toward the division record."
           />
         </section>
+
+        {roster ? (
+          <section className="min-w-0 lg:col-span-2" id="roster">
+            <SectionHeader
+              kicker="Roster"
+              meta={rosterCount > 0 ? `${rosterCount} player${rosterCount === 1 ? '' : 's'}` : undefined}
+            />
+            <TeamRoster view={roster} />
+          </section>
+        ) : null}
 
         <section className="min-w-0 lg:col-span-2">
           <SectionHeader kicker="Elsewhere" />
