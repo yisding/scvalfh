@@ -2,7 +2,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
-import type { RosterRow, RosterView } from './roster-view';
+import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**
  * The team page's roster (SPEC §1.1j): every varsity player MaxPreps lists, with whatever number,
@@ -22,9 +22,10 @@ import type { RosterRow, RosterView } from './roster-view';
  * footnote explains and the Sources row links; where a source disagrees with what is shown, the
  * disagreement is listed with a link to it.
  *
- * A player with a recruiting page of their own (NCSA and the like) gets a link at the end of the
- * meta line, after the facts. Its accessible name leads with the player's name, so a screen
- * reader's links list tells the rows apart.
+ * A player with a recruiting page of their own (NCSA and the like) gets a line of links under the
+ * facts — its own line, so a link never dangles off the end of a wrapped fact line. Alone on its
+ * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
+ * accessible name leads with the player's name, so a screen reader's links list tells them apart.
  */
 
 /** "†" for sighted readers; a short spoken note instead of the glyph for a screen reader. */
@@ -39,30 +40,34 @@ function ElsewhereMark() {
   );
 }
 
-/** The meta line: the row's facts, then its profile links, one dot-separated run. */
-function Meta({ row }: { row: RosterRow }) {
-  const items = [
-    ...row.facts.map((fact) => (
-      <span key={fact.text} className="whitespace-nowrap">
-        {fact.text}
-        {fact.elsewhere ? <ElsewhereMark /> : null}
-      </span>
-    )),
-    ...row.profiles.map((profile) => (
-      <ExternalLink key={profile.url} href={profile.url} className="whitespace-nowrap">
-        <span className="sr-only">{row.name}&rsquo;s </span>
-        {profile.label}
-      </ExternalLink>
-    )),
-  ];
+function Facts({ facts }: { facts: RosterFact[] }) {
   return (
     <span className="block text-meta text-ink-2">
-      {items.map((item, i) => (
+      {facts.map((fact, i) => (
         <span key={i}>
           {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never
               starts a line with one (the AwardsBlock rule). */}
           {i > 0 ? <>&nbsp;&middot; </> : null}
-          {item}
+          <span className="whitespace-nowrap">
+            {fact.text}
+            {fact.elsewhere ? <ElsewhereMark /> : null}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function Profiles({ row }: { row: RosterRow }) {
+  return (
+    <span className="block text-meta text-ink-2">
+      {row.profiles.map((profile, i) => (
+        <span key={profile.url}>
+          {i > 0 ? <>&nbsp;&middot; </> : null}
+          <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
+            <span className="sr-only">{row.name}&rsquo;s </span>
+            {profile.label}
+          </ExternalLink>
         </span>
       ))}
     </span>
@@ -140,7 +145,8 @@ export function TeamRoster({ view }: { view: RosterView }) {
                   </>
                 ) : null}
               </span>
-              {row.facts.length > 0 || row.profiles.length > 0 ? <Meta row={row} /> : null}
+              {row.facts.length > 0 ? <Facts facts={row.facts} /> : null}
+              {row.profiles.length > 0 ? <Profiles row={row} /> : null}
             </span>
           </li>
         ))}
@@ -171,8 +177,8 @@ export function TeamRoster({ view }: { view: RosterView }) {
         {view.profilePlatforms.length > 0 ? (
           <p className="mt-1 mb-0">
             Profile links go to players&rsquo; own recruiting pages on{' '}
-            {listWords(view.profilePlatforms)}, matched to this list by name, school and sport, and
-            by class year where the page gives one.
+            {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
+            school or class year.
           </p>
         ) : null}
         {view.jvLeftOut > 0 ? (

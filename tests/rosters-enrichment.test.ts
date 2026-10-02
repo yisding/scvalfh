@@ -238,6 +238,21 @@ describe('recruiting profiles', () => {
     expect(loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
   });
 
+  it('what was found, as captured on 2026-10-02', () => {
+    const players = raw.teams.flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
+    const profiles = players.flatMap((p) => p.profiles);
+    expect(profiles.length).toBe(50);
+    expect(players.length).toBe(49);
+    const count = (platform: string) => profiles.filter((p) => p.platform === platform).length;
+    expect([count('ncsa'), count('sportsrecruits'), count('hudl')]).toEqual([3, 37, 10]);
+    // St. Ignatius' SportsRecruits team page links a profile for every rostered player.
+    const si = raw.teams.find((t) => t.slug === 'st-ignatius')!;
+    expect(si.players.filter((p) => p.profiles.length > 0).length).toBe(base.teams.find((t) => t.slug === 'st-ignatius')!.players.length);
+    // One player has two: the NCSA profile under her legal name and a SportsRecruits one.
+    const lizzie = raw.teams.find((t) => t.slug === 'los-gatos')!.players.find((p) => p.fullName === 'Lizzie Moorehouse')!;
+    expect(lizzie.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits']);
+  });
+
   it('reaches the merged view', () => {
     for (const t of raw.teams) {
       const merged = new Map(getEnrichedTeamRoster(t.slug)!.players.map((p) => [p.athleteId, p]));

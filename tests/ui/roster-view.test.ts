@@ -144,6 +144,21 @@ describe('buildRosterView', () => {
       const sources = new Set(view.sources.map((s) => s.url));
       for (const row of view.rows) for (const x of row.profiles) expect(sources.has(x.url), slug).toBe(false);
     }
+    const platforms = (slug: string) => views.find((v) => v.slug === slug)!.view.profilePlatforms;
+    expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits']);
+    expect(platforms('saratoga')).toEqual(['Hudl']);
+    expect(platforms('valley-christian')).toEqual([]);
+    // NCSA first on a row that has both.
+    const lizzie = views.find((v) => v.slug === 'los-gatos')!.view.rows.find((r) => r.name === 'Lizzie Moorehouse')!;
+    expect(lizzie.profiles.map((x) => x.label)).toEqual(['NCSA profile', 'SportsRecruits profile']);
+  });
+
+  it('shows no profile from a JV row, which the list leaves out', () => {
+    const lg = getEnrichedTeamRoster('los-gatos')!;
+    const jvWithProfile = lg.players.filter((p) => p.level === 'jv' && p.profiles.length > 0);
+    expect(jvWithProfile.length).toBeGreaterThan(0);
+    const shown = new Set(views.find((v) => v.slug === 'los-gatos')!.view.rows.flatMap((r) => r.profiles.map((x) => x.url)));
+    for (const p of jvWithProfile) for (const x of p.profiles) expect(shown.has(x.url), p.fullName).toBe(false);
   });
 });
 
@@ -178,7 +193,7 @@ describe('TeamRoster', () => {
       /<a href="https:\/\/www\.ncsasports\.org\/x\/one" target="_blank" rel="noopener noreferrer"[^>]*>/,
     );
     expect(html).toContain(`<span class="sr-only">${esc(first.name)}’s </span>NCSA profile`);
-    // A row with no facts still gets its meta line, holding just the link.
+    // A row with no facts still gets its line of links.
     expect(html).toContain(`<span class="sr-only">${esc(second.name)}’s </span>Recruiting site`);
     expect(html).toContain('own recruiting pages on NCSA and personal sites,');
     expect(html.match(/own recruiting pages/g)?.length).toBe(1);
