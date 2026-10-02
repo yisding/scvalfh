@@ -18,7 +18,7 @@ import type { TeamSlug } from '../../lib/types';
  *     page is the whole program);
  *   - a blank is a blank: a fact nobody published is simply not printed, never guessed;
  *   - a value that did NOT come from MaxPreps carries `elsewhere`, which the page marks with †
- *     and explains under the list, with a link to every site those values came from;
+ *     and explains under the list, with a link to every page those values came from;
  *   - where a source disagrees with the value shown, the disagreement is published (DESIGN §9's
  *     posture: trust comes from showing the disagreement, not from silently picking a side).
  */
@@ -160,29 +160,124 @@ function hostLabel(url: string): string | null {
   }
 }
 
+/** What a source link backs up, in the order its label lists them. */
+const USE_WORDS = {
+  grade: ['grade', 'grades'],
+  position: ['position', 'positions'],
+  number: ['number', 'numbers'],
+  height: ['height', 'heights'],
+  coaches: ['coaches', 'coaches'],
+} as const;
+type SourceUse = keyof typeof USE_WORDS;
+
+const PROVENANCE_USE: Record<keyof MergedPlayer['provenance'], SourceUse> = {
+  grade: 'grade',
+  positions: 'position',
+  jersey: 'number',
+  height: 'height',
+};
+
+/** More pages than this from one site and kind fold into that site's team page. */
+const FOLD_OVER = 2;
+
+function siteLabel(kind: EnrichmentSource['kind'], host: string): string {
+  switch (kind) {
+    case 'maxpreps-team':
+      return 'MaxPreps team page';
+    case 'maxpreps-jv':
+      return 'MaxPreps JV roster';
+    case 'maxpreps-career':
+      return 'MaxPreps career';
+    case 'school-pdf':
+      return `${host} roster PDF`;
+    default:
+      return host;
+  }
+}
+
+function usesText(uses: Map<SourceUse, number>): string {
+  return (Object.keys(USE_WORDS) as SourceUse[])
+    .filter((u) => uses.has(u))
+    .map((u) => USE_WORDS[u][uses.get(u)! === 1 ? 0 : 1])
+    .join(', ');
+}
+
 /**
- * One link per site, in first-use order, from the URLs behind what the section actually shows:
- * filled values, recorded disagreements and the coach list. MaxPreps' own pages are covered by
- * the roster link, which always leads.
+ * Every page behind a value the list shows, so each † can be checked: MaxPreps' roster first,
+ * then one link per source URL in first-use order, labelled with the site and what it supplied
+ * ("MaxPreps JV roster: grade", "losgatosathletics.org: coaches").
+ *
+ * Deduplicated by URL, never by site: MaxPreps' career, JV and team pages each back up values the
+ * roster page does not carry. Where one site supplied a value from a separate page per player
+ * (Saratoga's and Lynbrook's player profiles), the pages fold into the one team roster page the
+ * enrichment file lists for that site, which links to every profile. Disagreements are linked
+ * where they are listed, not here: they are not values the list shows.
  */
 function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSourceLink[] {
-  const links: RosterSourceLink[] = [];
-  if (team.rosterUrl) links.push({ label: 'MaxPreps roster', url: team.rosterUrl });
-  const seen = new Set<string>(['maxpreps.com']);
-  const add = (url: string) => {
+  interface Entry {
+    url: string;
+    host: string;
+    kind: EnrichmentSource['kind'];
+    uses: Map<SourceUse, number>;
+    names: string[];
+  }
+  const entries = new Map<string, Entry>();
+  const note = (url: string, kind: EnrichmentSource['kind'], use: SourceUse, name?: string) => {
+    if (url === team.rosterUrl) return;
     const host = hostLabel(url);
-    if (!host || seen.has(host)) return;
-    seen.add(host);
-    links.push({ label: host, url });
+    if (!host) return;
+    let e = entries.get(url);
+    if (!e) {
+      e = { url, host, kind, uses: new Map(), names: [] };
+      entries.set(url, e);
+    }
+    e.uses.set(use, (e.uses.get(use) ?? 0) + 1);
+    if (name && !e.names.includes(name)) e.names.push(name);
   };
   for (const p of players) {
-    for (const tag of Object.values(p.provenance)) {
-      const source = elsewhereSource(tag);
-      if (source) add(source.source);
+    for (const field of Object.keys(PROVENANCE_USE) as Array<keyof MergedPlayer['provenance']>) {
+      const source = elsewhereSource(p.provenance[field]);
+      if (source) note(source.source, source.kind, PROVENANCE_USE[field], p.lastName ?? p.fullName);
     }
-    for (const c of p.conflicts) add(c.source);
   }
-  for (const c of team.coaches) add(c.source);
+  for (const c of team.coaches) {
+    const kind =
+      team.sources.find((s) => s.url === c.source)?.kind ??
+      (hostLabel(c.source) === 'maxpreps.com' ? 'maxpreps-team' : 'school-site');
+    note(c.source, kind, 'coaches');
+  }
+
+  const groups = new Map<string, Entry[]>();
+  for (const e of entries.values()) {
+    const key = `${e.host} ${e.kind}`;
+    groups.set(key, [...(groups.get(key) ?? []), e]);
+  }
+
+  const links: RosterSourceLink[] = [];
+  if (team.rosterUrl) links.push({ label: 'MaxPreps roster', url: team.rosterUrl });
+  for (const group of groups.values()) {
+    const { host, kind } = group[0];
+    const label = siteLabel(kind, host);
+    if (group.length > FOLD_OVER) {
+      const teamPage = team.sources.find(
+        (s) => s.kind === kind && hostLabel(s.url) === host && !entries.has(s.url),
+      );
+      if (teamPage) {
+        const uses = new Map<SourceUse, number>();
+        for (const e of group) for (const [u, n] of e.uses) uses.set(u, (uses.get(u) ?? 0) + n);
+        links.push({ label: `${label}: ${usesText(uses)} (player pages)`, url: teamPage.url });
+        continue;
+      }
+    }
+    const labels = group.map((e) => `${label}: ${usesText(e.uses)}`);
+    group.forEach((e, i) => {
+      // Two pages that would read the same ("lahstalon.org: grade" twice) say whose values they hold.
+      const clash = labels.filter((l) => l === labels[i]).length > 1;
+      const who =
+        e.names.length > 2 ? `${e.names.slice(0, 2).join(', ')} +${e.names.length - 2}` : e.names.join(', ');
+      links.push({ label: clash && who ? `${labels[i]} (${who})` : labels[i], url: e.url });
+    });
+  }
   return links;
 }
 

@@ -91,16 +91,41 @@ describe('buildRosterView', () => {
     expect(saratoga.map((c) => [c.field, c.shown, c.other])).toEqual([['grade', 'junior', 'sophomore']]);
   });
 
-  it('leads the sources with the MaxPreps roster and names each other site once', () => {
+  it('leads the sources with the MaxPreps roster and lists each page once, under its own label', () => {
     for (const { slug, view } of views) {
       expect(view.sources[0], slug).toEqual({ label: 'MaxPreps roster', url: getEnrichedTeamRoster(slug)!.rosterUrl });
+      const urls = view.sources.map((s) => s.url);
       const labels = view.sources.map((s) => s.label);
+      expect(new Set(urls).size, slug).toBe(urls.length);
       expect(new Set(labels).size, slug).toBe(labels.length);
-      for (const s of view.sources.slice(1)) {
-        expect(s.label, slug).not.toMatch(/maxpreps/i);
-        expect(s.url, slug).toMatch(/^https?:\/\//);
-      }
+      for (const s of view.sources) expect(s.url, slug).toMatch(/^https?:\/\//);
     }
+  });
+
+  it('links the page behind every value it marks †, MaxPreps career and JV pages included', () => {
+    for (const { slug, view } of views) {
+      const merged = getEnrichedTeamRoster(slug)!;
+      const linked = new Set(view.sources.map((s) => s.url));
+      const hosts = new Set(view.sources.map((s) => new URL(s.url).hostname));
+      for (const p of merged.players.filter((x) => x.level !== 'jv')) {
+        for (const tag of Object.values(p.provenance)) {
+          if (tag === null || tag === 'maxpreps') continue;
+          // Either the exact page, or (for a run of per-player profiles) that site's roster page.
+          const reachable = linked.has(tag.source) || hosts.has(new URL(tag.source).hostname);
+          expect(reachable, `${slug} / ${p.fullName}: ${tag.source}`).toBe(true);
+          if (tag.kind.startsWith('maxpreps-')) {
+            expect(linked.has(tag.source), `${slug} / ${p.fullName}: ${tag.source}`).toBe(true);
+          }
+        }
+      }
+      for (const c of merged.coaches) expect(linked.has(c.source), `${slug} coach ${c.name}`).toBe(true);
+    }
+    // The grades the review caught going unsourced: Los Altos' career-page grades, Homestead's JV one.
+    const labels = (slug: string) => views.find((v) => v.slug === slug)!.view.sources.map((s) => s.label);
+    expect(labels('los-altos').filter((l) => l.startsWith('MaxPreps career:')).length).toBeGreaterThan(0);
+    expect(labels('homestead')).toContain('MaxPreps JV roster: grade');
+    // Saratoga's 20 player profiles fold into its school roster page rather than 20 links.
+    expect(labels('saratoga')).toContain('shs-athletics.com: grades (player pages)');
   });
 });
 
