@@ -13,9 +13,11 @@ import { DIVISION_LABELS, DIVISIONS } from '@/lib/season';
  * /teams — "Find my school" (DESIGN §3.6).
  *
  * Fifteen card tiles, grouped by division and sorted alphabetically inside each one: 2-up below
- * 1024px and 4-up from there. El Camino's eight fill every row (4×2 on desktop, 2×4 below) and De
+ * 768px and 4-up from there. El Camino's eight fill every row (4×2 from 768px, 2×4 below) and De
  * Anza's seven leave one slot open on the last row; a 3-up tablet step left a slot open after
- * the last tile of both. **All fifteen**: league membership is the repo's list from the official
+ * the last tile of both. 4-up starts at 768px, not 1024px, so every school fits one tablet
+ * screen (2-up took two and a half); between 768 and 1023px the tile stacks its monogram over the
+ * name (TeamTile) so a long name still gets the whole tile width. **All fifteen**: league membership is the repo's list from the official
  * SCVAL PDFs, not the feed's rows, and dropping a school because a source has no data for it is
  * the single worst bug this site could ship (DESIGN §12.1, R-6).
  *
@@ -38,8 +40,7 @@ export default function TeamsPage() {
         description={
           <>
             All {counts.teams} schools in the two SCVAL divisions, with each team&rsquo;s league
-            record. Division alignment comes from the official SCVAL schedules, so every member is
-            listed even where a source has no games for it.
+            record.
           </>
         }
       />
@@ -57,7 +58,7 @@ export default function TeamsPage() {
               meta={`${tiles.length} teams`}
               action={{ href: `/standings#${division}`, label: 'Standings' }}
             />
-            <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 md:gap-4 lg:grid-cols-4">
+            <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 md:grid-cols-4 md:gap-4">
               {tiles.map((data) => (
                 <TeamTile key={data.team.slug} data={data} />
               ))}
@@ -66,10 +67,13 @@ export default function TeamsPage() {
         );
       })}
 
+      {/* The lede says what the page is; how it was made sits down here. The alignment sentence
+          is why a school with no games in any source still has a tile. */}
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
-        Records are league games only, computed from published results as of{' '}
-        {formatStamp(getFetchedAt())}. A team with no results reported shows an em dash rather
-        than 0-0-0.
+        Records are league games only. A dash means no results have been reported yet. Division
+        alignment comes from the official SCVAL schedules, so every member is listed even where a
+        source has no games for it; records are computed from published results as of{' '}
+        {formatStamp(getFetchedAt())}.
       </p>
     </div>
   );

@@ -4,9 +4,15 @@ import type { TeamPageView } from './team-view';
 /**
  * Home / away / neutral league splits (DESIGN §3.7, §12.5): three mini cards, label over value,
  * in the stat tiles' card recipe (StatTile `variant="card"`: 12px padding on a phone, 16px from
- * 768px, the 14px label over a bold value: 18px on a phone so five mono glyphs fit 320px, 24px
- * from 768px) so the team page has one tile look. The value
- * stays MONO: a W-L-T record is a stacked numeral (brief §1), unlike the tiles' sans figures.
+ * 768px, the label over a bold value) so the team page has one tile look.
+ *
+ * The value is set exactly like a StatTile value: `sx-figure`, Sans with proportional figures,
+ * 28px from 768px. DESIGN §4.3 reserves Mono + tabular for digits that STACK in a column (scores
+ * in a list, standings columns); three records side by side in their own cards stack with
+ * nothing, so they are "large standalone numbers", which §4.3 sets in Sans. In mono they read as a
+ * second, unrelated tile style beside the League tile showing the same kind of record. Below 768px
+ * the value stays `text-lead` (18px) and `whitespace-nowrap`, so "0-0-0" never breaks inside a
+ * 3-up card at 320px.
  *
  * The NEUTRAL split ships even while it is `0-0-0` for every team: CCS games and some non-league
  * tournaments are at neutral sites, and a split that materialises in November would break the
@@ -28,7 +34,7 @@ export function TeamSplits({ view }: { view: TeamPageView }) {
         {cells.map((cell) => (
           <div key={cell.label} className="sx-card p-3 md:p-4">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
-            <dd className="sx-num m-0 text-lead leading-7 font-semibold text-ink md:text-[1.5rem] md:leading-8 md:tracking-[-0.02em]">
+            <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
               {cell.value}
             </dd>
           </div>
