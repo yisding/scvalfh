@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { ordinal } from '../../lib/format';
-import Tag from '../ui/Tag';
 
 import type { StatusGroup } from './standings-view';
 
@@ -13,16 +12,23 @@ import type { StatusGroup } from './standings-view';
  * it as term-then-teams also means the legend can never drift out of sync with the markers — they
  * are the same list.
  *
- * Every status is a WORD (`AQ`, `Play-in`, `At-large`, `No AQ`) on a tag, so nothing here is
- * carried by color (DESIGN §6.5, channel 1 and 2). Only AQ takes the accent tag, because there the
- * accent already means "berth". The Article VII §2 text itself is cited once per page, in the
- * standings disclosure, and each status label names its place range.
+ * Every status is written out in WORDS ("Automatic qualifier", "Play-in game Oct 30", "At-large
+ * consideration", "No automatic path" — `PLAYOFF_STATUS_LABELS`, the phrases /playoffs uses) on a
+ * sentence-case chip, never a code like "AQ" or "NO AQ", so nothing here is carried by color or
+ * by jargon (DESIGN §6.5, channels 1 and 2). Only the automatic-qualifier chip takes the accent
+ * wash, because there the accent already means "berth". Beside the chip the term names just the
+ * place range ("Places 1–3", "4th place"). The Article VII §2 text itself is cited once per page,
+ * in the standings disclosure.
  *
  * Each team is a pill link to its page with its place beside the name, so the band reads as a
  * row of facts rather than a `·`-separated sentence.
  *
- * A shared place is rendered `5=` exactly as the table renders it, and `caveat` says in words
- * that the cut is unsettled — Article VI §7's coin flip is the league's to run, not ours.
+ * A shared place is rendered `T-5th`, the pill-sized form of the table's `T5`, and `caveat` says
+ * in words that the cut is unsettled — Article VI §7's coin flip is the league's to run, not ours.
+ *
+ * The caller passes `flex flex-col` with the card classes: from `lg` the band stretches to the
+ * Notes inset beside it, and the link row's `mt-auto` keeps it on the bottom edge, level with
+ * the Notes' own link row.
  * Teams with no reported results are NAMED but never given a projected place.
  */
 export interface PlayoffStatusBandProps {
@@ -48,18 +54,24 @@ export function PlayoffStatusBand({
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
-            term column is 22rem there: at 11rem "4th place — play-in Fri Oct 30 for the SCVAL
-            7th berth" broke into five lines beside a mostly empty pill column. From lg the band
+            term column is 22rem there, ample for the widest term ("Play-in game Oct 30" chip +
+            "4th place", ~190px), so every term is one line beside its pills. From lg the band
             shares its row with the Notes inset, so the term sits above its teams instead. */}
         {groups.map((group) => (
           <div
             key={group.status}
             className="grid gap-3 py-3 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
-            <dt className="flex items-baseline gap-2">
-              <Tag size="md" tone={group.status === 'aq' ? 'accent' : 'neutral'}>
-                {group.badge}
-              </Tag>
+            <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's
+                  tones, accent-ink on the wash only for the automatic qualifiers. */}
+              <span
+                className={`inline-block rounded-tag px-2 py-0.5 leading-5 text-micro font-semibold ${
+                  group.status === 'aq' ? 'bg-accent-wash text-accent-ink' : 'bg-surface-3 text-ink-2'
+                }`}
+              >
+                {group.statusText}
+              </span>
               <span className="text-meta text-ink-2">{group.label}</span>
             </dt>
             <dd className="m-0 flex flex-wrap content-start gap-2">
@@ -75,12 +87,12 @@ export function PlayoffStatusBand({
                   className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface-2 px-3 text-meta text-ink no-underline hover:bg-surface-3 forced-colors:border"
                 >
                   {team.name}
-                  {/* The same `=` marker the table uses for a level place, so the two never
-                      disagree about whether a place is settled. */}
-                  <span className="sx-num text-micro text-ink-3">
+                  {/* The same `T` marker the table uses for a level place ("T7" there, "T-7th"
+                      here), so the two never disagree about whether a place is settled. */}
+                  <span className="sx-num whitespace-nowrap text-micro text-ink-3">
                     {team.shared ? (
                       <>
-                        <span aria-hidden="true">{ordinal(team.place)}=</span>
+                        <span aria-hidden="true">T-{ordinal(team.place)}</span>
                         <span className="sr-only">tied for {ordinal(team.place)}</span>
                       </>
                     ) : (
@@ -101,8 +113,9 @@ export function PlayoffStatusBand({
         </p>
       ) : null}
       {/* A standalone action, like the Notes link row beside it: a <div>, so the in-prose
-          underline rule (`p a`) does not mark this one alone. */}
-      <div className="mt-4">
+          underline rule (`p a`) does not mark this one alone. `mt-auto` pins it to the bottom of
+          the stretched card from lg (the caller's `flex flex-col`); `pt-4` is the old gap. */}
+      <div className="mt-auto pt-4">
         <Link
           href="/playoffs"
           prefetch={false}

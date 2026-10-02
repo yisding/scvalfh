@@ -16,6 +16,14 @@
  *  - `inline` (≥768px): static, right-aligned in the page title row via PageHeader's `aside`.
  *
  * Each pill is a 36px capsule inside a 44px anchor, so the target is the full 44px (DESIGN §10.9).
+ * The capsule is drawn like the page's other link pills — the surface with a 1px ring — because
+ * surface-2 on the bg was nearly invisible in light, so the two read as words, not buttons. It
+ * borrows TopNav's focus treatment: the anchor is `sx-navtop`, so the keyboard ring is drawn on
+ * the `sx-indicator` capsule (2px out, following its 999px radius) instead of as a rectangle
+ * around the 44px box. The 4px between capsule and anchor edge on each side is what keeps that
+ * ring inside the 48px sticky bar rather than clipped by it. `group-active` is the press state,
+ * for the anchor's whole 44px box. Neither pill is ever "current" (see above), so the
+ * indicator's `aria-current` styling never applies.
  * The as-of stamp no longer rides here: the top bar and the footer already carry it.
  */
 export interface DivisionTabsProps {
@@ -40,8 +48,12 @@ export function DivisionTabs({
   return (
     <nav aria-label={label} className={`${VARIANT[variant]}${className ? ` ${className}` : ''}`}>
       {tabs.map((tab) => (
-        <a key={tab.href} href={tab.href} className="inline-flex h-11 shrink-0 items-center no-underline">
-          <span className="inline-flex h-9 items-center rounded-full bg-surface-2 px-4 text-body font-medium text-ink hover:bg-surface-3 forced-colors:border">
+        <a
+          key={tab.href}
+          href={tab.href}
+          className="group sx-navtop inline-flex h-11 shrink-0 items-center no-underline"
+        >
+          <span className="sx-indicator inline-flex h-9 items-center rounded-full bg-surface px-4 text-body font-medium text-ink shadow-[var(--sx-ring)] hover:bg-surface-2 group-active:bg-surface-3 forced-colors:border">
             {tab.label}
           </span>
         </a>

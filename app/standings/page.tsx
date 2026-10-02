@@ -24,8 +24,12 @@ import { getStandingsPageData } from './standings-data';
  * is a real `<h1>` again rather than a visually hidden one.
  *
  * Everything generic (the GD and PTS explanations, the qualifier-cut sentence, "this order is our
- * computation") is printed ONCE, in the "How these tables are computed" disclosure at the foot of
- * the page. Everything division-specific stays visible in that division's Notes block.
+ * computation") is printed ONCE, in the "How to read these tables" disclosure at the foot of the
+ * page. Everything division-specific stays visible in that division's Notes block.
+ *
+ * The foot ends in three link pills: the full method on /about, the by-laws PDF, and last
+ * season's final tables (/history/2025-26), the one place a reader can compare this table with a
+ * finished one.
  *
  * No `searchParams`, nothing derived from `Date.now()`: the page is fully static and every "as of"
  * label comes from `snapshot.fetchedAt` (DESIGN decision 7, BUILD-BRIEF).
@@ -66,11 +70,12 @@ export default function StandingsPage() {
   // The page disclosure: the GD paragraph (stating every division's own maximum), the PTS
   // paragraph, then each generic per-division sentence once (they are identical when both
   // divisions cut after the same place).
+  // In words ("De Anza's biggest goal difference is 36"), not "|GD| max 36".
   const gdMaxima = views
-    .map((view) => `${DIVISION_LABELS[view.division]} |GD| max ${view.gdDomain}`)
+    .map((view) => `${DIVISION_LABELS[view.division]}'s is ${view.gdDomain}`)
     .join(', ');
   const legend = [
-    `GD = league goals for minus goals against. Bars are scaled to each division alone (${gdMaxima}), so the two divisions' bars are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
+    `GD = league goals for minus goals against. Bars are scaled to each division's own biggest goal difference (${gdMaxima}), so the two divisions' bars are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     'PTS is the official ordering key: 3 points for a win, 1 for a tie (SCVAL By-Laws Article VI §2).',
     ...new Set(views.flatMap((view) => view.legendNotes)),
   ];
@@ -104,22 +109,41 @@ export default function StandingsPage() {
         />
       ))}
 
-      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
-        <summary>How these tables are computed ({legend.length} notes)</summary>
+      {/* The same shape as /schedule's key ("How to read this page"): `max-w-3xl` and a plain
+          summary with no note count, so the site's how-to-read disclosures look like one
+          component. The paragraphs inside keep the prose measure. */}
+      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
+        <summary>How to read these tables</summary>
         {legend.map((note) => (
-          <p key={note} className="mb-0">
+          <p key={note} className="mb-0 max-w-prose">
             {note}
           </p>
         ))}
       </details>
 
+      {/* The pills sit on the canvas, where the default surface-2 fill all but vanished in light:
+          the surface plus a 1px ring makes them read as buttons, like the division pills. */}
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link href="/about#standings" prefetch={false} className="sx-pill">
-          How standings are computed
+        <Link
+          href="/about#standings"
+          prefetch={false}
+          className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
+          Full method on the About page
         </Link>
-        <ExternalLink href={SOURCE_LINKS.scvalBylaws} className="sx-pill">
+        <ExternalLink
+          href={SOURCE_LINKS.scvalBylaws}
+          className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
           SCVAL field hockey by-laws 2026-27 (PDF)
         </ExternalLink>
+        <Link
+          href="/history/2025-26"
+          prefetch={false}
+          className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
+          Last season&rsquo;s final tables
+        </Link>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import {
   ordinalPlace,
   perGame,
   recordString,
+  recordWords,
   renderScore,
   scoreGlyph,
   scoreSentence,
@@ -88,6 +89,12 @@ describe('format: records and numbers', () => {
     expect(recordString({ w: 4, l: 1, t: 0 })).toBe('4-1-0');
   });
 
+  it('writes a record in words, singular for exactly one', () => {
+    expect(recordWords({ w: 5, l: 1, t: 0 })).toBe('5 wins, 1 loss, 0 ties');
+    expect(recordWords({ w: 1, l: 2, t: 1 })).toBe('1 win, 2 losses, 1 tie');
+    expect(recordWords({ w: 0, l: 0, t: 0 })).toBe('0 wins, 0 losses, 0 ties');
+  });
+
   it('always signs a goal differential and uses a real minus sign', () => {
     expect(signedGd(30)).toBe('+30');
     expect(signedGd(-24)).toBe(`${MINUS}24`);
@@ -122,7 +129,8 @@ describe('format: records and numbers', () => {
   });
 
   it('writes a streak and a form-strip sentence', () => {
-    expect(streakString({ count: 5, result: 'W' })).toBe('5W');
+    expect(streakString({ count: 5, result: 'W' })).toBe('W5');
+    expect(streakString({ count: 1, result: 'L' })).toBe('L1');
     expect(streakString(null)).toBe(EM_DASH);
     expect(formStripLabel(['L', 'L', 'W'])).toBe(
       'Last 3 league games, oldest first: loss, loss, win.',
