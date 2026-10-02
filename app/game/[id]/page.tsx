@@ -12,6 +12,7 @@ import {
   gameTitle,
 } from '@/components/game/game-model';
 import { OG_BASE } from '@/components/layout/site-url';
+import ExternalLink from '@/components/ui/ExternalLink';
 import ScoreBoard from '@/components/ui/ScoreBoard';
 import { getGames } from '@/lib/data';
 
@@ -20,9 +21,10 @@ import { getGames } from '@/lib/data';
  *
  * A final score is the object people actually send to each other, and a `<details>` row inside a
  * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
- * monograms and records, the line score with its decider, the cleaned recap, the venue, the real
- * off-site links, both sides' form going in, the season series between these two schools, and the
- * source deep links — plus a text-only OG card so a link pasted into a group text previews the score
+ * monograms and their league records as of that game, the line score with its decider, the cleaned
+ * recap with the box score under it, the venue, the real off-site links, routes to both team pages,
+ * both sides' form going in, the season series between these two schools, and the source deep
+ * links — plus a text-only OG card so a link pasted into a group text previews the score
  * itself.
  *
  * `id` is `Game.contestId`, the MaxPreps GUID: it is the snapshot's dedupe key, so it is stable
@@ -70,63 +72,135 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const model = buildGameModel(id);
   if (!model) notFound();
 
-  const { game, away, home, dayLabel } = model;
+  const { game, away, home, dayLabel, resultLinks, recordsCaption } = model;
+  // Away first, like the scoreboard; a non-SCVAL opponent has no page here to link to (DESIGN §8).
+  const teamLinks = [away, home].flatMap((side) => (side.team ? [side.team] : []));
+  // Does the main column's row 2 (recap · result links · source disagreement) render anything?
+  // The DETAILS rail starts in that row, so it takes the recap's 24px top margin when the row is
+  // there and the section margin when it is not: either way its top lines up with the first thing
+  // in the left column — the recap, or the FORM GOING IN heading (F-27c).
+  const leadRow = Boolean(game.recap) || Boolean(model.conflict) || resultLinks.length > 0;
 
   return (
     <div className="pb-section-lg">
-      {/* A standalone action back to the day: a 44px pill-shaped target (WCAG 2.5.8), pulled
-          left by its own padding so the arrow lines up with the gutter. */}
-      <p className="m-0">
+      {/* Routes out of the page (F-31): back to the day, then each SCVAL side's team page, away
+          first. Every one is a standalone 44px target (WCAG 2.5.8). Only the first is pulled left
+          by its own padding so its arrow lines up with the gutter; the team pills have a visible
+          capsule, which a negative margin would push into the gutter. They sit on the canvas,
+          where the plain `sx-pill` fill (surface-2) barely separates from the page, so they are
+          raised to the surface with the hairline ring and hover down to surface-2 (F-56g). The
+          label is the team's SHORT name ("Mitty") and the capsule takes 12px of side padding
+          rather than the pill's 16, which keeps most pairings on one line at 390. The two team
+          pills wrap as ONE group, so when the row does not fit (St Ignatius at St Francis at 390,
+          anything long at 320) they drop to a second line together instead of stranding the home
+          pill alone. */}
+      <p className="m-0 mt-4 flex flex-wrap items-center gap-2">
         <Link
           href={`/scores/${game.dateKey}`}
-          className="sx-action -ml-3 mt-4 min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+          className="sx-action -ml-3 min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
           <span aria-hidden="true" className="mr-1.5">
             &larr;
           </span>
-          All games on {dayLabel}
+          {dayLabel} games
         </Link>
+        {teamLinks.length > 0 ? (
+          <span className="flex flex-wrap gap-2">
+            {teamLinks.map((team) => (
+              <Link
+                key={team.slug}
+                href={`/teams/${team.slug}`}
+                prefetch={false}
+                className="sx-pill min-h-11 bg-surface px-3 shadow-[var(--sx-ring)] hover:bg-surface-2"
+              >
+                {team.shortName}
+                <span aria-hidden="true"> &rsaquo;</span>
+                <span className="sr-only"> team page</span>
+              </Link>
+            ))}
+          </span>
+        ) : null}
       </p>
 
       {/*
-        Desktop puts the DETAILS card in a right rail beside the main column, and the DOM keeps the
-        PHONE order — scoreboard, recap, details, form, series, sources (DESIGN §10.5). Explicit
+        From 1024px the DETAILS card sits in a right rail beside the main column, and the DOM keeps
+        the PHONE order — scoreboard, recap, details, form, series, sources (DESIGN §10.5). Explicit
         row placement, not two wrapper columns, is what makes those two facts compatible: a section
         that renders nothing collapses its row to zero height, and vertical rhythm comes from
         margins rather than a row gap so a collapsed row leaves no ghost space.
+
+        Deviation from DESIGN §3.5 (F-17): the spec put the rail beside the column from 768. In the
+        768–1023 band that left a ~400px main column — narrower than a phone held sideways — so the
+        season-series rows wrapped to two lines and each form strip dropped below its team name.
+        The tablet band is one column instead, with the
+        DETAILS facts laid out 3-up across the full width (GameDetails).
       */}
-      <div className="mt-2 md:grid md:grid-cols-[minmax(0,1fr)_20rem] md:gap-x-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
-        <div className="md:col-span-2 md:row-start-1">
+      <div className="mt-2 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
+        <div className="lg:col-span-2 lg:row-start-1">
           <h1 className="sr-only">{gameTitle(model)}</h1>
           <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
+          {/* The records on the board are AS OF this game (G-1), so say which moment they are
+              from: on a September final, today's record would sit beside a score it already
+              counts several games back. Centred from 768, where the board itself is centred. */}
+          {recordsCaption ? (
+            <p className="mt-3 mb-0 text-micro text-ink-3 md:text-center">{recordsCaption}</p>
+          ) : null}
         </div>
 
-        <div className="md:col-start-1 md:row-start-2">
+        <div className="lg:col-start-1 lg:row-start-2">
           {game.recap ? (
             <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{game.recap}</p>
+          ) : null}
+          {/* A final's box score lives HERE, directly under the recap (F-73/F-85): on a phone it is
+              above the tab bar rather than at the foot of the DETAILS card, and it appears once on
+              the page — GameDetails and GameElsewhere both leave it out. */}
+          {resultLinks.length > 0 ? (
+            <p className={game.recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
+              {resultLinks.map((link) => (
+                <ExternalLink
+                  key={link.href}
+                  href={link.href}
+                  // ExternalLink adds a `text-accent` utility, which would beat the pill's
+                  // accent-ink (accent on the wash is 4.37:1 in dark); `!` keeps accent-ink. The
+                  // plain pill sits on the canvas, so it takes the raised surface fill (F-56g).
+                  className={
+                    link.accent
+                      ? 'sx-pill sx-pill-accent text-accent-ink!'
+                      : 'sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2'
+                  }
+                >
+                  {link.label}
+                </ExternalLink>
+              ))}
+            </p>
           ) : null}
           <SourceDisagreement model={model} className="mt-4" />
         </div>
 
         {/* Sticky only when the viewport is tall enough to hold it: the card is up to ~510px,
             +80px of offset, and a sticky box taller than the viewport can never scroll its last
-            links into view (a focused "MaxPreps box score" sat below a 488px-tall window). */}
+            links into view (a focused link pill sat below a 488px-tall window). The two class
+            strings differ only in the top margin — see `leadRow`. */}
         <GameDetails
           model={model}
-          className="mt-section md:col-start-2 md:row-span-4 md:row-start-2 md:mt-6 md:self-start [@media(min-width:768px)_and_(min-height:40rem)]:sticky [@media(min-width:768px)_and_(min-height:40rem)]:top-[5rem]"
+          className={
+            leadRow
+              ? 'mt-section lg:col-start-2 lg:row-span-4 lg:row-start-2 lg:mt-6 lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
+              : 'mt-section lg:col-start-2 lg:row-span-4 lg:row-start-2 lg:mt-section-lg lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
+          }
         />
 
         <FormGoingIn
           model={model}
-          className="mt-section md:col-start-1 md:row-start-3 md:mt-section-lg"
+          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-3"
         />
         <SeasonSeries
           model={model}
-          className="mt-section md:col-start-1 md:row-start-4 md:mt-section-lg"
+          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-4"
         />
         <GameElsewhere
           model={model}
-          className="mt-section md:col-start-1 md:row-start-5 md:mt-section-lg"
+          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-5"
         />
       </div>
     </div>

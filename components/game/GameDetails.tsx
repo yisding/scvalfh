@@ -6,11 +6,20 @@ import SectionHeader from '../ui/SectionHeader';
 import type { GameModel } from './game-model';
 
 /**
- * The DETAILS card of DESIGN §3.5 — when, where, and every real off-site link. A card in the
- * right rail from 768px (sticky under the top bar), a card in the column on a phone; each fact is
- * a 12px label over a 16px value, with divider lines between them.
+ * The DETAILS card of DESIGN §3.5 — when, where, and the off-site links that are not the result's.
+ * Three widths, one DOM:
+ * - phone: a card in the column, each fact a 12px label over a 16px value, divider lines between;
+ * - 768–1023: still in the column (the page is one column there — F-17, a recorded deviation from
+ *   §3.5's 768 rail), so the facts sit 3-up across the full width with no dividers, and a Note
+ *   takes its own full-width row under a rule;
+ * - ≥1024: the right rail (sticky under the top bar), back to the stacked phone list.
+ * The 3-up band is written as `md:max-lg:` ranges rather than `md:` undone by `lg:` because the
+ * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
  *
- * Three honesty rules live here:
+ * A FINAL's box score and stream are not here: the page prints them under the recap
+ * (`GameModel.resultLinks`, F-73), and each link has one home on the page.
+ *
+ * Four honesty rules live here:
  *
  * 1. **`contest.location` is a NOTE field, not a venue field.** Live values include "Senior Night"
  *    and a coach's scoring note, so it is printed as a note and never labelled "Venue" (SPEC §4).
@@ -44,12 +53,16 @@ export function GameDetails({ model, className }: GameDetailsProps) {
       ? game.official.scheduledDate
       : null;
 
+  // Whatever the page already printed under the recap (a final's box score and stream) is
+  // skipped, so no link appears twice on the page.
+  const elsewhere = new Set(model.resultLinks.map((link) => link.href));
   const links: Array<{ href: string; label: string }> = [];
   if (address) links.push({ href: mapsHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score' });
   if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'SBLive game' });
+  const ownLinks = links.filter((link) => !elsewhere.has(link.href));
 
   return (
     <section
@@ -57,15 +70,17 @@ export function GameDetails({ model, className }: GameDetailsProps) {
       aria-labelledby="game-details-kicker"
     >
       <SectionHeader kicker="Details" as="h2" size="label" id="game-details-kicker" />
-      <dl className="m-0 divide-y divide-divider text-meta">
-        <div className="py-3 first:pt-0 last:pb-0">
+      <dl className="m-0 divide-y divide-divider text-meta md:max-lg:grid md:max-lg:grid-cols-3 md:max-lg:gap-x-6 md:max-lg:gap-y-4 md:max-lg:divide-y-0">
+        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
           <dt className="text-micro font-medium text-ink-3">When</dt>
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
             <time dateTime={dateTimeAttr(game)} className="block">
               <span className="block">
                 {longDate(game.dateLocal)}, {parseLocal(game.dateLocal).year}
               </span>
-              <span className="sx-num block text-meta text-ink-2">
+              {/* Sans with tabular figures, not `.sx-num` mono: a single time of day does not
+                  stack in a column, and "4:00 PM PT" in mono read as a code (F-54d). */}
+              <span className="block text-meta text-ink-2 tabular-nums">
                 {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
               </span>
             </time>
@@ -82,7 +97,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
           </dd>
         </div>
 
-        <div className="py-3 first:pt-0 last:pb-0">
+        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
           <dt className="text-micro font-medium text-ink-3">Where</dt>
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
             {game.venue.name ? (
@@ -112,7 +127,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
           </dd>
         </div>
 
-        <div className="py-3 first:pt-0 last:pb-0">
+        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
           <dt className="text-micro font-medium text-ink-3">Counts as</dt>
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
             {game.isLeague ? (
@@ -137,7 +152,9 @@ export function GameDetails({ model, className }: GameDetailsProps) {
         </div>
 
         {game.venue.text ? (
-          <div className="py-3 first:pt-0 last:pb-0">
+          // In the 3-up band the Note is a fourth fact, so it takes a full-width row of its own
+          // under a rule (it keeps the list's own 12px above the rule's content).
+          <div className="py-3 first:pt-0 last:pb-0 md:max-lg:col-span-3 md:max-lg:border-t md:max-lg:border-divider">
             <dt className="text-micro font-medium text-ink-3">Note</dt>
             {/* MaxPreps' `location` field, verbatim. It is a note, not a venue. */}
             <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">{game.venue.text}</dd>
@@ -145,9 +162,9 @@ export function GameDetails({ model, className }: GameDetailsProps) {
         ) : null}
       </dl>
 
-      {links.length > 0 ? (
+      {ownLinks.length > 0 ? (
         <p className="mt-4 mb-0 flex flex-wrap gap-2">
-          {links.map((link) => (
+          {ownLinks.map((link) => (
             <ExternalLink key={link.href} href={link.href} className="sx-pill">
               {link.label}
             </ExternalLink>

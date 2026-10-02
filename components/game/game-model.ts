@@ -48,7 +48,10 @@ export interface GameSideModel {
   /** Present only for one of the 15 SCVAL schools; a non-SCVAL opponent is a name (DESIGN §8). */
   team: Team | undefined;
   standing: Standing | undefined;
-  /** "4-1-0 De Anza", or the honest no-results line. `null` for a non-SCVAL opponent. */
+  /**
+   * "4-1-0 De Anza" — the LEAGUE record as of this contest (`recordAsOf`), not today's — or the
+   * honest no-results line. `null` for a non-SCVAL opponent.
+   */
   sub: string | null;
   /** Up to five LEAGUE results BEFORE this contest, oldest first (DESIGN §5.5). */
   formBefore: FormEntry[];
@@ -84,8 +87,22 @@ export interface GameConflict {
   maxprepsUrl: string | null;
 }
 
+/** An off-site link for this contest. `accent` marks the one primary pill. */
+export interface GameLink {
+  href: string;
+  label: string;
+  accent?: boolean;
+}
+
 export interface GameModel {
   game: Game;
+  /**
+   * A FINAL's result links — the MaxPreps box score (accent) and the NFHS stream — which the page
+   * prints directly under the recap, the first place a reader looks for them after the score
+   * (F-73/F-85). Empty for every other status. Each link has ONE home on the page: GameDetails
+   * skips whatever is in this list, and GameElsewhere carries no per-game links at all.
+   */
+  resultLinks: GameLink[];
   display: GameDisplay;
   /** Away is first everywhere on this site, including here. */
   away: GameSideModel;
@@ -96,6 +113,14 @@ export interface GameModel {
   division: Division | null;
   /** "Thu Sep 24" — the back link to /scores/[date]. */
   dayLabel: string;
+  /**
+   * The caption under the scoreboard that says WHEN the two `sub` records are from, because on an
+   * old game they are not today's: "League records after this game" (a league final), "League
+   * records as of Thu Sep 24" (a non-league final), "League records going in" (anything not yet
+   * decided) or "League records to date" (postponed — no date to measure from). Singular when only
+   * one side is an SCVAL school; `null` when neither is, since then there is no record to explain.
+   */
+  recordsCaption: string | null;
   /** "Sep 24, 2026 · 4:00 PM PT", or the date alone when the time is TBA. */
   whenLabel: string;
 }
@@ -119,14 +144,83 @@ function article(noun: string): string {
   return /^[aeiou]/i.test(noun) ? 'an' : 'a';
 }
 
-function subFor(standing: Standing | undefined, team: Team | undefined): string | null {
+/** A W-L-T record as `recordString` prints it, plus the game count the no-results rule keys on. */
+export interface RecordAsOf {
+  gp: number;
+  w: number;
+  l: number;
+  t: number;
+}
+
+/**
+ * A side's LEAGUE record at this contest's point in the season (G-1).
+ *
+ * The scoreboard used to print TODAY's standing under both names, so a September final read
+ * "7-0-0" for a team that was 2-0-0 that afternoon. The cut is made the way `formBefore` makes
+ * it — by position in the team's own league list, so a same-day doubleheader cannot leak — but it
+ * is INCLUSIVE of this contest when it is a final: the scoreboard shows the result, so the record
+ * beside it already contains it. Anything not yet decided cuts before it ("going in"). A
+ * non-league contest is not in that list, so it falls back to the league games dated strictly
+ * before it. A postponed game has no date to measure from and keeps the current standing.
+ *
+ * Only results with an outcome count (a played game with no published score is neither a W nor an
+ * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
+ * equals `standing.computed` (tests/ui/game-model-asof.test.ts holds that).
+ *
+ * `undefined` for a non-SCVAL side.
+ */
+export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
+  if (!side.slug) return undefined;
+  if (game.status === 'postponed') {
+    const computed = getStandingFor(side.slug)?.computed;
+    return computed ? { gp: computed.gp, w: computed.w, l: computed.l, t: computed.t } : undefined;
+  }
+  const form = getTeamForm(side.slug);
+  if (!form) return undefined;
+  const index = form.leagueGames.findIndex((g) => g.contestId === game.contestId);
+  const upTo =
+    index >= 0
+      ? form.leagueGames.slice(0, game.status === 'final' ? index + 1 : index)
+      : form.leagueGames.filter((g) => g.date < game.dateKey);
+  const record: RecordAsOf = { gp: 0, w: 0, l: 0, t: 0 };
+  for (const g of upTo) {
+    if (g.outcome === null) continue;
+    record.gp += 1;
+    if (g.outcome === 'W') record.w += 1;
+    else if (g.outcome === 'L') record.l += 1;
+    else record.t += 1;
+  }
+  return record;
+}
+
+function subFor(record: RecordAsOf | undefined, team: Team | undefined): string | null {
   if (!team) return null;
   const division = DIVISION_LABELS[team.division];
-  if (!standing || !standing.hasReportedResults) {
-    // Never 0-0-0 for a team the sources have no results for (DESIGN §8).
+  if (!record || record.gp === 0) {
+    // Never 0-0-0 for a team the sources have no results for (DESIGN §8) — including, as of an
+    // early-season game, a team that had not played a league game yet.
     return `No league results reported · ${division}`;
   }
-  return `${recordString(standing.computed)} ${division}`;
+  return `${recordString(record)} ${division}`;
+}
+
+/** The scoreboard caption — see `GameModel.recordsCaption`. */
+function recordsCaptionFor(
+  game: Game,
+  display: GameDisplay,
+  away: GameSideModel,
+  home: GameSideModel,
+): string | null {
+  const members = [away, home].filter((side) => side.team).length;
+  if (members === 0) return null;
+  const subject = members === 1 ? 'League record' : 'League records';
+  if (game.status === 'postponed') return `${subject} to date`;
+  if (display.kind === 'final') {
+    return game.isLeague
+      ? `${subject} after this game`
+      : `${subject} as of ${shortDate(game.dateLocal)}`;
+  }
+  return `${subject} going in`;
 }
 
 /**
@@ -173,7 +267,7 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
     label: labelFor(name, team),
     team,
     standing,
-    sub: subFor(standing, team),
+    sub: subFor(recordAsOf(game, side), team),
     formBefore: entries,
     playedBefore,
     outcome,
@@ -308,13 +402,23 @@ export function buildGameModel(contestId: string): GameModel | undefined {
   const sameDivision =
     home.team && away.team && home.team.division === away.team.division ? home.team.division : null;
 
+  const resultLinks: GameLink[] = [];
+  if (game.status === 'final') {
+    if (game.urls.maxpreps) {
+      resultLinks.push({ href: game.urls.maxpreps, label: 'MaxPreps box score', accent: true });
+    }
+    if (game.urls.nfhsStream) resultLinks.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  }
+
   return {
     game,
+    resultLinks,
     display,
     away,
     home,
     division: game.leagueDivision,
     dayLabel: shortDate(game.dateLocal),
+    recordsCaption: recordsCaptionFor(game, display, away, home),
     whenLabel: game.isTimeTba
       ? `${dateWithYear(game.dateLocal)} · time TBA`
       : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`,
