@@ -4,7 +4,13 @@
  *  - VNN / PlayOn school calendars: venue + start-time corroboration (only for the verified sites
  *    whose team's league is in the run). PER SITE carry-forward: a school whose feed produced
  *    nothing this run keeps the venues and confirmed start times it published before.
- *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom.
+ *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
+ *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
+ *    corpus, a failed request) keeps the previous snapshot's value — the calendar its
+ *    `ccsCalendar` + `keyDatesConfirmed`, the bracket its `bracketPublished` — so a run that never
+ *    queried CCS (an MCAL-only refresh) cannot unpublish a live bracket or drop a confirmed
+ *    calendar. With no previous snapshot the bracket is unpublished and there is no calendar. The
+ *    source rows are unchanged ('skipped' / 'error'): the carry only shows in the run log.
  *
  * Every failure becomes a SourceStatus row; a resource the corpus lacks is 'skipped' ('not in
  * corpus'), which is how an offline run skips these steps.
@@ -14,7 +20,7 @@ import { CCS, getLeague } from '../../leagues';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '../../sources/ccs';
 import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
 import { getTeamBySlug } from '../../teams';
-import type { CcsCalendarEvent, Game } from '../../types';
+import type { Game } from '../../types';
 import { FixtureMissing, TransportError, type SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { resourceUrl } from '../transport';
@@ -94,11 +100,46 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
   return games;
 }
 
-async function stepCcs(ctx: PipelineContext): Promise<Omit<SecondaryStepResult, 'games'>> {
-  if (!ctx.args.ccs) {
-    ctx.log('  ccs: skipped (--no-ccs)');
-    return { bracketPublished: false };
+type CcsState = Omit<SecondaryStepResult, 'games'>;
+
+/** What this run read from CCS. A `null` part was not read: skipped, not in the corpus, or failed. */
+interface CcsRead {
+  calendar: Pick<CcsState, 'ccsCalendar' | 'keyDatesConfirmed'> | null;
+  bracketPublished: boolean | null;
+}
+
+/**
+ * The CCS state to publish: each part read this run as read, each part not read carried from the
+ * previous snapshot (calendar and bracket independently), and with no previous snapshot today's
+ * empty state (bracket not published, no calendar). `why` names what was not read, for the log.
+ */
+function ccsState(ctx: PipelineContext, read: CcsRead, why: string): CcsState {
+  const prev = ctx.previous?.playoffs;
+  const carried: string[] = [];
+  let bracketPublished = read.bracketPublished ?? false;
+  if (read.bracketPublished === null && prev) {
+    bracketPublished = prev.bracketPublished;
+    carried.push('bracket');
   }
+  let calendar = read.calendar ?? {};
+  if (read.calendar === null && prev && (prev.ccsCalendar !== undefined || prev.keyDatesConfirmed !== undefined)) {
+    calendar = {
+      ...(prev.ccsCalendar ? { ccsCalendar: prev.ccsCalendar.map((e) => ({ ...e })) } : {}),
+      ...(prev.keyDatesConfirmed === undefined ? {} : { keyDatesConfirmed: prev.keyDatesConfirmed }),
+    };
+    carried.push('calendar');
+  }
+  if (read.calendar === null || read.bracketPublished === null) {
+    ctx.log(
+      `  ccs: ${why} — ${carried.length ? `carried ${carried.join('/')} state from the previous snapshot` : 'nothing to carry'}`,
+    );
+  }
+  return { ...calendar, bracketPublished };
+}
+
+async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
+  const nothingRead: CcsRead = { calendar: null, bracketPublished: null };
+  if (!ctx.args.ccs) return ccsState(ctx, nothingRead, 'skipped (--no-ccs)');
   const calendarBase = {
     id: 'ccs-ical' as const,
     kind: 'ccs-calendar' as const,
@@ -123,49 +164,46 @@ async function stepCcs(ctx: PipelineContext): Promise<Omit<SecondaryStepResult, 
       : `season gate: polling opens ${CCS.pollFrom} (today ${ctx.today})`;
     ctx.source({ ...calendarBase, status: 'skipped', error: reason });
     ctx.source({ ...bracketBase, status: 'skipped', error: reason });
-    ctx.log(`  ccs: skipped (${reason})`);
-    return { bracketPublished: false };
+    return ccsState(ctx, nothingRead, `skipped (${reason})`);
   }
 
-  let ccsCalendar: CcsCalendarEvent[] | undefined;
-  let keyDatesConfirmed: boolean | undefined;
-  let bracketPublished = false;
+  const read: CcsRead = { calendar: null, bracketPublished: null };
+  const missed: string[] = [];
   try {
     const res = await ctx.transport.get({ kind: 'ccs-ical' });
     const events = parseCcsIcal(res.body);
     const check = confirmKeyDates(events);
-    ccsCalendar = events;
-    keyDatesConfirmed = check.confirmed;
+    read.calendar = { ccsCalendar: events, keyDatesConfirmed: check.confirmed };
     for (const d of check.differences) ctx.warn(`ccs calendar: ${d}`);
     ctx.source({ ...calendarBase, status: 'ok', httpStatus: res.httpStatus, rowCount: events.length });
     ctx.log(`  ccs calendar: ${events.length} events · key dates ${check.confirmed ? 'confirmed' : 'DIFFER'}`);
   } catch (err) {
     if (err instanceof FixtureMissing) {
       ctx.source({ ...calendarBase, status: 'skipped', error: 'not in corpus' });
+      missed.push('calendar not in corpus');
     } else {
       ctx.warn(`ccs calendar failed: ${(err as Error).message}`);
       ctx.source({ ...calendarBase, status: 'error', ...statusOf(err), error: (err as Error).message });
+      missed.push('calendar failed');
     }
   }
   try {
     const res = await ctx.transport.get({ kind: 'ccs-bracket' });
     const state = readBracketPublished(res.body);
-    bracketPublished = state.published;
+    read.bracketPublished = state.published;
     ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus });
     ctx.log(`  ccs bracket: ${state.published ? 'PUBLISHED' : 'not published'} (${state.reason})`);
   } catch (err) {
     if (err instanceof FixtureMissing) {
       ctx.source({ ...bracketBase, status: 'skipped', error: 'not in corpus' });
+      missed.push('bracket not in corpus');
     } else {
       ctx.warn(`ccs bracket page failed: ${(err as Error).message}`);
       ctx.source({ ...bracketBase, status: 'error', ...statusOf(err), error: (err as Error).message });
+      missed.push('bracket page failed');
     }
   }
-  return {
-    ...(ccsCalendar ? { ccsCalendar } : {}),
-    ...(keyDatesConfirmed === undefined ? {} : { keyDatesConfirmed }),
-    bracketPublished,
-  };
+  return ccsState(ctx, read, missed.join(', '));
 }
 
 export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {

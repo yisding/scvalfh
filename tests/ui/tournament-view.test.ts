@@ -21,6 +21,7 @@ import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '../../lib/types';
 import { game } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
+import { textOf } from './html-text';
 
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/[league]/page.tsx';
@@ -229,12 +230,7 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     vi.resetModules();
   });
 
-  const text = () =>
-    html
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&#x27;|&#39;/g, "'")
-      .replace(/&amp;/g, '&')
-      .replace(/\s+/g, ' ');
+  const text = () => textOf(html);
 
   it('generates only the tournament leagues, for the page and its OG image alike', () => {
     expect(page.generateStaticParams(), PAGE).toEqual([{ league: 'mcal' }]);

@@ -188,6 +188,12 @@ describe('the live resource map', () => {
   });
 });
 
+/** True when `url`'s host is maxpreps.com or one of its subdomains (a host check, not a substring). */
+function isMaxprepsHost(url: string): boolean {
+  const host = new URL(url).hostname;
+  return host === 'maxpreps.com' || host.endsWith('.maxpreps.com');
+}
+
 describe('LiveTransport (injected clients, no network)', () => {
   function fakeHttp(log: string[], bodies: Record<string, string | Uint8Array | Error>) {
     const answer = <T>(url: string, kind: 'text' | 'bytes'): HttpResponse<T> => {
@@ -242,7 +248,7 @@ describe('LiveTransport (injected clients, no network)', () => {
 
     // si.com went through its own client; MaxPreps through MaxPrepsClient.raw only.
     expect(log.filter((l) => l.startsWith('text https://www.si.com'))).toHaveLength(1);
-    expect(log.filter((l) => l.startsWith('maxpreps ')).every((l) => l.includes('maxpreps.com'))).toBe(true);
+    expect(log.filter((l) => l.startsWith('maxpreps ')).every((l) => isMaxprepsHost(l.slice('maxpreps '.length)))).toBe(true);
   });
 });
 

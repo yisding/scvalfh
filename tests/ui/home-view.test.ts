@@ -13,6 +13,7 @@ import { corpusSnapshotPath } from '../helpers';
 
 import { POSTSEASON_LEAD, postseasonCardLine } from '../../components/home/home-types';
 
+import { textOf } from './html-text';
 import { width } from './text-metrics';
 
 type HomeData = typeof import('../../components/home/home-data');
@@ -25,15 +26,6 @@ const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
 
 const HD = 'components/home/home-data.ts';
-
-function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/\s+/g, ' ');
-}
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');

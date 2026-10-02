@@ -15,6 +15,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { MissingOfficialResult } from '../../lib/data';
 import { corpusSnapshotPath } from '../helpers';
+// textOf: visible text, tags dropped and entities decoded.
+import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type StandingsData = typeof import('../../app/standings/standings-data');
@@ -47,15 +49,6 @@ afterAll(() => {
   else process.env.SCVAL_SNAPSHOT = priorEnv;
   vi.resetModules();
 });
-
-/** Visible text: tags dropped, entities decoded enough for the assertions here. */
-function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/\s+/g, ' ');
-}
 
 function ids(html: string): string[] {
   return [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);

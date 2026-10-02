@@ -20,6 +20,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
+import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Model = typeof import('../../components/game/game-model');
@@ -71,15 +72,6 @@ afterAll(() => {
   else process.env.SCVAL_SNAPSHOT = priorEnv;
   vi.resetModules();
 });
-
-function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/\s+/g, ' ');
-}
 
 const leagueOfSlug = (slug: string | null) => (slug ? L.d.getTeamBySlug(slug)?.league : undefined);
 
@@ -213,7 +205,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     expect(model.conflict?.note, 'components/game/game-model.ts conflict note').toBe(g!.provenance.scoreConflict!.note);
     expect(model.conflict?.sblive, 'components/game/game-model.ts conflict si.com value').toEqual(g!.provenance.scoreConflict!.sblive);
     const text = textOf(await L.renderPage(g!.contestId));
-    expect(text, 'components/game/GameSources.tsx conflict').toContain(g!.provenance.scoreConflict!.note.replace(/'/g, "'"));
+    expect(text, 'components/game/GameSources.tsx conflict').toContain(g!.provenance.scoreConflict!.note);
     expect(text, 'components/ui/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
   });
 });

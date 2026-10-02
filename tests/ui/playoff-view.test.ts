@@ -19,6 +19,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { ProjectionRow } from '../../components/playoffs/playoff-view';
 import type { PlayoffStatus } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
+import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type View = typeof import('../../components/playoffs/playoff-view');
@@ -48,15 +49,6 @@ afterAll(() => {
   else process.env.SCVAL_SNAPSHOT = priorEnv;
   vi.resetModules();
 });
-
-function textOf(markup: string): string {
-  return markup
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/\s+/g, ' ');
-}
 
 function liveRows(division: string): ProjectionRow[] {
   const league = leagues.leagueOfDivision(division).id;

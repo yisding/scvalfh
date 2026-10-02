@@ -16,6 +16,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { REPO, corpusSnapshotPath } from '../helpers';
+import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Server = typeof import('../../components/schedule/filter-data-server');
@@ -55,10 +56,6 @@ afterAll(() => {
   else process.env.SCVAL_SNAPSHOT = priorEnv;
   vi.resetModules();
 });
-
-function textOf(html: string): string {
-  return html.replace(/<[^>]+>/g, ' ').replace(/&#x27;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ');
-}
 
 const leagueOfSlug = (slug: string | null) => (slug ? data.getTeamBySlug(slug)?.league : undefined);
 

@@ -19,6 +19,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Snapshot } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
+// textOf: the `<main>`-equivalent text of a page (the page component renders no layout).
+import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
@@ -73,16 +75,6 @@ afterAll(() => {
   else process.env.SCVAL_SNAPSHOT = priorEnv;
   vi.resetModules();
 });
-
-/** The `<main>`-equivalent text of a page (the page component renders no layout). */
-function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/\s+/g, ' ');
-}
 
 function ids(html: string): string[] {
   return [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);

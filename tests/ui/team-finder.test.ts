@@ -19,15 +19,13 @@ import { getTeamSearchIndex } from '../../lib/data';
 import { pinLabel } from '../../lib/pin-label';
 import { searchTeams } from '../../lib/search';
 
+import { decodeEntities, stripTags } from './html-text';
+
 const index = getTeamSearchIndex();
 
 /** The accessible name of a button with no aria-label: all of its text, sr-only included. */
 function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&quot;/g, '"');
+  return decodeEntities(stripTags(html, ''));
 }
 
 /** What a sighted reader sees: the text with every sr-only span removed, per line. */

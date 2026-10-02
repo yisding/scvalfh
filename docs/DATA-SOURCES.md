@@ -794,6 +794,14 @@ guards → standings → assemble. Failure has three scopes, so **one league nev
 | **League freeze** (`state: frozen`) | that league's games between its own teams, and its unmatched official fixtures, come from the previous snapshot and its table is recomputed from them, with the reasons published; other leagues publish fresh | (a) a division's metadata has the wrong season, year or section id; (b) 50% or more of the league's team feeds failed; (c) finals regression: counted finals in a division dropped by 3 or more against the previous run (1-2 vanished finals publish, each named in a warning) unless the league is passed to `--accept-regression`; (d) the league is not in `--leagues` |
 | **Source stale** (`status: stale`, `carriedFrom`) | that source's previous contribution is carried and the league becomes `partial` | a MaxPreps standings table failing (0 rows, HTTP 400, schema error, network); a team feed failing (that team's games carry forward, guarded: never an `sblive:` game, never a contest another feed reported Deleted this run, the earlier classification cleared so the game is matched and classified again, and the phantom dedupe re-run over fresh plus carried games with the fresh row always winning); an SCVAL PDF failing or parsing empty; an official-revision or MCAL changes check seeing a new hash (fixtures still used); an si.com page not read this run (a failed page, an item past the team-page cap, `--no-sblive`, nothing to read, or every request failing): the earlier si.com fills its data covered are re-applied where still eligible, and a failed page's row is `stale` when something was carried in its place |
 
+The **CCS calendar and bracket** are not a league source (no league changes state) and carry per
+part: a part not read this run (`--no-ccs`, no CCS league in `--leagues` such as an MCAL-only
+refresh, the season gate before `CCS.pollFrom`, a corpus without it, or a failed request) keeps the
+previous snapshot's value (the calendar its `ccsCalendar` and `keyDatesConfirmed`, the bracket its
+`bracketPublished`), so a run that never queried CCS cannot unpublish a live bracket or drop a
+confirmed calendar; their source rows stay `skipped`/`error` and the run log names the carry. With
+no previous snapshot the bracket is unpublished and there is no calendar.
+
 A frozen league with no previous data cannot be carried: not in `--leagues` or a wrong-season
 meta publishes it with no games; failed feeds or a finals regression publish the fresh rows with
 state `degraded` and the reason. Reasons are rendered verbatim on the league pages and `/about`.
