@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     // vinext build output (`pnpm build:vinext`) and its dev/build cache.
     "dist/**",
     ".vinext/**",
+    // The Cloudflare Workers build (`pnpm build:cloudflare`): built JS and generated workerd types.
+    ".cloudflare/**",
   ]),
 ]);
 

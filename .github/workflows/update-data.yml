@@ -131,6 +131,9 @@ jobs:
             const c = meta.counts;
             process.stdout.write(`${day} (${c.games} games, ${c.finals} finals)`);
           ')
+          # deploy-cloudflare.yml ships this commit without a ci run of its own only because it is
+          # recognisably this one: author github-actions[bot], one parent, a message starting
+          # "data: refresh snapshot", nothing but the two data files. Keep the four in step.
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/snapshot.json data/snapshot.meta.json

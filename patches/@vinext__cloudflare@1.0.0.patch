@@ -1,0 +1,23 @@
+diff --git a/dist/cache/static-assets-adapter.build.js b/dist/cache/static-assets-adapter.build.js
+index 294fa3b6a0b86c4e34f26f13f81f800979f4ef44..fc80fcd4ae076cd34301f4ae8a06835d27ebbe04 100644
+--- a/dist/cache/static-assets-adapter.build.js
++++ b/dist/cache/static-assets-adapter.build.js
+@@ -53,10 +53,17 @@ function finalizeStaticAssetsPrerenderOutput(root, options = {}) {
+ 		if (typeof route.revalidate === "number" && route.revalidate <= 0) continue;
+ 		const pathname = route.path ?? route.route;
+ 		const cachePathname = normalizePregeneratedPathname(pathname);
++		// Patched (scvalfh, patches/@vinext__cloudflare@1.0.0.patch): a prerendered GET Route Handler
++		// (router "route": this site's force-static /icon-192 and /icon-512, prerendered by
++		// patches/vinext@1.0.0.patch) is packaged like a metadata route. It was skipped, so the Worker
++		// rendered it per request with satori/resvg while `vinext start` and `next start` serve the
++		// build's body. Both kinds are keyed appIsrCacheKey(pathname, "route", buildId), the key the
++		// Worker reads (vinext server/seed-cache.js; isr-cache.js appIsrRouteKey, which the RSC entry
++		// hands to the Route Handler dispatch).
+ 		if (route.router === "app") {
+ 			count += Number(writeCacheAsset(outputDir, index, appIsrCacheKey(cachePathname, "html", manifest.buildId), "html", path.join(prerenderDir, getOutputPath(pathname, manifest.trailingSlash ?? false)), route));
+ 			count += Number(writeCacheAsset(outputDir, index, appIsrCacheKey(cachePathname, "rsc", manifest.buildId), "rsc", path.join(prerenderDir, getRscOutputPath(pathname)), route));
+-		} else if (route.router === "metadata") count += Number(writeCacheAsset(outputDir, index, appIsrCacheKey(cachePathname, "route", manifest.buildId), "route", path.join(prerenderDir, getAppRouteOutputPath(pathname)), route));
++		} else if (route.router === "metadata" || route.router === "route") count += Number(writeCacheAsset(outputDir, index, appIsrCacheKey(cachePathname, "route", manifest.buildId), "route", path.join(prerenderDir, getAppRouteOutputPath(pathname)), route));
+ 	}
+ 	if (count > 0) fs.writeFileSync(path.join(outputDir, "index.json"), JSON.stringify(index));
+ 	return count;
