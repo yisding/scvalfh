@@ -8,8 +8,9 @@
  *   - data/rosters-enrichment.json is what other public sources add — school athletics sites, a
  *     school roster PDF, school papers, MaxPreps career and JV pages — joined on team slug +
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
- *     MaxPreps stays and the disagreement is recorded. `getEnrichedTeamRoster` merges the two and
- *     says, per field, where each value came from.
+ *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
+ *     profiles (NCSA and the like). `getEnrichedTeamRoster` merges the two and says, per field,
+ *     where each value came from.
  *
  * Both are imported so the build bundles them, for the reason lib/history.ts and lib/data.ts give:
  * a Worker has no project filesystem. Both are validated once at module scope, and the merge rules
@@ -32,6 +33,7 @@ import {
   type EnrichedPositions,
   type EnrichedTeam,
   type EnrichmentSource,
+  type PlayerProfile,
   type RosterCoach,
   type RosterConflict,
   type RosterEnrichment,
@@ -49,6 +51,8 @@ export type {
   EnrichedPositions,
   EnrichedTeam,
   EnrichmentSource,
+  PlayerProfile,
+  ProfilePlatform,
   RosterCoach,
   RosterConflict,
   RosterEnrichment,
@@ -81,9 +85,10 @@ function loadRosters(): Rosters {
 }
 
 /**
- * The overlay's three rules, asserted against the base at load time (the schema alone cannot see
- * both files): every record joins to a MaxPreps row of the same team, a filled field was null on
- * MaxPreps, and a recorded conflict's `kept` value is MaxPreps' own.
+ * The overlay's rules, asserted against the base at load time (the schema alone cannot see both
+ * files): every record joins to a MaxPreps row of the same team, a filled field was null on
+ * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own, and a recruiting profile that
+ * states a class year agrees with the grade the row shows.
  */
 function loadEnrichment(base: Rosters): RosterEnrichment {
   const parsed = RosterEnrichmentSchema.safeParse(
@@ -119,9 +124,22 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
           fail(team.slug, e.fullName, `conflict on ${c.field} says kept="${c.kept}" but the roster shows "${own}"`);
         }
       }
+      const grade = p!.grade ?? e.grade?.value ?? null;
+      for (const x of e.profiles) {
+        if (x.classOf !== null && grade !== null && x.classOf !== classOf(base.season, grade)) {
+          fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${grade}`);
+        }
+      }
     }
   }
   return enrichment;
+}
+
+/** The graduation year of a player in `grade` during `season`: in "26-27" a senior is class of 2027. */
+export function classOf(season: string, grade: number): number {
+  const m = /^(\d{2})-(\d{2})$/.exec(season);
+  if (!m) throw new Error(`lib/rosters.ts: cannot read season "${season}"`);
+  return 2000 + Number(m[2]) + (12 - grade);
 }
 
 const rosters = loadRosters();
@@ -160,6 +178,8 @@ export interface MergedPlayer extends RosterPlayer {
   };
   /** Sources that disagree with the value shown. */
   conflicts: RosterConflict[];
+  /** The player's own recruiting pages (NCSA and the like), in the enrichment file's order. */
+  profiles: PlayerProfile[];
 }
 
 export interface MergedTeamRoster extends Omit<TeamRoster, 'players'> {
@@ -183,6 +203,7 @@ function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlay
       height: p.height !== null ? 'maxpreps' : null,
     },
     conflicts: e?.conflicts ?? [],
+    profiles: e?.profiles ?? [],
   };
   if (!e) return base;
   if (e.grade) {

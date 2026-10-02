@@ -2,7 +2,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
-import type { RosterFact, RosterView } from './roster-view';
+import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**
  * The team page's roster (SPEC §1.1j): every varsity player MaxPreps lists, with whatever number,
@@ -21,6 +21,11 @@ import type { RosterFact, RosterView } from './roster-view';
  * Provenance is visible, not buried: a value that did not come from MaxPreps carries a † that the
  * footnote explains and the Sources row links; where a source disagrees with what is shown, the
  * disagreement is listed with a link to it.
+ *
+ * A player with a recruiting page of their own (NCSA and the like) gets a line of links under the
+ * facts — its own line, so a link never dangles off the end of a wrapped fact line. Alone on its
+ * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
+ * accessible name leads with the player's name, so a screen reader's links list tells them apart.
  */
 
 /** "†" for sighted readers; a short spoken note instead of the glyph for a screen reader. */
@@ -51,6 +56,31 @@ function Facts({ facts }: { facts: RosterFact[] }) {
       ))}
     </span>
   );
+}
+
+function Profiles({ row }: { row: RosterRow }) {
+  return (
+    <span className="block text-meta text-ink-2">
+      {row.profiles.map((profile, i) => (
+        <span key={profile.url}>
+          {i > 0 ? <>&nbsp;&middot; </> : null}
+          <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
+            {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
+                name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
+            <span>
+              <span className="sr-only">{row.name}&rsquo;s </span>
+              {profile.label}
+            </span>
+          </ExternalLink>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** "NCSA", "NCSA and SportsRecruits", "NCSA, Hudl and SportsRecruits". */
+function listWords(words: string[]): string {
+  return words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`;
 }
 
 export function TeamRoster({ view }: { view: RosterView }) {
@@ -120,6 +150,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
                 ) : null}
               </span>
               {row.facts.length > 0 ? <Facts facts={row.facts} /> : null}
+              {row.profiles.length > 0 ? <Profiles row={row} /> : null}
             </span>
           </li>
         ))}
@@ -145,6 +176,13 @@ export function TeamRoster({ view }: { view: RosterView }) {
             {view.hasDerivedGrade
               ? ' A few grades are worked out from a class year listed for an earlier season.'
               : ''}
+          </p>
+        ) : null}
+        {view.profilePlatforms.length > 0 ? (
+          <p className="mt-1 mb-0">
+            Profile links go to players&rsquo; own recruiting pages on{' '}
+            {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
+            school or class year.
           </p>
         ) : null}
         {view.jvLeftOut > 0 ? (

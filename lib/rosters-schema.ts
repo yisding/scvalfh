@@ -163,6 +163,8 @@ export type Rosters = z.infer<typeof RostersSchema>;
  *   1. a value is filled only where MaxPreps has null for that field
  *   2. where a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded
  *   3. every filled value names its source URL, its kind and a confidence
+ * It also carries links to players' own recruiting profiles (PlayerProfileSchema below), which
+ * fill no field: they sit beside the row, and a class year they state must agree with its grade.
  */
 
 export const ENRICHMENT_KINDS = [
@@ -225,6 +227,59 @@ export const EnrichedHeightSchema = z
     return !!m && Number(m[1]) * 12 + Number(m[2]) === h.inches;
   }, 'inches must agree with value');
 
+/**
+ * A player's own recruiting page: a profile the athlete (or their family) published for college
+ * coaches — NCSA, SportsRecruits, FieldLevel, Hudl, Captain U, or a personal recruiting site.
+ * Social media, news stories and team rosters are not profiles.
+ *
+ * Linked only when the page (or, for NCSA, whose pages are behind a bot wall, the search result
+ * for it) names this player, field hockey and this school. A stated graduation year must agree
+ * with the grade the roster shows: lib/rosters.ts checks that at load time.
+ */
+export const PROFILE_PLATFORMS = [
+  'ncsa',
+  'sportsrecruits',
+  'fieldlevel',
+  'hudl',
+  'captainu',
+  /** a site built for this one athlete, on any host */
+  'personal',
+] as const;
+export type ProfilePlatform = (typeof PROFILE_PLATFORMS)[number];
+
+/** Where each platform's profiles live; a URL on any other host is refused. */
+export const PROFILE_HOSTS: Record<Exclude<ProfilePlatform, 'personal'>, string> = {
+  ncsa: 'ncsasports.org',
+  sportsrecruits: 'sportsrecruits.com',
+  fieldlevel: 'fieldlevel.com',
+  hudl: 'hudl.com',
+  captainu: 'captainu.com',
+};
+
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+export const PlayerProfileSchema = z
+  .object({
+    platform: z.enum(PROFILE_PLATFORMS),
+    url: httpUrl.refine((v) => v.startsWith('https://'), 'expected an https URL'),
+    /** The graduation year the profile states, when it states one. */
+    classOf: z.number().int().min(2020).max(2040).nullable(),
+    note: z.string().min(1).nullable(),
+  })
+  .refine((p) => {
+    const host = hostOf(p.url);
+    if (host === null) return false;
+    if (p.platform === 'personal') return true;
+    const want = PROFILE_HOSTS[p.platform];
+    return host === want || host.endsWith(`.${want}`);
+  }, 'url is not a valid URL on the platform it names');
+
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({
   field: z.enum(['jersey', 'grade', 'position', 'height']),
@@ -251,15 +306,21 @@ export const EnrichedPlayerSchema = z
     jersey: EnrichedJerseySchema.nullable(),
     height: EnrichedHeightSchema.nullable(),
     conflicts: z.array(RosterConflictSchema),
+    /** The player's own recruiting pages, at most one per platform. */
+    profiles: z.array(PlayerProfileSchema),
     note: z.string().min(1).nullable(),
   })
   .refine(
     (p) =>
       p.sourceName !== null || p.level !== null || p.grade !== null || p.positions !== null ||
-      p.jersey !== null || p.height !== null || p.conflicts.length > 0,
+      p.jersey !== null || p.height !== null || p.conflicts.length > 0 || p.profiles.length > 0,
     'an enrichment record must add something',
   )
-  .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together');
+  .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together')
+  .refine(
+    (p) => new Set(p.profiles.map((x) => x.platform)).size === p.profiles.length,
+    'one profile per platform',
+  );
 
 export const RosterCoachSchema = z.object({
   name: z.string().min(1),
@@ -296,12 +357,17 @@ export const RosterEnrichmentSchema = z
     notes: z.array(z.string().min(1)),
     teams: z.array(EnrichedTeamSchema).length(15),
   })
-  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique');
+  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique')
+  .refine((e) => {
+    const urls = e.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url)));
+    return new Set(urls).size === urls.length;
+  }, 'a profile URL is linked to more than one player');
 
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;
 export type EnrichedJersey = z.infer<typeof EnrichedJerseySchema>;
 export type EnrichedHeight = z.infer<typeof EnrichedHeightSchema>;
+export type PlayerProfile = z.infer<typeof PlayerProfileSchema>;
 export type RosterConflict = z.infer<typeof RosterConflictSchema>;
 export type EnrichedPlayer = z.infer<typeof EnrichedPlayerSchema>;
 export type RosterCoach = z.infer<typeof RosterCoachSchema>;
