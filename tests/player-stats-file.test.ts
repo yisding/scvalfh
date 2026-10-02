@@ -109,9 +109,12 @@ describe('playerStatsContentKey', () => {
     later.fetchedAt = '2030-01-01T00:00:00.000Z';
     for (const t of later.teams) t.fetchedAt = '2030-01-01T00:00:00.000Z';
     expect(playerStatsContentKey(later)).toBe(playerStatsContentKey(raw));
+    // Any field but a stamp changes the key. Not a player's number: this reads the committed file,
+    // which a valid refresh can leave with no goal counts at all, and the scheduled refresh runs
+    // this suite before it commits ("rewrites the file when a number moved" covers that case on
+    // the fixture build).
     const moved = structuredClone(raw);
-    const scorer = moved.teams.flatMap((t) => t.players).find((p) => p.field?.goals != null)!;
-    scorer.field!.goals! += 1;
+    moved.season = `${moved.season}-changed`;
     expect(playerStatsContentKey(moved)).not.toBe(playerStatsContentKey(raw));
   });
 });
