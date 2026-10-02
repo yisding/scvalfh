@@ -192,9 +192,10 @@ describe('TeamRoster', () => {
     expect(html).toMatch(
       /<a href="https:\/\/www\.ncsasports\.org\/x\/one" target="_blank" rel="noopener noreferrer"[^>]*>/,
     );
-    expect(html).toContain(`<span class="sr-only">${esc(first.name)}’s </span>NCSA profile`);
+    // One wrapper span, so `.sx-action`'s inline-flex cannot trim the space before the label.
+    expect(html).toContain(`<span><span class="sr-only">${esc(first.name)}’s </span>NCSA profile</span>`);
     // A row with no facts still gets its line of links.
-    expect(html).toContain(`<span class="sr-only">${esc(second.name)}’s </span>Recruiting site`);
+    expect(html).toContain(`<span><span class="sr-only">${esc(second.name)}’s </span>Recruiting site</span>`);
     expect(html).toContain('own recruiting pages on NCSA and personal sites,');
     expect(html.match(/own recruiting pages/g)?.length).toBe(1);
 

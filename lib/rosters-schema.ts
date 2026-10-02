@@ -273,11 +273,12 @@ export const PlayerProfileSchema = z
     note: z.string().min(1).nullable(),
   })
   .refine((p) => {
-    if (p.platform === 'personal') return true;
     const host = hostOf(p.url);
+    if (host === null) return false;
+    if (p.platform === 'personal') return true;
     const want = PROFILE_HOSTS[p.platform];
-    return host !== null && (host === want || host.endsWith(`.${want}`));
-  }, 'url is not on the platform it names');
+    return host === want || host.endsWith(`.${want}`);
+  }, 'url is not a valid URL on the platform it names');
 
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({

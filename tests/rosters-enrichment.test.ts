@@ -209,6 +209,12 @@ describe('recruiting profiles', () => {
     ];
     expect(RosterEnrichmentSchema.safeParse(wrongHost).success).toBe(false);
 
+    const unparsable = structuredClone(raw);
+    recordFor(unparsable, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      { platform: 'personal', url: 'https://?broken', classOf: null, note: null },
+    ];
+    expect(RosterEnrichmentSchema.safeParse(unparsable).success).toBe(false);
+
     const twice = structuredClone(raw);
     recordFor(twice, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
       ncsa('https://www.ncsasports.org/a', null),

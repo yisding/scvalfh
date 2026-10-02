@@ -65,8 +65,12 @@ function Profiles({ row }: { row: RosterRow }) {
         <span key={profile.url}>
           {i > 0 ? <>&nbsp;&middot; </> : null}
           <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
-            <span className="sr-only">{row.name}&rsquo;s </span>
-            {profile.label}
+            {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
+                name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
+            <span>
+              <span className="sr-only">{row.name}&rsquo;s </span>
+              {profile.label}
+            </span>
           </ExternalLink>
         </span>
       ))}
