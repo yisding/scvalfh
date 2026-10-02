@@ -156,8 +156,48 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
 alongside and **rejected as a source**: `query.team.teamPlayers.nodes[]` carries names only (no
 jersey/position/class on any node for any SCVAL team), is paginated 24 at a time with a client-side
 "load more" that the `?page=`/`?after=` query forms do not drive, 404s for Valley Christian, and on
-several teams lists a **different set of names** from MaxPreps (0/24 overlap for St. Ignatius and
-Fremont; 17/17 for Los Altos). Useful only as a name cross-check.
+several teams lists a **different set of names** from MaxPreps: the paginated lists for St.
+Ignatius, Fremont, Palo Alto and Wilcox include male-typical names (0/24, 0/24, 3/24 overlap), and
+Saint Francis's 24 names are exactly the school's **2025-26** roster. Useful only as a name
+cross-check (17/17 for Los Altos, 13/13 for Cupertino).
+
+**Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** Where a coach left
+MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
+teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)
+found these, all **[V]** against the page on that date:
+
+| School | Source | Publishes |
+|---|---|---|
+| St. Ignatius | `siwildcats.com/sports/field-hockey/roster` (Sidearm) | grade, **height**, number; no position; +1 manager |
+| Saint Francis | `sfhsathletics.com/sports/field-hockey/roster` (Sidearm) | grade, position (`M/D`-style), height, number — agrees with MaxPreps 25/25 |
+| Valley Christian | `gowarriors.net/sports/field-hockey/roster` (Sidearm) | number only (29 of MaxPreps' 30) |
+| Cupertino | `chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey` (Finalsite) | varsity **and** JV lists with grade; no number/position |
+| Los Gatos | `losgatosathletics.org/sport/field%20hockey/girls/?tab=roster` (VNN; JV via `/sport/RefreshRosterAthleteStyle2ViewComponent/{teamId}?schoolYear=`) | varsity 27 + JV 33 with grade — proves MaxPreps' 58-name "varsity" page is the whole program |
+| Presentation | `presentationhs.org/…/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf` | number + graduation year (→ grade); no position |
+| Santa Clara | `schsathletics.com/varsity/field-hockey/roster` (Home Campus) | grade; no number/position |
+| Saratoga | `shs-athletics.com/varsity/field-hockey/roster` + `/player/<slug>/` (Home Campus) | names; grade only on the per-player profile ("Grade N", **not season-dated** — one was stale) |
+| Lynbrook | `lynbrookvikings.com/varsity/field-hockey/roster/` + `/player/<slug>/` (Home Campus) | names; grade on the profile; a profile-level position for 4 |
+| Monta Vista | `matadorathletics.org/varsity/field-hockey/roster` + `/player/<slug>/` (Home Campus) | names; grade (agrees with MaxPreps 16/16); a number that **differs from MaxPreps for 6 of 16** |
+| Los Altos | `lahs.mvla.net/field-hockey` | coaches only — no roster anywhere; `lahstalon.org` previews name 4 seniors |
+| Homestead | `homesteadmustangs.com/sport/girls-field-hockey/roster?team=…&year=2026-2027` (PlayOn) | "No roster" for both levels; MaxPreps' JV page carries one varsity player's grade |
+| Palo Alto | `palyathletics.com/sport/field%20hockey/girls/?tab=roster` (VNN) | names only; `palyvoice.com` preview names the captain |
+| Fremont, Mitty | not sought | MaxPreps already complete bar height |
+| Wilcox | `wilcox.santaclarausd.org/athletics` | field hockey absent from the fall sports list; no roster anywhere |
+
+Rules of the overlay, enforced by `lib/rosters-schema.ts` and re-checked against the base file in
+`lib/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is
+counted, never added); it fills a field **only where MaxPreps is null**; where a source disagrees
+with MaxPreps (10 numbers, 1 position) MaxPreps stays and the disagreement is stored under
+`conflicts`; every filled value carries `kind`, `source` URL and `confidence` (`high` = an official
+2026-27 school roster or MaxPreps' own data for the same career; `medium` = a profile field that is
+not season-dated, a school-paper statement, or a grade **derived** from a dated MaxPreps class year
+plus the years elapsed, flagged `derived: true`; `low` = a profile field not tied to the season).
+Net on 2026-10-02: 133 grades, 9 positions, 23 heights and the Los Gatos varsity/JV split added to
+the 341 MaxPreps rows → 303 with a grade, 108 with a position, 49 with a height. Position coverage
+is the real gap: **no current-season public source lists positions** for 8 of the 16 programs.
+MaxPreps' per-level pages (`/jv/roster/`, `/freshman/roster/`) and prior-season pages
+(`/25-26/roster/`) were empty for every team checked except Homestead JV (25), Palo Alto JV (25),
+Monta Vista JV (12) and Los Gatos JV (2). This sweep is not a script: re-running it is research.
 
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 

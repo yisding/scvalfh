@@ -153,6 +153,162 @@ export type TeamRoster = z.infer<typeof TeamRosterSchema>;
 export type RosterCounts = z.infer<typeof RosterCountsSchema>;
 export type Rosters = z.infer<typeof RostersSchema>;
 
+// ---------------------------------------------------------------- the enrichment overlay
+
+/**
+ * data/rosters-enrichment.json — what OTHER public sources add to the MaxPreps rosters, joined on
+ * team slug + MaxPreps athleteId (SPEC §1.1j).
+ *
+ * It is an overlay, never a replacement. The three rules, enforced by lib/rosters.ts at load time:
+ *   1. a value is filled only where MaxPreps has null for that field
+ *   2. where a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded
+ *   3. every filled value names its source URL, its kind and a confidence
+ */
+
+export const ENRICHMENT_KINDS = [
+  /** an official school athletics site (roster page or player profile) */
+  'school-site',
+  /** an official school roster PDF */
+  'school-pdf',
+  /** a school newspaper or similar public article */
+  'news',
+  /** MaxPreps' own JV roster page for the same career id */
+  'maxpreps-jv',
+  /** a dated class year on a MaxPreps career page plus the years elapsed */
+  'maxpreps-career',
+  /** a MaxPreps team home page (coach names) */
+  'maxpreps-team',
+] as const;
+const enrichmentKind = z.enum(ENRICHMENT_KINDS);
+
+/**
+ * high   an official 2026-27 school roster, or MaxPreps' own data for the same career
+ * medium a school-site profile field that is not season-dated, a school-paper statement, or a
+ *        derived grade
+ * low    a profile field not tied to the season at all
+ */
+const confidence = z.enum(['high', 'medium', 'low']);
+const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+
+const sourced = {
+  kind: enrichmentKind,
+  source: httpUrl,
+  confidence,
+  note: z.string().min(1).nullable(),
+};
+
+export const EnrichedGradeSchema = z.object({
+  value: z.number().int().min(9).max(12),
+  /** true when computed from a class year on another season, not read for this one. */
+  derived: z.boolean(),
+  ...sourced,
+});
+
+export const EnrichedPositionsSchema = z.object({
+  value: z.array(z.string().min(1)).min(1),
+  ...sourced,
+});
+
+export const EnrichedJerseySchema = z.object({
+  value: z.string().min(1),
+  ...sourced,
+});
+
+export const EnrichedHeightSchema = z
+  .object({
+    value: z.string().regex(/^\d'\d{1,2}"$/, 'expected feet\'inches"'),
+    inches: z.number().int().min(1),
+    ...sourced,
+  })
+  .refine((h) => {
+    const m = /^(\d)'(\d{1,2})"$/.exec(h.value);
+    return !!m && Number(m[1]) * 12 + Number(m[2]) === h.inches;
+  }, 'inches must agree with value');
+
+/** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
+export const RosterConflictSchema = z.object({
+  field: z.enum(['jersey', 'grade', 'position', 'height']),
+  kept: z.string().min(1).nullable(),
+  other: z.string().min(1),
+  kind: enrichmentKind,
+  source: httpUrl,
+  note: z.string().min(1).nullable(),
+});
+
+export const EnrichedPlayerSchema = z
+  .object({
+    /** The MaxPreps per-season id: the join key. */
+    athleteId: z.string().min(1),
+    /** As MaxPreps spells it (for reading the file; the join is on athleteId). */
+    fullName: z.string().min(1),
+    /** As the source spells it, when that differs (e.g. "Gabriella" for "Gigi"). */
+    sourceName: z.string().min(1).nullable(),
+    /** Only where a school source says which squad a row belongs to (Los Gatos). */
+    level: z.enum(['varsity', 'jv']).nullable(),
+    levelSource: httpUrl.nullable(),
+    grade: EnrichedGradeSchema.nullable(),
+    positions: EnrichedPositionsSchema.nullable(),
+    jersey: EnrichedJerseySchema.nullable(),
+    height: EnrichedHeightSchema.nullable(),
+    conflicts: z.array(RosterConflictSchema),
+    note: z.string().min(1).nullable(),
+  })
+  .refine(
+    (p) =>
+      p.sourceName !== null || p.level !== null || p.grade !== null || p.positions !== null ||
+      p.jersey !== null || p.height !== null || p.conflicts.length > 0,
+    'an enrichment record must add something',
+  )
+  .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together');
+
+export const RosterCoachSchema = z.object({
+  name: z.string().min(1),
+  role: z.string().min(1).nullable(),
+  source: httpUrl,
+});
+
+export const EnrichmentSourceSchema = z.object({
+  kind: enrichmentKind,
+  url: httpUrl,
+  title: z.string().min(1),
+  capturedAt: dateOnly,
+  confidence,
+});
+
+export const EnrichedTeamSchema = z
+  .object({
+    slug: teamSlug,
+    sources: z.array(EnrichmentSourceSchema),
+    players: z.array(EnrichedPlayerSchema),
+    coaches: z.array(RosterCoachSchema),
+    notes: z.array(z.string().min(1)),
+  })
+  .refine(
+    (t) => new Set(t.players.map((p) => p.athleteId)).size === t.players.length,
+    'athleteIds are not unique within the team',
+  );
+
+export const RosterEnrichmentSchema = z
+  .object({
+    season: z.string().min(1),
+    capturedAt: dateOnly,
+    builtBy: z.string().min(1),
+    notes: z.array(z.string().min(1)),
+    teams: z.array(EnrichedTeamSchema).length(16),
+  })
+  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 16, 'team slugs are not unique');
+
+export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
+export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;
+export type EnrichedJersey = z.infer<typeof EnrichedJerseySchema>;
+export type EnrichedHeight = z.infer<typeof EnrichedHeightSchema>;
+export type RosterConflict = z.infer<typeof RosterConflictSchema>;
+export type EnrichedPlayer = z.infer<typeof EnrichedPlayerSchema>;
+export type RosterCoach = z.infer<typeof RosterCoachSchema>;
+export type EnrichmentSource = z.infer<typeof EnrichmentSourceSchema>;
+export type EnrichedTeam = z.infer<typeof EnrichedTeamSchema>;
+export type RosterEnrichment = z.infer<typeof RosterEnrichmentSchema>;
+
 /** The one place the summary numbers are computed; the schema refuses a file that disagrees. */
 export function countRosters(teams: readonly TeamRoster[]): RosterCounts {
   const players = teams.flatMap((t) => t.players);

@@ -111,9 +111,17 @@ athlete as a 37-element positional array, so `lib/sources/maxpreps-roster.ts` de
 MaxPreps' own column list and cross-checks every row against the page's rendered table, failing
 the team rather than publishing a wrong grade beside a name. Blanks are `null`, never guessed;
 soft-deleted rows are dropped; a team whose fetch fails keeps its previous rows with
-`status: "carried-forward"`. `lib/rosters.ts` is the read API (`getTeamRoster(slug)`,
-`sortedPlayers(team)`); no page renders it yet. See `docs/DATA-SOURCES.md` §1.1j for the column
-map and the per-program coverage.
+`status: "carried-forward"`.
+
+`data/rosters-enrichment.json` is what other public sources add to that — the schools' own
+athletics-site rosters, one roster PDF, two school papers, MaxPreps career and JV pages — gathered
+by hand once (2026-10-02) and joined on the MaxPreps athlete id. It only ever fills a blank; where
+a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded; every value
+carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
+`getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
+per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. No page
+renders it yet. See `docs/DATA-SOURCES.md` §1.1j for the column map, the per-school sources and
+the overlay's rules.
 
 ```bash
 pnpm fetch-rosters                                      # live: 16 roster pages → data/rosters.json
@@ -270,9 +278,12 @@ computed one; see `/about#cross-check`.
   synthetic test data).
 - **Roster detail depends on the coach.** As of 2026-10-02 five programs publish grade, position
   and number on MaxPreps, three publish grade and number only, seven publish names only (Los
-  Gatos' 58 names look like the whole program, not just varsity), and Wilcox publishes no roster
-  at all. The file stores exactly that — a blank is `null`, never a guess — and si.com's rosters
-  were rejected as a fill-in source (names only, and often a different list of names).
+  Gatos' 58 names are the whole program, varsity and JV), and Wilcox publishes no roster at all.
+  The MaxPreps file stores exactly that — a blank is `null`, never a guess. The schools' own
+  sites fill most of the grades (303 of 341 players once the enrichment overlay is applied) and
+  a few heights, but **no current-season public source lists positions for 8 of the 16
+  programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
+  si.com's rosters were rejected as a source (names only, and often a different list of names).
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and SBLive-only games that MaxPreps never published are surfaced as warnings rather than
