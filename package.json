@@ -11,6 +11,7 @@
     "test": "vitest run",
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",
+    "fetch-player-stats": "tsx scripts/fetch-player-stats.ts",
     "discover-season": "tsx scripts/discover-season.ts",
     "build-history": "tsx scripts/build-history.ts",
     "dev:vinext": "vite dev --port 3001",
