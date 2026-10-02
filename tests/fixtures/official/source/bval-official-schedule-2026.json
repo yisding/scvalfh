@@ -1,0 +1,1041 @@
+{
+  "source": {
+    "mt-hamilton": {
+      "url": "https://docs.google.com/document/d/150BDI14JosnaB71NoTwYyLp1AFfXSVXb/edit",
+      "download": "https://drive.google.com/uc?export=download&id=150BDI14JosnaB71NoTwYyLp1AFfXSVXb",
+      "revised": "2026-09-20",
+      "revisedVerbatim": "9/20/26",
+      "index": "https://bval.org/field-hockey/",
+      "sha256": "2b0eb69347cdb0e6aa57da94213db50bd5eadeccfeed96370b5c8106ef2cb172"
+    },
+    "santa-teresa": {
+      "url": "https://docs.google.com/document/d/1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD/edit",
+      "download": "https://drive.google.com/uc?export=download&id=1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD",
+      "revised": "2026-09-22",
+      "revisedVerbatim": "9/22/26",
+      "index": "https://bval.org/field-hockey/",
+      "sha256": "5730fb6089f31d94abd2ebe7a3073114f3867eef731391c8dd113557b79d7303"
+    }
+  },
+  "fetchedOn": "2026-10-02",
+  "note": "BVAL Field Hockey 2026-27 league schedules (one docx per division, footer revision dates 9/20/26 Mt. Hamilton and 9/22/26 Santa Teresa; re-downloaded byte-identical on 2026-10-02). Format: away @ home. Dates are 2026. Default game times VARSITY 5:00pm, JV 6:15pm; timeOverride is the verbatim trailing text of the docx line (null = defaults); times.varsity/times.jv are its 24h reading (a bare time such as '6:30pm' or '4pm' is read as the varsity start). away/home are registry slugs; codes maps slug -> registry name and the verbatim grid spellings ('WG' = Willow Glen). Double round robin: 30 games per division, 10 per team, every ordered pair once. The 10/31 play-in is NOT a league game and is in playIn, not games. The docs get revised mid-season; re-download and diff before each season update.",
+  "codes": {
+    "leigh": {
+      "name": "Leigh",
+      "gridSpellings": [
+        "Leigh"
+      ]
+    },
+    "gilroy": {
+      "name": "Gilroy",
+      "gridSpellings": [
+        "Gilroy"
+      ]
+    },
+    "leland": {
+      "name": "Leland",
+      "gridSpellings": [
+        "Leland"
+      ]
+    },
+    "willow-glen": {
+      "name": "Willow Glen",
+      "gridSpellings": [
+        "Willow Glen",
+        "WG"
+      ]
+    },
+    "branham": {
+      "name": "Branham",
+      "gridSpellings": [
+        "Branham"
+      ]
+    },
+    "christopher": {
+      "name": "Christopher",
+      "gridSpellings": [
+        "Christopher"
+      ]
+    },
+    "prospect": {
+      "name": "Prospect",
+      "gridSpellings": [
+        "Prospect"
+      ]
+    },
+    "silver-creek": {
+      "name": "Silver Creek",
+      "gridSpellings": [
+        "Silver Creek"
+      ]
+    },
+    "del-mar": {
+      "name": "Del Mar",
+      "gridSpellings": [
+        "Del Mar"
+      ]
+    },
+    "westmont": {
+      "name": "Westmont",
+      "gridSpellings": [
+        "Westmont"
+      ]
+    },
+    "live-oak": {
+      "name": "Live Oak",
+      "gridSpellings": [
+        "Live Oak"
+      ]
+    },
+    "sobrato": {
+      "name": "Ann Sobrato",
+      "gridSpellings": [
+        "Sobrato"
+      ]
+    }
+  },
+  "games": [
+    {
+      "division": "mt-hamilton",
+      "away": "leigh",
+      "home": "gilroy",
+      "date": "2026-09-17",
+      "timeOverride": null,
+      "awayName": "Leigh",
+      "homeName": "Gilroy",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leland",
+      "home": "willow-glen",
+      "date": "2026-09-22",
+      "timeOverride": "6:30pm",
+      "awayName": "Leland",
+      "homeName": "Willow Glen",
+      "times": {
+        "varsity": "18:30",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leland",
+      "home": "branham",
+      "date": "2026-09-24",
+      "timeOverride": null,
+      "awayName": "Leland",
+      "homeName": "Branham",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "willow-glen",
+      "home": "gilroy",
+      "date": "2026-09-24",
+      "timeOverride": null,
+      "awayName": "Willow Glen",
+      "homeName": "Gilroy",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "christopher",
+      "home": "leigh",
+      "date": "2026-09-29",
+      "timeOverride": null,
+      "awayName": "Christopher",
+      "homeName": "Leigh",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leigh",
+      "home": "branham",
+      "date": "2026-10-01",
+      "timeOverride": null,
+      "awayName": "Leigh",
+      "homeName": "Branham",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "gilroy",
+      "home": "christopher",
+      "date": "2026-10-01",
+      "timeOverride": "V 4p/JV 515p",
+      "awayName": "Gilroy",
+      "homeName": "Christopher",
+      "times": {
+        "varsity": "16:00",
+        "jv": "17:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "gilroy",
+      "home": "leigh",
+      "date": "2026-10-06",
+      "timeOverride": null,
+      "awayName": "Gilroy",
+      "homeName": "Leigh",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "christopher",
+      "home": "leland",
+      "date": "2026-10-06",
+      "timeOverride": null,
+      "awayName": "Christopher",
+      "homeName": "Leland",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "branham",
+      "home": "willow-glen",
+      "date": "2026-10-06",
+      "timeOverride": "6:30pm",
+      "awayName": "Branham",
+      "homeName": "Willow Glen",
+      "times": {
+        "varsity": "18:30",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "willow-glen",
+      "home": "christopher",
+      "date": "2026-10-08",
+      "timeOverride": "V 4p/JV 515p",
+      "awayName": "WG",
+      "homeName": "Christopher",
+      "times": {
+        "varsity": "16:00",
+        "jv": "17:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leigh",
+      "home": "leland",
+      "date": "2026-10-08",
+      "timeOverride": null,
+      "awayName": "Leigh",
+      "homeName": "Leland",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "branham",
+      "home": "gilroy",
+      "date": "2026-10-08",
+      "timeOverride": null,
+      "awayName": "Branham",
+      "homeName": "Gilroy",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "willow-glen",
+      "home": "leigh",
+      "date": "2026-10-13",
+      "timeOverride": null,
+      "awayName": "Willow Glen",
+      "homeName": "Leigh",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "christopher",
+      "home": "branham",
+      "date": "2026-10-13",
+      "timeOverride": null,
+      "awayName": "Christopher",
+      "homeName": "Branham",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leland",
+      "home": "gilroy",
+      "date": "2026-10-13",
+      "timeOverride": null,
+      "awayName": "Leland",
+      "homeName": "Gilroy",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "gilroy",
+      "home": "willow-glen",
+      "date": "2026-10-15",
+      "timeOverride": "6:30pm",
+      "awayName": "Gilroy",
+      "homeName": "Willow Glen",
+      "times": {
+        "varsity": "18:30",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "branham",
+      "home": "leland",
+      "date": "2026-10-15",
+      "timeOverride": null,
+      "awayName": "Branham",
+      "homeName": "Leland",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leigh",
+      "home": "christopher",
+      "date": "2026-10-16",
+      "timeOverride": "V 4p/JV 515p",
+      "awayName": "Leigh",
+      "homeName": "Christopher",
+      "times": {
+        "varsity": "16:00",
+        "jv": "17:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "christopher",
+      "home": "gilroy",
+      "date": "2026-10-20",
+      "timeOverride": null,
+      "awayName": "Christopher",
+      "homeName": "Gilroy",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "branham",
+      "home": "leigh",
+      "date": "2026-10-20",
+      "timeOverride": null,
+      "awayName": "Branham",
+      "homeName": "Leigh",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "willow-glen",
+      "home": "leland",
+      "date": "2026-10-20",
+      "timeOverride": null,
+      "awayName": "Willow Glen",
+      "homeName": "Leland",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "willow-glen",
+      "home": "branham",
+      "date": "2026-10-22",
+      "timeOverride": null,
+      "awayName": "Willow Glen",
+      "homeName": "Branham",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leland",
+      "home": "christopher",
+      "date": "2026-10-23",
+      "timeOverride": "V 4p/JV 515p",
+      "awayName": "Leland",
+      "homeName": "Christopher",
+      "times": {
+        "varsity": "16:00",
+        "jv": "17:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "gilroy",
+      "home": "branham",
+      "date": "2026-10-27",
+      "timeOverride": null,
+      "awayName": "Gilroy",
+      "homeName": "Branham",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leland",
+      "home": "leigh",
+      "date": "2026-10-27",
+      "timeOverride": null,
+      "awayName": "Leland",
+      "homeName": "Leigh",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "christopher",
+      "home": "willow-glen",
+      "date": "2026-10-27",
+      "timeOverride": "6:30pm",
+      "awayName": "Christopher",
+      "homeName": "Willow Glen",
+      "times": {
+        "varsity": "18:30",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "gilroy",
+      "home": "leland",
+      "date": "2026-10-29",
+      "timeOverride": null,
+      "awayName": "Gilroy",
+      "homeName": "Leland",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "leigh",
+      "home": "willow-glen",
+      "date": "2026-10-29",
+      "timeOverride": "6:30pm",
+      "awayName": "Leigh",
+      "homeName": "Willow Glen",
+      "times": {
+        "varsity": "18:30",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "mt-hamilton",
+      "away": "branham",
+      "home": "christopher",
+      "date": "2026-10-30",
+      "timeOverride": "JV 4p/V 515p",
+      "awayName": "Branham",
+      "homeName": "Christopher",
+      "times": {
+        "varsity": "17:15",
+        "jv": "16:00"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "prospect",
+      "home": "silver-creek",
+      "date": "2026-09-18",
+      "timeOverride": null,
+      "awayName": "Prospect",
+      "homeName": "Silver Creek",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "silver-creek",
+      "home": "del-mar",
+      "date": "2026-09-22",
+      "timeOverride": "4pm",
+      "awayName": "Silver Creek",
+      "homeName": "Del Mar",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "silver-creek",
+      "home": "westmont",
+      "date": "2026-09-24",
+      "timeOverride": null,
+      "awayName": "Silver Creek",
+      "homeName": "Westmont",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "prospect",
+      "home": "live-oak",
+      "date": "2026-09-29",
+      "timeOverride": "4pm",
+      "awayName": "Prospect",
+      "homeName": "Live Oak",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "westmont",
+      "home": "sobrato",
+      "date": "2026-09-29",
+      "timeOverride": null,
+      "awayName": "Westmont",
+      "homeName": "Sobrato",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "prospect",
+      "home": "del-mar",
+      "date": "2026-10-01",
+      "timeOverride": "4pm",
+      "awayName": "Prospect",
+      "homeName": "Del Mar",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "sobrato",
+      "home": "live-oak",
+      "date": "2026-10-01",
+      "timeOverride": "4pm",
+      "awayName": "Sobrato",
+      "homeName": "Live Oak",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "sobrato",
+      "home": "prospect",
+      "date": "2026-10-06",
+      "timeOverride": "4pm",
+      "awayName": "Sobrato",
+      "homeName": "Prospect",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "live-oak",
+      "home": "silver-creek",
+      "date": "2026-10-06",
+      "timeOverride": null,
+      "awayName": "Live Oak",
+      "homeName": "Silver Creek",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "del-mar",
+      "home": "westmont",
+      "date": "2026-10-06",
+      "timeOverride": null,
+      "awayName": "Del Mar",
+      "homeName": "Westmont",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "westmont",
+      "home": "live-oak",
+      "date": "2026-10-08",
+      "timeOverride": "4pm",
+      "awayName": "Westmont",
+      "homeName": "Live Oak",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "del-mar",
+      "home": "sobrato",
+      "date": "2026-10-08",
+      "timeOverride": null,
+      "awayName": "Del Mar",
+      "homeName": "Sobrato",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "westmont",
+      "home": "prospect",
+      "date": "2026-10-13",
+      "timeOverride": "4pm",
+      "awayName": "Westmont",
+      "homeName": "Prospect",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "live-oak",
+      "home": "del-mar",
+      "date": "2026-10-13",
+      "timeOverride": "4pm",
+      "awayName": "Live Oak",
+      "homeName": "Del Mar",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "silver-creek",
+      "home": "sobrato",
+      "date": "2026-10-13",
+      "timeOverride": null,
+      "awayName": "Silver Creek",
+      "homeName": "Sobrato",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "live-oak",
+      "home": "prospect",
+      "date": "2026-10-15",
+      "timeOverride": "4pm",
+      "awayName": "Live Oak",
+      "homeName": "Prospect",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "del-mar",
+      "home": "silver-creek",
+      "date": "2026-10-15",
+      "timeOverride": null,
+      "awayName": "Del Mar",
+      "homeName": "Silver Creek",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "sobrato",
+      "home": "westmont",
+      "date": "2026-10-15",
+      "timeOverride": null,
+      "awayName": "Sobrato",
+      "homeName": "Westmont",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "live-oak",
+      "home": "sobrato",
+      "date": "2026-10-20",
+      "timeOverride": null,
+      "awayName": "Live Oak",
+      "homeName": "Sobrato",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "del-mar",
+      "home": "prospect",
+      "date": "2026-10-20",
+      "timeOverride": "4pm",
+      "awayName": "Del Mar",
+      "homeName": "Prospect",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "westmont",
+      "home": "silver-creek",
+      "date": "2026-10-20",
+      "timeOverride": null,
+      "awayName": "Westmont",
+      "homeName": "Silver Creek",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "prospect",
+      "home": "sobrato",
+      "date": "2026-10-22",
+      "timeOverride": null,
+      "awayName": "Prospect",
+      "homeName": "Sobrato",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "westmont",
+      "home": "del-mar",
+      "date": "2026-10-22",
+      "timeOverride": "4pm",
+      "awayName": "Westmont",
+      "homeName": "Del Mar",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "silver-creek",
+      "home": "live-oak",
+      "date": "2026-10-22",
+      "timeOverride": "4pm",
+      "awayName": "Silver Creek",
+      "homeName": "Live Oak",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "sobrato",
+      "home": "del-mar",
+      "date": "2026-10-27",
+      "timeOverride": "4pm",
+      "awayName": "Sobrato",
+      "homeName": "Del Mar",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "silver-creek",
+      "home": "prospect",
+      "date": "2026-10-27",
+      "timeOverride": "JV 5p/ V 615p",
+      "awayName": "Silver Creek",
+      "homeName": "Prospect",
+      "times": {
+        "varsity": "18:15",
+        "jv": "17:00"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "live-oak",
+      "home": "westmont",
+      "date": "2026-10-27",
+      "timeOverride": null,
+      "awayName": "Live Oak",
+      "homeName": "Westmont",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "sobrato",
+      "home": "silver-creek",
+      "date": "2026-10-29",
+      "timeOverride": null,
+      "awayName": "Sobrato",
+      "homeName": "Silver Creek",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "del-mar",
+      "home": "live-oak",
+      "date": "2026-10-29",
+      "timeOverride": "4pm",
+      "awayName": "Del Mar",
+      "homeName": "Live Oak",
+      "times": {
+        "varsity": "16:00",
+        "jv": null,
+        "assumed": "bare time read as the varsity start; JV time not stated"
+      }
+    },
+    {
+      "division": "santa-teresa",
+      "away": "prospect",
+      "home": "westmont",
+      "date": "2026-10-30",
+      "timeOverride": null,
+      "awayName": "Prospect",
+      "homeName": "Westmont",
+      "times": {
+        "varsity": "17:00",
+        "jv": "18:15"
+      }
+    }
+  ],
+  "playIn": {
+    "date": "2026-10-31",
+    "time": "11:00",
+    "away": {
+      "division": "mt-hamilton",
+      "place": 4
+    },
+    "home": {
+      "division": "santa-teresa",
+      "place": 1
+    },
+    "countsAsLeagueGame": false,
+    "verbatim": "CCS Play-in Game / 4th Place MH @ ST Champion 11am",
+    "listedIn": [
+      "mt-hamilton",
+      "santa-teresa"
+    ],
+    "note": "Winner becomes BVAL #4 CCS automatic qualifier (BVAL by-laws 7a; CCS by-laws: BVAL 4 AQs)."
+  },
+  "events": [
+    {
+      "date": "2026-11-02",
+      "text": "Entries Due"
+    },
+    {
+      "date": "2026-11-07",
+      "text": "CCS Playoffs Begin"
+    }
+  ],
+  "maxprepsCrossCheck": {
+    "checkedOn": "2026-10-02",
+    "method": "schedule-calculated for all 12 BVAL teams (maxpreps/bval-recheck-1002/); non-deleted contests (contestState != 1, isDeleted false) matched on exact date + home/away orientation",
+    "matchedExact": 60,
+    "unmatched": [],
+    "extraIntraDivisionContests": [],
+    "pastFixturesNotFinal": [
+      {
+        "date": "2026-10-01",
+        "away": "prospect",
+        "home": "del-mar",
+        "contestId": "3c691d2c-7e22-46bf-9438-25db21df4640",
+        "contestState": 5
+      },
+      {
+        "date": "2026-10-01",
+        "away": "sobrato",
+        "home": "live-oak",
+        "contestId": "be7bd768-4ae2-42a7-b88c-b8e7930b2290",
+        "contestState": 5
+      }
+    ],
+    "contestTypeNonLeague": [
+      {
+        "date": "2026-09-29",
+        "away": "prospect",
+        "home": "live-oak",
+        "contestId": "258b9301-ddeb-48f1-a1ad-2b3d01e4ab7d"
+      },
+      {
+        "date": "2026-10-06",
+        "away": "sobrato",
+        "home": "prospect",
+        "contestId": "b3bfb653-7e3a-4cdb-a422-5bc1b833ea54"
+      },
+      {
+        "date": "2026-10-15",
+        "away": "live-oak",
+        "home": "prospect",
+        "contestId": "b369d96f-b201-4256-90e3-d743cab336dd"
+      },
+      {
+        "date": "2026-10-22",
+        "away": "prospect",
+        "home": "sobrato",
+        "contestId": "6828777b-0c17-4afa-ae98-00fcc2e539be"
+      }
+    ],
+    "timeDisagreements": [
+      {
+        "date": "2026-09-24",
+        "away": "willow-glen",
+        "home": "gilroy",
+        "official": "17:00",
+        "maxpreps": "18:15"
+      },
+      {
+        "date": "2026-10-27",
+        "away": "christopher",
+        "home": "willow-glen",
+        "official": "18:30",
+        "maxpreps": "17:00"
+      },
+      {
+        "date": "2026-10-29",
+        "away": "gilroy",
+        "home": "leland",
+        "official": "17:00",
+        "maxpreps": "18:30"
+      },
+      {
+        "date": "2026-10-30",
+        "away": "branham",
+        "home": "christopher",
+        "official": "17:15",
+        "maxpreps": "17:30"
+      },
+      {
+        "date": "2026-10-06",
+        "away": "live-oak",
+        "home": "silver-creek",
+        "official": "17:00",
+        "maxpreps": "16:00"
+      },
+      {
+        "date": "2026-10-13",
+        "away": "westmont",
+        "home": "prospect",
+        "official": "16:00",
+        "maxpreps": "17:00"
+      },
+      {
+        "date": "2026-10-27",
+        "away": "sobrato",
+        "home": "del-mar",
+        "official": "16:00",
+        "maxpreps": "17:00"
+      },
+      {
+        "date": "2026-10-27",
+        "away": "live-oak",
+        "home": "westmont",
+        "official": "17:00",
+        "maxpreps": "16:00"
+      },
+      {
+        "date": "2026-10-30",
+        "away": "prospect",
+        "home": "westmont",
+        "official": "17:00",
+        "maxpreps": "16:00"
+      }
+    ]
+  }
+}

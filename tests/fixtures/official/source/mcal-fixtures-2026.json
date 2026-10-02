@@ -1,0 +1,755 @@
+{
+ "source": "https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf",
+ "adjustmentsSource": "https://www.mcalsports.org/Schedir.htm",
+ "tieBreakNumbers": {
+  "AW": 1,
+  "R": 2,
+  "T": 3,
+  "B": 4,
+  "LW": 5,
+  "U": 6,
+  "MC": 7,
+  "CSH": 8,
+  "MA": 9
+ },
+ "venues": {
+  "AW": "plays @ Redhill",
+  "U": "plays at Goode Field",
+  "LW": "plays @ City College"
+ },
+ "teams": {
+  "AW": "Archie Williams",
+  "R": "Redwood",
+  "U": "University",
+  "CSH": "Convent & Stuart Hall",
+  "MC": "Marin Catholic",
+  "LW": "Lick-Wilmerding",
+  "B": "Berkeley",
+  "T": "Tamalpais",
+  "MA": "Marin Academy"
+ },
+ "fixtures": [
+  {
+   "originalDate": "2026-08-24",
+   "date": "2026-08-24",
+   "away": "MA",
+   "home": "CSH",
+   "awayName": "Marin Academy",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-24",
+   "date": "2026-08-24",
+   "away": "MC",
+   "home": "U",
+   "awayName": "Marin Catholic",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-25",
+   "date": "2026-08-25",
+   "away": "LW",
+   "home": "B",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-25",
+   "date": "2026-08-25",
+   "away": "R",
+   "home": "AW",
+   "awayName": "Redwood",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-26",
+   "date": "2026-08-26",
+   "away": "T",
+   "home": "CSH",
+   "awayName": "Tamalpais",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-26",
+   "date": "2026-08-26",
+   "away": "LW",
+   "home": "R",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-27",
+   "date": "2026-08-27",
+   "away": "U",
+   "home": "MA",
+   "awayName": "University",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-27",
+   "date": "2026-08-27",
+   "away": "T",
+   "home": "AW",
+   "awayName": "Tamalpais",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-28",
+   "date": "2026-08-28",
+   "away": "CSH",
+   "home": "MC",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-31",
+   "date": "2026-08-31",
+   "away": "U",
+   "home": "B",
+   "awayName": "University",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-08-31",
+   "date": "2026-08-31",
+   "away": "MC",
+   "home": "LW",
+   "awayName": "Marin Catholic",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-01",
+   "date": "2026-09-01",
+   "away": "MC",
+   "home": "MA",
+   "awayName": "Marin Catholic",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-01",
+   "date": "2026-09-01",
+   "away": "CSH",
+   "home": "U",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-02",
+   "date": "2026-09-02",
+   "away": "MA",
+   "home": "AW",
+   "awayName": "Marin Academy",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-02",
+   "date": "2026-09-02",
+   "away": "B",
+   "home": "R",
+   "awayName": "Berkeley",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-03",
+   "date": "2026-09-03",
+   "away": "T",
+   "home": "U",
+   "awayName": "Tamalpais",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-03",
+   "date": "2026-09-03",
+   "away": "B",
+   "home": "MC",
+   "awayName": "Berkeley",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-04",
+   "date": "2026-09-04",
+   "away": "LW",
+   "home": "AW",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-04",
+   "date": "2026-09-04",
+   "away": "R",
+   "home": "CSH",
+   "awayName": "Redwood",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-08",
+   "date": "2026-09-08",
+   "away": "MA",
+   "home": "LW",
+   "awayName": "Marin Academy",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-08",
+   "date": "2026-09-08",
+   "away": "R",
+   "home": "T",
+   "awayName": "Redwood",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-09",
+   "date": "2026-09-09",
+   "away": "CSH",
+   "home": "B",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-09",
+   "date": "2026-09-09",
+   "away": "MC",
+   "home": "AW",
+   "awayName": "Marin Catholic",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-10",
+   "date": "2026-09-10",
+   "away": "AW",
+   "home": "U",
+   "awayName": "Archie Williams",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-10",
+   "date": "2026-09-10",
+   "away": "T",
+   "home": "LW",
+   "awayName": "Tamalpais",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-14",
+   "date": "2026-09-14",
+   "away": "T",
+   "home": "B",
+   "awayName": "Tamalpais",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-14",
+   "date": "2026-09-14",
+   "away": "CSH",
+   "home": "AW",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-15",
+   "date": "2026-09-15",
+   "away": "U",
+   "home": "LW",
+   "awayName": "University",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-15",
+   "date": "2026-09-15",
+   "away": "MC",
+   "home": "T",
+   "awayName": "Marin Catholic",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-16",
+   "date": "2026-09-16",
+   "away": "B",
+   "home": "MA",
+   "awayName": "Berkeley",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-17",
+   "date": "2026-09-17",
+   "away": "LW",
+   "home": "CSH",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-18",
+   "date": "2026-09-18",
+   "away": "MA",
+   "home": "T",
+   "awayName": "Marin Academy",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-18",
+   "date": "2026-09-18",
+   "away": "R",
+   "home": "MC",
+   "awayName": "Redwood",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-22",
+   "date": "2026-09-22",
+   "away": "MA",
+   "home": "R",
+   "awayName": "Marin Academy",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-22",
+   "date": "2026-09-22",
+   "away": "B",
+   "home": "AW",
+   "awayName": "Berkeley",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-09-23",
+   "date": "2026-09-23",
+   "away": "CSH",
+   "home": "T",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-23",
+   "date": "2026-09-23",
+   "away": "U",
+   "home": "MC",
+   "awayName": "University",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-24",
+   "date": "2026-09-29",
+   "away": "B",
+   "home": "LW",
+   "awayName": "Berkeley",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false,
+   "note": "Approved adjustment (Schedir.htm): Sept 24 Lick Wilmerding vs Berkeley moved to Sept 29 (Varsity 4:30pm, JV 5:30pm at City College of San Francisco)"
+  },
+  {
+   "originalDate": "2026-09-24",
+   "date": "2026-09-24",
+   "away": "T",
+   "home": "MA",
+   "awayName": "Tamalpais",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-25",
+   "date": "2026-09-25",
+   "away": "AW",
+   "home": "R",
+   "awayName": "Archie Williams",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-25",
+   "date": "2026-09-25",
+   "away": "MC",
+   "home": "CSH",
+   "awayName": "Marin Catholic",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-28",
+   "date": "2026-09-28",
+   "away": "MC",
+   "home": "B",
+   "awayName": "Marin Catholic",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-28",
+   "date": "2026-09-28",
+   "away": "AW",
+   "home": "T",
+   "awayName": "Archie Williams",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-29",
+   "date": "2026-09-29",
+   "away": "CSH",
+   "home": "MA",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-29",
+   "date": "2026-09-29",
+   "away": "R",
+   "home": "U",
+   "awayName": "Redwood",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-30",
+   "date": "2026-09-30",
+   "away": "LW",
+   "home": "T",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-09-30",
+   "date": "2026-09-30",
+   "away": "AW",
+   "home": "MC",
+   "awayName": "Archie Williams",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-01",
+   "date": "2026-10-01",
+   "away": "B",
+   "home": "CSH",
+   "awayName": "Berkeley",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-02",
+   "date": "2026-10-02",
+   "away": "MA",
+   "home": "U",
+   "awayName": "Marin Academy",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-05",
+   "date": "2026-10-05",
+   "away": "R",
+   "home": "B",
+   "awayName": "Redwood",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-05",
+   "date": "2026-10-05",
+   "away": "LW",
+   "home": "MA",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-06",
+   "date": "2026-10-06",
+   "away": "U",
+   "home": "CSH",
+   "awayName": "University",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-06",
+   "date": "2026-10-06",
+   "away": "MA",
+   "home": "MC",
+   "awayName": "Marin Academy",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-07",
+   "date": "2026-10-07",
+   "away": "T",
+   "home": "R",
+   "awayName": "Tamalpais",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-07",
+   "date": "2026-10-07",
+   "away": "AW",
+   "home": "LW",
+   "awayName": "Archie Williams",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-08",
+   "date": "2026-10-08",
+   "away": "U",
+   "home": "T",
+   "awayName": "University",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-08",
+   "date": "2026-10-08",
+   "away": "MA",
+   "home": "B",
+   "awayName": "Marin Academy",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-09",
+   "date": "2026-10-09",
+   "away": "AW",
+   "home": "CSH",
+   "awayName": "Archie Williams",
+   "homeName": "Convent & Stuart Hall",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-09",
+   "date": "2026-10-09",
+   "away": "MC",
+   "home": "R",
+   "awayName": "Marin Catholic",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-12",
+   "date": "2026-10-15",
+   "away": "LW",
+   "home": "MC",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false,
+   "note": "Approved adjustment (Schedir.htm): Oct 12 Marin Catholic vs Lick Wilmerding moved to Oct 15 (Varsity 4:30pm, JV 5:15pm)"
+  },
+  {
+   "originalDate": "2026-10-14",
+   "date": "2026-10-14",
+   "away": "R",
+   "home": "LW",
+   "awayName": "Redwood",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-14",
+   "date": "2026-10-14",
+   "away": "B",
+   "home": "U",
+   "awayName": "Berkeley",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-10-15",
+   "date": "2026-10-15",
+   "away": "B",
+   "home": "T",
+   "awayName": "Berkeley",
+   "homeName": "Tamalpais",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-15",
+   "date": "2026-10-15",
+   "away": "AW",
+   "home": "MA",
+   "awayName": "Archie Williams",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-16",
+   "date": "2026-10-16",
+   "away": "CSH",
+   "home": "R",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-16",
+   "date": "2026-10-16",
+   "away": "U",
+   "home": "AW",
+   "awayName": "University",
+   "homeName": "Archie Williams",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-10-19",
+   "date": "2026-10-19",
+   "away": "T",
+   "home": "MC",
+   "awayName": "Tamalpais",
+   "homeName": "Marin Catholic",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-20",
+   "date": "2026-10-20",
+   "away": "R",
+   "home": "MA",
+   "awayName": "Redwood",
+   "homeName": "Marin Academy",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-20",
+   "date": "2026-10-20",
+   "away": "LW",
+   "home": "U",
+   "awayName": "Lick-Wilmerding",
+   "homeName": "University",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-21",
+   "date": "2026-10-21",
+   "away": "AW",
+   "home": "B",
+   "awayName": "Archie Williams",
+   "homeName": "Berkeley",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": true
+  },
+  {
+   "originalDate": "2026-10-22",
+   "date": "2026-10-22",
+   "away": "CSH",
+   "home": "LW",
+   "awayName": "Convent & Stuart Hall",
+   "homeName": "Lick-Wilmerding",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  },
+  {
+   "originalDate": "2026-10-22",
+   "date": "2026-10-22",
+   "away": "U",
+   "home": "R",
+   "awayName": "University",
+   "homeName": "Redwood",
+   "time": "16:00",
+   "highlightedChangeFromOriginal": false
+  }
+ ]
+}

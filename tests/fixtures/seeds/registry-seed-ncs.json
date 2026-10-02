@@ -1,0 +1,718 @@
+{
+  "generatedOn": "2026-10-02",
+  "scope": "NCS (CIF North Coast Section) girls varsity field hockey 26-27",
+  "sections": [
+    {
+      "id": "ncs",
+      "label": "North Coast Section",
+      "officialName": "CIF North Coast Section",
+      "maxprepsSectionId": "89ae2e0f-e108-4054-9df3-329f0579f86d",
+      "maxprepsName": "North Coast Section",
+      "maxprepsHubUrl": "https://www.maxpreps.com/ca/north-coast-section/field-hockey/",
+      "contestIdsUrl": "https://production.api.maxpreps.com/gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=section&id=89ae2e0f-e108-4054-9df3-329f0579f86d&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25",
+      "holdsFieldHockeyChampionship": false,
+      "championshipEvidence": [
+        "https://www.cifncs.org/governance/CHMPCAL2026-2029.pdf (no hockey in 2026-29 championship schedule)",
+        "https://www.cifncs.org/governance/1_year_Calendar_26-27.pdf (Field Hockey: Last Contest Date \"Determined by School\")",
+        "https://www.cifncs.org/governance/sptbk26-27.pdf (no Field Hockey championship chapter; bylaws 112H(d)/(e), 113H)",
+        "https://www.cifstate.org/sports/field_hockey/info (\"Field Hockey does not have a CIF Regional or State Championship\")"
+      ],
+      "seasonRules": {
+        "practiceBegins": "2026-08-10",
+        "firstScrimmage": "2026-08-15",
+        "firstContest": "2026-08-15",
+        "maxContests": 24,
+        "maxScrimmages": 2,
+        "sitOutDate": "2026-09-16",
+        "lastContestDate": "Determined by School",
+        "nonChampionshipPostseasonCeiling": "2026-11-28",
+        "source": "https://www.cifncs.org/governance/1_year_Calendar_26-27.pdf"
+      },
+      "seasonWindow": {
+        "start": "2026-08-10",
+        "regularSeasonEnd": "2026-10-22",
+        "expectedEnd": "2026-10-31",
+        "hardCeiling": "2026-11-28",
+        "confidence": "recommendation [U]; component dates [V]"
+      },
+      "confidence": "verified"
+    }
+  ],
+  "leagues": [
+    {
+      "id": "mcal",
+      "section": "ncs",
+      "label": "Marin County Athletic League",
+      "shortLabel": "MCAL",
+      "divisions": [
+        {
+          "id": "marin-county",
+          "label": "MCAL",
+          "maxprepsLeagueId": "c15255d5-c2ad-49f5-9afb-cf4ba289875c",
+          "maxprepsName": "Marin County",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/marin-county/?leagueid=c15255d5-c2ad-49f5-9afb-cf4ba289875c",
+          "teamCount": 9,
+          "verifiedBy": [
+            "leagues/c15255d5-…/v1 → sectionId 89ae2e0f-… \"North Coast Section\", sportSeasonId e302eb3e-…, year 26-27",
+            "leagues/c15255d5-…/standings/v1 → 9 rows",
+            "NCS hub __NEXT_DATA__ league card lists exactly this one league",
+            "context=section contest ids (89) == context=league contest ids (89) == union of non-deleted rows of all NCS team schedules",
+            "official 2026 MCAL schedule PDF names the same 9 teams; all 72 official fixtures matched to MaxPreps contests"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "a0fa5d87-b596-4001-adc2-95403ccb8a32",
+              "sportSeasonId": "8ae4cbab-caa1-4889-87a8-547fdaca9516"
+            }
+          }
+        }
+      ],
+      "rules": {
+        "summary": "Single 9-team division, double round robin (72 fixtures, 16 per team). Standings = order of points: 3 per win, 1 per tie, 0 per loss. Equal points at the top = co-champions. No regular-season overtime (ties stand). Tiebreakers: (1) head-to-head winning pct, (2) record above the tie (winning pct), (3) spring draw numbers (lowest wins). Multi-team ties: seed one team then restart among the rest. Last playoff spot (6th): play-in game unless one team swept the head-to-head 2-0.",
+        "format": "double-round-robin",
+        "points": {
+          "win": 3,
+          "tie": 1,
+          "loss": 0
+        },
+        "orderBy": "points",
+        "coChampionsOnEqualPoints": true,
+        "overtimeRegularSeason": false,
+        "tiebreakers": [
+          "head-to-head-win-pct",
+          "record-above-tie-win-pct",
+          "draw-number"
+        ],
+        "multiTeamTieProcedure": "seed-one-then-restart",
+        "drawNumbers": {
+          "archie-williams": 1,
+          "redwood": 2,
+          "tamalpais": 3,
+          "berkeley": 4,
+          "lick-wilmerding": 5,
+          "university-sf": 6,
+          "marin-catholic": 7,
+          "convent-sacred-heart": 8,
+          "marin-academy": 9
+        },
+        "drawNumbersSource": "https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf (legend: AW1 R2 T3 B4 LW5 U6 MC7 CVS/CSH8 MA9)",
+        "incompleteScheduleFallback": "winning-percentage (General Rules)",
+        "maxprepsPlacementWarning": "MaxPreps conferenceStandingPlacement ranks by conference winning pct (ties = half) and MUST NOT be used; MaxPreps conferencePoints is goals-for, not standings points. On 2026-10-02 MaxPreps had University 1st, MCAL points put Tamalpais 1st (31 vs 23).",
+        "leagueGameFilter": "contestType 0, both teams in MCAL, not isDeleted, contestState != 5-without-score, date in [2026-08-24, 2026-10-22]; exclude 5cf5e3df-6e72-4f44-9b8d-e69da30b85c5",
+        "safestDefault": "compute 3-1-0 points from filtered league results; break ties by head-to-head pct then draw number; show W-L-T",
+        "confidence": "verified",
+        "citations": [
+          {
+            "rule": "points + order + co-champions",
+            "source": "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf §7a (rev 10/19/24)"
+          },
+          {
+            "rule": "tied in points → tie-breaking criteria",
+            "source": "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf §7b"
+          },
+          {
+            "rule": "tiebreak order, draw numbers, 6th-place play-in",
+            "source": "https://www.mcalsports.org/TiebreakingCriteria.pdf (REVISED 3/26)"
+          },
+          {
+            "rule": "double round robin",
+            "source": "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf §8a"
+          },
+          {
+            "rule": "no overtime in regular season; ties not played off",
+            "source": "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf; https://www.mcalsports.org/Gen_rules/GeneralRules.pdf (Ties)"
+          },
+          {
+            "rule": "incomplete schedule → winning percentage",
+            "source": "https://www.mcalsports.org/Gen_rules/GeneralRules.pdf"
+          }
+        ]
+      },
+      "postseason": {
+        "kind": "league-tournament",
+        "sectionChampionship": null,
+        "stateChampionship": null,
+        "qualifiers": 6,
+        "qualifiersConflict": "Handbook §8b (rev 10/19/24) says top 4; 2026 playoff sheet (adopted June 2024) says 6. Use 6 [U which governs].",
+        "seeding": "by league standing (points, then MCAL tiebreakers)",
+        "seedingNote": "Points (3-1-0), not winning pct: handbook 7a 'MCAL placement will be the order of team points', 8b 'as determined by the point total'. Confirmed by 2025 (Redwood 40 pts seeded #1 over Tamalpais 39 despite equal win pct and Tam's 2-0 head-to-head).",
+        "qualifiersEvidence2025": "The 2025 tournament had 6 qualifiers (QFs 5 at 4, 6 at 3 on 2025-10-28; byes for Redwood and Tamalpais), so the 6-team sheet, not handbook 8b 'top 4', was in force in 2025 too.",
+        "rounds": [
+          {
+            "id": "play-in",
+            "date": "2026-10-23",
+            "time": "16:00",
+            "optional": true,
+            "note": "Only if tied for 6th without a 2-0 head-to-head sweep; host = highest draw number. Sheet says \"Saturday October 23\" but 2026-10-23 is a Friday; schedule grid shows Fri 23."
+          },
+          {
+            "id": "quarterfinal",
+            "date": "2026-10-26",
+            "time": "16:00",
+            "games": [
+              "5 at 4",
+              "6 at 3"
+            ]
+          },
+          {
+            "id": "semifinal",
+            "date": "2026-10-28",
+            "time": "16:00",
+            "games": [
+              "worst remaining seed (largest number) at 1",
+              "best remaining seed among 3-6 (smallest number) at 2"
+            ],
+            "rule": "Re-seeded after the quarterfinals: the two QF winners (seeds 3-6) are sorted by seed; the larger seed number travels to #1, the smaller to #2. The sheet's wording \"(lowest seed (3-6) left in the tournament) at (1st)\" means lowest-RANKED, not seed #3.",
+            "evidence2025": {
+              "seeds": "1 Redwood 40 pts (13-2-1), 2 Tamalpais 39 (12-1-3), 3 Marin Catholic 34 (10-2-4), 4 Lick-Wilmerding 33 (10-3-3), 5 University 26 (8-6-2), 6 Convent of the Sacred Heart 14 (4-10-2); regular season = MaxPreps 25-26 conference record minus the contestType-0 SF/final games, cross-checked game-by-game for TM RW MC LW UN",
+              "quarterfinals": "2025-10-28: University 1, Lick-Wilmerding 0 (1 OT period, hosted by University, 51473ec5-a0f6-4d14-b05c-444c372a0ca0); Marin Catholic 4, Convent 1 (8ca393c6-c0b9-4099-b113-425a4f917ca7)",
+              "semifinals": "2025-10-29: (5) University 1 at (1) Redwood 4 (a3aee4a1-4aaf-4752-b62d-b4f72b14ab8d, location 'MCAL Semi Finals'); (3) Marin Catholic 0 at (2) Tamalpais 1 (cb5f9d81-77f3-4d39-ac92-2ecbf7de925c)",
+              "final": "2025-10-31 at Tamalpais although Redwood was the #1 seed (3fb94e4a-b4f6-45d3-b205-5ad86e68a07b)",
+              "whyUnambiguous": "Seeding is by points (handbook 7a/8b), so Redwood (40) is #1 over Tamalpais (39) even though both are 13.5/16 on winning pct and Tam won the head-to-head 2-0. Under 'smallest number at #1', Marin Catholic would have gone to Redwood.",
+              "fixture": "research/maxpreps-ncs/bracket-2025/bracket-2025.json",
+              "test": "research/maxpreps-ncs/bracket-2025/mcal-bracket.test.ts (reference impl mcal-bracket.ts; 7/7 passing)"
+            }
+          },
+          {
+            "id": "final",
+            "date": "2026-10-30",
+            "time": "16:00",
+            "site": "Tamalpais (fixed)",
+            "siteNote": "Fixed site, not 'higher seed hosts': the 2025 final (#1 Redwood vs #2 Tamalpais) was played at Tamalpais.",
+            "note": "Admission $10/$5 via GoFan"
+          }
+        ],
+        "byes": [
+          1,
+          2
+        ],
+        "overtime": "2 x 10-minute 7v7 sudden-victory periods, then 5-player 1v1 shootout (handbook)",
+        "maxprepsTyping": "In 25-26 the two MCAL quarterfinals were stored as contestType 4 on both sides, while the semis/final were stored as contestType 0 (conference) with all-zero tournament ids and shootout tallies as the score (2025 final 0-0 → stored 2-1). Classify any MCAL-vs-MCAL contest dated >= 2026-10-23 as postseason and exclude it from the table.",
+        "titles": "Regular-season points leader = MCAL Champion (co-champions on equal points); a different playoff winner also receives a pennant (General Rules \"Pennants\").",
+        "lastLeagueDate": "2026-10-22",
+        "seasonEnds": "2026-10-30",
+        "sources": [
+          "https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf",
+          "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf",
+          "https://www.mcalsports.org/Gen_rules/GeneralRules.pdf"
+        ],
+        "confidence": "verified (format/dates); 6-vs-4 qualifier count unverified as to which document governs"
+      },
+      "officialUrls": {
+        "home": "https://www.mcalsports.org/",
+        "fieldHockey": "https://www.mcalsports.org/FieldHockey.htm",
+        "schedulePdf": "https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf",
+        "scheduleChanges": "https://www.mcalsports.org/Schedir.htm#Changes",
+        "playoffPdf": "https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf",
+        "handbookPdf": "https://www.mcalsports.org/Sports_handbook/FieldHockeyHB.pdf",
+        "tiebreakPdf": "https://www.mcalsports.org/TiebreakingCriteria.pdf",
+        "generalRulesPdf": "https://www.mcalsports.org/Gen_rules/GeneralRules.pdf",
+        "constitution": "https://www.mcalsports.org/ConstitututionByLaws.htm",
+        "standings": "https://www.maxpreps.com/ca/field-hockey/26-27/league/marin-county/?leagueid=c15255d5-c2ad-49f5-9afb-cf4ba289875c",
+        "sbliveLeague": "https://www.si.com/high-school/stats/california/field-hockey/leagues/4212-marin-county/standings",
+        "machineReadable": "No official JSON/ICS. Schedule is a calendar-grid PDF (parsed: research/web-ncs/mcal-fixtures-2026.json). Standings are delegated to MaxPreps (league API is machine-readable). si.com bucket 4212 is misfiled (includes Davis, misses AW/MA/CSH): never take membership from it."
+      },
+      "officialFixturesFile": "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/web-ncs/mcal-fixtures-2026.json",
+      "officialCodes": {
+        "AW": "archie-williams",
+        "R": "redwood",
+        "T": "tamalpais",
+        "B": "berkeley",
+        "LW": "lick-wilmerding",
+        "U": "university-sf",
+        "MC": "marin-catholic",
+        "CSH": "convent-sacred-heart",
+        "CVS": "convent-sacred-heart",
+        "MA": "marin-academy"
+      },
+      "officialNames": {
+        "University": "university-sf",
+        "UNIVERSITY": "university-sf",
+        "Convent & Stuart Hall": "convent-sacred-heart"
+      },
+      "officialNamesNote": "League-scoped: consulted ONLY by the MCAL fixtures overlay (mcalsports.org PDF legend/grid), never by the global resolveTeam(). Codes from https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf legend (AW1 R2 T3 B4 LW5 U6 MC7 CVS/CSH8 MA9) [V]."
+    }
+  ],
+  "teams": [
+    {
+      "id": "5cbb07ea-6b9c-4286-81f6-2708253e1add",
+      "slug": "archie-williams",
+      "name": "Archie Williams",
+      "shortName": "Archie Wms.",
+      "abbr": "AW",
+      "acronym": "AWHS",
+      "mascot": "Peregrine Falcons",
+      "city": "San Anselmo",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-anselmo/archie-williams-peregrine-falcons/field-hockey/",
+      "aliases": [
+        "Archie Williams",
+        "ARCHIE WILLIAMS",
+        "Archie Williams High School",
+        "Archie Williams Peregrine Falcons",
+        "Archie Williams Falcons",
+        "Archie Williams (San Anselmo)",
+        "Sir Francis Drake High School"
+      ],
+      "sbliveTeamId": "487100",
+      "sbliveSlug": "487100-archie-williams-falcons",
+      "notes": {
+        "mcalCode": "AW",
+        "mcalDraw": 1,
+        "membership": "mcal-full-member",
+        "homeVenueNote": "plays @ Redhill",
+        "scheduleRows": 19,
+        "liveLeagueRows": 17,
+        "deletedRows": 2,
+        "sbliveSource": "si.com game page 6286226 (opponent webPath); not in any si.com league bucket",
+        "notes": "liveLeagueRows includes spurious 5cf5e3df-6e72-4f44-9b8d-e69da30b85c5 (8/18 vs MA, state 5) to exclude; 16 real. Formerly Sir Francis Drake High School (renamed 2020, Wikipedia)."
+      }
+    },
+    {
+      "id": "12616b84-157c-48d3-b353-434576d9df8d",
+      "slug": "redwood",
+      "name": "Redwood",
+      "shortName": "Redwood",
+      "abbr": "RW",
+      "acronym": "RHS",
+      "mascot": "Giants",
+      "city": "Larkspur",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/larkspur/redwood-giants/field-hockey/",
+      "aliases": [
+        "Redwood",
+        "REDWOOD",
+        "Redwood High School",
+        "Redwood Giants",
+        "Redwood (Larkspur)"
+      ],
+      "sbliveTeamId": "459143",
+      "sbliveSlug": "459143-redwood-giants",
+      "notes": {
+        "mcalCode": "R",
+        "mcalDraw": 2,
+        "membership": "mcal-full-member",
+        "scheduleRows": 23,
+        "liveLeagueRows": 16,
+        "deletedRows": 4
+      }
+    },
+    {
+      "id": "7298608f-2310-4399-aa07-d6bc50df3f4e",
+      "slug": "tamalpais",
+      "name": "Tamalpais",
+      "shortName": "Tamalpais",
+      "abbr": "TM",
+      "acronym": "THS",
+      "mascot": "Red-Tailed Hawks",
+      "city": "Mill Valley",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "CC0022"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/mill-valley/tamalpais-red-tailed-hawks/field-hockey/",
+      "aliases": [
+        "Tamalpais",
+        "TAMALPAIS",
+        "Tam",
+        "Tamalpais High School",
+        "Tamalpais Red-Tailed Hawks",
+        "Tamalpais (Mill Valley)"
+      ],
+      "sbliveTeamId": "486964",
+      "sbliveSlug": "486964-tamalpais-red-tailed-hawks",
+      "notes": {
+        "mcalCode": "T",
+        "mcalDraw": 3,
+        "membership": "mcal-full-member",
+        "scheduleRows": 20,
+        "liveLeagueRows": 16,
+        "deletedRows": 0,
+        "notes": "Duplicate 10/16 15:30 game vs \"Del Norte\": a05bedf5-c496-4560-8f08-c38503b7d9bc (Del Norte San Diego, keep) and 5b9ff911-a640-4947-b9fd-8a629e775b33 (Del Norte Crescent City ghost, drop). si.com 512156 is Tamalpais JV, never use."
+      },
+      "sbliveSchoolId": "13445"
+    },
+    {
+      "id": "6c68b5d2-1cab-449d-9140-bd7c8adb2791",
+      "slug": "berkeley",
+      "name": "Berkeley",
+      "shortName": "Berkeley",
+      "abbr": "BK",
+      "acronym": "BHS",
+      "mascot": "Yellowjackets",
+      "city": "Berkeley",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/berkeley/berkeley-yellowjackets/field-hockey/",
+      "aliases": [
+        "Berkeley",
+        "BERKELEY",
+        "Berkeley High",
+        "Berkeley High School",
+        "Berkeley Yellowjackets"
+      ],
+      "sbliveTeamId": "458485",
+      "sbliveSlug": "458485-berkeley-yellowjackets",
+      "notes": {
+        "mcalCode": "B",
+        "mcalDraw": 4,
+        "membership": "mcal-affiliate (field hockey only; WACC school)",
+        "scheduleRows": 16,
+        "liveLeagueRows": 16,
+        "deletedRows": 0
+      }
+    },
+    {
+      "id": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
+      "slug": "lick-wilmerding",
+      "name": "Lick-Wilmerding",
+      "shortName": "Lick-Wilm.",
+      "abbr": "LW",
+      "acronym": "LWHS",
+      "mascot": "Tigers",
+      "city": "San Francisco",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-francisco/lick-wilmerding-tigers/field-hockey/",
+      "aliases": [
+        "Lick-Wilmerding",
+        "LICK-WILMERDING",
+        "Lick Wilmerding",
+        "Lick",
+        "Lick-Wilmerding High School",
+        "Lick-Wilmerding Tigers",
+        "Lick-Wilmerding (San Francisco)"
+      ],
+      "sbliveTeamId": "487098",
+      "sbliveSlug": "487098-lickwilmerding-tigers",
+      "notes": {
+        "mcalCode": "LW",
+        "mcalDraw": 5,
+        "membership": "mcal-affiliate (field hockey only; BAC/BCL school)",
+        "homeVenueNote": "plays @ City College (CCSF); MaxPreps home games at 16:30",
+        "scheduleRows": 16,
+        "liveLeagueRows": 16,
+        "deletedRows": 0
+      },
+      "sbliveSchoolId": "263"
+    },
+    {
+      "id": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+      "slug": "university-sf",
+      "name": "San Francisco University",
+      "shortName": "University SF",
+      "abbr": "UN",
+      "acronym": "UHS",
+      "mascot": "Red Devils",
+      "city": "San Francisco",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-francisco/university-red-devils/field-hockey/",
+      "aliases": [
+        "University (San Francisco)",
+        "San Francisco University High School",
+        "SF University",
+        "University High School (San Francisco)",
+        "University Red Devils"
+      ],
+      "sbliveTeamId": "456869",
+      "sbliveSlug": "456869-university-red-devils",
+      "notes": {
+        "mcalCode": "U",
+        "mcalDraw": 6,
+        "membership": "mcal-affiliate (field hockey + flag football; BAC/BCL school)",
+        "homeVenueNote": "Plays at Goode Field",
+        "scheduleRows": 27,
+        "liveLeagueRows": 16,
+        "deletedRows": 4,
+        "notes": "Bare \"University\"/\"UNIVERSITY\" REMOVED from global aliases (2026-10-02): si.com has a second \"University\" = University HS Irvine (team 458756-university-trojans, school 11359, bucket 4230 Pacific Coast) [V 2026-10-02 web-ncs/alias-audit]. The bare name lives only in leagues[mcal].officialNames (MCAL fixtures overlay) and in sbliveIdentity.statewideAmbiguousNames; si.com sides resolve University SF by team id 456869 or school id 259 only. Has 4 contestType-2 (neutral tournament) games 9/12 and a TBA-opponent contest 64e0b2e5-abef-4db0-97e9-54c8c4bb9af0 on 10/03."
+      },
+      "sbliveSchoolId": "259"
+    },
+    {
+      "id": "69e24861-fa93-42a2-acb5-be60e01ee555",
+      "slug": "marin-catholic",
+      "name": "Marin Catholic",
+      "shortName": "Marin Catholic",
+      "abbr": "MC",
+      "acronym": "MCHS",
+      "mascot": "Wildcats",
+      "city": "Kentfield",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/kentfield/marin-catholic-wildcats/field-hockey/",
+      "aliases": [
+        "Marin Catholic",
+        "MARIN CATHOLIC",
+        "Marin Catholic High School",
+        "Marin Catholic Wildcats",
+        "Marin Catholic (Kentfield)"
+      ],
+      "sbliveTeamId": "456834",
+      "sbliveSlug": "456834-marin-catholic-wildcats",
+      "notes": {
+        "mcalCode": "MC",
+        "mcalDraw": 7,
+        "membership": "mcal-full-member",
+        "scheduleRows": 18,
+        "liveLeagueRows": 16,
+        "deletedRows": 2
+      },
+      "sbliveSchoolId": "163"
+    },
+    {
+      "id": "d15d09d0-f8a6-463e-86d4-d998dbee7751",
+      "slug": "convent-sacred-heart",
+      "name": "Convent of the Sacred Heart",
+      "shortName": "Convent",
+      "abbr": "CS",
+      "acronym": "CSHHS",
+      "mascot": "Cubs",
+      "city": "San Francisco",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-francisco/convent-of-the-sacred-heart-cubs/field-hockey/",
+      "aliases": [
+        "Convent of the Sacred Heart",
+        "CONVENT",
+        "Convent",
+        "Convent & Stuart Hall",
+        "Convent and Stuart Hall",
+        "Convent Sacred Heart",
+        "Convent of the Sacred Heart High School",
+        "Convent of the Sacred Heart Cubs",
+        "Convent of the Sacred Heart (San Francisco)",
+        "CSH",
+        "CVS"
+      ],
+      "notes": {
+        "mcalCode": "CSH (legend: CVS)",
+        "mcalDraw": 8,
+        "membership": "mcal-affiliate (field hockey only; BAC/BCL school)",
+        "scheduleRows": 18,
+        "liveLeagueRows": 16,
+        "deletedRows": 0,
+        "notes": "si.com team 512325-convent-stuart-hall-knights (from game page 6181025, 9/23 at Tamalpais 0-5, matches MaxPreps b643a2fc) and school 6922 (scoreboard image) [V 2026-10-02 web-ncs/alias-audit]. Never alias bare \"Sacred Heart\" (collides with Sacred Heart Cathedral SF / Sacred Heart Prep Atherton)."
+      },
+      "sbliveSchoolId": "6922",
+      "sbliveTeamId": "512325",
+      "sbliveSlug": "512325-convent-stuart-hall-knights"
+    },
+    {
+      "id": "9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc",
+      "slug": "marin-academy",
+      "name": "Marin Academy",
+      "shortName": "Marin Academy",
+      "abbr": "MA",
+      "acronym": "MA",
+      "mascot": "Wildcats",
+      "city": "San Rafael",
+      "section": "ncs",
+      "league": "mcal",
+      "division": "marin-county",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "CC0022"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-rafael/marin-academy-wildcats/field-hockey/",
+      "aliases": [
+        "Marin Academy",
+        "MARIN ACADEMY",
+        "Marin Academy Wildcats",
+        "Marin Academy (San Rafael)"
+      ],
+      "notes": {
+        "mcalCode": "MA",
+        "mcalDraw": 9,
+        "membership": "mcal-affiliate (field hockey + water polo; BAC/BCL school)",
+        "scheduleRows": 17,
+        "liveLeagueRows": 17,
+        "deletedRows": 0,
+        "sbliveCandidate": "575124-marin-academy-wildcats (from WebSearch player URLs; varsity vs JV UNVERIFIED, so not seeded)",
+        "notes": "liveLeagueRows includes spurious 5cf5e3df-6e72-4f44-9b8d-e69da30b85c5 (8/18 vs AW, state 5) to exclude; 16 real. Omitted from handbook member list (rev 10/19/24) but on 2026 schedule and MaxPreps league."
+      }
+    }
+  ],
+  "excludedTeams": [
+    {
+      "id": "8396a0d3-8021-458d-b592-a5cb2c4a366d",
+      "name": "Del Norte (Crescent City)",
+      "reason": "MaxPreps ghost: NCS section, leagueId all zeros, teamSize 0, coach NULL_SSID; its one live contest 5b9ff911-a640-4947-b9fd-8a629e775b33 duplicates Tamalpais vs Del Norte (San Diego) a05bedf5-c496-4560-8f08-c38503b7d9bc [U strong]"
+    },
+    {
+      "id": "30e8ab58-54ac-4a43-b5f7-91f468fd49b8",
+      "name": "Irvington (Fremont)",
+      "reason": "team-context HTTP 400 \"Team does not exist\" for 26-27 and 25-26; empty schedule [V]"
+    }
+  ],
+  "abbrsChosen": [
+    "AW=archie-williams",
+    "RW=redwood",
+    "TM=tamalpais",
+    "BK=berkeley",
+    "LW=lick-wilmerding",
+    "UN=university-sf",
+    "MC=marin-catholic",
+    "CS=convent-sacred-heart",
+    "MA=marin-academy"
+  ],
+  "abbrReconciliation": {
+    "avoidedScval": [
+      "SI",
+      "SF",
+      "LA",
+      "VC",
+      "FR",
+      "CU",
+      "HM",
+      "MI",
+      "LG",
+      "PA",
+      "PR",
+      "SC",
+      "SG",
+      "LY",
+      "MV"
+    ],
+    "ccsSeedPresentAtBuild": false,
+    "foreseeableCcsConflicts": "MC (Marin Catholic): CCS Monterey should use MO (Mitty is already MI); CS (Convent) vs Christopher/Silver Creek/Santa Catalina → CCS should use CH/SK/CT; BK (Berkeley) chosen so Branham can take BR; AW chosen so Ann Sobrato can take AS; MA (Marin Academy) — no CCS M-A school seen; TM (Tamalpais) leaves TA free."
+  },
+  "sbliveIdentity": {
+    "verifiedOn": "2026-10-02",
+    "evidenceDir": "research/web-ncs/alias-audit/",
+    "scoreboardSideShape": "statewide scores?date= gameTeams[].team = {image,name,state} ONLY - no id, no webPath (64/64 sides on 2026-09-23 + 2026-09-30) [V]. Identity must come from the image URL: /uploads/production/team/{sbliveTeamId}-v3/... or /uploads/production/school/{sbliveSchoolId}/... or null.",
+    "resolutionOrder": [
+      "1 team id (webPath /teams/{id}- | team.id | image /team/{id}-v3/) -> registry sbliveTeamId",
+      "2 school id (image /school/{id}/) -> registry sbliveSchoolId",
+      "3 name key in statewideAmbiguousNames -> null (never name-resolve)",
+      "4 global name/alias key, rejected (null) if the side carries a team id or school id that CONTRADICTS the matched team recorded id",
+      "5 else null"
+    ],
+    "statewideAmbiguousNames": {
+      "University": [
+        {
+          "sbliveTeamId": "456869",
+          "sbliveSchoolId": "259",
+          "school": "San Francisco University HS",
+          "slug": "university-sf"
+        },
+        {
+          "sbliveTeamId": "458756",
+          "sbliveSchoolId": "11359",
+          "school": "University HS, Irvine (CIF-SS)",
+          "bucket": "4230 Pacific Coast",
+          "slug": null
+        }
+      ],
+      "Los Altos": [
+        {
+          "sbliveTeamId": "458850",
+          "sbliveSchoolId": "12174",
+          "school": "Los Altos HS, Los Altos (CCS/SCVAL)",
+          "slug": "los-altos"
+        },
+        {
+          "sbliveTeamId": "458731",
+          "sbliveSchoolId": "11179",
+          "school": "Los Altos HS, Hacienda Heights (CIF-SS)",
+          "bucket": "4200 Hacienda",
+          "slug": null
+        }
+      ],
+      "Santa Clara": [
+        {
+          "sbliveTeamId": "496839",
+          "sbliveSchoolId": "13089",
+          "school": "Santa Clara HS, Santa Clara (CCS/SCVAL)",
+          "slug": "santa-clara",
+          "bucket": "none"
+        },
+        {
+          "sbliveTeamId": "456804",
+          "sbliveSchoolId": "111",
+          "school": "Santa Clara HS, Oxnard (CIF-SS)",
+          "bucket": "4250 Tri-County Athletic",
+          "slug": null
+        }
+      ]
+    },
+    "ccsSchoolIdsObserved": {
+      "los-altos": "12174 (team-image 458850)",
+      "santa-clara": "13089",
+      "cupertino": "11002",
+      "fremont": "11003",
+      "homestead": "11004",
+      "valley-christian": "319",
+      "hollister": "12876",
+      "greenfield": "11486",
+      "carmel": "10223",
+      "salinas": "12870",
+      "saint-francis": "team-image 457982",
+      "st-ignatius": "team-image 456831",
+      "christopher": "team-image 458687"
+    },
+    "ncsTeamImageIds": {
+      "archie-williams": "team-image 487100"
+    },
+    "currentCodeBugProof": "repo lib/sources/sblive.ts parseStandingsTeamRefs on live 4200/4250 standings returns 458731 Los Altos -> los-altos and 456804 Santa Clara -> santa-clara (name-first) [V web-ncs/alias-audit/current-code-misresolution.txt]",
+    "prototype": "web-ncs/alias-audit/proto-resolver.ts (14/14 regression cases pass; every registry side on two live scoreboards resolves; no non-registry side resolves)"
+  }
+}

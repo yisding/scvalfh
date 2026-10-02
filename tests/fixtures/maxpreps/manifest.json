@@ -1,0 +1,28 @@
+{
+  "id": "scval-2026-09-29",
+  "fetchedAt": "2026-09-29T15:00:00.000Z",
+  "leagues": [
+    "scval"
+  ],
+  "files": {
+    "maxpreps/standings/de-anza": "da.json",
+    "maxpreps/standings/el-camino": "ec.json",
+    "maxpreps/schedule/mitty": "sched-archbishop-mitty.json",
+    "maxpreps/schedule/cupertino": "sched-cupertino.json",
+    "maxpreps/schedule/fremont": "sched-fremont.json",
+    "maxpreps/schedule/homestead": "sched-homestead.json",
+    "maxpreps/schedule/los-altos": "sched-los-altos.json",
+    "maxpreps/schedule/los-gatos": "sched-los-gatos.json",
+    "maxpreps/schedule/lynbrook": "sched-lynbrook.json",
+    "maxpreps/schedule/monta-vista": "sched-monta-vista.json",
+    "maxpreps/schedule/palo-alto": "sched-palo-alto.json",
+    "maxpreps/schedule/presentation": "sched-presentation.json",
+    "maxpreps/schedule/saint-francis": "sched-saint-francis.json",
+    "maxpreps/schedule/santa-clara": "sched-santa-clara.json",
+    "maxpreps/schedule/saratoga": "sched-saratoga.json",
+    "maxpreps/schedule/st-ignatius": "sched-st-ignatius-college-preparatory.json",
+    "maxpreps/schedule/valley-christian": "sched-valley-christian.json",
+    "scval/pdf-text/de-anza": "../scval/da-pdftotext.txt",
+    "scval/pdf-text/el-camino": "../scval/ec-pdftotext.txt"
+  }
+}

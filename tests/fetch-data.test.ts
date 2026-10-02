@@ -191,13 +191,20 @@ describe('fetch-data: the season-window guard', () => {
   });
 });
 
+/** Copies the fixture directory's regular files (not subdirectories such as ghosts/, §12.1). */
+function copyFixtureFiles(dir: string): void {
+  for (const entry of readdirSync(FIXTURE_DIR, { withFileTypes: true })) {
+    if (entry.isFile()) {
+      copyFileSync(path.join(FIXTURE_DIR, entry.name), path.join(dir, entry.name));
+    }
+  }
+}
+
 describe('fetch-data: SPEC §5.2.1 abort conditions', () => {
   /** A league that answers with zero standings rows keeps the previous snapshot. */
   it('aborts the run rather than publishing when a league returns 0 rows', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-empty-standings-'));
-    for (const file of readdirSync(FIXTURE_DIR)) {
-      copyFileSync(path.join(FIXTURE_DIR, file), path.join(dir, file));
-    }
+    copyFixtureFiles(dir);
     writeFileSync(
       path.join(dir, 'da.json'),
       JSON.stringify({ status: 200, message: 'Success', data: [] }),
@@ -217,9 +224,7 @@ describe('fetch-data: SPEC §5.2.1 abort conditions', () => {
    */
   it('treats an empty schedule feed for a team we already have games for as a failure', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-empty-schedule-'));
-    for (const file of readdirSync(FIXTURE_DIR)) {
-      copyFileSync(path.join(FIXTURE_DIR, file), path.join(dir, file));
-    }
+    copyFixtureFiles(dir);
     const target = path.join(dir, 'snapshot.json');
     // 1. a good run, so there is a previous snapshot with Cupertino's games in it.
     run(['--fixtures', dir, '--out', target, '--fetched-at', '2026-09-29T15:00:00.000Z']);

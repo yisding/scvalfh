@@ -1,0 +1,101 @@
+/**
+ * Reference implementation (research draft, proposed home: lib/mcal-bracket.ts) of the MCAL girls
+ * field hockey league tournament, per https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf
+ * and the MCAL Field Hockey handbook (https://www.mcalsports.org/FieldHockeyHB.pdf §7a, §8b).
+ *
+ * Seeding: order of league POINTS (3 per win, 1 per tie, 0 per loss), NOT winning percentage
+ * (handbook §7a "The MCAL placement will be the order of team points"; §8b "as determined by the
+ * point total"). Ties in points go to the tie-breaking criteria (not modelled here).
+ *
+ * Bracket (6 qualifiers; seeds 1 and 2 get byes):
+ *   QF  : (5) at (4), (6) at (3)
+ *   SF  : the WORST remaining seed of 3-6 (largest number) at (1);
+ *         the BEST remaining seed of 3-6 (smallest number) at (2)      <- re-seeded, not fixed
+ *   F   : the two semifinal winners at Tamalpais (fixed site, regardless of seeds)
+ *
+ * The sheet's wording "(lowest seed (3-6) left in the tournament) at (1st)" means lowest-RANKED
+ * (largest seed number). The 2025 bracket proves it: seeds R1 T2 MC3 LW4 UN5 CSH6, #5 University
+ * upset #4 Lick-Wilmerding, and the semifinals were #5 University at #1 Redwood and #3 Marin Catholic
+ * at #2 Tamalpais. Reading "lowest" as the smallest number would have sent Marin Catholic to Redwood.
+ */
+
+export interface LeagueRecord {
+  teamId: string;
+  wins: number;
+  losses: number;
+  ties: number;
+}
+
+export interface Seeded {
+  teamId: string;
+  seed: number;
+}
+
+export interface Pairing {
+  round: 'quarterfinal' | 'semifinal' | 'final';
+  /** Team whose field hosts; null for the final, which is played at the fixed site. */
+  homeTeamId: string | null;
+  awayTeamId: string | null;
+  homeSeed: number | null;
+  awaySeed: number | null;
+  /** Free-text site for fixed-site games. */
+  site?: string;
+  /** Both participants of a fixed-site game, better seed first. */
+  teams?: [string, string];
+}
+
+export const MCAL_PLAYOFF_QUALIFIERS = 6;
+export const MCAL_FINAL_SITE = 'Tamalpais';
+
+export const mcalPoints = (r: Pick<LeagueRecord, 'wins' | 'ties'>): number => 3 * r.wins + r.ties;
+
+/**
+ * Seeds the top six by points. Throws when two qualifying-relevant teams are level on points,
+ * because the MCAL tie-breaking criteria (head-to-head, record above the tie, draw numbers, a play-in
+ * for 6th) need data this function does not have.
+ */
+export function seedByPoints(records: readonly LeagueRecord[]): Seeded[] {
+  const sorted = [...records].sort((a, b) => mcalPoints(b) - mcalPoints(a));
+  for (let i = 0; i < Math.min(MCAL_PLAYOFF_QUALIFIERS, sorted.length - 1); i++) {
+    if (mcalPoints(sorted[i]) === mcalPoints(sorted[i + 1])) {
+      throw new Error(`points tie at seed ${i + 1}/${i + 2}: tie-breaking criteria required`);
+    }
+  }
+  return sorted.slice(0, MCAL_PLAYOFF_QUALIFIERS).map((r, i) => ({ teamId: r.teamId, seed: i + 1 }));
+}
+
+const bySeed = (seeds: readonly Seeded[], n: number): Seeded => {
+  const s = seeds.find((x) => x.seed === n);
+  if (!s) throw new Error(`no seed ${n}`);
+  return s;
+};
+
+export function quarterfinals(seeds: readonly Seeded[]): Pairing[] {
+  const pair = (home: Seeded, away: Seeded): Pairing => ({
+    round: 'quarterfinal', homeTeamId: home.teamId, awayTeamId: away.teamId, homeSeed: home.seed, awaySeed: away.seed,
+  });
+  return [pair(bySeed(seeds, 4), bySeed(seeds, 5)), pair(bySeed(seeds, 3), bySeed(seeds, 6))];
+}
+
+/** `qfWinners` are the two quarterfinal winners (seeds 3-6), in any order. */
+export function semifinals(seeds: readonly Seeded[], qfWinners: readonly Seeded[]): Pairing[] {
+  if (qfWinners.length !== 2 || qfWinners.some((w) => w.seed < 3 || w.seed > 6)) {
+    throw new Error('semifinals need exactly two quarterfinal winners seeded 3-6');
+  }
+  const [best, worst] = [...qfWinners].sort((a, b) => a.seed - b.seed);
+  const one = bySeed(seeds, 1), two = bySeed(seeds, 2);
+  return [
+    { round: 'semifinal', homeTeamId: one.teamId, awayTeamId: worst.teamId, homeSeed: 1, awaySeed: worst.seed },
+    { round: 'semifinal', homeTeamId: two.teamId, awayTeamId: best.teamId, homeSeed: 2, awaySeed: best.seed },
+  ];
+}
+
+export function final(sfWinners: readonly Seeded[]): Pairing {
+  if (sfWinners.length !== 2) throw new Error('final needs exactly two semifinal winners');
+  const [a, b] = [...sfWinners].sort((x, y) => x.seed - y.seed);
+  // Fixed site: neither team "hosts" in the seeding sense, even if one of them is Tamalpais.
+  return {
+    round: 'final', homeTeamId: null, awayTeamId: null, homeSeed: null, awaySeed: null,
+    site: MCAL_FINAL_SITE, teams: [a.teamId, b.teamId],
+  };
+}
