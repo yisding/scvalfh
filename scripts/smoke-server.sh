@@ -138,7 +138,7 @@ for path in / /about /standings /schedule /playoffs /teams /history/2025-26; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done
 families=''
-for family in game:100 scores:30 teams:16; do
+for family in game:100 scores:30 teams:15; do
   n=$(grep -cE "^/${family%:*}/[^/]+$" <<< "$paths" || true)
   [ "$n" -ge "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected at least ${family#*:}"
   families+=" $n /${family%:*}/"

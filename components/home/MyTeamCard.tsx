@@ -28,7 +28,7 @@ import { pickerName, pinLabel } from './pin-label';
  *
  * That is a deliberate deviation from §3.1's two different heights (240px card / 88px prompt):
  * those two numbers cannot both be honoured without a visible reflow the moment storage is read.
- * The reserved space is not a gap — the unpinned state is a 16-team picker, so "find my school"
+ * The reserved space is not a gap — the unpinned state is a 15-team picker, so "find my school"
  * (a top-three task) is answered in the fold instead of costing a trip to /teams.
  *
  * Every storage access is inside `try/catch` (see components/ui/local-store.ts). When storage is
@@ -61,7 +61,7 @@ const TILE =
 const TILE_NAME = 'sx-clamp-2 min-w-0 flex-1 hyphens-auto break-words text-micro text-ink';
 
 export interface MyTeamCardProps {
-  /** All 16, pre-serialized by the server. */
+  /** All 15, pre-serialized by the server. */
   views: HomeTeamView[];
 }
 
@@ -309,10 +309,10 @@ export function PinPrompt({
           {/* FOUR columns at every width, and the 20px monogram comes back at 480px where there
               is room for both.
 
-              Three columns below 360px read better per tile and cannot be used: sixteen tiles over
+              Three columns below 360px read better per tile and cannot be used: fifteen tiles over
               six rows is 308px of grid against the 204px four rows take, which overran the card's
               reserved height (the wrapper below) by 34px and — because that wrapper clips to hold
-              CLS at 0 — clipped the sixteenth school to a 14px sliver.
+              CLS at 0 — clipped the fifteenth school to a 14px sliver.
               Monta Vista was unpickable at 320-359px, which is a worse failure than an ugly line
               break and is the one DESIGN §10.8 names ("no loss of content" at 320px). Raising the
               reservation instead is not free either: the PINNED card is 284-302px tall and would

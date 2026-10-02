@@ -1,0 +1,4091 @@
+{
+  "builtBy": "one-off research on 2026-10-02 (16 teams; official school athletics sites, school papers, MaxPreps career and JV pages); transformed by a script, reviewed by hand",
+  "capturedAt": "2026-10-02",
+  "notes": [
+    "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays.",
+    "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season.",
+    "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV.",
+    "si.com rosters were rejected: names only, and for several teams a different or prior-season list."
+  ],
+  "season": "26-27",
+  "teams": [
+    {
+      "coaches": [
+        {
+          "name": "Michelle Van de Braak",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/"
+        },
+        {
+          "name": "Jenna McNicholas",
+          "role": "Assistant Coach",
+          "source": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/"
+        }
+      ],
+      "notes": [],
+      "players": [
+        {
+          "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
+          "conflicts": [],
+          "fullName": "Storey Lewis",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 65,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'5\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
+          "conflicts": [],
+          "fullName": "Olivia Van De Braak",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 69,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'9\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
+          "conflicts": [],
+          "fullName": "Gigi Colant",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 67,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'7\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Gabriella Colant"
+        },
+        {
+          "athleteId": "e79e55f0-cfce-4f33-bb37-1ea0e61ddd7f",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "6",
+              "kind": "school-site",
+              "note": "Official siwildcats.com '2026 Field Hockey (Varsity) Roster' lists #4; MaxPreps lists #6. The season-dated official school roster wins under the dataset-wide rule.",
+              "other": "4",
+              "source": "https://siwildcats.com/sports/field-hockey/roster"
+            }
+          ],
+          "fullName": "Stella Kwok",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 64,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'4\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "291464ef-7812-41ab-920b-bcb0e341e772",
+          "conflicts": [],
+          "fullName": "Gianna Monge",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 59,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "4'11\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+          "conflicts": [],
+          "fullName": "Maggie Magnano",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 60,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'0\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Margaret Magnano"
+        },
+        {
+          "athleteId": "8a84bf39-96a1-49dc-9127-738923b07ee2",
+          "conflicts": [],
+          "fullName": "Dylan Powell",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 65,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'5\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e1fceb71-79e3-46cf-80e6-c3de7ff7ad89",
+          "conflicts": [],
+          "fullName": "Scarlett Gammack",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 62,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'2\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d1f30b24-6a0a-4f56-b88e-55d0b226494d",
+          "conflicts": [],
+          "fullName": "Beatrix Hom",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 66,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'6\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Beatrice Hom"
+        },
+        {
+          "athleteId": "db47b519-3041-42d1-92b7-88cd0f6094dc",
+          "conflicts": [],
+          "fullName": "Violet Hesslein",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 67,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'7\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a1861648-3e4b-469b-ac73-01011a712330",
+          "conflicts": [],
+          "fullName": "Caitlyn Hughes",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 68,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'8\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "0b8ca788-b381-42c1-a1ca-7dbea5c7dff2",
+          "conflicts": [],
+          "fullName": "Quinn Fisher",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 63,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'3\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "63a9c5b4-64e5-4a19-83f0-ad28aaee353b",
+          "conflicts": [],
+          "fullName": "Samantha Brunsell",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 63,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'3\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "b225852d-2fb5-493c-80bf-fb40e2398cff",
+          "conflicts": [],
+          "fullName": "Andi Spink",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 63,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'3\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Andria Spink"
+        },
+        {
+          "athleteId": "89a6b589-3b6e-4db7-848c-45c24a351d2b",
+          "conflicts": [],
+          "fullName": "Sofie Stiefel",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 68,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'8\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "ef619b65-0ca7-48ba-97da-8e3b4411632a",
+          "conflicts": [],
+          "fullName": "Hazel Stang",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 68,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'8\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "34fd4daa-6180-4e60-a145-0997ddfe47be",
+          "conflicts": [],
+          "fullName": "Lila Lamb",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 68,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'8\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "6e4625b6-0f4e-43f4-8f10-0a01ed9e43cf",
+          "conflicts": [],
+          "fullName": "Catherine Cecchini",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 66,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'6\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a32d08b2-dc29-485c-9287-a4da168f5cdd",
+          "conflicts": [],
+          "fullName": "Kaye Zilinskas",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 66,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'6\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "98db9697-092f-4c09-a01a-9189d82330c7",
+          "conflicts": [],
+          "fullName": "Clara Brunello",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 63,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'3\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "caab315c-9e7f-40ce-9afa-a307833a59cd",
+          "conflicts": [],
+          "fullName": "Maisy Brown",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 66,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'6\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Margaret Brown"
+        },
+        {
+          "athleteId": "3dfb337c-d545-4778-9f05-25f522a4a83d",
+          "conflicts": [],
+          "fullName": "Marina Jones",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 68,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'8\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "274fec66-4428-4eaf-b1b4-c20c5c729cc2",
+          "conflicts": [],
+          "fullName": "Stella Strain",
+          "grade": null,
+          "height": {
+            "confidence": "high",
+            "inches": 69,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://siwildcats.com/sports/field-hockey/roster",
+            "value": "5'9\""
+          },
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "st-ignatius",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "siwildcats.com — \"2026 Field Hockey (Varsity) Roster\": 23 players with grade + height for all, jersey for 20 (3 GKs marked G), Pos column blank; plus 1 ma…",
+          "url": "https://siwildcats.com/sports/field-hockey/roster"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Emilie Marino",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/field-hockey/"
+        },
+        {
+          "name": "Gabriella Fondario",
+          "role": "Head JV Coach",
+          "source": "https://sfhsathletics.com/staff-directory"
+        }
+      ],
+      "notes": [],
+      "players": [
+        {
+          "athleteId": "c1ba0fdf-b13e-4d8e-92e5-37d094813199",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "27",
+              "kind": "school-site",
+              "note": "An official school source disagrees with MaxPreps; MaxPreps is kept and the school value recorded.",
+              "other": "24",
+              "source": "https://sfhsathletics.com/sports/field-hockey/roster"
+            }
+          ],
+          "fullName": "Frankie Jones",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f1ed9be7-1b82-4055-a9f3-35cafeb66da4",
+          "conflicts": [],
+          "fullName": "Nora Lagenfeld",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Nora Langenfeld"
+        }
+      ],
+      "slug": "saint-francis",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "sfhsathletics.com",
+          "url": "https://sfhsathletics.com/sports/field-hockey/roster"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "sfhsathletics.com — athletics staff directory, Field Hockey section: Emilie Marino, Head Varsity Field Hockey; Gabriella Fondario, Head JV Field Hockey.",
+          "url": "https://sfhsathletics.com/staff-directory"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Mary Donahue",
+          "role": "Head Coach (varsity and JV)",
+          "source": "https://lahs.mvla.net/field-hockey"
+        },
+        {
+          "name": "Maggie Evans",
+          "role": "Varsity Assistant / Goalie Coach",
+          "source": "https://lahs.mvla.net/field-hockey"
+        }
+      ],
+      "notes": [
+        "No public source lists a 2026 roster with grades. 4 senior grades come from The Talon (the school paper); 6 are derived from MaxPreps career pages (a class year on another season plus the years elapsed); 12 players still have no grade."
+      ],
+      "players": [
+        {
+          "athleteId": "78cb7004-abd2-42ee-ae1e-e9f31d6e61ba",
+          "conflicts": [],
+          "fullName": "Kaitlyn Byon",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "Talon 2026-09-18 article quotes \"teammate senior Katie Byon\"; MaxPreps roster name Kaitlyn Byon (only Byon on the roster). MaxPreps career page has graduatingClass null and a 25-26 Varsity soccer entry with blank classYear, so it neither confirms nor contra…",
+            "source": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Katie=Kaitlyn",
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "746f60f1-e416-430b-a46d-c03184a40828",
+          "conflicts": [],
+          "fullName": "Chloe Caldbeck",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "Talon 2026-08-28 preview: senior Chloe Caldbeck Corroborated by MaxPreps career https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/chloe-caldbeck/?careerid=4gfhmq66upfp9: Varsity basketball 25-26 as Junior, Varsity softball 23-24 as Freshman ->…",
+            "source": "https://lahstalon.org/girls-field-hockey-is-shaking-things-up-season-preview/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a66bcd41-52a0-4b73-8e91-749036a854d1",
+          "conflicts": [],
+          "fullName": "Natalie Erdell",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos JV girls soccer 2023-24 as Freshman (/ca/los-altos/los-altos-eagles/soccer/girls/jv/winter/23-24/schedule/) -> grade 12 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/natalie-erdell/?careerid=ienah8po4upk4",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9dea0a40-ad98-4099-b5df-38fb6e6dfa89",
+          "conflicts": [],
+          "fullName": "Paige Gracon",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos JV girls lacrosse 2025-26 as Sophomore (/ca/los-altos/los-altos-eagles/lacrosse/girls/jv/25-26/schedule/) -> grade 11 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/paige-gracon/?careerid=qpa621lr42ll5",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "070ce338-1eb3-4eb9-bd95-2ad3e723fb4b",
+          "conflicts": [],
+          "fullName": "Aisha Grebene",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "Talon 2026-08-28 preview: senior Aisha Grebene",
+            "source": "https://lahstalon.org/girls-field-hockey-is-shaking-things-up-season-preview/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f92f5ded-7d55-41fa-8086-ef36f37355f0",
+          "conflicts": [],
+          "fullName": "Sasha Grebene",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos Varsity girls softball 2025-26 as Freshman (/ca/los-altos/los-altos-eagles/softball/25-26/schedule/) -> grade 10 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/sasha-grebene/?careerid=091hpu163fpbb",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "793be50d-805a-426e-a4f2-fa58a14799e7",
+          "conflicts": [],
+          "fullName": "Mia Jones",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos JV girls soccer 2025-26 as Freshman (/ca/los-altos/los-altos-eagles/soccer/girls/jv/winter/25-26/schedule/) -> grade 10 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/mia-jones/?careerid=e3f8q5pug4ksc",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
+          "conflicts": [],
+          "fullName": "Quinley McCarroll",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos JV girls basketball 2025-26 as Freshman (/ca/los-altos/los-altos-eagles/basketball/girls/jv/25-26/schedule/) -> grade 10 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/quinley-mccarroll/?careerid=e83r9st9dijqa",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
+          "conflicts": [],
+          "fullName": "Katarina Smith",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "Talon 2026-08-28 preview names her Kat Smith, senior Talon 2026-09-18 https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/: \"senior Katarina Smith\"",
+            "source": "https://lahstalon.org/girls-field-hockey-is-shaking-things-up-season-preview/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Kat=Katarina",
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "cd30ab95-9def-4b58-ae1c-3a51e3e89aa1",
+          "conflicts": [],
+          "fullName": "Bree Van Wert",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Los Altos JV girls basketball 2025-26 as Sophomore (/ca/los-altos/los-altos-eagles/basketball/girls/jv/25-26/schedule/) -> grade 11 in 2026-27",
+            "source": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/bree-van-wert/?careerid=l0jdp1828g0n7",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "los-altos",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "lahs.mvla.net — School site lists coaches (Mary Donahue, Maggie Evans), no roster",
+          "url": "https://lahs.mvla.net/field-hockey"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "lahstalon.org — Talon 2026-08-28 preview: seniors Chloe Caldbeck, Kat Smith, Aisha Grebene",
+          "url": "https://lahstalon.org/girls-field-hockey-is-shaking-things-up-season-preview/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "lahstalon.org — Talon (LAHS student paper) 2026-09-18: quotes 'teammate senior Katie Byon' -> Kaitlyn Byon grade 12 (Katie=Kaitlyn; only Byon on roster);…",
+          "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Jackie Hinojosa",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/field-hockey/"
+        },
+        {
+          "name": "John Graham",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/field-hockey/"
+        },
+        {
+          "name": "Gino Borello",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/field-hockey/"
+        }
+      ],
+      "notes": [
+        "The school roster (gowarriors.net, '2026 Varsity Field Hockey Roster') confirms 29 names and every number but publishes no grade, position or height."
+      ],
+      "players": [],
+      "slug": "valley-christian",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "gowarriors.net — school (Valley Christian Schools, Sidearm) page titled '2026 Varsity Field Hockey Roster'.",
+          "url": "https://gowarriors.net/sports/field-hockey/roster"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Jordan Serpe",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/field-hockey/"
+        }
+      ],
+      "notes": [
+        "MaxPreps is complete except height; no school roster was sought."
+      ],
+      "players": [],
+      "slug": "fremont",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Allyson Matsuoka",
+          "role": "Head Varsity Coach",
+          "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
+        },
+        {
+          "name": "Michael Watson",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/field-hockey/"
+        },
+        {
+          "name": "Alicia Guzman",
+          "role": "Head JV Coach",
+          "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
+        }
+      ],
+      "notes": [
+        "18 names on the school roster are not on MaxPreps and were not added."
+      ],
+      "players": [
+        {
+          "athleteId": "44408ba7-4750-4b19-bf10-f5f2f2d2e701",
+          "conflicts": [],
+          "fullName": "Brooke Barba",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a91d1995-7edd-482e-bff8-583f0f6cc57a",
+          "conflicts": [],
+          "fullName": "Kimia Bolourchian",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "070c8f03-6154-4689-9a56-14a4b47699a1",
+          "conflicts": [],
+          "fullName": "Claudia Espitia-alvarez",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d149c1b5-760d-4ba5-9157-d175c9c90959",
+          "conflicts": [],
+          "fullName": "Ava Tanarie Farris",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f17e6eac-d572-4145-a068-cae28cdaa8ec",
+          "conflicts": [],
+          "fullName": "Nihita Gutlapalli",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "2403af52-6f4e-4594-b1a6-13f81926ab5d",
+          "conflicts": [],
+          "fullName": "Momoka Hattori-roels",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "66168a30-2b46-444f-8b9e-8c1b05727b4c",
+          "conflicts": [],
+          "fullName": "Esther Huai",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "295d650c-aef8-4b29-a546-b6a9dae51ea3",
+          "conflicts": [],
+          "fullName": "Kamaile Iwami Asamoto",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d62e8b1b-4c90-4ce5-9eea-0575eb0fb797",
+          "conflicts": [],
+          "fullName": "Jaelyn Jensen",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "622a22f1-8718-4db8-8892-63ca66c51761",
+          "conflicts": [],
+          "fullName": "Elizabeth Klinefelter",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f022f234-27de-43b6-b587-47c2a6e2f6f5",
+          "conflicts": [],
+          "fullName": "Angela Lee",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "fe497497-bc13-409d-b352-58229c34317e",
+          "conflicts": [],
+          "fullName": "Camila Ramirez Flores",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "fcda2413-7378-47b6-beb9-2c7447133ab6",
+          "conflicts": [],
+          "fullName": "Allenah Watkins",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "829a311b-b6d7-4220-97ce-5b7fc5c73d6d",
+          "conflicts": [],
+          "fullName": "Bailey Watson",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e90c1d8c-1eb3-4842-8616-8c857d5c2991",
+          "conflicts": [],
+          "fullName": "Sannie Wong",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "cupertino",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "chs.fuhsd.org — official school athletics page",
+          "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Donna Keith",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/"
+        },
+        {
+          "name": "Katie Heaney",
+          "role": "Head JV Coach",
+          "source": "https://www.homesteadmustangs.com/sport/girls-field-hockey/roster?team=7813641&year=2026-2027"
+        }
+      ],
+      "notes": [
+        "25 names on the school roster are not on MaxPreps and were not added.",
+        "The school's PlayOn site publishes no roster. Only one varsity grade is known, from the MaxPreps JV page (same career id)."
+      ],
+      "players": [
+        {
+          "athleteId": "a33c1e81-0bd2-47d7-95fc-ef27fb0a334b",
+          "conflicts": [],
+          "fullName": "Emma Chen",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "maxpreps-jv",
+            "note": null,
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/jv/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "same careerid ahnjq9l9q2b11 on JV page (fetched/homestead_mp_jv_roster.html)",
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "homestead",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "homesteadmustangs.com — school site 'Girls Junior Varsity Field Hockey Roster' (team 7813641 from the site's team list): 'No roster for 2026-2027 Junior Varsity…",
+          "url": "https://www.homesteadmustangs.com/sport/girls-field-hockey/roster?team=7813641&year=2026-2027"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "maxpreps-jv",
+          "title": "maxpreps.com — MaxPreps Girls Field Hockey JV Fall 26-27 (sportSeasonId fae4fc22-...), school Homestead verified; 25 players, all with grade/class and j…",
+          "url": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/jv/roster/"
+        }
+      ]
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school roster was sought: MaxPreps is nearly complete. The si.com list is empty."
+      ],
+      "players": [],
+      "slug": "mitty",
+      "sources": []
+    },
+    {
+      "coaches": [
+        {
+          "name": "Henry Reyes",
+          "role": "Head Coach",
+          "source": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        },
+        {
+          "name": "Anita Wierima",
+          "role": "Assistant Coach",
+          "source": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        },
+        {
+          "name": "Caitlin Lincoln",
+          "role": "Assistant Coach",
+          "source": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        },
+        {
+          "name": "Angie Cucco",
+          "role": "Assistant Coach",
+          "source": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        },
+        {
+          "name": "Alison Fell",
+          "role": "Assistant Coach",
+          "source": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        }
+      ],
+      "notes": [
+        "3 names on the school roster are not on MaxPreps and were not added.",
+        "MaxPreps' 58-name list is the whole program: the school site lists 27 varsity and 32 JV players (29 of them MaxPreps rows); 2 MaxPreps rows carry no level on any source."
+      ],
+      "players": [
+        {
+          "athleteId": "789c1ef4-61d1-4d92-b8a3-7532d6f30ce7",
+          "conflicts": [],
+          "fullName": "Hannah Anderson",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "fe1c434b-f946-4395-b714-a43caf981699",
+          "conflicts": [],
+          "fullName": "Lilibelle Barraza",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "ee7ece92-b479-46f4-9b74-dd75f1795427",
+          "conflicts": [],
+          "fullName": "Stiene Bastien",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "00ea50e6-f2d7-40cd-b23e-db44eaf662bf",
+          "conflicts": [],
+          "fullName": "Eastin Boyle",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "bfd69c18-c992-40fd-ace7-ebab1a23c5b8",
+          "conflicts": [],
+          "fullName": "Colette Carlson",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1a30e948-e0b2-45fb-b2fd-437022d95c47",
+          "conflicts": [],
+          "fullName": "Tanya Chang",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "554744c5-f6b4-40f2-8196-b0caf7024ffe",
+          "conflicts": [],
+          "fullName": "Laurel Collins",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a52b52ea-0f89-4e55-b035-8f3c29933281",
+          "conflicts": [],
+          "fullName": "Eve De La Vega",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4e0dadc5-ad09-4f5a-8bff-3fd446408bde",
+          "conflicts": [],
+          "fullName": "Keira Faye",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "8da21373-f311-4be0-a1c1-c65f5dc2480e",
+          "conflicts": [],
+          "fullName": "Gia Gerston",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "77ae9ea0-0ef3-4f5e-bc7e-6a75a0ecafad",
+          "conflicts": [],
+          "fullName": "Beckette Glass",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d1dda443-cbc1-41e6-94c6-13767578ebdc",
+          "conflicts": [],
+          "fullName": "Mikayla Gulesserian",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7bf56afd-b476-414a-9c68-5fa401af7aaa",
+          "conflicts": [],
+          "fullName": "Jihyung Hong",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c6319238-de98-4ba8-ba31-f7132b071425",
+          "conflicts": [],
+          "fullName": "Adriana Lopez-corpas",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "2eb22304-058a-4076-bd74-8690279262bf",
+          "conflicts": [],
+          "fullName": "Mila Maletic",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f1aa31be-9ef5-483d-a45f-ff9f9a59ee3d",
+          "conflicts": [],
+          "fullName": "Isabella Martinez",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a20e235d-97ae-4d16-9b2c-bf6ae2b51536",
+          "conflicts": [],
+          "fullName": "Sofia Maskalik",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9342402a-1e6b-4bd5-ac04-5a246d6b9265",
+          "conflicts": [],
+          "fullName": "Lizzie Moorehouse",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": "Mary Moorehouse"
+        },
+        {
+          "athleteId": "b9dfdb37-8ed3-4764-8f28-fa7ccbb77831",
+          "conflicts": [],
+          "fullName": "Stella Musser",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "526c0022-0ba7-42cf-8c66-cc06e2b692cc",
+          "conflicts": [],
+          "fullName": "Scarlett Schafer",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e3a794dc-438e-4901-aba9-a68d4de63f8a",
+          "conflicts": [],
+          "fullName": "Tori Schubert",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a0413544-2eda-4501-a78d-2867a5835d77",
+          "conflicts": [],
+          "fullName": "MacKenzie Sorto",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "743e20e3-d6a1-4afe-8843-a0a15a653a37",
+          "conflicts": [],
+          "fullName": "Francesca Tolich",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f7af42e8-3f67-434f-95b0-e8c701dc75e0",
+          "conflicts": [],
+          "fullName": "Brynn Vivoli",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster%20(also%20listed%20on%20the%20school%20JV%20roster;%20kept%20as%20Varsity)",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "afba8b7c-9b74-4de5-9308-80bdf94384ec",
+          "conflicts": [],
+          "fullName": "Chloé Wall",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d79c4844-0fd1-4492-bcd7-1065cf391092",
+          "conflicts": [],
+          "fullName": "Kendall Welsh",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "85aeba1a-a268-422f-938e-a9e2129a15dd",
+          "conflicts": [],
+          "fullName": "Shyla Werdebaugh",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "levelSource": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "2c981148-8325-45fc-b306-4ea688d17808",
+          "conflicts": [],
+          "fullName": "Allegra Avlas",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7fa90bce-318f-4678-8e1a-328732fe45d7",
+          "conflicts": [],
+          "fullName": "Maia Bolger",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "03d44719-77d2-411b-afbc-56bb69191d91",
+          "conflicts": [],
+          "fullName": "Evie Bonotto",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "ca7ac85a-16dc-4e8a-b5e3-6d521ce70d69",
+          "conflicts": [],
+          "fullName": "Cassidy Buran",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9ea0066b-56c4-46a9-8591-00fd34384d3a",
+          "conflicts": [],
+          "fullName": "Lexie Funk",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "69445d2f-1dea-4ffc-8a00-2660efd27885",
+          "conflicts": [],
+          "fullName": "Natalie Hobbs",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4c7db210-bafb-4a90-ae93-fc398f0a56d1",
+          "conflicts": [],
+          "fullName": "Isabel Kaplunov",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a6f9e79e-ca6d-4ecf-bc65-0f4503dfbcbc",
+          "conflicts": [],
+          "fullName": "Tessa Lambert",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "b49d749e-8bbf-491e-8682-27af628404e7",
+          "conflicts": [],
+          "fullName": "Elle Lamont",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "8a6caa20-7146-4140-a0bd-93a9a9f02e32",
+          "conflicts": [],
+          "fullName": "Juliana Lenz",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9527509d-c52a-4902-aff3-ec1a5c7f9a64",
+          "conflicts": [],
+          "fullName": "Kaija Linden",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e193b72b-5154-4e31-9836-7b78ef9a2f4c",
+          "conflicts": [],
+          "fullName": "Isla Lopez",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c5ee13dd-d6e3-46a6-a0b2-0301cebf9ea4",
+          "conflicts": [],
+          "fullName": "Ella MacIas",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
+          "conflicts": [],
+          "fullName": "Beatrix Monk",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
+          "conflicts": [],
+          "fullName": "Casey Moorehouse",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a08924ac-0932-491e-be9d-65c870893fec",
+          "conflicts": [],
+          "fullName": "Talia Nathan",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "20687728-cf59-4a1a-a622-b62b543072ad",
+          "conflicts": [],
+          "fullName": "Payton Ng",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "a3320200-e8a3-4e9b-8f82-78388c2d5e50",
+          "conflicts": [],
+          "fullName": "Brooke Pearce-percy",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f1c466d7-0c8c-49a5-916d-a1fcde62de10",
+          "conflicts": [],
+          "fullName": "Anushka Raman",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f83ebcae-c4f0-4c36-9bd9-f7082b027318",
+          "conflicts": [],
+          "fullName": "Libby Ratzin",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1867e1a3-6c73-4e2e-aa46-f7b28793c6cf",
+          "conflicts": [],
+          "fullName": "Zoe Ruelas",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "17acecec-2277-49f2-a032-05b20fd606e3",
+          "conflicts": [],
+          "fullName": "Ida Sears",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "11d12ada-a761-4c8d-ad23-93aad2090ac5",
+          "conflicts": [],
+          "fullName": "Nitzan Socolovsky",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "81ba4c88-3550-41b8-8c90-478879bb0186",
+          "conflicts": [],
+          "fullName": "Georgiana Stripp",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4005cc62-5547-4eea-b8be-97c9af20afee",
+          "conflicts": [],
+          "fullName": "Eleanora Tremblay",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c2db6525-d731-4993-93bc-f4d3673358e6",
+          "conflicts": [],
+          "fullName": "Sienna Vernacchia",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7bf1074d-84a9-4d73-9028-ea16360038e9",
+          "conflicts": [],
+          "fullName": "Colette Von Klemperer",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1b15f631-185c-43ee-a3e1-cb78653ae5a5",
+          "conflicts": [],
+          "fullName": "Bree Werdebaugh",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "e0fd1e9d-568f-4897-b341-beba6561e902",
+          "conflicts": [],
+          "fullName": "Clara Zeman",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "los-gatos",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "losgatosathletics.org — school site JV roster for 2026-2027 (team 139303): 33 athletes with grades (mostly FRESHMAN/SOPHOMORE), no numbers or positions.",
+          "url": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "losgatosathletics.org — Varsity 2026-2027 staff: Henry Reyes (Head Coach); assistants Anita Wierima, Caitlin Lincoln, Angie Cucco, Alison Fell.",
+          "url": "https://www.losgatosathletics.org/sport/RefreshRosterStaffStyle4ViewComponent/139296?schoolYear=2026-2027"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "losgatosathletics.org — school site, title 'Los Gatos High School Field Hockey | Girls', level 'Varsity' (team 139296) and school year 2026-2027 selected.",
+          "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "losgatosathletics.org — official school athletics page",
+          "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster%20(also%20listed%20on%20the%20school%20JV%20roster;%20kept%20as%20Varsity)"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Quinn Basewitz",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/"
+        },
+        {
+          "name": "Alexa Gwyn",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/"
+        },
+        {
+          "name": "Paige Hsieh",
+          "role": "Assistant Coach",
+          "source": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/"
+        },
+        {
+          "name": "Lauren Williams",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/"
+        }
+      ],
+      "notes": [
+        "24 names on the school roster are not on MaxPreps and were not added."
+      ],
+      "players": [
+        {
+          "athleteId": "59bdbc4b-af89-4c03-a7a0-0f606c272053",
+          "conflicts": [
+            {
+              "field": "position",
+              "kept": "F",
+              "kind": "news",
+              "note": "A school-paper mention disagrees with MaxPreps; MaxPreps is kept.",
+              "other": "M",
+              "source": "https://palyvoice.com/189628/sports/preview-field-hockey-searching-for-success-with-fresh-roster/"
+            }
+          ],
+          "fullName": "Ella Renazco-Sperling",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "palo-alto",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "palyvoice.com — The Paly Voice (student newspaper), dated August 27, 2026.",
+          "url": "https://palyvoice.com/189628/sports/preview-field-hockey-searching-for-success-with-fresh-roster/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "maxpreps-jv",
+          "title": "maxpreps.com — Palo Alto JV Field Hockey Roster (2026-27), sportSeasonId fae4fc22-6de6-47ae-972d-e290b0ec31ef, school verified.",
+          "url": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/jv/roster/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Anthony Gourley",
+          "role": "Head Coach",
+          "source": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
+        },
+        {
+          "name": "Wiley Martin",
+          "role": "Assistant Coach",
+          "source": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
+        },
+        {
+          "name": "Fieke Schram",
+          "role": "Assistant Coach",
+          "source": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
+        }
+      ],
+      "notes": [],
+      "players": [
+        {
+          "athleteId": "8599db77-058e-4d9f-b592-3494a46f50b2",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "0",
+              "kind": "school-pdf",
+              "note": "An official school source disagrees with MaxPreps; MaxPreps is kept and the school value recorded.",
+              "other": "99",
+              "source": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
+            }
+          ],
+          "fullName": "Brooklyn Barnard",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "presentation",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-pdf",
+          "title": "presentationhs.org — 2026-27 Varsity Field Hockey Roster PDF, 'Updated 8/25/2026'.",
+          "url": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Laura Jones",
+          "role": "Head Coach (varsity and JV)",
+          "source": "https://www.schsathletics.com/varsity/field-hockey/coaches"
+        }
+      ],
+      "notes": [],
+      "players": [
+        {
+          "athleteId": "63efad28-52ba-4172-8e2e-3be05a4e420d",
+          "conflicts": [],
+          "fullName": "Jillian Aochi",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d02cf28f-bf52-4819-a8b0-0b1d2c4d5d49",
+          "conflicts": [],
+          "fullName": "Isabel Bestul",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "8a13c2d5-1fad-40fb-82a4-84e198520915",
+          "conflicts": [],
+          "fullName": "Bintu Deen",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "8a24ca76-e352-401c-af37-5b7426ad4c50",
+          "conflicts": [],
+          "fullName": "Eva Drut",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "3a86cc3b-da86-4cf8-89c3-18c4fa06e279",
+          "conflicts": [],
+          "fullName": "Aashi Jain",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9a34e093-215c-44e4-8d17-3eb9980807cb",
+          "conflicts": [],
+          "fullName": "Mariann Kannathumadam",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c23074ed-b61f-4fd1-a562-d0b363807a50",
+          "conflicts": [],
+          "fullName": "Helen Kao",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4e2e00ff-f7d3-4d11-82e7-d63f6f4bc4df",
+          "conflicts": [],
+          "fullName": "Bella Leano",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": "Ysabella Leano"
+        },
+        {
+          "athleteId": "695399d9-29cf-48c8-ac52-558b4128978b",
+          "conflicts": [],
+          "fullName": "Harshika Manapragada",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "f1658478-adc6-4b2a-98e1-3a1cd89a698b",
+          "conflicts": [],
+          "fullName": "Niva Mundrathi",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "107d5710-6cc3-4065-9de5-f4f353b091fb",
+          "conflicts": [],
+          "fullName": "Aahana Nayak",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1a386e16-eaba-473f-996e-9a550f1222fd",
+          "conflicts": [],
+          "fullName": "Olivia Park",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "43441448-4343-4681-8306-43c992af1cdc",
+          "conflicts": [],
+          "fullName": "Audrey Reilly",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "99b27ec8-2f8a-458a-bf72-6580205d185b",
+          "conflicts": [],
+          "fullName": "Mia Rojo",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1466b7bc-88b2-48da-aefd-080c0e7c18c7",
+          "conflicts": [],
+          "fullName": "Areha Shah",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4724ccdf-9c03-4f6f-bd06-dfdd9394adda",
+          "conflicts": [],
+          "fullName": "Avni Vohra",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.schsathletics.com/varsity/field-hockey/roster",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "santa-clara",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "schsathletics.com — 2026-27 coaches: Laura Jones, Head Coach for both field hockey (varsity) and field hockey junior varsity.",
+          "url": "https://www.schsathletics.com/varsity/field-hockey/coaches"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "schsathletics.com",
+          "url": "https://www.schsathletics.com/varsity/field-hockey/roster"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Staci Ljepava",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/field-hockey/"
+        },
+        {
+          "name": "Zinneerah Ahmed",
+          "role": "Assistant Coach",
+          "source": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/field-hockey/"
+        },
+        {
+          "name": "Amy Williams",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/field-hockey/"
+        },
+        {
+          "name": "Sierra Ward",
+          "role": "Statistician",
+          "source": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/field-hockey/"
+        }
+      ],
+      "notes": [
+        "Grades come from school-site player profiles; MaxPreps career pages confirm the 9 seniors, cannot confirm the 10 freshmen and 1 sophomore (new MaxPreps careers), and correct one profile grade (see conflicts)."
+      ],
+      "players": [
+        {
+          "athleteId": "ad210bb1-d240-4c09-b68f-e6e3f9f90bee",
+          "conflicts": [],
+          "fullName": "Giselle Adams",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/giselle-adams/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "98ef4f2e-0e3a-44dc-8b20-768e2e08edc7",
+          "conflicts": [],
+          "fullName": "Geneva Arman",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/geneva-arman/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "89625935-c150-48ed-93ab-5c2035687275",
+          "conflicts": [],
+          "fullName": "Dyuthi Boinepalli",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/dyuthi-boinepalli/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4b60b4ea-0dce-410e-b04e-b371b182d17f",
+          "conflicts": [],
+          "fullName": "Krithi Boinepalli",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/krithi-boinepalli/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "0f946cb1-e844-49be-a98f-c693994e8444",
+          "conflicts": [],
+          "fullName": "Katherine Bui",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/katherine-bui/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7435d5a4-e3dc-4fb4-8307-190cc6230580",
+          "conflicts": [],
+          "fullName": "Clara Choi",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/clara-choi/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "14c3bd67-410d-4881-99f0-d2af5594f770",
+          "conflicts": [],
+          "fullName": "Stella Choi",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/stella-choi/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d96b85e1-2374-4e9c-b0f4-1db5d464b7f3",
+          "conflicts": [],
+          "fullName": "Lydia Co",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/lydia-co/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "71b252e5-72ff-471f-b1de-71044954122e",
+          "conflicts": [],
+          "fullName": "Alma Garniek",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/alma-garniek/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "bbb25ec8-14b9-4f8d-9126-acf228246dc9",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "school-site",
+              "note": "The school profile grade is not season-dated; the MaxPreps career history (classYear 9 in 24-25) is.",
+              "other": "10",
+              "source": "https://www.shs-athletics.com/player/elise-hubert/"
+            }
+          ],
+          "fullName": "Elise Hubert",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "School profile says Grade 10, but MaxPreps career history lists her on Saratoga varsity field hockey 24-25 with classYear 9 (createdOn 2024-10-02), so fall 2026 = grade 11 (Jr). This matches the school profile's own 2024/2025 seasons, so the profile's 'Grad…",
+            "source": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/athletes/elise-hubert/?careerid=o4ffit6oa29ue",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "cbac9088-be17-4e12-8c1f-a6c7bc347ad9",
+          "conflicts": [],
+          "fullName": "Lakshmi Iyer",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/lakshmi-iyer/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1df22436-7b6e-4a97-abe9-616bd51901c9",
+          "conflicts": [],
+          "fullName": "Dahlia Jha",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/dahlia-jha/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "d384662c-5936-4e0b-b778-81a4173ffc99",
+          "conflicts": [],
+          "fullName": "Angelina Labban",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/angelina-labban/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "0d414953-43ae-4a23-bcdb-532a3c26f42f",
+          "conflicts": [],
+          "fullName": "Hannah Li",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/hannah-li/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "db6ecca3-0ecf-4779-8268-1253579ea098",
+          "conflicts": [],
+          "fullName": "Devika Nair",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/devika-nair/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "c591ff9a-630b-4f7e-b00d-a7b5d7528bda",
+          "conflicts": [],
+          "fullName": "Alaina Retamoso",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (softball/25-26/schedule classYear 11 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/alaina-retamoso/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "cb7a0636-9301-435a-9472-a16ecfee7aa9",
+          "conflicts": [],
+          "fullName": "Aanya Sharma",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/aanya-sharma/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "87a138d2-762d-4bfe-8e6f-eb4b5e3ac372",
+          "conflicts": [],
+          "fullName": "Sophie (mai Lam) Vu",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/sophie-mai-lam-vu/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "1a13275a-f4aa-4129-9c1e-35f0e791793f",
+          "conflicts": [],
+          "fullName": "Emma Williams",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (basketball/girls/25-26/schedule classYear 11 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/emma-williams/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "2ae463f7-167c-46e2-9c6f-a9a8289f0868",
+          "conflicts": [],
+          "fullName": "Evelyn Williams",
+          "grade": {
+            "confidence": "high",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Confirmed by MaxPreps career page (field-hockey/24-25/schedule classYear 10 -> grade 12 in 2026-27).",
+            "source": "https://www.shs-athletics.com/player/evelyn-williams/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "eb04387b-f3b1-4e1b-97dd-d8666ccb5c41",
+          "conflicts": [],
+          "fullName": "Jocelyn Yeh",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": "Unverifiable on MaxPreps: the career was created 2026-08-25 with only a 26-27 Field Hockey row, and classYear is blank. That fits a new player but cannot tell Fr from So, because MaxPreps has no 25-26 Saratoga field h…",
+            "source": "https://www.shs-athletics.com/player/jocelyn-yeh/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "saratoga",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/field-hockey/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "shs-athletics.com — school roster, year dropdown 2026-27 selected (only coach_div_2026 present): 21 names, Name column only (no #, grade or position).",
+          "url": "https://www.shs-athletics.com/varsity/field-hockey/roster"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Lionel Hunt",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/field-hockey/"
+        },
+        {
+          "name": "Ashley Erickson",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/field-hockey/"
+        },
+        {
+          "name": "Mark Shimada",
+          "role": "Assistant Coach",
+          "source": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/field-hockey/"
+        }
+      ],
+      "notes": [
+        "The 4 positions come from a profile-level field on the school site that is not tied to the 2026 season."
+      ],
+      "players": [
+        {
+          "athleteId": "fff6ba68-ed60-4d8a-8226-41b5ba9d327b",
+          "conflicts": [],
+          "fullName": "Audrey Cabaltica",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/audrey-cabaltica/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "low",
+            "kind": "school-site",
+            "note": "source text: Midfielder; profile-level, not season-specific: the school site repeats one profile Position value on every season row, so it may predate 2026",
+            "source": "https://www.lynbrookvikings.com/player/audrey-cabaltica/",
+            "value": [
+              "M"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "f69f1880-5352-4169-81c3-cf18a863f588",
+          "conflicts": [],
+          "fullName": "Grace Cho",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/grace-cho/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "2760b7f0-efef-4775-b8cb-f27fbea09b2f",
+          "conflicts": [],
+          "fullName": "Junali Dutta",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/junali-dutta/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "low",
+            "kind": "school-site",
+            "note": "source text: Midfielder,Forward; profile-level, not season-specific: the school site repeats one profile Position value on every season row, so it may predate 2026",
+            "source": "https://www.lynbrookvikings.com/player/junali-dutta/",
+            "value": [
+              "M",
+              "F"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "31a9f502-6578-48ce-acf8-87daa1bbcbdf",
+          "conflicts": [],
+          "fullName": "Rishika Gajjar",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/rishika-gajjar/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "36861f97-5fdb-41eb-9cc5-00dab16b65e1",
+          "conflicts": [],
+          "fullName": "Aashvi Gireesh",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/aashvi-gireesh/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "9d4257b4-d9f0-4913-9a88-15d083a7d844",
+          "conflicts": [],
+          "fullName": "Manisha Mehta",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/manisha-mehta/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "47d0301a-b9f1-4df9-8f39-1c81dcda281b",
+          "conflicts": [],
+          "fullName": "Anh Nguyenle",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/anh-nguyenle/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "57bdcf48-1fff-4f15-a404-a2dd802d4ec5",
+          "conflicts": [],
+          "fullName": "Srimai Nukala",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/srimai-nukala/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7d595a6d-344a-481d-ae4a-cd6ea680af24",
+          "conflicts": [],
+          "fullName": "Colleen Pan",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/colleen-pan/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "951518b2-a8ee-4288-96ad-a4c96bed10a4",
+          "conflicts": [],
+          "fullName": "Sahana Rajamani",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/sahana-rajamani/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "8fb32d44-c529-4db5-afe9-4fb78d7f0333",
+          "conflicts": [],
+          "fullName": "Verity Rediawan",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/verity-rediawan/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "low",
+            "kind": "school-site",
+            "note": "source text: Sweeper,Fullback,Midfielder; profile-level, not season-specific: the school site repeats one profile Position value on every season row, so it may predate 2026",
+            "source": "https://www.lynbrookvikings.com/player/verity-rediawan/",
+            "value": [
+              "D",
+              "M"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "3a4d9596-1a6d-46e5-972f-b44e9451c622",
+          "conflicts": [],
+          "fullName": "Trishna Sinha",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/trishna-sinha/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "b2cce1bd-59ae-42b8-abfb-47825e02d7cd",
+          "conflicts": [],
+          "fullName": "Gemma Smoler",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/gemma-smoler/",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "535a67b2-807d-44df-868e-8098567e2466",
+          "conflicts": [],
+          "fullName": "Annie Zhang",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/annie-zhang/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "low",
+            "kind": "school-site",
+            "note": "source text: Forward; profile-level, not season-specific: the school site repeats one profile Position value on every season row, so it may predate 2026",
+            "source": "https://www.lynbrookvikings.com/player/annie-zhang/",
+            "value": [
+              "F"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "9fddd129-65e9-4ff1-b2d4-6811b43bd237",
+          "conflicts": [],
+          "fullName": "Wenhe Zhang",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "school-site",
+            "note": null,
+            "source": "https://www.lynbrookvikings.com/player/wenhe-zhang/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "lynbrook",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "lynbrookvikings.com — varsity roster, 2026-27 selected: exactly the same 15 names as MaxPreps (including Grace Cho and Verity Rediawan).",
+          "url": "https://www.lynbrookvikings.com/varsity/field-hockey/roster/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/field-hockey/"
+        }
+      ]
+    },
+    {
+      "coaches": [
+        {
+          "name": "Amelia De Leon",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/field-hockey/"
+        },
+        {
+          "name": "Natasha Puthukudy",
+          "role": "Head Coach",
+          "source": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/field-hockey/"
+        },
+        {
+          "name": "Arnold de Leon",
+          "role": "Assistant Coach",
+          "source": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/field-hockey/"
+        }
+      ],
+      "notes": [
+        "The school site's player profiles show a different number for 6 of 16 players; MaxPreps' numbers are kept and the school's recorded as conflicts."
+      ],
+      "players": [
+        {
+          "athleteId": "743f831a-74d9-44c2-ac7e-be5e8a49cc9b",
+          "conflicts": [],
+          "fullName": "Emilie Chan",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "medium",
+            "kind": "news",
+            "note": "source text: D",
+            "source": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/",
+            "value": [
+              "D"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "004a844c-0837-49ac-a078-e0bed849def0",
+          "conflicts": [],
+          "fullName": "Jasmine Zhao",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "medium",
+            "kind": "news",
+            "note": "source text: LF",
+            "source": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/",
+            "value": [
+              "F"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "beea6ff8-cdb9-41de-ba44-03211320567d",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "6",
+              "kind": "school-site",
+              "note": "School site shows #9 for 2026 and the same number in 2024, 2025, 2026; MaxPreps #6 appears nowhere in her school history, so it is likely stale or wrong.",
+              "other": "9",
+              "source": "https://www.matadorathletics.org/player/elizabeth-weafer/"
+            }
+          ],
+          "fullName": "Elizabeth Weafer",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "7ff8e53d-1d24-42eb-875f-d4a8cecdc087",
+          "conflicts": [],
+          "fullName": "Seraphima (Phima) Jenssen",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "El Estoque caption spells 'Seraphima Jensen' (one 's'); school site 'Seraphima Jenssen', MaxPreps 'Seraphima (Phima) Jenssen'. Matched on first name Seraphima (unique on the 16-player roster) plus …",
+          "positions": {
+            "confidence": "medium",
+            "kind": "news",
+            "note": "source text: LM",
+            "source": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/",
+            "value": [
+              "M"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "071d3c3d-c881-41e6-9903-612e6e2c812a",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "4",
+              "kind": "school-site",
+              "note": "School site shows #16 for 2026 and the same number in 2023, 2024, 2025, 2026; MaxPreps #4 appears nowhere in her school history, so it is likely stale or wrong.",
+              "other": "16",
+              "source": "https://www.matadorathletics.org/player/ella-yao/"
+            }
+          ],
+          "fullName": "Ella Yao",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "62c5db3e-c77b-4b54-8e7d-bba6baa257ca",
+          "conflicts": [],
+          "fullName": "Genevieve To",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "medium",
+            "kind": "news",
+            "note": "source text: CM",
+            "source": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/",
+            "value": [
+              "M"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "7c79e40e-a37f-4169-aa05-3909ee59beae",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "16",
+              "kind": "school-site",
+              "note": "An official school source disagrees with MaxPreps; MaxPreps is kept and the school value recorded.",
+              "other": "24",
+              "source": "https://www.matadorathletics.org/player/riya-mahajan/"
+            }
+          ],
+          "fullName": "Riya Mahajan",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "5496bf29-59e2-4284-8de2-6cc7b1260c04",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "1",
+              "kind": "school-site",
+              "note": "School site shows #25 for 2026 and the same number in 2023, 2024, 2025, 2026; MaxPreps #1 appears nowhere in her school history, so it is likely stale or wrong.",
+              "other": "25",
+              "source": "https://www.matadorathletics.org/player/ruhee-bhatnagar/"
+            }
+          ],
+          "fullName": "Ruhee Bhatnagar",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        },
+        {
+          "athleteId": "4171590f-095c-491f-8b79-956228b87736",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "17",
+              "kind": "school-site",
+              "note": "School site shows #30 for 2026 and the same number in 2024, 2025, 2026; MaxPreps #17 matches her 2023 Field Hockey Junior Varsity number, so it is likely stale.",
+              "other": "30",
+              "source": "https://www.matadorathletics.org/player/aashka-nadathur/"
+            }
+          ],
+          "fullName": "Aashka Nadathur",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": {
+            "confidence": "medium",
+            "kind": "news",
+            "note": "source text: CF",
+            "source": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/",
+            "value": [
+              "F"
+            ]
+          },
+          "sourceName": null
+        },
+        {
+          "athleteId": "0592f6ba-5c0e-48a2-8d7d-cc0100c4745c",
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "24",
+              "kind": "school-site",
+              "note": "An official school source disagrees with MaxPreps; MaxPreps is kept and the school value recorded.",
+              "other": "36",
+              "source": "https://www.matadorathletics.org/player/medhavi-modi/"
+            }
+          ],
+          "fullName": "Medhavi Modi",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "sourceName": null
+        }
+      ],
+      "slug": "monta-vista",
+      "sources": [
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "elestoque.org — El Estoque (MVHS student paper) recap dated 2026-09-25 gives positions for 5 varsity players.",
+          "url": "https://elestoque.org/2026/09/25/sports/varsity-girls-field-hockey-falls-12-0-to-archbishop-mitty-high-school/"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "school-site",
+          "title": "matadorathletics.org — school varsity roster with the year dropdown on 2026-27 (coach_div_2026): 16 names, Name column only.",
+          "url": "https://www.matadorathletics.org/varsity/field-hockey/roster"
+        },
+        {
+          "capturedAt": "2026-10-02",
+          "confidence": "high",
+          "kind": "maxpreps-team",
+          "title": "MaxPreps team home page (staff list)",
+          "url": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/field-hockey/"
+        }
+      ]
+    }
+  ]
+}

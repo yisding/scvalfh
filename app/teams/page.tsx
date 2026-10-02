@@ -12,20 +12,19 @@ import { DIVISION_LABELS, DIVISIONS } from '@/lib/season';
 /**
  * /teams — "Find my school" (DESIGN §3.6).
  *
- * Sixteen card tiles, grouped by division and sorted alphabetically inside each one: 2-up below
- * 1024px and 4-up from there. Each division has exactly eight teams, so both counts fill every row
- * (4×2 on desktop, 2×4 below); a 3-up tablet step left an empty slot after the last tile.
- * **All sixteen**, Wilcox included: league membership is the
- * repo's list from the official SCVAL PDFs, not the feed's seven De Anza rows, and dropping a
- * school because a source has no data for it is the single worst bug this site could ship
- * (DESIGN §12.1, R-6).
+ * Fifteen card tiles, grouped by division and sorted alphabetically inside each one: 2-up below
+ * 1024px and 4-up from there. El Camino's eight fill every row (4×2 on desktop, 2×4 below) and De
+ * Anza's seven leave one slot open on the last row; a 3-up tablet step left a slot open after
+ * the last tile of both. **All fifteen**: league membership is the repo's list from the official
+ * SCVAL PDFs, not the feed's rows, and dropping a school because a source has no data for it is
+ * the single worst bug this site could ship (DESIGN §12.1, R-6).
  *
- * There is no search box on purpose: 16 teams and ten pages, so this page beats one (DESIGN §1.2).
+ * There is no search box on purpose: 15 teams and ten pages, so this page beats one (DESIGN §1.2).
  */
 export const metadata: Metadata = {
   title: 'Teams',
   description:
-    'All 16 SCVAL girls varsity field hockey teams — De Anza and El Camino — with league records. Find your school.',
+    'All 15 SCVAL girls varsity field hockey teams — De Anza and El Camino — with league records. Find your school.',
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/teams' },
 };

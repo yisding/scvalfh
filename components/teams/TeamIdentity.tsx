@@ -20,7 +20,7 @@ import type { TeamPageView } from './team-view';
  * Phone padding is 16px and the row gap 12px (20 / 16 from 768px) to keep the Last result on the
  * first phone screen.
  *
- * The monogram is the ONLY place a school color appears anywhere on the site: sixteen
+ * The monogram is the ONLY place a school color appears anywhere on the site: fifteen
  * uncontrolled brand hues blow past every categorical ceiling, so they are decoration with a
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
  * requested from a third party.

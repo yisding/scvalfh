@@ -12,7 +12,7 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
 export const SITE_NAME = 'SCVAL Field Hockey';
 export const SITE_TAGLINE = 'Santa Clara Valley Athletic League girls varsity field hockey';
 export const SITE_DESCRIPTION =
-  'Scores, standings, schedules and CCS playoff picture for the 16 De Anza and El Camino girls varsity field hockey teams. Rebuilt nightly from MaxPreps; unofficial.';
+  'Scores, standings, schedules and CCS playoff picture for the 15 De Anza and El Camino girls varsity field hockey teams. Rebuilt nightly from MaxPreps; unofficial.';
 
 /**
  * The `openGraph` fields every page has to repeat.

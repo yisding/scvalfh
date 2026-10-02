@@ -143,7 +143,7 @@ export async function generateMetadata(): Promise<Metadata> {
       )}, semifinals ${shortDate(keyDates.semifinals)}, final ${shortDate(
         keyDates.finals,
       )}. Unofficial, computed from published results.`
-    : `SCVAL holds ${format.autoQualifiers.scval} of the ${format.autoQualifiers.total} CCS berths: the first three in each division, plus the winner of the Oct 30 play-in. Seeding meeting ${shortDate(
+    : `SCVAL holds ${format.autoQualifiers.scval} of the ${format.autoQualifiers.total} CCS berths: the first three in each division, plus the winner of the ${shortDate(keyDates.crossover)} play-in. Seeding meeting ${shortDate(
         keyDates.seedingMeeting,
       )}; quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${shortDate(
         keyDates.finals,
@@ -216,7 +216,7 @@ export default function PlayoffsPage() {
                     {path.name}
                   </h3>
                 ) : null}
-                <PlayoffBracket path={path} />
+                <PlayoffBracket path={path} headingLevel={paths.length > 1 ? 'h4' : 'h3'} />
               </div>
             ))}
           </div>
@@ -329,6 +329,7 @@ export default function PlayoffsPage() {
           </div>
           <ProjectionKey
             className="mt-stack"
+            playIn={shortDate(keyDates.crossover)}
             showRule={divisions.some((d) => d.berthRuleAfter > 0)}
           />
           <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">

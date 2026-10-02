@@ -25,9 +25,9 @@ export interface TeamNextGameProps {
   perspective: TeamSlug;
   teamName: string;
   /**
-   * The next fixture that exists only in the official SCVAL grid. Wilcox has no contest in any
-   * source, so without this the block would claim it has no games left when the league schedule
-   * says otherwise (SPEC §1.3).
+   * The next fixture that exists only in the official SCVAL grid. A fixture with no contest in any
+   * source would otherwise make the block claim no games are left when the league schedule says
+   * otherwise (SPEC §1.3).
    */
   nextOfficial?: OfficialFixture | null;
 }

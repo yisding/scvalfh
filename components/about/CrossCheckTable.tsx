@@ -35,7 +35,7 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
     return (
       <p className="max-w-prose py-1 text-body text-ink-2">
         No disagreements in the most recent run &mdash; our computed league records match
-        MaxPreps&rsquo; published table exactly for all 16 teams.
+        MaxPreps&rsquo; published table exactly for all 15 teams.
       </p>
     );
   }

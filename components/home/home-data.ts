@@ -212,9 +212,9 @@ function titleCase(name: string): string {
 }
 
 /**
- * The next fixture from the official SCVAL grid, for a team MaxPreps has no contest for. Wilcox is
- * in the official eight-team De Anza alignment and absent from every data source, so its schedule
- * comes from the PDF and its results stay empty — no record is ever invented (DESIGN §8, §12.1).
+ * The next fixture from the official SCVAL grid, for a team MaxPreps has no contest for. Its
+ * schedule comes from the PDF and its results stay empty — no record is ever invented
+ * (DESIGN §8, §12.1).
  */
 function officialNextView(team: Team, today: string): HomeOfficialFixture | null {
   const fixture = getOfficialFixtures({ slug: team.slug })
@@ -237,8 +237,8 @@ function officialNextView(team: Team, today: string): HomeOfficialFixture | null
 }
 
 /**
- * All 16 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
- * cannot know which one is wanted; shipping all 16 compact views is the cost of the feature, and
+ * All 15 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
+ * cannot know which one is wanted; shipping all 15 compact views is the cost of the feature, and
  * each one is a handful of strings rather than a full `Game`.
  */
 export function buildTeamViews(): HomeTeamView[] {

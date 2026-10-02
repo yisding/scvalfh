@@ -1,9 +1,11 @@
 /**
  * OFFICIAL source: the two scval.com schedule-grid PDFs (SPEC §1.3).
  *
- * These are the authority for DIVISION ALIGNMENT and for the official league fixture list — the
- * only place Wilcox's 14 De Anza games exist at all. They carry no scores and no times beyond the
- * footer's "Varsity 4:00".
+ * These are the authority for DIVISION ALIGNMENT and for the official league fixture list. They
+ * carry no scores and no times beyond the footer's "Varsity 4:00".
+ *
+ * The De Anza grid still lists Wilcox, which is not fielding a team this season: its fixtures are
+ * dropped here and its roster-line entry is not a membership warning (WITHDRAWN_SCHOOL_NAMES).
  *
  * Extraction facts, all verified against the live files:
  *   - `http://` 302s to `https://`; redirects must be followed.
@@ -13,8 +15,7 @@
  *   - the naive "split on 2+ spaces, re-pair on @" approach is broken: `ST. FRANCIS        @   FREMONT`
  *     shatters into `"@"` and `"FREMONT"`. The verified matchup regex below scores 56/56 on both
  *     PDFs with zero bad rows.
- *   - group 1 is AWAY, group 2 is HOME (`WILCOX @ VALLEY CHRISTIAN` = Wilcox away at Valley
- *     Christian).
+ *   - group 1 is AWAY, group 2 is HOME (`ST. FRANCIS @ FREMONT` = St. Francis away at Fremont).
  *   - the Friday Oct 30 column is the crossover block (`DE ANZA #4 VS EL CAMINO #4`, `#1 v. #1`)
  *     and carries no `@`, so it falls out of the matchup regex on its own.
  */
@@ -25,7 +26,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { DIVISION_LABELS } from '../season';
-import { resolveTeam, teamsInDivision } from '../teams';
+import { isWithdrawnSchool, resolveTeam, teamsInDivision } from '../teams';
 import type { Division, Game, OfficialFixture, TeamSlug } from '../types';
 import { HttpClient, type HttpClientOptions } from './http';
 
@@ -112,7 +113,7 @@ export interface OfficialSchedule {
   division: Division;
   /** "2026 - 2027" from the page header, when present. */
   yearLabel: string | null;
-  /** The `Teams:` line, verbatim entries. */
+  /** The `Teams:` line, verbatim entries, less any school not fielding a team. */
   officialTeamNames: string[];
   /** Those names resolved through the alias table; null = unknown to the registry. */
   officialTeamSlugs: Array<TeamSlug | null>;
@@ -158,7 +159,7 @@ export function parseSchedulePdfText(text: string, division: Division): Official
     ? (TEAMS_LINE_RE.exec(teamsLine)?.[1] ?? '')
         .split(',')
         .map((s) => s.trim())
-        .filter(Boolean)
+        .filter((s) => s && !isWithdrawnSchool(s))
     : [];
   if (officialTeamNames.length === 0) warnings.push('no "Teams:" roster line found');
 
@@ -194,6 +195,8 @@ export function parseSchedulePdfText(text: string, division: Division): Official
       if (!col.dateKey) continue;
       const awayName = mm[1].trim();
       const homeName = mm[2].trim();
+      // A school that is not fielding a team plays none of its grid fixtures.
+      if (isWithdrawnSchool(awayName) || isWithdrawnSchool(homeName)) continue;
       const away = resolveTeam(awayName);
       const home = resolveTeam(homeName);
       if (!away) warnings.push(`official grid name "${awayName}" resolves to no registry team`);
@@ -288,7 +291,7 @@ export interface ApplyFixturesResult {
   games: Game[];
   /** Fixtures matched to a MaxPreps contest. */
   matched: number;
-  /** Fixtures with no MaxPreps contest — Wilcox's whole slate lives here. */
+  /** Fixtures with no MaxPreps contest. */
   unmatched: OfficialFixture[];
   /** Matched contests MaxPreps does NOT flag as league games. */
   leagueDisagreements: string[];

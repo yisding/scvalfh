@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { FETCHABLE_TEAMS, TEAMS, normalizeTeamKey, onPrimaryInk, resolveTeam, teamsInDivision } from '../lib/teams';
+import { FETCHABLE_TEAMS, TEAMS, isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveTeam, teamsInDivision } from '../lib/teams';
 
 describe('teams: the registry is the league', () => {
-  it('holds 16 official SCVAL members, 8 per division', () => {
-    expect(TEAMS.length).toBe(16);
-    expect(teamsInDivision('de-anza').length).toBe(8);
+  it('holds 15 SCVAL members: De Anza 7, El Camino 8', () => {
+    expect(TEAMS.length).toBe(15);
+    expect(teamsInDivision('de-anza').length).toBe(7);
     expect(teamsInDivision('el-camino').length).toBe(8);
     for (const t of TEAMS) expect(t.isScvalMember).toBe(true);
   });
@@ -20,13 +20,13 @@ describe('teams: the registry is the league', () => {
     expect(resolveTeam('saratoga')!.abbr).toBe('SG');
   });
 
-  it('carries 15 fetchable teams and marks Wilcox as having no data', () => {
+  it('carries 15 fetchable teams and no Wilcox, which is not fielding a team', () => {
     expect(FETCHABLE_TEAMS.length).toBe(15);
-    const wilcox = resolveTeam('wilcox')!;
-    expect(wilcox.dataCoverage).toBe('none');
-    expect(wilcox.division).toBe('de-anza');
-    expect(wilcox.colors.source).toBe('placeholder');
-    expect(FETCHABLE_TEAMS.some((t) => t.slug === 'wilcox')).toBe(false);
+    for (const name of ['wilcox', 'WILCOX', 'Wilcox High School']) {
+      expect(resolveTeam(name), name).toBeUndefined();
+      expect(isWithdrawnSchool(name), name).toBe(true);
+    }
+    expect(isWithdrawnSchool('Fremont')).toBe(false);
   });
 
   it('keys everything on the MaxPreps GUID, with our own slugs', () => {
@@ -54,7 +54,6 @@ describe('teams: the registry is the league', () => {
       ['Los Gatos', 'los-gatos'],
       ['VALLEY CHRISTIAN', 'valley-christian'],
       ['Monta Vista Matadors', 'monta-vista'],
-      ['WILCOX', 'wilcox'],
     ];
     for (const [input, slug] of cases) {
       expect(resolveTeam(input)?.slug, input).toBe(slug);
@@ -82,7 +81,7 @@ describe('teams: the registry is the league', () => {
     );
     expect(la.external.maxprepsScheduleUrl).toMatch(/\/schedule\/$/);
     expect(la.external.sbliveGamesUrl).toContain('458850-los-altos-eagles');
-    // All 16 si.com slugs were harvested from live payloads on 2026-09-29, never guessed, so
+    // All 15 si.com slugs were harvested from live payloads on 2026-09-29, never guessed, so
     // SPEC §7.3's TODO is closed. Each URL must carry its own numeric SBLive id.
     for (const t of TEAMS) {
       expect(t.external.sbliveTeamId, t.slug).toBeTruthy();

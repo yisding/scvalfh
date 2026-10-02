@@ -36,8 +36,8 @@ export function EmptyState({
       {children ? <p className="mt-1 mb-0 max-w-[52ch] text-meta text-ink-2">{children}</p> : null}
       {action ? (
         /* The one action is a 44px pill: alone in its own paragraph it is not a word in a
-           sentence, so WCAG 2.5.8's inline exception does not reach it, and on /teams/wilcox,
-           where every section is an empty state, these are the only links on the page. */
+           sentence, so WCAG 2.5.8's inline exception does not reach it, and on a team page with no
+           results, where every section is an empty state, these are the only links on the page. */
         <p className="mt-4 mb-0">
           {action.external ? (
             <a

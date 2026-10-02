@@ -93,10 +93,6 @@ export default function AboutPage() {
   const sbliveCross = getSbliveCrossCheck();
 
   const officialFixtures = getOfficialFixtures();
-  const wilcoxFixtures = officialFixtures.filter(
-    (f) => f.awaySlug === 'wilcox' || f.homeSlug === 'wilcox',
-  ).length;
-  const otherFixtures = officialFixtures.length - wilcoxFixtures;
 
   const officialStandingsPdfUrl = getOfficialStandingsPdfUrl();
 
@@ -115,7 +111,7 @@ export default function AboutPage() {
       <PageHeader
         className="lg:col-start-1 lg:row-start-1"
         title="About & sources"
-        description="This is an unofficial, fan-built scoreboard for the 16 De Anza and El Camino girls varsity field hockey teams. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved."
+        description="This is an unofficial, fan-built scoreboard for the 15 De Anza and El Camino girls varsity field hockey teams. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved."
       />
 
       <details className="sx-inset sx-disclosure mt-8 lg:hidden">
@@ -222,13 +218,12 @@ export default function AboutPage() {
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                 <span className="block md:columns-2 md:gap-x-8">
                   SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
-                  scval.com. League membership (which 16 schools are in which division), the
+                  scval.com. League membership (which schools are in which division), the
                   points/tiebreak rules quoted below, and every scheduled matchup come from these
                   documents, not from MaxPreps. When MaxPreps has never published a result for a
                   game that the official grid says was scheduled &mdash; today that is{' '}
-                  {officialFixtures.length} game{officialFixtures.length === 1 ? '' : 's'},{' '}
-                  {wilcoxFixtures} of them Wilcox&rsquo;s{otherFixtures > 0 ? ` and ${otherFixtures} involving other schools` : ''}{' '}
-                  &mdash; it is listed as scheduled per SCVAL rather than silently dropped.{' '}
+                  {officialFixtures.length} game{officialFixtures.length === 1 ? '' : 's'} &mdash; it is
+                  listed as scheduled per SCVAL rather than silently dropped.{' '}
                   {officialStandingsPdfUrl === null ? (
                     <>SCVAL has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
                   ) : officialStandingsPdfUrl ? (
@@ -285,11 +280,10 @@ export default function AboutPage() {
           <div className="sx-prose">
           <p>
             League membership is a list we maintain from the official SCVAL alignment, not
-            whatever happens to appear in the MaxPreps feed that day. Today MaxPreps&rsquo; own De
-            Anza standings table has 7 rows; Wilcox is the league&rsquo;s 8th member and has no
-            games in MaxPreps&rsquo; feed at all. We still show all 8 De Anza teams, with Wilcox
-            sorted last, every cell an em dash, and a note explaining why &mdash; never a
-            fabricated 0-0-0 record.
+            whatever happens to appear in the MaxPreps feed that day. De Anza has 7 teams this
+            season: the official grid still lists Wilcox, but Wilcox is not fielding a team, so it
+            is not shown anywhere on the site and its grid fixtures are not counted. A team with no
+            reported results is never shown as a fabricated 0-0-0 record.
           </p>
           <p>
             Everything else is computed from individual game results, then compared field by

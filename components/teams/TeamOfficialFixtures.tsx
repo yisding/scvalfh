@@ -8,9 +8,9 @@ import TeamMonogram from '../ui/TeamMonogram';
 /**
  * Fixtures that exist in the official SCVAL schedule grid and in NO data source (SPEC §1.3).
  *
- * This is how the site tells the truth about a hole instead of hiding it. Wilcox's whole 14-game
- * slate lives here, and so do the two Homestead–Cupertino legs MaxPreps has never published — so
- * the list is rendered from the data, never hard-coded as "the Wilcox list".
+ * This is how the site tells the truth about a hole instead of hiding it. The two
+ * Homestead–Cupertino legs MaxPreps has never published live here — and the list is rendered from
+ * the data, never hard-coded.
  *
  * These rows are NOT games: they have no contest, no score slot and no game page, they are
  * excluded from every record, and they are deliberately outside the game log so nothing here can

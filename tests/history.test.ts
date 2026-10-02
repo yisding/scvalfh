@@ -105,10 +105,9 @@ describe('history: the standings PDF', () => {
     }
   });
 
-  it('records the 7-team 2025-26 De Anza — Wilcox is new to the 2026-27 grid', () => {
+  it('records the 7-team 2025-26 De Anza', () => {
     expect(blocks[0].rows).toHaveLength(7);
-    expect(blocks[0].rows.some((r) => r.slug === 'wilcox')).toBe(false);
-    expect(getTeamBySlug('wilcox')?.division).toBe('de-anza');
+    expect(blocks[0].rows.every((r) => r.slug !== null)).toBe(true);
   });
 
   it('keeps JV membership separate from varsity', () => {
@@ -282,9 +281,8 @@ describe('history: the read API', () => {
       ['varsity', 1],
       ['jv', 2],
     ]);
-    // Valley Christian played varsity but not JV, and Wilcox played neither.
+    // Valley Christian played varsity but not JV.
     expect(h.getHistoryFor('valley-christian').map((x) => x.level)).toEqual(['varsity']);
-    expect(h.getHistoryFor('wilcox')).toEqual([]);
   });
 
   it('exposes the awards and the two source PDFs for the page credit', async () => {

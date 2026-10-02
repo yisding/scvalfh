@@ -121,8 +121,8 @@ export function getScoreConflict(contestId: ContestId): Game['provenance']['scor
 
 /**
  * Official SCVAL fixtures with NO contest in the snapshot — render these as
- * "scheduled per SCVAL, not reported" (SPEC §1.3). Today: Wilcox's 14 games plus the two
- * Homestead–Cupertino legs MaxPreps has never published.
+ * "scheduled per SCVAL, not reported" (SPEC §1.3). Today: the two Homestead–Cupertino legs
+ * MaxPreps has never published.
  */
 export function getOfficialFixtures(filter: { division?: Division; slug?: string } = {}): OfficialFixture[] {
   let rows = snapshot.officialFixtures ?? [];

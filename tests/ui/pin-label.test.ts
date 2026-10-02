@@ -2,7 +2,7 @@
  * `components/home/pin-label.ts` — WCAG 2.5.3 Label in Name over the real registry.
  *
  * The picker tile's VISIBLE label is `shortName`, so the accessible name has to contain it. Three
- * of the sixteen short names are not substrings of the school's full name, so a label built from
+ * of the fifteen short names are not substrings of the school's full name, so a label built from
  * the full name alone left those three unsayable.
  */
 
@@ -19,8 +19,8 @@ const IDENTITIES = TEAMS.map((team) => ({
 }));
 
 describe('pinLabel', () => {
-  it('contains the visible tile label for all 16 teams', () => {
-    expect(IDENTITIES.length).toBe(16);
+  it('contains the visible tile label for all 15 teams', () => {
+    expect(IDENTITIES.length).toBe(15);
     for (const team of IDENTITIES) {
       const label = pinLabel(team);
       expect(label.toLowerCase(), team.slug).toContain(team.shortName.toLowerCase());
@@ -43,7 +43,7 @@ describe('pinLabel', () => {
       'st-ignatius',
       'valley-christian',
     ]);
-    // The other thirteen read as one name, not a name twice over.
+    // The other twelve read as one name, not a name twice over.
     for (const team of IDENTITIES) {
       if (bracketed.includes(team)) continue;
       expect(pinLabel(team), team.slug).toBe(`Pin ${team.name}, ${team.divisionLabel} Division`);
@@ -55,7 +55,7 @@ const SHY = '­';
 
 describe('pickerName', () => {
   it('renders the same string as the short name, give or take a break point', () => {
-    expect(IDENTITIES.length).toBe(16);
+    expect(IDENTITIES.length).toBe(15);
     for (const team of IDENTITIES) {
       expect(pickerName(team).replaceAll(SHY, ''), team.slug).toBe(team.shortName);
     }
@@ -63,9 +63,9 @@ describe('pickerName', () => {
 
   it('breaks only the two names with no space to break at', () => {
     // The picker tile is four columns wide at every width, which leaves the name 61px at 320px.
-    // Fifteen of the sixteen either fit it or break at their own space; "Homestead" (70px) and
+    // Thirteen of the fifteen either fit it or break at their own space; "Homestead" (70px) and
     // "Presentation" (77px) are single words that do neither, and `hyphens: auto` will not break
-    // a capitalised word in Chromium, so they carry soft hyphens. A seventeenth school, or a
+    // a capitalised word in Chromium, so they carry soft hyphens. A sixteenth school, or a
     // renamed short name, fails here and has to be measured rather than assumed.
     const broken = IDENTITIES.filter((t) => pickerName(t).includes(SHY));
     expect(broken.map((t) => t.slug).sort()).toEqual(['homestead', 'presentation']);

@@ -47,7 +47,7 @@ export interface UnbeatenOpponent {
   remaining: number;
   /** The next meeting's date key, when one is scheduled. */
   nextDate: string | null;
-  /** Official SCVAL fixtures against them with no MaxPreps contest (Wilcox's whole slate). */
+  /** Official SCVAL fixtures against them with no MaxPreps contest (never published). */
   unreportedFixtures: number;
 }
 
@@ -235,7 +235,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   };
 }
 
-/** The /teams index: both divisions, in the standings order, with Wilcox included. */
+/** The /teams index: both divisions, in the standings order. */
 export interface TeamTileData {
   team: Team;
   standing: Standing | undefined;

@@ -24,7 +24,7 @@ import {
  *  - **The 2px rule after the last automatic berth is the redundant cue**, never the only one.
  *  - **Shared places render level** — `6=` with an sr-only "tied for 6th" — and every tied group
  *    gets `tiebreak.note` verbatim in the footnotes, which already carries its Article citation.
- *  - **A team with nothing reported (Wilcox) is never 0-0-0**: place `—`, record `—`, and the
+ *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
  *    written status "No results reported". It is still a link to its team page.
  *  - The whole row is one block link whose hit area is exactly the row (WCAG 2.5.8), the same
  *    mechanism `StandingsTable` uses. Its sentence carries the place and the record; the status
@@ -89,19 +89,26 @@ function StatusBadge({ row }: { row: ProjectionRow }) {
   );
 }
 
-const QUALIFYING =
-  'The first three in each division qualify automatically (Article VII §2). The two ' +
-  'fourth-place teams meet in the Oct 30 play-in for the seventh SCVAL berth, and the play-in ' +
-  'loser plus both fifth-place teams are submitted to CCS for at-large consideration.';
+/** The by-law sentence, with the play-in date formatted from the snapshot like every other date. */
+function qualifying(playIn: string): string {
+  return (
+    'The first three in each division qualify automatically (Article VII §2). The two ' +
+    `fourth-place teams meet in the ${playIn} play-in for the seventh SCVAL berth, and the play-in ` +
+    'loser plus both fifth-place teams are submitted to CCS for at-large consideration.'
+  );
+}
 
 /**
  * The footnotes every division shares, said once for the page in a labelled disclosure (brief
  * §4.22). Division-specific facts (tie notes, no-results teams) stay visible under their own table.
  */
 export function ProjectionKey({
+  playIn,
   className,
   showRule = true,
 }: {
+  /** The crossover / play-in date, already formatted ("Fri Oct 30"). */
+  playIn: string;
   className?: string;
   /** false when no table draws the 2px rule (nobody is in automatic position yet). */
   showRule?: boolean;
@@ -114,7 +121,7 @@ export function ProjectionKey({
       <div className="flex max-w-prose flex-col gap-3 text-meta text-ink-2">
         <p className="m-0">
           {showRule ? 'The 2px rule marks the last automatic berth. ' : ''}
-          {QUALIFYING}
+          {qualifying(playIn)}
         </p>
         <p className="m-0">
           Every status in the tables is a written word. There are no probabilities on this page, because
@@ -202,7 +209,7 @@ export function PlayoffProjection({
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and the two projection tables together are
-                      sixteen stretched row links. Navigation still fetches on click. */}
+                      fifteen stretched row links. Navigation still fetches on click. */}
                   <Link
                     href={`/teams/${row.team.slug}`}
                     prefetch={false}

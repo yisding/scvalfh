@@ -41,7 +41,7 @@ import {
  * always visible — a filtered list that looks like the whole season is the failure mode here.
  */
 export interface ScheduleFiltersProps {
-  /** The 16 SCVAL teams, for the native `<select>`. */
+  /** The 15 SCVAL teams, for the native `<select>`. */
   teams: readonly { slug: string; name: string; division: Division }[];
   counts: ScheduleCounts;
   /** The id of the element that holds the `[data-game]` items. */

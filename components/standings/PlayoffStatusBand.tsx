@@ -29,7 +29,7 @@ export interface PlayoffStatusBandProps {
   divisionLabel: string;
   groups: StatusGroup[];
   caveat: string | null;
-  /** Teams with `hasReportedResults === false` (Wilcox today). */
+  /** Teams with `hasReportedResults === false`. */
   unrankedTeams: string[];
   className?: string;
 }

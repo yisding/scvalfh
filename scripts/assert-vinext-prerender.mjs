@@ -55,8 +55,8 @@ const games = count('game', html), dates = count('scores', html), teams = count(
 const gameCards = count('game', og), dateCards = count('scores', og), teamCards = count('teams', og);
 console.log(`prerendered: ${routes.length} routes; ${games} game, ${dates} date, ${teams} team pages; ` +
   `${gameCards} game, ${dateCards} date, ${teamCards} team OG images`);
-if (games < 100 || dates < 30 || teams < 16) throw new Error('a generateStaticParams route came back short');
-if (gameCards < 100 || dateCards < 30 || teamCards < 16) throw new Error('an opengraph-image below a dynamic segment came back short');
+if (games < 100 || dates < 30 || teams < 15) throw new Error('a generateStaticParams route came back short');
+if (gameCards < 100 || dateCards < 30 || teamCards < 15) throw new Error('an opengraph-image below a dynamic segment came back short');
 // Every game, date and team page has exactly one OG image beside it, so the two counts must agree.
 if (gameCards !== games || dateCards !== dates || teamCards !== teams) throw new Error('page and opengraph-image counts disagree');
 // The prerendered sitemap lists exactly the prerendered pages (every page but the 404), one for one:

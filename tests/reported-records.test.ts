@@ -30,10 +30,9 @@ const standings = computeStandings(games, { reported });
 const crossCheck = buildCrossCheck(standings);
 
 describe('computed vs reported', () => {
-  it('has a reported row for all 15 MaxPreps teams and none for Wilcox', () => {
+  it('has a reported row for all 15 MaxPreps teams', () => {
     expect(reported.size).toBe(15);
     expect(standings.filter((s) => s.reported !== null).length).toBe(15);
-    expect(standings.find((s) => s.slug === 'wilcox')!.reported).toBeNull();
   });
 
   it('reproduces every MaxPreps league record, or flags the difference', () => {

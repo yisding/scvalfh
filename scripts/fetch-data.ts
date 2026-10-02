@@ -9,7 +9,7 @@
  *   pnpm fetch-data --fetched-at <iso>   pin the stamp (reproducible test snapshots)
  *   pnpm fetch-data --force              run even outside the Aug 1 – Nov 30 season window
  *   pnpm fetch-data --no-sblive          skip the SBLive score cross-check
- *   pnpm fetch-data --sblive-full        also pull all 16 si.com team pages (whole-season check)
+ *   pnpm fetch-data --sblive-full        also pull all 15 si.com team pages (whole-season check)
  *   pnpm fetch-data --no-scval           skip the official SCVAL schedule PDFs
  *   pnpm fetch-data --no-ccs             skip the CCS calendar / bracket poll
  *   pnpm fetch-data --no-vnn             skip the VNN school .ics feeds
@@ -490,7 +490,7 @@ async function main(): Promise<number> {
         : (await client.getSchedule(team.id)).data;
       if (!teamRows) throw new Error('no fixture for this team');
       // A 200 with an empty array is a legitimate answer for a school that has published nothing
-      // (lib/sources/maxpreps.ts), and Wilcox is exactly that case — but for a team we ALREADY
+      // (lib/sources/maxpreps.ts) — but for a team we ALREADY
       // hold games for it is indistinguishable from an upstream blip, and taking it at face value
       // would silently delete that team's non-league games (the ones no other feed carries) and
       // change its overall record with no warning. Treat it as a failure so the carry-forward
@@ -685,15 +685,15 @@ async function main(): Promise<number> {
   }
 
   // SPEC §5.3: one bad scval.com response (or a runner without poppler) must not empty the
-  // section. Wilcox's ENTIRE team page is built from officialFixtures, and /standings counts its
-  // "games remaining" from the same rows, so blanking it would take a published route with it.
+  // section. /standings counts its "games remaining" from officialFixtures, and team pages list
+  // them as "scheduled per SCVAL", so blanking it would silently drop real fixtures.
   //
   // PER DIVISION, not per section. There are two grids and two requests, and the failure that
   // actually happens is ONE of them: a non-empty `officialFixtures` is no evidence that De Anza
   // was read, because it can hold nothing but El Camino's rows — El Camino matched all 56 of its
   // fixtures on the live data, so its contribution here is legitimately the empty array. A
   // section-level "did we get anything at all" guard therefore published an empty De Anza section
-  // (all 16 live rows, 14 of them Wilcox's whole team page) with a source row still reading
+  // (every De Anza row) with a source row still reading
   // "current", which is the exact failure SPEC §5.3 exists to prevent.
   const missingDivisions = DIVISIONS.filter((d) => !officialDivisions.has(d));
   if (missingDivisions.length && previous) {
@@ -770,7 +770,7 @@ async function main(): Promise<number> {
       }
     }
 
-    // --sblive-full additionally reads all 16 si.com team pages: a whole-season cross-check at the
+    // --sblive-full additionally reads all 15 si.com team pages: a whole-season cross-check at the
     // cost of 16 more requests. Not the cron default.
     if (args.sbliveFull) {
       for (const team of TEAMS) {

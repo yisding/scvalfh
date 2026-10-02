@@ -30,6 +30,12 @@ export interface PlayoffBracketProps {
   path: BracketPath;
   /** The pinned team, highlighted with the 2px accent rule wherever it appears. */
   highlightSlug?: TeamSlug | null;
+  /**
+   * The level of each round's heading. The page owns the h1 and the section heading is an h2; the
+   * caller renders a path-name h3 only when there is more than one path, so with a single path the
+   * round headings are the h3s themselves and the outline never skips from h2 to h4.
+   */
+  headingLevel?: 'h3' | 'h4';
   className?: string;
 }
 
@@ -122,7 +128,12 @@ function BracketCard({
   );
 }
 
-export function PlayoffBracket({ path, highlightSlug, className }: PlayoffBracketProps) {
+export function PlayoffBracket({
+  path,
+  highlightSlug,
+  headingLevel: RoundHeading = 'h4',
+  className,
+}: PlayoffBracketProps) {
   const { rounds } = path;
   if (rounds.length === 0) return null;
 
@@ -132,12 +143,10 @@ export function PlayoffBracket({ path, highlightSlug, className }: PlayoffBracke
       <ol className="m-0 list-none space-y-6 p-0 md:hidden">
         {rounds.map((round) => (
           <li key={round.dateKey}>
-            {/* h4: the page owns h1, the section heading is h2 and the bracket's name is h3, so a
-                round heading is the fourth level. */}
-            <h4 className="m-0 mb-3 flex flex-wrap items-baseline gap-x-3 text-lead text-ink">
+            <RoundHeading className="m-0 mb-3 flex flex-wrap items-baseline gap-x-3 text-lead text-ink">
               {round.name}
               <span className="text-meta font-normal text-ink-2">{round.dateLabel}</span>
-            </h4>
+            </RoundHeading>
             <ol className="sx-list sx-card sx-flush">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
@@ -158,10 +167,10 @@ export function PlayoffBracket({ path, highlightSlug, className }: PlayoffBracke
       >
         {rounds.map((round, roundIndex) => (
           <li key={round.dateKey} className="flex min-w-0 flex-col">
-            <h4 className="m-0 mb-3 text-lead text-ink">
+            <RoundHeading className="m-0 mb-3 text-lead text-ink">
               {round.name}{' '}
               <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
-            </h4>
+            </RoundHeading>
             <ol
               className={`m-0 flex flex-1 list-none flex-col justify-around gap-4 p-0${
                 roundIndex > 0 ? ' border-l border-divider' : ''

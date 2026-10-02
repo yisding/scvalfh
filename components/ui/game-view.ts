@@ -24,7 +24,7 @@ export type StatusTone = 'ink' | 'ink-2' | 'ink-3' | 'accent';
 export interface SideView {
   name: string;
   /**
-   * The registry's short name for one of our 16 schools ("Mitty", "St Ignatius"), and the source
+   * The registry's short name for one of our 15 schools ("Mitty", "St Ignatius"), and the source
    * name unchanged for everyone else. A dense row — a game list, a bracket — renders this, because
    * the row gives the name roughly 120px once the score and the status label have taken their
    * share and "Archbishop Mitty High School" truncates to "Archbish…". The full name stays on the
