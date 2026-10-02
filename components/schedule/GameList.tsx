@@ -17,6 +17,11 @@ import { gameFilterAttrs } from './filter-data';
  *   - and DOM order matches visual order at both breakpoints (DESIGN §10.5).
  * That is the same "render both variants and hide one" pattern `StandingsTable` uses, because the
  * phone and desktop forms are genuinely different DOM rather than a restyle.
+ *
+ * With no `perspective` — /schedule and /scores/[date], a slate nobody is following one team
+ * through — an upcoming league game prints each SCVAL side's league record beside its name
+ * (`showRecords`), which is what a reader sizing up a game before kickoff wants. A list oriented to
+ * one team leaves them off: that team's own page already leads with its record.
  */
 export interface GameListProps {
   games: readonly Game[];
@@ -49,6 +54,7 @@ export function GameList({
   className,
   id,
 }: GameListProps) {
+  const showRecords = perspective === null;
   return (
     <ol
       id={id}
@@ -75,10 +81,17 @@ export function GameList({
             game={game}
             perspective={perspective}
             showRecap={showRecap}
+            showRecords={showRecords}
             className="md:hidden"
           />
           <div className="hidden h-full md:block">
-            <GameCard game={game} perspective={perspective} showRecap={showRecap} className="h-full" />
+            <GameCard
+              game={game}
+              perspective={perspective}
+              showRecap={showRecap}
+              showRecords={showRecords}
+              className="h-full"
+            />
           </div>
         </li>
       ))}

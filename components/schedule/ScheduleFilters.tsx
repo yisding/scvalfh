@@ -15,6 +15,7 @@ import {
   type FilterState,
   type ScheduleCounts,
 } from './filter-data';
+import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from './rail-targets';
 
 /**
  * `/schedule`'s filters — the only client module this route has (DESIGN §7, §7.13); see
@@ -33,12 +34,16 @@ import {
  *     `searchParams` opts a page into dynamic rendering at request time).
  *
  * Filter state lives in this component rather than in the URL. The page's own hash space is
- * already spoken for by the date anchors (`#2026-09-24`) that the timeline rail and every
- * `share →` link depend on, so writing filters into the hash would break navigation that works
- * without JavaScript in order to make navigation that only works with it.
+ * already spoken for by the date anchors (`#2026-09-24`) that the timeline rail, the Scores tab and
+ * every day page's "Full season" link depend on, so writing filters into the hash would break
+ * navigation that works without JavaScript in order to make navigation that only works with it.
  *
  * Active filters echo back as removable chips and the live count is announced, so the state is
  * always visible — a filtered list that looks like the whole season is the failure mode here.
+ *
+ * The timeline rail is server-rendered for the whole season, so while groups are hidden its chips
+ * are re-aimed at groups that are still shown (`retargetRail`, rail-targets.ts) — a jump to a
+ * `hidden` section goes nowhere — and put back exactly as served once every group shows again.
  */
 export interface ScheduleFiltersProps {
   /** The 15 SCVAL teams, for the native `<select>`. */
@@ -104,7 +109,61 @@ function applyFilters(listId: string, f: FilterState): number {
         shown === total ? `${total} ${gameWord(total)}` : `${shown} of ${total} ${gameWord(total)}`;
     }
   });
+  retargetRail(
+    root.querySelectorAll('[data-dategroup]').length,
+    [...root.querySelectorAll<HTMLElement>('[data-dategroup]:not([hidden])')].map(
+      (group) => group.dataset.dategroup ?? '',
+    ),
+  );
   return visible;
+}
+
+/** Replaces a span's text in place, keeping the text node React rendered. */
+function setText(el: HTMLElement, text: string) {
+  const node = el.firstChild;
+  if (node && node.nodeType === Node.TEXT_NODE && !node.nextSibling) node.nodeValue = text;
+  else el.textContent = text;
+}
+
+/**
+ * Re-aims the timeline rail's date chips (TimelineRail.tsx) at the date groups still shown, or
+ * restores them once every group is shown. The server's href, label and screen-reader text are
+ * saved to `data-*-orig` the first time a chip is touched, so "restore" is exact. A chip with
+ * nothing shown to jump to (no shown contest in its month, none after today) hides its `<li>`.
+ */
+function retargetRail(totalGroups: number, shownDates: string[]) {
+  const links = document.querySelectorAll<HTMLAnchorElement>(
+    "nav[aria-label='Jump to a date'] a[data-rail-date]",
+  );
+  const markers: RailMarker[] = [...links].map((link) => ({
+    date: link.dataset.railDate ?? '',
+    kind: (link.dataset.railKind ?? 'up') as RailKind,
+  }));
+  const allShown = shownDates.length === totalGroups;
+  const targets = railTargets(shownDates, markers);
+  links.forEach((link, i) => {
+    const sr = link.querySelector<HTMLElement>('[data-rail-sr]');
+    const label = link.querySelector<HTMLElement>('[data-rail-label]');
+    const item = link.closest('li');
+    if (link.dataset.hrefOrig === undefined) {
+      link.dataset.hrefOrig = link.getAttribute('href') ?? '';
+      if (sr) sr.dataset.srOrig = sr.textContent ?? '';
+      if (label) label.dataset.labelOrig = label.textContent ?? '';
+    }
+    const target = targets[i];
+    if (allShown || target === null) {
+      link.setAttribute('href', link.dataset.hrefOrig);
+      if (sr) setText(sr, sr.dataset.srOrig ?? '');
+      if (label) setText(label, label.dataset.labelOrig ?? '');
+      if (item) item.hidden = !allShown;
+      return;
+    }
+    if (item) item.hidden = false;
+    link.setAttribute('href', `#${target}`);
+    if (sr) setText(sr, railSr(markers[i], target));
+    const text = railLabel(markers[i], target);
+    if (label) setText(label, text ?? label.dataset.labelOrig ?? '');
+  });
 }
 
 function Chevron() {
@@ -159,10 +218,14 @@ function PillGroup<T extends string>({
               onClick={() => onPick(option.value)}
               // box-shadow is dropped in forced colours, so each pill gets a real border there and
               // the pressed one a Highlight ring: the state is never reduced to font weight.
+              // Press state, for touch as much as the mouse (`.sx-tap:active` alone loses to the
+              // utility background): an unpressed pill steps one plane up from its rest fill
+              // (surface → surface-2 on a phone, surface-2 → surface-3 from 768px); the pressed
+              // one keeps its wash and thickens its accent ring to 2px.
               className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-full px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
                 active
-                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
-                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:disabled:hover:bg-surface-2'
+                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] active:shadow-[inset_0_0_0_2px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
+                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:active:bg-surface-3 md:disabled:hover:bg-surface-2'
               }`}
             >
               {option.label}

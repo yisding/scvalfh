@@ -25,6 +25,11 @@ import { DIVISIONS, DIVISION_LABELS } from '@/lib/season';
  * (`scripts/build-history.ts`). MaxPreps cannot serve a prior season at all — the year segment of
  * its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this page is
  * the only place last season's numbers live, and it is not part of the nightly snapshot.
+ *
+ * The header says only what a reader needs before the tables (what this is, where it came from,
+ * that it does not change) in a two-sentence lede; the provenance detail (built once, why not MaxPreps,
+ * why there is no overall record) sits in the source note at the foot. A long lede here pushed
+ * the first standings row under the phone tab bar.
  */
 export const metadata: Metadata = {
   title: '2025-26 season archive',
@@ -48,15 +53,12 @@ export default function HistoryPage() {
     // (6rem); from md the pills sit in the title row and do not stick.
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow="Archive · not part of the nightly snapshot"
+        eyebrow="Archive"
         title={`${season} season archive`}
         description={
           <>
-            Final varsity and JV standings and all-league awards for the Santa Clara Valley
-            Athletic League&rsquo;s De Anza and El Camino field hockey divisions, taken directly
-            from SCVAL&rsquo;s own end-of-season PDFs. This page is built once from those PDFs,
-            not from the live MaxPreps snapshot the rest of the site uses — MaxPreps only ever
-            serves the current season.
+            Final varsity and JV standings and all-league awards from SCVAL&rsquo;s end-of-season
+            PDFs. This page doesn&rsquo;t change.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a division" />}
@@ -145,8 +147,9 @@ export default function HistoryPage() {
         Source: scval.com &mdash;{' '}
         <ExternalLink href={sources.standingsPdf}>2025-26 final standings (PDF)</ExternalLink> and{' '}
         <ExternalLink href={sources.allLeaguePdf}>2025-26 all-league awards (PDF)</ExternalLink>.
-        League record is each PDF&rsquo;s own W-L(-T) column; the PDF&rsquo;s overall-record
-        column was empty for this season, so it renders as an em dash here rather than a guess.
+        This page is built once from those PDFs, not from the live MaxPreps snapshot the rest of
+        the site uses &mdash; MaxPreps only ever serves the current season. SCVAL&rsquo;s final
+        PDFs list league records only; their overall-record column was empty for this season.
         Full attribution and update details are on the{' '}
         <Link href="/about" className="text-accent hover:underline">
           About &amp; sources

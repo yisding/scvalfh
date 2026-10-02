@@ -20,6 +20,10 @@ import type { DivisionView } from './standings-view';
  *
  * Both tables pass `notes="none"`; their division-specific notes are collected here once and go
  * into the Notes inset, and the generic legend is printed once per page by app/standings/page.tsx.
+ *
+ * From `lg` the Notes inset and the CCS card share a row and STRETCH to the taller of the two;
+ * each is a flex column whose link row is pushed to the bottom (`mt-auto`), so the two panels
+ * end level and their link rows sit on one line. Below `lg` they stack and nothing moves.
  */
 export interface DivisionStandingsProps {
   view: DivisionView;
@@ -52,19 +56,22 @@ export function DivisionStandings({ view, highlightSlug = null, className }: Div
       <SectionHeader kicker={view.label} meta={`${view.meta} · unofficial`} />
       <StandingsTable {...table} variant="phone" className="lg:hidden" />
       <StandingsTable {...table} variant="desktop" className="hidden lg:block" />
+      {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        PTS: 3 a win, 1 a tie &middot; GD bars scaled to {view.label} (|GD| max {view.gdDomain})
+        PTS: 3 for a win, 1 for a tie &middot; bars scaled to {view.label}&rsquo;s biggest goal
+        difference ({view.gdDomain})
         {view.berthRuleAfter ? (
           <>
             {' '}
-            &middot; the heavier line after {ordinal(view.berthRuleAfter)} is the
-            automatic-qualifier cut
+            &middot; the heavier line under {ordinal(view.berthRuleAfter)} marks the automatic CCS
+            spots
           </>
         ) : null}
       </p>
-      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
+      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <StandingsNotes
           divisionLabel={view.label}
+          rows={view.rows}
           tableNotes={specific}
           mismatches={view.mismatches}
           unreported={view.unreported}
@@ -77,7 +84,7 @@ export function DivisionStandings({ view, highlightSlug = null, className }: Div
           groups={view.statusGroups}
           caveat={view.statusCaveat}
           unrankedTeams={view.unrankedTeams}
-          className="sx-card p-5 md:p-6"
+          className="sx-card flex flex-col p-5 md:p-6"
         />
       </div>
     </section>

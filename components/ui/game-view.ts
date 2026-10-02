@@ -1,5 +1,6 @@
 /**
- * The pure display helper behind ScoreCell, StatusLabel, GameRow, GameCard and ScoreBoard.
+ * The pure display helper behind ScoreCell, StatusLabel, GameRow, GameCard, GameLogRow and
+ * ScoreBoard.
  *
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
  * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
@@ -244,6 +245,19 @@ export function describeCancelled(game: Game, note: string | null = null): GameD
     perspectiveOutcome: null,
     sentence: `${game.away.name} versus ${game.home.name}: cancelled.`,
   };
+}
+
+/**
+ * true when a game's status label IS its own clock time ("4:00 PM", "TIME TBA") — every
+ * scheduled game. A row, a card, a log line or the scoreboard that already prints the time then
+ * has nothing left to say in the status slot but the NL tag; printing the label as well read
+ * "3:30 PM … 3:30 PM". One definition, so GameRow, GameCard, GameLogRow and ScoreBoard cannot
+ * drift apart on what counts as "a time".
+ */
+export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
+  return (
+    statusLabel === 'TIME TBA' || (!game.isTimeTba && statusLabel === timeOfDay(game.dateLocal))
+  );
 }
 
 /** 'Tue 5:30 PM' style label for a scheduled row, or 'TIME TBA'. */

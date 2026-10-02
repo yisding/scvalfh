@@ -13,7 +13,18 @@ import { EM_DASH } from '../../lib/format';
  *   same order ("Place, 4th, of 8 in De Anza"). It used to pull the label up with `order-first`,
  *   which brief §1 vetoes: the reading and caret order must match what is on screen. Below 768px
  *   the card is compact (12px padding, a 24px value, a 12px sub, no 96px floor) so the six tiles
- *   take three short rows and the Last result still reaches the first phone screen.
+ *   take three short rows.
+ *
+ * `inList` (the team page's six tiles): the tiles are a `<dl>`, one name/value group per tile, so
+ * a screen reader announces "list, 6 items" and pairs each label with its number instead of
+ * reading 18 loose lines. The card's wrapper div becomes the `<dl>`'s group div, with `<dt>` (the
+ * label) and `<dd>` (the value, then the sub) as its DIRECT children, which is the only shape a
+ * `<dl>` group may take (axe `dlitem` / `definition-list`). Only a card without an `href` can do
+ * that: a linked tile's children sit inside the `<Link>`, and the label must come first, which the
+ * plain variant's value-first order does not.
+ *
+ * `srLabel` / `srValue` replace what a screen reader hears for a label or value that only reads
+ * well to the eye: "5L" is "5 losses in a row", "0 / 52" is "0 for, 52 against".
  */
 export interface StatTileProps {
   label: string;
@@ -25,6 +36,12 @@ export interface StatTileProps {
   /** Default `plain`. */
   variant?: 'plain' | 'card';
   href?: string;
+  /** Render as one `<dt>` / `<dd>` group of a parent `<dl>` (card variant, no `href` only). */
+  inList?: boolean;
+  /** Spoken in place of `label`; the visible label is then hidden from assistive tech. */
+  srLabel?: string;
+  /** Spoken in place of `value`; the visible value is then hidden from assistive tech. */
+  srValue?: string;
   className?: string;
 }
 
@@ -35,9 +52,13 @@ export function StatTile({
   emphasis = 'default',
   variant = 'plain',
   href,
+  inList = false,
+  srLabel,
+  srValue,
   className,
 }: StatTileProps) {
   const isCard = variant === 'card';
+  const asList = inList && isCard && !href;
   const valueClass =
     emphasis === 'hero'
       ? isCard
@@ -46,36 +67,54 @@ export function StatTile({
       : isCard
         ? 'text-[1.5rem] leading-7 tracking-[-0.02em] md:text-[1.75rem] md:leading-8'
         : 'text-[1.75rem] leading-none tracking-[-0.02em]';
-  const valueEl = (
-    <span className={`sx-figure block font-semibold text-ink ${valueClass}`}>
-      {value === null ? <span aria-label="not reported">{EM_DASH}</span> : value}
-    </span>
+  const valueText =
+    value === null ? (
+      <span aria-label="not reported">{EM_DASH}</span>
+    ) : srValue ? (
+      <>
+        <span aria-hidden="true">{value}</span>
+        <span className="sr-only">{srValue}</span>
+      </>
+    ) : (
+      value
+    );
+  const labelText = srLabel ? (
+    <>
+      <span aria-hidden="true">{label}</span>
+      <span className="sr-only">{srLabel}</span>
+    </>
+  ) : (
+    label
   );
-  const labelEl = (
-    <span
-      className={
-        isCard
-          ? 'mb-0.5 block text-meta font-medium text-ink-3 md:mb-1'
-          : 'mt-1.5 block text-meta font-medium text-ink-3'
-      }
-    >
-      {label}
-    </span>
+  // The same three boxes in either shape; `asList` only swaps the elements for dt / dd (`m-0`
+  // cancels the UA's 40px dd indent), so a tile is pixel-identical in and out of a <dl>.
+  const valueClassName = `sx-figure block font-semibold text-ink ${valueClass}`;
+  const valueEl = asList ? (
+    <dd className={`m-0 ${valueClassName}`}>{valueText}</dd>
+  ) : (
+    <span className={valueClassName}>{valueText}</span>
   );
+  const labelClassName = isCard
+    ? 'mb-0.5 block text-meta font-medium text-ink-3 md:mb-1'
+    : 'mt-1.5 block text-meta font-medium text-ink-3';
+  const labelEl = asList ? (
+    <dt className={labelClassName}>{labelText}</dt>
+  ) : (
+    <span className={labelClassName}>{labelText}</span>
+  );
+  const subClassName = isCard
+    ? 'mt-0.5 block text-micro font-normal text-ink-2 text-balance md:mt-1 md:text-meta'
+    : 'mt-1 block text-meta text-ink-2';
   const body = (
     <>
       {isCard ? labelEl : valueEl}
       {isCard ? valueEl : labelEl}
       {sub ? (
-        <span
-          className={
-            isCard
-              ? 'mt-0.5 block text-micro font-normal text-ink-2 text-balance md:mt-1 md:text-meta'
-              : 'mt-1 block text-meta text-ink-2'
-          }
-        >
-          {sub}
-        </span>
+        asList ? (
+          <dd className={`m-0 ${subClassName}`}>{sub}</dd>
+        ) : (
+          <span className={subClassName}>{sub}</span>
+        )
       ) : null}
     </>
   );
@@ -96,6 +135,8 @@ export function StatTile({
         <Link href={href} prefetch={false} className={`${inner} no-underline hover:underline`}>
           {body}
         </Link>
+      ) : asList ? (
+        body
       ) : isCard ? (
         <div className={inner}>{body}</div>
       ) : (

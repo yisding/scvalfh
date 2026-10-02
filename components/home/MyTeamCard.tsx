@@ -22,23 +22,31 @@ import { pickerName, pinLabel } from './pin-label';
  *
  * ZERO LAYOUT SHIFT, which is the whole reason this component is shaped the way it is. The server
  * cannot know what is pinned (the pin is `localStorage['scvalfh.pinnedTeam']`, and nothing leaves
- * the browser), so the slot RESERVES THE SAME HEIGHT in all three states — pinned, not pinned, and
- * storage unavailable — and only its contents swap after hydration. CLS is therefore exactly 0
- * rather than "small".
+ * the browser), so it always renders the PICKER, and the pinned card swaps in after hydration. The
+ * two have to occupy the same height from the first paint:
  *
- * That is a deliberate deviation from §3.1's two different heights (240px card / 88px prompt):
- * those two numbers cannot both be honoured without a visible reflow the moment storage is read.
- * The reserved space is not a gap — the unpinned state is a 15-team picker, so "find my school"
- * (a top-three task) is answered in the fold instead of costing a trip to /teams.
+ * - the picker is SHORT — a title, one sentence and a "Choose from 15 schools" disclosure — so a
+ *   reader with nothing pinned gets the latest scores in the fold instead of a 15-tile grid;
+ * - the pinned card's height is held by a FLOOR that exists only while a team is pinned. The
+ *   inline <head> script stamps `data-has-pin` on <html> before the first paint
+ *   (components/layout/pinned-team-script.ts), so the server-rendered picker already stands at
+ *   the pinned card's height for exactly the readers who will get one, and `PinnedTeamMarks`
+ *   keeps the flag in step after a pin, an unpin or a client-side navigation.
+ *
+ * A floor, not a fixed height: the card used to be clipped to a reserved box, which cut the
+ * privacy sentence and the fifteenth tile under WCAG 1.4.12 text spacing. Now anything longer
+ * than the floor simply grows the card. CLS is therefore exactly 0 in every state on a hard load —
+ * pinned, not pinned, storage blocked and a stale pin — rather than "small".
  *
  * Every storage access is inside `try/catch` (see components/ui/local-store.ts). When storage is
- * blocked the picker is replaced by one sentence saying so and the page stays completely correct;
- * when the stored slug is no longer in the snapshot it is cleared and reported in words.
+ * blocked the disclosure is replaced by a same-height "Find your school" pill and the page stays
+ * completely correct; when the stored slug is no longer in the snapshot it is cleared.
  * Before hydration — and with JavaScript off — each tile is a LINK to the team page rather than a
  * dead button.
  */
 /**
- * One picker tile: a 48px borderless surface-2 key at every width (two lines of name fit).
+ * One picker tile: a 48px borderless surface-2 key at every width (two lines of name fit), with a
+ * surface-3 press state (the shared `.sx-tap` press colour IS surface-2, so it showed nothing).
  *
  * Below 360px the tile's own padding drops to 4px (and the grid gap and the card's padding by 2px
  * and 4px, in `PinPrompt`), which hands the NAME back 12px: 62px at 320 instead of 50. At 50px
@@ -47,7 +55,7 @@ import { pickerName, pinLabel } from './pin-label';
  */
 const TILE =
   'sx-tap flex h-12 w-full min-w-0 items-center gap-1.5 rounded-card bg-surface-2 px-1 text-left ' +
-  'min-[360px]:px-2 hover:bg-surface-3';
+  'min-[22.5rem]:px-2 hover:bg-surface-3 active:bg-surface-3 transition-colors duration-[var(--sx-dur-tap)]';
 
 /**
  * Two lines, never `truncate`: a school name in a picker has to be readable, and at 320px a
@@ -60,12 +68,24 @@ const TILE =
  */
 const TILE_NAME = 'sx-clamp-2 min-w-0 flex-1 hyphens-auto break-words text-micro text-ink';
 
+/**
+ * A score line's name weight: the winner semibold in full ink, the loser regular in ink-2, and a
+ * LEVEL side (a tie, an unreported score) regular in full ink, because neither side lost. A
+ * cancelled or postponed side recedes to ink-2. Whole literals, the same three-way rule as the
+ * game rows' name class.
+ */
+const NAME_WEIGHT: Record<SideView['weight'], string> = {
+  winner: 'font-semibold text-ink',
+  loser: 'font-normal text-ink-2',
+  level: 'font-normal text-ink',
+};
+
 export interface MyTeamCardProps {
-  /** All 15, pre-serialized by the server. */
+  /** All 15, pre-serialized by the server, in picker order (De Anza A–Z, then El Camino A–Z). */
   views: HomeTeamView[];
 }
 
-/** An in-card label ("Last", "Next", "Form"): 12px sans, sentence case, ink-3. Not a heading. */
+/** An in-card label ("Last", "Next", "Form", "CCS"): 12px sans, sentence case, ink-3. Not a heading. */
 function Kicker({ children }: { children: React.ReactNode }) {
   return <span className="text-micro font-medium text-ink-3">{children}</span>;
 }
@@ -75,16 +95,14 @@ function Kicker({ children }: { children: React.ReactNode }) {
  * the two numbers stack in one column (the status word sits on the "Last" line above instead).
  */
 function ScoreLine({ side }: { side: SideView }) {
+  const name =
+    side.chip === 'cancelled' || side.chip === 'postponed'
+      ? 'font-normal text-ink-2'
+      : NAME_WEIGHT[side.weight];
   return (
     <span className="flex h-6 items-center gap-2">
       <ResultChip kind={side.chip} size={20} />
-      <span
-        className={`min-w-0 flex-1 truncate text-body ${
-          side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
-        }`}
-      >
-        {side.name}
-      </span>
+      <span className={`min-w-0 flex-1 truncate text-body ${name}`}>{side.name}</span>
       <span className="w-8 shrink-0 text-right">
         <ScoreGlyph side={side} size="score" />
       </span>
@@ -113,14 +131,15 @@ export function PinnedCard({
   return (
     <article
       /* 2px accent left rule = the pinned team (DESIGN §4.4). */
-      className="sx-pinned flex h-full flex-col bg-surface px-4 py-3 md:px-5"
+      className="sx-pinned flex flex-1 flex-col bg-surface px-4 py-3 md:px-5"
       aria-label={`My team: ${team.name}`}
     >
       <div className="flex h-11 shrink-0 items-center gap-2">
         <TeamMonogram team={team} size={24} />
-        {/* Both strings truncate: the card's height is fixed, so nothing here may wrap. The meta
-            is read place-first ("4th · De Anza · Eagles"), and keeps at least 4.5rem against a
-            long school name, so a 320px truncation cuts the mascot and never the standing. */}
+        {/* Both strings truncate: the card's floor is sized for one line here, so nothing may
+            wrap. The meta is read place-first ("4th · De Anza · Eagles"), and keeps at least
+            4.5rem against a long school name, so a 320px truncation cuts the mascot and never the
+            standing. */}
         <Link
           href={`/teams/${team.slug}`}
           className="min-w-0 truncate text-lead font-semibold text-ink no-underline hover:underline"
@@ -136,45 +155,97 @@ export function PinnedCard({
       </div>
 
       <div className="flex-1 border-t border-divider pt-2">
-        <div className="flex items-baseline justify-between gap-2">
-          <Kicker>Last</Kicker>
-          {last ? (
-            <span className="flex items-baseline gap-2">
-              {/* The status word, on the date line rather than after the second score (where it
-                  pushed that score 48px left of the first). Hidden from assistive tech: the
-                  link below already says "final" in its accessible name. */}
-              <span aria-hidden="true">
-                <StatusLabel display={last.display} />
-              </span>
-              <time dateTime={last.dateTime} className="sx-num text-meta text-ink-3">
-                {last.dateLabel}
-              </time>
-            </span>
-          ) : null}
-        </div>
         {last && first && second ? (
-          /* One focusable link whose accessible name is the whole score sentence, so a screen
-             reader hears "Saint Francis 10, Homestead 0, final." and not a pile of glyphs. */
-          <Link
-            href={last.href}
-            className="mt-0.5 block no-underline"
-            aria-label={`${last.display.sentence}${last.recap ? ` ${last.recap}` : ''}`}
-          >
-            <span aria-hidden="true">
-              <ScoreLine side={first} />
-              <ScoreLine side={second} />
-              {/* h-10 = two 20px lines: the old h-9 shaved the descenders off the second one. */}
-              <span className="sx-clamp-2 mt-1 block h-10 text-meta text-ink-2">
-                {last.recap ?? last.display.note ?? ''}
+          <>
+            {/* ONE focusable link for the whole last game: the "Last · status · date" line and
+                the two score lines. Its accessible name is the whole sentence ("Last game, Wed
+                Sep 30: Saint Francis 10, Homestead 0, final."), so a screen reader hears that
+                and not a pile of glyphs. The hover / press band is surface-2 and is pulled only
+                8px into the card's 16px padding, so it never paints over the 2px pinned rule;
+                its 4px of vertical breathing room is cancelled by equal negative margins, so the
+                card's height does not move. */}
+            <Link
+              href={last.href}
+              className="sx-tap -mx-2 -my-1 block rounded-chip px-2 py-1 no-underline hover:bg-surface-2"
+              aria-label={`Last game, ${last.dateLabel}: ${last.display.sentence}`}
+            >
+              <span aria-hidden="true" className="block">
+                <span className="flex items-baseline justify-between gap-2">
+                  <Kicker>Last</Kicker>
+                  {/* The status word, on the date line rather than after the second score
+                      (where it pushed that score 48px left of the first). An unreported game
+                      drops the NL tag: SCORE NOT REPORTED and the date already fill the line
+                      at 320px, and the game page carries it. The 6px gaps are what keep that
+                      line whole at 320: "Last" + SCORE NOT REPORTED + the mono date + the
+                      chevron measure 284px of the 288 there, and 8px gaps made it 288.4. */}
+                  <span className="flex min-w-0 items-baseline gap-1.5">
+                    <StatusLabel
+                      display={last.display}
+                      showNonLeague={last.display.kind !== 'unreported'}
+                    />
+                    <time dateTime={last.dateTime} className="sx-num shrink-0 text-meta text-ink-3">
+                      {last.dateLabel}
+                    </time>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0 self-center text-ink-3"
+                    >
+                      <path d="M4.5 2.5 8 6l-3.5 3.5" />
+                    </svg>
+                  </span>
+                </span>
+                <span className="mt-0.5 block">
+                  <ScoreLine side={first} />
+                  <ScoreLine side={second} />
+                </span>
               </span>
-            </span>
-          </Link>
+            </Link>
+            {/* The slot under the scores, two 20px lines tall at every state so the card's
+                height never depends on it. A game still waiting for its score says so (the
+                §5.2 note). A final says where the team stands for CCS — the boilerplate
+                auto-recap it used to show repeated the score above in words — until the
+                committee seeds the field, when there is nothing left to project. */}
+            <div className="mt-1 h-10">
+              {last.display.kind !== 'final' ? (
+                last.display.note ? (
+                  <p className="sx-clamp-2 m-0 text-meta text-ink-2">{last.display.note}</p>
+                ) : null
+              ) : view.projection ? (
+                <p className="m-0 flex min-w-0 items-baseline gap-2">
+                  <Kicker>CCS</Kicker>
+                  <Link
+                    href="/playoffs#projection"
+                    prefetch={false}
+                    className="sx-action min-w-0 text-meta font-medium text-accent no-underline hover:underline"
+                    aria-label={`${team.name} currently projects: ${view.projection.label}. Not official.`}
+                  >
+                    <span className="truncate">{view.projection.head}</span>
+                    <span aria-hidden="true" className="shrink-0">
+                      &nbsp;&rsaquo;
+                    </span>
+                  </Link>
+                </p>
+              ) : null}
+            </div>
+          </>
         ) : (
-          <p className="mt-1 mb-0 text-meta text-ink-2">
-            {view.hasResults
-              ? 'No completed game yet this season.'
-              : `No results reported for ${team.name} yet. Their schedule is still on the schedule page.`}
-          </p>
+          <>
+            <div className="flex items-baseline justify-between gap-2">
+              <Kicker>Last</Kicker>
+            </div>
+            <p className="mt-1 mb-0 text-meta text-ink-2">
+              {view.hasResults
+                ? 'No completed game yet this season.'
+                : `No results reported for ${team.name} yet. Their schedule is still on the schedule page.`}
+            </p>
+          </>
         )}
       </div>
 
@@ -224,8 +295,8 @@ export function PinnedCard({
               {view.officialNext.versus} {view.officialNext.opponent}
             </p>
             <p className="mt-0.5 mb-1 text-meta text-ink-3">
-              Scheduled per SCVAL for {view.officialNext.dateLabel}; MaxPreps has no contest for it,
-              so no result will be reported here.{' '}
+              On SCVAL&rsquo;s schedule for {view.officialNext.dateLabel}, but no source lists it,
+              so no score will appear here.{' '}
               <ExternalLink href={view.officialNext.pdfUrl}>Official schedule</ExternalLink>
             </p>
           </>
@@ -236,10 +307,10 @@ export function PinnedCard({
         )}
       </div>
 
-      <div className="flex h-11 shrink-0 items-center gap-2 border-t border-divider min-[390px]:h-8">
+      <div className="flex h-11 shrink-0 items-center gap-2 border-t border-divider min-[24.375rem]:h-8">
         <Kicker>Form</Kicker>
         {/* Marks, not links. A linked chip is a 40px tap target (DESIGN §4.4) and five of them
-            plus the record line cannot share a 32px row inside a height-locked card. The newest
+            plus the record line cannot share a 32px row inside the card's floor. The newest
             game is one tap away in LAST above, and /teams/<slug> carries the linked strip. */}
         <FormStrip
           entries={view.form.map(({ outcome }) => ({ outcome }))}
@@ -247,14 +318,14 @@ export function PinnedCard({
           label={`${team.name} last ${view.form.length} league games`}
         />
         {/* Both records at every width. Below 390 the 20px strip leaves no room for them on one
-            line, so they stack right-aligned in a 44px row (the reserved height below allows for
-            it); from 390 they share the 32px row, separated by a middot. */}
-        <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[390px]:block min-[390px]:truncate">
+            line, so they stack right-aligned in a 44px row (the floor below allows for it); from
+            390 they share the 32px row, separated by a middot. */}
+        <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[24.375rem]:block min-[24.375rem]:truncate">
           <span>
             <span className="sx-num">{view.leagueRecord}</span> league
           </span>
           <span>
-            <span aria-hidden="true" className="hidden min-[390px]:inline">
+            <span aria-hidden="true" className="hidden min-[24.375rem]:inline">
               {' '}
               &middot;{' '}
             </span>
@@ -273,6 +344,7 @@ export function PinPrompt({
   stalePin,
   onPin,
   tileRefs,
+  pickerRef,
 }: {
   views: HomeTeamView[];
   ready: boolean;
@@ -281,51 +353,68 @@ export function PinPrompt({
   onPin: (slug: string) => void;
   /** Collects each tile, so focus can return to the team that was just unpinned. */
   tileRefs?: React.RefObject<Map<string, HTMLButtonElement>>;
+  /** The disclosure, so an unpin can open it before focus returns to the tile inside. */
+  pickerRef?: React.Ref<HTMLDetailsElement>;
 }) {
   const blocked = ready && !available;
+  // El Camino starts a new grid row when that costs no extra row: 7 + 8 tiles in four columns is
+  // two rows each either way, so the divisions read as two blocks instead of one run of fifteen.
+  const deAnza = views.filter((v) => v.team.division === 'de-anza').length;
+  const elCamino = views.length - deAnza;
+  const splitRows =
+    deAnza > 0 &&
+    elCamino > 0 &&
+    Math.ceil(deAnza / 4) + Math.ceil(elCamino / 4) === Math.ceil(views.length / 4);
   return (
-    <div className="flex h-full flex-col bg-surface px-3 py-3 min-[360px]:px-4 md:px-5">
+    <div className="flex flex-1 flex-col bg-surface px-3 py-3 min-[22.5rem]:px-4 md:px-5">
       <p id="pin-your-team" className="m-0 text-body font-semibold text-ink">
         Pin your team
       </p>
-      {/* Three lines are reserved below 390 and two from there, and every message fits that
-          (the default one needs three at 320–359): a clamp that cut "browser only." would drop
-          the privacy statement, which is the point of the sentence. */}
-      <p className="m-0 line-clamp-3 h-15 max-w-prose text-meta text-ink-2 min-[390px]:line-clamp-2 min-[390px]:h-10">
+      {/* A FLOOR of three lines below 390 and two from there, and every message fits it (the
+          default one needs three at 320–389): the blocked branch below swaps in after
+          hydration, so a sentence that grew by a line there would shift the page. Never a clamp:
+          one that cut "browser only." dropped the privacy statement, which is the point of the
+          sentence, and under WCAG 1.4.12 text spacing the line simply grows. */}
+      <p className="m-0 min-h-15 max-w-prose shrink-0 text-meta text-ink-2 min-[24.375rem]:min-h-10">
         {stalePin
           ? 'That team is no longer in the data, so its pin was cleared. Pick another; it stays in this browser.'
           : blocked
             ? 'This browser is not saving a pinned team, so pinning is off. Everything below works without it.'
-            : 'Its last result, next game, form and place move to the top of this page, kept in this browser only.'}
+            : 'Pick your school to keep its latest result, next game and place up here. Saved in this browser only.'}
       </p>
       {blocked ? (
-        <p className="mt-2 mb-0 text-meta">
+        /* The 44px pill takes exactly the summary's 44px, so the swap after hydration moves
+           nothing. `flex` so the paragraph is the pill's height and no taller line box. */
+        <p className="m-0 flex text-meta">
           <Link href="/teams" className="sx-pill min-h-11">
             Find your school
           </Link>
         </p>
       ) : (
-        <>
+        /* Collapsed by default: the fifteen tiles cost 230px of the phone fold, which pushed the
+           day's latest scores under the tab bar for every first-time reader. The 44px summary
+           is the whole cost now. An unpin opens it (MyTeamCard) so focus can return to the tile
+           of the team that was just unpinned. */
+        <details ref={pickerRef} className="sx-disclosure">
+          <summary>Choose from {views.length} schools</summary>
           {/* FOUR columns at every width, and the 20px monogram comes back at 480px where there
-              is room for both.
+              is room for both. `p-0` also cancels the disclosure's 1.5rem body indent, which
+              the grid cannot spare at 320.
 
-              Three columns below 360px read better per tile and cannot be used: fifteen tiles over
-              six rows is 308px of grid against the 204px four rows take, which overran the card's
-              reserved height (the wrapper below) by 34px and — because that wrapper clips to hold
-              CLS at 0 — clipped the fifteenth school to a 14px sliver.
-              Monta Vista was unpickable at 320-359px, which is a worse failure than an ugly line
-              break and is the one DESIGN §10.8 names ("no loss of content" at 320px). Raising the
-              reservation instead is not free either: the PINNED card is 284-302px tall and would
-              have sat in a 338px box with 36-54px of dead air under it at the commonest phone
-              width.
-
+              Three columns below 360px read better per tile and cost two more rows (308px of
+              grid against the 204px four rows take). Before this grid lived in a disclosure it
+              also overran a fixed card height, and Monta Vista was clipped to a 14px sliver;
+              the card is a floor now, but the narrow tile still holds the grid to four rows.
               So the tile stays narrow and the NAME is made to fit it — see `pickerName`. */}
           <ul
             aria-labelledby="pin-your-team"
-            className="mt-3 grid list-none grid-cols-4 gap-1.5 p-0 min-[360px]:gap-2"
+            className="mt-1 grid list-none grid-cols-4 gap-1.5 p-0 min-[22.5rem]:gap-2"
           >
-            {views.map((v) => (
-              <li key={v.team.slug} className="min-w-0">
+            {views.map((v, i) => (
+              <li
+                key={v.team.slug}
+                className={splitRows && i === deAnza ? 'col-start-1 min-w-0' : 'min-w-0'}
+              >
                 {ready ? (
                   <button
                     ref={(el) => {
@@ -338,7 +427,7 @@ export function PinPrompt({
                     aria-label={pinLabel(v.team)}
                     className={TILE}
                   >
-                    <span className="hidden shrink-0 min-[480px]:inline-flex">
+                    <span className="hidden shrink-0 min-[30rem]:inline-flex">
                       <TeamMonogram team={v.team} size={20} />
                     </span>
                     <span className={TILE_NAME}>{pickerName(v.team)}</span>
@@ -349,7 +438,7 @@ export function PinPrompt({
                     prefetch={false}
                     className={`${TILE} no-underline`}
                   >
-                    <span className="hidden shrink-0 min-[480px]:inline-flex">
+                    <span className="hidden shrink-0 min-[30rem]:inline-flex">
                       <TeamMonogram team={v.team} size={20} />
                     </span>
                     <span className={TILE_NAME}>{pickerName(v.team)}</span>
@@ -361,8 +450,10 @@ export function PinPrompt({
               </li>
             ))}
           </ul>
-          <p className="mt-1.5 mb-0 truncate text-meta text-ink-3">De Anza, then El Camino.</p>
-        </>
+          <p className="mt-1.5 mb-0 shrink-0 truncate p-0 text-meta text-ink-3">
+            De Anza, then El Camino, each A to Z.
+          </p>
+        </details>
       )}
     </div>
   );
@@ -375,17 +466,22 @@ export function MyTeamCard({ views }: MyTeamCardProps) {
 
   // Pinning replaces the button that was just pressed, which would otherwise drop the keyboard at
   // the top of the document. Focus follows the change instead: to Unpin after a pin, and back to
-  // the team's own tile after an unpin. No state is set here, so nothing re-renders for it.
+  // the team's own tile after an unpin, opening the disclosure it sits in first. No state is set
+  // here, so nothing re-renders for it.
   const action = useRef<'pin' | 'unpin' | null>(null);
   const lastSlug = useRef<string | null>(null);
   const unpinRef = useRef<HTMLButtonElement | null>(null);
   const tileRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const pickerRef = useRef<HTMLDetailsElement | null>(null);
 
   useEffect(() => {
     const what = action.current;
     action.current = null;
     if (what === 'pin') unpinRef.current?.focus();
-    else if (what === 'unpin' && lastSlug.current) tileRefs.current.get(lastSlug.current)?.focus();
+    else if (what === 'unpin' && lastSlug.current) {
+      if (pickerRef.current) pickerRef.current.open = true;
+      tileRefs.current.get(lastSlug.current)?.focus();
+    }
   }, [pinned]);
 
   const handlePin = (slug: string) => {
@@ -401,21 +497,22 @@ export function MyTeamCard({ views }: MyTeamCardProps) {
 
   return (
     <>
-      {/* The header lives here, not in the page, because "change team" is an action for a state a
-          first-time visitor is not in: the server always renders the PICKER, so the shipped HTML
-          used to read "CHANGE TEAM →" directly above the heading "Pin your team". Both states
-          render the same component at the same height, so moving it costs no layout shift. */}
-      <SectionHeader
-        kicker="My team"
-        action={{ href: '/teams', label: view ? 'Change team' : 'Find your school' }}
-      />
-      {/* The reserved height: 372px below 390, 344px from 390. Measured natural content:
-          below 390 the picker is 342–362px (a three-line lead at 320–359) and the pinned card at
-          most 370px (the stacked records row, plus the "Next" date line wrapping for a long time
-          label); from 390 the picker is 342px and the pinned card at most 334px, 250–290px for a
-          team with no results. Both states fit, so reading storage reflows nothing and CLS stays
-          exactly 0. */}
-      <div className="sx-card sx-flush sx-bleed h-[23.25rem] min-[390px]:h-[21.5rem]">
+      {/* ONE label in both states. It used to read "Find your school" over the picker and
+          "Change team" over the card, and because the action is right-aligned, the shorter word
+          moved the link 20px when the pinned card swapped in — the only layout shift left on a
+          pinned hard load. "All teams" is also what the link does: it opens /teams in both
+          states; a pin is changed with Unpin and the picker. */}
+      <SectionHeader kicker="My team" action={{ href: '/teams', label: 'All teams' }} />
+      {/* The floor, only while <html data-has-pin> (see the docblock): 372px below 390, 344px
+          from 390. Measured natural pinned card: at most 370px below 390 (the stacked records
+          row, plus the "Next" date line wrapping for a long time label) and at most 334px from
+          390, 250–290px for a team with no results; so the pinned card is the floor's height and
+          the server-rendered picker stretches (`*:flex-1`) to the same height before it swaps.
+          With no pin there is no floor and the collapsed picker is 132px from 390, 152px below
+          (its sentence takes three lines there). A stale pin never sets the flag, so it never
+          holds the floor open for a card it will not show. */}
+      <div className="sx-card sx-flush sx-bleed flex flex-col *:flex-1 [html[data-has-pin]_&]:min-h-[23.25rem] [html[data-has-pin]_&]:min-[24.375rem]:min-h-[21.5rem]"
+      >
         {view ? (
           <PinnedCard view={view} onUnpin={handleUnpin} unpinRef={unpinRef} />
         ) : (
@@ -426,6 +523,7 @@ export function MyTeamCard({ views }: MyTeamCardProps) {
             stalePin={stalePin}
             onPin={handlePin}
             tileRefs={tileRefs}
+            pickerRef={pickerRef}
           />
         )}
       </div>

@@ -11,10 +11,12 @@ import type { HomeDivision } from './home-data';
  * ("no PTS column") and §11.8's win-percentage sort (BYLAWS-ADDENDUM).
  *
  * The `mini` variant renders no footnotes of its own, so the two disclosures the bars and the
- * points column owe the reader are printed here instead. The per-division |GD| domain (§5.6 — the
+ * points column owe the reader are printed here instead. The per-division bar scale (§5.6 — the
  * two tables are NOT comparable to each other) is division-specific, so it stays visible under
- * each table whenever the bars are drawn; where the card is too narrow for the plot (under 375px)
- * the sentences about bars are dropped with it. The points rule with its citation is the same
+ * each table whenever the bars are drawn, in words ("bars scaled to De Anza's biggest goal
+ * difference (36)"), not as "|GD| max 36". Where the card is too narrow for the plot (under
+ * 23.4375rem: 375px at the default text size, wider under a larger one) the sentences about bars
+ * are dropped with it. The points rule with its citation is the same
  * sentence for both, so it is said once, under El Camino, in a labelled `<details>`
  * (`showLegend`). Shared places, MaxPreps mismatches and the no-results row are below the top
  * four; the full table carries all of them, and this table's header links straight to it.
@@ -57,18 +59,20 @@ export function MiniStandings({
           ` — top ${shown} of ${division.total}`
         }
       />
-      {/* The GD plot is dropped when the CARD is under 375px (`@container` on the card: phones
-          under 375 and the side-by-side minis at 768–~820). This wrapper bleeds like the card
-          (`.sx-bleed`; the gutter comes back as padding on an INNER box, because a container query
-          measures the content box), so the same query here keeps every sentence about the bars in
-          step with whether any bars are drawn. */}
+      {/* The GD plot is dropped when the CARD is under 23.4375rem (`@container` on the card:
+          phones under 375, the side-by-side minis at 768–~820, and a 390 phone with a 24px
+          browser text size, where the rem query resolves to 562px). This wrapper bleeds like the
+          card (`.sx-bleed`; the gutter comes back as padding on an INNER box, because a container
+          query measures the content box), so the SAME query, in the same unit, keeps every
+          sentence about the bars in step with whether any bars are drawn. */}
       <div className="sx-bleed @container">
         <div className="px-gutter md:px-0">
           <p className="mt-2 mb-0 text-meta text-ink-3">
             Top {shown} of {division.total}
-            <span className="hidden @min-[375px]:inline">
+            <span className="hidden @min-[23.4375rem]:inline">
               {' '}
-              &middot; GD bars scaled to {division.label} alone (|GD| max {division.gdDomain})
+              &middot; bars scaled to {division.label}&rsquo;s biggest goal difference (
+              {division.gdDomain})
             </span>
           </p>
           {showLegend ? (
@@ -76,7 +80,7 @@ export function MiniStandings({
               <summary>How to read these tables</summary>
               <p className="m-0 max-w-prose text-meta text-ink-2">
                 PTS is the ordering key: 3 for a win, 1 for a tie (By-Laws Article VI §2).
-                <span className="hidden @min-[375px]:inline">
+                <span className="hidden @min-[23.4375rem]:inline">
                   {' '}
                   Bars are scaled to each division alone, so the two divisions&rsquo; bars are not
                   comparable.

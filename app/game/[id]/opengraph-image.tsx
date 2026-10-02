@@ -17,6 +17,10 @@ import { dateWithYear, timeOfDayPT } from '@/lib/format';
  * The numbers are `SideView.glyph` from the shared model, which comes from `describeGame()`, so a
  * game with no reported score shows two en dashes on the card exactly as it does on the page. A
  * scheduled game shows the start time in the score column instead of a number, never a `0`.
+ *
+ * The record under each name is `GameSideModel.sub` from the same model, so it is the league
+ * record AS OF this game (`recordAsOf`, G-1) — a card shared weeks later still shows the record
+ * that went with that score, exactly as the page does.
  */
 
 export const alt = `${SITE_NAME} — game score card`;

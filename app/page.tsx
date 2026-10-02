@@ -18,9 +18,10 @@ import { longDate, shortDate } from '@/lib/format';
  *
  * Phone source order is the DOM order. From 768px the same nodes sit in a two-column grid (the two
  * division tables side by side, everything else full width), and from 1024px the grid becomes a
- * main column plus a side column, re-placed with explicit row/column starts. A screen reader and a
- * 400%-zoom reader both get the phone order: my team → what just happened → the tables → what's
- * next → CCS (DESIGN §10.5).
+ * main column plus a side column, each one stack placed in one grid row. A screen reader and a
+ * 400%-zoom reader both get the phone order: my team → what just happened → what's still to play →
+ * the tables → CCS (DESIGN §10.5). "Still to play" sits above the tables because on a game day it
+ * is the second question the page answers, and below the two tables it was ~1,660px down a phone.
  *
  * Space separates the sections (40px phone, 56px from 768px); the page title and a one-line data
  * status open the page, so the as-of fact is read first rather than in a closing footnote.
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
  */
 const GRID = [
   'mt-8 flex flex-col gap-y-section md:mt-10 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-section-lg',
-  'lg:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-10',
+  'lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start lg:gap-x-10',
   'xl:grid-cols-[minmax(0,1fr)_minmax(22rem,26rem)]',
 ].join(' ');
 
@@ -59,16 +60,12 @@ const GRID = [
  * every section a separate grid item, De Anza shared a row with My team and sat 127px above El
  * Camino instead of 56. The DOM order is unchanged.
  *
- * lg placement: rows are `auto auto 1fr`. Row 1 is the division tables (the side stack), row 3 is
- * Next; my team + latest span rows 1–2, CCS spans 2–3. Row 2 has no item of its own, so the main
- * stack's overhang goes to it alone (an empty auto track has no growth limit yet when spanning
- * items are placed) and row 1 stays the side stack's height: CCS starts one section gap under El
- * Camino and Next one gap under the latest scores. Row 3 is the flexible one: CCS crosses it, so
- * CCS is sized in the flex step and a CCS card taller than Next lengthens row 3 BELOW Next instead
- * of pushing Next down (it is about 500px at 1024, where the side column is narrow).
+ * lg placement: ONE row, two stacks. The main stack is my team → latest scores → still to play;
+ * the side stack is De Anza → El Camino → CCS. Each section therefore starts one section gap under
+ * the one above it in its own column, whatever the other column's height, which is what the old
+ * three-row grid (Next in row 3, CCS spanning rows 2–3) was built to approximate.
  */
-const MAIN_STACK =
-  'contents lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col lg:gap-y-section-lg';
+const MAIN_STACK = 'contents lg:col-start-1 lg:row-start-1 lg:flex lg:flex-col lg:gap-y-section-lg';
 const SIDE_STACK = 'contents lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:gap-y-section-lg';
 /** Full width in the md two-column grid, one column again at lg. */
 const WIDE = 'md:col-span-2 lg:col-span-1';
@@ -89,9 +86,11 @@ export default function HomePage() {
         title="SCVAL field hockey"
         srTitle=" — girls varsity scores, standings and the CCS playoff picture"
         meta={
+          /* One line at 390: the division names wrapped "El Camino" alone onto a second line
+             there, and both are named on the tables below. From 640px they fit and come back. */
           <p className="m-0 text-meta text-ink-2">
-            Results through {shortDate(asOfResults)} &middot; {teamViews.length} teams &middot; De
-            Anza and El Camino
+            Results through {shortDate(asOfResults)} &middot; {teamViews.length} teams
+            <span className="hidden sm:inline"> &middot; De Anza and El Camino</span>
           </p>
         }
       />
@@ -108,10 +107,11 @@ export default function HomePage() {
 
       <div className={GRID}>
         <div className={MAIN_STACK}>
-          {/* 1 — my team, or the picker. Same reserved height in every state, so CLS is 0. */}
+          {/* 1 — my team, or the picker. Its height does not change when storage is read (a floor
+              while a team is pinned, the collapsed picker otherwise), so CLS is 0. */}
           <section className={WIDE}>
-            {/* The heading is MyTeamCard's own: only it knows whether a team is pinned, and the
-                action link's wording depends on that (components/home/MyTeamCard.tsx). */}
+            {/* The heading is MyTeamCard's own, so the card and its header stay one unit
+                (components/home/MyTeamCard.tsx). */}
             <MyTeamCard views={teamViews} />
           </section>
 
@@ -157,31 +157,33 @@ export default function HomePage() {
               </EmptyState>
             </section>
           )}
+
+          {/* 4 — today's remaining slate, or the next day that has one, plus when league play
+              resumes if everything on it is non-league. */}
+          <NextSlate
+            className={WIDE}
+            date={slate?.date ?? null}
+            games={slate?.games ?? []}
+            total={slate?.total ?? 0}
+            isToday={slate?.isToday ?? false}
+            kicker={latest ? undefined : 'First games'}
+            nextLeague={data.nextLeague}
+          />
         </div>
 
-        {/* 4 & 5 — both divisions, top four each, side by side at md. De Anza first. */}
+        {/* 5 & 6 — both divisions, top four each, side by side at md. De Anza first. Then 7, the
+            CCS berth math, with no model and no percentages: full width at md, under the
+            tables in the side column at lg. */}
         <div className={SIDE_STACK}>
           <MiniStandings division={deAnza} />
           <MiniStandings division={elCamino} showLegend />
+          <PlayoffsCard
+            className={WIDE}
+            playoffs={data.playoffs}
+            phase={data.phase}
+            crossover={data.crossover}
+          />
         </div>
-
-        {/* 6 — today's remaining slate, or the next day that has one. */}
-        <NextSlate
-          className={`${WIDE} lg:col-start-1 lg:row-start-3`}
-          date={slate?.date ?? null}
-          games={slate?.games ?? []}
-          total={slate?.total ?? 0}
-          isToday={slate?.isToday ?? false}
-          kicker={latest ? undefined : 'First games'}
-        />
-
-        {/* 7 — the CCS berth math, with no model and no percentages. */}
-        <PlayoffsCard
-          className={`${WIDE} lg:col-start-2 lg:row-span-2 lg:row-start-2`}
-          playoffs={data.playoffs}
-          phase={data.phase}
-          crossover={data.crossover}
-        />
       </div>
     </div>
   );

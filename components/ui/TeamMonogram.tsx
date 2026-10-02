@@ -18,8 +18,12 @@ export interface TeamMonogramProps {
   className?: string;
 }
 
-/** Initials are decorative and aria-hidden beside the name, so they are exempt from the 12px floor. */
-const LETTER_SIZE: Record<number, number> = {
+/**
+ * Initials are decorative and aria-hidden beside the name, so they are exempt from the 12px floor.
+ * Exported with the radius below so GhostMonogram (a school we do not track) is the same tile at
+ * every size without restating either number.
+ */
+export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number> = {
   20: 10,
   24: 11,
   28: 12,
@@ -29,6 +33,11 @@ const LETTER_SIZE: Record<number, number> = {
   56: 20,
   64: 22,
 };
+
+/** The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 56px hero is 14px. */
+export function monogramRadius(size: number): number {
+  return Math.round(size / 4);
+}
 
 export function TeamMonogram({
   team,
@@ -45,7 +54,7 @@ export function TeamMonogram({
       style={{
         width: size,
         height: size,
-        borderRadius: Math.round(size / 4),
+        borderRadius: monogramRadius(size),
         background: `#${primary}`,
         color: onPrimary,
         fontSize: LETTER_SIZE[size],

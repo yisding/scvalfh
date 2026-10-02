@@ -161,9 +161,10 @@ export default function AboutPage() {
           </p>
           {/* Rows stretch, so the two cards in a row end level and each card's link row sits on its
               bottom edge (`mt-auto`). The long SCVAL card and the two-line CIF-CCS card are
-              not paired: each spans both columns from md (the SCVAL text set in two columns,
-              which keeps its measure near the other cards'), so no row has a short card next
-              to a tall one. */}
+              not paired: each spans both columns from md, so no row has a short card next to a
+              tall one. The SCVAL text runs in ONE column capped at the prose measure
+              (`max-w-prose`): it was once set in two CSS columns, which broke a sentence
+              mid-way and sent the reader from the bottom of one column to the top of the next. */}
           <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2">
             <div className="sx-card flex flex-col p-5">
               <dt>
@@ -216,7 +217,7 @@ export default function AboutPage() {
                 <span className="mt-0.5 block text-meta text-ink-3">The league itself</span>
               </dt>
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
-                <span className="block md:columns-2 md:gap-x-8">
+                <span className="block max-w-prose">
                   SCVAL publishes the actual by-laws and the two schedule grids as PDFs on
                   scval.com. League membership (which schools are in which division), the
                   points/tiebreak rules quoted below, and every scheduled matchup come from these
@@ -323,7 +324,7 @@ export default function AboutPage() {
             <li>
               A coin flip. This site cannot compute a coin flip, so teams that reach this step
               render as <b className="font-semibold text-ink">tied at the same place</b> (a
-              shared &ldquo;6=&rdquo; instead of a 6th and a 7th), with a footnote citing this
+              shared &ldquo;T6&rdquo; instead of a 6th and a 7th), with a footnote citing this
               rule. ({BYLAW_CITATIONS.coinFlip})
             </li>
           </ol>
@@ -496,27 +497,30 @@ export default function AboutPage() {
             page.
           </p>
           <h3>Key dates</h3>
+          {/* The dates sit inside sentences, so they stay in the prose's sans with tabular
+              figures (`tabular-nums`), not mono `sx-num`: mono is for digits that stack in a
+              column (DESIGN §4.3), and a mono date mid-line read as a pasted code fragment. */}
           <ul className="list-disc">
             <li>
               Entries due &amp; seeding meeting:{' '}
-              <span className="sx-num">
+              <span className="tabular-nums">
                 {dateWithYear(PLAYOFF_KEY_DATES.entriesDue)}, {timeOfDayPT(PLAYOFF_KEY_DATES.entriesDue)}
               </span>{' '}
-              / <span className="sx-num">{timeOfDayPT(PLAYOFF_KEY_DATES.seedingMeeting)}</span>
+              / <span className="tabular-nums">{timeOfDayPT(PLAYOFF_KEY_DATES.seedingMeeting)}</span>
             </li>
             <li>
               Quarterfinals:{' '}
-              <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.quarterfinals)}</span>
+              <span className="tabular-nums">{dateWithYear(PLAYOFF_KEY_DATES.quarterfinals)}</span>
             </li>
             <li>
-              Semifinals: <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.semifinals)}</span>
+              Semifinals: <span className="tabular-nums">{dateWithYear(PLAYOFF_KEY_DATES.semifinals)}</span>
             </li>
             <li>
-              Final: <span className="sx-num">{dateWithYear(PLAYOFF_KEY_DATES.finals)}</span>
+              Final: <span className="tabular-nums">{dateWithYear(PLAYOFF_KEY_DATES.finals)}</span>
             </li>
             <li>
               Committee evaluation:{' '}
-              <span className="sx-num">
+              <span className="tabular-nums">
                 {dateWithYear(PLAYOFF_KEY_DATES.evaluationMeeting)}, {timeOfDayPT(PLAYOFF_KEY_DATES.evaluationMeeting)}
               </span>
             </li>

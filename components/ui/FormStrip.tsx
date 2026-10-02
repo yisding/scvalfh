@@ -95,14 +95,20 @@ export function FormStrip({
         {entries.map((entry, i) => {
           // The newest chip carries a 2px ink underline as well as its position. It hugs the
           // MARK, not the tap box, so widening the box does not widen the underline.
+          // Only the newest mark has a border at all; the others take the same 4px as padding.
+          // A `transparent` border is NOT invisible under forced colours: the UA repaints every
+          // border colour as CanvasText, so the old "2px solid transparent" spacer drew an
+          // underline under all five chips there and the newest one was no longer singled out.
+          // Normal rendering is pixel-identical (2 + 2 vs 4 below each chip).
+          const newest = i === entries.length - 1;
           const mark = (
             <span
               className="inline-flex"
-              style={{
-                paddingBottom: 2,
-                borderBottom:
-                  i === entries.length - 1 ? '2px solid var(--sx-text)' : '2px solid transparent',
-              }}
+              style={
+                newest
+                  ? { paddingBottom: 2, borderBottom: '2px solid var(--sx-text)' }
+                  : { paddingBottom: 4 }
+              }
             >
               <ResultChip kind={entry.outcome} size={size} />
             </span>

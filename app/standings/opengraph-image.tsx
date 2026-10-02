@@ -13,8 +13,9 @@ import { getStandingsPageData } from './standings-data';
  * automatic-qualifier line is exactly where the standings become news — Article VII §2 gives the
  * first three in each division an AQ — and a link preview has room for nothing else.
  *
- * A shared place prints as `3=`: Article VI §7 ends in a coin flip we cannot compute, and a card
- * that silently picked a winner would be the one place on the site that lies.
+ * A shared place prints as `T3`, the US sports-page mark the tables use: Article VI §7 ends in a
+ * coin flip we cannot compute, and a card that silently picked a winner would be the one place on
+ * the site that lies.
  */
 export const alt = `${SITE_NAME} — De Anza and El Camino standings`;
 export const size = { width: 1200, height: 630 };
@@ -110,8 +111,8 @@ export default function StandingsOpengraphImage() {
                         }}
                       >
                         <div style={{ display: 'flex', fontSize: 26, color: MUTED, width: 44 }}>
+                          {row.standing.tiebreak.shared ? 'T' : ''}
                           {place}
-                          {row.standing.tiebreak.shared ? '=' : ''}
                         </div>
                         <div style={{ display: 'flex', fontSize: 34, fontWeight: 600 }}>
                           {row.team.shortName}

@@ -5,6 +5,7 @@ import Attribution from '@/components/layout/Attribution';
 import BottomTabBar from '@/components/layout/BottomTabBar';
 import SiteHeader from '@/components/layout/SiteHeader';
 import { BUILD_INSTANT } from '@/components/layout/build-instant';
+import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site-url';
 import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
 import { THEME_SCRIPT } from '@/components/layout/theme-script';
@@ -88,6 +89,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
             components/layout/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
+        {/* Scrolls a <details> the reader just opened into view when its panel lands under the
+            phone tab bar; see components/layout/disclosure-script.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: DISCLOSURE_SCRIPT }} />
       </head>
       <body>
         <a
@@ -97,7 +101,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <PinnedTeamMarks />
-        <SiteHeader snapshotAt={snapshotAt} />
+        <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} />
         {/* `tabIndex={-1}` is what makes the skip link actually MOVE focus. Without it only
             browsers that implement the sequential-focus-navigation starting point continue from
             here; elsewhere `#main` scrolls into view while focus stays on <body> and a screen

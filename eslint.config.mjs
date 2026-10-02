@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     ".vinext/**",
     // The Cloudflare Workers build (`pnpm build:cloudflare`): built JS and generated workerd types.
     ".cloudflare/**",
+    // Claude Code keeps agent worktrees (each with its own .next output) under .claude/.
+    ".claude/**",
   ]),
 ]);
 

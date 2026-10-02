@@ -15,7 +15,7 @@
 
 import { ordinal, shortDate } from '../../lib/format';
 import { BYLAW_CITATIONS, DIVISION_LABELS } from '../../lib/season';
-import { outcomesFor } from '../../lib/standings';
+import { PLAYOFF_STATUS_LABELS, outcomesFor } from '../../lib/standings';
 import type {
   CrossCheckRow,
   Division,
@@ -31,14 +31,19 @@ export interface StatusTeam {
   slug: TeamSlug;
   name: string;
   place: number;
-  /** Article VI §7: level with another team, so the marker is "5=" and the cut is unsettled. */
+  /** Article VI §7: level with another team, so the marker is "T-5th" and the cut is unsettled. */
   shared: boolean;
 }
 
 export interface StatusGroup {
   status: PlayoffStatus;
-  /** A word or letters — never a hue on its own (DESIGN §6.5). */
-  badge: string;
+  /**
+   * The status in words, from `PLAYOFF_STATUS_LABELS` ("Automatic qualifier", "Play-in game Oct
+   * 30") — the same phrases /playoffs prints, never a code like "AQ" or "NO AQ" a reader has to
+   * decode, and never a hue on its own (DESIGN §6.5).
+   */
+  statusText: string;
+  /** The place range the status belongs to: "Places 1–3", "4th place". */
   label: string;
   teams: StatusTeam[];
 }
@@ -100,24 +105,21 @@ export interface DivisionView {
 
 const STATUS_ORDER: PlayoffStatus[] = ['aq', 'play-in', 'at-large', 'out'];
 
-const STATUS_BADGE: Record<PlayoffStatus, string> = {
-  aq: 'AQ',
-  'play-in': 'Play-in',
-  'at-large': 'At-large',
-  out: 'No AQ',
-};
-
-/** The legend sentence for each status. `playInDate` is the Oct 30 crossover from the snapshot. */
-export function statusLabel(status: PlayoffStatus, playInDate: string): string {
+/**
+ * The place range each status belongs to (Article VII §2). What the status MEANS is the chip
+ * beside it (`StatusGroup.statusText`), so this is only the range — the old "Places 1-3 —
+ * automatic CCS qualifier" said the same thing twice next to an "AQ" code.
+ */
+export function statusLabel(status: PlayoffStatus): string {
   switch (status) {
     case 'aq':
-      return 'Places 1-3 — automatic CCS qualifier';
+      return 'Places 1–3';
     case 'play-in':
-      return `4th place — play-in ${shortDate(playInDate)} for the SCVAL 7th berth`;
+      return '4th place';
     case 'at-large':
-      return '5th place — submitted to CCS for at-large consideration';
+      return '5th place';
     case 'out':
-      return '6th or lower — no automatic path';
+      return '6th or lower';
   }
 }
 
@@ -129,6 +131,11 @@ export interface DivisionViewInput {
   crossCheck: readonly CrossCheckRow[];
   officialFixtures: readonly OfficialFixture[];
   gdDomain: number;
+  /**
+   * The Oct 30 crossover from the snapshot. The status band no longer prints it: its play-in chip
+   * reads `PLAYOFF_STATUS_LABELS`, the wording /playoffs uses. Kept so the caller's input shape
+   * does not change.
+   */
   playInDate: string;
   sourceUrl: string;
   scheduleUrl: string;
@@ -175,7 +182,12 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
         shared: r.standing.tiebreak.shared,
       }));
     if (teams.length > 0) {
-      statusGroups.push({ status, badge: STATUS_BADGE[status], label: statusLabel(status, input.playInDate), teams });
+      statusGroups.push({
+        status,
+        statusText: PLAYOFF_STATUS_LABELS[status],
+        label: statusLabel(status),
+        teams,
+      });
     }
   }
 
@@ -263,11 +275,12 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     'This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to SCVAL.',
   );
   if (input.pendingLeagueGames > 0) {
-    const plural = input.pendingLeagueGames === 1 ? 'game has' : 'games have';
+    // In words, not a list of column codes ("not in W-L-T, PTS, GF, GA, GD…"): "anywhere above"
+    // is the whole claim and every reader can check it.
     footnotes.push(
-      `${input.pendingLeagueGames} league ${plural} been played with no score published, so ${
-        input.pendingLeagueGames === 1 ? 'it counts' : 'they count'
-      } for nothing above — not in W-L-T, PTS, GF, GA, GD, the streak or the last 5.`,
+      input.pendingLeagueGames === 1
+        ? "1 league game was played but has no score yet, so it isn't counted anywhere above."
+        : `${input.pendingLeagueGames} league games were played but have no score yet, so they aren't counted anywhere above.`,
     );
   }
   if (input.leagueFinals === 0) {

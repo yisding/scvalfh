@@ -55,8 +55,17 @@ export function PinControl({
         // Pressed reads as pressed: accent-ink on the accent wash (6.5 / 7.55), the
         // `.sx-pill-accent` pairing, held on hover too (a utility outranks the base hover rule).
         // Unpressed stays the neutral grey pill. The words change as well ("Pinned").
-        className={`sx-pill sx-tap min-h-11 justify-center font-semibold aria-pressed:bg-accent-wash aria-pressed:text-accent-ink${
-          variant === 'button' ? ' w-full md:w-auto' : ''
+        //
+        // The press itself darkens the unpressed pill to surface-3: `.sx-tap:active` paints
+        // surface-2, which IS the pill's resting colour, so a tap gave no feedback at all. It is
+        // scoped to `aria-pressed="false"` so it can never paint over the pressed wash, whatever
+        // order Tailwind emits the two variants in.
+        //
+        // `md:min-w-36` (144px, wider than either label): from 768px the button is `w-auto` at the
+        // card's right edge, so "Pin this team" → "Pinned" shrank it and moved its LEFT edge under
+        // the pointer. On a phone it is full width already.
+        className={`sx-pill sx-tap min-h-11 justify-center font-semibold aria-[pressed=false]:active:bg-surface-3 aria-pressed:bg-accent-wash aria-pressed:text-accent-ink${
+          variant === 'button' ? ' w-full md:w-auto md:min-w-36' : ''
         }`}
       >
         {/* 16px star: filled when pinned, an outline when not. aria-pressed carries the state;

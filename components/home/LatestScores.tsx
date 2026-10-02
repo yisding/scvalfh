@@ -90,8 +90,13 @@ export function LatestScores({
 
       <p className="mt-4 mb-0 flex justify-center md:justify-start">
         {/* A 44px pill: alone in its paragraph it is a primary way on through the site, not a word
-            in a sentence, so WCAG 2.5.8's inline exception does not cover it. */}
-        <Link href={`/scores/${date}`} className="sx-pill min-h-11">
+            in a sentence, so WCAG 2.5.8's inline exception does not cover it. It sits on the
+            canvas, not in a card, where a surface-2 pill barely separated from the page in
+            light: a surface fill and the 1px ring make it read as a button. */}
+        <Link
+          href={`/scores/${date}`}
+          className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
           {rest > 0 ? `See all ${total} games` : `Every game from ${longDate(date)}`}
         </Link>
       </p>

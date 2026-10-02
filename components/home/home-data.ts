@@ -84,6 +84,13 @@ export interface HomeData {
   unreported: HomeDay | null;
   /** Today's remaining slate, or the next day that has one. */
   slate: HomeDay | null;
+  /**
+   * The first day AFTER the slate's with at least one league game, so a slate of non-league games
+   * can say when league play resumes. `games` is that day's league games only, in kickoff order;
+   * `total` counts every contest on it, which is what its /scores page lists. Null when there is
+   * no slate or no league game after it.
+   */
+  nextLeague: HomeDay | null;
   divisions: HomeDivision[];
   playoffs: Playoffs;
   crossover: { date: string; pairings: string[] };
@@ -101,6 +108,19 @@ function playableDay(date: string, today: string): HomeDay {
     .filter((g) => g.status !== 'final')
     .sort(byKickoff);
   return { date, games, total: games.length, isToday: date === today };
+}
+
+/**
+ * The first league day after `after`, read from EVERY upcoming playable game rather than the
+ * 40-game window the slate is taken from, so a long run of non-league dates cannot hide it.
+ */
+function nextLeagueDay(after: string, today: string): HomeDay | null {
+  const date = getUpcoming(Number.MAX_SAFE_INTEGER).find((g) => g.isLeague && g.dateKey > after)
+    ?.dateKey;
+  if (!date) return null;
+  const all = playableDay(date, today);
+  // `total` is the day's full count (what its /scores page lists), not the playable subset.
+  return { ...all, games: all.games.filter((g) => g.isLeague), total: getGames({ date }).length };
 }
 
 function firstDateOf(filter: Parameters<typeof getGames>[0]): string | null {
@@ -168,9 +188,19 @@ function lastGameView(game: Game, slug: TeamSlug): HomeLastGame {
     mineIsHome: game.home.slug === slug,
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
-    recap: game.recap,
     href: `/game/${game.contestId}`,
   };
+}
+
+/**
+ * The CCS line's two strings, or null (see `HomeProjection`). "Seeded" is read from what the
+ * snapshot actually carries (it has no seeded-at stamp): the official bracket being posted, or the
+ * seeding meeting being behind us. After either, the committee's answer exists and a projection is
+ * noise.
+ */
+function projectionView(label: string, hasResults: boolean, seeded: boolean) {
+  if (!hasResults || seeded) return null;
+  return { head: label.split(' — ')[0], label };
 }
 
 function nextGameView(game: Game, slug: TeamSlug): HomeNextGame {
@@ -240,14 +270,30 @@ function officialNextView(team: Team, today: string): HomeOfficialFixture | null
  * All 15 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
  * cannot know which one is wanted; shipping all 15 compact views is the cost of the feature, and
  * each one is a handful of strings rather than a full `Game`.
+ *
+ * The ORDER is the picker's: De Anza, then El Camino, each A–Z by the short name the tile prints,
+ * so a reader scans one alphabetical run per division instead of the registry's order. Sorted here
+ * on the server, once, so the client renders exactly the order the HTML shipped with.
  */
 export function buildTeamViews(): HomeTeamView[] {
   const today = getToday();
-  return getTeams().map((team) => {
+  const { bracketPublished, keyDates } = getPlayoffs();
+  // The meeting is an afternoon one ('2026-11-02T13:00:00'), so the nightly build of its own day
+  // still runs before it: seeding counts as done from the day AFTER.
+  const seeded = bracketPublished || today > keyDates.seedingMeeting.slice(0, 10);
+  const teams = [...getTeams()].sort(
+    (a, b) =>
+      DIVISIONS.indexOf(a.division) - DIVISIONS.indexOf(b.division) ||
+      a.shortName.localeCompare(b.shortName, 'en'),
+  );
+  return teams.map((team) => {
     const standing = getStandingFor(team.slug);
     const games = getGames({ teamId: team.id }).sort(byKickoff);
-    const finals = games.filter((g) => g.status === 'final');
-    const last = finals.length > 0 ? finals[finals.length - 1] : null;
+    // Played = a final, or a game whose date has come and whose score has not (score-pending).
+    const played = games.filter(
+      (g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= today,
+    );
+    const last = played.length > 0 ? played[played.length - 1] : null;
     const next =
       games.find(
         (g) =>
@@ -255,6 +301,8 @@ export function buildTeamViews(): HomeTeamView[] {
           (g.status === 'scheduled' || g.status === 'live' || g.status === 'postponed'),
       ) ?? null;
     const hasResults = standing?.hasReportedResults ?? false;
+    const playoffLabel =
+      hasResults && standing ? playoffOutcomeLabel(outcomesFor(standing)) : 'No results reported';
     const place = standing
       ? standing.tiebreak.shared
         ? `tied ${ordinal(standing.computed.place)}`
@@ -278,10 +326,8 @@ export function buildTeamViews(): HomeTeamView[] {
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
       overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
       pts: hasResults && standing ? standing.computed.pts : null,
-      playoffLabel:
-        hasResults && standing
-          ? playoffOutcomeLabel(outcomesFor(standing))
-          : 'No results reported',
+      playoffLabel,
+      projection: projectionView(playoffLabel, hasResults, seeded),
       form: hasResults ? formEntries(team.slug, team.division, standing?.computed.last5 ?? []) : [],
       nonLeagueCount: games.filter((g) => !g.isLeague && g.status === 'final').length,
       last: last ? lastGameView(last, team.slug) : null,
@@ -313,6 +359,7 @@ export function getHomeData(): HomeData {
     latest: latestResults ? day(latestResults, today) : null,
     unreported: unreported ? day(unreported, today) : null,
     slate: slateDate ? playableDay(slateDate, today) : null,
+    nextLeague: slateDate ? nextLeagueDay(slateDate, today) : null,
     divisions: DIVISIONS.map((division) => {
       const standings = getStandings(division);
       return {
