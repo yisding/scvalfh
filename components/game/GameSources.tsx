@@ -26,23 +26,27 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
   if (!conflict) return null;
   return (
     <aside
-      className={`rounded-card px-3 py-2 text-meta text-ink${className ? ` ${className}` : ''}`}
-      style={{ background: 'var(--sx-accent-wash)' }}
+      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
       aria-label="Sources disagree on this score"
     >
-      <span aria-hidden="true">&#9873; </span>
-      {/* The sentence is written by lib/crosscheck.ts and carries both numbers already. */}
-      {conflict.note}{' '}
-      {conflict.sbliveUrl ? (
-        <ExternalLink href={conflict.sbliveUrl} className="text-accent-ink">
-          SBLive&rsquo;s page
-        </ExternalLink>
-      ) : null}
-      {conflict.sbliveUrl && conflict.maxprepsUrl ? ' · ' : null}
-      {conflict.maxprepsUrl ? (
-        <ExternalLink href={conflict.maxprepsUrl} className="text-accent-ink">
-          MaxPreps&rsquo; page
-        </ExternalLink>
+      <p className="m-0">
+        <span aria-hidden="true">&#9873; </span>
+        {/* The sentence is written by lib/crosscheck.ts and carries both numbers already. */}
+        {conflict.note}
+      </p>
+      {conflict.sbliveUrl || conflict.maxprepsUrl ? (
+        <p className="m-0 flex flex-wrap gap-x-4">
+          {conflict.sbliveUrl ? (
+            <ExternalLink href={conflict.sbliveUrl} className="sx-action no-underline">
+              SBLive&rsquo;s page
+            </ExternalLink>
+          ) : null}
+          {conflict.maxprepsUrl ? (
+            <ExternalLink href={conflict.maxprepsUrl} className="sx-action no-underline">
+              MaxPreps&rsquo; page
+            </ExternalLink>
+          ) : null}
+        </p>
       ) : null}
     </aside>
   );
@@ -59,43 +63,33 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
     side.team ? [{ name: side.name, team: side.team, sbliveUrl: side.sbliveUrl }] : [],
   );
 
+  const links: Array<{ href: string; label: string }> = [];
+  if (game.urls.maxpreps) {
+    links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score for this game' });
+  }
+  if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'SBLive/SI page for this game' });
+  for (const side of sides) {
+    if (side.team.external.maxprepsTeamUrl) {
+      links.push({ href: side.team.external.maxprepsTeamUrl, label: `${side.name} on MaxPreps` });
+    }
+    if (side.sbliveUrl) links.push({ href: side.sbliveUrl, label: `${side.name} on SBLive/SI` });
+  }
+
   return (
     <section className={className} aria-labelledby="game-sources-kicker">
       <SectionHeader kicker="Elsewhere" as="h2" id="game-sources-kicker" />
-      <ul className="mt-2 mb-0 list-none space-y-1.5 p-0 text-meta">
-        {/* Every link in this list is a standalone target, so each takes its own 24px box
-            (WCAG 2.5.8) instead of the 17-18px line box of the text. */}
-        {game.urls.maxpreps ? (
-          <li>
-            <ExternalLink href={game.urls.maxpreps} className="sx-action">
-              MaxPreps box score for this game
-            </ExternalLink>
-          </li>
-        ) : null}
-        {game.urls.sblive ? (
-          <li>
-            <ExternalLink href={game.urls.sblive} className="sx-action">
-              SBLive/SI page for this game
-            </ExternalLink>
-          </li>
-        ) : null}
-        {sides.map((side) => (
-          <li key={side.team.slug} className="flex flex-wrap items-center gap-x-3">
-            <span className="text-ink-2">{side.name}:</span>
-            {side.team.external.maxprepsTeamUrl ? (
-              <ExternalLink href={side.team.external.maxprepsTeamUrl} className="sx-action">
-                MaxPreps
+      {links.length > 0 ? (
+        <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+          {links.map((link) => (
+            <li key={link.href}>
+              <ExternalLink href={link.href} className="sx-pill">
+                {link.label}
               </ExternalLink>
-            ) : null}
-            {side.sbliveUrl ? (
-              <ExternalLink href={side.sbliveUrl} className="sx-action">
-                SBLive/SI
-              </ExternalLink>
-            ) : null}
-          </li>
-        ))}
-      </ul>
-      <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-3">
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         Scores come from MaxPreps and are cross-checked against SBLive/SI. When the two disagree we
         publish MaxPreps&rsquo; number and show the disagreement rather than choosing quietly.
       </p>

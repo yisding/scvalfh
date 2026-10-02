@@ -4,9 +4,11 @@ import Link from 'next/link';
 import AwardsBlock from '@/components/about/AwardsBlock';
 import HistoryStandingsTable from '@/components/about/HistoryStandingsTable';
 import ExternalLink from '@/components/ui/ExternalLink';
+import PageHeader from '@/components/layout/PageHeader';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import SectionHeader from '@/components/ui/SectionHeader';
-import StatTile from '@/components/ui/StatTile';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
+import { getTeamBySlug } from '@/lib/data';
 import {
   getHistoryAwards,
   getHistoryChampions,
@@ -37,42 +39,42 @@ export default function HistoryPage() {
   const sources = getHistorySources();
 
   return (
-    <div className="py-6 md:py-10">
-      <p className="m-0 font-mono text-kicker font-semibold tracking-[0.10em] text-ink-3 uppercase">
-        Archive &middot; not part of the nightly snapshot
-      </p>
-      <h1 className="mt-1 mb-0 text-h1 text-ink">{season} season archive</h1>
-      <p className="mt-2 mb-0 max-w-[62ch] text-body text-ink-2">
-        Final varsity and JV standings and all-league awards for the Santa Clara Valley Athletic
-        League&rsquo;s De Anza and El Camino field hockey divisions, taken directly from
-        SCVAL&rsquo;s own end-of-season PDFs. This page is built once from those PDFs, not from
-        the live MaxPreps snapshot the rest of the site uses — MaxPreps only ever serves the
-        current season.
-      </p>
+    <div>
+      <PageHeader
+        eyebrow="Archive · not part of the nightly snapshot"
+        title={`${season} season archive`}
+        description={
+          <>
+            Final varsity and JV standings and all-league awards for the Santa Clara Valley
+            Athletic League&rsquo;s De Anza and El Camino field hockey divisions, taken directly
+            from SCVAL&rsquo;s own end-of-season PDFs. This page is built once from those PDFs,
+            not from the live MaxPreps snapshot the rest of the site uses — MaxPreps only ever
+            serves the current season.
+          </>
+        }
+      />
 
-      {/* A SUBGRID 2-up, not two independent stacks. These tiles carry a school NAME where every
-          other `StatTile` on the site carries a number, so at 320px one of the two wraps to a
-          second line and the other does not — "St. Ignatius" over two lines beside "Los Gatos" on
-          one. With each tile stacking on its own that pushed its DE ANZA CHAMPION kicker and its
-          "11-0-1 league record" a whole line below El Camino's, and a 2-up whose two halves share
-          no baseline reads as broken. `grid-rows-subgrid` puts both tiles on the parent's three
-          rows instead, so the name block is as tall as the taller of the two and the kicker and
-          record lines always align. (It works because these tiles pass no `href`: with one,
-          `StatTile` wraps its three spans in a `<Link>` and they are no longer grid items.) */}
       {champions.length > 0 ? (
-        <div className="mt-6 grid grid-cols-2 grid-rows-[auto_auto_auto] gap-x-6 gap-y-4 border-t border-hairline pt-4">
-          {champions.map(({ division, row }) => (
-            <StatTile
-              key={division}
-              label={`${DIVISION_LABELS[division]} champion`}
-              value={row.name}
-              sub={`${row.leagueRecord} league record`}
-              className="row-span-3 grid grid-rows-subgrid"
-            />
-          ))}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:mt-10">
+          {champions.map(({ division, row }) => {
+            const team = row.slug ? getTeamBySlug(row.slug) : undefined;
+            return (
+              <div key={division} className="sx-card p-5">
+                <p className="m-0 text-micro font-medium text-ink-3">
+                  {DIVISION_LABELS[division]} champion
+                </p>
+                <div className="mt-3 flex items-center gap-3">
+                  {team ? <TeamMonogram team={team} size={40} /> : null}
+                  <p className="m-0 min-w-0 text-title text-ink">{row.name}</p>
+                </div>
+                <p className="mt-3 mb-0 text-meta text-ink-2">{row.leagueRecord} league record</p>
+              </div>
+            );
+          })}
         </div>
       ) : null}
 
+      <div className="mt-section grid gap-y-section md:mt-section-lg md:gap-y-section-lg lg:grid-cols-2 lg:gap-x-10">
       {DIVISIONS.map((division) => {
         const varsity = getHistoryStandings(division, 'varsity');
         const jv = getHistoryStandings(division, 'jv');
@@ -82,7 +84,7 @@ export default function HistoryPage() {
         return (
           <section
             key={division}
-            className="mt-10"
+            className="min-w-0"
             id={division}
             aria-label={label}
           >
@@ -98,23 +100,24 @@ export default function HistoryPage() {
               emptyLabel="No varsity standings were published for this division."
             />
 
-            <SectionHeader kicker={`${label} · JV final standings`} className="mt-8" />
+            <SectionHeader kicker={`${label} · JV final standings`} className="mt-section" />
             <HistoryStandingsTable
               rows={jv}
               caption={`${label} JV final standings, ${season}`}
               emptyLabel="No JV standings were published for this division."
             />
 
-            <SectionHeader kicker={`${label} · all-league awards, varsity`} className="mt-8" />
+            <SectionHeader kicker={`${label} · all-league awards, varsity`} className="mt-section" />
             <AwardsBlock awards={varsityAwards} levelLabel="Varsity" />
 
-            <SectionHeader kicker={`${label} · all-league awards, JV`} className="mt-8" />
+            <SectionHeader kicker={`${label} · all-league awards, JV`} className="mt-section" />
             <AwardsBlock awards={jvAwards} levelLabel="JV" />
           </section>
         );
       })}
+      </div>
 
-      <p className="mt-10 max-w-[62ch] border-t border-hairline pt-4 text-meta text-ink-3">
+      <p className="mt-section max-w-prose text-meta text-ink-3 md:mt-section-lg">
         Source: scval.com &mdash;{' '}
         <ExternalLink href={sources.standingsPdf}>2025-26 final standings (PDF)</ExternalLink> and{' '}
         <ExternalLink href={sources.allLeaguePdf}>2025-26 all-league awards (PDF)</ExternalLink>.

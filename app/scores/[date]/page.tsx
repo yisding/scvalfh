@@ -6,7 +6,9 @@ import GameList from '@/components/schedule/GameList';
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import { daySummary } from '@/components/schedule/day-summary';
 import { gameWord } from '@/components/schedule/filter-data';
+import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site-url';
 import { getGameDates, getGames, getOfficialFixtures, getToday } from '@/lib/data';
 import { longDate, parseLocal, shortDate } from '@/lib/format';
@@ -20,7 +22,7 @@ import { getTeamBySlug } from '@/lib/teams';
  * `notFound()` rather than rendering an empty day, because an empty day and a day with no games are
  * different claims and only one of them is true.
  *
- * `← previous day` / `next day →` step through dates that HAVE contests, not calendar neighbours:
+ * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
  * a link to an empty Sunday would be a dead end.
  */
 /** A registry team renders by its short name; a non-SCVAL opponent is a name and nothing else. */
@@ -81,75 +83,77 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
      claims the games were played: at 5pm on a game day they may not have started. */
   const nothingReportedYet = date <= today && summary.total > 0 && summary.final === 0;
 
-  return (
-    <div className="pb-10">
-      <p className="mt-3 mb-1 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
-        One day
-      </p>
-      <h1 className="m-0 text-h1 font-semibold text-ink">
-        <time dateTime={date}>
-          {longDate(date)}, {year}
-        </time>
-      </h1>
-      <p className="sx-num m-0 mt-1 text-meta text-ink-2">
-        {summary.total} {gameWord(summary.total)}
-        {summary.final > 0 ? ` · ${summary.final} final` : ''}
-        {summary.upcoming > 0 ? ` · ${summary.upcoming} to come` : ''}
-        {summary.pending > 0 ? ` · ${summary.pending} not reported` : ''}
-        {date === today ? ' · today' : ''}
-      </p>
+  const badges: string[] = [`${summary.total} ${gameWord(summary.total)}`];
+  if (summary.final > 0) badges.push(`${summary.final} final`);
+  if (summary.upcoming > 0) badges.push(`${summary.upcoming} to come`);
+  if (summary.pending > 0) badges.push(`${summary.pending} not reported`);
+  if (date === today) badges.push('Today');
 
-      {/* This is the only way to walk the season day by day on a phone, so the three links take
-          DESIGN §4.4's full 44px rather than the 24px floor — they shipped as bare 18px block links
-          with no padding at all, under even WCAG 2.5.8's minimum, and 16px apart on one baseline so
-          the spacing exception did not rescue them either. `sx-action` gives the box; `min-h-11`
-          raises it; the 44px height is itself what clears the 24px spacing circle. */}
-      <nav
-        aria-label="Other days"
-        className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-meta"
-      >
-        {previous ? (
-          <Link
-            href={`/scores/${previous}`}
-            className="sx-action min-h-11 text-accent hover:underline"
-          >
-            <span aria-hidden="true">&larr;</span>&nbsp;{shortDate(previous)}
-            <span className="sr-only">: the previous day with games</span>
-          </Link>
-        ) : (
-          <span className="sx-action min-h-11 text-ink-3">First day of the season</span>
-        )}
-        {next ? (
-          <Link href={`/scores/${next}`} className="sx-action min-h-11 text-accent hover:underline">
-            {shortDate(next)}&nbsp;<span aria-hidden="true">&rarr;</span>
-            <span className="sr-only">: the next day with games</span>
-          </Link>
-        ) : (
-          <span className="sx-action min-h-11 text-ink-3">Last day of the season</span>
-        )}
-        <Link href={`/schedule#${date}`} className="sx-action min-h-11 text-accent hover:underline">
-          Full season&nbsp;<span aria-hidden="true">&rarr;</span>
+  /* This is the only way to walk the season day by day on a phone, so the steppers are 44px
+     pills (DESIGN §4.4), not bare text links. */
+  const dayNav = (
+    <nav aria-label="Other days" className="flex flex-wrap items-center gap-2">
+      {previous ? (
+        <Link href={`/scores/${previous}`} className="sx-pill min-h-11">
+          <span aria-hidden="true">&lsaquo;</span>
+          {shortDate(previous)}
+          <span className="sr-only">: the previous day with games</span>
         </Link>
-      </nav>
+      ) : (
+        <span className="sx-badge">First day of the season</span>
+      )}
+      {next ? (
+        <Link href={`/scores/${next}`} className="sx-pill min-h-11">
+          {shortDate(next)}
+          <span aria-hidden="true">&rsaquo;</span>
+          <span className="sr-only">: the next day with games</span>
+        </Link>
+      ) : (
+        <span className="sx-badge">Last day of the season</span>
+      )}
+      <Link
+        href={`/schedule#${date}`}
+        className="sx-action min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+      >
+        Full season
+      </Link>
+    </nav>
+  );
+
+  return (
+    <div className="pb-section-lg">
+      <PageHeader
+        title={
+          <time dateTime={date}>
+            {longDate(date)}, {year}
+          </time>
+        }
+        meta={badges.map((badge) => (
+          <span key={badge} className="sx-badge sx-num">
+            {badge}
+          </span>
+        ))}
+        aside={dayNav}
+      />
 
       {nothingReportedYet ? (
-        <p className="mt-3 mb-0 max-w-[62ch] rounded-card bg-surface-2 p-3 text-meta text-ink">
+        <p className="sx-inset mt-6 mb-0 max-w-prose text-ink">
           {summary.total} {gameWord(summary.total)} {summary.total === 1 ? 'is' : 'are'} on the
           schedule for {shortDate(date)} and no score has been reported yet. Coaches enter results by
           hand, so a game that finishes in the evening usually appears the next morning.
         </p>
       ) : null}
 
-      <div className="mt-4">
+      <div className="mt-8 md:mt-10">
         {games.length > 0 ? (
           <GameList games={games} />
         ) : (
-          <p className="m-0 text-meta text-ink-2">No contests on this date.</p>
+          <EmptyState heading="No contests on this date." />
         )}
       </div>
 
       {moved.length > 0 ? (
-        <p className="mt-4 mb-0 max-w-[62ch] text-meta text-ink-3">
+        <p className="sx-inset mt-stack mb-0 max-w-prose">
           {moved.length === 1 ? 'One game here was moved' : `${moved.length} games here were moved`}{' '}
           from the date on SCVAL&rsquo;s official grid:{' '}
           {moved
@@ -166,20 +170,24 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       ) : null}
 
       {fixtures.length > 0 ? (
-        <section className="mt-8">
+        <section className="mt-section md:mt-section-lg">
           <SectionHeader kicker="Scheduled by SCVAL, not reported" />
           <OfficialFixtures fixtures={fixtures} variant="plain" />
         </section>
       ) : null}
 
-      <p className="mt-8 mb-0 max-w-[62ch] text-meta text-ink-3">
-        All times Pacific. A real <span className="sx-num">0</span> shows as{' '}
-        <span className="sx-num">0</span>; a score we do not have shows as a dash. Scores are
-        computed from what MaxPreps publishes and are unofficial &mdash;{' '}
-        <Link href="/about#conventions" className="text-accent hover:underline">
-          how every state is rendered <span aria-hidden="true">&rarr;</span>
-        </Link>
-      </p>
+      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
+        <summary>How scores are shown</summary>
+        <p className="mt-2 mb-0">
+          All times Pacific. A real <span className="sx-num">0</span> shows as{' '}
+          <span className="sx-num">0</span>; a score we do not have shows as a dash. Scores are
+          computed from what MaxPreps publishes and are unofficial &mdash;{' '}
+          <Link href="/about#conventions" className="text-accent">
+            how every state is rendered
+          </Link>
+          .
+        </p>
+      </details>
     </div>
   );
 }

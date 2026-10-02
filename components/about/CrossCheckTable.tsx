@@ -33,18 +33,20 @@ export interface CrossCheckTableProps {
 export function CrossCheckTable({ groups }: CrossCheckTableProps) {
   if (groups.length === 0) {
     return (
-      <p className="max-w-[62ch] py-1 text-body text-ink-2">
+      <p className="max-w-prose py-1 text-body text-ink-2">
         No disagreements in the most recent run &mdash; our computed league records match
         MaxPreps&rsquo; published table exactly for all 16 teams.
       </p>
     );
   }
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-stack">
       {groups.map(({ team, detail, rows }) => (
-        <div key={team.id} className="border-t border-hairline pt-3 first:border-t-0 first:pt-0">
-          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-            <TeamMonogram team={team} size={20} />
+        // `max-w-3xl` on the group, not only the card, so the header's right-aligned link lines
+        // up with the card edge below it.
+        <div key={team.id} className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <TeamMonogram team={team} size={24} />
             {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                 (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
                 STATIC, so Next 16's `auto` downloads the whole linked route the moment the link
@@ -70,20 +72,20 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
               </span>
             ) : null}
           </div>
-          {detail ? <p className="mt-1 mb-0 max-w-[62ch] text-meta text-ink-2">{detail}</p> : null}
+          {detail ? <p className="mt-1 mb-0 max-w-prose text-meta text-ink-2">{detail}</p> : null}
           {rows.length > 0 ? (
-            <div className="sx-bleed mt-2 overflow-clip">
-              <table className="sx-table sx-table-wide text-meta">
+            <div className="sx-card sx-flush mt-3 max-w-3xl">
+              <table className="sx-table text-meta">
                 <caption className="sr-only">{team.name} MaxPreps cross-check</caption>
                 <thead>
                   <tr>
-                    <th scope="col" className="pl-gutter">
+                    <th scope="col" className="pl-4">
                       Field
                     </th>
-                    <th scope="col" className="text-right">
+                    <th scope="col" className="px-2 text-right">
                       We compute
                     </th>
-                    <th scope="col" className="pr-gutter text-right">
+                    <th scope="col" className="pr-4 text-right">
                       MaxPreps shows
                     </th>
                   </tr>
@@ -91,9 +93,9 @@ export function CrossCheckTable({ groups }: CrossCheckTableProps) {
                 <tbody>
                   {rows.map((row) => (
                     <tr key={row.field}>
-                      <td className="pl-gutter text-ink-2">{row.field}</td>
-                      <td className="sx-num text-right font-semibold text-ink">{row.ours}</td>
-                      <td className="sx-num pr-gutter text-right text-ink-2">{row.theirs}</td>
+                      <td className="py-3 pl-4 text-ink-2">{row.field}</td>
+                      <td className="sx-num px-2 py-3 text-right text-cell font-semibold text-ink">{row.ours}</td>
+                      <td className="sx-num py-3 pr-4 text-right text-cell text-ink-2">{row.theirs}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -20,34 +20,33 @@ function PlayerList({ title, players }: { title: string; players: HistoryPlayer[
   if (players.length === 0) return null;
   return (
     <div>
-      <dt className="font-mono text-kicker font-semibold tracking-[0.10em] text-ink-3 uppercase">
+      <dt className="text-micro font-semibold text-ink-3">
         {title}
       </dt>
-      <dd className="m-0 mt-1.5 space-y-1.5">
+      <dd className="m-0 mt-1.5">
         {players.map((p, i) => {
           const team = p.slug ? getTeamBySlug(p.slug) : undefined;
           return (
-            <div key={i} className="flex flex-wrap items-baseline gap-x-1.5 text-meta text-ink-2">
-              <span className="text-body text-ink">{p.player}</span>
-              <span>
-                {p.position} &middot; {ordinal(p.year)} grade &middot;
+            <div key={i} className="border-b border-divider py-2 last:border-b-0">
+              <span className="block text-body text-ink">{p.player}</span>
+              <span className="block text-meta text-ink-2">
+                {p.position} &middot; {ordinal(p.year)} grade &middot;{' '}
+                {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads
+                    the whole linked route the moment the link scrolls into view, and every award
+                    names a school, so one block is dozens of these. Navigation still fetches on
+                    click. */}
+                {team ? (
+                  <Link
+                    href={`/teams/${team.slug}`}
+                    prefetch={false}
+                    className="text-accent hover:underline"
+                  >
+                    {p.school}
+                  </Link>
+                ) : (
+                  <span>{p.school}</span>
+                )}
               </span>
-              {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                  (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
-                  here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
-                  the link scrolls into view, and every award names a school, so one block is dozens
-                  of these. Navigation still fetches on click. */}
-              {team ? (
-                <Link
-                  href={`/teams/${team.slug}`}
-                  prefetch={false}
-                  className="text-accent hover:underline"
-                >
-                  {p.school}
-                </Link>
-              ) : (
-                <span>{p.school}</span>
-              )}
             </div>
           );
         })}
@@ -65,9 +64,9 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
     );
   }
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col gap-8">
       {awards.overall.length > 0 ? (
-        <dl className="m-0 space-y-1">
+        <dl className="m-0 flex flex-col gap-1">
           {awards.overall.map((o, i) => (
             <div key={i} className="flex flex-wrap gap-x-2 text-meta">
               <dt className="text-ink-2">{o.award}</dt>
@@ -76,7 +75,7 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
           ))}
         </dl>
       ) : null}
-      <dl className="m-0 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+      <dl className="m-0 grid gap-x-8 gap-y-8 sm:grid-cols-2">
         <PlayerList title="First team" players={awards.firstTeam} />
         <PlayerList title="Second team" players={awards.secondTeam} />
       </dl>

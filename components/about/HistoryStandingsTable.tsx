@@ -24,24 +24,24 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
     return <p className="py-2 text-meta text-ink-3">{emptyLabel}</p>;
   }
   return (
-    <div className="sx-bleed overflow-clip">
+    <div className="sx-card sx-flush max-w-xl">
       {/* `sx-table-wide` puts a gutter between columns: without it the place cell ("1st") runs
           straight into the team monogram beside it. */}
-      <table className="sx-table sx-table-wide text-meta">
+      <table className="sx-table text-meta">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr>
             {/* 32px, not 40: at 320px the four columns added up to 328 inside a 320px
                 `overflow-clip` box and the Overall column lost its last 8px with nothing to
                 scroll (DESIGN R-8). "8th" in tabular mono is 24px wide. */}
-            <th scope="col" className="w-8 pl-gutter">
+            <th scope="col" className="w-12 pl-4">
               #
             </th>
             <th scope="col">Team</th>
             <th scope="col" className="text-right">
               League
             </th>
-            <th scope="col" className="pr-gutter text-right">
+            <th scope="col" className="pr-4 text-right">
               Overall
             </th>
           </tr>
@@ -50,8 +50,8 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
           {rows.map((row) => {
             const team = row.slug ? getTeamBySlug(row.slug) : undefined;
             return (
-              <tr key={`${row.place}-${row.name}`} style={{ height: 44 }}>
-                <td className="sx-num w-8 pl-gutter">{ordinal(row.place)}</td>
+              <tr key={`${row.place}-${row.name}`} className="h-12">
+                <td className="sx-num w-12 pl-4 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
@@ -62,9 +62,9 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                     <Link
                       href={`/teams/${team.slug}`}
                       prefetch={false}
-                      className="flex items-center gap-1.5 no-underline hover:underline"
+                      className="flex items-center gap-2 no-underline hover:underline"
                     >
-                      <TeamMonogram team={team} size={20} />
+                      <TeamMonogram team={team} size={24} />
                       {/* Wraps rather than truncating: at 320px a nowrap name set the column's
                           minimum to 143px and pushed the four columns to 328px inside a 320px
                           clip box, so the Overall column lost its last 8px with no way to scroll
@@ -72,11 +72,11 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                       <span className="min-w-0 text-body text-ink">{row.name}</span>
                     </Link>
                   ) : (
-                    <span className="flex items-center gap-1.5 text-body text-ink">{row.name}</span>
+                    <span className="flex items-center gap-2 text-body text-ink">{row.name}</span>
                   )}
                 </th>
-                <td className="sx-num text-right">{row.leagueRecord}</td>
-                <td className="sx-num pr-gutter text-right text-ink-3">
+                <td className="sx-num text-right text-cell">{row.leagueRecord}</td>
+                <td className="sx-num pr-4 text-right text-cell text-ink-3">
                   {row.overallRecord ?? EM_DASH}
                 </td>
               </tr>

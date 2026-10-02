@@ -13,12 +13,16 @@ import { signedMargin } from './game-view';
  * clamped to the team's own range, x = game order (not a time scale — the August block would
  * compress to nothing). One series, so no legend box: the kicker names it.
  *
- * Geometry for the 358px phone content box: 40px value gutter + 14 columns × 18px + 13 × 2px gaps
- * = 278 ≤ 318. Height 56 + 1 + 56 + 15 = 128, axis band included, so the container never grows a
- * nested scrollbar. Those 18px columns are marks, NOT tap targets: a 24px column at a 24px pitch
- * needs 330px and there are 318, and shrinking the pitch instead would make the 24px spacing
- * circles of WCAG 2.5.8 overlap, which DESIGN §4.4 forbids. The desktop variant's 24px columns ARE
- * links, and on phone the table twin and the League game log carry the same navigation.
+ * Geometry (modernization brief §4.18): the strip sits in a `p-4` card, so at 390px the plot is
+ * 326 − 48 = 278px, exactly 14 columns × 18px + 13 × 2px gaps. Columns are FLUID — `flex-1` up to
+ * a 56px cap — so the strip fills its card at every width instead of hugging the left edge. The
+ * phone floor is 12px rather than the brief's 18px: at 320 and 360 the card's plot is only 208 and
+ * 248px, and an 18px floor would push the strip into a nested horizontal scroller (an overflow and
+ * an axe `scrollable-region-focusable` failure). Phone columns are marks, NOT tap targets: a 24px
+ * column at a 24px pitch needs 362px, and shrinking the pitch would make the 24px spacing circles of
+ * WCAG 2.5.8 overlap, which DESIGN §4.4 forbids. The desktop variant's columns ARE links, so their
+ * floor is 24px; on phone the table twin and the League game log carry the same navigation.
+ * Height 128 includes a 16px glyph band, so each arm is floor((128 − 16 − 1) / 2) = 55px.
  *
  * Unplayed games get a `?` tick and NO column, and the axis continues to game 14, so the reader
  * sees how much season is left. Forfeits are excluded entirely — they have no goal margin — and
@@ -48,18 +52,26 @@ export function MarginStrip({
   const played = entries.filter((e) => e.margin !== null && !e.excludedFromMargin);
   if (played.length === 0) {
     return (
-      <EmptyState heading={`No league results reported for ${teamName}.`} className={className}>
+      <EmptyState
+        heading={`No league results reported for ${teamName}.`}
+        variant="plain"
+        className={className}
+      >
         The schedule is below, and MaxPreps may have results we have not picked up yet.
       </EmptyState>
     );
   }
 
   const isPhone = height === 128;
-  const colWidth = isPhone ? 18 : 24;
-  const gap = isPhone ? 2 : 4;
+  // Columns are fluid between a floor and a 56px cap. The phone floor is 12px (a chart mark; see
+  // the geometry note above); the desktop floor is 24px because those marks are links (WCAG
+  // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px.
+  const colClass = isPhone ? 'min-w-3 max-w-14 flex-1' : 'min-w-6 max-w-14 flex-1';
+  const gap = isPhone ? 2 : 3;
   /** Only a 24px-wide column is a legal tap target, so only the desktop marks are links. */
   const interactive = !isPhone;
-  const glyphBand = 15;
+  // 16px: the H / A / N glyphs are 12px text on a 16px line (the 12px floor, brief §1).
+  const glyphBand = 16;
   const arm = Math.floor((height - glyphBand - 1) / 2);
   const domain = Math.max(1, ...played.map((e) => Math.abs(e.margin as number)));
 
@@ -81,21 +93,26 @@ export function MarginStrip({
     <div className={className}>
       <div className="flex items-start gap-2">
         <div
-          className="sx-num relative w-10 shrink-0 text-kicker text-ink-3"
+          className="sx-num relative w-10 shrink-0 text-micro text-ink-3"
           style={{ height: height - glyphBand }}
           aria-hidden="true"
         >
           <span className="absolute top-0 right-0">+{domain}</span>
-          <span className="absolute right-0" style={{ top: arm - 5 }}>
+          <span className="absolute right-0" style={{ top: arm - 8 }}>
             0
           </span>
           <span className="absolute right-0 bottom-0">{signedMargin(-domain)}</span>
         </div>
-        <div className="min-w-0 flex-1 overflow-x-auto">
-          {/* `w-max` — the rule and the columns share ONE box, so they start and end together.
-              Spanning the flex parent instead left a 1024px rule hanging across ~600px of empty
-              surface to the right of a ~400px plot on a 1280px team page. */}
-          <div className="relative w-max">
+        {/* The plot is as wide as its card, and the columns are FLUID (18px floor, 56px cap), so
+            the strip fills the card at every width without a nested scrollbar; the zero rule and the
+            columns share ONE box, so they start and end together. From 768px the wrapper is `overflow-visible`, so
+            the CSS tooltips above the marks are never clipped. Below 768px it is `overflow-x-clip`,
+            NOT `auto`: the hidden tooltips of the right-most marks reach past the card, and a
+            scroll container would turn that into a keyboard-unreachable scrollable region (axe
+            `scrollable-region-focusable`, serious). `clip` makes no scroll container; phone marks
+            are not focusable and phones have no hover, so nothing visible is lost. */}
+        <div className="min-w-0 flex-1 overflow-x-clip md:overflow-visible">
+          <div className="relative">
             {/* The zero rule is one continuous solid hairline behind the columns, never dashed. */}
             <div
               className="sx-zero pointer-events-none absolute left-0 h-px w-full"
@@ -143,7 +160,7 @@ export function MarginStrip({
                     ) : null}
                   </span>
                   <span
-                    className="sx-num block w-full text-center text-kicker text-ink-3"
+                    className="sx-num block w-full text-center text-micro text-ink-3"
                     style={{ height: glyphBand }}
                     aria-hidden="true"
                   >
@@ -155,8 +172,7 @@ export function MarginStrip({
                 return (
                   <span
                     key={`slot-${i}`}
-                    className="flex shrink-0 flex-col items-center"
-                    style={{ width: colWidth }}
+                    className={`flex flex-col items-center ${colClass}`}
                   >
                     {body}
                   </span>
@@ -174,8 +190,7 @@ export function MarginStrip({
               return (
                 <span
                   key={entry.contestId}
-                  className="sx-tip flex shrink-0 flex-col items-center"
-                  style={{ width: colWidth }}
+                  className={`sx-tip flex flex-col items-center ${colClass}`}
                 >
                   {/* A 24px column is a legal tap target (WCAG 2.5.8); an 18px one at a 20px pitch
                       is not, on either the size rule or the spacing rule, and it cannot be made one
@@ -215,8 +230,8 @@ export function MarginStrip({
         </div>
       </div>
 
-      {/* 62ch (DESIGN §4.3): the chart is as wide as its column, the legend is prose. */}
-      <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-3">
+      {/* The chart is as wide as its card; the legend is prose, so it keeps a reading measure. */}
+      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {signedMargin(best)} best &middot; {signedMargin(worst)} worst &middot;{' '}
         {signedMargin(latest)} most recent. H / A / N is home, away, neutral; <b>?</b> is a game
         not played yet.
@@ -225,8 +240,8 @@ export function MarginStrip({
           : ''}
       </p>
 
-      <details className="mt-2">
-        <summary className="sx-action cursor-pointer text-meta text-accent">Show as table</summary>
+      <details className="sx-disclosure mt-2">
+        <summary>Show as table</summary>
         <table className="sx-table mt-2 text-meta">
           <caption className="sr-only">{teamName} league goal margin by game</caption>
           <thead>

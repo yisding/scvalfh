@@ -27,38 +27,36 @@ export interface AttributionProps {
 
 export function Attribution({ snapshotAt, now, links, extraCredit, className }: AttributionProps) {
   return (
-    <footer
-      className={`mt-8 border-t border-hairline px-gutter py-4 text-meta text-ink-2 md:px-gutter-lg${
-        className ? ` ${className}` : ''
-      }`}
-    >
-      <div className="mx-auto max-w-content space-y-1.5">
-        <p className="m-0">
+    <footer className={`mt-section-lg border-t border-hairline md:mt-16${className ? ` ${className}` : ''}`}>
+      {/* The padding lives INSIDE the max-w-content box, so the footer's left edge lines up with
+          <main> and the header at every width. From 768px: sources on the left, the stamp and
+          the actions on the right, the disclaimer across both under a divider. */}
+      <div className="mx-auto max-w-content px-gutter py-10 text-meta text-ink-2 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-12 md:gap-y-4 md:px-gutter-lg md:py-12 xl:px-gutter-xl">
+        <p className="m-0 max-w-prose">
           Data from <ExternalLink href={SOURCE_LINKS.maxpreps}>MaxPreps</ExternalLink> and{' '}
           <ExternalLink href={SOURCE_LINKS.sblive}>SBLive/SI</ExternalLink>. Division alignment and
           the by-laws from <ExternalLink href={SOURCE_LINKS.scval}>SCVAL</ExternalLink>; playoff
           dates and format from <ExternalLink href={SOURCE_LINKS.ccs}>CIF-CCS</ExternalLink>.
         </p>
         {/* The deep links and "About & sources" are standalone actions, not words in a sentence, so
-            each takes its own 24px box (WCAG 2.5.8). The prose links in the paragraph above do not:
-            they sit inside a sentence, which is the case 2.5.8 exempts. */}
-        {links && links.length > 0 ? (
-          <p className="m-0 flex flex-wrap gap-x-3 gap-y-1">
-            {links.map((l) => (
-              <ExternalLink key={l.href} href={l.href} className="sx-action">
-                {l.label}
-              </ExternalLink>
-            ))}
-          </p>
-        ) : null}
-        <p className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+            each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in the paragraph
+            above do not: they sit inside a sentence, which is the case 2.5.8 exempts. */}
+        <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} />
-          <span aria-hidden="true">&middot;</span>
           <Link href="/about" className="sx-action text-accent hover:underline">
             About &amp; sources
           </Link>
-        </p>
-        <p className="m-0 max-w-[62ch] text-ink-3">
+          {links && links.length > 0 ? (
+            <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
+              {links.map((l) => (
+                <ExternalLink key={l.href} href={l.href} className="sx-action">
+                  {l.label}
+                </ExternalLink>
+              ))}
+            </div>
+          ) : null}
+        </div>
+        <p className="mt-6 mb-0 max-w-prose border-t border-divider pt-4 text-meta text-ink-3 md:col-span-2">
           Unofficial fan site. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated.
           Records are computed from published game results and may differ from official standings.
           {extraCredit ? ` ${extraCredit}` : ''}

@@ -47,35 +47,38 @@ function MeetingRow({
         {isThisGame ? 'This game. ' : ''}
         {display.sentence}
       </span>
-      {/* Same shape as GameRow's TeamLine, and for the same reason: the date, the chip, the
-          fixed score column, the "this game" tag and the status label are all `shrink-0`, so the
-          OPPONENT NAME — the one thing this row exists to say — was the only thing left to give.
-          At 390px it had 22px and at 320px it had none. It keeps a floor now, and the trailing
-          cluster wraps to a second line instead. */}
-      <span
-        className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5"
-        aria-hidden="true"
-      >
-        <span className="sx-num w-12 shrink-0 text-ink-2">{monthDay(game.dateLocal)}</span>
+      {/* The same four columns as a team page's game log (date · chip · score · the rest), so the
+          dates, chips and scores line up. The last column wraps the "this game" tag and the
+          status under the opponent rather than truncating the opponent, the one thing this row
+          exists to say. */}
+      <span className="sx-num text-cell text-ink-2" aria-hidden="true">
+        {monthDay(game.dateLocal)}
+      </span>
+      <span className="inline-flex" aria-hidden="true">
         <ResultChip
           kind={display.perspectiveOutcome ?? (display.showScores ? 'pending' : 'none')}
-          size={16}
+          size={20}
         />
-        <span className="sx-num w-12 shrink-0 text-right">
-          {display.showScores ? (
-            <>
-              <ScoreGlyph side={mine} size="meta" />
-              <span className="text-ink-3">{'–'}</span>
-              <ScoreGlyph side={theirs} size="meta" />
-            </>
-          ) : (
+      </span>
+      <span className="sx-num whitespace-nowrap text-right" aria-hidden="true">
+        {display.showScores ? (
+          <>
+            <ScoreGlyph side={mine} size="meta" />
             <span className="text-ink-3">{'–'}</span>
-          )}
-        </span>
-        <span className="min-w-[5.5rem] flex-1 truncate text-ink">
+            <ScoreGlyph side={theirs} size="meta" />
+          </>
+        ) : (
+          <span className="text-ink-3">{'–'}</span>
+        )}
+      </span>
+      <span
+        className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1"
+        aria-hidden="true"
+      >
+        <span className="line-clamp-2 min-w-[6.5rem] flex-1 text-body text-ink">
           {display.versus ?? 'vs'} {theirs.name}
         </span>
-        <span className="ml-auto flex shrink-0 items-center gap-2">
+        <span className="flex max-w-full flex-wrap items-center gap-2">
           {isThisGame ? <Tag label="the game on this page">this game</Tag> : null}
           <StatusLabel display={display} />
         </span>
@@ -83,14 +86,13 @@ function MeetingRow({
     </>
   );
 
+  const ROW =
+    'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-4 py-3 text-meta';
+
   return (
     <li>
       {isThisGame ? (
-        <span
-          className="flex min-h-11 items-center px-gutter py-2 text-meta"
-          style={{ background: 'var(--sx-surface-2)' }}
-          aria-current="page"
-        >
+        <span className={`${ROW} bg-surface-2`} aria-current="page">
           {body}
         </span>
       ) : (
@@ -101,9 +103,7 @@ function MeetingRow({
         <Link
           href={`/game/${game.contestId}`}
           prefetch={false}
-          className={`sx-tap flex min-h-11 items-center px-gutter py-2 text-meta no-underline${
-            display.isNonLeague ? ' sx-nonleague' : ''
-          }`}
+          className={`sx-tap ${ROW} no-underline${display.isNonLeague ? ' sx-nonleague' : ''}`}
         >
           {body}
         </Link>
@@ -124,29 +124,31 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
         id="game-series-kicker"
         meta={
           series.meetings.length === 1
-            ? 'one meeting'
+            ? 'One meeting'
             : `${series.meetings.length} meetings`
         }
       />
-      <ol className="sx-list sx-bleed mt-2">
-        {series.meetings.map((meeting) => (
-          <MeetingRow
-            key={meeting.game.contestId}
-            game={meeting.game}
-            perspective={perspective}
-            isThisGame={meeting.isThisGame}
-          />
-        ))}
-      </ol>
-      <p className="mt-2 mb-0 text-meta text-ink-2">{series.summary}</p>
-      {series.meetings.length > 1 && series.perspective.team ? (
-        <p className="mt-1 mb-0 text-meta text-ink-3">
-          Results, scores and home/away are shown from {series.perspective.name}&rsquo;s side.
-        </p>
-      ) : null}
-      {series.tiebreakNote ? (
-        <p className="mt-1 mb-0 text-meta text-ink-3">{series.tiebreakNote}</p>
-      ) : null}
+      <div className="sx-card sx-flush sx-bleed">
+        <ol className="sx-list">
+          {series.meetings.map((meeting) => (
+            <MeetingRow
+              key={meeting.game.contestId}
+              game={meeting.game}
+              perspective={perspective}
+              isThisGame={meeting.isThisGame}
+            />
+          ))}
+        </ol>
+        <div className="space-y-1 border-t border-divider px-4 py-3 text-meta text-ink-3">
+          <p className="m-0 text-ink-2">{series.summary}</p>
+          {series.meetings.length > 1 && series.perspective.team ? (
+            <p className="m-0">
+              Results, scores and home/away are shown from {series.perspective.name}&rsquo;s side.
+            </p>
+          ) : null}
+          {series.tiebreakNote ? <p className="m-0">{series.tiebreakNote}</p> : null}
+        </div>
+      </div>
     </section>
   );
 }

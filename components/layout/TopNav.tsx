@@ -14,7 +14,7 @@ export const TOP_LINKS = [
 export function TopNav({ className }: { className?: string }) {
   return (
     <nav aria-label="Main" className={className}>
-      <ul className="flex list-none items-center gap-1 p-0">
+      <ul className="flex list-none items-center gap-0.5 p-0">
         {TOP_LINKS.map((link) => (
           <li key={link.href}>
             <NavLink href={link.href} variant="top" label={link.label} />

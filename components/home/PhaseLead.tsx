@@ -11,6 +11,9 @@ import type { PlayoffKeyDates, SeasonPhase } from '../../lib/types';
  * window, when the standings tables are legitimately empty while dozens of non-league games have
  * been played — gets a full sentence rather than a confusing blank table. In the ordinary middle of
  * the league season this renders NOTHING, because the fold is worth more than a banner.
+ *
+ * It is commentary, so it sits on the inset plane (`.sx-inset`, surface-2) between the page title
+ * and the grid, never in a card.
  */
 export interface PhaseLeadProps {
   phase: SeasonPhase;
@@ -28,7 +31,7 @@ export interface PhaseLeadProps {
 function Banner({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <p
-      className={`mt-0 mb-6 max-w-[62ch] rounded-card border border-hairline bg-surface-2 px-gutter py-3 text-meta text-ink-2${
+      className={`sx-inset mt-6 mb-0 max-w-prose text-meta${
         className ? ` ${className}` : ''
       }`}
     >

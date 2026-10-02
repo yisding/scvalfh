@@ -21,11 +21,11 @@ export interface FormGoingInProps {
   className?: string;
 }
 
-function FormRow({ side, showDirection }: { side: GameSideModel; showDirection: boolean }) {
+function FormRow({ side }: { side: GameSideModel }) {
   return (
-    <li className="flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 px-gutter py-2">
-      <span className="flex min-w-0 shrink-0 items-center gap-2">
-        {side.team ? <TeamMonogram team={side.team} size={20} /> : null}
+    <li className="flex min-h-row-1 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+      <span className="flex min-w-0 shrink-0 items-center gap-2.5">
+        {side.team ? <TeamMonogram team={side.team} size={24} /> : null}
         <span className="truncate text-body text-ink">{side.name}</span>
       </span>
       {side.team ? (
@@ -33,11 +33,10 @@ function FormRow({ side, showDirection }: { side: GameSideModel; showDirection: 
           <FormStrip
             entries={side.formBefore}
             size={20}
-            showDirection={showDirection}
             label={`${side.name} going into this game`}
           />
           {side.outcome ? (
-            <span className="ml-auto flex items-center gap-1.5 text-meta text-ink-3">
+            <span className="ml-auto flex items-center gap-2 text-meta text-ink-3">
               <span aria-hidden="true">&rarr;</span>
               <span>then</span>
               {/* `aria-hidden` on the chip, as every other ResultChip consumer does (GameRow,
@@ -71,17 +70,24 @@ export function FormGoingIn({ model, className }: FormGoingInProps) {
 
   return (
     <section className={className} aria-labelledby="game-form-kicker">
-      <SectionHeader kicker="Form going in" as="h2" id="game-form-kicker" />
-      <ol className="sx-list sx-bleed mt-2">
-        {/* Away over home, the same order as the scoreboard and every list on the site. */}
-        <FormRow side={away} showDirection />
-        <FormRow side={home} showDirection={false} />
-      </ol>
-      <p className="mt-2 mb-0 text-meta text-ink-3">
-        {played === 0
-          ? 'Neither side had a league result before this date.'
-          : 'League games only, oldest first. Games with no reported score are skipped, never shown as a result.'}
-      </p>
+      <SectionHeader
+        kicker="Form going in"
+        as="h2"
+        id="game-form-kicker"
+        meta="League games · oldest → newest"
+      />
+      <div className="sx-card sx-flush sx-bleed">
+        <ol className="sx-list">
+          {/* Away over home, the same order as the scoreboard and every list on the site. */}
+          <FormRow side={away} />
+          <FormRow side={home} />
+        </ol>
+        <p className="m-0 border-t border-divider px-4 py-3 text-meta text-ink-3">
+          {played === 0
+            ? 'Neither side had a league result before this date.'
+            : 'Games with no reported score are skipped, never shown as a result.'}
+        </p>
+      </div>
     </section>
   );
 }

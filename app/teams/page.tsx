@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import PageHeader from '@/components/layout/PageHeader';
 import TeamTile from '@/components/teams/TeamTile';
 import { buildTeamsIndex } from '@/components/teams/team-view';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -11,8 +12,8 @@ import { DIVISION_LABELS, DIVISIONS } from '@/lib/season';
 /**
  * /teams — "Find my school" (DESIGN §3.6).
  *
- * Sixteen tiles, grouped by division and sorted alphabetically inside each one, 3-up on a phone,
- * 4-up at 768px and 8-up at 1120px. **All sixteen**, Wilcox included: league membership is the
+ * Sixteen card tiles, grouped by division and sorted alphabetically inside each one: 2-up on a
+ * phone, 3-up from 640px and 4-up from 768px, so each division is two rows of four on desktop. **All sixteen**, Wilcox included: league membership is the
  * repo's list from the official SCVAL PDFs, not the feed's seven De Anza rows, and dropping a
  * school because a source has no data for it is the single worst bug this site could ship
  * (DESIGN §12.1, R-6).
@@ -30,28 +31,32 @@ export const metadata: Metadata = {
 export default function TeamsPage() {
   const counts = getCounts();
   return (
-    <div className="pt-3 pb-6">
-      <h1 className="m-0 text-h1">Teams</h1>
-      <p className="mt-1 mb-5 max-w-[62ch] text-meta text-ink-2">
-        All {counts.teams} schools in the two SCVAL divisions, with each team&rsquo;s league
-        record. Division alignment comes from the official SCVAL schedules, so every member is
-        listed even where a source has no games for it.
-      </p>
+    <div className="pb-section-lg">
+      <PageHeader
+        title="Teams"
+        description={
+          <>
+            All {counts.teams} schools in the two SCVAL divisions, with each team&rsquo;s league
+            record. Division alignment comes from the official SCVAL schedules, so every member is
+            listed even where a source has no games for it.
+          </>
+        }
+      />
 
-      {DIVISIONS.map((division) => {
+      {DIVISIONS.map((division, index) => {
         const tiles = buildTeamsIndex(division);
         return (
           <section
             key={division}
             id={division}
-            className="mb-6"
+            className={index === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
           >
             <SectionHeader
               kicker={DIVISION_LABELS[division]}
               meta={`${tiles.length} teams`}
-              action={{ href: `/standings#${division}`, label: 'standings' }}
+              action={{ href: `/standings#${division}`, label: 'Standings' }}
             />
-            <ul className="grid grid-cols-3 gap-2 md:grid-cols-4 min-[1120px]:grid-cols-8">
+            <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 md:grid-cols-4 md:gap-4">
               {tiles.map((data) => (
                 <TeamTile key={data.team.slug} data={data} />
               ))}
@@ -60,7 +65,7 @@ export default function TeamsPage() {
         );
       })}
 
-      <p className="mt-6 mb-0 max-w-[62ch] text-meta text-ink-3">
+      <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
         Records are league games only, computed from published results as of{' '}
         {formatStamp(getFetchedAt())}. A team with no results reported shows an em dash rather
         than 0-0-0.

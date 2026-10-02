@@ -11,8 +11,12 @@ import type { ChipKind } from './game-view';
  */
 export interface ResultChipProps {
   kind: ChipKind;
-  /** 20 = standings form strip, 24 = game row. */
-  size?: 16 | 20 | 24;
+  /**
+   * 20 = standings form strip, 24 = game row, 28 = a hero mark. 16 stays in the union for
+   * compatibility only: its 10px letter is under the site's 12px floor, so no visible surface
+   * should use it.
+   */
+  size?: 16 | 20 | 24 | 28;
   className?: string;
 }
 
@@ -24,6 +28,9 @@ const STYLES: Record<Exclude<ChipKind, 'none'>, { bg: string; ring: string; ink:
   cancelled: { bg: 'var(--sx-tie-wash)', ring: 'var(--sx-tie)', ink: 'var(--sx-tie-ink)' },
   postponed: { bg: 'var(--sx-tie-wash)', ring: 'var(--sx-tie)', ink: 'var(--sx-tie-ink)' },
 };
+
+/** Letter size per chip size, px. 20 → 12 is the smallest letter any visible surface uses. */
+const LETTER: Record<16 | 20 | 24 | 28, number> = { 16: 10, 20: 12, 24: 13, 28: 14 };
 
 const GLYPH: Record<Exclude<ChipKind, 'none'>, string> = {
   W: 'W',
@@ -64,7 +71,7 @@ export function ResultChip({ kind, size = 20, className }: ResultChipProps) {
           '--sx-chip-bg': s.bg,
           '--sx-chip-ring': s.ring,
           '--sx-chip-ink': s.ink,
-          fontSize: size <= 16 ? 10 : size === 20 ? 12 : 13,
+          fontSize: LETTER[size],
         } as React.CSSProperties
       }
       role="img"

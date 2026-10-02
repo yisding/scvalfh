@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { gameWhen, shortDate } from '../../lib/format';
+import { dateTimeAttr, shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, OfficialFixture, TeamSlug } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
@@ -11,8 +11,9 @@ import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame } from '../ui/game-view';
 
 /**
- * The NEXT block (DESIGN §3.7). The kicker carries the date, the time and league/non-league; the
- * body is one lead line — `at Los Altos` — and then only the chips that are real links. A dead
+ * The NEXT block (DESIGN §3.7, modernization brief §5.7). The heading says Next and whether it is a
+ * league game; the card holds the date (18px) and the time (13px mono), the opponent beside a
+ * 32px monogram, and then only the pills that are real links. A dead
  * affordance is worse than an absent one, so a game with no stream and no ticket link simply has
  * fewer chips.
  *
@@ -60,19 +61,25 @@ export function TeamNextGame({
     const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
     return (
       <section>
-        <SectionHeader kicker="Next" meta={`${shortDate(nextOfficial.dateKey)} \u00b7 League`} />
-        <p className="m-0 flex items-center gap-2 text-lead">
-          {opponent ? <TeamMonogram team={opponent} size={24} /> : null}
-          <span className="text-ink">
-            <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'} </span>
-            {opponent ? opponent.name : mineIsHome ? nextOfficial.awayName : nextOfficial.homeName}
-          </span>
-        </p>
-        <p className="mt-1 mb-0 max-w-[62ch] text-meta text-ink-3">
-          From the official SCVAL schedule. No source has published a contest for this fixture, so
-          there is no start time, no venue and no game page for it &mdash; and there will be no
-          score unless one is reported.
-        </p>
+        <SectionHeader kicker="Next" meta="League" />
+        <div className="sx-card p-5">
+          <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-lead text-ink">{shortDate(nextOfficial.dateKey)}</span>
+            <span className="text-meta text-ink-2">No start time published</span>
+          </p>
+          <p className="mt-3 mb-0 flex items-center gap-3 text-body">
+            {opponent ? <TeamMonogram team={opponent} size={32} /> : null}
+            <span className="min-w-0 text-ink">
+              <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'} </span>
+              {opponent ? opponent.name : mineIsHome ? nextOfficial.awayName : nextOfficial.homeName}
+            </span>
+          </p>
+          <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
+            From the official SCVAL schedule. No source has published a contest for this fixture,
+            so there is no start time, no venue and no game page for it &mdash; and there will be no
+            score unless one is reported.
+          </p>
+        </div>
       </section>
     );
   }
@@ -94,42 +101,57 @@ export function TeamNextGame({
   const opponentSide = mineIsHome ? game.away : game.home;
   const opponent = opponentSide.slug ? getTeamBySlug(opponentSide.slug) : undefined;
   const chips = chipsFor(game);
+  // A scheduled game's status label IS its time, which the date line already carries in mono;
+  // anything else (LIVE, POSTPONED, CANCELLED with its struck time, SCORE NOT REPORTED) is the
+  // written status in that slot instead, so the word is never dropped (DESIGN §5.2).
+  const scheduled = display.kind === 'scheduled';
 
   return (
     <section>
-      <SectionHeader
-        kicker="Next"
-        meta={`${gameWhen(game)} · ${game.isLeague ? 'League' : 'Non-league'}`}
-      />
-      <p className="m-0 flex items-center gap-2 text-lead">
-        {opponent ? <TeamMonogram team={opponent} size={24} /> : null}
-        <Link href={`/game/${game.contestId}`} className="text-ink no-underline hover:underline">
-          <span className="text-ink-2">{display.versus ?? 'vs'} </span>
-          {opponent ? opponent.name : opponentSide.name}
-        </Link>
-        <StatusLabel display={display} className="shrink-0" />
-      </p>
-      {game.venue.name ? (
-        <p className="mt-1 mb-0 text-meta text-ink-2">{game.venue.name}</p>
-      ) : null}
-      {game.isTimeTba ? (
-        <p className="mt-1 mb-0 text-meta text-ink-3">
-          MaxPreps has not published a start time for this game yet.
+      <SectionHeader kicker="Next" meta={game.isLeague ? 'League' : 'Non-league'} />
+      <div className="sx-card p-5">
+        <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <time dateTime={dateTimeAttr(game)} className="text-lead text-ink">
+            {game.isDateTba ? 'Date TBA' : shortDate(game.dateLocal)}
+          </time>
+          {scheduled ? (
+            game.isDateTba ? null : (
+              <span className="sx-num text-cell text-ink-2">
+                {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
+              </span>
+            )
+          ) : (
+            <StatusLabel display={display} showNonLeague={false} className="shrink-0" />
+          )}
         </p>
-      ) : null}
-      {chips.length > 0 ? (
-        <p className="mt-2 mb-0 flex flex-wrap gap-2">
-          {chips.map((chip) => (
-            <ExternalLink
-              key={chip.href}
-              href={chip.href}
-              className="inline-flex h-11 items-center rounded-chip border border-hairline bg-surface px-3 text-meta no-underline"
-            >
-              {chip.label}
-            </ExternalLink>
-          ))}
+        <p className="mt-3 mb-0 flex items-center gap-3 text-body">
+          {opponent ? <TeamMonogram team={opponent} size={32} /> : null}
+          <Link
+            href={`/game/${game.contestId}`}
+            className="min-w-0 text-ink no-underline hover:underline"
+          >
+            <span className="text-ink-2">{display.versus ?? 'vs'} </span>
+            {opponent ? opponent.name : opponentSide.name}
+          </Link>
         </p>
-      ) : null}
+        {game.venue.name ? (
+          <p className="mt-1 mb-0 text-meta text-ink-2">{game.venue.name}</p>
+        ) : null}
+        {game.isTimeTba ? (
+          <p className="mt-1 mb-0 text-meta text-ink-3">
+            MaxPreps has not published a start time for this game yet.
+          </p>
+        ) : null}
+        {chips.length > 0 ? (
+          <p className="mt-4 mb-0 flex flex-wrap gap-2">
+            {chips.map((chip) => (
+              <ExternalLink key={chip.href} href={chip.href} className="sx-pill">
+                {chip.label}
+              </ExternalLink>
+            ))}
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }

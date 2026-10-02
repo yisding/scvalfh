@@ -6,7 +6,8 @@ import type { GameDisplay, StatusTone } from './game-view';
  * CANCELLED · the time · TIME TBA (DESIGN §5.2, §6.5 channel 2).
  *
  * Channel 2 is never abbreviated to a dot, and LIVE always carries the word as well as the
- * accent dot, so the pulse is never load-bearing.
+ * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
+ * already uppercase, so `uppercase` changes nothing a reader hears.
  */
 export interface StatusLabelProps {
   display: GameDisplay;
@@ -25,7 +26,7 @@ const TONE: Record<StatusTone, string> = {
 export function StatusLabel({ display, showNonLeague = true, className }: StatusLabelProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-mono text-kicker font-semibold tracking-[0.10em] uppercase ${
+      className={`inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-sans text-micro font-semibold uppercase tracking-[0.04em] ${
         TONE[display.statusTone]
       }${className ? ` ${className}` : ''}`}
     >

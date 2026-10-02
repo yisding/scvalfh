@@ -6,9 +6,10 @@ import { gameFilterAttrs } from './filter-data';
 /**
  * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).
  *
- * Phone gets the 68px two-line `GameRow` — a `<details>`/`<summary>` pair, so expanding a game
- * needs no JavaScript. Desktop gets the same games as `GameCard`s, 2-up at 768px and 3-up at
- * 1120px, with the recap and venue always visible and nothing to expand.
+ * Phone gets the 76px two-line `GameRow` — a `<details>`/`<summary>` pair, so expanding a game
+ * needs no JavaScript — in one full-bleed band. From 768px the same games are `GameCard`s in an
+ * auto-fill grid (17rem minimum, so 2-up at 768 and 3- or 4-up wider), with the recap always
+ * visible and nothing to expand.
  *
  * Both render inside ONE `<li>` per contest, with one set of `data-*` filter attributes, so:
  *   - the filter has exactly one element per game to hide, at any viewport width,
@@ -36,34 +37,28 @@ export function GameList({
   return (
     <ol
       id={id}
-      // Tailwind v4's scanner skips a candidate that runs straight into `${`, which is how
-      // `xl:grid-cols-3` — DESIGN §3.3's desktop 3-up card grid — went missing from the built
-      // CSS while every other class here survived. Keep the interpolation out of the literal.
+      // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
+      // interpolation stays out of the literal.
       className={[
-        'sx-bleed m-0 list-none p-0 md:grid md:grid-cols-2 md:items-start md:gap-3 xl:grid-cols-3',
+        'sx-list sx-bleed max-md:bg-surface max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)] md:grid md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] md:items-stretch md:gap-4',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       {games.map((game) => (
-        <li
-          key={game.contestId}
-          {...gameFilterAttrs(game)}
-          className="border-b border-hairline last:border-b-0 md:border-b-0"
-        >
+        // No display utility on the <li>: the filter toggles `hidden` on it, and a `display`
+        // class would beat the attribute and leave a hole in the grid.
+        <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
           <GameRow
             game={game}
             perspective={perspective}
             showRecap={showRecap}
             className="md:hidden"
           />
-          <GameCard
-            game={game}
-            perspective={perspective}
-            showRecap={showRecap}
-            className="hidden md:block"
-          />
+          <div className="hidden h-full md:block">
+            <GameCard game={game} perspective={perspective} showRecap={showRecap} className="h-full" />
+          </div>
         </li>
       ))}
     </ol>

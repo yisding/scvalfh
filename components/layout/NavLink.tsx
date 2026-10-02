@@ -37,37 +37,50 @@ export function NavLink({ href, variant, label, glyph }: NavLinkProps) {
   const active = isActive(pathname ?? '/', href);
 
   if (variant === 'top') {
+    // The 44px link box is the target; the 36px capsule inside it is the visible state. The
+    // active capsule is accent-wash with accent-ink (6.5 / 7.55), never accent on the wash.
     return (
       <Link
         href={href}
         prefetch={false}
         aria-current={active ? 'page' : undefined}
-        className={`inline-flex h-11 items-center px-2 text-meta no-underline ${
-          active ? 'font-semibold text-accent-ink' : 'text-ink-2 hover:text-ink'
-        }`}
+        className="group inline-flex h-11 items-center no-underline"
       >
-        {label}
+        <span
+          className={`sx-indicator inline-flex h-9 items-center rounded-full px-2.5 text-meta lg:px-3 ${
+            active
+              ? 'bg-accent-wash font-semibold text-accent-ink'
+              : 'font-medium text-ink-2 group-hover:bg-surface-2 group-hover:text-ink'
+          }`}
+        >
+          {label}
+        </span>
       </Link>
     );
   }
 
+  // The active tab's non-colour cues are `aria-current`, the capsule behind the glyph and the
+  // heavier label; forced colours draw an outline on `.sx-indicator` (globals.css).
   return (
     <Link
       href={href}
       prefetch={false}
       aria-current={active ? 'page' : undefined}
-      className={`flex h-14 w-full flex-col items-center justify-center gap-0.5 no-underline ${
+      className={`flex h-14 w-full flex-col items-center justify-center gap-1 no-underline ${
         active ? 'text-accent-ink' : 'text-ink-2'
       }`}
-      style={{
-        // A 2px top rule is the second, non-color cue for the active tab.
-        boxShadow: active ? 'inset 0 2px 0 var(--sx-accent)' : undefined,
-      }}
     >
-      <span aria-hidden="true" className="flex h-5 items-center">
+      <span
+        aria-hidden="true"
+        className={`sx-indicator flex h-7 w-14 max-w-full items-center justify-center rounded-full${
+          active ? ' bg-accent-wash' : ''
+        }`}
+      >
         {glyph}
       </span>
-      <span className="text-[0.625rem] font-semibold leading-none">{label}</span>
+      <span className={`text-micro leading-none ${active ? 'font-semibold' : 'font-medium'}`}>
+        {label}
+      </span>
     </Link>
   );
 }

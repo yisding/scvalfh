@@ -20,7 +20,7 @@ import './globals.css';
  * Together they are 53 KB of the critical path (sans 29.6 KB, mono 23.4 KB) — the largest line
  * item after the framework's own JS, and the reason DESIGN §13's "`/` under 120 KB gzipped
  * including fonts" cannot be met. `preload: false` on the mono face was measured as a way to buy
- * that back and does NOT: mono is the numeral and kicker face, so `.sx-kicker` and `.sx-num` ask
+ * that back and does NOT: mono is the numeral and tag face, so `.sx-num` and `Tag` ask
  * for it above the fold on every route, and the browser fetches it the moment the stylesheet is
  * applied whether or not a preload hint pointed at it — `/` measured 236.3 KB with the hint
  * removed against 236.8 KB with it, i.e. the ~550 bytes of the `<link>` itself. All it actually
@@ -106,7 +106,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <main
           id="main"
           tabIndex={-1}
-          className="mx-auto max-w-content px-gutter md:px-gutter-lg"
+          className="mx-auto max-w-content px-gutter md:px-gutter-lg xl:px-gutter-xl"
         >
           {children}
         </main>

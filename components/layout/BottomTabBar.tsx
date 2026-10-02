@@ -2,13 +2,13 @@ import NavLink from './NavLink';
 
 /**
  * The phone bottom bar (DESIGN §1.3, §3.1, R-3). FIVE tabs, because "find my school" was a
- * top-three task with no phone nav entry. Each item is 56px tall and at most 78px wide — 78×56 at
- * the 390px reference width, and an equal fifth of the viewport below that, so a 320px phone still
- * gets 64×56 per tab (past the 44×44 minimum) and the fifth tab is never pushed off-screen. The
- * labels are ≤6 characters, so they do not truncate at any supported width.
+ * top-three task with no phone nav entry. The bar is 56px tall plus the safe-area inset; each tab
+ * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
+ * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤6 characters at
+ * 12px, so they do not truncate at any supported width.
  *
  * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current="page"`, accent
- * ink AND a 2px top rule — never color alone.
+ * ink, a wash capsule behind its glyph AND a heavier label — never color alone.
  */
 const ICON_PROPS = {
   width: 20,
@@ -79,10 +79,10 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Sections"
-      className="fixed bottom-0 left-0 z-20 w-full border-t border-hairline bg-surface md:hidden"
+      className="fixed bottom-0 left-0 z-20 w-full bg-surface shadow-[0_-1px_0_var(--sx-border)] md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="mx-auto flex w-full max-w-[390px] list-none p-0">
+      <ul className="mx-auto flex w-full max-w-md list-none p-0">
         {TABS.map((tab) => (
           <li key={tab.href} className="min-w-0 flex-1">
             <NavLink href={tab.href} variant="tab" label={tab.label} glyph={tab.glyph} />

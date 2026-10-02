@@ -88,7 +88,7 @@ function BracketCard({
   const named = isNamedSide(game.home) || isNamedSide(game.away);
   return (
     <div
-      className={`min-w-0 flex-1 rounded-card border border-hairline bg-surface${
+      className={`sx-card min-w-0 flex-1${
         pinned ? ' sx-pinned' : ''
       }`}
     >
@@ -129,19 +129,16 @@ export function PlayoffBracket({ path, highlightSlug, className }: PlayoffBracke
   return (
     <div className={className}>
       {/* Phone: rounds stacked, the same GameRow as every other list. */}
-      <ol className="m-0 list-none space-y-5 p-0 md:hidden">
+      <ol className="m-0 list-none space-y-6 p-0 md:hidden">
         {rounds.map((round) => (
           <li key={round.dateKey}>
-            {/* SectionHeader's rule-and-kicker, at h4: the page owns h1, the section kicker is
-                h2 and the bracket's name is h3, so a round heading is the fourth level. */}
-            <div className="sx-kicker">
-              <h4 className="m-0 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
-                {round.name}
-              </h4>
-              <span className="normal-case tracking-normal text-ink-3">{round.dateLabel}</span>
-              <span className="sx-kicker-rule" aria-hidden="true" />
-            </div>
-            <ol className="sx-list sx-bleed border-y border-hairline bg-surface">
+            {/* h4: the page owns h1, the section heading is h2 and the bracket's name is h3, so a
+                round heading is the fourth level. */}
+            <h4 className="m-0 mb-3 flex flex-wrap items-baseline gap-x-3 text-lead text-ink">
+              {round.name}
+              <span className="text-meta font-normal text-ink-2">{round.dateLabel}</span>
+            </h4>
+            <ol className="sx-list sx-card sx-flush">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is isLeague=false, so the NL tag would mark the whole
@@ -161,23 +158,23 @@ export function PlayoffBracket({ path, highlightSlug, className }: PlayoffBracke
       >
         {rounds.map((round, roundIndex) => (
           <li key={round.dateKey} className="flex min-w-0 flex-col">
-            <h4 className="m-0 mb-2 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
+            <h4 className="m-0 mb-3 text-lead text-ink">
               {round.name}{' '}
-              <span className="normal-case tracking-normal">&middot; {round.dateLabel}</span>
+              <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
             </h4>
             <ol
               className={`m-0 flex flex-1 list-none flex-col justify-around gap-4 p-0${
-                roundIndex > 0 ? ' border-l border-hairline' : ''
+                roundIndex > 0 ? ' border-l border-divider' : ''
               }`}
             >
               {round.games.map((entry) => (
                 <li key={entry.game.contestId} className="flex min-w-0 items-center">
                   {roundIndex > 0 ? (
-                    <span className="w-4 shrink-0 border-t border-hairline" aria-hidden="true" />
+                    <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}
                   <BracketCard entry={entry} highlightSlug={highlightSlug} />
                   {roundIndex < rounds.length - 1 ? (
-                    <span className="w-4 shrink-0 border-t border-hairline" aria-hidden="true" />
+                    <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}
                 </li>
               ))}

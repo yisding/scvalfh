@@ -4,7 +4,8 @@ import { longDate, monthDay, parseLocal } from '../../lib/format';
 import { PLAYOFF_KEY_DATES } from '../../lib/season';
 
 /**
- * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · SEP · ● TODAY · OCT · Oct 28 ↓ · CCS Nov 7–14`.
+ * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · Sep · ● Today · Oct · Oct 28 ↓ · CCS Nov 7–14`,
+ * as a row of 36px capsules inside a 44px hit row.
  *
  * Plain `<a href="#2026-09-24">` anchors into the date groups below — real, shareable, JS-free
  * URLs, and `/scores/[date]` exists for every one of them. No scroll-spy and no client component:
@@ -15,7 +16,7 @@ import { PLAYOFF_KEY_DATES } from '../../lib/season';
  * part of the reproducible build rather than something that drifts between build and view.
  */
 const MONTH_NAMES = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ] as const;
 
 const MONTH_NAMES_LONG = [
@@ -36,7 +37,7 @@ interface Marker {
   label: string;
   /** A leading glyph: `↑` for the season's first day, `↓` for its last, `●` for today. */
   glyph?: string;
-  /** The whole accessible name, because `SEP` alone is not a date. */
+  /** The whole accessible name, because `Sep` alone is not a date. */
   sr: string;
   current?: boolean;
 }
@@ -55,7 +56,7 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   if (dates.includes(today)) {
     candidates.push({
       date: today,
-      label: 'TODAY',
+      label: 'Today',
       glyph: '●',
       sr: `Today, ${longDate(today)}`,
       current: true,
@@ -112,13 +113,18 @@ export function TimelineRail({ dates, today, className }: TimelineRailProps) {
           clipped its own chips correctly while the last chip's hidden label resolved at x=350 past
           the clip and pushed `documentElement.scrollWidth` to 350 against a 320px viewport, which
           is DESIGN §10.8 / R-8's "no horizontal page scroll … at 320px" (WCAG 1.4.10 Reflow). */}
-      <ol className="m-0 flex list-none items-center gap-1 overflow-x-auto p-0">
+      {/* `scroll-px-10`: Chrome only scrolls a focused chip into view when it is wholly outside
+          the scrollport, and the last chip sat half under the 2rem fade, so Tab left it there,
+          masked. A 2.5rem scroll padding makes the faded edge count as outside. */}
+      <ol className="sx-fade-x m-0 flex list-none items-center gap-2 overflow-x-auto scroll-px-10 px-gutter py-1 md:px-1">
         {markers.map((marker) => (
-          <li key={marker.date} className="shrink-0">
+          <li key={marker.date} className="flex h-11 shrink-0 items-center">
             <a
               href={`#${marker.date}`}
-              className={`relative inline-flex h-11 items-center gap-1 px-2 font-mono text-kicker font-semibold tracking-[0.10em] uppercase no-underline ${
-                marker.current ? 'text-accent-ink' : 'text-ink-2 hover:text-ink'
+              className={`relative inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] ${
+                marker.current
+                  ? 'bg-accent-wash text-accent-ink'
+                  : 'bg-surface text-ink-2 hover:text-ink'
               }`}
             >
               {marker.glyph ? <span aria-hidden="true">{marker.glyph}</span> : null}
@@ -127,10 +133,10 @@ export function TimelineRail({ dates, today, className }: TimelineRailProps) {
             </a>
           </li>
         ))}
-        <li className="shrink-0">
+        <li className="flex h-11 shrink-0 items-center">
           <Link
             href="/playoffs"
-            className="relative inline-flex h-11 items-center gap-1 px-2 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-2 no-underline hover:text-ink"
+            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:text-ink"
           >
             <span aria-hidden="true">{ccsLabel()}</span>
             <span aria-hidden="true">&rarr;</span>

@@ -23,14 +23,18 @@ export function TeamGameLog({ games, perspective, emptyHeading, emptyBody }: Tea
   if (games.length === 0) {
     return <EmptyState heading={emptyHeading}>{emptyBody}</EmptyState>;
   }
+  // The card is the band on a phone (edge to edge, a line above and below) and a rounded card
+  // from 768px; `sx-flush` clips the rows to its corners and draws their focus rings inset.
   return (
-    <ol className="sx-list sx-bleed border-y border-hairline bg-surface md:border">
-      {games.map((game) => (
-        <li key={game.contestId}>
-          <GameLogRow game={game} perspective={perspective} />
-        </li>
-      ))}
-    </ol>
+    <div className="sx-card sx-flush sx-bleed">
+      <ol className="sx-list">
+        {games.map((game) => (
+          <li key={game.contestId}>
+            <GameLogRow game={game} perspective={perspective} />
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 

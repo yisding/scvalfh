@@ -5,6 +5,7 @@ import { dateWithYear } from '../../lib/format';
 import { outcomesFor } from '../../lib/standings';
 import type { PlayoffStatus } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import Tag from '../ui/Tag';
 import type { TeamPageView } from './team-view';
 
 /**
@@ -47,31 +48,57 @@ function playoffSentence(name: string, outcomes: readonly PlayoffStatus[]): stri
     .join(' or ')} once Article VI §7's coin flip is run.`;
 }
 
+/** The written status word on the tag — the same words the standings band uses. */
+const BADGE: Record<PlayoffStatus, { text: string; label: string }> = {
+  aq: { text: 'AQ', label: 'Automatic qualifier position' },
+  'play-in': { text: 'Play-in', label: 'Play-in position' },
+  'at-large': { text: 'At-large', label: 'At-large consideration' },
+  out: { text: 'No AQ', label: 'No automatic berth' },
+};
+
 export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
   const { team, standing, hasResults } = view;
+  const outcomes = hasResults && standing ? outcomesFor(standing) : [];
   return (
-    <div className="space-y-2 text-meta">
+    <div className="sx-card p-5 text-meta">
+      {outcomes.length > 0 ? (
+        // A level place can straddle a boundary, so it gets one tag per possible outcome, in the
+        // same order the sentence names them. Only AQ takes the accent: there it means "berth".
+        <p className="m-0 mb-3 flex flex-wrap gap-2">
+          {outcomes.map((status) => (
+            <Tag
+              key={status}
+              size="md"
+              tone={status === 'aq' ? 'accent' : 'neutral'}
+              label={BADGE[status].label}
+            >
+              {BADGE[status].text}
+            </Tag>
+          ))}
+        </p>
+      ) : null}
       <p className="m-0 text-body text-ink">
         {hasResults && standing
-          ? playoffSentence(team.name, outcomesFor(standing))
+          ? playoffSentence(team.name, outcomes)
           : `No results are reported for ${team.name}, so it has no computed position in the CCS picture.`}
       </p>
       {hasResults && standing?.tiebreak.shared ? (
-        <p className="m-0 text-ink-2">{standing.tiebreak.note}</p>
+        <p className="mt-2 mb-0 text-ink-2">{standing.tiebreak.note}</p>
       ) : null}
-      <p className="m-0 text-ink-2">
-        {BYLAW_CITATIONS.qualifiers}. The SCVAL crossover and play-in are{' '}
-        {dateWithYear(PLAYOFF_KEY_DATES.crossover)}; CCS seeds on{' '}
-        {dateWithYear(PLAYOFF_KEY_DATES.seedingMeeting)}. Berths are assigned by the CCS committee
-        and nothing here is official.
+      <p className="mt-2 mb-0 text-ink-2">
+        The SCVAL crossover and play-in are {dateWithYear(PLAYOFF_KEY_DATES.crossover)}; CCS seeds
+        on {dateWithYear(PLAYOFF_KEY_DATES.seedingMeeting)}. Berths are assigned by the CCS
+        committee and nothing here is official.
       </p>
-      {/* Two standalone actions on their own row, so each carries its own 24px box (WCAG 2.5.8)
-          rather than the 17px height of the type around them. */}
-      <p className="m-0 flex flex-wrap gap-x-4 gap-y-1">
-        <Link href="/playoffs" className="sx-action text-accent hover:underline">
-          Playoff picture <span aria-hidden="true">&rarr;</span>
+      <details className="sx-disclosure mt-3">
+        <summary>How CCS qualifying works</summary>
+        <p className="mt-1 mb-2 max-w-prose text-ink-2">{BYLAW_CITATIONS.qualifiers}.</p>
+      </details>
+      <p className="mt-3 mb-0 flex flex-wrap gap-2">
+        <Link href="/playoffs" className="sx-pill text-accent">
+          Playoff picture
         </Link>
-        <ExternalLink href={CCS_BRACKET_URL} className="sx-action">
+        <ExternalLink href={CCS_BRACKET_URL} className="sx-pill">
           Official CCS bracket
         </ExternalLink>
       </p>

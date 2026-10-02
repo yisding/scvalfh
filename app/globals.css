@@ -64,14 +64,19 @@
   --sx-select:        #cbdaf0;
 
   /* radii */
-  --sx-r-tag: 4px;
-  --sx-r-chip: 6px;
-  --sx-r-card: 10px;
-  --sx-r-card-lg: 14px;
+  --sx-r-tag: 6px;
+  --sx-r-chip: 8px;
+  --sx-r-card: 12px;
+  --sx-r-card-lg: 16px;
 
-  /* the only two shadows in the system */
+  /* Elevation. A card is a 1px ring plus a soft shadow (light) or the ring alone (dark).
+     None of these is a colour token: they are alpha on the ink, so the contrast test is untouched. */
   --sx-shadow-sticky: 0 1px 0 var(--sx-border);
-  --sx-shadow-raised: 0 1px 2px rgb(14 17 22 / 0.05), 0 2px 12px rgb(14 17 22 / 0.05);
+  --sx-shadow-raised: 0 1px 2px rgb(14 17 22 / 0.04), 0 4px 16px -4px rgb(14 17 22 / 0.08);
+  --sx-shadow-lift:   0 2px 4px rgb(14 17 22 / 0.05), 0 12px 28px -8px rgb(14 17 22 / 0.16);
+  --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.08);
+  /* in-card row lines: lighter than a container edge, so space (not lines) groups sections */
+  --sx-divider:       color-mix(in srgb, var(--sx-border) 60%, transparent);
 
   /* motion */
   --sx-dur-tap: 120ms;
@@ -108,8 +113,10 @@
     --sx-zero:          #3d444d;
     --sx-focus:         #4f95ee;
     --sx-select:        #213043;
-    /* shadows do not read on #0b0d10 — the hairline does the work */
+    /* shadows do not read on #0b0d10 — the ring does the work */
     --sx-shadow-raised: none;
+    --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
+    --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
   }
 }
 
@@ -142,7 +149,10 @@
   --sx-focus:         #4f95ee;
   --sx-select:        #213043;
   --sx-shadow-raised: none;
+  --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
+  --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
+
 
 /* ── Tailwind theme. `inline` is required: the utilities must resolve the
       var() at use-site so the dark overrides above take effect. ─────────── */
@@ -157,6 +167,7 @@
   --color-surface-2:    var(--sx-surface-2);
   --color-surface-3:    var(--sx-surface-3);
   --color-hairline:     var(--sx-border);
+  --color-divider:      var(--sx-divider);
   --color-rule:         var(--sx-border-strong);
   --color-ink:          var(--sx-text);
   --color-ink-2:        var(--sx-text-2);
@@ -176,52 +187,80 @@
   --color-bar:          var(--sx-bar);
   --color-zero:         var(--sx-zero);
 
-  /* type scale — 8 steps, two of them fluid. No three steps inside 2px. */
-  --text-kicker: 0.6875rem;                    /* 11 — mono caps, the kicker voice */
-  --text-kicker--line-height: 1;
-  --text-kicker--letter-spacing: 0.10em;
+  /* type ladder — 12 · 13 · 14 · 16 · 18 · 18→20 · 22 · 24 · 28→36 · 32→44 · 40→56.
+     Nothing that carries information is set below 12px. `cell` is NOT a prose step: it is the
+     13px mono numeral used only in pixel-budgeted columns (phone standings, time columns). */
+  --text-kicker: 0.75rem;                      /* 12 — column heads and 1–2 word caps tags only */
+  --text-kicker--line-height: 1rem;
+  --text-kicker--letter-spacing: 0.06em;
   --text-kicker--font-weight: 600;
 
-  --text-micro: 0.75rem;                       /* 12 — tab labels, chip letters */
+  --text-micro: 0.75rem;                       /* 12 — tab labels, status words, pills, dt labels */
   --text-micro--line-height: 1rem;
   --text-micro--font-weight: 500;
 
-  --text-meta: 0.8125rem;                      /* 13 — timestamps, footnotes, recaps, cells */
-  --text-meta--line-height: 1.125rem;
+  --text-cell: 0.8125rem;                      /* 13 — mono numerals in measured columns */
+  --text-cell--line-height: 1.25rem;
 
-  --text-body: 0.9375rem;                      /* 15 — default reading size, team names */
-  --text-body--line-height: 1.375rem;
+  --text-meta: 0.875rem;                       /* 14 — notes, captions, recaps, nav, desktop cells */
+  --text-meta--line-height: 1.25rem;
 
-  --text-lead: 1.0625rem;                      /* 17 — the next-game line, card leads */
-  --text-lead--line-height: 1.5rem;
+  --text-body: 1rem;                           /* 16 — default reading size, team names */
+  --text-body--line-height: 1.5rem;
+
+  --text-lead: 1.125rem;                       /* 18 — card leads, h3 */
+  --text-lead--line-height: 1.625rem;
   --text-lead--font-weight: 600;
 
-  --text-score: 1.25rem;                       /* 20 — mono tabular scores in lists */
-  --text-score--line-height: 1.5rem;
+  --text-section: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);   /* 18 → 20 — every h2 */
+  --text-section--line-height: 1.75rem;
+  --text-section--letter-spacing: -0.012em;
+  --text-section--font-weight: 600;
+
+  --text-score: 1.375rem;                      /* 22 — mono tabular scores in lists */
+  --text-score--line-height: 1.75rem;
   --text-score--font-weight: 600;
 
-  --text-h1: clamp(1.375rem, 1.1rem + 1.1vw, 1.75rem);    /* 22 → 28 */
+  --text-title: 1.5rem;                        /* 24 — long-form h2 (About, History), board names */
+  --text-title--line-height: 2rem;
+  --text-title--letter-spacing: -0.015em;
+  --text-title--font-weight: 600;
+
+  --text-h1: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);      /* 28 → 36 */
   --text-h1--line-height: 1.15;
-  --text-h1--letter-spacing: -0.02em;
+  --text-h1--letter-spacing: -0.025em;
   --text-h1--font-weight: 600;
 
-  --text-figure: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);  /* 28 → 40 — stat values */
+  --text-figure: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);     /* 32 → 44 — stat values */
   --text-figure--line-height: 1;
   --text-figure--letter-spacing: -0.02em;
   --text-figure--font-weight: 600;
 
-  /* named layout constants used in the fold arithmetic of §3 */
-  --spacing-gutter:    1rem;      /* 16px phone side gutter */
-  --spacing-gutter-lg: 1.5rem;    /* 24px desktop */
-  --spacing-topbar:    2.75rem;   /* 44px phone */
-  --spacing-topbar-lg: 3.5rem;    /* 56px desktop */
-  --spacing-tabbar:    3.5rem;    /* 56px */
-  --spacing-row:       3.75rem;   /* 60px two-line standings row */
-  --spacing-gamerow:   4.25rem;   /* 68px game row */
-  --spacing-content:   70rem;     /* 1120px content max-width */
+  --text-display: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);   /* 40 → 56 — the game-page score */
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+
+  /* named layout constants */
+  --spacing-gutter:    1rem;      /* 16px phone side gutter — .sx-bleed and the measured phone
+                                     standings depend on it; never make it media-varying */
+  --spacing-gutter-lg: 1.5rem;    /* 24px, 768–1279 */
+  --spacing-gutter-xl: 2rem;      /* 32px, ≥1280 (`xl:px-gutter-xl`) */
+  --spacing-topbar:    3rem;      /* 48px phone */
+  --spacing-topbar-lg: 4rem;      /* 64px desktop */
+  --spacing-tabbar:    3.5rem;    /* 56px — unchanged on purpose */
+  --spacing-divbar:    3rem;      /* 48px — /standings phone division bar */
+  --spacing-row:       4.25rem;   /* 68px two-line phone standings row */
+  --spacing-row-1:     3.25rem;   /* 52px one-line row: desktop/mini table, GameLine, game log */
+  --spacing-gamerow:   4.75rem;   /* 76px game row */
+  --spacing-section:   2.5rem;    /* 40px between sections, phone */
+  --spacing-section-lg: 3.5rem;   /* 56px between sections, ≥768 */
+  --spacing-stack:     1.5rem;    /* 24px between blocks inside a section */
+  --spacing-head:      0.75rem;   /* 12px from a heading to its content */
+  --spacing-content:   75rem;     /* 1200px content max-width (padding included) */
   /* `max-w-*` reads the --container-* namespace, not --spacing-*, so the content
      cap has to be declared in both to be usable as `max-w-content`. */
-  --container-content: 70rem;
+  --container-content: 75rem;
 
   --radius-tag:     var(--sx-r-tag);
   --radius-chip:    var(--sx-r-chip);
@@ -230,6 +269,8 @@
 
   --shadow-sticky: var(--sx-shadow-sticky);
   --shadow-raised: var(--sx-shadow-raised);
+  --shadow-lift:   var(--sx-shadow-lift);
+  --shadow-ring:   var(--sx-ring);
 
   --ease-sx: var(--sx-ease);
 }
@@ -238,33 +279,22 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-    /* WCAG 2.2 SC 2.4.11 Focus Not Obscured. The page has fixed chrome at BOTH ends on a phone —
-       a sticky 44px header and a fixed 56px tab bar — and the scroll the browser performs when
-       focus moves knows nothing about either, so tabbing forward parked a focused row 84% behind
-       the tab bar and Shift-Tab parked it under the header. Declaring the chrome as the scroll
-       container's own padding fixes the focus scroll, `#hash` navigation and `scrollIntoView()` in
-       one place, which is why no element carries a `scroll-mt-*` of its own any more.
-
-       The top value is the TALLEST stack on the site (/standings adds a 44px division bar under the
-       header), not the header alone: over-padding only leaves a little more air above the target,
-       while under-padding hides it.
-
-       The bottom value adds the bar's own `border-t` hairline to `--spacing-tabbar`: the token is
-       the 56px CONTENT height and the rendered bar is 57px, so the padding alone still left the
-       focus ring's last pixel underneath it. Over-pad by a pixel rather than under-pad by one. */
-    scroll-padding-top: 5.5rem;
+    /* WCAG 2.2 SC 2.4.11 Focus Not Obscured: the chrome is declared as the scroll container's own
+       padding, which fixes focus scroll, `#hash` navigation and `scrollIntoView()` in one place.
+       The top value is the TALLEST sticky stack on the site, plus 8px of air:
+         phone — 48px top bar + 48px /standings division bar (or /schedule's 48px date header);
+         ≥768  — 64px top bar + 48px /schedule date header.
+       The bottom value adds 1px to the 56px tab bar so the last pixel of a focus ring clears it. */
+    scroll-padding-top: 6.5rem;
     scroll-padding-bottom: calc(var(--spacing-tabbar) + 1px + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) {
     /* BottomTabBar is `md:hidden`, so there is nothing at the bottom to clear from here up. */
-    html { scroll-padding-top: 6.25rem; scroll-padding-bottom: 0; }
+    html { scroll-padding-top: 7.5rem; scroll-padding-bottom: 0; }
   }
 
-  /* The sticky stack a sticky <thead> parks under. A page with more chrome than the top bar
-     (/standings adds a 44px division bar) raises it on its own wrapper; everything else gets
-     the bar's own height, so a table header never slides underneath it. This is a DEFAULT, not
-     an offset applied at rest: `position: sticky` only pulls an element once it would scroll
-     past the offset. */
+  /* The sticky stack a sticky <thead> parks under. /standings raises it on its own wrapper
+     (phone: top bar + division bar); everything else gets the bar's own height. */
   :root {
     --sx-sticky-top: var(--spacing-topbar);
   }
@@ -276,27 +306,29 @@
     background: var(--sx-bg);
     color: var(--sx-text);
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.9375rem;
-    line-height: 1.375rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
     font-synthesis-weight: none;
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     /* room for the fixed bottom tab bar + the notch */
     padding-bottom: calc(var(--spacing-tabbar) + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) { body { padding-bottom: 0; } }
 
-  /* WCAG 1.4.1 / SC 1.4.11: a link sitting INSIDE a run of text cannot be told from that text by
-     colour alone — accent blue against muted grey measures about 1.2:1, far under the 3:1 a
-     non-text cue needs — so a link in prose is underlined. A whole-row or whole-card link is not
-     in a text block and does not need one; every such link already carries Tailwind's
-     `no-underline`, which lives in the utilities layer and therefore wins over this base rule. */
+  /* Ragged-right that reads as set, not as overflow. */
+  h1, h2, h3 { text-wrap: balance; }
+  p, li, dd, dt, figcaption, blockquote { text-wrap: pretty; }
+
+  /* WCAG 1.4.1 / SC 1.4.11: a link inside a run of text is underlined. Whole-row, whole-card and
+     pill links carry `no-underline` (utilities layer) or `.sx-pill` (higher specificity). */
   p a, li a, dd a, dt a, blockquote a, caption a, figcaption a {
     text-decoration-line: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: from-font;
   }
 
-  /* Mono is the voice of facts; Sans is the voice of names and prose. Nothing else. */
+  /* Mono is the voice of facts; Sans is the voice of names, headings and prose. */
   .sx-num {                     /* digits that stack in a column */
     font-family: var(--font-mono), ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
@@ -306,25 +338,29 @@
     font-variant-numeric: proportional-nums;
   }
 
-  /* The signature move: a 1px rule with an 11px mono kicker sitting on it. */
+  /* ── Section header. The class keeps its historical name (tests assert it), but it is no
+        longer a rule with an 11px mono kicker on it: it is an 18→20px sans heading sitting on
+        clear space. Space separates sections; lines only separate rows. ─────────────────── */
   .sx-kicker {
-    display: flex; align-items: center; gap: 0.75rem;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: var(--text-kicker); font-weight: 600;
-    letter-spacing: 0.10em; text-transform: uppercase;
-    color: var(--sx-text-3);
-    border-top: 1px solid var(--sx-border);
-    padding-top: 0.5rem; margin-bottom: 0.5rem;
-    min-height: 1.75rem;
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    column-gap: 0.75rem; row-gap: 0.125rem;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-section); line-height: 1.75rem; font-weight: 600;
+    letter-spacing: -0.012em; text-transform: none;
+    color: var(--sx-text);
+    border-top: 0; padding-top: 0;
+    margin-bottom: var(--spacing-head);
+    min-height: 2rem;
   }
-  .sx-kicker > .sx-kicker-rule { flex: 1 1 auto; height: 1px; background: var(--sx-border); }
-  /* A STANDALONE action link — one that is not a word inside a sentence — is not covered by WCAG
-     2.5.8's inline exception, so it carries its own box instead of inheriting the 17-18px height of
-     the type around it. 24px is the floor; DESIGN §4.4's 44px is used where the link is the primary
-     way through the site on a phone (the day nav on /scores/[date]).
-
-     A link inside prose deliberately does NOT get this: making it inline-flex would stop it wrapping
-     mid-sentence, and 2.5.8 exempts it for exactly that reason. */
+  /* In-card label variant (Last / Next / Splits …): 12px sans, ink-3, tight to its content. */
+  .sx-kicker.sx-kicker-label {
+    font-size: var(--text-micro); line-height: 1rem; letter-spacing: 0;
+    color: var(--sx-text-3); min-height: 1.25rem; margin-bottom: 0.5rem;
+  }
+  /* The rule is now only the flex spacer that pushes the action to the right. */
+  .sx-kicker > .sx-kicker-rule { flex: 1 1 0; min-width: 0; height: 0; background: transparent; }
+  /* A STANDALONE action link is not covered by WCAG 2.5.8's inline exception, so it carries its
+     own box: 24px is the floor; 44px where it is a primary way through the site on a phone. */
   .sx-action {
     display: inline-flex;
     align-items: center;
@@ -333,13 +369,94 @@
   .sx-kicker > a {
     display: inline-flex; align-items: center; min-height: 1.5rem;
     margin-left: auto; color: var(--sx-accent);
+    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500; letter-spacing: 0;
   }
 
   /* Long lists stay in the HTML without costing layout on first paint. */
   .sx-dategroup { content-visibility: auto; contain-intrinsic-size: auto 480px; }
 
-  /* ── Tables. No radius, no box per row: one hairline between rows, and a
-        sticky head that never clips its own focus ring (DESIGN §4.4). ───── */
+  /* ── Surfaces. Three planes, one job each:
+        canvas (--sx-bg)        page titles and section headings;
+        card   (--sx-surface)   data — tables, game lists, tiles, details;
+        inset  (--sx-surface-2) commentary — notes, legends, disclosures, control tracks. ──── */
+  .sx-card {
+    background: var(--sx-surface);
+    border-radius: var(--sx-r-card-lg);
+    box-shadow: var(--sx-ring), var(--sx-shadow-raised);
+  }
+  /* A card that holds rows or a table: no padding, clipped corners. `clip`, NEVER `hidden` —
+     `hidden` makes a scroll container and a sticky <thead> inside would stop sticking. Focus
+     rings inside are drawn inset so the clip cannot eat them. */
+  .sx-flush { padding: 0; overflow: clip; }
+  .sx-flush :where(a, button, summary, [tabindex]):focus-visible { outline-offset: -2px; }
+
+  .sx-inset {
+    background: var(--sx-surface-2);
+    border-radius: var(--sx-r-card);
+    padding: 1rem 1.125rem;
+    font-size: var(--text-meta); line-height: 1.375rem;
+    color: var(--sx-text-2);
+  }
+  .sx-inset > * + * { margin-top: 0.75rem; }
+
+  /* A labelled disclosure for generic legends and methodology (never for division- or
+     team-specific facts). The summary is a ≥44px target with a CSS chevron. */
+  .sx-disclosure > summary {
+    display: flex; align-items: center; gap: 0.625rem;
+    min-height: 2.75rem; cursor: pointer; list-style: none;
+    font-size: var(--text-body); line-height: 1.5rem; font-weight: 500;
+    color: var(--sx-text);
+  }
+  .sx-disclosure > summary::-webkit-details-marker { display: none; }
+  .sx-disclosure > summary::before {
+    content: ""; flex: none; width: 0.5rem; height: 0.5rem; margin-inline: 0.25rem 0.125rem;
+    border-right: 1.5px solid var(--sx-text-3); border-bottom: 1.5px solid var(--sx-text-3);
+    rotate: -45deg;
+    transition: rotate var(--sx-dur-ui) var(--sx-ease);
+  }
+  .sx-disclosure[open] > summary::before { rotate: 45deg; }
+  .sx-inset.sx-disclosure { padding-block: 0.25rem; }
+  .sx-inset.sx-disclosure[open] { padding-bottom: 1rem; }
+
+  /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary). */
+  .sx-pill {
+    display: inline-flex; align-items: center; gap: 0.375rem;
+    min-height: 2.5rem; padding-inline: 1rem;
+    border-radius: 999px;
+    background: var(--sx-surface-2); color: var(--sx-text);
+    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--sx-dur-tap) var(--sx-ease);
+  }
+  /* A pill that is a LINK reads as one, the same as the ExternalLink pills beside it: accent
+     text (on surface-2 6.24 / 5.35, on the surface-3 hover 5.64 / 4.72). A pill that is a
+     BUTTON (Unpin, Pin this team, More filters) keeps ink. */
+  a.sx-pill { color: var(--sx-accent); }
+  .sx-pill.sx-pill-accent { background: var(--sx-accent-wash); color: var(--sx-accent-ink); font-weight: 600; }
+  @media (hover: hover) {
+    .sx-pill:hover { background: var(--sx-surface-3); }
+    .sx-pill.sx-pill-accent:hover { background: var(--sx-accent-wash); text-decoration: underline; }
+  }
+  /* A small static fact pill: "as of Wed Sep 30", "3 final", a count beside a date. */
+  .sx-badge {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    height: 1.75rem; padding-inline: 0.75rem; border-radius: 999px;
+    background: var(--sx-surface-2); color: var(--sx-text-2);
+    font-size: var(--text-micro); line-height: 1rem; font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Long-form prose (About, How it works). */
+  .sx-prose { font-size: var(--text-body); line-height: 1.625rem; color: var(--sx-text-2); max-width: 66ch; }
+  .sx-prose > * + * { margin-top: 1rem; }
+  .sx-prose h3 { margin-top: 2rem; font-size: var(--text-lead); line-height: 1.625rem; font-weight: 600; color: var(--sx-text); }
+  .sx-prose h3 + * { margin-top: 0.5rem; }
+  .sx-prose ul, .sx-prose ol { padding-left: 1.25rem; }
+  .sx-prose li + li { margin-top: 0.5rem; }
+  .sx-prose b, .sx-prose strong { font-weight: 600; color: var(--sx-text); }
+
+  /* ── Tables. A head without a fill band, divider lines between rows, and a sticky head that
+        never clips its own focus ring. ────────────────────────────────────────────────────── */
   .sx-table {
     width: 100%;
     border-collapse: collapse;
@@ -353,32 +470,36 @@
     padding-block: 0.5rem;
     vertical-align: middle;
   }
-  /* A wide many-column table needs a gutter BETWEEN columns or the right-aligned values in
-     neighbouring columns touch (NEUT `0-0-0` running straight into the LAST 5 chips). The phone
-     table cannot afford it — its five columns are measured to the pixel in a 358px box — so it
-     is opt-in per table rather than a change to every cell. */
-  .sx-table-wide th, .sx-table-wide td { padding-inline: 0.375rem; }
-  .sx-table-wide th:first-child, .sx-table-wide td:first-child { padding-inline-start: 0; }
-  .sx-table-wide th:last-child, .sx-table-wide td:last-child { padding-inline-end: 0; }
+  /* The 14-column desktop table: fixed layout from a <colgroup>, 52px rows, a gutter between
+     columns (6px at lg, 10px from 1280) and 20px at the card's inner edges. */
+  .sx-table-wide { table-layout: fixed; }
+  .sx-table-wide th, .sx-table-wide td { padding-block: 0.875rem; padding-inline: 0.375rem; }
+  @media (min-width: 1280px) {
+    .sx-table-wide th, .sx-table-wide td { padding-inline: 0.625rem; }
+  }
+  .sx-table-wide th:first-child, .sx-table-wide td:first-child { padding-inline-start: 1.25rem; }
+  .sx-table-wide th:last-child, .sx-table-wide td:last-child { padding-inline-end: 1.25rem; }
   .sx-table thead th {
     position: sticky;
     top: var(--sx-sticky-top, 0px);
     z-index: 1;
-    background: var(--sx-surface-2);
+    background: var(--sx-surface);
     color: var(--sx-text-3);
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--text-kicker);
+    line-height: 1rem;
     font-weight: 600;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     white-space: nowrap;
-    height: 1.875rem;            /* 30px — the measured header row of §3.2 */
+    height: 2.25rem;             /* 36px phone / mini */
+    padding-block: 0;
     border-bottom: 1px solid var(--sx-border);
   }
-  .sx-table tbody tr { border-bottom: 1px solid var(--sx-border); }
+  .sx-table-wide thead th { height: 2.5rem; padding-block: 0; }
+  .sx-table tbody tr { border-bottom: 1px solid var(--sx-divider); }
   .sx-table tbody tr:last-child { border-bottom: 0; }
-  /* The whole two-line row is one block-level <a>: its hit area is exactly the
-     row and never overflows into its neighbour (WCAG 2.5.8, DESIGN §3.2). */
+  /* The whole two-line row is one block-level <a>: its hit area is exactly the row. */
   .sx-rowlink {
     display: block;
     height: 100%;
@@ -389,28 +510,32 @@
     .sx-table tbody tr:hover { background: var(--sx-surface-2); }
   }
   .sx-table tbody tr:has(.sx-rowlink:active) { background: var(--sx-surface-2); }
-  /* 2px accent left rule = the pinned team; 2px strong rule = non-league.
-     TWO channels, styled identically and deliberately independent: `.sx-pinned` is the class a
-     server component sets through `StandingsTable`'s `highlightSlug`, and `[data-pinned]` is the
-     attribute the localStorage pin sets from the browser — the <head> script before first paint,
-     then `PinnedTeamMarks` after every client-side navigation. Neither can clear the other. */
+  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. Two independent
+     channels: `.sx-pinned` (server, `highlightSlug`) and `[data-pinned]` (the localStorage pin). */
   .sx-pinned,
   [data-team-slug][data-pinned] { box-shadow: inset 2px 0 0 var(--sx-accent); }
-  /* The rule's second, non-colour channel: a visually hidden word that only the pinned row
-     announces. `sr-only` hides it visually; `display` is what switches it on and off. */
+  /* On a card the rule widens to 3px and is COMPOSED with the ring in the same rule, so the
+     card edge survives and no utility shadow can erase the pin. */
+  .sx-card.sx-pinned,
+  .sx-card[data-team-slug][data-pinned] {
+    box-shadow: inset 3px 0 0 var(--sx-accent), var(--sx-ring), var(--sx-shadow-raised);
+  }
+  /* The rule's non-colour channel: a visually hidden word only the pinned row announces. */
   .sx-pin-note { display: none; }
   .sx-pinned .sx-pin-note,
   [data-team-slug][data-pinned] .sx-pin-note { display: inline; }
   .sx-nonleague { box-shadow: inset 2px 0 0 var(--sx-border-strong); }
 
-  /* ── The marks' colours live HERE, not in a `style` attribute.
-        An inline declaration outranks every stylesheet rule, so setting these
-        per element made the `forced-colors` block at the bottom of this file
-        DEAD — while the `forced-color-adjust: none` in those same rules kept
-        applying and suppressed the browser's own substitution. The zero rule,
-        the one thing that tells a positive margin from a negative one, then
-        painted at 2.13:1 on a forced black canvas. The per-mark values arrive
-        as custom properties, which the cascade can override normally. ────── */
+  /* Hover elevation for card-sized links only (TeamTile, GameCard). Shadow only — no translate. */
+  @media (hover: hover) {
+    .sx-lift { transition: box-shadow var(--sx-dur-ui) var(--sx-ease); }
+    .sx-lift:hover { box-shadow: var(--sx-ring), var(--sx-shadow-lift); }
+    .sx-lift:is(.sx-pinned, [data-team-slug][data-pinned]):hover {
+      box-shadow: inset 3px 0 0 var(--sx-accent), var(--sx-ring), var(--sx-shadow-lift);
+    }
+  }
+
+  /* ── The marks' colours live HERE, not in a `style` attribute (forced-colors must win). ── */
   .sx-chip {
     background: var(--sx-chip-bg);
     border-color: var(--sx-chip-ring);
@@ -421,8 +546,7 @@
   .sx-meter-track { background: var(--sx-accent-wash); }
   .sx-meter-fill  { background: var(--sx-accent); }
 
-  /* ── Full-bleed phone lists: run edge to edge, buying back 32px at 390px.
-        Radius 0 while bled; the gutter and the radius come back at 768px. ── */
+  /* ── Full-bleed phone lists: edge to edge below 768px, a rounded card from 768px. ── */
   .sx-bleed {
     margin-inline: calc(-1 * var(--spacing-gutter));
     border-radius: 0;
@@ -430,13 +554,28 @@
   @media (min-width: 768px) {
     .sx-bleed { margin-inline: 0; border-radius: var(--sx-r-card-lg); }
   }
-  .sx-list { list-style: none; margin: 0; padding: 0; }
-  .sx-list > li { border-bottom: 1px solid var(--sx-border); }
+  /* A bled card on a phone is a band: no radius, a container line above and below. */
+  @media (max-width: 767.98px) {
+    .sx-card.sx-bleed { box-shadow: 0 -1px 0 var(--sx-border), 0 1px 0 var(--sx-border); }
+  }
+  /* `margin-block` only: `.sx-list` is declared after `.sx-bleed` in this layer, and a
+     `margin: 0` shorthand here would silently cancel the phone bleed on `sx-list sx-bleed`. */
+  .sx-list { list-style: none; margin-block: 0; padding: 0; }
+  .sx-list > li { border-bottom: 1px solid var(--sx-divider); }
   .sx-list > li:last-child { border-bottom: 0; }
 
-  /* 120ms tap feedback — the only interaction transition in the system. */
+  /* 120ms tap feedback. */
   .sx-tap { transition: background-color var(--sx-dur-tap) var(--sx-ease); }
   .sx-tap:active { background: var(--sx-surface-2); }
+
+  /* A disclosure chevron (GameRow): rotates when its <details> opens. */
+  .sx-chevron { transition: rotate var(--sx-dur-ui) var(--sx-ease); }
+  details[open] > summary .sx-chevron { rotate: 180deg; }
+
+  /* Phone-only right-edge fade for a horizontally scrolling rail. */
+  @media (max-width: 767.98px) {
+    .sx-fade-x { mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); }
+  }
 
   /* The auto-generated recap never takes more than two lines (DESIGN §5.8). */
   .sx-clamp-2 {
@@ -451,11 +590,11 @@
   .sx-tip > .sx-tip-body {
     position: absolute; bottom: 100%; left: 50%; translate: -50% -6px;
     z-index: 2; min-width: max-content; max-width: 14rem;
-    padding: 0.375rem 0.5rem;
+    padding: 0.375rem 0.625rem;
     background: var(--sx-surface); color: var(--sx-text);
-    border: 1px solid var(--sx-border); border-radius: var(--sx-r-chip);
-    box-shadow: var(--sx-shadow-raised);
-    font-size: var(--text-meta); line-height: 1.125rem;
+    border-radius: var(--sx-r-chip);
+    box-shadow: var(--sx-ring), var(--sx-shadow-lift);
+    font-size: var(--text-meta); line-height: 1.25rem;
     opacity: 0; visibility: hidden;
     transition: opacity var(--sx-dur-tap) var(--sx-ease);
   }
@@ -505,10 +644,26 @@
     .sx-zero { forced-color-adjust: none; background: CanvasText; }
     .sx-meter-fill { forced-color-adjust: none; background: CanvasText; }
     .sx-meter-track { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; }
+    /* box-shadow is dropped in forced colors, so every surface edge needs a real border. */
+    .sx-card, .sx-inset, .sx-pill, .sx-badge { border: 1px solid CanvasText; }
+    .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
+    [aria-current="page"] .sx-indicator { outline: 2px solid Highlight; outline-offset: -2px; }
   }
 }
 
 @keyframes sx-pulse {
   0%, 100% { box-shadow: 0 0 0 0 var(--sx-accent-wash); }
   50%      { box-shadow: 0 0 0 4px var(--sx-accent-wash); }
+}
+
+/* ── Unlayered on purpose: the game-page hero score must beat ScoreGlyph's `text-[2rem]` utility
+      WITHOUT changing that class string (tests/ui/rendered-never-00.test.ts matches it literally).
+      An unlayered rule outranks every @layer, utilities included. ScoreBoard wraps each of its
+      two glyphs in `<span class="sx-board-score">`; nothing else on the site uses that class. ── */
+.sx-board-score > .sx-num {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
