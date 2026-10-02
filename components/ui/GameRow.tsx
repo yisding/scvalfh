@@ -1,16 +1,18 @@
 import Link from 'next/link';
 
-import { EM_DASH, monthDay, shortDate, timeOfDay } from '../../lib/format';
+import { getStandingFor } from '../../lib/data';
+import { EM_DASH, monthDay, recordString, shortDate, timeOfDay } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
+import GhostMonogram from './GhostMonogram';
 import ResultChip from './ResultChip';
-import { ScoreGlyph } from './ScoreCell';
+import { ScoreGlyph, nameClass } from './ScoreCell';
 import StatusLabel from './StatusLabel';
 import Tag from './Tag';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, type SideView } from './game-view';
+import { describeGame, statusLabelIsTime, type GameDisplay, type SideView } from './game-view';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).
@@ -25,8 +27,11 @@ import { describeGame, type SideView } from './game-view';
  * stream, tickets, the box score and the /game/[id] link live in the panel, which is why 174
  * venue addresses never enter the initial payload of a list page.
  *
- * A non-SCVAL opponent gets a ghost monogram (initials on the inset surface, no school colour)
- * and no link (DESIGN §8).
+ * A non-SCVAL opponent gets a ghost monogram (GhostMonogram: two mixed-case letters on the inset
+ * surface, no school colour) and no link (DESIGN §8).
+ *
+ * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
+ * scope. Every consumer is a server component; nothing on the client imports this module.
  */
 export interface GameViewProps {
   game: Game;
@@ -41,66 +46,103 @@ export interface GameViewProps {
    * a CCS bracket, for one — because marking the majority is noise (DESIGN §5.4).
    */
   showNonLeague?: boolean;
+  /**
+   * GameRow / GameCard only: print each SCVAL side's current league record beside its name on a
+   * league game that has no score yet ("Homestead 1-4-0"). GameList passes it on /schedule and
+   * /scores/[date] only — a list with no perspective, where a reader is sizing up a game before
+   * kickoff. Never on a team page (the record is that page's headline) or in a bracket.
+   */
+  showRecords?: boolean;
   defaultExpanded?: boolean;
   className?: string;
 }
 
+/** `GameLogRowBody` only: the row IS the page being viewed (the season series on /game/[id]). */
+export interface GameLogRowProps extends GameViewProps {
+  isThisGame?: boolean;
+}
+
 /**
- * Initials for a non-SCVAL opponent's ghost monogram. Decorative only (aria-hidden, the name sits
- * beside it): the registry's abbrs are ours and never derived by munging, so a school we do not
- * track gets the first letter of up to two words of its source name, and nothing pretends to be
- * its colours.
+ * A side's current league record ("1-4-0") for `showRecords`, or null when it should not print:
+ * a non-SCVAL side has no record on this site (DESIGN §8), and a team with no reported result
+ * would read 0-0-0, which the never-0-0 posture forbids for a record as much as for a score.
  */
-function ghostInitials(name: string): string {
-  const words = name
-    .replace(/['’]/g, '')
-    .split(/[\s-]+/)
-    .filter((w) => w && !/^(high|school|hs|the|of)$/i.test(w));
-  return words
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join('');
+function leagueRecord(side: SideView): string | null {
+  if (!side.slug) return null;
+  const standing = getStandingFor(side.slug);
+  return standing && standing.hasReportedResults ? recordString(standing.computed) : null;
+}
+
+/** Whether a game shows records at all: a league game with nothing on the scoreboard yet. */
+function recordsApply(game: Game, display: GameDisplay, showRecords: boolean): boolean {
+  return showRecords && game.isLeague && !display.showScores;
+}
+
+/**
+ * The sr-only tail for the records, appended to the row's own sentence (describeGame's sentence
+ * is shared with the game page and the OG card, so it is not changed): " Homestead 1-4-0 in
+ * league, Los Altos 3-1-0 in league." A side with no record is left out rather than read as zero.
+ */
+function recordsSentence(display: GameDisplay): string {
+  const parts = [display.away, display.home].flatMap((side) => {
+    const record = leagueRecord(side);
+    return record ? [`${side.name} ${record} in league`] : [];
+  });
+  return parts.length ? ` ${parts.join(', ')}.` : '';
 }
 
 function TeamLine({
   side,
   showScore,
   chipSlot = true,
+  showRecord = false,
 }: {
   side: SideView;
   showScore: boolean;
   /** false drops the chip column entirely (a GameCard where neither side has a chip). */
   chipSlot?: boolean;
+  /** Print the side's league record after its name (`showRecords`, already gated by the row). */
+  showRecord?: boolean;
 }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
+  const record = showRecord ? leagueRecord(side) : null;
   return (
     // One 24px line per side: chip 20 · monogram 24 · name · score, 8px apart. The status label
     // lives in the row's lead column, so nothing trails the score. The score column is sized to
     // its glyph (one digit is ~13px), not reserved for two: right-aligned, the scores still line
     // up down a list, and the name gets the slack (≈ 95px at 320, enough for "Monta Vista").
     // A name that still does not fit wraps to a second line instead of losing its end; below
-    // 360px it also steps down to 15px so that stays rare.
+    // 359px (22.4375rem, a rem gate so it follows the reader's text size) it also steps down to
+    // 15px so that stays rare.
+    // The name takes `nameClass`: a winner 600/ink, a loser 400/ink-2, and a LEVEL side —
+    // a tie and every game not yet decided — 400 in full ink, so an upcoming slate is not
+    // printed in the loser's grey.
     <span className="flex min-h-6 items-center gap-2">
       {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
-      {team ? (
-        <TeamMonogram team={team} size={24} />
-      ) : (
-        <span
-          className="inline-flex size-6 shrink-0 items-center justify-center rounded-[6px] border border-hairline bg-surface-2 text-[0.6875rem] font-semibold text-ink-3"
-          aria-hidden="true"
-        >
-          {ghostInitials(side.name)}
-        </span>
-      )}
+      {team ? <TeamMonogram team={team} size={24} /> : <GhostMonogram name={side.name} size={24} />}
       <span
-        className={`line-clamp-2 min-w-0 flex-1 break-words text-body max-[359px]:text-[0.9375rem] max-[359px]:leading-5 ${
-          side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
-        }`}
+        className={`line-clamp-2 min-w-0 flex-1 break-words text-body max-[22.4375rem]:text-[0.9375rem] max-[22.4375rem]:leading-5 ${nameClass(
+          side,
+        )}`}
       >
         {/* The dense row renders the SHORT name (DESIGN §3.3's wireframe writes "Mitty", not
             "Archbishop Mitty High School"). `display.sentence` keeps the full name for a screen
             reader. */}
         {side.shortName}
+        {/* The league record rides INLINE after the name, never in the score column (which
+            stays empty until there is a score). 12px mono ink-3, so it reads as a footnote to
+            the name: "Presentation 2-4-1", the widest pair, measures 136px of the 156px a 360px
+            row leaves the name (two-digit records would add ≈ 15px and still fit).
+            Below 359px it is dropped rather than allowed to wrap the name. The row's sr-only
+            sentence carries it in words. */}
+        {record ? (
+          <span
+            className="sx-num ml-2 whitespace-nowrap text-micro text-ink-3 max-[22.4375rem]:hidden"
+            aria-hidden="true"
+          >
+            {record}
+          </span>
+        ) : null}
       </span>
       {/* The 22px glyph's 28px line box is centred in the 24px line, so two team lines are
           52px and the row keeps its 76px height. */}
@@ -110,13 +152,6 @@ function TeamLine({
         </span>
       ) : null}
     </span>
-  );
-}
-
-/** A scheduled game's status label is its own clock time ("4:00 PM", "TIME TBA"). */
-function statusLabelIsTime(game: Game, statusLabel: string): boolean {
-  return (
-    statusLabel === 'TIME TBA' || (!game.isTimeTba && statusLabel === timeOfDay(game.dateLocal))
   );
 }
 
@@ -144,9 +179,14 @@ function GameLinks({ game }: { game: Game }) {
         Full game page
       </Link>
       {/* The open panel is surface-2, the pill's own fill, so these pills take the card
-          surface instead or they would read as bare text links. */}
+          surface instead or they would read as bare text links. A press steps them to surface-3,
+          the same as a hover, so a tap on a phone (no hover) still answers. */}
       {links.map((l) => (
-        <ExternalLink key={l.href} href={l.href} className="sx-pill bg-surface hover:bg-surface-3">
+        <ExternalLink
+          key={l.href}
+          href={l.href}
+          className="sx-pill bg-surface hover:bg-surface-3 active:bg-surface-3"
+        >
           {l.label}
         </ExternalLink>
       ))}
@@ -180,10 +220,12 @@ export function GameRow({
   showTime = true,
   showRecap = true,
   showNonLeague = true,
+  showRecords = false,
   defaultExpanded = false,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
+  const withRecords = recordsApply(game, display, showRecords);
   // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a final
   // and the upcoming game under it no longer switch between `4:00` and a sans-caps `4:00 PM`.
   // "12:00 PM" is 63px at 13px mono, inside the 80px lead column. `display.sentence` carries PT.
@@ -210,33 +252,45 @@ export function GameRow({
       {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
           by the screen edge (or by a /schedule date group's paint containment). */}
       <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[5rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
-        <span className="sr-only">{display.sentence}</span>
-        <span className="flex min-w-0 flex-col gap-1 self-start" aria-hidden="true">
+        {/* The NL tag is aria-hidden in the lead column, so the sentence says it in words — the
+            same gate as the tag, so a bracket (showNonLeague false) does not repeat it per row. */}
+        <span className="sr-only">
+          {display.sentence}
+          {showNonLeague && display.isNonLeague ? ' Non-league.' : ''}
+          {withRecords ? recordsSentence(display) : ''}
+        </span>
+        {/* The lead column stretches to the team block and spreads its two lines to its ends, so
+            the clock sits on the AWAY name's line and the status on the HOME name's: each is a
+            24px line (`leading-6` / `min-h-6`) to match a 24px team line. With `self-start` and a
+            4px gap they floated between the two names instead. If `showDate` is ever passed (no
+            caller does today) it makes three lines, and this column needs `gap-1` back without
+            `justify-between`. */}
+        <span className="flex min-w-0 flex-col justify-between self-stretch" aria-hidden="true">
           {showDate ? (
             <span className="sx-num text-cell text-ink-2">{monthDay(game.dateLocal)}</span>
           ) : null}
           {timeLine ? (
             <span
-              className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}
+              className={`sx-num text-cell leading-6 text-ink-2${display.strikeTime ? ' line-through' : ''}`}
             >
               {when}
             </span>
           ) : null}
           {statusIsTime && timeLine ? (
-            nonLeagueTag ? <span className="flex">{nonLeagueTag}</span> : null
+            nonLeagueTag ? <span className="flex min-h-6 items-center">{nonLeagueTag}</span> : null
           ) : (
             // The status word and the NL tag share one wrapping line, 4px apart: FINAL (38px) +
             // NL (26px) fits 80px, so a final non-league row is two lines, not three. Tracking is
             // normal and the line 14px here only, so a long label takes two tight lines.
-            <span className="flex flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
+            <span className="flex min-h-6 flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
               <StatusLabel display={display} showNonLeague={false} />
               {nonLeagueTag}
             </span>
           )}
         </span>
         <span className="min-w-0 space-y-1" aria-hidden="true">
-          <TeamLine side={display.away} showScore={display.showScores} />
-          <TeamLine side={display.home} showScore={display.showScores} />
+          <TeamLine side={display.away} showScore={display.showScores} showRecord={withRecords} />
+          <TeamLine side={display.home} showScore={display.showScores} showRecord={withRecords} />
         </span>
         <svg
           className="sx-chevron text-ink-3"
@@ -269,9 +323,17 @@ export function GameCard({
   perspective,
   showRecap = true,
   showNonLeague = true,
+  showRecords = false,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
+  const withRecords = recordsApply(game, display, showRecords);
+  // The two links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
+  // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Short names,
+  // as the card prints them; the visible text stays the start of the name (label-in-name).
+  const matchup = `${display.away.shortName} ${game.site === 'neutral' ? 'vs' : 'at'} ${
+    display.home.shortName
+  }`;
   // An upcoming card has no chip on either side; an invisible 28px slot there pushed both team
   // lines right of the time above them. Rows keep the slot (cross-row alignment), cards drop it.
   const chipSlot = display.away.chip !== 'none' || display.home.chip !== 'none';
@@ -290,6 +352,8 @@ export function GameCard({
     >
       <span id={sentenceId} className="sr-only">
         {display.sentence}
+        {showNonLeague && display.isNonLeague ? ' Non-league.' : ''}
+        {withRecords ? recordsSentence(display) : ''}
       </span>
       <div className="flex items-center justify-between gap-2" aria-hidden="true">
         <span className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}>
@@ -306,8 +370,18 @@ export function GameCard({
         )}
       </div>
       <div className="space-y-2" aria-hidden="true">
-        <TeamLine side={display.away} showScore={display.showScores} chipSlot={chipSlot} />
-        <TeamLine side={display.home} showScore={display.showScores} chipSlot={chipSlot} />
+        <TeamLine
+          side={display.away}
+          showScore={display.showScores}
+          chipSlot={chipSlot}
+          showRecord={withRecords}
+        />
+        <TeamLine
+          side={display.home}
+          showScore={display.showScores}
+          chipSlot={chipSlot}
+          showRecord={withRecords}
+        />
       </div>
       {showRecap && game.recap ? (
         // Not clamped: in a 17rem card the generated recap needs 3–4 lines, and a two-line clamp
@@ -324,15 +398,17 @@ export function GameCard({
           aria-describedby={sentenceId}
           className="sx-action font-medium text-accent no-underline hover:underline after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)] focus-visible:outline-none"
         >
-          Game page
+          Game page<span className="sr-only">: {matchup}</span>
         </Link>
-        {/* The same face as its neighbour: sentence case, 500 weight, underline on hover only. */}
+        {/* The same face as its neighbour: sentence case, 500 weight, underline on hover only.
+            The matchup goes inside the children so ExternalLink's "(opens in a new tab)" stays
+            last in the name. */}
         {game.urls.maxpreps ? (
           <ExternalLink
             href={game.urls.maxpreps}
             className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
           >
-            Box score
+            Box score<span className="sr-only">: {matchup}</span>
           </ExternalLink>
         ) : null}
       </div>
@@ -340,7 +416,15 @@ export function GameCard({
   );
 }
 
-/** The one-line "Next up" form: `5:30 PM  Homestead at Los Altos`. */
+/**
+ * The compact "Next up" form: `5:30 PM  Homestead at Los Altos`. Normally one line; a matchup
+ * that does not fit ("Scripps Ranch at St Francis" at 320) wraps WHOLE onto a second line,
+ * clamped at two, rather than losing its home team to an ellipsis. The time and the trailing
+ * tag stay centred on the pair (`items-center`).
+ *
+ * The time is NOT aria-hidden: it is the link's only statement of when, so the name reads
+ * "5:30 PM Homestead at Los Altos, league game".
+ */
 export function GameLine({ game, perspective, showNonLeague = true, className }: GameViewProps) {
   const display = describeGame(game, perspective);
   const awayTeam = game.away.slug ? getTeamBySlug(game.away.slug) : undefined;
@@ -353,10 +437,10 @@ export function GameLine({ game, perspective, showNonLeague = true, className }:
         className ? ` ${className}` : ''
       }`}
     >
-      <span className="sx-num text-cell text-ink-2" aria-hidden="true">
+      <span className="sx-num text-cell text-ink-2">
         {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
       </span>
-      <span className="min-w-0 truncate text-ink">
+      <span className="line-clamp-2 min-w-0 break-words text-ink">
         {awayTeam ? awayTeam.shortName : game.away.name}
         {game.site === 'neutral' ? ' vs ' : ' at '}
         {homeTeam ? homeTeam.shortName : game.home.name}
@@ -373,7 +457,11 @@ export function GameLine({ game, perspective, showNonLeague = true, className }:
 }
 
 /**
- * A dense game-log line for a team page: `Sep 24 (L) 0–7 vs Saint Francis FINAL`.
+ * A dense game-log line: `Sep 24 (L) 0–7 vs Saint Francis FINAL`. ONE row for a team page's log
+ * AND the /game/[id] season series ("These two this season"), so the two lists that say the same
+ * thing cannot drift apart in columns, names or type size. The series renders its own `<Link>`
+ * (or, for the game being viewed, an `aria-current` band) around `GameLogRowBody` with
+ * `gameLogRowClass`; a team log uses `GameLogRow`, which is exactly that link.
  *
  * ONE `sr-only` sentence and everything visual behind a single `aria-hidden`, exactly as
  * `GameRow`'s summary and `GameCard` already do. Leaving `ResultChip` (role="img") and
@@ -382,15 +470,28 @@ export function GameLine({ game, perspective, showNonLeague = true, className }:
  * sentence here.
  *
  * Four fixed columns (date · chip · score · the rest) so the dates, chips and scores line up
- * down the log. The last column wraps the status under the opponent rather than truncating the
+ * down the log. The score column is itself a three-track grid — mine · dash · theirs — with MY
+ * goals right-aligned against the dash, so a 10 and a 3 line up on their last digit and the
+ * dashes stack. The last column wraps the status under the opponent rather than truncating the
  * opponent: the opponent is the thing the row exists to say.
  */
-export function GameLogRow({
+export function gameLogRowClass(game: Game, className?: string): string {
+  return `relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta${
+    game.isLeague ? '' : ' sx-nonleague'
+  }${className ? ` ${className}` : ''}`;
+}
+
+/**
+ * The row's contents, for a host that supplies its own wrapper. `isThisGame` (the season series,
+ * on the game's own page) adds a "this game" tag and leads the sentence with "This game."; the
+ * host then renders a non-link `aria-current="page"` band instead of a link to itself.
+ */
+export function GameLogRowBody({
   game,
   perspective,
   showNonLeague = true,
-  className,
-}: GameViewProps) {
+  isThisGame = false,
+}: GameLogRowProps) {
   const display = describeGame(game, perspective);
   const mineIsHome = perspective ? game.home.slug === perspective : true;
   const opponent = mineIsHome ? display.away : display.home;
@@ -398,14 +499,9 @@ export function GameLogRow({
   const opponentTeam = opponent.slug ? getTeamBySlug(opponent.slug) : undefined;
   const day = shortDate(game.dateLocal).slice(4);
   return (
-    <Link
-      href={`/game/${game.contestId}`}
-      prefetch={false}
-      className={`sx-tap relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta no-underline${
-        display.isNonLeague ? ' sx-nonleague' : ''
-      }${className ? ` ${className}` : ''}`}
-    >
+    <>
       <span className="sr-only">
+        {isThisGame ? 'This game. ' : ''}
         {day}: {display.sentence}
       </span>
       <span className="sx-num text-cell text-ink-2" aria-hidden="true">
@@ -417,15 +513,21 @@ export function GameLogRow({
           size={20}
         />
       </span>
-      <span className="sx-num whitespace-nowrap text-right" aria-hidden="true">
+      {/* mine · dash · theirs. `1ch` holds the en dash and `2ch` the widest score, so mine takes
+          the slack and sits right against the dash. An unreported game keeps ScoreGlyph's two
+          muted en dashes (never 0–0); a game with no score yet is one em dash in the middle. */}
+      <span
+        className="sx-num grid grid-cols-[minmax(0,1fr)_1ch_2ch] whitespace-nowrap"
+        aria-hidden="true"
+      >
         {display.showScores ? (
           <>
-            <ScoreGlyph side={mine} size="meta" />
-            <span className="text-ink-3">{'–'}</span>
-            <ScoreGlyph side={opponent} size="meta" />
+            <ScoreGlyph side={mine} size="meta" className="justify-self-end" />
+            <span className="text-center text-ink-3">{'–'}</span>
+            <ScoreGlyph side={opponent} size="meta" className="justify-self-start" />
           </>
         ) : (
-          <span className="text-ink-3">{EM_DASH}</span>
+          <span className="col-start-2 text-center text-ink-3">{EM_DASH}</span>
         )}
       </span>
       <span
@@ -438,8 +540,35 @@ export function GameLogRow({
               keeps the full name. */}
           {display.versus ?? 'vs'} {opponentTeam ? opponentTeam.shortName : opponent.name}
         </span>
-        <StatusLabel display={display} showNonLeague={showNonLeague} className="max-w-full" />
+        <span className="flex max-w-full flex-wrap items-center gap-2">
+          {isThisGame ? <Tag label="the game on this page">this game</Tag> : null}
+          {statusLabelIsTime(game, display.statusLabel) ? (
+            // An upcoming game's status IS its time: printed as the clock it is — mono 13px
+            // ink-2, the face of every other clock on the site — not as a sans-caps status word.
+            <>
+              <span className="sx-num text-cell text-ink-2">
+                {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
+              </span>
+              {showNonLeague && display.isNonLeague ? <Tag label="non-league">NL</Tag> : null}
+            </>
+          ) : (
+            <StatusLabel display={display} showNonLeague={showNonLeague} className="max-w-full" />
+          )}
+        </span>
       </span>
+    </>
+  );
+}
+
+/** A team page's game-log row: the whole row is one link to the game page. */
+export function GameLogRow({ game, className, ...rest }: GameViewProps) {
+  return (
+    <Link
+      href={`/game/${game.contestId}`}
+      prefetch={false}
+      className={`sx-tap no-underline ${gameLogRowClass(game, className)}`}
+    >
+      <GameLogRowBody game={game} {...rest} />
     </Link>
   );
 }
