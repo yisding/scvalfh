@@ -24,6 +24,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { CCS, getDivision, getLeague } from '../leagues';
+import { cellText, tdCellBodies } from '../official/validate';
 import { BOOTSTRAP_URL } from '../season';
 import { CCS_ICAL_URL } from '../sources/ccs';
 import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
@@ -146,14 +147,9 @@ export function sha256Hex(data: string | Uint8Array): string {
  * `&nbsp;`/`&amp;` decoded, whitespace collapsed, trimmed), or null when no cell holds it.
  */
 export function officialChangesCellText(html: string, marker: string): string | null {
-  const cell = /<td\b[^>]*>([\s\S]*?)<\/td>/gi;
-  for (let m = cell.exec(html); m !== null; m = cell.exec(html)) {
-    const text = m[1]
-      .replace(/<[^>]*>/g, ' ')
-      .replace(/&nbsp;/gi, ' ')
-      .replace(/&amp;/gi, '&')
-      .replace(/\s+/g, ' ')
-      .trim();
+  // Linear scans (lib/official/validate.ts): the page is upstream HTML of any shape.
+  for (const body of tdCellBodies(html)) {
+    const text = cellText(body);
     if (text.includes(marker)) return text;
   }
   return null;

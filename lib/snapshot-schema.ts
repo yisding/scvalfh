@@ -697,6 +697,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     for (const d of h.divisions) if (d.classification === 'fallback-contest-type') degraded.add(d.divisionId);
   }
   const contestIds = new Set<string>();
+  const countedFixtures = new Map<string, string>();
   s.games.forEach((g, i) => {
     if (contestIds.has(g.contestId)) issue(ctx, ['games', i, 'contestId'], `duplicate contestId in games (${g.contestId})`);
     contestIds.add(g.contestId);
@@ -735,6 +736,22 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
     if (g.provenance.backfill && g.provenance.scores !== 'sblive') {
       issue(ctx, ['games', i, 'provenance', 'scores'], 'a backfilled game must carry sblive scores');
+    }
+    // One official fixture is one game: where the official schedule decides what counts, two counted
+    // games stamped with the same fixture would count it twice.
+    if (g.countsFor !== null && g.official) {
+      const d = findDivision(g.countsFor);
+      const league = d ? findLeague(d.leagueId) : undefined;
+      if (league?.rules.classification === 'official-fixtures') {
+        const prior = countedFixtures.get(g.official.fixtureId);
+        if (prior !== undefined) {
+          issue(
+            ctx,
+            ['games', i, 'official', 'fixtureId'],
+            `official fixture ${g.official.fixtureId} is counted twice (${prior} and ${g.contestId})`,
+          );
+        } else countedFixtures.set(g.official.fixtureId, g.contestId);
+      }
     }
   });
 

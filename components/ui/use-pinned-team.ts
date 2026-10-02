@@ -47,9 +47,9 @@ export interface PinOptions {
 export interface UnpinOptions {
   /**
    * `'auto'` (SPEC §8.2): one frame later, focus the unpinned team's tile when it is rendered (the
-   * first rendered `[data-team-slug="<slug>"]` that is, or contains, a link or button), else the
-   * search field of the My-team slot (`.sx-myteam-slot input[type="search"]`). A function returns
-   * the element to focus instead. Omitted: focus is left alone.
+   * first rendered `[data-team-slug="<slug>"]` that is, or contains, a link or button), else
+   * `unpinFallbackTarget()` (the slot's finder, the first-visit finder, or its heading). A function
+   * returns the element to focus instead. Omitted: focus is left alone.
    */
   focus?: 'auto' | (() => HTMLElement | null | undefined);
 }
@@ -63,8 +63,11 @@ export interface PinnedTeamState {
   available: boolean;
   /** A stored slug that is no longer in the snapshot. It has been cleared from storage. */
   stalePin: string | null;
-  /** Pin `slug`; with `leagueId` also remember that league (SPEC §8.2 write 3). */
-  pin: (slug: string, leagueId?: LeagueId, opts?: PinOptions) => void;
+  /**
+   * Pin `slug`; with `leagueId` also remember that league (SPEC §8.2 write 3). Returns false — and
+   * changes nothing — when storage is unavailable.
+   */
+  pin: (slug: string, leagueId?: LeagueId, opts?: PinOptions) => boolean;
   unpin: (opts?: UnpinOptions) => void;
   /** Pin, or unpin when `slug` is already the pin. */
   toggle: (slug: string, leagueId?: LeagueId) => void;
@@ -110,6 +113,26 @@ function isRendered(el: Element): boolean {
   return el.getClientRects().length > 0;
 }
 
+/**
+ * Where focus goes after an unpin when the team's own tile is not rendered (SPEC §8.2, WCAG 2.4.3):
+ * the My-team slot's finder field; else — the slot is hidden, e.g. a pin with "All" remembered,
+ * where unpinning leaves no slot at all — the first-visit block's finder (`[data-scope="none"]`,
+ * shown exactly when the slot hides); else that block's heading (`#find-your-team`, made
+ * programmatically focusable). Shared by `focus: 'auto'` and MyTeamCard's own target.
+ */
+export function unpinFallbackTarget(): HTMLElement | null {
+  for (const selector of ['.sx-myteam-slot input[type="search"]', '[data-scope="none"] input[type="search"]']) {
+    const field = [...document.querySelectorAll<HTMLElement>(selector)].find(isRendered);
+    if (field) return field;
+  }
+  const heading = document.getElementById('find-your-team');
+  if (heading && isRendered(heading)) {
+    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+    return heading;
+  }
+  return null;
+}
+
 function focusAfterUnpin(slug: string | null, focus: UnpinOptions['focus']): void {
   if (!focus) return;
   const run = () => {
@@ -128,16 +151,29 @@ function focusAfterUnpin(slug: string | null, focus: UnpinOptions['focus']): voi
           }
         }
       }
-      if (!target) {
-        target = [...document.querySelectorAll<HTMLElement>('.sx-myteam-slot input[type="search"]')].find(
-          isRendered,
-        );
-      }
+      if (!target) target = unpinFallbackTarget();
     }
     target?.focus();
   };
   if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
   else run();
+}
+
+/**
+ * Pin `slug` (the work behind `usePinnedTeam().pin`). Storage is written FIRST: when it throws
+ * (a private window, blocked site data) nothing else happens — no `html[data-pin]` stamp, no
+ * remembered league, no focus move — and this returns false, so the caller can fall back to a
+ * plain team link instead of leaving an empty My-team box with nothing to unpin.
+ */
+export function pinTeam(slug: string, leagueId?: LeagueId, opts?: PinOptions): boolean {
+  if (!writeStored(PINNED_TEAM_KEY, slug)) return false;
+  stampPin(slug);
+  setStale(null);
+  // writeStored notified before the stamp; notify again so subscribers read the new attribute.
+  notifyStore();
+  if (leagueId) setLeague(leagueId);
+  focusAfterWrite(opts?.focus, leagueId ?? null);
+  return true;
 }
 
 /**
@@ -160,13 +196,10 @@ export function usePinnedTeam(knownSlugs?: readonly string[]): PinnedTeamState {
     writeStored(PINNED_TEAM_KEY, null);
   }, [isStale, stored]);
 
-  const pin = useCallback((slug: string, leagueId?: LeagueId, opts?: PinOptions) => {
-    stampPin(slug);
-    setStale(null);
-    writeStored(PINNED_TEAM_KEY, slug);
-    if (leagueId) setLeague(leagueId);
-    focusAfterWrite(opts?.focus, leagueId ?? null);
-  }, []);
+  const pin = useCallback(
+    (slug: string, leagueId?: LeagueId, opts?: PinOptions) => pinTeam(slug, leagueId, opts),
+    [],
+  );
 
   const unpin = useCallback((opts?: UnpinOptions) => {
     const previous = readStored(PINNED_TEAM_KEY);

@@ -111,6 +111,8 @@ export interface LeagueRules {
   /** Every string the engine prints. SCVAL's are today's BYLAW_CITATIONS, verbatim. */
   citations: {
     points: string;
+    /** The points rule's short cite, inside the cross-check's place label ('Art. VI §2' for SCVAL, verbatim). */
+    pointsShort: string;
     order: string;
     doubleRoundRobin: string;
     overtime: string;
@@ -308,6 +310,7 @@ const SCVAL: LeagueConfig = {
     // ↓ VERBATIM from today's lib/season.ts BYLAW_CITATIONS (golden-gated)
     citations: {
       points: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie)',
+      pointsShort: 'Art. VI §2',
       order: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points)',
       doubleRoundRobin: 'Article VI §1 (double round robin; division games only count to the division record)',
       overtime: 'Article IV (one 7-minute sudden-victory period; still tied ⇒ the game ends in a tie)',
@@ -420,6 +423,7 @@ const BVAL: LeagueConfig = {
     multiTeam: 'seed-one-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'sudden-victory',
     citations: {
       points: `${BVAL_BYLAWS} §6a (3 points for a win, 1 for a tie)`,
+      pointsShort: 'BVAL by-laws §6a',
       order: `${BVAL_BYLAWS} §6a (division placement is the order of team points)`,
       doubleRoundRobin: 'BVAL 2026-27 schedules (home-and-home double round robin; division games only)',
       overtime: `${BVAL_BYLAWS} §1a (one 7-minute 7v7 sudden-victory period; still tied ⇒ the game ends in a tie)`,
@@ -532,13 +536,14 @@ const PCAL: LeagueConfig = {
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'none',
     citations: {
       points: `${PCAL_RULES} §1.7 (3 points for a win, 1 for a tie)`,
+      pointsShort: 'PCAL Sports Rules §1.7',
       order: `${PCAL_RULES} §1.7 (standings are the order of points)`,
       doubleRoundRobin: `${PCAL_RULES} §1.4 (one division; the 2026 schedule is a double round robin)`,
       overtime: `${PCAL_RULES} §1.6.4 (overtime applies to single round robin or bracket play; a tie is 1 point either way)`,
       coChampions: `${PCAL_BYLAWS} §22.3 (two teams level at the top are co-champions; three are tri-champions)`,
       stages: {
         'head-to-head': `${PCAL_BYLAWS} §23.3 (head-to-head in league contests; three level: three-way, then two-way)`,
-        'record-vs-lower-placed': `${PCAL_BYLAWS} §23.3.1 (record against each lower-placed team, in standings order)`,
+        'record-vs-lower-placed': `${PCAL_BYLAWS} §23.3.1(b) / §23.3.3(c) (record against each lower-placed team, in standings order)`,
         'record-vs-higher-placed': `${PCAL_BYLAWS} §23.3.3 (record against each higher-placed team, from the champion down)`,
         'ccs-points': `${PCAL_BYLAWS} §23.3 (the CCS-points step applies only to sports seeded by CCS points; then a coin flip or blind draw — we cannot compute either, so the teams stay tied)`,
         'no-rule': 'PCAL’s by-laws break ties only for the two CCS places; this tie is left as it is',
@@ -625,6 +630,7 @@ const MCAL: LeagueConfig = {
     leagueOvertime: 'none',
     citations: {
       points: `${MCAL_HB} §7a (3 points for a win, 1 for a tie)`,
+      pointsShort: 'MCAL Handbook §7a',
       order: `${MCAL_HB} §7a (“The MCAL placement will be the order of team points”)`,
       doubleRoundRobin: `${MCAL_HB} §8a (double round robin, 16 league games each)`,
       overtime: 'MCAL General Rules (no regular-season overtime; ties stand)',
@@ -1020,7 +1026,7 @@ export function assertLeagues(): void {
     for (const s of usedStages) {
       if (!rules.citations.stages[s]) fail(`${l.id}: stage ${s} has no citation`);
     }
-    for (const key of ['points', 'order', 'doubleRoundRobin', 'overtime', 'coChampions'] as const) {
+    for (const key of ['points', 'pointsShort', 'order', 'doubleRoundRobin', 'overtime', 'coChampions'] as const) {
       if (!rules.citations[key]) fail(`${l.id}: empty citation ${key}`);
     }
     if (!rules.coChampionsLabel) fail(`${l.id}: empty coChampionsLabel`);

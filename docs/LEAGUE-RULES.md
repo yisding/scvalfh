@@ -149,18 +149,26 @@ so the chain is keyed by **where the tied points bucket starts**:
 
 | Bucket starts at | Chain |
 |---|---|
-| 1st (co-/tri-champions) | head-to-head (§23.3, three level: a three-way head-to-head, then a two-way among those still level); then the record against each lower-placed team in standings order, one team at a time (§23.3.1); then the CCS-points step, a coin flip or a blind draw |
-| 2nd | head-to-head; then the record against each higher-placed team from the champion down (§23.3.3); then the record against each lower-placed team; then the CCS-points step, a coin flip or a blind draw |
+| 1st (co-/tri-champions) | head-to-head (§23.3, three level: a three-way head-to-head, then a two-way among those still level); then the record against each lower-placed team in standings order, one team at a time (§23.3.1(b)); then the CCS-points step, a coin flip or a blind draw |
+| 2nd | head-to-head; then the record against each higher-placed team from the champion down (§23.3.3); then the record against each lower-placed team (§23.3.3(c)); then the CCS-points step, a coin flip or a blind draw |
 | 3rd or lower | none: PCAL defines no tiebreak, so the teams stay level, listed by name |
 
 The CCS-points step applies only to sports seeded by CCS points, and the coin flip or blind draw is
 drawn by the Commissioner; the site cannot compute either, so those teams share a place.
 
+**A comparison with a placed team stops the chain when it cannot be made** (§23.3.1(b) /
+§23.3.3(c) for the lower-placed step, §23.3.3 for the higher-placed one). The walk compares the
+tied teams' points against one placed team at a time; if the tied teams have not all met that team,
+or have not met it equally often (an unplayed fixture, mid-season), nothing is invented: the chain
+stops there and the teams stay level, on the CCS-points / coin-flip / blind-draw step, sharing a
+place. It does not move on to the next placed team or the next step.
+
 **Multi-team procedure: `partition-restart`** (PCAL By-laws §23.3.2, a-b). Three teams level for
 first: the three-way head-to-head places the best and the worst of the three, and the two still
 level restart with a two-way head-to-head. (A seed-one restart would wrongly re-run the pair that
-already played its way through the three-way table.) If two teams never met in a stage that
-needs them to have met, the stage is skipped rather than invented.
+already played its way through the three-way table.) If two teams never met, the head-to-head
+stage is skipped rather than invented; a record-vs-placed-team stage that cannot be made stops the
+chain instead (above).
 
 **Co-champions.** Two teams level at the top are co-champions and three are tri-champions (By-laws
 §22.3); the label is "Co-champions (tri-champions when three are level)".
@@ -210,9 +218,17 @@ play-off position "except for the 6th place". For a points group that spans 6th 
 - two teams, one of which won both meetings (2-0): the sweeper takes 6th;
 - two teams that split, tied or have not both played: they share 6th (`play-in`) and a play-in game
   on **Fri Oct 23** decides it, hosted by the higher draw number;
-- a three-way tie for 5th-7th: draw numbers place the 5th seed and the other two share 6th;
+- three teams tied on points for 5th-7th: draw numbers place the 5th seed and the other two share
+  6th;
 - a three-way or larger tie for 6th: stages 1-2 and then the draw number pick the two play-in
   teams; the remaining team is placed after them.
+
+These last-place rules (the three-way 5th-7th draw and the play-in) are for teams tied **on
+points** over those places. Inside a larger points tie, seeding one team at a time, a stage can
+leave a subgroup level at its best mark (say three of five teams level on head-to-head); the
+criteria then keep running among that subgroup alone to seed the one team ("the above criteria
+will be used to break the tie, seeding one team"), and the last-place rules are not used for that
+pick.
 
 **Co-champions.** Equal points means co-MCAL Champions (§7a), labelled "MCAL co-champions". The
 regular-season points leader is MCAL Champion; if a different team wins the tournament, it also

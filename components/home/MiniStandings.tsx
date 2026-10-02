@@ -69,8 +69,25 @@ function PlaceCell({ row }: { row: MiniRow }) {
 
 const COLS = 6;
 
+/**
+ * How many rows the mini table shows: `miniRows`, stretched to keep a place shared AT the cutoff
+ * whole — a parent never sees a rival in "4=" and their own team, equally 4th, missing. Only
+ * teams with results and the SAME shared place extend it, so an unplayed table (or the next tied
+ * cluster) never stretches the card.
+ */
+export function miniShownCount(
+  rows: readonly Pick<MiniRow, 'hasResults' | 'shared' | 'place'>[],
+  miniRows: number,
+): number {
+  let n = Math.min(miniRows, rows.length);
+  const last = rows[n - 1];
+  if (!last || !last.hasResults || !last.shared) return n;
+  while (n < rows.length && rows[n].hasResults && rows[n].shared && rows[n].place === last.place) n++;
+  return n;
+}
+
 export function MiniStandings({ division, href, showDivisionLabel, home, legend, className }: MiniStandingsProps) {
-  const shown = division.rows.slice(0, Math.min(home.miniRows, division.rows.length));
+  const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));
   const where = showDivisionLabel && division.heading ? division.heading : division.leagueShort;
   const through = division.throughDate;
   // The labelled line goes after PLACE `home.lineAfter`, not after a row index: two teams level on

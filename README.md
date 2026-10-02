@@ -113,14 +113,20 @@ season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (SCVAL only; see
-"Player stats" below), which is allowed to fail without stopping the run. It runs the test suite against what it just wrote, and commits
-`data/snapshot.json` + `data/snapshot.meta.json` and `data/player-stats.json` **only where they
-changed**, in one commit.
-The commit is what triggers your hosting provider's rebuild — that's the entire point of the job,
-so it deliberately does not carry `[skip ci]`. The job fails, and commits nothing, only on a run
-abort; a frozen or partial league still publishes (with its reasons on the site). After a
-successful run it opens or updates one issue per official schedule revised upstream and one per
-league frozen in this run and the previous one, never more than one open issue per title.
+"Player stats" below), which is allowed to fail without stopping the run. It runs the test suite
+against what it just wrote, and commits `data/snapshot.json` + `data/snapshot.meta.json` and
+`data/player-stats.json` **only where they changed**, in one commit. The commit is what triggers
+your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
+carry `[skip ci]`. The job fails, and commits nothing, only on a run abort; a frozen or partial
+league still publishes (with its reasons on the site). After a successful run it opens or updates
+one issue per official schedule revised upstream and one per league frozen in this run and the
+previous one, never more than one open issue per title.
+
+A manual **Run workflow** (`workflow_dispatch`) takes the same switches as inputs: `force` (run
+outside the season window), `skip_sblive` (`--no-sblive`), `leagues` (`--leagues`) and
+`accept_regression` (`--accept-regression`, for a finals drop you have checked is real). Its test
+step does not set `CI_GATE`, so the home page's teamViews budget only warns there; `ci.yml` sets
+`CI_GATE` and fails past 60 KB.
 
 For this to work on a deployed copy of this repo:
 1. **Push the repo to GitHub** with Actions enabled.
@@ -183,24 +189,24 @@ is the only reason to run a live fetch by hand.
 ### Official fixtures
 
 BVAL, PCAL and MCAL publish their schedules as documents, so their league fixtures are bundled in
-`data/official/{bval,pcal,mcal}-2026.json`, written by `pnpm exec tsx
-scripts/build-official-fixtures.ts` from the transcriptions under
-`tests/fixtures/official/source/` and never hand-edited (`--check` exits 1 if a file differs). The
-cron compares each document's hash with the bundled one; a difference is published as a "revised
-upstream" reason and an issue, and the bundled fixtures are still used until someone re-transcribes
-them (the runbook is in `docs/DATA-SOURCES.md`).
+`data/official/{bval,pcal,mcal}-2026.json`, written by `pnpm build-official-fixtures` from the
+transcriptions under `tests/fixtures/official/source/` and never hand-edited (`pnpm
+build-official-fixtures --check` exits 1 if a file differs). The cron compares each document's hash
+with the bundled one; a difference is published as a "revised upstream" reason and an issue, and the
+bundled fixtures are still used until someone re-transcribes them (the runbook is in
+`docs/DATA-SOURCES.md`).
 
 ### Rosters
 
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
 from the 15 MaxPreps roster pages (the SCVAL teams; rosters are SCVAL-only) and committed, like
-the history file, rather than refreshed by the cron (rosters change a few times a season; run it by hand or weekly). The page encodes each
-athlete as a 37-element positional array, so `lib/sources/maxpreps-roster.ts` decodes it with
-MaxPreps' own column list and cross-checks every row against the page's rendered table, failing
-the team rather than publishing a wrong grade beside a name. Blanks are `null`, never guessed;
-soft-deleted rows are dropped; a team whose fetch fails keeps its previous rows with
-`status: "carried-forward"`.
+the history file, rather than refreshed by the cron (rosters change a few times a season; run it by
+hand or weekly). The page encodes each athlete as a 37-element positional array, so
+`lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
+row against the page's rendered table, failing the team rather than publishing a wrong grade beside
+a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
+keeps its previous rows with `status: "carried-forward"`.
 
 `data/rosters-enrichment.json` is what other public sources add to that — the schools' own
 athletics-site rosters, one roster PDF, two school papers, MaxPreps career and JV pages — gathered
@@ -216,12 +222,12 @@ team pages have no Roster section at all (`buildRosterView` returns `null` outsi
 than an empty one.
 
 The same overlay links players' own recruiting pages (SCVAL only) — NCSA, SportsRecruits and Hudl
-profiles (`profiles` on each record; 70 for 56 players as of 2026-10-02, 67 of them on varsity rows). A
-page is linked only when it names the player and field hockey and either names the school or shows
-the class year the roster shows plus a California hometown, and a stated class year must agree with
-the row's grade (checked at load). The roster shows them as a line of links under the player's
-facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map, the
-per-school sources and the overlay's rules.
+profiles (`profiles` on each record; 70 for 56 players as of 2026-10-02, 67 of them on varsity
+rows). A page is linked only when it names the player and field hockey and either names the school
+or shows the class year the roster shows plus a California hometown, and a stated class year must
+agree with the row's grade (checked at load). The roster shows them as a line of links under the
+player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
+the per-school sources and the overlay's rules.
 
 ```bash
 pnpm fetch-rosters                                      # live: 15 roster pages → data/rosters.json
@@ -241,9 +247,9 @@ game-winning goals, steals, minutes and goalkeeping — built by `pnpm fetch-pla
 JSON behind each team's MaxPreps `/stats/` page and joined to `data/rosters.json` on the career id
 in each row's player link. A stat is kept only where the team tracks it (its team total is above
 zero), so a 0 is a real zero and an untracked stat is null; per-game and percentage columns are
-dropped. 10 of the 15 SCVAL teams publish stats; for the other five MaxPreps answers "No data was found"
-and the file says `status: "none"`. `lib/player-stats.ts` is the read API; each SCVAL team page renders it
-in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
+dropped. 10 of the 15 SCVAL teams publish stats; for the other five MaxPreps answers "No data was
+found" and the file says `status: "none"`. `lib/player-stats.ts` is the read API; each SCVAL team
+page renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
@@ -284,7 +290,7 @@ pnpm deploy:cloudflare   # vinext-cloudflare deploy — rebuilds it and uploads 
 pnpm assert:prerender    # after a build: every route family prerendered, with exact counts from the snapshot
 pnpm assert:budgets      # after a build: snapshot, page-weight and first-load JS budgets
 pnpm assert:copy         # after a build: copy-honesty scan of the built HTML
-pnpm exec tsx scripts/build-official-fixtures.ts   # rewrite data/official/*.json (never hand-edit them)
+pnpm build-official-fixtures   # rewrite data/official/*.json (never hand-edit them; --check verifies)
 pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, smoke and axe on each
 ```
 
@@ -310,30 +316,31 @@ by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
 
-`.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test,
-build, and an assertion that every route family actually prerendered (no route should ever fall
-back to dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores/[date]`
-and `/teams/[slug]`, and the per-league `/standings/[league]`, `/schedule/[league]` and
+`.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test, build,
+and an assertion that every route family actually prerendered (no route should ever fall back to
+dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores/[date]` and
+`/teams/[slug]`, and the per-league `/standings/[league]`, `/schedule/[league]` and
 `/playoffs/[league]` pages, with exact counts read from the snapshot and the league config), then
-checks the page-weight and first-load JS budgets and a copy-honesty scan of the built HTML. A second job starts `next start` on that build, holds it to the response
-contract with `scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core`
-against it (`scripts/a11y-axe.mjs`) across every route family, both themes, both a phone and a
-desktop viewport, failing on any serious/critical accessibility violation. Two more jobs, one per
-vinext target, run beside them (not after `gates`, so a vinext regression shows even when Next is
-red). `vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup
-with `vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then
-builds with `pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
-`scripts/assert-vinext-prerender.mjs` that every route rendered with `revalidate: false`, that
-the static pages, metadata routes and Route Handlers are on disk, that the game, date and team
-pages and their OG images clear the same minimum counts as the Next build and that the
-prerendered sitemap lists exactly the prerendered pages; for the Worker it also checks that every
-one of them is packaged into the static-assets cache and every file its index lists is there,
-that `_headers` is there, and that nothing else ships: no precompressed copy, and nothing at the
-top level of the upload but `_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it
-out. Then each starts its server (`vinext start`, or the Worker
-in workerd through `vite preview`) and runs the same `scripts/smoke-server.sh` and axe passes
-against it. Uploading the Worker is `.github/workflows/deploy-cloudflare.yml`'s job (see
-"Cloudflare Workers").
+checks the page-weight and first-load JS budgets and a copy-honesty scan of the built HTML. A second
+job starts `next start` on that build, holds it to the response contract with
+`scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core` against it
+(`scripts/a11y-axe.mjs`) across every route family, both themes, both a phone and a desktop
+viewport, failing on any serious/critical accessibility violation. Two more jobs, one per vinext
+target, run beside them (not after `gates`, so a vinext regression shows even when Next is red).
+`vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup with
+`vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then builds with
+`pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
+`scripts/assert-vinext-prerender.mjs` that every route rendered with `revalidate: false`, that the
+static pages, metadata routes and Route Handlers are on disk, that the page families and their OG
+images are exactly the ones the Next build's assertion expects (standings, schedule, playoffs, game,
+date and team, with OG/page parity by name) and that the prerendered sitemap lists exactly the
+prerendered pages; for the Worker it also checks that every one of them is packaged into the
+static-assets cache and every file its index lists is there, that `_headers` is there, and that
+nothing else ships: no precompressed copy, and nothing at the top level of the upload but
+`_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it out. Then each starts its server
+(`vinext start`, or the Worker in workerd through `vite preview`) and runs the same
+`scripts/smoke-server.sh` and axe passes against it. Uploading the Worker is
+`.github/workflows/deploy-cloudflare.yml`'s job (see "Cloudflare Workers").
 
 ## Tests
 
@@ -425,10 +432,11 @@ one division, a double round robin in 2026, 3 points for a win and 1 for a tie (
 standings in the order of points, two teams level at the top are co-champions and three are
 tri-champions (By-laws §22.3). PCAL's by-laws break ties only for the two automatic CCS places
 (§23.3): a tie whose points start at 1st or 2nd is worked through head-to-head (three level: the
-three-way head-to-head, then a two-way among those still level), then the record against each
-lower-placed team, then each higher-placed team for 2nd; what is left would be settled by a coin
-flip or blind draw, which this site cannot compute. A tie for 3rd or lower has no rule and is
-shown level. The top two are automatic CCS qualifiers (Rules §1.8.1; 3rd and lower may apply for
+three-way head-to-head, then a two-way among those still level), then, for 1st, the record against
+each lower-placed team in standings order, and for 2nd the record against each higher-placed team
+from the champion down and only then against each lower-placed team; what is left would be settled
+by a coin flip or blind draw, which this site cannot compute. A tie for 3rd or lower has no rule and
+is shown level. The top two are automatic CCS qualifiers (Rules §1.8.1; 3rd and lower may apply for
 at-large under By-laws §23.4); PCAL holds 2 of the 16 CCS berths.
 
 ### MCAL
@@ -503,12 +511,12 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run
   (not just a trailing window) specifically so corrections and backfills are never missed.
-- **SBLive's league buckets are wrong for this league.** Its "De Anza" and "El Camino" pages
+- **SBLive's league buckets are wrong for SCVAL.** Its "De Anza" and "El Camino" pages
   misfile several SCVAL schools between divisions and omit Santa Clara entirely, and statewide
-  name collisions (University, Los Altos, Santa Clara) are common. si.com is a cross-check and, under
-  the narrow backfill rules above, a source of scores MaxPreps lacks or has plainly wrong;
-  division membership, league records and standings order are **never** taken from it, and a team
-  is matched only by si.com's own ids.
+  name collisions (University, Los Altos, Santa Clara) are common. si.com is a cross-check and,
+  under the narrow backfill rules above, a source of scores MaxPreps lacks or has plainly wrong;
+  division membership, league records and standings order are **never** taken from it, and a team is
+  matched only by si.com's own ids.
 - **The CCS playoff bracket doesn't exist until after entries close on Nov 2.** Before then,
   `/playoffs` shows a projection built from the by-laws' auto-qualifier rules and the standings
   as they stand. From Nov 2 the site polls the CCS calendar and MaxPreps' tournament page for a
@@ -524,11 +532,11 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   SCVAL programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - **Player stats are SCVAL-only, and exist only where a coach enters them.** BVAL, PCAL and MCAL
-  teams have no player stats or roster on the site. As of 2026-10-02, 10 of the 15 SCVAL teams publish
-  stats on MaxPreps (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none, and no
-  school site or si.com page has them either), what each tracks varies by coach, and some stop
-  entering mid-season (Presentation's last update was Sep 10). The team page says so rather than
-  showing a short table as if it were complete.
+  teams have no player stats or roster on the site. As of 2026-10-02, 10 of the 15 SCVAL teams
+  publish stats on MaxPreps (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none,
+  and no school site or si.com page has them either), what each tracks varies by coach, and some
+  stop entering mid-season (Presentation's last update was Sep 10). The team page says so rather
+  than showing a short table as if it were complete.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -567,6 +575,11 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
 - **Self-host:** `pnpm build && pnpm start` runs Next.js's own production server behind any
   reverse proxy that can talk to a Node process. Set `SITE_URL` the same way. Pair with the cron
   line under "Self-hosting the cron" above to keep data fresh without GitHub Actions at all.
+  `dynamicParams = false` does not reach the OG images, so `next start` renders the card of an
+  unknown param (`/standings/nope/opengraph-image`) on request, answers 404 and caches that 404
+  under `.next/server/app` (a 0-byte `.body` and a `.meta`), one entry per distinct URL a crawler
+  asks for, with no upper bound. They are safe to delete at any time (the next request renders the
+  404 again), every new build starts without them, and `pnpm assert:prerender` ignores them.
 - **vinext:** `pnpm build:vinext && pnpm start:vinext` on Node, or `pnpm deploy:cloudflare` to
   Cloudflare Workers, which `.github/workflows/deploy-cloudflare.yml` runs after every green `ci`
   run and snapshot refresh on `main` once an account is connected. See "vinext" and "Cloudflare
@@ -603,15 +616,16 @@ both load `.env` the way Next does. The Workers build empties `dist/` (it stages
 there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `pnpm start:vinext`.
 
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
-`next build` does — roughly 600-700 pages with the current snapshot (the exact counts are derived
-from `data/snapshot.json` by `scripts/assert-vinext-prerender.mjs`), all `revalidate: false` in
-`dist/server/vinext-prerender.json`: every page (HTML and RSC payload) plus a 404 page, and
-every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per league,
-game, date and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under
-`dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at startup
-("Seeded N pre-rendered routes into memory cache") and serves each one as built. None of them
-renders per request; a 404, which no prerendered route covers, is what the server renders on
-request (see above).
+`next build` does — about 480 pages plus a 404 with the current snapshot (481 .html, per the
+measurement in `next.config.ts`; the exact counts are derived from `data/snapshot.json` by
+`scripts/assert-vinext-prerender.mjs`), all `revalidate: false` in
+`dist/server/vinext-prerender.json`: every page (HTML and RSC payload) plus a 404 page, and every
+icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per league, game, date
+and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under
+`dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at startup ("Seeded N
+pre-rendered routes into memory cache") and serves each one as built. None of them renders per
+request; a 404, which no prerendered route covers, is what the server renders on request (see
+above).
 
 The response-header contract is the same on all three servers — `next start`, `vinext start` and
 the Worker: every page, metadata route and OG image carries the `next.config.ts` `headers()` rule,

@@ -163,6 +163,7 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
   it('cites Article VI exactly as BYLAW_CITATIONS did', () => {
     expect(scval.rules.citations).toEqual({
       points: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie)',
+      pointsShort: 'Art. VI §2',
       order: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points)',
       doubleRoundRobin: 'Article VI §1 (double round robin; division games only count to the division record)',
       overtime: 'Article IV (one 7-minute sudden-victory period; still tied ⇒ the game ends in a tie)',

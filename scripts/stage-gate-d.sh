@@ -12,6 +12,7 @@
 #  3. `pnpm build:vinext` → assert-vinext-prerender.mjs → `vinext start --port 3118` → smoke `node`
 #     → axe → stop.
 #  4. `pnpm build:cloudflare` → assert-vinext-prerender.mjs --cloudflare → the Worker budget →
+#     .cloudflare/output/v0/config.json exists and no .dev.vars*/.env* file is in the output →
 #     `vite preview --mode cloudflare --port 3119` → the first 404 (/standings/nope) in the fresh
 #     isolate must answer within 500 ms → smoke `workers` → axe →
 #     `vinext-cloudflare deploy --env cloudflare --dry-run` → stop.
@@ -177,6 +178,12 @@ step "4. pnpm build:cloudflare"
 SITE_URL=https://scvalfh.example.invalid pnpm build:cloudflare
 node scripts/assert-vinext-prerender.mjs --cloudflare
 pnpm exec tsx scripts/assert-budgets.ts --worker-only
+# As ci.yml's cloudflare job: the Build Output config is there, and nothing that can hold a secret
+# is: the plugin reads .dev.vars and .env* for local runs only, and all of .cloudflare/output is
+# uploaded with the Worker.
+test -f .cloudflare/output/v0/config.json || { echo "no Build Output config in .cloudflare/output" >&2; exit 1; }
+leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)
+if [ -n "$leaked" ]; then echo "env files in the Worker output:" >&2; echo "$leaked" >&2; exit 1; fi
 step "4. vite preview --mode cloudflare --port 3119"
 start workers 3119 pnpm exec vite preview --mode cloudflare --port 3119 --strictPort --host 127.0.0.1
 # The first 404 in the fresh isolate: rendered on request (the not-found page), so this is the

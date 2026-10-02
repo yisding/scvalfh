@@ -26,8 +26,10 @@ import { signedMargin } from './game-view';
  * Phone height 160 (it was 128, and the ±4 plot was ~100px tall inside a much larger card) includes
  * a 16px glyph band, so each arm is floor((160 − 16 − 1) / 2) = 71px; desktop 200 gives 91px.
  *
- * Unplayed games get a `?` tick and NO column, and the axis continues to game 14, so the reader
- * sees how much season is left. Forfeits are excluded entirely — they have no goal margin — and
+ * Unplayed games get a `?` tick and NO column, and the axis continues to the division's scheduled
+ * league-game count (`slots`, the team view's `leagueScheduled` — `gamesPerTeam`: 14 in El Camino,
+ * 12 in De Anza and PCAL, 10 in BVAL, 16 in MCAL), so the reader sees how much season is left and never a
+ * phantom game that is not on the schedule. Forfeits are excluded entirely — they have no goal margin — and
  * the caption says so. The `<details>` table twin below is the relief channel and is always
  * present, never a fallback.
  */
@@ -35,8 +37,11 @@ export interface MarginStripProps {
   /** League games in date order, played and remaining — lib/data's `getTeamForm().leagueGames`. */
   entries: FormGame[];
   teamName: string;
-  /** Default 14 — the full double-round-robin league season. */
-  slots?: number;
+  /**
+   * The division's scheduled league games for this team (`leagueScheduled`, from `gamesPerTeam`).
+   * Required: a fixed default would pad a 10-game BVAL season with unplayed `?` games.
+   */
+  slots: number;
   /** Phone / desktop, INCLUDING the axis band. */
   height?: 160 | 200;
   className?: string;
@@ -47,7 +52,7 @@ const SITE_GLYPH: Record<FormGame['site'], string> = { home: 'H', away: 'A', neu
 export function MarginStrip({
   entries,
   teamName,
-  slots = 14,
+  slots,
   height = 160,
   className,
 }: MarginStripProps) {

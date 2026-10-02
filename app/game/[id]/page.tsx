@@ -4,7 +4,12 @@ import { notFound } from 'next/navigation';
 
 import FormGoingIn from '../../../components/game/FormGoingIn';
 import GameDetails from '../../../components/game/GameDetails';
-import { GameElsewhere, GameSourceLine, SourceDisagreement } from '../../../components/game/GameSources';
+import {
+  GameElsewhere,
+  GameSourceLine,
+  ResultFlagConflict,
+  SourceDisagreement,
+} from '../../../components/game/GameSources';
 import SeasonSeries from '../../../components/game/SeasonSeries';
 import {
   buildGameModel,
@@ -148,6 +153,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
             </div>
           ) : null}
           <SourceDisagreement model={model} className="mt-4" />
+          <ResultFlagConflict model={model} className="mt-4" />
         </div>
 
         {/* Sticky only when the viewport is tall enough to hold it: the card is up to ~510px,

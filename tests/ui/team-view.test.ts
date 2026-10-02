@@ -259,6 +259,25 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
     }
   });
 
+  it('the margin strip spans the division\'s scheduled league games, never a phantom 14-game season', async () => {
+    const PHONE_CELL = 'flex flex-col items-center min-w-3 max-w-14 flex-1';
+    const DESKTOP_CELL = 'flex flex-col items-center min-w-6 max-w-14 flex-1';
+    let checked = 0;
+    for (const division of leagues.ALL_DIVISIONS) {
+      for (const team of data.getTeams(division.id)) {
+        const v = view.buildTeamPageView(team.slug)!;
+        if (!v.marginEntries.some((e) => e.margin !== null && !e.excludedFromMargin)) continue;
+        const html = await renderTeam(team.slug);
+        const expected = Math.max(division.gamesPerTeam, v.marginEntries.length);
+        const count = (cls: string) => html.split(`${cls}"`).length - 1;
+        expect(count(PHONE_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
+        expect(count(DESKTOP_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
+        checked += 1;
+      }
+    }
+    expect(checked).toBeGreaterThan(30);
+  });
+
   it('a si.com-only game links by its param, never the raw contest id', async () => {
     const game = data.getGames().find((g) => g.contestId.startsWith('sblive:'));
     expect(game, 'lib/data.ts: the corpus has a si.com backfill').toBeDefined();

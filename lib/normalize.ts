@@ -548,11 +548,20 @@ function comparePhantom(a: Game, b: Game): number {
  * score-pending > scheduled, then a contestType 0 row, then the later `maxprepsModifiedOn`, then the
  * smaller contestId) and records the others as 'phantom-duplicate'. Any other pair — a non-league
  * double-header, a cross-division or non-member game — is never touched. Order is kept.
+ *
+ * `preferred` (optional) ranks above everything else: a group keeps a preferred contest over any other
+ * (the pipeline prefers this run's rows over games carried from the previous snapshot).
  */
-export function dedupePhantomPairs(games: readonly Game[]): {
+export function dedupePhantomPairs(
+  games: readonly Game[],
+  opts: { preferred?: (game: Game) => boolean } = {},
+): {
   games: Game[];
   dropped: DroppedContest[];
 } {
+  const preferred = opts.preferred ?? (() => false);
+  const order = (a: Game, b: Game): number =>
+    (preferred(a) === preferred(b) ? 0 : preferred(a) ? -1 : 1) || comparePhantom(a, b);
   const groups = new Map<string, Game[]>();
   for (const game of games) {
     const home = game.home.teamId ? getTeamById(game.home.teamId) : undefined;
@@ -569,7 +578,7 @@ export function dedupePhantomPairs(games: readonly Game[]): {
   const dropped: DroppedContest[] = [];
   for (const group of groups.values()) {
     if (group.length < 2) continue;
-    const [keep, ...rest] = [...group].sort(comparePhantom);
+    const [keep, ...rest] = [...group].sort(order);
     for (const g of rest) {
       losers.set(g.contestId, g);
       dropped.push(

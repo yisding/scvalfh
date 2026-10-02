@@ -80,13 +80,15 @@ export function parseCcsIcal(text: string): CcsCalendarEvent[] {
       continue;
     }
     if (upper === 'END:VEVENT') {
-      if (current && current.dateKey && current.summary) {
+      // The label is checked AFTER cleaning: a SUMMARY of only "(Field Hockey)" cleans to '' and is no event.
+      const label = current ? cleanCcsSummary(current.summary) : '';
+      if (current && current.dateKey && label) {
         events.push({
           date: current.dateKey,
-          summary: cleanCcsSummary(current.summary),
+          summary: label,
           kind: classifyCcsSummary(current.summary),
           uid: current.uid || null,
-          detail: current.description ? cleanCcsSummary(current.description) : null,
+          detail: cleanCcsSummary(current.description) || null,
         });
       }
       inEvent = false;

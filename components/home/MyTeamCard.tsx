@@ -11,11 +11,12 @@ import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { GameDisplay } from '../ui/game-view';
-import { usePinnedTeam } from '../ui/use-pinned-team';
+import { formStripName } from '../ui/plural';
+import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
 import { UNPIN_ID, focusUnpin } from './FindYourTeam';
-import type { HomeColors, HomeLastDisplay, HomeSide, HomeTeamView } from './home-types';
+import { postseasonCardLine, type HomeColors, type HomeLastDisplay, type HomeSide, type HomeTeamView } from './home-types';
 
 /**
  * The My-team slot (SPEC §10.1, §8.2; DESIGN §3.1, §7.12) — the one optional personalization.
@@ -166,8 +167,10 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
         </Link>
       </div>
       {view.postseason ? (
+        /* The short form is what fits one 320px line; the full sentence is the accessible text. */
         <p className="m-0 h-6 shrink-0 truncate text-meta text-ink-2" title={view.postseason}>
-          {view.postseason}
+          <span aria-hidden="true">{postseasonCardLine(view)}</span>
+          <span className="sr-only">{view.postseason}</span>
         </p>
       ) : null}
 
@@ -265,7 +268,7 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
         <FormStrip
           entries={view.form.map((outcome) => ({ outcome }))}
           size={20}
-          label={`${team.name} last ${view.form.length} league games`}
+          label={formStripName(team.name, view.form.length)}
         />
         <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[390px]:block min-[390px]:truncate">
           <span>
@@ -310,16 +313,18 @@ export function StalePin({ onUnpin }: { onUnpin: () => void }) {
   );
 }
 
-/** Focus target after an unpin: the team's own tile when rendered, else the slot's finder field. */
-function unpinFocusTarget(slug: string | null): HTMLElement | null {
+/**
+ * Focus target after an unpin: the team's own tile when rendered, else `unpinFallbackTarget()` —
+ * the slot's finder field, or, when the whole slot hides (a pin with "All" remembered), the
+ * first-visit finder or its heading. Never `<body>` (WCAG 2.4.3).
+ */
+export function unpinFocusTarget(slug: string | null): HTMLElement | null {
   const rendered = (el: Element) => el.getClientRects().length > 0;
   if (slug && /^[a-z0-9-]+$/.test(slug)) {
     const tile = [...document.querySelectorAll<HTMLElement>(`[data-pin-tile="${slug}"]`)].find(rendered);
     if (tile) return tile;
   }
-  return (
-    [...document.querySelectorAll<HTMLElement>('.sx-myteam-slot input[type="search"]')].find(rendered) ?? null
-  );
+  return unpinFallbackTarget();
 }
 
 export function MyTeamCard({ views, index }: MyTeamCardProps) {

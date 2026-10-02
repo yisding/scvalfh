@@ -21,6 +21,12 @@
  *
  * `next build` writes a prerendered page as `<path>.html` (+ `.rsc`, `.meta`) and a prerendered
  * metadata route as `<path>.body` (+ `.meta`) under `.next/server/app`.
+ *
+ * `next start` writes there too: `dynamicParams = false` does not reach a metadata route, so an
+ * unknown param's card (`/standings/nope/opengraph-image`, which the smoke script and any crawler
+ * request) is rendered on demand, answers 404, and is persisted as `<family>/nope/opengraph-image`
+ * `.body` (0 bytes) + `.meta` (`"status":404`). Those entries are not part of the build: they are
+ * left out here (see `notBuilt`), so this assertion holds on a `.next` that has served traffic.
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -49,8 +55,32 @@ if (!existsSync(APP)) {
 const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as SnapshotLike;
 
 /** Every file under .next/server/app, as forward-slash paths relative to it. */
-const files = (readdirSync(APP, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
+const allFiles = (readdirSync(APP, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
+
+/**
+ * An `opengraph-image` entry whose `.meta` records a status other than 200: a 404 that `next start`
+ * rendered on request for an unknown param and cached (see the header), never a prerendered card.
+ * A card without a `.meta`, or with no status in it, counts as prerendered.
+ */
+function notBuilt(base: string): boolean {
+  if (!base.endsWith('opengraph-image')) return false;
+  const meta = path.join(APP, `${base}.meta`);
+  if (!existsSync(meta)) return false;
+  try {
+    const status = (JSON.parse(readFileSync(meta, 'utf8')) as { status?: unknown }).status;
+    return status !== undefined && status !== 200;
+  } catch {
+    return false;
+  }
+}
+const runtime404 = new Set(
+  allFiles.filter((f) => f.endsWith('.meta')).map((f) => f.slice(0, -'.meta'.length)).filter(notBuilt),
+);
+const files = allFiles.filter((f) => !runtime404.has(f.replace(/\.(body|meta)$/, '')));
 const fileSet = new Set(files);
+if (runtime404.size) {
+  console.log(`assert-prerender: ignoring ${runtime404.size} opengraph-image 404(s) cached by \`next start\``);
+}
 
 // ---------------------------------------------------------------- ':' in a prerendered path
 const colon = files.filter((f) => f.includes(':') && /\.(html|rsc|body|meta|segments)$/.test(f));

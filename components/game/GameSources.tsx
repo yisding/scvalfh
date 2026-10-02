@@ -92,6 +92,34 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
   );
 }
 
+/**
+ * MaxPreps' own result flags contradict the score it published (a 0-0 game flagged W/L, most
+ * likely a shootout), and no si.com score replaced it: say so under the scoreboard, and what the
+ * site counts, so "Tie" here never silently disagrees with MaxPreps or the recap.
+ */
+export function ResultFlagConflict({ model, className }: SourceDisagreementProps) {
+  if (!model.resultConflictNote) return null;
+  const url = model.game.urls.maxpreps;
+  return (
+    <aside
+      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      aria-label="MaxPreps’ result flags disagree with the score"
+    >
+      <p className="m-0">
+        <span aria-hidden="true">&#9873; </span>
+        {model.resultConflictNote}
+      </p>
+      {url ? (
+        <p className="m-0">
+          <ExternalLink href={url} className="sx-action no-underline">
+            MaxPreps&rsquo; page
+          </ExternalLink>
+        </p>
+      ) : null}
+    </aside>
+  );
+}
+
 export interface GameElsewhereProps {
   model: GameModel;
   className?: string;

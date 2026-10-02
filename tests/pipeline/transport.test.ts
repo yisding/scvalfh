@@ -31,6 +31,7 @@ import {
   resourceUrl,
   sha256Hex,
 } from '../../lib/pipeline/transport';
+import { tdCellBodies } from '../../lib/official/validate';
 import { BOOTSTRAP_URL } from '../../lib/season';
 import { HttpError, type HttpResponse } from '../../lib/sources/http';
 import { MaxPrepsError } from '../../lib/sources/maxpreps';
@@ -163,6 +164,27 @@ describe('the live resource map', () => {
     expect(cell?.startsWith('Girls Field Hockey:')).toBe(true);
     expect(sha256Hex(cell ?? '')).toBe(changes?.sha256);
     expect(officialChangesCellText('<table><td>nothing</td></table>', 'Girls Field Hockey:')).toBeNull();
+  });
+
+  it('scans cells linearly: the same cells as the old regex, and no blow-up on a page without </td>', () => {
+    const RE = /<td\b[^>]*>([\s\S]*?)<\/td>/gi;
+    const viaRegex = (html: string) => [...html.matchAll(RE)].map((m) => m[1]);
+    const tokens = ['<td', '<TD', '<tdx', '>', '</td>', '</TD>', '</td', '<', 'x', ' ', '<b>', '\n'];
+    let x = 11;
+    const next = () => ((x = (x * 1103515245 + 12345) >>> 0) % tokens.length);
+    for (let n = 0; n < 500; n++) {
+      const html = Array.from({ length: 1 + (n % 30) }, () => tokens[next()]).join('');
+      expect([...tdCellBodies(html)], html).toEqual(viaRegex(html));
+      const marker = 'x';
+      const old = viaRegex(html)
+        .map((b) => b.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/\s+/g, ' ').trim())
+        .find((t) => t.includes(marker));
+      expect(officialChangesCellText(html, marker), html).toBe(old ?? null);
+    }
+    const t0 = Date.now();
+    expect(officialChangesCellText('<td>x'.repeat(200_000), 'Girls Field Hockey:')).toBeNull(); // 1 MB
+    expect(officialChangesCellText(`<td>${'<'.repeat(500_000)}</td>`, 'Girls')).toBeNull();
+    expect(Date.now() - t0).toBeLessThan(1500);
   });
 });
 

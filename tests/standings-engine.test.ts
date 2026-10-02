@@ -126,7 +126,8 @@ describe('PCAL: partition-restart by the bucket-start chain', () => {
     expect(row(rows, 'monterey').computed.place).toBeLessThan(row(rows, 'salinas').computed.place);
     expect(places(rows, ['greenfield', 'hollister'])).toEqual([2, 3]);
     expect(row(rows, 'greenfield').tiebreak.resolvedBy).toBe('record-vs-lower-placed');
-    expect(row(rows, 'greenfield').tiebreak.note).toMatch(/§23\.3\.1/);
+    // A tie for 2nd is §23.3.3 (its clause (c)), not the co-champions clause alone.
+    expect(row(rows, 'greenfield').tiebreak.note).toMatch(/§23\.3\.3\(c\) \(record against each lower-placed team/);
   });
 
   it('stops at a shared lower cluster that would decide it: the teams stay level (ccs-points)', () => {
@@ -209,6 +210,73 @@ describe('PCAL: partition-restart by the bucket-start chain', () => {
       expect(r.tiebreak.shared, s).toBe(true);
     }
     expect(places(rows, ['monterey', 'salinas'])).toEqual([4, 4]);
+  });
+
+  it('a tie for 1st: a lower-placed team one of them has not played yet decides nothing (no invented 0)', () => {
+    // Stevenson and Hollister level on 6, never met. Stevenson beat Carmel (3rd); Hollister has not
+    // played Carmel yet. Scoring that unplayed meeting as 0 would hand Stevenson the title.
+    const rows = table(
+      finals([
+        ['stevenson', 'carmel', 2, 0], ['stevenson', 'salinas', 2, 0],
+        ['hollister', 'greenfield', 2, 0], ['hollister', 'santa-catalina', 2, 0],
+        ['carmel', 'monterey', 1, 0], ['carmel', 'salinas', 1, 1],
+      ]),
+      'pcal',
+    );
+    expect(row(rows, 'carmel').computed.place).toBe(3);
+    expect(places(rows, ['stevenson', 'hollister'])).toEqual([1, 1]);
+    for (const s of ['stevenson', 'hollister']) {
+      expect(row(rows, s).tiebreak.resolvedBy, s).toBe('ccs-points');
+      expect(row(rows, s).tiebreak.shared, s).toBe(true);
+    }
+  });
+
+  it('a tie for 2nd: a higher-placed team one of them has not played yet decides nothing (no invented 0)', () => {
+    // Stevenson champion. Hollister drew Stevenson; Carmel has not played Stevenson yet. Hollister's
+    // 1 point vs Carmel's unplayed 0 must not take the second CCS automatic berth.
+    const rows = table(
+      finals([
+        ['stevenson', 'monterey', 2, 0], ['stevenson', 'salinas', 2, 0], ['stevenson', 'greenfield', 2, 0],
+        ['hollister', 'stevenson', 1, 1], ['hollister', 'greenfield', 2, 0],
+        ['carmel', 'santa-catalina', 2, 0], ['carmel', 'monterey', 1, 1],
+      ]),
+      'pcal',
+    );
+    expect(row(rows, 'stevenson').computed.place).toBe(1);
+    expect(places(rows, ['hollister', 'carmel'])).toEqual([2, 2]);
+    for (const s of ['hollister', 'carmel']) {
+      expect(row(rows, s).tiebreak.resolvedBy, s).toBe('ccs-points');
+      expect(row(rows, s).tiebreak.shared, s).toBe(true);
+      expect(outcomesFor(row(rows, s)), s).toEqual(['aq', 'no-aq-route']);
+    }
+  });
+
+  it('an undecidable higher-placed comparison stops the chain: lower-placed teams do not decide it', () => {
+    // Greenfield and Hollister level on 8 for 2nd. Against Carmel (1st) Greenfield has 1 meeting (a win)
+    // and Hollister 2 (a win and a loss): 3 points each, on unequal meetings, so it cannot be compared
+    // yet. Monterey (3rd, lower-placed) would separate them, but §23.3.3 reaches lower-placed teams only
+    // once the higher-placed comparison is made, so they stay level.
+    const rows = table(
+      finals([
+        ['greenfield', 'carmel', 1, 0],
+        ['hollister', 'carmel', 1, 0], ['carmel', 'hollister', 1, 0],
+        ['carmel', 'monterey', 1, 0], ['carmel', 'salinas', 1, 0], ['carmel', 'santa-catalina', 1, 0],
+        ['carmel', 'stevenson', 1, 0],
+        ['greenfield', 'hollister', 1, 1], ['hollister', 'greenfield', 1, 1],
+        ['greenfield', 'monterey', 1, 0], ['monterey', 'hollister', 1, 0],
+        ['hollister', 'santa-catalina', 1, 0],
+      ]),
+      'pcal',
+    );
+    expect(row(rows, 'carmel').computed.place).toBe(1);
+    expect(row(rows, 'greenfield').computed.pts).toBe(8);
+    expect(row(rows, 'hollister').computed.pts).toBe(8);
+    expect(row(rows, 'monterey').computed.place).toBe(4);
+    expect(places(rows, ['greenfield', 'hollister'])).toEqual([2, 2]);
+    for (const s of ['greenfield', 'hollister']) {
+      expect(row(rows, s).tiebreak.resolvedBy, s).toBe('ccs-points');
+      expect(row(rows, s).tiebreak.shared, s).toBe(true);
+    }
   });
 });
 
@@ -432,6 +500,98 @@ describe('MCAL: the last tournament place (§5.4b)', () => {
     expect(row(rows, 'convent-sacred-heart').tiebreak.shared).toBe(false);
     expect(row(rows, 'marin-academy').computed.place).toBe(9);
   });
+
+  /**
+   * Four level on 9 for 5th-8th. Head-to-head among the four is a cycle (LW > MA > CSH > LW) and all
+   * three beat Berkeley, so criterion 1 leaves LW, MA and CSH level. That remainder is NOT the
+   * "three-way tie for 5 & 6" (three teams tied on points): the criteria keep going among it ("The
+   * above criteria will be used to break the tie, seeding one team"), and criterion 2 — MA beat
+   * Tamalpais, LW and CSH lost to teams above — seeds Marin Academy 5th. LW, CSH and Berkeley are then
+   * three level at 6th: CSH (2-0 among them) and LW (beat Berkeley) play in.
+   */
+  const fourWayFiveToEight = (): Game[] =>
+    finals([
+      ['marin-academy', 'lick-wilmerding', 0, 1], ['convent-sacred-heart', 'marin-academy', 0, 1],
+      ['lick-wilmerding', 'convent-sacred-heart', 0, 1],
+      ['berkeley', 'lick-wilmerding', 0, 1], ['berkeley', 'marin-academy', 0, 1], ['berkeley', 'convent-sacred-heart', 0, 1],
+      ['tamalpais', 'marin-academy', 0, 1], ['university-sf', 'lick-wilmerding', 1, 0], ['redwood', 'convent-sacred-heart', 1, 0],
+      ['archie-williams', 'lick-wilmerding', 0, 1], ['archie-williams', 'convent-sacred-heart', 0, 1],
+      ['archie-williams', 'marin-academy', 1, 0],
+      ['archie-williams', 'berkeley', 0, 1], ['berkeley', 'archie-williams', 1, 0], ['marin-catholic', 'berkeley', 0, 1],
+      ['tamalpais', 'archie-williams', 5, 0], ['archie-williams', 'tamalpais', 0, 5], ['tamalpais', 'redwood', 2, 0],
+      ['tamalpais', 'university-sf', 2, 0],
+      ['university-sf', 'archie-williams', 5, 0], ['archie-williams', 'university-sf', 0, 5],
+      ['university-sf', 'marin-catholic', 2, 0], ['university-sf', 'redwood', 2, 0],
+      ['redwood', 'archie-williams', 5, 0], ['archie-williams', 'redwood', 0, 5], ['redwood', 'marin-catholic', 2, 0],
+      ['redwood', 'university-sf', 2, 0],
+      ['marin-catholic', 'archie-williams', 5, 0], ['archie-williams', 'marin-catholic', 0, 5],
+      ['marin-catholic', 'tamalpais', 2, 0], ['marin-catholic', 'redwood', 2, 0], ['marin-catholic', 'university-sf', 2, 0],
+    ]);
+
+  it('a four-way tie for 5-8 keeps applying the criteria to a three-team remainder (no draw-number shortcut)', () => {
+    const rows = table(fourWayFiveToEight(), 'marin-county');
+    for (const s of ['lick-wilmerding', 'marin-academy', 'convent-sacred-heart', 'berkeley']) {
+      expect(row(rows, s).computed.pts, s).toBe(9);
+    }
+    expect(row(rows, 'tamalpais').computed.place).toBe(4);
+    const ma = row(rows, 'marin-academy');
+    expect(ma.computed.place).toBe(5);
+    expect(ma.tiebreak.resolvedBy).toBe('record-above-tie');
+    expect(ma.tiebreak.shared).toBe(false);
+    expect(places(rows, ['convent-sacred-heart', 'lick-wilmerding'])).toEqual([6, 6]);
+    for (const s of ['convent-sacred-heart', 'lick-wilmerding']) {
+      expect(row(rows, s).tiebreak.resolvedBy, s).toBe('play-in');
+      expect(row(rows, s).tiebreak.shared, s).toBe(true);
+    }
+    expect(row(rows, 'berkeley').computed.place).toBe(8);
+  });
+
+  /**
+   * Four level on 9 for 6th-9th. Criterion 1 leaves University, Marin Catholic and Convent level (a
+   * cycle; all beat Marin Academy); criterion 2 picks Marin Catholic (1-0 against the teams above)
+   * as the first play-in team; the criteria start over among the other three for the second: Convent.
+   */
+  const fourWaySixToNine = (): Game[] => {
+    const top = ['archie-williams', 'redwood', 'tamalpais', 'berkeley', 'lick-wilmerding'];
+    const specs: Spec[] = [];
+    for (const a of top) for (const b of top) if (a !== b) specs.push([a, b, 1, 1]);
+    for (const t of top) specs.push([t, 'marin-academy', 2, 0]);
+    specs.push(
+      ['university-sf', 'marin-catholic', 1, 0], ['marin-catholic', 'convent-sacred-heart', 1, 0],
+      ['convent-sacred-heart', 'university-sf', 1, 0],
+      ['university-sf', 'marin-academy', 1, 0], ['marin-catholic', 'marin-academy', 1, 0],
+      ['convent-sacred-heart', 'marin-academy', 1, 0],
+      ['marin-academy', 'archie-williams', 1, 0], ['marin-academy', 'redwood', 1, 0], ['marin-academy', 'tamalpais', 1, 0],
+      ['tamalpais', 'university-sf', 1, 1], ['berkeley', 'university-sf', 1, 1], ['lick-wilmerding', 'university-sf', 1, 1],
+      ['marin-catholic', 'tamalpais', 1, 0],
+      ['archie-williams', 'convent-sacred-heart', 1, 0], ['convent-sacred-heart', 'redwood', 1, 0],
+    );
+    return finals(specs);
+  };
+
+  it('a four-way tie for 6-9: the play-in pair comes from criteria 1-2 among the remainder; the rest follow', () => {
+    const rows = table(fourWaySixToNine(), 'marin-county');
+    for (const s of ['university-sf', 'marin-catholic', 'convent-sacred-heart', 'marin-academy']) {
+      expect(row(rows, s).computed.pts, s).toBe(9);
+    }
+    expect(places(rows, ['convent-sacred-heart', 'marin-catholic'])).toEqual([6, 6]);
+    expect(row(rows, 'marin-catholic').tiebreak.resolvedBy).toBe('play-in');
+    expect(places(rows, ['university-sf', 'marin-academy'])).toEqual([8, 9]);
+  });
+
+  it('sixthPlaceRule agrees with the table in both four-way cases', () => {
+    const mcal = getLeague('mcal');
+    const a = fourWayFiveToEight();
+    const da = sixthPlaceRule(computeStandings(a), a, mcal);
+    expect([...da.contenders].sort()).toEqual(['convent-sacred-heart', 'lick-wilmerding']);
+    expect(da.seats).toEqual([6]);
+    // Two teams for one play-in place: the higher draw number hosts (Convent 8, Lick-Wilmerding 5).
+    expect(da.host).toBe('convent-sacred-heart');
+    const b = fourWaySixToNine();
+    const db = sixthPlaceRule(computeStandings(b), b, mcal);
+    expect([...db.contenders].sort()).toEqual(['convent-sacred-heart', 'marin-catholic']);
+    expect(db.host).toBe('convent-sacred-heart');
+  });
 });
 
 describe('MCAL: lib/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
@@ -586,6 +746,19 @@ describe('cross-check trust levels (§5.8)', () => {
     expect(check.find((r) => r.slug === 'saint-francis')?.knownCause).toBeUndefined();
     expect(check.find((r) => r.slug === 'live-oak')?.knownCause).toMatch(/leaves out Prospect/);
     expect(check.find((r) => r.slug === 'carmel')?.url).toMatch(/leagueid=50ac53cd/);
+  });
+
+  it('the place row cites each league’s own points rule (SCVAL Art. VI §2 verbatim; BVAL §6a)', () => {
+    const games = finals([
+      ['saint-francis', 'fremont', 1, 0], ['leigh', 'branham', 1, 0],
+    ]);
+    const ids = ['saint-francis', 'leigh'].map((slug) => computeStandings(games).find((r) => r.slug === slug)!.teamId);
+    const rows = computeStandings(games, { reported: new Map(ids.map((id) => [id, reported({})])) });
+    const place = (slug: string) =>
+      buildCrossCheck(rows).find((r) => r.slug === slug && r.field.startsWith('place'))?.field;
+    expect(place('saint-francis')).toBe('place (we order on points, Art. VI §2; MaxPreps orders on win pct)');
+    expect(place('leigh')).toBe('place (we order on points, BVAL by-laws §6a; MaxPreps orders on win pct)');
+    expect(place('leigh')).not.toMatch(/Art\. VI/);
   });
 });
 

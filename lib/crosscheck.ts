@@ -294,3 +294,52 @@ export function withBackfill(
 export function emptyCrossCheck(sbliveFetchedAt: string): SbliveCrossCheck {
   return { sbliveFetchedAt, compared: 0, agreements: 0, conflicts: [], sbliveOnlyScored: [], backfilled: [] };
 }
+
+/**
+ * A previous run's report carried into a run that read no si.com data (every request failed, `--no-sblive`,
+ * nothing read, or the si.com step threw). Only rows that are still true of THIS run's games survive, so the
+ * published report never contradicts the scores beside it:
+ *  - a conflict row stays while its game exists, is not a si.com value, and still shows exactly the MaxPreps
+ *    score the row reports (a MaxPreps correction or deletion since retires it);
+ *  - a si.com-only row keyed on a MaxPreps contest stays while that contest exists in the same status and is
+ *    not a si.com value; one keyed `sblive:<id>` stays while that id has not become a published game;
+ *  - `backfilled` is this run's (carried) fills, and nothing published is listed as unpublished.
+ * `compared` and `agreements` are kept, so `compared >= agreements + conflicts` still holds.
+ */
+export function carryCrossCheck(
+  prior: SbliveCrossCheck,
+  games: readonly Game[],
+  backfilled: readonly BackfillRow[],
+): SbliveCrossCheck {
+  const byId = new Map(games.map((g) => [g.contestId, g]));
+  const published = new Set(backfilled.map((r) => r.contestId));
+  const publishedUrls = new Set(backfilled.map((r) => r.sbliveUrl));
+  const byDate = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }) =>
+    a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
+  const conflicts = prior.conflicts.filter((r) => {
+    const g = byId.get(r.contestId);
+    return (
+      g !== undefined &&
+      !published.has(r.contestId) &&
+      g.provenance.scores !== 'sblive' &&
+      g.home.score === r.maxpreps.home &&
+      g.away.score === r.maxpreps.away
+    );
+  });
+  const sbliveOnlyScored = prior.sbliveOnlyScored.filter((r) => {
+    if (published.has(r.contestId)) return false;
+    if (r.contestId.startsWith('sblive:')) {
+      return !byId.has(r.contestId) && !(r.sbliveUrl !== null && publishedUrls.has(r.sbliveUrl));
+    }
+    const g = byId.get(r.contestId);
+    return g !== undefined && g.provenance.scores !== 'sblive' && g.status === r.status;
+  });
+  return {
+    sbliveFetchedAt: prior.sbliveFetchedAt,
+    compared: prior.compared,
+    agreements: prior.agreements,
+    conflicts: [...conflicts].sort(byDate),
+    sbliveOnlyScored: [...sbliveOnlyScored].sort(byDate),
+    backfilled: [...backfilled].sort(byDate),
+  };
+}

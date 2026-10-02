@@ -1,6 +1,6 @@
 /**
  * The COMMITTED data/snapshot.json, as it stands on disk, read the way the site reads it: through
- * `loadSnapshot` (a v1 file is migrated in memory until the first v2 run replaces it).
+ * `loadSnapshot` (loadSnapshot would migrate a v1 file in memory; the committed file is v2).
  *
  * Every other suite builds its own snapshot, so nothing else looks at the file the site actually
  * renders and the cron actually commits. This one does, which makes `pnpm test` a real gate in

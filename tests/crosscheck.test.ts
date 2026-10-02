@@ -12,10 +12,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { NOT_PUBLISHED, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '../lib/crosscheck';
+import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '../lib/crosscheck';
 import type { SbliveGame, SbliveSide } from '../lib/sources/sblive';
 import { resolveTeam } from '../lib/teams';
-import type { BackfillRow, SbliveOnlyRow } from '../lib/types';
+import type { BackfillRow, Game, SbliveCrossCheck, SbliveOnlyRow } from '../lib/types';
 import { game } from './helpers';
 
 function side(ref: string, score: number | null, via: SbliveSide['via'] = 'team-id'): SbliveSide {
@@ -312,5 +312,42 @@ describe('crosscheck: report shape', () => {
       sbliveOnlyScored: [],
       backfilled: [],
     });
+  });
+});
+
+describe('carryCrossCheck: a carried report keeps only rows still true of this run’s games', () => {
+  it('drops conflict rows whose game changed or vanished, and si.com-only rows no longer accurate', () => {
+    const kept = game({ home: 'stevenson', away: 'greenfield', hs: 8, as: 0, date: '2026-09-21' });
+    const corrected = game({ home: 'carmel', away: 'salinas', hs: 2, as: 0, date: '2026-09-22' });
+    const pending = game({ home: 'hollister', away: 'monterey', date: '2026-09-23', status: 'score-pending' });
+    const nowFinal = game({ home: 'hollister', away: 'salinas', hs: 1, as: 0, date: '2026-09-24' });
+    const conflict = (g: Game, maxpreps: { home: number; away: number }) => ({
+      contestId: g.contestId, dateKey: g.dateKey, label: 'x', maxpreps, sblive: { home: 7, away: 0 },
+      aligned: true, maxprepsUrl: null, sbliveUrl: null, note: 'n',
+    });
+    const only = (contestId: string, status: Game['status']): SbliveOnlyRow => ({
+      contestId, dateKey: '2026-09-23', label: 'x', sblive: { home: 1, away: 0 }, aligned: true,
+      sbliveUrl: `https://www.si.com/high-school/stats/california/field-hockey/games/${contestId.replace(/\D/g, '').slice(0, 7) || '1'}-x`,
+      maxprepsUrl: null, status, note: 'n',
+    });
+    const prior: SbliveCrossCheck = {
+      sbliveFetchedAt: '2026-10-01T15:00:00.000Z', compared: 5, agreements: 2,
+      conflicts: [
+        conflict(kept, { home: 8, away: 0 }),
+        conflict(corrected, { home: 3, away: 0 }), // MaxPreps now says 2-0
+        { ...conflict(kept, { home: 1, away: 1 }), contestId: '00000000-0000-4000-8000-00000000dead' }, // deleted
+      ],
+      sbliveOnlyScored: [
+        only(pending.contestId, 'score-pending'),
+        only(nowFinal.contestId, 'score-pending'), // MaxPreps has posted it since
+        only('sblive:7777777', 'scheduled'),
+      ],
+      backfilled: [],
+    };
+    const out = carryCrossCheck(prior, [kept, corrected, pending, nowFinal], []);
+    expect(out.conflicts.map((r) => r.contestId)).toEqual([kept.contestId]);
+    expect(out.sbliveOnlyScored.map((r) => r.contestId).sort()).toEqual([pending.contestId, 'sblive:7777777'].sort());
+    expect(out.compared).toBeGreaterThanOrEqual(out.agreements + out.conflicts.length);
+    expect(out.sbliveFetchedAt).toBe(prior.sbliveFetchedAt);
   });
 });

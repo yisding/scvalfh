@@ -126,7 +126,61 @@ describe('sblive: urls', () => {
   });
 });
 
+describe('sblive: malformed upstream rows never reach the snapshot', () => {
+  it('drops a row with a non-numeric game id, with a warning', () => {
+    const warnings: string[] = [];
+    const html = page('teams/Games', teamGamesProps([teamNode({ id: 'G6528121' }), teamNode({ id: ' 6528122 ' })]));
+    const rows = sblive.parseTeamGamesPage(html, 'https://example.test/x', (m) => warnings.push(m));
+    expect(rows.map((r) => r.sbliveGameId)).toEqual(['6528122']);
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toMatch(/non-numeric game id "G6528121"/);
+  });
+
+  it('gives a row whose webPath is not a plain path no url (so D2 ignores it as a junk row)', () => {
+    const html = page('teams/Games', teamGamesProps([
+      teamNode({ webPath: '/california/field-hockey/games/6528121-cupertino-vs los-altos' }),
+      teamNode({ id: '6528122', webPath: 'https://evil.example/x' }),
+      teamNode({ id: '6528123' }),
+    ]));
+    const rows = sblive.parseTeamGamesPage(html);
+    expect(rows.map((r) => r.url)).toEqual([
+      null,
+      null,
+      'https://www.si.com/high-school/stats/california/field-hockey/games/6528121-cupertino-vs-los-altos',
+    ]);
+    expect(rows.filter((r) => sblive.isCaliforniaGameRow(r)).map((r) => r.sbliveGameId)).toEqual(['6528123']);
+  });
+
+  it('sbliveGameUrl accepts only plain paths; sbliveGameIdOf only digits', () => {
+    expect(sblive.sbliveGameUrl('/california/field-hockey/games/1-a-vs-b')).toBe(
+      'https://www.si.com/high-school/stats/california/field-hockey/games/1-a-vs-b',
+    );
+    for (const bad of [null, undefined, '', 'california/x', '/a b', '/a?b=1', '/a\nb', '/a"b']) {
+      expect(sblive.sbliveGameUrl(bad), String(bad)).toBeNull();
+    }
+    expect(sblive.sbliveGameIdOf(6541425)).toBe('6541425');
+    expect(sblive.sbliveGameIdOf('G6541425')).toBeNull();
+    expect(sblive.sbliveGameIdOf(null)).toBeNull();
+  });
+});
+
 describe('sblive: props extraction', () => {
+  it('finds exactly the pairs the old regex found, in linear-ish time on hostile pages', () => {
+    const RE = /data-react-class="([^"]+)"[^>]*?data-react-props="([^"]*)"/g;
+    const viaRegex = (html: string) => [...html.matchAll(RE)].map((m) => [m[1], m[2]]);
+    const tokens = ['data-react-class="', 'data-react-props="', '"', '>', '<div ', 'a', 'b{}', ' '];
+    let x = 7;
+    const next = () => ((x = (x * 1103515245 + 12345) >>> 0) % tokens.length);
+    for (let n = 0; n < 400; n++) {
+      const html = Array.from({ length: 1 + (n % 40) }, () => tokens[next()]).join('');
+      expect(sblive.reactPropsPairs(html), html).toEqual(viaRegex(html));
+    }
+    const hostile = 'data-react-class="a" '.repeat(40_000); // ~840 KB, no props, no '>'
+    const t0 = Date.now();
+    expect(sblive.reactPropsPairs(hostile)).toEqual([]);
+    expect(Date.now() - t0).toBeLessThan(1500);
+  });
+
   it('unescapes the five entity forms si.com emits', () => {
     expect(htmlUnescape('&quot;a&quot; &amp; &#39;b&#39; &lt;c&gt;')).toBe('"a" & \'b\' <c>');
   });

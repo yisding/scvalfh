@@ -256,18 +256,18 @@ Gotchas, all **[V]**:
 **Recall is partial.** NCSA can only be found through search, and its pages cannot be fetched, so
 a profile the search index does not surface stays unfound. Every school got NCSA sweeps by school,
 class year and position. A name search (NCSA and Hudl together) ran for nearly every varsity player
-on all 15 SCVAL teams (a few who already had a link were skipped; JV rows, which the page does not show,
-were not searched). Every player on every roster was looked up directly on SportsRecruits;
-FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else could exist and not
-be linked.
-Like the first sweep, this one is research, not a script.
+on all 15 SCVAL teams (a few who already had a link were skipped; JV rows, which the page does not
+show, were not searched). Every player on every roster was looked up directly on SportsRecruits;
+FieldLevel lookups covered six teams. An NCSA or Hudl profile for anyone else could exist and not be
+linked. Like the first sweep, this one is research, not a script.
 
-**(k) Player stats (SCVAL only)** — `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
-on the ghost API (JSON; captured and verified 2026-10-02, all 15 SCVAL teams). Like the rosters it
-joins to, it covers the SCVAL teams only (`teamsInLeague(HISTORY_LEAGUE)`); BVAL, PCAL and MCAL are
-never requested and their team pages have no player stats section. This is the call the team's
-`/stats/` page makes from the browser (page `/team/stats`, function `eM` in that build); the page
-itself server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
+**(k) Player stats (SCVAL only)** —
+`GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
+(JSON; captured and verified 2026-10-02, all 15 SCVAL teams). Like the rosters it joins to, it
+covers the SCVAL teams only (`teamsInLeague(HISTORY_LEAGUE)`); BVAL, PCAL and MCAL are never
+requested and their team pages have no player stats section. This is the call the team's `/stats/`
+page makes from the browser (page `/team/stats`, function `eM` in that build); the page itself
+server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
 (`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
 the same chunk, not used: `team-season-stats/rollup/v1`, `team-season-game-stats/rollup/v1`,
 `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the rollup to league games.
@@ -300,17 +300,17 @@ Gotchas, all **[V]**:
   table only): their stats from the missing table are null, shown as a dash.
 - `Goals` and `GamesPlayed` appear in both field subgroups and always agree; the parser throws if
   they ever do not.
-- Coverage on 2026-10-02: 10 of the 15 SCVAL teams, 121 players, 13 goalkeepers. Every team with stats
-  tracks games, goals and points; 8 track assists; shots / shots on goal, game-winning goals,
-  steals and minutes are each tracked by two to three teams; goalkeeping ranges from saves only
-  to the full ten columns (Valley Christian). Some teams stop entering: Presentation's last update
-  was Sep 10, Monta Vista's Sep 12.
+- Coverage on 2026-10-02: 10 of the 15 SCVAL teams, 121 players, 13 goalkeepers. Every team with
+  stats tracks games, goals and points; 8 track assists; shots / shots on goal, game-winning goals,
+  steals and minutes are each tracked by two to three teams; goalkeeping ranges from saves only to
+  the full ten columns (Valley Christian). Some teams stop entering: Presentation's last update was
+  Sep 10, Monta Vista's Sep 12.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
-- Budget: 15 calls of 0.2–35 KB (one per SCVAL team), twice a day in season: `.github/workflows/update-data.yml` runs
-  `pnpm fetch-player-stats` right after the core sweep (non-fatal) and commits
-  `data/player-stats.json` with the snapshot when its content changed; the script leaves the file
-  untouched when only its `fetchedAt` stamps would move.
+- Budget: 15 calls of 0.2–35 KB (one per SCVAL team), twice a day in season:
+  `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
+  (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
+  script leaves the file untouched when only its `fetchedAt` stamps would move.
 
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
@@ -350,10 +350,11 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    Only rows whose `webPath` starts `/california/field-hockey/games/` are read.
 
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with
-timezone-correct timestamps and — under ten mechanical rules, only for official league games —
-a **backfill**: its score may be published where MaxPreps has no game, no score, or a plainly wrong
-row. MaxPreps remains the primary source. A team on si.com is identified **by id** (§5.3), never by
-bare name.
+timezone-correct timestamps and — under ten mechanical rules, for official league fixtures
+MaxPreps lacks, for past MaxPreps contests between two of our teams that have no score, and for
+three mechanically detected wrong finals — a **backfill**: its score may be published where MaxPreps
+has no game, no score, or a plainly wrong row. MaxPreps remains the primary source. A team on si.com
+is identified **by id** (§5.3), never by bare name.
 
 ### 1.3 OFFICIAL — SCVAL schedule PDFs (read live)
 
@@ -411,8 +412,8 @@ checked as one: every ordered pair a@b exactly once (n·(n−1) fixtures), each 
 | MCAL | `mcalsports.org/Schedules/Fall/FieldHockey_26.pdf` | 72 | `aee4894e665be7aebbe37dcb9c14db37dcc5c177dfe7adca2586459eb4370319` | none |
 
 - **BVAL:** 60 fixtures (30 per division, each team 10 games, 5 home). The Oct 31 CCS play-in line
-  in the document is an *event* in the file, never a fixture. Default varsity start 5:00 PM with five
-  override forms; `lib/official/bval-text.ts` parses the two document texts and
+  in the document is an *event* in the file, never a fixture. Default varsity start 5:00 PM with
+  five override forms; `lib/official/bval-text.ts` parses the two document texts and
   `tests/bval-text.test.ts` proves the parse reproduces the bundled file. `WG` = Willow Glen.
 - **PCAL:** 42 fixtures; the grid uses codes (`STE CAR HOL MON SAL GRE CAT`; `CAT/YOR` and `SCAT`
   are Santa Catalina; York plays JV only). Start time 4:00 PM.
@@ -791,7 +792,7 @@ guards → standings → assemble. Failure has three scopes, so **one league nev
 |---|---|---|
 | **Run abort** (exit 1, nothing written, previous snapshot stays) | the whole run is rejected | (1) the bootstrap's season ids differ from config; (2) the league/team config or registry fails its own invariants; (3) the assembled snapshot fails schema validation; (4) a systemic outage: published games under 80% of the previous snapshot, or 60% or more of the feeds attempted failed, or every league in the run ended frozen |
 | **League freeze** (`state: frozen`) | that league's games between its own teams, and its unmatched official fixtures, come from the previous snapshot and its table is recomputed from them, with the reasons published; other leagues publish fresh | (a) a division's metadata has the wrong season, year or section id; (b) 50% or more of the league's team feeds failed; (c) finals regression: counted finals in a division dropped by 3 or more against the previous run (1-2 vanished finals publish, each named in a warning) unless the league is passed to `--accept-regression`; (d) the league is not in `--leagues` |
-| **Source stale** (`status: stale`, `carriedFrom`) | that source's previous contribution is carried and the league becomes `partial` | a MaxPreps standings table failing (0 rows, HTTP 400, schema error, network); a team feed failing (that team's games carry forward); an SCVAL PDF failing or parsing empty; an official-revision or MCAL changes check seeing a new hash (fixtures still used); every si.com request failing (previous backfills re-applied where still eligible) |
+| **Source stale** (`status: stale`, `carriedFrom`) | that source's previous contribution is carried and the league becomes `partial` | a MaxPreps standings table failing (0 rows, HTTP 400, schema error, network); a team feed failing (that team's games carry forward, guarded: never an `sblive:` game, never a contest another feed reported Deleted this run, the earlier classification cleared so the game is matched and classified again, and the phantom dedupe re-run over fresh plus carried games with the fresh row always winning); an SCVAL PDF failing or parsing empty; an official-revision or MCAL changes check seeing a new hash (fixtures still used); an si.com page not read this run (a failed page, an item past the team-page cap, `--no-sblive`, nothing to read, or every request failing): the earlier si.com fills its data covered are re-applied where still eligible, and a failed page's row is `stale` when something was carried in its place |
 
 A frozen league with no previous data cannot be carried: not in `--leagues` or a wrong-season
 meta publishes it with no games; failed feeds or a finals regression publish the fresh rows with
@@ -827,21 +828,24 @@ identity by GUID, display name by the alias table.
 
 **Owner decision D2: MaxPreps is the primary source; si.com may backfill it, under rules that are
 mechanical so the site never guesses.** This replaces the earlier rule that si.com
-scores were only recorded and never published, everywhere. The rules are implemented as pure functions in `lib/backfill.ts`; match games across
-sources on `(date, unordered pair of teams)`. **Every rule needs both teams resolved by si.com id
-(§5.3), a si.com status of Final with integer scores, and a si.com game that is not a junk row
-(rule 7).**
+scores were only recorded and never published, everywhere. The rules are implemented as pure
+functions in `lib/backfill.ts`; match games across sources on `(date, unordered pair of teams)`.
+**Every rule needs both teams resolved by si.com id (§5.3), a si.com status of Final with integer
+scores, and a si.com game that is not a junk row (rule 7).**
 
 1. **MaxPreps is primary.** A MaxPreps final with a score is published as MaxPreps publishes it,
    unless rule 4 applies.
 2. **No MaxPreps contest for an official fixture.** An official league fixture (any league,
    SCVAL included) dated before today, for which no non-deleted MaxPreps contest of the same
-   pair exists within ±14 days of the fixture date (any type, status or postseason tag), and
-   si.com has that pair as Final within ±1 day of the fixture date: **publish si.com's score** as a
+   pair exists within ±14 days of the fixture date (any type, status or postseason tag) that is
+   not already matched to a different official fixture (the pair's other leg counts for its own
+   fixture and does not block this one), and si.com has that pair as Final within ±1 day of the
+   fixture date: **publish si.com's score** as a
    new game with `contestId: 'sblive:<si.com game id>'`, `provenance.scores: 'sblive'`, no MaxPreps
    URL, the si.com URL, counted in the league table exactly like a MaxPreps final, with home/away
-   and `official` taken from the fixture. If two or more candidates remain with different scores,
-   nothing is filled and a warning is logged. (If MaxPreps *does* have the game but it is not
+   and `official` taken from the fixture. A si.com row that is the same game as an existing
+   MaxPreps contest (same date, same pair: the cross-check's join) is never used to fill. If two
+   or more candidates remain with different scores, nothing is filled and a warning is logged. (If MaxPreps *does* have the game but it is not
    counted, for example an MCAL league game it moved to Oct 23 or typed as a tournament game, the
    game is recorded as si.com-only with the reason and is **not** filled.) The UI marks the row's
    source ("score via si.com").
@@ -873,8 +877,9 @@ sources on `(date, unordered pair of teams)`. **Every rule needs both teams reso
    name are dropped; statewide name collisions (University, Los Altos, Santa Clara) never resolve
    by name.
 8. **Budget:** the statewide daily scoreboard stays the cron default; si.com **team-games pages**
-   are fetched only for teams with an eligible item (an official fixture that is past-dated and has
-   no counted result) that the scoreboard did not cover, as a greedy set cover capped at 8 per run;
+   are fetched only for teams with an eligible item (a past official fixture with no MaxPreps
+   contest, a past score-pending contest between two registry teams, or a clearly-wrong final, per
+   `eligibleItems`) that the scoreboard did not cover, as a greedy set cover capped at 8 per run;
    items past the cap wait for the next run and are logged.
 9. **Transparency:** `/about` lists every si.com-sourced or si.com-overridden score with both
    values and the rule that applied (`#backfills`); the game page shows the source line ("Score
@@ -883,8 +888,18 @@ sources on `(date, unordered pair of teams)`. **Every rule needs both teams reso
 10. **Supersede and carry-forward:** a MaxPreps contest that later matches a filled fixture wins;
     no `sblive:` game is emitted for it, a score difference becomes an ordinary conflict, and the
     old `sblive:<id>` page stays as a stub linking the MaxPreps game (`supersededGames`, carried for
-    the rest of the season). If every si.com request fails in a run, the previous snapshot's
-    si.com games and overrides are re-applied where still eligible, with their source rows `stale`.
+    the rest of the season). An earlier si.com fill is decided again only by the si.com data that
+    covers it (a scoreboard row of the pair near the date, or a team page of either side). Whenever
+    this run did not read that data — its page failed (a partial failure is enough), the item was
+    past the team-page cap or not planned, `--no-sblive`, nothing was read, or every request failed —
+    the previous snapshot's si.com game or override for it is re-applied where still eligible, and
+    each failed page's source row is `stale` (rather than an error) when something was carried in
+    its place. When no si.com page was read at all, the previous cross-check is carried too, keeping
+    only the rows still true of this run's games (`carryCrossCheck` in `lib/crosscheck.ts`): a
+    conflict whose game is gone or whose MaxPreps score has since changed, an si.com-only row whose
+    game is now published or has changed status, and a fill that is no longer eligible all drop out.
+    Separately, the step-06 team-feed carry never carries an `sblive:` game, so a fill always goes
+    through this rule and is never counted twice.
 
 The never-0-0 rule still holds for every non-final game. On the 2026-10-02 corpus the rules fill
 exactly three games, all in PCAL (rule 2: Greenfield at Santa Catalina Sep 4 and Hollister at

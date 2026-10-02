@@ -28,6 +28,7 @@ import FormStrip from '../../../components/ui/FormStrip';
 import GameRow from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
+import { formStripName } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { OG_BASE } from '../../../components/layout/site-url';
 import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
@@ -237,7 +238,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   <FormStrip
                     entries={formEntries}
                     size={24}
-                    label={`${team.name} last ${formEntries.length} league games`}
+                    label={formStripName(team.name, formEntries.length)}
                   />
                 </div>
                 {nonLeagueLog.length > 0 ? (
@@ -254,12 +255,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
+                  slots={leagueScheduled}
                   className="hidden md:block"
                   height={200}
                 />
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
+                  slots={leagueScheduled}
                   className="md:hidden"
                   height={160}
                 />

@@ -68,8 +68,16 @@ export interface BackfillInput {
   today: string;
   /** For carry-forward and supersede. */
   previous: Snapshot | null;
-  /** Every si.com request failed this run. */
+  /** Every si.com request failed this run (or si.com was not read at all): every earlier fill is carried. */
   sbliveFailed: boolean;
+  /**
+   * Whether this run read the si.com data that decides the item of `pairKey` near `date`: a scoreboard row
+   * of the pair, or a team-games page of either side, read successfully. An earlier fill (rules 2-4) whose
+   * item this run did not consult (its page failed, was past the cap, or was not planned) is carried
+   * (rule 10) instead of being dropped; a consulted item is decided by this run's rows alone. Defaults to
+   * "everything was consulted".
+   */
+  consulted?: (pairKey: string, date: string) => boolean;
   /** The run's fetchedAt, stamped on a rule-2 game's provenance. Defaults to the input games' stamp. */
   fetchedAt?: string;
 }
@@ -103,6 +111,8 @@ export interface BackfillResult {
   warnings: string[];
   /** Rule 10: `sblive:<id>` → the MaxPreps contest that superseded it (carried from the previous snapshot). */
   supersededGames: Record<ContestId, ContestId>;
+  /** Rule 10: the games whose si.com value was carried from the previous snapshot rather than read this run. */
+  carried: ContestId[];
 }
 
 // ---------------------------------------------------------------- dates and keys
@@ -311,8 +321,32 @@ function isPhantomTieCandidate(g: Game): boolean {
   return league !== null && getLeague(league).rules.leagueOvertime === 'none';
 }
 
-function hasPairContestNear(games: readonly Game[], pairKey: string, date: string, days: number): Game[] {
-  return games.filter((g) => !isSbliveContest(g.contestId) && gamePair(g) === pairKey && within(g.dateKey, date, days));
+/**
+ * Rule 2 precondition: MaxPreps contests of the pair within ±`days` of `date` that could be this fixture's
+ * game. A contest already matched to a DIFFERENT official fixture (the pair's other leg) is not: it
+ * counts, for that fixture. Unstamped contests (and contests excluded by contest type or a postseason
+ * cut-off) still block.
+ */
+function hasPairContestNear(
+  games: readonly Game[],
+  pairKey: string,
+  date: string,
+  days: number,
+  fixtureId: string,
+): Game[] {
+  return games.filter(
+    (g) =>
+      !isSbliveContest(g.contestId) &&
+      gamePair(g) === pairKey &&
+      within(g.dateKey, date, days) &&
+      !(g.official && g.official.fixtureId !== fixtureId),
+  );
+}
+
+/** A si.com row that is the same game as an existing MaxPreps contest (reconcile's join: same date, same pair). */
+function isMaxprepsGame(games: readonly Game[], row: SbliveGame): boolean {
+  const pairKey = sblivePairKey(row.sides);
+  return games.some((g) => !isSbliveContest(g.contestId) && g.dateKey === row.dateKey && gamePair(g) === pairKey);
 }
 
 /** Every item D2 could act on this run, whether or not si.com has it. */
@@ -341,7 +375,7 @@ export function eligibleItems(
   for (const f of unmatched) {
     const pairKey = fixturePair(f);
     if (!pairKey || f.dateKey >= today) continue;
-    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS).length) continue;
+    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
     out.push({ kind: 'absent-fixture', pairKey, date: f.dateKey, fixture: f, contestId: null });
   }
   return out;
@@ -572,15 +606,17 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   let games: Game[] = input.games.map((g) => g);
   let unmatched: OfficialFixture[] = [...input.unmatched];
   const touched = new Set<string>();
+  const carriedIds: ContestId[] = [];
 
   if (input.sbliveFailed) {
-    const carried = carryForward(games, unmatched, input.previous, input.today);
+    const carried = carryForward(games, unmatched, input.previous, input.today, () => true);
     games = carried.games;
     unmatched = carried.unmatched;
     for (const id of carried.touched) touched.add(id);
+    carriedIds.push(...carried.touched);
     if (carried.touched.length) {
       warnings.push(
-        `si.com failed this run; re-applied ${carried.touched.length} earlier si.com ${carried.touched.length === 1 ? 'score' : 'scores'} still eligible`,
+        `si.com was not read this run; re-applied ${carried.touched.length} earlier si.com ${carried.touched.length === 1 ? 'score' : 'scores'} still eligible`,
       );
     }
   } else {
@@ -682,6 +718,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
     });
 
     // ---- rule 2: absent fixtures
+    const rule2Finals = finals.filter((row) => !isMaxprepsGame(input.games, row));
     const stillUnmatched: OfficialFixture[] = [];
     const added: Game[] = [];
     for (const f of unmatched) {
@@ -697,9 +734,9 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         continue;
       }
       const label = `${away.name} at ${home.name}`;
-      const near = hasPairContestNear(input.games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS);
-      const pick = pickCandidate(finals, pairKey, f.dateKey, used);
+      const near = hasPairContestNear(input.games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id);
       if (near.length) {
+        const pick = pickCandidate(finals, pairKey, f.dateKey, used);
         // MaxPreps has the pair within ±14 days: never fill; say why its contest does not count.
         stillUnmatched.push(f);
         if (pick.kind === 'none') continue;
@@ -715,6 +752,8 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         );
         continue;
       }
+      // Never a si.com row that is the same game as a MaxPreps contest (the pair's other leg, days away).
+      const pick = pickCandidate(rule2Finals, pairKey, f.dateKey, used);
       if (pick.kind === 'conflict') {
         stillUnmatched.push(f);
         warnings.push(`si.com has ${pick.rows.length} different scores for the ${f.dateKey} fixture ${label}; not filled`);
@@ -727,7 +766,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         const loose = nameOnlyNear(pairKey, f.dateKey);
         const outside = loose
           ? null
-          : finals.find((g) => !used.has(g.sbliveGameId) && sblivePairKey(g.sides) === pairKey && within(g.dateKey, f.dateKey, OFF_SCHEDULE_DAYS));
+          : rule2Finals.find((g) => !used.has(g.sbliveGameId) && sblivePairKey(g.sides) === pairKey && within(g.dateKey, f.dateKey, OFF_SCHEDULE_DAYS));
         const row = loose ?? outside;
         const s = row ? scoreFor(row, f.homeSlug, f.awaySlug) : null;
         if (row && s) {
@@ -745,6 +784,26 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
     }
     unmatched = stillUnmatched;
     games = [...games, ...added];
+
+    // ---- rule 10: an earlier fill whose item this run did not consult (its page failed, was past the
+    // team-page cap, or was not read) is carried while still eligible, never silently dropped.
+    const consulted = input.consulted ?? (() => true);
+    const freshlyFilled = new Set([...touched, ...added.map((g) => g.contestId)]);
+    const carried = carryForward(
+      games,
+      unmatched,
+      input.previous,
+      input.today,
+      (pairKey, date, contestId) => !freshlyFilled.has(contestId) && !consulted(pairKey, date),
+    );
+    games = carried.games;
+    unmatched = carried.unmatched;
+    carriedIds.push(...carried.touched);
+    if (carried.touched.length) {
+      warnings.push(
+        `re-applied ${carried.touched.length} earlier si.com ${carried.touched.length === 1 ? 'score' : 'scores'} still eligible that si.com was not read for this run`,
+      );
+    }
   }
 
   const rows = games
@@ -763,6 +822,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
     skipped: skippedOut,
     warnings,
     supersededGames: supersededGamesOf(games, input.previous),
+    carried: [...carriedIds].sort(),
   };
 }
 
@@ -799,11 +859,17 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
 
 // ---------------------------------------------------------------- carry-forward (every si.com request failed)
 
+/**
+ * Rule 10 carry-forward: the previous snapshot's si.com fills that are still eligible and that `carry`
+ * accepts (by the item's pair, date and contest id) are re-applied: rules 3/4 onto the same MaxPreps
+ * contest, rule 2 as the same `sblive:<id>` game.
+ */
 function carryForward(
   games: readonly Game[],
   unmatched: readonly OfficialFixture[],
   previous: Snapshot | null,
   today: string,
+  carry: (pairKey: string, date: string, contestId: string) => boolean,
 ): { games: Game[]; unmatched: OfficialFixture[]; touched: string[] } {
   if (!previous) return { games: [...games], unmatched: [...unmatched], touched: [] };
   const touched: string[] = [];
@@ -814,6 +880,10 @@ function carryForward(
     const prev = prevById.get(g.contestId);
     const b = prev?.provenance.backfill;
     if (!prev || !b || isSbliveContest(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
+    if (g.provenance.backfill) return g;
+    const pairKey = gamePair(g);
+    const itemDate = b.rule === 'off-schedule-date' ? (offScheduleDate(g) ?? g.dateKey) : g.dateKey;
+    if (!pairKey || !carry(pairKey, itemDate, g.contestId)) return g;
     const stillEligible =
       b.rule === 'score-pending'
         ? g.status === 'score-pending' && g.dateKey < today
@@ -844,14 +914,17 @@ function carryForward(
 
   // Rule 2: the fixture is still unmatched, past-dated and absent from MaxPreps.
   const byFixtureId = new Map(unmatched.map((f) => [f.id, f]));
+  const have = new Set(games.map((g) => g.contestId));
   const added: Game[] = [];
   const filled = new Set<string>();
   for (const prev of previous.games) {
     if (!isSbliveContest(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
+    if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;
     if (!f || !pairKey || f.dateKey >= today || filled.has(f.id)) continue;
-    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS).length) continue;
+    if (!carry(pairKey, f.dateKey, prev.contestId)) continue;
+    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
     filled.add(f.id);
     touched.push(prev.contestId);
     added.push(prev);

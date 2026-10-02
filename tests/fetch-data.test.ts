@@ -373,8 +373,8 @@ describe('fetch-data: carrying a failed team feed', () => {
 
 describe('fetch-data: the previous snapshot', () => {
   it('reads a v1 previous through loadSnapshot and starts a run from it', () => {
-    // The committed data/snapshot.json is v1 until the first live fetch; the corpus run reads it as
-    // its previous (migrated), and SCVAL's 09-29 feeds have fewer finals than its 10-02 copy.
+    // A v1 previous snapshot (the Stage-0 golden, tests/golden/snapshot-2026-10-02.v1.json) is read
+    // through loadSnapshot (migrated in memory); SCVAL's 09-29 feeds have fewer finals than that 10-02 copy.
     const res = runFixtureCli({
       corpus: 'scval',
       previous: path.join(REPO, 'tests', 'golden', 'snapshot-2026-10-02.v1.json'),

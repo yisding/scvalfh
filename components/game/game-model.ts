@@ -143,6 +143,12 @@ export interface GameModel {
   series: SeriesModel;
   conflict: GameConflict | null;
   source: GameSourceLine | null;
+  /**
+   * MaxPreps' result flags (or its two team feeds) contradict the published score
+   * (`provenance.resultConflict`), and no si.com score replaced it: the pipeline's sentence plus
+   * what this site does with the score. Null otherwise (a backfilled game says so in `source`).
+   */
+  resultConflictNote: string | null;
   /** The division this contest counts toward (`countsFor`), or null. */
   division: DivisionId | null;
   /** The game's league: the league of `countsFor`, else of the postseason tag, else of a member side. */
@@ -276,12 +282,32 @@ function seriesGames(game: Game): Game[] {
     .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
 }
 
+/** A final whose published score MaxPreps' own result flags contradict, with no si.com score over it. */
+function hasResultConflict(g: Game): boolean {
+  return !!g.provenance.resultConflict && !g.provenance.backfill;
+}
+
+/**
+ * The game page's sentence for `provenance.resultConflict`: the pipeline's note, then what this
+ * site publishes — a level score counts as a tie (DESIGN §5.2: the score is the record).
+ */
+function resultConflictNoteFor(game: Game): string | null {
+  if (!hasResultConflict(game)) return null;
+  const note = (game.provenance.resultConflict as string).trim().replace(/[.\s]+$/, '');
+  const level = game.home.score !== null && game.home.score === game.away.score;
+  return level
+    ? `${note}. The score is level, so this site counts it as a tie.`
+    : `${note}. This site goes by the published score.`;
+}
+
 function seriesSummary(game: Game, games: Game[], homeName: string, awayName: string): string {
   let homeWins = 0;
   let awayWins = 0;
   let ties = 0;
   let played = 0;
   let pending = 0;
+  /** Level finals MaxPreps flags with a winner (a shootout, most likely): counted as ties, said so. */
+  const flaggedTies: Game[] = [];
   const keyHome = sideKey(game.home);
   for (const g of games) {
     const display = describeGame(g);
@@ -297,6 +323,7 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
     const rowHome = display.home.weight;
     if (rowHome === 'level') {
       ties += 1;
+      if (hasResultConflict(g)) flaggedTies.push(g);
     } else if ((rowHome === 'winner') === thisGameHomeIsRowHome) {
       homeWins += 1;
     } else {
@@ -327,6 +354,24 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
     sentences.push(
       `${awayName} leads the season series ${record(awayWins, homeWins, ties)}.`,
     );
+  } else if (ties === played && flaggedTies.length > 0) {
+    // MaxPreps marks a winner on a level score: "a draw" alone would contradict the recap.
+    if (played === 1) {
+      const g = flaggedTies[0];
+      const flagged = g.home.result === 'W' ? g.home : g.away.result === 'W' ? g.away : null;
+      const winner = flagged ? (sideKey(flagged) === keyHome ? homeName : awayName) : null;
+      sentences.push(
+        `Their only meeting this season ended ${g.home.score}-${g.away.score}, which this site counts as a draw; ${
+          winner ? `MaxPreps lists ${winner} as the winner.` : 'MaxPreps’ result flags for it disagree.'
+        }`,
+      );
+    } else {
+      sentences.push(
+        `All ${played} meetings this season ended level, which this site counts as draws; MaxPreps lists a winner for ${
+          flaggedTies.length === 1 ? 'one of them' : `${flaggedTies.length} of them`
+        }.`,
+      );
+    }
   } else if (ties === played) {
     // "level at 0-0-1" is true but unreadable; say what happened instead.
     sentences.push(
@@ -579,6 +624,7 @@ export function buildGameModel(param: string): GameModel | undefined {
     },
     conflict: conflictFor(game),
     source: sourceFor(game),
+    resultConflictNote: resultConflictNoteFor(game),
   };
 }
 
@@ -589,8 +635,12 @@ export function buildGameModel(param: string): GameModel | undefined {
  */
 export function buildSupersededStub(param: string): SupersededStub | undefined {
   const contestId = paramToGameId(param);
-  const target = getSupersededGames()[contestId];
-  if (!target) return undefined;
+  // Only an si.com id can be superseded, and the map is a plain JSON object: an own-property
+  // lookup, so 'constructor' or '__proto__' never reads Object.prototype as a "target".
+  if (!/^sblive:\d+$/.test(contestId)) return undefined;
+  const map = getSupersededGames();
+  const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
+  if (typeof target !== 'string' || target === '') return undefined;
   const targetModel = buildGameModel(gameIdToParam(target));
   const short = targetModel?.league?.shortName;
   return {

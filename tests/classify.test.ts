@@ -5,6 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { postseasonTagOf } from '../components/ui/game-view';
 import {
   classifyGame,
   classifyGames,
@@ -68,6 +69,33 @@ describe('classify: official-fixtures leagues (BVAL, PCAL, MCAL)', () => {
     expect(bval.postseason).toEqual({ kind: 'ccs', leagueId: 'bval', via: 'contest-type-4' });
     const cross = game({ home: 'leigh', away: 'cupertino', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
     expect(cross.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'contest-type-4' });
+  });
+
+  it('never tags an NCS (MCAL) team’s contestType 4 game outside the MCAL tournament as CCS', () => {
+    // An MCAL team against a non-registry opponent (a showcase, an out-of-section event): 'other'.
+    const base = game({ home: 'tamalpais', away: 'redwood', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    const outside: Game = {
+      ...base,
+      away: { ...base.away, teamId: '11111111-2222-4333-8444-555555555555', slug: null, name: 'Outside Prep' },
+      leagueDivision: null,
+      postseason: null,
+    };
+    const tag = postseasonTag(outside);
+    expect(tag).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
+    expect(postseasonTagOf({ postseason: tag })).toBeNull();
+    // An MCAL team against a CCS team: not a CCS game either.
+    const vsCcs = game({ home: 'tamalpais', away: 'leigh', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    expect(vsCcs.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
+    expect(postseasonTagOf(vsCcs)).toBeNull();
+    // A CCS team against a non-registry opponent is still CCS.
+    const ccsBase = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    const ccsOutside: Game = {
+      ...ccsBase,
+      away: { ...ccsBase.away, teamId: '11111111-2222-4333-8444-555555555555', slug: null, name: 'Outside Prep' },
+      leagueDivision: null,
+      postseason: null,
+    };
+    expect(postseasonTag(ccsOutside)).toEqual({ kind: 'ccs', leagueId: null, via: 'contest-type-4' });
   });
 
   it('treats an MCAL pair on or after Oct 23 as the MCAL tournament, not a league game', () => {

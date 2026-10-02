@@ -21,12 +21,28 @@ import {
   readBracketPublished,
 } from '../lib/sources/ccs';
 import { CCS } from '../lib/leagues';
+import { CcsCalendarEventSchema } from '../lib/snapshot-schema';
 import { REPO } from './helpers';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');
 const events = parseCcsIcal(ics);
 
 describe('ccs: the iCal feed', () => {
+  it('drops an event whose summary is only the sport prefix; every event passes the snapshot schema', () => {
+    const parsed = parseCcsIcal(
+      [
+        'BEGIN:VCALENDAR',
+        'BEGIN:VEVENT', 'DTSTART;VALUE=DATE:20261107', 'SUMMARY:(Field Hockey)', 'END:VEVENT',
+        'BEGIN:VEVENT', 'DTSTART;VALUE=DATE:20261108', 'SUMMARY:Field Hockey:', 'DESCRIPTION:Field Hockey:', 'END:VEVENT',
+        'BEGIN:VEVENT', 'DTSTART;VALUE=DATE:20261114', 'SUMMARY:(Field Hockey) CCS Finals', 'DESCRIPTION:(Field Hockey)', 'END:VEVENT',
+        'END:VCALENDAR',
+        '',
+      ].join('\n'),
+    );
+    expect(parsed.map((e) => [e.date, e.summary, e.detail])).toEqual([['2026-11-14', 'CCS Finals', null]]);
+    for (const e of [...parsed, ...events]) expect(CcsCalendarEventSchema.safeParse(e).success, e.summary).toBe(true);
+  });
+
   it('reads exactly the five all-day VEVENTs', () => {
     expect(events.map((e) => e.date)).toEqual([
       '2026-11-02',

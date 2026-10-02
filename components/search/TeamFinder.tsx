@@ -29,7 +29,9 @@ import {
  *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
  *   order (WCAG 2.5.3). A tap pins the team (which remembers its league) and calls `onPin`; the
- *   caller moves focus.
+ *   caller moves focus. When this browser stores nothing (`localStorage` throws), each result is
+ *   instead a plain link to the team page (`TeamResultLink`) under one line saying why, and Enter
+ *   on a single match follows it — a pin that cannot be stored is never offered.
  *
  * Both modes show "Divisions and leagues" results (links) above the teams, and the not-covered
  * sentences ("York plays JV field hockey only…").
@@ -189,6 +191,27 @@ export function PinResult({ entry, onPick }: { entry: TeamSearchEntry; onPick: (
   );
 }
 
+/**
+ * One pin-mode result when this browser stores nothing (`localStorage` throws): pinning cannot
+ * work, so the result is a plain link to the team page with the same visible text — never a pin
+ * button that would leave an empty My-team box with no Unpin to recover from.
+ */
+export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
+  return (
+    <Link
+      href={`/teams/${entry.slug}`}
+      prefetch={false}
+      className="flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left no-underline"
+    >
+      <span className="text-body font-semibold text-accent">{entry.shortName}</span>
+      <span className="text-meta text-ink-2">{pinResultDetail(entry)}</span>
+    </Link>
+  );
+}
+
+/** The line above the results when pinning cannot work in this browser. */
+export const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
+
 function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[]; kickerId: string }) {
   if (groups.length === 0) return null;
   return (
@@ -230,7 +253,9 @@ export function TeamFinder({
   const groupsKickerId = useId();
   const [query, setQuery] = useState('');
   const [announced, setAnnounced] = useState('');
-  const { pin } = usePinnedTeam();
+  const { ready, available, pin } = usePinnedTeam();
+  // pin mode with storage blocked: results are team-page links, not pin buttons.
+  const linkResults = mode === 'pin' && ready && !available;
 
   const view = useMemo(() => finderView(index, query, mode, limit), [index, query, mode, limit]);
   const typing = query.trim() !== '';
@@ -274,7 +299,8 @@ export function TeamFinder({
   }, [mode, listId, hideWhileSearchingId]);
 
   const pick = (entry: TeamSearchEntry) => {
-    pin(entry.slug, entry.leagueId);
+    // A failed write (storage blocked) changes nothing, so there is no pinned card to focus.
+    if (!pin(entry.slug, entry.leagueId)) return;
     setQuery('');
     onPin?.(entry.slug, entry.leagueId);
   };
@@ -289,7 +315,8 @@ export function TeamFinder({
     event.preventDefault();
     const only = view.matches[0];
     if (mode === 'pin') {
-      pick(only);
+      if (linkResults) document.getElementById(resultsId)?.querySelector<HTMLElement>('a[href]')?.click();
+      else pick(only);
     } else if (listId) {
       document
         .getElementById(listId)
@@ -338,10 +365,11 @@ export function TeamFinder({
           ) : null}
           {mode === 'pin' && view.shown.length > 0 ? (
             <Fragment>
+              {linkResults ? <p className="mt-3 mb-0 text-meta text-ink-2">{PIN_UNAVAILABLE_NOTE}</p> : null}
               <ul id={resultsId} className="m-0 mt-2 list-none p-0">
                 {view.shown.map((entry) => (
                   <li key={entry.slug}>
-                    <PinResult entry={entry} onPick={pick} />
+                    {linkResults ? <TeamResultLink entry={entry} /> : <PinResult entry={entry} onPick={pick} />}
                   </li>
                 ))}
               </ul>

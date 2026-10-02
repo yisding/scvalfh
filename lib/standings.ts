@@ -256,8 +256,28 @@ function pointsVs(ctx: DivisionCtx, id: TeamId, other: TeamId): { pts: number; g
 const allEqual = (values: readonly number[]): boolean => values.every((v) => v === values[0]);
 
 /**
- * Stage keys, higher is better; `null` = the stage is skipped for this group (SPEC §5.5).
- * `head-to-head`, `division-wins`, `h2h-goals-against` and `h2h-goal-diff` are today's SCVAL code.
+ * Points each team of `group` earned against `target` (PCAL §23.3.1(b)/§23.3.3(c): "compare one team
+ * at a time"), or `null` when the tied teams have not all met `target` the same number of times (at
+ * least once): an unplayed meeting is not a 0-point meeting, so it can neither separate nor be
+ * passed over (SPEC §5.5).
+ */
+function pointsVsEach(ctx: DivisionCtx, group: readonly TeamId[], target: TeamId): number[] | null {
+  const r = group.map((id) => pointsVs(ctx, id, target));
+  if (r.some((x) => x.gp === 0) || !allEqual(r.map((x) => x.gp))) return null;
+  return r.map((x) => x.pts);
+}
+
+/**
+ * A stage that cannot be applied YET: the tied teams have not all met the placed team it must compare
+ * them on. Skipping to the next stage would decide the tie on the steps the by-laws put after it, so
+ * the chain stops and the teams stay level on its terminal uncomputable stage (SPEC §5.5).
+ */
+const HALT = 'halt' as const;
+
+/**
+ * Stage keys, higher is better; `null` = the stage is skipped for this group; `HALT` = the chain stops
+ * here, unresolved (SPEC §5.5). `head-to-head`, `division-wins`, `h2h-goals-against` and
+ * `h2h-goal-diff` are today's SCVAL code.
  */
 function stageKeys(
   stage: TiebreakStage,
@@ -265,7 +285,7 @@ function stageKeys(
   above: readonly TeamId[],
   below: readonly TeamId[][],
   ctx: DivisionCtx,
-): Map<TeamId, number> | null {
+): Map<TeamId, number> | null | typeof HALT {
   const { rules } = ctx;
   const out = new Map<TeamId, number>();
   switch (stage) {
@@ -332,7 +352,9 @@ function stageKeys(
     }
     case 'record-vs-higher-placed': {
       for (const target of above) {
-        const k = group.map((id) => pointsVs(ctx, id, target).pts);
+        const k = pointsVsEach(ctx, group, target);
+        // A meeting not yet played (or not played as often) stops the walk: no invented 0.
+        if (k === null) return HALT;
         if (allEqual(k)) continue;
         group.forEach((id, i) => out.set(id, k[i]));
         return out;
@@ -342,7 +364,8 @@ function stageKeys(
     case 'record-vs-lower-placed': {
       for (const cluster of below) {
         if (cluster.length === 1) {
-          const k = group.map((id) => pointsVs(ctx, id, cluster[0]).pts);
+          const k = pointsVsEach(ctx, group, cluster[0]);
+          if (k === null) return HALT;
           if (allEqual(k)) continue;
           group.forEach((id, i) => out.set(id, k[i]));
           return out;
@@ -350,7 +373,8 @@ function stageKeys(
         // A shared lower cluster: its internal order is undefined, so it can only be passed over
         // when every member of it gives the tied teams equal points.
         for (const member of cluster) {
-          const k = group.map((id) => pointsVs(ctx, id, member).pts);
+          const k = pointsVsEach(ctx, group, member);
+          if (k === null) return HALT;
           if (!allEqual(k)) return null;
         }
       }
@@ -404,6 +428,7 @@ function resolveGroup(
 
   for (const stage of stages) {
     const keys = stageKeys(stage, group, above, below, ctx);
+    if (keys === HALT) break;
     if (keys === null) continue;
     const keyed = group.map((id) => ({ id, key: keys.get(id) as number }));
     const distinct = new Set(keyed.map((k) => k.key));
@@ -456,6 +481,11 @@ function pickFirst(
       return { cluster: byName(group), terminal: true };
     }
     const keys = stageKeys(stage, group, above, ctx.below, ctx);
+    if (keys === HALT) {
+      const terminal = chain.find((st) => UNCOMPUTABLE.has(st)) ?? 'coin-flip';
+      for (const id of group) ctx.resolvedBy.set(id, terminal);
+      return { cluster: byName(group), terminal: true };
+    }
     if (keys === null) continue;
     const values = group.map((id) => keys.get(id) as number);
     if (allEqual(values)) continue;
@@ -470,20 +500,33 @@ function pickFirst(
   return { cluster: byName(group), terminal: true };
 }
 
-/** seed-one-restart: place one team, then restart the whole chain among the rest. */
-function seedOne(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: SeedCtx): TeamId[][] {
+/**
+ * seed-one-restart: place one team, then restart the whole chain among the rest.
+ *
+ * `narrowing` is set when `group` is the subgroup a stage left level at its best key while seeding
+ * one team out of a larger tie: the chain then runs among the subgroup only ("The above criteria will
+ * be used to break the tie, seeding one team"). MCAL's last-place rules (the three-way 5-7 draw and the
+ * play-in, SPEC §5.4b) apply to teams tied ON POINTS for those places, never to such a remainder.
+ */
+function seedOne(
+  group: readonly TeamId[],
+  place: number,
+  above: readonly TeamId[],
+  ctx: SeedCtx,
+  narrowing = false,
+): TeamId[][] {
   if (group.length === 0) return [];
   if (group.length === 1) return [[group[0]]];
   const ps = ctx.league.postseason;
-  if (ps.kind === 'league-tournament') {
+  if (!narrowing && ps.kind === 'league-tournament') {
     const L = ps.lastSpot.place;
     if (place <= L && L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx);
   }
   const chain = tiebreakChainFor(ctx.division, ctx.bucketStart);
-  const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx)[0]);
+  const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx, true)[0]);
   if (head.terminal) return [head.cluster];
   const rest = group.filter((id) => !head.cluster.includes(id));
-  return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx)];
+  return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx, narrowing)];
 }
 
 /** MCAL Tie-Breaking Criteria for the play-in pair: criteria 1-2, then draw numbers. */
@@ -506,7 +549,7 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
       return [[first], ...seedOne(rest, L, [...above, first], ctx)];
     }
     const chain = tiebreakChainFor(ctx.division, ctx.bucketStart);
-    const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx)[0]);
+    const head = pickFirst(group, chain, above, ctx, (best) => seedOne(best, place, above, ctx, true)[0]);
     if (head.terminal) return [head.cluster];
     const rest = group.filter((id) => !head.cluster.includes(id));
     return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx)];
@@ -853,7 +896,7 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));
     if (trust === 'records-only') continue;
     push(
-      'place (we order on points, Art. VI §2; MaxPreps orders on win pct)',
+      `place (we order on points, ${getLeague(div.leagueId).rules.citations.pointsShort}; MaxPreps orders on win pct)`,
       String(s.computed.place),
       r.conferenceStandingPlacement === null ? '—' : String(r.conferenceStandingPlacement),
     );

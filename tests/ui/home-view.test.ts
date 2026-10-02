@@ -11,6 +11,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { corpusSnapshotPath } from '../helpers';
 
+import { POSTSEASON_LEAD, postseasonCardLine } from '../../components/home/home-types';
+
+import { width } from './text-metrics';
+
 type HomeData = typeof import('../../components/home/home-data');
 
 let home: HomeData;
@@ -112,7 +116,7 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
   });
 
   it('the division `home` config drives each mini table', async () => {
-    const { MiniStandings } = await import('../../components/home/MiniStandings');
+    const { MiniStandings, miniShownCount } = await import('../../components/home/MiniStandings');
     const expected: Record<string, { rows: number; line: string | null }> = {
       'de-anza': { rows: 4, line: null },
       'el-camino': { rows: 4, line: null },
@@ -134,7 +138,9 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
         );
         const want = expected[division.id];
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
-        expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBe(Math.min(want.rows, division.total));
+        // `want.rows`, plus any team sharing the place at the cutoff.
+        expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBe(miniShownCount(division.rows, want.rows));
+        expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
         if (want.line) expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} line`).toContain(want.line);
         expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
         expect(division.href, `${HD}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
@@ -148,6 +154,23 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
       const html = renderPanel(panel.id);
       expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(1);
     }
+  });
+
+  it('a place shared at the row cutoff is shown whole (Mt. Hamilton 4= pair), and nothing else stretches it', async () => {
+    const { miniShownCount } = await import('../../components/home/MiniStandings');
+    const row = (place: number, shared: boolean, hasResults = true) => ({ place, shared, hasResults });
+    // 1, 2, 3, 4=, 4=, 6: four rows asked, both 4= teams shown.
+    const tied = [row(1, false), row(2, false), row(3, false), row(4, true), row(4, true), row(6, false)];
+    expect(miniShownCount(tied, 4)).toBe(5);
+    // Three-way tie at the cutoff.
+    expect(miniShownCount([row(1, false), row(2, true), row(2, true), row(2, true)], 2)).toBe(4);
+    // The next row is a different shared cluster: no stretch.
+    expect(miniShownCount([row(1, true), row(1, true), row(3, true), row(3, true)], 2)).toBe(2);
+    // No tie at the cutoff, or no results yet: exactly the configured rows.
+    expect(miniShownCount([row(1, false), row(2, false), row(3, false), row(4, false), row(5, false)], 4)).toBe(4);
+    const unplayed = Array.from({ length: 6 }, () => row(1, true, false));
+    expect(miniShownCount(unplayed, 4)).toBe(4);
+    expect(miniShownCount([row(1, false)], 4)).toBe(1);
   });
 
   it('the other-leagues strip names each division leader', () => {
@@ -257,6 +280,8 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     expect(leigh.meta, `${HD}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
     expect(leigh.played, `${HD}: played`).toBe('3 of 10 played');
     expect(leigh.postseason, `${HD}: postseason line`).toBe('If the season ended today: Automatic qualifier');
+    expect(postseasonCardLine(leigh), `${HD}: postseason card line`).toBe('Today: Automatic qualifier');
+    expect(leigh.postseasonShort, `${HD}: no tie, no second copy of the line`).toBeUndefined();
     expect(leigh.tableHref).toBe('/standings/bval#mt-hamilton');
     const tam = data.teamViews.find((v) => v.team.slug === 'tamalpais')!;
     expect(tam.meta, `${HD}: single-division meta`).toBe('1st · MCAL');
@@ -265,6 +290,42 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, onUnpin: () => {} }));
       expect(html, `components/home/MyTeamCard.tsx: ${v.team.slug} unpin id`).toContain('id="my-team-unpin"');
       if (v.postseason) expect(textOf(html)).toContain(v.postseason);
+      const card = postseasonCardLine(v);
+      if (card) expect(textOf(html)).toContain(card);
+      expect(card === null, `${HD}: ${v.team.slug} card line iff line`).toBe(v.postseason === null);
+    }
+  });
+
+  // The card text is 288px wide at 320 (px-4 in a 320px card); the line is one truncated h-6 row,
+  // so the STATUS must fit whole or the reader sees only the prefix. Widths: tests/ui/text-metrics.ts
+  // (Geist 12px/500) scaled to the 14px meta size — an over-estimate for the 400 weight.
+  const CARD_TEXT_PX = 288;
+  const at14 = (s: string) => (width(s) * 14) / 12;
+
+  it('the postseason card line fits one 320px line for every team (corpus)', () => {
+    for (const v of data.teamViews) {
+      const card = postseasonCardLine(v);
+      if (!card) continue;
+      expect(at14(card), `${HD}: ${v.team.slug} "${card}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+    }
+  });
+
+  it('every ladder label, and every two-rung tie, fits that line in every league', () => {
+    for (const league of leagues.LEAGUES) {
+      const rungs = league.postseason.ladder;
+      for (const division of league.divisions) {
+        const mine = rungs.filter((r) => r.divisions === '*' || r.divisions.includes(division.id));
+        for (const lead of Object.values(POSTSEASON_LEAD).map((l) => l.short)) {
+          for (const r of mine) {
+            const line = `${lead} ${r.label}`;
+            expect(at14(line), `${HD}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+          }
+          for (let i = 0; i + 1 < mine.length; i++) {
+            const line = `${lead} ${mine[i].badge} or ${mine[i + 1].badge} (tied)`;
+            expect(at14(line), `${HD}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+          }
+        }
+      }
     }
   });
 });

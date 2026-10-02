@@ -304,7 +304,7 @@ export type TiebreakStage =
   | 'h2h-goal-diff'            // SCVAL §6, BVAL §6d
   | 'division-goals-against'   // BVAL §6e — fewest goals allowed in ALL division games
   | 'record-vs-higher-placed'  // PCAL §23.3.3
-  | 'record-vs-lower-placed'   // PCAL §23.3.1
+  | 'record-vs-lower-placed'   // PCAL §23.3.1(b), §23.3.3(c)
   | 'h2h-win-pct'              // MCAL criterion 1
   | 'record-above-tie'         // MCAL criterion 2
   | 'draw-number'              // MCAL criterion 3 — lowest spring draw number wins; always resolves

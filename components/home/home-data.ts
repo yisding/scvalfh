@@ -45,6 +45,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import { outcomesFor, statusBadge } from '../../lib/standings';
 import {
   CCS,
   HISTORY_LEAGUE,
@@ -70,6 +71,7 @@ import type {
   LeagueCardView,
   PinTileView,
 } from './home-types';
+import { POSTSEASON_LEAD } from './home-types';
 
 // ---------------------------------------------------------------- shared helpers
 
@@ -722,7 +724,14 @@ export function buildTeamViews(): HomeTeamView[] {
         : ordinal(standing.computed.place)
       : null;
     const line = getTeamPostseasonLine(team.slug);
-    const prefix = LATER_PHASES.has(getSeasonPhase(league.id)) ? 'If the season ended today:' : 'Final place:';
+    const projected = LATER_PHASES.has(getSeasonPhase(league.id));
+    const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
+    // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
+    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
+    // instead of the full label with its tiebreak citation, which the team page carries.
+    const outcomes = standing ? outcomesFor(standing) : [];
+    const tieBadges =
+      line && outcomes.length > 1 ? `${outcomes.map((o) => statusBadge(team.division, o)).join(' or ')} (tied)` : null;
     return {
       team: {
         abbr: team.abbr,
@@ -739,7 +748,8 @@ export function buildTeamViews(): HomeTeamView[] {
         .join(' · '),
       played:
         context && context.remaining > 0 ? `${context.counted} of ${context.scheduled} played` : null,
-      postseason: line ? `${prefix} ${line.label}` : null,
+      postseason: line ? `${lead.full} ${line.label}` : null,
+      ...(tieBadges ? { postseasonShort: `${lead.short} ${tieBadges}` } : {}),
       tableHref: `/standings/${league.id}#${team.division}`,
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,

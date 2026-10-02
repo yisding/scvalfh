@@ -11,6 +11,7 @@ import {
   DEFAULT_FINDER_LABEL,
   PinResult,
   TeamFinder,
+  TeamResultLink,
   finderView,
   pinResultDetail,
 } from '../../components/search/TeamFinder';
@@ -183,5 +184,17 @@ describe('pin-mode result buttons', () => {
     expect(pinResultDetail(leigh)).toBe('Mt. Hamilton · BVAL');
     const tam = index.teams.find((t) => t.slug === 'tamalpais')!;
     expect(pinResultDetail(tam)).toBe('MCAL');
+  });
+});
+
+describe('pin-mode results when this browser stores nothing', () => {
+  it('each result is a plain link to the team page with the same visible text, not a pin button', () => {
+    for (const entry of index.teams) {
+      const html = renderToStaticMarkup(createElement(TeamResultLink, { entry }));
+      expect(html, entry.slug).toMatch(new RegExp(`^<a [^>]*href="/teams/${entry.slug}"`));
+      expect(html, entry.slug).not.toContain('<button');
+      expect(textOf(html), entry.slug).toBe(`${entry.shortName}${pinResultDetail(entry)}`);
+      expect(textOf(html).startsWith('Pin '), entry.slug).toBe(false);
+    }
   });
 });

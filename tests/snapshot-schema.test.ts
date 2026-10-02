@@ -209,6 +209,19 @@ describe('snapshot schema: checkAgainstConfig', () => {
     );
   });
 
+  it('4. never counts one official fixture twice (official-fixtures leagues)', () => {
+    const s = baseSnapshot();
+    const a = game({ home: 'carmel', away: 'salinas', hs: 1, as: 0, date: '2026-09-23' });
+    const b = game({ home: 'carmel', away: 'salinas', hs: 1, as: 0, date: '2026-09-23' });
+    expect(a.countsFor).toBe('pcal');
+    expect(a.official?.fixtureId).toBe(b.official?.fixtureId);
+    expect(issuesOf({ ...s, games: [...s.games, a, b] })).toMatch(/official fixture pcal:2026-09-23:salinas@carmel is counted twice/);
+    // One of them not counted (another fixture's stamp would be a different id): no such issue.
+    const c = { ...b, official: { ...b.official!, fixtureId: 'pcal:2026-09-23:salinas@carmel-2' } };
+    const ok = SnapshotSchema.safeParse({ ...s, games: [...s.games, a, c] });
+    expect(JSON.stringify(ok.error?.issues ?? [])).not.toMatch(/counted twice/);
+  });
+
   it('4. countsFor must equal classifyGame', () => {
     const s = baseSnapshot();
     const i = s.games.findIndex((g) => g.countsFor !== null);

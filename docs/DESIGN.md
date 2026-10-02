@@ -2654,9 +2654,14 @@ measured values in CI; this section states the targets, never a measurement):
 
 The pinned card's own height is measured at its longest real content (two-line Next, a team with no
 results, the longest postseason line) at 320, 360, 390 and 768 px and recorded in a comment at the
-component; this supersedes §3.1's 240 px. The pinned card's postseason line is one truncated line
-("If the season ended today: …" during the regular season, "Final place: …" after it); the full
-sentence lives on the team page.
+component; this supersedes §3.1's 240 px. The pinned card's postseason line is one line that fits
+a 320px card (288px of text) and shows the short form: "Today: <label>" during the regular season,
+"Final: <label>" after it. For a place shared across two rungs, whose full label carries a tiebreak
+citation, the card shows the two rungs' badges plus "(tied)" instead (e.g. "Today: Play-in or No AQ
+route (tied)"; `HomeTeamView.postseasonShort`, set only for those ties). The full sentence ("If the
+season ended today: <label>" / "Final place: <label>") remains the line's accessible text and its
+`title`, and lives in full on the team page (`postseasonCardLine` in
+`components/home/home-types.ts` picks the visible form).
 
 ### 15.7 GP, LEFT, MAX and the missing-results line
 

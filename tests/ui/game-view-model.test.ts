@@ -123,6 +123,10 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-model.
     expect(L.m.buildGameModel('nope'), 'components/game/game-model.ts unknown').toBeUndefined();
     expect(L.m.buildGameModel('sblive-1'), 'components/game/game-model.ts unknown sblive').toBeUndefined();
     expect(L.m.buildSupersededStub('sblive-1'), 'components/game/game-model.ts unknown stub').toBeUndefined();
+    // The superseded map is a plain JSON object: no prototype member is ever a "target".
+    for (const param of ['constructor', '__proto__', 'toString', 'hasOwnProperty', 'valueOf']) {
+      expect(L.m.buildSupersededStub(param), `components/game/game-model.ts stub for "${param}"`).toBeUndefined();
+    }
   });
 });
 
@@ -229,6 +233,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
   let S: Loaded;
   let tournament: Game;
   let target: Game;
+  let flagged: Game;
   const SUPERSEDED = 'sblive:999999';
 
   beforeAll(async () => {
@@ -246,6 +251,26 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     tournament = oneGoal;
     target = snap.games.find((g) => g.countsFor !== null && !g.contestId.startsWith('sblive:') && mcalIds.has(g.home.teamId ?? ''))!;
     snap.supersededGames = { [SUPERSEDED]: target.contestId };
+    // A level non-league final MaxPreps flags W/L (the Gilroy–University shape): a single meeting.
+    const pairKey = (g: Game) => [g.home.slug ?? g.home.name, g.away.slug ?? g.away.name].sort().join('|');
+    const pairs = new Map<string, number>();
+    for (const g of snap.games) pairs.set(pairKey(g), (pairs.get(pairKey(g)) ?? 0) + 1);
+    flagged = snap.games.find(
+      (g) =>
+        g.status === 'final' &&
+        g.countsFor === null &&
+        g.postseason === null &&
+        !g.provenance.backfill &&
+        !g.contestId.startsWith('sblive:') &&
+        (g.home.slug === null) !== (g.away.slug === null) &&
+        pairs.get(pairKey(g)) === 1,
+    )!;
+    flagged.home.score = 0;
+    flagged.away.score = 0;
+    flagged.home.result = 'L';
+    flagged.away.result = 'W';
+    flagged.provenance.resultConflict = `MaxPreps marks ${flagged.home.name} L and ${flagged.away.name} W on a 0-0 score.`;
+    flagged.provenance.scoreConflict = undefined;
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-game-view-'));
     const file = path.join(dir, 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
@@ -265,6 +290,23 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(text, 'app/game/[id]/page.tsx MCAL note').toContain('MCAL tournament game — it does not count in the league table.');
     expect(text, 'app/game/[id]/page.tsx shootout caveat').toContain(SHOOTOUT_NOTE);
     expect(text, 'app/game/[id]/page.tsx MCAL: no CCS concept').not.toMatch(/automatic qualifier|at-large|CCS picture/i);
+  });
+
+  it('a level final MaxPreps flags W/L: the note under the score, and the series never says just "a draw"', async () => {
+    expect(flagged, 'tests: a single-meeting non-league final in the corpus').toBeDefined();
+    const model = S.m.buildGameModel(flagged.contestId)!;
+    expect(model.resultConflictNote, 'components/game/game-model.ts resultConflictNote').toBe(
+      `${flagged.provenance.resultConflict!.replace(/\.$/, '')}. The score is level, so this site counts it as a tie.`,
+    );
+    expect(model.series.summary, 'components/game/game-model.ts series summary').toBe(
+      `Their only meeting this season ended 0-0, which this site counts as a draw; MaxPreps lists ${model.away.name} as the winner.`,
+    );
+    expect(model.series.summary).not.toContain('was a draw.');
+    const text = textOf(await S.renderPage(flagged.contestId));
+    expect(text, 'components/game/GameSources.tsx ResultFlagConflict').toContain('The score is level, so this site counts it as a tie.');
+    // A backfilled game explains itself in the source line instead.
+    const plain = S.m.buildGameModel(tournament.contestId)!;
+    expect(plain.resultConflictNote, 'components/game/game-model.ts: no conflict, no note').toBeNull();
   });
 
   it('a superseded si.com id is a stub page, in both param lists, canonical to the MaxPreps game', async () => {

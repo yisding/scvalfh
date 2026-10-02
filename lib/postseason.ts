@@ -178,10 +178,15 @@ function pickFirst(
   return { cluster: [...group], terminal: true };
 }
 
+/**
+ * `top` is false inside a narrowing call (the subgroup a stage left level while seeding one team out of
+ * a larger tie): the chain then runs among the subgroup only, and the last-place rules — which are for
+ * teams tied ON POINTS for those places — never apply to it (lib/standings.ts `seedOne`'s `narrowing`).
+ */
 function seedOne(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: RuleCtx, top: boolean): TeamId[][] {
   if (group.length === 0) return [];
   if (group.length === 1) return [[group[0]]];
-  if (place <= ctx.L && ctx.L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx, top);
+  if (top && place <= ctx.L && ctx.L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx, top);
   const head = pickFirst(group, ctx.chain, above, ctx, (best) => seedOne(best, place, above, ctx, false)[0]);
   if (head.terminal) return [head.cluster];
   const rest = group.filter((id) => !head.cluster.includes(id));

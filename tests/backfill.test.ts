@@ -228,6 +228,39 @@ describe('backfill rule 2: an official fixture MaxPreps has no contest for', () 
     expect(filled.games.map((g) => g.contestId)).toEqual([far.contestId, 'sblive:63']);
   });
 
+  it('the pair’s other leg, matched to its own fixture, does not block a fill (MCAL legs 6 days apart)', () => {
+    const leg1 = fixture('marin-county', '2026-09-18', 'marin-academy', 'tamalpais');
+    const leg2 = fixture('marin-county', '2026-09-24', 'tamalpais', 'marin-academy');
+    const played = game({ home: 'tamalpais', away: 'marin-academy', date: '2026-09-18', hs: 2, as: 0, official: { fixtureId: leg1.id } });
+    expect(played.countsFor).toBe('marin-county');
+    const rows = [
+      sb('2026-09-18', ['marin-academy', 0], ['tamalpais', 2], { sbliveGameId: '81' }),
+      sb('2026-09-24', ['marin-academy', 1], ['tamalpais', 1], { sbliveGameId: '82' }),
+    ];
+    expect(eligibleItems([played], [leg2], TODAY).map((i) => `${i.kind} ${i.date}`)).toEqual(['absent-fixture 2026-09-24']);
+    const res = applyBackfill(input({ games: [played], unmatched: [leg2], sblive: rows }));
+    expect(res.games.map((g) => g.contestId)).toEqual([played.contestId, 'sblive:82']);
+    expect(res.games[1].official?.fixtureId).toBe(leg2.id);
+    expect(res.unmatched).toEqual([]);
+    // Never a false "MaxPreps has this game … it did not match" row about the other leg.
+    expect(res.skipped.filter((r) => r.contestId === played.contestId)).toEqual([]);
+
+    // An UNSTAMPED contest of the pair still blocks, and is the one named.
+    const loose = game({ home: 'tamalpais', away: 'marin-academy', date: '2026-09-20', hs: 1, as: 0, official: null, league: false });
+    const blocked = applyBackfill(input({ games: [played, loose], unmatched: [leg2], sblive: rows }));
+    expect(blocked.games.some((g) => g.contestId.startsWith('sblive:'))).toBe(false);
+  });
+
+  it('never fills a leg with the si.com row of the other leg’s MaxPreps game (legs two days apart)', () => {
+    const leg1 = fixture('marin-county', '2026-09-22', 'marin-academy', 'tamalpais');
+    const leg2 = fixture('marin-county', '2026-09-24', 'tamalpais', 'marin-academy');
+    // MaxPreps dates leg 1's contest Sep 23 (matched to leg 1); si.com has that same game on Sep 23.
+    const played = game({ home: 'tamalpais', away: 'marin-academy', date: '2026-09-23', hs: 2, as: 0, official: { fixtureId: leg1.id, scheduledDate: leg1.dateKey } });
+    const res = applyBackfill(input({ games: [played], unmatched: [leg2], sblive: [sb('2026-09-23', ['marin-academy', 0], ['tamalpais', 2])] }));
+    expect(res.games).toEqual([played]);
+    expect(res.unmatched).toEqual([leg2]);
+  });
+
   it('names the MCAL cut-off when MaxPreps moved a league game past it', () => {
     const f = fixture('marin-county', '2026-10-22', 'redwood', 'tamalpais');
     const moved = game({ home: 'tamalpais', away: 'redwood', date: '2026-10-23', status: 'score-pending', official: null });
@@ -612,6 +645,31 @@ describe('backfill rule 10: supersede and carry-forward', () => {
     expect(res.games).toEqual([nowScored, contest]);
     expect(res.unmatched).toEqual([GRE_AT_CAT]);
     expect(res.rows).toEqual([]);
+  });
+
+  it('a run that read si.com but not the page an earlier fill came from carries that fill; a consulted item is decided afresh', () => {
+    const pending = game({ home: 'stevenson', away: 'carmel', date: '2026-09-29', status: 'score-pending' });
+    const pendingFilled = applyBackfill(input({ games: [pending], sblive: [sb('2026-09-29', ['carmel', 0], ['stevenson', 9])] })).games[0];
+    const previous = previousWith([filled, pendingFilled]);
+    const notRead = applyBackfill(input({ games: [pending], unmatched: [GRE_AT_CAT], previous, consulted: () => false }));
+    expect(notRead.games.map((g) => [g.contestId, g.status, g.provenance.backfill?.rule])).toEqual([
+      [pending.contestId, 'final', 'score-pending'],
+      ['sblive:6541425', 'final', 'absent-fixture'],
+    ]);
+    expect(notRead.carried.sort()).toEqual([pending.contestId, 'sblive:6541425'].sort());
+    expect(notRead.unmatched).toEqual([]);
+    // Only the Greenfield/Santa Catalina item was read (and si.com no longer has it): only the other is carried.
+    const partly = applyBackfill(
+      input({ games: [pending], unmatched: [GRE_AT_CAT], previous, consulted: (pairKey) => pairKey.includes('greenfield') }),
+    );
+    expect(partly.carried).toEqual([pending.contestId]);
+    expect(partly.unmatched).toEqual([GRE_AT_CAT]);
+    // Read and filled afresh: never carried on top.
+    const fresh = applyBackfill(
+      input({ games: [pending], previous, sblive: [sb('2026-09-29', ['carmel', 0], ['stevenson', 9])], consulted: () => true }),
+    );
+    expect(fresh.carried).toEqual([]);
+    expect(fresh.games).toHaveLength(1);
   });
 
   it('applies nothing new from si.com when it failed, and nothing at all without a previous snapshot', () => {

@@ -54,6 +54,10 @@ on:
         description: 'Only these leagues, comma-separated (e.g. bval,pcal); the others are carried forward, frozen'
         type: string
         default: ''
+      accept_regression:
+        description: 'Skip the finals-regression guard for these leagues this run, comma-separated (e.g. bval)'
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -117,6 +121,7 @@ jobs:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
           SKIP_SBLIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_sblive && '1' || '' }}
           LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}
+          ACCEPT_REGRESSION: ${{ github.event_name == 'workflow_dispatch' && inputs.accept_regression || '' }}
         run: |
           set -euo pipefail
           args=()
@@ -125,6 +130,10 @@ jobs:
           if [ -n "$LEAGUES" ]; then
             [[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid leagues input: $LEAGUES"; exit 1; }
             args+=(--leagues "$LEAGUES")
+          fi
+          if [ -n "$ACCEPT_REGRESSION" ]; then
+            [[ "$ACCEPT_REGRESSION" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid accept_regression input: $ACCEPT_REGRESSION"; exit 1; }
+            args+=(--accept-regression "$ACCEPT_REGRESSION")
           fi
           pnpm fetch-data "${args[@]}"
 

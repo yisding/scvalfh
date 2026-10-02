@@ -42,6 +42,25 @@ export function sbliveScoresUrl(date: string): string {
   return `${SBLIVE_WEB}/scores?date=${date}`;
 }
 
+/**
+ * A si.com game page URL from a payload's `webPath`, or null when the path is not a plain URL path
+ * (whitespace, a scheme, a query, anything outside RFC 3986's unreserved set plus `%` and `/`). The result
+ * always passes the snapshot schema's httpUrl, so one malformed upstream row can never fail a run.
+ */
+export function sbliveGameUrl(webPath: string | null | undefined): string | null {
+  if (!webPath || !/^\/[A-Za-z0-9._~%/-]+$/.test(webPath)) return null;
+  return `${SBLIVE_HOST}/high-school/stats${webPath}`;
+}
+
+/** A si.com game id as published in `sblive:<id>` contest ids: digits only, else null. */
+export function sbliveGameIdOf(id: unknown): string | null {
+  const s = String(id ?? '').trim();
+  return /^\d+$/.test(s) ? s : null;
+}
+
+/** Called once per payload row a parser had to drop (a non-numeric game id). */
+export type SbliveParseWarn = (message: string) => void;
+
 export function sbliveLeagueStandingsUrl(leagueSlug: string): string {
   return `${SBLIVE_WEB}/leagues/${leagueSlug}/standings`;
 }
@@ -70,7 +89,57 @@ export interface ReactPropsBlock {
   props: unknown;
 }
 
-const REACT_PROPS_RE = /data-react-class="([^"]+)"[^>]*?data-react-props="([^"]*)"/g;
+const CLASS_ATTR = 'data-react-class="';
+const PROPS_ATTR = 'data-react-props="';
+
+/** Every index of `needle` in `hay`, ascending (one linear pass). */
+function allIndexes(hay: string, needle: string): number[] {
+  const out: number[] = [];
+  for (let i = hay.indexOf(needle); i >= 0; i = hay.indexOf(needle, i + needle.length)) out.push(i);
+  return out;
+}
+
+/** The first value of a sorted array that is >= `min`, or -1. */
+function firstAtOrAfter(sorted: readonly number[], min: number): number {
+  let lo = 0;
+  let hi = sorted.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (sorted[mid] < min) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo < sorted.length ? sorted[lo] : -1;
+}
+
+/**
+ * The `[className, rawProps]` pairs `/data-react-class="([^"]+)"[^>]*?data-react-props="([^"]*)"/g` would
+ * capture, found in O(n log n): the regex rescans to the next `>` from every class attribute, which is
+ * quadratic on a page of class attributes without props or without a closing `>`.
+ */
+export function reactPropsPairs(html: string): Array<[string, string]> {
+  const quotes = allIndexes(html, '"');
+  const gts = allIndexes(html, '>');
+  const props = allIndexes(html, PROPS_ATTR);
+  const out: Array<[string, string]> = [];
+  let from = 0;
+  for (;;) {
+    const p = html.indexOf(CLASS_ATTR, from);
+    if (p < 0) return out;
+    from = p + 1;
+    const classStart = p + CLASS_ATTR.length;
+    const classEnd = firstAtOrAfter(quotes, classStart);
+    if (classEnd <= classStart) continue; // `[^"]+`: at least one character, then the closing quote
+    const marker = firstAtOrAfter(props, classEnd + 1);
+    if (marker < 0) continue;
+    const gt = firstAtOrAfter(gts, classEnd + 1);
+    if (gt >= 0 && gt < marker) continue; // `[^>]*?` never crosses the end of the tag
+    const valueStart = marker + PROPS_ATTR.length;
+    const valueEnd = firstAtOrAfter(quotes, valueStart);
+    if (valueEnd < 0) continue;
+    out.push([html.slice(classStart, classEnd), html.slice(valueStart, valueEnd)]);
+    from = valueEnd + 1;
+  }
+}
 
 /**
  * `JSON.parse` of a prefix, the way Python's `JSONDecoder.raw_decode` works: parse the first
@@ -110,11 +179,9 @@ export function parseJsonPrefix(text: string): unknown {
 /** Every `data-react-class` / `data-react-props` pair on the page, decoded. */
 export function extractReactProps(html: string, className?: string): ReactPropsBlock[] {
   const out: ReactPropsBlock[] = [];
-  REACT_PROPS_RE.lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = REACT_PROPS_RE.exec(html)) !== null) {
-    if (className && m[1] !== className) continue;
-    out.push({ className: m[1], props: parseJsonPrefix(htmlUnescape(m[2])) });
+  for (const [name, raw] of reactPropsPairs(html)) {
+    if (className && name !== className) continue;
+    out.push({ className: name, props: parseJsonPrefix(htmlUnescape(raw)) });
   }
   return out;
 }
@@ -392,13 +459,18 @@ export function sbliveGameKey(game: Pick<SbliveGame, 'dateKey' | 'sides'>): stri
 // ---------------------------------------------------------------- parsers
 
 /** Parse a team `/games` page. Featured side is the team whose page it is. */
-export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl('')): SbliveGame[] {
+export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl(''), warn?: SbliveParseWarn): SbliveGame[] {
   const props = TeamGamesPropsSchema.parse(requireBlock(html, 'teams/Games', url));
   const team = props.query.team;
   const out: SbliveGame[] = [];
   for (const node of team.games.nodes) {
     const featuredName = node.featured.team?.name ?? team.name ?? null;
     if (!featuredName) continue;
+    const gameId = sbliveGameIdOf(node.id);
+    if (gameId === null) {
+      warn?.(`si.com row with a non-numeric game id ${JSON.stringify(String(node.id))} ignored (${url})`);
+      continue;
+    }
     const mine = makeSide(
       {
         name: featuredName,
@@ -419,13 +491,13 @@ export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl('')): 
     );
     const sides = orderSides(mine, theirs);
     out.push({
-      sbliveGameId: String(node.id),
+      sbliveGameId: gameId,
       dateIso: node.date,
       dateKey: localDateKey(node.date),
       sides,
       isFinal: node.statusId === 3,
       isScored: sides[0].score !== null && sides[1].score !== null,
-      url: node.webPath ? SBLIVE_HOST + '/high-school/stats' + node.webPath : null,
+      url: sbliveGameUrl(node.webPath),
       gameTypeLabel: node.gameTypeLabel ?? null,
       origin: 'team-games',
     });
@@ -438,11 +510,16 @@ export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl('')): 
  * but no webPath and no isHome, which is exactly why the cross-check joins on an UNORDERED pair and
  * why identity comes from the logo URL's si.com team or school id (SPEC §7.9).
  */
-export function parseScoresPage(html: string, url = sbliveScoresUrl('')): SbliveGame[] {
+export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: SbliveParseWarn): SbliveGame[] {
   const props = ScoreboardPropsSchema.parse(requireBlock(html, 'games/GenderSportIndex', url));
   const out: SbliveGame[] = [];
   for (const node of props.query.scoreboardDate.games.nodes) {
     if (node.gameTeams.length !== 2) continue;
+    const gameId = sbliveGameIdOf(node.id);
+    if (gameId === null) {
+      warn?.(`si.com row with a non-numeric game id ${JSON.stringify(String(node.id))} ignored (${url})`);
+      continue;
+    }
     const [a, b] = node.gameTeams.map((gt) =>
       makeSide(
         { name: gt.team.name, webPath: gt.team.webPath, rawId: gt.team.id, image: gt.team.image },
@@ -451,13 +528,13 @@ export function parseScoresPage(html: string, url = sbliveScoresUrl('')): Sblive
     );
     const sides = orderSides(a, b);
     out.push({
-      sbliveGameId: String(node.id),
+      sbliveGameId: gameId,
       dateIso: node.date,
       dateKey: localDateKey(node.date),
       sides,
       isFinal: node.statusId === 3,
       isScored: sides[0].score !== null && sides[1].score !== null,
-      url: node.webPath ? SBLIVE_HOST + '/high-school/stats' + node.webPath : null,
+      url: sbliveGameUrl(node.webPath),
       gameTypeLabel: null,
       origin: 'scoreboard',
     });

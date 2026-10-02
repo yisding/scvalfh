@@ -6,8 +6,9 @@
  *
  * One `it` per module whose first statement is `'use client'`, named by its path, so a filter like
  * `-t 'components/(layout|search)/'` runs one owner's modules. Each walks the static import graph
- * (relative and `@/` specifiers; `import type` / `export type` and all-type specifier lists are
- * ignored, since they vanish at compile time) and fails with the chain that reached a banned module.
+ * (relative and `@/` specifiers, static and dynamic `import()` / `require()`; `import type` /
+ * `export type` and all-type specifier lists are ignored, since they vanish at compile time) and
+ * fails with the chain that reached a banned module. Anything under data/ is banned outright.
  *
  * Client-safe: lib/types (types), lib/season (a constants leaf), lib/format, lib/game-id,
  * lib/search, lib/pin-label.
@@ -79,6 +80,9 @@ function runtimeImports(src: string): string[] {
     }
     specs.push(m[4]);
   }
+  // Dynamic `import('…')` and `require('…')` pull the module into the client bundle as well.
+  const dyn = /\b(?:import|require)\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
+  while ((m = dyn.exec(code)) !== null) specs.push(m[1]);
   return specs;
 }
 
@@ -103,7 +107,10 @@ function resolve(spec: string, fromFile: string): Target {
   if (spec.startsWith('@/')) base = path.join(ROOT, spec.slice(2));
   else if (spec.startsWith('.')) base = path.resolve(path.dirname(fromFile), spec);
   if (base === null) return { kind: 'external' };
-  const rel = path.relative(ROOT, base).split(path.sep).join('/').replace(/\.(ts|tsx|js|mjs|jsx)$/, '');
+  const relPath = path.relative(ROOT, base).split(path.sep).join('/');
+  // Anything under data/ (the snapshot, the official fixtures, the history) is server-only.
+  if (relPath === 'data' || relPath.startsWith('data/')) return { kind: 'banned', name: relPath };
+  const rel = relPath.replace(/\.(ts|tsx|js|mjs|jsx)$/, '');
   if (BANNED_LIB.some((re) => re.test(rel))) return { kind: 'banned', name: rel };
   const file = resolveFile(base);
   return file ? { kind: 'file', file } : { kind: 'external' };
@@ -153,6 +160,25 @@ describe('client boundary: no "use client" module reaches a server-only module',
         ].join('\n'),
       ),
     ).toEqual(['./keep', './side-effect', '@/lib/format']);
+  });
+
+  it('the import scanner collects dynamic import() and require() specifiers', () => {
+    expect(
+      runtimeImports(
+        [
+          "const g = await import('../lib/data');",
+          "const h = import ( \"@/lib/teams\" );",
+          "const j = require('./legacy');",
+        ].join('\n'),
+      ),
+    ).toEqual(['../lib/data', '@/lib/teams', './legacy']);
+  });
+
+  it('a specifier that resolves under data/ is banned (the snapshot never ships to the client)', () => {
+    const from = path.join(ROOT, 'components', 'home', 'Leak.tsx');
+    expect(resolve('../../data/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/snapshot.json' });
+    expect(resolve('@/data/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/snapshot.json' });
+    expect(resolve('../../lib/data', from)).toEqual({ kind: 'banned', name: 'lib/data' });
   });
 
   for (const file of CLIENT_MODULES) {

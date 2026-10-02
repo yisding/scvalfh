@@ -1,4 +1,5 @@
 import { EM_DASH, ordinal, perGame, recordString, signedGd, streakString } from '../../lib/format';
+import { plural } from '../ui/plural';
 import StatTile from '../ui/StatTile';
 import type { TeamPageView } from './team-view';
 import { placeSub } from './team-view';
@@ -65,7 +66,7 @@ export function TeamStatTiles({ view }: { view: TeamPageView }) {
           label="Overall"
           variant="card"
           value={overall ? recordString(overall) : null}
-          sub={overall ? `${overall.gp} games, all opponents` : 'all opponents'}
+          sub={overall ? `${plural(overall.gp, 'game')}, all opponents` : 'all opponents'}
         />
         <StatTile
           label="Streak"

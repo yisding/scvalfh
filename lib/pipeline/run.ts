@@ -22,6 +22,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { carryCrossCheck } from '../crosscheck';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
 import { loadSnapshot, stableStringify } from '../snapshot-schema';
@@ -120,7 +121,9 @@ async function runSblive(
   } catch (err) {
     if (err instanceof RunAbort) throw err;
     ctx.warn(`si.com step failed: ${(err as Error).message}`);
-    return { games, unmatched, crossCheck: ctx.previous?.sbliveCrossCheck };
+    // The previous report, keeping only rows still true of these games (no stale conflict rows).
+    const prior = ctx.previous?.sbliveCrossCheck;
+    return { games, unmatched, crossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
   }
 }
 

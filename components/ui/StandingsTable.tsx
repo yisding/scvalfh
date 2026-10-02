@@ -8,6 +8,7 @@ import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/typ
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
 import { GoalDiffCell } from './GoalDiffBar';
+import { formStripName } from './plural';
 import TeamMonogram from './TeamMonogram';
 
 /**
@@ -381,7 +382,7 @@ export function StandingsTable(props: StandingsTableProps) {
       : undefined;
   const hrefOf = (row: StandingsRowData) => row.href ?? `/teams/${row.team.slug}`;
   const formLabel = (row: StandingsRowData) =>
-    `${row.team.name} last ${row.standing.computed.last5.length} league games`;
+    formStripName(row.team.name, row.standing.computed.last5.length);
 
   const bleed = variant === 'phone' || variant === 'mini';
 

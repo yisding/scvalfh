@@ -8,13 +8,16 @@
  *   3. applyBackfill (rules 2-4, 10), then reconcile (rule 5 conflicts, agreements, si.com-only rows)
  *      over what D2 left, folded together by withBackfill.
  *
- * Failure scope is "source stale" (§7.5): when EVERY si.com request fails, the previous snapshot's
- * backfills are re-applied where still eligible, its cross-check is carried, and this run's si.com
- * rows are marked stale. Never an abort.
+ * Failure scope is "source stale" (§7.5), never an abort. An earlier si.com fill is decided again only
+ * by the si.com data that covers it; when this run did not read that data (its page failed, was past the
+ * team-page cap, or si.com was not read at all: every request failed, `--no-sblive`, nothing to read),
+ * the fill is re-applied while still eligible (rule 10) and the failed pages' rows are marked stale.
+ * When no si.com page was read, the previous cross-check is carried, keeping only the rows that are
+ * still true of this run's games (lib/crosscheck.ts `carryCrossCheck`).
  */
 
 import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '../../backfill';
-import { emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck';
+import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck';
 import {
   dedupeSbliveGames,
   parseScoresPage,
@@ -23,7 +26,7 @@ import {
   type SbliveGame,
 } from '../../sources/sblive';
 import { getTeamBySlug, teamsInLeague } from '../../teams';
-import type { Game, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
+import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
 import {
   FixtureMissing,
   TransportError,
@@ -83,14 +86,14 @@ function lastFresh(ctx: RunContext, url: string): string | undefined {
   return prior.status === 'ok' ? prior.fetchedAt : prior.carriedFrom;
 }
 
-function record(ctx: RunContext, attempts: readonly Attempt[], allFailed: boolean): void {
+function record(ctx: RunContext, attempts: readonly Attempt[], carried: boolean): void {
   for (const a of attempts) {
     const httpStatus = a.httpStatus !== undefined ? { httpStatus: a.httpStatus } : {};
     if (a.outcome === 'ok') {
       ctx.source({ ...a.row, status: 'ok', ...httpStatus, rowCount: a.rowCount ?? 0 });
     } else if (a.outcome === 'skipped') {
       ctx.source({ ...a.row, status: 'skipped', error: a.error });
-    } else if (allFailed && ctx.previous) {
+    } else if (carried && ctx.previous) {
       const carriedFrom = lastFresh(ctx, a.row.url);
       ctx.source({
         ...a.row,
@@ -119,12 +122,39 @@ function teamPageBase(ctx: RunContext, slug: TeamSlug): Omit<SourceStatus, 'stat
   };
 }
 
+/**
+ * A run that read no si.com data: the previous snapshot's fills are re-applied where still eligible, and
+ * its cross-check is carried with only the rows still true of this run's games.
+ */
+function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixture[], why: string): SbliveStepResult {
+  const result = applyBackfill({
+    games,
+    unmatched,
+    sblive: [],
+    today: ctx.today,
+    previous: ctx.previous,
+    sbliveFailed: true,
+    fetchedAt: ctx.fetchedAt,
+  });
+  for (const w of result.warnings) ctx.warn(`sblive: ${w}`);
+  const carriedGames = carryConflicts(result.games, ctx);
+  const prior = ctx.previous?.sbliveCrossCheck;
+  let crossCheck: SbliveCrossCheck | undefined;
+  if (prior) crossCheck = carryCrossCheck(prior, carriedGames, result.rows);
+  else if (result.rows.length) crossCheck = { ...emptyCrossCheck(ctx.fetchedAt), backfilled: result.rows };
+  ctx.log(
+    `  sblive: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}` +
+      ` and ${result.rows.length} earlier si.com ${result.rows.length === 1 ? 'score' : 'scores'} still eligible`,
+  );
+  return { games: carriedGames, unmatched: result.unmatched, crossCheck };
+}
+
 export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResult> => {
   const games = [...input.games];
   const unmatched = [...input.unmatched];
   if (!ctx.args.sblive) {
     ctx.log('  sblive: skipped (--no-sblive)');
-    return { games, unmatched, crossCheck: undefined };
+    return withoutSblive(ctx, games, unmatched, 'not read (--no-sblive)');
   }
 
   const attempts: Attempt[] = [];
@@ -140,7 +170,9 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       url: sbliveScoresUrl(date),
       fetchedAt: ctx.fetchedAt,
     };
-    const res = await read(ctx, { kind: 'sblive-scores', date }, base, parseScoresPage);
+    const res = await read(ctx, { kind: 'sblive-scores', date }, base, (body, url) =>
+      parseScoresPage(body, url, (m) => ctx.warn(`sblive: ${m}`, base.scope)),
+    );
     attempts.push(res.attempt);
     scoreboardRows.push(...res.games);
   }
@@ -164,45 +196,37 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   for (const slug of pages) {
     const base = teamPageBase(ctx, slug);
     if (!base) continue;
-    const res = await read(ctx, { kind: 'sblive-team-games', team: slug }, base, parseTeamGamesPage);
+    const res = await read(ctx, { kind: 'sblive-team-games', team: slug }, base, (body, url) =>
+      parseTeamGamesPage(body, url, (m) => ctx.warn(`sblive: ${m}`, base.scope)),
+    );
     attempts.push(res.attempt);
     teamRows.push(...res.games);
   }
 
   const ok = attempts.filter((a) => a.outcome === 'ok').length;
   const failed = attempts.filter((a) => a.outcome === 'error').length;
-  const sbliveFailed = ok === 0 && failed > 0;
-  record(ctx, attempts, sbliveFailed);
 
   // 3a. every si.com request failed: re-apply what is still eligible, carry the previous report.
-  if (sbliveFailed) {
-    const result = applyBackfill({
-      games,
-      unmatched,
-      sblive: [],
-      today: ctx.today,
-      previous: ctx.previous,
-      sbliveFailed: true,
-      fetchedAt: ctx.fetchedAt,
-    });
-    for (const w of result.warnings) ctx.warn(`sblive: ${w}`);
-    const prior = ctx.previous?.sbliveCrossCheck;
-    const crossCheck: SbliveCrossCheck = prior
-      ? { ...prior, backfilled: result.rows }
-      : { ...emptyCrossCheck(ctx.fetchedAt), backfilled: result.rows };
-    ctx.warn(
-      prior
-        ? 'sblive: every request failed — carried the previous cross-check and re-applied eligible si.com scores'
-        : 'sblive: every request failed — the score cross-check is empty for this run',
-    );
-    return { games: carryConflicts(result.games, ctx), unmatched: result.unmatched, crossCheck };
+  if (ok === 0 && failed > 0) {
+    record(ctx, attempts, true);
+    ctx.warn('sblive: every request failed');
+    return withoutSblive(ctx, games, unmatched, 'every request failed');
   }
 
   // 3b. nothing was read (nothing to read, or nothing in the corpus): no si.com data this run.
   if (ok === 0) {
+    record(ctx, attempts, false);
     ctx.log('  sblive: no si.com page was read this run');
-    return { games, unmatched, crossCheck: undefined };
+    return withoutSblive(ctx, games, unmatched, 'nothing read');
   }
+
+  // What this run consulted: a scoreboard row of the pair near the date, or a team page of either side.
+  const scoreboardCovers = scoreboardCoverage(scoreboardRows);
+  const okPages = new Set(
+    attempts.flatMap((a) => (a.outcome === 'ok' && a.row.kind === 'sblive-team-games' && a.row.scope?.team ? [a.row.scope.team] : [])),
+  );
+  const consulted = (pairKey: string, date: string): boolean =>
+    scoreboardCovers(pairKey, date) || pairKey.split('~').some((slug) => okPages.has(slug));
 
   const cleaned = cleanSbliveRows([...scoreboardRows, ...teamRows]);
   if (cleaned.junkPath.length) {
@@ -218,9 +242,12 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
     today: ctx.today,
     previous: ctx.previous,
     sbliveFailed: false,
+    consulted,
     fetchedAt: ctx.fetchedAt,
   });
   for (const w of result.warnings) ctx.warn(`sblive: ${w}`);
+  // Failed pages are stale (not merely errors) when an earlier si.com score was carried in their place.
+  record(ctx, attempts, result.carried.length > 0);
   for (const r of result.rows) ctx.log(`  sblive: published si.com ${r.rule} ${r.dateKey} ${r.label} (${r.sblive.away}-${r.sblive.home})`);
 
   // The statewide scoreboard is STATEWIDE: rows with no registry side can never join.

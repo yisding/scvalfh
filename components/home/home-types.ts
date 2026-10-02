@@ -118,6 +118,12 @@ export interface HomeTeamView {
    * later; null for a team with no league results (getTeamPostseasonLine returns null).
    */
   postseason: string | null;
+  /**
+   * Only for a place shared across two rungs, whose full label carries a tiebreak citation: the
+   * card line as the rungs' badges ('Today: Play-in or No AQ route (tied)'). Absent otherwise (the
+   * card derives its line with `postseasonCardLine`), so 43 views do not ship the line twice.
+   */
+  postseasonShort?: string;
   /** `/standings/<league>#<division>` */
   tableHref: string;
   /** false ⇒ nothing reported: no record is invented, and the card says so (DESIGN §8). */
@@ -158,4 +164,24 @@ export interface LeagueCardView {
   /** Division labels; empty for a single-division league. */
   divisions: string[];
   standingsHref: string;
+}
+
+/** The postseason line's lead, full (the accessible text, SPEC §10.1) and as the card shows it. */
+export const POSTSEASON_LEAD = {
+  projected: { full: 'If the season ended today:', short: 'Today:' },
+  final: { full: 'Final place:', short: 'Final:' },
+} as const;
+
+/**
+ * The pinned card's VISIBLE postseason line, short enough for one 320px line (288px of text):
+ * `postseasonShort` for a tie, else `postseason` with the short lead. The full `postseason` stays
+ * the accessible text and the title. Null when there is no line.
+ */
+export function postseasonCardLine(view: Pick<HomeTeamView, 'postseason' | 'postseasonShort'>): string | null {
+  if (!view.postseason) return null;
+  if (view.postseasonShort) return view.postseasonShort;
+  for (const lead of Object.values(POSTSEASON_LEAD)) {
+    if (view.postseason.startsWith(`${lead.full} `)) return `${lead.short}${view.postseason.slice(lead.full.length)}`;
+  }
+  return view.postseason;
 }

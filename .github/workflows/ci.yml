@@ -82,8 +82,13 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # CI_GATE turns tests/ui/home-weight.test.ts's teamViews budget (60 KB) on the bundled
+      # snapshot from a warning into a failure. Only here: update-data.yml must never set it, so a
+      # heavy live fetch warns (past 90 %) and the data cron is never blocked by it.
       - name: Test
         run: pnpm test
+        env:
+          CI_GATE: '1'
 
       # SCVAL_BUILD_AT pins the instant the "stale snapshot" warning is measured against
       # (components/layout/build-instant.ts), so two builds of one commit are byte-identical.

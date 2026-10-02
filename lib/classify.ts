@@ -56,8 +56,11 @@ function sharedLeague(game: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
  * In order; first match wins:
  *  1. CONFIG PAIRING: game.dateKey === pairing.date, one side in each pairing division (any places), both sides
  *     in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }.
- *  2. contestType 4 on either row → { kind: both sides in one league whose postseason.kind is
- *     'league-tournament' ? 'mcal-tournament' : 'ccs', leagueId: that league or null, via: 'contest-type-4' }.
+ *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
+ *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament'; else
+ *     'ccs' when at least one registry side is in a CCS league and no registry side is in a league of another
+ *     section (NCS holds no field hockey championship); else 'other' (an MCAL team against a non-registry or CCS
+ *     opponent, or no registry side at all).
  *  2b. both sides members of one CCS league (postseason.kind 'ccs-ladder') and game.dateKey >=
  *     CCS.keyDates.quarterfinals → { kind: 'ccs', leagueId: that league, via: 'ccs-window' }.
  *  3. both sides members of one league L with rules.postseasonFrom, game.dateKey >= postseasonFrom, and
@@ -84,11 +87,15 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   // 2. MaxPreps' own postseason flag on either row
   const types = game.contestTypes ?? { home: null, away: null };
   if (types.home === 4 || types.away === 4) {
-    return {
-      kind: league?.postseason.kind === 'league-tournament' ? 'mcal-tournament' : 'ccs',
-      leagueId: league ? league.id : null,
-      via: 'contest-type-4',
-    };
+    let kind: PostseasonTag['kind'];
+    if (league?.postseason.kind === 'league-tournament') kind = 'mcal-tournament';
+    else {
+      const sections = [home, away]
+        .filter((t): t is Team => t !== undefined)
+        .map((t) => leagueById(t.league)?.sectionId ?? null);
+      kind = sections.length > 0 && sections.every((s) => s === 'ccs') ? 'ccs' : 'other';
+    }
+    return { kind, leagueId: league ? league.id : null, via: 'contest-type-4' };
   }
 
   // 2b. the CCS bracket window

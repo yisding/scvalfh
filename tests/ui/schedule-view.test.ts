@@ -102,6 +102,9 @@ describe('league scoping (/schedule/<league>)', () => {
     expect(textOf(mcal)).not.toMatch(/CCS Nov/);
     const scval = await renderLeague('scval');
     expect(scval, 'components/schedule/TimelineRail.tsx scval chip').toContain('href="/playoffs#scval"');
+    // No article before the initialism ('a MCAL team' is wrong; 'an SCVAL team' reads oddly too).
+    expect(textOf(mcal), 'app/schedule/[league]/page.tsx header').toContain('every contest involving MCAL teams');
+    expect(textOf(mcal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL)\b/);
   });
 });
 
