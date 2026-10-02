@@ -43,10 +43,10 @@ export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdat
     return (
       <time
         dateTime={at}
-        className={`sx-num whitespace-nowrap text-meta text-ink-3${className ? ` ${className}` : ''}`}
+        className={`sx-num whitespace-nowrap text-cell text-ink-3${className ? ` ${className}` : ''}`}
       >
         <span className="sr-only">Snapshot </span>
-        {/* The weekday is the first thing to go. This form lives inside the 44px phone top bar
+        {/* The weekday is the first thing to go. This form lives inside the 48px phone top bar
             beside the wordmark and the theme toggle (DESIGN §1.3, R-5), and "Wed Sep 30" does not
             fit there next to the time. `hidden` removes a span from the accessibility tree too, so
             exactly one date is ever announced. */}
@@ -61,7 +61,7 @@ export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdat
     const days = Math.round(ageHours / 24);
     return (
       <span
-        className={`inline-flex flex-wrap items-baseline gap-1 rounded-tag px-1.5 py-0.5 text-meta text-ink${
+        className={`inline-flex flex-wrap items-baseline gap-1 rounded-full px-2.5 py-1 text-meta text-ink${
           className ? ` ${className}` : ''
         }`}
         style={{ background: 'var(--sx-accent-wash)' }}

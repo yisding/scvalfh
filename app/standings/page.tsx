@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import PageHeader from '@/components/layout/PageHeader';
 import DivisionStandings from '@/components/standings/DivisionStandings';
 import DivisionTabs from '@/components/standings/DivisionTabs';
 import ExternalLink from '@/components/ui/ExternalLink';
-import LastUpdated from '@/components/ui/LastUpdated';
 import { OG_BASE } from '@/components/layout/site-url';
 import { shortDate } from '@/lib/format';
-import { SOURCE_LINKS } from '@/lib/season';
+import { DIVISION_LABELS, SOURCE_LINKS } from '@/lib/season';
 
 import { getStandingsPageData } from './standings-data';
 
@@ -18,11 +18,14 @@ import { getStandingsPageData } from './standings-data';
  * comparison, a tab that hides the other division would be a worse deal, and anchors work with
  * JavaScript off and are shareable (DESIGN §1.2).
  *
- * The phone fold is budgeted, not hoped for: 44px top bar + 44px division bar + 28px kicker + 30px
- * table head = 146 of the 604px usable at 390×664, leaving 458px = 7.6 rows of 60px, so rows 1-7 of
- * De Anza's 8 are above the fold. That is the whole reason the `<h1>` is visually hidden on phone
- * (the sticky top bar already names the page) and the "as of" stamp rides in the division bar
- * instead of taking a row of its own — the same trade DESIGN §1.3 makes for the top bar.
+ * The phone fold, once the page title has scrolled away: 48px top bar + 48px division bar (both
+ * sticky) + 40px section heading + 36px table head = 172px, then 68px two-line rows — about six
+ * rows above the fold at 390×844. That is deliberate (brief §5.2): the rows got air, and the title
+ * is a real `<h1>` again rather than a visually hidden one.
+ *
+ * Everything generic (the GD and PTS explanations, the qualifier-cut sentence, "this order is our
+ * computation") is printed ONCE, in the "How these tables are computed" disclosure at the foot of
+ * the page. Everything division-specific stays visible in that division's Notes block.
  *
  * No `searchParams`, nothing derived from `Date.now()`: the page is fully static and every "as of"
  * label comes from `snapshot.fetchedAt` (DESIGN decision 7, BUILD-BRIEF).
@@ -57,53 +60,67 @@ export function generateMetadata(): Metadata {
 }
 
 export default function StandingsPage() {
-  const { asOf, views, notice } = getStandingsPageData();
+  const { views, notice } = getStandingsPageData();
+  const tabs = views.map((view) => ({ href: `#${view.division}`, label: view.label }));
+
+  // The page disclosure: the GD paragraph (stating every division's own maximum), the PTS
+  // paragraph, then each generic per-division sentence once (they are identical when both
+  // divisions cut after the same place).
+  const gdMaxima = views
+    .map((view) => `${DIVISION_LABELS[view.division]} |GD| max ${view.gdDomain}`)
+    .join(', ');
+  const legend = [
+    `GD = league goals for minus goals against. Bars are scaled to each division alone (${gdMaxima}), so the two divisions' bars are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
+    'PTS is the official ordering key: 3 points for a win, 1 for a tie (SCVAL By-Laws Article VI §2).',
+    ...new Set(views.flatMap((view) => view.legendNotes)),
+  ];
 
   return (
-    /* The sticky table heads sit under the sticky division bar: 44 + 44 on phone, 56 + 44 from md.
-       `.sx-table thead th` reads this variable, so the offset is declared once, here. */
-    <div className="[--sx-sticky-top:5.5rem] md:[--sx-sticky-top:6.25rem]">
-      <div className="md:flex md:items-baseline md:gap-3 md:pt-6 md:pb-3">
-        <h1 className="sr-only m-0 md:not-sr-only md:text-h1">Standings</h1>
-        <p className="m-0 hidden text-meta text-ink-3 md:block">
-          2026 SCVAL girls varsity field hockey &middot; league games only &middot; computed from
-          published results
-        </p>
-      </div>
-
-      <DivisionTabs
-        tabs={views.map((view) => ({ href: `#${view.division}`, label: view.label }))}
-        /* Phone only: the sticky top bar carries the same stamp from `sm` up, and two of them in
-           two sticky bars would be the page telling the reader the same thing twice. */
-        stamp={<LastUpdated at={asOf} variant="compact" className="sm:hidden" />}
+    /* The sticky table heads park under the sticky chrome: on phone the 48px top bar plus the 48px
+       division bar (6rem); from md the division pills sit in the title row and do not stick, so
+       only the 64px top bar. `.sx-table thead th` reads this variable, so it is declared once. */
+    <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
+      <PageHeader
+        title="Standings"
+        description="2026 SCVAL girls varsity field hockey · league games only · computed from published results"
+        aside={<DivisionTabs variant="inline" tabs={tabs} />}
+        asideClassName="hidden md:block"
       />
 
+      <DivisionTabs variant="bar" tabs={tabs} className="mt-4" />
+
       {notice ? (
-        <div className="mt-3 rounded-card border border-hairline bg-surface p-3">
+        <div className="sx-inset mt-6 max-w-prose">
           <p className="m-0 text-body font-semibold text-ink">{notice.heading}</p>
-          <p className="mt-1 mb-0 max-w-[62ch] text-meta text-ink-2">{notice.body}</p>
+          <p className="mb-0">{notice.body}</p>
         </div>
       ) : null}
 
-      {views.map((view) => (
-        <DivisionStandings key={view.division} view={view} />
+      {views.map((view, index) => (
+        <DivisionStandings
+          key={view.division}
+          view={view}
+          className={index === 0 && !notice ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+        />
       ))}
 
-      {/* `sx-action` on both, like every other standalone action link on the site (the footer, the
-          game sources, the team page's three external links). This row is a flex container, which
-          BLOCKIFIES its children, so these two are not words inside a sentence and WCAG 2.5.8's
-          inline exception does not reach them — they shipped as 18px boxes while the rule that
-          exists for exactly this shape (app/globals.css `.sx-action`, a 24px floor) was applied
-          everywhere else. `items-center` rather than `items-baseline` because a 24px box has no
-          text baseline to align to. */}
-      <p className="mt-6 mb-0 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-hairline pt-3 text-meta text-ink-2">
-        <Link href="/about#standings" prefetch={false} className="sx-action text-accent hover:underline">
-          How standings are computed <span aria-hidden="true">&rarr;</span>
+      <details className="sx-inset sx-disclosure mt-section max-w-prose md:mt-section-lg">
+        <summary>How these tables are computed ({legend.length} notes)</summary>
+        {legend.map((note) => (
+          <p key={note} className="mb-0">
+            {note}
+          </p>
+        ))}
+      </details>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link href="/about#standings" prefetch={false} className="sx-pill">
+          How standings are computed
         </Link>
-        <ExternalLink href={SOURCE_LINKS.scvalBylaws} className="sx-action">
+        <ExternalLink href={SOURCE_LINKS.scvalBylaws} className="sx-pill">
           SCVAL field hockey by-laws 2026-27 (PDF)
         </ExternalLink>
-      </p>
+      </div>
     </div>
   );
 }

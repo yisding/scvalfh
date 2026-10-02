@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { ordinal } from '../../lib/format';
-import { BYLAW_CITATIONS } from '../../lib/season';
 import Tag from '../ui/Tag';
 
 import type { StatusGroup } from './standings-view';
@@ -14,9 +13,13 @@ import type { StatusGroup } from './standings-view';
  * it as term-then-teams also means the legend can never drift out of sync with the markers — they
  * are the same list.
  *
- * Every status is a WORD (`AQ`, `Play-in`, `At-large`, `No AQ`) on the hueless tag ground, so
- * nothing here is carried by color (DESIGN §6.5, channel 1 and 2). The by-law is cited in full
- * underneath, because a projection that does not name its rule is just an opinion.
+ * Every status is a WORD (`AQ`, `Play-in`, `At-large`, `No AQ`) on a tag, so nothing here is
+ * carried by color (DESIGN §6.5, channel 1 and 2). Only AQ takes the accent tag, because there the
+ * accent already means "berth". The Article VII §2 text itself is cited once per page, in the
+ * standings disclosure, and each status label names its place range.
+ *
+ * Each team is a pill link to its page with its place beside the name, so the band reads as a
+ * row of facts rather than a `·`-separated sentence.
  *
  * A shared place is rendered `5=` exactly as the table renders it, and `caveat` says in words
  * that the cut is unsettled — Article VI §7's coin flip is the league's to run, not ours.
@@ -40,35 +43,41 @@ export function PlayoffStatusBand({
 }: PlayoffStatusBandProps) {
   return (
     <div className={className}>
-      <h3 className="m-0 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
-        {divisionLabel} &mdash; CCS qualifying as things stand
+      <h3 className="m-0 text-lead text-ink">
+        <span className="sr-only">{divisionLabel}: </span>CCS qualifying, as things stand
       </h3>
-      <dl className="mt-2 mb-0 grid grid-cols-1 gap-y-2 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-x-6 md:gap-y-1.5">
+      <dl className="mt-2 mb-0 divide-y divide-divider">
+        {/* Two columns (status | teams) where the band spans the content width (768-1023). The
+            term column is 22rem there: at 11rem "4th place — play-in Fri Oct 30 for the SCVAL
+            7th berth" broke into five lines beside a mostly empty pill column. From lg the band
+            shares its row with the Notes inset, so the term sits above its teams instead. */}
         {groups.map((group) => (
-          <div key={group.status} className="contents">
+          <div
+            key={group.status}
+            className="grid gap-3 py-3 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
+          >
             <dt className="flex items-baseline gap-2">
-              <Tag>{group.badge}</Tag>
+              <Tag size="md" tone={group.status === 'aq' ? 'accent' : 'neutral'}>
+                {group.badge}
+              </Tag>
               <span className="text-meta text-ink-2">{group.label}</span>
             </dt>
-            <dd className="m-0 text-meta text-ink">
-              {group.teams.map((team, index) => (
-                <span key={team.slug}>
-                  {index > 0 ? <span aria-hidden="true"> &middot; </span> : null}
-                  {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                      (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
-                      here is STATIC, so Next 16's `auto` downloads the whole linked route the
-                      moment the link scrolls into view, and this band names all fifteen teams,
-                      eight per division. Navigation still fetches on click. */}
-                  <Link
-                    href={`/teams/${team.slug}`}
-                    prefetch={false}
-                    className="text-ink hover:underline"
-                  >
-                    {team.name}
-                  </Link>{' '}
+            <dd className="m-0 flex flex-wrap content-start gap-2">
+              {group.teams.map((team) => (
+                /* `prefetch={false}` for the reason the nav and the standings rows carry it
+                   (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                   here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
+                   the link scrolls into view, and this band names every team in the division. */
+                <Link
+                  key={team.slug}
+                  href={`/teams/${team.slug}`}
+                  prefetch={false}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface-2 px-3 text-meta text-ink no-underline hover:bg-surface-3 forced-colors:border"
+                >
+                  {team.name}
                   {/* The same `=` marker the table uses for a level place, so the two never
                       disagree about whether a place is settled. */}
-                  <span className="sx-num text-ink-3">
+                  <span className="sx-num text-micro text-ink-3">
                     {team.shared ? (
                       <>
                         <span aria-hidden="true">{ordinal(team.place)}=</span>
@@ -78,27 +87,30 @@ export function PlayoffStatusBand({
                       ordinal(team.place)
                     )}
                   </span>
-                </span>
+                </Link>
               ))}
             </dd>
           </div>
         ))}
       </dl>
-      {/* 62ch (DESIGN §4.3) on all three sentences below: the band itself spans the content
-          column because its `dl` is a row of places, but these are prose. */}
-      {caveat ? <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-2">{caveat}</p> : null}
+      {caveat ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">{caveat}</p> : null}
       {unrankedTeams.length > 0 ? (
-        <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-2">
+        <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
           {unrankedTeams.join(', ')} {unrankedTeams.length === 1 ? 'has' : 'have'} no published
           result, so no place and no playoff status is projected.
         </p>
       ) : null}
-      <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-3">
-        {BYLAW_CITATIONS.qualifiers}.{' '}
-        <Link href="/playoffs" className="sx-action text-accent hover:underline">
-          Playoff picture <span aria-hidden="true">&rarr;</span>
+      {/* A standalone action, like the Notes link row beside it: a <div>, so the in-prose
+          underline rule (`p a`) does not mark this one alone. */}
+      <div className="mt-4">
+        <Link
+          href="/playoffs"
+          prefetch={false}
+          className="sx-action text-meta font-medium text-accent hover:underline"
+        >
+          Playoff picture
         </Link>
-      </p>
+      </div>
     </div>
   );
 }

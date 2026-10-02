@@ -66,11 +66,21 @@ export interface DivisionView {
   label: string;
   rows: StandingsRowData[];
   gdDomain: number;
-  /** The table's `<caption>`: shown on desktop, visually hidden on phone. */
+  /** The table's `<caption>`: visually hidden in every variant (the section meta says "unofficial"). */
   caption: string;
-  /** The rule-and-kicker's right-hand meta. */
+  /** The section heading's meta line. */
   meta: string;
+  /**
+   * Division-specific notes (pending games, no league results yet). They stay visible in the
+   * division's Notes block.
+   */
   footnotes: string[];
+  /**
+   * The generic sentences that read the same for every division (the 2px qualifier cut and "this
+   * order is our computation"). /standings prints each of them ONCE, in the page's "How these
+   * tables are computed" disclosure, instead of under every table.
+   */
+  legendNotes: string[];
   /** 1-based row index to draw the 2px automatic-qualifier rule after. */
   berthRuleAfter?: number;
   statusGroups: StatusGroup[];
@@ -238,13 +248,18 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     ? `${label} Division league standings, league games only, through ${through}. Computed from published results; unofficial.`
     : `${label} Division league standings. No league game has been reported yet.`;
 
+  const legendNotes: string[] = [];
   const footnotes: string[] = [];
   if (berthRuleAfter) {
-    footnotes.push(
+    legendNotes.push(
       `The 2px rule after ${ordinal(berthRuleAfter)} place is the automatic-qualifier cut — ${BYLAW_CITATIONS.qualifiers}.`,
     );
+  } else {
+    // No cut is drawn (no ranked team yet, e.g. before the first league result), but the
+    // qualifying rule still has to be stated somewhere on /standings.
+    legendNotes.push(`CCS qualifying: ${BYLAW_CITATIONS.qualifiers}.`);
   }
-  footnotes.push(
+  legendNotes.push(
     'This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to SCVAL.',
   );
   if (input.pendingLeagueGames > 0) {
@@ -269,6 +284,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     caption,
     meta,
     footnotes,
+    legendNotes,
     ...(berthRuleAfter ? { berthRuleAfter } : {}),
     statusGroups,
     statusCaveat,

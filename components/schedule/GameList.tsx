@@ -6,9 +6,10 @@ import { gameFilterAttrs } from './filter-data';
 /**
  * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).
  *
- * Phone gets the 68px two-line `GameRow` — a `<details>`/`<summary>` pair, so expanding a game
- * needs no JavaScript. Desktop gets the same games as `GameCard`s, 2-up at 768px and 3-up at
- * 1120px, with the recap and venue always visible and nothing to expand.
+ * Phone gets the 76px two-line `GameRow` — a `<details>`/`<summary>` pair, so expanding a game
+ * needs no JavaScript — in one full-bleed band. From 768px the same games are `GameCard`s in an
+ * auto-fill grid (17rem minimum, so 2-up at 768 and 3- or 4-up wider), with the recap always
+ * visible and nothing to expand.
  *
  * Both render inside ONE `<li>` per contest, with one set of `data-*` filter attributes, so:
  *   - the filter has exactly one element per game to hide, at any viewport width,
@@ -22,6 +23,19 @@ export interface GameListProps {
   perspective?: TeamSlug | null;
   /** Default true on /schedule and /scores/[date]; the recap is never the only place a score is. */
   showRecap?: boolean;
+  /**
+   * `bleed` (default): the phone band pulls itself out to the screen edge (`.sx-bleed`) and draws
+   * its own line above and below. `grouped`: the HOST is already full-bleed (a /schedule date
+   * group, which must be, because `content-visibility: auto` clips paint to its own box) and its
+   * sticky date header draws the line above, so the list adds only the line below.
+   */
+  variant?: 'bleed' | 'grouped';
+  /**
+   * The ≥768px grid's track rule. `fill` (default) keeps empty tracks, so a /schedule day with
+   * one game shows one card-sized card. `fit` collapses them, so a single-day page's two or
+   * three cards run to the same right edge as everything else under its h1.
+   */
+  tracks?: 'fill' | 'fit';
   className?: string;
   id?: string;
 }
@@ -30,40 +44,42 @@ export function GameList({
   games,
   perspective = null,
   showRecap = true,
+  variant = 'bleed',
+  tracks = 'fill',
   className,
   id,
 }: GameListProps) {
   return (
     <ol
       id={id}
-      // Tailwind v4's scanner skips a candidate that runs straight into `${`, which is how
-      // `xl:grid-cols-3` — DESIGN §3.3's desktop 3-up card grid — went missing from the built
-      // CSS while every other class here survived. Keep the interpolation out of the literal.
+      // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
+      // interpolation stays out of the literal.
       className={[
-        'sx-bleed m-0 list-none p-0 md:grid md:grid-cols-2 md:items-start md:gap-3 xl:grid-cols-3',
+        'sx-list max-md:bg-surface md:grid md:items-stretch md:gap-4',
+        tracks === 'fit'
+          ? 'md:grid-cols-[repeat(auto-fit,minmax(17rem,1fr))]'
+          : 'md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))]',
+        variant === 'bleed'
+          ? 'sx-bleed max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]'
+          : 'max-md:shadow-[0_1px_0_var(--sx-border)]',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       {games.map((game) => (
-        <li
-          key={game.contestId}
-          {...gameFilterAttrs(game)}
-          className="border-b border-hairline last:border-b-0 md:border-b-0"
-        >
+        // No display utility on the <li>: the filter toggles `hidden` on it, and a `display`
+        // class would beat the attribute and leave a hole in the grid.
+        <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
           <GameRow
             game={game}
             perspective={perspective}
             showRecap={showRecap}
             className="md:hidden"
           />
-          <GameCard
-            game={game}
-            perspective={perspective}
-            showRecap={showRecap}
-            className="hidden md:block"
-          />
+          <div className="hidden h-full md:block">
+            <GameCard game={game} perspective={perspective} showRecap={showRecap} className="h-full" />
+          </div>
         </li>
       ))}
     </ol>

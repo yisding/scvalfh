@@ -11,14 +11,24 @@ import type { Team } from '../../lib/types';
  */
 export interface TeamMonogramProps {
   team: Pick<Team, 'abbr' | 'name' | 'colors'>;
-  /** 24 = table row, 40 = teams tile, 56 = team page. */
-  size?: 20 | 24 | 40 | 56;
+  /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes. */
+  size?: 20 | 24 | 28 | 32 | 40 | 48 | 56 | 64;
   /** Default true → aria-hidden, because the school name is adjacent. */
   decorative?: boolean;
   className?: string;
 }
 
-const LETTER_SIZE: Record<number, number> = { 20: 10, 24: 11, 40: 15, 56: 20 };
+/** Initials are decorative and aria-hidden beside the name, so they are exempt from the 12px floor. */
+const LETTER_SIZE: Record<number, number> = {
+  20: 10,
+  24: 11,
+  28: 12,
+  32: 12,
+  40: 15,
+  48: 17,
+  56: 20,
+  64: 22,
+};
 
 export function TeamMonogram({
   team,
@@ -35,7 +45,7 @@ export function TeamMonogram({
       style={{
         width: size,
         height: size,
-        borderRadius: size <= 20 ? 'var(--sx-r-tag)' : 'var(--sx-r-chip)',
+        borderRadius: Math.round(size / 4),
         background: `#${primary}`,
         color: onPrimary,
         fontSize: LETTER_SIZE[size],

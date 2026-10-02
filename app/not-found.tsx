@@ -1,56 +1,47 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import SectionHeader from '@/components/ui/SectionHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 export const metadata: Metadata = {
   title: 'Page not found',
 };
 
+const LINKS: Array<{ href: string; name: string; description: string }> = [
+  { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
+  { href: '/standings', name: 'Standings', description: 'Both divisions' },
+  { href: '/schedule', name: 'Schedule & results', description: 'The whole season' },
+  { href: '/teams', name: 'Teams', description: 'Find your school' },
+  { href: '/playoffs', name: 'CCS playoffs', description: 'Who is in, and the key dates' },
+  { href: '/about', name: 'About', description: 'Where this data comes from' },
+];
+
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
- * links are the real navigation rather than a single "go home".
+ * links are the real navigation rather than a single "go home": one card per page, with its
+ * name over a one-line description, so nothing is a sentence squeezed into a pill.
  */
 export default function NotFound() {
   return (
-    <div className="py-6">
-      <SectionHeader kicker="404" />
-      <h1 className="mt-2 text-h1">That page is not here.</h1>
-      <p className="mt-2 max-w-[62ch] text-body text-ink-2">
-        The link may be old, or the game or date may not exist in this season&rsquo;s data. Every
-        page on this site is one of the links below.
-      </p>
-      <ul className="mt-4 list-none space-y-2 p-0 text-body">
-        <li>
-          <Link href="/" className="text-accent hover:underline">
-            Home — what just happened, and when the next game is
-          </Link>
-        </li>
-        <li>
-          <Link href="/standings" className="text-accent hover:underline">
-            Standings — both divisions
-          </Link>
-        </li>
-        <li>
-          <Link href="/schedule" className="text-accent hover:underline">
-            Schedule &amp; results — the whole season
-          </Link>
-        </li>
-        <li>
-          <Link href="/teams" className="text-accent hover:underline">
-            Teams — find your school
-          </Link>
-        </li>
-        <li>
-          <Link href="/playoffs" className="text-accent hover:underline">
-            CCS playoffs
-          </Link>
-        </li>
-        <li>
-          <Link href="/about" className="text-accent hover:underline">
-            About — where this data comes from
-          </Link>
-        </li>
+    <div className="pb-section-lg">
+      <PageHeader
+        eyebrow="404"
+        title="That page is not here."
+        description="The link may be old, or the game or date may not exist in this season’s data. Every page on this site is one of the links below."
+      />
+      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
+        {LINKS.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              prefetch={false}
+              className="sx-card sx-lift block min-h-11 p-4 no-underline"
+            >
+              <span className="block text-body font-semibold text-ink">{l.name}</span>
+              <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );

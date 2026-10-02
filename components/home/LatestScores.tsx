@@ -10,8 +10,17 @@ import type { Game } from '../../lib/types';
  *
  * The day is ALWAYS named, in the kicker and in the footer link, so a day-old score can never read
  * as "last night" — that is §8's rule for the fallback to the most recent day that actually has
- * results. Phone gets the two-line 68px `GameRow` list (a `<details>`, so expanding needs no
- * JavaScript); ≥768px gets `GameCard`s 2-up, 3-up from 900px, with nothing to expand.
+ * results. Phone gets the `GameRow` list (a `<details>`, so expanding needs no JavaScript) as a
+ * full-bleed flush card; ≥768px gets a grid of `GameCard`s with nothing to expand.
+ *
+ * The grid is sized to the COUNT rather than auto-filled, so no card is left alone on a row beside
+ * a card-sized hole (3 cards in 2 auto-fill columns put the third one under the first, next to
+ * 330×226px of empty canvas). Two columns everywhere from 768px — the main column is 552–680px at
+ * 1024+ — except that 3 or 6 cards go three across at 872–1023px, where each is still 264px wide
+ * (a card's time and status line need about 258px, or "4:00 PM" breaks after the time). In two
+ * columns, an odd count lets the FIRST card span the row, so the rest pair up beneath it.
+ *
+ * Every class below is a whole literal so Tailwind's scanner generates it.
  *
  * A game with no reported score renders two en dashes and the words SCORE NOT REPORTED — never
  * `0-0` — because every score on the site goes through `renderScore()` (DESIGN §5.2, §5.3).
@@ -22,7 +31,7 @@ export interface LatestScoresProps {
   games: Game[];
   /** How many contests that day, before the cap below. */
   total: number;
-  /** "LATEST SCORES", or "FIRST GAMES" in the preseason. */
+  /** "Latest scores", or "Played, not reported" for a day with no results. */
   kicker?: string;
   /** The §8 sentence for a day that was played and reported nothing. */
   note?: string;
@@ -42,16 +51,27 @@ export function LatestScores({
 }: LatestScoresProps) {
   const shown = games.slice(0, limit);
   const rest = total - shown.length;
+  const threeUp = shown.length % 3 === 0;
+  const odd = shown.length % 2 === 1;
+  const gridClass = threeUp
+    ? 'hidden list-none grid-cols-2 gap-4 p-0 md:grid min-[54.5rem]:grid-cols-3 lg:grid-cols-2'
+    : 'hidden list-none grid-cols-2 gap-4 p-0 md:grid';
+  // The first card's span: full row whenever the grid is two across and the count is odd.
+  const firstClass = !odd
+    ? 'grid'
+    : threeUp
+      ? 'grid col-span-2 min-[54.5rem]:col-span-1 lg:col-span-2'
+      : 'grid col-span-2';
   return (
     <section className={className}>
       <SectionHeader
         kicker={kicker}
         meta={shortDate(date)}
-        action={{ href: `/scores/${date}`, label: `all ${total}` }}
+        action={{ href: `/scores/${date}`, label: `All ${total} ${total === 1 ? 'game' : 'games'}` }}
       />
-      {note ? <p className="mt-0 mb-2 max-w-[62ch] text-meta text-ink-2">{note}</p> : null}
+      {note ? <p className="sx-inset mt-0 mb-3 max-w-prose">{note}</p> : null}
 
-      <div className="sx-bleed md:hidden">
+      <div className="sx-card sx-flush sx-bleed md:hidden">
         <ol className="sx-list">
           {shown.map((game) => (
             <li key={game.contestId}>
@@ -60,20 +80,19 @@ export function LatestScores({
           ))}
         </ol>
       </div>
-      <ol className="hidden list-none grid-cols-2 gap-3 p-0 md:grid min-[900px]:grid-cols-3">
-        {shown.map((game) => (
-          <li key={game.contestId}>
+      <ol className={gridClass}>
+        {shown.map((game, i) => (
+          <li key={game.contestId} className={i === 0 ? firstClass : 'grid'}>
             <GameCard game={game} />
           </li>
         ))}
       </ol>
 
-      <p className="m-0 flex min-h-12 items-center justify-center border-t border-hairline text-meta md:justify-start md:border-0 md:pt-3">
-        {/* `sx-action` + `min-h-11`: the paragraph around it is already 48px, but the LINK was 18px
-            of it, which is what a thumb and WCAG 2.5.8 actually measure. */}
-        <Link href={`/scores/${date}`} className="sx-action min-h-11 text-accent hover:underline">
-          {rest > 0 ? `See all ${total} games` : `Every game from ${longDate(date)}`}{' '}
-          <span aria-hidden="true">&rarr;</span>
+      <p className="mt-4 mb-0 flex justify-center md:justify-start">
+        {/* A 44px pill: alone in its paragraph it is a primary way on through the site, not a word
+            in a sentence, so WCAG 2.5.8's inline exception does not cover it. */}
+        <Link href={`/scores/${date}`} className="sx-pill min-h-11">
+          {rest > 0 ? `See all ${total} games` : `Every game from ${longDate(date)}`}
         </Link>
       </p>
     </section>

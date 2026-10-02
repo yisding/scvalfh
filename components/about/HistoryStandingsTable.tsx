@@ -24,24 +24,24 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
     return <p className="py-2 text-meta text-ink-3">{emptyLabel}</p>;
   }
   return (
-    <div className="sx-bleed overflow-clip">
-      {/* `sx-table-wide` puts a gutter between columns: without it the place cell ("1st") runs
-          straight into the team monogram beside it. */}
-      <table className="sx-table sx-table-wide text-meta">
+    <div className="sx-card sx-flush sx-bleed">
+      {/* No `sx-table-wide`, so every gutter is explicit: `pr-2` after the place cell keeps "1st"
+          off the monogram, and `pl-2` (`pl-3` from sm) before League and Overall keeps the two right-aligned heads
+          from running together as "LEAGUEOVERALL". On a phone the card is a full-bleed band
+          (`sx-bleed`, like the standings), which is what gives the four columns room at 320px. */}
+      <table className="sx-table text-meta">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr>
-            {/* 32px, not 40: at 320px the four columns added up to 328 inside a 320px
-                `overflow-clip` box and the Overall column lost its last 8px with nothing to
-                scroll (DESIGN R-8). "8th" in tabular mono is 24px wide. */}
-            <th scope="col" className="w-8 pl-gutter">
+            {/* 48px: 16 of left padding, 24 for "8th" in tabular mono, 8 of gutter. */}
+            <th scope="col" className="w-12 pl-4 pr-2">
               #
             </th>
             <th scope="col">Team</th>
-            <th scope="col" className="text-right">
+            <th scope="col" className="pl-2 text-right sm:pl-3">
               League
             </th>
-            <th scope="col" className="pr-gutter text-right">
+            <th scope="col" className="pl-2 pr-4 text-right sm:pl-3">
               Overall
             </th>
           </tr>
@@ -50,8 +50,8 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
           {rows.map((row) => {
             const team = row.slug ? getTeamBySlug(row.slug) : undefined;
             return (
-              <tr key={`${row.place}-${row.name}`} style={{ height: 44 }}>
-                <td className="sx-num w-8 pl-gutter">{ordinal(row.place)}</td>
+              <tr key={`${row.place}-${row.name}`} className="h-12">
+                <td className="sx-num w-12 pl-4 pr-2 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
@@ -62,9 +62,9 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                     <Link
                       href={`/teams/${team.slug}`}
                       prefetch={false}
-                      className="flex items-center gap-1.5 no-underline hover:underline"
+                      className="flex items-center gap-2 no-underline hover:underline"
                     >
-                      <TeamMonogram team={team} size={20} />
+                      <TeamMonogram team={team} size={24} />
                       {/* Wraps rather than truncating: at 320px a nowrap name set the column's
                           minimum to 143px and pushed the four columns to 328px inside a 320px
                           clip box, so the Overall column lost its last 8px with no way to scroll
@@ -72,11 +72,11 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                       <span className="min-w-0 text-body text-ink">{row.name}</span>
                     </Link>
                   ) : (
-                    <span className="flex items-center gap-1.5 text-body text-ink">{row.name}</span>
+                    <span className="flex items-center gap-2 text-body text-ink">{row.name}</span>
                   )}
                 </th>
-                <td className="sx-num text-right">{row.leagueRecord}</td>
-                <td className="sx-num pr-gutter text-right text-ink-3">
+                <td className="sx-num pl-2 text-right text-cell sm:pl-3">{row.leagueRecord}</td>
+                <td className="sx-num pl-2 pr-4 text-right text-cell text-ink-3 sm:pl-3">
                   {row.overallRecord ?? EM_DASH}
                 </td>
               </tr>

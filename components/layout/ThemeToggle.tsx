@@ -25,7 +25,38 @@ import { THEME_STORAGE_KEY } from './theme-script';
 type Theme = 'system' | 'light' | 'dark';
 
 const ORDER: Theme[] = ['system', 'light', 'dark'];
-const GLYPH: Record<Theme, string> = { system: '◐', light: '☀', dark: '☽' };
+const SVG_PROPS = {
+  width: 20,
+  height: 20,
+  viewBox: '0 0 20 20',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.6,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+  'aria-hidden': true,
+};
+
+/** 20px inline glyphs: a half-filled circle (system), a sun (light), a crescent (dark). */
+const GLYPH: Record<Theme, React.ReactNode> = {
+  system: (
+    <svg {...SVG_PROPS}>
+      <circle cx="10" cy="10" r="7" />
+      <path d="M10 3a7 7 0 0 0 0 14z" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  light: (
+    <svg {...SVG_PROPS}>
+      <circle cx="10" cy="10" r="4" />
+      <path d="M10 1.75v1.5M10 16.75v1.5M1.75 10h1.5M16.75 10h1.5M4.17 4.17l1.06 1.06M14.77 14.77l1.06 1.06M4.17 15.83l1.06-1.06M14.77 5.23l1.06-1.06" />
+    </svg>
+  ),
+  dark: (
+    <svg {...SVG_PROPS}>
+      <path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7z" />
+    </svg>
+  ),
+};
 const WORD: Record<Theme, string> = {
   system: 'System theme',
   light: 'Light theme',
@@ -50,11 +81,11 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => applyTheme(next)}
-      className={`sx-tap inline-flex h-11 w-11 items-center justify-center rounded-chip text-ink-2${
+      className={`sx-tap inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink${
         className ? ` ${className}` : ''
       }`}
     >
-      <span aria-hidden="true">{GLYPH[theme]}</span>
+      {GLYPH[theme]}
       <span className="sr-only">
         {WORD[theme]} is on. Switch to {WORD[next].toLowerCase()}.
       </span>

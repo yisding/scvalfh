@@ -11,18 +11,28 @@ import type { HomeDivision } from './home-data';
  * ("no PTS column") and §11.8's win-percentage sort (BYLAWS-ADDENDUM).
  *
  * The `mini` variant renders no footnotes of its own, so the two disclosures the bars and the
- * points column owe the reader are printed here instead: the per-division |GD| domain (§5.6 — the
- * two tables are NOT comparable to each other) and the points rule with its citation. Shared
- * places, MaxPreps mismatches and the no-results row are below the top four; the full table carries
- * all of them, and this table's header links straight to it.
+ * points column owe the reader are printed here instead. The per-division |GD| domain (§5.6 — the
+ * two tables are NOT comparable to each other) is division-specific, so it stays visible under
+ * each table whenever the bars are drawn; where the card is too narrow for the plot (under 375px)
+ * the sentences about bars are dropped with it. The points rule with its citation is the same
+ * sentence for both, so it is said once, under El Camino, in a labelled `<details>`
+ * (`showLegend`). Shared places, MaxPreps mismatches and the no-results row are below the top
+ * four; the full table carries all of them, and this table's header links straight to it.
  */
 export interface MiniStandingsProps {
   division: HomeDivision;
   limit?: number;
+  /** Render the one shared "How to read these tables" disclosure (the home page passes it once). */
+  showLegend?: boolean;
   className?: string;
 }
 
-export function MiniStandings({ division, limit = 4, className }: MiniStandingsProps) {
+export function MiniStandings({
+  division,
+  limit = 4,
+  showLegend = false,
+  className,
+}: MiniStandingsProps) {
   const shown = Math.min(limit, division.rows.length);
   // THIS division's last league result, never the latest scores day across both of them: the two
   // divisions play on different days, and the shared date captioned De Anza "through Sep 29" on a
@@ -33,7 +43,7 @@ export function MiniStandings({ division, limit = 4, className }: MiniStandingsP
     <section className={className}>
       <SectionHeader
         kicker={division.label}
-        action={{ href: `/standings#${division.division}`, label: 'full table' }}
+        action={{ href: `/standings#${division.division}`, label: 'Full table' }}
       />
       <StandingsTable
         division={division.division}
@@ -47,11 +57,35 @@ export function MiniStandings({ division, limit = 4, className }: MiniStandingsP
           ` — top ${shown} of ${division.total}`
         }
       />
-      <p className="mt-2 mb-0 text-meta text-ink-3">
-        Top {shown} of {division.total}. PTS is the ordering key: 3 for a win, 1 for a tie (By-Laws
-        Article VI §2). Bars are scaled to {division.label} alone (|GD| max {division.gdDomain}), so
-        the two divisions&rsquo; bars are not comparable.
-      </p>
+      {/* The GD plot is dropped when the CARD is under 375px (`@container` on the card: phones
+          under 375 and the side-by-side minis at 768–~820). This wrapper bleeds like the card
+          (`.sx-bleed`; the gutter comes back as padding on an INNER box, because a container query
+          measures the content box), so the same query here keeps every sentence about the bars in
+          step with whether any bars are drawn. */}
+      <div className="sx-bleed @container">
+        <div className="px-gutter md:px-0">
+          <p className="mt-2 mb-0 text-meta text-ink-3">
+            Top {shown} of {division.total}
+            <span className="hidden @min-[375px]:inline">
+              {' '}
+              &middot; GD bars scaled to {division.label} alone (|GD| max {division.gdDomain})
+            </span>
+          </p>
+          {showLegend ? (
+            <details className="sx-disclosure mt-3">
+              <summary>How to read these tables</summary>
+              <p className="m-0 max-w-prose text-meta text-ink-2">
+                PTS is the ordering key: 3 for a win, 1 for a tie (By-Laws Article VI §2).
+                <span className="hidden @min-[375px]:inline">
+                  {' '}
+                  Bars are scaled to each division alone, so the two divisions&rsquo; bars are not
+                  comparable.
+                </span>
+              </p>
+            </details>
+          ) : null}
+        </div>
+      </div>
     </section>
   );
 }

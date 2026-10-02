@@ -107,41 +107,235 @@ function applyFilters(listId: string, f: FilterState): number {
   return visible;
 }
 
+function Chevron() {
+  return (
+    <svg
+      className="pointer-events-none absolute right-3 text-ink-3"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m4 6 4 4 4-4" />
+    </svg>
+  );
+}
+
+// A disabled select (the static fallback, which is all a reader without JavaScript ever sees)
+// LOOKS disabled: dead controls that look live are worse than none.
+const SELECT =
+  'h-11 w-full appearance-none rounded-full border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:cursor-not-allowed disabled:text-ink-3';
+
 function PillGroup<T extends string>({
   legend,
   value,
   options,
   onPick,
+  disabled = false,
 }: {
   legend: string;
   value: T;
   options: Option<T>[];
   onPick: (value: T) => void;
+  disabled?: boolean;
 }) {
   return (
-    <fieldset className="m-0 flex min-w-0 flex-wrap items-center gap-2 border-0 p-0">
-      <legend className="shrink-0 pr-1 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
-        {legend}
-      </legend>
-      {options.map((option) => {
-        const active = option.value === value;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            aria-pressed={active}
-            onClick={() => onPick(option.value)}
-            className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-chip border px-2.5 text-meta ${
-              active
-                ? 'border-rule bg-surface-3 font-semibold text-ink'
-                : 'border-hairline bg-surface text-ink-2'
-            }`}
-          >
-            {option.label}
-          </button>
-        );
-      })}
+    <fieldset className="m-0 min-w-0 border-0 p-0">
+      <legend className="mb-2 p-0 text-micro font-medium text-ink-3">{legend}</legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => {
+          const active = option.value === value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={active}
+              disabled={disabled}
+              onClick={() => onPick(option.value)}
+              // box-shadow is dropped in forced colours, so each pill gets a real border there and
+              // the pressed one a Highlight ring: the state is never reduced to font weight.
+              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-full px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
+                active
+                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
+                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:disabled:hover:bg-surface-2'
+              }`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
     </fieldset>
+  );
+}
+
+interface PanelProps {
+  teams: ScheduleFiltersProps['teams'];
+  filters: FilterState;
+  countLine: string;
+  moreActive: number;
+  /** Absent in the Suspense fallback: the same shell, inert, at the same height. */
+  update?: (patch: Partial<FilterState>) => void;
+  className?: string;
+}
+
+/**
+ * The panel itself: one card holding the two selects, the "More" disclosure and the live count.
+ * A plain function of its props, so the Suspense fallback renders the identical shell (no CLS).
+ */
+function FiltersPanel({ teams, filters, countLine, moreActive, update, className }: PanelProps) {
+  const inert = !update;
+  return (
+    // One wrapping row of items. On a 390 phone that is the two selects, then "More filters" with
+    // the count beside it (right-aligned, at most two lines) — a ~120px closed panel instead of
+    // four stacked rows. Below 390 the space beside the pill is too narrow (124px at 320 wrapped
+    // the count into four ragged lines), so the count takes its own left-aligned row under it.
+    // From 768px everything sits on one line with the count pushed right.
+    <div
+      className={[
+        'sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+        <span className="sr-only">Team</span>
+        <select
+          value={filters.team}
+          disabled={inert}
+          onChange={(event) => update?.({ team: event.target.value })}
+          className={SELECT}
+        >
+          <option value="all">All teams</option>
+          {DIVISION_OPTIONS.slice(1).map((division) => (
+            <optgroup key={division.value} label={`${division.label} Division`}>
+              {teams
+                .filter((team) => team.division === division.value)
+                .slice()
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((team) => (
+                  <option key={team.slug} value={team.slug}>
+                    {team.name}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
+        </select>
+        <Chevron />
+      </label>
+      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+        <span className="sr-only">Division</span>
+        <select
+          value={filters.division}
+          disabled={inert}
+          onChange={(event) =>
+            update?.({ division: event.target.value as FilterState['division'] })
+          }
+          className={SELECT}
+        >
+          <option value="all">Both divisions</option>
+          {DIVISION_OPTIONS.slice(1).map((division) => (
+            <option key={division.value} value={division.value}>
+              {division.label}
+            </option>
+          ))}
+        </select>
+        <Chevron />
+      </label>
+      {/* A real `<details>`, so the panel opens with JavaScript off too. Open on a phone, it
+          takes the whole row so its tray is full width, and the count drops below it. */}
+      <details className="peer relative max-md:open:basis-full">
+        <summary className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          More filters
+          {moreActive > 0 ? (
+            <span className="sx-badge sx-num h-6 bg-surface px-2 text-ink">
+              {moreActive}
+              <span className="sr-only"> active</span>
+            </span>
+          ) : null}
+          <svg
+            className="sx-chevron text-ink-3"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m4 6 4 4 4-4" />
+          </svg>
+        </summary>
+        {/* Phone: an inset tray inside the panel. From 768px: a floating card over the list. */}
+        <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-md:rounded-card max-md:bg-surface-2 max-md:shadow-none md:absolute md:left-0 md:z-20 md:w-max md:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
+          <PillGroup
+            legend="Game type"
+            value={filters.type}
+            options={TYPE_OPTIONS}
+            onPick={(type) => update?.({ type })}
+            disabled={inert}
+          />
+          <PillGroup
+            legend="Status"
+            value={filters.state}
+            options={STATE_OPTIONS}
+            onPick={(state) => update?.({ state })}
+            disabled={inert}
+          />
+        </div>
+      </details>
+      <p
+        aria-live="polite"
+        className="m-0 min-w-0 flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left max-[389px]:basis-full max-[389px]:text-left md:flex-none md:ml-auto"
+      >
+        {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
+            never strands "3" from "not reported" or opens a line on "·". The text content is
+            unchanged. */}
+        {countLine.split(' · ').map((part, i, parts) => (
+          <span key={part}>
+            {i > 0 ? ' ' : null}
+            <span className="whitespace-nowrap">
+              {part}
+              {i < parts.length - 1 ? ' ·' : null}
+            </span>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
+/** The Suspense fallback for `/schedule`: the same panel, inert, so nothing shifts on hydrate. */
+export function ScheduleFiltersFallback({
+  teams,
+  counts,
+  className,
+}: Pick<ScheduleFiltersProps, 'teams' | 'counts' | 'className'>) {
+  return (
+    <div className={className}>
+      <FiltersPanel
+        teams={teams}
+        filters={DEFAULT_FILTERS}
+        countLine={unfilteredCountLine(counts)}
+        moreActive={0}
+      />
+      {/* The prerendered page leaves this boundary pending, so WITHOUT JavaScript this fallback is
+          what stays on screen: its controls are disabled, and the note saying why lives here. */}
+      <noscript>
+        <p className="mt-3 mb-0 text-meta text-ink-3">
+          Filtering needs JavaScript. The complete season — all {counts.total}{' '}
+          {contestWord(counts.total)}, oldest first — is listed below either way.
+        </p>
+      </noscript>
+    </div>
   );
 }
 
@@ -194,116 +388,55 @@ export function ScheduleFilters({ teams, counts, listId, className }: ScheduleFi
 
   return (
     <div className={className}>
-      {/* ONE row of controls, which is what DESIGN §3.3 budgets (44 top bar · 48 filter row · 24
-          count · 36 rail · 34 date header = 186, leaving six GameRows above the fold). Three
-          pill GROUPS laid out flat wrapped to three rows on a 390px phone and pushed the first
-          result to y=427 — one result above the fold on the longest page on the site. Team and
-          division stay in the row, exactly as §3.3 draws them, and the other two dimensions sit
-          behind one disclosure that opens over the list. Whatever is active still echoes back as
-          removable mono chips below, so a filtered list can never look like the whole season.
-
-          Sticky from 768px up only: pinning even this row to the top of a phone would spend
-          fold on chrome that the date header needs more (DESIGN §1.3). */}
-      <div className="-mx-gutter border-b border-hairline bg-bg px-gutter py-2 md:sticky md:top-topbar-lg md:z-10 md:-mx-gutter-lg md:px-gutter-lg">
-        <div className="flex flex-wrap items-center gap-2">
-          <label className="inline-flex items-center gap-1.5">
-            <span className="sr-only">Team</span>
-            <select
-              value={filters.team}
-              onChange={(event) => update({ team: event.target.value })}
-              className="h-11 max-w-[11rem] rounded-chip border border-hairline bg-surface px-2 text-meta text-ink"
-            >
-              <option value="all">All teams</option>
-              {DIVISION_OPTIONS.slice(1).map((division) => (
-                <optgroup key={division.value} label={`${division.label} Division`}>
-                  {teams
-                    .filter((team) => team.division === division.value)
-                    .slice()
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((team) => (
-                      <option key={team.slug} value={team.slug}>
-                        {team.name}
-                      </option>
-                    ))}
-                </optgroup>
-              ))}
-            </select>
-          </label>
-          <label className="inline-flex items-center gap-1.5">
-            <span className="sr-only">Division</span>
-            <select
-              value={filters.division}
-              onChange={(event) =>
-                update({ division: event.target.value as FilterState['division'] })
-              }
-              className="h-11 rounded-chip border border-hairline bg-surface px-2 text-meta text-ink"
-            >
-              <option value="all">Both divisions</option>
-              {DIVISION_OPTIONS.slice(1).map((division) => (
-                <option key={division.value} value={division.value}>
-                  {division.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          {/* A real `<details>`, so the panel opens with JavaScript off too. */}
-          <details className="relative">
-            <summary className="sx-tap inline-flex h-11 cursor-pointer list-none items-center gap-1.5 rounded-chip border border-hairline bg-surface px-2.5 text-meta text-ink-2 [&::-webkit-details-marker]:hidden">
-              More
-              {moreActive > 0 ? (
-                <span className="sx-num inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-3 px-1 text-kicker font-semibold text-ink">
-                  {moreActive}
-                  <span className="sr-only"> filters active</span>
-                </span>
-              ) : null}
-              <span aria-hidden="true">&#8964;</span>
-            </summary>
-            <div className="mt-2 space-y-2 rounded-card border border-hairline bg-surface p-3 md:absolute md:z-20 md:mt-1 md:w-max md:shadow-[var(--sx-shadow-raised)]">
-              <PillGroup
-                legend="Game type"
-                value={filters.type}
-                options={TYPE_OPTIONS}
-                onPick={(type) => update({ type })}
-              />
-              <PillGroup
-                legend="Status"
-                value={filters.state}
-                options={STATE_OPTIONS}
-                onPick={(state) => update({ state })}
-              />
-            </div>
-          </details>
-        </div>
-        <p aria-live="polite" className="sx-num m-0 mt-1.5 text-meta text-ink-2">
-          {countLine}
-        </p>
-      </div>
+      {/* ONE card of controls. Team and division stay in the row, exactly as DESIGN §3.3 draws
+          them; game type and status sit behind one disclosure. Whatever is active echoes back as
+          removable pills below, so a filtered list can never look like the whole season. The
+          panel is not sticky at any width: the date header is the sticky thing on this page. */}
+      <FiltersPanel
+        teams={teams}
+        filters={filters}
+        countLine={countLine}
+        moreActive={moreActive}
+        update={update}
+      />
 
       <noscript>
-        <p className="mt-2 mb-0 text-meta text-ink-3">
+        <p className="mt-3 mb-0 text-meta text-ink-3">
           Filtering needs JavaScript. The complete season — all {counts.total}{' '}
           {contestWord(counts.total)}, oldest first — is listed below either way.
         </p>
       </noscript>
 
       {chips.length > 0 ? (
-        <p className="mt-2 mb-0 flex flex-wrap items-center gap-2">
+        <p className="mt-3 mb-0 flex flex-wrap items-center gap-2">
           {chips.map((chip) => (
             <button
               key={chip.key}
               type="button"
               onClick={() => update(chip.clear)}
-              className="sx-tap inline-flex h-11 items-center gap-1.5 rounded-chip border border-hairline bg-surface-3 px-2.5 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink"
+              className="sx-pill min-h-11"
             >
               {chip.label}
-              <span aria-hidden="true">&#10005;</span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                aria-hidden="true"
+                className="text-ink-3"
+              >
+                <path d="m3 3 6 6M9 3 3 9" />
+              </svg>
               <span className="sr-only">— remove this filter</span>
             </button>
           ))}
           <button
             type="button"
             onClick={() => update(DEFAULT_FILTERS)}
-            className="inline-flex h-11 items-center px-2 text-meta text-accent hover:underline"
+            className="inline-flex min-h-11 items-center rounded-full px-3 text-meta font-medium text-accent hover:bg-surface-2"
           >
             Clear all
           </button>
@@ -311,7 +444,7 @@ export function ScheduleFilters({ teams, counts, listId, className }: ScheduleFi
       ) : null}
 
       {filtered && visible === 0 ? (
-        <EmptyState heading="No contests match these filters.">
+        <EmptyState heading="No contests match these filters." className="mt-4">
           Remove one of the filters above — they are all still listed, and still removable — or
           clear them all to see the whole season again.
         </EmptyState>

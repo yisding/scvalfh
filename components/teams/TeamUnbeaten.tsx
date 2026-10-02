@@ -55,13 +55,13 @@ function OpponentRow({ opponent }: { opponent: UnbeatenOpponent }) {
         href={`/teams/${opponent.slug}`}
         prefetch={false}
         aria-label={sentenceFor(opponent)}
-        className="sx-tap flex min-h-11 items-center gap-2 px-gutter text-meta no-underline"
+        className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline"
       >
-        <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-2">
-          {team ? <TeamMonogram team={team} size={20} /> : null}
-          <span className="min-w-0 flex-1 truncate text-ink">{opponent.shortName}</span>
+        <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-3">
+          {team ? <TeamMonogram team={team} size={24} /> : null}
+          <span className="min-w-0 flex-1 truncate text-body text-ink">{opponent.shortName}</span>
         </span>
-        <span className="sx-num shrink-0 text-ink-2" aria-hidden="true">
+        <span className="sx-num shrink-0 text-cell text-ink-2" aria-hidden="true">
           {opponent.played === 0 ? '' : recordString(opponent.record)}
         </span>
         <span className="shrink-0 text-ink-3" aria-hidden="true">
@@ -84,12 +84,14 @@ export function TeamUnbeaten({ view }: { view: TeamPageView }) {
   }
   return (
     <>
-      <ul className="sx-list sx-bleed border-y border-hairline bg-surface md:border">
-        {view.unbeaten.map((opponent) => (
-          <OpponentRow key={opponent.slug} opponent={opponent} />
-        ))}
-      </ul>
-      <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-3">
+      <div className="sx-card sx-flush sx-bleed">
+        <ul className="sx-list">
+          {view.unbeaten.map((opponent) => (
+            <OpponentRow key={opponent.slug} opponent={opponent} />
+          ))}
+        </ul>
+      </div>
+      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {view.unbeaten.length} of {view.divisionSize - 1} {view.divisionLabel} opponents. Division
         mates play each other twice, home and away (By-Laws Article VI §1), so a name can be here
         with two meetings left, one, or none.

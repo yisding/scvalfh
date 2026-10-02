@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
-import ScheduleFilters from '@/components/schedule/ScheduleFilters';
+import ScheduleFilters, { ScheduleFiltersFallback } from '@/components/schedule/ScheduleFilters';
 import ScheduleList from '@/components/schedule/ScheduleList';
 import TimelineRail from '@/components/schedule/TimelineRail';
-import { countGames, unfilteredCountLine } from '@/components/schedule/filter-data';
+import { countGames } from '@/components/schedule/filter-data';
+import PageHeader from '@/components/layout/PageHeader';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
 import { getGamesByDate, getOfficialFixtures, getTeams, getToday } from '@/lib/data';
@@ -59,45 +60,51 @@ export default function SchedulePage() {
     dates.length > 0 ? `${monthDay(dates[0])} – ${monthDay(dates[dates.length - 1])}` : null;
 
   return (
-    <div className="pb-10 [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:calc(var(--spacing-topbar-lg)+4.5rem)]">
-      <h1 className="mt-3 mb-1 text-h1 font-semibold text-ink">Schedule &amp; results</h1>
-      {span ? (
-        <p className="m-0 mb-2 text-meta text-ink-3">
-          {span} &middot; every contest, league and non-league, oldest first
-        </p>
-      ) : null}
+    // `scroll-behavior: auto` on <html> while this page is mounted: a smooth scroll to a date
+    // anchor renders the `content-visibility` groups it passes, their real heights replace the
+    // estimates mid-flight, and the target slid out of view ("Today" landed on Oct 5 at 1280).
+    // An instant jump lands exactly, as it already did for reduced-motion users.
+    <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)] [html:has(&)]:[scroll-behavior:auto]">
+      <PageHeader
+        title="Schedule & results"
+        description={
+          span ? (
+            <>
+              {span} &middot; every contest, league and non-league, oldest first &middot; all
+              times Pacific
+            </>
+          ) : undefined
+        }
+      />
 
       <Suspense
-        fallback={
-          <p className="sx-num m-0 border-b border-hairline py-2 text-meta text-ink-2">
-            {unfilteredCountLine(counts)}
-          </p>
-        }
+        fallback={<ScheduleFiltersFallback teams={teams} counts={counts} className="mt-6" />}
       >
-        <ScheduleFilters teams={teams} counts={counts} listId="schedule-list" />
+        <ScheduleFilters teams={teams} counts={counts} listId="schedule-list" className="mt-6" />
       </Suspense>
 
-      <TimelineRail
-        dates={dates}
-        today={today}
-        className="-mx-gutter border-b border-hairline px-gutter md:mx-0 md:px-0"
-      />
+      {/* Bled to the screen edge on a phone so the rail scrolls under the gutter, with the chips'
+          own padding inside; 4px of room at desktop so no ring or focus outline is clipped. */}
+      <TimelineRail dates={dates} today={today} className="mt-4 -mx-gutter md:-mx-1" />
 
       <ScheduleList id="schedule-list" groups={groups} />
 
       {fixtures.length > 0 ? (
-        <section className="mt-8">
+        <section className="mt-section md:mt-section-lg">
           <SectionHeader kicker="Scheduled by SCVAL, not reported" />
           <OfficialFixtures fixtures={fixtures} />
         </section>
       ) : null}
 
-      <section className="mt-8">
-        <SectionHeader kicker="How to read this page" />
-        <ul className="m-0 max-w-[62ch] list-disc space-y-1 pl-5 text-meta text-ink-2">
+      {/* The same width as the fixtures card above it, so the two end-of-page disclosures read
+          as one kind of thing. */}
+      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
+        <summary>How to read this page (4 notes)</summary>
+        <ul className="m-0 mt-2 list-disc space-y-2 pl-5">
           <li>
-            Standings count league games only. A non-league game carries the <code>NL</code> tag and
-            a 2px left rule; it counts in a team&rsquo;s overall record and nowhere else.
+            Standings count league games only. A non-league game carries the <code>NL</code> tag
+            and, on phone rows, a 2px left rule; it counts in a team&rsquo;s overall record and
+            nowhere else.
           </li>
           <li>
             A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span> in
@@ -105,7 +112,7 @@ export default function SchedulePage() {
             <span className="sx-num">0-0</span>.
           </li>
           <li>
-            <span className="font-mono text-kicker font-semibold tracking-[0.10em] uppercase">
+            <span className="font-sans text-micro font-semibold uppercase tracking-[0.04em]">
               score not reported
             </span>{' '}
             means the game was played and MaxPreps has not posted a score yet. It counts for nothing
@@ -113,18 +120,16 @@ export default function SchedulePage() {
           </li>
           <li>
             Every date and time is Pacific, formatted when the site was built. Tap a game to expand
-            its venue, stream, ticket and box-score links; tap a date&rsquo;s{' '}
-            <span className="whitespace-nowrap">share &rarr;</span> to open that day on its own page.
+            its venue, stream, ticket and box-score links; tap a date&rsquo;s Share link to open
+            that day on its own page.
           </li>
         </ul>
-        {/* `sx-action`: alone in its own paragraph, so the 24px floor rather than the 17px the
-            type around it would give (WCAG 2.5.8; see app/globals.css). */}
-        <p className="mt-3 mb-0 text-meta">
-          <Link href="/about#conventions" className="sx-action text-accent hover:underline">
-            Every rendering convention, in one table <span aria-hidden="true">&rarr;</span>
+        <p className="mt-3 mb-0">
+          <Link href="/about#conventions" className="sx-action font-medium text-accent">
+            Every rendering convention, in one table
           </Link>
         </p>
-      </section>
+      </details>
     </div>
   );
 }

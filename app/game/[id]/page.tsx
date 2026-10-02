@@ -73,49 +73,61 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const { game, away, home, dayLabel } = model;
 
   return (
-    <div className="py-4">
-      {/* `sx-action` for the reason the day nav on /scores/[date] carries it: a standalone action
-          link, alone in its own paragraph, is not covered by WCAG 2.5.8's inline exception, and at
-          `text-meta` its own box is 17px tall. */}
-      <p className="m-0 text-meta">
-        <Link href={`/scores/${game.dateKey}`} className="sx-action text-accent hover:underline">
-          <span aria-hidden="true">&larr; </span>All games on {dayLabel}
+    <div className="pb-section-lg">
+      {/* A standalone action back to the day: a 44px pill-shaped target (WCAG 2.5.8), pulled
+          left by its own padding so the arrow lines up with the gutter. */}
+      <p className="m-0">
+        <Link
+          href={`/scores/${game.dateKey}`}
+          className="sx-action -ml-3 mt-4 min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+        >
+          <span aria-hidden="true" className="mr-1.5">
+            &larr;
+          </span>
+          All games on {dayLabel}
         </Link>
       </p>
 
       {/*
-        Desktop is a 2fr / 1fr grid with the DETAILS card in the right rail, and the DOM keeps the
+        Desktop puts the DETAILS card in a right rail beside the main column, and the DOM keeps the
         PHONE order — scoreboard, recap, details, form, series, sources (DESIGN §10.5). Explicit
         row placement, not two wrapper columns, is what makes those two facts compatible: a section
         that renders nothing collapses its row to zero height, and vertical rhythm comes from
         margins rather than a row gap so a collapsed row leaves no ghost space.
       */}
-      <div className="md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,20rem)] md:gap-x-8">
-        <div className="mt-3 md:col-start-1 md:row-start-1">
+      <div className="mt-2 md:grid md:grid-cols-[minmax(0,1fr)_20rem] md:gap-x-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
+        <div className="md:col-span-2 md:row-start-1">
           <h1 className="sr-only">{gameTitle(model)}</h1>
-          <ScoreBoard
-            game={game}
-            away={{ sub: away.sub }}
-            home={{ sub: home.sub }}
-            className="sx-bleed px-gutter py-2 md:px-3"
-          />
+          <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
         </div>
 
         <div className="md:col-start-1 md:row-start-2">
           {game.recap ? (
-            <p className="mt-3 mb-0 max-w-[62ch] text-meta text-ink-2">{game.recap}</p>
+            <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{game.recap}</p>
           ) : null}
-          <SourceDisagreement model={model} className="mt-3" />
+          <SourceDisagreement model={model} className="mt-4" />
         </div>
 
+        {/* Sticky only when the viewport is tall enough to hold it: the card is up to ~510px,
+            +80px of offset, and a sticky box taller than the viewport can never scroll its last
+            links into view (a focused "MaxPreps box score" sat below a 488px-tall window). */}
         <GameDetails
           model={model}
-          className="mt-8 md:col-start-2 md:row-start-1 md:row-span-5 md:mt-3 md:self-start"
+          className="mt-section md:col-start-2 md:row-span-4 md:row-start-2 md:mt-6 md:self-start [@media(min-width:768px)_and_(min-height:40rem)]:sticky [@media(min-width:768px)_and_(min-height:40rem)]:top-[5rem]"
         />
 
-        <FormGoingIn model={model} className="mt-8 md:col-start-1 md:row-start-3" />
-        <SeasonSeries model={model} className="mt-8 md:col-start-1 md:row-start-4" />
-        <GameElsewhere model={model} className="mt-8 md:col-start-1 md:row-start-5" />
+        <FormGoingIn
+          model={model}
+          className="mt-section md:col-start-1 md:row-start-3 md:mt-section-lg"
+        />
+        <SeasonSeries
+          model={model}
+          className="mt-section md:col-start-1 md:row-start-4 md:mt-section-lg"
+        />
+        <GameElsewhere
+          model={model}
+          className="mt-section md:col-start-1 md:row-start-5 md:mt-section-lg"
+        />
       </div>
     </div>
   );

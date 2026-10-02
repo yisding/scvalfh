@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { BYLAW_CITATIONS, CCS_BRACKET_URL, PLAYOFF_KEY_DATES } from '../../lib/season';
 import { dateWithYear } from '../../lib/format';
-import { outcomesFor } from '../../lib/standings';
+import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
 import type { PlayoffStatus } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
 import type { TeamPageView } from './team-view';
@@ -47,31 +47,60 @@ function playoffSentence(name: string, outcomes: readonly PlayoffStatus[]): stri
     .join(' or ')} once Article VI §7's coin flip is run.`;
 }
 
+/**
+ * The status chip says EXACTLY what /playoffs says for the same team ("Automatic qualifier",
+ * "Play-in game Oct 30", "At-large consideration", "No automatic path"; a level place reads
+ * "Automatic qualifier or the Oct 30 play-in"), in the projection's own chip: 12px sans semibold,
+ * sentence case, accent-ink on the wash only for a sole AQ (6.5 / 7.55), else ink-2 on surface-3.
+ * The mono caps codes it replaced ("NO AQ") were jargon defined only inside a collapsed
+ * disclosure. The by-law tail after " — " is the sentence's job below, not the chip's.
+ */
+function statusChip(outcomes: readonly PlayoffStatus[]): { text: string; accent: boolean } {
+  const [head] = playoffOutcomeLabel(outcomes).split(' — ');
+  return { text: head ?? '', accent: outcomes.length === 1 && outcomes[0] === 'aq' };
+}
+
 export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
   const { team, standing, hasResults } = view;
+  const outcomes = hasResults && standing ? outcomesFor(standing) : [];
+  const chip = outcomes.length > 0 ? statusChip(outcomes) : null;
   return (
-    <div className="space-y-2 text-meta">
+    <div className="sx-card p-5 text-meta">
+      {chip ? (
+        <p className="m-0 mb-3">
+          <span
+            className={
+              chip.accent
+                ? 'inline-block rounded-tag bg-accent-wash px-2 py-1 text-micro font-semibold text-accent-ink'
+                : 'inline-block rounded-tag bg-surface-3 px-2 py-1 text-micro font-semibold text-ink-2'
+            }
+          >
+            {chip.text}
+          </span>
+        </p>
+      ) : null}
       <p className="m-0 text-body text-ink">
         {hasResults && standing
-          ? playoffSentence(team.name, outcomesFor(standing))
+          ? playoffSentence(team.name, outcomes)
           : `No results are reported for ${team.name}, so it has no computed position in the CCS picture.`}
       </p>
       {hasResults && standing?.tiebreak.shared ? (
-        <p className="m-0 text-ink-2">{standing.tiebreak.note}</p>
+        <p className="mt-2 mb-0 text-ink-2">{standing.tiebreak.note}</p>
       ) : null}
-      <p className="m-0 text-ink-2">
-        {BYLAW_CITATIONS.qualifiers}. The SCVAL crossover and play-in are{' '}
-        {dateWithYear(PLAYOFF_KEY_DATES.crossover)}; CCS seeds on{' '}
-        {dateWithYear(PLAYOFF_KEY_DATES.seedingMeeting)}. Berths are assigned by the CCS committee
-        and nothing here is official.
+      <p className="mt-2 mb-0 text-ink-2">
+        The SCVAL crossover and play-in are {dateWithYear(PLAYOFF_KEY_DATES.crossover)}; CCS seeds
+        on {dateWithYear(PLAYOFF_KEY_DATES.seedingMeeting)}. Berths are assigned by the CCS
+        committee and nothing here is official.
       </p>
-      {/* Two standalone actions on their own row, so each carries its own 24px box (WCAG 2.5.8)
-          rather than the 17px height of the type around them. */}
-      <p className="m-0 flex flex-wrap gap-x-4 gap-y-1">
-        <Link href="/playoffs" className="sx-action text-accent hover:underline">
-          Playoff picture <span aria-hidden="true">&rarr;</span>
+      <details className="sx-disclosure mt-3">
+        <summary>How CCS qualifying works</summary>
+        <p className="mt-1 mb-2 max-w-prose text-ink-2">{BYLAW_CITATIONS.qualifiers}.</p>
+      </details>
+      <p className="mt-3 mb-0 flex flex-wrap gap-2">
+        <Link href="/playoffs" className="sx-pill text-accent">
+          Playoff picture
         </Link>
-        <ExternalLink href={CCS_BRACKET_URL} className="sx-action">
+        <ExternalLink href={CCS_BRACKET_URL} className="sx-pill">
           Official CCS bracket
         </ExternalLink>
       </p>

@@ -62,6 +62,81 @@ function PlaceCell({ row }: { row: ProjectionRow }) {
   return <span className="sx-num text-ink">{place}</span>;
 }
 
+/**
+ * The written status: one tinted capsule in 12px SANS, sentence case. These are phrases ("At-large
+ * consideration or no automatic path"), and mono caps are kept for the 1–2 word codes a `Tag` is
+ * for (brief §1). The tones are Tag's: accent-ink on the wash only for a sole AQ. The capsule is
+ * `inline-block`, so a long phrase grows into ONE taller capsule instead of breaking into a cloned
+ * pill per line. Any " — " tail (the coin-flip note) is plain text under it.
+ */
+function StatusBadge({ row }: { row: ProjectionRow }) {
+  const [head, ...tail] = row.label.split(' — ');
+  return (
+    <>
+      <span
+        className={`inline-block max-w-full rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
+          row.status === 'aq' && row.statuses.length === 1
+            ? 'bg-accent-wash text-accent-ink'
+            : 'bg-surface-3 text-ink-2'
+        }`}
+      >
+        {head}
+      </span>
+      {tail.length > 0 ? (
+        <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail.join(' — ')}</span>
+      ) : null}
+    </>
+  );
+}
+
+/** The by-law sentence, with the play-in date formatted from the snapshot like every other date. */
+function qualifying(playIn: string): string {
+  return (
+    'The first three in each division qualify automatically (Article VII §2). The two ' +
+    `fourth-place teams meet in the ${playIn} play-in for the seventh SCVAL berth, and the play-in ` +
+    'loser plus both fifth-place teams are submitted to CCS for at-large consideration.'
+  );
+}
+
+/**
+ * The footnotes every division shares, said once for the page in a labelled disclosure (brief
+ * §4.22). Division-specific facts (tie notes, no-results teams) stay visible under their own table.
+ */
+export function ProjectionKey({
+  playIn,
+  className,
+  showRule = true,
+}: {
+  /** The crossover / play-in date, already formatted ("Fri Oct 30"). */
+  playIn: string;
+  className?: string;
+  /** false when no table draws the 2px rule (nobody is in automatic position yet). */
+  showRule?: boolean;
+}) {
+  return (
+    <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
+      <summary>How to read the projection</summary>
+      {/* A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so the
+          children's `m-0` would win and the paragraphs would touch. */}
+      <div className="flex max-w-prose flex-col gap-3 text-meta text-ink-2">
+        <p className="m-0">
+          {showRule ? 'The 2px rule marks the last automatic berth. ' : ''}
+          {qualifying(playIn)}
+        </p>
+        <p className="m-0">
+          Every status in the tables is a written word. There are no probabilities on this page, because
+          there is no model behind it &mdash; only the league points played so far.
+        </p>
+        <p className="m-0">
+          <Link href="/about#standings" className="sx-action text-accent hover:underline">
+            How these places are computed
+          </Link>
+        </p>
+      </div>
+    </details>
+  );
+}
+
 export function PlayoffProjection({
   projection,
   asOfLabel,
@@ -70,15 +145,7 @@ export function PlayoffProjection({
   id,
 }: PlayoffProjectionProps) {
   const { rows, divisionLabel, berthRuleAfter, autoRows, notes } = projection;
-  const qualifying =
-    'The first three in each division qualify automatically (Article VII §2). The two ' +
-    'fourth-place teams meet in the Oct 30 play-in for the seventh SCVAL berth, and the play-in ' +
-    'loser plus both fifth-place teams are submitted to CCS for at-large consideration.';
-  const footnotes: string[] = [
-    berthRuleAfter > 0 ? `The 2px rule marks the last automatic berth. ${qualifying}` : qualifying,
-    'Every status above is a written word. There are no probabilities on this page, because there is no model behind it — only the league points played so far.',
-    ...notes,
-  ];
+  const footnotes: string[] = [...notes];
   // One footnote for the whole set, not one per team: eight identical sentences would bury the
   // rest. When NO row has results, buildDivisionProjection has already said so.
   const noData = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
@@ -97,29 +164,28 @@ export function PlayoffProjection({
       <SectionHeader
         as="h3"
         kicker={divisionLabel}
-        action={{ href: standingsHref, label: 'full table' }}
+        meta={`${asOfLabel} · unofficial`}
+        action={{ href: standingsHref, label: 'Full table' }}
       />
       <BerthMeter
         claimed={autoRows.length}
         total={rows.length}
         label={`${autoRows.length} of ${divisionLabel}'s ${rows.length} teams are in automatic-qualifier position today. Three per division qualify automatically (Article VII §2).`}
-        className="mb-3"
+        className="mb-4"
       />
-      <div className="sx-bleed overflow-clip">
+      <div className="sx-card sx-flush">
         <table className="sx-table text-meta">
-          {/* Visually hidden on phone, shown on desktop (DESIGN §7.3): the section kicker above
-              already says "projection · not official / through Sep 29" on a small screen. */}
-          <caption className="sr-only md:not-sr-only md:pb-2 md:text-meta md:text-ink-3">
+          <caption className="sr-only">
             {divisionLabel} projected CCS qualification, from league points {asOfLabel}.
             Unofficial.
           </caption>
           <thead>
             <tr>
-              <th scope="col" className="w-7 pl-gutter">
+              <th scope="col" className="w-8 pr-1 pl-3 sm:w-10 sm:pr-2 sm:pl-4">
                 #
               </th>
               <th scope="col">Team</th>
-              <th scope="col" className="w-[8.5rem] pr-gutter md:w-52">
+              <th scope="col" className="hidden pr-4 md:table-cell md:w-52">
                 Status
               </th>
             </tr>
@@ -131,14 +197,14 @@ export function PlayoffProjection({
                 className="relative"
                 style={
                   berthRuleAfter && index + 1 === berthRuleAfter
-                    ? { height: 48, borderBottom: '2px solid var(--sx-border-strong)' }
-                    : { height: 48 }
+                    ? { height: 56, borderBottom: '2px solid var(--sx-border-strong)' }
+                    : { height: 56 }
                 }
               >
-                <td className="pl-gutter align-middle">
+                <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
-                <th scope="row" className="font-normal">
+                <th scope="row" className="pr-3 font-normal sm:pr-4 md:pr-0">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
@@ -151,40 +217,55 @@ export function PlayoffProjection({
                   >
                     <span className="sr-only">{projectionRowLabel(row, divisionLabel)}</span>
                   </Link>
-                  <span className="flex items-center gap-2" aria-hidden="true">
-                    <TeamMonogram team={row.team} size={20} />
-                    <span className="min-w-0">
-                      <span className="block truncate text-body text-ink">
+                  <span className="flex items-center gap-3">
+                    <TeamMonogram team={row.team} size={28} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-body text-ink" aria-hidden="true">
                         {row.team.shortName}
                       </span>
-                      <span className="sx-num block text-meta text-ink-2">
-                        {recordLine(row.standing)}
+                      {/* Record and points wrap as two whole units, never "pts" alone. Below md
+                          the status capsule follows them on the same line (it wraps under them
+                          when the row is too narrow); from md it has its own column. */}
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span
+                          className="sx-num flex flex-wrap gap-x-2 text-cell text-ink-2"
+                          aria-hidden="true"
+                        >
+                          {recordLine(row.standing)
+                            .split(' · ')
+                            .map((part) => (
+                              <span key={part} className="whitespace-nowrap">
+                                {part}
+                              </span>
+                            ))}
+                        </span>
+                        <span className="contents md:hidden">
+                          <StatusBadge row={row} />
+                        </span>
                       </span>
                     </span>
                   </span>
                 </th>
                 {/* The status is the whole point of the page, so it stays in the a11y tree and
-                    the row link's sentence deliberately does not repeat it. */}
-                <td className="pr-gutter align-middle text-ink">{row.label}</td>
+                    the row link's sentence deliberately does not repeat it. Below md it sits under
+                    the record in the team cell (above), where it has the card's width; this
+                    column only exists from md. `display: none` keeps it out of the a11y tree, so
+                    exactly one copy is ever read. */}
+                <td className="hidden pr-3 pl-3 align-middle sm:pr-4 md:table-cell">
+                  <StatusBadge row={row} />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {/* 62ch (DESIGN §4.3) — the same measure as the "How it works" prose further down the
-          page, which this block ran at twice the width of. */}
-      <ul className="mt-2 mb-0 max-w-[62ch] list-none space-y-1 pl-0 text-meta text-ink-3">
-        {footnotes.map((note) => (
-          <li key={note}>{note}</li>
-        ))}
-        {/* The footnotes above are sentences; this one is a standalone action and the only thing
-            in its row, so it takes its own 24px box (WCAG 2.5.8; see app/globals.css). */}
-        <li>
-          <Link href="/about#standings" className="sx-action text-accent hover:underline">
-            How these places are computed
-          </Link>
-        </li>
-      </ul>
+      {footnotes.length > 0 ? (
+        <ul className="mt-3 mb-0 max-w-prose list-none space-y-1 pl-0 text-meta text-ink-2">
+          {footnotes.map((note) => (
+            <li key={note}>{note}</li>
+          ))}
+        </ul>
+      ) : null}
     </section>
   );
 }

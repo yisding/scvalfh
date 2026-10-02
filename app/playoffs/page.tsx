@@ -4,7 +4,7 @@ import Link from 'next/link';
 import CrossoverPairings from '@/components/playoffs/CrossoverPairings';
 import KeyDates from '@/components/playoffs/KeyDates';
 import PlayoffBracket from '@/components/playoffs/PlayoffBracket';
-import PlayoffProjection from '@/components/playoffs/PlayoffProjection';
+import PlayoffProjection, { ProjectionKey } from '@/components/playoffs/PlayoffProjection';
 import { buildBrackets, pendingRounds } from '@/components/playoffs/bracket-model';
 import {
   buildDivisionProjection,
@@ -16,6 +16,7 @@ import {
 } from '@/components/playoffs/playoff-view';
 import BerthMeter from '@/components/ui/BerthMeter';
 import ExternalLink from '@/components/ui/ExternalLink';
+import PageHeader from '@/components/layout/PageHeader';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
 import {
@@ -47,7 +48,7 @@ import type { CrossoverSeat, Division, PlayoffProjection as Projection } from '@
  * never `Date.now()`, so the build is reproducible and the "as of" label is true.
  */
 
-const PAGE_TITLE = 'CCS Playoffs';
+const PAGE_TITLE = 'CCS playoffs';
 
 function projectionRows(projection: Projection, division: Division): ProjectionRow[] {
   return projection.byDivision[division].flatMap((row) => {
@@ -142,7 +143,7 @@ export async function generateMetadata(): Promise<Metadata> {
       )}, semifinals ${shortDate(keyDates.semifinals)}, final ${shortDate(
         keyDates.finals,
       )}. Unofficial, computed from published results.`
-    : `SCVAL holds ${format.autoQualifiers.scval} of the ${format.autoQualifiers.total} CCS berths: the first three in each division, plus the winner of the Oct 30 play-in. Seeding meeting ${shortDate(
+    : `SCVAL holds ${format.autoQualifiers.scval} of the ${format.autoQualifiers.total} CCS berths: the first three in each division, plus the winner of the ${shortDate(keyDates.crossover)} play-in. Seeding meeting ${shortDate(
         keyDates.seedingMeeting,
       )}; quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${shortDate(
         keyDates.finals,
@@ -166,12 +167,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function PlayoffsPage() {
   const playoffs = getPlayoffs();
   const projection = getPlayoffProjection();
-  // Per division for each table's own caption, and the later of the two for the section header that
-  // covers both.
+  // Per division, for each table's own header and caption: the two divisions are not always
+  // current through the same day.
   const asOfBy = Object.fromEntries(
     DIVISIONS.map((d) => [d, getLastLeagueResultDate(d)]),
   ) as Record<Division, string | null>;
-  const asOfOverall = getLastLeagueResultDate();
   const { keyDates, format, bracketUrl, bracketPublished } = playoffs;
   const auto = format.autoQualifiers;
 
@@ -189,34 +189,40 @@ export default function PlayoffsPage() {
   const crossover = crossoverRows(projection);
 
   return (
-    <div className="py-4">
-      <h1 className="m-0 text-h1 text-ink">{PAGE_TITLE}</h1>
-      <p className="mt-1 mb-0 max-w-[62ch] text-body text-ink-2">
-        Central Coast Section championships, {shortDate(keyDates.quarterfinals)} to{' '}
-        {shortDate(keyDates.finals)}. This page tracks SCVAL&rsquo;s share of the field and, once
-        CCS seeds it, the bracket itself.
-      </p>
+    <div className="pb-section-lg">
+      <PageHeader
+        title={PAGE_TITLE}
+        description={
+          <>
+            Central Coast Section championships, {shortDate(keyDates.quarterfinals)} to{' '}
+            {shortDate(keyDates.finals)}. This page tracks SCVAL&rsquo;s share of the field and,
+            once CCS seeds it, the bracket itself.
+          </>
+        }
+      />
 
       {seeded ? (
-        <section id="bracket" className="mt-6">
+        <section id="bracket" className="mt-8 md:mt-10">
           <SectionHeader
             kicker="Bracket"
             meta={`seeded ${shortDate(keyDates.seedingMeeting)}`}
-            action={{ href: '/schedule', label: 'all games' }}
+            action={{ href: '/schedule', label: 'All games' }}
           />
-          <div className="space-y-8">
+          <div className="space-y-stack">
             {paths.map((path) => (
               <div key={path.id}>
                 {paths.length > 1 ? (
-                  <h3 className="m-0 mb-2 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink">
+                  <h3 className="m-0 mb-3 text-lead text-ink">
                     {path.name}
                   </h3>
                 ) : null}
-                <PlayoffBracket path={path} />
+                <PlayoffBracket path={path} headingLevel={paths.length > 1 ? 'h4' : 'h3'} />
               </div>
             ))}
           </div>
-          <div className="mt-3 space-y-1 text-meta text-ink-3">
+          {/* `flex-col gap-2`, not `space-y-2`: the children carry `m-0`, which outranks v4's
+              zero-specificity space-y rule and would collapse the gap to nothing. */}
+          <div className="mt-4 flex flex-col gap-2 text-meta text-ink-2">
             {pending.length > 0 ? (
               <p className="m-0">
                 {joinNames(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
@@ -233,11 +239,9 @@ export default function PlayoffsPage() {
           </div>
         </section>
       ) : (
-        <div className="mt-5 border-t border-hairline pt-3">
-          <p className="m-0 font-mono text-kicker font-semibold tracking-[0.10em] uppercase text-ink-3">
-            Not seeded yet
-          </p>
-          <p className="mt-1 mb-0 max-w-[62ch] text-body text-ink">
+        <div className="mt-8 md:mt-10 sx-card max-w-3xl p-5 shadow-[inset_4px_0_0_var(--sx-accent),var(--sx-ring),var(--sx-shadow-raised)] md:p-6">
+          <p className="m-0 text-lead text-ink">Not seeded yet</p>
+          <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">
             The CCS seeding meeting is{' '}
             <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>
               {shortDate(keyDates.seedingMeeting)}
@@ -248,33 +252,31 @@ export default function PlayoffsPage() {
         </div>
       )}
 
-      <section id="berths" className="mt-6">
+      <div className="mt-section md:mt-section-lg lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-10">
+      <section id="berths" className="lg:col-start-1 lg:row-start-1">
         <SectionHeader kicker="SCVAL's share of the field" />
-        <BerthMeter
-          claimed={auto.scval}
-          total={auto.total}
-          label={`${auto.scval} of ${auto.total} CCS berths are automatic to SCVAL.`}
-        />
-        <p className="mt-2 mb-0 max-w-[62ch] text-meta text-ink-3">
+        <div className="sx-card p-5">
+          <BerthMeter
+            claimed={auto.scval}
+            total={auto.total}
+            label={`${auto.scval} of ${auto.total} CCS berths are automatic to SCVAL.`}
+          />
+        </div>
+        <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
           Three per division qualify automatically; the winner of the{' '}
           {shortDate(keyDates.crossover)} play-in between the two fourth-place teams takes the
           seventh (By-Laws Article VII §1&ndash;2).
         </p>
       </section>
 
-      <section id="dates" className="mt-6">
-        <SectionHeader kicker="Key dates" meta="all times PT" />
-        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
-      </section>
-
-      <section id="format" className="mt-6">
+            <section id="format" className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-2">
         <SectionHeader kicker="How it works" />
-        <div className="max-w-[62ch] space-y-2 text-body text-ink-2">
-          <p className="m-0">
+        <div className="sx-prose">
+          <p>
             Single elimination, two divisions of eight teams — {auto.total} berths in all. The higher
             seed hosts through the semifinals; CCS sets the site for the finals.
           </p>
-          <p className="m-0">
+          <p>
             SCVAL receives {auto.scval} of them. The{' '}
             <span className="text-ink">first three teams in each division</span> qualify
             automatically, and the two{' '}
@@ -283,11 +285,11 @@ export default function PlayoffsPage() {
             VII §2, and division places are the order of league points (3 for a win, 1 for a tie)
             under Article VI §2.
           </p>
-          <p className="m-0">
+          <p>
             The rest of the field is BVAL {auto.bval}, PCAL {auto.pcal}, and {auto.atLarge} at-large
             berths filled by the CCS seeding committee from the candidates leagues submit.
           </p>
-          <p className="m-0 text-meta text-ink-3">
+          <p className="text-meta text-ink-2">
             {bracketPublished ? (
               <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
             ) : (
@@ -299,17 +301,22 @@ export default function PlayoffsPage() {
         </div>
       </section>
 
+      <section id="dates" className="mt-section md:mt-section-lg lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:mt-0">
+        <SectionHeader kicker="Key dates" meta="all times PT" />
+        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
+      </section>
+      </div>
+
       {seeded ? null : (
-        <section id="projection" className="mt-6">
+        <section id="projection" className="mt-section md:mt-section-lg">
           <SectionHeader
             kicker="Projection · not official"
-            meta={asOfPhrase(asOfOverall).replace(/^so far$/, 'no league results yet')}
           />
-          <p className="m-0 max-w-[62ch] text-meta text-ink-3">
-            Ordered by league points {asOfPhrase(asOfOverall)} only, per Article VI. No
+          <p className="m-0 max-w-prose text-meta text-ink-2">
+            Ordered by league points only, per Article VI. Each table says how far its own division has been played. No
             probabilities &mdash; we have no model, so every status below is a written word.
           </p>
-          <div className="mt-4 space-y-8">
+          <div className="mt-stack space-y-section lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
             {divisions.map((division) => (
               <PlayoffProjection
                 key={division.division}
@@ -320,26 +327,34 @@ export default function PlayoffsPage() {
               />
             ))}
           </div>
-          <p className="mt-4 mb-0 max-w-[62ch] text-meta text-ink-2">
+          <ProjectionKey
+            className="mt-stack"
+            playIn={shortDate(keyDates.crossover)}
+            showRule={divisions.some((d) => d.berthRuleAfter > 0)}
+          />
+          <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
             Berths are assigned by the CCS committee. Nothing here is official until{' '}
-            {shortDate(keyDates.seedingMeeting)}.
+            {shortDate(keyDates.seedingMeeting)}.{' '}
+            <Link href="/about#standings" className="sx-action text-accent hover:underline">
+              How these places are computed
+            </Link>
           </p>
         </section>
       )}
 
       {seeded ? null : (
-        <section id="at-large" className="mt-6">
+        <section id="at-large" className="mt-section md:mt-section-lg">
           <SectionHeader kicker="At-large consideration" />
-          <div className="max-w-[62ch] space-y-2 text-body text-ink-2">
-            <p className="m-0">
+          <div className="sx-prose">
+            <p>
               {auto.atLarge} of the {auto.total} berths are at-large, and SCVAL does not award them
               — the CCS committee does. SCVAL submits the team that loses the{' '}
               {shortDate(keyDates.crossover)} play-in and{' '}
               <span className="text-ink">both fifth-place teams</span> for consideration (Article
               VII §2).
             </p>
-            <p className="m-0">{atLargeSentence(divisions)}</p>
-            <p className="m-0 text-meta text-ink-3">
+            <p>{atLargeSentence(divisions)}</p>
+            <p className="text-meta text-ink-2">
               An at-large submission is not a berth. CCS weighs every league&rsquo;s candidates
               together at the {shortDate(keyDates.seedingMeeting)} meeting.
             </p>
@@ -347,18 +362,18 @@ export default function PlayoffsPage() {
         </section>
       )}
 
-      <section id="crossover" className="mt-6">
+      <section id="crossover" className="mt-section md:mt-section-lg max-w-3xl lg:max-w-none">
         <SectionHeader
           kicker="Crossover and play-in"
           meta={shortDate(keyDates.crossover)}
-          action={{ href: '/standings', label: 'standings' }}
+          action={{ href: '/standings', label: 'Standings' }}
         />
         <CrossoverPairings
           date={keyDates.crossover}
           dateLabel={shortDate(keyDates.crossover)}
           rows={crossover}
         />
-        <p className="mt-3 mb-0 max-w-[62ch] text-meta text-ink-3">
+        <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
           Pairings follow the current league tables, so they move with every result.{' '}
           <Link href="/standings" className="text-accent hover:underline">
             See both tables
