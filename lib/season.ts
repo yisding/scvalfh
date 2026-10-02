@@ -16,6 +16,19 @@ export const BOOTSTRAP_URL = `${MAXPREPS_WEB}/ca/field-hockey/`;
 
 /** [V] leagues/{id}/v1 .year; team-context .year */
 export const SEASON_YEAR = '26-27';
+
+/**
+ * Months the season can touch: Aug 1 (first scrimmage Aug 21) – Nov 30 (CCS finals Nov 14). The
+ * scheduled fetch scripts (fetch-data, fetch-player-stats) write nothing outside it unless forced,
+ * so a cron that fires out of season changes nothing.
+ */
+export const SEASON_MONTHS = { first: 8, last: 11 } as const;
+
+/** `todayKey` is a Pacific YYYY-MM-DD. */
+export function inSeasonWindow(todayKey: string): boolean {
+  const month = Number(todayKey.slice(5, 7));
+  return month >= SEASON_MONTHS.first && month <= SEASON_MONTHS.last;
+}
 /** [V] leagues/{id}/v1 .sportSeasonName */
 export const SEASON_LABEL = 'Girls Varsity Field Hockey Fall 26-27';
 /** [V] verdicts 25/28/33/36/37/52 */

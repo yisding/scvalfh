@@ -7,7 +7,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -18,6 +18,7 @@ import {
   FIELD_STAT_KEYS,
   PlayerStatsFileSchema,
   countPlayerStats,
+  playerStatsContentKey,
   type PlayerStatsFile,
 } from '../lib/player-stats-schema';
 import { getRosters } from '../lib/rosters';
@@ -82,22 +83,46 @@ describe('data/player-stats.json', () => {
   });
 });
 
+/** Run the script offline against the captures, writing to `out`; returns its stdout. */
+function buildFromFixtures(out: string, fetchedAt: string, ...extra: string[]): string {
+  return execFileSync(
+    path.join(REPO, 'node_modules', '.bin', 'tsx'),
+    [
+      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
+      '--fixtures',
+      FIXTURE_DIR,
+      '--out',
+      out,
+      '--fetched-at',
+      fetchedAt,
+      ...extra,
+    ],
+    { cwd: REPO, stdio: 'pipe', encoding: 'utf8' },
+  );
+}
+
+const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
+
+describe('playerStatsContentKey', () => {
+  it('ignores every fetchedAt and nothing else', () => {
+    const later = structuredClone(raw);
+    later.fetchedAt = '2030-01-01T00:00:00.000Z';
+    for (const t of later.teams) t.fetchedAt = '2030-01-01T00:00:00.000Z';
+    expect(playerStatsContentKey(later)).toBe(playerStatsContentKey(raw));
+    // Any field but a stamp changes the key. Not a player's number: this reads the committed file,
+    // which a valid refresh can leave with no goal counts at all, and the scheduled refresh runs
+    // this suite before it commits ("rewrites the file when a number moved" covers that case on
+    // the fixture build).
+    const moved = structuredClone(raw);
+    moved.season = `${moved.season}-changed`;
+    expect(playerStatsContentKey(moved)).not.toBe(playerStatsContentKey(raw));
+  });
+});
+
 describe('scripts/fetch-player-stats.ts --fixtures', () => {
   it('builds a valid file from the captures', () => {
-    const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
-    execFileSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [
-        path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
-        '--fixtures',
-        FIXTURE_DIR,
-        '--out',
-        out,
-        '--fetched-at',
-        '2026-10-02T14:00:00.000Z',
-      ],
-      { cwd: REPO, stdio: 'pipe' },
-    );
+    const out = tmpOut();
+    buildFromFixtures(out, '2026-10-02T14:00:00.000Z');
     const built = PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
     expect(built.counts.teamsWithStats).toBe(10);
     expect(built.counts.errors).toBe(0);
@@ -108,5 +133,38 @@ describe('scripts/fetch-player-stats.ts --fixtures', () => {
       'lynbrook',
       'saratoga',
     ]);
+  });
+
+  it('leaves the file byte for byte as it was when only the stamp would change', () => {
+    const out = tmpOut();
+    buildFromFixtures(out, '2026-10-02T14:00:00.000Z');
+    const first = readFileSync(out, 'utf8');
+    const log = buildFromFixtures(out, '2026-10-03T05:00:00.000Z');
+    expect(log).toContain('no change since 2026-10-02T14:00:00.000Z');
+    expect(readFileSync(out, 'utf8')).toBe(first);
+  });
+
+  it('rewrites the file when a number moved', () => {
+    const out = tmpOut();
+    buildFromFixtures(out, '2026-10-02T14:00:00.000Z');
+    // Make the previous file disagree with the captures, as yesterday's would after a game.
+    const prev = JSON.parse(readFileSync(out, 'utf8')) as PlayerStatsFile;
+    const line = prev.teams.flatMap((t) => t.players).find((p) => p.field?.goals != null)!;
+    line.field!.goals! += 1;
+    writeFileSync(out, JSON.stringify(prev), 'utf8');
+    buildFromFixtures(out, '2026-10-03T05:00:00.000Z');
+    const next = JSON.parse(readFileSync(out, 'utf8')) as PlayerStatsFile;
+    expect(next.fetchedAt).toBe('2026-10-03T05:00:00.000Z');
+    expect(playerStatsContentKey(next)).not.toBe(playerStatsContentKey(prev));
+  });
+
+  it('writes nothing outside the season window unless forced', () => {
+    const out = tmpOut();
+    // 2026-07-15 noon Pacific: July, outside Aug 1 – Nov 30.
+    const log = buildFromFixtures(out, '2026-07-15T19:00:00.000Z');
+    expect(log).toContain('out of season: 2026-07-15');
+    expect(existsSync(out)).toBe(false);
+    buildFromFixtures(out, '2026-07-15T19:00:00.000Z', '--force');
+    expect(existsSync(out)).toBe(true);
   });
 });

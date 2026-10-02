@@ -243,9 +243,10 @@ Gotchas, all **[V]**:
   was Sep 10, Monta Vista's Sep 12.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
-- Budget: 15 calls of 0.2–35 KB. Stats move after every game; `pnpm fetch-player-stats` is not in
-  the twice-daily cron yet (adding it means letting the deploy gate in
-  `.github/workflows/deploy-cloudflare.yml` accept a third data file).
+- Budget: 15 calls of 0.2–35 KB, twice a day in season: `.github/workflows/update-data.yml` runs
+  `pnpm fetch-player-stats` right after the core sweep (non-fatal) and commits
+  `data/player-stats.json` with the snapshot when its content changed; the script leaves the file
+  untouched when only its `fetchedAt` stamps would move.
 
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
