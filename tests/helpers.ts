@@ -5,6 +5,7 @@ import { mkdtempSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
+import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { resolveTeam } from '../lib/teams';
 import type { Division, Game, GameStatus } from '../lib/types';
@@ -47,6 +48,29 @@ export function buildFixtureSnapshot(fetchedAt = '2026-09-29T15:00:00.000Z'): st
     { cwd: REPO, stdio: 'pipe' },
   );
   return out;
+}
+
+/**
+ * Build data/player-stats.json from the 2026-10-02 stats captures by running the real script, and
+ * return it. Tests that assert specific numbers read this, never the committed file, which the
+ * scheduled refresh rewrites whenever a coach enters a game.
+ */
+export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'): PlayerStatsFile {
+  const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
+  execFileSync(
+    path.join(REPO, 'node_modules', '.bin', 'tsx'),
+    [
+      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
+      '--fixtures',
+      FIXTURE_DIR,
+      '--out',
+      out,
+      '--fetched-at',
+      fetchedAt,
+    ],
+    { cwd: REPO, stdio: 'pipe' },
+  );
+  return PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
 }
 
 // ---------------------------------------------------------------- synthetic games

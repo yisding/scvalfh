@@ -15,6 +15,7 @@ import { describe, expect, it } from 'vitest';
 
 import { getPlayerStats, getTeamPlayerStats } from '../lib/player-stats';
 import {
+  FIELD_STAT_KEYS,
   PlayerStatsFileSchema,
   countPlayerStats,
   type PlayerStatsFile,
@@ -60,10 +61,16 @@ describe('data/player-stats.json', () => {
   });
 
   it('refuses a number in a column the team does not track', () => {
-    const team = raw.teams.find((t) => t.players.length > 0 && !t.tracked.field.includes('steals'))!;
+    // Any team with a field player and any stat it leaves untracked; there is always one today
+    // (field minutes, steals), and the case is skipped only if every coach tracks everything.
     const bad = structuredClone(raw);
-    const t = bad.teams.find((x) => x.slug === team.slug)!;
-    t.players[0].field = { ...t.players[0].field!, steals: 2 };
+    const team = bad.teams.find(
+      (t) => t.players.some((p) => p.field) && FIELD_STAT_KEYS.some((k) => !t.tracked.field.includes(k)),
+    );
+    if (!team) return;
+    const key = FIELD_STAT_KEYS.find((k) => !team.tracked.field.includes(k))!;
+    const player = team.players.find((p) => p.field)!;
+    player.field = { ...player.field!, [key]: 2 };
     expect(PlayerStatsFileSchema.safeParse(bad).success).toBe(false);
   });
 

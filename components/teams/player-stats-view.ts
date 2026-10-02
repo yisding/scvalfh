@@ -158,12 +158,14 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): Goalie
 /**
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
+ * @param team the team's stats; defaults to data/player-stats.json's. Tests pass a fixture build,
+ *   since the committed file moves with every refresh.
  */
 export function buildPlayerStatsView(
   slug: TeamSlug,
   games: readonly Game[] = [],
+  team: TeamPlayerStats | undefined = getTeamPlayerStats(slug),
 ): PlayerStatsView | undefined {
-  const team = getTeamPlayerStats(slug);
   if (!team) return undefined;
 
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
