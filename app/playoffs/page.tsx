@@ -36,10 +36,15 @@ import type { CrossoverSeat, Division, PlayoffProjection as Projection } from '@
  *
  * TWO MODES, and only one of them is live before the Nov 2 seeding meeting:
  *
- *  1. **Not seeded** (today). The berth math, the five CCS key dates, how the tournament works, the
- *     per-division projection with every status written out and a 2px rule after the last automatic
- *     berth, the Oct 30 crossover pairings, and who goes to CCS for at-large consideration. There
- *     is deliberately **NO skeleton bracket**: a greyed-out tree reads as real data (DESIGN §3.8).
+ *  1. **Not seeded** (today). The question the page is opened for is answered first: the
+ *     per-division projection, with every status written out and a 2px rule after the last
+ *     automatic berth, then who goes to CCS for at-large consideration. The reference material
+ *     follows (the berth math, how the tournament works, the CCS key dates) and then the Oct 30
+ *     crossover pairings. "Not seeded yet" is one sentence in the page description, not a callout
+ *     card above the projection, and the 3 + 3 + play-in rule is stated once in the page body
+ *     ("How it works"; the projection's disclosure repeats it for a reader who opens only that).
+ *     There is deliberately **NO skeleton bracket**: a greyed-out tree reads as real data
+ *     (DESIGN §3.8).
  *  2. **Seeded** — `playoffs.bracketPublished` with games in the snapshot. The real bracket, phone
  *     as stacked rounds and desktop as a CSS-grid tree, plus whichever rounds have no games yet as
  *     one honest sentence rather than empty boxes.
@@ -197,6 +202,20 @@ export default function PlayoffsPage() {
             Central Coast Section championships, {shortDate(keyDates.quarterfinals)} to{' '}
             {shortDate(keyDates.finals)}. This page tracks SCVAL&rsquo;s share of the field and,
             once CCS seeds it, the bracket itself.
+            {/* Before seeding, this ONE sentence replaces the accent-ruled "Not seeded yet" card
+                that used to sit between the title and the projection and pushed the projection,
+                which is what the page is opened for, most of a phone screen down. */}
+            {seeded ? null : (
+              <>
+                {' '}
+                <span className="text-ink">Not seeded yet:</span> CCS sets the bracket at its
+                seeding meeting on{' '}
+                <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>
+                  {shortDate(keyDates.seedingMeeting)}
+                </time>
+                , and it appears here that evening.
+              </>
+            )}
           </>
         }
       />
@@ -238,85 +257,25 @@ export default function PlayoffsPage() {
             </p>
           </div>
         </section>
-      ) : (
-        <div className="mt-8 md:mt-10 sx-card max-w-3xl p-5 shadow-[inset_4px_0_0_var(--sx-accent),var(--sx-ring),var(--sx-shadow-raised)] md:p-6">
-          <p className="m-0 text-lead text-ink">Not seeded yet</p>
-          <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">
-            The CCS seeding meeting is{' '}
-            <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>
-              {shortDate(keyDates.seedingMeeting)}
-            </time>
-            {'. This page fills in that evening — there is no bracket to show before then, and a '}
-            {'greyed-out one would read as real data.'}
-          </p>
-        </div>
-      )}
+      ) : null}
 
-      <div className="mt-section md:mt-section-lg lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-10">
-      <section id="berths" className="lg:col-start-1 lg:row-start-1">
-        <SectionHeader kicker="SCVAL's share of the field" />
-        <div className="sx-card p-5">
-          <BerthMeter
-            claimed={auto.scval}
-            total={auto.total}
-            label={`${auto.scval} of ${auto.total} CCS berths are automatic to SCVAL.`}
-          />
-        </div>
-        <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
-          Three per division qualify automatically; the winner of the{' '}
-          {shortDate(keyDates.crossover)} play-in between the two fourth-place teams takes the
-          seventh (By-Laws Article VII §1&ndash;2).
-        </p>
-      </section>
-
-            <section id="format" className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-2">
-        <SectionHeader kicker="How it works" />
-        <div className="sx-prose">
-          <p>
-            Single elimination, two divisions of eight teams — {auto.total} berths in all. The higher
-            seed hosts through the semifinals; CCS sets the site for the finals.
-          </p>
-          <p>
-            SCVAL receives {auto.scval} of them. The{' '}
-            <span className="text-ink">first three teams in each division</span> qualify
-            automatically, and the two{' '}
-            <span className="text-ink">fourth-place teams meet in a play-in</span> on{' '}
-            {shortDate(keyDates.crossover)} whose winner takes the seventh. That is By-Laws Article
-            VII §2, and division places are the order of league points (3 for a win, 1 for a tie)
-            under Article VI §2.
-          </p>
-          <p>
-            The rest of the field is BVAL {auto.bval}, PCAL {auto.pcal}, and {auto.atLarge} at-large
-            berths filled by the CCS seeding committee from the candidates leagues submit.
-          </p>
-          <p className="text-meta text-ink-2">
-            {bracketPublished ? (
-              <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
-            ) : (
-              <>
-                <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink> — not yet posted.
-              </>
-            )}
-          </p>
-        </div>
-      </section>
-
-      <section id="dates" className="mt-section md:mt-section-lg lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:mt-0">
-        <SectionHeader kicker="Key dates" meta="all times PT" />
-        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
-      </section>
-      </div>
-
+      {/* Not seeded, the projection is the first block under the title (`mt-8 md:mt-10`, the
+          PageHeader rule) and at-large follows it: "are we in?" is answered before the reference
+          material below. Seeded, both are gone and the bracket above is the first block. */}
       {seeded ? null : (
-        <section id="projection" className="mt-section md:mt-section-lg">
+        <section id="projection" className="mt-8 md:mt-10">
           <SectionHeader
             kicker="Projection · not official"
           />
           <p className="m-0 max-w-prose text-meta text-ink-2">
-            Ordered by league points only, per Article VI. Each table says how far its own division has been played. No
-            probabilities &mdash; we have no model, so every status below is a written word.
+            Where each team would finish if the league season ended today, ordered by league
+            points.
           </p>
-          <div className="mt-stack space-y-section lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+          {/* Side by side from md, not lg: at 768 each half is ~350px, which holds the tile, the
+              longest short name and the status column without truncating, so the two tables no
+              longer stack into a long phone-style scroll on a tablet. `items-start` keeps the
+              shorter division from stretching to the longer one's height. */}
+          <div className="mt-stack space-y-section md:grid md:grid-cols-2 md:items-start md:gap-6 md:space-y-0 lg:gap-8">
             {divisions.map((division) => (
               <PlayoffProjection
                 key={division.division}
@@ -361,6 +320,58 @@ export default function PlayoffsPage() {
           </div>
         </section>
       )}
+
+      <div className="mt-section md:mt-section-lg lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-10">
+      <section id="berths" className="lg:col-start-1 lg:row-start-1">
+        <SectionHeader kicker="SCVAL's share of the field" />
+        {/* The meter carries the number and one plain sentence. The 3 + 3 + play-in rule that
+            used to sit under it is said once, in "How it works" directly below. */}
+        <div className="sx-card p-5">
+          <BerthMeter
+            claimed={auto.scval}
+            total={auto.total}
+            label={`SCVAL teams get ${auto.scval} of the ${auto.total} CCS places automatically.`}
+          />
+        </div>
+      </section>
+
+            <section id="format" className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-2">
+        <SectionHeader kicker="How it works" />
+        <div className="sx-prose">
+          <p>
+            Single elimination, two divisions of eight teams — {auto.total} berths in all. The higher
+            seed hosts through the semifinals; CCS sets the site for the finals.
+          </p>
+          <p>
+            SCVAL receives {auto.scval} of them. The{' '}
+            <span className="text-ink">first three teams in each division</span> qualify
+            automatically, and the two{' '}
+            <span className="text-ink">fourth-place teams meet in a play-in</span> on{' '}
+            {shortDate(keyDates.crossover)} whose winner takes the seventh. That is By-Laws Article
+            VII §2, and division places are the order of league points (3 for a win, 1 for a tie)
+            under Article VI §2.
+          </p>
+          <p>
+            The rest of the field is BVAL {auto.bval}, PCAL {auto.pcal}, and {auto.atLarge} at-large
+            berths filled by the CCS seeding committee from the candidates leagues submit.
+          </p>
+          <p className="text-meta text-ink-2">
+            {bracketPublished ? (
+              <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
+            ) : (
+              <>
+                <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink> — not yet posted.
+              </>
+            )}
+          </p>
+        </div>
+      </section>
+
+      <section id="dates" className="mt-section md:mt-section-lg lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:mt-0">
+        <SectionHeader kicker="Key dates" meta="all times PT" />
+        <KeyDates keyDates={keyDates} confirmed={areKeyDatesConfirmed()} />
+      </section>
+      </div>
 
       <section id="crossover" className="mt-section md:mt-section-lg max-w-3xl lg:max-w-none">
         <SectionHeader

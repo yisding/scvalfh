@@ -39,6 +39,25 @@ export interface PlayoffBracketProps {
   className?: string;
 }
 
+/**
+ * The name's weight and ink, three ways rather than "winner or not": the winner is 600 in ink, the
+ * loser 400 in ink-2, and a LEVEL side (an upcoming game, a tie) is 400 in full ink, so an unplayed
+ * pairing does not read as two losers. A cancelled or postponed game's names step back to ink-2.
+ * The same rule as `nameClass` in components/ui/ScoreCell.tsx (G-2), written inline here so the
+ * bracket does not depend on that export landing first.
+ */
+const NAME_CLASS: Record<SideView['weight'], string> = {
+  winner: 'font-semibold text-ink',
+  loser: 'font-normal text-ink-2',
+  level: 'font-normal text-ink',
+};
+
+function nameClass(side: SideView): string {
+  return side.chip === 'cancelled' || side.chip === 'postponed'
+    ? 'font-normal text-ink-2'
+    : NAME_CLASS[side.weight];
+}
+
 function sideLabel(side: SideView): string {
   const name = side.shortName.trim();
   return name || 'TBD';
@@ -67,11 +86,7 @@ function BracketLine({
       ) : (
         <span className="inline-block shrink-0" style={{ width: 20 }} />
       )}
-      <span
-        className={`min-w-0 flex-1 truncate text-meta ${
-          side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
-        }`}
-      >
+      <span className={`min-w-0 flex-1 truncate text-meta ${nameClass(side)}`}>
         {sideLabel(side)}
       </span>
       {showScore ? <ScoreGlyph side={side} size="meta" /> : null}
@@ -147,7 +162,9 @@ export function PlayoffBracket({
               {round.name}
               <span className="text-meta font-normal text-ink-2">{round.dateLabel}</span>
             </RoundHeading>
-            <ol className="sx-list sx-card sx-flush">
+            {/* A full-bleed band below md, like every other game list (GameRow pads itself
+                with the 16px gutter); the desktop tree below never bleeds. */}
+            <ol className="sx-list sx-card sx-flush sx-bleed">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is isLeague=false, so the NL tag would mark the whole

@@ -38,19 +38,24 @@ function Side({
   seed: number;
 }) {
   const [first, ...rest] = side.contenders;
-  // The right-hand team mirrors at md (`flex-row-reverse`, right-aligned text); on phone both sides
-  // read left to right so the names stay in a column.
+  // The right-hand team mirrors at md (`flex-row-reverse`, right-aligned text); on phone the two
+  // sides STACK, each a full-width row reading left to right, so the names stay in a column.
   const mirror = divisionLabel === 'El Camino' ? ' md:flex-row-reverse md:text-right' : '';
   const row = `flex min-w-0 items-center gap-2${mirror}`;
+  // The sub line is sans: "De Anza #4" is a label, and only the record's digits are mono (DESIGN
+  // §4.3). The label is one unbreakable unit, so a wrap can never strand "#4" on its own line.
+  const seedLabel = (
+    <span className="whitespace-nowrap">
+      {divisionLabel}&nbsp;#{seed}
+    </span>
+  );
   if (!first) {
     return (
       <span className={row}>
         <span className="inline-block size-7 shrink-0" aria-hidden="true" />
         <span className="min-w-0">
           <span className="block truncate text-body text-ink-2">TBD</span>
-          <span className="block text-meta text-ink-2">
-            {divisionLabel} #{seed}
-          </span>
+          <span className="block text-meta text-ink-2">{seedLabel}</span>
         </span>
       </span>
     );
@@ -68,15 +73,19 @@ function Side({
         <span className="block text-body text-ink md:truncate">
           {side.contenders.map((c) => c.team.shortName).join(' or ')}
         </span>
-        <span className="sx-num block text-meta text-ink-2">
-          {divisionLabel} #{seed}
-          {/* On a phone, and in the two-up grid from lg until xl, the half-width side cannot hold
-              both on one line, and a free wrap left "·" at the start of a line; the record takes
-              its own line there instead. */}
-          <span className="max-md:hidden lg:max-xl:hidden"> &middot;</span>{' '}
-          <span className="whitespace-nowrap max-md:block lg:max-xl:block">
-            {rest.length === 0 ? recordString(first.standing.computed) : 'not settled'}
-          </span>
+        <span className="block text-meta text-ink-2">
+          {seedLabel}
+          {/* In the two-up grid from lg until xl the half-width side cannot hold both on one
+              line, and a free wrap left "·" at the start of a line; the record takes its own line
+              there instead. On a phone the side is a full-width stacked row, so it fits inline. */}
+          <span className="lg:max-xl:hidden"> &middot;</span>{' '}
+          {rest.length === 0 ? (
+            <span className="sx-num whitespace-nowrap lg:max-xl:block">
+              {recordString(first.standing.computed)}
+            </span>
+          ) : (
+            <span className="whitespace-nowrap lg:max-xl:block">not settled</span>
+          )}
         </span>
       </span>
     </span>
@@ -137,12 +146,17 @@ export function CrossoverPairings({
               </span>
               {/* The date is the section's, not the row's — all four games are the same day. */}
             </p>
+            {/* Phone: the sides stack, and "vs" is a divider row between them (a hairline either
+                side of the pill), so each side has the card's full width and its name and seed
+                line stay one tidy row at 320. From md: the mirrored three-column pairing. */}
             <div
-              className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3"
+              className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:gap-3"
               aria-hidden="true"
             >
               <Side side={row.deAnza} divisionLabel="De Anza" seed={row.seed} />
-              <span className="sx-badge">vs</span>
+              <span className="flex items-center gap-3 max-md:before:h-px max-md:before:flex-1 max-md:before:bg-divider max-md:after:h-px max-md:after:flex-1 max-md:after:bg-divider md:block">
+                <span className="sx-badge">vs</span>
+              </span>
               <Side side={row.elCamino} divisionLabel="El Camino" seed={row.seed} />
             </div>
             {row.isPlayIn ? (
