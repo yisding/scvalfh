@@ -4,7 +4,7 @@ import { SITE_URL } from '@/components/layout/site-url';
 import { getGameDates, getFetchedAt, getSnapshot, getTeams } from '@/lib/data';
 
 /**
- * /sitemap.xml — every route family in DESIGN §1.1: the ten static pages, 16 team pages, one page
+ * /sitemap.xml — every route family in DESIGN §1.1: the ten static pages, 15 team pages, one page
  * per date with a contest (~50) and one per contest (~158).
  *
  * `lastModified` is the snapshot stamp, never `Date.now()`, so a rebuild with unchanged data does

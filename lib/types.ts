@@ -24,7 +24,7 @@ export type Division = 'de-anza' | 'el-camino';
 /** Our own URL slug. Decoupled from every upstream slug (DESIGN §12.9). */
 export type TeamSlug =
   | 'cupertino' | 'fremont' | 'homestead' | 'los-altos' | 'saint-francis'
-  | 'st-ignatius' | 'valley-christian' | 'wilcox'
+  | 'st-ignatius' | 'valley-christian'
   | 'los-gatos' | 'lynbrook' | 'mitty' | 'monta-vista'
   | 'palo-alto' | 'presentation' | 'santa-clara' | 'saratoga';
 
@@ -68,7 +68,7 @@ export interface TeamColors {
   secondary: string;
   /** Ink that clears AA on `primary`, computed at build (DESIGN §12.4). */
   onPrimary: '#0e1116' | '#ffffff';
-  /** 'placeholder' when no upstream row exists (Wilcox). */
+  /** 'placeholder' when no upstream row exists. */
   source: 'maxpreps-standings' | 'placeholder';
 }
 
@@ -103,9 +103,9 @@ export interface Team {
   aliases: string[];
   /** null would mean a non-SCVAL opponent; the registry holds members only. */
   division: Division;
-  /** true for all 16 schools in the official SCVAL PDFs (SPEC §3). */
+  /** true for all 15 fielding schools in the official SCVAL PDFs (SPEC §3). */
   isScvalMember: true;
-  /** Wilcox is 'none': in the official grid, absent from every data source. */
+  /** 'none' = in the official grid, absent from every data source. */
   dataCoverage: 'full' | 'partial' | 'none';
   colors: TeamColors;
   mascotUrl: string | null;
@@ -446,8 +446,8 @@ export interface CrossCheckRow {
 /**
  * A fixture from the official SCVAL schedule-grid PDFs (SPEC §1.3).
  *
- * `snapshot.officialFixtures` holds the fixtures that matched NO MaxPreps contest — Wilcox's whole
- * 14-game slate lives there — so the UI can render "scheduled per SCVAL, not reported".
+ * `snapshot.officialFixtures` holds the fixtures that matched NO MaxPreps contest, so the UI can
+ * render "scheduled per SCVAL, not reported".
  */
 export interface OfficialFixture {
   division: Division;
@@ -517,7 +517,7 @@ export interface Snapshot {
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
   season: Season;
-  /** ALWAYS 16 — the registry, left-joined against the feed (DESIGN §12.1). */
+  /** ALWAYS 15 — the registry, left-joined against the feed (DESIGN §12.1). */
   teams: Team[];
   /** Deduped on contestId. */
   games: Game[];
@@ -532,7 +532,7 @@ export interface Snapshot {
    * Named separately from `crossCheck` because that field was already the standings log.
    */
   sbliveCrossCheck?: SbliveCrossCheck;
-  /** Official SCVAL fixtures with no MaxPreps contest — mostly Wilcox (SPEC §1.3). */
+  /** Official SCVAL fixtures with no MaxPreps contest (SPEC §1.3). */
   officialFixtures?: OfficialFixture[];
   /** Discovered by polling scval.com/standings/; null until SCVAL publishes the 26-27 file. */
   officialStandingsPdfUrl?: string | null;

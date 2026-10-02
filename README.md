@@ -1,6 +1,6 @@
 # SCVAL Field Hockey
 
-Scores, standings, schedules and the CCS playoff picture for the 16 De Anza and El Camino girls
+Scores, standings, schedules and the CCS playoff picture for the 15 De Anza and El Camino girls
 varsity field hockey teams (Santa Clara Valley Athletic League). A static Next.js site rebuilt
 from one JSON snapshot, refreshed nightly by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
@@ -17,7 +17,7 @@ Unofficial. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated. 
 | `/schedule` | Full season schedule, filterable client-side |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game) |
-| `/teams` | All 16 SCVAL teams |
+| `/teams` | All 15 SCVAL teams |
 | `/teams/[slug]` | One team's record, schedule, results, splits |
 | `/playoffs` | CCS auto-qualifier / play-in / at-large projection, and the bracket once CCS publishes one |
 | `/history/2025-26` | Prior season's final standings (record-only, from the official PDF) |
@@ -258,10 +258,9 @@ computed one; see `/about#cross-check`.
 
 ## Known limitations
 
-- **Wilcox has no results anywhere.** It's a full De Anza member on the official SCVAL schedule
-  PDF, but MaxPreps' own De Anza standings table omits it entirely and its MaxPreps schedule page
-  publishes zero games. It renders with an explicit "no results reported" state — never as
-  0-0-0, and its record is never fabricated from opponents' rows.
+- **Wilcox is not fielding a team this season.** The official SCVAL De Anza grid still lists it,
+  but it is not in the team registry: its 14 grid fixtures are dropped when the PDF is parsed, and
+  De Anza is shown as 7 teams (`WITHDRAWN_SCHOOL_NAMES` in `lib/teams.ts`).
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run
@@ -278,10 +277,10 @@ computed one; see `/about#cross-check`.
   synthetic test data).
 - **Roster detail depends on the coach.** As of 2026-10-02 five programs publish grade, position
   and number on MaxPreps, three publish grade and number only, seven publish names only (Los
-  Gatos' 58 names are the whole program, varsity and JV), and Wilcox publishes no roster at all.
+  Gatos' 58 names are the whole program, varsity and JV).
   The MaxPreps file stores exactly that — a blank is `null`, never a guess. The schools' own
   sites fill most of the grades (303 of 341 players once the enrichment overlay is applied) and
-  a few heights, but **no current-season public source lists positions for 8 of the 16
+  a few heights, but **no current-season public source lists positions for 7 of the 15
   programs** (108 of 341 have one), Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current

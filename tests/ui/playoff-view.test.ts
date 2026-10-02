@@ -145,11 +145,11 @@ describe('buildDivisionProjection', () => {
 
 describe('row copy', () => {
   it('never invents a record for a team with nothing reported', () => {
-    const wilcox = getStandingFor('wilcox');
-    expect(wilcox).toBeTruthy();
-    expect(wilcox!.hasReportedResults).toBe(false);
-    expect(recordLine(wilcox!)).toBe('—');
-    expect(recordLine(wilcox!)).not.toContain('0-0-0');
+    const fremont = getStandingFor('fremont');
+    expect(fremont).toBeTruthy();
+    const unreported = { ...fremont!, hasReportedResults: false };
+    expect(recordLine(unreported)).toBe('—');
+    expect(recordLine(unreported)).not.toContain('0-0-0');
   });
 
   it('joins names the way a sentence does', () => {

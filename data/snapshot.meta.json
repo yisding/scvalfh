@@ -1,12 +1,12 @@
 {
-  "contentHash": "10466390c9dea8bae746051e186ee80c00aa4bcd89da8ee905c8dd547ad178d2",
+  "contentHash": "5c780b9b3653ffc76a695c0f9ff0bf12fa338f7e1cf466f2268aa96b84c97c66",
   "counts": {
     "finals": 91,
     "games": 158,
     "leagueGames": 96,
     "mismatches": 0,
     "pending": 3,
-    "teams": 16
+    "teams": 15
   },
   "crossCheck": {
     "agreements": 24,
@@ -15,7 +15,7 @@
     "sbliveOnlyScored": 0
   },
   "fetchedAt": "2026-10-02T10:48:51.206Z",
-  "officialFixturesUnmatched": 16,
+  "officialFixturesUnmatched": 2,
   "officialStandingsPdfUrl": null,
   "sources": [
     {
@@ -119,13 +119,8 @@
       "status": "ok"
     },
     {
-      "label": "wilcox schedule",
-      "rowCount": null,
-      "status": "skipped"
-    },
-    {
       "label": "de-anza official schedule PDF",
-      "rowCount": 56,
+      "rowCount": 42,
       "status": "ok"
     },
     {

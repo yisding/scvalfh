@@ -54,7 +54,6 @@ const EXPECTED: Record<string, number> = {
   fremont: 18,
   cupertino: 15,
   homestead: 24,
-  wilcox: 0,
   mitty: 22,
   'los-gatos': 58,
   'palo-alto': 19,
@@ -102,7 +101,7 @@ describe('maxpreps roster: the key list', () => {
   });
 });
 
-describe('maxpreps roster: the 16 captures of 2026-10-02', () => {
+describe('maxpreps roster: the 15 captures of 2026-10-02', () => {
   it.each(Object.entries(EXPECTED))('%s decodes and matches its rendered table (%i players)', (slug, n) => {
     const page = parse(slug);
     expect(page.players.length).toBe(n);
@@ -134,9 +133,11 @@ describe('maxpreps roster: the 16 captures of 2026-10-02', () => {
     expect(page.warnings).toContain('dropped 1 soft-deleted row (isDeleted)');
   });
 
-  it('renders an empty roster as no players, no table and no error (Wilcox)', () => {
-    expect(parseRosterTable(fixture('wilcox'))).toBeNull();
-    const page = parse('wilcox');
+  it('renders an empty roster as no players, no table and no error', () => {
+    // roster-empty.html is a real 2026-10-02 capture of a MaxPreps roster with no athletes, from
+    // a school that is not fielding a team (so not in the registry).
+    expect(parseRosterTable(fixture('empty'))).toBeNull();
+    const page = parseRosterPage(fixture('empty'), { url: 'empty' });
     expect(page.players).toEqual([]);
     expect(page.athleteCount).toBe(0);
     expect(page.warnings).toEqual([]);

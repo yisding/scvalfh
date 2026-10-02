@@ -34,8 +34,8 @@ describeIfPresent('the committed snapshot', () => {
   it('passes the zod contract', () => {
     expect(snapshot.fetchedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(snapshot.season.year).toBe('26-27');
-    expect(snapshot.teams).toHaveLength(16);
-    expect(snapshot.standings).toHaveLength(16);
+    expect(snapshot.teams).toHaveLength(15);
+    expect(snapshot.standings).toHaveLength(15);
   });
 
   it('never renders a scoreline for a game that is not final', () => {

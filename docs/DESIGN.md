@@ -5,6 +5,12 @@
 > standings table DOES show a PTS column.** See `README.md` ("How standings are computed") and
 > `docs/BYLAWS-2026-27.md` for the current rule.
 >
+> **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
+> example below predates the news that Wilcox is not fielding a team this season. The site now
+> has 15 teams (De Anza 7, El Camino 8); Wilcox's grid fixtures are dropped at parse time
+> (`WITHDRAWN_SCHOOL_NAMES` in `lib/teams.ts`). The no-results state itself still applies to any
+> fielded team with nothing reported.
+>
 > One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
 > fonts". The App Router's own client runtime is ~150 KB gzipped on a page that ships no
 > interactive code at all, so nothing this site does to its own code can get under 120 KB without

@@ -7,7 +7,7 @@ import type { TeamPageView } from './team-view';
  * The 84px identity header (DESIGN §3.7): a 56px monogram, the school name as the page's `h1`,
  * the mascot, and one meta line of division · city · place. Then the pin control.
  *
- * The monogram is the ONLY place a school color appears anywhere on the site: sixteen
+ * The monogram is the ONLY place a school color appears anywhere on the site: fifteen
  * uncontrolled brand hues blow past every categorical ceiling, so they are decoration with a
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
  * requested from a third party.

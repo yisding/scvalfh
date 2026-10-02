@@ -1,12 +1,12 @@
 /**
- * The Zod contract for data/rosters.json — the 16 teams' MaxPreps rosters (SPEC §1.1j).
+ * The Zod contract for data/rosters.json — the 15 teams' MaxPreps rosters (SPEC §1.1j).
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
  * same split as lib/snapshot-schema.ts / lib/data.ts.
  *
  * Invariants:
- *   1. exactly 16 teams, unique slugs, one per registry team
+ *   1. exactly 15 teams, unique slugs, one per registry team
  *   2. grade and its label are set together or null together, and agree
  *   3. position is exactly positions joined with ", " (what MaxPreps' table prints)
  *   4. height and heightInches are set together or null together
@@ -19,7 +19,7 @@ import { z } from 'zod';
 
 const teamSlug = z.enum([
   'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian', 'wilcox',
+  'st-ignatius', 'valley-christian',
   'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
   'palo-alto', 'presentation', 'santa-clara', 'saratoga',
 ]);
@@ -80,7 +80,7 @@ export const TeamRosterStatus = z.enum(['ok', 'empty', 'carried-forward', 'error
 export const TeamRosterSchema = z
   .object({
     slug: teamSlug,
-    /** The registry id (lib/teams.ts) — the join key to the snapshot. A placeholder for Wilcox. */
+    /** The registry id (lib/teams.ts) — the join key to the snapshot. */
     teamId: z.string().min(1),
     /** The GUID the page itself reports; null when the page was not read. */
     maxprepsTeamId: z.string().min(1).nullable(),
@@ -89,7 +89,7 @@ export const TeamRosterSchema = z
     rosterUrl: httpUrl.nullable(),
     /**
      * ok              rows were read from the page this run
-     * empty           the page was read and MaxPreps publishes no athletes (Wilcox)
+     * empty           the page was read and MaxPreps publishes no athletes
      * carried-forward this run failed for this team; players[] are the previous file's rows
      * error           this run failed and there was nothing to carry forward
      */
@@ -139,10 +139,10 @@ export const RostersSchema = z
       builtBy: z.string().min(1),
       notes: z.array(z.string()),
     }),
-    teams: z.array(TeamRosterSchema).length(16),
+    teams: z.array(TeamRosterSchema).length(15),
     counts: RosterCountsSchema,
   })
-  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === 16, 'team slugs are not unique')
+  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique')
   .refine((r) => {
     const c = countRosters(r.teams);
     return (Object.keys(c) as Array<keyof typeof c>).every((k) => c[k] === r.counts[k]);
@@ -294,9 +294,9 @@ export const RosterEnrichmentSchema = z
     capturedAt: dateOnly,
     builtBy: z.string().min(1),
     notes: z.array(z.string().min(1)),
-    teams: z.array(EnrichedTeamSchema).length(16),
+    teams: z.array(EnrichedTeamSchema).length(15),
   })
-  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 16, 'team slugs are not unique');
+  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique');
 
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;

@@ -5,7 +5,7 @@
     "leagueGames": 96,
     "mismatches": 0,
     "pending": 3,
-    "teams": 16
+    "teams": 15
   },
   "crossCheck": [
     {
@@ -8203,138 +8203,12 @@
       "source": "scval-pdf"
     },
     {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-09-09",
-      "division": "de-anza",
-      "homeName": "VALLEY CHRISTIAN",
-      "homeSlug": "valley-christian",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-09-14",
-      "division": "de-anza",
-      "homeName": "ST. IGNATIUS",
-      "homeSlug": "st-ignatius",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "HOMESTEAD",
-      "awaySlug": "homestead",
-      "dateKey": "2026-09-16",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-09-21",
-      "division": "de-anza",
-      "homeName": "ST. FRANCIS",
-      "homeSlug": "saint-francis",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "FREMONT",
-      "awaySlug": "fremont",
-      "dateKey": "2026-09-23",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-09-28",
-      "division": "de-anza",
-      "homeName": "CUPERTINO",
-      "homeSlug": "cupertino",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "LOS ALTOS",
-      "awaySlug": "los-altos",
-      "dateKey": "2026-09-30",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
       "awayName": "CUPERTINO",
       "awaySlug": "cupertino",
       "dateKey": "2026-10-05",
       "division": "de-anza",
       "homeName": "HOMESTEAD",
       "homeSlug": "homestead",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "VALLEY CHRISTIAN",
-      "awaySlug": "valley-christian",
-      "dateKey": "2026-10-05",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "ST. IGNATIUS",
-      "awaySlug": "st-ignatius",
-      "dateKey": "2026-10-07",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-10-12",
-      "division": "de-anza",
-      "homeName": "HOMESTEAD",
-      "homeSlug": "homestead",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "ST. FRANCIS",
-      "awaySlug": "saint-francis",
-      "dateKey": "2026-10-14",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-10-19",
-      "division": "de-anza",
-      "homeName": "FREMONT",
-      "homeSlug": "fremont",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "CUPERTINO",
-      "awaySlug": "cupertino",
-      "dateKey": "2026-10-21",
-      "division": "de-anza",
-      "homeName": "WILCOX",
-      "homeSlug": "wilcox",
-      "source": "scval-pdf"
-    },
-    {
-      "awayName": "WILCOX",
-      "awaySlug": "wilcox",
-      "dateKey": "2026-10-26",
-      "division": "de-anza",
-      "homeName": "LOS ALTOS",
-      "homeSlug": "los-altos",
       "source": "scval-pdf"
     }
   ],
@@ -8594,19 +8468,11 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=405614ad-a015-4270-b527-18e899c90824&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e"
     },
     {
-      "error": "in the official SCVAL grid but absent from every data source",
-      "fetchedAt": "2026-10-02T10:48:51.206Z",
-      "id": "maxpreps-api",
-      "label": "wilcox schedule",
-      "status": "skipped",
-      "url": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/field-hockey/schedule/"
-    },
-    {
       "fetchedAt": "2026-10-02T10:48:51.206Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "label": "de-anza official schedule PDF",
-      "rowCount": 56,
+      "rowCount": 42,
       "status": "ok",
       "url": "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
     },
@@ -9598,79 +9464,6 @@
       "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "tiebreak": {
         "note": "0 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
-        "resolvedBy": "points",
-        "shared": false,
-        "tiedWith": []
-      }
-    },
-    {
-      "computed": {
-        "awayRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "ga": 0,
-        "gd": 0,
-        "gf": 0,
-        "gp": 0,
-        "homeRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "l": 0,
-        "last5": [],
-        "neutralRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "place": 8,
-        "pts": 0,
-        "streak": null,
-        "t": 0,
-        "w": 0,
-        "winPct": 0
-      },
-      "division": "de-anza",
-      "hasReportedResults": false,
-      "mismatch": false,
-      "overall": {
-        "awayRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "ga": 0,
-        "gd": 0,
-        "gf": 0,
-        "gp": 0,
-        "homeRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "l": 0,
-        "last5": [],
-        "neutralRecord": {
-          "l": 0,
-          "t": 0,
-          "w": 0
-        },
-        "place": 8,
-        "pts": 0,
-        "streak": null,
-        "t": 0,
-        "w": 0,
-        "winPct": 0
-      },
-      "playoffStatus": "out",
-      "reported": null,
-      "slug": "wilcox",
-      "teamId": "wilcox",
-      "tiebreak": {
-        "note": "No division results reported for Wilcox, so it is listed last; De Anza order is the order of team points (SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points)).",
         "resolvedBy": "points",
         "shared": false,
         "tiedWith": []
@@ -10874,41 +10667,6 @@
       "name": "Homestead",
       "shortName": "Homestead",
       "slug": "homestead"
-    },
-    {
-      "abbr": "WX",
-      "acronym": "WHS",
-      "aliases": [
-        "Wilcox",
-        "WILCOX",
-        "Wilcox Chargers",
-        "Wilcox High School",
-        "Adrian Wilcox",
-        "Adrian Wilcox High School"
-      ],
-      "city": "Santa Clara",
-      "colors": {
-        "onPrimary": "#ffffff",
-        "primary": "454444",
-        "secondary": "FFFFFF",
-        "source": "placeholder"
-      },
-      "dataCoverage": "none",
-      "division": "de-anza",
-      "external": {
-        "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/field-hockey/schedule/",
-        "maxprepsTeamId": "wilcox",
-        "maxprepsTeamUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/field-hockey/",
-        "sbliveGamesUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/485528-wilcox-chargers/games",
-        "sbliveTeamId": "485528"
-      },
-      "id": "wilcox",
-      "isScvalMember": true,
-      "mascot": "Chargers",
-      "mascotUrl": null,
-      "name": "Wilcox",
-      "shortName": "Wilcox",
-      "slug": "wilcox"
     },
     {
       "abbr": "MI",

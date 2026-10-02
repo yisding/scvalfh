@@ -138,12 +138,12 @@ describe('snapshot schema: game invariants (DESIGN §5.1)', () => {
 });
 
 describe('snapshot schema: snapshot invariants', () => {
-  it('rejects a snapshot with fewer than 16 teams', () => {
+  it('rejects a snapshot with fewer than 15 teams', () => {
     const s = baseSnapshot();
-    const broken = { ...s, teams: s.teams.slice(0, 15), counts: { ...s.counts, teams: 15 } };
+    const broken = { ...s, teams: s.teams.slice(0, 14), counts: { ...s.counts, teams: 14 } };
     const result = SnapshotSchema.safeParse(broken);
     expect(result.success).toBe(false);
-    expect(JSON.stringify(result.error?.issues)).toMatch(/exactly 16 teams/);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/exactly 15 teams/);
   });
 
   it('rejects duplicate contest ids', () => {

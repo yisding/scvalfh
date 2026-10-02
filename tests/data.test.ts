@@ -14,7 +14,7 @@ beforeAll(async () => {
 
 describe('data: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
-    expect(data.getSnapshot().teams.length).toBe(16);
+    expect(data.getSnapshot().teams.length).toBe(15);
     expect(data.getFetchedAt()).toBe('2026-09-29T15:00:00.000Z');
   });
 
@@ -30,9 +30,9 @@ describe('data: identity and freshness', () => {
 });
 
 describe('data: teams', () => {
-  it('returns all 16, or one division', () => {
-    expect(data.getTeams().length).toBe(16);
-    expect(data.getTeams('de-anza').length).toBe(8);
+  it('returns all 15, or one division', () => {
+    expect(data.getTeams().length).toBe(15);
+    expect(data.getTeams('de-anza').length).toBe(7);
     expect(data.getTeams('el-camino').length).toBe(8);
   });
 
@@ -112,8 +112,8 @@ describe('data: games', () => {
 describe('data: standings and projections', () => {
   it('returns a division table in finishing order', () => {
     const table = data.getStandings('de-anza');
-    expect(table.length).toBe(8);
-    expect(table.at(-1)!.slug).toBe('wilcox');
+    expect(table.length).toBe(7);
+    expect(table.map((s) => s.slug)).not.toContain('wilcox');
     for (let i = 1; i < table.length; i += 1) {
       expect(table[i].computed.place).toBeGreaterThanOrEqual(table[i - 1].computed.place);
     }
@@ -132,9 +132,9 @@ describe('data: standings and projections', () => {
     expect(projection.crossover.date).toBe('2026-10-30');
     expect(projection.crossover.pairings.length).toBe(4);
     const deAnza = projection.byDivision['de-anza'];
-    expect(deAnza.length).toBe(8);
+    expect(deAnza.length).toBe(7);
     expect(deAnza[0].status).toBe('aq');
-    expect(deAnza.at(-1)!.label).toBe('No results reported');
+    expect(deAnza.map((r) => r.label)).not.toContain('No results reported');
   });
 
   it('reports the season phase from the snapshot stamp', () => {
@@ -169,12 +169,9 @@ describe('data: head-to-head and form', () => {
     expect(form!.nonLeagueCount).toBeGreaterThan(0);
   });
 
-  it('gives a no-data team a complete, empty form', () => {
-    const form = data.getTeamForm('wilcox');
-    expect(form).toBeDefined();
-    expect(form!.last5).toEqual([]);
-    expect(form!.leagueGames).toEqual([]);
-    expect(form!.standing?.hasReportedResults).toBe(false);
+  it('knows nothing of a school that is not fielding a team', () => {
+    expect(data.getTeamBySlug('wilcox')).toBeUndefined();
+    expect(data.getTeamForm('wilcox')).toBeUndefined();
   });
 });
 

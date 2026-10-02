@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 
 import { buildBrackets, isNamedSide, pendingRounds, roundKeyFor } from '../../components/playoffs/bracket-model';
 import { getPlayoffs } from '../../lib/data';
+import { resolveTeam } from '../../lib/teams';
 import type { Game, Playoffs } from '../../lib/types';
 import { game } from '../helpers';
 
@@ -25,11 +26,20 @@ function withGames(games: Game[]): Playoffs {
   return { ...playoffs, bracketPublished: true, games };
 }
 
-/** One 8-team division: 4 quarterfinals, 2 semifinals, 1 final, all won by the top half. */
+/** A CCS opponent from outside SCVAL: no registry slug or id, only a printed name. */
+function vsOutsider(home: string, awayName: string): Game {
+  const g = game({ home, away: home === 'fremont' ? 'cupertino' : 'fremont', hs: 3, as: 0, date: QF, league: false });
+  return { ...g, away: { ...g.away, teamId: null, slug: null, name: awayName } };
+}
+
+/**
+ * One 8-team division: 4 quarterfinals, 2 semifinals, 1 final, all won by the top half. The
+ * eighth seed is a non-SCVAL school when it is not a registry slug, as in the real CCS field.
+ */
 function oneDivision(teams: string[]): Game[] {
   const [a, b, c, d, e, f, g, h] = teams;
   return [
-    game({ home: a, away: h, hs: 3, as: 0, date: QF, league: false }),
+    resolveTeam(h) ? game({ home: a, away: h, hs: 3, as: 0, date: QF, league: false }) : vsOutsider(a, h),
     game({ home: b, away: g, hs: 2, as: 1, date: QF, league: false }),
     game({ home: c, away: f, hs: 4, as: 0, date: QF, league: false }),
     game({ home: d, away: e, hs: 1, as: 0, date: QF, league: false }),
@@ -39,7 +49,7 @@ function oneDivision(teams: string[]): Game[] {
   ];
 }
 
-const DIV_A = ['st-ignatius', 'saint-francis', 'valley-christian', 'los-altos', 'fremont', 'cupertino', 'homestead', 'wilcox'];
+const DIV_A = ['st-ignatius', 'saint-francis', 'valley-christian', 'los-altos', 'fremont', 'cupertino', 'homestead', 'Menlo-Atherton'];
 const DIV_B = ['archbishop-mitty', 'los-gatos', 'palo-alto', 'saratoga', 'presentation', 'santa-clara', 'lynbrook', 'monta-vista'];
 
 describe('buildBrackets', () => {

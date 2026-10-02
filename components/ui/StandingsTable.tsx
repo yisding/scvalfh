@@ -23,7 +23,7 @@ import TeamMonogram from './TeamMonogram';
  * article) goes into the footnotes. On the live snapshot that means De Anza has two 6th places
  * and El Camino has two 4th places and therefore NO 5th place and no at-large row.
  *
- * A row with `hasReportedResults === false` (Wilcox) sorts last, renders its rank as an em dash,
+ * A row with `hasReportedResults === false` sorts last, renders its rank as an em dash,
  * every numeric cell as an em dash and its GD as a `·` on the zero rule — never `0-0-0`, never
  * `.000`, never a rank by merit — and it is still a link.
  *
@@ -117,7 +117,7 @@ function dash(value: number | null, hasResults: boolean, render = (v: number) =>
  *
  * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx) and the team
  * tiles: every team route is STATIC, and Next 16's default `auto` downloads a static route in full
- * the moment the link enters the viewport. Sixteen rows in one viewport is sixteen whole team pages
+ * the moment the link enters the viewport. Fifteen rows in one viewport is fifteen whole team pages
  * — measured at 97 KB on the wire and 876 KB decoded on /standings, against a 35 KB document.
  * Navigation still fetches on click.
  */
@@ -452,7 +452,7 @@ export function StandingsTable(props: StandingsTableProps) {
                         {has ? streakString(s.computed.streak) : EM_DASH}
                       </td>
                       {/* Guarded like every other cell in the row: a team with no reported
-                          results (Wilcox) gets an em dash, never a fabricated 0-0-0. /about
+                          results gets an em dash, never a fabricated 0-0-0. /about
                           promises exactly that, and TeamSplits already honours it. */}
                       <td className="sx-num text-right">
                         {has ? recordString(s.computed.homeRecord) : EM_DASH}

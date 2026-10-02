@@ -54,7 +54,7 @@ export interface MismatchNote {
 
 export interface UnreportedFixtures {
   total: number;
-  /** Fixtures involving a team that has no reported results at all (Wilcox today). */
+  /** Fixtures involving a team that has no reported results at all. */
   noDataTotal: number;
   noDataTeams: string[];
   /** The remaining matchups, deduped — MaxPreps has simply never published them. */

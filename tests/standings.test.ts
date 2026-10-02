@@ -31,8 +31,8 @@ function order(rows: Standing[], division: 'de-anza' | 'el-camino'): string[] {
 }
 
 describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie)', () => {
-  it('includes every one of the 16 registry teams', () => {
-    expect(liveStandings.length).toBe(16);
+  it('includes every one of the 15 registry teams', () => {
+    expect(liveStandings.length).toBe(15);
     for (const team of TEAMS) {
       expect(liveStandings.some((s) => s.teamId === team.id), team.slug).toBe(true);
     }
@@ -101,26 +101,11 @@ describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie
   });
 });
 
-describe('standings: Wilcox (ADDENDUM §4)', () => {
-  const wilcox = row(liveStandings, 'wilcox');
-
-  it('is present with a zero-game row rather than missing', () => {
-    expect(wilcox.computed.gp).toBe(0);
-    expect(wilcox.hasReportedResults).toBe(false);
-    expect(wilcox.reported).toBeNull();
-  });
-
-  it('sits at the bottom of De Anza', () => {
-    expect(order(liveStandings, 'de-anza').at(-1)).toBe('wilcox');
-    expect(wilcox.computed.place).toBe(8);
-  });
-
-  it('never fabricates a record', () => {
-    expect(wilcox.computed.pts).toBe(0);
-    expect(wilcox.computed.gf).toBe(0);
-    expect(wilcox.computed.last5).toEqual([]);
-    expect(wilcox.computed.streak).toBeNull();
-    expect(resolveTeam('wilcox')!.dataCoverage).toBe('none');
+describe('standings: Wilcox is not fielding a team', () => {
+  it('has no row, and De Anza is seven teams', () => {
+    expect(liveStandings.find((r) => (r.slug as string) === 'wilcox')).toBeUndefined();
+    expect(order(liveStandings, 'de-anza')).toHaveLength(7);
+    expect(resolveTeam('wilcox')).toBeUndefined();
   });
 });
 

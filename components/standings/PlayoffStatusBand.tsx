@@ -26,7 +26,7 @@ export interface PlayoffStatusBandProps {
   divisionLabel: string;
   groups: StatusGroup[];
   caveat: string | null;
-  /** Teams with `hasReportedResults === false` (Wilcox today). */
+  /** Teams with `hasReportedResults === false`. */
   unrankedTeams: string[];
   className?: string;
 }
@@ -57,7 +57,7 @@ export function PlayoffStatusBand({
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
                       (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
-                      moment the link scrolls into view, and this band names all sixteen teams,
+                      moment the link scrolls into view, and this band names all fifteen teams,
                       eight per division. Navigation still fetches on click. */}
                   <Link
                     href={`/teams/${team.slug}`}
