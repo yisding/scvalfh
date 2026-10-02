@@ -1,3 +1,5 @@
+import { getLatestResultsDate, getToday } from '../../lib/data';
+import { parseLocal } from '../../lib/format';
 import type { Game } from '../../lib/types';
 
 import DateHeader from './DateHeader';
@@ -11,17 +13,55 @@ import GameList from './GameList';
  * `contain-intrinsic-size: auto 480px`, so the browser skips layout and paint for the groups that
  * are off screen while the text stays findable and the anchors stay linkable.
  *
- * html's `scroll-padding-top` (globals.css) clears the top bar plus a 48px date header, so a
- * `#2026-09-24` anchor from the timeline rail (or from a pasted link) lands with the date header
- * visible instead of underneath the sticky chrome.
+ * Where a `#2026-09-24` anchor lands (the timeline rail, the Scores tab, a pasted link): html's
+ * `scroll-padding-top` (globals.css) clears the top bar PLUS a 48px date header, because a focused
+ * row inside a group must clear the header that sticks above it. The group carries that header
+ * itself, so `.sx-dategroup` hands the 48px back with `scroll-margin-top: -3rem` (F-80): the group
+ * top — its date header — parks flush under the top bar, at 56px on a phone and 72px from 768px,
+ * with no half-shown header above it.
+ *
+ * A jump only lands where it was aimed if the groups above the target keep their heights while the
+ * scroll happens. A hard load gets that from the browser, which re-runs the fragment scroll while
+ * the page settles; a client navigation (the Scores tab, `router.push`) scrolls ONCE, and the
+ * groups that then render around the target swap their estimates for real heights and shove it off
+ * its mark. So the days around the Scores tab's landing date (`landingDate` below) are never
+ * skipped at all: `[content-visibility:visible]` lays them out from the first frame, and the one
+ * scroll lands where the hard load does.
+ *
+ * Each date header links to that day's own prerendered page, `/scores/[date]` ("Day page"), so a
+ * single day can be opened, bookmarked or sent on.
  */
 export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
-  /** Renders the Share action on each date header. */
+  /** Renders the "Day page" link (to /scores/[date]) on each date header. */
   shareLinks?: boolean;
   className?: string;
   id?: string;
 }
+
+/**
+ * The date the Scores tab opens on (BottomTabBar's `scoresHref`, F-1a), from the same snapshot
+ * data: the latest day at or before "today" with at least one final, otherwise the next day with a
+ * contest. "Today" is the snapshot's Pacific day, never the clock.
+ */
+function landingDate(dates: readonly string[]): string | null {
+  const today = getToday();
+  return getLatestResultsDate() ?? dates.find((d) => d >= today) ?? null;
+}
+
+/** Whole days since 1970-01-01 for a 'YYYY-MM-DD' key: integer arithmetic, no clock read. */
+function dayNumber(date: string): number {
+  const { year, month, day } = parseLocal(date);
+  return Date.UTC(year, month - 1, day) / 86_400_000;
+}
+
+/**
+ * How many calendar days either side of the landing date are always laid out. A week each way
+ * covers what the landing scroll can touch at any width (11 groups, ~40 rows on the Oct 2
+ * snapshot); every group outside it keeps its skipped placeholder, so the page still costs little
+ * to lay out.
+ */
+const LANDING_WINDOW_DAYS = 7;
 
 /**
  * Per-group height estimates, kept just ABOVE the measured heights so a skipped group never
@@ -45,8 +85,13 @@ export function ScheduleList({
   className,
   id,
 }: ScheduleListProps) {
+  const landing = landingDate(groups.map((group) => group.date));
+  const landingDay = landing ? dayNumber(landing) : null;
   return (
-    <div id={id} className={className}>
+    // `max-md:mt-4`: on a phone the groups carry no top margin of their own (below), so the gap
+    // between the rail and the first SHOWN group lives here, where it survives a filter hiding
+    // the first group — a `first:` margin on the group would not.
+    <div id={id} className={['max-md:mt-4', className].filter(Boolean).join(' ')}>
       {groups.map((group) => (
         <section
           key={group.date}
@@ -64,9 +109,25 @@ export function ScheduleList({
           // Full-bleed on a phone (`max-md:-mx-gutter`): `content-visibility: auto` implies paint
           // containment, so a band that pulled itself out of a gutter-inset group was clipped back
           // to the gutter — no side padding left, and the 2px non-league rule clipped away.
-          className="sx-dategroup mt-8 first:mt-6 [contain-intrinsic-size:auto_calc(var(--sx-n)*var(--sx-rh)+3.5rem)] max-md:-mx-gutter md:mt-12 md:first:mt-8 md:[contain-intrinsic-size:auto_calc(var(--sx-r)*var(--sx-ch)+3.5rem)] lg:[contain-intrinsic-size:auto_calc(var(--sx-r3)*var(--sx-ch)+3.5rem)] xl:[contain-intrinsic-size:auto_calc(var(--sx-r4)*var(--sx-ch)+3.5rem)]"
-          // No scroll-margin here: html's scroll-padding-top (6.5rem / 7.5rem in globals.css)
-          // already clears the top bar plus this 48px date header, and a margin would add to it.
+          //
+          // No gap between days on a phone (`mt-0`): the date header draws a rule above and below
+          // itself (DateHeader), and the 32px gaps that used to sit here cost a whole row of the
+          // fold. From 768px the cards float on the canvas, and the 48px gap is what groups them.
+          //
+          // Landing: html's scroll-padding-top clears the top bar plus a 48px header, and
+          // `.sx-dategroup`'s `scroll-margin-top: -3rem` (globals.css, F-80) hands those 48px
+          // back, because the group's own header is what should sit under the bar.
+          className={[
+            'sx-dategroup mt-0 [contain-intrinsic-size:auto_calc(var(--sx-n)*var(--sx-rh)+3.5rem)] max-md:-mx-gutter md:mt-12 md:first:mt-8 md:[contain-intrinsic-size:auto_calc(var(--sx-r)*var(--sx-ch)+3.5rem)] lg:[contain-intrinsic-size:auto_calc(var(--sx-r3)*var(--sx-ch)+3.5rem)] xl:[contain-intrinsic-size:auto_calc(var(--sx-r4)*var(--sx-ch)+3.5rem)]',
+            // Within a week of the landing date: always laid out (see the docblock), so a client
+            // navigation's single scroll lands where a hard load does.
+            landingDay !== null &&
+            Math.abs(dayNumber(group.date) - landingDay) <= LANDING_WINDOW_DAYS
+              ? '[content-visibility:visible]'
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
           style={
             {
               '--sx-n': group.games.length,

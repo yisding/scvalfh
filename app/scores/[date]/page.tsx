@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import GameList from '@/components/schedule/GameList';
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
+import SeasonCalendar from '@/components/schedule/SeasonCalendar';
 import { daySummary } from '@/components/schedule/day-summary';
 import { gameWord } from '@/components/schedule/filter-data';
 import EmptyState from '@/components/ui/EmptyState';
@@ -11,19 +12,20 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site-url';
 import { getGameDates, getGames, getOfficialFixtures, getToday } from '@/lib/data';
-import { longDate, parseLocal, shortDate } from '@/lib/format';
+import { longDate, monthDay, parseLocal, shortDate } from '@/lib/format';
 import { getTeamBySlug } from '@/lib/teams';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
  *
  * One prerendered page per date that actually has a contest (49 today), which is what makes the
- * `share →` action on every date header a real URL instead of a clipboard trick. Unknown dates
- * `notFound()` rather than rendering an empty day, because an empty day and a day with no games are
- * different claims and only one of them is true.
+ * "Day page" link on every /schedule date header a real URL instead of a clipboard trick. Unknown
+ * dates `notFound()` rather than rendering an empty day, because an empty day and a day with no
+ * games are different claims and only one of them is true.
  *
  * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
- * a link to an empty Sunday would be a dead end.
+ * a link to an empty Sunday would be a dead end. "Pick a date" (SeasonCalendar) jumps straight to
+ * any of them, and links only the days that have contests for the same reason.
  */
 /** A registry team renders by its short name; a non-SCVAL opponent is a name and nothing else. */
 function sideName(slug: string | null, fallback: string): string {
@@ -90,26 +92,40 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   if (date === today) badges.push('Today');
 
   /* This is the only way to walk the season day by day on a phone, so the steppers are 44px
-     pills (DESIGN §4.4), not bare text links. */
+     pills (DESIGN §4.4), not bare text links. They sit on the card plane with the hairline ring
+     (`bg-surface shadow-[var(--sx-ring)]`), so in light mode they read as buttons rather than as
+     the surface-2 fact badges beside the h1; accent on surface is the strongest pairing the pill
+     has. At the ends of the season the missing pill is a short badge — "First day" / "Last day",
+     with " of the season" for screen readers only — so the row stays one line at 390. */
   const dayNav = (
     <nav aria-label="Other days" className="flex flex-wrap items-center gap-2">
       {previous ? (
-        <Link href={`/scores/${previous}`} className="sx-pill min-h-11">
+        <Link
+          href={`/scores/${previous}`}
+          className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
           <span aria-hidden="true">&lsaquo;</span>
           {shortDate(previous)}
           <span className="sr-only">: the previous day with games</span>
         </Link>
       ) : (
-        <span className="sx-badge">First day of the season</span>
+        <span className="sx-badge">
+          First day<span className="sr-only"> of the season</span>
+        </span>
       )}
       {next ? (
-        <Link href={`/scores/${next}`} className="sx-pill min-h-11">
+        <Link
+          href={`/scores/${next}`}
+          className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+        >
           {shortDate(next)}
           <span aria-hidden="true">&rsaquo;</span>
           <span className="sr-only">: the next day with games</span>
         </Link>
       ) : (
-        <span className="sx-badge">Last day of the season</span>
+        <span className="sx-badge">
+          Last day<span className="sr-only"> of the season</span>
+        </span>
       )}
       <Link
         href={`/schedule#${date}`}
@@ -120,21 +136,36 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
     </nav>
   );
 
+  /* "Wednesday, Sep 30" on a phone: the full "Wednesday, September 30, 2026" took two lines of
+     28px h1 at 390 on most days. The full date is still the h1's accessible name (the short form
+     is aria-hidden), and from 768px it is what shows. */
+  const shortTitle = `${longDate(date).split(',')[0]}, ${monthDay(date)}`;
+
   return (
     <div className="pb-section-lg">
       <PageHeader
         title={
           <time dateTime={date}>
-            {longDate(date)}, {year}
+            <span aria-hidden="true" className="md:hidden">
+              {shortTitle}
+            </span>
+            <span className="sr-only md:not-sr-only">
+              {longDate(date)}, {year}
+            </span>
           </time>
         }
+        // Sans with tabular figures, not `.sx-num` mono: these are short phrases ("3 final"),
+        // not a column of digits (DESIGN §4.3).
         meta={badges.map((badge) => (
-          <span key={badge} className="sx-badge sx-num">
+          <span key={badge} className="sx-badge tabular-nums">
             {badge}
           </span>
         ))}
         aside={dayNav}
       />
+
+      {/* Its own block under the header, closed by default so the day's games stay in the fold. */}
+      <SeasonCalendar dates={dates} current={date} className="mt-4 md:mt-6" />
 
       {nothingReportedYet ? (
         <p className="sx-inset mt-6 mb-0 max-w-prose text-ink">
@@ -171,30 +202,40 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </p>
       ) : null}
 
+      {/* Fixtures on SCVAL's grid that no source lists. A day that has not come yet introduces
+          them as more of the day ("Also on SCVAL's schedule…"), never as a missing result; a past
+          day keeps the section and its note. The date column would repeat the h1, so it goes. */}
       {fixtures.length > 0 ? (
-        <section className="mt-section md:mt-section-lg">
-          <SectionHeader kicker="Scheduled by SCVAL, not reported" />
-          <OfficialFixtures fixtures={fixtures} variant="plain" />
-        </section>
+        date >= today ? (
+          <section aria-label="On SCVAL's schedule only" className="mt-section md:mt-section-lg">
+            <OfficialFixtures
+              fixtures={fixtures}
+              today={today}
+              variant="plain"
+              showDate={false}
+              lead="Also on SCVAL’s schedule for this day, but not listed by any source:"
+            />
+          </section>
+        ) : (
+          <section className="mt-section md:mt-section-lg">
+            <SectionHeader kicker="On SCVAL's schedule only" />
+            <OfficialFixtures fixtures={fixtures} today={today} variant="plain" showDate={false} />
+          </section>
+        )
       ) : null}
 
-      {/* Always visible (brief §4.22: "not official" sentences never collapse), once, under the
-          day's games: the zone every time on this page is in, and whose numbers these are. */}
+      {/* One always-visible line under the day's games instead of a caption plus a "How scores
+          are shown" disclosure: the zone every time here is in, the two states a reader can
+          mistake for each other, and the full table. "Unofficial" is not repeated here; the
+          footer says it on every page. The link sits inside the sentence, so it needs no 24px
+          box of its own (WCAG 2.5.8's inline exception). */}
       <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
-        All times Pacific. Scores are computed from what MaxPreps publishes and are unofficial.
+        All times Pacific. A dash means no score has been reported;{' '}
+        <span className="sx-num">0</span> is a real zero.{' '}
+        <Link href="/about#conventions" prefetch={false} className="text-accent">
+          How every state is shown
+        </Link>
       </p>
-
-      <details className="sx-inset sx-disclosure mt-section md:mt-section-lg">
-        <summary>How scores are shown</summary>
-        <p className="mt-2 mb-0 max-w-prose">
-          A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span>; a
-          score we do not have shows as a dash &mdash;{' '}
-          <Link href="/about#conventions" className="text-accent">
-            how every state is rendered
-          </Link>
-          .
-        </p>
-      </details>
     </div>
   );
 }
