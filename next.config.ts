@@ -16,6 +16,17 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /**
+   * The in-memory cache that `vinext start` seeds with every prerendered page at startup (vinext
+   * reads this key from next.config too; `next start` serves the same pages from disk). The default
+   * is 50 MB, and the prerendered HTML + RSC of all 230 pages is just over that: the handler then
+   * evicts the earliest-seeded routes (/about, /schedule, every /game page, …) while seeding, and
+   * their first request renders on demand instead of serving the build, which
+   * scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`. 256 MB holds the whole season with
+   * room for the recaps and scores still to come; actual use is bounded by the content size.
+   */
+  cacheMaxMemorySize: 256 * 1024 * 1024,
+
+  /**
    * DESIGN §13: HTML is `s-maxage=300, stale-while-revalidate=86400`.
    *
    * Next's default for a fully prerendered page is `s-maxage=31536000` with NO revalidation
