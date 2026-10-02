@@ -173,6 +173,20 @@ function fail(what: string, url: string): never {
   throw new MaxPrepsError(`player stats: ${what}`, { url });
 }
 
+const NO_DATA = /^no data was found for this request\.?$/i;
+
+/** The envelope's `message`, or its first `errors` entry. */
+function describe(envelope: { message?: unknown; errors?: unknown }): string {
+  if (typeof envelope.message === 'string') return envelope.message;
+  if (Array.isArray(envelope.errors) && typeof envelope.errors[0] === 'string') return envelope.errors[0];
+  return '(no message)';
+}
+
+/** MaxPreps' answer for a team whose coach has entered no stats [V] 2026-10-02. */
+function isNoDataAnswer(envelope: { message?: unknown; errors?: unknown }): boolean {
+  return NO_DATA.test(describe(envelope).trim());
+}
+
 function toNumber(raw: string | null, key: string, where: string, url: string): number | null {
   const v = raw?.trim() ?? '';
   if (v === '') return null;
@@ -211,9 +225,12 @@ export function parsePlayerStats(
     fail(`schema drift: ${issues}`, url);
   }
   const data = parsed.data.data;
-  if (data === null) {
-    if (String(parsed.data.status) === '400') return null;
-    fail(`no data and status ${String(parsed.data.status)}`, url);
+  const status = String(parsed.data.status);
+  // Only MaxPreps' own "no stats" answer means no stats. Any other 400 (a bad team or season id)
+  // or empty envelope is a failure, so the fetch script carries the previous rows forward.
+  if (data === null || status === '400') {
+    if (status === '400' && data === null && isNoDataAnswer(parsed.data)) return null;
+    fail(`no data and status ${status}: ${describe(parsed.data)}`, url);
   }
   const expectedSeason = opts.expectedSeasonId ?? SPORT_SEASON_ID;
   if (data.sportSeasonId !== expectedSeason) {
@@ -317,8 +334,9 @@ export function parsePlayerStats(
 }
 
 /**
- * Fetch one team's rollup. The client throws on any non-2xx, so the 400 that means "no stats
- * entered" is caught here and comes back as null, the same as the parsed 400 envelope.
+ * Fetch one team's rollup. The client throws on any non-2xx, so a 400 is read from the error's
+ * body: MaxPreps' "No data was found" envelope comes back as null, the same as parsing that
+ * envelope, and any other 400 — or one whose body cannot be read — still throws.
  */
 export async function fetchPlayerStats(
   client: MaxPrepsClient,
@@ -329,8 +347,12 @@ export async function fetchPlayerStats(
   try {
     raw = (await client.json(url, PlayerStatsResponseSchema)).data;
   } catch (err) {
-    if (err instanceof MaxPrepsError && err.httpStatus === 400) return null;
-    throw err;
+    if (!(err instanceof MaxPrepsError) || err.httpStatus !== 400 || !err.body) throw err;
+    try {
+      raw = JSON.parse(err.body) as unknown;
+    } catch {
+      throw err;
+    }
   }
   return parsePlayerStats(raw, { expectedTeamId: teamId, url });
 }

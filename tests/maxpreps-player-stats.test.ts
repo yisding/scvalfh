@@ -190,6 +190,13 @@ describe('parsePlayerStats: loud on drift', () => {
     expect(parsePlayerStats(raw('cupertino'))).toBeNull();
     expect(() => parsePlayerStats({ status: 500, data: null })).toThrow(/no data and status 500/);
     expect(() => parsePlayerStats({ status: 200, data: { teamId: 1 } })).toThrow(/schema drift/);
+    // A 400 for any other reason (a stale season id, a bad team id) is a failure, not "no stats".
+    expect(() =>
+      parsePlayerStats({ status: 400, message: 'Invalid sportSeasonId.', data: null, errors: ['Invalid sportSeasonId.'] }),
+    ).toThrow(/no data and status 400: Invalid sportSeasonId/);
+    expect(() => parsePlayerStats({ status: 400, data: null })).toThrow(/no data and status 400/);
+    // The message may come only in errors[].
+    expect(parsePlayerStats({ status: 400, data: null, errors: ['No data was found for this request.'] })).toBeNull();
   });
 });
 
@@ -213,6 +220,16 @@ describe('fetchPlayerStats', () => {
     const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
     expect(await fetchPlayerStats(client, teamId)).toBeNull();
     expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails on any other 400, so the fetch script carries the previous rows forward', async () => {
+    const other = JSON.stringify({ status: 400, message: 'Invalid teamId.', data: null, errors: ['Invalid teamId.'] });
+    for (const body of [other, '', '<html>Bad Request</html>']) {
+      const fetchImpl = vi.fn(async () => new Response(body, { status: 400 }));
+      const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+      await expect(fetchPlayerStats(client, teamId), JSON.stringify(body)).rejects.toThrow(/400/);
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+    }
   });
 
   it('still fails on a server error', async () => {

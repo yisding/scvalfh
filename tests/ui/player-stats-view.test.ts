@@ -109,10 +109,10 @@ describe('buildPlayerStatsView — rules, over the committed file', () => {
     }
   });
 
-  it('counts the finals played after the last MaxPreps update', () => {
+  it('counts the finals played after the last MaxPreps update, to the minute', () => {
     for (const { slug, data, games, view } of live) {
-      const day = data.lastUpdated?.slice(0, 10);
-      const expected = day ? games.filter((g) => g.status === 'final' && g.dateKey > day).length : 0;
+      const at = data.lastUpdated?.slice(0, 19);
+      const expected = at ? games.filter((g) => g.status === 'final' && g.dateLocal.slice(0, 19) > at).length : 0;
       expect(view.gamesSince, slug).toBe(expected);
     }
   });
@@ -157,6 +157,14 @@ describe('buildPlayerStatsView — the 2026-10-02 captures', () => {
     const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view: at('saratoga').view }));
     expect(html).toContain('No player stats for Saratoga.');
     expect(html).not.toContain('<table');
+  });
+
+  it('counts a game played later on the day of the update (Santa Clara: 11:15, then a 4 PM final)', () => {
+    const sc = at('santa-clara');
+    expect(sc.data.lastUpdated).toBe('2026-10-01T11:15:44');
+    const sameDay = sc.games.filter((g) => g.status === 'final' && g.dateKey === '2026-10-01' && g.dateLocal > sc.data.lastUpdated!);
+    expect(sameDay.length).toBeGreaterThan(0);
+    expect(sc.view.gamesSince).toBeGreaterThanOrEqual(sameDay.length);
   });
 
   it('warns when the totals are behind the games played (Presentation stops on Sep 10)', () => {
