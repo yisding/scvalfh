@@ -2,11 +2,11 @@
   "counts": {
     "errors": 0,
     "goalkeepers": 13,
-    "players": 121,
+    "players": 122,
     "teams": 15,
     "teamsWithStats": 10
   },
-  "fetchedAt": "2026-10-02T14:02:38.770Z",
+  "fetchedAt": "2026-10-02T18:58:27.161Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -21,7 +21,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-09-29T22:59:28",
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius College Preparatory",
@@ -439,7 +439,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-10-01T11:01:37",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -880,7 +880,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -901,7 +901,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-10-01T10:02:48",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
@@ -1272,7 +1272,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-10-01T12:44:36",
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -1518,7 +1518,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -1539,7 +1539,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-09-28T18:18:37",
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -1657,8 +1657,8 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
-      "lastUpdated": "2026-09-29T22:09:38",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "lastUpdated": "2026-10-02T09:25:09",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
       "players": [
@@ -1709,12 +1709,12 @@
           "careerId": "hs9gppu3qfhk4",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/caroline-farley/?careerid=hs9gppu3qfhk4",
           "field": {
-            "assists": 1,
+            "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 8,
+            "gamesPlayed": 9,
             "goals": 2,
             "minutes": null,
-            "points": 5,
+            "points": 6,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1730,12 +1730,12 @@
           "careerId": "ntc3vggjopuaa",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/haley-young/?careerid=ntc3vggjopuaa",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 4,
             "minutes": null,
-            "points": 8,
+            "points": 9,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1774,10 +1774,10 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 1,
-            "gamesPlayed": 9,
-            "goals": 11,
+            "gamesPlayed": 10,
+            "goals": 12,
             "minutes": null,
-            "points": 23,
+            "points": 25,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1793,12 +1793,12 @@
           "careerId": "lc1nd6qu7vaqa",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/lilly-jones/?careerid=lc1nd6qu7vaqa",
           "field": {
-            "assists": 1,
+            "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 8,
+            "gamesPlayed": 9,
             "goals": 0,
             "minutes": null,
-            "points": 1,
+            "points": 2,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1835,12 +1835,12 @@
           "careerId": "vbaii0mdr0400",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/josephine-traverso/?careerid=vbaii0mdr0400",
           "field": {
-            "assists": 3,
+            "assists": 4,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 0,
             "minutes": null,
-            "points": 3,
+            "points": 4,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1921,10 +1921,10 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 9,
-            "goals": 4,
+            "gamesPlayed": 10,
+            "goals": 5,
             "minutes": null,
-            "points": 9,
+            "points": 11,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1936,16 +1936,37 @@
           "shortName": "M. Waltz"
         },
         {
+          "athleteId": "0e91db8a-2631-4b0d-8959-acfa5cfc0b58",
+          "careerId": "r7k585sv0ntk4",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/gabriella-vizzusi/?careerid=r7k585sv0ntk4",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": 0,
+            "gamesPlayed": 7,
+            "goals": 1,
+            "minutes": null,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Gabriella Vizzusi",
+          "goalkeeping": null,
+          "jersey": "13",
+          "onRoster": true,
+          "shortName": "G. Vizzusi"
+        },
+        {
           "athleteId": "b402aa2b-9e07-4f93-b92e-6aca58f68bc3",
           "careerId": "17bg01e2r2jff",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/elizabeth-traverso/?careerid=17bg01e2r2jff",
           "field": {
-            "assists": 3,
+            "assists": 4,
             "gameWinningGoals": 0,
-            "gamesPlayed": 9,
-            "goals": 1,
+            "gamesPlayed": 10,
+            "goals": 2,
             "minutes": null,
-            "points": 5,
+            "points": 8,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -1985,14 +2006,14 @@
       "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "totals": {
         "field": {
-          "assists": 25,
+          "assists": 30,
           "gameWinningGoals": 2,
-          "gamesPlayed": 9,
-          "goals": 48,
-          "points": 121
+          "gamesPlayed": 10,
+          "goals": 52,
+          "points": 134
         },
         "goalkeeping": {
-          "gamesPlayed": 9,
+          "gamesPlayed": 10,
           "saves": 17,
           "wins": 1
         }
@@ -2015,7 +2036,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -2036,7 +2057,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-10-02T06:19:56",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -2446,7 +2467,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-09-10T20:27:06",
       "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
       "name": "Presentation",
@@ -2528,8 +2549,8 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
-      "lastUpdated": "2026-10-01T11:15:44",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "lastUpdated": "2026-10-02T09:47:42",
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
       "players": [
@@ -2540,7 +2561,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -2550,7 +2571,7 @@
           },
           "fullName": "Bintu Deen",
           "goalkeeping": {
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goalsAgainst": null,
             "losses": 1,
             "minutes": null,
@@ -2572,10 +2593,10 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 7,
-            "goals": 5,
+            "gamesPlayed": 8,
+            "goals": 6,
             "minutes": null,
-            "points": 10,
+            "points": 12,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -2592,11 +2613,11 @@
           "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/aahana-nayak/?careerid=sk05ijgcj8644",
           "field": {
             "assists": 1,
-            "gameWinningGoals": 0,
-            "gamesPlayed": 8,
-            "goals": 3,
+            "gameWinningGoals": 1,
+            "gamesPlayed": 9,
+            "goals": 5,
             "minutes": null,
-            "points": 7,
+            "points": 11,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -2614,7 +2635,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -2635,7 +2656,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -2656,7 +2677,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -2677,10 +2698,10 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 10,
-            "goals": 4,
+            "gamesPlayed": 11,
+            "goals": 5,
             "minutes": null,
-            "points": 8,
+            "points": 10,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -2698,7 +2719,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 6,
             "minutes": null,
             "points": 12,
@@ -2719,7 +2740,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 3,
@@ -2761,16 +2782,16 @@
           "field": null,
           "fullName": "Mia Rojo",
           "goalkeeping": {
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goalsAgainst": 7,
             "losses": 3,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
             "saves": null,
-            "shutouts": 3,
+            "shutouts": 4,
             "ties": 1,
-            "wins": 4
+            "wins": 5
           },
           "jersey": null,
           "onRoster": true,
@@ -2784,18 +2805,18 @@
       "totals": {
         "field": {
           "assists": 2,
-          "gameWinningGoals": 3,
-          "gamesPlayed": 11,
-          "goals": 25,
-          "points": 52
+          "gameWinningGoals": 4,
+          "gamesPlayed": 12,
+          "goals": 29,
+          "points": 60
         },
         "goalkeeping": {
-          "gamesPlayed": 11,
+          "gamesPlayed": 12,
           "goalsAgainst": 7,
           "losses": 4,
-          "shutouts": 3,
+          "shutouts": 4,
           "ties": 1,
-          "wins": 4
+          "wins": 5
         }
       },
       "tracked": {
@@ -2819,7 +2840,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -2840,7 +2861,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -2861,7 +2882,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T14:02:38.770Z",
+      "fetchedAt": "2026-10-02T18:58:27.161Z",
       "lastUpdated": "2026-09-12T17:12:38",
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",

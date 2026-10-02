@@ -1,11 +1,11 @@
 {
-  "contentHash": "5c780b9b3653ffc76a695c0f9ff0bf12fa338f7e1cf466f2268aa96b84c97c66",
+  "contentHash": "5891aec962b218a6650b7c9f7033499ab85323e4304e7175a13c5e69c179c0fb",
   "counts": {
-    "finals": 91,
+    "finals": 92,
     "games": 158,
     "leagueGames": 96,
     "mismatches": 0,
-    "pending": 3,
+    "pending": 2,
     "teams": 15
   },
   "crossCheck": {
@@ -14,7 +14,7 @@
     "conflicts": 1,
     "sbliveOnlyScored": 0
   },
-  "fetchedAt": "2026-10-02T10:48:51.206Z",
+  "fetchedAt": "2026-10-02T18:58:12.408Z",
   "officialFixturesUnmatched": 2,
   "officialStandingsPdfUrl": null,
   "sources": [
