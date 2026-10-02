@@ -168,9 +168,18 @@ export function buildPlayerStatsView(
 ): PlayerStatsView | undefined {
   if (!team) return undefined;
 
-  const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
-  const gamesSince = updatedDay
-    ? new Set(games.filter((g) => g.status === 'final' && g.dateKey > updatedDay).map((g) => g.contestId)).size
+  // Both stamps are naive local time in the same zone: on 2026-10-02 the finals at or before each
+  // team's update matched MaxPreps' own games-played total on 9 of 10 teams (Palo Alto's total is
+  // one game ahead of the snapshot). Compared whole, not by date, so a game later on the day of
+  // the update counts (Santa Clara: updated 11:15, played at 16:00).
+  const updatedAt = team.lastUpdated?.slice(0, 19) ?? null;
+  const updatedDay = updatedAt?.slice(0, 10) ?? null;
+  const gamesSince = updatedAt
+    ? new Set(
+        games
+          .filter((g) => g.status === 'final' && g.dateLocal.slice(0, 19) > updatedAt)
+          .map((g) => g.contestId),
+      ).size
     : 0;
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
