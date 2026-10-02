@@ -127,6 +127,24 @@ describe('buildRosterView', () => {
     // Saratoga's 20 player profiles fold into its school roster page rather than 20 links.
     expect(labels('saratoga')).toContain('shs-athletics.com: grades (player pages)');
   });
+
+  it("links each listed player's own recruiting pages, and names the platforms once", () => {
+    for (const { slug, view } of views) {
+      const merged = new Map(getEnrichedTeamRoster(slug)!.players.map((p) => [p.fullName, p]));
+      for (const row of view.rows) {
+        const p = merged.get(row.name)!;
+        expect(row.profiles.map((x) => x.url).sort(), `${slug} / ${row.name}`).toEqual(
+          p.profiles.map((x) => x.url).sort(),
+        );
+        for (const x of row.profiles) expect(x.label, `${slug} / ${row.name}`).toMatch(/profile$|^Recruiting site$/);
+      }
+      expect(view.profilePlatforms.length > 0, slug).toBe(view.rows.some((r) => r.profiles.length > 0));
+      expect(new Set(view.profilePlatforms).size, slug).toBe(view.profilePlatforms.length);
+      // A profile is not a source of a listed value: it never joins the Sources row.
+      const sources = new Set(view.sources.map((s) => s.url));
+      for (const row of view.rows) for (const x of row.profiles) expect(sources.has(x.url), slug).toBe(false);
+    }
+  });
 });
 
 describe('TeamRoster', () => {
@@ -140,6 +158,36 @@ describe('TeamRoster', () => {
       expect(html, slug).not.toMatch(/>(null|undefined)</);
       expect((html.match(/<li/g) ?? []).length, slug).toBeGreaterThanOrEqual(view.rows.length);
     }
+  });
+
+  it('renders a profile as an off-site link named for the player, and explains the links once', () => {
+    const base = views.find((v) => v.slug === 'saint-francis')!.view;
+    const [first, second, ...rest] = base.rows;
+    const view = {
+      ...base,
+      rows: [
+        { ...first, profiles: [{ label: 'NCSA profile', url: 'https://www.ncsasports.org/x/one' }] },
+        { ...second, facts: [], profiles: [{ label: 'Recruiting site', url: 'https://example.com/two' }] },
+        ...rest.map((r) => ({ ...r, profiles: [] })),
+      ],
+      profilePlatforms: ['NCSA', 'personal sites'],
+    };
+    const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
+    const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/'/g, '&#x27;');
+    expect(html).toMatch(
+      /<a href="https:\/\/www\.ncsasports\.org\/x\/one" target="_blank" rel="noopener noreferrer"[^>]*>/,
+    );
+    expect(html).toContain(`<span class="sr-only">${esc(first.name)}’s </span>NCSA profile`);
+    // A row with no facts still gets its meta line, holding just the link.
+    expect(html).toContain(`<span class="sr-only">${esc(second.name)}’s </span>Recruiting site`);
+    expect(html).toContain('own recruiting pages on NCSA and personal sites,');
+    expect(html.match(/own recruiting pages/g)?.length).toBe(1);
+
+    const none = renderToStaticMarkup(
+      createElement(TeamRoster, { view: { ...view, rows: view.rows.map((r) => ({ ...r, profiles: [] })), profilePlatforms: [] } }),
+    );
+    expect(none).not.toContain('own recruiting pages');
+    expect(none).not.toContain('ncsasports.org');
   });
 
   it('shows a stated empty state, not an empty card, when a team has no rows', () => {

@@ -2,7 +2,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
-import type { RosterFact, RosterView } from './roster-view';
+import type { RosterRow, RosterView } from './roster-view';
 
 /**
  * The team page's roster (SPEC §1.1j): every varsity player MaxPreps lists, with whatever number,
@@ -21,6 +21,10 @@ import type { RosterFact, RosterView } from './roster-view';
  * Provenance is visible, not buried: a value that did not come from MaxPreps carries a † that the
  * footnote explains and the Sources row links; where a source disagrees with what is shown, the
  * disagreement is listed with a link to it.
+ *
+ * A player with a recruiting page of their own (NCSA and the like) gets a link at the end of the
+ * meta line, after the facts. Its accessible name leads with the player's name, so a screen
+ * reader's links list tells the rows apart.
  */
 
 /** "†" for sighted readers; a short spoken note instead of the glyph for a screen reader. */
@@ -35,22 +39,39 @@ function ElsewhereMark() {
   );
 }
 
-function Facts({ facts }: { facts: RosterFact[] }) {
+/** The meta line: the row's facts, then its profile links, one dot-separated run. */
+function Meta({ row }: { row: RosterRow }) {
+  const items = [
+    ...row.facts.map((fact) => (
+      <span key={fact.text} className="whitespace-nowrap">
+        {fact.text}
+        {fact.elsewhere ? <ElsewhereMark /> : null}
+      </span>
+    )),
+    ...row.profiles.map((profile) => (
+      <ExternalLink key={profile.url} href={profile.url} className="whitespace-nowrap">
+        <span className="sr-only">{row.name}&rsquo;s </span>
+        {profile.label}
+      </ExternalLink>
+    )),
+  ];
   return (
     <span className="block text-meta text-ink-2">
-      {facts.map((fact, i) => (
+      {items.map((item, i) => (
         <span key={i}>
           {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never
               starts a line with one (the AwardsBlock rule). */}
           {i > 0 ? <>&nbsp;&middot; </> : null}
-          <span className="whitespace-nowrap">
-            {fact.text}
-            {fact.elsewhere ? <ElsewhereMark /> : null}
-          </span>
+          {item}
         </span>
       ))}
     </span>
   );
+}
+
+/** "NCSA", "NCSA and SportsRecruits", "NCSA, Hudl and SportsRecruits". */
+function listWords(words: string[]): string {
+  return words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`;
 }
 
 export function TeamRoster({ view }: { view: RosterView }) {
@@ -119,7 +140,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
                   </>
                 ) : null}
               </span>
-              {row.facts.length > 0 ? <Facts facts={row.facts} /> : null}
+              {row.facts.length > 0 || row.profiles.length > 0 ? <Meta row={row} /> : null}
             </span>
           </li>
         ))}
@@ -145,6 +166,13 @@ export function TeamRoster({ view }: { view: RosterView }) {
             {view.hasDerivedGrade
               ? ' A few grades are worked out from a class year listed for an earlier season.'
               : ''}
+          </p>
+        ) : null}
+        {view.profilePlatforms.length > 0 ? (
+          <p className="mt-1 mb-0">
+            Profile links go to players&rsquo; own recruiting pages on{' '}
+            {listWords(view.profilePlatforms)}, matched to this list by name, school and sport, and
+            by class year where the page gives one.
           </p>
         ) : null}
         {view.jvLeftOut > 0 ? (

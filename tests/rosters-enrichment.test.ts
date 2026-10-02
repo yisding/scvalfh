@@ -17,6 +17,7 @@ import {
   type Rosters,
 } from '../lib/rosters-schema';
 import {
+  classOf,
   getAllEnrichedRosters,
   getEnrichedTeamRoster,
   getRosterEnrichment,
@@ -30,6 +31,40 @@ const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'u
 const raw = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
+
+/**
+ * Load lib/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
+ * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
+ */
+function loadError(enrichment: RosterEnrichment): string {
+  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
+  const file = path.join(dir, 'bad.json');
+  writeFileSync(file, JSON.stringify(enrichment));
+  try {
+    execFileSync(
+      path.join(REPO, 'node_modules', '.bin', 'tsx'),
+      ['-e', "import('./lib/rosters.ts').then(() => console.log('LOADED'))"],
+      { cwd: REPO, stdio: 'pipe', env: { ...process.env, SCVAL_ROSTERS_ENRICHMENT: file } },
+    );
+    return '';
+  } catch (err) {
+    return String((err as { stderr?: Buffer }).stderr ?? '');
+  }
+}
+
+/** A team's enrichment record for a MaxPreps row, created empty if the file has none yet. */
+function recordFor(file: RosterEnrichment, slug: string, athleteId: string, fullName: string) {
+  const team = file.teams.find((t) => t.slug === slug)!;
+  let record = team.players.find((p) => p.athleteId === athleteId);
+  if (!record) {
+    record = {
+      athleteId, fullName, sourceName: null, level: null, levelSource: null, grade: null,
+      positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
+    };
+    team.players.push(record);
+  }
+  return record;
+}
 
 describe('data/rosters-enrichment.json', () => {
   it('validates against the contract', () => {
@@ -129,20 +164,85 @@ describe('data/rosters-enrichment.json', () => {
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
     // ...which is why lib/rosters.ts re-checks the join at load. Exercise that check in a child
     // process with the bad file swapped in.
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
-    const file = path.join(dir, 'bad.json');
-    writeFileSync(file, JSON.stringify(bad));
-    let out = '';
-    try {
-      execFileSync(
-        path.join(REPO, 'node_modules', '.bin', 'tsx'),
-        ['-e', "import('./lib/rosters.ts').then(() => console.log('LOADED'))"],
-        { cwd: REPO, stdio: 'pipe', env: { ...process.env, SCVAL_ROSTERS_ENRICHMENT: file } },
-      );
-    } catch (err) {
-      out = String((err as { stderr?: Buffer }).stderr ?? '');
+    expect(loadError(bad)).toMatch(/grade would overwrite a MaxPreps value/);
+  });
+});
+
+describe('recruiting profiles', () => {
+  const storey = base.teams.find((t) => t.slug === 'st-ignatius')!.players[0];
+  const ncsa = (url: string, classOf: number | null) =>
+    ({ platform: 'ncsa', url, classOf, note: null }) as const;
+
+  it('links each profile once, over https, on the platform it names', () => {
+    const profiles = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    const urls = profiles.map((p) => p.url);
+    expect(new Set(urls).size).toBe(urls.length);
+    for (const p of profiles) {
+      expect(p.url).toMatch(/^https:\/\//);
+      if (p.platform === 'ncsa') {
+        expect(p.url).toMatch(/^https:\/\/www\.ncsasports\.org\/field-hockey-recruiting\/california\//);
+      }
     }
-    expect(out).toMatch(/grade would overwrite a MaxPreps value/);
+  });
+
+  it('agrees with the grade the roster shows wherever a profile states a class year', () => {
+    for (const t of getAllEnrichedRosters()) {
+      for (const p of t.players) {
+        for (const x of p.profiles) {
+          if (x.classOf === null || p.grade === null) continue;
+          expect(x.classOf, `${t.slug} / ${p.fullName}`).toBe(classOf(base.season, p.grade));
+        }
+      }
+    }
+  });
+
+  it('works out a class year from the season and grade', () => {
+    expect(classOf('26-27', 12)).toBe(2027);
+    expect(classOf('26-27', 9)).toBe(2030);
+    expect(classOf('27-28', 11)).toBe(2029);
+  });
+
+  it('refuses a profile on the wrong host, a second profile on one platform, and a URL shared by two players', () => {
+    const wrongHost = structuredClone(raw);
+    recordFor(wrongHost, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      ncsa('https://my.sportsrecruits.com/athlete/storey_lewis', null),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(wrongHost).success).toBe(false);
+
+    const twice = structuredClone(raw);
+    recordFor(twice, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      ncsa('https://www.ncsasports.org/a', null),
+      ncsa('https://www.ncsasports.org/b', null),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(twice).success).toBe(false);
+
+    const shared = structuredClone(raw);
+    const other = base.teams.find((t) => t.slug === 'st-ignatius')!.players[1];
+    recordFor(shared, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      ncsa('https://www.ncsasports.org/same', null),
+    ];
+    recordFor(shared, 'st-ignatius', other.athleteId!, other.fullName).profiles = [
+      ncsa('https://www.ncsasports.org/same', null),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(shared).success).toBe(false);
+  });
+
+  it('refuses, at load, a profile whose class year disagrees with the roster', () => {
+    // Storey Lewis is a senior on MaxPreps: class of 2027, never 2028.
+    expect(storey.grade).toBe(12);
+    const bad = structuredClone(raw);
+    recordFor(bad, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      ncsa('https://www.ncsasports.org/field-hockey-recruiting/california/x/y/storey-lewis', 2028),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
+    expect(loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
+  });
+
+  it('reaches the merged view', () => {
+    for (const t of raw.teams) {
+      const merged = new Map(getEnrichedTeamRoster(t.slug)!.players.map((p) => [p.athleteId, p]));
+      for (const e of t.players) expect(merged.get(e.athleteId)!.profiles).toEqual(e.profiles);
+    }
   });
 });
 

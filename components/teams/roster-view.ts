@@ -5,6 +5,7 @@ import {
   type EnrichmentSource,
   type MergedPlayer,
   type MergedTeamRoster,
+  type ProfilePlatform,
   type RosterConflict,
 } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
@@ -20,7 +21,8 @@ import type { TeamSlug } from '../../lib/types';
  *   - a value that did NOT come from MaxPreps carries `elsewhere`, which the page marks with †
  *     and explains under the list, with a link to every page those values came from;
  *   - where a source disagrees with the value shown, the disagreement is published (DESIGN §9's
- *     posture: trust comes from showing the disagreement, not from silently picking a side).
+ *     posture: trust comes from showing the disagreement, not from silently picking a side);
+ *   - a player's own recruiting pages (NCSA and the like) are linked from that player's row.
  */
 
 const GRADE_WORDS = { 9: 'Freshman', 10: 'Sophomore', 11: 'Junior', 12: 'Senior' } as const;
@@ -43,6 +45,17 @@ const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
   'maxpreps-team': "MaxPreps' team page",
 };
 
+/** A row's link text, and how the footnote names the platform. */
+const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }> = {
+  ncsa: { link: 'NCSA profile', footnote: 'NCSA' },
+  sportsrecruits: { link: 'SportsRecruits profile', footnote: 'SportsRecruits' },
+  fieldlevel: { link: 'FieldLevel profile', footnote: 'FieldLevel' },
+  hudl: { link: 'Hudl profile', footnote: 'Hudl' },
+  captainu: { link: 'Captain U profile', footnote: 'Captain U' },
+  personal: { link: 'Recruiting site', footnote: 'personal sites' },
+};
+const PROFILE_ORDER = Object.keys(PROFILE_WORDS) as ProfilePlatform[];
+
 const FIELD_WORDS: Record<RosterConflict['field'], string> = {
   jersey: 'number',
   grade: 'grade',
@@ -56,6 +69,12 @@ export interface RosterFact {
   elsewhere: boolean;
 }
 
+export interface RosterProfileLink {
+  /** "NCSA profile", "Recruiting site" … */
+  label: string;
+  url: string;
+}
+
 export interface RosterRow {
   key: string;
   name: string;
@@ -63,6 +82,8 @@ export interface RosterRow {
   captain: boolean;
   /** Grade, position(s), height — only the ones somebody published, in that order. */
   facts: RosterFact[];
+  /** The player's own recruiting pages, one per platform, NCSA first. */
+  profiles: RosterProfileLink[];
 }
 
 export interface RosterConflictLine {
@@ -97,6 +118,8 @@ export interface RosterView {
   hasElsewhere: boolean;
   /** Some grade is worked out from a class year on another season (Los Altos, Saratoga). */
   hasDerivedGrade: boolean;
+  /** The platforms the listed rows link to, as the footnote names them ("NCSA", "SportsRecruits"). */
+  profilePlatforms: string[];
   coaches: Array<{ key: string; name: string; role: string | null }>;
   conflicts: RosterConflictLine[];
   /** MaxPreps' roster page first, then one link per other site a shown value came from. */
@@ -149,6 +172,9 @@ function rowFor(p: MergedPlayer, index: number): RosterRow {
         : { text: p.jersey, elsewhere: elsewhereSource(p.provenance.jersey) !== null },
     captain: p.isCaptain,
     facts,
+    profiles: [...p.profiles]
+      .sort((a, b) => PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform))
+      .map((x) => ({ label: PROFILE_WORDS[x.platform].link, url: x.url })),
   };
 }
 
@@ -313,6 +339,9 @@ export function buildRosterView(slug: TeamSlug): RosterView | undefined {
       const g = elsewhereSource(p.provenance.grade);
       return g !== null && 'derived' in g && g.derived;
     }),
+    profilePlatforms: PROFILE_ORDER.filter((k) =>
+      players.some((p) => p.profiles.some((x) => x.platform === k)),
+    ).map((k) => PROFILE_WORDS[k].footnote),
     coaches: team.coaches.map((c, i) => ({ key: `${c.name}-${i}`, name: c.name, role: c.role })),
     conflicts,
     sources: sourceLinks(team, players),
