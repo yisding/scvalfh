@@ -55,8 +55,10 @@ export function NextSlate({
     .join(', ');
   // The date is omitted when the heading already says "today"; the counts always show.
   const showDate = date && !(isToday && !kicker);
+  // Judged over the whole day, like the counts: a league game cut off by `limit` is still today's,
+  // and the card must not say league play resumes on a later date under a "1 league" meta.
   const resume =
-    nextLeague && nextLeague.games.length > 0 && shown.every((g) => !g.isLeague) ? nextLeague : null;
+    nextLeague && nextLeague.games.length > 0 && games.every((g) => !g.isLeague) ? nextLeague : null;
   return (
     <section className={className}>
       <SectionHeader

@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 import { getStandingFor } from '../../lib/data';
-import { EM_DASH, monthDay, recordString, shortDate, timeOfDay } from '../../lib/format';
+import { EM_DASH, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, TeamSlug } from '../../lib/types';
+import type { Game, Record3, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
@@ -67,10 +67,15 @@ export interface GameLogRowProps extends GameViewProps {
  * a non-SCVAL side has no record on this site (DESIGN §8), and a team with no reported result
  * would read 0-0-0, which the never-0-0 posture forbids for a record as much as for a score.
  */
-function leagueRecord(side: SideView): string | null {
+function leagueStanding(side: SideView): Record3 | null {
   if (!side.slug) return null;
   const standing = getStandingFor(side.slug);
-  return standing && standing.hasReportedResults ? recordString(standing.computed) : null;
+  return standing && standing.hasReportedResults ? standing.computed : null;
+}
+
+function leagueRecord(side: SideView): string | null {
+  const computed = leagueStanding(side);
+  return computed ? recordString(computed) : null;
 }
 
 /** Whether a game shows records at all: a league game with nothing on the scoreboard yet. */
@@ -80,13 +85,16 @@ function recordsApply(game: Game, display: GameDisplay, showRecords: boolean): b
 
 /**
  * The sr-only tail for the records, appended to the row's own sentence (describeGame's sentence
- * is shared with the game page and the OG card, so it is not changed): " Homestead 1-4-0 in
- * league, Los Altos 3-1-0 in league." A side with no record is left out rather than read as zero.
+ * is shared with the game page and the OG card, so it is not changed): " Homestead 1 win,
+ * 4 losses, 0 ties in league, Los Altos 3 wins, 1 loss, 0 ties in league." In words, as the
+ * standings row labels are: the visible team rows are aria-hidden, so this is the only record a
+ * screen reader gets, and "1-4-0" is read as a subtraction or a date. A side with no record is
+ * left out rather than read as zero.
  */
 function recordsSentence(display: GameDisplay): string {
   const parts = [display.away, display.home].flatMap((side) => {
-    const record = leagueRecord(side);
-    return record ? [`${side.name} ${record} in league`] : [];
+    const computed = leagueStanding(side);
+    return computed ? [`${side.name} ${recordWords(computed)} in league`] : [];
   });
   return parts.length ? ` ${parts.join(', ')}.` : '';
 }

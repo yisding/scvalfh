@@ -147,27 +147,32 @@ function toItems(lines: FlagLine[]): NoteItem[] {
 const pct3 = (s: Standing) => Math.round(s.computed.winPct * 1000);
 
 /**
- * Does MaxPreps' win-percentage ordering explain a place difference? Only if the team's win
- * percentage differs from that of a team it traded places with (ours ↔ theirs, inclusive).
- * Unknown (no rows, no MaxPreps place) claims nothing.
+ * Does MaxPreps' win-percentage ordering explain a place difference? Only if it points the same
+ * way: MaxPreps puts the team LOWER than we do only if a team between the two places has a higher
+ * win percentage, and HIGHER only if one has a lower percentage. A percentage that merely differs
+ * does not establish the cause (the gap could be a game one table counts and the other does not),
+ * and then no reason is given. Unknown (no rows, no MaxPreps place) claims nothing.
  */
 function winPctExplains(
   slug: string,
   place: { ours: number; theirs: number | null },
   rows: readonly StandingsRowData[],
 ): boolean {
-  if (place.theirs === null) return false;
+  const theirs = place.theirs;
+  if (theirs === null || theirs === place.ours) return false;
   const self = rows.find((r) => r.team.slug === slug)?.standing;
   if (!self) return false;
-  const lo = Math.min(place.ours, place.theirs);
-  const hi = Math.max(place.ours, place.theirs);
+  const lo = Math.min(place.ours, theirs);
+  const hi = Math.max(place.ours, theirs);
+  const outranksOnPct = (other: Standing) =>
+    theirs > place.ours ? pct3(other) > pct3(self) : pct3(other) < pct3(self);
   return rows.some(
     (r) =>
       r.team.slug !== slug &&
       r.standing.hasReportedResults &&
       r.standing.computed.place >= lo &&
       r.standing.computed.place <= hi &&
-      pct3(r.standing) !== pct3(self),
+      outranksOnPct(r.standing),
   );
 }
 
@@ -234,7 +239,7 @@ function TeamSentence({ line, rows }: { line: FlagLine; rows: readonly Standings
   );
 }
 
-/** "St Francis and St Ignatius: MaxPreps lists them the other way round because …" */
+/** "St Francis (1st) and St Ignatius (2nd): MaxPreps lists them the other way round because …" */
 function SwapSentence({
   a,
   b,
@@ -247,7 +252,8 @@ function SwapSentence({
   const reason = winPctExplains(a.slug, a.place!, rows);
   return (
     <>
-      <Name>{a.name}</Name> and <Name>{b.name}</Name>: MaxPreps lists them the other way round
+      <Name>{a.name}</Name> ({ordinal(a.place!.ours)}) and <Name>{b.name}</Name> (
+      {ordinal(b.place!.ours)}): MaxPreps lists them the other way round
       {reason ? ' because it ranks by win percentage' : null}. {RULE_SENTENCE}
       {[a, b]
         .filter((line) => line.items.length > 0)

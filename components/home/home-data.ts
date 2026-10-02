@@ -119,7 +119,8 @@ function nextLeagueDay(after: string, today: string): HomeDay | null {
     ?.dateKey;
   if (!date) return null;
   const all = playableDay(date, today);
-  return { ...all, games: all.games.filter((g) => g.isLeague) };
+  // `total` is the day's full count (what its /scores page lists), not the playable subset.
+  return { ...all, games: all.games.filter((g) => g.isLeague), total: getGames({ date }).length };
 }
 
 function firstDateOf(filter: Parameters<typeof getGames>[0]): string | null {

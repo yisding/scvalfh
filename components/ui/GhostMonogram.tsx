@@ -37,7 +37,10 @@ export function ghostInitials(name: string): string {
     .filter((w) => w && !FILLER.test(w));
   const first = words[0] ?? name.trim();
   if (!first) return '';
-  return `${first.charAt(0).toUpperCase()}${first.slice(1, 2).toLowerCase()}`;
+  // By code point, not UTF-16 unit: a name starting with an astral letter would otherwise split
+  // its surrogate pair into two broken glyphs.
+  const [a = '', b = ''] = Array.from(first);
+  return `${a.toUpperCase()}${b.toLowerCase()}`;
 }
 
 export function GhostMonogram({ name, size = 24, className }: GhostMonogramProps) {
