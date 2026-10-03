@@ -6,22 +6,24 @@ import NavLink from './NavLink';
 import { navLeagueHrefs } from './TopNav';
 
 /**
- * The phone bottom bar (DESIGN §1.3, §3.1, R-3). FIVE tabs, because "find my school" was a
- * top-three task with no phone nav entry. The bar is 56px tall plus the safe-area inset; each tab
+ * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §17). FIVE tabs: Home, Scores, Teams, Leaders,
+ * Playoffs. "Find my school" was a top-three task with no phone nav entry, so Teams has a tab; since
+ * DESIGN §17 that page also holds every division's standings table, so the separate Table tab gave
+ * its place to Leaders (/leaders). The bar is 56px tall plus the safe-area inset; each tab
  * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
  * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
  * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
  * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
  * fails any label over 56px, so none truncates at any supported width.
  *
- * After hydration Scores, Table and Playoffs follow the page's league, else the remembered one
- * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
+ * After hydration Scores, Teams and Playoffs follow the page's league, else the remembered one
+ * (`/schedule/<id>#<date>`, `/teams#<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
  * static HTML keeps the index hrefs.
  *
  * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current`, accent ink, a
  * wash capsule behind its glyph AND a heavier label — never color alone. `aria-current` is "page"
- * on the tab's own route and "true" inside its section (a team page under Teams; a day or game page
- * under Scores, which used to leave the bar with nothing lit), see NavLink.tsx.
+ * on the tab's own route and "true" inside its section (a team page or a standings page under Teams;
+ * a day or game page under Scores, which used to leave the bar with nothing lit), see NavLink.tsx.
  *
  * Scores opens on the latest results, not on the top of a season-long list: its href carries the
  * date as a fragment (see scoresHrefs below), and so does each of its league targets
@@ -89,16 +91,6 @@ export const TABS = [
     ),
   },
   {
-    href: '/standings',
-    label: 'Table',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        {/* A ranked list: a rank mark, then the row. Three bare lines read as a menu icon. */}
-        <path d="M3 5h1.5M7.5 5H17M3 10h1.5M7.5 10H17M3 15h1.5M7.5 15H17" />
-      </svg>
-    ),
-  },
-  {
     href: '/teams',
     label: 'Teams',
     glyph: (
@@ -107,6 +99,17 @@ export const TABS = [
         <rect x="11" y="3" width="6" height="6" rx="1" />
         <rect x="3" y="11" width="6" height="6" rx="1" />
         <rect x="11" y="11" width="6" height="6" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    href: '/leaders',
+    label: 'Leaders',
+    glyph: (
+      <svg {...ICON_PROPS} aria-hidden="true">
+        {/* A podium: 1st in the middle, the highest block, with 2nd and 3rd beside it on one
+            floor line. A plain bar chart would read as statistics, not places. */}
+        <path d="M2.5 17.5h15M7.5 17.5V3.5h5v14M3 17.5V9h4.5M12.5 17.5V12H17v5.5" />
       </svg>
     ),
   },

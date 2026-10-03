@@ -12,10 +12,12 @@
 import {
   getGames,
   getHeadToHead,
+  getLastLeagueResultDate,
   getLeagueSummaries,
   getOfficialFixtures,
   getStandingContext,
   getStandingFor,
+  getStandings,
   getTeamBySlug,
   getTeamForm,
   getTeamPostseasonLine,
@@ -44,6 +46,7 @@ import type {
   TeamSlug,
 } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame } from '../ui/game-view';
 
@@ -589,40 +592,6 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
 
 // ---------------------------------------------------------------- /teams
 
-/** One tile on /teams. */
-export interface TeamTileData {
-  team: Team;
-  standing: Standing | undefined;
-  hasResults: boolean;
-  /** The small league chip a tile shows while a search is active (optional: additive). */
-  leagueShort?: string;
-}
-
-/** One division's tiles, sorted by the name the tile shows. */
-export function buildTeamsIndex(division: DivisionId): TeamTileData[] {
-  // Sorted by the name the tile actually SHOWS, so the grid reads alphabetically to a reader
-  // looking for their school ("Mitty", not "Archbishop Mitty" filed under A).
-  const leagueShort = getLeague(getDivision(division).leagueId).shortName;
-  return [...getTeams(division)]
-    .sort((a, b) => a.shortName.localeCompare(b.shortName))
-    .map((team) => {
-      const standing = getStandingFor(team.slug);
-      return { team, standing, hasResults: standing?.hasReportedResults ?? false, leagueShort };
-    });
-}
-
-export interface TeamsDivisionGroup {
-  id: DivisionId;
-  /** null for a single-division league: no h4 is rendered. */
-  heading: string | null;
-  /**
-   * The element id the division wrapper carries (`de-anza`, `marin-county`), or null when it equals
-   * the league id (PCAL's `pcal`): every id on the page is unique (SPEC §8.1).
-   */
-  anchorId: string | null;
-  tiles: TeamTileData[];
-}
-
 export interface TeamsLeagueGroup {
   league: LeagueSummary;
   /** `SCVAL — Santa Clara Valley Athletic League` */
@@ -633,7 +602,13 @@ export interface TeamsLeagueGroup {
   standingsHref: string;
   /** `SCVAL standings` */
   standingsLabel: string;
-  divisions: TeamsDivisionGroup[];
+  /**
+   * Each division's compact standings table: every team of the division in the engine's order,
+   * with its anchor, h4 heading, ladder line and `Full <division> table →` link — the /standings
+   * overview's own division view (components/standings/standings-view.ts), so the two pages can
+   * never disagree about a place.
+   */
+  divisions: OverviewDivision[];
 }
 
 export interface TeamsSectionGroup {
@@ -645,8 +620,9 @@ export interface TeamsSectionGroup {
 
 const teamsWord = (n: number) => `${n} ${n === 1 ? 'team' : 'teams'}`;
 
-/** /teams: section → league → division → tiles, config order (SPEC §10.5). */
+/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §17). */
 export function buildTeamsByLeague(): TeamsSectionGroup[] {
+  const teams = getTeams();
   return getTeamsGrouped().map(({ section, leagues }) => ({
     id: section.id,
     name: section.name,
@@ -656,12 +632,14 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
       meta: teamsWord(league.teamCount),
       standingsHref: `/standings/${league.id}`,
       standingsLabel: `${league.shortName} standings`,
-      divisions: divisions.map((d) => ({
-        id: d.id,
-        heading: d.heading,
-        anchorId: d.id === league.id ? null : d.id,
-        tiles: buildTeamsIndex(d.id),
-      })),
+      divisions: divisions.map((d) =>
+        buildOverviewDivision({
+          division: d.id,
+          standings: getStandings(d.id),
+          teams,
+          throughDate: getLastLeagueResultDate({ division: d.id }),
+        }),
+      ),
     })),
   }));
 }

@@ -19,7 +19,7 @@ import { TEAMS } from '../../lib/teams';
 
 const HREFS = navLeagueHrefs();
 const SLUG_LEAGUE = Object.fromEntries(TEAMS.map((t) => [t.slug, t.league]));
-const LEAGUES = new Set(Object.keys(HREFS['/standings']));
+const LEAGUES = new Set(Object.keys(HREFS['/teams']));
 
 function render(href: string, pathname: string): string {
   mockPath = pathname;
@@ -35,21 +35,28 @@ function render(href: string, pathname: string): string {
 }
 
 describe('the league hrefs the bars hand to NavLink', () => {
-  it('Scores, Table and Playoffs per league; MCAL’s Playoffs is its tournament page', () => {
+  it('Scores, Teams and Playoffs per league; MCAL’s Playoffs is its tournament page', () => {
     expect(HREFS['/schedule']).toEqual({
       scval: '/schedule/scval',
       bval: '/schedule/bval',
       pcal: '/schedule/pcal',
       mcal: '/schedule/mcal',
     });
-    expect(HREFS['/standings'].bval).toBe('/standings/bval');
+    // Teams took over the Table tab's job (DESIGN §17): your league's tables, on /teams.
+    expect(HREFS['/teams']).toEqual({
+      scval: '/teams#scval',
+      bval: '/teams#bval',
+      pcal: '/teams#pcal',
+      mcal: '/teams#mcal',
+    });
     expect(HREFS['/playoffs']).toEqual({
       scval: '/playoffs#scval',
       bval: '/playoffs#bval',
       pcal: '/playoffs#pcal',
       mcal: '/playoffs/mcal',
     });
-    expect(HREFS['/teams']).toBeUndefined();
+    expect(HREFS['/standings']).toBeUndefined();
+    expect(HREFS['/leaders']).toBeUndefined();
   });
 });
 
@@ -59,15 +66,21 @@ describe('active state comes from the base href only', () => {
     expect(render('/playoffs', '/playoffs')).toContain('aria-current="page"');
   });
 
-  it('base /standings on /standings/scval is active', () => {
-    expect(isActive('/standings/scval', '/standings')).toBe(true);
-    expect(render('/standings', '/standings/scval')).toContain('aria-current="page"');
+  it('base /schedule on /schedule/scval is active, as the page its league target names', () => {
+    expect(isActive('/schedule/scval', '/schedule')).toBe(true);
+    expect(render('/schedule', '/schedule/scval')).toContain('aria-current="page"');
   });
 
-  it('/playoffs/mcal lights Playoffs; /standings/bval lights Table and not Scores', () => {
+  it('/playoffs/mcal lights Playoffs; /standings and /standings/bval light Teams and not Scores', () => {
     expect(render('/playoffs', '/playoffs/mcal')).toContain('aria-current="page"');
-    expect(render('/standings', '/standings/bval')).toContain('aria-current="page"');
+    expect(render('/teams', '/standings/bval')).toContain('aria-current="true"');
+    expect(render('/teams', '/standings')).toContain('aria-current="true"');
     expect(render('/schedule', '/standings/bval')).not.toContain('aria-current');
+  });
+
+  it('/teams#bval, a league target, still lights Teams as the page itself', () => {
+    expect(render('/teams', '/teams')).toContain('aria-current="page"');
+    expect(render('/teams', '/teams/leigh')).toContain('aria-current="true"');
   });
 
   it('Home is active on / only', () => {
@@ -98,13 +111,13 @@ describe('the target: page league, then the remembered league, then the index', 
     expect(pageLeagueOf('/teams/leigh', LEAGUES, SLUG_LEAGUE)).toBe(leigh.league);
     expect(
       navTarget({
-        href: '/standings',
-        leagueHrefs: HREFS['/standings'],
+        href: '/teams',
+        leagueHrefs: HREFS['/teams'],
         slugLeague: SLUG_LEAGUE,
         pathname: '/teams/leigh',
         effectiveLeague: 'pcal',
       }),
-    ).toBe(`/standings/${leigh.league}`);
+    ).toBe(`/teams#${leigh.league}`);
   });
 
   it('a page about no league follows the remembered league', () => {
@@ -131,13 +144,13 @@ describe('the target: page league, then the remembered league, then the index', 
   it('no league anywhere: the index href', () => {
     expect(
       navTarget({
-        href: '/standings',
-        leagueHrefs: HREFS['/standings'],
+        href: '/teams',
+        leagueHrefs: HREFS['/teams'],
         slugLeague: SLUG_LEAGUE,
         pathname: '/teams',
         effectiveLeague: null,
       }),
-    ).toBe('/standings');
+    ).toBe('/teams');
   });
 
   it('unknown path params are not leagues', () => {
@@ -149,7 +162,7 @@ describe('the target: page league, then the remembered league, then the index', 
 
   it('a link with no league hrefs keeps its href', () => {
     expect(
-      navTarget({ href: '/teams', pathname: '/standings/bval', slugLeague: SLUG_LEAGUE, effectiveLeague: 'bval' }),
-    ).toBe('/teams');
+      navTarget({ href: '/leaders', pathname: '/standings/bval', slugLeague: SLUG_LEAGUE, effectiveLeague: 'bval' }),
+    ).toBe('/leaders');
   });
 });

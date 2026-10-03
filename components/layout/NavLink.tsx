@@ -35,16 +35,16 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
  * are their own inner component. They return the capsule span as a DIRECT child of the `<a>`, which
  * `.sx-navtop:focus-visible > .sx-indicator` (globals.css) depends on.
  *
- * League-aware targets (SPEC §8.3). Scores, Table and Playoffs carry `leagueHrefs` (built by the
+ * League-aware targets (SPEC §8.3). Scores, Teams and Playoffs carry `leagueHrefs` (built by the
  * server bars from the league config) and every link gets `slugLeague` (the same `{slug: league}`
  * map the prefs script embeds). After hydration the link points at `leagueHrefs[L] ?? href`, where L
  * is the PAGE's league when the path names one (`/standings|schedule|playoffs/<id>`, or
  * `/teams/<slug>` through `slugLeague`), else the effective (remembered) league, else none. The
  * server HTML is always the index `href`, so there is no hydration mismatch and the nav works
  * with JS off; storage is never written here. The ACTIVE state is computed from the path part of
- * the base `href` (and of the league targets), so `/standings/bval` lights Table, `/playoffs/mcal`
- * lights Playoffs, and a `#hash` target (`/playoffs#bval`, `/schedule#<date>`) never breaks
- * `aria-current`.
+ * the base `href` (and of the league targets), so `/standings/bval` lights Teams (DESIGN §17),
+ * `/playoffs/mcal` lights Playoffs, and a `#hash` target (`/playoffs#bval`, `/teams#bval`,
+ * `/schedule#<date>`) never breaks `aria-current`.
  */
 export interface NavLinkProps {
   /**
@@ -69,9 +69,12 @@ export interface NavLinkProps {
  * Routes that belong to a section without living under its path. A day page and a game page are
  * both reached from /schedule and are what its Scores tab is FOR, so the reader on
  * /scores/2026-09-19 or /game/… keeps that section lit instead of a bar with nothing lit at all.
+ * The standings pages belong to Teams, which absorbed the old Table tab (DESIGN §17): /standings
+ * and /standings/<id> keep Teams lit.
  */
 const SECTION_PREFIXES: Readonly<Record<string, readonly string[]>> = {
   '/schedule': ['/scores/', '/game/'],
+  '/teams': ['/standings'],
 };
 
 /**
@@ -164,13 +167,12 @@ function TopFace({
   // The 44px link box is the target; the 36px capsule inside it is the visible state. The lit
   // capsule is accent-wash with accent-ink (6.5 / 7.55), never accent on the wash. The press grey
   // sits on the capsule rather than the link box, so it is the same shape as the wash that
-  // follows it. 8px of side padding below 1024px, 12px from there: with eight links (Leaders was
-  // added) the 10px it had put the theme toggle 21px into the right gutter at 768
-  // (components/layout/SiteHeader.tsx has the measurements).
+  // follows it. 10px of side padding below 1024px, 12px from there (components/layout/
+  // SiteHeader.tsx has the measurements for the seven links).
   return (
     <span
       data-pending={pending && !active ? '' : undefined}
-      className={`sx-indicator inline-flex h-9 items-center rounded-full px-2 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
+      className={`sx-indicator inline-flex h-9 items-center rounded-full px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
         lit
           ? 'bg-accent-wash font-semibold text-accent-ink'
           : 'font-medium group-hover:bg-surface-2 group-hover:text-ink group-active:bg-surface-2'

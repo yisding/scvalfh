@@ -299,19 +299,48 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect([...order].sort((a, b) => a - b), 'app/teams/page.tsx order').toEqual(order);
   });
 
-  it('the finder hooks: 43 tiles with data-team-tile on the <li>, group wrappers, the switcher wrapper', () => {
+  it('the finder hooks: 43 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
     const html = renderIndex();
-    const tiles = [...html.matchAll(/<li data-team-tile="([^"]+)"/g)].map((m) => m[1]);
-    expect(tiles.length, 'components/teams/TeamTile.tsx data-team-tile').toBe(43);
-    expect(new Set(tiles), 'components/teams/TeamTile.tsx').toEqual(new Set(data.getTeamSlugs()));
+    // Every team is a row of its division's standings table (DESIGN §17), and the row is the
+    // finder's hook: no <li> tiles any more.
+    const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
+    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(43);
+    for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
+    expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
+    expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
+    // Six tables, one per division, each in a group wrapper the finder can hide.
+    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(6);
     expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(2 + 4 + 6);
+    // A division with a ladder line drawn marks it, so a search never leaves it between rows.
+    const lines = [...html.matchAll(/<tr data-hide-while-searching="">\s*<td colSpan="5"[^>]*>([^<]+)</g)].map((m) => m[1]);
+    expect(lines.length, 'components/standings/CompactStandingsTable.tsx ladder rows').toBeGreaterThan(0);
+    for (const label of lines) expect(label, 'ladder row label').toMatch(/line|host/i);
+    // Each division links its full league table.
+    for (const href of ['/standings/scval#de-anza', '/standings/bval#santa-teresa', '/standings/pcal#pcal', '/standings/mcal#marin-county']) {
+      expect(html, `app/teams/page.tsx ${href}`).toContain(`href="${href}"`);
+    }
     expect(html, 'app/teams/page.tsx finder').toContain('<search');
     expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
     const text = textOf(html);
     expect(text, 'app/teams/page.tsx description').toContain(
-      'All 43 girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section). League and division alignment comes from each league’s official schedule.',
+      'All 43 girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule.',
     );
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
+  });
+
+  it('a row holds what the Table tab showed, and agrees with /standings', () => {
+    const html = renderIndex();
+    const heads = [...html.matchAll(/<thead[\s\S]*?<\/thead>/g)].map((m) => textOf(m[0]).replace(/\s+/g, ' ').trim());
+    for (const head of heads) expect(head, 'app/teams/page.tsx table head').toBe('# Team GP W-L-T Pts');
+    for (const slug of ['st-ignatius', 'leigh', 'stevenson', 'tamalpais']) {
+      const s = data.getStandingFor(slug)!;
+      const row = new RegExp(`<tr data-team-slug="${slug}"[\\s\\S]*?</tr>`).exec(html)![0];
+      const cells = textOf(row).replace(/\s+/g, ' ');
+      if (s.hasReportedResults) {
+        expect(cells, slug).toContain(`${s.computed.w}-${s.computed.l}-${s.computed.t}`);
+        expect(cells, slug).toContain(String(s.computed.pts));
+      }
+    }
   });
 });
 

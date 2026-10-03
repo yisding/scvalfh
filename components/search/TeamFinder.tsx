@@ -19,10 +19,12 @@ import {
  * 43-team index the page passes in. Two modes:
  *
  * - `filter` (/teams): the page's own server-rendered, grouped list IS the result list. This
- *   toggles `hidden` on its `<li data-team-tile="<slug>">` items (so no empty list item is left for
- *   a screen reader) and on any `[data-team-group]` wrapper left with no visible tile — the
- *   `ScheduleFilters` pattern; the component does not own the list — and hides
- *   `#hideWhileSearchingId` (the anchor switcher) while a query is typed. Empty query restores all.
+ *   toggles `hidden` on its `[data-team-tile="<slug>"]` items (the standings tables' team rows, so
+ *   no empty row is left for a screen reader) and on any `[data-team-group]` wrapper left with no
+ *   visible team — the `ScheduleFilters` pattern; the component does not own the list — hides
+ *   every `[data-hide-while-searching]` inside the list (a table's labelled ladder row, which means
+ *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
+ *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
  *   `Search all 43 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
@@ -278,6 +280,9 @@ export function TeamFinder({
     for (const tile of list.querySelectorAll<HTMLElement>('[data-team-tile]')) {
       tile.hidden = keep !== null && !keep.has(tile.getAttribute('data-team-tile') ?? '');
     }
+    for (const el of list.querySelectorAll<HTMLElement>('[data-hide-while-searching]')) {
+      el.hidden = keep !== null;
+    }
     // Innermost wrappers first (reverse document order), so a section that only holds hidden
     // leagues is hidden too.
     for (const group of [...list.querySelectorAll<HTMLElement>('[data-team-group]')].reverse()) {
@@ -290,9 +295,11 @@ export function TeamFinder({
     if (mode !== 'filter') return;
     return () => {
       const list = listId ? document.getElementById(listId) : null;
-      list?.querySelectorAll<HTMLElement>('[data-team-tile], [data-team-group]').forEach((el) => {
-        el.hidden = false;
-      });
+      list
+        ?.querySelectorAll<HTMLElement>('[data-team-tile], [data-team-group], [data-hide-while-searching]')
+        .forEach((el) => {
+          el.hidden = false;
+        });
       const hideMe = hideWhileSearchingId ? document.getElementById(hideWhileSearchingId) : null;
       if (hideMe) hideMe.hidden = false;
     };
