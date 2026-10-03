@@ -155,6 +155,21 @@ async function main(): Promise<number> {
   const problems: string[] = [];
   if (standings.length !== 4) problems.push(`standings PDF yielded ${standings.length} blocks, expected 4`);
   if (allLeague.length !== 4) problems.push(`all-league PDF yielded ${allLeague.length} blocks, expected 4`);
+  // Four blocks is not enough: each division/level must appear exactly once, or a duplicated block
+  // would hide a missing one and `pick` below would quietly write it as empty.
+  const expectedBlocks = divisionsOf('scval').flatMap(({ id }) => [`${id}/varsity`, `${id}/jv`]);
+  for (const [name, blocks] of [
+    ['standings', standings],
+    ['all-league', allLeague],
+  ] as const) {
+    const keys = blocks.map(({ division, level }) => `${division}/${level}`);
+    for (const key of new Set(keys)) {
+      if (keys.filter((k) => k === key).length > 1) problems.push(`${name} PDF has more than one ${key} block`);
+    }
+    for (const key of expectedBlocks) {
+      if (!keys.includes(key)) problems.push(`${name} PDF has no ${key} block`);
+    }
+  }
   for (const block of standings) {
     if (block.rows.length === 0) problems.push(`${block.division}/${block.level} standings block is empty`);
     for (const row of block.rows) {

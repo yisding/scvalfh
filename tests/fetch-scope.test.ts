@@ -140,8 +140,38 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     const log = describePrevious(p, 'data/rosters.json');
     expect(log[0]).toMatch(/^WARN previous data\/rosters\.json: 4 row\(s\) do not validate and are dropped/);
     for (const slug of ['leigh', 'not-a-school', 'greenfield', 'stevenson']) {
-      expect(log.some((l) => l.startsWith(`WARN   ${slug}: `)), slug).toBe(true);
+      expect(log.some((l) => l.startsWith(`WARN   ${slug}`)), slug).toBe(true);
     }
+  });
+
+  it('ties a dropped row to its registry team by MaxPreps id when its slug is broken', () => {
+    const file = structuredClone(raw);
+    file.teams[file.teams.findIndex((t) => t.slug === 'del-mar')].slug = 'not-a-school';
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([expect.objectContaining({ slug: 'not-a-school', team: 'del-mar' })]);
+    expect(describePrevious(p, 'data/rosters.json')).toContain(
+      `WARN   not-a-school (del-mar): ${p.dropped[0].reason}`,
+    );
+    // An SCVAL-only run must not report Del Mar (BVAL) as kept: it lost its row.
+    const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
+    const byLeague = summarizeByLeague(teams, ['scval'], new Set(p.dropped.flatMap((d) => (d.team ? [d.team] : []))));
+    expect(byLeague.find((l) => l.league === 'bval')!.dropped).toEqual(['del-mar']);
+    expect(runExitCode(byLeague, p.dropped)).toBe(1);
+  });
+
+  it('fails the run when a dropped row names no registry team at all', () => {
+    const file = structuredClone(raw) as unknown as { teams: Array<Record<string, unknown>> };
+    const i = file.teams.findIndex((t) => t.slug === 'del-mar');
+    delete file.teams[i].slug;
+    file.teams[i].teamId = 'not-a-maxpreps-id';
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([expect.objectContaining({ slug: `teams[${i}]`, team: null })]);
+    expect(describePrevious(p, 'data/rosters.json').some((l) => /names no registry team; the run fails/.test(l))).toBe(true);
+    // No league can claim the lost team, so only the unattributed drop fails the run.
+    const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
+    const byLeague = summarizeByLeague(teams, ['scval'], new Set());
+    expect(runExitCode(byLeague)).toBe(0);
+    expect(runExitCode(byLeague, p.dropped)).toBe(1);
   });
 
   it('keeps every row when only the counts lie, and says the file is not valid whole', () => {
@@ -160,7 +190,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     file.teams.push(structuredClone(file.teams[0]));
     file.counts = countRosters(file.teams);
     const p = rowsOf(read(file));
-    expect(p.dropped).toEqual([{ slug: raw.teams[0].slug, reason: '2 rows claim this team; none is kept' }]);
+    expect(p.dropped).toEqual([{ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: '2 rows claim this team; none is kept' }]);
     expect(p.rows.has(raw.teams[0].slug)).toBe(false);
     expect(p.rows.size).toBe(TEAMS.length - 1);
   });
@@ -180,7 +210,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
       expect(p.whole).toBeNull();
       expect(p.otherSeason).toBe(season ?? '(none)');
       expect(p.dropped).toHaveLength(TEAMS.length);
-      expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
+      expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
       const log = describePrevious(p, 'data/rosters.json');
       expect(log).toHaveLength(1);
       expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its 43 row(s) are ignored, as if absent`)).toBe(true);

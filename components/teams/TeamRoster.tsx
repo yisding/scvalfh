@@ -138,9 +138,8 @@ export function TeamRoster({ view }: { view: RosterView }) {
     const action = view.rosterUrl
       ? { href: view.rosterUrl, label: 'Check MaxPreps', external: true }
       : undefined;
-    // Coaches and their sources come from the enrichment file, not the MaxPreps list, so a team
-    // with no list still shows them.
-    const hasCoaches = view.coaches.length > 0;
+    // Coaches and the sources come from the enrichment file, not the MaxPreps list, so a team
+    // with no list still shows them (each renders nothing when it has nothing).
     return (
       <div>
         <EmptyState
@@ -162,7 +161,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
           )}
         </EmptyState>
         <Coaches view={view} />
-        {hasCoaches ? <Sources view={view} /> : null}
+        <Sources view={view} />
       </div>
     );
   }

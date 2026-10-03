@@ -138,7 +138,7 @@ async function main(): Promise<number> {
   if (previous) {
     for (const line of describePrevious(previous, path.relative(process.cwd(), args.out))) console.warn(line);
   }
-  const dropped = new Set(previous?.dropped.map((d) => d.slug) ?? []);
+  const dropped = new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
 
   console.log(
@@ -272,7 +272,7 @@ async function main(): Promise<number> {
   // row was dropped (it is pending now); a league left out of the run is otherwise not a failure.
   const failed = byLeague.reduce((n, l) => n + l.failed, 0);
   const lost = byLeague.reduce((n, l) => n + l.dropped.length, 0);
-  const exitCode = runExitCode(byLeague);
+  const exitCode = runExitCode(byLeague, previous?.dropped ?? []);
   const c = rosters.counts;
   console.log(
     `\n${c.players} players on ${c.teams} teams · ${c.withGrade} with a grade · ` +

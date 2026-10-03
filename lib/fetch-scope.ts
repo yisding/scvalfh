@@ -89,7 +89,21 @@ export function contentKey(value: unknown, ignore: readonly string[]): string {
 export interface DroppedRow {
   /** The row's slug, or `teams[<i>]` when it has none. */
   slug: string;
+  /**
+   * The registry team the row belonged to: its slug when that is a registry slug, else the team
+   * whose MaxPreps id the row carries. `null` when neither names one: that team cannot be told
+   * apart from a team the file simply lacked, so the run must fail rather than report it kept
+   * (runExitCode).
+   */
+  team: string | null;
   reason: string;
+}
+
+/** Which registry team a dropped row belonged to (DroppedRow.team). */
+function registryTeamOf(t: unknown, slug: string): string | null {
+  if (getTeamBySlug(slug)) return slug;
+  const teamId = isRecord(t) && typeof t.teamId === 'string' ? t.teamId : null;
+  return (teamId && TEAMS.find((team) => team.id === teamId)?.slug) || null;
 }
 
 /** What a run may take from the previous file. */
@@ -152,7 +166,11 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
     return {
       readable: true,
       rows: new Map(),
-      dropped: teams.map((t, i) => ({ slug: slugOf(t, i), reason: `season ${season}, not ${opts.season}` })),
+      dropped: teams.map((t, i) => ({
+        slug: slugOf(t, i),
+        team: registryTeamOf(t, slugOf(t, i)),
+        reason: `season ${season}, not ${opts.season}`,
+      })),
       otherSeason: season,
       whole: null,
       problems: [],
@@ -167,13 +185,13 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
     times.set(slug, (times.get(slug) ?? 0) + 1);
     const parsed = opts.row.safeParse(t);
     if (parsed.success) rows.set(slug, parsed.data);
-    else dropped.push({ slug, reason: describeIssues(parsed.error.issues) });
+    else dropped.push({ slug, team: registryTeamOf(t, slug), reason: describeIssues(parsed.error.issues) });
   });
   for (const [slug, n] of times) {
     if (n < 2) continue;
     rows.delete(slug);
     dropped = dropped.filter((d) => d.slug !== slug);
-    dropped.push({ slug, reason: `${n} rows claim this team; none is kept` });
+    dropped.push({ slug, team: registryTeamOf(undefined, slug), reason: `${n} rows claim this team; none is kept` });
   }
 
   const problems: string[] = [];
@@ -198,7 +216,11 @@ export function describePrevious(previous: PreviousRows<unknown, unknown>, label
     lines.push(
       `WARN previous ${label}: ${previous.dropped.length} row(s) do not validate and are dropped — not carried forward, not kept:`,
     );
-    for (const d of previous.dropped) lines.push(`WARN   ${d.slug}: ${d.reason}`);
+    for (const d of previous.dropped) {
+      const who =
+        d.team === null ? `${d.slug} (names no registry team; the run fails)` : d.team === d.slug ? d.slug : `${d.slug} (${d.team})`;
+      lines.push(`WARN   ${who}: ${d.reason}`);
+    }
   }
   for (const p of previous.problems) lines.push(`WARN previous ${label} ${p}`);
   return lines;
@@ -254,10 +276,14 @@ export function summarizeByLeague(
 
 /**
  * 1 when a team the run covered failed, or when a team it did not cover lost its previous row (now
- * pending where the file had rows), so a scheduler notices either; else 0.
+ * pending where the file had rows), or when a dropped row names no registry team at all (by slug
+ * or MaxPreps id), so whichever team lost it cannot be shown as kept; else 0.
  */
-export function runExitCode(byLeague: readonly LeagueRunSummary[]): 0 | 1 {
-  return byLeague.some((l) => l.failed > 0 || l.dropped.length > 0) ? 1 : 0;
+export function runExitCode(
+  byLeague: readonly LeagueRunSummary[],
+  dropped: ReadonlyArray<Pick<DroppedRow, 'team'>> = [],
+): 0 | 1 {
+  return byLeague.some((l) => l.failed > 0 || l.dropped.length > 0) || dropped.some((d) => d.team === null) ? 1 : 0;
 }
 
 /**
