@@ -9,7 +9,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * grade, position and height somebody published.
  *
  * A list, not a table: a five-column table cannot reflow at 320px / 400% zoom without a scroller
- * (DESIGN §10.8), and for seven of the fifteen programs most columns would be empty. Each row is
+ * (DESIGN §10.8), and for many of the 43 programs most columns would be empty. Each row is
  * the number (when the team publishes numbers at all), the name, and one meta line holding only
  * the facts that exist — a blank is never printed as a guess or a placeholder.
  *

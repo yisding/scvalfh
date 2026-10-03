@@ -1,13 +1,16 @@
 import Link from 'next/link';
 
 import { longDate, monthDay, parseLocal } from '../../lib/format';
-import { PLAYOFF_KEY_DATES } from '../../lib/season';
+import { CCS, getLeague } from '../../lib/leagues';
+import type { LeagueId } from '../../lib/types';
 
 import type { RailKind } from './rail-targets';
 
 /**
  * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · Sep · ● Today · Oct · Oct 28 ↓ · CCS Nov 7–14`,
- * as a row of 36px capsules inside a 44px hit row.
+ * as a row of 36px capsules inside a 44px hit row. The last chip is the league's own postseason:
+ * the CCS dates (`/playoffs#<league>`) for a CCS league, the MCAL tournament
+ * (`/playoffs/<league>`) for a league tournament — never a CCS chip on an NCS league's page.
  *
  * Plain `<a href="#2026-09-24">` anchors into the date groups below — real, shareable, JS-free
  * URLs, and `/scores/[date]` exists for every one of them. No scroll-spy and no client component:
@@ -36,6 +39,8 @@ export interface TimelineRailProps {
   dates: readonly string[];
   /** 'YYYY-MM-DD' derived from the snapshot stamp. */
   today: string;
+  /** The page's league: its postseason chip ends the rail. */
+  leagueId: LeagueId;
   className?: string;
 }
 
@@ -109,13 +114,35 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
 }
 
-function ccsLabel(): string {
-  const qf = monthDay(PLAYOFF_KEY_DATES.quarterfinals);
-  const finalDay = parseLocal(PLAYOFF_KEY_DATES.finals).day;
-  return `CCS ${qf}–${finalDay}`;
+/** `Nov 7–14` / `Oct 26–30` (one month), `Oct 30–Nov 14` across months. */
+function span(first: string, last: string): string {
+  const a = parseLocal(first);
+  const b = parseLocal(last);
+  return a.month === b.month ? `${monthDay(first)}–${b.day}` : `${monthDay(first)}–${monthDay(last)}`;
 }
 
-export function TimelineRail({ dates, today, className }: TimelineRailProps) {
+/** The rail's last chip: the league's postseason, from config. */
+export function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } {
+  const league = getLeague(leagueId);
+  if (league.postseason.kind === 'league-tournament') {
+    const rounds = league.postseason.rounds.filter((r) => !r.optional).map((r) => r.date).sort();
+    const first = rounds[0];
+    const last = rounds[rounds.length - 1];
+    return {
+      label: `${league.postseason.name} ${span(first, last)}`,
+      href: `/playoffs/${league.id}`,
+      sr: `${league.postseason.name}, ${longDate(first)} to ${longDate(last)}`,
+    };
+  }
+  return {
+    label: `CCS ${span(CCS.keyDates.quarterfinals, CCS.keyDates.finals)}`,
+    href: `/playoffs#${league.id}`,
+    sr: `CCS playoffs, ${longDate(CCS.keyDates.quarterfinals)} to ${longDate(CCS.keyDates.finals)}`,
+  };
+}
+
+export function TimelineRail({ dates, today, leagueId, className }: TimelineRailProps) {
+  const chip = postseasonChip(leagueId);
   const markers = buildMarkers(dates, today);
   if (markers.length === 0) return null;
   return (
@@ -159,12 +186,13 @@ export function TimelineRail({ dates, today, className }: TimelineRailProps) {
         ))}
         <li className="flex h-11 shrink-0 items-center">
           <Link
-            href="/playoffs"
+            href={chip.href}
+            prefetch={false}
             className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
           >
-            <span aria-hidden="true">{ccsLabel()}</span>
+            <span aria-hidden="true">{chip.label}</span>
             <span aria-hidden="true">&rarr;</span>
-            <span className="sr-only">CCS playoffs, November 7 to 14</span>
+            <span className="sr-only">{chip.sr}</span>
           </Link>
         </li>
       </ol>

@@ -2,26 +2,38 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
+import { HISTORY_LEAGUE, LEAGUES, getLeague } from '@/lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
 };
 
+/** 'SCVAL, BVAL, PCAL and MCAL', from the config (never a literal list). */
+const LEAGUE_LIST = LEAGUES.map((l) => l.shortName).reduce(
+  (acc, name, i, all) => (i === 0 ? name : `${acc}${i === all.length - 1 ? ' and ' : ', '}${name}`),
+  '',
+);
+
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
-  { href: '/standings', name: 'Standings', description: 'Both divisions' },
-  { href: '/schedule', name: 'Schedule & results', description: 'The whole season' },
-  { href: '/teams', name: 'Teams', description: 'Find your school' },
-  { href: '/playoffs', name: 'CCS playoffs', description: 'Who is in, and the key dates' },
-  { href: '/history/2025-26', name: 'History', description: 'Last season’s final tables and awards' },
+  { href: '/standings', name: 'Standings — every league', description: `${LEAGUE_LIST} tables` },
+  { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
+  { href: '/teams', name: 'Find a team', description: 'Search by school, city or mascot' },
+  { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
+  {
+    href: '/history/2025-26',
+    name: 'History',
+    description: `Last season’s final ${getLeague(HISTORY_LEAGUE).shortName} tables and awards`,
+  },
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
  * links are the real navigation rather than a single "go home": one card per top-level page
- * (the six nav destinations plus the History archive), with its name over a one-line
- * description, so nothing is a sentence squeezed into a pill.
+ * (the seven desktop nav destinations, the History archive among them, which only the history
+ * league has), with its name over a one-line description, so nothing is a sentence squeezed into
+ * a pill.
  *
  * The copy does not claim these seven are every page on the site — there are hundreds of team,
  * game and day pages — only that each of those is reachable from one of them, which is true.

@@ -1,12 +1,14 @@
 import { EM_DASH, ordinal, perGame, recordString, signedGd, streakString } from '../../lib/format';
+import { plural } from '../ui/plural';
 import StatTile from '../ui/StatTile';
 import type { TeamPageView } from './team-view';
 import { placeSub } from './team-view';
 
 /**
- * The headline numbers (DESIGN §3.7, §7.7): six card tiles, 2-up on a phone, 3-up from 768px and
- * one 6-up band from 1280px. (The brief's 6-up from 1024px left 151px tiles whose subs all wrapped
- * to two lines; two rows of three fit them on one.)
+ * The headline numbers (DESIGN §3.7, §7.7, SPEC §10.5): eight card tiles, 2-up on a phone and
+ * 4-up from 768px — Place (`<place> of <N> in <division heading ?? league short>`), the league
+ * record, GP (`<counted>/<scheduled>`) and MAX (the points ceiling, `pts + win × games left`, from
+ * `getStandingContext`), then overall, streak and goals.
  *
  * Every tile keeps its full footprint when the value is missing, so the row never reflows, and a
  * team with no reported results shows an em dash in every tile rather than a zero — `0` and
@@ -14,37 +16,42 @@ import { placeSub } from './team-view';
  * (Cupertino, Homestead and Monta Vista in league play) therefore read `0 / 23` and `0.0` scored
  * per game in full-strength ink: nothing is hidden because it is unflattering.
  *
- * PTS sits under the league record because it is the official ordering key — 3 for a win, 1 for a
- * tie (By-Laws Article VI §2), which is also why PLACE is the one hero figure here.
+ * PTS sits under the league record because it is the official ordering key in all four leagues —
+ * 3 for a win, 1 for a tie — which is also why PLACE is the one hero figure here. GP and MAX are
+ * counts, not scores: `0/12` GP is a true count for a team with nothing reported, while MAX is a
+ * ceiling, never a projection.
  *
- * Placement follows the §3.7 wireframe's priority: LAST and NEXT come first, then these tiles. The
- * wireframe splits the six into two rows of three with LAST and NEXT between them; they are kept
- * together instead, after the pair, so the desktop row is one full-width 6-up band (`md:col-span-2`
- * in the team page's grid) rather than two half bands. The place itself is not lost by moving
- * them down: the identity card's meta line states it. The counting rules are generic
- * boilerplate, so they sit in one labelled disclosure under the tiles (brief §4.22).
+ * Placement follows the §3.7 wireframe's priority: LAST and NEXT come first, then these tiles, as
+ * one full-width band after the pair (the caller places them and passes `className` for the gap).
+ * The place itself is not lost by moving them down: the identity card's second meta line states
+ * it. The counting rules are generic boilerplate, so they sit in one labelled disclosure under the
+ * tiles (brief §4.22).
  *
- * The tiles are a `<dl>` (StatTile `inList`): six label/value pairs, announced as such. The two
- * values that only read well to the eye carry a spoken form: Streak "5L" is "5 losses in a row",
+ * The tiles are a `<dl>` (StatTile `inList`): eight label/value pairs, announced as such. The two
+ * values that only read well to the eye carry a spoken form: Streak "L5" is "5 losses in a row",
  * Goals F / A "0 / 52" is "0 for, 52 against".
  */
 const STREAK_WORD = { W: ['win', 'wins'], L: ['loss', 'losses'], T: ['tie', 'ties'] } as const;
 
 export function TeamStatTiles({ view, className }: { view: TeamPageView; className?: string }) {
-  const { standing, hasResults } = view;
+  const { standing, hasResults, context } = view;
   const league = hasResults && standing ? standing.computed : null;
   const overall = hasResults && standing ? standing.overall : null;
+  const left = context ? context.remaining : null;
   const streak = league?.streak ?? null;
+  // A level place reads `T-7th` with "tied for 7th" spoken, exactly as the identity card says it.
+  const sharedPlace = league !== null && (standing?.tiebreak.shared ?? false);
   const streakSpoken = streak
-    ? `${streak.count} ${STREAK_WORD[streak.result][streak.count === 1 ? 0 : 1]} in a row`
+    ? `${plural(streak.count, STREAK_WORD[streak.result][0], STREAK_WORD[streak.result][1])} in a row`
     : undefined;
 
   return (
     <div className={className}>
-      <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-6">
+      <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <StatTile
           label="Place"
-          value={league ? ordinal(league.place) : null}
+          value={league ? `${sharedPlace ? 'T-' : ''}${ordinal(league.place)}` : null}
+          srValue={league && sharedPlace ? `tied for ${ordinal(league.place)}` : undefined}
           sub={placeSub(view)}
           emphasis="hero"
           variant="card"
@@ -58,11 +65,31 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
           sub={league ? `${league.pts} pts · ${league.gp} played` : 'league games only'}
         />
         <StatTile
+          label="GP"
+          variant="card"
+          inList
+          value={context ? `${context.counted}/${context.scheduled}` : null}
+          sub={
+            left === null
+              ? 'league games counted'
+              : left === 0
+                ? 'no league games left'
+                : `${plural(left, 'league game')} left`
+          }
+        />
+        <StatTile
+          label="Max"
+          variant="card"
+          inList
+          value={context ? context.maxPts : null}
+          sub="points still reachable"
+        />
+        <StatTile
           label="Overall"
           variant="card"
           inList
           value={overall ? recordString(overall) : null}
-          sub={overall ? `${overall.gp} games, all opponents` : 'all opponents'}
+          sub={overall ? `${plural(overall.gp, 'game')}, all opponents` : 'all opponents'}
         />
         <StatTile
           label="Streak"
@@ -92,7 +119,8 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
       <details className="sx-disclosure mt-3">
         <summary>How these numbers are counted</summary>
         <p className="mt-1 mb-2 max-w-prose text-meta text-ink-2">
-          League figures count division games only (By-Laws Article VI §1). A real 0 shows as{' '}
+          {`League figures count only the games that count toward the ${view.scopeLabel} table: ${view.league.doubleRoundRobin}. GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `}
+          A real 0 shows as{' '}
           <span className="sx-num">0</span>; a number we do not have shows as{' '}
           <span aria-hidden="true">{EM_DASH}</span>
           <span className="sr-only">an em dash</span>. Forfeits count in W-L-T but not in goals.

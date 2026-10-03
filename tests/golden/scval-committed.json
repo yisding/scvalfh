@@ -1,0 +1,2272 @@
+{
+  "_meta": {
+    "fetchedAt": "2026-10-02T10:48:51.206Z",
+    "generatedFrom": "cbe1aa06c74c46016edfa7236a36f8fcb1f87c5c",
+    "notes": "standings = parsed snapshot.standings (parseSnapshot); divisionGames = sorted contest ids; projection = getPlayoffProjection() with SCVAL_SNAPSHOT=data/snapshot.json (asOf omitted); phases = getSeasonPhase(`${d}T19:00:00.000Z`); labels.legends = statusLabel(s, \"2026-10-30\") from components/standings/standings-view.ts; labels.badges = STATUS_BADGE[s] read via buildDivisionView().statusGroups; labels.unions = playoffOutcomeLabel(union.split(\"|\")).",
+    "source": "data/snapshot.json"
+  },
+  "crossCheck": [
+    {
+      "field": "place (we order on points, Art. VI §2; MaxPreps orders on win pct)",
+      "ours": "1",
+      "slug": "saint-francis",
+      "theirs": "2",
+      "url": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--de-anza/?leagueid=ea062dfe-9fb9-45c7-9839-0801993d6ac6"
+    },
+    {
+      "field": "place (we order on points, Art. VI §2; MaxPreps orders on win pct)",
+      "ours": "2",
+      "slug": "st-ignatius",
+      "theirs": "1",
+      "url": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--de-anza/?leagueid=ea062dfe-9fb9-45c7-9839-0801993d6ac6"
+    },
+    {
+      "field": "place (we order on points, Art. VI §2; MaxPreps orders on win pct)",
+      "ours": "7",
+      "slug": "monta-vista",
+      "theirs": "8",
+      "url": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--el-camino/?leagueid=7bdfb2a7-8dde-4a21-88c9-832f1593554d"
+    }
+  ],
+  "divisionGames": {
+    "de-anza": [
+      "2107ba18-9e14-4626-9c4e-a34b941eed63",
+      "27b4602a-5ad0-4bd2-9cd1-4379a93427af",
+      "32a00237-be5c-4f37-ac80-893e523e127e",
+      "452c8d9a-d76e-4f37-a334-55feb9faefd4",
+      "4c02fa58-29a8-46d3-9820-2883a8c9d065",
+      "59392bb6-f046-4742-9e0a-eb736a77a1fa",
+      "5b12bb6f-b724-42ce-8c14-8b12882c1164",
+      "709b0601-6bcf-4662-a385-a7ab55833ee3",
+      "7b2bb4c9-f6c2-4be2-884a-b32085dbd4e0",
+      "81c6a8fa-4002-4c21-b914-434e95d2dd4e",
+      "82dca0e3-7350-4e7a-a287-3815828fd7a4",
+      "84ac644e-64b0-446e-987c-c2813b5d2da5",
+      "87aeb6f3-e35d-4bea-8c5c-ef4382cc2836",
+      "88256a4a-f330-42ab-9304-443da57c3d83",
+      "bd87713a-7937-4b9c-954e-7702499e934f",
+      "cd172f36-5926-4255-8179-f0265c06c030",
+      "d6ec9aac-f2f7-482d-8a2e-3370cbf0c96d",
+      "f8b94b88-e9ba-48cb-9666-117067a29340"
+    ],
+    "el-camino": [
+      "17f96b98-8dde-4606-946a-9de234de1dc3",
+      "39d3c97e-af7d-4145-8835-945d0d52fd87",
+      "3b6621bb-9a1f-4c7a-b8aa-43d889d02c5d",
+      "47015ab4-f9d2-4366-a8f6-cdcd8e131df2",
+      "4f2b2187-85b3-4a01-a19f-937388bc884f",
+      "58d2629f-1722-4753-931d-c83bf54ff23c",
+      "645c899c-360b-4346-8f8f-61d2f3ed5afb",
+      "679c94c5-4e3d-4a8e-9633-4d21c1ad2c63",
+      "6f2695f9-5883-4198-80ee-3738bf57f748",
+      "744df1db-89af-47c2-b733-d404ef533b7c",
+      "782794bf-4534-4dd2-93dd-48cd3d0bdea4",
+      "79aecb5f-6537-4b0e-96af-dbc9854ce449",
+      "80175ec7-ea39-42d1-a0ab-399100dc1925",
+      "8934b9cd-8e0e-44b9-b211-f4e7ba8b8b0a",
+      "97e2c95f-c8bd-42a0-b4ad-d7439535f7d5",
+      "9b4807cc-d3b0-4554-855c-16817deb4609",
+      "be0abe11-6748-41fd-810f-32937cac33c2",
+      "c5657c4f-4461-4ff4-a123-ebfa3466e8f1",
+      "c5afc4d3-63a7-4fc9-bbd7-cedeba2c5234",
+      "c9bf9dbf-d062-4911-867f-e56ef63d46ab",
+      "dbcfc6e4-5f23-4e89-9466-ec47a4d687d6",
+      "e7ed5902-3b3c-4c7e-b7d1-fd7b3fe48bae",
+      "ec0274ba-7ee4-47b1-ba72-88128eda99c5",
+      "f081714f-246c-490d-bbbf-5f6a4bbc61d0",
+      "f47cba37-6c57-40dd-b659-0a4c7dca7986",
+      "f6f0fbfa-907c-4b4a-a40f-7e44bf25fc6d"
+    ]
+  },
+  "labels": {
+    "badges": {
+      "aq": "AQ",
+      "at-large": "At-large",
+      "out": "No AQ",
+      "play-in": "Play-in"
+    },
+    "legends": {
+      "aq": "Places 1-3 — automatic CCS qualifier",
+      "at-large": "5th place — submitted to CCS for at-large consideration",
+      "out": "6th or lower — no automatic path",
+      "play-in": "4th place — play-in Fri Oct 30 for the SCVAL 7th berth"
+    },
+    "statusLabels": {
+      "aq": "Automatic qualifier",
+      "at-large": "At-large consideration",
+      "out": "No automatic path",
+      "play-in": "Play-in game Oct 30"
+    },
+    "unions": {
+      "aq|play-in": "Automatic qualifier or the Oct 30 play-in — Article VI §7 decides it with a coin flip",
+      "aq|play-in|at-large": "Automatic qualifier or the Oct 30 play-in or at-large consideration — Article VI §7 decides it with a coin flip",
+      "at-large|out": "At-large consideration or no automatic path — Article VI §7 decides it with a coin flip",
+      "play-in|at-large": "Play-in game Oct 30 or at-large consideration — Article VI §7 decides it with a coin flip",
+      "play-in|at-large|out": "Play-in game Oct 30 or at-large consideration or no automatic path — Article VI §7 decides it with a coin flip"
+    }
+  },
+  "phases": {
+    "2026-08-01": "preseason",
+    "2026-08-02": "preseason",
+    "2026-08-03": "preseason",
+    "2026-08-04": "preseason",
+    "2026-08-05": "preseason",
+    "2026-08-06": "preseason",
+    "2026-08-07": "preseason",
+    "2026-08-08": "preseason",
+    "2026-08-09": "preseason",
+    "2026-08-10": "preseason",
+    "2026-08-11": "preseason",
+    "2026-08-12": "preseason",
+    "2026-08-13": "preseason",
+    "2026-08-14": "preseason",
+    "2026-08-15": "preseason",
+    "2026-08-16": "preseason",
+    "2026-08-17": "preseason",
+    "2026-08-18": "preseason",
+    "2026-08-19": "preseason",
+    "2026-08-20": "preseason",
+    "2026-08-21": "preseason",
+    "2026-08-22": "preseason",
+    "2026-08-23": "preseason",
+    "2026-08-24": "regular",
+    "2026-08-25": "regular",
+    "2026-08-26": "regular",
+    "2026-08-27": "regular",
+    "2026-08-28": "regular",
+    "2026-08-29": "regular",
+    "2026-08-30": "regular",
+    "2026-08-31": "regular",
+    "2026-09-01": "regular",
+    "2026-09-02": "regular",
+    "2026-09-03": "regular",
+    "2026-09-04": "regular",
+    "2026-09-05": "regular",
+    "2026-09-06": "regular",
+    "2026-09-07": "regular",
+    "2026-09-08": "regular",
+    "2026-09-09": "regular",
+    "2026-09-10": "regular",
+    "2026-09-11": "regular",
+    "2026-09-12": "regular",
+    "2026-09-13": "regular",
+    "2026-09-14": "regular",
+    "2026-09-15": "regular",
+    "2026-09-16": "regular",
+    "2026-09-17": "regular",
+    "2026-09-18": "regular",
+    "2026-09-19": "regular",
+    "2026-09-20": "regular",
+    "2026-09-21": "regular",
+    "2026-09-22": "regular",
+    "2026-09-23": "regular",
+    "2026-09-24": "regular",
+    "2026-09-25": "regular",
+    "2026-09-26": "regular",
+    "2026-09-27": "regular",
+    "2026-09-28": "regular",
+    "2026-09-29": "regular",
+    "2026-09-30": "regular",
+    "2026-10-01": "regular",
+    "2026-10-02": "regular",
+    "2026-10-03": "regular",
+    "2026-10-04": "regular",
+    "2026-10-05": "regular",
+    "2026-10-06": "regular",
+    "2026-10-07": "regular",
+    "2026-10-08": "regular",
+    "2026-10-09": "regular",
+    "2026-10-10": "regular",
+    "2026-10-11": "regular",
+    "2026-10-12": "regular",
+    "2026-10-13": "regular",
+    "2026-10-14": "regular",
+    "2026-10-15": "regular",
+    "2026-10-16": "regular",
+    "2026-10-17": "regular",
+    "2026-10-18": "regular",
+    "2026-10-19": "regular",
+    "2026-10-20": "regular",
+    "2026-10-21": "regular",
+    "2026-10-22": "regular",
+    "2026-10-23": "regular",
+    "2026-10-24": "regular",
+    "2026-10-25": "regular",
+    "2026-10-26": "regular",
+    "2026-10-27": "regular",
+    "2026-10-28": "regular",
+    "2026-10-29": "crossover",
+    "2026-10-30": "crossover",
+    "2026-10-31": "playoffs",
+    "2026-11-01": "playoffs",
+    "2026-11-02": "playoffs",
+    "2026-11-03": "playoffs",
+    "2026-11-04": "playoffs",
+    "2026-11-05": "playoffs",
+    "2026-11-06": "playoffs",
+    "2026-11-07": "playoffs",
+    "2026-11-08": "playoffs",
+    "2026-11-09": "playoffs",
+    "2026-11-10": "playoffs",
+    "2026-11-11": "playoffs",
+    "2026-11-12": "playoffs",
+    "2026-11-13": "playoffs",
+    "2026-11-14": "playoffs",
+    "2026-11-15": "complete",
+    "2026-11-16": "complete",
+    "2026-11-17": "complete",
+    "2026-11-18": "complete",
+    "2026-11-19": "complete",
+    "2026-11-20": "complete",
+    "2026-11-21": "complete",
+    "2026-11-22": "complete",
+    "2026-11-23": "complete",
+    "2026-11-24": "complete",
+    "2026-11-25": "complete",
+    "2026-11-26": "complete",
+    "2026-11-27": "complete",
+    "2026-11-28": "complete",
+    "2026-11-29": "complete",
+    "2026-11-30": "complete",
+    "2026-12-01": "complete"
+  },
+  "projection": {
+    "berths": {
+      "auto": 7,
+      "total": 16
+    },
+    "byDivision": {
+      "de-anza": [
+        {
+          "label": "Automatic qualifier",
+          "place": 1,
+          "shared": false,
+          "slug": "saint-francis",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+        },
+        {
+          "label": "Automatic qualifier",
+          "place": 2,
+          "shared": false,
+          "slug": "st-ignatius",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366"
+        },
+        {
+          "label": "Automatic qualifier",
+          "place": 3,
+          "shared": false,
+          "slug": "valley-christian",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
+        },
+        {
+          "label": "Play-in game Oct 30",
+          "place": 4,
+          "shared": false,
+          "slug": "los-altos",
+          "status": "play-in",
+          "statuses": [
+            "play-in"
+          ],
+          "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
+        },
+        {
+          "label": "At-large consideration",
+          "place": 5,
+          "shared": false,
+          "slug": "fremont",
+          "status": "at-large",
+          "statuses": [
+            "at-large"
+          ],
+          "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
+        },
+        {
+          "label": "No automatic path",
+          "place": 6,
+          "shared": false,
+          "slug": "homestead",
+          "status": "out",
+          "statuses": [
+            "out"
+          ],
+          "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2"
+        },
+        {
+          "label": "No automatic path",
+          "place": 7,
+          "shared": false,
+          "slug": "cupertino",
+          "status": "out",
+          "statuses": [
+            "out"
+          ],
+          "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
+        }
+      ],
+      "el-camino": [
+        {
+          "label": "Automatic qualifier",
+          "place": 1,
+          "shared": false,
+          "slug": "mitty",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+        },
+        {
+          "label": "Automatic qualifier",
+          "place": 2,
+          "shared": false,
+          "slug": "los-gatos",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7"
+        },
+        {
+          "label": "Automatic qualifier",
+          "place": 3,
+          "shared": false,
+          "slug": "palo-alto",
+          "status": "aq",
+          "statuses": [
+            "aq"
+          ],
+          "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
+        },
+        {
+          "label": "Play-in game Oct 30",
+          "place": 4,
+          "shared": false,
+          "slug": "santa-clara",
+          "status": "play-in",
+          "statuses": [
+            "play-in"
+          ],
+          "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+        },
+        {
+          "label": "At-large consideration",
+          "place": 5,
+          "shared": false,
+          "slug": "saratoga",
+          "status": "at-large",
+          "statuses": [
+            "at-large"
+          ],
+          "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
+        },
+        {
+          "label": "No automatic path",
+          "place": 6,
+          "shared": false,
+          "slug": "presentation",
+          "status": "out",
+          "statuses": [
+            "out"
+          ],
+          "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+        },
+        {
+          "label": "No automatic path",
+          "place": 7,
+          "shared": true,
+          "slug": "lynbrook",
+          "status": "out",
+          "statuses": [
+            "out"
+          ],
+          "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+        },
+        {
+          "label": "No automatic path",
+          "place": 7,
+          "shared": true,
+          "slug": "monta-vista",
+          "status": "out",
+          "statuses": [
+            "out"
+          ],
+          "teamId": "405614ad-a015-4270-b527-18e899c90824"
+        }
+      ]
+    },
+    "crossover": {
+      "date": "2026-10-30",
+      "pairings": [
+        {
+          "deAnza": [
+            {
+              "slug": "saint-francis",
+              "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+            }
+          ],
+          "elCamino": [
+            {
+              "slug": "mitty",
+              "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+            }
+          ],
+          "isPlayIn": false,
+          "label": "De Anza #1 vs El Camino #1 — crossover (helps CCS ordering)",
+          "seed": 1
+        },
+        {
+          "deAnza": [
+            {
+              "slug": "st-ignatius",
+              "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366"
+            }
+          ],
+          "elCamino": [
+            {
+              "slug": "los-gatos",
+              "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7"
+            }
+          ],
+          "isPlayIn": false,
+          "label": "De Anza #2 vs El Camino #2 — crossover (helps CCS ordering)",
+          "seed": 2
+        },
+        {
+          "deAnza": [
+            {
+              "slug": "valley-christian",
+              "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
+            }
+          ],
+          "elCamino": [
+            {
+              "slug": "palo-alto",
+              "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
+            }
+          ],
+          "isPlayIn": false,
+          "label": "De Anza #3 vs El Camino #3 — crossover (helps CCS ordering)",
+          "seed": 3
+        },
+        {
+          "deAnza": [
+            {
+              "slug": "los-altos",
+              "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
+            }
+          ],
+          "elCamino": [
+            {
+              "slug": "santa-clara",
+              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+            }
+          ],
+          "isPlayIn": true,
+          "label": "De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier",
+          "seed": 4
+        }
+      ]
+    }
+  },
+  "standings": [
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 4,
+        "gd": 36,
+        "gf": 40,
+        "gp": 6,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 2
+        },
+        "l": 1,
+        "last5": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 1,
+        "pts": 15,
+        "streak": {
+          "count": 2,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 5,
+        "winPct": 0.8333333333333334
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 4
+        },
+        "ga": 4,
+        "gd": 56,
+        "gf": 60,
+        "gp": 10,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 5
+        },
+        "l": 1,
+        "last5": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 1,
+        "pts": 27,
+        "streak": {
+          "count": 2,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 9,
+        "winPct": 0.9
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 1,
+        "awayTies": 0,
+        "awayWins": 4,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 1,
+        "conferencePoints": 40,
+        "conferencePointsAgainst": 4,
+        "conferenceStandingPlacement": 2,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0.833,
+        "conferenceWins": 5,
+        "homeLosses": 0,
+        "homeTies": 0,
+        "homeWins": 5,
+        "modifiedOn": "2026-10-01T19:17:21",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 10,
+        "overallLosses": 1,
+        "overallTies": 0,
+        "overallWins": 9,
+        "points": 60,
+        "pointsAgainst": 4,
+        "streak": 2,
+        "streakResult": "W",
+        "winningPercentage": 0.9
+      },
+      "slug": "saint-francis",
+      "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+      "tiebreak": {
+        "note": "15 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 1,
+        "gd": 32,
+        "gf": 33,
+        "gp": 4,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 1
+        },
+        "l": 0,
+        "last5": [
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 2,
+        "pts": 12,
+        "streak": {
+          "count": 4,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 4,
+        "winPct": 1
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 1,
+        "gd": 42,
+        "gf": 43,
+        "gp": 6,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 3
+        },
+        "l": 0,
+        "last5": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 2,
+        "pts": 18,
+        "streak": {
+          "count": 6,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 6,
+        "winPct": 1
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 0,
+        "awayTies": 0,
+        "awayWins": 3,
+        "conferenceContestsPlayed": 4,
+        "conferenceLosses": 0,
+        "conferencePoints": 33,
+        "conferencePointsAgainst": 1,
+        "conferenceStandingPlacement": 1,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 1,
+        "conferenceWins": 4,
+        "homeLosses": 0,
+        "homeTies": 0,
+        "homeWins": 3,
+        "modifiedOn": "2026-09-30T16:57:04",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 6,
+        "overallLosses": 0,
+        "overallTies": 0,
+        "overallWins": 6,
+        "points": 43,
+        "pointsAgainst": 1,
+        "streak": 6,
+        "streakResult": "W",
+        "winningPercentage": 1
+      },
+      "slug": "st-ignatius",
+      "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+      "tiebreak": {
+        "note": "12 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 0,
+          "t": 1,
+          "w": 2
+        },
+        "ga": 19,
+        "gd": -14,
+        "gf": 5,
+        "gp": 6,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 2,
+        "last5": [
+          "L",
+          "W",
+          "W",
+          "W",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 3,
+        "pts": 10,
+        "streak": {
+          "count": 1,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 3,
+        "winPct": 0.5833333333333334
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 0,
+          "t": 1,
+          "w": 5
+        },
+        "ga": 21,
+        "gd": 2,
+        "gf": 23,
+        "gp": 12,
+        "homeRecord": {
+          "l": 2,
+          "t": 2,
+          "w": 2
+        },
+        "l": 2,
+        "last5": [
+          "L",
+          "W",
+          "W",
+          "W",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 3,
+        "pts": 24,
+        "streak": {
+          "count": 1,
+          "result": "L"
+        },
+        "t": 3,
+        "w": 7,
+        "winPct": 0.7083333333333334
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 0,
+        "awayTies": 1,
+        "awayWins": 5,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 2,
+        "conferencePoints": 5,
+        "conferencePointsAgainst": 19,
+        "conferenceStandingPlacement": 3,
+        "conferenceTies": 1,
+        "conferenceWinningPercentage": 0.583,
+        "conferenceWins": 3,
+        "homeLosses": 2,
+        "homeTies": 2,
+        "homeWins": 2,
+        "modifiedOn": "2026-10-01T19:17:21",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 12,
+        "overallLosses": 2,
+        "overallTies": 3,
+        "overallWins": 7,
+        "points": 23,
+        "pointsAgainst": 21,
+        "streak": 1,
+        "streakResult": "L",
+        "winningPercentage": 0.708
+      },
+      "slug": "valley-christian",
+      "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+      "tiebreak": {
+        "note": "10 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 0,
+          "t": 1,
+          "w": 1
+        },
+        "ga": 6,
+        "gd": 0,
+        "gf": 6,
+        "gp": 5,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 2,
+        "last5": [
+          "W",
+          "L",
+          "T",
+          "W",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 4,
+        "pts": 7,
+        "streak": {
+          "count": 1,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 2,
+        "winPct": 0.5
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 0,
+          "t": 1,
+          "w": 2
+        },
+        "ga": 14,
+        "gd": 2,
+        "gf": 16,
+        "gp": 10,
+        "homeRecord": {
+          "l": 4,
+          "t": 1,
+          "w": 2
+        },
+        "l": 4,
+        "last5": [
+          "T",
+          "T",
+          "W",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 4,
+        "pts": 14,
+        "streak": {
+          "count": 2,
+          "result": "L"
+        },
+        "t": 2,
+        "w": 4,
+        "winPct": 0.5
+      },
+      "playoffStatus": "play-in",
+      "reported": {
+        "awayLosses": 0,
+        "awayTies": 1,
+        "awayWins": 2,
+        "conferenceContestsPlayed": 5,
+        "conferenceLosses": 2,
+        "conferencePoints": 6,
+        "conferencePointsAgainst": 6,
+        "conferenceStandingPlacement": 4,
+        "conferenceTies": 1,
+        "conferenceWinningPercentage": 0.5,
+        "conferenceWins": 2,
+        "homeLosses": 4,
+        "homeTies": 1,
+        "homeWins": 2,
+        "modifiedOn": "2026-09-29T18:46:28",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 10,
+        "overallLosses": 4,
+        "overallTies": 2,
+        "overallWins": 4,
+        "points": 16,
+        "pointsAgainst": 14,
+        "streak": 2,
+        "streakResult": "L",
+        "winningPercentage": 0.5
+      },
+      "slug": "los-altos",
+      "teamId": "0279f2de-d5ce-484d-b210-2286ded42058",
+      "tiebreak": {
+        "note": "7 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 1
+        },
+        "ga": 17,
+        "gd": -9,
+        "gf": 8,
+        "gp": 6,
+        "homeRecord": {
+          "l": 2,
+          "t": 2,
+          "w": 0
+        },
+        "l": 3,
+        "last5": [
+          "T",
+          "W",
+          "T",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 5,
+        "pts": 5,
+        "streak": {
+          "count": 2,
+          "result": "L"
+        },
+        "t": 2,
+        "w": 1,
+        "winPct": 0.3333333333333333
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 5
+        },
+        "ga": 26,
+        "gd": 17,
+        "gf": 43,
+        "gp": 14,
+        "homeRecord": {
+          "l": 3,
+          "t": 2,
+          "w": 3
+        },
+        "l": 4,
+        "last5": [
+          "T",
+          "W",
+          "W",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 5,
+        "pts": 26,
+        "streak": {
+          "count": 2,
+          "result": "L"
+        },
+        "t": 2,
+        "w": 8,
+        "winPct": 0.6428571428571429
+      },
+      "playoffStatus": "at-large",
+      "reported": {
+        "awayLosses": 1,
+        "awayTies": 0,
+        "awayWins": 5,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 3,
+        "conferencePoints": 8,
+        "conferencePointsAgainst": 17,
+        "conferenceStandingPlacement": 5,
+        "conferenceTies": 2,
+        "conferenceWinningPercentage": 0.333,
+        "conferenceWins": 1,
+        "homeLosses": 3,
+        "homeTies": 2,
+        "homeWins": 3,
+        "modifiedOn": "2026-10-01T19:44:38",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 14,
+        "overallLosses": 4,
+        "overallTies": 2,
+        "overallWins": 8,
+        "points": 43,
+        "pointsAgainst": 26,
+        "streak": 2,
+        "streakResult": "L",
+        "winningPercentage": 0.643
+      },
+      "slug": "fremont",
+      "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
+      "tiebreak": {
+        "note": "5 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 0
+        },
+        "ga": 24,
+        "gd": -22,
+        "gf": 2,
+        "gp": 5,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 4,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 6,
+        "pts": 3,
+        "streak": {
+          "count": 1,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 1,
+        "winPct": 0.2
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 4,
+          "t": 0,
+          "w": 1
+        },
+        "ga": 36,
+        "gd": -22,
+        "gf": 14,
+        "gp": 11,
+        "homeRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 3
+        },
+        "l": 7,
+        "last5": [
+          "W",
+          "L",
+          "L",
+          "L",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 6,
+        "pts": 12,
+        "streak": {
+          "count": 1,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 4,
+        "winPct": 0.36363636363636365
+      },
+      "playoffStatus": "out",
+      "reported": {
+        "awayLosses": 4,
+        "awayTies": 0,
+        "awayWins": 1,
+        "conferenceContestsPlayed": 5,
+        "conferenceLosses": 4,
+        "conferencePoints": 2,
+        "conferencePointsAgainst": 24,
+        "conferenceStandingPlacement": 6,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0.2,
+        "conferenceWins": 1,
+        "homeLosses": 3,
+        "homeTies": 0,
+        "homeWins": 3,
+        "modifiedOn": "2026-10-01T19:29:00",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 11,
+        "overallLosses": 7,
+        "overallTies": 0,
+        "overallWins": 4,
+        "points": 14,
+        "pointsAgainst": 36,
+        "streak": 1,
+        "streakResult": "W",
+        "winningPercentage": 0.364
+      },
+      "slug": "homestead",
+      "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
+      "tiebreak": {
+        "note": "3 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 0
+        },
+        "ga": 23,
+        "gd": -23,
+        "gf": 0,
+        "gp": 4,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 0
+        },
+        "l": 4,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 0,
+        "streak": {
+          "count": 4,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 0,
+        "winPct": 0
+      },
+      "division": "de-anza",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 3,
+          "t": 1,
+          "w": 1
+        },
+        "ga": 32,
+        "gd": -27,
+        "gf": 5,
+        "gp": 9,
+        "homeRecord": {
+          "l": 4,
+          "t": 0,
+          "w": 0
+        },
+        "l": 7,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 4,
+        "streak": {
+          "count": 5,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 1,
+        "winPct": 0.16666666666666666
+      },
+      "playoffStatus": "out",
+      "reported": {
+        "awayLosses": 3,
+        "awayTies": 1,
+        "awayWins": 1,
+        "conferenceContestsPlayed": 4,
+        "conferenceLosses": 4,
+        "conferencePoints": 0,
+        "conferencePointsAgainst": 23,
+        "conferenceStandingPlacement": 7,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0,
+        "conferenceWins": 0,
+        "homeLosses": 4,
+        "homeTies": 0,
+        "homeWins": 0,
+        "modifiedOn": "2026-09-30T12:21:03",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 9,
+        "overallLosses": 7,
+        "overallTies": 1,
+        "overallWins": 1,
+        "points": 5,
+        "pointsAgainst": 32,
+        "streak": 5,
+        "streakResult": "L",
+        "winningPercentage": 0.167
+      },
+      "slug": "cupertino",
+      "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
+      "tiebreak": {
+        "note": "0 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 3,
+        "gd": 41,
+        "gf": 44,
+        "gp": 7,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 4
+        },
+        "l": 0,
+        "last5": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 1,
+        "pts": 21,
+        "streak": {
+          "count": 7,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 7,
+        "winPct": 1
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 4
+        },
+        "ga": 4,
+        "gd": 48,
+        "gf": 52,
+        "gp": 10,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 6
+        },
+        "l": 0,
+        "last5": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 1,
+        "pts": 30,
+        "streak": {
+          "count": 10,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 10,
+        "winPct": 1
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 0,
+        "awayTies": 0,
+        "awayWins": 4,
+        "conferenceContestsPlayed": 7,
+        "conferenceLosses": 0,
+        "conferencePoints": 44,
+        "conferencePointsAgainst": 3,
+        "conferenceStandingPlacement": 1,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 1,
+        "conferenceWins": 7,
+        "homeLosses": 0,
+        "homeTies": 0,
+        "homeWins": 6,
+        "modifiedOn": "2026-10-02T01:13:13",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 10,
+        "overallLosses": 0,
+        "overallTies": 0,
+        "overallWins": 10,
+        "points": 52,
+        "pointsAgainst": 4,
+        "streak": 10,
+        "streakResult": "W",
+        "winningPercentage": 1
+      },
+      "slug": "mitty",
+      "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+      "tiebreak": {
+        "note": "21 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 2
+        },
+        "ga": 4,
+        "gd": 46,
+        "gf": 50,
+        "gp": 7,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 4
+        },
+        "l": 1,
+        "last5": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 2,
+        "pts": 18,
+        "streak": {
+          "count": 2,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 6,
+        "winPct": 0.8571428571428571
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 4
+        },
+        "ga": 9,
+        "gd": 56,
+        "gf": 65,
+        "gp": 10,
+        "homeRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 5
+        },
+        "l": 1,
+        "last5": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 2,
+        "pts": 27,
+        "streak": {
+          "count": 2,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 9,
+        "winPct": 0.9
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 1,
+        "awayTies": 0,
+        "awayWins": 4,
+        "conferenceContestsPlayed": 7,
+        "conferenceLosses": 1,
+        "conferencePoints": 50,
+        "conferencePointsAgainst": 4,
+        "conferenceStandingPlacement": 2,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0.857,
+        "conferenceWins": 6,
+        "homeLosses": 0,
+        "homeTies": 0,
+        "homeWins": 5,
+        "modifiedOn": "2026-10-02T06:36:14",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 10,
+        "overallLosses": 1,
+        "overallTies": 0,
+        "overallWins": 9,
+        "points": 65,
+        "pointsAgainst": 9,
+        "streak": 2,
+        "streakResult": "W",
+        "winningPercentage": 0.9
+      },
+      "slug": "los-gatos",
+      "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+      "tiebreak": {
+        "note": "18 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 8,
+        "gd": 12,
+        "gf": 20,
+        "gp": 6,
+        "homeRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 1
+        },
+        "l": 2,
+        "last5": [
+          "L",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 3,
+        "pts": 12,
+        "streak": {
+          "count": 4,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 4,
+        "winPct": 0.6666666666666666
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 12,
+        "gd": 14,
+        "gf": 26,
+        "gp": 8,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 2
+        },
+        "l": 3,
+        "last5": [
+          "L",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 3,
+        "pts": 15,
+        "streak": {
+          "count": 4,
+          "result": "W"
+        },
+        "t": 0,
+        "w": 5,
+        "winPct": 0.625
+      },
+      "playoffStatus": "aq",
+      "reported": {
+        "awayLosses": 1,
+        "awayTies": 0,
+        "awayWins": 3,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 2,
+        "conferencePoints": 20,
+        "conferencePointsAgainst": 8,
+        "conferenceStandingPlacement": 3,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0.667,
+        "conferenceWins": 4,
+        "homeLosses": 2,
+        "homeTies": 0,
+        "homeWins": 2,
+        "modifiedOn": "2026-10-01T18:10:22",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 8,
+        "overallLosses": 3,
+        "overallTies": 0,
+        "overallWins": 5,
+        "points": 26,
+        "pointsAgainst": 12,
+        "streak": 4,
+        "streakResult": "W",
+        "winningPercentage": 0.625
+      },
+      "slug": "palo-alto",
+      "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+      "tiebreak": {
+        "note": "12 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 1,
+          "t": 0,
+          "w": 2
+        },
+        "ga": 16,
+        "gd": 1,
+        "gf": 17,
+        "gp": 7,
+        "homeRecord": {
+          "l": 2,
+          "t": 1,
+          "w": 1
+        },
+        "l": 3,
+        "last5": [
+          "L",
+          "T",
+          "W",
+          "L",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 4,
+        "pts": 10,
+        "streak": {
+          "count": 1,
+          "result": "W"
+        },
+        "t": 1,
+        "w": 3,
+        "winPct": 0.5
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 3
+        },
+        "ga": 26,
+        "gd": 6,
+        "gf": 32,
+        "gp": 12,
+        "homeRecord": {
+          "l": 3,
+          "t": 1,
+          "w": 2
+        },
+        "l": 6,
+        "last5": [
+          "L",
+          "T",
+          "W",
+          "L",
+          "W"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 4,
+        "pts": 16,
+        "streak": {
+          "count": 1,
+          "result": "W"
+        },
+        "t": 1,
+        "w": 5,
+        "winPct": 0.4583333333333333
+      },
+      "playoffStatus": "play-in",
+      "reported": {
+        "awayLosses": 3,
+        "awayTies": 0,
+        "awayWins": 3,
+        "conferenceContestsPlayed": 7,
+        "conferenceLosses": 3,
+        "conferencePoints": 17,
+        "conferencePointsAgainst": 16,
+        "conferenceStandingPlacement": 4,
+        "conferenceTies": 1,
+        "conferenceWinningPercentage": 0.5,
+        "conferenceWins": 3,
+        "homeLosses": 3,
+        "homeTies": 1,
+        "homeWins": 2,
+        "modifiedOn": "2026-10-02T02:08:18",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 12,
+        "overallLosses": 6,
+        "overallTies": 1,
+        "overallWins": 5,
+        "points": 32,
+        "pointsAgainst": 26,
+        "streak": 1,
+        "streakResult": "W",
+        "winningPercentage": 0.458
+      },
+      "slug": "santa-clara",
+      "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
+      "tiebreak": {
+        "note": "10 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 2
+        },
+        "ga": 24,
+        "gd": 0,
+        "gf": 24,
+        "gp": 7,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 4,
+        "last5": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 5,
+        "pts": 9,
+        "streak": {
+          "count": 1,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 3,
+        "winPct": 0.42857142857142855
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 2
+        },
+        "ga": 24,
+        "gd": 0,
+        "gf": 24,
+        "gp": 7,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 4,
+        "last5": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 5,
+        "pts": 9,
+        "streak": {
+          "count": 1,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 3,
+        "winPct": 0.42857142857142855
+      },
+      "playoffStatus": "at-large",
+      "reported": {
+        "awayLosses": 2,
+        "awayTies": 0,
+        "awayWins": 2,
+        "conferenceContestsPlayed": 7,
+        "conferenceLosses": 4,
+        "conferencePoints": 24,
+        "conferencePointsAgainst": 24,
+        "conferenceStandingPlacement": 5,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0.429,
+        "conferenceWins": 3,
+        "homeLosses": 2,
+        "homeTies": 0,
+        "homeWins": 1,
+        "modifiedOn": "2026-10-02T06:36:14",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 7,
+        "overallLosses": 4,
+        "overallTies": 0,
+        "overallWins": 3,
+        "points": 24,
+        "pointsAgainst": 24,
+        "streak": 1,
+        "streakResult": "L",
+        "winningPercentage": 0.429
+      },
+      "slug": "saratoga",
+      "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
+      "tiebreak": {
+        "note": "9 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 2,
+          "t": 1,
+          "w": 1
+        },
+        "ga": 19,
+        "gd": -8,
+        "gf": 11,
+        "gp": 7,
+        "homeRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 1
+        },
+        "l": 4,
+        "last5": [
+          "L",
+          "T",
+          "W",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 6,
+        "pts": 7,
+        "streak": {
+          "count": 2,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 2,
+        "winPct": 0.35714285714285715
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 3,
+          "t": 1,
+          "w": 1
+        },
+        "ga": 24,
+        "gd": -12,
+        "gf": 12,
+        "gp": 9,
+        "homeRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 1
+        },
+        "l": 6,
+        "last5": [
+          "L",
+          "T",
+          "W",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 6,
+        "pts": 7,
+        "streak": {
+          "count": 2,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 2,
+        "winPct": 0.2777777777777778
+      },
+      "playoffStatus": "out",
+      "reported": {
+        "awayLosses": 3,
+        "awayTies": 1,
+        "awayWins": 1,
+        "conferenceContestsPlayed": 7,
+        "conferenceLosses": 4,
+        "conferencePoints": 11,
+        "conferencePointsAgainst": 19,
+        "conferenceStandingPlacement": 6,
+        "conferenceTies": 1,
+        "conferenceWinningPercentage": 0.357,
+        "conferenceWins": 2,
+        "homeLosses": 3,
+        "homeTies": 0,
+        "homeWins": 1,
+        "modifiedOn": "2026-10-02T01:13:13",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 9,
+        "overallLosses": 6,
+        "overallTies": 1,
+        "overallWins": 2,
+        "points": 12,
+        "pointsAgainst": 24,
+        "streak": 2,
+        "streakResult": "L",
+        "winningPercentage": 0.278
+      },
+      "slug": "presentation",
+      "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
+      "tiebreak": {
+        "note": "7 points (3 per win, 1 per tie) — placed on points alone, SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (standings are the order of points).",
+        "resolvedBy": "points",
+        "shared": false,
+        "tiedWith": []
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 0
+        },
+        "ga": 43,
+        "gd": -40,
+        "gf": 3,
+        "gp": 6,
+        "homeRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 0
+        },
+        "l": 6,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 0,
+        "streak": {
+          "count": 6,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 0,
+        "winPct": 0
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 6,
+          "t": 0,
+          "w": 0
+        },
+        "ga": 66,
+        "gd": -61,
+        "gf": 5,
+        "gp": 12,
+        "homeRecord": {
+          "l": 5,
+          "t": 0,
+          "w": 1
+        },
+        "l": 11,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 3,
+        "streak": {
+          "count": 10,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 1,
+        "winPct": 0.08333333333333333
+      },
+      "playoffStatus": "out",
+      "reported": {
+        "awayLosses": 6,
+        "awayTies": 0,
+        "awayWins": 0,
+        "conferenceContestsPlayed": 6,
+        "conferenceLosses": 6,
+        "conferencePoints": 3,
+        "conferencePointsAgainst": 43,
+        "conferenceStandingPlacement": 7,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0,
+        "conferenceWins": 0,
+        "homeLosses": 5,
+        "homeTies": 0,
+        "homeWins": 1,
+        "modifiedOn": "2026-10-02T02:08:18",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 12,
+        "overallLosses": 11,
+        "overallTies": 0,
+        "overallWins": 1,
+        "points": 5,
+        "pointsAgainst": 66,
+        "streak": 10,
+        "streakResult": "L",
+        "winningPercentage": 0.083
+      },
+      "slug": "lynbrook",
+      "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
+      "tiebreak": {
+        "note": "Tied on 0 points with Monta Vista and unresolved by every criterion — Article VI §7 (coin flip — we cannot compute it, so the teams stay tied). We show them level.",
+        "resolvedBy": "coin-flip",
+        "shared": true,
+        "tiedWith": [
+          "405614ad-a015-4270-b527-18e899c90824"
+        ]
+      }
+    },
+    {
+      "computed": {
+        "awayRecord": {
+          "l": 2,
+          "t": 0,
+          "w": 0
+        },
+        "ga": 52,
+        "gd": -52,
+        "gf": 0,
+        "gp": 5,
+        "homeRecord": {
+          "l": 3,
+          "t": 0,
+          "w": 0
+        },
+        "l": 5,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 0,
+        "streak": {
+          "count": 5,
+          "result": "L"
+        },
+        "t": 0,
+        "w": 0,
+        "winPct": 0
+      },
+      "division": "el-camino",
+      "hasReportedResults": true,
+      "mismatch": false,
+      "overall": {
+        "awayRecord": {
+          "l": 4,
+          "t": 1,
+          "w": 0
+        },
+        "ga": 72,
+        "gd": -71,
+        "gf": 1,
+        "gp": 9,
+        "homeRecord": {
+          "l": 4,
+          "t": 0,
+          "w": 0
+        },
+        "l": 8,
+        "last5": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "neutralRecord": {
+          "l": 0,
+          "t": 0,
+          "w": 0
+        },
+        "place": 7,
+        "pts": 1,
+        "streak": {
+          "count": 8,
+          "result": "L"
+        },
+        "t": 1,
+        "w": 0,
+        "winPct": 0.05555555555555555
+      },
+      "playoffStatus": "out",
+      "reported": {
+        "awayLosses": 4,
+        "awayTies": 1,
+        "awayWins": 0,
+        "conferenceContestsPlayed": 5,
+        "conferenceLosses": 5,
+        "conferencePoints": 0,
+        "conferencePointsAgainst": 52,
+        "conferenceStandingPlacement": 8,
+        "conferenceTies": 0,
+        "conferenceWinningPercentage": 0,
+        "conferenceWins": 0,
+        "homeLosses": 4,
+        "homeTies": 0,
+        "homeWins": 0,
+        "modifiedOn": "2026-09-30T02:09:56",
+        "neutralLosses": 0,
+        "neutralTies": 0,
+        "neutralWins": 0,
+        "overallContestsPlayed": 9,
+        "overallLosses": 8,
+        "overallTies": 1,
+        "overallWins": 0,
+        "points": 1,
+        "pointsAgainst": 72,
+        "streak": 8,
+        "streakResult": "L",
+        "winningPercentage": 0
+      },
+      "slug": "monta-vista",
+      "teamId": "405614ad-a015-4270-b527-18e899c90824",
+      "tiebreak": {
+        "note": "Tied on 0 points with Lynbrook and unresolved by every criterion — Article VI §7 (coin flip — we cannot compute it, so the teams stay tied). We show them level.",
+        "resolvedBy": "coin-flip",
+        "shared": true,
+        "tiedWith": [
+          "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+        ]
+      }
+    }
+  ]
+}

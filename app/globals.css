@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCVAL Field Hockey — design tokens (DESIGN §4.1 / §4.2)
+   NorCal Field Hockey — design tokens (DESIGN §4.1 / §4.2)
 
    Every hex below is measured output from the contrast validator, not an
    assertion. tests/ui/contrast.test.ts parses THIS FILE and re-measures every
@@ -608,6 +608,39 @@
   .sx-list > li { border-bottom: 1px solid var(--sx-divider); }
   .sx-list > li:last-child { border-bottom: 0; }
 
+  /* ── League chips (components/layout/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
+        a 44px target, 8px of side padding. The current chip is the accent wash + accent ink + a
+        1.5px ink ring + the aria-hidden ✓ — never colour alone, and no league hue anywhere
+        (DESIGN §6.4). Before hydration the scope stylesheet (components/layout/league-scope-css.ts,
+        unlayered) draws the same state from html[data-league]; after it, aria-pressed /
+        aria-current do. ── */
+  .sx-league-chip {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
+    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.5rem;
+    border-radius: 999px;
+    background: var(--sx-surface-2); color: var(--sx-text-2);
+    font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
+    text-decoration: none; white-space: nowrap;
+  }
+  .sx-league-chip:disabled { cursor: default; }
+  @media (hover: hover) {
+    .sx-league-chip:not(:disabled):hover { background: var(--sx-surface-3); color: var(--sx-text); }
+  }
+  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
+    background: var(--sx-accent-wash); color: var(--sx-accent-ink);
+    box-shadow: inset 0 0 0 1.5px var(--sx-text);
+  }
+  .sx-chip-check { display: none; }
+  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { display: inline; }
+
+  /* "Jump to <SHORT> ↓" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's
+     call (`.sx-jump` hidden, `.sx-jump-<id>` shown for the effective league), unlayered. */
+  .sx-jump {
+    align-items: center; gap: 0.25rem; min-height: 2.75rem;
+    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
+    color: var(--sx-accent);
+  }
+
   /* 120ms tap feedback. */
   .sx-tap { transition: background-color var(--sx-dur-tap) var(--sx-ease); }
   .sx-tap:active { background: var(--sx-surface-2); }
@@ -730,6 +763,8 @@
     .sx-meter-track { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; }
     /* box-shadow is dropped in forced colors, so every surface edge needs a real border. */
     .sx-card, .sx-inset, .sx-pill, .sx-badge { border: 1px solid CanvasText; }
+    .sx-league-chip { border: 1px solid CanvasText; }
+    .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
     /* Any truthy `aria-current`, not only "page": a section that is lit for its descendants
        (Teams on /teams/cupertino, Scores on /scores/[date] and /game/[id]) carries

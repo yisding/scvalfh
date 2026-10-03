@@ -1,0 +1,90 @@
+/**
+ * DRAFT regression tests (research artifact, not in the repo) for id-first si.com side resolution.
+ * Drop into tests/sblive.test.ts once the registry contains university-sf (456869 / school 259) and
+ * sblive.ts resolves id-first. Reuses that file's `page`, `teamNode`, `teamGamesProps` helpers.
+ * Live evidence: research/web-ncs/alias-audit/standings-4230-pacific-coast.html etc.
+ */
+import { describe, expect, it } from 'vitest';
+import { parseScoresPage, parseStandingsTeamRefs, parseTeamGamesPage } from '../lib/sources/sblive';
+
+declare function page(className: string, props: unknown): string;
+declare function teamNode(over?: Record<string, unknown>): Record<string, unknown>;
+declare function teamGamesProps(nodes: unknown[]): unknown;
+
+const IMG_SCHOOL = (id: string) => `https://assets.scorebooklive.com/uploads/production/school/${id}/image/x.png`;
+const IMG_TEAM = (id: string) => `https://assets.scorebooklive.com/uploads/production/team/${id}-v3/image/x.png`;
+
+const scoreboard = (teams: Array<{ name: string; image: string | null }>) =>
+  page('games/GenderSportIndex', {
+    query: {
+      scoreboardDate: {
+        date: '2026-09-23',
+        games: {
+          totalCount: 1,
+          nodes: [{
+            id: '1', date: '2026-09-23T16:00:00.000-07:00', statusId: 3, webPath: null,
+            gameTeams: teams.map((t, i) => ({ scoreText: String(i), isTbd: false, team: { name: t.name, image: t.image, state: { abbrev: 'CA' } } })),
+          }],
+        },
+      },
+    },
+  });
+
+describe('sblive: statewide namesakes never resolve by name', () => {
+  it('a team-games side named "University" whose webPath id is not 456869 resolves to null', () => {
+    const node = teamNode({
+      opponent: { scoreText: '2', isHome: false, team: { name: 'University', webPath: '/california/field-hockey/teams/458756-university-trojans' } },
+    });
+    const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
+    const side = game.sides.find((s) => s.name === 'University');
+    expect(side?.sbliveTeamId).toBe('458756');
+    expect(side?.slug).toBeNull();
+  });
+
+  it('…and with webPath id 456869 resolves to university-sf', () => {
+    const node = teamNode({
+      opponent: { scoreText: '2', isHome: false, team: { name: 'University', webPath: '/california/field-hockey/teams/456869-university-red-devils' } },
+    });
+    const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
+    expect(game.sides.find((s) => s.name === 'University')?.slug).toBe('university-sf');
+  });
+
+  it('standings refs: the Irvine/Hacienda/Oxnard namesakes resolve to null', () => {
+    const html = page('organizations/Standings', {
+      query: { organization: { teamStandings: [
+        { team: { id: '458756', name: 'University', webPath: '/california/field-hockey/teams/458756-university-trojans', image: IMG_SCHOOL('11359') } },
+        { team: { id: '458731', name: 'Los Altos', webPath: '/california/field-hockey/teams/458731-los-altos-conquerors', image: IMG_SCHOOL('11179') } },
+        { team: { id: '456804', name: 'Santa Clara', webPath: '/california/field-hockey/teams/456804-santa-clara-saints', image: IMG_SCHOOL('111') } },
+      ] } },
+    });
+    expect(parseStandingsTeamRefs(html).map((r) => r.slug)).toEqual([null, null, null]);
+  });
+
+  it('scoreboard (no id, no webPath): identity comes from the image URL only', () => {
+    const cases: Array<[string, string | null, string | null]> = [
+      ['University', IMG_SCHOOL('11359'), null],
+      ['University', IMG_SCHOOL('259'), 'university-sf'],
+      ['University', null, null],
+      ['Los Altos', IMG_SCHOOL('11179'), null],
+      ['Los Altos', IMG_TEAM('458850'), 'los-altos'],
+      ['Los Altos', null, null],
+      ['Santa Clara', IMG_SCHOOL('111'), null],
+      ['Santa Clara', IMG_SCHOOL('13089'), 'santa-clara'],
+      ['Santa Clara', null, null],
+    ];
+    for (const [name, image, want] of cases) {
+      const [game] = parseScoresPage(scoreboard([{ name, image }, { name: 'Woodbridge', image: IMG_SCHOOL('11360') }]));
+      expect(game.sides.find((s) => s.name === name)?.slug, `${name} ${image}`).toBe(want);
+    }
+  });
+
+  it('a non-ambiguous registry name still resolves with no id signal', () => {
+    const [game] = parseScoresPage(scoreboard([{ name: 'Tamalpais', image: null }, { name: 'Woodbridge', image: null }]));
+    expect(game.sides.find((s) => s.name === 'Tamalpais')?.slug).toBe('tamalpais');
+  });
+
+  it('a non-ambiguous name with a CONTRADICTING id resolves to null', () => {
+    const [game] = parseScoresPage(scoreboard([{ name: 'Tamalpais', image: IMG_SCHOOL('99999') }, { name: 'X', image: null }]));
+    expect(game.sides.find((s) => s.name === 'Tamalpais')?.slug).toBeNull();
+  });
+});

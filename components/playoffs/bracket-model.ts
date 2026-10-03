@@ -2,8 +2,10 @@
  * Turning `snapshot.playoffs` into rounds a bracket can render — pure, and deliberately cautious.
  *
  * WHAT THE SNAPSHOT ACTUALLY CARRIES. `playoffs.games` is a plain `Game[]`: no seed numbers, and
- * no CCS division label (`Game.leagueDivision` is the SCVAL division, which is meaningless for a
- * CCS bracket whose field also holds BVAL and PCAL teams). So:
+ * no CCS division label (`Game.leagueDivision` is a LEAGUE division, which is meaningless for a
+ * CCS bracket whose field holds SCVAL, BVAL and PCAL teams). The CCS's own two divisions are
+ * `format.ccsDivisions` and are always called "CCS Division 1" / "CCS Division 2" in copy, never a
+ * bare "Division 1" that could be read as a league division. So:
  *
  *  - **Rounds come from dates**, matched against the three published `keyDates`. Any other date
  *    becomes its own round named by that date rather than being forced into a named round.
@@ -22,7 +24,7 @@
  */
 
 import { isoDateKey, shortDate } from '../../lib/format';
-import type { Game, GameSide, Playoffs } from '../../lib/types';
+import type { CcsPlayoffs, Game, GameSide } from '../../lib/types';
 
 export type RoundKey = 'quarterfinals' | 'semifinals' | 'finals' | 'other';
 
@@ -64,7 +66,7 @@ function participantKeys(game: Game): string[] {
     .map((side) => side.slug ?? side.teamId ?? side.name.trim().toLowerCase());
 }
 
-export function roundKeyFor(dateKey: string, keyDates: Playoffs['keyDates']): RoundKey {
+export function roundKeyFor(dateKey: string, keyDates: CcsPlayoffs['keyDates']): RoundKey {
   if (dateKey === isoDateKey(keyDates.quarterfinals)) return 'quarterfinals';
   if (dateKey === isoDateKey(keyDates.semifinals)) return 'semifinals';
   if (dateKey === isoDateKey(keyDates.finals)) return 'finals';
@@ -117,7 +119,7 @@ function splitByParticipants(games: Game[], maxGroups: number): Game[][] | null 
   return [...groups.values()];
 }
 
-function buildRounds(games: Game[], keyDates: Playoffs['keyDates']): BracketRound[] {
+function buildRounds(games: Game[], keyDates: CcsPlayoffs['keyDates']): BracketRound[] {
   const byDate = new Map<string, Game[]>();
   for (const game of games) {
     const list = byDate.get(game.dateKey);
@@ -147,11 +149,19 @@ function earliest(games: Game[]): string {
   return games.reduce((min, g) => (g.dateLocal < min ? g.dateLocal : min), games[0].dateLocal);
 }
 
+/**
+ * The CCS's two eight-team divisions as copy: 'CCS Division 1 (seeds 1-8)'. Always prefixed with
+ * "CCS" so it can never be read as a league division.
+ */
+export function ccsDivisionLabels(playoffs: Pick<CcsPlayoffs, 'format'>): string[] {
+  return playoffs.format.ccsDivisions.map((d) => `CCS ${d.name} (seeds ${d.seeds[0]}-${d.seeds[1]})`);
+}
+
 /** Every bracket the snapshot can support, in a stable order. Empty when nothing is published. */
-export function buildBrackets(playoffs: Playoffs): BracketPath[] {
+export function buildBrackets(playoffs: CcsPlayoffs): BracketPath[] {
   const games = playoffs.games;
   if (games.length === 0) return [];
-  const divisions = playoffs.format.divisions.length;
+  const divisions = playoffs.format.ccsDivisions.length;
   const groups = splitByParticipants(games, divisions) ?? [games];
   const ordered = groups
     .slice()
@@ -176,7 +186,7 @@ export interface PendingRound {
 }
 
 /** The published rounds that have no games in the snapshot yet — printed as a sentence, not a box. */
-export function pendingRounds(playoffs: Playoffs, paths: BracketPath[]): PendingRound[] {
+export function pendingRounds(playoffs: CcsPlayoffs, paths: BracketPath[]): PendingRound[] {
   const present = new Set(paths.flatMap((p) => p.rounds.map((r) => r.key)));
   const rounds: Array<[Exclude<RoundKey, 'other'>, string]> = [
     ['quarterfinals', playoffs.keyDates.quarterfinals],

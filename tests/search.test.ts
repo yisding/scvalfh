@@ -1,0 +1,199 @@
+/** lib/search.ts over the real registry and config (SPEC §9.1-§9.2 regression cases). */
+
+import { describe, expect, it } from 'vitest';
+
+import { DATA_QUALITY, LEAGUES, SECTIONS } from '../lib/leagues';
+import { buildSearchIndex, normalizeQuery, searchTeams } from '../lib/search';
+import { TEAMS } from '../lib/teams';
+
+const INDEX = buildSearchIndex(
+  TEAMS.map((t) => ({
+    slug: t.slug, name: t.name, shortName: t.shortName, abbr: t.abbr, city: t.city, mascot: t.mascot,
+    aliases: [...t.aliases], leagueId: t.league, division: t.division,
+    colors: { primary: t.colors.primary, onPrimary: t.colors.onPrimary },
+  })),
+  LEAGUES.map((l) => ({
+    id: l.id, shortName: l.shortName, name: l.name,
+    sectionShort: SECTIONS.find((s) => s.id === l.sectionId)!.shortName,
+    divisions: l.divisions.map((d) => ({
+      id: d.id, label: d.label, heading: l.divisions.length === 1 ? null : d.label,
+      searchAliases: d.searchAliases, teamCount: d.expectedTeams,
+    })),
+  })),
+  DATA_QUALITY.notCovered,
+);
+
+const slugs = (q: string) => searchTeams(INDEX, q).teams.map((t) => t.entry.slug);
+const groupIds = (q: string) => searchTeams(INDEX, q).groups.map((g) => `${g.kind}:${g.id}`);
+
+describe('normalizeQuery', () => {
+  it('normalizes per §9.2', () => {
+    expect(normalizeQuery('  St. Francis ')).toEqual({ compact: 'saintfrancis', tokens: ['saint', 'francis'] });
+    expect(normalizeQuery('Lick-Wilmerding')).toEqual({ compact: 'lickwilmerding', tokens: ['lick', 'wilmerding'] });
+    expect(normalizeQuery('Convent & Stuart Hall').tokens).toEqual(['convent', 'and', 'stuart', 'hall']);
+    expect(normalizeQuery('Berkeley High School').tokens).toEqual(['berkeley']);
+    expect(normalizeQuery('High School').tokens).toEqual(['high', 'school']);
+    expect(normalizeQuery('Tamalpaïs').compact).toBe('tamalpais');
+  });
+});
+
+describe('buildSearchIndex', () => {
+  it('holds the 43 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
+    expect(INDEX.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
+    const labels = new Set(
+      LEAGUES.flatMap((l) => [l.shortName, l.name, ...l.divisions.flatMap((d) => [d.label, ...d.searchAliases])])
+        .map((s) => normalizeQuery(s).compact),
+    );
+    for (const t of INDEX.teams) {
+      for (const k of t.keys.whole) expect(labels.has(k), `${t.slug}: ${k}`).toBe(false);
+      for (const tok of [...t.keys.nameTokens, ...t.keys.cityTokens, ...t.keys.mascotTokens]) {
+        expect(['scval', 'bval', 'pcal', 'mcal', 'gabilan'], `${t.slug}: ${tok}`).not.toContain(tok);
+      }
+    }
+    expect(INDEX.teams.find((t) => t.slug === 'leigh')!.divisionLabel).toBe('Mt. Hamilton');
+    expect(INDEX.teams.find((t) => t.slug === 'tamalpais')!.divisionLabel).toBeNull();
+  });
+
+  it('builds league and division groups', () => {
+    expect(INDEX.groups.map((g) => `${g.kind}:${g.id}`)).toEqual([
+      'league:scval', 'division:de-anza', 'division:el-camino',
+      'league:bval', 'division:mt-hamilton', 'division:santa-teresa',
+      'league:pcal', 'league:mcal',
+    ]);
+    const st = INDEX.groups.find((g) => g.id === 'santa-teresa')!;
+    expect(st).toMatchObject({ label: 'Santa Teresa', detail: 'BVAL division · 6 teams', href: '/standings/bval#santa-teresa' });
+    const mcal = INDEX.groups.find((g) => g.id === 'mcal')!;
+    expect(mcal).toMatchObject({
+      label: 'MCAL', detail: 'Marin County Athletic League · NCS · 9 teams', href: '/standings/mcal',
+    });
+    expect(JSON.stringify(INDEX).toLowerCase()).not.toContain('gabilan');
+  });
+});
+
+describe('searchTeams — §9.2 regression cases', () => {
+  it('"st" → Stevenson (abbr, raw query), then Saint Francis and St Ignatius', () => {
+    const r = searchTeams(INDEX, 'st');
+    expect(r.teams[0]).toMatchObject({ score: 90, why: 'abbr' });
+    expect(r.teams[0].entry.slug).toBe('stevenson');
+    expect(r.teams.slice(1).map((t) => t.entry.slug).sort()).toEqual(['saint-francis', 'st-ignatius']);
+    expect(r.teams).toHaveLength(3);
+  });
+
+  it('"Santa Teresa" → 0 teams + 1 division', () => {
+    const r = searchTeams(INDEX, 'Santa Teresa');
+    expect(r.teams).toEqual([]);
+    expect(r.groups.map((g) => g.id)).toEqual(['santa-teresa']);
+  });
+
+  it('"santa" → Santa Clara and Santa Catalina + the Santa Teresa division (+ the SCVAL league by its name)', () => {
+    expect(slugs('santa')).toEqual(['santa-clara', 'santa-catalina']);
+    expect(groupIds('santa')).toContain('division:santa-teresa');
+  });
+
+  it('"Carmel" → Carmel only (score 100)', () => {
+    const r = searchTeams(INDEX, 'Carmel');
+    expect(r.teams.map((t) => [t.entry.slug, t.score])).toEqual([['carmel', 100]]);
+  });
+
+  it('"University" → University SF', () => {
+    expect(slugs('University')[0]).toBe('university-sf');
+    expect(slugs('university')).toEqual(['university-sf']);
+  });
+
+  it('"Del Norte" → nothing', () => {
+    expect(searchTeams(INDEX, 'Del Norte')).toEqual({ teams: [], groups: [], notCovered: [] });
+  });
+
+  it('"York" and "Wilcox" → not covered, exact keys only', () => {
+    const r = searchTeams(INDEX, 'York');
+    expect(r.teams).toEqual([]);
+    expect(r.notCovered.map((n) => n.reason)).toEqual(['York plays JV field hockey only, so it has no varsity results here.']);
+    expect(searchTeams(INDEX, 'wilcox').notCovered.map((n) => n.reason)).toEqual(['Wilcox is not fielding a varsity team in 2026.']);
+    expect(searchTeams(INDEX, 'yor').notCovered).toEqual([]);
+    expect(searchTeams(INDEX, 'York School').notCovered).toHaveLength(1);
+  });
+
+  it('"Wildcats" → 4 teams', () => {
+    expect(slugs('Wildcats').sort()).toEqual(['los-gatos', 'marin-academy', 'marin-catholic', 'st-ignatius']);
+    expect(slugs('wildcat').sort()).toEqual(['los-gatos', 'marin-academy', 'marin-catholic', 'st-ignatius']);
+  });
+
+  it('"MC" → Marin Catholic; "SF" → Saint Francis; "LW" → Lick-Wilmerding (abbr wins)', () => {
+    expect(slugs('MC')[0]).toBe('marin-catholic');
+    expect(slugs('SF')[0]).toBe('saint-francis');
+    expect(searchTeams(INDEX, 'SF').teams[0]).toMatchObject({ score: 90, why: 'abbr' });
+    expect(slugs('lw')[0]).toBe('lick-wilmerding');
+  });
+
+  it('"st francis" / "Saint Francis" / "st. francis" → Saint Francis first', () => {
+    for (const q of ['st francis', 'Saint Francis', 'st. francis', 'ST. FRANCIS']) {
+      const r = searchTeams(INDEX, q);
+      expect(r.teams[0].entry.slug, q).toBe('saint-francis');
+      expect(r.teams[0].score, q).toBe(100);
+    }
+  });
+
+  it('"Mount Hamilton" / "mt ham" → the Mt. Hamilton division, no team', () => {
+    for (const q of ['Mount Hamilton', 'mt ham', 'Mt. Hamilton']) {
+      const r = searchTeams(INDEX, q);
+      expect(r.teams, q).toEqual([]);
+      expect(r.groups.map((g) => g.id), q).toEqual(['mt-hamilton']);
+    }
+  });
+
+  it('"BVAL" → the BVAL league group, no team', () => {
+    const r = searchTeams(INDEX, 'BVAL');
+    expect(r.teams).toEqual([]);
+    expect(r.groups.map((g) => `${g.kind}:${g.id}`)).toEqual(['league:bval']);
+  });
+
+  it('"mcal" / "marin county" → the MCAL league group; "marin" also finds the Marin schools by name', () => {
+    expect(groupIds('mcal')).toEqual(['league:mcal']);
+    expect(slugs('mcal')).toEqual([]);
+    expect(groupIds('marin county')).toEqual(['league:mcal']);
+    expect(slugs('marin county')).toEqual([]);
+    expect(groupIds('marin')).toEqual(['league:mcal']);
+    expect(slugs('marin')).toEqual(['marin-catholic', 'marin-academy']);
+  });
+
+  it('"Gabilan" → nothing at all', () => {
+    expect(searchTeams(INDEX, 'Gabilan')).toEqual({ teams: [], groups: [], notCovered: [] });
+  });
+
+  it('"los a" → Los Altos, not Los Gatos; "lyn" → Lynbrook', () => {
+    expect(slugs('los a')).toEqual(['los-altos']);
+    expect(slugs('lyn')).toEqual(['lynbrook']);
+  });
+
+  it('"san jose" → the San Jose schools on city; "monterey" → Monterey, then Santa Catalina', () => {
+    const sj = searchTeams(INDEX, 'san jose');
+    // Two San Jose schools carry '(San Jose)' in an alias, so they rank on name tokens (70) above the city rule (40).
+    expect(sj.teams.every((t) => t.entry.city === 'San Jose' && t.score >= 40)).toBe(true);
+    expect(sj.teams.map((t) => t.entry.slug).sort()).toEqual(TEAMS.filter((t) => t.city === 'San Jose').map((t) => t.slug).sort());
+    expect(sj.teams.filter((t) => t.why === 'city').map((t) => t.score)).not.toContain(70);
+    expect(slugs('monterey')).toEqual(['monterey', 'santa-catalina']);
+  });
+
+  it('every one of the 43 names returns that team first', () => {
+    for (const t of TEAMS) expect(slugs(t.name)[0], t.name).toBe(t.slug);
+  });
+
+  it('every alias returns its team in the top 3', () => {
+    for (const t of TEAMS) {
+      for (const a of t.aliases) expect(slugs(a).slice(0, 3), `${t.slug}: ${a}`).toContain(t.slug);
+    }
+  });
+
+  it('a 1-character query returns nothing', () => {
+    for (const q of ['s', 'M', ' a ', '', '&']) {
+      expect(searchTeams(INDEX, q), q).toEqual({ teams: [], groups: [], notCovered: [] });
+    }
+  });
+
+  it('applies the limit to teams only, keeping relevance then index order', () => {
+    const all = searchTeams(INDEX, 'san jose').teams;
+    const top = searchTeams(INDEX, 'san jose', { limit: 8 }).teams;
+    expect(all.length).toBeGreaterThan(8);
+    expect(top).toEqual(all.slice(0, 8));
+  });
+});

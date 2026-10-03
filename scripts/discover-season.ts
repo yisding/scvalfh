@@ -1,48 +1,61 @@
 #!/usr/bin/env tsx
 /**
- * Next-season bootstrap (SPEC §1.1h). Run once, by hand, when the season rolls over.
+ * Next-season bootstrap (SPEC §1.1h, §7.13). Run once, by hand, when the season rolls over.
  *
  *   pnpm exec tsx scripts/discover-season.ts
  *   pnpm exec tsx scripts/discover-season.ts --ssid <sportSeasonId>   pin the season explicitly
- *   pnpm exec tsx scripts/discover-season.ts --teams los-altos,mitty  probe fewer teams
+ *   pnpm exec tsx scripts/discover-season.ts --teams los-altos,mitty  probe these teams instead
+ *   pnpm exec tsx scripts/discover-season.ts --help                   print usage, no request
  *
  * What it does:
  *   1. reads `ssid` / `allSeasonId` / `genderSport` / `teamLevel` from the state hub's __NEXT_DATA__
- *   2. resolves every registry team's `leagueId` + `leagueName` through `team-context/v1`
+ *   2. resolves one representative team per division (ALL_DIVISIONS) to its `leagueId` + `leagueName`
+ *      through `team-context/v1` (or every team named by --teams)
  *   3. asserts `leagues/{leagueId}/v1`'s `sportSeasonId` and `year` agree with step 1
- *   4. prints a DIFF against lib/season.ts and a ready-to-paste constants block
+ *   4. matches each division by `maxprepsLeagueId`, guesses by `maxprepsName`, prints a DIFF against
+ *      lib/season.ts and lib/leagues.ts and a ready-to-paste block
  *
- * It NEVER writes a file. `lib/season.ts` is edited by a human who has read the diff, because a
- * wrong season id would silently publish last year's table.
+ * It NEVER writes a file. `lib/season.ts` and `lib/leagues.ts` are edited by a human who has read
+ * the diff, because a wrong season id would silently publish last year's table.
  *
- * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so a
- * full pass moves ~11 MB. That is why the daily cron never touches this endpoint.
+ * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
+ * default pass (one team per division, 6 divisions) moves ~4.4 MB; probing all 43 teams would move
+ * ~32 MB. That is why the daily cron never touches this endpoint.
  */
 
 import { MaxPrepsClient, MaxPrepsError } from '../lib/sources/maxpreps';
+import { ALL_DIVISIONS } from '../lib/leagues';
 import {
   ALL_SEASON_ID,
   BOOTSTRAP_URL,
   GENDER_SPORT,
-  LEAGUE_IDS,
-  LEAGUE_NAMES,
   SEASON_LABEL,
   SEASON_YEAR,
-  SECTION_ID,
-  SECTION_NAME,
   SPORT_SEASON_ID,
   TEAM_LEVEL,
 } from '../lib/season';
-import { TEAMS } from '../lib/teams';
-import type { Division } from '../lib/types';
+import { TEAMS, teamsInDivision } from '../lib/teams';
+import type { Team } from '../lib/types';
+
+const USAGE = `Usage: pnpm exec tsx scripts/discover-season.ts [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
+
+Next-season bootstrap: reads the MaxPreps state hub, resolves each division's league through
+team-context/v1, asserts leagues/{id}/v1 agrees, and prints a diff plus a paste block. Never writes a file.
+
+  --ssid <id>        pin the sportSeasonId instead of reading it from the hub
+  --teams <slugs>    probe exactly these registry teams (default: one representative team per division,
+                     about 738 KB each)
+  --help, -h         print this text and exit without making any request
+`;
 
 interface Args {
   ssid: string | null;
   teams: string[] | null;
+  help: boolean;
 }
 
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = { ssid: null, teams: null };
+  const out: Args = { ssid: null, teams: null, help: false };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = () => {
@@ -51,7 +64,8 @@ function parseArgs(argv: readonly string[]): Args {
       i += 1;
       return v;
     };
-    if (arg === '--ssid') out.ssid = next();
+    if (arg === '--help' || arg === '-h') out.help = true;
+    else if (arg === '--ssid') out.ssid = next();
     else if (arg === '--teams') out.teams = next().split(',').map((s) => s.trim()).filter(Boolean);
     else throw new Error(`unknown flag: ${arg}`);
   }
@@ -87,6 +101,10 @@ function compare(label: string, ours: string | null, theirs: string | null | und
 
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    console.log(USAGE);
+    return 0;
+  }
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
 
   // ---- 1. the state hub
@@ -108,9 +126,17 @@ async function main(): Promise<number> {
   if (args.ssid) console.log(`  (using --ssid ${args.ssid})`);
 
   // ---- 2. per-team league resolution
-  const wanted = args.teams
+  const wanted: Team[] = args.teams
     ? TEAMS.filter((t) => args.teams?.includes(t.slug))
-    : TEAMS.filter((t) => t.dataCoverage !== 'none');
+    : ALL_DIVISIONS.flatMap((d) => {
+        const members = teamsInDivision(d.id);
+        const rep = members.find((t) => t.dataCoverage !== 'none') ?? members[0];
+        return rep ? [rep] : [];
+      });
+  if (wanted.length === 0) {
+    console.error('FAILED: --teams matched no registry team.');
+    return 1;
+  }
   console.log(`\nresolving ${wanted.length} team context(s) at ~738 KB each — this is slow`);
 
   const rows: Row[] = [];
@@ -185,35 +211,34 @@ async function main(): Promise<number> {
   const failed = rows.filter((r) => r.error);
   if (failed.length) console.log(`  (failed: ${failed.map((r) => r.slug).join(', ')})`);
 
-  // ---- 4. the diff against lib/season.ts, then the paste block
-  console.log('\ndiff against lib/season.ts:');
-  for (const division of ['de-anza', 'el-camino'] as Division[]) {
-    const ours = LEAGUE_IDS[division];
-    const match = resolved.find((r) => r.leagueId === ours);
+  // ---- 4. the diff against lib/leagues.ts (match by maxprepsLeagueId, guess by maxprepsName)
+  console.log('\ndiff against lib/leagues.ts divisions:');
+  const guesses = new Map<string, { leagueId: string; name: string } | null>();
+  for (const division of ALL_DIVISIONS) {
+    const probed = wanted.some((t) => t.division === division.id);
+    const match = resolved.find((r) => r.leagueId === division.maxprepsLeagueId);
     if (match) {
-      console.log(`  ${division}: leagueId unchanged (${ours}) — ${match.slugs.length} teams this season`);
-      if (match.name !== LEAGUE_NAMES[division]) {
-        diffs.push(`LEAGUE_NAMES['${division}']: ${LEAGUE_NAMES[division]} → ${match.name}`);
-        console.log(`    name CHANGED: ${LEAGUE_NAMES[division]} → ${match.name}`);
+      console.log(`  ${division.id}: maxprepsLeagueId unchanged (${division.maxprepsLeagueId}) — ${match.slugs.length} probed team(s)`);
+      if (match.name !== division.maxprepsName) {
+        diffs.push(`${division.id} maxprepsName: ${division.maxprepsName} → ${match.name}`);
+        console.log(`    name CHANGED: ${division.maxprepsName} → ${match.name}`);
       }
-    } else if (!wanted.some((t) => t.division === division)) {
-      // A --teams probe that skipped this division says nothing about its leagueId.
-      console.log(`  ${division}: not probed (no --teams member is in this division)`);
+      guesses.set(division.id, { leagueId: match.leagueId, name: match.name });
+    } else if (!probed) {
+      // A --teams probe that skipped this division says nothing about its league id.
+      console.log(`  ${division.id}: not probed (no --teams member is in this division)`);
+      guesses.set(division.id, null);
     } else {
-      const guess = resolved.find((r) =>
-        r.name.toLowerCase().includes(division === 'de-anza' ? 'de anza' : 'el camino'),
-      );
+      const guess = resolved.find((r) => r.name.toLowerCase() === division.maxprepsName.toLowerCase());
       diffs.push(
-        `LEAGUE_IDS['${division}']: ${ours} → ${guess ? guess.leagueId : 'NOT FOUND — look it up by hand'}`,
+        `${division.id} maxprepsLeagueId: ${division.maxprepsLeagueId} → ${guess ? guess.leagueId : 'NOT FOUND — look it up by hand'}`,
       );
       console.log(
-        `  ${division}: leagueId CHANGED — ours ${ours}, upstream ${guess ? `${guess.leagueId} (${guess.name})` : 'not found'}`,
+        `  ${division.id}: maxprepsLeagueId CHANGED — ours ${division.maxprepsLeagueId}, upstream ${guess ? `${guess.leagueId} (${guess.name})` : 'not found'}`,
       );
+      guesses.set(division.id, guess ? { leagueId: guess.leagueId, name: guess.name } : null);
     }
   }
-
-  const deAnza = resolved.find((r) => r.name.toLowerCase().includes('de anza'));
-  const elCamino = resolved.find((r) => r.name.toLowerCase().includes('el camino'));
 
   console.log('\n--- paste into lib/season.ts (after checking every line) ---');
   console.log(`export const SEASON_YEAR = '${rows.find((r) => r.year)?.year ?? SEASON_YEAR}';`);
@@ -222,25 +247,25 @@ async function main(): Promise<number> {
   console.log(`export const ALL_SEASON_ID = '${boot.data.allSeasonId ?? ALL_SEASON_ID}';`);
   console.log(`export const GENDER_SPORT = '${boot.data.genderSport ?? GENDER_SPORT}' as const;`);
   console.log(`export const TEAM_LEVEL = '${boot.data.teamLevel ?? TEAM_LEVEL}' as const;`);
-  console.log(`export const SECTION_ID = '${SECTION_ID}'; // team-context .sectionId`);
-  console.log(`export const SECTION_NAME = '${SECTION_NAME}';`);
-  console.log('export const LEAGUE_IDS: Record<Division, string> = {');
-  console.log(`  'de-anza': '${deAnza?.leagueId ?? LEAGUE_IDS['de-anza']}',`);
-  console.log(`  'el-camino': '${elCamino?.leagueId ?? LEAGUE_IDS['el-camino']}',`);
-  console.log('};');
-  console.log('export const LEAGUE_NAMES: Record<Division, string> = {');
-  console.log(`  'de-anza': '${deAnza?.name ?? LEAGUE_NAMES['de-anza']}',`);
-  console.log(`  'el-camino': '${elCamino?.name ?? LEAGUE_NAMES['el-camino']}',`);
-  console.log('};');
   console.log('--- end paste block ---');
+
+  console.log('\n--- divisions block for lib/leagues.ts (only the two MaxPreps fields per division) ---');
+  for (const division of ALL_DIVISIONS) {
+    const g = guesses.get(division.id) ?? null;
+    console.log(`  // ${division.id}`);
+    console.log(`  maxprepsLeagueId: '${g?.leagueId ?? division.maxprepsLeagueId}',${g ? '' : ' // unchanged: not resolved this run'}`);
+    console.log(`  maxprepsName: '${g?.name ?? division.maxprepsName}',`);
+  }
+  console.log('--- end divisions block ---');
 
   console.log(
     `\n${diffs.length === 0 ? 'NO CHANGES: lib/season.ts still matches upstream.' : `${diffs.length} change(s) to apply:`}`,
   );
   for (const d of diffs) console.log(`  - ${d}`);
   console.log(
-    '\nAlso check by hand: the registry in lib/teams.ts (division membership comes from the two ' +
-      'scval.com PDFs, not from these leagueIds), PLAYOFF_KEY_DATES, and the crossover date.',
+    '\nAlso check by hand: the registry in lib/registry/* (membership comes from each league\'s own ' +
+      'official schedule, not from these leagueIds), CCS.keyDates, each league\'s keyDates and the postseason dates. ' +
+      'Provenance by league: SCVAL from the two scval.com PDFs, BVAL/PCAL/MCAL from their bundled official documents.',
   );
   return 0;
 }

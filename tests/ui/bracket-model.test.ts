@@ -1,28 +1,46 @@
 /**
  * `components/playoffs/bracket-model.ts` — the CCS bracket, recovered from a `Game[]` that
- * carries no seeds and no CCS division label.
+ * carries no seeds and no CCS division label (`format.ccsDivisions`, always "CCS Division 1/2" in
+ * copy).
  *
- * This code cannot run against real data yet: the 2026 bracket is unpublished, so
- * `playoffs.games` is `[]` and /playoffs is in its not-seeded mode. The /playoffs stage exercised
- * it by pointing `SCVAL_SNAPSHOT` at synthetic snapshots and asked for the cases to be committed
- * (scratchpad/notes/page-playoffs.md, request 2). Building them here from the real `playoffs`
- * record plus synthetic games keeps the key dates honest.
+ * The bracket is unpublished until the CCS seeding meeting, so these cases build it from the CCS
+ * section block (`CCS` in lib/leagues — the key dates and the two CCS divisions) plus synthetic
+ * games. Nothing here reads the bundled snapshot, so live fetches cannot break it.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { buildBrackets, isNamedSide, pendingRounds, roundKeyFor } from '../../components/playoffs/bracket-model';
-import { getPlayoffs } from '../../lib/data';
+import {
+  buildBrackets,
+  ccsDivisionLabels,
+  isNamedSide,
+  pendingRounds,
+  roundKeyFor,
+} from '../../components/playoffs/bracket-model';
+import { CCS } from '../../lib/leagues';
 import { resolveTeam } from '../../lib/teams';
-import type { Game, Playoffs } from '../../lib/types';
-import { game } from '../helpers';
+import type { CcsPlayoffs, Game } from '../../lib/types';
+import { game } from '../game-builder';
 
-const playoffs = getPlayoffs();
+const MODEL = 'components/playoffs/bracket-model.ts';
+
+const playoffs: CcsPlayoffs = {
+  keyDates: { ...CCS.keyDates },
+  format: {
+    elimination: 'single',
+    ccsDivisions: CCS.ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] })),
+    autoQualifiers: { ...CCS.autoQualifiers },
+    highSeedHostsThrough: 'semifinals',
+  },
+  bracketPublished: false,
+  bracketUrl: CCS.bracketUrl,
+  games: [],
+};
 const QF = playoffs.keyDates.quarterfinals.slice(0, 10);
 const SF = playoffs.keyDates.semifinals.slice(0, 10);
 const F = playoffs.keyDates.finals.slice(0, 10);
 
-function withGames(games: Game[]): Playoffs {
+function withGames(games: Game[]): CcsPlayoffs {
   return { ...playoffs, bracketPublished: true, games };
 }
 
@@ -49,14 +67,18 @@ function oneDivision(teams: string[]): Game[] {
   ];
 }
 
-const DIV_A = ['st-ignatius', 'saint-francis', 'valley-christian', 'los-altos', 'fremont', 'cupertino', 'homestead', 'Menlo-Atherton'];
-const DIV_B = ['archbishop-mitty', 'los-gatos', 'palo-alto', 'saratoga', 'presentation', 'santa-clara', 'lynbrook', 'monta-vista'];
+// Two CCS divisions drawn from all three CCS leagues; the eighth seed of the first is a school from
+// outside the registry (a printed name only), as can happen in the real field.
+const DIV_A = ['st-ignatius', 'saint-francis', 'christopher', 'stevenson', 'fremont', 'gilroy', 'homestead', 'Menlo-Atherton'];
+const DIV_B = ['mitty', 'los-gatos', 'palo-alto', 'leigh', 'hollister', 'santa-clara', 'prospect', 'monta-vista'];
 
 describe('buildBrackets', () => {
-  it('renders nothing at all while the bracket is unpublished — the live case', () => {
-    expect(playoffs.bracketPublished).toBe(false);
-    expect(playoffs.games).toEqual([]);
-    expect(buildBrackets(playoffs)).toEqual([]);
+  it('renders nothing at all while the bracket is unpublished', () => {
+    expect(buildBrackets(playoffs), MODEL).toEqual([]);
+  });
+
+  it('names the two CCS divisions with the CCS prefix, from format.ccsDivisions', () => {
+    expect(ccsDivisionLabels(playoffs), MODEL).toEqual(['CCS Division 1 (seeds 1-8)', 'CCS Division 2 (seeds 9-16)']);
   });
 
   it('splits two independent 7-game divisions into two named paths', () => {

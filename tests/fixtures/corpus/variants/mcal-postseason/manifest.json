@@ -1,0 +1,12 @@
+{
+  "id": "mcal-postseason",
+  "note": "Four synthetic MCAL finals dated Oct 24-30 (contestType 4 on Oct 24 and 28, 0 on Oct 26 and 30), and the University @ Redwood league fixture (official date Oct 22, contest dad1ea0d) moved by MaxPreps to Oct 23, after MCAL's postseasonFrom. A synthetic si.com scoreboard for Oct 23 carries that game as a Final (si.com 9990023), so a run dated after Oct 22 proves D2 rule 2 does not fill the fixture from si.com.",
+  "files": {
+    "maxpreps/schedule/marin-catholic": "maxpreps/schedule/marin-catholic.json",
+    "maxpreps/schedule/lick-wilmerding": "maxpreps/schedule/lick-wilmerding.json",
+    "maxpreps/schedule/redwood": "maxpreps/schedule/redwood.json",
+    "maxpreps/schedule/tamalpais": "maxpreps/schedule/tamalpais.json",
+    "maxpreps/schedule/university-sf": "maxpreps/schedule/university-sf.json",
+    "sblive/scores/2026-10-23": "sblive/scores/2026-10-23.html"
+  }
+}

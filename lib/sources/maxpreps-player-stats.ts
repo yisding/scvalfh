@@ -7,7 +7,9 @@
  * card, and the legacy print view (`/print/team_stats.aspx`) carries the same table without the
  * career links. The JSON carries them, so every row joins to the roster on the career id.
  *
- * Shape [V] 2026-10-02, all 15 teams: `data.groups[]` ("Field Stats", "Goaltending Stats"), each
+ * Player stats are SCVAL-only (SPEC §0.2 item 12), like the rosters they join to.
+ *
+ * Shape [V] 2026-10-02, all 15 SCVAL teams: `data.groups[]` ("Field Stats", "Goaltending Stats"), each
  * with `subgroups[]` (a second subgroup "… (2)" holds the overflow columns), each a table of
  * `stats.columns[]` ({name, header, displayName, overallValue, columnType}) and `stats.rows[]`
  * whose `columns[i]` lines up with `stats.columns[i]` ({value, href, caption}). Column `Name`

@@ -1,0 +1,5 @@
+{
+  "id": "finals-regression",
+  "note": "Starts from a previous snapshot (fetched 2026-10-02T03:00Z) in which three Santa Teresa league games were final (3c691d2c, be7bd768, 1cc606d9) that the corpus does not have as finals: BVAL counted finals drop by 3 (SPEC §7.5 trigger c).",
+  "previous": "previous-snapshot.json"
+}

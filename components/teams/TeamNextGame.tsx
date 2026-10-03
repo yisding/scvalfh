@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { dateTimeAttr, timeOfDayPT } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import ResultChip from '../ui/ResultChip';
@@ -8,7 +9,7 @@ import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame } from '../ui/game-view';
-import type { NextCard } from './team-view';
+import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**
  * The NEXT block (DESIGN §3.7, modernization brief §5.7). Presentational: every string comes from
@@ -18,13 +19,19 @@ import type { NextCard } from './team-view';
  * - the date (18px, "Today · Fri Oct 2" on the day itself) and the start time (13px sans,
  *   tabular figures);
  * - the opponent's short name beside a 32px monogram, with their league record and place under it
- *   for one of the 15 ("3-3-1 · 4th in El Camino"): "can we beat them?" is the question a parent
- *   asks next, and the answer used to be two taps away;
+ *   for a registry team ("3-3-1 · 4th in El Camino", "2nd in MCAL", or the opponent's league named
+ *   too when it is another league's): "can we beat them?" is the question a parent asks next, and
+ *   the answer used to be two taps away;
  * - where it is, when we can say so honestly (a venue, "Neutral site", or the host school's city);
  * - the last time the two met, as one link to that game ("Earlier: lost 0–7 at home, Sep 10");
  * - a pill row pinned to the bottom: "Full game page" first (the opponent's name was the only way
  *   there, and nothing said it was a link), then only the external links that really exist. A
  *   dead affordance is worse than an absent one, so a game with no stream has no stream chip.
+ *
+ * The league copy comes from config (`league`): the official-fixture card names the league's own
+ * schedule, and the empty state is the league's end-of-season and bracket sentences — an MCAL page
+ * never mentions CCS (SPEC §10.5). The heading's meta is League / Postseason / Non-league from
+ * `countsFor` and `postseason` (SPEC §10.4).
  *
  * There is no score here and never a `0-0`: a scheduled game's score slot does not exist, the
  * time takes its place (DESIGN §5.2).
@@ -32,6 +39,8 @@ import type { NextCard } from './team-view';
 export interface TeamNextGameProps {
   card: NextCard;
   teamName: string;
+  /** The team's league copy (config): the end-of-season and bracket sentences, the short name. */
+  league: TeamLeagueCopy;
 }
 
 /** Monogram + "at Santa Clara" over the record line. Shared by the contest and fixture cards. */
@@ -56,7 +65,7 @@ function Opponent({ card }: { card: Exclude<NextCard, { kind: 'none' }> }) {
   );
 }
 
-export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
+export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
   if (card.kind === 'official') {
     return (
       <section className="flex min-w-0 flex-col">
@@ -70,9 +79,9 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
           </p>
           <Opponent card={card} />
           <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-            From the official SCVAL schedule. No source has published a contest for this fixture,
-            so there is no start time, no venue and no game page for it &mdash; and there will be no
-            score unless one is reported.
+            From the official {league.shortName} schedule. No source has published a contest for
+            this fixture, so there is no start time, no venue and no game page for it &mdash; and
+            there will be no score unless one is reported.
           </p>
         </div>
       </section>
@@ -84,8 +93,7 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
       <section className="min-w-0">
         <SectionHeader kicker="Next" />
         <EmptyState heading={`No more games on ${teamName}'s published schedule.`}>
-          The league season ends Oct 28 and the SCVAL crossover is Fri Oct 30. We will list a
-          playoff game as soon as CCS publishes the bracket.
+          {`${league.seasonEndSentence} ${league.bracketSentence}`}
         </EmptyState>
       </section>
     );
@@ -106,7 +114,10 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
 
   return (
     <section className="flex min-w-0 flex-col">
-      <SectionHeader kicker="Next" meta={game.isLeague ? 'League' : 'Non-league'} />
+      <SectionHeader
+        kicker="Next"
+        meta={game.countsFor !== null ? 'League' : game.postseason !== null ? 'Postseason' : 'Non-league'}
+      />
       {/* `flex-1`: in the two-column grid the card fills its row beside the Last card, with the
           pill row pinned to its bottom edge (`mt-auto`), so the pair ends level. */}
       <div className="sx-card flex flex-1 flex-col p-5">
@@ -127,7 +138,7 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
         {card.place ? <p className="mt-2 mb-0 text-meta text-ink-2">{card.place}</p> : null}
         {game.isTimeTba ? (
           <p className="mt-1 mb-0 text-meta text-ink-3">
-            MaxPreps has not published a start time for this game yet.
+            No source has published a start time for this game yet.
           </p>
         ) : null}
         {card.earlier ? (
@@ -135,7 +146,7 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
             {/* One link, chip and words together. The chip is decoration here: the words already
                 say won / lost / tied, so it is hidden rather than read as a second "Loss". */}
             <Link
-              href={`/game/${card.earlier.contestId}`}
+              href={gameHref(card.earlier.contestId)}
               prefetch={false}
               className="sx-action gap-2 text-meta text-ink-2 no-underline hover:underline"
             >
@@ -148,7 +159,7 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
         ) : null}
         <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
           <Link
-            href={`/game/${game.contestId}`}
+            href={gameHref(game.contestId)}
             prefetch={false}
             className="sx-pill sx-pill-accent min-h-11"
           >

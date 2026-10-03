@@ -156,6 +156,12 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): Goalie
 }
 
 /**
+ * null for a team data/player-stats.json does not hold: player stats are SCVAL-only, like the
+ * rosters they join to (SPEC §0.2 item 12), so a BVAL, PCAL or MCAL page gets no player stats
+ * section at all — never an empty state that would read as the coach entering none. Never throws
+ * for a registry slug. (An SCVAL team whose coach enters no stats still gets a view, with no
+ * tables, and the section says so.)
+ *
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
  * @param team the team's stats; defaults to data/player-stats.json's. Tests pass a fixture build,
@@ -165,8 +171,8 @@ export function buildPlayerStatsView(
   slug: TeamSlug,
   games: readonly Game[] = [],
   team: TeamPlayerStats | undefined = getTeamPlayerStats(slug),
-): PlayerStatsView | undefined {
-  if (!team) return undefined;
+): PlayerStatsView | null {
+  if (!team) return null;
 
   // Both stamps are naive local time in the same zone: on 2026-10-02 the finals at or before each
   // team's update matched MaxPreps' own games-played total on 9 of 10 teams (Palo Alto's total is

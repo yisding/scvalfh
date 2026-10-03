@@ -1,7 +1,7 @@
 import { GameCard, GameRow } from '../ui/GameRow';
-import type { Game, TeamSlug } from '../../lib/types';
+import type { Game, LeagueId, TeamSlug } from '../../lib/types';
 
-import { gameFilterAttrs } from './filter-data';
+import { gameFilterAttrs } from './filter-data-server';
 
 /**
  * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).
@@ -18,14 +18,16 @@ import { gameFilterAttrs } from './filter-data';
  * That is the same "render both variants and hide one" pattern `StandingsTable` uses, because the
  * phone and desktop forms are genuinely different DOM rather than a restyle.
  *
- * With no `perspective` — /schedule and /scores/[date], a slate nobody is following one team
- * through — an upcoming league game prints each SCVAL side's league record beside its name
+ * With no `perspective` — /schedule/<league> and /scores/[date], a slate nobody is following one
+ * team through — an upcoming league game prints each registry side's league record beside its name
  * (`showRecords`), which is what a reader sizing up a game before kickoff wants. A list oriented to
  * one team leaves them off: that team's own page already leads with its record.
  */
 export interface GameListProps {
   games: readonly Game[];
   perspective?: TeamSlug | null;
+  /** A league-scoped list: a side from another league carries its league's short name. */
+  scopeLeague?: LeagueId | null;
   /** Default true on /schedule and /scores/[date]; the recap is never the only place a score is. */
   showRecap?: boolean;
   /**
@@ -48,6 +50,7 @@ export interface GameListProps {
 export function GameList({
   games,
   perspective = null,
+  scopeLeague = null,
   showRecap = true,
   variant = 'bleed',
   tracks = 'fill',
@@ -80,6 +83,7 @@ export function GameList({
           <GameRow
             game={game}
             perspective={perspective}
+            scopeLeague={scopeLeague}
             showRecap={showRecap}
             showRecords={showRecords}
             className="md:hidden"
@@ -88,6 +92,7 @@ export function GameList({
             <GameCard
               game={game}
               perspective={perspective}
+              scopeLeague={scopeLeague}
               showRecap={showRecap}
               showRecords={showRecords}
               className="h-full"

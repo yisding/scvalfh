@@ -25,10 +25,17 @@ import {
 } from '../../components/teams/player-stats-view';
 import { buildTeamPageView } from '../../components/teams/team-view';
 import { getPlayerStats } from '../../lib/player-stats';
+import { HISTORY_LEAGUE } from '../../lib/leagues';
 import type { PlayerStatsFile, TeamPlayerStats as TeamStats } from '../../lib/player-stats-schema';
-import { TEAMS } from '../../lib/teams';
+import { TEAMS as REGISTRY, teamsInLeague } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { buildFixturePlayerStats } from '../helpers';
+
+/**
+ * Rosters and player stats are SCVAL-only (SPEC §0.2 item 12): the teams these files hold are the
+ * registry's HISTORY_LEAGUE teams (15), not the whole 43-team registry.
+ */
+const TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 interface Case {
   slug: string;
@@ -57,9 +64,18 @@ describe('buildPlayerStatsView — rules, over the committed file', () => {
     }
   });
 
-  it('builds a view for every team; a team with no stats has no tables', () => {
+  it('builds no view (null: no section, no empty state) for a team outside SCVAL', () => {
+    const others = REGISTRY.filter((t) => t.league !== HISTORY_LEAGUE);
+    expect(others.length).toBe(REGISTRY.length - TEAMS.length);
+    for (const t of others) {
+      const page = buildTeamPageView(t.slug)!;
+      expect(buildPlayerStatsView(t.slug, [...page.leagueLog, ...page.nonLeagueLog]), t.slug).toBeNull();
+    }
+  });
+
+  it('builds a view for every SCVAL team; a team with no stats has no tables', () => {
     for (const { slug, data, view } of live) {
-      expect(view, slug).toBeDefined();
+      expect(view, slug).toBeTruthy();
       if (data.players.length === 0) {
         expect(view.scoring, slug).toBeNull();
         expect(view.more, slug).toBeNull();

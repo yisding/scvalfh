@@ -1,81 +1,130 @@
 /**
- * `components/home/pin-label.ts` — WCAG 2.5.3 Label in Name over the real registry.
+ * `lib/pin-label.ts` over the real 43-team registry (SPEC §10.1).
  *
- * The picker tile's VISIBLE label is `shortName`, so the accessible name has to contain it. Three
- * of the fifteen short names are not substrings of the school's full name, so a label built from
- * the full name alone left those three unsayable.
+ * WCAG 2.5.3 Label in Name: a tile's VISIBLE label is `shortName`, so the accessible name has to contain it.
+ * The picker's break points are asserted against tests/ui/text-metrics.ts (static Geist 12 px / 500 widths),
+ * so a new school or a renamed short name that needs one fails here instead of being assumed.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { pickerName, pinLabel } from '../../components/home/pin-label';
-import { DIVISION_LABELS } from '../../lib/season';
+import { divisionHeading, getLeague } from '../../lib/leagues';
+import { PICKER_BREAKS, pickerName, pinLabel } from '../../lib/pin-label';
 import { TEAMS } from '../../lib/teams';
+import { width } from './text-metrics';
 
-/** What `buildTeamViews()` hands the picker: the registry row plus its division's label. */
+const SHY = '­';
+/** The name's measure in a picker tile at 320 px (four columns). */
+const TILE_PX = 61;
+
 const IDENTITIES = TEAMS.map((team) => ({
-  ...team,
-  divisionLabel: DIVISION_LABELS[team.division],
+  slug: team.slug,
+  name: team.name,
+  shortName: team.shortName,
+  divisionHeading: divisionHeading(team.division),
+  leagueShort: getLeague(team.league).shortName,
 }));
 
 describe('pinLabel', () => {
-  it('contains the visible tile label for all 15 teams', () => {
-    expect(IDENTITIES.length).toBe(15);
-    for (const team of IDENTITIES) {
-      const label = pinLabel(team);
-      expect(label.toLowerCase(), team.slug).toContain(team.shortName.toLowerCase());
+  it('formats the documented examples', () => {
+    expect(pinLabel({ name: 'Leigh', shortName: 'Leigh', divisionHeading: 'Mt. Hamilton', leagueShort: 'BVAL' }))
+      .toBe('Pin Leigh, Mt. Hamilton · BVAL');
+    expect(pinLabel({ name: 'Tamalpais', shortName: 'Tamalpais', divisionHeading: null, leagueShort: 'MCAL' }))
+      .toBe('Pin Tamalpais, MCAL');
+    const byslug = (slug: string) => pinLabel(IDENTITIES.find((t) => t.slug === slug)!);
+    expect(byslug('leigh')).toBe('Pin Leigh, Mt. Hamilton · BVAL');
+    expect(byslug('tamalpais')).toBe('Pin Tamalpais, MCAL');
+    expect(byslug('carmel')).toBe('Pin Carmel, PCAL');
+    expect(byslug('mitty')).toBe('Pin Archbishop Mitty, El Camino · SCVAL');
+    expect(byslug('saint-francis')).toBe('Pin St Francis (Saint Francis), De Anza · SCVAL');
+  });
+
+  it('has the label format for all 43 teams', () => {
+    expect(IDENTITIES.length).toBe(43);
+    for (const t of IDENTITIES) {
+      const label = pinLabel(t);
+      const tail = `, ${t.divisionHeading === null ? '' : `${t.divisionHeading} · `}${t.leagueShort}`;
+      expect(label.startsWith('Pin '), t.slug).toBe(true);
+      expect(label.endsWith(tail), t.slug).toBe(true);
+      expect(label, t.slug).toContain(t.name);
+      // Single-division leagues (PCAL, MCAL) carry no division label.
+      if (t.leagueShort === 'PCAL' || t.leagueShort === 'MCAL') expect(label, t.slug).not.toContain(' · ');
+      expect(label, t.slug).not.toContain('Division');
     }
   });
 
-  it('still names the full school, so the row is identifiable out of context', () => {
-    for (const team of IDENTITIES) {
-      const label = pinLabel(team);
-      expect(label, team.slug).toContain(team.name);
-      expect(label, team.slug).toContain(`${team.divisionLabel} Division`);
-      expect(label.startsWith('Pin '), team.slug).toBe(true);
+  it('contains the visible tile label (WCAG 2.5.3) for all 43 teams', () => {
+    for (const t of IDENTITIES) {
+      expect(pinLabel(t).toLowerCase(), t.slug).toContain(t.shortName.toLowerCase());
     }
   });
 
   it('adds the full name in parentheses only when the short name is not inside it', () => {
     const bracketed = IDENTITIES.filter((t) => pinLabel(t).includes('('));
     expect(bracketed.map((t) => t.slug).sort()).toEqual([
+      'archie-williams',
+      'lick-wilmerding',
       'saint-francis',
       'st-ignatius',
+      'university-sf',
       'valley-christian',
     ]);
-    // The other twelve read as one name, not a name twice over.
-    for (const team of IDENTITIES) {
-      if (bracketed.includes(team)) continue;
-      expect(pinLabel(team), team.slug).toBe(`Pin ${team.name}, ${team.divisionLabel} Division`);
+    for (const t of IDENTITIES) {
+      if (bracketed.includes(t)) {
+        expect(pinLabel(t).startsWith(`Pin ${t.shortName} (${t.name}), `), t.slug).toBe(true);
+      } else {
+        expect(pinLabel(t).startsWith(`Pin ${t.name}, `), t.slug).toBe(true);
+      }
     }
-  });
-});
-
-const SHY = '­';
-
-describe('pickerName', () => {
-  it('renders the same string as the short name, give or take a break point', () => {
-    expect(IDENTITIES.length).toBe(15);
-    for (const team of IDENTITIES) {
-      expect(pickerName(team).replaceAll(SHY, ''), team.slug).toBe(team.shortName);
-    }
-  });
-
-  it('breaks only the two names with no space to break at', () => {
-    // The picker tile is four columns wide at every width, which leaves the name 61px at 320px.
-    // Thirteen of the fifteen either fit it or break at their own space; "Homestead" (70px) and
-    // "Presentation" (77px) are single words that do neither, and `hyphens: auto` will not break
-    // a capitalised word in Chromium, so they carry soft hyphens. A sixteenth school, or a
-    // renamed short name, fails here and has to be measured rather than assumed.
-    const broken = IDENTITIES.filter((t) => pickerName(t).includes(SHY));
-    expect(broken.map((t) => t.slug).sort()).toEqual(['homestead', 'presentation']);
-    expect(pickerName({ shortName: 'Homestead' })).toBe(`Home${SHY}stead`);
-    expect(pickerName({ shortName: 'Presentation' })).toBe(`Pre${SHY}sen${SHY}ta${SHY}tion`);
   });
 
   it('leaves the accessible name alone — the soft hyphen is visual only', () => {
-    for (const team of IDENTITIES) {
-      expect(pinLabel(team), team.slug).not.toContain(SHY);
+    for (const t of IDENTITIES) expect(pinLabel(t), t.slug).not.toContain(SHY);
+  });
+});
+
+/** Pieces a line can break between without help: spaces, and after a hyphen. */
+const segments = (s: string) => s.split(/ |(?<=-)/).filter(Boolean);
+
+describe('text metrics (calibration)', () => {
+  it('reproduces the widths the browser rendered at 12 px / 500 Geist', () => {
+    expect(width('Homestead')).toBeCloseTo(70, 0);
+    expect(width('Presentation')).toBeCloseTo(77, 0);
+    expect(width('Hollister')).toBeCloseTo(50.9, 1);
+  });
+});
+
+describe('pickerName', () => {
+  it('renders the same string as the short name, give or take a break point', () => {
+    for (const t of IDENTITIES) {
+      expect(pickerName(t).split(SHY).join(''), t.slug).toBe(t.shortName);
     }
+  });
+
+  it('has PICKER_BREAKS keys = exactly the short names with a word wider than the 61 px tile', () => {
+    const tooWide = IDENTITIES
+      .filter((t) => segments(t.shortName).some((seg) => width(seg) > TILE_PX))
+      .map((t) => t.shortName)
+      .sort();
+    expect(Object.keys(PICKER_BREAKS).sort()).toEqual(tooWide);
+    expect(tooWide).toEqual([
+      'Christopher', 'Greenfield', 'Homestead', 'Presentation', 'Stevenson', 'Tamalpais', 'Westmont',
+    ]);
+    // Hollister fits and gets no break.
+    expect(width('Hollister')).toBeLessThan(TILE_PX);
+    expect(pickerName({ shortName: 'Hollister' })).toBe('Hollister');
+  });
+
+  it('breaks each listed name into pieces that fit the tile with their hyphen', () => {
+    for (const [shortName, broken] of Object.entries(PICKER_BREAKS)) {
+      const pieces = broken.split(SHY);
+      expect(pieces.length, shortName).toBeGreaterThan(1);
+      pieces.forEach((piece, i) => {
+        const shown = i < pieces.length - 1 ? `${piece}-` : piece;
+        expect(width(shown), `${shortName}: ${shown}`).toBeLessThanOrEqual(TILE_PX);
+      });
+    }
+    expect(pickerName({ shortName: 'Homestead' })).toBe(`Home${SHY}stead`);
+    expect(pickerName({ shortName: 'Presentation' })).toBe(`Pre${SHY}sen${SHY}ta${SHY}tion`);
   });
 });

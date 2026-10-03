@@ -1,62 +1,102 @@
 /**
- * The normalized domain model.
- *
- * Source of truth: research/SPEC.md §4, amended by research/BYLAWS-ADDENDUM.md:
- *   - Standing.computed.pts is a NUMBER (3 pts win, 1 pt tie) — SCVAL By-Laws Article VI §2.
- *     SPEC §5.6's "pts: number | null / do not invent a points system" is superseded.
- *   - Standings order is the order of points, then the Article VI §3-7 tiebreakers, so every
- *     Standing carries the tie state and a human-readable explanation of how its place was set.
- *   - Article VII §2 drives `playoffStatus`.
- *
+ * The normalized domain model: sections → leagues → divisions → teams, games, standings.
+ * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/leagues.ts.
  * Everything is exported; nothing here is a class and nothing here has behaviour.
  */
 
 // ---------- identity ----------
 
-/** MaxPreps `schoolId` / `teamId` GUID. THE primary key across all sources (SPEC §2.1). */
+/** MaxPreps `schoolId` / `teamId` GUID. THE primary key across all sources. */
 export type TeamId = string;
 
-/** MaxPreps `contestId` GUID. THE dedupe key for games (SPEC §5.5.1). */
+/**
+ * MaxPreps `contestId` GUID, or `sblive:<digits>` for a game that only si.com has and that D2 rule 2
+ * published (lib/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
+ */
 export type ContestId = string;
 
-export type Division = 'de-anza' | 'el-camino';
+export type SectionId = 'ccs' | 'ncs';
 
-/** Our own URL slug. Decoupled from every upstream slug (DESIGN §12.9). */
-export type TeamSlug =
-  | 'cupertino' | 'fremont' | 'homestead' | 'los-altos' | 'saint-francis'
-  | 'st-ignatius' | 'valley-christian'
-  | 'los-gatos' | 'lynbrook' | 'mitty' | 'monta-vista'
-  | 'palo-alto' | 'presentation' | 'santa-clara' | 'saratoga';
+/** 'scval' | 'bval' | 'pcal' | 'mcal' as DATA. Validated against LEAGUES at load and at parse. */
+export type LeagueId = string;
 
-/** Where a value came from. Every externally-sourced record carries one (SPEC §4). */
+/**
+ * One MaxPreps league table. Globally unique: 'de-anza' | 'el-camino' | 'mt-hamilton' |
+ * 'santa-teresa' | 'pcal' | 'marin-county'. A single-division league may reuse its league id ('pcal').
+ */
+export type DivisionId = string;
+
+/** @deprecated Use DivisionId. Banned outside lib/ by tests/legacy-imports.test.ts. */
+export type Division = DivisionId;
+
+/** Our URL slug, validated against the registry. The 15 SCVAL slugs are frozen. */
+export type TeamSlug = string;
+
+/** The CCS PLAYOFF division (never a league division). Always "CCS Division 1/2" in copy. */
+export type CcsDivisionName = 'Division 1' | 'Division 2';
+
+export type OfficialSourceId = 'scval-pdf' | 'bval-docx' | 'pcal-pdf' | 'mcal-pdf';
+
 export type SourceId =
-  | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | 'scval-pdf'
+  | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
   | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'derived';
 
 // ---------- season ----------
 
 export interface SeasonWindow {
-  /** min dateLocal over all kept contests. */
+  /** min dateLocal over the games in scope. */
   firstGame: string | null;
-  /** max dateLocal where isLeague. */
+  /**
+   * Global window: max dateLocal where `isLeague` (today's semantics, unchanged).
+   * League window: max dateLocal where `countsFor` is one of the league's divisions (any status).
+   */
   lastLeagueGame: string | null;
-  /** max dateLocal over all kept contests. */
+  /** max dateLocal over the games in scope. */
   lastGame: string | null;
 }
 
+export interface SeasonSection {
+  id: SectionId;
+  name: string;                       // 'Central Coast Section'
+  maxprepsSectionId: string;
+  holdsFieldHockeyChampionship: boolean;
+}
+
+export interface SeasonDivision {
+  id: DivisionId;
+  /** Our UI label ('De Anza', 'Mt. Hamilton', 'PCAL', 'MCAL'). MaxPreps' own name is NOT stored. */
+  label: string;
+  maxprepsLeagueId: string;
+}
+
+export interface SeasonLeague {
+  id: LeagueId;
+  sectionId: SectionId;
+  name: string;                       // 'Blossom Valley Athletic League'
+  shortName: string;                  // 'BVAL'
+  divisions: SeasonDivision[];
+  /** NEW. Copied from config (LEAGUES[].postseason.kind) and validated against it (checkAgainstConfig #6). Lets scripts read the tournament leagues from the snapshot. */
+  postseasonKind: 'ccs-ladder' | 'league-tournament';
+  /**
+   * Over games with at least one registry side in this league AND `postseason === null` (crossover, play-in,
+   * MCAL tournament and CCS games never extend it). Drives this league's phase.
+   */
+  window: SeasonWindow;
+}
+
 export interface Season {
-  /** "26-27" — MaxPreps `leagues/{id}/v1`.year (SPEC §2). */
+  /** "26-27" */
   year: string;
-  /** "Girls Varsity Field Hockey Fall 26-27" — `.sportSeasonName`. */
   label: string;
   sportSeasonId: string;
   allSeasonId: string;
   genderSport: 'girls,fieldhockey';
   teamLevel: 'Varsity' | 'JV';
-  sectionId: string;
-  sectionName: string;
-  leagues: Record<Division, { leagueId: string; name: string }>;
-  /** Computed from game dates, never hardcoded (SPEC §5.8). */
+  /** Config order: ccs, ncs. */
+  sections: SeasonSection[];
+  /** Config order: scval, bval, pcal, mcal. */
+  leagues: SeasonLeague[];
+  /** Global window over every kept contest — today's semantics. */
   window: SeasonWindow;
 }
 
@@ -74,14 +114,13 @@ export interface TeamColors {
 
 export interface TeamExternalIds {
   maxprepsTeamId: TeamId;
-  /** Always the API's `teamCanonicalUrl`; never string-built (SPEC §2.1). */
   maxprepsTeamUrl: string | null;
   maxprepsScheduleUrl: string | null;
-  /** numeric, e.g. "458850" */
+  /** numeric si.com TEAM id, e.g. "458850". Never guessed. */
   sbliveTeamId?: string;
-  /** Only where the si.com slug was verified; slugs are never guessed (SPEC §2.1). */
+  /** NEW. numeric si.com SCHOOL id from a logo URL `/uploads/production/school/{id}/`. Never guessed. */
+  sbliveSchoolId?: string;
   sbliveGamesUrl?: string;
-  /** VNN / PlayOn "Mascot Media Bolt" site id (SPEC §1.5). */
   vnnSiteId?: string;
   vnnIcsUrl?: string;
 }
@@ -91,21 +130,22 @@ export interface Team {
   slug: TeamSlug;
   /** Canonical display name (MaxPreps `schoolName`). */
   name: string;
-  /** Desktop-table name, e.g. "St Ignatius". */
+  /** ≤ 14 characters. */
   shortName: string;
-  /** Hand-assigned 2-letter monogram, asserted unique (DESIGN §12.9). */
+  /** 2 letters, unique across all 43 teams. */
   abbr: string;
-  /** MaxPreps `schoolNameAcronym`, e.g. "LAHS". */
+  /** MaxPreps `schoolNameAcronym`. Display only: NOT unique; indexed for resolution only when unique. */
   acronym: string;
   mascot: string;
   city: string;
-  /** Every spelling seen in any source (SPEC §2.3). */
+  /** Globally unambiguous spellings only. League-grid codes live in LeagueConfig.officialCodes. */
   aliases: string[];
-  /** null would mean a non-SCVAL opponent; the registry holds members only. */
-  division: Division;
-  /** true for all 15 fielding schools in the official SCVAL PDFs (SPEC §3). */
-  isScvalMember: true;
-  /** 'none' = in the official grid, absent from every data source. */
+  /** NEW */
+  section: SectionId;
+  /** NEW — replaces `isScvalMember: true`. */
+  league: LeagueId;
+  division: DivisionId;
+  /** 'none' = in the league's official alignment, absent from every data source. */
   dataCoverage: 'full' | 'partial' | 'none';
   colors: TeamColors;
   mascotUrl: string | null;
@@ -160,96 +200,129 @@ export interface GameVenue {
   address?: { street: string; city: string; region: string; postalCode: string };
 }
 
+/**
+ * Why a game is postseason. A postseason game never counts for a table. (SCVAL classifies by contest-type: a
+ * crossover or play-in is never same-division, and a same-division game tagged 'ccs' is excluded — lib/classify.ts.)
+ */
+export interface PostseasonTag {
+  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'ccs' | 'other';
+  leagueId: LeagueId | null;
+  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'ccs-window';
+}
+
+/** Set when a contest matched a fixture in a league's official schedule. */
+export interface OfficialStamp {
+  /** The official date, YYYY-MM-DD. Differs from dateKey when the game moved. */
+  scheduledDate: string;
+  /** The FIXTURE's division — the classifier's evidence. */
+  division: DivisionId;
+  source: OfficialSourceId;
+  /** OfficialFixture.id */
+  fixtureId: string;
+  pass: 'same-date' | 'same-date-swapped' | 'rescheduled';
+}
+
+/** How a si.com value entered a published game (owner decision D2, rules 2-4). */
+export interface BackfillProvenance {
+  rule: 'absent-fixture' | 'score-pending' | 'contradictory-result' | 'off-schedule-date' | 'phantom-tie';
+  sbliveGameId: string;
+  /** What MaxPreps said, when it said anything (rules 3-4). */
+  maxpreps: { home: number; away: number } | null;
+  /** One sentence, safe to render verbatim. */
+  note: string;
+}
+
 export interface Game {
   contestId: ContestId;
-  /** Naive local school time, America/Los_Angeles: `contest.date`. */
   dateLocal: string;
-  /** UTC twin: `calculatedFields.contestDateInGMT`, stored with a Z. */
   dateUtc: string;
-  /** YYYY-MM-DD derived from dateLocal — the URL key for /scores/[date]. */
   dateKey: string;
   isDateTba: boolean;
   isTimeTba: boolean;
   home: GameSide;
   away: GameSide;
-  /** 'neutral' ⇒ neither side hosted; home/away slots are then just a stable ordering. */
   site: 'home' | 'away' | 'neutral';
   status: GameStatus;
-  /** From `teams[].contestType === 0` (SPEC §5.5.5). */
+  /** "What MaxPreps says": contestType === 0 on either row. Evidence for SCVAL only; never overwritten. */
   isLeague: boolean;
-  /** Set only when both sides are registry members of the SAME division. */
-  leagueDivision: Division | null;
+  /** Membership only: both sides are registry members of the SAME division. Necessary, not sufficient. */
+  leagueDivision: DivisionId | null;
+  /** NEW. Raw MaxPreps contestType per row (0 league, 1 non-league, 2 neutral/tournament, 4 postseason); null when unknown or si.com-only. */
+  contestTypes: { home: number | null; away: number | null };
+  /**
+   * NEW. THE classification (lib/classify.ts classifyGame), for ANY status: the division whose table
+   * this game belongs to. Standings count it once status === 'final'. Chips, filters and counts read it.
+   */
+  countsFor: DivisionId | null;
+  /** NEW. Crossover, play-in, MCAL tournament and CCS games. */
+  postseason: PostseasonTag | null;
   otPeriods: number;
   isOt: boolean;
   isForfeit: boolean;
   forfeitBy: 'home' | 'away' | null;
-  /** null unless status === 'final'. */
   decider: Decider | null;
-  /** Always null in this league (see Decider). */
+  /** MCAL tournament shootouts are stored by MaxPreps as goals; this stays null (see caveat copy). */
   shootout: { home: number; away: number } | null;
   venue: GameVenue;
-  /**
-   * Set when a school athletics calendar (VNN / PlayOn `.ics`) corroborates the MaxPreps start
-   * time. `dateLocal` is never rewritten from a secondary source (SPEC §1.5).
-   */
   timeConfirmed?: boolean;
-  /**
-   * Set when the contest was matched to a fixture in the official SCVAL schedule grid. A
-   * `scheduledDate` that differs from `dateKey` means the game moved (SPEC §1.3).
-   */
-  official?: { scheduledDate: string; source: 'scval-pdf' };
-  /** `calculatedFields.description`, cleaned per DESIGN §5.8. */
+  /** WIDENED: any league's official schedule. */
+  official?: OfficialStamp;
   recap: string | null;
   urls: {
-    /** `calculatedFields.canonicalUrl`. */
     maxpreps: string | null;
     sblive?: string;
     nfhsStream: string | null;
     goFan: string | null;
   };
   provenance: {
+    /** 'sblive' when D2 published a si.com score. */
     scores: SourceId;
     schedule: SourceId;
+    /** Plain disagreement (D2 rule 5) or the overridden MaxPreps value (rule 4). */
     scoreConflict?: { sblive: { home: number; away: number }; note: string };
+    /** NEW. Set on every game whose published score came from si.com. */
+    backfill?: BackfillProvenance;
     fetchedAt: string;
     maxprepsModifiedOn?: string;
-    /** Set when the two team rows disagree on `contestType`. */
     leagueFlagConflict?: string;
-    /**
-     * Set when the official SCVAL grid names the other school as the host. Home/away itself is
-     * always MaxPreps' (SPEC §5.5.4); this records that the two sources disagree.
-     */
     hostConflict?: string;
+    /** NEW. D2 rule 4a evidence: result flags contradict the score, or the two rows disagree. */
+    resultConflict?: string;
+    /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
+    classificationNote?: string;
   };
 }
 
 // ---------- standings ----------
 
-/** Which By-Laws Article VI step set a team's place. */
+/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/leagues.ts). */
 export type TiebreakStage =
-  /** §2 — points alone, no tie. */
-  | 'points'
-  /** §3 — better head-to-head record among the tied teams. */
-  | 'head-to-head'
-  /** §4 — greater number of wins in division play. */
-  | 'division-wins'
-  /** §5 — least goals given up between the head-to-head tied teams. */
-  | 'h2h-goals-against'
-  /** §6 — goal differential between the head-to-head tied teams. */
-  | 'h2h-goal-diff'
-  /** §7 — a coin flip we cannot compute; the teams stay tied. */
-  | 'coin-flip';
+  | 'points'                   // placed on points alone
+  | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — today's code
+  | 'division-wins'            // SCVAL §4, BVAL §6c
+  | 'h2h-goals-against'        // SCVAL §5
+  | 'h2h-goal-diff'            // SCVAL §6, BVAL §6d
+  | 'division-goals-against'   // BVAL §6e — fewest goals allowed in ALL division games
+  | 'record-vs-higher-placed'  // PCAL §23.3.3
+  | 'record-vs-lower-placed'   // PCAL §23.3.1(b), §23.3.3(c)
+  | 'h2h-win-pct'              // MCAL criterion 1
+  | 'record-above-tie'         // MCAL criterion 2
+  | 'draw-number'              // MCAL criterion 3 — lowest spring draw number wins; always resolves
+  | 'ccs-points'               // PCAL — uncomputable terminal; teams stay level
+  | 'coin-flip'                // SCVAL §7, BVAL §6f — uncomputable terminal; teams stay level
+  | 'no-rule'                  // PCAL ties whose points bucket starts at 3rd or lower — no tiebreak; teams stay level
+  | 'play-in';                 // MCAL last tournament place — a play-in decides it unless one team swept 2-0; teams stay level
 
-/** By-Laws Article VII §2. */
+/** Union over every league's ladder. Labels are per league (config), never global. */
 export type PlayoffStatus =
-  /** places 1-3: automatic qualifier */
-  | 'aq'
-  /** place 4: Oct 30 play-in for the SCVAL 7th AQ */
-  | 'play-in'
-  /** place 5: submitted to CCS for at-large consideration */
-  | 'at-large'
-  /** place 6+: no AQ path */
-  | 'out';
+  | 'aq'           // automatic CCS berth by place
+  | 'play-in'      // SCVAL 4th (Oct 30); BVAL Mt. Hamilton 4th and Santa Teresa 1st (Oct 31)
+  | 'at-large'     // SCVAL 5th: submitted to CCS for at-large consideration
+  | 'out'          // SCVAL 6th+: "No automatic path" (today's wording)
+  | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic-berth route" — never "eliminated"
+  | 'bye'          // MCAL seeds 1-2
+  | 'tournament'   // MCAL seeds 3-6
+  | 'below-line';  // MCAL 7th+
 
 export interface ComputedRecord {
   gp: number;
@@ -309,55 +382,39 @@ export interface TiebreakInfo {
   shared: boolean;
 }
 
+/** SHAPE UNCHANGED — only field types widen. Derived per-row facts live in lib/data.ts StandingContext. */
 export interface Standing {
   teamId: TeamId;
   slug: TeamSlug;
-  division: Division;
+  division: DivisionId;
   computed: ComputedRecord;
-  /** Overall (league + non-league) record, for the team page. */
   overall: ComputedRecord;
   reported: ReportedRecord | null;
-  /** true when computed and reported disagree. Surfaced, never hidden (DESIGN §9). */
   mismatch: boolean;
   mismatchDetail?: string;
   tiebreak: TiebreakInfo;
   playoffStatus: PlayoffStatus;
-  /** false ⇒ sorted last, rank rendered '—' (DESIGN §8). */
   hasReportedResults: boolean;
 }
 
-// ---------- playoffs ----------
+// ---------- CCS playoffs (the snapshot key stays `playoffs`) ----------
 
-export interface PlayoffKeyDates {
-  /** 2026-11-02T12:00 local */
-  entriesDue: string;
-  /** 2026-11-02T13:00 local */
-  seedingMeeting: string;
-  quarterfinals: string;
-  semifinals: string;
-  finals: string;
-  evaluationMeeting: string;
-  /** SCVAL crossover + 4-vs-4 play-in, from the official schedule PDFs. */
-  crossover: string;
+export interface CcsKeyDates {
+  entriesDue: string;          // '2026-11-02T12:00:00'
+  seedingMeeting: string;      // '2026-11-02T13:00:00'
+  quarterfinals: string;       // '2026-11-07'
+  semifinals: string;          // '2026-11-11'
+  finals: string;              // '2026-11-14'
+  evaluationMeeting: string;   // '2026-11-19T16:00:00'
+  /** NEW: CCS end of league season. `crossover` MOVED to LEAGUES.scval (pairings + phases). */
+  endOfLeagueSeason: string;   // '2026-10-31'
 }
 
-/**
- * Who can take one side of one crossover seed.
- *
- * Empty ⇒ the league table does not reach that seed yet (rendered TBD). One entry ⇒ settled.
- * Two or more ⇒ a level place (Article VI §7) spans the seed and the coin flip decides it, so
- * every contender is named rather than one of them being picked.
- */
-export type CrossoverSeat = Array<{ teamId: TeamId; slug: TeamSlug }>;
-
-export interface CrossoverPairing {
-  /** 1 = #1 v #1 … 4 = the play-in. */
-  seed: number;
-  deAnza: CrossoverSeat;
-  elCamino: CrossoverSeat;
-  /** true for seed 4: the winner takes the SCVAL 7th AQ (Article VII §2). */
-  isPlayIn: boolean;
-  label: string;
+/** Numbers only. Keys = every league whose postseason.kind is 'ccs-ladder', plus atLarge and total. */
+export interface CcsAutoQualifiers {
+  [leagueId: string]: number;
+  atLarge: number;
+  total: number;
 }
 
 /** One VEVENT from `cifccs.org/calendar/Field_Hockey?print=ical` (SPEC §1.4). */
@@ -380,88 +437,200 @@ export interface CcsCalendarEvent {
   detail: string | null;
 }
 
-export interface Playoffs {
-  keyDates: PlayoffKeyDates;
-  /** The CCS iCal feed, when the season gate opened and the read succeeded (SPEC §5.9). */
+export interface CcsPlayoffs {
+  keyDates: CcsKeyDates;
   ccsCalendar?: CcsCalendarEvent[];
-  /** true when every published key date is corroborated by that feed. */
   keyDatesConfirmed?: boolean;
   format: {
     elimination: 'single';
-    divisions: Array<{ name: 'Division 1' | 'Division 2'; seeds: [number, number] }>;
-    autoQualifiers: { scval: 7; bval: 4; pcal: string; atLarge: number; total: 16 };
+    /** RENAMED from `divisions`. */
+    ccsDivisions: Array<{ name: CcsDivisionName; seeds: [number, number] }>;
+    autoQualifiers: CcsAutoQualifiers;
     highSeedHostsThrough: 'semifinals';
   };
-  /** Flips when the MaxPreps tournament page stops saying not-published (SPEC §5.9). */
   bracketPublished: boolean;
   bracketUrl: string;
-  /** Arrive via the calculatedFields bracket/tournament fields once seeded — [U]. */
   games: Game[];
 }
 
-export interface PlayoffProjection {
-  asOf: string;
-  berths: { auto: number; total: number };
-  byDivision: Record<Division, Array<{
-    teamId: TeamId;
-    slug: TeamSlug;
-    place: number;
-    /** The best status the team can take — `statuses[0]`. */
-    status: PlayoffStatus;
-    /**
-     * Every status still open to the team, best first. Longer than one only when a level place
-     * (Article VI §7) straddles an Article VII §2 boundary.
-     */
-    statuses: PlayoffStatus[];
-    /** Written status words — no probability model exists (DESIGN §6.1). */
-    label: string;
-    shared: boolean;
-  }>>;
-  crossover: { date: string; pairings: CrossoverPairing[] };
+// ---------- league postseason projections (derived in lib/data.ts, never stored) ----------
+
+/** Who can take one seat. Empty = TBD; 2+ = a level place spans the seat (all are named). */
+export type CrossoverSeat = Array<{ teamId: TeamId; slug: TeamSlug }>;
+
+/** SCVAL crossover (×4) and BVAL play-in (×1): one generic, config-driven shape. */
+export interface LeaguePairing {
+  id: string;                          // 'scval-crossover-1' … 'scval-crossover-4', 'bval-play-in'
+  leagueId: LeagueId;
+  date: string;                        // YYYY-MM-DD
+  time: string | null;                 // '11:00' (BVAL); null (SCVAL)
+  seats: [CrossoverSeat, CrossoverSeat];
+  seatLabels: [string, string];        // ['De Anza #4', 'El Camino #4'] | ['Santa Teresa #1', 'Mt. Hamilton #4']
+  /** Index of the hosting seat; null = not stated (SCVAL crossover). BVAL: 0. */
+  host: 0 | 1 | null;
+  isPlayIn: boolean;
+  label: string;
+  /** The contest once MaxPreps has it (postseason tag + seat teams on the pairing date). */
+  game: Game | null;
 }
 
-// ---------- snapshot ----------
+export interface LadderRow {
+  teamId: TeamId;
+  slug: TeamSlug;
+  place: number;
+  /** statuses[0] */
+  status: PlayoffStatus;
+  /** Every status still open, best first; >1 only when a level place straddles a rung boundary. */
+  statuses: PlayoffStatus[];
+  /** Written words from the league's ladder; 'No results reported' for a team without results. */
+  label: string;
+  shared: boolean;
+}
+
+/** Per CCS league. */
+export interface PlayoffProjection {
+  asOf: string;
+  leagueId: LeagueId;
+  /** { auto: autoQualifiers[league], total: 16 } */
+  berths: { auto: number; total: number };
+  byDivision: Record<DivisionId, LadderRow[]>;
+  /** SCVAL: 4 crossover pairings; BVAL: the play-in; PCAL: []. */
+  pairings: LeaguePairing[];
+}
+
+export type TournamentSlot =
+  | { kind: 'seed'; seed: number; seat: CrossoverSeat }
+  | { kind: 'winner-of'; gameId: TournamentGame['id']; label: string }
+  | { kind: 'rule'; text: string };    // e.g. 'Lowest-ranked remaining seed'
+
+export interface TournamentGame {
+  id: 'play-in' | 'qf-1' | 'qf-2' | 'sf-1' | 'sf-2' | 'final';
+  round: 'play-in' | 'quarterfinal' | 'semifinal' | 'final';
+  date: string;
+  time: string;                        // '16:00'
+  home: TournamentSlot;
+  away: TournamentSlot;
+  /** 'Tamalpais' for the final (fixed site); null = the home seat's field. */
+  site: string | null;
+  /** The matched MCAL postseason contest, once it exists. */
+  game: Game | null;
+  /** e.g. the shootout caveat on a one-goal tournament result. */
+  note: string | null;
+}
+
+export interface LeagueTournamentProjection {
+  leagueId: LeagueId;
+  asOf: string;
+  status: 'projected' | 'seeded' | 'in-progress' | 'complete';
+  /** Seeds 1..6; a seat with >1 contender = an unresolved 6th-place play-in or an undefined tie. */
+  seeds: Array<{ seed: number; seat: CrossoverSeat }>;
+  playInNeeded: 'no' | 'yes' | 'possible';
+  playIn: TournamentGame | null;
+  games: TournamentGame[];             // qf-1, qf-2, sf-1, sf-2, final (play-in is separate)
+  notes: string[];
+}
+
+// ---------- fixtures ----------
+
+export interface OfficialFixture {
+  /** `${division}:${dateKey}:${awaySlug ?? awayName}@${homeSlug ?? homeName}` — stable key. */
+  id: string;
+  league: LeagueId;
+  division: DivisionId;
+  /** The official date, YYYY-MM-DD. */
+  dateKey: string;
+  /** League-published varsity start 'HH:MM', when the source states one. */
+  time: string | null;
+  /** Grid spelling, verbatim (SCVAL uppercase; BVAL docx; PCAL code name; MCAL legend name). */
+  awayName: string;
+  homeName: string;
+  awaySlug: TeamSlug | null;
+  homeSlug: TeamSlug | null;
+  source: OfficialSourceId;
+}
+
+// ---------- pipeline health ----------
+
+export type SourceKind =
+  | 'bootstrap' | 'league-meta' | 'reported-standings' | 'team-schedule'
+  | 'official-schedule' | 'official-revision-check' | 'standings-index'
+  | 'sblive-scoreboard' | 'sblive-team-games'
+  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar';
 
 export interface SourceStatus {
   id: SourceId;
+  /** NEW (always set by the v2 pipeline; absent on rows migrated from v1). */
+  kind?: SourceKind;
+  /** NEW. Which section/league/division/team the row is about. Absent = global. */
+  scope?: { section?: SectionId; league?: LeagueId; division?: DivisionId; team?: TeamSlug };
   label: string;
   url: string;
   status: 'ok' | 'stale' | 'error' | 'skipped';
   httpStatus?: number;
   fetchedAt: string;
+  /** NEW. When a stale row's data was last fresh (copied from the previous snapshot). */
+  carriedFrom?: string;
   upstreamModifiedOn?: string;
   error?: string;
   rowCount?: number;
 }
 
-/** One published disagreement with MaxPreps (DESIGN §9). */
+export type LeagueRunState = 'fresh' | 'partial' | 'frozen' | 'degraded';
+
+export interface DivisionHealth {
+  divisionId: DivisionId;
+  meta: 'ok' | 'error' | 'mismatch' | 'skipped';
+  reportedTable: 'ok' | 'carried' | 'missing' | 'skipped';
+  reportedRows: number | null;
+  classification: 'contest-type' | 'official-fixtures' | 'fallback-contest-type';
+  official: {
+    source: OfficialSourceId;
+    total: number;
+    matched: number;
+    /** Official fixtures dated before today with no counted result. */
+    missingPast: number;
+    carried: boolean;
+    /** The upstream document's sha256 differs from our bundled copy's. */
+    revisedUpstream: boolean;
+  } | null;
+  countedFinals: number;
+  previousCountedFinals: number | null;
+  backfilled: number;
+}
+
+export interface LeagueHealth {
+  leagueId: LeagueId;
+  state: LeagueRunState;
+  /** fetchedAt of the last run in which this league was 'fresh' or 'partial'. */
+  lastFreshAt: string | null;
+  /** Plain sentences, safe to render verbatim (league banner, /about health card). */
+  reasons: string[];
+  divisions: DivisionHealth[];
+  teamFeeds: { total: number; ok: number; carried: number; failed: number };
+}
+
+/** A contest the pipeline removed on purpose, published so nothing disappears silently. */
+export interface DroppedContest {
+  contestId: ContestId;
+  reason: 'ghost-team' | 'excluded-by-config' | 'tba-opponent' | 'phantom-duplicate';
+  note: string;
+  dateKey: string | null;
+  teams: string[];
+}
+
+// ---------- cross-checks ----------
+
 export interface CrossCheckRow {
   slug: TeamSlug;
   field: string;
   ours: string;
   theirs: string;
   url: string;
+  /** NEW. The division's known reason this table differs (DivisionConfig.knownCause). */
+  knownCause?: string;
 }
 
-/**
- * A fixture from the official SCVAL schedule-grid PDFs (SPEC §1.3).
- *
- * `snapshot.officialFixtures` holds the fixtures that matched NO MaxPreps contest, so the UI can
- * render "scheduled per SCVAL, not reported".
- */
-export interface OfficialFixture {
-  division: Division;
-  /** The official date, YYYY-MM-DD. */
-  dateKey: string;
-  /** UPPERCASE grid spelling, verbatim. */
-  awayName: string;
-  homeName: string;
-  awaySlug: TeamSlug | null;
-  homeSlug: TeamSlug | null;
-  source: 'scval-pdf';
-}
-
-/** One game where MaxPreps and SBLive publish different numbers (SPEC §5.7). */
+/** Plain disagreement (D2 rule 5): MaxPreps stays. */
 export interface ScoreConflictRow {
   contestId: ContestId;
   dateKey: string;
@@ -476,8 +645,7 @@ export interface ScoreConflictRow {
   sbliveUrl: string | null;
   note: string;
 }
-
-/** A game SBLive has scored and MaxPreps has not. We do NOT backfill it (SPEC §5.7). */
+/** A si.com-only score that D2 did NOT publish, and why. */
 export interface SbliveOnlyRow {
   contestId: ContestId;
   dateKey: string;
@@ -490,59 +658,83 @@ export interface SbliveOnlyRow {
   note: string;
 }
 
-/** The published SBLive score cross-check (SPEC §5.7, DESIGN §9). */
+/** NEW. One si.com value D2 published or used to override MaxPreps. */
+export interface BackfillRow {
+  contestId: ContestId;
+  dateKey: string;
+  /** "Away at Home", our display names. */
+  label: string;
+  rule: BackfillProvenance['rule'];
+  sblive: { home: number; away: number };
+  maxpreps: { home: number; away: number } | null;
+  sbliveUrl: string;
+  maxprepsUrl: string | null;
+  note: string;
+}
+
 export interface SbliveCrossCheck {
   sbliveFetchedAt: string;
-  /**
-   * MaxPreps contests that MATCHED an SBLive row on (date, unordered pair) — the join, not the
-   * comparison. A matched row whose SBLive side carries no numbers is counted here and in neither
-   * `agreements` nor `conflicts`, so `agreements + conflicts.length` is the smaller "had a score on
-   * both sides" figure and any copy that reports these numbers has to say which is which.
-   */
   compared: number;
-  /** Of the rows with a score on BOTH sides, how many agreed on both numbers. */
   agreements: number;
   conflicts: ScoreConflictRow[];
   sbliveOnlyScored: SbliveOnlyRow[];
+  /** NEW. Every si.com value D2 published (rules 2-4), with both values and the rule. */
+  backfilled: BackfillRow[];
 }
 
 export type SeasonPhase =
   | 'preseason'
   | 'regular'
-  | 'crossover'
-  | 'playoffs'
+  | 'crossover'     // SCVAL only
+  | 'play-in'       // BVAL only (Oct 31)
+  | 'tournament'    // MCAL only (Oct 23-30)
+  | 'playoffs'      // CCS bracket window (CCS leagues only)
   | 'complete';
 
+// ---------- snapshot ----------
+
 export interface Snapshot {
+  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
+  schemaVersion: 2;
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
   season: Season;
-  /** ALWAYS 15 — the registry, left-joined against the feed (DESIGN §12.1). */
+  /** EXACTLY the registry (43), in registry order, left-joined against the feeds. */
   teams: Team[];
   /** Deduped on contestId. */
   games: Game[];
+  /** One row per registry team, in LEAGUES order then division order then place. */
   standings: Standing[];
-  playoffs: Playoffs;
-  /** One row per request; a partial run is still publishable (SPEC §5.3). */
+  /** The CCS section block. */
+  playoffs: CcsPlayoffs;
+  /** One row per request; deterministic order (§7.12). */
   sources: SourceStatus[];
-  /** The MaxPreps STANDINGS comparison (DESIGN §9). Scores are in `sbliveCrossCheck`. */
+  /** NEW. One row per configured league, config order. */
+  leagueHealth: LeagueHealth[];
+  /** NEW. Contests removed on purpose this run. */
+  dropped: DroppedContest[];
   crossCheck: CrossCheckRow[];
-  /**
-   * The SBLive SCORE cross-check (SPEC §5.7). Absent when the step was skipped or failed.
-   * Named separately from `crossCheck` because that field was already the standings log.
-   */
   sbliveCrossCheck?: SbliveCrossCheck;
-  /** Official SCVAL fixtures with no MaxPreps contest (SPEC §1.3). */
+  /** Official fixtures, ALL leagues, that matched no published game. */
   officialFixtures?: OfficialFixture[];
-  /** Discovered by polling scval.com/standings/; null until SCVAL publishes the 26-27 file. */
+  /**
+   * NEW. 'sblive:<id>' games that D2 published in an earlier run and that a MaxPreps contest has since superseded
+   * (rule 10), mapped to that contest. Carried forward for the season so /game/sblive-<id> keeps resolving as a
+   * stub page (canonical → the MaxPreps game). Empty object when none.
+   */
+  supersededGames: Record<ContestId, ContestId>;
+  /** SCVAL-only (scval.com standings PDF poll). */
   officialStandingsPdfUrl?: string | null;
   counts: {
     teams: number;
     games: number;
     finals: number;
     pending: number;
+    /** games with countsFor !== null, any status (was: isLeague). */
     leagueGames: number;
     mismatches: number;
+    /** NEW */
+    byLeague: Record<LeagueId, { teams: number; games: number; finals: number; leagueGames: number; backfilled: number }>;
   };
 }
 

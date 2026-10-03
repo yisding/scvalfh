@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
-import { dayLines, orderedForPreview } from '@/components/schedule/day-summary';
-import { gameWord } from '@/components/schedule/filter-data';
-import { SITE_NAME } from '@/components/layout/site-url';
-import { getGameDates, getGames } from '@/lib/data';
-import { EN_DASH, longDate, parseLocal } from '@/lib/format';
+import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
+import { gameWord } from '../../../components/schedule/filter-data';
+import { SITE_NAME } from '../../../components/layout/site-url';
+import { getGameDates, getGames } from '../../../lib/data';
+import { EN_DASH, shortDate } from '../../../lib/format';
 
 /**
  * The per-date OG card (DESIGN §3.4) — the thing a link pasted into a group text previews with.
@@ -14,8 +14,11 @@ import { EN_DASH, longDate, parseLocal } from '@/lib/format';
  * Every score comes from `dayLines()` → `describeGame()`, so a game with no published score shows
  * an en dash here exactly as it does in the HTML. The card can no more invent a `0-0` than the page
  * can.
+ *
+ * The title is `<Thu Sep 24> · <n> games in <k> leagues` (SPEC §8.4) and the day's headline result
+ * — the final with the largest margin — leads the lines.
  */
-export const alt = `One day of SCVAL girls varsity field hockey scores`;
+export const alt = 'One day of girls varsity field hockey scores';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -41,11 +44,14 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
   const { date } = await params;
   if (!getGameDates().includes(date)) notFound();
   const games = getGames({ date });
-  const ordered = orderedForPreview(games);
+  const headline = headlineGame(games);
+  const ordered = headline
+    ? [headline, ...orderedForPreview(games).filter((g) => g.contestId !== headline.contestId)]
+    : orderedForPreview(games);
   const lines = dayLines(ordered.slice(0, MAX_LINES));
   const remaining = games.length - lines.length;
   const finals = games.filter((game) => game.status === 'final').length;
-  const heading = `${longDate(date)}, ${parseLocal(date).year}`;
+  const heading = dayCardTitle(shortDate(date), games);
 
   return new ImageResponse(
     (
@@ -150,7 +156,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
           }}
         >
           {games.length} {gameWord(games.length)} &middot; {finals} final &middot; unofficial
-          &middot; data from MaxPreps
+          &middot; data from MaxPreps and si.com
         </div>
       </div>
     ),

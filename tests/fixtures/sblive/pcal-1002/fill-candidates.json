@@ -1,0 +1,23 @@
+{
+  "capturedAt": "2026-10-02T13:47Z..13:56Z",
+  "method": "curl -L with Chrome UA (lib/sources/http.ts CHROME_USER_AGENT), >=1.2 s between requests, 1 at a time; 7 team pages + 4 game pages; parsed with repo lib/sources/sblive.ts parseTeamGamesPage / extractReactProps(games/Show)",
+  "sbliveTeamIds": {"STE": "456854", "CAR": "458529", "HOL": "459010", "MON": "458839", "SAL": "459009", "GRE": "458776", "CAT": "458109", "YORK(JV-only, drop)": "456851"},
+  "absentFromMaxPreps_pastDated_fill": [
+    {"official": "2026-09-04 GRE@CAT", "sbliveGameId": "6541425", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6541425-greenfield-vs-santa-catalina", "date": "2026-09-04T16:45:00-07:00", "statusId": 3, "away": {"name": "Greenfield", "id": "458776", "score": 0}, "home": {"name": "Santa Catalina", "id": "458109", "score": 1}, "locationText": "Monterey, CA", "gameTypeLabel": "League", "verifiedOnGamePage": true},
+    {"official": "2026-09-30 HOL@GRE", "sbliveGameId": "6543072", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6543072-hollister-vs-greenfield", "date": "2026-09-30T16:00:00-07:00", "statusId": 3, "away": {"name": "Hollister", "id": "459010", "score": 3}, "home": {"name": "Greenfield", "id": "458776", "score": 1}, "locationText": "Greenfield, CA", "gameTypeLabel": "Non League (WRONG; ignore)", "verifiedOnGamePage": true}
+  ],
+  "absentFromMaxPreps_future_scheduledOnSblive": {"2026-10-06 CAT@GRE": "6783666", "2026-10-13 CAT@HOL": "6543077", "2026-10-14 MON@GRE": "6543418", "2026-10-22 MON@HOL": "6544901", "2026-10-26 CAT@MON": "6545160", "2026-10-28 GRE@HOL": "6544904"},
+  "maxprepsScorePending_sbliveFinal_NOT_filled_under_policy": [
+    {"official": "2026-09-29 CAR@STE", "maxprepsContestId": "f06f9d76-c8a1-4358-b7a9-1c97c2d686f0", "maxprepsContestState": 5, "sbliveGameId": "6499423", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6499423-carmel-vs-stevenson", "statusId": 3, "away": {"name": "Carmel", "score": 0}, "home": {"name": "Stevenson", "score": 9}, "locationText": "Pebble Beach, CA", "verifiedOnGamePage": true}
+  ],
+  "dropRows": [
+    {"sbliveGameId": "6641900", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6641900-york-vs-salinas", "date": "2026-09-30", "teams": "York 1 @ Salinas 1 (TIE, Final, 'League')", "why": "York (456851) is JV-only. The row sits in the CAT/YOR grid slot (official 10/01 CAT@SAL), but its score (1-1) differs from MaxPreps CAT@SAL 9/30 Salinas 1-0, so it is either the JV game or a mis-entered varsity game [U]. Never attribute it to Santa Catalina."},
+    {"sbliveGameId": "6545421", "date": "2026-10-29", "teams": "Salinas @ York (scheduled)", "why": "CAT/YOR slot (official 10/29 SAL@CAT); same York issue"},
+    {"sbliveGameId": "6642005", "url": "https://www.si.com/high-school/stats/new-york/field-hockey/games/6642005-salinas-vs-stevenson", "why": "duplicate Salinas-Stevenson 10/12 with a /new-york/ webPath; require webPath to start /california/field-hockey/"},
+    {"sbliveGameIds": ["6499419", "6641765"], "why": "two si.com rows for Stevenson-Salinas 9/11 (both unscored); dedupe by unordered pair+date, and refuse a fill when >1 distinct scored candidate"}
+  ],
+  "jointlyScoredCrossCheck": {"compared": 11, "agree": 9, "conflicts": [
+    {"game": "2026-09-21 STE@GRE", "maxpreps": "STE 8-0", "sblive": "STE 7-0"},
+    {"game": "2026-09-21 HOL@MON", "maxpreps": "HOL 7-1", "sblive": "HOL 7-0"}
+  ], "note": "both conflicts margin-only, same winner"}
+}

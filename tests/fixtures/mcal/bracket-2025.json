@@ -1,0 +1,349 @@
+{
+  "season": "25-26",
+  "leagueId": "a0fa5d87-b596-4001-adc2-95403ccb8a32",
+  "sportSeasonId": "8ae4cbab-caa1-4889-87a8-547fdaca9516",
+  "source": {
+    "standings": "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/league-marin-county-25-26.standings.json",
+    "schedules": [
+      "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/sched-25-26-tamalpais.json",
+      "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/critic/sched-25-26-redwood.json",
+      "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/critic/sched-25-26-marin-catholic.json",
+      "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/critic/sched-25-26-lick-wilmerding.json",
+      "/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/maxpreps-ncs/critic/sched-25-26-university.json"
+    ],
+    "standingsUrl": "https://production.api.maxpreps.com/leagues/a0fa5d87-b596-4001-adc2-95403ccb8a32/standings/v1?sportseasonid=8ae4cbab-caa1-4889-87a8-547fdaca9516"
+  },
+  "method": "regular season = MaxPreps conference record minus MCAL-vs-MCAL contestType-0 games dated >= 2025-10-28; cross-checked against a direct tally of contestType-0 MCAL-vs-MCAL games in the 5 captured schedules",
+  "table": [
+    {
+      "teamId": "12616b84-157c-48d3-b353-434576d9df8d",
+      "name": "Redwood",
+      "w": 13,
+      "l": 2,
+      "t": 1,
+      "pts": 40,
+      "captured": {
+        "w": 13,
+        "l": 2,
+        "t": 1
+      }
+    },
+    {
+      "teamId": "7298608f-2310-4399-aa07-d6bc50df3f4e",
+      "name": "Tamalpais",
+      "w": 12,
+      "l": 1,
+      "t": 3,
+      "pts": 39,
+      "captured": {
+        "w": 12,
+        "l": 1,
+        "t": 3
+      }
+    },
+    {
+      "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+      "name": "Marin Catholic",
+      "w": 10,
+      "l": 2,
+      "t": 4,
+      "pts": 34,
+      "captured": {
+        "w": 10,
+        "l": 2,
+        "t": 4
+      }
+    },
+    {
+      "teamId": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
+      "name": "Lick-Wilmerding",
+      "w": 10,
+      "l": 3,
+      "t": 3,
+      "pts": 33,
+      "captured": {
+        "w": 10,
+        "l": 3,
+        "t": 3
+      }
+    },
+    {
+      "teamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+      "name": "University",
+      "w": 8,
+      "l": 6,
+      "t": 2,
+      "pts": 26,
+      "captured": {
+        "w": 8,
+        "l": 6,
+        "t": 2
+      }
+    },
+    {
+      "teamId": "d15d09d0-f8a6-463e-86d4-d998dbee7751",
+      "name": "Convent of the Sacred Heart",
+      "w": 4,
+      "l": 10,
+      "t": 2,
+      "pts": 14,
+      "captured": {
+        "w": 0,
+        "l": 10,
+        "t": 0
+      }
+    },
+    {
+      "teamId": "9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc",
+      "name": "Marin Academy",
+      "w": 3,
+      "l": 11,
+      "t": 2,
+      "pts": 11,
+      "captured": {
+        "w": 0,
+        "l": 9,
+        "t": 1
+      }
+    },
+    {
+      "teamId": "6c68b5d2-1cab-449d-9140-bd7c8adb2791",
+      "name": "Berkeley",
+      "w": 3,
+      "l": 12,
+      "t": 1,
+      "pts": 10,
+      "captured": {
+        "w": 0,
+        "l": 10,
+        "t": 0
+      }
+    },
+    {
+      "teamId": "5cbb07ea-6b9c-4286-81f6-2708253e1add",
+      "name": "Archie Williams",
+      "w": 0,
+      "l": 16,
+      "t": 0,
+      "pts": 0,
+      "captured": {
+        "w": 0,
+        "l": 10,
+        "t": 0
+      }
+    }
+  ],
+  "seeds": [
+    {
+      "seed": 1,
+      "teamId": "12616b84-157c-48d3-b353-434576d9df8d",
+      "name": "Redwood",
+      "w": 13,
+      "l": 2,
+      "t": 1,
+      "pts": 40,
+      "captured": {
+        "w": 13,
+        "l": 2,
+        "t": 1
+      }
+    },
+    {
+      "seed": 2,
+      "teamId": "7298608f-2310-4399-aa07-d6bc50df3f4e",
+      "name": "Tamalpais",
+      "w": 12,
+      "l": 1,
+      "t": 3,
+      "pts": 39,
+      "captured": {
+        "w": 12,
+        "l": 1,
+        "t": 3
+      }
+    },
+    {
+      "seed": 3,
+      "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+      "name": "Marin Catholic",
+      "w": 10,
+      "l": 2,
+      "t": 4,
+      "pts": 34,
+      "captured": {
+        "w": 10,
+        "l": 2,
+        "t": 4
+      }
+    },
+    {
+      "seed": 4,
+      "teamId": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
+      "name": "Lick-Wilmerding",
+      "w": 10,
+      "l": 3,
+      "t": 3,
+      "pts": 33,
+      "captured": {
+        "w": 10,
+        "l": 3,
+        "t": 3
+      }
+    },
+    {
+      "seed": 5,
+      "teamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+      "name": "University",
+      "w": 8,
+      "l": 6,
+      "t": 2,
+      "pts": 26,
+      "captured": {
+        "w": 8,
+        "l": 6,
+        "t": 2
+      }
+    },
+    {
+      "seed": 6,
+      "teamId": "d15d09d0-f8a6-463e-86d4-d998dbee7751",
+      "name": "Convent of the Sacred Heart",
+      "w": 4,
+      "l": 10,
+      "t": 2,
+      "pts": 14,
+      "captured": {
+        "w": 0,
+        "l": 10,
+        "t": 0
+      }
+    }
+  ],
+  "postseason": [
+    {
+      "contestId": "51473ec5-a0f6-4d14-b05c-444c372a0ca0",
+      "date": "2025-10-28T15:30:00",
+      "location": "MCAL Quater Finals",
+      "overtimePeriodsPlayed": 1,
+      "contestType": [
+        4,
+        4
+      ],
+      "home": {
+        "teamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+        "name": "University",
+        "seed": 5,
+        "score": 1,
+        "result": "W"
+      },
+      "away": {
+        "teamId": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
+        "name": "Lick-Wilmerding",
+        "seed": 4,
+        "score": 0,
+        "result": "L"
+      },
+      "url": "https://www.maxpreps.com/ca/field-hockey/game/lick-wilmerding-san-francisco-vs-university-san-francisco/10-28-2025/?c=51473ec5-a0f6-4d14-b05c-444c372a0ca0"
+    },
+    {
+      "contestId": "8ca393c6-c0b9-4099-b113-425a4f917ca7",
+      "date": "2025-10-28T16:00:00",
+      "location": "",
+      "overtimePeriodsPlayed": 0,
+      "contestType": [
+        4,
+        4
+      ],
+      "home": {
+        "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+        "name": "Marin Catholic",
+        "seed": 3,
+        "score": 4,
+        "result": "W"
+      },
+      "away": {
+        "teamId": "d15d09d0-f8a6-463e-86d4-d998dbee7751",
+        "name": "Convent of the Sacred Heart",
+        "seed": 6,
+        "score": 1,
+        "result": "L"
+      },
+      "url": "https://www.maxpreps.com/ca/field-hockey/game/convent-of-the-sacred-heart-san-francisco-vs-marin-catholic-kentfield/10-28-2025/?c=8ca393c6-c0b9-4099-b113-425a4f917ca7"
+    },
+    {
+      "contestId": "cb5f9d81-77f3-4d39-ac92-2ecbf7de925c",
+      "date": "2025-10-29T16:00:00",
+      "location": "",
+      "overtimePeriodsPlayed": 0,
+      "contestType": [
+        0,
+        0
+      ],
+      "home": {
+        "teamId": "7298608f-2310-4399-aa07-d6bc50df3f4e",
+        "name": "Tamalpais",
+        "seed": 2,
+        "score": 1,
+        "result": "W"
+      },
+      "away": {
+        "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+        "name": "Marin Catholic",
+        "seed": 3,
+        "score": 0,
+        "result": "L"
+      },
+      "url": "https://www.maxpreps.com/ca/field-hockey/game/marin-catholic-kentfield-vs-tamalpais-mill-valley/10-29-2025/?c=cb5f9d81-77f3-4d39-ac92-2ecbf7de925c"
+    },
+    {
+      "contestId": "a3aee4a1-4aaf-4752-b62d-b4f72b14ab8d",
+      "date": "2025-10-29T16:00:00",
+      "location": "MCAL Semi Finals",
+      "overtimePeriodsPlayed": 0,
+      "contestType": [
+        0,
+        0
+      ],
+      "home": {
+        "teamId": "12616b84-157c-48d3-b353-434576d9df8d",
+        "name": "Redwood",
+        "seed": 1,
+        "score": 4,
+        "result": "W"
+      },
+      "away": {
+        "teamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+        "name": "University",
+        "seed": 5,
+        "score": 1,
+        "result": "L"
+      },
+      "url": "https://www.maxpreps.com/ca/field-hockey/game/redwood-larkspur-vs-university-san-francisco/10-29-2025/?c=a3aee4a1-4aaf-4752-b62d-b4f72b14ab8d"
+    },
+    {
+      "contestId": "3fb94e4a-b4f6-45d3-b205-5ad86e68a07b",
+      "date": "2025-10-31T16:00:00",
+      "location": "Championship game",
+      "overtimePeriodsPlayed": 0,
+      "contestType": [
+        0,
+        0
+      ],
+      "home": {
+        "teamId": "7298608f-2310-4399-aa07-d6bc50df3f4e",
+        "name": "Tamalpais",
+        "seed": 2,
+        "score": 2,
+        "result": "W"
+      },
+      "away": {
+        "teamId": "12616b84-157c-48d3-b353-434576d9df8d",
+        "name": "Redwood",
+        "seed": 1,
+        "score": 1,
+        "result": "L"
+      },
+      "url": "https://www.maxpreps.com/ca/field-hockey/game/redwood-larkspur-vs-tamalpais-mill-valley/10-31-2025/?c=3fb94e4a-b4f6-45d3-b205-5ad86e68a07b"
+    }
+  ]
+}

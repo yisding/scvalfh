@@ -1,19 +1,38 @@
 /** The MaxPreps client: schemas, the __NEXT_DATA__ trap, retries and the courtesy budget. */
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { describe, expect, it, vi } from 'vitest';
 
+import type { RawResponse } from '../lib/pipeline/contract';
 import {
+  DEFAULT_USER_AGENT,
   MaxPrepsClient,
   MaxPrepsEmptyStandingsError,
   MaxPrepsError,
   NEXT_DATA_RE,
   ScheduleResponseSchema,
   StandingsResponseSchema,
+  TBA_TEAM_ID,
   parseBootstrap,
+  splitTbaRows,
+  type ScheduleRow,
 } from '../lib/sources/maxpreps';
-import { MAX_RETRY_AFTER_MS } from '../lib/sources/http';
-import { SPORT_SEASON_ID } from '../lib/season';
-import { allScheduleRows, standingsFixture } from './helpers';
+import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '../lib/sources/http';
+import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '../lib/season';
+import { getTeamBySlug } from '../lib/teams';
+import { REPO, allScheduleRows, standingsFixture } from './helpers';
+
+const CORPUS_SCHEDULES = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'schedule');
+
+function corpusFeedText(slug: string): string {
+  return readFileSync(path.join(CORPUS_SCHEDULES, `${slug}.json`), 'utf8');
+}
+
+function corpusFeed(slug: string): ScheduleRow[] {
+  return ScheduleResponseSchema.parse(JSON.parse(corpusFeedText(slug)) as unknown).data;
+}
 
 function response(body: string, init: { status?: number; headers?: Record<string, string> } = {}) {
   return new Response(body, {
@@ -224,5 +243,155 @@ describe('maxpreps: retries and the courtesy budget (SPEC §5.2-5.3)', () => {
       .mockResolvedValue(response(JSON.stringify({ data: [{ schoolId: 5 }] })));
     const c = client(fetchImpl as unknown as typeof fetch);
     await expect(c.getStandings('LEAGUE')).rejects.toThrow(/schema drift/);
+  });
+});
+
+describe('maxpreps: TBA opponents (SPEC §7.6 step 1)', () => {
+  // [feed, contestId, the named side]
+  const cases = [
+    ['sobrato', '64c8188b-db94-44ff-8477-d60b4e3db218', 'Ann Sobrato'],
+    ['stevenson', '55207683-8dd2-41c6-aa1b-02919d6bb261', 'Stevenson'],
+    ['university-sf', '64e0b2e5-abef-4db0-97e9-54c8c4bb9af0', 'University'],
+  ] as const;
+
+  it('parses a feed whose TBA row has a null teamId and name instead of rejecting it', () => {
+    for (const [slug, contestId] of cases) {
+      const rows = corpusFeed(slug);
+      const tba = rows.find((r) => r.contest.contestId === contestId)!;
+      expect(tba.contest.teams.some((t) => t.teamId === null && t.name === null)).toBe(true);
+    }
+  });
+
+  it('splits off exactly the TBA row of each feed, one dropped entry per row', () => {
+    for (const [slug, contestId, named] of cases) {
+      const rows = corpusFeed(slug);
+      const res = splitTbaRows(rows);
+      expect(res.rows).toEqual(rows.filter((r) => r.contest.contestId !== contestId));
+      expect(res.dropped).toHaveLength(1);
+      expect(res.dropped[0]).toMatchObject({ contestId, reason: 'tba-opponent', teams: [named] });
+      expect(res.dropped[0].dateKey).toMatch(/^2026-\d{2}-\d{2}$/);
+      expect(res.dropped[0].note).toContain(named);
+    }
+  });
+
+  it('treats an all-zero teamId and a null name as TBA too, and passes a clean feed through', () => {
+    const rows = allScheduleRows().slice(0, 4);
+    expect(splitTbaRows(rows)).toEqual({ rows, dropped: [] });
+    const zero = {
+      ...rows[0],
+      contest: {
+        ...rows[0].contest,
+        teams: rows[0].contest.teams.map((t, i) => (i === 1 ? { ...t, teamId: TBA_TEAM_ID } : t)),
+      },
+    };
+    const nameless = {
+      ...rows[1],
+      contest: {
+        ...rows[1].contest,
+        teams: rows[1].contest.teams.map((t, i) => (i === 0 ? { ...t, name: null } : t)),
+      },
+    };
+    const res = splitTbaRows([zero, nameless, rows[2]]);
+    expect(res.rows).toEqual([rows[2]]);
+    expect(res.dropped.map((d) => d.contestId)).toEqual([rows[0].contest.contestId, rows[1].contest.contestId]);
+    expect(res.dropped.every((d) => d.reason === 'tba-opponent' && d.teams.length === 1)).toBe(true);
+  });
+
+  it('serves a feed with a TBA row through getSchedule (the own-team guard still holds)', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response(corpusFeedText('sobrato')));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    const res = await c.getSchedule(getTeamBySlug('sobrato')!.id);
+    expect(res.data.length).toBe(corpusFeed('sobrato').length);
+  });
+});
+
+describe('maxpreps: MaxPrepsClient.raw (the LiveTransport read, SPEC §7.2-§7.3)', () => {
+  it('returns the body and status untouched, through the polite User-Agent', async () => {
+    const body = corpusFeedText('leigh');
+    const fetchImpl = vi.fn().mockResolvedValue(response(body));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    const url = c.scheduleUrl(getTeamBySlug('leigh')!.id);
+    const res: RawResponse = await c.raw(url);
+    expect(res).toEqual({ url, httpStatus: 200, body });
+    const init = fetchImpl.mock.calls[0][1] as RequestInit;
+    const headers = init.headers as Record<string, string>;
+    expect(headers['user-agent']).toBe(POLITE_USER_AGENT);
+    expect(DEFAULT_USER_AGENT).toBe(POLITE_USER_AGENT);
+    expect(headers.accept).toBe('application/json');
+  });
+
+  it('asks for HTML on the bootstrap page and does not parse anything', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response('<html>not next data</html>'));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    const res = await c.raw(BOOTSTRAP_URL);
+    expect(res.body).toBe('<html>not next data</html>');
+    expect((fetchImpl.mock.calls[0][1] as RequestInit & { headers: Record<string, string> }).headers.accept).toBe(
+      'text/html',
+    );
+  });
+
+  it('returns a body that fails our schema as-is (validation belongs to the step)', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response('{"data":[{"schoolId":5}]}'));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    await expect(c.raw(c.standingsUrl('LEAGUE'))).resolves.toMatchObject({ body: '{"data":[{"schoolId":5}]}' });
+  });
+
+  it('retries a 5xx like every other read, then reports the final status', async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(response('boom', { status: 502 }))
+      .mockResolvedValueOnce(response('{"data":[]}'));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    const res = await c.raw('https://production.api.maxpreps.com/x');
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(res.httpStatus).toBe(200);
+    expect(res.body).toBe('{"data":[]}');
+  });
+
+  it('never returns a 4xx silently: it throws MaxPrepsError with the status, without retrying', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response('bad', { status: 400 }));
+    const c = client(fetchImpl as unknown as typeof fetch);
+    const err = await c.raw(c.standingsUrl('LEAGUE')).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(MaxPrepsError);
+    expect((err as MaxPrepsError).httpStatus).toBe(400);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it('shares the gate with the typed reads: never more than three at once', async () => {
+    let active = 0;
+    let peak = 0;
+    const fetchImpl = vi.fn(async () => {
+      active += 1;
+      peak = Math.max(peak, active);
+      await new Promise((r) => setTimeout(r, 5));
+      active -= 1;
+      return response('{}');
+    });
+    const c = client(fetchImpl as unknown as typeof fetch);
+    await Promise.all([
+      ...Array.from({ length: 6 }, (_, i) => c.raw(`https://example.test/raw/${i}`)),
+      ...Array.from({ length: 6 }, (_, i) => c.text(`https://example.test/text/${i}`)),
+    ]);
+    expect(fetchImpl).toHaveBeenCalledTimes(12);
+    expect(peak).toBeLessThanOrEqual(3);
+  });
+
+  it('spaces request starts by the configured interval', async () => {
+    const slept: number[] = [];
+    const fetchImpl = vi.fn().mockImplementation(async () => response('{}'));
+    const c = new MaxPrepsClient({
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      sleep: async (ms: number) => {
+        slept.push(ms);
+      },
+      spacingMs: 500,
+      concurrency: 1,
+    });
+    await c.raw('https://example.test/a');
+    await c.raw('https://example.test/b');
+    // The second start waited for (most of) the 500 ms spacing; the first did not wait.
+    expect(slept).toHaveLength(1);
+    expect(slept[0]).toBeGreaterThan(0);
+    expect(slept[0]).toBeLessThanOrEqual(500);
   });
 });

@@ -9,13 +9,17 @@ import { LETTER_SIZE, monogramRadius, type TeamMonogramProps } from './TeamMonog
  * Server-only by intent: no consumer of it is a client component, and TeamMonogram (which IS in
  * the pinned-team card's client bundle) does not import it back, so it costs the client nothing.
  *
- * Decorative and aria-hidden: the school's name always sits beside it.
+ * Decorative and aria-hidden: the school's name always sits beside it. `title` (optional) is the
+ * hover note callers attach to say why the tile is plain (GameRow and ScoreBoard pass
+ * NON_MEMBER_NOTE); it is a tooltip only, so the tile stays aria-hidden.
  */
 export interface GhostMonogramProps {
   /** The source name, as the snapshot spells it. */
   name: string;
   size?: NonNullable<TeamMonogramProps['size']>;
   className?: string;
+  /** Hover note for a sighted pointer user, e.g. NON_MEMBER_NOTE. */
+  title?: string;
 }
 
 /** Words that never start a school's name in the sense a reader means it. */
@@ -43,7 +47,7 @@ export function ghostInitials(name: string): string {
   return `${a.toUpperCase()}${b.toLowerCase()}`;
 }
 
-export function GhostMonogram({ name, size = 24, className }: GhostMonogramProps) {
+export function GhostMonogram({ name, size = 24, className, title }: GhostMonogramProps) {
   return (
     <span
       className={`inline-flex shrink-0 items-center justify-center border border-hairline bg-surface-2 font-sans font-semibold leading-none text-ink-3${
@@ -55,6 +59,7 @@ export function GhostMonogram({ name, size = 24, className }: GhostMonogramProps
         borderRadius: monogramRadius(size),
         fontSize: LETTER_SIZE[size],
       }}
+      title={title}
       aria-hidden="true"
     >
       {ghostInitials(name)}

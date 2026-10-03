@@ -14,8 +14,9 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, timeOfDay } from '../../lib/format';
+import { findDivision, findLeague } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, Outcome, ScoreView, TeamSlug } from '../../lib/types';
+import type { Game, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
@@ -25,7 +26,7 @@ export type StatusTone = 'ink' | 'ink-2' | 'ink-3' | 'accent';
 export interface SideView {
   name: string;
   /**
-   * The registry's short name for one of our 15 schools ("Mitty", "St Ignatius"), and the source
+   * The registry's short name for one of the 43 teams this site follows ("Mitty", "St Ignatius"), and the source
    * name unchanged for everyone else. A dense row — a game list, a bracket — renders this, because
    * the row gives the name roughly 120px once the score and the status label have taken their
    * share and "Archbishop Mitty High School" truncates to "Archbish…". The full name stays on the
@@ -54,8 +55,18 @@ export interface GameDisplay {
   deciderTag: string | null;
   /** '(4–3 SO)' — never produced by this league (By-Laws Article IV) but modelled. */
   shootoutText: string | null;
-  /** Non-league carries the word, a 2px rule and (in MarginStrip) an outline column. */
+  /**
+   * Non-league carries the word, a 2px rule and (in MarginStrip) an outline column. From
+   * `countsFor` (SPEC §10.4): a game that counts for no division table and is not a postseason
+   * game. A postseason game carries `postseasonTag` instead.
+   */
   isNonLeague: boolean;
+  /** The league chip (`SCVAL`, `BVAL`, …) of a counted game: the league of `countsFor`. null otherwise. */
+  leagueTag: string | null;
+  /** `SCVAL crossover` · `BVAL play-in` · `MCAL tournament` · `CCS` when `postseason` is set. */
+  postseasonTag: string | null;
+  /** 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. */
+  sourceMark: 'si.com' | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
   isForfeit: boolean;
   /** true ⇒ render the two score cells. false ⇒ the time/label takes the column. */
@@ -75,6 +86,43 @@ export interface GameDisplay {
 }
 
 const UNREPORTED_NOTE = 'We will update when MaxPreps posts it.';
+
+/** The word after the league's short name in a postseason chip; `ccs` is the section's own chip. */
+const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = {
+  'scval-crossover': 'crossover',
+  'bval-play-in': 'play-in',
+  'mcal-tournament': 'tournament',
+  ccs: null,
+  other: null,
+};
+
+/** The league chip of a counted game (`countsFor` → its league's short name). */
+export function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
+  if (game.countsFor === null) return null;
+  const division = findDivision(game.countsFor);
+  return division ? (findLeague(division.leagueId)?.shortName ?? null) : null;
+}
+
+/** `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `CCS`; null for no or an unnamed postseason. */
+export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
+  const tag = game.postseason;
+  if (!tag) return null;
+  if (tag.kind === 'ccs') return 'CCS';
+  const word = POSTSEASON_WORD[tag.kind];
+  if (!word) return null;
+  // The tag names its league; the kind's prefix is the fallback for a tag written without one.
+  const league = findLeague(tag.leagueId ?? tag.kind.split('-')[0] ?? '');
+  return league ? `${league.shortName} ${word}` : null;
+}
+
+function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
+  return {
+    isNonLeague: game.countsFor === null && game.postseason === null,
+    leagueTag: leagueTagOf(game),
+    postseasonTag: postseasonTagOf(game),
+    sourceMark: game.provenance.scores === 'sblive' ? 'si.com' : null,
+  };
+}
 const LIVE_NOTE = 'A scheduled window, not a running score — we do not collect live scores.';
 
 function deciderTagFor(game: Game): string | null {
@@ -109,7 +157,6 @@ function sideView(
  */
 export function describeGame(game: Game, perspective?: TeamSlug | null): GameDisplay {
   const view = renderScore(game);
-  const isNonLeague = !game.isLeague;
   const isForfeit = game.isForfeit;
   const mineIsHome = perspective ? game.home.slug === perspective : null;
   const versus: GameDisplay['versus'] =
@@ -119,7 +166,7 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     note: null as string | null,
     deciderTag: null as string | null,
     shootoutText: null as string | null,
-    isNonLeague,
+    ...chipsFor(game),
     isForfeit,
     strikeTime: false,
     liveDot: false,
@@ -234,7 +281,8 @@ export function describeCancelled(game: Game, note: string | null = null): GameD
     note,
     deciderTag: null,
     shootoutText: null,
-    isNonLeague: !game.isLeague,
+    ...chipsFor(game),
+    sourceMark: null,
     isForfeit: false,
     showScores: false,
     strikeTime: true,

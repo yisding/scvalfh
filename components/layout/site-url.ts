@@ -9,10 +9,20 @@ import type { Metadata } from 'next';
  */
 export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
-export const SITE_NAME = 'SCVAL Field Hockey';
-export const SITE_TAGLINE = 'Santa Clara Valley Athletic League girls varsity field hockey';
+/**
+ * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
+ * for Monterey, Salinas and Greenfield, and "CCS" is false for MCAL. The scope note (footer and
+ * /about) names exactly what is covered. The repo name, the Worker name, the `scvalfh.*` storage
+ * keys and the `SCVAL_*` env names deliberately stay as they are.
+ */
+export const SITE_NAME = 'NorCal Field Hockey';
+/** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
+export const SITE_SHORT_NAME = 'NorCal FH';
+export const SITE_TAGLINE = 'Girls varsity field hockey in the Central Coast and North Coast sections';
 export const SITE_DESCRIPTION =
-  'Scores, standings, schedules and CCS playoff picture for the 15 De Anza and El Camino girls varsity field hockey teams. Rebuilt nightly from MaxPreps; unofficial.';
+  'Scores, standings, schedules and playoff pictures for 43 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS) and MCAL (NCS). Rebuilt twice daily from MaxPreps; unofficial.';
+export const SITE_SCOPE_NOTE =
+  'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL) and the North Coast Section’s MCAL. Teams from other sections appear only as opponents.';
 
 /**
  * The `openGraph` fields every page has to repeat.
@@ -49,7 +59,7 @@ export const ROOT_OG_IMAGE: Pick<NonNullable<Metadata['openGraph']>, 'images'> =
       url: '/opengraph-image',
       width: 1200,
       height: 630,
-      alt: `${SITE_NAME} — 2026 standings, scores and CCS playoffs`,
+      alt: `${SITE_NAME} — 2026 standings, scores and playoffs`,
       type: 'image/png',
     },
   ],

@@ -1,6 +1,6 @@
 import { getLatestResultsDate, getToday } from '../../lib/data';
 import { parseLocal } from '../../lib/format';
-import type { Game } from '../../lib/types';
+import type { Game, LeagueId } from '../../lib/types';
 
 import DateHeader from './DateHeader';
 import GameList from './GameList';
@@ -8,7 +8,7 @@ import GameList from './GameList';
 /**
  * The whole season, date-grouped, server-rendered (DESIGN §3.3).
  *
- * All 158 contests are in the HTML: no pagination, no virtualization, Ctrl-F finds any team on any
+ * Every contest of the league is in the HTML: no pagination, no virtualization, Ctrl-F finds any team on any
  * day. Each date group carries `.sx-dategroup`, i.e. `content-visibility: auto` with
  * `contain-intrinsic-size: auto 480px`, so the browser skips layout and paint for the groups that
  * are off screen while the text stays findable and the anchors stay linkable.
@@ -35,18 +35,26 @@ export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
   /** Renders the "Day page" link (to /scores/[date]) on each date header. */
   shareLinks?: boolean;
+  /** A league-scoped list (`/schedule/<league>`): other leagues' sides carry their league's name. */
+  scopeLeague?: LeagueId | null;
   className?: string;
   id?: string;
 }
 
 /**
- * The date the Scores tab opens on (BottomTabBar's `scoresHref`, F-1a), from the same snapshot
- * data: the latest day at or before "today" with at least one final, otherwise the next day with a
- * contest. "Today" is the snapshot's Pacific day, never the clock.
+ * The date the Scores tab opens on (BottomTabBar's per-league `/schedule/<league>#<date>`, F-1a),
+ * from the same snapshot data: the league's latest day at or before "today" with at least one
+ * final, otherwise its next day with a contest. League-aware so the always-laid-out window below
+ * surrounds the date the tab actually aims at on this league's list. "Today" is the snapshot's
+ * Pacific day, never the clock.
  */
-function landingDate(dates: readonly string[]): string | null {
+function landingDate(dates: readonly string[], league: LeagueId | null): string | null {
   const today = getToday();
-  return getLatestResultsDate() ?? dates.find((d) => d >= today) ?? null;
+  return (
+    getLatestResultsDate(undefined, league ? { league } : {}) ??
+    dates.find((d) => d >= today) ??
+    null
+  );
 }
 
 /** Whole days since 1970-01-01 for a 'YYYY-MM-DD' key: integer arithmetic, no clock read. */
@@ -82,10 +90,11 @@ function cardEstimate(games: readonly Game[]): string {
 export function ScheduleList({
   groups,
   shareLinks = true,
+  scopeLeague = null,
   className,
   id,
 }: ScheduleListProps) {
-  const landing = landingDate(groups.map((group) => group.date));
+  const landing = landingDate(groups.map((group) => group.date), scopeLeague);
   const landingDay = landing ? dayNumber(landing) : null;
   return (
     // `max-md:mt-4`: on a phone the groups carry no top margin of their own (below), so the gap
@@ -145,7 +154,7 @@ export function ScheduleList({
             shareHref={shareLinks ? `/scores/${group.date}` : undefined}
             sticky
           />
-          <GameList games={group.games} variant="grouped" />
+          <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />
         </section>
       ))}
     </div>

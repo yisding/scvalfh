@@ -1,5 +1,5 @@
 import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
-import { DIVISION_LABELS } from '../../lib/season';
+import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
@@ -16,8 +16,9 @@ import type { GameModel } from './game-model';
  * The 3-up band is written as `md:max-lg:` ranges rather than `md:` undone by `lg:` because the
  * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
  *
- * A FINAL's box score and stream are not here: the page prints them under the recap
- * (`GameModel.resultLinks`, F-73), and each link has one home on the page.
+ * A FINAL's result links (the box score or si.com game page, and the stream) are not here: the
+ * page prints them under the recap (`GameModel.resultLinks`, F-73), and each link has one home on
+ * the page.
  *
  * Four honesty rules live here:
  *
@@ -29,10 +30,14 @@ import type { GameModel } from './game-model';
  * 3. **The venue we do know is the host school, not the field.** When the `.ics` feeds gave a real
  *    venue name it is shown; otherwise the line says who hosted, which is all MaxPreps published.
  * 4. **Where the two sources disagree about the host, the page says so.** Home and away are always
- *    MaxPreps' (SPEC §5.5.4 — it is the only source that states them), but on the two games where
- *    the official SCVAL grid names the other school the host line was the one claim on this page
- *    stated as settled fact while `provenance.hostConflict` recorded the opposite. It is printed
- *    here, the way `Moved` is printed under WHEN, rather than left in the snapshot unread.
+ *    MaxPreps' (SPEC §5.5.4 — it is the only source that states them), but where a league's official
+ *    schedule names the other school the host line was the one claim on this page stated as settled
+ *    fact while `provenance.hostConflict` recorded the opposite. It is printed here, the way `Moved`
+ *    is printed under WHEN, rather than left in the snapshot unread.
+ *
+ * "Counts as" is the model's league-aware `countsAs` (SPEC §10.6): `League game · De Anza Division`
+ * (a division label only through `divisionHeading`), `League game · MCAL` for a single-division
+ * league, the postseason round, or `Non-league game`; the points sentence cites the game's league.
  */
 export interface GameDetailsProps {
   model: GameModel;
@@ -45,7 +50,10 @@ function mapsHref(address: NonNullable<GameModel['game']['venue']['address']>): 
 }
 
 export function GameDetails({ model, className }: GameDetailsProps) {
-  const { game, home, division } = model;
+  const { game, home, countsAs } = model;
+  const officialLeague = game.official
+    ? findLeague(findDivision(game.official.division)?.leagueId ?? '')?.shortName
+    : undefined;
   const address = game.venue.address;
   const host = game.site === 'neutral' ? null : home;
   const movedFrom =
@@ -53,15 +61,15 @@ export function GameDetails({ model, className }: GameDetailsProps) {
       ? game.official.scheduledDate
       : null;
 
-  // Whatever the page already printed under the recap (a final's box score and stream) is
-  // skipped, so no link appears twice on the page.
+  // Whatever the page already printed under the recap (a final's result links) is skipped, so no
+  // link appears twice on the page.
   const elsewhere = new Set(model.resultLinks.map((link) => link.href));
   const links: Array<{ href: string; label: string }> = [];
   if (address) links.push({ href: mapsHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score' });
-  if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'SBLive game' });
+  if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
   const ownLinks = links.filter((link) => !elsewhere.has(link.href));
 
   return (
@@ -91,7 +99,8 @@ export function GameDetails({ model, className }: GameDetailsProps) {
             ) : null}
             {movedFrom ? (
               <span className="mt-1 block text-meta text-ink-3">
-                Moved — the official SCVAL grid has this game on {monthDay(movedFrom)}.
+                Moved — the official {officialLeague ?? 'league'} schedule has this game on{' '}
+                {monthDay(movedFrom)}.
               </span>
             ) : null}
           </dd>
@@ -130,24 +139,11 @@ export function GameDetails({ model, className }: GameDetailsProps) {
         <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
           <dt className="text-micro font-medium text-ink-3">Counts as</dt>
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
-            {game.isLeague ? (
-              <>
-                <span className="block">
-                  League game
-                  {division ? ` · ${DIVISION_LABELS[division]} Division` : ''}
-                </span>
-                <span className="mt-1 block text-meta text-ink-3">
-                  Counts toward the division standings — 3 points for a win, 1 for a tie.
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="block">Non-league game</span>
-                <span className="mt-1 block text-meta text-ink-3">
-                  Counts in the overall record only, never in the division table.
-                </span>
-              </>
-            )}
+            <span className="block">{countsAs.label}</span>
+            <span className="mt-1 block text-meta text-ink-3">{countsAs.detail}</span>
+            {countsAs.classificationNote ? (
+              <span className="mt-1 block text-meta text-ink-3">{countsAs.classificationNote}</span>
+            ) : null}
           </dd>
         </div>
 

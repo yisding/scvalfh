@@ -1,22 +1,97 @@
 {
-  "contentHash": "5891aec962b218a6650b7c9f7033499ab85323e4304e7175a13c5e69c179c0fb",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0",
+  "contentHash": "56d3e64d72326f6652c43d9fd3dcc71eee1a4ff6c827293095bd9ed4af8c27fc",
   "counts": {
-    "finals": 92,
-    "games": 158,
-    "leagueGames": 96,
-    "mismatches": 0,
-    "pending": 2,
-    "teams": 15
+    "byLeague": {
+      "bval": {
+        "backfilled": 0,
+        "finals": 65,
+        "games": 116,
+        "leagueGames": 60,
+        "teams": 12
+      },
+      "mcal": {
+        "backfilled": 0,
+        "finals": 56,
+        "games": 86,
+        "leagueGames": 72,
+        "teams": 9
+      },
+      "pcal": {
+        "backfilled": 2,
+        "finals": 38,
+        "games": 56,
+        "leagueGames": 36,
+        "teams": 7
+      },
+      "scval": {
+        "backfilled": 0,
+        "finals": 92,
+        "games": 158,
+        "leagueGames": 96,
+        "teams": 15
+      }
+    },
+    "finals": 203,
+    "games": 364,
+    "leagueGames": 264,
+    "mismatches": 6,
+    "pending": 4,
+    "teams": 43
   },
   "crossCheck": {
-    "agreements": 24,
-    "compared": 29,
-    "conflicts": 1,
-    "sbliveOnlyScored": 0
+    "agreements": 74,
+    "backfilled": 2,
+    "compared": 143,
+    "conflicts": 3,
+    "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-10-02T18:58:12.408Z",
-  "officialFixturesUnmatched": 2,
+  "fetchedAt": "2026-10-02T22:56:42.788Z",
+  "leagues": [
+    {
+      "backfilled": 0,
+      "countedFinals": 45,
+      "finalsDelta": 0,
+      "id": "scval",
+      "missingPast": 4,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 12,
+      "finalsDelta": 0,
+      "id": "bval",
+      "missingPast": 2,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 2,
+      "countedFinals": 21,
+      "finalsDelta": 0,
+      "id": "pcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 48,
+      "finalsDelta": 0,
+      "id": "mcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    }
+  ],
+  "officialFixturesUnmatched": 8,
   "officialStandingsPdfUrl": null,
+  "requests": {
+    "maxpreps": 56,
+    "official": 8,
+    "sblive": 21
+  },
   "sources": [
     {
       "label": "season bootstrap",
@@ -119,18 +194,243 @@
       "status": "ok"
     },
     {
-      "label": "de-anza official schedule PDF",
+      "label": "SCVAL · De Anza official schedule (PDF)",
       "rowCount": 42,
       "status": "ok"
     },
     {
-      "label": "el-camino official schedule PDF",
+      "label": "SCVAL · El Camino official schedule (PDF)",
       "rowCount": 56,
       "status": "ok"
     },
     {
-      "label": "scval standings index",
+      "label": "SCVAL standings index",
       "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "mt-hamilton league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "santa-teresa league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "mt-hamilton reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "santa-teresa reported standings",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "branham schedule",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "christopher schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "gilroy schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "leigh schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "leland schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "willow-glen schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "del-mar schedule",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "live-oak schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "prospect schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "silver-creek schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "sobrato schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "westmont schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "BVAL · Mt. Hamilton official schedule (bundled copy)",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "BVAL · Mt. Hamilton official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "BVAL · Santa Teresa official schedule (bundled copy)",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "BVAL · Santa Teresa official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "pcal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "pcal reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "carmel schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "greenfield schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "hollister schedule",
+      "rowCount": 11,
+      "status": "ok"
+    },
+    {
+      "label": "monterey schedule",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "salinas schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "santa-catalina schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "stevenson schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "PCAL official schedule (bundled copy)",
+      "rowCount": 42,
+      "status": "ok"
+    },
+    {
+      "label": "PCAL official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "marin-county league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "marin-county reported standings",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "archie-williams schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "redwood schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "tamalpais schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "berkeley schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "lick-wilmerding schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "university-sf schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "marin-catholic schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "convent-sacred-heart schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "marin-academy schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "MCAL official schedule (bundled copy)",
+      "rowCount": 72,
+      "status": "ok"
+    },
+    {
+      "label": "MCAL official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "MCAL schedule changes",
+      "rowCount": null,
       "status": "ok"
     },
     {
@@ -169,6 +469,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-09-26",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive scoreboard 2026-09-28",
       "rowCount": 14,
       "status": "ok"
@@ -194,13 +499,53 @@
       "status": "ok"
     },
     {
-      "label": "palo-alto school calendar",
-      "rowCount": 15,
+      "label": "sblive berkeley games",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "sblive carmel games",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "sblive convent-sacred-heart games",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "sblive cupertino games",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive del-mar games",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "sblive gilroy games",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "sblive greenfield games",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "sblive live-oak games",
+      "rowCount": 12,
       "status": "ok"
     },
     {
       "label": "los-gatos school calendar",
       "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "palo-alto school calendar",
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -215,10 +560,10 @@
     }
   ],
   "today": "2026-10-02",
-  "warnings": 14,
+  "warnings": 40,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
-    "lastGame": "2026-10-28T18:00:00",
-    "lastLeagueGame": "2026-10-28T18:00:00"
+    "lastGame": "2026-10-30T17:30:00",
+    "lastLeagueGame": "2026-10-30T17:30:00"
   }
 }

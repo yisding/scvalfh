@@ -113,13 +113,13 @@ describe('vnn: opponent naming differs per school', () => {
       'BEGIN:VCALENDAR',
       'BEGIN:VEVENT',
       'DTSTART:20260827T230000Z',
-      'SUMMARY:Girls Varsity Field Hockey vs Leigh High School',
+      'SUMMARY:Girls Varsity Field Hockey vs La Jolla High School',
       'LOCATION:Palo Alto High School',
       'END:VEVENT',
       'END:VCALENDAR',
     ].join('\r\n');
     const [e] = parseVnnIcs(ics, 'palo-alto');
-    expect(e.opponentName).toBe('Leigh High School');
+    expect(e.opponentName).toBe('La Jolla High School');
     expect(e.opponentSlug).toBeNull();
   });
 });

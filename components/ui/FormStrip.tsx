@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { OUTCOME_WORDS } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import type { Outcome } from '../../lib/types';
 
 import ResultChip, { CHIP_LABEL } from './ResultChip';
@@ -28,7 +29,7 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  */
 export interface FormEntry {
   outcome: Outcome;
-  /** Links the chip to /game/[contestId] when the caller has it. */
+  /** Links the chip to the game page (`gameHref(contestId)`) when the caller has it. */
   contestId?: string;
   opponent?: string;
   score?: string;
@@ -122,7 +123,7 @@ export function FormStrip({
             >
               {entry.contestId ? (
                 <Link
-                  href={`/game/${entry.contestId}`}
+                  href={gameHref(entry.contestId)}
                   prefetch={false}
                   aria-label={chipLabel(entry)}
                   className="inline-flex items-center justify-center"

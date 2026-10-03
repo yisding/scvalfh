@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "generatedFrom": "cbe1aa06c74c46016edfa7236a36f8fcb1f87c5c",
+    "method": "html/rsc = bytes of .next/server/app/<name>.html/.rsc after `pnpm build`; *Gzip = node:zlib gzipSync level 9; firstLoadJs = firstLoadUncompressedJsBytes of the route in .next/diagnostics/route-bundle-stats.json; workerGzip = sum over every file in .cloudflare/output/v0/workers/default/bundle/ (excluding .vite/manifest.json) of its gzip level-9 size after `pnpm build:cloudflare`; workerEntryGzip = the same for bundle/index.js alone.",
+    "routes": {
+      "index": "/",
+      "playoffs": "/playoffs",
+      "schedule": "/schedule",
+      "standings": "/standings",
+      "teams": "/teams"
+    },
+    "workerEntryGzip": 73348,
+    "workerFiles": 194,
+    "workerRawBytes": 4136153
+  },
+  "index": {
+    "firstLoadJs": 494618,
+    "html": 220768,
+    "htmlGzip": 25552,
+    "rsc": 124827,
+    "rscGzip": 15794
+  },
+  "playoffs": {
+    "firstLoadJs": 469887,
+    "html": 153771,
+    "htmlGzip": 18793,
+    "rsc": 82942,
+    "rscGzip": 10509
+  },
+  "schedule": {
+    "firstLoadJs": 488695,
+    "html": 2887105,
+    "htmlGzip": 120444,
+    "rsc": 1544462,
+    "rscGzip": 67062
+  },
+  "standings": {
+    "firstLoadJs": 469887,
+    "html": 460506,
+    "htmlGzip": 33128,
+    "rsc": 246181,
+    "rscGzip": 18432
+  },
+  "teams": {
+    "firstLoadJs": 469887,
+    "html": 75070,
+    "htmlGzip": 9681,
+    "rsc": 39924,
+    "rscGzip": 6211
+  },
+  "workerGzip": 1425651
+}

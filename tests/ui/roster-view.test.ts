@@ -12,14 +12,24 @@ import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
 import { buildRosterView } from '../../components/teams/roster-view';
+import { HISTORY_LEAGUE } from '../../lib/leagues';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { TEAMS } from '../../lib/teams';
+import { TEAMS as REGISTRY, teamsInLeague } from '../../lib/teams';
+
+/**
+ * Rosters and player stats are SCVAL-only (SPEC §0.2 item 12): the teams these files hold are the
+ * registry's HISTORY_LEAGUE teams (15), not the whole 43-team registry.
+ */
+const TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));
 
 describe('buildRosterView', () => {
-  it('builds a view for every team in the registry', () => {
-    for (const { slug, view } of views) expect(view, slug).toBeDefined();
+  it('builds a view for every SCVAL team, and null (no section, no empty state) for every other', () => {
+    for (const { slug, view } of views) expect(view, slug).toBeTruthy();
+    const others = REGISTRY.filter((t) => t.league !== HISTORY_LEAGUE);
+    expect(others.length).toBe(REGISTRY.length - TEAMS.length);
+    for (const t of others) expect(buildRosterView(t.slug), t.slug).toBeNull();
   });
 
   it('lists every MaxPreps row except the ones a school source marks JV', () => {

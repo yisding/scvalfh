@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { EN_DASH, monthDay } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import type { FormGame } from '../../lib/data';
 import { getTeamBySlug } from '../../lib/teams';
 
@@ -15,8 +16,8 @@ import { signedMargin } from './game-view';
  * compress to nothing). One series, so no legend box: the kicker names it.
  *
  * Geometry (modernization brief §4.18): the strip sits in a `p-4` card, so at 390px the plot is
- * 326 − 48 = 278px, exactly 14 columns × 18px + 13 × 2px gaps (El Camino's 14-game slate; De
- * Anza's seven teams play 12, which the team page passes as `slots`). Columns are FLUID — `flex-1` up to
+ * 326 − 48 = 278px, exactly 14 columns × 18px + 13 × 2px gaps (a 14-game slate; MCAL's 16 and
+ * BVAL's 10 come in as `slots` like every other). Columns are FLUID — `flex-1` up to
  * a 56px cap — so the strip fills its card at every width instead of hugging the left edge. The
  * phone floor is 12px rather than the brief's 18px: at 320 and 360 the card's plot is only 208 and
  * 248px, and an 18px floor would push the strip into a nested horizontal scroller (an overflow and
@@ -27,8 +28,10 @@ import { signedMargin } from './game-view';
  * Phone height 160 (it was 128, and the ±4 plot was ~100px tall inside a much larger card) includes
  * a 16px glyph band, so each arm is floor((160 − 16 − 1) / 2) = 71px; desktop 200 gives 91px.
  *
- * Unplayed games get a `?` tick and NO column, and the axis continues to the last game of the
- * team's slate (`slots`), so the reader sees how much season is left. A game that WAS played and
+ * Unplayed games get a `?` tick and NO column, and the axis continues to the division's scheduled
+ * league-game count (`slots`, the team view's `leagueScheduled` — `gamesPerTeam`: 14 in El Camino,
+ * 12 in De Anza and PCAL, 10 in BVAL, 16 in MCAL), so the reader sees how much season is left and
+ * never a phantom game that is not on the schedule. A game that WAS played and
  * never scored (`score-pending`) is not "left": it gets an en dash, the site's mark for a number we
  * do not have (DESIGN §5.3), and "score not reported" in words in the screen-reader description,
  * the desktop link's name and the table twin. Forfeits are excluded entirely — they have no goal
@@ -40,12 +43,11 @@ export interface MarginStripProps {
   entries: FormGame[];
   teamName: string;
   /**
-   * Columns on the axis. Default 14, El Camino's double round robin (eight teams); the team page
-   * passes the team's real slate (`leagueScheduled`: feed contests + official-only fixtures), so a
-   * De Anza strip draws 12 and does not promise two games that do not exist. Never fewer columns
-   * than entries.
+   * The division's scheduled league games for this team (`leagueScheduled`, from `gamesPerTeam`).
+   * Required: a fixed default would pad a 10-game BVAL season with unplayed `?` games. Never fewer
+   * columns than entries.
    */
-  slots?: number;
+  slots: number;
   /** Phone / desktop, INCLUDING the axis band. */
   height?: 160 | 200;
   className?: string;
@@ -58,7 +60,7 @@ function isUnreported(entry: FormGame): boolean {
   return entry.status === 'score-pending';
 }
 
-/** "vs Santa Clara" / "at Palo Alto", with the registry's short name for one of the 15. */
+/** "vs Santa Clara" / "at Palo Alto", with the registry's short name for a registry team. */
 function opponentPhrase(entry: FormGame): string {
   const name = (entry.opponentSlug ? getTeamBySlug(entry.opponentSlug)?.shortName : undefined) ??
     entry.opponent;
@@ -68,7 +70,7 @@ function opponentPhrase(entry: FormGame): string {
 export function MarginStrip({
   entries,
   teamName,
-  slots = 14,
+  slots,
   height = 160,
   className,
 }: MarginStripProps) {
@@ -88,8 +90,8 @@ export function MarginStrip({
   const isPhone = height !== 200;
   // Columns are fluid between a floor and a 56px cap. The phone floor is 12px (a chart mark; see
   // the geometry note above); the desktop floor is 24px because those marks are links (WCAG
-  // 2.5.8). At the most, 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card
-  // at 1024px; a 12-game De Anza strip needs 321px.
+  // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px; a
+  // 12-game strip needs 321px.
   const colClass = isPhone ? 'min-w-3 max-w-14 flex-1' : 'min-w-6 max-w-14 flex-1';
   const gap = isPhone ? 2 : 3;
   /** Only a 24px-wide column is a legal tap target, so only the desktop marks are links. */
@@ -235,7 +237,7 @@ export function MarginStrip({
                       immediately below and a 52px link in the League game log under that. */}
                   {interactive ? (
                     <Link
-                      href={`/game/${entry.contestId}`}
+                      href={gameHref(entry.contestId)}
                       prefetch={false}
                       className="flex w-full flex-col items-center"
                       aria-label={description}

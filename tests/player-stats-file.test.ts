@@ -21,9 +21,16 @@ import {
   playerStatsContentKey,
   type PlayerStatsFile,
 } from '../lib/player-stats-schema';
+import { HISTORY_LEAGUE } from '../lib/leagues';
 import { getRosters } from '../lib/rosters';
-import { TEAMS } from '../lib/teams';
+import { TEAMS as REGISTRY, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO } from './helpers';
+
+/**
+ * Rosters and player stats are SCVAL-only (SPEC §0.2 item 12): the teams these files hold are the
+ * registry's HISTORY_LEAGUE teams (15), not the whole 43-team registry.
+ */
+const TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
 
@@ -33,9 +40,12 @@ describe('data/player-stats.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
     expect(getPlayerStats().fetchedAt).toBe(raw.fetchedAt);
     for (const team of TEAMS) expect(getTeamPlayerStats(team.slug)?.slug).toBe(team.slug);
+    for (const team of REGISTRY.filter((t) => t.league !== HISTORY_LEAGUE)) {
+      expect(getTeamPlayerStats(team.slug), team.slug).toBeUndefined();
+    }
   });
 
-  it('has one entry per registry team, in registry order', () => {
+  it('has one entry per SCVAL registry team, in registry order', () => {
     expect(raw.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
     expect(raw.teams.map((t) => t.teamId)).toEqual(TEAMS.map((t) => t.id));
   });

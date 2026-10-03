@@ -17,10 +17,10 @@ import type { GameModel, GameSideModel } from './game-model';
  * and cancelled games skipped rather than shown as placeholder squares, and the words "no results"
  * instead of an empty row of boxes.
  *
- * A non-SCVAL opponent has no record on this site at all (DESIGN §8), so its row says so in words,
- * beside the same GhostMonogram tile its game rows use.
+ * An opponent outside the 43 teams this site follows has no record here at all (DESIGN §8), so its
+ * row says so in words (SPEC §10.6), beside the same GhostMonogram tile its game rows use.
  *
- * An SCVAL side's name is a link to its team page — the natural next step from "how were they
+ * A member side's name is a link to its team page — the natural next step from "how were they
  * playing coming in" is "show me their season". It is a standalone link, so it carries
  * `.sx-action`'s 24px box (WCAG 2.5.8); the short name, because the strip shares its line.
  */
@@ -29,7 +29,7 @@ export interface FormGoingInProps {
   className?: string;
 }
 
-function FormRow({ side }: { side: GameSideModel }) {
+function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: number }) {
   return (
     <li className="flex min-h-row-1 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
       {side.team ? (
@@ -86,7 +86,7 @@ function FormRow({ side }: { side: GameSideModel }) {
         </span>
       ) : (
         <span className="text-meta text-ink-3">
-          Not an SCVAL school — this site keeps no record for {side.name}.
+          {`Not one of the ${memberCount} teams this site follows — no record is kept here.`}
         </span>
       )}
     </li>
@@ -110,8 +110,8 @@ export function FormGoingIn({ model, className }: FormGoingInProps) {
       <div className="sx-card sx-flush sx-bleed">
         <ol className="sx-list">
           {/* Away over home, the same order as the scoreboard and every list on the site. */}
-          <FormRow side={away} />
-          <FormRow side={home} />
+          <FormRow side={away} memberCount={model.memberCount} />
+          <FormRow side={home} memberCount={model.memberCount} />
         </ol>
         <p className="m-0 border-t border-divider px-4 py-3 text-meta text-ink-3">
           {played === 0

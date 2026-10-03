@@ -7,14 +7,19 @@
  * any disagreement sets the `mismatch` flag and produces a cross-check row.
  */
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
+import { classifyGames } from '../lib/classify';
+import { ALL_DIVISIONS } from '../lib/leagues';
 import { normalizeGames } from '../lib/normalize';
 import { StandingsResponseSchema } from '../lib/sources/maxpreps';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '../lib/standings';
-import { resolveTeam } from '../lib/teams';
+import { getTeamById, resolveTeam, teamsInDivision } from '../lib/teams';
 import type { ReportedRecord, TeamId } from '../lib/types';
-import { allScheduleRows, standingsFixture } from './helpers';
+import { REPO, allScheduleRows, standingsFixture } from './helpers';
 
 const reported = new Map<TeamId, ReportedRecord>();
 for (const which of ['da', 'ec'] as const) {
@@ -25,11 +30,22 @@ for (const which of ['da', 'ec'] as const) {
   }
 }
 
-const games = normalizeGames(allScheduleRows(), { fetchedAt: '2026-09-29T15:00:00.000Z' }).games;
+// Standings read the persisted classification (`countsFor`), so the normalized games are
+// classified first, exactly as the pipeline's step 10 does (SPEC §7.6).
+const games = classifyGames(
+  normalizeGames(allScheduleRows(), { fetchedAt: '2026-09-29T15:00:00.000Z' }).games,
+);
 const standings = computeStandings(games, { reported });
 const crossCheck = buildCrossCheck(standings);
 
 describe('computed vs reported', () => {
+  it('classifies the SCVAL captures exactly by contest type (isLeague within one division)', () => {
+    for (const g of games) {
+      expect(g.countsFor, g.contestId).toBe(g.isLeague ? g.leagueDivision : null);
+    }
+    expect(games.filter((g) => g.countsFor !== null).length).toBeGreaterThan(80);
+  });
+
   it('has a reported row for all 15 MaxPreps teams', () => {
     expect(reported.size).toBe(15);
     expect(standings.filter((s) => s.reported !== null).length).toBe(15);
@@ -104,4 +120,34 @@ describe('computed vs reported', () => {
       expect(s.reported.modifiedOn).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     }
   });
+});
+
+describe('reported tables of all six divisions (all-2026-10-02 corpus)', () => {
+  const STANDINGS_DIR = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'standings');
+
+  for (const division of ALL_DIVISIONS) {
+    it(`${division.id}: every MaxPreps row resolves by GUID to a member of that division`, () => {
+      const raw = JSON.parse(readFileSync(path.join(STANDINGS_DIR, `${division.id}.json`), 'utf8')) as unknown;
+      const rows = StandingsResponseSchema.parse(raw).data;
+      expect(rows.length).toBe(division.maxprepsTeamCount);
+      const resolved = rows.map((row) => getTeamById(row.schoolId));
+      for (const [i, team] of resolved.entries()) {
+        expect(team, rows[i].schoolName).toBeDefined();
+        expect(team!.division).toBe(division.id);
+      }
+      // The members MaxPreps leaves out of its table are exactly the configured ones (Prospect).
+      const present = new Set(resolved.map((t) => t!.slug));
+      const missing = teamsInDivision(division.id).filter((t) => !present.has(t.slug)).map((t) => t.slug);
+      expect(missing).toEqual([...division.maxprepsMissing]);
+      // Each row converts to a ReportedRecord without loss of the league numbers.
+      for (const row of rows) {
+        const r = toReportedRecord(row);
+        expect([r.conferenceWins, r.conferenceLosses, r.conferenceTies]).toEqual([
+          row.conferenceWins,
+          row.conferenceLosses,
+          row.conferenceTies,
+        ]);
+      }
+    });
+  }
 });
