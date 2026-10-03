@@ -27,7 +27,7 @@ import {
   type StandingContext,
   type TeamPostseasonLine,
 } from '../../lib/data';
-import { gameWhen, monthDay, ordinal, recordString, shortDate } from '../../lib/format';
+import { gameWhen, monthDay, ordinal, recordString, shortDate, timeOfDayPT } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
 import { outcomesFor } from '../../lib/standings';
@@ -181,9 +181,14 @@ export type NextCard =
        * A fixture from the league's official schedule dated BEFORE this game, which no source has
        * published as a contest. The fixture list marks it Upcoming, so the card names it rather
        * than let the page contradict itself; it does not take Next's place (a contest has a time
-       * and a page).
+       * and a page). `timeLabel` is the league's published start ('4:00 PM PT'), when it gives one.
        */
-      officialBefore: { dateLabel: string; versus: 'vs' | 'at'; opponentName: string } | null;
+      officialBefore: {
+        dateLabel: string;
+        timeLabel: string | null;
+        versus: 'vs' | 'at';
+        opponentName: string;
+      } | null;
     })
   | (NextOpponent & { kind: 'official'; fixture: OfficialFixture })
   | { kind: 'none' };
@@ -442,6 +447,7 @@ export function buildNextCard(
       const { versus, opponentName } = fixtureOpponent(early, team);
       officialBefore = {
         dateLabel: dateLabelFor(early.dateKey, early.dateKey, today),
+        timeLabel: early.time ? timeOfDayPT(`${early.dateKey}T${early.time}`) : null,
         versus,
         opponentName,
       };

@@ -24,7 +24,7 @@ import { signedMargin } from './game-view';
  * an axe `scrollable-region-focusable` failure). Phone columns are marks, NOT tap targets: a 24px
  * column at a 24px pitch needs 362px, and shrinking the pitch would make the 24px spacing circles of
  * WCAG 2.5.8 overlap, which DESIGN §4.4 forbids. The desktop variant's columns ARE links, so their
- * floor is 24px; on phone the table twin and the League game log carry the same navigation.
+ * floor is 24px (20px at a 24px pitch for MCAL's 16 games); on phone the table twin and the League game log carry the same navigation.
  * Phone height 160 (it was 128, and the ±4 plot was ~100px tall inside a much larger card) includes
  * a 16px glyph band, so each arm is floor((160 − 16 − 1) / 2) = 71px; desktop 200 gives 91px.
  *
@@ -91,9 +91,17 @@ export function MarginStrip({
   // Columns are fluid between a floor and a 56px cap. The phone floor is 12px (a chart mark; see
   // the geometry note above); the desktop floor is 24px because those marks are links (WCAG
   // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px; a
-  // 12-game strip needs 321px.
-  const colClass = isPhone ? 'min-w-3 max-w-14 flex-1' : 'min-w-6 max-w-14 flex-1';
-  const gap = isPhone ? 2 : 3;
+  // 12-game strip needs 321px. MCAL's 16-game slate would need 16 × 24 + 15 × 3 = 429px and scroll
+  // the page sideways, so a slate longer than 14 drops to a 20px floor with a 4px gap: 16 × 20 +
+  // 15 × 4 = 380px fits, and the 24px pitch keeps WCAG 2.5.8's spacing exception (the 24px circles
+  // centred on neighbouring marks touch but never overlap, DESIGN §4.4).
+  const dense = !isPhone && slots > 14;
+  const colClass = isPhone
+    ? 'min-w-3 max-w-14 flex-1'
+    : dense
+      ? 'min-w-5 max-w-14 flex-1'
+      : 'min-w-6 max-w-14 flex-1';
+  const gap = isPhone ? 2 : dense ? 4 : 3;
   /** Only a 24px-wide column is a legal tap target, so only the desktop marks are links. */
   const interactive = !isPhone;
   // 16px: the H / A / N glyphs are 12px text on a 16px line (the 12px floor, brief §1).
@@ -131,7 +139,7 @@ export function MarginStrip({
           <span className="absolute right-0 bottom-0">{signedMargin(-domain)}</span>
         </div>
         {/* The plot is as wide as its card, and the columns are FLUID (12px floor on phone, 24px on
-            desktop, 56px cap), so
+            desktop, 20px at a 24px pitch for a slate longer than 14, 56px cap), so
             the strip fills the card at every width without a nested scrollbar; the zero rule and the
             columns share ONE box, so they start and end together. From 768px the wrapper is `overflow-visible`, so
             the CSS tooltips above the marks are never clipped. Below 768px it is `overflow-x-clip`,

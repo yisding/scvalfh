@@ -162,9 +162,12 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
         ) : null}
         {card.officialBefore ? (
           <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
-            {league.shortName}&rsquo;s schedule also lists {card.officialBefore.dateLabel}{' '}
+            {/* A league that publishes a start time (PCAL, BVAL) has it named; only a fixture
+                without one (SCVAL) is said to have none. */}
+            {league.shortName}&rsquo;s schedule also lists {card.officialBefore.dateLabel}
+            {card.officialBefore.timeLabel ? `, ${card.officialBefore.timeLabel},` : null}{' '}
             {card.officialBefore.versus} {card.officialBefore.opponentName}, but no source does, so
-            it has no start time here.
+            {card.officialBefore.timeLabel ? ' it has no game page here.' : ' it has no start time here.'}
           </p>
         ) : null}
         <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
@@ -175,7 +178,7 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
           >
             {/* The Last card's pill has the same visible words, so the opponent is added for a
                 screen reader's links list and for voice control. */}
-            Full game page<span className="sr-only">: {card.versus} {card.opponentName}</span>
+            Full game page<span className="sr-only">: {card.versus} {card.opponent?.name ?? card.opponentName}</span>
           </Link>
           {card.chips.map((chip) => (
             <ExternalLink key={chip.href} href={chip.href} className="sx-pill">

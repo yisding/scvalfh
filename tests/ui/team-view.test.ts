@@ -251,7 +251,10 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
 
   it('the margin strip spans the division\'s scheduled league games, never a phantom 14-game season', async () => {
     const PHONE_CELL = 'flex flex-col items-center min-w-3 max-w-14 flex-1';
-    const DESKTOP_CELL = 'flex flex-col items-center min-w-6 max-w-14 flex-1';
+    // A slate longer than 14 (MCAL's 16) takes the 20px desktop floor at a 24px pitch, so it fits
+    // the 380px plot of a half-width card at 1024px (components/ui/MarginStrip.tsx).
+    const desktopCell = (slots: number) =>
+      `flex flex-col items-center ${slots > 14 ? 'min-w-5' : 'min-w-6'} max-w-14 flex-1`;
     let checked = 0;
     for (const division of leagues.ALL_DIVISIONS) {
       for (const team of data.getTeams(division.id)) {
@@ -261,7 +264,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
         const expected = Math.max(division.gamesPerTeam, v.marginEntries.length);
         const count = (cls: string) => html.split(`${cls}"`).length - 1;
         expect(count(PHONE_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
-        expect(count(DESKTOP_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
+        expect(count(desktopCell(v.leagueScheduled)), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
         checked += 1;
       }
     }
@@ -522,12 +525,12 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       checked += 1;
       // A fixture of the team's own league, at home against a school outside the registry, so the
       // card must fall back to the schedule's own spelling of the opponent.
-      const fixture = (dateKey: string) => ({
+      const fixture = (dateKey: string, time: string | null = null) => ({
         id: `${team.division}:${dateKey}:Visitors@${team.slug}`,
         league: team.league,
         division: team.division,
         dateKey,
-        time: null,
+        time,
         awayName: 'Visitors',
         homeName: team.name,
         awaySlug: null,
@@ -538,9 +541,13 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       const before = view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey))], today, v.league);
       expect(before.kind === 'game' ? before.officialBefore : null, `components/teams/team-view.ts ${team.slug}`).toEqual({
         dateLabel: expect.any(String),
+        timeLabel: null,
         versus: 'vs',
         opponentName: 'Visitors',
       });
+      // A league that publishes the start time (PCAL, BVAL): the card names it.
+      const timed = view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey), '16:00')], today, v.league);
+      expect(timed.kind === 'game' ? timed.officialBefore?.timeLabel : null, `components/teams/team-view.ts ${team.slug}`).toBe('4:00 PM PT');
       const sameDay = view.buildNextCard(team, next, [fixture(next.dateKey)], today, v.league);
       expect(sameDay.kind === 'game' ? sameDay.officialBefore : 'not a game card', `components/teams/team-view.ts ${team.slug}`).toBeNull();
     }
