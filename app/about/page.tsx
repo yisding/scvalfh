@@ -484,7 +484,11 @@ export default function AboutPage() {
                   MaxPreps&rsquo; own public data feed, the same one that powers its team and league
                   pages. We read it, never write to it, and never hotlink its mascot images &mdash;
                   each school is shown as a color monogram instead, built from the two colors the feed
-                  reports.
+                  reports. Each team page&rsquo;s roster and season player stats come from MaxPreps
+                  too, for all {counts.teams} teams in all four leagues: whatever the coach entered,
+                  with anything nobody published left blank. Other public sources, such as a school&rsquo;s
+                  own athletics site, only fill a blank MaxPreps leaves, and the team page marks every
+                  value that came from one.
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">

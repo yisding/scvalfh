@@ -12,7 +12,8 @@ import type { TeamSlug } from '../../lib/types';
 
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
- * view in lib/rosters.ts. Pure, so tests/ui/roster-view.test.ts can assert it over the real files.
+ * view in lib/rosters.ts, for every team of all four leagues. Pure, so tests/ui/roster-view.test.ts
+ * can assert it over the real files.
  *
  * What the page promises, and this module enforces:
  *   - varsity only: rows a school source marks JV are left out and counted (Los Gatos' MaxPreps
@@ -127,6 +128,12 @@ export interface RosterView {
   rosterUrl: string | null;
   /** "Fri Oct 2": when MaxPreps was read (older than the file when carried forward). */
   asOf: string | null;
+  /**
+   * Another public source (a school site, a paper, MaxPreps' JV and career pages) was looked at
+   * for this team: the enrichment file lists a source or notes for it. The empty state may only
+   * say "no other source has a roster" when this is true.
+   */
+  otherSourcesChecked: boolean;
 }
 
 function gradeWord(grade: number): string {
@@ -275,7 +282,9 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
 
   const groups = new Map<string, Entry[]>();
   for (const e of entries.values()) {
-    const key = `${e.host} ${e.kind}`;
+    // A coaches page is linked as itself: only runs of per-player pages fold into the roster page.
+    const coachesOnly = e.uses.size === 1 && e.uses.has('coaches');
+    const key = `${e.host} ${e.kind}${coachesOnly ? ' coaches' : ''}`;
     groups.set(key, [...(groups.get(key) ?? []), e]);
   }
 
@@ -284,7 +293,8 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
   for (const group of groups.values()) {
     const { host, kind } = group[0];
     const label = siteLabel(kind, host);
-    if (group.length > FOLD_OVER) {
+    // MaxPreps career and JV pages are never folded: each backs up values the roster page lacks.
+    if (group.length > FOLD_OVER && !kind.startsWith('maxpreps-')) {
       const teamPage = team.sources.find(
         (s) => s.kind === kind && hostLabel(s.url) === host && !entries.has(s.url),
       );
@@ -308,9 +318,11 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
 }
 
 /**
- * null for a team lib/rosters.ts does not hold: rosters are SCVAL-only (SPEC §0.2 item 12), so a
- * BVAL, PCAL or MCAL page gets no roster section at all — never an empty state that would read as
- * the team hiding its roster. Never throws for a registry slug.
+ * The roster section for any registry team, in every league. null only for a slug lib/rosters.ts
+ * does not hold (not a registry team), so the team page never prints an empty state for something
+ * that does not exist. A team no run has covered yet has status 'pending' and says so; one whose
+ * fetch failed with nothing to fall back on has status 'error'; one MaxPreps lists no players for
+ * has status 'empty'. Never throws for a registry slug.
  */
 export function buildRosterView(slug: TeamSlug): RosterView | null {
   const team = getEnrichedTeamRoster(slug);
@@ -352,5 +364,6 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     sources: sourceLinks(team, players),
     rosterUrl: team.rosterUrl,
     asOf: team.fetchedAt ? shortDate(toLocalTimestamp(team.fetchedAt)) : null,
+    otherSourcesChecked: team.sources.length > 0 || team.enrichmentNotes.length > 0,
   };
 }

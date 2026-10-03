@@ -1,0 +1,28 @@
+{
+  "note": "Provenance of the roster-<slug>.html and stats-<slug>.json captures. The fifteen SCVAL teams were captured 2026-10-02; a deliberate sample of the other three leagues 2026-10-03. Every roster page is trimmed the same way (see the comment at the top of each file); each stats file is the rollup response as served.",
+  "scval": {
+    "capturedAt": "2026-10-02T04:55:55Z (rosters), 2026-10-02T18:58:27Z (stats)",
+    "teams": "all 15 SCVAL teams"
+  },
+  "others": {
+    "capturedAt": "2026-10-03T01:53:00Z",
+    "rosters": {
+      "leigh": "BVAL, full fields",
+      "del-mar": "BVAL, empty roster (no table)",
+      "greenfield": "PCAL, sparse: names, a jersey for half",
+      "stevenson": "PCAL, full fields and a soft-deleted row",
+      "monterey": "PCAL, empty roster (no table)",
+      "university-sf": "MCAL, 3 soft-deleted rows, jersey gaps",
+      "marin-catholic": "MCAL, half the grades blank"
+    },
+    "stats": {
+      "leigh": "BVAL, rollup",
+      "stevenson": "PCAL, rollup",
+      "university-sf": "MCAL, rollup",
+      "marin-catholic": "MCAL, rollup",
+      "berkeley": "MCAL, the 400 no-data envelope, a team with a roster",
+      "del-mar": "BVAL, the 400 no-data envelope, a team with no roster",
+      "monterey": "PCAL, the 400 no-data envelope, a team with no roster"
+    }
+  }
+}

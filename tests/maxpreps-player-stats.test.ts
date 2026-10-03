@@ -1,6 +1,7 @@
 /**
  * lib/sources/maxpreps-player-stats.ts — the team-season-player-stats rollup, over the 15
- * captures in tests/fixtures/maxpreps/stats-<slug>.json (2026-10-02).
+ * captures in tests/fixtures/maxpreps/stats-<slug>.json (2026-10-02; SCVAL's teams, the first
+ * league captured — the adapter reads every league's teams the same way).
  *
  * The adapter's promises: a team with no stats is null (not an error), a stat the team does not
  * track is null while a tracked 0 stays 0, every row joins to the roster on the career id, and
@@ -18,16 +19,24 @@ import {
   fetchPlayerStats,
   joinToRoster,
   parsePlayerStats,
+  pendingPlayerStats,
   playerStatsUrl,
+  reconcileTotals,
   teamStatsPageUrl,
 } from '../lib/sources/maxpreps-player-stats';
-import { HISTORY_LEAGUE } from '../lib/leagues';
+import {
+  FIELD_STAT_KEYS,
+  PlayerStatsFileSchema,
+  countPlayerStats,
+  type FieldStatKey,
+  type GoalieStatKey,
+} from '../lib/player-stats-schema';
 import { SPORT_SEASON_ID } from '../lib/season';
-import { teamsInLeague } from '../lib/teams';
+import { TEAMS as REGISTRY, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';
 
-/** Player stats are SCVAL-only (SPEC §0.2 item 12): the 15 captures are the HISTORY_LEAGUE teams'. */
-const TEAMS = teamsInLeague(HISTORY_LEAGUE);
+/** The 15 captures are SCVAL's: the first league captured. */
+const TEAMS = teamsInLeague('scval');
 
 const raw = (slug: string): unknown =>
   JSON.parse(readFileSync(path.join(FIXTURE_DIR, `stats-${slug}.json`), 'utf8')) as unknown;
@@ -109,11 +118,11 @@ describe('parsePlayerStats over the captures', () => {
     expect(goalies.find((g) => g.shortName === 'N. Kalina')!.goalkeeping!.saves).toBe(9);
   });
 
-  it('points are 2 per goal + 1 per assist on every team, so no warning fires', () => {
+  it('points are 2 per goal + 1 per assist on every team, so no points warning fires', () => {
     for (const team of TEAMS) {
       const page = parse(team.slug);
       if (!page) continue;
-      expect(page.warnings, team.slug).toEqual([]);
+      expect(page.warnings.filter((w) => /points/.test(w)), team.slug).toEqual([]);
       for (const p of page.players) {
         const f = p.field;
         if (f?.points != null && f.goals != null) {
@@ -135,6 +144,58 @@ describe('parsePlayerStats over the captures', () => {
         expect(l.fullName, `${team.slug} ${l.shortName}`).toContain(last);
       }
     }
+  });
+});
+
+describe('reconcileTotals: the tracked stats hold up against the rows', () => {
+  const zeros = (keys: string[]) => Object.fromEntries(keys.map((k) => [k, 0]));
+  const page = (rows: Array<Record<string, number>>, total: Record<string, number>) => ({
+    tracked: { field: Object.keys(total) as FieldStatKey[], goalkeeping: [] as GoalieStatKey[] },
+    totals: { field: total as Partial<Record<FieldStatKey, number>>, goalkeeping: {} },
+    players: rows.map((r) => ({ field: { ...zeros([...FIELD_STAT_KEYS]), ...r } as Record<string, number | null>, goalkeeping: null })),
+    warnings: [] as string[],
+  });
+
+  it('drops a stat whose team total no player holds (Hollister minutes), with a warning', () => {
+    const r = reconcileTotals(page([{ goals: 2, minutes: 0 }, { goals: 1, minutes: 0 }], { goals: 3, minutes: 60 }));
+    expect(r.tracked.field).toEqual(['goals']);
+    expect(r.totals.field).toEqual({ goals: 3 });
+    expect(r.players.map((p) => p.field!.minutes)).toEqual([null, null]);
+    expect(r.players.map((p) => p.field!.goals)).toEqual([2, 1]);
+    expect(r.warnings).toEqual([expect.stringMatching(/minutes: team total is 60 but no player has any/)]);
+  });
+
+  it('keeps a stat any one player holds, and a real 0 beside it', () => {
+    const r = reconcileTotals(page([{ goals: 2 }, { goals: 0 }], { goals: 2 }));
+    expect(r.tracked.field).toEqual(['goals']);
+    expect(r.players.map((p) => p.field!.goals)).toEqual([2, 0]);
+    expect(r.warnings).toEqual([]);
+  });
+
+  it('flags rows that add up to more than the team total, and keeps both as published', () => {
+    const r = reconcileTotals(page([{ goals: 6 }, { goals: 4 }], { goals: 7 }));
+    expect(r.players.map((p) => p.field!.goals)).toEqual([6, 4]);
+    expect(r.totals.field.goals).toBe(7);
+    expect(r.warnings).toEqual([expect.stringMatching(/goals: players add up to 10, above MaxPreps' team total of 7/)]);
+  });
+
+  it('does not compare games or minutes, which do not add across players, and flags nothing for fewer', () => {
+    const r = reconcileTotals(page([{ gamesPlayed: 9, minutes: 40, goals: 1 }, { gamesPlayed: 8, minutes: 50, goals: 1 }], { gamesPlayed: 10, minutes: 60, goals: 5 }));
+    expect(r.warnings).toEqual([]);
+    expect(r.tracked.field).toEqual(['gamesPlayed', 'minutes', 'goals']);
+  });
+
+  it('leaves the input untouched', () => {
+    const input = page([{ minutes: 0 }], { minutes: 60 });
+    const before = structuredClone(input);
+    reconcileTotals(input);
+    expect(input).toEqual(before);
+  });
+
+  it('is what the parser applies: Fremont\'s goalie games total has no player behind it', () => {
+    const fremont = parse('fremont')!;
+    expect(fremont.tracked.goalkeeping).not.toContain('gamesPlayed');
+    expect(fremont.players.every((p) => p.goalkeeping === null || p.goalkeeping.gamesPlayed === null)).toBe(true);
   });
 });
 
@@ -226,6 +287,18 @@ describe('fetchPlayerStats', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 
+  it('hands the decoded response to onRaw (what --capture saves), 400 envelope included', async () => {
+    for (const [slug, status] of [['saint-francis', 200], ['cupertino', 400]] as const) {
+      const body = raw(slug);
+      const fetchImpl = vi.fn(async () => new Response(JSON.stringify(body), { status }));
+      const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+      const seen: unknown[] = [];
+      await fetchPlayerStats(client, teamId, (r) => seen.push(r));
+      // The saved capture parses exactly as the response did.
+      expect(seen, slug).toEqual([body]);
+    }
+  });
+
   it('fails on any other 400, so the fetch script carries the previous rows forward', async () => {
     const other = JSON.stringify({ status: 400, message: 'Invalid teamId.', data: null, errors: ['Invalid teamId.'] });
     for (const body of [other, '', '<html>Bad Request</html>']) {
@@ -249,5 +322,26 @@ describe('teamStatsPageUrl', () => {
       'https://www.maxpreps.com/ca/x/y/field-hockey/stats/',
     );
     expect(teamStatsPageUrl(null)).toBeNull();
+  });
+});
+
+describe('pendingPlayerStats', () => {
+  it('is a valid, claim-free entry for every registry team of every league', () => {
+    const teams = REGISTRY.map((t) => pendingPlayerStats(t));
+    expect(teams).toHaveLength(43);
+    for (const t of teams) {
+      expect(t.status).toBe('pending');
+      expect(t.players).toEqual([]);
+      expect(t.fetchedAt).toBeNull();
+      expect(t.statsUrl).toBe(teamStatsPageUrl(REGISTRY.find((x) => x.slug === t.slug)!.external.maxprepsTeamUrl));
+    }
+    const file = {
+      season: '26-27',
+      fetchedAt: '2026-10-02T00:00:00.000Z',
+      source: { id: 'maxpreps-api' as const, builtBy: 'test', notes: [] },
+      teams,
+      counts: countPlayerStats(teams),
+    };
+    expect(PlayerStatsFileSchema.safeParse(file).success).toBe(true);
   });
 });

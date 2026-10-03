@@ -7,9 +7,11 @@
  * card, and the legacy print view (`/print/team_stats.aspx`) carries the same table without the
  * career links. The JSON carries them, so every row joins to the roster on the career id.
  *
- * Player stats are SCVAL-only (SPEC §0.2 item 12), like the rosters they join to.
+ * Every registry team (all four leagues) is read the same way, and joined to the rosters on the
+ * career id.
  *
- * Shape [V] 2026-10-02, all 15 SCVAL teams: `data.groups[]` ("Field Stats", "Goaltending Stats"), each
+ * Shape [V] 2026-10-02, all 15 SCVAL teams (the other leagues' teams are read by the same code
+ * and fail loudly on any drift, never silently): `data.groups[]` ("Field Stats", "Goaltending Stats"), each
  * with `subgroups[]` (a second subgroup "… (2)" holds the overflow columns), each a table of
  * `stats.columns[]` ({name, header, displayName, overallValue, columnType}) and `stats.rows[]`
  * whose `columns[i]` lines up with `stats.columns[i]` ({value, href, caption}). Column `Name`
@@ -24,7 +26,9 @@
  * TRACKED for a team when the team's own total (`overallValue`) is above zero, and only then are
  * its cells read: a tracked 0 is a real zero, an untracked column is null for everyone. Per-game
  * and percentage columns are dropped — they are arithmetic on the counts, and recomputing them is
- * safer than trusting a rounded string.
+ * safer than trusting a rounded string. A total with no player holding any of it (Hollister's
+ * minutes) is not tracked either, and a count whose rows add up to more than the team total is
+ * flagged in `warnings` (reconcileTotals).
  *
  * Loud on drift, like the roster adapter: a missing Name column, a row whose cell count differs
  * from the header, a non-numeric count, or two subgroups disagreeing about the same player's
@@ -42,7 +46,9 @@ import {
   type FieldStats,
   type GoalieStatKey,
   type GoalieStats,
+  type TeamPlayerStats,
 } from '../player-stats-schema';
+import type { Team } from '../types';
 import { MAXPREPS_API, SPORT_SEASON_ID } from '../season';
 
 // ---------------------------------------------------------------- the columns we keep
@@ -167,6 +173,29 @@ export function playerStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID):
 /** The human-facing page for the same numbers: `<team url>/stats/`. */
 export function teamStatsPageUrl(maxprepsTeamUrl: string | null): string | null {
   return maxprepsTeamUrl ? `${maxprepsTeamUrl.replace(/\/+$/, '')}/stats/` : null;
+}
+
+/**
+ * The entry for a team no run has covered yet: nothing fetched, so nothing claimed (status
+ * 'pending', no players). Built by scripts/fetch-player-stats.ts for a team its `--leagues` scope
+ * leaves out when the previous file held no row for it.
+ */
+export function pendingPlayerStats(team: Team): TeamPlayerStats {
+  return {
+    slug: team.slug,
+    teamId: team.id,
+    name: team.name,
+    maxprepsTeamId: null,
+    statsUrl: teamStatsPageUrl(team.external.maxprepsTeamUrl),
+    status: 'pending',
+    lastUpdated: null,
+    tracked: { field: [], goalkeeping: [] },
+    totals: { field: {}, goalkeeping: {} },
+    players: [],
+    warnings: [],
+    fetchedAt: null,
+    error: null,
+  };
 }
 
 // ---------------------------------------------------------------- parsing
@@ -321,7 +350,7 @@ export function parsePlayerStats(
     }
   }
 
-  return {
+  return reconcileTotals({
     teamId: data.teamId,
     sportSeasonId: data.sportSeasonId,
     lastUpdated: data.lastUpdated?.timeStamp ?? null,
@@ -332,7 +361,78 @@ export function parsePlayerStats(
     totals,
     players,
     warnings,
-  };
+  });
+}
+
+/** Counts that add up across players; games, minutes and overtime minutes do not, so are not compared. */
+const ADDITIVE_FIELD = new Set<FieldStatKey>([
+  'goals', 'assists', 'points', 'shots', 'shotsOnGoal', 'gameWinningGoals', 'steals',
+]);
+const ADDITIVE_GOALIE = new Set<GoalieStatKey>([
+  'opponentShotsOnGoal', 'saves', 'goalsAgainst', 'shutouts', 'wins', 'losses', 'ties',
+]);
+
+/**
+ * Hold the tracked stats to the rows. A stat is tracked when the team's total is above zero, but
+ * MaxPreps sometimes serves a total with no player holding any of it (Hollister's minutes: team 60,
+ * every player 0). Those per-player zeros are not real zeros, so the stat is dropped for the team
+ * (untracked, null for everyone) with a warning, rather than shown as 0 for every player. And when
+ * the rows add up to MORE than the team total for a count, the figures are MaxPreps' own and are
+ * kept as published, but the disagreement is recorded in `warnings`.
+ *
+ * Generic over the rows so scripts can apply the same rule to an already-built file.
+ */
+export function reconcileTotals<
+  T extends {
+    tracked: { field: FieldStatKey[]; goalkeeping: GoalieStatKey[] };
+    totals: {
+      field: Partial<Record<FieldStatKey, number>>;
+      goalkeeping: Partial<Record<GoalieStatKey, number>>;
+    };
+    players: Array<{
+      field: Record<string, number | null> | null;
+      goalkeeping: Record<string, number | null> | null;
+    }>;
+    warnings: string[];
+  },
+>(page: T): T {
+  const warnings = [...page.warnings];
+  const kinds = [
+    { kind: 'field', additive: ADDITIVE_FIELD as ReadonlySet<string>, label: 'field' },
+    { kind: 'goalkeeping', additive: ADDITIVE_GOALIE as ReadonlySet<string>, label: 'goalkeeping' },
+  ] as const;
+  const tracked = { field: [...page.tracked.field], goalkeeping: [...page.tracked.goalkeeping] };
+  const totals = { field: { ...page.totals.field }, goalkeeping: { ...page.totals.goalkeeping } };
+  const players = page.players.map((p) => ({
+    ...p,
+    field: p.field ? { ...p.field } : null,
+    goalkeeping: p.goalkeeping ? { ...p.goalkeeping } : null,
+  }));
+
+  for (const { kind, additive, label } of kinds) {
+    const keys = tracked[kind] as string[];
+    const sums = totals[kind] as Record<string, number>;
+    for (const key of [...keys]) {
+      const cells = players
+        .map((p) => p[kind]?.[key])
+        .filter((v): v is number => typeof v === 'number');
+      const total = sums[key];
+      const sum = cells.reduce((a, b) => a + b, 0);
+      if (!cells.some((v) => v > 0)) {
+        keys.splice(keys.indexOf(key), 1);
+        delete sums[key];
+        for (const p of players) if (p[kind]) p[kind]![key] = null;
+        warnings.push(
+          `${label} ${key}: team total is ${total} but no player has any; not shown rather than as zeros`,
+        );
+      } else if (additive.has(key) && sum > total) {
+        warnings.push(
+          `${label} ${key}: players add up to ${sum}, above MaxPreps' team total of ${total}; both as published`,
+        );
+      }
+    }
+  }
+  return { ...page, tracked, totals, players, warnings };
 }
 
 /**
@@ -343,6 +443,8 @@ export function parsePlayerStats(
 export async function fetchPlayerStats(
   client: MaxPrepsClient,
   teamId: string,
+  /** Sees the decoded response before it is parsed — scripts/fetch-player-stats.ts --capture. */
+  onRaw?: (raw: unknown) => void,
 ): Promise<PlayerStatsPage | null> {
   const url = playerStatsUrl(teamId);
   let raw: unknown;
@@ -356,6 +458,7 @@ export async function fetchPlayerStats(
       throw err;
     }
   }
+  onRaw?.(raw);
   return parsePlayerStats(raw, { expectedTeamId: teamId, url });
 }
 

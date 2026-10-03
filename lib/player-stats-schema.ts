@@ -6,27 +6,28 @@
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
  * is about to overwrite — the same split as lib/rosters-schema.ts / lib/rosters.ts.
  *
- * Player stats are SCVAL-only, like the rosters they join to (SPEC §0.2 item 12, §4.2): slugs are
- * checked against the registry's teams of HISTORY_LEAGUE, and the file holds exactly one entry per
- * such team (teamsInLeague(HISTORY_LEAGUE).length, 15), never one per registry team.
+ * Player stats cover every registry team, all four leagues, like the rosters they join to: slugs
+ * and team ids are checked against the 43-team registry, and the file holds exactly one entry per
+ * team.
  *
  * Invariants:
- *   1. exactly one team per SCVAL registry team, unique slugs
+ *   1. exactly one team per registry team (43), unique slugs, each with its registry id
  *   2. a stat the team does not track is null for every player; a tracked one is a number or null
  *      (null only when the player is missing from the table that carries it)
  *   3. a team's status says what its players[] are: read this run, published nothing, carried
- *      forward after a failure, or nothing at all
+ *      forward after a failure, nothing at all after a failure, or nothing yet because no run
+ *      has covered the team ('pending')
  *   4. counts are recomputed from the rows, never trusted from the file
  */
 
 import { z } from 'zod';
 
-import { HISTORY_LEAGUE } from './leagues';
-import { teamsInLeague } from './teams';
+import { contentKey } from './fetch-scope';
+import { TEAMS, getTeamBySlug } from './teams';
 
-/** Player stats are SCVAL-only (SPEC §0.2 #12): one per registry team of HISTORY_LEAGUE. */
-const STATS_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
-/** How many teams a player-stats file holds: teamsInLeague(HISTORY_LEAGUE).length. */
+/** Player stats cover every registry team, all four leagues: one entry per team of TEAMS. */
+const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
+/** How many teams a player-stats file holds: TEAMS.length (43). */
 export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;
 
 /** What a field player's line can hold, in display order. */
@@ -64,7 +65,7 @@ export type GoalieStats = Record<GoalieStatKey, number | null>;
 const teamSlug = z
   .string()
   .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
-  .refine((slug) => STATS_SLUGS.has(slug), `not a registry slug of league ${HISTORY_LEAGUE}`);
+  .refine((slug) => STATS_SLUGS.has(slug), 'not a registry team slug');
 
 /** Same scheme check as lib/rosters-schema.ts: these end up in an href. */
 const httpUrl = z
@@ -100,7 +101,7 @@ export const PlayerStatLineSchema = z.object({
   goalkeeping: GoalieStatsSchema.nullable(),
 });
 
-export const TeamPlayerStatsStatus = z.enum(['ok', 'none', 'carried-forward', 'error']);
+export const TeamPlayerStatsStatus = z.enum(['ok', 'none', 'carried-forward', 'error', 'pending']);
 
 export const TeamPlayerStatsSchema = z
   .object({
@@ -115,6 +116,9 @@ export const TeamPlayerStatsSchema = z
      * none            MaxPreps answered "No data was found": the coach has entered no stats
      * carried-forward this run failed for this team; players[] are the previous file's rows
      * error           this run failed and there was nothing to carry forward
+     * pending         no run has covered this team yet (a league left out of a `--leagues` run, or
+     *                 a team added to the registry since the file was built): nothing was
+     *                 fetched, so nothing is claimed — not even "the coach entered no stats"
      */
     status: TeamPlayerStatsStatus,
     /** MaxPreps' own "last updated" stamp (naive local time). */
@@ -132,9 +136,14 @@ export const TeamPlayerStatsSchema = z
   })
   .refine((t) => t.status !== 'ok' || t.players.length > 0, 'status ok needs players')
   .refine(
-    (t) => (t.status !== 'none' && t.status !== 'error') || t.players.length === 0,
-    'status none / error cannot have players',
+    (t) => (t.status !== 'none' && t.status !== 'error' && t.status !== 'pending') || t.players.length === 0,
+    'status none / error / pending cannot have players',
   )
+  .refine(
+    (t) => t.status !== 'pending' || (t.fetchedAt === null && t.maxprepsTeamId === null && t.lastUpdated === null),
+    'status pending means nothing was read: no fetchedAt, no page id, no last-updated stamp',
+  )
+  .refine((t) => getTeamBySlug(t.slug)?.id === t.teamId, "teamId is not the registry team's")
   .refine(
     (t) => (t.status === 'carried-forward' || t.status === 'error') === (t.error !== null),
     'error is set exactly when the fetch failed',
@@ -159,27 +168,38 @@ export const PlayerStatsCountsSchema = z.object({
   errors: z.number().int(),
 });
 
-export const PlayerStatsFileSchema = z
-  .object({
-    season: z.string().min(1),
-    /** ISO UTC, when the run started. */
-    fetchedAt: z.string().min(1),
-    source: z.object({
-      id: z.literal('maxpreps-api'),
-      builtBy: z.string().min(1),
-      notes: z.array(z.string()),
-    }),
-    teams: z.array(TeamPlayerStatsSchema).length(PLAYER_STATS_TEAM_COUNT),
-    counts: PlayerStatsCountsSchema,
-  })
-  .refine(
-    (f) => new Set(f.teams.map((t) => t.slug)).size === PLAYER_STATS_TEAM_COUNT,
-    'team slugs are not unique',
-  )
+const PlayerStatsShape = z.object({
+  season: z.string().min(1),
+  /** ISO UTC, when the run started. */
+  fetchedAt: z.string().min(1),
+  source: z.object({
+    id: z.literal('maxpreps-api'),
+    builtBy: z.string().min(1),
+    notes: z.array(z.string()),
+  }),
+  teams: z.array(TeamPlayerStatsSchema),
+  counts: PlayerStatsCountsSchema,
+});
+
+/**
+ * Any player-stats file whose teams are valid, unique and correctly counted — possibly not every
+ * registry team. scripts/fetch-player-stats.ts reads the PREVIOUS file with this, so one written
+ * before the other leagues were added (15 SCVAL teams), or before a team joined the registry,
+ * still supplies the rows a failed team carries forward. The file the site loads is
+ * PlayerStatsFileSchema.
+ */
+export const PlayerStatsPartialSchema = PlayerStatsShape
+  .refine((f) => new Set(f.teams.map((t) => t.slug)).size === f.teams.length, 'team slugs are not unique')
   .refine((f) => {
     const c = countPlayerStats(f.teams);
     return (Object.keys(c) as Array<keyof typeof c>).every((k) => c[k] === f.counts[k]);
   }, 'counts do not match the rows');
+
+/** The file the site loads: exactly one entry per registry team. */
+export const PlayerStatsFileSchema = PlayerStatsPartialSchema.refine(
+  (f) => f.teams.length === PLAYER_STATS_TEAM_COUNT,
+  `expected one entry per registry team (${PLAYER_STATS_TEAM_COUNT})`,
+);
 
 export type PlayerStatLine = z.infer<typeof PlayerStatLineSchema>;
 export type TeamPlayerStats = z.infer<typeof TeamPlayerStatsSchema>;
@@ -199,24 +219,13 @@ export function countPlayerStats(teams: readonly TeamPlayerStats[]): PlayerStats
 }
 
 /**
- * The file's content with every `fetchedAt` dropped and keys sorted. Two files with the same key
- * differ only in when they were read, so scripts/fetch-player-stats.ts leaves the old one in place
- * and the scheduled refresh (.github/workflows/update-data.yml) has nothing to commit — the same
- * job data/snapshot.meta.json's `contentHash` does for the snapshot.
+ * The file's content with every `fetchedAt` and `error` dropped and keys sorted. Two files with the
+ * same key differ only in when they were read and in a failure's message text (which can carry a
+ * duration or request id), so scripts/fetch-player-stats.ts leaves the old one in place and the
+ * scheduled refresh (.github/workflows/update-data.yml) has nothing to commit — the same job
+ * data/snapshot.meta.json's `contentHash` does for the snapshot. A team's `status` stays in the
+ * key, so a team going from ok to carried-forward still counts as a change.
  */
 export function playerStatsContentKey(file: PlayerStatsFile): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        if (key === 'fetchedAt') continue;
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return JSON.stringify(normalize(file));
+  return contentKey(file, ['fetchedAt', 'error']);
 }

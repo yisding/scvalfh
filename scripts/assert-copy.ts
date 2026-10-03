@@ -15,6 +15,9 @@
  * `playoffs/mcal`, its nine team pages): no "automatic qualifier", "at-large", "CCS Division",
  * "CCS picture", no BerthMeter label ("holds <n> of 16"), and "CCS" only in the
  * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
+ * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all four
+ * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)". The history page may still
+ * say the 2025-26 archive is SCVAL-only: that claim is not about rosters or stats.
  * And: `playoffs/mcal.html` contains "North Coast Section"; `standings.html` keeps the old anchors
  * `id="de-anza"` and `id="el-camino"`.
  *
@@ -25,6 +28,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
+import { SCVAL_ONLY_CLAIM } from './copy-rules';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -73,6 +77,12 @@ for (const file of files) {
   const withoutMaxprepsUrls = html.replace(/https?:(?:\/|\\\/){2}(?:www\.)?maxpreps\.com[^\s"'<>\\]*/g, '');
   forbid(file, withoutMaxprepsUrls, /gabilan/i, '"gabilan" outside a MaxPreps URL');
   forbid(file, html, /eliminat/i, 'contains "eliminat…"');
+  forbid(
+    file,
+    html,
+    SCVAL_ONLY_CLAIM,
+    'claims rosters or player stats are SCVAL-only',
+  );
   for (const label of bannedDivisionLabels) {
     const i = html.indexOf(label);
     if (i >= 0) fail(file, `single-division league labelled as a division ("${label}") — “…${around(html, i)}…”`);

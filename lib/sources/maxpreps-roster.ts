@@ -27,6 +27,7 @@ import { z } from 'zod';
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
 import { MAXPREPS_WEB, SPORT_SEASON_ID } from '../season';
+import type { TeamRoster } from '../rosters-schema';
 import type { Team } from '../types';
 
 // ---------------------------------------------------------------- the positional map
@@ -175,6 +176,30 @@ export function rosterUrl(team: Team): string | null {
   const base = team.external.maxprepsTeamUrl;
   if (!base) return null;
   return `${base.replace(/\/+$/, '')}/roster/`;
+}
+
+/**
+ * The entry for a team no run has covered yet: nothing fetched, so nothing claimed (status
+ * 'pending', no players, no counts). Built by scripts/fetch-rosters.ts for a team its `--leagues`
+ * scope leaves out when the previous file held no row for it.
+ */
+export function pendingRoster(team: Team): TeamRoster {
+  return {
+    slug: team.slug,
+    teamId: team.id,
+    maxprepsTeamId: null,
+    name: team.name,
+    division: team.division,
+    rosterUrl: rosterUrl(team),
+    status: 'pending',
+    athleteCount: null,
+    staffCount: null,
+    players: [],
+    deletedRows: 0,
+    warnings: [],
+    fetchedAt: null,
+    error: null,
+  };
 }
 
 /** `?careerid=6jijuu90hc0o8` → `6jijuu90hc0o8`. */

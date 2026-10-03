@@ -86,7 +86,7 @@ function listWords(words: string[]): string {
 export function TeamRoster({ view }: { view: RosterView }) {
   const { rows, showNumbers, teamName } = view;
 
-  if (view.status === 'error' || rows.length === 0) {
+  if (view.status === 'error' || view.status === 'pending' || rows.length === 0) {
     const action = view.rosterUrl
       ? { href: view.rosterUrl, label: 'Check MaxPreps', external: true }
       : undefined;
@@ -95,13 +95,19 @@ export function TeamRoster({ view }: { view: RosterView }) {
         heading={
           view.status === 'error'
             ? `${teamName}'s roster could not be read.`
-            : `MaxPreps lists no players for ${teamName}.`
+            : view.status === 'pending'
+              ? `${teamName}'s roster has not been collected yet.`
+              : `MaxPreps lists no players for ${teamName}.`
         }
         action={action}
       >
         {view.status === 'error'
           ? 'The last roster update failed and there was no earlier list to fall back on.'
-          : 'No other public source we checked has a current roster either.'}
+          : view.status === 'pending'
+            ? 'No roster update has covered this team yet. It will appear after the next one.'
+            : view.otherSourcesChecked
+              ? 'No other public source we checked has a current roster either.'
+              : 'We have not checked other public sources for this team.'}
       </EmptyState>
     );
   }

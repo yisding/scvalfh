@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   RosterEnrichmentSchema,
+  countRosters,
   type RosterEnrichment,
   type Rosters,
 } from '../lib/rosters-schema';
@@ -24,11 +25,21 @@ import {
   getRosters,
   getTeamRoster,
 } from '../lib/rosters';
-import { teamsInLeague } from '../lib/teams';
-
-/** Rosters stay SCVAL-only (SPEC §0.2 #12, §4.2). */
-const SCVAL_TEAMS = teamsInLeague('scval');
+import { TEAMS, teamsInLeague } from '../lib/teams';
 import { REPO } from './helpers';
+
+/**
+ * The numbers pinned below are what the 2026-10-02 research found for SCVAL, the one league
+ * researched then. They are asserted over SCVAL's teams only, so enrichment added for another
+ * league later moves none of them.
+ */
+const SCVAL_SLUGS: ReadonlySet<string> = new Set(teamsInLeague('scval').map((t) => t.slug));
+
+/** Teams whose derived grades also come from a source other than MaxPreps' career page. */
+const DERIVED_FROM_OTHER: Record<string, readonly string[]> = {
+  berkeley: ['maxpreps-jv'],
+  'archie-williams': ['news'],
+};
 
 const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
 const raw = JSON.parse(
@@ -39,15 +50,20 @@ const raw = JSON.parse(
  * Load lib/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
  * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
  */
-function loadError(enrichment: RosterEnrichment): string {
+function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
   const file = path.join(dir, 'bad.json');
   writeFileSync(file, JSON.stringify(enrichment));
+  const env: NodeJS.ProcessEnv = { ...process.env, SCVAL_ROSTERS_ENRICHMENT: file };
+  if (rosters) {
+    env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
+    writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
+  }
   try {
     execFileSync(
       path.join(REPO, 'node_modules', '.bin', 'tsx'),
       ['-e', "import('./lib/rosters.ts').then(() => console.log('LOADED'))"],
-      { cwd: REPO, stdio: 'pipe', env: { ...process.env, SCVAL_ROSTERS_ENRICHMENT: file } },
+      { cwd: REPO, stdio: 'pipe', env },
     );
     return '';
   } catch (err) {
@@ -75,17 +91,32 @@ describe('data/rosters-enrichment.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('refuses a team outside SCVAL', () => {
-    const foreign = structuredClone(raw);
-    foreign.teams[0].slug = 'leigh';
-    expect(RosterEnrichmentSchema.safeParse(foreign).success).toBe(false);
+  it('refuses a slug that is not a registry team, a duplicate, and a missing team', () => {
+    const stranger = structuredClone(raw);
+    stranger.teams[0].slug = 'not-a-school';
+    expect(RosterEnrichmentSchema.safeParse(stranger).success).toBe(false);
+    const duplicate = structuredClone(raw);
+    duplicate.teams[0].slug = duplicate.teams[1].slug;
+    expect(RosterEnrichmentSchema.safeParse(duplicate).success).toBe(false);
+    const short = structuredClone(raw);
+    short.teams.pop();
+    expect(RosterEnrichmentSchema.safeParse(short).success).toBe(false);
   });
 
-  it('covers the 15 SCVAL registry teams and the same season as the MaxPreps file', () => {
-    expect(SCVAL_TEAMS).toHaveLength(15);
-    expect(raw.teams.map((t) => t.slug).sort()).toEqual(SCVAL_TEAMS.map((t) => t.slug).sort());
+  it('accepts any registry team, in any league, and covers all 43 plus the same season as the MaxPreps file', () => {
+    expect(TEAMS).toHaveLength(43);
+    expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
+    // A BVAL, PCAL or MCAL team takes a record exactly as an SCVAL one does.
+    for (const slug of ['leigh', 'del-mar', 'redwood']) {
+      const withRecord = structuredClone(raw);
+      const team = withRecord.teams.find((t) => t.slug === slug)!;
+      team.notes.push('checked the school site');
+      expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
+    }
     expect(raw.season).toBe(base.season);
-    expect(raw.capturedAt).toBe(base.fetchedAt.slice(0, 10));
+    // The overlay is stamped 2026-10-03 (SCVAL was researched 2026-10-02, the other leagues
+    // 2026-10-03); the roster file may be re-read later (see the athleteId join below), never earlier.
+    expect(raw.capturedAt <= base.fetchedAt.slice(0, 10)).toBe(true);
   });
 
   it('joins every record onto a MaxPreps row of the same team, by athleteId', () => {
@@ -117,6 +148,9 @@ describe('data/rosters-enrichment.json', () => {
     expect(conflicts.length).toBeGreaterThanOrEqual(10);
     for (const { t, p, c } of conflicts) {
       expect(c.kept, `${t} ${p.fullName} ${c.field}`).not.toBe(c.other);
+      // https, with one pinned exception: Lick-Wilmerding's roster host (m.lwhs.org) serves a
+      // certificate that does not cover it, so its page can only be cited over http.
+      if (t === 'lick-wilmerding' && c.source.startsWith('http://m.lwhs.org/')) continue;
       expect(c.source).toMatch(/^https:\/\//);
     }
     // Monta Vista's school profiles disagree with MaxPreps on six numbers; MaxPreps' stay.
@@ -136,13 +170,18 @@ describe('data/rosters-enrichment.json', () => {
           expect(v.source).toMatch(/^https:\/\//);
           expect(['high', 'medium', 'low']).toContain(v.confidence);
         }
-        if (e.grade?.derived) expect(e.grade.kind).toBe('maxpreps-career');
+        // A derived grade is computed from a dated class year on MaxPreps' career page. Two teams
+        // (2026-10-03) have one from another dated source, pinned here rather than allowed anywhere.
+        if (e.grade?.derived) {
+          expect(['maxpreps-career', ...(DERIVED_FROM_OTHER[t.slug] ?? [])], `${t.slug} ${e.fullName}`).toContain(e.grade.kind);
+        }
       }
     }
   });
 
-  it('what it adds, as captured on 2026-10-02', () => {
-    const all = raw.teams.flatMap((t) => t.players);
+  it('what it adds for SCVAL, as captured on 2026-10-02', () => {
+    const scval = raw.teams.filter((t) => SCVAL_SLUGS.has(t.slug));
+    const all = scval.flatMap((t) => t.players);
     const n = (k: 'grade' | 'positions' | 'jersey' | 'height') => all.filter((p) => p[k] !== null).length;
     expect(n('grade')).toBe(133);
     expect(n('positions')).toBe(9);
@@ -150,7 +189,7 @@ describe('data/rosters-enrichment.json', () => {
     expect(n('jersey')).toBe(0);
     expect(all.filter((p) => p.level !== null).length).toBe(56);
     // The level split only exists for Los Gatos, whose MaxPreps list is the whole program.
-    expect(raw.teams.filter((t) => t.players.some((p) => p.level !== null)).map((t) => t.slug)).toEqual(['los-gatos']);
+    expect(scval.filter((t) => t.players.some((p) => p.level !== null)).map((t) => t.slug)).toEqual(['los-gatos']);
     const lg = raw.teams.find((t) => t.slug === 'los-gatos')!;
     expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(27);
     expect(lg.players.filter((p) => p.level === 'jv').length).toBe(29);
@@ -254,8 +293,10 @@ describe('recruiting profiles', () => {
     expect(loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
   });
 
-  it('what was found, as captured on 2026-10-02', () => {
-    const players = raw.teams.flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
+  it('what was found for SCVAL, as captured on 2026-10-02', () => {
+    const players = raw.teams
+      .filter((t) => SCVAL_SLUGS.has(t.slug))
+      .flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
     const profiles = players.flatMap((p) => p.profiles);
     expect(profiles.length).toBe(70);
     expect(players.length).toBe(56);
@@ -269,11 +310,89 @@ describe('recruiting profiles', () => {
     expect(lizzie.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits']);
   });
 
+  it('what was found for BVAL, PCAL and MCAL, as captured on 2026-10-03', () => {
+    const others = raw.teams.filter((t) => !SCVAL_SLUGS.has(t.slug));
+    expect(others.length).toBe(28);
+    // Every team of the three leagues was looked at: each lists a source or a note.
+    for (const t of others) expect(t.sources.length + t.notes.length, t.slug).toBeGreaterThan(0);
+    const fills = (kind: 'grade' | 'positions' | 'jersey' | 'height') =>
+      others.flatMap((t) => t.players).filter((p) => p[kind] !== null).length;
+    expect([fills('grade'), fills('positions')]).toEqual([85, 5]);
+    // Jersey numbers and heights are never filled for these leagues (the README says so).
+    expect([fills('jersey'), fills('height')]).toEqual([0, 0]);
+    // A position MaxPreps lists only for the previous season is never filled.
+    for (const t of others) {
+      for (const p of t.players) {
+        if (p.positions) expect(p.positions.kind, `${t.slug} ${p.fullName}`).not.toBe('maxpreps-career');
+      }
+    }
+    const profiles = others.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    expect(profiles.length).toBe(28);
+    expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(26);
+  });
+
   it('reaches the merged view', () => {
     for (const t of raw.teams) {
       const merged = new Map(getEnrichedTeamRoster(t.slug)!.players.map((p) => [p.athleteId, p]));
       for (const e of t.players) expect(merged.get(e.athleteId)!.profiles).toEqual(e.profiles);
     }
+  });
+});
+
+describe('the load-time rules hold for every league, not just SCVAL', () => {
+  // A rosters file in which a BVAL, a PCAL and an MCAL team carry rows (copied from SCVAL's), so
+  // the overlay's join, blank-only and conflict rules can be exercised on them.
+  // Their real overlay records are cleared first: the copied rows carry other athlete ids.
+  const cleanRaw = structuredClone(raw);
+  for (const slug of ['leigh', 'del-mar', 'redwood']) cleanRaw.teams.find((t) => t.slug === slug)!.players = [];
+  const donor = base.teams.find((t) => t.slug === 'cupertino')!;
+  const blank = donor.players.find((p) => p.grade === null && p.athleteId !== null)!;
+  const rosters = structuredClone(base);
+  for (const slug of ['leigh', 'del-mar', 'redwood']) {
+    const t = rosters.teams.find((x) => x.slug === slug)!;
+    Object.assign(t, {
+      status: 'ok',
+      maxprepsTeamId: t.teamId,
+      athleteCount: donor.athleteCount,
+      staffCount: donor.staffCount,
+      players: donor.players,
+      fetchedAt: base.fetchedAt,
+    });
+  }
+  // One row that already has a grade, so an overlay record for it would overwrite MaxPreps.
+  const withGrade = base.teams.find((t) => t.slug === 'st-ignatius')!.players.find((p) => p.grade !== null)!;
+  rosters.teams.find((t) => t.slug === 'redwood')!.players.push(withGrade);
+  rosters.teams.find((t) => t.slug === 'redwood')!.athleteCount! += 1;
+  rosters.counts = countRosters(rosters.teams);
+  const sourced = { kind: 'school-site', source: 'https://example.com/roster', confidence: 'high', note: null } as const;
+  const record = (grade: unknown) => ({
+    athleteId: blank.athleteId!, fullName: blank.fullName, sourceName: null, level: null, levelSource: null,
+    grade, positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
+  });
+
+  it('loads a record that fills a blank on a team of any league', () => {
+    for (const slug of ['leigh', 'del-mar', 'redwood']) {
+      const file = structuredClone(cleanRaw);
+      file.teams.find((t) => t.slug === slug)!.players.push(record({ value: 11, derived: false, ...sourced }) as never);
+      expect(loadError(file, rosters), slug).toBe('');
+    }
+  });
+
+  it('refuses a record for a player the team does not list, or one that would overwrite MaxPreps', () => {
+    const stranger = structuredClone(cleanRaw);
+    stranger.teams.find((t) => t.slug === 'leigh')!.players.push(
+      { ...record({ value: 11, derived: false, ...sourced }), athleteId: 'not-an-athlete' } as never,
+    );
+    expect(loadError(stranger, rosters)).toMatch(/not a MaxPreps row of this team/);
+    // A record for a team whose roster is still pending has no row to join to.
+    const pending = structuredClone(cleanRaw);
+    pending.teams.find((t) => t.slug === 'carmel')!.players.push(record({ value: 11, derived: false, ...sourced }) as never);
+    expect(loadError(pending, rosters)).toMatch(/not a MaxPreps row of this team/);
+    const overwrite = structuredClone(cleanRaw);
+    overwrite.teams.find((t) => t.slug === 'redwood')!.players.push(
+      { ...record({ value: 10, derived: false, ...sourced }), athleteId: withGrade.athleteId!, fullName: withGrade.fullName } as never,
+    );
+    expect(loadError(overwrite, rosters)).toMatch(/grade would overwrite a MaxPreps value/);
   });
 });
 
@@ -319,12 +438,17 @@ describe('lib/rosters.ts merged view', () => {
     expect(lg.coaches.map((c) => c.role)).toContain('Head Coach');
   });
 
-  it('coverage after the overlay', () => {
-    const all = getAllEnrichedRosters().flatMap((t) => t.players);
-    expect(all.length).toBe(getRosters().counts.players);
-    expect(all.filter((p) => p.grade !== null).length).toBe(getRosters().counts.withGrade + 133);
-    expect(all.filter((p) => p.position !== null).length).toBe(getRosters().counts.withPosition + 9);
-    expect(all.filter((p) => p.height !== null).length).toBe(getRosters().counts.withHeight + 23);
-    expect(getRosterEnrichment().teams.length).toBe(SCVAL_TEAMS.length);
+  it('coverage after the overlay, for SCVAL', () => {
+    const scvalBase = getRosters().teams.filter((t) => SCVAL_SLUGS.has(t.slug)).flatMap((t) => t.players);
+    const all = getAllEnrichedRosters().filter((t) => SCVAL_SLUGS.has(t.slug)).flatMap((t) => t.players);
+    expect(all.length).toBe(scvalBase.length);
+    const n = (ps: ReadonlyArray<{ grade: number | null; position: string | null; height: string | null }>, k: 'grade' | 'position' | 'height') =>
+      ps.filter((p) => p[k] !== null).length;
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 133);
+    expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
+    expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
+    expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);
+    // Every team of every league has a merged view, whatever was found for it.
+    expect(getAllEnrichedRosters()).toHaveLength(TEAMS.length);
   });
 });

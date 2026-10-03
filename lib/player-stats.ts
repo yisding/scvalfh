@@ -7,8 +7,9 @@
  * scope, so a bad file fails at import time rather than half-way through a render.
  * `SCVAL_PLAYER_STATS` swaps in another file through node:fs (Node only; never set it on a Worker).
  *
- * SCVAL-only (SPEC §0.2 item 12): the file holds the HISTORY_LEAGUE teams, so getTeamPlayerStats
- * returns undefined for a BVAL, PCAL or MCAL slug, and the team page shows no stats section.
+ * The file holds one entry per registry team (43, all four leagues), so getTeamPlayerStats
+ * returns undefined only for a string that is not a registry slug. A team no run has covered yet is
+ * status 'pending'; one whose coach entered nothing is status 'none'.
  */
 
 import { readFileSync } from 'node:fs';

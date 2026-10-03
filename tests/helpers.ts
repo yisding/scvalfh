@@ -193,9 +193,10 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
 }
 
 /**
- * Build data/player-stats.json from the 2026-10-02 stats captures by running the real script, and
- * return it. Tests that assert specific numbers read this, never the committed file, which the
- * scheduled refresh rewrites whenever a coach enters a game.
+ * Build data/player-stats.json from the 2026-10-02 stats captures (the SCVAL teams') by running the
+ * real script, and return it; every other team is 'pending'. Tests that assert specific numbers
+ * read this, never the committed file, which the scheduled refresh rewrites whenever a coach
+ * enters a game.
  */
 export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'): PlayerStatsFile {
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
@@ -205,6 +206,9 @@ export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'):
       path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
       '--fixtures',
       FIXTURE_DIR,
+      // The captures are SCVAL's; the other leagues' teams come out as 'pending'.
+      '--leagues',
+      'scval',
       '--out',
       out,
       '--fetched-at',

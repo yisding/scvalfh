@@ -1,42 +1,59 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every SCVAL team's MaxPreps roster page into data/rosters.json (SPEC §1.1j).
+ * Fetch every registry team's MaxPreps roster page into data/rosters.json (SPEC §1.1j): all four
+ * leagues, 43 teams.
  *
- *   pnpm fetch-rosters                     live: one roster page per SCVAL team (rosters stay SCVAL-only)
+ *   pnpm fetch-rosters                     live: one roster page per registry team (43)
+ *   pnpm fetch-rosters --leagues scval,bval  only these leagues; the others keep their previous rows
  *   pnpm fetch-rosters --fixtures <dir>    offline: read roster-<slug>.html captures
+ *   pnpm fetch-rosters --capture <dir>     live, and save each page read as <dir>/roster-<slug>.html
  *   pnpm fetch-rosters --out <path>        write somewhere else
- *   pnpm fetch-rosters --dry-run           parse and report, write nothing
+ *   pnpm fetch-rosters --dry-run           parse and report, write nothing (captures included)
+ *   a run whose rows equal the previous file's apart from fetchedAt / error text leaves it as it was
  *   pnpm fetch-rosters --fetched-at <iso>  pin the stamp (reproducible fixture builds)
  *
  * Not part of the twice-daily cron: a roster changes a few times a season and each page is ~250 KB,
  * so this runs by hand or from a weekly schedule. The budget is the MaxPreps client's own
  * (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
  *
- * A partial run still publishes: a team whose page fails to fetch or to parse keeps the previous
- * file's rows with status 'carried-forward' (or 'error' when there is nothing to carry), and the
- * process exits 1 so a scheduler notices. The parser throws on any sign of positional drift, which
- * lands here as that same per-team failure — never as a wrong grade beside a name.
+ * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
+ * whose page fails to fetch or to parse keeps the previous file's rows with status
+ * 'carried-forward' (or 'error' when there is nothing to carry), and never stops another team or
+ * another league from being read. A team outside a `--leagues` run keeps the previous file's row
+ * untouched (or is 'pending' when the file has none). The process exits 1 when a team the run
+ * covered failed, so a scheduler notices; the report ends with one line per league. The parser
+ * throws on any sign of positional drift, which lands here as that same per-team failure — never
+ * as a wrong grade beside a name.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { MaxPrepsClient } from "../lib/sources/maxpreps";
-import { parseRosterPage, rosterUrl } from "../lib/sources/maxpreps-roster";
 import {
+  formatLeagueSummary,
+  inScope,
+  parseLeaguesFlag,
+  stableStringify,
+  summarizeByLeague,
+} from "../lib/fetch-scope";
+import { MaxPrepsClient } from "../lib/sources/maxpreps";
+import { parseRosterPage, pendingRoster, rosterUrl } from "../lib/sources/maxpreps-roster";
+import {
+  RostersPartialSchema,
   RostersSchema,
   countRosters,
+  rostersContentKey,
   type Rosters,
   type TeamRoster,
 } from "../lib/rosters-schema";
 import { SEASON_YEAR } from "../lib/season";
-import { teamsInLeague } from "../lib/teams";
-
-/** Rosters stay SCVAL-only (SPEC §7.13): the other leagues in the registry have no roster capture. */
-const ROSTER_TEAMS = teamsInLeague("scval");
+import { TEAMS } from "../lib/teams";
+import type { LeagueId } from "../lib/types";
 
 interface Args {
   fixtures: string | null;
+  capture: string | null;
+  leagues: LeagueId[] | null;
   out: string;
   dryRun: boolean;
   fetchedAt: string | null;
@@ -45,6 +62,8 @@ interface Args {
 function parseArgs(argv: readonly string[]): Args {
   const out: Args = {
     fixtures: null,
+    capture: null,
+    leagues: null,
     out: path.join(process.cwd(), "data", "rosters.json"),
     dryRun: false,
     fetchedAt: null,
@@ -58,36 +77,26 @@ function parseArgs(argv: readonly string[]): Args {
       return v;
     };
     if (arg === "--fixtures") out.fixtures = path.resolve(next());
+    else if (arg === "--capture") out.capture = path.resolve(next());
+    else if (arg === "--leagues") out.leagues = parseLeaguesFlag(next(), arg);
     else if (arg === "--out") out.out = path.resolve(next());
     else if (arg === "--dry-run") out.dryRun = true;
     else if (arg === "--fetched-at") out.fetchedAt = next();
     else throw new Error(`unknown flag: ${arg}`);
   }
+  if (out.fixtures && out.capture) throw new Error("--capture records live pages; it cannot be combined with --fixtures");
   return out;
 }
 
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === "object") {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
-
-/** The previous file, if it exists and still validates; its rows are what a failed team keeps. */
+/**
+ * The previous file, if it exists and still validates; its rows are what a failed or out-of-scope
+ * team keeps. Read with the partial schema so a file written before every team was in the registry
+ * (the 15 SCVAL teams) still counts: the teams it lacks are simply pending.
+ */
 function loadPrevious(file: string): Rosters | null {
   if (!existsSync(file)) return null;
   try {
-    const parsed = RostersSchema.safeParse(
+    const parsed = RostersPartialSchema.safeParse(
       JSON.parse(readFileSync(file, "utf8")) as unknown,
     );
     return parsed.success ? parsed.data : null;
@@ -97,6 +106,7 @@ function loadPrevious(file: string): Rosters | null {
 }
 
 const NOTES = [
+  "One entry per registry team, all four leagues (SCVAL, BVAL, PCAL, MCAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
   "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
   "Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.",
   "Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.",
@@ -112,11 +122,19 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-rosters: offline, from ${args.fixtures}`
-      : `fetch-rosters: ${ROSTER_TEAMS.length} MaxPreps roster pages`,
+      : `fetch-rosters: ${TEAMS.filter((t) => inScope(t, args.leagues)).length} MaxPreps roster pages` +
+          (args.leagues ? ` (${args.leagues.join(", ")} only)` : ""),
   );
+  // --dry-run writes nothing, --capture included.
+  const capture = args.dryRun ? null : args.capture;
+  if (capture) mkdirSync(capture, { recursive: true });
 
   const teams: TeamRoster[] = await Promise.all(
-    ROSTER_TEAMS.map(async (team): Promise<TeamRoster> => {
+    TEAMS.map(async (team): Promise<TeamRoster> => {
+      // A league outside this run is not fetched: its previous row stays as it was.
+      if (!inScope(team, args.leagues)) {
+        return previous?.teams.find((t) => t.slug === team.slug) ?? pendingRoster(team);
+      }
       const url = rosterUrl(team);
       const base = {
         slug: team.slug,
@@ -135,6 +153,9 @@ async function main(): Promise<number> {
         } else {
           if (!url) throw new Error("no MaxPreps team URL in the registry");
           html = (await client.text(url)).data;
+          if (capture) {
+            writeFileSync(path.join(capture, `roster-${team.slug}.html`), html, "utf8");
+          }
         }
         // A team with no data coverage has a placeholder registry id (no standings row to read a
         // GUID from), so the page's own id cannot be asserted against it; every other must match.
@@ -158,7 +179,9 @@ async function main(): Promise<number> {
         const error = err instanceof Error ? err.message : String(err);
         console.warn(`WARN ${team.slug}: ${error}`);
         const prior = previous?.teams.find((t) => t.slug === team.slug);
-        if (prior && prior.players.length) {
+        // Any row that was actually read (ok, empty, or itself carried forward) is still true: an
+        // empty roster stays "MaxPreps lists no players", not "could not be read".
+        if (prior && prior.status !== 'error' && prior.status !== 'pending') {
           return {
             ...prior,
             ...base,
@@ -217,21 +240,32 @@ async function main(): Promise<number> {
         (t.error ? ` · ERROR ${t.error}` : ""),
     );
   }
+  const byLeague = summarizeByLeague(teams, args.leagues);
+  console.log("");
+  for (const l of byLeague) console.log(formatLeagueSummary(l));
+  // Only teams this run covered decide the exit code: a league left out of the run is not a failure.
+  const failed = byLeague.reduce((n, l) => n + l.failed, 0);
   const c = rosters.counts;
   console.log(
     `\n${c.players} players on ${c.teams} teams · ${c.withGrade} with a grade · ` +
       `${c.withPosition} with a position · ${c.withJersey} with a number · ` +
-      `${c.withHeight} with a height · ${c.captains} captains · ${c.errors} team(s) failed`,
+      `${c.withHeight} with a height · ${c.captains} captains · ${failed} team(s) failed this run`,
   );
 
   if (args.dryRun) {
     console.log("\ndry run: nothing written");
-    return c.errors ? 1 : 0;
+    return failed ? 1 : 0;
+  }
+  if (previous && rostersContentKey(previous) === rostersContentKey(validated.data)) {
+    console.log(
+      `\nno change since ${previous.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
+    );
+    return failed ? 1 : 0;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
   writeFileSync(args.out, stableStringify(rosters), "utf8");
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return c.errors ? 1 : 0;
+  return failed ? 1 : 0;
 }
 
 main()

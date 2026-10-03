@@ -1,4 +1,7 @@
-/** The MaxPreps roster page: the positional key list, the rendered-table cross-check, and drift. */
+/**
+ * The MaxPreps roster page: the positional key list, the rendered-table cross-check, and drift.
+ * The 15 captures are SCVAL's, the first league captured; every league's page is the same page.
+ */
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -13,9 +16,11 @@ import {
   ROSTER_ROW_LENGTH,
   careerIdFromUrl,
   parseRosterPage,
+  pendingRoster,
   parseRosterTable,
   rosterUrl,
 } from '../lib/sources/maxpreps-roster';
+import { RostersSchema, countRosters } from '../lib/rosters-schema';
 import { SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';
@@ -298,5 +303,33 @@ describe('maxpreps roster: drift is loud', () => {
 
   it('a page without __NEXT_DATA__ throws', () => {
     expect(() => parseIt('<html><body>maintenance</body></html>')).toThrow(/__NEXT_DATA__/);
+  });
+});
+
+describe('every league has a roster page URL and a claim-free placeholder', () => {
+  it('rosterUrl is the team page plus roster/, for all 43 teams', () => {
+    expect(TEAMS).toHaveLength(43);
+    for (const team of TEAMS) {
+      expect(rosterUrl(team), team.slug).toBe(`${team.external.maxprepsTeamUrl!.replace(/\/+$/, '')}/roster/`);
+    }
+  });
+
+  it('pendingRoster is a valid status-pending entry for every team, and fills a whole file', () => {
+    const teams = TEAMS.map((t) => pendingRoster(t));
+    for (const t of teams) {
+      expect(t.status).toBe('pending');
+      expect(t.players).toEqual([]);
+      expect(t.fetchedAt).toBeNull();
+      expect(t.athleteCount).toBeNull();
+      expect(t.rosterUrl).toBe(rosterUrl(getTeamBySlug(t.slug)!));
+    }
+    const file = {
+      season: '26-27',
+      fetchedAt: '2026-10-02T00:00:00.000Z',
+      source: { id: 'maxpreps-html' as const, builtBy: 'test', notes: [] },
+      teams,
+      counts: countRosters(teams),
+    };
+    expect(RostersSchema.safeParse(file).success).toBe(true);
   });
 });
