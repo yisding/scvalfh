@@ -100,7 +100,9 @@ export interface GameModel {
    * A FINAL's result links — the MaxPreps box score (accent) and the NFHS stream — which the page
    * prints directly under the recap, the first place a reader looks for them after the score
    * (F-73/F-85). Empty for every other status. Each link has ONE home on the page: GameDetails
-   * skips whatever is in this list, and GameElsewhere carries no per-game links at all.
+   * skips whatever is in this list, and GameElsewhere carries no per-game links at all — except a
+   * score conflict, whose SourceDisagreement note cites both sources' pages side by side, so the
+   * MaxPreps page can appear there too.
    */
   resultLinks: GameLink[];
   display: GameDisplay;
@@ -193,14 +195,23 @@ export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
   return record;
 }
 
-function subFor(record: RecordAsOf | undefined, team: Team | undefined): string | null {
+function subFor(
+  record: RecordAsOf | undefined,
+  team: Team | undefined,
+  standing: Standing | undefined,
+): string | null {
   if (!team) return null;
   const division = DIVISION_LABELS[team.division];
-  if (!record || record.gp === 0) {
-    // Never 0-0-0 for a team the sources have no results for (DESIGN §8) — including, as of an
-    // early-season game, a team that had not played a league game yet.
-    return `No league results reported · ${division}`;
-  }
+  // The two no-record lines are longer than any record, so at phone widths they wrap: a no-break
+  // space inside the division keeps "El Camino" / "De Anza" whole and moves the break to the "·".
+  // Only here — the record line is compared to a plain-space string (game-model-asof test 1).
+  const unbroken = division.replace(' ', '\u00a0');
+  // DESIGN §8's missing-data line is for a team the sources have NOTHING for. Never 0-0-0.
+  if (!standing?.hasReportedResults) return `No league results reported · ${unbroken}`;
+  // Results exist, just none by this date — an early-season non-league final, or a first league
+  // game still to play. Saying "not reported" here read as missing data about a team that went on
+  // to post a record; FormGoingIn words the same case as "no league result before this date".
+  if (!record || record.gp === 0) return `No league results yet · ${unbroken}`;
   return `${recordString(record)} ${division}`;
 }
 
@@ -267,7 +278,7 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
     label: labelFor(name, team),
     team,
     standing,
-    sub: subFor(recordAsOf(game, side), team),
+    sub: subFor(recordAsOf(game, side), team, standing),
     formBefore: entries,
     playedBefore,
     outcome,

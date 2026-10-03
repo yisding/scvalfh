@@ -17,7 +17,8 @@ import type { GameModel } from './game-model';
  * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
  *
  * A FINAL's box score and stream are not here: the page prints them under the recap
- * (`GameModel.resultLinks`, F-73), and each link has one home on the page.
+ * (`GameModel.resultLinks`, F-73), and each link has one home on the page (the one exception is
+ * SourceDisagreement's paired citation on a score conflict).
  *
  * Four honesty rules live here:
  *

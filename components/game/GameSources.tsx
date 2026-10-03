@@ -14,7 +14,9 @@ import type { GameModel } from './game-model';
  * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
  * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
  * The links for THIS contest are not repeated here (F-71c): a final's box score and stream sit
- * under the recap, and every other per-game link is in DETAILS — each link has one home.
+ * under the recap, and every other per-game link is in DETAILS. Each link has one home, except this
+ * file's own pair: a disagreement cites both sources even when the box score is also linked under
+ * the recap.
  */
 
 export interface SourceDisagreementProps {

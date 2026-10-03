@@ -135,7 +135,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         The tablet band is one column instead, with the
         DETAILS facts laid out 3-up across the full width (GameDetails).
       */}
-      <div className="mt-2 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
+      <div className="mt-3 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
         <div className="lg:col-span-2 lg:row-start-1">
           <h1 className="sr-only">{gameTitle(model)}</h1>
           <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
