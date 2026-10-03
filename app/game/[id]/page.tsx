@@ -182,7 +182,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         The tablet band is one column instead, with the DETAILS facts laid out 3-up across the full
         width (GameDetails).
       */}
-      <div className="mt-2 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
+      <div className="mt-3 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
         <div className="lg:col-span-2 lg:row-start-1">
           <h1 className="sr-only">{gameTitle(model)}</h1>
           <p className="m-0 mb-2 text-meta font-medium text-ink-3">{model.contextLabel}</p>
@@ -201,8 +201,9 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           ) : null}
           {/* A final's result links live HERE, directly under the recap (F-73/F-85): on a phone they
               are above the tab bar rather than at the foot of the DETAILS card, and they appear
-              once on the page — GameDetails and GameElsewhere both leave them out. The accent
-              pill is the source the score came from. */}
+              once on the page (GameDetails and GameElsewhere leave them out; only the
+              disagreement notes below cite a source page again). The accent pill is the source
+              the score came from. */}
           {resultLinks.length > 0 ? (
             <p className={game.recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
               {resultLinks.map((link) => (

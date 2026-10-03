@@ -39,7 +39,8 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
  *
  * The copy does not claim these seven are every page on the site — there are hundreds of team,
  * game and day pages — only that each of those is reachable from one of them, which is true.
- * Seven cards run two-up from sm and four-up from lg (a row of four, then three).
+ * Seven cards run two-up from sm and four-up from lg (a row of four, then three). Each card is
+ * h-full so a row stays even when one description wraps in the narrower four-up column.
  */
 export default function NotFound() {
   return (
@@ -55,7 +56,7 @@ export default function NotFound() {
             <Link
               href={l.href}
               prefetch={false}
-              className="sx-card sx-lift block min-h-11 p-4 no-underline"
+              className="sx-card sx-lift block h-full min-h-11 p-4 no-underline"
             >
               <span className="block text-body font-semibold text-ink">{l.name}</span>
               <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>

@@ -20,8 +20,9 @@ import type { StatusGroup } from './standings-view';
  * nothing here is carried by color or by jargon (DESIGN §6.5, channels 1 and 2). Only the
  * automatic-qualifier chip takes the accent wash, because there the accent already means "berth".
  * Beside the chip the term keeps the rung's verbatim legend from config (`statusLegend`, SPEC §5.7
- * / §10.3: its place range, dates, hosts and pairings). The league's qualification rule is cited
- * once per page.
+ * / §10.3: its place range, dates, hosts and pairings), so a play-in row also says what the game
+ * decides — the one consequence its chip cannot. The league's qualification rule is cited once
+ * per page.
  *
  * Each team is a pill link to its page with its place beside the name, so the band reads as a
  * row of facts rather than a `·`-separated sentence.
@@ -67,14 +68,22 @@ export function PlayoffStatusBand({
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
-            term column is 22rem there: at 11rem a legend such as "4th place — play-in Fri Oct 30
-            for the SCVAL 7th berth" broke into five lines beside a mostly empty pill column. From
-            lg the band shares its row with the Notes inset, so the term sits above its teams
-            instead. The term wraps (`flex-wrap`), so a long legend drops under its chip. */}
+            term column is 16rem there (256px of the 672px card at 768), a balance between two
+            failures. Wider (22rem) left 296px of pills, so a three-team automatic-qualifier row
+            broke onto two rows beside a short term; narrower (11rem) broke a legend such as "4th
+            place — play-in Fri Oct 30 for the SCVAL 7th berth" into five lines beside a mostly
+            empty pill column. At 16rem the automatic-qualifier legends ("Places 1-3 — automatic
+            CCS qualifier", ~240px) sit on one line under their chip, the pills get ~392px, which
+            holds three typical pills (~340px), and the longest legends (~550px, BVAL's play-in
+            and PCAL's at-large route) take three lines under the chip. The term wraps
+            (`flex-wrap`), which also absorbs a larger browser font. A fixed track, not `auto`:
+            each row is its own grid, and a fixed width keeps the pill column aligned across
+            rows. From lg the band shares its row with the Notes inset, so the term sits above
+            its teams instead. */}
         {groups.map((group) => (
           <div
             key={group.status}
-            className="grid gap-3 py-3 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
+            className="grid gap-3 py-3 md:grid-cols-[minmax(0,16rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's

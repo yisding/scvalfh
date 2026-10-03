@@ -18,7 +18,8 @@ import type { GameModel } from './game-model';
  *
  * A FINAL's result links (the box score or si.com game page, and the stream) are not here: the
  * page prints them under the recap (`GameModel.resultLinks`, F-73), and each link has one home on
- * the page.
+ * the page (the exception is the disagreement notes under the scoreboard — GameSources'
+ * SourceDisagreement and ResultFlagConflict — which link the source pages they cite).
  *
  * Four honesty rules live here:
  *

@@ -94,4 +94,21 @@ describe('recordAsOf', () => {
       }
     }
   });
+
+  it("keeps 'not reported' for teams with no results — before a team's first league game it says 'yet'", () => {
+    let yet = 0;
+    for (const game of d.getGames()) {
+      const model = m.buildGameModel(ids.gameIdToParam(game.contestId));
+      for (const side of model ? [model.away, model.home] : []) {
+        if (side.sub === null) continue;
+        if (side.standing?.hasReportedResults) {
+          // DESIGN §8's missing-data line on a team that later posted a record read as a site gap.
+          expect(side.sub.startsWith('No league results reported'), game.contestId).toBe(false);
+        }
+        if (side.sub.startsWith('No league results yet')) yet += 1;
+      }
+    }
+    // Early-season non-league finals exist in the corpus; a vacuous pass is a failure.
+    expect(yet).toBeGreaterThan(0);
+  });
 });

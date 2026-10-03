@@ -28,7 +28,10 @@ import type { ComparisonView, MismatchNote, MissingRowView } from './standings-v
  *        league ranks by points (`rankRule`, from the league's citations);
  *      - a lone place difference reads "3rd here, 4th on MaxPreps", and only claims the
  *        win-percentage reason when the win percentages involved actually explain it;
- *      - a place we hold LEVEL says so, with what settles it: "level 7th here (<levelReason>)".
+ *      - a place we hold LEVEL says so, in the US sports-page words the table's `T` stands for:
+ *        "tied for 7th here; MaxPreps puts it 8th". It does not say what settles the tie: the
+ *        tied group's own note (`tiebreak.note`, item 1, earlier in this same list) already cites
+ *        the league's last step — SCVAL's coin flip, MCAL's play-in — so it is said once.
  *  4. Division-specific footnotes (league games played with no score; no league results yet).
  *  5. `Scheduled per <SHORT>` and one row of links: the cross-check log, MaxPreps' table, the
  *     official schedule (labelled by its source: PDF or Google Doc). They are standalone actions
@@ -65,8 +68,12 @@ export interface StandingsNotesProps {
   scheduledPer: string;
   /** `<SHORT> ranks by points (<citation>), and so do we.` (standings-view `rankRule`). */
   rankRule: string;
-  /** What settles a level place, for "level 7th here (…)" (standings-view `levelReason`). */
-  levelReason: string;
+  /**
+   * What settles a level place (standings-view `levelReason`). Accepted but not printed: the
+   * mismatch line says only "tied for 7th here", because the tied group's own note in this list
+   * already names the league's last step (see the docblock, item 3).
+   */
+  levelReason?: string;
   className?: string;
 }
 
@@ -217,12 +224,10 @@ function TeamSentence({
   line,
   rows,
   rankRule,
-  levelReason,
 }: {
   line: FlagLine;
   rows: readonly StandingsRowData[];
   rankRule: string;
-  levelReason: string;
 }) {
   const p = line.place;
   const shared = rows.find((r) => r.team.slug === line.slug)?.standing.tiebreak.shared ?? false;
@@ -233,7 +238,7 @@ function TeamSentence({
       {p ? (
         shared ? (
           <>
-            level {ordinal(p.ours)} here ({levelReason})
+            tied for {ordinal(p.ours)} here
             {p.theirs === null ? '; MaxPreps gives no place' : `; MaxPreps puts it ${ordinal(p.theirs)}`}
             .
           </>
@@ -315,7 +320,6 @@ export function StandingsNotes({
   officialSchedule,
   scheduledPer,
   rankRule,
-  levelReason,
   className,
 }: StandingsNotesProps) {
   const items = toItems(byTeam(mismatches));
@@ -366,12 +370,7 @@ export function StandingsNotes({
                   </>
                 ) : (
                   <>
-                    <TeamSentence
-                      line={item.line}
-                      rows={rows}
-                      rankRule={rankRule}
-                      levelReason={levelReason}
-                    />
+                    <TeamSentence line={item.line} rows={rows} rankRule={rankRule} />
                     <TeamLinks lines={[item.line]} sourceUrl={sourceUrl} />
                   </>
                 )}

@@ -156,18 +156,32 @@ function countsInLeague(game: Game, league: LeagueId): boolean {
  * can say when league play resumes. Read from EVERY upcoming playable game of the league rather
  * than the slate's own day, so a long run of non-league dates cannot hide it. `games` is that
  * day's league games only, in kickoff order; `total` counts every contest of the league that day,
- * which is what the panel's other `All N on <date>` counts and the /scores page list.
+ * which is what the panel's other `All N on <date>` counts and the /scores page list; `postseason`
+ * is how many of those are postseason contests (no table, a bracket), so the card can split the
+ * rest the way its own meta does.
  */
-function nextLeagueDay(league: LeagueId, after: string, today: string): HomeDay | null {
+export interface NextLeagueDay extends HomeDay {
+  postseason: number;
+  /** Non-league contests that day (neither counted in a table nor postseason), every status. */
+  nonLeague: number;
+}
+
+function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeagueDay | null {
   const date = getUpcoming(Number.MAX_SAFE_INTEGER, undefined, { league }).find(
     (g) => countsInLeague(g, league) && g.dateKey > after,
   )?.dateKey;
   if (!date) return null;
   const day = leagueDay(league, date, today, { playable: true });
+  const all = getGames({ league, date });
   return {
     ...day,
     games: day.games.filter((g) => countsInLeague(g, league)),
-    total: getGames({ league, date }).length,
+    total: all.length,
+    postseason: all.filter((g) => g.countsFor === null && g.postseason !== null).length,
+    // Counted directly rather than as `total − league − postseason`: `games` holds only the
+    // PLAYABLE league games, so a league game already final that day would otherwise be
+    // mis-counted as non-league.
+    nonLeague: all.filter((g) => g.countsFor === null && g.postseason === null).length,
   };
 }
 
@@ -557,7 +571,7 @@ export interface HomeLeaguePanel {
    * The first day after the slate's with a league game, so a slate of non-league games can say
    * when league play resumes (`NextSlate`). Null when there is no slate or no league game after it.
    */
-  nextLeague: HomeDay | null;
+  nextLeague: NextLeagueDay | null;
   /** The first league contest of the season, for an empty "Latest scores" block. */
   firstGame: string | null;
   divisions: MiniDivisionView[];

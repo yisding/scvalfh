@@ -261,7 +261,10 @@ export default function PlayoffsPage() {
       </p>
       <LeagueSwitcher mode="anchor" label="Leagues" leagues={chips} hrefs={hrefs} className="mt-4" />
 
-      {/* 4. The field: numbers only, ink only (no league hue). */}
+      {/* 4. The field: numbers only, ink only (no league hue). Each label names its unit, "berths"
+          (not "places", which on this page means league-table places). It keeps the "holds <n> of 16"
+          shape that scripts/assert-copy.ts and the copy-honesty test match, so a meter that ever
+          reached an MCAL page would still be caught. */}
       <section id="field" className="mt-section md:mt-section-lg">
         <SectionHeader kicker="The field" meta={`${field.total} teams`} />
         <div className="sx-card flex flex-col gap-6 p-5">
@@ -270,7 +273,7 @@ export default function PlayoffsPage() {
               key={l.leagueId}
               claimed={l.auto}
               total={field.total}
-              label={`${l.shortName} holds ${l.auto} of ${field.total}`}
+              label={`${l.shortName} holds ${l.auto} of ${field.total} berths`}
             />
           ))}
         </div>
