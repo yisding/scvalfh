@@ -251,7 +251,10 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
 
   it('the margin strip spans the division\'s scheduled league games, never a phantom 14-game season', async () => {
     const PHONE_CELL = 'flex flex-col items-center min-w-3 max-w-14 flex-1';
-    const DESKTOP_CELL = 'flex flex-col items-center min-w-6 max-w-14 flex-1';
+    // A slate longer than 14 (MCAL's 16) takes the 20px desktop floor at a 24px pitch, so it fits
+    // the 380px plot of a half-width card at 1024px (components/ui/MarginStrip.tsx).
+    const desktopCell = (slots: number) =>
+      `flex flex-col items-center ${slots > 14 ? 'min-w-5' : 'min-w-6'} max-w-14 flex-1`;
     let checked = 0;
     for (const division of leagues.ALL_DIVISIONS) {
       for (const team of data.getTeams(division.id)) {
@@ -261,7 +264,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
         const expected = Math.max(division.gamesPerTeam, v.marginEntries.length);
         const count = (cls: string) => html.split(`${cls}"`).length - 1;
         expect(count(PHONE_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
-        expect(count(DESKTOP_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
+        expect(count(desktopCell(v.leagueScheduled)), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
         checked += 1;
       }
     }
@@ -469,5 +472,123 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     expect(text, 'components/teams/TeamIdentity.tsx gp 0: place line').not.toContain(
       zeroed.v.placeScope(v.divisionSize, v.scopeLabel),
     );
+  });
+});
+
+/** The calendar day before a 'YYYY-MM-DD' key, by UTC arithmetic (no clock, no time zone). */
+function dayBefore(dateKey: string): string {
+  const d = new Date(`${dateKey}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+// Invariants over the corpus snapshot, checked for every registry team in all four leagues rather
+// than pinned per team, so a corpus refresh that moves a game keeps them meaningful.
+// `buildNextCard` takes `today` as a parameter, so the Today label is tested without the clock.
+describe('buildNextCard (components/teams/team-view.ts)', () => {
+  it("labels the next game 'Today · ' only on its own day", () => {
+    let checked = 0;
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      const next = v.next;
+      if (!next || next.isDateTba) continue;
+      checked += 1;
+      const onDay = view.buildNextCard(team, next, [], next.dateKey, v.league);
+      const dayAhead = view.buildNextCard(team, next, [], dayBefore(next.dateKey), v.league);
+      expect(onDay.kind, `components/teams/team-view.ts ${team.slug}`).toBe('game');
+      if (onDay.kind === 'none' || dayAhead.kind === 'none') continue;
+      expect(onDay.dateLabel.startsWith('Today \u00b7 '), `components/teams/team-view.ts ${team.slug}`).toBe(true);
+      expect(dayAhead.dateLabel.startsWith('Today'), `components/teams/team-view.ts ${team.slug}`).toBe(false);
+    }
+    expect(checked, 'the corpus has upcoming games to label').toBeGreaterThan(0);
+  });
+
+  it('prints no place when the sources disagree on the host and no venue is named', () => {
+    // The corpus may or may not hold such a game; when it has none the assertion holds vacuously.
+    const conflicted = data.getGames().filter((g) => g.provenance.hostConflict && !g.venue.name);
+    for (const game of conflicted) {
+      for (const slug of [game.home.slug, game.away.slug]) {
+        const team = slug ? data.getTeamBySlug(slug) : undefined;
+        if (!team) continue;
+        const card = view.buildNextCard(team, game, [], game.dateKey, view.leagueCopy(team.league));
+        expect(card.kind === 'game' ? card.place : 'not a game card', `components/teams/team-view.ts ${game.contestId}`).toBeNull();
+      }
+    }
+  });
+
+  it('names an official-only fixture dated before the next contest, and only one dated before it', () => {
+    let checked = 0;
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      const next = v.next;
+      if (!next || next.isDateTba) continue;
+      checked += 1;
+      // A fixture of the team's own league, at home against a school outside the registry, so the
+      // card must fall back to the schedule's own spelling of the opponent.
+      const fixture = (dateKey: string, time: string | null = null) => ({
+        id: `${team.division}:${dateKey}:Visitors@${team.slug}`,
+        league: team.league,
+        division: team.division,
+        dateKey,
+        time,
+        awayName: 'Visitors',
+        homeName: team.name,
+        awaySlug: null,
+        homeSlug: team.slug,
+        source: leagues.getDivision(team.division).official.source,
+      });
+      const today = dayBefore(dayBefore(next.dateKey));
+      const before = view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey))], today, v.league);
+      expect(before.kind === 'game' ? before.officialBefore : null, `components/teams/team-view.ts ${team.slug}`).toEqual({
+        dateLabel: expect.any(String),
+        timeLabel: null,
+        versus: 'vs',
+        opponentName: 'Visitors',
+      });
+      // A league that publishes the start time (PCAL, BVAL): the card names it.
+      const timed = view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey), '16:00')], today, v.league);
+      expect(timed.kind === 'game' ? timed.officialBefore?.timeLabel : null, `components/teams/team-view.ts ${team.slug}`).toBe('4:00 PM PT');
+      const sameDay = view.buildNextCard(team, next, [fixture(next.dateKey)], today, v.league);
+      expect(sameDay.kind === 'game' ? sameDay.officialBefore : 'not a game card', `components/teams/team-view.ts ${team.slug}`).toBeNull();
+    }
+    expect(checked, 'the corpus has upcoming games').toBeGreaterThan(0);
+  });
+});
+
+describe('opponentRecordLine (components/teams/team-view.ts)', () => {
+  it('prints nothing for an opponent outside the registry, whichever league is asking', () => {
+    for (const league of leagues.LEAGUES) {
+      expect(view.opponentRecordLine(undefined, league.id), `components/teams/team-view.ts ${league.id}`).toBeNull();
+    }
+  });
+
+  it("reads 'W-L-T · [tied ]Nth in <scope>' from its own league, 'tied' exactly when the place is shared", () => {
+    for (const team of data.getTeams()) {
+      const line = view.opponentRecordLine(team, team.league);
+      if (line === 'no league results yet') continue;
+      const scope = leagues.divisionHeading(team.division) ?? leagues.getLeague(team.league).shortName;
+      const m = /^\d+-\d+-\d+ \u00b7 (tied )?\d+(?:st|nd|rd|th) in (.+)$/.exec(line ?? '');
+      expect(m, `components/teams/team-view.ts ${team.slug}: ${line}`).not.toBeNull();
+      if (!m) continue;
+      expect(m[2], `components/teams/team-view.ts ${team.slug} scope`).toBe(scope);
+      const standing = data.getStandingFor(team.slug);
+      expect(m[1] === 'tied ', `components/teams/team-view.ts ${team.slug} tied`).toBe(standing?.tiebreak.shared ?? false);
+    }
+  });
+});
+
+describe('earlierMeeting (components/teams/team-view.ts)', () => {
+  it('recalls only a final played before the next game', () => {
+    for (const team of data.getTeams()) {
+      const next = view.buildTeamPageView(team.slug)?.next;
+      if (!next) continue;
+      const side = next.home.slug === team.slug ? next.away : next.home;
+      const opponent = side.slug ? data.getTeamBySlug(side.slug) : undefined;
+      const earlier = view.earlierMeeting(team, opponent, next.dateLocal);
+      if (!earlier) continue;
+      const game = data.getGameById(earlier.contestId);
+      expect(game?.status, `components/teams/team-view.ts ${team.slug}`).toBe('final');
+      expect(game !== undefined && game.dateLocal < next.dateLocal, `components/teams/team-view.ts ${team.slug}`).toBe(true);
+    }
   });
 });

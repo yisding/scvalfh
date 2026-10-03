@@ -26,8 +26,15 @@ export interface NextSlateProps {
   /** Overrides the kicker — "First games" before the season starts. */
   kicker?: string;
   limit?: number;
-  /** The league's first league day after `date` (its league games, and every contest it has in `total`). */
-  nextLeague?: { date: string; games: Game[]; total: number } | null;
+  /** The league's first league day after `date` (its league games, every contest it has in
+      `total`, and how many of those are postseason and non-league contests). */
+  nextLeague?: {
+    date: string;
+    games: Game[];
+    total: number;
+    postseason: number;
+    nonLeague: number;
+  } | null;
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
   as?: 'h2' | 'h3';
@@ -69,6 +76,13 @@ export function NextSlate({
     nextLeague && nextLeague.games.length > 0 && games.every((g) => g.countsFor === null)
       ? nextLeague
       : null;
+  // `resume.games` is that later day's playable games counted in THIS league's tables (a day after
+  // the slate day, so all of them); the postseason and non-league counts come with it, each
+  // counted directly over every contest of the league that day (the list its /scores page shows),
+  // never derived by subtraction from `total`.
+  const resumeLeague = resume ? resume.games.length : 0;
+  const resumePost = resume ? resume.postseason : 0;
+  const resumeOther = resume ? resume.nonLeague : 0;
   // One level below the block's own heading (panel h2 → block h3 → sub-row h4).
   const Sub = as === 'h2' ? 'h3' : 'h4';
   return (
@@ -96,14 +110,19 @@ export function NextSlate({
               <div className="flex min-h-11 flex-wrap items-center gap-x-3 px-gutter py-1">
                 <Sub className="m-0 text-micro font-semibold text-ink-3">Next league games</Sub>
                 {/* In a <p> so it takes the site's in-text link underline: in ink-2 it is
-                    otherwise indistinguishable from the date it names. */}
+                    otherwise indistinguishable from the date it names. The link goes to the
+                    whole day's /scores page, but a bare "3 games" under a "league games"
+                    heading with two rows read as a missing row, so it says what it counts, in
+                    the same words as the card's meta: "2 league, 1 non-league". */}
                 <p className="m-0">
                   <Link
                     href={`/scores/${resume.date}`}
                     prefetch={false}
                     className="sx-action text-meta text-ink-2"
                   >
-                    {shortDate(resume.date)} &middot; {plural(resume.total, 'game')}
+                    {shortDate(resume.date)} &middot; {resumeLeague} league
+                    {resumeOther > 0 ? `, ${resumeOther} non-league` : ''}
+                    {resumePost > 0 ? `, ${resumePost} postseason` : ''}
                   </Link>
                 </p>
               </div>

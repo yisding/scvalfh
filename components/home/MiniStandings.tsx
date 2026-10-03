@@ -29,6 +29,12 @@ import type { MiniDivisionView, MiniRow } from './home-data';
  * bars stays in step with whether any bars are drawn. The bar scale is said in words ("bars scaled
  * to De Anza's biggest goal difference (36)"), not as "|GD| max 36".
  *
+ * The name keeps its room under a large browser text size, by the same rem container queries:
+ * below a 20rem card (320px at the default text size, so never on a phone at 16px; 400 at 20px,
+ * 480 at 24px) the GP column drops out, and below 18rem (360 at 20px, 432 at 24px) the monogram
+ * does too — at 320 with 24px text the two left the name 17px, one letter per row. The name
+ * itself wraps onto two lines at a space, never per letter; a word still too long ends in "…".
+ *
  * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
  */
 export interface MiniStandingsProps {
@@ -128,7 +134,7 @@ export function MiniStandings({ division, href, showDivisionLabel, home, legend,
                 #
               </th>
               <th scope="col">Team</th>
-              <th scope="col" className="w-8 text-right">
+              <th scope="col" className="w-8 text-right @max-[20rem]:hidden">
                 GP
               </th>
               <th scope="col" className="w-[52px] text-right">
@@ -214,11 +220,18 @@ function MiniRowView({
             </span>
           </Link>
           <span className="flex items-center gap-2">
-            <TeamMonogram team={{ abbr: row.abbr, name: row.name, colors: row.colors }} size={24} />
-            <span className="min-w-0 truncate text-body text-ink">{row.shortName}</span>
+            <TeamMonogram
+              team={{ abbr: row.abbr, name: row.name, colors: row.colors }}
+              size={24}
+              className="@max-[18rem]:hidden"
+            />
+            {/* Up to two lines, broken between words only: a name never loses its second word
+                to an ellipsis and never breaks per letter; a single word too long for the cell
+                ends in an ellipsis. */}
+            <span className="min-w-0 line-clamp-2 text-ellipsis text-body text-ink">{row.shortName}</span>
           </span>
         </th>
-        <td className="sx-num w-8 text-right text-[11px] text-ink-2">{has ? row.gp : EM_DASH}</td>
+        <td className="sx-num w-8 text-right text-[11px] text-ink-2 @max-[20rem]:hidden">{has ? row.gp : EM_DASH}</td>
         <td className="sx-num w-[52px] text-right font-medium text-ink">{has ? row.record : EM_DASH}</td>
         <td className="sx-num w-11 pr-2 text-right text-body font-bold text-ink">{has ? row.pts : EM_DASH}</td>
         <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">

@@ -7,8 +7,7 @@ import TeamFinder from '../../components/search/TeamFinder';
 import TeamTile from '../../components/teams/TeamTile';
 import { buildTeamsByLeague, teamsLeagueChips } from '../../components/teams/team-view';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { getCounts, getFetchedAt, getTeamSearchIndex } from '../../lib/data';
-import { formatStamp } from '../../lib/format';
+import { getCounts, getTeamSearchIndex } from '../../lib/data';
 
 /**
  * /teams — "Find my school" (DESIGN §3.6, SPEC §10.5, §9.3).
@@ -113,9 +112,10 @@ export default function TeamsPage() {
         ))}
       </div>
 
+      {/* No snapshot stamp or "computed from published results" here: the footer states both on
+          every page, one line below. The alignment source is already in the page description. */}
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
-        Records are league games only. A dash means no results have been reported yet; records are
-        computed from published results as of {formatStamp(getFetchedAt())}.
+        Records are league games only. A dash means no results have been reported yet.
       </p>
     </div>
   );

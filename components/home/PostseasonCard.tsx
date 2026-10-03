@@ -70,7 +70,9 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
               <ExternalLink href={view.bracket.url}>Official bracket</ExternalLink>{' '}
             </>
           ) : null}
-          <Link href={view.link.href} prefetch={false} className={LINK}>
+          {/* Kept on one line: it ends a wrapping sentence, and "CCS playoffs" stranded above
+              its arrow (or the arrow alone on the next line) read as two things. */}
+          <Link href={view.link.href} prefetch={false} className={`whitespace-nowrap ${LINK}`}>
             {view.link.label} <span aria-hidden="true">&rarr;</span>
           </Link>
         </p>

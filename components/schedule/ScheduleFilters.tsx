@@ -364,7 +364,7 @@ function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update
       </details>
       <p
         aria-live="polite"
-        className="m-0 min-w-0 flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left max-[389px]:basis-full max-[389px]:text-left md:flex-none md:ml-auto"
+        className="m-0 min-w-[8rem] flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left max-[389px]:basis-full max-[389px]:text-left md:flex-none md:ml-auto"
       >
         {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
             never strands "3" from "not reported" or opens a line on "·". The text content is

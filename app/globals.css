@@ -289,7 +289,8 @@
     /* WCAG 2.2 SC 2.4.11 Focus Not Obscured: the chrome is declared as the scroll container's own
        padding, which fixes focus scroll, `#hash` navigation and `scrollIntoView()` in one place.
        The top value is the TALLEST sticky stack on the site, plus 8px of air:
-         phone — 48px top bar + 48px /standings division bar (or /schedule's 48px date header);
+         phone — 48px top bar + 48px multi-division /standings/<league> division bar (or the 48px
+           date header on /schedule/<league>, or /history's 48px jump bar);
          ≥768  — 64px top bar + 48px /schedule date header.
        A /schedule date group is the one target that carries its own header, so `.sx-dategroup`
        hands those 48px back with a negative scroll-margin (below).

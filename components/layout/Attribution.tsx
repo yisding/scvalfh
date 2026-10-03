@@ -114,7 +114,8 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
             </div>
           ) : null}
         </div>
-        {/* The divider spans the whole footer grid; only the sentence is capped at the prose measure. */}
+        {/* The divider spans the whole footer grid; only the sentence is capped at the prose
+            measure (32em, `--max-width-prose`). */}
         <div className="mt-6 border-t border-divider pt-4 md:col-span-2">
           <p className="m-0 max-w-prose text-meta text-ink-3">
             Unofficial; not affiliated with {notAffiliated} or SI. Records are computed from

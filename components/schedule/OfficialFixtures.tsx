@@ -32,8 +32,8 @@ export interface OfficialFixturesProps {
   variant?: 'details' | 'plain';
   /**
    * Replaces the note above the list with a lead-in sentence (a future day page's "Also on
-   * <SHORT>’s schedule for this day…"); the note's explanation and schedule links then follow the
-   * list.
+   * <SHORT>’s schedule for this day, but not listed by any source:"). Since the lead already says
+   * that, only the rest of the note follows the list: no result here, and the schedule links.
    */
   lead?: React.ReactNode;
   /** false drops the date column, for a list that is all one day (a /scores/[date] page). */
@@ -127,11 +127,9 @@ export function OfficialFixtures({
   if (fixtures.length === 0) return null;
   const short = getLeague(leagueId).shortName;
   const links = scheduleLinks(leagueId);
-  // What these rows are and where the league publishes them.
-  const note = (
+  // Where the league publishes these rows: ends both the note and, after a lead, its follow-up.
+  const schedules = (
     <>
-      Scheduled per {short}; no result has been published for these, so they carry no result at
-      all here.{' '}
       {links.map((link, i) => (
         <span key={link.href}>
           {i > 0 ? ' · ' : null}
@@ -142,6 +140,20 @@ export function OfficialFixtures({
         </span>
       ))}
       .
+    </>
+  );
+  // What these rows are and where the league publishes them.
+  const note = (
+    <>
+      Scheduled per {short}; no result has been published for these, so they carry no result at
+      all here. {schedules}
+    </>
+  );
+  // After a lead, which has already said "on <SHORT>’s schedule, not listed by any source", only
+  // the rest of the note, in the number the list has.
+  const followUp = (
+    <>
+      So {fixtures.length === 1 ? 'it carries' : 'they carry'} no result at all here. {schedules}
     </>
   );
   const rows = <FixtureRows fixtures={fixtures} today={today} showDate={showDate} short={short} />;
@@ -157,7 +169,7 @@ export function OfficialFixtures({
         {/* Full content width: on /scores/[date] it shares the right edge of the day's cards,
             the pager and the line under it. */}
         <div className="sx-card sx-flush sx-bleed">{rows}</div>
-        {lead ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">{note}</p> : null}
+        {lead ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">{followUp}</p> : null}
       </div>
     );
   }

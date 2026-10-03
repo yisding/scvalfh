@@ -69,7 +69,11 @@ export interface StatusGroup {
    * /playoffs prints, never a code like "AQ" a reader has to decode. The status band's chip.
    */
   statusText: string;
-  /** The rung's verbatim legend from config (`statusLegend`, SPEC §5.7 / §10.3). */
+  /**
+   * The rung's verbatim legend from config (`statusLegend`, SPEC §5.7 / §10.3): the place range
+   * and what the rung leads to ("4th place — play-in Fri Oct 30 for the SCVAL 7th berth"), the
+   * consequence the chip beside it cannot say.
+   */
   label: string;
   teams: StatusTeam[];
 }
@@ -168,9 +172,10 @@ export interface DivisionView {
    */
   rankRule: string;
   /**
-   * What settles a place we hold LEVEL, for "level 7th here (<levelReason>)": the league's
-   * `rules.unresolvedSuffix` without its leading "— " (and any trailing citation in parentheses
-   * turned into a comma clause, so the Notes' own parentheses never nest).
+   * What settles a place we hold LEVEL, in words: the league's `rules.unresolvedSuffix` without its
+   * leading "— " (and any trailing citation in parentheses turned into a comma clause, so it never
+   * nests inside a caller's parentheses). The Notes' mismatch line does not print it ("tied for
+   * 7th here"): the tied group's own note, in the same list, already cites the league's last step.
    */
   levelReason: string;
   sourceUrl: string;

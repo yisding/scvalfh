@@ -48,8 +48,9 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * grid whose children stay in that DOM order. One column on a phone. From 768px Last and Next pair
  * up (both cards stretch to the row, so the pair ends level) and every section after them takes
  * both columns until 1024px. Rows are separated by space, never by a rule. From 768px the Last
- * card is the `GameCard` (time, both teams, recap, Game page link) instead of the phone's expanded
- * `GameRow`, so it fills its half of the row like the Next card does.
+ * card is the `GameCard` (time, both teams, recap, Game page / Box score / NFHS stream links)
+ * instead of the phone's expanded `GameRow`, so it fills its half of the row like the Next card
+ * does.
  *
  * At 1024px+ a strict pairing left 250–350px holes beside every tall section (Form beside Margin,
  * Who we haven't beaten beside the League game log). So the two tallest sections SPAN two rows
@@ -240,7 +241,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <GameRow game={last} perspective={team.slug} defaultExpanded showTime={false} />
               </div>
               <div className="hidden md:flex md:flex-1 md:flex-col">
-                <GameCard game={last} perspective={team.slug} className="flex-1" />
+                <GameCard game={last} perspective={team.slug} showStream className="flex-1" />
               </div>
             </>
           ) : (
@@ -453,13 +454,18 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               ) : null}
             </ul>
             {/* Last season in one line, record exactly as the 2025-26 standings PDF printed it
-                ("1-13": that division's table has no tie column). The site-wide disclaimer that
-                sat here is the footer's, so it is no longer repeated on every team page. */}
+                ("1-13"; the PDF drops a zero tie count on some rows). The site-wide disclaimer
+                that sat here is the footer's, so it is no longer repeated on every team page. The
+                link text keeps "2025-26" on one line rather than breaking at its hyphen. */}
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
                 Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}
                 {historyScope}, {history.row.leagueRecord} &mdash;{' '}
-                <Link href={`/history/2025-26#${history.division}`} prefetch={false}>
+                <Link
+                  href={`/history/2025-26#${history.division}`}
+                  prefetch={false}
+                  className="whitespace-nowrap"
+                >
                   full {getHistorySeason()} standings
                 </Link>
               </p>

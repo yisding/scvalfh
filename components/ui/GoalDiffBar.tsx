@@ -108,8 +108,9 @@ export function GoalDiffBar({
  *
  * `barClassName` wraps the PLOT only, so a caller can drop it at a width where the track is the
  * difference between a readable school name and a fragment — the phone table passes
- * `hidden min-[375px]:block`. Nothing announced is lost when it goes: the bar is `aria-hidden` and
- * the signed numeral beside it is the accessible value (DESIGN §7.8).
+ * `hidden min-[23.4375rem]:block` (rem, so it moves with the browser text size). Nothing
+ * announced is lost when it goes: the bar is `aria-hidden` and the signed numeral beside it is
+ * the accessible value (DESIGN §7.8).
  *
  * `numberClassName` sets the numeral's size: 14px `text-meta` by default (the desktop table), 13px
  * `text-cell` in the pixel-budgeted phone and mini tables.

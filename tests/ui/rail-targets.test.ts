@@ -101,10 +101,11 @@ describe('rail text', () => {
     expect(railSr({ date: '2026-10-02', kind: 'today' }, '2026-10-02')).toBe('Today, Fri Oct 2');
   });
 
-  it('rewrites only the season-end labels', () => {
+  it('rewrites the season-end labels and a re-aimed Today, never a month', () => {
     expect(railLabel({ date: '2026-08-24', kind: 'up' }, '2026-08-27')).toBe('Aug 27');
     expect(railLabel({ date: '2026-10-28', kind: 'down' }, '2026-10-22')).toBe('Oct 22');
     expect(railLabel({ date: '2026-09-01', kind: 'month' }, '2026-09-03')).toBeNull();
-    expect(railLabel({ date: '2026-10-02', kind: 'today' }, '2026-10-07')).toBeNull();
+    expect(railLabel({ date: '2026-10-02', kind: 'today' }, '2026-10-07')).toBe('Next');
+    expect(railLabel({ date: '2026-10-02', kind: 'today' }, '2026-10-02')).toBeNull();
   });
 });

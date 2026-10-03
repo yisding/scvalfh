@@ -85,9 +85,9 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
               where the seven nav links need the room; back from 896 (56rem, ≈ 19px to spare at the
               widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
               min-width variants by value only within one unit, and every px one sorts BEFORE
-              `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default font size, as `md` and
-              `lg` do: at a 24px default the phone stamp starts at 540px, so a 390px screen drops
-              it rather than scrolling sideways. */}
+              `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
+              font size, as `md` and `lg` do: at a 24px default the phone stamp starts at 540px,
+              so a 390px screen drops it rather than scrolling sideways. */}
           <LastUpdated
             at={snapshotAt}
             now={now}

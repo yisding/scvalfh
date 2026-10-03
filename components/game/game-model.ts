@@ -65,7 +65,8 @@ export interface GameSideModel {
   /**
    * The name for a `<title>` and an OG card: the full name, or `shortName` when the full one is
    * too long for a link preview ("St. Ignatius College Preparatory" is 32 characters and would eat
-   * a whole title on its own). Everything in the page body uses `name`.
+   * a whole title on its own). The page body uses `name`, except the season-series sentence,
+   * which uses the team's short name to match the meeting rows above it.
    */
   label: string;
   /** Present only for one of the 43 teams this site follows; anyone else is a name (DESIGN §8). */
@@ -153,7 +154,10 @@ export interface GameModel {
    * came from (owner decision D2): the MaxPreps box score, or — on a si.com-scored final — the
    * si.com game page, with MaxPreps' contest page beside it as a plain pill. Then the NFHS stream.
    * Empty for every other status. Each link has ONE home on the page: GameDetails skips whatever is
-   * in this list, and GameElsewhere carries no per-game links at all.
+   * in this list, and GameElsewhere carries no per-game links at all — except the two disagreement
+   * notes under the scoreboard (SourceDisagreement cites both sources' pages, ResultFlagConflict
+   * MaxPreps'), which link the pages they cite beside their sentence, so a page in this list can
+   * appear there too.
    */
   resultLinks: GameLink[];
   /** Away is first everywhere on this site, including here. */
@@ -283,14 +287,23 @@ export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
   return record;
 }
 
-function subFor(record: RecordAsOf | undefined, team: Team | undefined): string | null {
+function subFor(
+  record: RecordAsOf | undefined,
+  team: Team | undefined,
+  standing: Standing | undefined,
+): string | null {
   if (!team) return null;
   const scope = scopeOf(team.division);
-  if (!record || record.gp === 0) {
-    // Never 0-0-0 for a team the sources have no results for (DESIGN §8) — including, as of an
-    // early-season game, a team that had not played a league game yet.
-    return `No league results reported · ${scope}`;
-  }
+  // The two no-record lines are longer than any record, so at phone widths they wrap: no-break
+  // spaces inside the scope keep "El Camino" / "Mt. Hamilton" whole and move the break to the "·".
+  // Only here — the record line is compared to a plain-space string (game-model-asof test 1).
+  const unbroken = scope.replace(/ /g, '\u00a0');
+  // DESIGN §8's missing-data line is for a team the sources have NOTHING for. Never 0-0-0.
+  if (!standing?.hasReportedResults) return `No league results reported · ${unbroken}`;
+  // Results exist, just none by this date — an early-season non-league final, or a first league
+  // game still to play. Saying "not reported" here read as missing data about a team that went on
+  // to post a record; FormGoingIn words the same case as "no league result before this date".
+  if (!record || record.gp === 0) return `No league results yet · ${unbroken}`;
   return `${recordString(record)} ${scope}`;
 }
 
@@ -383,7 +396,7 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
     label: labelFor(name, team),
     team,
     standing,
-    sub: subFor(recordAsOf(game, side), team),
+    sub: subFor(recordAsOf(game, side), team, standing),
     formBefore: entries,
     playedBefore,
     outcome,
@@ -744,7 +757,17 @@ export function buildGameModel(param: string): GameModel | undefined {
       : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`,
     series: {
       meetings: games.map((g) => ({ game: g, isThisGame: g.contestId === game.contestId })),
-      summary: seriesSummary(game, games, home.name, away.name),
+      // Short names, as the meeting rows above it ("at St Ignatius") and the team pills print
+      // them; a side outside the registry has no short name and keeps its own. Not `side.label`:
+      // that only shortens names over 24 characters, so "Saint Francis" would survive beside
+      // "St Francis". An abbreviated short name ("Lick-Wilm.", "Valley Chr.") gives way to the
+      // full name: its period reads as a sentence break, and a screen reader spells it out.
+      summary: seriesSummary(
+        game,
+        games,
+        home.team && !home.team.shortName.endsWith('.') ? home.team.shortName : home.name,
+        away.team && !away.team.shortName.endsWith('.') ? away.team.shortName : away.name,
+      ),
       tiebreakNote: division ? tiebreakNoteFor(division) : null,
       perspective,
     },

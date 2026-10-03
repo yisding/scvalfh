@@ -22,7 +22,9 @@ import type { GameModel } from './game-model';
  * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
  * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
  * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
- * line — each link has one home.
+ * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
+ * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
+ * when that page is also a result pill under the recap.
  */
 
 export interface GameSourceLineProps {
