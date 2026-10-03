@@ -6,7 +6,7 @@
     "teams": 15,
     "teamsWithStats": 10
   },
-  "fetchedAt": "2026-10-02T18:58:27.161Z",
+  "fetchedAt": "2026-10-03T10:09:27.115Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -21,7 +21,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-09-29T22:59:28",
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius College Preparatory",
@@ -439,8 +439,8 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
-      "lastUpdated": "2026-10-01T11:01:37",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
+      "lastUpdated": "2026-10-02T20:41:30",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
       "players": [
@@ -451,7 +451,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -472,7 +472,7 @@
           "field": {
             "assists": 5,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 6,
             "minutes": null,
             "points": 17,
@@ -493,12 +493,12 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
-            "goals": 6,
+            "gamesPlayed": 11,
+            "goals": 8,
             "minutes": null,
-            "points": 14,
+            "points": 18,
             "shots": null,
-            "shotsOnGoal": 4,
+            "shotsOnGoal": 7,
             "steals": null
           },
           "fullName": "Aliya Grimaldo",
@@ -514,12 +514,12 @@
           "field": {
             "assists": 5,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 9,
             "minutes": null,
             "points": 23,
             "shots": null,
-            "shotsOnGoal": 2,
+            "shotsOnGoal": 5,
             "steals": null
           },
           "fullName": "Melanie Henderson",
@@ -535,7 +535,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 0,
             "minutes": null,
             "points": 2,
@@ -556,7 +556,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 4,
@@ -575,14 +575,14 @@
           "careerId": "thjluncidggsc",
           "careerUrl": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/athletes/evie-ferrini/?careerid=thjluncidggsc",
           "field": {
-            "assists": 3,
+            "assists": 4,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 6,
             "minutes": null,
-            "points": 15,
+            "points": 16,
             "shots": null,
-            "shotsOnGoal": 7,
+            "shotsOnGoal": 9,
             "steals": null
           },
           "fullName": "Evie Ferrini",
@@ -596,12 +596,12 @@
           "careerId": "a2fhqpm52h3vf",
           "careerUrl": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/athletes/ava-langford/?careerid=a2fhqpm52h3vf",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 4,
             "minutes": null,
-            "points": 8,
+            "points": 9,
             "shots": null,
             "shotsOnGoal": 0,
             "steals": null
@@ -619,7 +619,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 8,
+            "gamesPlayed": 9,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -661,7 +661,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -682,7 +682,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 2,
             "minutes": null,
             "points": 5,
@@ -703,7 +703,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -724,7 +724,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 8,
             "minutes": null,
             "points": 17,
@@ -745,12 +745,12 @@
           "field": {
             "assists": 4,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 10,
             "goals": 10,
             "minutes": null,
             "points": 24,
             "shots": null,
-            "shotsOnGoal": 4,
+            "shotsOnGoal": 5,
             "steals": null
           },
           "fullName": "Abby Scharrenberg",
@@ -808,13 +808,13 @@
           "field": null,
           "fullName": "Nora Lagenfeld",
           "goalkeeping": {
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 3,
+            "saves": 9,
             "shutouts": null,
             "ties": null,
             "wins": null
@@ -830,13 +830,13 @@
           "field": null,
           "fullName": "Nikki Kalina",
           "goalkeeping": {
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 9,
+            "saves": 13,
             "shutouts": null,
             "ties": null,
             "wins": null
@@ -852,15 +852,15 @@
       "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "totals": {
         "field": {
-          "assists": 27,
-          "gamesPlayed": 10,
-          "goals": 59,
-          "points": 145,
-          "shotsOnGoal": 35
+          "assists": 29,
+          "gamesPlayed": 11,
+          "goals": 61,
+          "points": 151,
+          "shotsOnGoal": 44
         },
         "goalkeeping": {
-          "gamesPlayed": 10,
-          "saves": 12
+          "gamesPlayed": 11,
+          "saves": 22
         }
       },
       "tracked": {
@@ -880,7 +880,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -901,7 +901,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-10-01T10:02:48",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
@@ -1272,7 +1272,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-10-01T12:44:36",
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -1518,7 +1518,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -1539,7 +1539,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-09-28T18:18:37",
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -1657,7 +1657,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-10-02T09:25:09",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
@@ -2036,7 +2036,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -2057,7 +2057,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-10-02T06:19:56",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -2467,7 +2467,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-09-10T20:27:06",
       "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
       "name": "Presentation",
@@ -2549,7 +2549,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-10-02T09:47:42",
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -2840,7 +2840,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -2861,7 +2861,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -2882,7 +2882,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-02T18:58:27.161Z",
+      "fetchedAt": "2026-10-03T10:09:27.115Z",
       "lastUpdated": "2026-09-12T17:12:38",
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",

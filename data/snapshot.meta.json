@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0",
-  "contentHash": "56d3e64d72326f6652c43d9fd3dcc71eee1a4ff6c827293095bd9ed4af8c27fc",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +1",
+  "contentHash": "19ecce694122846c5dcf9dce4fd8bf11342e46415d0e7b113071d1b5fd440bfe",
   "counts": {
     "byLeague": {
       "bval": {
@@ -12,7 +12,7 @@
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 56,
+        "finals": 57,
         "games": 86,
         "leagueGames": 72,
         "teams": 9
@@ -26,27 +26,27 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 92,
+        "finals": 93,
         "games": 158,
         "leagueGames": 96,
         "teams": 15
       }
     },
-    "finals": 203,
+    "finals": 205,
     "games": 364,
     "leagueGames": 264,
     "mismatches": 6,
-    "pending": 4,
+    "pending": 6,
     "teams": 43
   },
   "crossCheck": {
-    "agreements": 74,
+    "agreements": 70,
     "backfilled": 2,
-    "compared": 143,
-    "conflicts": 3,
+    "compared": 137,
+    "conflicts": 2,
     "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-10-02T22:56:42.788Z",
+  "fetchedAt": "2026-10-03T10:08:45.929Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -77,8 +77,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 48,
-      "finalsDelta": 0,
+      "countedFinals": 49,
+      "finalsDelta": 1,
       "id": "mcal",
       "missingPast": 0,
       "reasons": [],
@@ -434,11 +434,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-09-18",
-      "rowCount": 17,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-09-19",
       "rowCount": 3,
       "status": "ok"
@@ -480,7 +475,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-29",
-      "rowCount": 24,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -495,7 +490,12 @@
     },
     {
       "label": "sblive scoreboard 2026-10-02",
-      "rowCount": 10,
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-10-03",
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -525,7 +525,7 @@
     },
     {
       "label": "sblive gilroy games",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -559,8 +559,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-02",
-  "warnings": 40,
+  "today": "2026-10-03",
+  "warnings": 39,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
     "lastGame": "2026-10-30T17:30:00",
