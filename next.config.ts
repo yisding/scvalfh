@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 /**
  * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
  * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
- * `/teams/[slug]`, `/playoffs`, `/playoffs/[league]`, `/history/2025-26`, `/about`, plus the OG
+ * `/teams/[slug]`, `/playoffs`, `/playoffs/[league]`, `/leaders`, `/history/2025-26`, `/about`, plus the OG
  * images beside them and the metadata routes (icons, manifest, sitemap, robots) — every one
  * prerendered (`dynamicParams = false` on each dynamic segment, SPEC §8.1), so there is nothing to
  * configure for data. Notably absent, on purpose:

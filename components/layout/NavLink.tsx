@@ -164,11 +164,13 @@ function TopFace({
   // The 44px link box is the target; the 36px capsule inside it is the visible state. The lit
   // capsule is accent-wash with accent-ink (6.5 / 7.55), never accent on the wash. The press grey
   // sits on the capsule rather than the link box, so it is the same shape as the wash that
-  // follows it.
+  // follows it. 8px of side padding below 1024px, 12px from there: with eight links (Leaders was
+  // added) the 10px it had put the theme toggle 21px into the right gutter at 768
+  // (components/layout/SiteHeader.tsx has the measurements).
   return (
     <span
       data-pending={pending && !active ? '' : undefined}
-      className={`sx-indicator inline-flex h-9 items-center rounded-full px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
+      className={`sx-indicator inline-flex h-9 items-center rounded-full px-2 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
         lit
           ? 'bg-accent-wash font-semibold text-accent-ink'
           : 'font-medium group-hover:bg-surface-2 group-hover:text-ink group-active:bg-surface-2'

@@ -59,7 +59,7 @@ const fileSet = new Set(files);
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
-const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26'];
+const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26'];
 const metadata = ['icon', 'apple-icon', 'icon-192', 'icon-512', 'opengraph-image', 'standings/opengraph-image',
   'manifest.webmanifest', 'sitemap.xml', 'robots.txt'];
 const missing = [

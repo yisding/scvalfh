@@ -1,4 +1,4 @@
-import type { Team } from '../../lib/types';
+import type { Team, TeamColors } from '../../lib/types';
 
 /**
  * A school's color square (DESIGN §7.1, §12.4).
@@ -10,7 +10,14 @@ import type { Team } from '../../lib/types';
  * read and discarded (see /about#sources).
  */
 export interface TeamMonogramProps {
-  team: Pick<Team, 'abbr' | 'name' | 'colors'>;
+  /**
+   * The fill and its ink are required; the second school color is drawn only from 40px, so a
+   * caller that renders only small tiles may leave it out (the home page's 43 pinned-card views and
+   * its team tiles ship without it). The provenance field is never read.
+   */
+  team: Pick<Team, 'abbr' | 'name'> & {
+    colors: Pick<TeamColors, 'primary' | 'onPrimary'> & Partial<Pick<TeamColors, 'secondary'>>;
+  };
   /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes. */
   size?: 20 | 24 | 28 | 32 | 40 | 48 | 56 | 64;
   /** Default true → aria-hidden, because the school name is adjacent. */
@@ -59,7 +66,7 @@ export function TeamMonogram({
         color: onPrimary,
         fontSize: LETTER_SIZE[size],
         // The second school color gets a place to live without touching legibility.
-        boxShadow: size >= 40 ? `inset 0 0 0 2px #${secondary}` : undefined,
+        boxShadow: size >= 40 && secondary ? `inset 0 0 0 2px #${secondary}` : undefined,
       }}
       aria-hidden={decorative ? 'true' : undefined}
       role={decorative ? undefined : 'img'}

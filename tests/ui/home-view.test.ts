@@ -267,26 +267,38 @@ describe('the rendered home page (app/page.tsx)', () => {
 });
 
 describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team views)', () => {
+  /** The card's identity: the search index entry its view joins to on `slug` (MyTeamCard.tsx). */
+  const cardTeam = (slug: string) => data.searchIndex.teams.find((t) => t.slug === slug)!;
+
+  it('joins every view to exactly one search-index entry, and ships no identity of its own', () => {
+    const slugs = data.teamViews.map((v) => v.slug);
+    expect(new Set(slugs).size, `${HD}: one view per team`).toBe(43);
+    expect([...slugs].sort(), `${HD}: views ↔ search index`).toEqual(data.searchIndex.teams.map((t) => t.slug).sort());
+    for (const v of data.teamViews) {
+      expect(Object.hasOwn(v, 'team'), `${HD}: ${v.slug} carries no second copy of the identity`).toBe(false);
+    }
+  });
+
   it('has a view for all 43 teams with the meta, played and postseason lines', async () => {
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
     expect(data.teamViews, `${HD}: team views`).toHaveLength(43);
-    const leigh = data.teamViews.find((v) => v.team.slug === 'leigh')!;
+    const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
     expect(leigh.meta, `${HD}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
     expect(leigh.played, `${HD}: played`).toBe('3 of 10 played');
     expect(leigh.postseason, `${HD}: postseason line`).toBe('If the season ended today: Automatic qualifier');
     expect(postseasonCardLine(leigh), `${HD}: postseason card line`).toBe('Today: Automatic qualifier');
     expect(leigh.postseasonShort, `${HD}: no tie, no second copy of the line`).toBeUndefined();
     expect(leigh.tableHref).toBe('/standings/bval#mt-hamilton');
-    const tam = data.teamViews.find((v) => v.team.slug === 'tamalpais')!;
+    const tam = data.teamViews.find((v) => v.slug === 'tamalpais')!;
     expect(tam.meta, `${HD}: single-division meta`).toBe('1st · MCAL');
     for (const v of data.teamViews) {
-      if (!v.hasResults) expect(v.postseason, `${HD}: ${v.team.slug} gp 0 has no postseason line`).toBeNull();
-      const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, onUnpin: () => {} }));
-      expect(html, `components/home/MyTeamCard.tsx: ${v.team.slug} unpin id`).toContain('id="my-team-unpin"');
+      if (!v.hasResults) expect(v.postseason, `${HD}: ${v.slug} gp 0 has no postseason line`).toBeNull();
+      const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
+      expect(html, `components/home/MyTeamCard.tsx: ${v.slug} unpin id`).toContain('id="my-team-unpin"');
       if (v.postseason) expect(textOf(html)).toContain(v.postseason);
       const card = postseasonCardLine(v);
       if (card) expect(textOf(html)).toContain(card);
-      expect(card === null, `${HD}: ${v.team.slug} card line iff line`).toBe(v.postseason === null);
+      expect(card === null, `${HD}: ${v.slug} card line iff line`).toBe(v.postseason === null);
     }
   });
 
@@ -297,22 +309,22 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
     let pending = 0;
     for (const v of data.teamViews) {
-      const team = d.getTeamBySlug(v.team.slug)!;
+      const team = d.getTeamBySlug(v.slug)!;
       const played = d
         .getGames({ teamId: team.id })
         .filter((g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= data.today)
         .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name));
       const newest = played.at(-1);
-      expect(v.last?.href ?? null, `${HD}: ${v.team.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
+      expect(v.last?.href ?? null, `${HD}: ${v.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
       if (!newest || !v.last) continue;
-      expect(Object.hasOwn(v.last, 'recap'), `${HD}: ${v.team.slug} carries no recap`).toBe(false);
-      const unreported = describeGame(newest, v.team.slug).kind === 'unreported';
-      expect(v.last.display.kind, `${HD}: ${v.team.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
+      expect(Object.hasOwn(v.last, 'recap'), `${HD}: ${v.slug} carries no recap`).toBe(false);
+      const unreported = describeGame(newest, v.slug).kind === 'unreported';
+      expect(v.last.display.kind, `${HD}: ${v.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
       if (!unreported) continue;
       pending += 1;
-      const text = textOf(renderToStaticMarkup(createElement(PinnedCard, { view: v, onUnpin: () => {} })));
-      expect(text, `components/home/MyTeamCard.tsx: ${v.team.slug} unreported last`).toMatch(/score not reported/i);
-      if (v.last.display.note) expect(text, `components/home/MyTeamCard.tsx: ${v.team.slug} note`).toContain(v.last.display.note);
+      const text = textOf(renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} })));
+      expect(text, `components/home/MyTeamCard.tsx: ${v.slug} unreported last`).toMatch(/score not reported/i);
+      if (v.last.display.note) expect(text, `components/home/MyTeamCard.tsx: ${v.slug} note`).toContain(v.last.display.note);
     }
     // The corpus has at least one such team, so the unreported branch is never vacuous.
     expect(pending, `${HD}: a newest played game that is score-pending`).toBeGreaterThan(0);
@@ -328,7 +340,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     for (const v of data.teamViews) {
       const card = postseasonCardLine(v);
       if (!card) continue;
-      expect(at14(card), `${HD}: ${v.team.slug} "${card}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+      expect(at14(card), `${HD}: ${v.slug} "${card}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
     }
   });
 

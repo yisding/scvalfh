@@ -482,7 +482,11 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             anyone scans. */}
         {playerStats ? (
           <section className="min-w-0 md:col-span-2" id="player-stats">
-            <SectionHeader kicker="Player stats" meta="This season, from MaxPreps" />
+            <SectionHeader
+              kicker="Player stats"
+              meta="This season, from MaxPreps"
+              action={{ href: '/leaders#players', label: 'Site leaders' }}
+            />
             <TeamPlayerStats view={playerStats} />
           </section>
         ) : null}
