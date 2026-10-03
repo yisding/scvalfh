@@ -318,3 +318,9 @@ export function versusLabel(game: Game, teamId: string): 'vs' | 'at' {
   if (game.site === 'neutral') return 'vs';
   return game.home.teamId === teamId ? 'vs' : 'at';
 }
+
+/** 'A', 'A and B', 'A, B and C'. */
+export function listWords(words: readonly string[]): string {
+  if (words.length <= 1) return words[0] ?? '';
+  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+}

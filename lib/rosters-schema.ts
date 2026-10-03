@@ -1,43 +1,45 @@
 /**
- * The Zod contract for data/rosters.json — the 15 SCVAL teams' MaxPreps rosters (SPEC §1.1j).
- * Rosters stay SCVAL-only; slugs and divisions are checked against the registry's SCVAL teams.
+ * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all four leagues
+ * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 43-team registry.
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
  * same split as lib/snapshot-schema.ts / lib/data.ts.
  *
  * Invariants:
- *   1. exactly one team per SCVAL registry team, unique slugs
+ *   1. exactly one team per registry team (43), unique slugs, each with its registry id and division
  *   2. grade and its label are set together or null together, and agree
  *   3. position is exactly positions joined with ", " (what MaxPreps' table prints)
  *   4. height and heightInches are set together or null together
  *   5. a team's status says what its players[] are: read this run, empty upstream, carried forward
- *      from the previous file after a failure, or nothing at all
+ *      from the previous file after a failure, nothing at all after a failure, or nothing yet
+ *      because no run has covered the team ('pending')
  *   6. counts are recomputed from the rows, never trusted from the file
  */
 
 import { z } from 'zod';
 
-import { HISTORY_LEAGUE, divisionsOf } from './leagues';
-import { teamsInLeague } from './teams';
+import { contentKey } from './fetch-scope';
+import { ALL_DIVISIONS } from './leagues';
+import { TEAMS, getTeamBySlug } from './teams';
 
-/** Rosters are SCVAL-only (SPEC §0.2 #12): one per registry team of HISTORY_LEAGUE. */
-const ROSTER_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
-const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(divisionsOf(HISTORY_LEAGUE).map((d) => d.id));
-/** How many teams a rosters file holds: teamsInLeague(HISTORY_LEAGUE).length. */
+/** Rosters cover every registry team, all four leagues: one entry per team of TEAMS. */
+const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
+const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d.id));
+/** How many teams a rosters file holds: TEAMS.length (43). */
 export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
 
 const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 
-const teamSlug = id.refine(
-  (slug) => ROSTER_SLUGS.has(slug),
-  `not a registry slug of league ${HISTORY_LEAGUE}`,
-);
+const teamSlug = id.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
 
-const division = id.refine(
-  (d) => ROSTER_DIVISIONS.has(d),
-  `not a division of league ${HISTORY_LEAGUE}`,
-);
+const division = id.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
+
+/** A team entry must carry its own registry id and division, not another team's. */
+export function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
+  const team = getTeamBySlug(t.slug);
+  return team !== undefined && team.id === t.teamId && team.division === t.division;
+}
 
 /** Same scheme check as lib/snapshot-schema.ts: these end up in an href. */
 const httpUrl = z
@@ -90,7 +92,7 @@ export const RosterPlayerSchema = z
     'height and heightInches must be set together',
   );
 
-export const TeamRosterStatus = z.enum(['ok', 'empty', 'carried-forward', 'error']);
+export const TeamRosterStatus = z.enum(['ok', 'empty', 'carried-forward', 'error', 'pending']);
 
 export const TeamRosterSchema = z
   .object({
@@ -107,9 +109,12 @@ export const TeamRosterSchema = z
      * empty           the page was read and MaxPreps publishes no athletes
      * carried-forward this run failed for this team; players[] are the previous file's rows
      * error           this run failed and there was nothing to carry forward
+     * pending         no run has covered this team yet (a league left out of a `--leagues` run, or
+     *                 a team added to the registry since the file was built): nothing was
+     *                 fetched, so nothing is claimed — not even "MaxPreps has no players"
      */
     status: TeamRosterStatus,
-    /** MaxPreps' own count (excludes soft-deleted rows); null when the page was not read. */
+    /** MaxPreps' own count (excludes soft-deleted rows); null when no page was ever read. */
     athleteCount: z.number().int().min(0).nullable(),
     staffCount: z.number().int().min(0).nullable(),
     players: z.array(RosterPlayerSchema),
@@ -123,13 +128,19 @@ export const TeamRosterSchema = z
   .refine((t) => t.status !== 'ok' || t.players.length > 0, 'status ok needs players')
   .refine((t) => t.status !== 'empty' || t.players.length === 0, 'status empty cannot have players')
   .refine((t) => t.status !== 'error' || t.players.length === 0, 'status error cannot have players')
+  .refine((t) => t.status !== 'pending' || t.players.length === 0, 'status pending cannot have players')
+  .refine(
+    (t) => t.status !== 'pending' || (t.fetchedAt === null && t.maxprepsTeamId === null),
+    'status pending means nothing was read: no fetchedAt, no page id',
+  )
+  .refine(agreesWithRegistry, 'teamId or division is not the registry team\'s')
   .refine(
     (t) => (t.status === 'carried-forward' || t.status === 'error') === (t.error !== null),
     'error is set exactly when the fetch failed',
   )
   .refine(
-    (t) => (t.status === 'ok' || t.status === 'empty') === (t.athleteCount !== null),
-    'athleteCount is set exactly when the page was read',
+    (t) => (t.status === 'ok' || t.status === 'empty' || t.status === 'carried-forward') === (t.athleteCount !== null),
+    'athleteCount is set exactly when a page was read (this run, or the one a carried-forward team keeps)',
   );
 
 export const RosterCountsSchema = z.object({
@@ -144,24 +155,37 @@ export const RosterCountsSchema = z.object({
   errors: z.number().int(),
 });
 
-export const RostersSchema = z
-  .object({
-    season: z.string().min(1),
-    /** ISO UTC, when the run started. */
-    fetchedAt: z.string().min(1),
-    source: z.object({
-      id: z.literal('maxpreps-html'),
-      builtBy: z.string().min(1),
-      notes: z.array(z.string()),
-    }),
-    teams: z.array(TeamRosterSchema).length(ROSTER_TEAM_COUNT),
-    counts: RosterCountsSchema,
-  })
-  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique')
+const RostersShape = z.object({
+  season: z.string().min(1),
+  /** ISO UTC, when the run started. */
+  fetchedAt: z.string().min(1),
+  source: z.object({
+    id: z.literal('maxpreps-html'),
+    builtBy: z.string().min(1),
+    notes: z.array(z.string()),
+  }),
+  teams: z.array(TeamRosterSchema),
+  counts: RosterCountsSchema,
+});
+
+/**
+ * Any rosters file whose teams are valid, unique and correctly counted — possibly not every
+ * registry team. This is how scripts/fetch-rosters.ts reads the PREVIOUS file: one written before
+ * the other leagues were added (15 SCVAL teams), or before a team joined the registry, still
+ * supplies the rows a failed team carries forward. The file the site loads is RostersSchema.
+ */
+export const RostersPartialSchema = RostersShape
+  .refine((r) => new Set(r.teams.map((t) => t.slug)).size === r.teams.length, 'team slugs are not unique')
   .refine((r) => {
     const c = countRosters(r.teams);
     return (Object.keys(c) as Array<keyof typeof c>).every((k) => c[k] === r.counts[k]);
   }, 'counts do not match the rows');
+
+/** The file the site loads: exactly one entry per registry team. */
+export const RostersSchema = RostersPartialSchema.refine(
+  (r) => r.teams.length === ROSTER_TEAM_COUNT,
+  `expected one entry per registry team (${ROSTER_TEAM_COUNT})`,
+);
 
 export type RosterPlayer = z.infer<typeof RosterPlayerSchema>;
 export type TeamRoster = z.infer<typeof TeamRosterSchema>;
@@ -370,6 +394,7 @@ export const RosterEnrichmentSchema = z
     capturedAt: dateOnly,
     builtBy: z.string().min(1),
     notes: z.array(z.string().min(1)),
+    /** One entry per registry team; a team nothing has been added for has empty lists. */
     teams: z.array(EnrichedTeamSchema).length(ROSTER_TEAM_COUNT),
   })
   .refine((e) => new Set(e.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique')
@@ -403,4 +428,14 @@ export function countRosters(teams: readonly TeamRoster[]): RosterCounts {
     captains: players.filter((p) => p.isCaptain).length,
     errors: teams.filter((t) => t.status === 'carried-forward' || t.status === 'error').length,
   };
+}
+
+/**
+ * The file's content with every `fetchedAt` and `error` dropped and keys sorted. Two files with the
+ * same key differ only in when they were read and in a failure's message text, so
+ * scripts/fetch-rosters.ts leaves the old one in place and a run that found nothing new commits
+ * nothing — the same guard as playerStatsContentKey. A team's `status` stays in the key.
+ */
+export function rostersContentKey(file: Rosters): string {
+  return contentKey(file, ['fetchedAt', 'error']);
 }

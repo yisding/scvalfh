@@ -1,8 +1,10 @@
 /**
  * The read API for data/history-2025-26.json — the prior-season archive (DESIGN §3.9).
  *
- * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in
- * scval.com's end-of-season PDFs. MaxPreps cannot serve a prior season at all — the year segment of
+ * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
+ * league's own end-of-season documents (SCVAL's two PDFs, BVAL's Google Sheet and all-league
+ * documents; PCAL and MCAL published nothing we could reach, and are marked 'unavailable' with the
+ * reason, never filled from a third party). MaxPreps cannot serve a prior season at all — the year segment of
  * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
  * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
  *
@@ -14,102 +16,169 @@ import { readFileSync } from 'node:fs';
 
 import { z } from 'zod';
 import bundledHistory from '../data/history-2025-26.json';
-import { HISTORY_LEAGUE, divisionsOf } from './leagues';
-import { teamsInLeague } from './teams';
-import type { DivisionId, TeamSlug } from './types';
-
-/** The archive is SCVAL-only (SPEC §0.2 #12): slugs and divisions are those of HISTORY_LEAGUE. */
-const HISTORY_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
-const HISTORY_DIVISIONS: ReadonlySet<string> = new Set(divisionsOf(HISTORY_LEAGUE).map((d) => d.id));
+import { LEAGUE_IDS, divisionsOf, getLeague } from './leagues';
+import { getTeamBySlug, teamsInLeague } from './teams';
+import type { DivisionId, LeagueId, TeamSlug } from './types';
 
 const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
-const teamSlug = id.refine(
-  (slug) => HISTORY_SLUGS.has(slug),
-  `not a registry slug of league ${HISTORY_LEAGUE}`,
-);
+/**
+ * The archive is league-aware: every league of lib/leagues.ts has an entry, and each entry is
+ * validated against ITS league's registry (slugs) and divisions. A league either has final
+ * standings from an official source ('available') or says, with the reason, that it has none
+ * ('unavailable'). There is no third state: a league missing from the file fails validation, so a
+ * league cannot silently drop off the page.
+ */
+function leagueSchema(leagueId: LeagueId) {
+  const slugs: ReadonlySet<string> = new Set(teamsInLeague(leagueId).map((t) => t.slug));
+  const divisions: ReadonlySet<string> = new Set(divisionsOf(leagueId).map((d) => d.id));
+  const teamSlug = id.refine((slug) => slugs.has(slug), `not a registry slug of league ${leagueId}`);
+  const division = id.refine((d) => divisions.has(d), `not a division of league ${leagueId}`);
 
-const division = id.refine(
-  (d) => HISTORY_DIVISIONS.has(d),
-  `not a division of league ${HISTORY_LEAGUE}`,
-);
+  const row = z
+    .object({
+      /** The source's own finish order ("SCHOOL by finish" / the sheet's "Place"). Never recomputed. */
+      place: z.number().int().min(1),
+      /** Verbatim source spelling, e.g. "St. Francis" where MaxPreps says "Saint Francis". */
+      name: z.string().min(1),
+      slug: teamSlug.nullable(),
+      leagueRecord: z.string().regex(/^\d+-\d+(-\d+)?$/),
+      w: z.number().int().min(0),
+      l: z.number().int().min(0),
+      /** null = the source printed no ties field (BVAL's Sobrato "4-6"): unpublished, not 0. */
+      t: z.number().int().min(0).nullable(),
+      /** The overall record as published, or null when the source has none (SCVAL's column is empty). */
+      overallRecord: z
+        .string()
+        .regex(/^\d+-\d+(-\d+)?$/)
+        .nullable(),
+    })
+    .refine(
+      (r) =>
+        r.leagueRecord === (r.t === null ? `${r.w}-${r.l}` : `${r.w}-${r.l}-${r.t}`) ||
+        // SCVAL's parser has always stored a two-part PDF record ("2-10") with t: 0. That file is
+        // unchanged; every other league must say null for a record with no ties field.
+        (leagueId === 'scval' && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`),
+      'leagueRecord does not match w/l/t',
+    );
 
-const HistoryRowSchema = z.object({
-  /** The PDF's own "SCHOOL by finish" order. Not a recomputed ranking. */
-  place: z.number().int().min(1),
-  /** Verbatim PDF spelling, e.g. "St. Francis" where MaxPreps says "Saint Francis". */
-  name: z.string().min(1),
-  slug: teamSlug.nullable(),
-  leagueRecord: z.string().regex(/^\d+-\d+(-\d+)?$/),
-  w: z.number().int().min(0),
-  l: z.number().int().min(0),
-  t: z.number().int().min(0),
-  /** Always null: that PDF column is empty in the 2025-26 file. */
-  overallRecord: z.null(),
-});
+  const player = z.object({
+    player: z.string().min(1),
+    school: z.string().min(1),
+    slug: teamSlug.nullable(),
+    /** null = the source left the cell empty. */
+    position: z.string().nullable(),
+    year: z.number().int().min(9).max(12),
+  });
 
-const HistoryPlayerSchema = z.object({
-  player: z.string().min(1),
-  school: z.string().min(1),
-  slug: teamSlug.nullable(),
-  position: z.string(),
-  year: z.number().int().min(9).max(12),
-});
+  const awards = z.object({
+    division,
+    level: z.enum(['varsity', 'jv']),
+    /** `value` is the source's right-hand side as written; the documents write it differently. */
+    overall: z.array(z.object({ award: z.string().min(1), value: z.string().min(1) })),
+    firstTeam: z.array(player),
+    secondTeam: z.array(player),
+    honorableMention: z.array(player),
+  });
 
-const HistoryAwardsSchema = z.object({
-  division,
-  level: z.enum(['varsity', 'jv']),
-  /** `value` is the PDF's right-hand side VERBATIM — the three divisions write it differently. */
-  overall: z.array(z.object({ award: z.string().min(1), value: z.string().min(1) })),
-  firstTeam: z.array(HistoryPlayerSchema),
-  secondTeam: z.array(HistoryPlayerSchema),
-  honorableMention: z.array(HistoryPlayerSchema),
-});
+  const available = z
+    .object({
+      status: z.literal('available'),
+      league: z.string(),
+      provenance: z.discriminatedUnion('source', [
+        z.object({
+          source: z.literal('scval-pdf'),
+          builtBy: z.string(),
+          standingsPdf: z.string().url(),
+          allLeaguePdf: z.string().url(),
+          extraction: z.string(),
+          notes: z.array(z.string()),
+        }),
+        z.object({
+          source: z.literal('bval-sheet'),
+          builtBy: z.string(),
+          /** The official Google Sheet of final standings (the CSV export is what the build reads). */
+          standingsSheet: z.string().url(),
+          /** The bval.org page that links it. */
+          standingsIndex: z.string().url(),
+          /** division -> the official all-league document, or null when there is none. */
+          allLeagueDocs: z.record(division, z.string().url().nullable()),
+          /** The day the sheet and documents were read. */
+          retrievedOn: isoDate,
+          extraction: z.string(),
+          notes: z.array(z.string()),
+        }),
+      ]),
+      divisions: z.array(
+        z.object({
+          division,
+          label: z.string(),
+          standings: z.object({ varsity: z.array(row), jv: z.array(row) }),
+          awards: z.object({ varsity: awards.nullable(), jv: awards.nullable() }),
+        }),
+      ),
+    })
+    .refine(
+      (h) => h.divisions.length === divisions.size && new Set(h.divisions.map((d) => d.division)).size === divisions.size,
+      `expected each of the ${divisions.size} division(s) of ${leagueId} exactly once`,
+    )
+    // Places must be 1..n with no gaps, or the table would render a hole.
+    .refine(
+      (h) =>
+        h.divisions.every((d) =>
+          [d.standings.varsity, d.standings.jv].every((rows) => rows.every((r, i) => r.place === i + 1)),
+        ),
+      'standings places are not 1..n in order',
+    )
+    .refine(
+      (h) => h.divisions.every((d) => d.standings.varsity.length > 0),
+      'an available league needs varsity standings in every division',
+    );
+
+  const unavailable = z.object({
+    status: z.literal('unavailable'),
+    league: z.string(),
+    /** Why there is nothing to show, in words a reader can be given. */
+    reason: z.string().min(20),
+    /** The day we last looked. */
+    checkedOn: isoDate,
+    /** What we looked at, so the claim is checkable. */
+    checked: z.array(z.string().min(1)).min(1),
+  });
+
+  return z.discriminatedUnion('status', [available, unavailable]);
+}
+
+const leagueShape = Object.fromEntries(LEAGUE_IDS.map((l) => [l, leagueSchema(l)])) as Record<
+  string,
+  ReturnType<typeof leagueSchema>
+>;
 
 export const HistorySchema = z
   .object({
     season: z.string(),
     sport: z.string(),
-    league: z.string(),
-    provenance: z.object({
-      source: z.literal('scval-pdf'),
-      builtBy: z.string(),
-      standingsPdf: z.string().url(),
-      allLeaguePdf: z.string().url(),
-      extraction: z.string(),
-      notes: z.array(z.string()),
-    }),
-    divisions: z.array(
-      z.object({
-        division,
-        label: z.string(),
-        standings: z.object({
-          varsity: z.array(HistoryRowSchema),
-          jv: z.array(HistoryRowSchema),
-        }),
-        awards: z.object({
-          varsity: HistoryAwardsSchema.nullable(),
-          jv: HistoryAwardsSchema.nullable(),
-        }),
-      }),
-    ),
+    leagues: z.object(leagueShape).strict(),
   })
-  .refine((h) => h.divisions.length === 2, 'expected both divisions')
-  // Places must be 1..n with no gaps, or the table would render a hole.
   .refine(
     (h) =>
-      h.divisions.every((d) =>
-        [d.standings.varsity, d.standings.jv].every((rows) =>
-          rows.every((r, i) => r.place === i + 1),
-        ),
-      ),
-    'standings places are not 1..n in order',
+      LEAGUE_IDS.every((l) => {
+        const entry = (h.leagues as Record<string, { league: string }>)[l];
+        return entry?.league === getLeague(l).name;
+      }),
+    'a league entry is not named after its registry league',
   );
 
-export type HistoryRow = z.infer<typeof HistoryRowSchema>;
-export type HistoryPlayer = z.infer<typeof HistoryPlayerSchema>;
-export type HistoryAwards = z.infer<typeof HistoryAwardsSchema>;
-export type History = z.infer<typeof HistorySchema>;
+type LeagueEntry = z.infer<ReturnType<typeof leagueSchema>>;
+export type AvailableLeagueHistory = Extract<LeagueEntry, { status: 'available' }>;
+export type UnavailableLeagueHistory = Extract<LeagueEntry, { status: 'unavailable' }>;
+export type LeagueHistory = AvailableLeagueHistory | UnavailableLeagueHistory;
+export type HistoryDivision = AvailableLeagueHistory['divisions'][number];
+export type HistoryRow = HistoryDivision['standings']['varsity'][number];
+export type HistoryAwards = NonNullable<HistoryDivision['awards']['varsity']>;
+export type HistoryPlayer = HistoryAwards['firstTeam'][number];
+export type History = { season: string; sport: string; leagues: Record<string, LeagueHistory> };
 export type HistoryLevel = 'varsity' | 'jv';
 
 /**
@@ -140,7 +209,7 @@ function load(): History {
       .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
     throw new Error(`history failed validation:\n${lines.join('\n')}`);
   }
-  return parsed.data;
+  return parsed.data as History;
 }
 
 const history = load();
@@ -153,24 +222,56 @@ export function getHistorySeason(): string {
   return history.season;
 }
 
-/** The two source PDFs, so /history/2025-26 can credit scval.com beside the global attribution. */
-export function getHistorySources(): { standingsPdf: string; allLeaguePdf: string } {
-  return {
-    standingsPdf: history.provenance.standingsPdf,
-    allLeaguePdf: history.provenance.allLeaguePdf,
-  };
+/** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL). */
+export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
+  return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
+}
+
+export function getHistoryLeague(leagueId: LeagueId): LeagueHistory | undefined {
+  return history.leagues[leagueId];
+}
+
+/** The leagues that have final standings, in config order. */
+export function getAvailableHistoryLeagues(): Array<{ id: LeagueId; entry: AvailableLeagueHistory }> {
+  return getHistoryLeagues().filter(
+    (x): x is { id: LeagueId; entry: AvailableLeagueHistory } => x.entry.status === 'available',
+  );
+}
+
+/** The leagues marked unavailable, in config order. */
+export function getUnavailableHistoryLeagues(): Array<{ id: LeagueId; entry: UnavailableLeagueHistory }> {
+  return getHistoryLeagues().filter(
+    (x): x is { id: LeagueId; entry: UnavailableLeagueHistory } => x.entry.status === 'unavailable',
+  );
+}
+
+export function hasHistory(leagueId: LeagueId): boolean {
+  return history.leagues[leagueId]?.status === 'available';
+}
+
+/** The source credit of an available league (SCVAL's two PDFs, BVAL's sheet and documents). */
+export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory['provenance'] | null {
+  const entry = history.leagues[leagueId];
+  return entry?.status === 'available' ? entry.provenance : null;
+}
+
+function divisionEntry(division: DivisionId): HistoryDivision | undefined {
+  for (const { entry } of getAvailableHistoryLeagues()) {
+    const found = entry.divisions.find((d) => d.division === division);
+    if (found) return found;
+  }
+  return undefined;
 }
 
 export function getHistoryStandings(division: DivisionId, level: HistoryLevel = 'varsity'): HistoryRow[] {
-  const entry = history.divisions.find((d) => d.division === division);
-  return entry ? entry.standings[level] : [];
+  return divisionEntry(division)?.standings[level] ?? [];
 }
 
 export function getHistoryAwards(
   division: DivisionId,
   level: HistoryLevel = 'varsity',
 ): HistoryAwards | null {
-  return history.divisions.find((d) => d.division === division)?.awards[level] ?? null;
+  return divisionEntry(division)?.awards[level] ?? null;
 }
 
 /** Every 2025-26 row for one school, across divisions and levels. */
@@ -180,18 +281,51 @@ export function getHistoryFor(slug: TeamSlug): Array<{
   row: HistoryRow;
 }> {
   const out: Array<{ division: DivisionId; level: HistoryLevel; row: HistoryRow }> = [];
-  for (const d of history.divisions) {
-    for (const level of ['varsity', 'jv'] as const) {
-      const row = d.standings[level].find((r) => r.slug === slug);
-      if (row) out.push({ division: d.division, level, row });
+  for (const { entry } of getAvailableHistoryLeagues()) {
+    for (const d of entry.divisions) {
+      for (const level of ['varsity', 'jv'] as const) {
+        const row = d.standings[level].find((r) => r.slug === slug);
+        if (row) out.push({ division: d.division, level, row });
+      }
     }
   }
   return out;
 }
 
-/** The champions, for a one-line archive summary. */
-export function getHistoryChampions(): Array<{ division: DivisionId; row: HistoryRow }> {
-  return history.divisions
+/** One league's first-place varsity rows, for a one-line archive summary. */
+export function getHistoryChampions(leagueId: LeagueId): Array<{ division: DivisionId; row: HistoryRow }> {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  return entry.divisions
     .map((d) => ({ division: d.division, row: d.standings.varsity[0] }))
     .filter((x): x is { division: DivisionId; row: HistoryRow } => !!x.row);
+}
+
+/**
+ * Teams whose 2025-26 division (as the source printed it) is not the division the registry lists
+ * today (the 2026-27 alignment), e.g. Leland: Santa Teresa in the 2025-26 sheet, Mt. Hamilton in
+ * the registry. The history keeps the source's division; the page says that the team moved.
+ */
+export function getHistoryDivisionChanges(
+  leagueId: LeagueId,
+): Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  const out: Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> = [];
+  for (const d of entry.divisions) {
+    for (const r of d.standings.varsity) {
+      const team = r.slug ? getTeamBySlug(r.slug) : undefined;
+      if (r.slug && team && team.division !== d.division) {
+        out.push({ slug: r.slug, name: r.name, historyDivision: d.division, registryDivision: team.division });
+      }
+    }
+  }
+  return out;
+}
+
+/** Varsity rows whose source record has no ties field (`t` is null), by division. */
+export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  return entry.divisions.flatMap((d) => d.standings.varsity.filter((r) => r.t === null));
 }

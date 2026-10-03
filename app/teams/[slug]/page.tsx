@@ -89,11 +89,12 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * The player stats and the roster come after every game section: they answer "who is on this
  * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
  * rows each they would push those below the fold. Stats lead, since they change after every game.
- * Both are SCVAL-only (SPEC §0.2 item 12): `buildPlayerStatsView` / `buildRosterView` return null
- * for a team lib/rosters.ts and data/player-stats.json do not hold, and then the section is not
- * rendered at all — a BVAL, PCAL or MCAL page shows no empty state about a roster or stats nobody
- * collected for it. The meta description names player stats and the roster only for a team whose
- * page shows them.
+ * Both sections appear on every team page, in all four leagues: `buildPlayerStatsView` /
+ * `buildRosterView` return null only for a slug the data files do not hold, which a registry team
+ * never is. The empty states are honest about why: MaxPreps lists no players, the coach entered no
+ * stats, the last update failed with nothing to fall back on, or no update has covered the team
+ * yet. The meta description names player stats and the roster only for a team whose page lists
+ * them.
  *
  * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
  * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
@@ -139,8 +140,9 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
 
 /**
  * `player stats, roster, ` for the description, naming only what this page shows: stats when the
- * coach has entered some, the roster when it lists players. Empty for every team outside the
- * rosters' league (both views are null there), so those descriptions are unchanged.
+ * coach has entered some, the roster when it lists players. Empty for a team that has neither
+ * (a coach who published nothing, or a team no update has covered yet), so its description does not
+ * promise what the page lacks.
  */
 function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null): string {
   const parts: string[] = [];
@@ -184,14 +186,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leaguePlayed,
     leagueScheduled,
   } = view;
-  // Last season's varsity row from the 2025-26 standings PDF (the history league only: any other
-  // slug has no rows), and the size of that division as it was then (the alignment can change
-  // between seasons).
+  // Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;
+  // PCAL and MCAL are unavailable, so their slugs have no rows), and the size of that division as
+  // it was then (the alignment can change between seasons: Leland is in Santa Teresa here).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
   const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
-  // Both null outside the rosters' league (SCVAL only): no section, no empty state.
+  // Both exist for every registry team; an empty or pending team gets a stated empty state.
   const roster = buildRosterView(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
@@ -453,10 +455,11 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </li>
               ) : null}
             </ul>
-            {/* Last season in one line, record exactly as the 2025-26 standings PDF printed it
-                ("1-13"; the PDF drops a zero tie count on some rows). The site-wide disclaimer
-                that sat here is the footer's, so it is no longer repeated on every team page. The
-                link text keeps "2025-26" on one line rather than breaking at its hyphen. */}
+            {/* Last season in one line, record exactly as the league's 2025-26 standings
+                printed it ("1-13": SCVAL's PDF drops a zero tie count on some rows; BVAL's sheet
+                has no tie field for one row). The site-wide disclaimer that sat here is the
+                footer's, so it is no longer repeated on every team page. The link text keeps
+                "2025-26" on one line rather than breaking at its hyphen. */}
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
                 Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}

@@ -45,10 +45,10 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import { hasHistory } from '../../lib/history';
 import { outcomesFor, statusBadge } from '../../lib/standings';
 import {
   CCS,
-  HISTORY_LEAGUE,
   getDivision,
   getLeague,
   sectionOf,
@@ -337,7 +337,8 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     return {
       lead: 'The season is over.',
       body: 'The tables below are the final league standings.',
-      link: league.id === HISTORY_LEAGUE ? { href: '/history/2025-26', label: 'Last season' } : null,
+      // Only a league with a published 2025-26 table has a last season to link to.
+      link: hasHistory(league.id) ? { href: `/history/2025-26#${league.id}`, label: 'Last season' } : null,
     };
   }
 

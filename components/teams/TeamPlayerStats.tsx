@@ -118,13 +118,17 @@ export function TeamPlayerStats({ view }: { view: PlayerStatsView }) {
         heading={
           view.status === 'error'
             ? `${teamName}'s player stats could not be read.`
-            : `No player stats for ${teamName}.`
+            : view.status === 'pending'
+              ? `${teamName}'s player stats have not been collected yet.`
+              : `No player stats for ${teamName}.`
         }
         action={action}
       >
         {view.status === 'error'
           ? 'The last stats update failed and there was no earlier copy to fall back on.'
-          : 'Nobody has entered any on MaxPreps this season, and we have found no other public source.'}
+          : view.status === 'pending'
+            ? 'No stats update has covered this team yet. It will appear after the next one.'
+            : 'Nobody has entered any on MaxPreps this season.'}
       </EmptyState>
     );
   }

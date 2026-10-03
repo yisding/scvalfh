@@ -32,7 +32,8 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, formatStamp, listWords, shortDate, timeOfDayPT } from '../../lib/format';
+import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
 import { CCS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
@@ -95,11 +96,6 @@ function plural(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }
 
-/** 'SCVAL, BVAL, PCAL and MCAL' */
-function listWords(words: readonly string[]): string {
-  if (words.length <= 1) return words[0] ?? '';
-  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
-}
 
 const DROP_REASON_WORDS: Readonly<Record<DroppedContest['reason'], string>> = {
   'ghost-team': 'MaxPreps ghost team',
@@ -418,6 +414,9 @@ export default function AboutPage() {
 
   const TOC = toc(leagues);
   const leagueWords = listWords(leagues.map((l) => l.shortName));
+  const historySeason = getHistorySeason();
+  const historyAvailable = getAvailableHistoryLeagues();
+  const historyUnavailable = getUnavailableHistoryLeagues();
 
   return (
     // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
@@ -484,7 +483,11 @@ export default function AboutPage() {
                   MaxPreps&rsquo; own public data feed, the same one that powers its team and league
                   pages. We read it, never write to it, and never hotlink its mascot images &mdash;
                   each school is shown as a color monogram instead, built from the two colors the feed
-                  reports.
+                  reports. Each team page&rsquo;s roster and season player stats come from MaxPreps
+                  too, for all {counts.teams} teams in all four leagues: whatever the coach entered,
+                  with anything nobody published left blank. Other public sources, such as a school&rsquo;s
+                  own athletics site, only fill a blank MaxPreps leaves, and the team page marks every
+                  value that came from one.
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">
@@ -586,6 +589,19 @@ export default function AboutPage() {
             When MaxPreps has never published a result for a game that a league&rsquo;s official
             schedule says was scheduled &mdash; today that is {plural(officialFixtures.length, 'game', 'games')}{' '}
             &mdash; it is listed as scheduled per the league rather than silently dropped.
+          </p>
+          <p id="history-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
+            Last season ({historySeason}): the{' '}
+            <Link href="/history/2025-26" prefetch={false} className="text-accent hover:underline">
+              {historySeason} archive
+            </Link>{' '}
+            has final standings and all-league awards for{' '}
+            {listWords(historyAvailable.map((l) => getLeague(l.id).shortName))}, each from that
+            league&rsquo;s own documents (SCVAL&rsquo;s two PDFs; BVAL&rsquo;s standings sheet and all-league
+            documents), because MaxPreps only ever serves the current season.{' '}
+            {listWords(historyUnavailable.map((l) => getLeague(l.id).shortName))} {historyUnavailable.length === 1 ? 'is' : 'are'}{' '}
+            marked unavailable: no official {historySeason} standings were reachable, and we do not
+            fill the gap with standings or awards from third-party sites or newspapers.
           </p>
         </section>
 

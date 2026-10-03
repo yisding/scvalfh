@@ -55,7 +55,7 @@ export interface NavLinkProps {
   /** 'tab' is the bottom-bar item (56px tall, an equal fifth of the bar); 'top' is the desktop nav link. */
   variant: 'tab' | 'top';
   label: string;
-  /** Visually hidden words after the label (History: ' (SCVAL 2025-26)'). */
+  /** Visually hidden words after the label (History: ' (2025-26 final standings)'). */
   srSuffix?: string;
   /** A 20px inline SVG glyph for the tab variant. */
   glyph?: React.ReactNode;

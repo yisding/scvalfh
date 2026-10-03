@@ -1,17 +1,15 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every SCVAL team's MaxPreps season player stats into data/player-stats.json (SPEC §1.1k),
- * joined to data/rosters.json on the career id.
+ * Fetch every registry team's MaxPreps season player stats into data/player-stats.json (SPEC
+ * §1.1k): all four leagues, 43 teams, joined to data/rosters.json on the career id.
  *
- * Rosters and player stats stay SCVAL-only (SPEC §0.2 item 12, §4.2, §7.13): the teams are
- * teamsInLeague(HISTORY_LEAGUE), the 15 SCVAL teams data/rosters.json holds, never the whole
- * 43-team registry. BVAL, PCAL and MCAL team pages show no player stats.
- *
- *   pnpm fetch-player-stats                     live: one small JSON call per SCVAL team (15)
+ *   pnpm fetch-player-stats                     live: one small JSON call per registry team (43)
+ *   pnpm fetch-player-stats --leagues scval,bval  only these leagues; the others keep their previous rows
  *   pnpm fetch-player-stats --fixtures <dir>    offline: read stats-<slug>.json captures
+ *   pnpm fetch-player-stats --capture <dir>     live, and save each response as <dir>/stats-<slug>.json
  *   pnpm fetch-player-stats --rosters <path>    join against another rosters file
  *   pnpm fetch-player-stats --out <path>        write somewhere else
- *   pnpm fetch-player-stats --dry-run           parse and report, write nothing
+ *   pnpm fetch-player-stats --dry-run           parse and report, write nothing (captures included)
  *   pnpm fetch-player-stats --fetched-at <iso>  pin the stamp (reproducible fixture builds)
  *   pnpm fetch-player-stats --force             run even outside the Aug 1 – Nov 30 season window
  *
@@ -19,7 +17,10 @@
  * `pnpm fetch-data`, twice a day in season; each call is 0.2–35 KB. The budget is the MaxPreps
  * client's own (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
  * Run `pnpm fetch-rosters` first when the rosters have changed: a stats row whose player is not on
- * the roster is still published, under the stats sheet's own short name, with a warning.
+ * the roster is still published, under the stats sheet's own short name, with a warning. A team
+ * whose roster has no MaxPreps page id yet (its roster fetch failed, or is still pending) is
+ * still read, on its registry id (the registry id IS MaxPreps' team GUID, and the response's own
+ * teamId is checked against it); its rows are then all "not on the roster".
  *
  * Two guards keep the scheduled run from churning the repository. Outside the season window
  * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/leagues.ts' section windows,
@@ -27,20 +28,31 @@
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *
- * A partial run still publishes: a team whose call fails or does not parse keeps the previous
- * file's rows with status 'carried-forward' (or 'error' when there is nothing to carry), and the
- * process exits 1 so a scheduler notices. A team MaxPreps has no stats for is status 'none' —
- * that is the coach's choice, not a failure.
+ * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
+ * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
+ * (or 'error' when there is nothing to carry), and never stops another team or another league from
+ * being read. A team outside a `--leagues` run keeps the previous file's row untouched (or is
+ * 'pending' when the file has none). The process exits 1 when a team the run covered failed, so a
+ * scheduler notices; the report ends with one line per league. A team MaxPreps has no stats for is
+ * status 'none' — that is the coach's choice, not a failure.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { localDateKey, monthDay } from '../lib/format';
-import { HISTORY_LEAGUE, getLeague, seasonWindowBounds } from '../lib/leagues';
+import {
+  formatLeagueSummary,
+  inScope,
+  parseLeaguesFlag,
+  stableStringify,
+  summarizeByLeague,
+} from '../lib/fetch-scope';
+import { seasonWindowBounds } from '../lib/leagues';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
+  PlayerStatsPartialSchema,
   countPlayerStats,
   playerStatsContentKey,
   type PlayerStatsFile,
@@ -52,18 +64,19 @@ import {
   fetchPlayerStats,
   joinToRoster,
   parsePlayerStats,
+  pendingPlayerStats,
   playerStatsUrl,
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
 import { SEASON_YEAR } from '../lib/season';
-import { teamsInLeague } from '../lib/teams';
-
-/** Player stats stay SCVAL-only, like the rosters they join to (SPEC §0.2 item 12, §7.13). */
-const STATS_TEAMS = teamsInLeague(HISTORY_LEAGUE);
+import { TEAMS } from '../lib/teams';
+import type { LeagueId } from '../lib/types';
 
 interface Args {
   fixtures: string | null;
+  capture: string | null;
+  leagues: LeagueId[] | null;
   rosters: string;
   out: string;
   dryRun: boolean;
@@ -74,6 +87,8 @@ interface Args {
 function parseArgs(argv: readonly string[]): Args {
   const out: Args = {
     fixtures: null,
+    capture: null,
+    leagues: null,
     rosters: path.join(process.cwd(), 'data', 'rosters.json'),
     out: path.join(process.cwd(), 'data', 'player-stats.json'),
     dryRun: false,
@@ -89,6 +104,8 @@ function parseArgs(argv: readonly string[]): Args {
       return v;
     };
     if (arg === '--fixtures') out.fixtures = path.resolve(next());
+    else if (arg === '--capture') out.capture = path.resolve(next());
+    else if (arg === '--leagues') out.leagues = parseLeaguesFlag(next(), arg);
     else if (arg === '--rosters') out.rosters = path.resolve(next());
     else if (arg === '--out') out.out = path.resolve(next());
     else if (arg === '--dry-run') out.dryRun = true;
@@ -96,31 +113,19 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--force') out.force = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
+  if (out.fixtures && out.capture) throw new Error('--capture records live responses; it cannot be combined with --fixtures');
   return out;
 }
 
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
-
-/** The previous file, if it exists and still validates; its rows are what a failed team keeps. */
+/**
+ * The previous file, if it exists and still validates; its rows are what a failed or out-of-scope
+ * team keeps. Read with the partial schema so a file written before every team was in the registry
+ * (the 15 SCVAL teams) still counts: the teams it lacks are simply pending.
+ */
 function loadPrevious(file: string): PlayerStatsFile | null {
   if (!existsSync(file)) return null;
   try {
-    const parsed = PlayerStatsFileSchema.safeParse(JSON.parse(readFileSync(file, 'utf8')) as unknown);
+    const parsed = PlayerStatsPartialSchema.safeParse(JSON.parse(readFileSync(file, 'utf8')) as unknown);
     return parsed.success ? parsed.data : null;
   } catch {
     return null;
@@ -128,9 +133,10 @@ function loadPrevious(file: string): PlayerStatsFile | null {
 }
 
 const NOTES = [
+  'One entry per registry team, all four leagues (SCVAL, BVAL, PCAL, MCAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.',
   "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
   'Every number is what the coach entered on MaxPreps, for all of this season\'s varsity games, league and non-league alike. Coverage is the coach\'s choice: a team MaxPreps has no stats for is status none.',
-  "A stat is tracked for a team when the team's own total is above zero; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
+  "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
@@ -153,13 +159,23 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-player-stats: offline, from ${args.fixtures}`
-      : `fetch-player-stats: ${STATS_TEAMS.length} MaxPreps stats rollups (${getLeague(HISTORY_LEAGUE).shortName} only)`,
+      : `fetch-player-stats: ${TEAMS.filter((t) => inScope(t, args.leagues)).length} MaxPreps stats rollups` +
+          (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
+  // --dry-run writes nothing, --capture included.
+  const capture = args.dryRun ? null : args.capture;
+  if (capture) mkdirSync(capture, { recursive: true });
 
   const teams: TeamPlayerStats[] = await Promise.all(
-    STATS_TEAMS.map(async (team): Promise<TeamPlayerStats> => {
+    TEAMS.map(async (team): Promise<TeamPlayerStats> => {
+      // A league outside this run is not fetched: its previous row stays as it was.
+      if (!inScope(team, args.leagues)) {
+        return previous?.teams.find((t) => t.slug === team.slug) ?? pendingPlayerStats(team);
+      }
       const roster = rosters.teams.find((t) => t.slug === team.slug);
-      const maxprepsTeamId = roster?.maxprepsTeamId ?? null;
+      // The page's own id when the roster read one; else the registry id, which is MaxPreps' team
+      // GUID (the response's teamId is checked against it either way).
+      const maxprepsTeamId = roster?.maxprepsTeamId ?? (team.dataCoverage === 'none' ? null : team.id);
       const base = {
         slug: team.slug,
         teamId: team.id,
@@ -168,7 +184,7 @@ async function main(): Promise<number> {
         statsUrl: teamStatsPageUrl(team.external.maxprepsTeamUrl),
       };
       try {
-        if (!maxprepsTeamId) throw new Error('no MaxPreps team id in data/rosters.json');
+        if (!maxprepsTeamId) throw new Error('no MaxPreps team id: none on the roster and none in the registry');
         let page: PlayerStatsPage | null;
         if (args.fixtures) {
           const raw = JSON.parse(
@@ -179,7 +195,18 @@ async function main(): Promise<number> {
             url: playerStatsUrl(maxprepsTeamId),
           });
         } else {
-          page = await fetchPlayerStats(client, maxprepsTeamId);
+          page = await fetchPlayerStats(
+            client,
+            maxprepsTeamId,
+            capture
+              ? (raw) =>
+                  writeFileSync(
+                    path.join(capture, `stats-${team.slug}.json`),
+                    `${JSON.stringify(raw)}\n`,
+                    'utf8',
+                  )
+              : undefined,
+          );
         }
         if (!page) {
           return {
@@ -221,7 +248,9 @@ async function main(): Promise<number> {
         const error = err instanceof Error ? err.message : String(err);
         console.warn(`WARN ${team.slug}: ${error}`);
         const prior = previous?.teams.find((t) => t.slug === team.slug);
-        if (prior && prior.players.length) {
+        // Any row that was actually read (ok, none, or itself carried forward) is still true: a
+        // team with no stats stays "coach entered none", not "could not be read".
+        if (prior && prior.status !== 'error' && prior.status !== 'pending') {
           return { ...prior, ...base, status: 'carried-forward', error };
         }
         return {
@@ -267,26 +296,31 @@ async function main(): Promise<number> {
         (t.error ? ` · ERROR ${t.error}` : ''),
     );
   }
+  const byLeague = summarizeByLeague(teams, args.leagues);
+  console.log('');
+  for (const l of byLeague) console.log(formatLeagueSummary(l));
+  // Only teams this run covered decide the exit code: a league left out of the run is not a failure.
+  const failed = byLeague.reduce((n, l) => n + l.failed, 0);
   const c = file.counts;
   console.log(
     `\n${c.players} player stat lines on ${c.teamsWithStats} of ${c.teams} teams · ` +
-      `${c.goalkeepers} goalkeepers · ${c.errors} team(s) failed`,
+      `${c.goalkeepers} goalkeepers · ${failed} team(s) failed this run`,
   );
 
   if (args.dryRun) {
     console.log('\ndry run: nothing written');
-    return c.errors ? 1 : 0;
+    return failed ? 1 : 0;
   }
   if (previous && playerStatsContentKey(previous) === playerStatsContentKey(validated.data)) {
     console.log(
       `\nno change since ${previous.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
     );
-    return c.errors ? 1 : 0;
+    return failed ? 1 : 0;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
   writeFileSync(args.out, stableStringify(file), 'utf8');
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return c.errors ? 1 : 0;
+  return failed ? 1 : 0;
 }
 
 main()

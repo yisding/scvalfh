@@ -10,7 +10,7 @@ import DivisionTabs from '../../../components/standings/DivisionTabs';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { HISTORY_LEAGUE } from '../../../lib/leagues';
+import { hasHistory } from '../../../lib/history';
 
 import { getStandingsPageData, leagueChips, leaderClause, leagueHrefs } from '../standings-data';
 
@@ -163,7 +163,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
 
       {/* The pills sit on the canvas, where the default surface-2 fill all but vanished in light:
           the surface plus a 1px ring makes them read as buttons, like the division pills. Only the
-          history league has a finished season to compare with (SPEC §8.1). */}
+          league with a published 2025-26 table has a finished season to compare with (SPEC §8.1). */}
       <div className="mt-6 flex flex-wrap gap-2">
         {summary.links.map((link) => (
           <ExternalLink
@@ -174,9 +174,9 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
             {link.label}
           </ExternalLink>
         ))}
-        {summary.id === HISTORY_LEAGUE ? (
+        {hasHistory(summary.id) ? (
           <Link
-            href="/history/2025-26"
+            href={`/history/2025-26#${summary.id}`}
             prefetch={false}
             className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
           >

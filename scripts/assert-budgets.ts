@@ -11,13 +11,14 @@
  * |----------------------------------------------------------------|------------------------------------|
  * | data/snapshot.json raw                                         | ≤ 1.6 MB (warn > 1.2 MB)           |
  * | `/` HTML gzip and RSC gzip                                     | each ≤ 2.0 × baseline `index`      |
- * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/standings/<league>` | ≤ baseline + 20 KB  |
+ * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>` | ≤ baseline + 20 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.0 × baseline `standings`       |
  * | each `/standings/<league>` HTML gzip                           | ≤ 1.25 × baseline `standings`      |
  * | each `/schedule/<league>` HTML gzip                            | ≤ 1.25 × baseline `schedule`       |
  * | `/schedule` (index) HTML gzip                                  | ≤ 0.5 × baseline `schedule`        |
  * | `/teams` HTML gzip                                             | ≤ 3.0 × baseline `teams`           |
  * | `/playoffs` HTML gzip                                          | ≤ 2.0 × baseline `playoffs`        |
+ * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 600 KB                |
  *
  * The first-load JS budget is what catches config, the registry or zod leaking into the browser
@@ -84,6 +85,16 @@ if (!workerOnly) {
   check('/schedule HTML gzip', gz(file('schedule.html')), 0.5 * baseline.schedule.htmlGzip, '0.5 × schedule');
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
+  // Every team page, all 43: the largest was ~39 KB gzip (3.9 × baseline) with both the Roster and
+  // the Player stats section; 6.0 × leaves room for a busy week of games, not for a table per player.
+  const teamDir = path.join(APP, 'teams');
+  const teamPages = existsSync(teamDir) ? readdirSync(teamDir).filter((f) => f.endsWith('.html')).sort() : [];
+  if (teamPages.length === 0) failures.push(`${teamDir} has no prerendered team pages — run \`pnpm build\` first`);
+  const teamGz = teamPages.map((f) => ({ f, bytes: gz(file(`teams/${f}`)) }));
+  const biggest = teamGz.reduce((m, x) => (x.bytes > m.bytes ? x : m), { f: '', bytes: 0 });
+  if (teamGz.length) {
+    check(`/teams/<slug> HTML gzip, largest of ${teamGz.length}`, biggest.bytes, 6.0 * baseline.teams.htmlGzip, `6.0 × teams: ${biggest.f}`);
+  }
 
   // ------------------------------------------------------------ first-load client JS
   if (!existsSync(STATS)) {
@@ -94,6 +105,7 @@ if (!workerOnly) {
       ['/', 'index'],
       ['/schedule/[league]', 'schedule'],
       ['/teams', 'teams'],
+      ['/teams/[slug]', 'teams'],
       ['/standings/[league]', 'standings'],
     ];
     for (const [route, base] of js) {

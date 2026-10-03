@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
-import { HISTORY_LEAGUE, LEAGUES, getLeague } from '@/lib/leagues';
+import { listWords } from '@/lib/format';
+import { getAvailableHistoryLeagues } from '@/lib/history';
+import { LEAGUES, getLeague } from '@/lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -23,7 +25,7 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
   {
     href: '/history/2025-26',
     name: 'History',
-    description: `Last season’s final ${getLeague(HISTORY_LEAGUE).shortName} tables and awards`,
+    description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
   },
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
@@ -31,9 +33,9 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
  * links are the real navigation rather than a single "go home": one card per top-level page
- * (the seven desktop nav destinations, the History archive among them, which only the history
- * league has), with its name over a one-line description, so nothing is a sentence squeezed into
- * a pill.
+ * (the seven desktop nav destinations, the History archive among them, which covers the leagues
+ * with a published 2025-26 table), with its name over a one-line description, so nothing is a
+ * sentence squeezed into a pill.
  *
  * The copy does not claim these seven are every page on the site — there are hundreds of team,
  * game and day pages — only that each of those is reachable from one of them, which is true.

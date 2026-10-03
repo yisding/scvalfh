@@ -6,7 +6,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, HISTORY_LEAGUE, LEAGUES, LEAGUE_IDS,
+  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, LEAGUE_IDS,
   RESERVED_SEGMENTS, SECTIONS, TOURNAMENT_LEAGUE_IDS, assertLeagues, divisionDisplay,
   divisionHeading, divisionLabel, divisionsOf, findDivision, findLeague, getDivision, getLeague,
   getSection, isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision,
@@ -71,7 +71,6 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county',
     ]);
     expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs']);
-    expect(HISTORY_LEAGUE).toBe('scval');
   });
 
   it('labels divisions, and single-division leagues have no division heading', () => {

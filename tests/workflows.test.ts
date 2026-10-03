@@ -16,6 +16,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { gameIdToParam } from '../lib/game-id';
+import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
 import { REPO } from './helpers';
 
@@ -76,10 +77,10 @@ describe('the update-data commit and the deploy gate', () => {
 });
 
 describe('the player stats step', () => {
-  const step = /- name: Fetch player stats\n([\s\S]*?)\n\n/.exec(update)?.[1] ?? '';
+  const step = stepBody(update, 'Fetch player stats');
 
   it('runs the stats script, after the snapshot and before the tests', () => {
-    expect(step).toContain('run: pnpm fetch-player-stats');
+    expect(step).toContain('pnpm fetch-player-stats "${args[@]}"');
     const at = (s: string) => update.indexOf(s);
     expect(at('- name: Fetch data')).toBeLessThan(at('- name: Fetch player stats'));
     expect(at('- name: Fetch player stats')).toBeLessThan(at('- name: Test'));
@@ -89,8 +90,19 @@ describe('the player stats step', () => {
     expect(step).toMatch(/continue-on-error: true/);
   });
 
-  it('passes the manual --force through, as fetch-data does', () => {
-    expect(step).toContain("inputs.force) && '--force'");
+  it('passes the manual force and leagues inputs through env, as fetch-data does, validated', () => {
+    expect(step).toContain("FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}");
+    expect(step).toContain("LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}");
+    expect(step).toContain('[ -n "$FORCE" ] && args+=(--force)');
+    expect(step).toContain('[[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]]');
+    expect(step).toContain('args+=(--leagues "$LEAGUES")');
+    // Never interpolated into the script itself.
+    expect(step.slice(step.indexOf('run: |'))).not.toContain('inputs.');
+  });
+
+  it('is not described as SCVAL-only: it covers every league', () => {
+    expect(update).not.toMatch(/SCVAL[- ]only/i);
+    expect(update).not.toMatch(/15 SCVAL teams/);
   });
 });
 
@@ -159,6 +171,18 @@ describe('assert:prerender on a .next that has served traffic', () => {
   const OK_META = JSON.stringify({ status: 200, headers: { 'content-type': 'image/png' } });
   const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
 
+  /** A league section for every league, a division anchor inside each available one. */
+  function historyBody(omit: string[] = []): string {
+    return getHistoryLeagues()
+      .filter(({ id }) => !omit.includes(id))
+      .map(({ id, entry }) =>
+        `<section id="${id}">${
+          entry.status === 'available' ? entry.divisions.map((d) => `<section id="${d.division}"></section>`).join('') : ''
+        }</section>`,
+      )
+      .join('');
+  }
+
   function tree(extra: Record<string, string>): string {
     const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-prerender-'));
     const app = path.join(root, '.next', 'server', 'app');
@@ -166,9 +190,11 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams']) {
       put(`${p}.html`);
     }
+    // The history page: a section per league, and a division anchor for every available league.
+    put('history/2025-26.html', historyBody());
     put('opengraph-image.body');
     put('standings/opengraph-image.body');
     const families: Record<string, string[]> = {
@@ -182,9 +208,12 @@ describe('assert:prerender on a .next that has served traffic', () => {
       scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
       teams: snapshot.teams.map((t) => t.slug),
     };
+    // A team page carries both sections on every team, in every league.
+    const body = (family: string) =>
+      family === 'teams' ? '<main><section id="player-stats"></section><section id="roster"></section></main>' : '';
     for (const [family, params] of Object.entries(families)) {
       for (const p of params) {
-        put(`${family}/${p}.html`);
+        put(`${family}/${p}.html`, body(family));
         put(`${family}/${p}/opengraph-image.body`, 'png');
         put(`${family}/${p}/opengraph-image.meta`, OK_META);
       }
@@ -226,6 +255,19 @@ describe('assert:prerender on a .next that has served traffic', () => {
     expect(r.output).toContain('ignoring 7 opengraph-image 404(s)');
     expect(r.output).toContain('assert-prerender: ok');
     expect(r.status).toBe(0);
+  });
+
+  it('fails a history page that lost a league section, naming it', () => {
+    const r = run(tree({ 'history/2025-26.html': historyBody(['pcal']) }));
+    expect(r.output).toContain('FAIL history/2025-26: no section id="pcal"');
+    expect(r.status).toBe(1);
+  });
+
+  it('fails a team page that lost its Roster or Player stats section, naming the team', () => {
+    const slug = snapshot.teams[30].slug; // a BVAL/PCAL/MCAL team, not an SCVAL one
+    const r = run(tree({ [`teams/${slug}.html`]: '<main><section id="roster"></section></main>' }));
+    expect(r.output).toContain(`team page section(s) missing: ${slug} (#player-stats)`);
+    expect(r.status).toBe(1);
   });
 
   it('still fails on a served card without its page, with or without a .meta', () => {

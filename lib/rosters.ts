@@ -1,6 +1,6 @@
 /**
- * The read API for data/rosters.json and data/rosters-enrichment.json — every SCVAL team's roster
- * (SPEC §1.1j).
+ * The read API for data/rosters.json and data/rosters-enrichment.json — every registry team's
+ * roster, all four leagues (SPEC §1.1j).
  *
  * Two files, one view:
  *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
@@ -10,7 +10,8 @@
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
  *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
  *     profiles (NCSA and the like). `getEnrichedTeamRoster` merges the two and says, per field,
- *     where each value came from.
+ *     where each value came from. Both files hold one entry per registry team (43); a team no run
+ *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
  *
  * Both are imported so the build bundles them, for the reason lib/history.ts and lib/data.ts give:
  * a Worker has no project filesystem. Both are validated once at module scope, and the merge rules

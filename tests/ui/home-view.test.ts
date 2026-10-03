@@ -200,8 +200,10 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     expect(`${pcal?.lead} ${pcal?.body}`, `${HD}: PCAL playoffs`).toBe(
       'PCAL league play is over. CCS seeds the 16-team field on Mon Nov 2; quarterfinals are Sat Nov 7.',
     );
-    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${HD}: no last-season link outside SCVAL`).toBeNull();
-    expect(lead('scval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26');
+    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${HD}: no last-season link: PCAL history is unavailable`).toBeNull();
+    expect(lead('mcal', 'complete', '2026-11-20')?.link).toBeNull();
+    expect(lead('scval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#scval');
+    expect(lead('bval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#bval');
   });
 });
 

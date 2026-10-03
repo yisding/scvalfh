@@ -9,8 +9,9 @@ import type {
 import type { Game, TeamSlug } from '../../lib/types';
 
 /**
- * The team page's player stats section (SPEC §1.1k), derived from data/player-stats.json. Pure, so
- * tests/ui/player-stats-view.test.ts can assert it over the real file.
+ * The team page's player stats section (SPEC §1.1k), derived from data/player-stats.json, for every
+ * team of all four leagues. Pure, so tests/ui/player-stats-view.test.ts can assert it over the real
+ * file.
  *
  * Three blocks, each shown only when the team has something for it:
  *   - Scoring: games, goals, assists, points — the columns every stat-keeping coach fills in;
@@ -156,11 +157,11 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): Goalie
 }
 
 /**
- * null for a team data/player-stats.json does not hold: player stats are SCVAL-only, like the
- * rosters they join to (SPEC §0.2 item 12), so a BVAL, PCAL or MCAL page gets no player stats
- * section at all — never an empty state that would read as the coach entering none. Never throws
- * for a registry slug. (An SCVAL team whose coach enters no stats still gets a view, with no
- * tables, and the section says so.)
+ * The player stats section for any registry team, in every league. null only for a slug
+ * data/player-stats.json does not hold (not a registry team). A team whose coach enters no stats
+ * still gets a view, with no tables, and the section says so (status 'none'); one no run has
+ * covered yet has status 'pending' and says that instead; one whose fetch failed with nothing to
+ * fall back on has status 'error'. Never throws for a registry slug.
  *
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.

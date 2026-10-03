@@ -15,6 +15,16 @@
  * `playoffs/mcal`, its nine team pages): no "automatic qualifier", "at-large", "CCS Division",
  * "CCS picture", no BerthMeter label ("holds <n> of 16"), and "CCS" only in the
  * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
+ * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all four
+ * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
+ * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL and MCAL unavailable):
+ *  - never says the archive is SCVAL-only (it was, once);
+ *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="mcal"`), the division
+ *    anchors of every available league, and a "Unavailable" card, with the reason, in the section of
+ *    every league the data marks unavailable;
+ *  - an unavailable league's section has no table and names no champion, winner or award, so
+ *    nothing is shown for it that we could not read from an official source;
+ *  - an available league's tables are the data's: every varsity row's league record is on the page.
  * And: `playoffs/mcal.html` contains "North Coast Section"; `standings.html` keeps the old anchors
  * `id="de-anza"` and `id="el-camino"`.
  *
@@ -24,7 +34,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import { getHistoryLeagues } from '../lib/history';
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
+import { SCVAL_ONLY_CLAIM } from './copy-rules';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -73,6 +85,12 @@ for (const file of files) {
   const withoutMaxprepsUrls = html.replace(/https?:(?:\/|\\\/){2}(?:www\.)?maxpreps\.com[^\s"'<>\\]*/g, '');
   forbid(file, withoutMaxprepsUrls, /gabilan/i, '"gabilan" outside a MaxPreps URL');
   forbid(file, html, /eliminat/i, 'contains "eliminat…"');
+  forbid(
+    file,
+    html,
+    SCVAL_ONLY_CLAIM,
+    'claims rosters or player stats are SCVAL-only',
+  );
   for (const label of bannedDivisionLabels) {
     const i = html.indexOf(label);
     if (i >= 0) fail(file, `single-division league labelled as a division ("${label}") — “…${around(html, i)}…”`);
@@ -108,6 +126,49 @@ for (const league of ncsLeagues) {
   const file = `playoffs/${league.id}.html`;
   const p = path.join(APP, file);
   if (existsSync(p) && !readFileSync(p, 'utf8').includes('North Coast Section')) fail(file, 'does not say "North Coast Section"');
+}
+
+// ---------------------------------------------------------------- /history/2025-26
+const historyFile = 'history/2025-26.html';
+const historyPath = path.join(APP, historyFile);
+if (!existsSync(historyPath)) {
+  fail(historyFile, 'not prerendered');
+} else {
+  const html = readFileSync(historyPath, 'utf8');
+  const main = mainOf(historyFile, html);
+  forbid(historyFile, main, /SCVAL[- ]only/i, 'says the archive is SCVAL-only');
+  forbid(historyFile, main, /Only SCVAL/i, 'says only SCVAL has an archive');
+  /** A league's `<section id="<league>" …>…</section>`: sections are not nested at this level. */
+  const sectionOf = (id: string): string => {
+    const start = main.indexOf(`<section id="${id}"`);
+    if (start < 0) return '';
+    const next = main.indexOf('<section id="', start + 1);
+    return main.slice(start, next < 0 ? main.length : next);
+  };
+  const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
+  for (const { id, entry } of getHistoryLeagues()) {
+    const section = sectionOf(id);
+    if (!section) {
+      fail(historyFile, `no <section id="${id}">`);
+      continue;
+    }
+    if (entry.status === 'available') {
+      for (const d of entry.divisions) {
+        if (!section.includes(`id="${d.division}"`)) fail(historyFile, `${id}: no id="${d.division}" division anchor`);
+        for (const row of d.standings.varsity) {
+          if (!section.includes(`>${row.leagueRecord}<`)) {
+            fail(historyFile, `${id}/${d.division}: ${row.name}'s record ${row.leagueRecord} is not on the page`);
+          }
+        }
+      }
+      if (/Unavailable/.test(section)) fail(historyFile, `${id}: an available league says "Unavailable"`);
+    } else {
+      if (!section.includes('Unavailable')) fail(historyFile, `${id}: unavailable league has no "Unavailable" card`);
+      if (!attrDecode(section).includes(entry.reason.slice(0, 40))) fail(historyFile, `${id}: the reason is not on the page`);
+      if (/<table/.test(section)) fail(historyFile, `${id}: an unavailable league shows a table`);
+      forbid(historyFile, section, /champion|winner|all-league|MVP|first team/i, `${id}: an unavailable league shows a result or award`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------- old anchors

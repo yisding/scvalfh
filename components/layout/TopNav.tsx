@@ -1,4 +1,4 @@
-import { CCS_LEAGUE_IDS, HISTORY_LEAGUE, LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, getLeague } from '../../lib/leagues';
+import { CCS_LEAGUE_IDS, LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
@@ -29,8 +29,7 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
 
 /**
  * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3). History keeps its short
- * visible label; an sr-only suffix says whose history it is, because only one league has a past
- * season here (its page is titled with it).
+ * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
  */
 export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
   { href: '/', label: 'Home' },
@@ -38,7 +37,7 @@ export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: 
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },
   { href: '/playoffs', label: 'Playoffs' },
-  { href: '/history/2025-26', label: 'History', srSuffix: ` (${getLeague(HISTORY_LEAGUE).shortName} 2025-26)` },
+  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
   { href: '/about', label: 'About' },
 ];
 

@@ -25,17 +25,11 @@ import {
 } from '../../components/teams/player-stats-view';
 import { buildTeamPageView } from '../../components/teams/team-view';
 import { getPlayerStats } from '../../lib/player-stats';
-import { HISTORY_LEAGUE } from '../../lib/leagues';
+import { LEAGUE_IDS } from '../../lib/leagues';
 import type { PlayerStatsFile, TeamPlayerStats as TeamStats } from '../../lib/player-stats-schema';
-import { TEAMS as REGISTRY, teamsInLeague } from '../../lib/teams';
+import { TEAMS, teamsInLeague } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { buildFixturePlayerStats } from '../helpers';
-
-/**
- * Rosters and player stats are SCVAL-only (SPEC §0.2 item 12): the teams these files hold are the
- * registry's HISTORY_LEAGUE teams (15), not the whole 43-team registry.
- */
-const TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 interface Case {
   slug: string;
@@ -64,16 +58,18 @@ describe('buildPlayerStatsView — rules, over the committed file', () => {
     }
   });
 
-  it('builds no view (null: no section, no empty state) for a team outside SCVAL', () => {
-    const others = REGISTRY.filter((t) => t.league !== HISTORY_LEAGUE);
-    expect(others.length).toBe(REGISTRY.length - TEAMS.length);
-    for (const t of others) {
-      const page = buildTeamPageView(t.slug)!;
-      expect(buildPlayerStatsView(t.slug, [...page.leagueLog, ...page.nonLeagueLog]), t.slug).toBeNull();
+  it('builds a view for every team of every league, and null only for a slug that is no team', () => {
+    expect(live).toHaveLength(43);
+    for (const id of LEAGUE_IDS) {
+      for (const t of teamsInLeague(id)) {
+        const page = buildTeamPageView(t.slug)!;
+        expect(buildPlayerStatsView(t.slug, [...page.leagueLog, ...page.nonLeagueLog]), `${id} / ${t.slug}`).not.toBeNull();
+      }
     }
+    expect(buildPlayerStatsView('not-a-school' as never)).toBeNull();
   });
 
-  it('builds a view for every SCVAL team; a team with no stats has no tables', () => {
+  it('builds a view for every team; a team with no stats has no tables', () => {
     for (const { slug, data, view } of live) {
       expect(view, slug).toBeTruthy();
       if (data.players.length === 0) {
@@ -138,7 +134,7 @@ describe('buildPlayerStatsView — rules, over the committed file', () => {
       const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view }));
       expect(html, slug).not.toMatch(/>(null|undefined|NaN)</);
       for (const r of [...(view.scoring?.rows ?? []), ...(view.more?.rows ?? [])]) {
-        expect(html, `${slug} ${r.name}`).toContain(r.name.replace(/'/g, '&#x27;'));
+        expect(html, `${slug} ${r.name}`).toContain(r.name.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;'));
       }
       for (const c of [...(view.scoring?.columns ?? []), ...(view.more?.columns ?? [])]) {
         expect(html, `${slug} ${c.key}`).toContain(`<span class="sr-only">${c.title}</span>`);
@@ -172,7 +168,28 @@ describe('buildPlayerStatsView — the 2026-10-02 captures', () => {
   it('says a team with no stats has none, rather than rendering an empty table', () => {
     const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view: at('saratoga').view }));
     expect(html).toContain('No player stats for Saratoga.');
+    expect(html).toContain('Nobody has entered any on MaxPreps this season.');
     expect(html).not.toContain('<table');
+  });
+
+  it('says a team no update has covered is not collected, and never that its coach entered none', () => {
+    // The build covers SCVAL only, so every other league's team is pending.
+    const pending = fixture.filter((c) => !teamsInLeague('scval').some((t) => t.slug === c.slug));
+    expect(pending).toHaveLength(28);
+    for (const { slug, data, view } of pending) {
+      expect(data.status, slug).toBe('pending');
+      expect(view.status, slug).toBe('pending');
+      const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view }));
+      expect(html, slug).toContain('player stats have not been collected yet');
+      expect(html, slug).not.toContain('No player stats for');
+      expect(html, slug).not.toContain('<table');
+    }
+  });
+
+  it('says a failed read with nothing to fall back on could not be read', () => {
+    const view = { ...at('saratoga').view, status: 'error' as const };
+    const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view }));
+    expect(html).toContain('player stats could not be read');
   });
 
   it('counts a game played later on the day of the update (Santa Clara: 11:15, then a 4 PM final)', () => {

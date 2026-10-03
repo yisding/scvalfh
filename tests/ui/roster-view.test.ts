@@ -12,24 +12,30 @@ import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
 import { buildRosterView } from '../../components/teams/roster-view';
-import { HISTORY_LEAGUE } from '../../lib/leagues';
+import { LEAGUE_IDS } from '../../lib/leagues';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { TEAMS as REGISTRY, teamsInLeague } from '../../lib/teams';
+import { TEAMS, teamsInLeague } from '../../lib/teams';
 
-/**
- * Rosters and player stats are SCVAL-only (SPEC §0.2 item 12): the teams these files hold are the
- * registry's HISTORY_LEAGUE teams (15), not the whole 43-team registry.
- */
-const TEAMS = teamsInLeague(HISTORY_LEAGUE);
-
+/** Rosters cover every registry team, all four leagues: 43 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));
 
 describe('buildRosterView', () => {
-  it('builds a view for every SCVAL team, and null (no section, no empty state) for every other', () => {
+  it('builds a view for every team of every league, and null only for a slug that is no team', () => {
+    expect(views).toHaveLength(43);
     for (const { slug, view } of views) expect(view, slug).toBeTruthy();
-    const others = REGISTRY.filter((t) => t.league !== HISTORY_LEAGUE);
-    expect(others.length).toBe(REGISTRY.length - TEAMS.length);
-    for (const t of others) expect(buildRosterView(t.slug), t.slug).toBeNull();
+    for (const id of LEAGUE_IDS) {
+      for (const t of teamsInLeague(id)) expect(buildRosterView(t.slug), `${id} / ${t.slug}`).not.toBeNull();
+    }
+    expect(buildRosterView('not-a-school' as never)).toBeNull();
+  });
+
+  it('says what each team\'s list is: its players, MaxPreps listing none, a failed read, or not covered yet', () => {
+    for (const { slug, view } of views) {
+      const merged = getEnrichedTeamRoster(slug)!;
+      expect(view.status, slug).toBe(merged.status);
+      if (view.status === 'error' || view.status === 'pending' || view.status === 'empty') expect(view.rows, slug).toEqual([]);
+      if (view.status === 'pending') expect(view.asOf, slug).toBeNull();
+    }
   });
 
   it('lists every MaxPreps row except the ones a school source marks JV', () => {
@@ -177,7 +183,7 @@ describe('TeamRoster', () => {
     for (const { slug, view } of views) {
       const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
       for (const row of view.rows) {
-        expect(html, `${slug} / ${row.name}`).toContain(row.name.replace(/&/g, '&amp;').replace(/'/g, '&#x27;'));
+        expect(html, `${slug} / ${row.name}`).toContain(row.name.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;'));
       }
       expect(html.includes('†'), slug).toBe(view.hasElsewhere);
       expect(html, slug).not.toMatch(/>(null|undefined)</);
@@ -198,7 +204,7 @@ describe('TeamRoster', () => {
       profilePlatforms: ['NCSA', 'personal sites'],
     };
     const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
-    const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/'/g, '&#x27;');
+    const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
     expect(html).toMatch(
       /<a href="https:\/\/www\.ncsasports\.org\/x\/one" target="_blank" rel="noopener noreferrer"[^>]*>/,
     );
@@ -219,9 +225,45 @@ describe('TeamRoster', () => {
   it('shows a stated empty state, not an empty card, when a team has no rows', () => {
     const base = views[0].view;
     const html = renderToStaticMarkup(
-      createElement(TeamRoster, { view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [] } }),
+      createElement(TeamRoster, {
+        view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [], otherSourcesChecked: true },
+      }),
     );
     expect(html).toContain(`MaxPreps lists no players for ${base.teamName}.`);
+    expect(html).toContain('No other public source we checked has a current roster either.');
     expect(html).not.toContain('<ul class="sx-card');
+  });
+
+  it('claims no other source was checked only where one was', () => {
+    for (const { slug, view } of views) {
+      const merged = getEnrichedTeamRoster(slug)!;
+      expect(view.otherSourcesChecked, slug).toBe(merged.sources.length > 0 || merged.enrichmentNotes.length > 0);
+    }
+    const base = views[0].view;
+    const unchecked = renderToStaticMarkup(
+      createElement(TeamRoster, {
+        view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [], otherSourcesChecked: false },
+      }),
+    );
+    expect(unchecked).toContain('We have not checked other public sources for this team.');
+    expect(unchecked).not.toContain('No other public source we checked');
+  });
+
+  it('says a team no update has covered yet is not collected, and never that MaxPreps lists nobody', () => {
+    const base = views[0].view;
+    const html = renderToStaticMarkup(
+      createElement(TeamRoster, {
+        view: { ...base, status: 'pending', rows: [], conflicts: [], coaches: [], asOf: null },
+      }),
+    );
+    expect(html).toContain(`${base.teamName}&#x27;s roster has not been collected yet.`);
+    expect(html).not.toContain('MaxPreps lists no players');
+    expect(html).not.toContain('could not be read');
+    // Every pending team in the committed file renders the same way.
+    for (const { slug, view } of views.filter((v) => v.view.status === 'pending')) {
+      const out = renderToStaticMarkup(createElement(TeamRoster, { view }));
+      expect(out, slug).toContain('has not been collected yet');
+      expect(out, slug).not.toMatch(/>(null|undefined)</);
+    }
   });
 });

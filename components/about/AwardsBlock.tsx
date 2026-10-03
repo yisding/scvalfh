@@ -6,9 +6,9 @@ import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
 
 /**
  * The 2025-26 all-league awards (DESIGN §3.9): overall award lines, then First Team / Second
- * Team / Honorable Mention as `<dl>`s. `value` on an overall award is the PDF's right-hand side
- * printed verbatim — the three leagues in this file wrote it differently, so this site does not
- * try to normalize it.
+ * Team / Honorable Mention as `<dl>`s. `value` on an overall award is the source's right-hand side
+ * printed as written — the divisions write it differently, so this site does not try to
+ * normalize it.
  */
 export interface AwardsBlockProps {
   awards: HistoryAwards | null;
@@ -60,7 +60,9 @@ function PlayerList({
               <span className="block text-meta text-ink-2">
                 {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and
                     never starts a line with one ("· Cupertino"), nor splits "12th grade". */}
-                {p.position}&nbsp;&middot; {ordinal(p.year)}&nbsp;grade&nbsp;&middot;{' '}
+                {/* A blank position cell in the source is null: say nothing rather than guess. */}
+                {p.position ? <>{p.position}&nbsp;&middot; </> : null}
+                {ordinal(p.year)}&nbsp;grade&nbsp;&middot;{' '}
                 {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads
                     the whole linked route the moment the link scrolls into view, and every award
                     names a school, so one block is dozens of these. Navigation still fetches on
