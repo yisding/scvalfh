@@ -85,7 +85,7 @@ export interface MyTeamCardProps {
   views: HomeTeamView[];
 }
 
-/** An in-card label ("Last", "Next", "Form", "CCS"): 12px sans, sentence case, ink-3. Not a heading. */
+/** An in-card label ("Last", "Next", "Form", "CCS now"): 12px sans, sentence case, ink-3. Not a heading. */
 function Kicker({ children }: { children: React.ReactNode }) {
   return <span className="text-micro font-medium text-ink-3">{children}</span>;
 }
@@ -211,7 +211,10 @@ export function PinnedCard({
                 height never depends on it. A game still waiting for its score says so (the
                 §5.2 note). A final says where the team stands for CCS — the boilerplate
                 auto-recap it used to show repeated the score above in words — until the
-                committee seeds the field, when there is nothing left to project. */}
+                committee seeds the field, when there is nothing left to project. That status
+                is only where the team would land if the season ended today, so the visible
+                kicker says "now" as well as the accessible name ("currently projects … Not
+                official"): a bare "CCS · Automatic qualifier" read as settled. */}
             <div className="mt-1 h-10">
               {last.display.kind !== 'final' ? (
                 last.display.note ? (
@@ -219,7 +222,7 @@ export function PinnedCard({
                 ) : null
               ) : view.projection ? (
                 <p className="m-0 flex min-w-0 items-baseline gap-2">
-                  <Kicker>CCS</Kicker>
+                  <Kicker>CCS now</Kicker>
                   <Link
                     href="/playoffs#projection"
                     prefetch={false}

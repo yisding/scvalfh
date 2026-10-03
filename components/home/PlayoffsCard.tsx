@@ -67,12 +67,13 @@ export function PlayoffsCard({ playoffs, phase, crossover, className }: Playoffs
           ))}
         </dl>
         <p className="mt-5 mb-0 border-t border-divider pt-4 text-meta text-ink-3">
-          Berths are assigned by the CCS committee at the {shortDate(keyDates.seedingMeeting)}{' '}
-          seeding meeting.{' '}
+          {/* No date here: the card's opening line already names the seeding meeting's date in
+              every phase. */}
+          Berths are assigned by the CCS committee at the seeding meeting.{' '}
           {bracketPublished ? (
             <ExternalLink href={bracketUrl}>Official bracket</ExternalLink>
           ) : (
-            <Link href="/playoffs" className="text-accent hover:underline">
+            <Link href="/playoffs" className="text-accent whitespace-nowrap hover:underline">
               What we know <span aria-hidden="true">&rarr;</span>
             </Link>
           )}

@@ -59,6 +59,7 @@ export function NextSlate({
   // and the card must not say league play resumes on a later date under a "1 league" meta.
   const resume =
     nextLeague && nextLeague.games.length > 0 && games.every((g) => !g.isLeague) ? nextLeague : null;
+  const resumeRows = resume ? resume.games.slice(0, RESUME_LIMIT) : [];
   return (
     <section className={className}>
       <SectionHeader
@@ -90,20 +91,24 @@ export function NextSlate({
                 <div className="flex min-h-11 flex-wrap items-center gap-x-3 px-gutter py-1">
                   <h3 className="m-0 text-micro font-semibold text-ink-3">Next league games</h3>
                   {/* In a <p> so it takes the site's in-text link underline: in ink-2 it is
-                      otherwise indistinguishable from the date it names. */}
+                      otherwise indistinguishable from the date it names. The count is the whole
+                      day's /scores page, not the league rows below it, so it says "all N" when
+                      that day has more contests than the rows show. */}
                   <p className="m-0">
                     <Link
                       href={`/scores/${resume.date}`}
                       prefetch={false}
                       className="sx-action text-meta text-ink-2"
                     >
-                      {shortDate(resume.date)} &middot; {resume.total}{' '}
-                      {resume.total === 1 ? 'game' : 'games'}
+                      {shortDate(resume.date)} &middot;{' '}
+                      {resume.total > resumeRows.length
+                        ? `all ${resume.total} games`
+                        : `${resume.total} ${resume.total === 1 ? 'game' : 'games'}`}
                     </Link>
                   </p>
                 </div>
                 <ol className="sx-list border-t border-divider">
-                  {resume.games.slice(0, RESUME_LIMIT).map((game) => (
+                  {resumeRows.map((game) => (
                     <li key={game.contestId}>
                       <GameLine game={game} />
                     </li>
