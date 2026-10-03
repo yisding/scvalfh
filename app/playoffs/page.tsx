@@ -45,7 +45,8 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * Central Coast Section leagues. The North Coast Section holds no field hockey championship, so an
  * MCAL reader is pointed to /playoffs/mcal at the top and nothing below is about MCAL.
  *
- * The eight blocks, in order: header (+ the not-seeded state), the NCS pointer card, jump links and
+ * The eight blocks, in order: header (+ the not-seeded state, one sentence in the description),
+ * the NCS pointer card, jump links and
  * the league chips, "The field" (one BerthMeter row per CCS league + the at-large line), "Key dates"
  * (CCS dates plus each league's own crossover / play-in, labelled), the `#scval #bval #pcal`
  * sections (per-division ladder projection, the league's pairings, its qualification sentence), the
@@ -209,21 +210,25 @@ export default function PlayoffsPage() {
             Central Coast Section championships, {shortDate(keyDates.quarterfinals)} to{' '}
             {shortDate(keyDates.finals)}. This page tracks each CCS league&rsquo;s share of the field
             and, once CCS seeds it, the bracket itself.
+            {/* Before seeding, this ONE sentence replaces the accent-ruled "Not seeded yet" card
+                that used to sit under the title and pushed everything below it most of a phone
+                screen down. There is still no skeleton bracket: a greyed-out one would read as
+                real data. */}
+            {seeded ? null : (
+              <>
+                {' '}
+                <span className="text-ink">Not seeded yet:</span> CCS sets the bracket at its
+                seeding meeting on{' '}
+                <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>
+                  {shortDate(keyDates.seedingMeeting)}
+                </time>
+                , and it appears here that evening.
+              </>
+            )}
           </>
         }
         meta={<span className="text-meta text-ink-2">{fieldMeta}</span>}
       />
-      {seeded ? null : (
-        <div className="mt-8 sx-card max-w-3xl p-5 shadow-[inset_4px_0_0_var(--sx-accent),var(--sx-ring),var(--sx-shadow-raised)] md:mt-10 md:p-6">
-          <p className="m-0 text-lead text-ink">Not seeded yet</p>
-          <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">
-            The CCS seeding meeting is{' '}
-            <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>{shortDate(keyDates.seedingMeeting)}</time>
-            {'. This page fills in that evening — there is no bracket to show before then, and a '}
-            {'greyed-out one would read as real data.'}
-          </p>
-        </div>
-      )}
 
       {/* 2. The NCS pointer card: always present, one per league tournament. */}
       {tournamentLeagues.map((league) => {
@@ -245,7 +250,11 @@ export default function PlayoffsPage() {
       {/* 3. Jump links (shown pre-paint only for the remembered league) and the league chips. */}
       <p className="m-0 mt-4 flex flex-wrap gap-2">
         {summaries.map((league) => (
-          <a key={league.id} href={hrefs[league.id]} className={`sx-jump sx-jump-${league.id} sx-pill min-h-11`}>
+          <a
+            key={league.id}
+            href={hrefs[league.id]}
+            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
+          >
             Jump to {league.shortName} {tournamentIds.has(league.id) ? <>&rarr;</> : <>&darr;</>}
           </a>
         ))}
@@ -291,7 +300,11 @@ export default function PlayoffsPage() {
               nothing here is official until {shortDate(keyDates.seedingMeeting)}.
             </p>
             <LeagueHealthNote leagueId={summary.id} className="mt-stack" />
-            <div className="mt-stack space-y-section lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+            {/* Side by side from md, not lg: at 768 each half is ~350px, which holds the tile, the
+                longest short name and the status column without truncating, so the tables no
+                longer stack into a long phone-style scroll on a tablet. `items-start` keeps the
+                shorter division from stretching to the longer one's height. */}
+            <div className="mt-stack space-y-section md:grid md:grid-cols-2 md:items-start md:gap-6 md:space-y-0 lg:gap-8">
               {divisions.map((d) => (
                 <PlayoffProjection
                   key={d.id}

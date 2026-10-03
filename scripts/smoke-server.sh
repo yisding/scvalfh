@@ -130,7 +130,7 @@ expect / 200 text/html "$public"
 # at module scope, shows up as a mismatch (see vite.config.ts).
 origin=$(grep -oE '<link rel="canonical" href="https?://[^/"]+"' "$tmp/b" | sed -n '1s/.*href="//; 1s/"$//p' || true)
 og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)
-stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
+stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 [ -n "$origin" ] || fail / "no canonical URL naming the site origin"
 [[ "$og" == "<meta property=\"og:image\" content=\"$origin/"* ]] || fail / "og:image '${og#*content=\"}' is not an absolute URL on $origin"
 
@@ -262,7 +262,7 @@ for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /hi
   grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)
   [ "$got_og" = "$og" ] || fail "$path" "og:image '${got_og#*content=\"}', expected '${og#*content=\"}' as on /"
-  got_stale=$(grep -c 'the nightly update may be failing' "$tmp/b" || true)
+  got_stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
   [ "$got_stale" = "$stale" ] || fail "$path" "stale-snapshot notice shown $got_stale time(s), / shows it $stale"
   # One robots directive, noindex: app/layout.tsx deliberately sets none, so the 404's own is not
   # contradicted by an "index, follow" beside it (two tags were measured before that was removed).

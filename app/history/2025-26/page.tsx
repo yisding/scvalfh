@@ -29,6 +29,11 @@ import { HISTORY_LEAGUE, divisionsOf, getLeague } from '../../../lib/leagues';
  *
  * No other league has a prior season here, so the page is labelled with the league everywhere
  * and reads its divisions from `divisionsOf(HISTORY_LEAGUE)` (never every division on the site).
+ *
+ * The header says only what a reader needs before the tables (what this is, where it came from,
+ * that it does not change, and that no other league has one) in a short lede; the provenance
+ * detail (built once, why not MaxPreps, why there is no overall record) sits in the source note at
+ * the foot. A long lede here pushed the first standings row under the phone tab bar.
  */
 const HISTORY = getLeague(HISTORY_LEAGUE);
 const DIVISIONS = divisionsOf(HISTORY_LEAGUE);
@@ -56,16 +61,13 @@ export default function HistoryPage() {
     // (6rem); from md the pills sit in the title row and do not stick.
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow="Archive · not part of the nightly snapshot"
+        eyebrow="Archive"
         title={`${HISTORY.shortName} ${season}`}
         description={
           <>
-            Final varsity and JV standings and all-league awards for the {HISTORY.name}&rsquo;s{' '}
-            {DIVISIONS.map((d) => d.label).join(' and ')} field hockey divisions, taken directly
-            from {HISTORY.shortName}&rsquo;s own end-of-season PDFs. This page is built once from
-            those PDFs, not from the live MaxPreps snapshot the rest of the site uses — MaxPreps
-            only ever serves the current season. Prior-season results are available for{' '}
-            {HISTORY.shortName} only.
+            Final varsity and JV standings and all-league awards from {HISTORY.shortName}&rsquo;s
+            end-of-season PDFs. This page doesn&rsquo;t change. Prior-season results are available
+            for {HISTORY.shortName} only.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a division" />}
@@ -153,8 +155,10 @@ export default function HistoryPage() {
         Source: scval.com &mdash;{' '}
         <ExternalLink href={sources.standingsPdf}>2025-26 final standings (PDF)</ExternalLink> and{' '}
         <ExternalLink href={sources.allLeaguePdf}>2025-26 all-league awards (PDF)</ExternalLink>.
-        League record is each PDF&rsquo;s own W-L(-T) column; the PDF&rsquo;s overall-record
-        column was empty for this season, so it renders as an em dash here rather than a guess.
+        This page is built once from those PDFs, not from the live MaxPreps snapshot the rest of
+        the site uses &mdash; MaxPreps only ever serves the current season.{' '}
+        {HISTORY.shortName}&rsquo;s final PDFs list league records only; their overall-record
+        column was empty for this season.
         Full attribution and update details are on the{' '}
         <Link href="/about" className="text-accent hover:underline">
           About &amp; sources

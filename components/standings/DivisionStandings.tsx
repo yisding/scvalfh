@@ -25,6 +25,10 @@ import type { DivisionView } from './standings-view';
  *
  * Both tables pass `notes="none"`; their division-specific notes are collected here once and go
  * into the Notes inset, and the generic legend is printed once per page by the page.
+ *
+ * From `lg` the Notes inset and the postseason card share a row and STRETCH to the taller of the
+ * two; each is a flex column whose link row is pushed to the bottom (`mt-auto`), so the two panels
+ * end level and their link rows sit on one line. Below `lg` they stack and nothing moves.
  */
 export interface DivisionStandingsProps {
   view: DivisionView;
@@ -68,19 +72,23 @@ export function DivisionStandings({
       <MissingResultsBanner text={view.missingBanner} targetId={view.missingId} className="mb-3" />
       <StandingsTable {...table} variant="phone" className="lg:hidden" />
       <StandingsTable {...table} variant="desktop" className="hidden lg:block" />
+      {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        PTS: {points}. GD bars are per division ({view.label} |GD| max {view.gdDomain})
+        PTS: {points}. GD bars are per division, scaled to {view.label}&rsquo;s biggest goal
+        difference ({view.gdDomain})
         {view.berthRuleAfter ? (
           <>
             {' '}
-            &middot; the heavier line after {ordinal(view.berthRuleAfter)} is the {view.ladderLineLabel}
+            &middot; the heavier line under {ordinal(view.berthRuleAfter)} marks the{' '}
+            {view.ladderLineLabel}
           </>
         ) : null}
       </p>
       {view.backfillFootnote ? <p className="mt-1 mb-0 text-meta text-ink-3">{view.backfillFootnote}</p> : null}
-      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
+      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <StandingsNotes
           divisionLabel={view.label}
+          rows={view.rows}
           tableNotes={specific}
           mismatches={view.mismatches}
           comparison={view.comparison}
@@ -92,6 +100,8 @@ export function DivisionStandings({
           sourceUrl={view.sourceUrl}
           officialSchedule={view.officialSchedule}
           scheduledPer={view.scheduledPer}
+          rankRule={view.rankRule}
+          levelReason={view.levelReason}
         />
         <PlayoffStatusBand
           divisionLabel={view.label}
@@ -101,7 +111,7 @@ export function DivisionStandings({
           groups={view.statusGroups}
           caveat={view.statusCaveat}
           unrankedTeams={view.unrankedTeams}
-          className="sx-card p-5 md:p-6"
+          className="sx-card flex flex-col p-5 md:p-6"
         />
       </div>
     </section>

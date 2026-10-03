@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
-import { LEAGUES } from '@/lib/leagues';
+import { HISTORY_LEAGUE, LEAGUES, getLeague } from '@/lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -20,13 +20,24 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
   { href: '/teams', name: 'Find a team', description: 'Search by school, city or mascot' },
   { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
+  {
+    href: '/history/2025-26',
+    name: 'History',
+    description: `Last season’s final ${getLeague(HISTORY_LEAGUE).shortName} tables and awards`,
+  },
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
- * links are the real navigation rather than a single "go home": one card per page, with its
- * name over a one-line description, so nothing is a sentence squeezed into a pill.
+ * links are the real navigation rather than a single "go home": one card per top-level page
+ * (the seven desktop nav destinations, the History archive among them, which only the history
+ * league has), with its name over a one-line description, so nothing is a sentence squeezed into
+ * a pill.
+ *
+ * The copy does not claim these seven are every page on the site — there are hundreds of team,
+ * game and day pages — only that each of those is reachable from one of them, which is true.
+ * Seven cards run two-up from sm and four-up from lg (a row of four, then three).
  */
 export default function NotFound() {
   return (
@@ -34,9 +45,9 @@ export default function NotFound() {
       <PageHeader
         eyebrow="404"
         title="That page is not here."
-        description="The link may be old, or the game or date may not exist in this season’s data. Every page on this site is one of the links below."
+        description="The link may be out of date, or that game or day isn’t in this season’s schedule. Every team, game and day is reachable from one of these:"
       />
-      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
+      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
         {LINKS.map((l) => (
           <li key={l.href}>
             <Link

@@ -19,14 +19,16 @@ import type { PinTileView } from './home-types';
  * `data-pin-tile` marks the control so an unpin can hand focus back to this tile when it is
  * rendered (components/home/MyTeamCard.tsx).
  *
- * 48px borderless surface-2 key at every width. Below 360px the tile's own padding drops to 4px,
+ * 48px borderless surface-2 key at every width, with a surface-3 press state (the shared `.sx-tap`
+ * press colour IS surface-2, so it showed nothing). Below 360px (22.5rem, so a larger browser text
+ * size keeps the narrow padding longer) the tile's own padding drops to 4px,
  * which hands the NAME back the pixels it needs at 320px: every short name fits whole or breaks at
  * its space or soft hyphen (`pickerName`, measured in tests/ui/pin-label.test.ts). Two lines, never
  * `truncate`: names in a picker have to be distinguishable.
  */
 const TILE =
   'sx-tap flex h-12 w-full min-w-0 items-center gap-1.5 rounded-card bg-surface-2 px-1 text-left ' +
-  'min-[360px]:px-2 hover:bg-surface-3';
+  'min-[22.5rem]:px-2 hover:bg-surface-3 active:bg-surface-3 transition-colors duration-[var(--sx-dur-tap)]';
 const TILE_NAME = 'sx-clamp-2 min-w-0 flex-1 hyphens-auto break-words text-micro text-ink';
 
 export interface PinTileProps {
@@ -37,7 +39,7 @@ export function PinTile({ tile }: PinTileProps) {
   const { ready, available, pin } = usePinnedTeam();
   const face = (
     <>
-      <span className="hidden shrink-0 min-[480px]:inline-flex">
+      <span className="hidden shrink-0 min-[30rem]:inline-flex">
         {/* TeamMonogram takes a registry TeamColors; it never reads the provenance field. */}
         <TeamMonogram
           team={{ abbr: tile.abbr, name: tile.name, colors: { ...tile.colors, source: 'placeholder' } }}

@@ -12,8 +12,11 @@ import type { TeamTileData } from './team-view';
  *
  * Below 380px the monogram STACKS above the name. Side by side, a 2-up tile at 320–379px leaves
  * the name 62–88px, and a single long word ("Presentation" is 89px at 14px/600) cannot wrap, so
- * the clamp cut it mid-word. Stacked, the name gets the tile's full inner width. `h-full` makes
- * every tile in a grid row the same height when one name wraps.
+ * the clamp cut it mid-word. Stacked, the name gets the tile's full inner width. The same stack
+ * applies from 768 to 1023px, where /teams goes 4-up (so a league's teams fit one tablet screen): a
+ * quarter of 768px leaves a side-by-side name ~90px at 16px/600, the same squeeze. From 1024px the
+ * tile is wide enough to sit side by side again. `h-full` makes every tile in a grid row the same
+ * height when one name wraps.
  *
  * The lift eases its shadow AND the `.sx-tap` press colour: both base rules set `transition`, and
  * the later `.sx-tap` one wins the cascade, so the shadow used to snap. The utility below lists
@@ -53,14 +56,14 @@ export function TeamTile({ data }: { data: TeamTileData }) {
         href={`/teams/${team.slug}`}
         prefetch={false}
         data-team-slug={team.slug}
-        className="sx-card sx-lift sx-tap flex h-full min-h-[4.5rem] items-center gap-3 p-3 no-underline transition-[box-shadow,background-color] duration-(--sx-dur-ui) ease-(--sx-ease) max-[379px]:flex-col max-[379px]:items-start max-[379px]:gap-2 md:p-4"
+        className="sx-card sx-lift sx-tap flex h-full min-h-[4.5rem] items-center gap-3 p-3 no-underline transition-[box-shadow,background-color] duration-(--sx-dur-ui) ease-(--sx-ease) max-[379px]:flex-col max-[379px]:items-start max-[379px]:gap-2 md:p-4 md:max-lg:flex-col md:max-lg:items-start md:max-lg:gap-2"
       >
         <span className="sr-only">
           <span className="sx-pin-note">Your team. </span>
           {label}
         </span>
         <TeamMonogram team={team} size={40} />
-        <span className="min-w-0 max-[379px]:w-full">
+        <span className="min-w-0 max-[379px]:w-full md:max-lg:w-full">
           <span
             className="sx-clamp-2 block text-meta font-semibold text-ink sm:text-body"
             aria-hidden="true"

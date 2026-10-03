@@ -14,7 +14,9 @@ import { formatStamp } from '../../lib/format';
  * /teams — "Find my school" (DESIGN §3.6, SPEC §10.5, §9.3).
  *
  * All 43 teams, grouped section → league → division, each division's tiles sorted alphabetically:
- * 2-up below 1024px and 4-up from there. **Every team**: league membership is the registry's list
+ * 2-up below 768px and 4-up from there, so a league's teams fit one tablet screen; between 768 and
+ * 1023px the tile stacks its monogram over the name (TeamTile) so a long name still gets the whole
+ * tile width. **Every team**: league membership is the registry's list
  * from each league's official schedule, not the feed's rows, and dropping a school because a
  * source has no data for it is the single worst bug this site could ship (DESIGN §12.1, R-6).
  *
@@ -98,7 +100,7 @@ export default function TeamsPage() {
                     {division.heading ? (
                       <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4>
                     ) : null}
-                    <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 md:gap-4 lg:grid-cols-4">
+                    <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 md:grid-cols-4 md:gap-4">
                       {division.tiles.map((data) => (
                         <TeamTile key={data.team.slug} data={data} />
                       ))}
@@ -112,9 +114,8 @@ export default function TeamsPage() {
       </div>
 
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
-        Records are league games only, computed from published results as of{' '}
-        {formatStamp(getFetchedAt())}. A team with no results reported shows an em dash rather
-        than 0-0-0.
+        Records are league games only. A dash means no results have been reported yet; records are
+        computed from published results as of {formatStamp(getFetchedAt())}.
       </p>
     </div>
   );

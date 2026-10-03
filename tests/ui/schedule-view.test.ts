@@ -235,3 +235,68 @@ describe('/scores/[date]', () => {
     );
   });
 });
+
+describe('fixture status and slate records (UI pass, league-aware)', () => {
+  it('an official fixture reads "Upcoming" on or after today and "No result" before it', async () => {
+    const { OfficialFixtures } = await import('../../components/schedule/OfficialFixtures');
+    const team = data.getTeams({ league: 'bval' })[0];
+    const today = data.getToday();
+    const fixture = (dateKey: string) => ({
+      id: `${team.division}:${dateKey}:Somewhere@${team.slug}`,
+      league: team.league,
+      division: team.division,
+      dateKey,
+      time: null,
+      awayName: 'Somewhere',
+      homeName: team.name,
+      awaySlug: null,
+      homeSlug: team.slug,
+      source: 'bval-docx' as const,
+    });
+    const render = (dateKey: string) =>
+      textOf(
+        renderToStaticMarkup(
+          createElement(OfficialFixtures, { fixtures: [fixture(dateKey)], leagueId: team.league, today }),
+        ),
+      );
+    const future = render('2099-10-30');
+    expect(future, 'components/schedule/OfficialFixtures.tsx future').toContain('Upcoming');
+    expect(future).toContain('On BVAL’s schedule only, not played yet');
+    expect(future).not.toContain('No result');
+    expect(future).not.toMatch(/not reported/i);
+    expect(future).toContain('1 official BVAL fixture with no published result');
+    const past = render('2000-09-01');
+    expect(past, 'components/schedule/OfficialFixtures.tsx past').toContain('No result');
+    expect(past).toContain('On BVAL’s schedule only, no result');
+    expect(past).not.toContain('Upcoming');
+  });
+
+  it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
+    const { GameRow } = await import('../../components/ui/GameRow');
+    const { recordWords } = await import('../../lib/format');
+    const today = data.getToday();
+    const upcoming = data
+      .getGames()
+      .filter((g) => g.status === 'scheduled' && g.dateKey >= today);
+    const league = upcoming.find((g) => g.countsFor !== null);
+    expect(league, 'corpus has an upcoming league game').toBeDefined();
+    const text = textOf(renderToStaticMarkup(createElement(GameRow, { game: league!, showRecords: true })));
+    let checked = 0;
+    for (const side of [league!.away, league!.home]) {
+      const standing = side.slug ? data.getStandingFor(side.slug) : undefined;
+      if (standing?.hasReportedResults) {
+        checked += 1;
+        expect(text, `components/ui/GameRow.tsx records: ${side.slug}`).toContain(
+          `${recordWords(standing.computed)} in league`,
+        );
+      }
+    }
+    expect(checked, 'a side with a record was checked').toBeGreaterThan(0);
+    expect(text).not.toContain('0-0-0');
+    const nonLeague = upcoming.find((g) => g.countsFor === null);
+    if (nonLeague) {
+      const nl = textOf(renderToStaticMarkup(createElement(GameRow, { game: nonLeague, showRecords: true })));
+      expect(nl, 'components/ui/GameRow.tsx: no records on a non-league game').not.toContain(' in league');
+    }
+  });
+});

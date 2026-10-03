@@ -1,23 +1,43 @@
 import { EM_DASH, recordString } from '../../lib/format';
+import type { Record3 } from '../../lib/types';
 import type { TeamPageView } from './team-view';
 
 /**
  * Home / away / neutral league splits (DESIGN §3.7, §12.5): three mini cards, label over value,
  * in the stat tiles' card recipe (StatTile `variant="card"`: 12px padding on a phone, 16px from
- * 768px, the 14px label over a bold value: 18px on a phone so five mono glyphs fit 320px, 24px
- * from 768px) so the team page has one tile look. The value
- * stays MONO: a W-L-T record is a stacked numeral (brief §1), unlike the tiles' sans figures.
+ * 768px, the label over a bold value) so the team page has one tile look.
  *
- * The NEUTRAL split ships even while it is `0-0-0` for every team: CCS games and some non-league
- * tournaments are at neutral sites, and a split that materialises in November would break the
- * reader's model of the page. It is honest, not padding.
+ * The value is set exactly like a StatTile value: `sx-figure`, Sans with proportional figures,
+ * 28px from 768px. DESIGN §4.3 reserves Mono + tabular for digits that STACK in a column (scores
+ * in a list, standings columns); three records side by side in their own cards stack with
+ * nothing, so they are "large standalone numbers", which §4.3 sets in Sans. In mono they read as a
+ * second, unrelated tile style beside the League tile showing the same kind of record. Below 768px
+ * the value stays `text-lead` (18px) and `whitespace-nowrap`, so "0-0-0" never breaks inside a
+ * 3-up card at 320px.
+ *
+ * The NEUTRAL split ships even while no team has played a league game at a neutral site: CCS
+ * games and some non-league tournaments are at neutral sites, and a split that materialises in
+ * November would break the reader's model of the page. A split with no games shows an em dash,
+ * spoken as "no neutral-site league games", never `0-0-0`: a record of nothing played is not a
+ * record (the stat tiles above follow the same rule).
  */
+const NO_GAMES = {
+  Home: 'no home league games',
+  Away: 'no away league games',
+  Neutral: 'no neutral-site league games',
+} as const;
+
+function splitValue(record: Record3 | null): string | null {
+  if (!record || record.w + record.l + record.t === 0) return null;
+  return recordString(record);
+}
+
 export function TeamSplits({ view }: { view: TeamPageView }) {
   const league = view.hasResults && view.standing ? view.standing.computed : null;
-  const cells: Array<{ label: string; value: string }> = [
-    { label: 'Home', value: league ? recordString(league.homeRecord) : EM_DASH },
-    { label: 'Away', value: league ? recordString(league.awayRecord) : EM_DASH },
-    { label: 'Neutral', value: league ? recordString(league.neutralRecord) : EM_DASH },
+  const cells: Array<{ label: keyof typeof NO_GAMES; value: string | null }> = [
+    { label: 'Home', value: splitValue(league?.homeRecord ?? null) },
+    { label: 'Away', value: splitValue(league?.awayRecord ?? null) },
+    { label: 'Neutral', value: splitValue(league?.neutralRecord ?? null) },
   ];
   return (
     // The caption sits OUTSIDE the <dl>: a <dl> may only contain dt/dd groups wrapped in div
@@ -28,8 +48,13 @@ export function TeamSplits({ view }: { view: TeamPageView }) {
         {cells.map((cell) => (
           <div key={cell.label} className="sx-card p-3 md:p-4">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
-            <dd className="sx-num m-0 text-lead leading-7 font-semibold text-ink md:text-[1.5rem] md:leading-8 md:tracking-[-0.02em]">
-              {cell.value}
+            <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
+              {cell.value ?? (
+                <>
+                  <span aria-hidden="true">{EM_DASH}</span>
+                  <span className="sr-only">{league ? NO_GAMES[cell.label] : 'not reported'}</span>
+                </>
+              )}
             </dd>
           </div>
         ))}

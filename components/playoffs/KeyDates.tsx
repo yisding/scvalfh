@@ -11,8 +11,13 @@ import type { CcsKeyDates } from '../../lib/types';
  *
  * Times are printed only where the source gives one (entries due 12:00 PM, seeding meeting 1:00 PM,
  * evaluation meeting 4:00 PM, the BVAL play-in 11 AM); the round dates are all-day in the CCS feed
- * and are not given an invented start time. Every date is a `<time datetime>` and every clock time
- * is labelled PT (DESIGN §10.11).
+ * and are not given an invented start time. A time sits UNDER its date in the 88px date column
+ * ("12:00 PM PT" is 86px of 13px mono), not after the title, where it pushed "CCS seeding meeting
+ * 1:00 PM PT" onto two lines at 390. Every date is a `<time datetime>` and every clock time is
+ * labelled PT (DESIGN §10.11).
+ *
+ * On a phone the card is a full-bleed band (`sx-bleed`) and each row takes the 16px gutter as its
+ * own padding, the same as every other row list on the site; from md it is a card again.
  */
 export interface KeyDatesProps {
   keyDates: CcsKeyDates;
@@ -25,15 +30,15 @@ export interface KeyDatesProps {
 
 function DateItem({ row }: { row: KeyDateRow }) {
   return (
-    <li className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-3 px-5 py-3">
+    <li className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-3 px-gutter py-3 md:px-5">
       <span className={`sx-num text-cell ${row.isRound ? 'font-medium text-ink' : 'text-ink-2'}`}>
         <time dateTime={row.dateKey}>{row.date}</time>
+        {row.time ? <span className="block whitespace-nowrap text-ink-2">{row.time}</span> : null}
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           {row.league ? <span className="sx-badge">{row.league}</span> : null}
           <span className={`text-body text-ink${row.isRound ? ' font-semibold' : ''}`}>{row.label}</span>
-          {row.time ? <span className="sx-num text-cell text-ink-2">{row.time}</span> : null}
         </span>
         {row.detail ? <span className="mt-0.5 block text-meta text-ink-2">{row.detail}</span> : null}
       </span>
@@ -46,7 +51,8 @@ export function KeyDates({ keyDates, leagueDates = [], confirmed, className }: K
 
   return (
     <div className={className}>
-      <ol className="sx-card sx-flush m-0 list-none divide-y divide-divider p-0">
+      {/* `my-0`, not `m-0`: a margin shorthand would cancel `sx-bleed`'s negative inline margin. */}
+      <ol className="sx-card sx-flush sx-bleed my-0 list-none divide-y divide-divider p-0">
         {rows.map((row) => (
           <DateItem key={row.key} row={row} />
         ))}

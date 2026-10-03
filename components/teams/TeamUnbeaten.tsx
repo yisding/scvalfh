@@ -60,12 +60,22 @@ function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; le
       >
         <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-3">
           {team ? <TeamMonogram team={team} size={24} /> : null}
-          <span className="min-w-0 flex-1 truncate text-body text-ink">{opponent.shortName}</span>
+          {/* Two lines, never an ellipsis: at 320px the fixed status column leaves the name ~110px,
+              and "Presentation" truncated to "Presenta…". */}
+          <span className="line-clamp-2 min-w-0 flex-1 break-words text-body text-ink">
+            {opponent.shortName}
+          </span>
         </span>
         <span className="sx-num shrink-0 text-cell text-ink-2" aria-hidden="true">
           {opponent.played === 0 ? '' : recordString(opponent.record)}
         </span>
-        <span className="shrink-0 text-ink-3" aria-hidden="true">
+        {/* A fixed 92px status column ("next Oct 13", "2 unreported" fit it on one line), so the
+            records to its left end on one right edge down the list instead of moving with the
+            width of each status. */}
+        <span
+          className="w-[5.75rem] shrink-0 whitespace-nowrap text-right text-ink-3"
+          aria-hidden="true"
+        >
           {statusOf(opponent)}
         </span>
       </Link>

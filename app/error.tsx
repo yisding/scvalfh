@@ -9,8 +9,14 @@ import PageHeader from '@/components/layout/PageHeader';
  * The route-level error boundary. Next 16 passes `retry`, not `reset`
  * (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/error.md).
  *
- * The page is static and cron-fed, so the only realistic cause is a bad snapshot or a bad URL —
- * which is what the copy says, rather than a generic apology.
+ * The page is static and cron-fed, so the realistic cause is a bad snapshot — but the reader
+ * does not need that mechanism. The copy says three plain things: it is our fault, not theirs;
+ * the rest of the site should still work; and what to do now (the two buttons). The digest is
+ * kept as a small reference line so a correction request can quote it.
+ *
+ * "Go to the home page" sits on the canvas, where the default `sx-pill` fill (surface-2) read as
+ * a grey label rather than a control; `bg-surface` plus the hairline ring makes it a button,
+ * the same canvas-pill treatment the other "See all"/stepper pills use.
  */
 export default function Error({
   error,
@@ -27,9 +33,9 @@ export default function Error({
   return (
     <div className="pb-section-lg">
       <PageHeader
-        eyebrow="Something broke"
-        title="This page could not be built from the current snapshot."
-        description="Nothing you did caused this. The data behind the site is rebuilt nightly; if a rebuild shipped a bad snapshot, this page fails while the rest of the site keeps working."
+        eyebrow="Something went wrong"
+        title="This page didn’t load."
+        description="It’s a problem on our end, not yours. The rest of the site should still work. Try again, or go back to the home page."
       />
       <div className="mt-8 md:mt-10">
         {error.digest ? (
@@ -41,7 +47,10 @@ export default function Error({
           <button type="button" onClick={() => retry()} className="sx-pill sx-pill-accent min-h-11">
             Try again
           </button>
-          <Link href="/" className="sx-pill min-h-11">
+          <Link
+            href="/"
+            className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+          >
             Go to the home page
           </Link>
         </div>

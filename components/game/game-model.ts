@@ -71,7 +71,10 @@ export interface GameSideModel {
   /** Present only for one of the 43 teams this site follows; anyone else is a name (DESIGN §8). */
   team: Team | undefined;
   standing: Standing | undefined;
-  /** "4-1-0 De Anza", "10-1-1 MCAL", or the honest no-results line. `null` for a non-member. */
+  /**
+   * "4-1-0 De Anza" / "10-1-1 MCAL" — the LEAGUE record as of this contest (`recordAsOf`), not
+   * today's — or the honest no-results line. `null` for a non-member.
+   */
   sub: string | null;
   /** Up to five LEAGUE results BEFORE this contest, oldest first (DESIGN §5.5). */
   formBefore: FormEntry[];
@@ -98,6 +101,13 @@ export interface SeriesModel {
   tiebreakNote: string | null;
   /** The perspective the rows are oriented from: this game's home side where possible. */
   perspective: GameSideModel;
+}
+
+/** An off-site link for this contest. `accent` marks the one primary pill. */
+export interface GameLink {
+  href: string;
+  label: string;
+  accent?: boolean;
 }
 
 export interface GameConflict {
@@ -137,10 +147,28 @@ export interface GameModel {
   /** `gameHref(contestId)`, the canonical path. */
   canonical: string;
   display: GameDisplay;
+  /**
+   * A FINAL's result links, which the page prints directly under the recap, the first place a
+   * reader looks for them after the score (F-73/F-85). The accent pill is the source the score
+   * came from (owner decision D2): the MaxPreps box score, or — on a si.com-scored final — the
+   * si.com game page, with MaxPreps' contest page beside it as a plain pill. Then the NFHS stream.
+   * Empty for every other status. Each link has ONE home on the page: GameDetails skips whatever is
+   * in this list, and GameElsewhere carries no per-game links at all.
+   */
+  resultLinks: GameLink[];
   /** Away is first everywhere on this site, including here. */
   away: GameSideModel;
   home: GameSideModel;
   series: SeriesModel;
+  /**
+   * The caption under the scoreboard that says WHEN the two `sub` records are from, because on an
+   * old game they are not today's: "League records after this game" (a league final), "League
+   * records as of Thu Sep 24" (any other final), "League records going in" (anything not yet
+   * decided) or "League records to date" (postponed — no date to measure from). Singular when only
+   * one side is one of the teams this site follows; `null` when neither is, since then there is no
+   * record to explain.
+   */
+  recordsCaption: string | null;
   conflict: GameConflict | null;
   source: GameSourceLine | null;
   /**
@@ -205,14 +233,110 @@ function scopeOf(division: DivisionId): string {
   return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
 
-function subFor(standing: Standing | undefined, team: Team | undefined): string | null {
+/** A W-L-T record as `recordString` prints it, plus the game count the no-results rule keys on. */
+export interface RecordAsOf {
+  gp: number;
+  w: number;
+  l: number;
+  t: number;
+}
+
+/**
+ * A side's LEAGUE record at this contest's point in the season (G-1).
+ *
+ * The scoreboard used to print TODAY's standing under both names, so a September final read
+ * "7-0-0" for a team that was 2-0-0 that afternoon. The cut is made the way `formBefore` makes
+ * it — by position in the team's own league list, so a same-day doubleheader cannot leak — but it
+ * is INCLUSIVE of this contest when it is a final: the scoreboard shows the result, so the record
+ * beside it already contains it. Anything not yet decided cuts before it ("going in"). A contest
+ * that does not count for the side's table (non-league or postseason) is not in that list, so it
+ * falls back to the league games dated strictly before it. A postponed game has no date to measure
+ * from and keeps the current standing.
+ *
+ * Only results with an outcome count (a played game with no published score is neither a W nor an
+ * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
+ * equals `standing.computed` (tests/ui/game-model-asof.test.ts holds that).
+ *
+ * `undefined` for a side outside the team registry.
+ */
+export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
+  if (!side.slug) return undefined;
+  if (game.status === 'postponed') {
+    const computed = getStandingFor(side.slug)?.computed;
+    return computed ? { gp: computed.gp, w: computed.w, l: computed.l, t: computed.t } : undefined;
+  }
+  const form = getTeamForm(side.slug);
+  if (!form) return undefined;
+  const index = form.leagueGames.findIndex((g) => g.contestId === game.contestId);
+  const upTo =
+    index >= 0
+      ? form.leagueGames.slice(0, game.status === 'final' ? index + 1 : index)
+      : form.leagueGames.filter((g) => g.date < game.dateKey);
+  const record: RecordAsOf = { gp: 0, w: 0, l: 0, t: 0 };
+  for (const g of upTo) {
+    if (g.outcome === null) continue;
+    record.gp += 1;
+    if (g.outcome === 'W') record.w += 1;
+    else if (g.outcome === 'L') record.l += 1;
+    else record.t += 1;
+  }
+  return record;
+}
+
+function subFor(record: RecordAsOf | undefined, team: Team | undefined): string | null {
   if (!team) return null;
   const scope = scopeOf(team.division);
-  if (!standing || !standing.hasReportedResults) {
-    // Never 0-0-0 for a team the sources have no results for (DESIGN §8).
+  if (!record || record.gp === 0) {
+    // Never 0-0-0 for a team the sources have no results for (DESIGN §8) — including, as of an
+    // early-season game, a team that had not played a league game yet.
     return `No league results reported · ${scope}`;
   }
-  return `${recordString(standing.computed)} ${scope}`;
+  return `${recordString(record)} ${scope}`;
+}
+
+/** The scoreboard caption — see `GameModel.recordsCaption`. */
+function recordsCaptionFor(
+  game: Game,
+  display: GameDisplay,
+  away: GameSideModel,
+  home: GameSideModel,
+): string | null {
+  const members = [away, home].filter((side) => side.team).length;
+  if (members === 0) return null;
+  const subject = members === 1 ? 'League record' : 'League records';
+  if (game.status === 'postponed') return `${subject} to date`;
+  if (display.kind === 'final') {
+    // A counted final is in each side's league list, so its record includes it; anything else
+    // (non-league, postseason) is measured by date.
+    return game.countsFor !== null
+      ? `${subject} after this game`
+      : `${subject} as of ${shortDate(game.dateLocal)}`;
+  }
+  return `${subject} going in`;
+}
+
+/**
+ * A final's result links (`GameModel.resultLinks`). The accent pill is the source the score came
+ * from: si.com's game page when the published score is si.com's (D2), else the MaxPreps box score.
+ */
+function resultLinksFor(game: Game): GameLink[] {
+  if (game.status !== 'final') return [];
+  const links: GameLink[] = [];
+  const sbliveScored = game.provenance.scores === 'sblive';
+  if (sbliveScored && game.urls.sblive) {
+    links.push({ href: game.urls.sblive, label: 'si.com game', accent: true });
+  }
+  if (game.urls.maxpreps) {
+    // Beside a si.com score, MaxPreps' contest page may carry no score (or a wrong one): it is the
+    // contest page, not "the box score", and never the accent pill.
+    links.push(
+      sbliveScored
+        ? { href: game.urls.maxpreps, label: 'MaxPreps game' }
+        : { href: game.urls.maxpreps, label: 'MaxPreps box score', accent: true },
+    );
+  }
+  if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  return links;
 }
 
 /**
@@ -259,7 +383,7 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
     label: labelFor(name, team),
     team,
     standing,
-    sub: subFor(standing, team),
+    sub: subFor(recordAsOf(game, side), team),
     formBefore: entries,
     playedBefore,
     outcome,
@@ -604,8 +728,10 @@ export function buildGameModel(param: string): GameModel | undefined {
     param: gameIdToParam(game.contestId),
     canonical: gameHref(game.contestId),
     display,
+    resultLinks: resultLinksFor(game),
     away,
     home,
+    recordsCaption: recordsCaptionFor(game, display, away, home),
     division,
     league,
     contextLabel: post?.contextLabel ?? (division ? divisionDisplay(division) : 'Non-league'),

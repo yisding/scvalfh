@@ -263,6 +263,11 @@
   /* `max-w-*` reads the --container-* namespace, not --spacing-*, so the content
      cap has to be declared in both to be usable as `max-w-content`. */
   --container-content: 75rem;
+  /* The reading measure, for `max-w-prose` and `.sx-prose`. Tailwind's default is 65ch, but a
+     `ch` is the width of a "0", and Geist's figures are wide: 65ch of 16px Geist is 690px, and
+     the About prose ran 88–100 characters a line. 32em (512px at 16px) runs 63–76 — and it is
+     `em`, so a 14px `text-meta` note gets the same character count as 16px body text. */
+  --max-width-prose: 32em;
 
   --radius-tag:     var(--sx-r-tag);
   --radius-chip:    var(--sx-r-chip);
@@ -286,6 +291,8 @@
        The top value is the TALLEST sticky stack on the site, plus 8px of air:
          phone — 48px top bar + 48px /standings division bar (or /schedule's 48px date header);
          ≥768  — 64px top bar + 48px /schedule date header.
+       A /schedule date group is the one target that carries its own header, so `.sx-dategroup`
+       hands those 48px back with a negative scroll-margin (below).
        The bottom value adds 1px to the 56px tab bar so the last pixel of a focus ring clears it. */
     scroll-padding-top: 6.5rem;
     scroll-padding-bottom: calc(var(--spacing-tabbar) + 1px + env(safe-area-inset-bottom));
@@ -378,13 +385,28 @@
     font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500; letter-spacing: 0;
   }
 
-  /* Long lists stay in the HTML without costing layout on first paint. */
-  .sx-dategroup { content-visibility: auto; contain-intrinsic-size: auto 480px; }
+  /* Long lists stay in the HTML without costing layout on first paint.
+     `scroll-margin-top: -3rem` cancels the 48px date header that html's scroll-padding-top
+     reserves (see `html` above): that header is the group's OWN first child, sticky inside it,
+     so a `/schedule#2026-09-16` jump (rail chip, Scores tab, pasted link) has nothing of its own
+     to clear. Without it the group landed 48px low, with half of the previous day's sticky
+     header still pinned above it.
+     With it the group's top lands at 56px on a phone (48px bar + 8px air) and 72px from 768px
+     (64 + 8), the header flush under the bar. */
+  .sx-dategroup {
+    content-visibility: auto; contain-intrinsic-size: auto 480px;
+    scroll-margin-top: -3rem;
+  }
 
   /* ── Surfaces. Three planes, one job each:
         canvas (--sx-bg)        page titles and section headings;
         card   (--sx-surface)   data — tables, game lists, tiles, details;
-        inset  (--sx-surface-2) commentary — notes, legends, disclosures, control tracks. ──── */
+        inset  (--sx-surface-2) commentary — notes, legends, disclosures, control tracks.
+        In dark, an inset that sits on the CANVAS steps down to --sx-surface: dark planes get
+        lighter as they rise, and surface-2 there was brighter than the data cards beside it, so
+        a legend outshone the scores it explains. Inside a card it stays surface-2, one step up
+        from the card. Light is unchanged (surface-2 on the canvas already reads as recessed).
+        Every ink on it is measured on --sx-surface as well (contrast.test). ──── */
   .sx-card {
     background: var(--sx-surface);
     border-radius: var(--sx-r-card-lg);
@@ -402,7 +424,9 @@
     padding: 1rem 1.125rem;
     font-size: var(--text-meta); line-height: 1.375rem;
     color: var(--sx-text-2);
+    @variant dark { background: var(--sx-surface); }
   }
+  .sx-card .sx-inset { background: var(--sx-surface-2); }
   .sx-inset > * + * { margin-top: 0.75rem; }
 
   /* A labelled disclosure for generic legends and methodology (never for division- or
@@ -443,6 +467,13 @@
      BUTTON (Unpin, Pin this team, More filters) keeps ink. */
   a.sx-pill { color: var(--sx-accent); }
   .sx-pill.sx-pill-accent { background: var(--sx-accent-wash); color: var(--sx-accent-ink); font-weight: 600; }
+  /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
+     surface-3 chrome plane (its hover plane, already measured above), and the accent pill, which
+     keeps its wash, draws a 1px accent ring inside its edge. A pill with a utility background
+     (`bg-surface`, `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead —
+     utilities outrank this layer. */
+  .sx-pill:not(.sx-pill-accent):active { background: var(--sx-surface-3); }
+  .sx-pill.sx-pill-accent:active { box-shadow: inset 0 0 0 1px var(--sx-accent); }
   @media (hover: hover) {
     .sx-pill:hover { background: var(--sx-surface-3); }
     .sx-pill.sx-pill-accent:hover { background: var(--sx-accent-wash); text-decoration: underline; }
@@ -456,9 +487,12 @@
     white-space: nowrap;
   }
 
-  /* Long-form prose (About, How it works). */
-  .sx-prose { font-size: var(--text-body); line-height: 1.625rem; color: var(--sx-text-2); max-width: 66ch; }
+  /* Long-form prose (About, How it works). 32em, the same measure as `max-w-prose` (@theme). */
+  .sx-prose { font-size: var(--text-body); line-height: 1.625rem; color: var(--sx-text-2); max-width: 32em; }
   .sx-prose > * + * { margin-top: 1rem; }
+  /* A smaller note inside the prose (a `text-meta` aside) keeps the same ~70-character measure
+     in its OWN ems — 448px at 14px — instead of running ~83 a line across the 512px column. */
+  .sx-prose > :is(p, ul, ol) { max-width: 32em; }
   .sx-prose h3 { margin-top: 2rem; font-size: var(--text-lead); line-height: 1.625rem; font-weight: 600; color: var(--sx-text); }
   .sx-prose h3 + * { margin-top: 0.5rem; }
   .sx-prose ul, .sx-prose ol { padding-left: 1.25rem; }
@@ -610,14 +644,33 @@
   /* 120ms tap feedback. */
   .sx-tap { transition: background-color var(--sx-dur-tap) var(--sx-ease); }
   .sx-tap:active { background: var(--sx-surface-2); }
+  /* With a mouse, a list row (GameRow's summary, GameLine, the game logs, SeasonSeries) answers
+     the pointer the way a table row does: surface-2, the plane `--sx-surface-2` documents as ROW
+     HOVER. Cards (TeamTile lifts its shadow) and pills (their own surface-3 hover) are excluded,
+     and anything with a utility hover — the pin picker's tiles, the filter chips, ThemeToggle —
+     keeps it, because utilities outrank this layer. */
+  @media (hover: hover) {
+    .sx-tap:not(.sx-card, .sx-pill):hover { background: var(--sx-surface-2); }
+  }
 
   /* A disclosure chevron (GameRow): rotates when its <details> opens. */
   .sx-chevron { transition: rotate var(--sx-dur-ui) var(--sx-ease); }
   details[open] > summary .sx-chevron { rotate: 180deg; }
+  /* A LEADING chevron (before the summary text, OfficialFixtures) follows `.sx-disclosure`
+     instead: it points right while closed and down when open. Add it beside `.sx-chevron` on the
+     same down-pointing glyph; it wins the open state by coming later at equal specificity. */
+  .sx-chevron-lead { rotate: -90deg; }
+  details[open] > summary .sx-chevron-lead { rotate: 0deg; }
 
   /* Phone-only right-edge fade for a horizontally scrolling rail. */
   @media (max-width: 767.98px) {
     .sx-fade-x { mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); }
+    /* While the KEYBOARD is in the rail it drops the fade and wraps, so every chip is wholly on
+       screen: Chrome only scrolls a focused chip into view when it is entirely outside the
+       scrollport, so the last chips (↓ Oct 28, CCS) took focus half under the fade or past the
+       edge at 320–390. `:focus-visible` only — a tap focuses no link visibly, so at rest and
+       under a finger the rail stays one scrolling line. */
+    .sx-fade-x:has(:focus-visible) { mask-image: none; flex-wrap: wrap; }
   }
 
   /* The auto-generated recap never takes more than two lines (DESIGN §5.8). */
@@ -628,11 +681,21 @@
     overflow: hidden;
   }
 
-  /* CSS-only tooltip: hover AND :focus-visible, and it never gates a value. */
+  /* CSS-only tooltip: hover AND :focus-visible, and it never gates a value.
+     `width: max-content` (capped at 14rem), NOT `min-width: max-content`: a min-width outranks
+     the max-width, so the cap never applied. And a hidden body still has a layout box: centred
+     on the right-most marks, the bodies hung past the card and widened the page by up to 43px
+     on 9 of the 15 team pages at 768–1024 (a horizontal page scroll).
+     The body is centred on its mark only in the middle of the strip: the first seven marks
+     anchor it to their LEFT edge and the last seven to their RIGHT edge, so it opens inward and
+     never reaches past the first or last column. On a strip of 14 or fewer columns every body
+     opens inward (where the two ranges overlap, the right anchor wins); a longer strip would keep
+     its middle marks centred. The counts include MarginStrip's unplayed `?` slots, which are
+     siblings of the marks. */
   .sx-tip { position: relative; }
   .sx-tip > .sx-tip-body {
     position: absolute; bottom: 100%; left: 50%; translate: -50% -6px;
-    z-index: 2; min-width: max-content; max-width: 14rem;
+    z-index: 2; width: max-content; min-width: 0; max-width: 14rem;
     padding: 0.375rem 0.625rem;
     background: var(--sx-surface); color: var(--sx-text);
     border-radius: var(--sx-r-chip);
@@ -641,6 +704,8 @@
     opacity: 0; visibility: hidden;
     transition: opacity var(--sx-dur-tap) var(--sx-ease);
   }
+  .sx-tip:nth-child(-n+7) > .sx-tip-body { left: 0; translate: 0 -6px; }
+  .sx-tip:nth-last-child(-n+7) > .sx-tip-body { left: auto; right: 0; translate: 0 -6px; }
   .sx-tip:hover > .sx-tip-body,
   .sx-tip:focus-within > .sx-tip-body { opacity: 1; visibility: visible; }
 
@@ -701,7 +766,10 @@
     .sx-league-chip { border: 1px solid CanvasText; }
     .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
-    [aria-current="page"] .sx-indicator { outline: 2px solid Highlight; outline-offset: -2px; }
+    /* Any truthy `aria-current`, not only "page": a section that is lit for its descendants
+       (Teams on /teams/cupertino, Scores on /scores/[date] and /game/[id]) carries
+       `aria-current="true"`, and its capsule is a background that forced colours drop too. */
+    [aria-current]:not([aria-current="false"]) .sx-indicator { outline: 2px solid Highlight; outline-offset: -2px; }
     /* The sticky/fixed chrome is edged by a box-shadow too: give it a real line, or content
        scrolls under a bar with no visible boundary. */
     .sx-chrome-top { border-bottom: 1px solid CanvasText; }
@@ -724,4 +792,22 @@
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Unlayered on purpose: one lit tab while a navigation is pending. NavLink marks the TARGET's
+      capsule `data-pending` (useLinkStatus) the moment it is tapped, but `aria-current` only moves
+      when the route commits, so for the length of the fetch two capsules were lit. While anything
+      in the same <nav> is pending, the current item that is not itself the pending one drops to
+      the resting look. It has to beat the active capsule's `bg-accent-wash` / `text-accent-ink`
+      utilities, and a rule in @layer base never can, so it sits outside every layer like the
+      score rule above. The ink is the resting nav ink (`text-ink-2`), set on the link for the tab
+      variant (whose label and glyph inherit it) and on the capsule for the top variant. Nothing
+      matches when nothing is pending, and forced colours keep the Highlight outline on
+      `aria-current` until the route actually changes. ── */
+nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])),
+nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
+  color: var(--sx-text-2);
+}
+nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
+  background: transparent;
 }

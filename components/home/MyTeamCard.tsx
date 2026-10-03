@@ -6,7 +6,7 @@ import TeamFinder from '../search/TeamFinder';
 import ExternalLink from '../ui/ExternalLink';
 import FormStrip from '../ui/FormStrip';
 import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph } from '../ui/ScoreGlyph';
+import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -35,16 +35,21 @@ import { postseasonCardLine, type HomeColors, type HomeLastDisplay, type HomeSid
  * hydration inside a box that is already the right size. Before hydration the box renders the
  * compact prompt, hidden while a pin (or a stale pin) is stamped, so nothing flashes.
  *
+ * The pinned reservation is a FLOOR (`min-h`), not a fixed height: a fixed box clipped the card
+ * under WCAG 1.4.12 text spacing, where the lines grow taller. Now anything longer than the floor
+ * grows the card, and on a normal load the card is exactly the floor's height, so CLS stays 0.
+ *
  * Heights (CLS 0). The pinned card is a stack of fixed-height rows (header 44, meta 24, the
  * postseason line 24, Form 44 below 390 / 32 from 390) around two blocks whose content is clamped
- * or truncated (Last: date line 20 + two 24px score lines + a two-line, 40px recap; Next: date
- * line 20 + a truncated opponent line 28 + one row of ≤3 44px chips), plus 12px top and bottom
- * padding and the row rules. The previous card — the same blocks without the meta and postseason
- * rows — measured at most 370px below 390 (the stacked records row plus a wrapped "Next" date line
- * for a long time label) and at most 334px from 390 (250–290px for a team with no results). The
- * two new 24px rows put the longest real content at ≈ 418px below 390 (320, 360) and ≈ 382px
- * from 390 (390, 768; at 768 the card is wider and nothing wraps). Reserved: 26.5rem (424px) below
- * 390 and 24.5rem (392px) from 390 — never DESIGN §3.1's 240px. The compact prompt is 12 + 20
+ * or truncated (Last: date line 20 + two 24px score lines + a two-line, 40px slot that now holds
+ * only an unreported game's §5.2 note — the auto-recap is gone, the slot's height is unchanged;
+ * Next: date line 20 + a truncated opponent line 28 + one row of ≤3 44px chips), plus 12px top
+ * and bottom padding and the row rules. The previous card — the same blocks without the meta and
+ * postseason rows — measured at most 370px below 390 (the stacked records row plus a wrapped
+ * "Next" date line for a long time label) and at most 334px from 390 (250–290px for a team with no
+ * results). The two new 24px rows put the longest real content at ≈ 418px below 390 (320, 360) and
+ * ≈ 382px from 390 (390, 768; at 768 the card is wider and nothing wraps). Floor: 26.5rem (424px)
+ * below 390 and 24.5rem (392px) from 390 — never DESIGN §3.1's 240px. The compact prompt is 12 + 20
  * (label) + 4 + 48 (field) + 8 + 40 (its one sentence, which needs two lines below 768 and is
  * clamped to them) + 12 = 144px → 9rem (SPEC's ≈ 8rem estimate assumed one 20px line; the
  * sentence is ≈ 430px at 14px, wider than a phone card); while a query is typed the finder
@@ -54,9 +59,10 @@ import { postseasonCardLine, type HomeColors, type HomeLastDisplay, type HomeSid
  * scripts/a11y-axe.mjs, SPEC §10.1 "Fold".)
  */
 const BOX = [
-  'sx-card sx-flush sx-bleed',
-  // pinned
-  '[html[data-pin]_&]:h-[26.5rem] min-[390px]:[html[data-pin]_&]:h-[24.5rem]',
+  // `*:flex-1`: the state inside stretches to the box, so the pinned card fills its floor.
+  'sx-card sx-flush sx-bleed flex flex-col *:flex-1',
+  // pinned: a floor, not a fixed height (see above)
+  '[html[data-pin]_&]:min-h-[26.5rem] min-[24.375rem]:[html[data-pin]_&]:min-h-[24.5rem]',
   // compact prompt (no pin, a league is effective): fixed height unless a query is typed
   '[html:not([data-pin])[data-league]_&]:min-h-[9rem]',
   '[html:not([data-pin])[data-league]_&:not(:has([data-searching]))]:h-[9rem]',
@@ -86,7 +92,7 @@ function fullDisplay(d: HomeLastDisplay): GameDisplay {
   const m = d.marks ?? {};
   const side = (s: HomeSide) => ({ ...s, shortName: s.name, slug: null });
   return {
-    kind: 'final',
+    kind: d.kind,
     statusLabel: d.statusLabel,
     statusTone: d.statusTone,
     note: d.note,
@@ -108,18 +114,18 @@ function fullDisplay(d: HomeLastDisplay): GameDisplay {
   };
 }
 
-/** One line of the last game: `[chip] name … score`, my team first. */
+/**
+ * One line of the last game: `[chip] name … score`, my team first. Nothing trails the score, so
+ * the two numbers stack in one column (the status word sits on the "Last" line above instead).
+ * The name weight is the game rows' three-way rule (`nameClass`): the winner semibold in full ink,
+ * the loser regular in ink-2, a LEVEL side (a tie, an unreported score) regular in full ink,
+ * because neither side lost; a cancelled or postponed side recedes to ink-2.
+ */
 function ScoreLine({ side }: { side: GameDisplay['home'] }) {
   return (
     <span className="flex h-6 items-center gap-2">
       <ResultChip kind={side.chip} size={20} />
-      <span
-        className={`min-w-0 flex-1 truncate text-body ${
-          side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
-        }`}
-      >
-        {side.name}
-      </span>
+      <span className={`min-w-0 flex-1 truncate text-body ${nameClass(side)}`}>{side.name}</span>
       <span className="w-8 shrink-0 text-right">
         <ScoreGlyph side={side} size="score" />
       </span>
@@ -140,7 +146,7 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
   return (
     <article
       /* 2px accent left rule = the pinned team (DESIGN §4.4). */
-      className="sx-pinned flex h-full flex-col bg-surface px-4 py-3 md:px-5"
+      className="sx-pinned flex flex-1 flex-col bg-surface px-4 py-3 md:px-5"
       aria-label={`My team: ${team.name}`}
     >
       <div className="flex h-11 shrink-0 items-center gap-2">
@@ -175,41 +181,75 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
       ) : null}
 
       <div className="mt-1 flex-1 border-t border-divider pt-2">
-        <div className="flex items-baseline justify-between gap-2">
-          <Kicker>Last</Kicker>
-          {last && display ? (
-            <span className="flex items-baseline gap-2">
-              <span aria-hidden="true">
-                <StatusLabel display={display} />
+        {last && display && first && second ? (
+          <>
+            {/* ONE focusable link for the whole last game: the "Last · status · date" line and
+                the two score lines. Its accessible name is the whole sentence ("Last game, Wed
+                Sep 30: Saint Francis 10, Homestead 0, final."), so a screen reader hears that
+                and not a pile of glyphs. The hover / press band is surface-2 and is pulled only
+                8px into the card's 16px padding, so it never paints over the 2px pinned rule;
+                its 4px of vertical breathing room is cancelled by equal negative margins, so the
+                card's height does not move. */}
+            <Link
+              href={last.href}
+              prefetch={false}
+              className="sx-tap -mx-2 -my-1 block rounded-chip px-2 py-1 no-underline hover:bg-surface-2"
+              aria-label={`Last game, ${last.dateLabel}: ${last.display.sentence}`}
+            >
+              <span aria-hidden="true" className="block">
+                <span className="flex items-baseline justify-between gap-2">
+                  <Kicker>Last</Kicker>
+                  {/* The status word, on the date line rather than after the second score. An
+                      unreported game drops its chips: SCORE NOT REPORTED and the date already
+                      fill the line at 320px, and the game page carries them. The 6px gaps keep
+                      that line whole at 320 with the chevron. */}
+                  <span className="flex min-w-0 items-baseline gap-1.5">
+                    <StatusLabel display={display} showNonLeague={display.kind !== 'unreported'} />
+                    <time dateTime={last.dateTime} className="sx-num shrink-0 text-meta text-ink-3">
+                      {last.dateLabel}
+                    </time>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0 self-center text-ink-3"
+                    >
+                      <path d="M4.5 2.5 8 6l-3.5 3.5" />
+                    </svg>
+                  </span>
+                </span>
+                <span className="mt-0.5 block">
+                  <ScoreLine side={first} />
+                  <ScoreLine side={second} />
+                </span>
               </span>
-              <time dateTime={last.dateTime} className="sx-num text-meta text-ink-3">
-                {last.dateLabel}
-              </time>
-            </span>
-          ) : null}
-        </div>
-        {last && first && second ? (
-          /* One focusable link whose accessible name is the whole score sentence. */
-          <Link
-            href={last.href}
-            prefetch={false}
-            className="mt-0.5 block no-underline"
-            aria-label={`${last.display.sentence}${last.recap ? ` ${last.recap}` : ''}`}
-          >
-            <span aria-hidden="true">
-              <ScoreLine side={first} />
-              <ScoreLine side={second} />
-              <span className="sx-clamp-2 mt-1 block h-10 text-meta text-ink-2">
-                {last.recap ?? last.display.note ?? ''}
-              </span>
-            </span>
-          </Link>
+            </Link>
+            {/* The slot under the scores, two 20px lines tall in every state so the card's
+                height never depends on it. A game still waiting for its score says so (the §5.2
+                note); a final leaves it empty — the boilerplate auto-recap it used to show
+                repeated the score above in words. */}
+            <div className="mt-1 h-10">
+              {last.display.kind === 'unreported' && last.display.note ? (
+                <p className="sx-clamp-2 m-0 text-meta text-ink-2">{last.display.note}</p>
+              ) : null}
+            </div>
+          </>
         ) : (
-          <p className="mt-1 mb-0 text-meta text-ink-2">
-            {view.hasResults
-              ? 'No completed game yet this season.'
-              : `No results reported for ${team.name} yet. Their games are on the schedule page.`}
-          </p>
+          <>
+            <div className="flex items-baseline justify-between gap-2">
+              <Kicker>Last</Kicker>
+            </div>
+            <p className="mt-1 mb-0 text-meta text-ink-2">
+              {view.hasResults
+                ? 'No completed game yet this season.'
+                : `No results reported for ${team.name} yet. Their games are on the schedule page.`}
+            </p>
+          </>
         )}
       </div>
 
@@ -261,7 +301,7 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
         )}
       </div>
 
-      <div className="flex h-11 shrink-0 items-center gap-2 border-t border-divider min-[390px]:h-8">
+      <div className="flex h-11 shrink-0 items-center gap-2 border-t border-divider min-[24.375rem]:h-8">
         <Kicker>Form</Kicker>
         {/* Marks, not links: five 40px linked chips cannot share this row inside a height-locked
             card; /teams/<slug> carries the linked strip. */}
@@ -270,12 +310,12 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
           size={20}
           label={formStripName(team.name, view.form.length)}
         />
-        <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[390px]:block min-[390px]:truncate">
+        <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[24.375rem]:block min-[24.375rem]:truncate">
           <span>
             <span className="sx-num">{view.leagueRecord}</span> league
           </span>
           <span>
-            <span aria-hidden="true" className="hidden min-[390px]:inline">
+            <span aria-hidden="true" className="hidden min-[24.375rem]:inline">
               {' '}
               &middot;{' '}
             </span>
@@ -290,7 +330,7 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
 /** No pin, a league is effective: the finder and one line (SPEC §10.1). */
 export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
   return (
-    <div className="flex flex-col bg-surface px-3 py-3 min-[360px]:px-4 md:px-5">
+    <div className="flex flex-col bg-surface px-3 py-3 min-[22.5rem]:px-4 md:px-5">
       <TeamFinder index={index} mode="pin" label="School, city or mascot" onPin={onPin} />
       <p className="sx-clamp-2 mt-2 mb-0 h-10 text-meta text-ink-2">
         Pin your team: search, or pick it from your league’s team list below.
@@ -354,7 +394,8 @@ export function MyTeamCard({ views, index }: MyTeamCardProps) {
 
   return (
     <>
-      <SectionHeader id="my-team-heading" kicker="My team" />
+      {/* "All teams" opens /teams in every state; a pin is changed with Unpin and the finder. */}
+      <SectionHeader id="my-team-heading" kicker="My team" action={{ href: '/teams', label: 'All teams' }} />
       <div className={BOX}>{content}</div>
     </>
   );

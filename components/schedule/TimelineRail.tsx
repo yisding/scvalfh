@@ -4,6 +4,8 @@ import { longDate, monthDay, parseLocal } from '../../lib/format';
 import { CCS, getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
+import type { RailKind } from './rail-targets';
+
 /**
  * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · Sep · ● Today · Oct · Oct 28 ↓ · CCS Nov 7–14`,
  * as a row of 36px capsules inside a 44px hit row. The last chip is the league's own postseason:
@@ -17,6 +19,11 @@ import type { LeagueId } from '../../lib/types';
  *
  * "Today" is derived from `snapshot.fetchedAt` in Pacific, never from `Date.now()`, so the rail is
  * part of the reproducible build rather than something that drifts between build and view.
+ *
+ * Under a filter: each date chip carries `data-rail-date` and `data-rail-kind`, its date label
+ * `data-rail-label` and its screen-reader name `data-rail-sr`, so ScheduleFilters can re-aim it at
+ * a group that is still shown (rail-targets.ts) and put the server's version back afterwards. The
+ * HTML as served is the whole-season rail, which is all a reader without JavaScript ever sees.
  */
 const MONTH_NAMES = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
@@ -39,6 +46,8 @@ export interface TimelineRailProps {
 
 interface Marker {
   date: string;
+  /** What the chip means, so a filter can re-aim it (rail-targets.ts). */
+  kind: RailKind;
   label: string;
   /** A leading glyph: `↑` for the season's first day, `↓` for its last, `●` for today. */
   glyph?: string;
@@ -61,6 +70,7 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   if (dates.includes(today)) {
     candidates.push({
       date: today,
+      kind: 'today',
       label: 'Today',
       glyph: '●',
       sr: `Today, ${longDate(today)}`,
@@ -69,6 +79,7 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   }
   candidates.push({
     date: first,
+    kind: 'up',
     label: monthDay(first),
     glyph: '↑',
     sr: `Jump to the first contest of the season, ${longDate(first)}`,
@@ -81,6 +92,7 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
     const month = parseLocal(date).month;
     candidates.push({
       date,
+      kind: 'month',
       label: MONTH_NAMES[month - 1],
       sr: `Jump to ${MONTH_NAMES_LONG[month - 1]}, starting ${longDate(date)}`,
     });
@@ -88,6 +100,7 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   if (last !== first) {
     candidates.push({
       date: last,
+      kind: 'down',
       label: monthDay(last),
       glyph: '↓',
       sr: `Jump to the last contest of the season, ${longDate(last)}`,
@@ -140,24 +153,34 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
           clipped its own chips correctly while the last chip's hidden label resolved at x=350 past
           the clip and pushed `documentElement.scrollWidth` to 350 against a 320px viewport, which
           is DESIGN §10.8 / R-8's "no horizontal page scroll … at 320px" (WCAG 1.4.10 Reflow). */}
-      {/* `scroll-px-10`: Chrome only scrolls a focused chip into view when it is wholly outside
-          the scrollport, and the last chip sat half under the 2rem fade, so Tab left it there,
-          masked. A 2.5rem scroll padding makes the faded edge count as outside. */}
-      <ol className="sx-fade-x m-0 flex list-none items-center gap-2 overflow-x-auto scroll-px-10 px-gutter py-1 md:px-1">
+      {/* Keyboard focus is handled in CSS, not with scroll padding: while a chip has
+          `:focus-visible`, `.sx-fade-x` drops its fade and lets the rail wrap (globals.css, F-103),
+          so a tabbed-to chip is never left half under the faded edge — which a 2.5rem
+          `scroll-padding` only half fixed, since Chrome scrolls a focused chip into view only
+          when it is wholly outside the scrollport. */}
+      <ol className="sx-fade-x m-0 flex list-none items-center gap-2 overflow-x-auto px-gutter py-1 md:px-1">
         {markers.map((marker) => (
           <li key={marker.date} className="flex h-11 shrink-0 items-center">
             <a
               href={`#${marker.date}`}
-              // `forced-colors:border`: the ring is a box-shadow, which forced colours drop.
+              data-rail-date={marker.date}
+              data-rail-kind={marker.kind}
+              // `forced-colors:border`: the ring is a box-shadow, which forced colours drop. The
+              // press state (`active:`) is for touch, where there is no hover to show the tap
+              // landed; the current chip keeps its wash.
               className={`relative inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] forced-colors:border forced-colors:border-[CanvasText] ${
                 marker.current
                   ? 'bg-accent-wash text-accent-ink'
-                  : 'bg-surface text-ink-2 hover:text-ink'
+                  : 'bg-surface text-ink-2 hover:bg-surface-2 hover:text-ink active:bg-surface-2'
               }`}
             >
               {marker.glyph ? <span aria-hidden="true">{marker.glyph}</span> : null}
-              <span aria-hidden="true">{marker.label}</span>
-              <span className="sr-only">{marker.sr}</span>
+              <span aria-hidden="true" data-rail-label>
+                {marker.label}
+              </span>
+              <span className="sr-only" data-rail-sr>
+                {marker.sr}
+              </span>
             </a>
           </li>
         ))}
@@ -165,7 +188,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
           <Link
             href={chip.href}
             prefetch={false}
-            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:text-ink forced-colors:border forced-colors:border-[CanvasText]"
+            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
           >
             <span aria-hidden="true">{chip.label}</span>
             <span aria-hidden="true">&rarr;</span>

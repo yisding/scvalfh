@@ -10,8 +10,9 @@ import { formatStamp, shortDate } from '../../../lib/format';
  * and W-L-T (a single-division league: one column, top 6), or `No league results yet`.
  *
  * TEXT ONLY, like every card on this site: no logo file, no school colors and no third-party image
- * request (DESIGN §12.4). A shared place prints as `3=`: the league's last step is the league's to
- * run, and a card that silently picked a winner would be the one place on the site that lies.
+ * request (DESIGN §12.4). A shared place prints as `T3`, the US sports-page mark the tables use:
+ * the league's last step is the league's to run, and a card that silently picked a winner would be
+ * the one place on the site that lies.
  * Division labels come only from `divisionHeading()` (via the league summary): PCAL and MCAL get
  * none.
  */
@@ -37,7 +38,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
       .slice(0, single ? 6 : 4)
       .map((s) => ({
         id: s.teamId,
-        place: `${s.computed.place}${s.tiebreak.shared ? '=' : ''}`,
+        place: `${s.tiebreak.shared ? 'T' : ''}${s.computed.place}`,
         name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
         pts: s.computed.pts,
         record: `${s.computed.w}-${s.computed.l}-${s.computed.t}`,

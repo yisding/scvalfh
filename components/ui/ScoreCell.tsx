@@ -5,7 +5,7 @@ import { describeGame } from './game-view';
 import { SCORE_SIZE_CLASS as SIZE_CLASS, ScoreGlyph } from './ScoreGlyph';
 
 /** ScoreGlyph lives in its own client-safe module (SPEC §10.4); re-exported for server callers. */
-export { ScoreGlyph } from './ScoreGlyph';
+export { ScoreGlyph, nameClass, NAME_CLASS } from './ScoreGlyph';
 export type { ScoreGlyphProps } from './ScoreGlyph';
 
 /**

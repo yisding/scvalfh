@@ -47,9 +47,13 @@ export default function HomePage() {
           title="NorCal field hockey"
           srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL and MCAL"
           meta={
+            /* One line at 390: the league list wrapped onto a second line there, and the leagues
+               are named by the switcher chips right below. From 640px it fits and comes back; the
+               text stays in the DOM either way. */
             <p className="m-0 text-meta text-ink-2">
               {status.resultsThrough ? `Results through ${shortDate(status.resultsThrough)}` : 'No results yet'}{' '}
-              &middot; {status.teamCount} teams &middot; {status.leagueShorts.join(' · ')}
+              &middot; {status.teamCount} teams
+              <span className="hidden sm:inline"> &middot; {status.leagueShorts.join(' · ')}</span>
             </p>
           }
         />

@@ -46,9 +46,11 @@ function PlaceCell({ row }: { row: SeedRowView }) {
     );
   }
   const { place } = standing.computed;
+  // `T6`, the site-wide tie mark, with the sr-only "tied for 6th"; `whitespace-nowrap` so the
+  // narrow first column can never break the T from its number.
   return row.shared ? (
-    <span className="sx-num text-ink">
-      <span aria-hidden="true">{place}=</span>
+    <span className="sx-num whitespace-nowrap text-ink">
+      <span aria-hidden="true">T{place}</span>
       <span className="sr-only">tied for {ordinal(place)}</span>
     </span>
   ) : (

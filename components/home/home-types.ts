@@ -40,6 +40,11 @@ export type HomeSide = Pick<SideView, 'name' | 'glyph' | 'hasScore' | 'weight' |
  * `StatusLabel` from it (MyTeamCard.tsx), so no score is ever re-derived on the client.
  */
 export interface HomeLastDisplay {
+  /**
+   * `final`, or `unreported` for a game that was played and has no score yet: the card then shows
+   * the §5.2 unreported row and its "we will update" note (`note`), never a 0–0.
+   */
+  kind: 'final' | 'unreported';
   statusLabel: GameDisplay['statusLabel'];
   statusTone: GameDisplay['statusTone'];
   /** The flags and chips that are set; an absent key is false/null. */
@@ -59,7 +64,13 @@ export interface HomeLastDisplay {
   away: HomeSide;
 }
 
-/** The pinned team's most recent final. */
+/**
+ * The pinned team's most recent PLAYED game: the newest one dated today or earlier whose status is
+ * `final` or `score-pending`, in kickoff order. A game that was played and has no score yet is
+ * still the team's last game; skipping it left a card on an older "Last" date after the team's
+ * newest game had been played. Such a game renders the §5.2 unreported row (two en dashes, the
+ * outlined pending chips, SCORE NOT REPORTED and the "we will update" note), never a 0–0.
+ */
 export interface HomeLastGame {
   /** The §5.2 rendering decision, resolved server-side and slimmed. */
   display: HomeLastDisplay;
@@ -69,8 +80,6 @@ export interface HomeLastGame {
   dateLabel: string;
   /** The `<time datetime>` value. */
   dateTime: string;
-  /** Cleaned at build (DESIGN §5.8), capped, clamped to two lines when rendered. */
-  recap: string | null;
   href: string;
 }
 

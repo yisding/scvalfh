@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph } from '../ui/ScoreGlyph';
+import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import { describeGame, type SideView } from '../ui/game-view';
@@ -96,9 +96,9 @@ function SideLine({ side, showScore, suffix }: { side: SideView; showScore: bool
   return (
     <span className="flex min-h-6 items-center gap-2">
       <ResultChip kind={side.chip} size={20} />
-      <span
-        className={`min-w-0 flex-1 truncate text-body ${side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'}`}
-      >
+      {/* The game rows' three-way name weight: a level side (a tie, an unreported score) stays in
+          full ink, because neither side lost; a cancelled or postponed side recedes. */}
+      <span className={`min-w-0 flex-1 truncate text-body ${nameClass(side)}`}>
         {side.shortName}
         {suffix ? <span className="text-ink-3">{suffix}</span> : null}
       </span>

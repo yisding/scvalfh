@@ -135,14 +135,16 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
       {fixtures.length > 0 ? (
         <section className="mt-section md:mt-section-lg">
           <SectionHeader kicker={`Scheduled by ${summary.shortName}, not reported`} />
-          <OfficialFixtures fixtures={fixtures} leagueId={summary.id} />
+          <OfficialFixtures fixtures={fixtures} leagueId={summary.id} today={today} />
         </section>
       ) : null}
 
       {/* The same width as the fixtures card above it, so the two end-of-page disclosures read
           as one kind of thing. */}
       <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
-        <summary>How to read this page (5 notes)</summary>
+        {/* The same summary as every other page's legend, and no count: "(5 notes)" was a number
+            to read before the notes themselves. */}
+        <summary>How to read this page</summary>
         <ul className="m-0 mt-2 list-disc space-y-2 pl-5">
           <li>
             Standings count league games only. A league game carries its league&rsquo;s tag; a
@@ -169,7 +171,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
           </li>
           <li>
             Every date and time is Pacific, formatted when the site was built. Tap a game to expand
-            its venue, stream, ticket and box-score links; tap a date&rsquo;s Share link to open
+            its venue, stream, ticket and box-score links; tap a date&rsquo;s Day page link to open
             that day on its own page.
           </li>
         </ul>

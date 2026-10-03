@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
-import { monthDay } from '../../lib/format';
+import { EN_DASH, monthDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { FormGame } from '../../lib/data';
+import { getTeamBySlug } from '../../lib/teams';
 
 import EmptyState from './EmptyState';
 import { signedMargin } from './game-view';
@@ -15,7 +16,8 @@ import { signedMargin } from './game-view';
  * compress to nothing). One series, so no legend box: the kicker names it.
  *
  * Geometry (modernization brief §4.18): the strip sits in a `p-4` card, so at 390px the plot is
- * 326 − 48 = 278px, exactly 14 columns × 18px + 13 × 2px gaps. Columns are FLUID — `flex-1` up to
+ * 326 − 48 = 278px, exactly 14 columns × 18px + 13 × 2px gaps (a 14-game slate; MCAL's 16 and
+ * BVAL's 10 come in as `slots` like every other). Columns are FLUID — `flex-1` up to
  * a 56px cap — so the strip fills its card at every width instead of hugging the left edge. The
  * phone floor is 12px rather than the brief's 18px: at 320 and 360 the card's plot is only 208 and
  * 248px, and an 18px floor would push the strip into a nested horizontal scroller (an overflow and
@@ -28,10 +30,13 @@ import { signedMargin } from './game-view';
  *
  * Unplayed games get a `?` tick and NO column, and the axis continues to the division's scheduled
  * league-game count (`slots`, the team view's `leagueScheduled` — `gamesPerTeam`: 14 in El Camino,
- * 12 in De Anza and PCAL, 10 in BVAL, 16 in MCAL), so the reader sees how much season is left and never a
- * phantom game that is not on the schedule. Forfeits are excluded entirely — they have no goal margin — and
- * the caption says so. The `<details>` table twin below is the relief channel and is always
- * present, never a fallback.
+ * 12 in De Anza and PCAL, 10 in BVAL, 16 in MCAL), so the reader sees how much season is left and
+ * never a phantom game that is not on the schedule. A game that WAS played and
+ * never scored (`score-pending`) is not "left": it gets an en dash, the site's mark for a number we
+ * do not have (DESIGN §5.3), and "score not reported" in words in the screen-reader description,
+ * the desktop link's name and the table twin. Forfeits are excluded entirely — they have no goal
+ * margin — and the caption says so. The `<details>` table twin below is the relief channel and is
+ * always present, never a fallback.
  */
 export interface MarginStripProps {
   /** League games in date order, played and remaining — lib/data's `getTeamForm().leagueGames`. */
@@ -39,7 +44,8 @@ export interface MarginStripProps {
   teamName: string;
   /**
    * The division's scheduled league games for this team (`leagueScheduled`, from `gamesPerTeam`).
-   * Required: a fixed default would pad a 10-game BVAL season with unplayed `?` games.
+   * Required: a fixed default would pad a 10-game BVAL season with unplayed `?` games. Never fewer
+   * columns than entries.
    */
   slots: number;
   /** Phone / desktop, INCLUDING the axis band. */
@@ -48,6 +54,18 @@ export interface MarginStripProps {
 }
 
 const SITE_GLYPH: Record<FormGame['site'], string> = { home: 'H', away: 'A', neutral: 'N' };
+
+/** Played, but no score was ever published (DESIGN §5.2): not "not played yet". */
+function isUnreported(entry: FormGame): boolean {
+  return entry.status === 'score-pending';
+}
+
+/** "vs Santa Clara" / "at Palo Alto", with the registry's short name for a registry team. */
+function opponentPhrase(entry: FormGame): string {
+  const name = (entry.opponentSlug ? getTeamBySlug(entry.opponentSlug)?.shortName : undefined) ??
+    entry.opponent;
+  return `${entry.site === 'away' ? 'at' : 'vs'} ${name}`;
+}
 
 export function MarginStrip({
   entries,
@@ -72,7 +90,8 @@ export function MarginStrip({
   const isPhone = height !== 200;
   // Columns are fluid between a floor and a 56px cap. The phone floor is 12px (a chart mark; see
   // the geometry note above); the desktop floor is 24px because those marks are links (WCAG
-  // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px.
+  // 2.5.8). 14 × 24 + 13 × 3 = 375px, which fits the 380px plot of a half-width card at 1024px; a
+  // 12-game strip needs 321px.
   const colClass = isPhone ? 'min-w-3 max-w-14 flex-1' : 'min-w-6 max-w-14 flex-1';
   const gap = isPhone ? 2 : 3;
   /** Only a 24px-wide column is a legal tap target, so only the desktop marks are links. */
@@ -95,6 +114,7 @@ export function MarginStrip({
 
   const cells = Array.from({ length: Math.max(slots, entries.length) }, (_, i) => entries[i]);
   const forfeits = entries.filter((e) => e.excludedFromMargin).length;
+  const unreported = entries.some(isUnreported);
 
   return (
     <div className={className}>
@@ -172,7 +192,13 @@ export function MarginStrip({
                     style={{ height: glyphBand }}
                     aria-hidden="true"
                   >
-                    {entry ? (entry.margin === null ? '?' : SITE_GLYPH[entry.site]) : '?'}
+                    {entry
+                      ? isUnreported(entry)
+                        ? EN_DASH
+                        : entry.margin === null
+                          ? '?'
+                          : SITE_GLYPH[entry.site]
+                      : '?'}
                   </span>
                 </>
               );
@@ -192,7 +218,9 @@ export function MarginStrip({
                 (entry.margin === null
                   ? entry.excludedFromMargin
                     ? 'forfeit, no goal margin'
-                    : 'not played yet'
+                    : isUnreported(entry)
+                      ? 'score not reported'
+                      : 'not played yet'
                   : `margin ${signedMargin(entry.margin)}`) +
                 (label ? `, ${label}` : '');
               return (
@@ -223,11 +251,26 @@ export function MarginStrip({
                     </span>
                   )}
                   {/* CSS-only tooltip on hover, and on focus wherever the mark is a link; it never
-                      gates a value, because the table twin below holds the same numbers. */}
-                  <span className="sx-tip-body" role="presentation">
-                    {monthDay(entry.date)} &middot; {entry.opponent} &middot;{' '}
-                    {SITE_GLYPH[entry.site]}{' '}
-                    {entry.margin === null ? '' : `· ${signedMargin(entry.margin)}`}
+                      gates a value, because the table twin below holds the same numbers. The last
+                      three marks hang their tooltip LEFT from the column's right edge instead of
+                      centring it: centred, the right-most one ran ~20px past the viewport at 768
+                      and 1024px, and even hidden it widened the page into a sideways scroll. */}
+                  <span
+                    className={
+                      i >= cells.length - 3
+                        ? 'sx-tip-body right-0 left-auto [translate:0_-6px]'
+                        : 'sx-tip-body'
+                    }
+                    role="presentation"
+                  >
+                    {monthDay(entry.date)} &middot; {opponentPhrase(entry)}
+                    {entry.margin !== null
+                      ? ` · ${signedMargin(entry.margin)}`
+                      : entry.excludedFromMargin
+                        ? ' · forfeit'
+                        : isUnreported(entry)
+                          ? ' · score not reported'
+                          : ''}
                   </span>
                   {interactive && label ? <span className="sr-only">{label}</span> : null}
                 </span>
@@ -241,8 +284,14 @@ export function MarginStrip({
       {/* The chart is as wide as its card; the legend is prose, so it keeps a reading measure. */}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {signedMargin(best)} best &middot; {signedMargin(worst)} worst &middot;{' '}
-        {signedMargin(latest)} most recent. H / A / N is home, away, neutral; <b>?</b> is a game
-        not played yet.
+        {signedMargin(latest)} most recent. H / A / N is home, away, neutral; <b>?</b> is a league
+        game with no result yet
+        {unreported ? (
+          <>
+            ; <b>{EN_DASH}</b> is a game whose score was not reported
+          </>
+        ) : null}
+        .
         {forfeits > 0
           ? ` ${forfeits === 1 ? '1 forfeit is' : `${forfeits} forfeits are`} excluded — a forfeit has no goal margin.`
           : ''}
@@ -269,9 +318,11 @@ export function MarginStrip({
                 <td className="sx-num">
                   {entry.excludedFromMargin
                     ? 'forfeit'
-                    : entry.margin === null
-                      ? 'not played'
-                      : signedMargin(entry.margin)}
+                    : isUnreported(entry)
+                      ? 'score not reported'
+                      : entry.margin === null
+                        ? 'not played'
+                        : signedMargin(entry.margin)}
                 </td>
               </tr>
             ))}

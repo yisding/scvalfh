@@ -20,7 +20,9 @@ export function BerthMeter({ claimed, total, label, className }: BerthMeterProps
     <div className={`max-w-prose${className ? ` ${className}` : ''}`}>
       <p className="m-0 flex items-baseline gap-1.5">
         <span className="sx-figure text-figure text-ink">{claimed}</span>
-        <span className="sx-num text-meta text-ink-2">/ {total}</span>
+        {/* Sans like the figure beside it (`tabular-nums`, not `.sx-num`): "7 / 16" is one
+            number read as a pair, not a column of stacked digits, so it keeps one typeface. */}
+        <span className="text-meta text-ink-2 tabular-nums">/ {total}</span>
       </p>
       {/* The numerals and the sentence are real text, so the segments are decoration. */}
       <div

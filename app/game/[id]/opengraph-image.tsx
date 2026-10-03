@@ -26,6 +26,10 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  * `/game/sblive-<n>/opengraph-image`, never a raw `sblive:<n>` path, plus the superseded stubs,
  * whose card is the MaxPreps game's). The kicker names the league (`BVAL · Santa Teresa`,
  * `Non-league`, `MCAL semifinal`), and a si.com score says `Score via si.com` (SPEC §8.4).
+ *
+ * The record under each name is `GameSideModel.sub` from the same model, so it is the league
+ * record AS OF this game (`recordAsOf`, G-1) — a card shared weeks later still shows the record
+ * that went with that score, exactly as the page does.
  */
 
 export const alt = `${SITE_NAME} — game score card`;

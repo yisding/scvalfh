@@ -605,7 +605,7 @@ export interface TournamentRoundView {
 export interface SeedRowView {
   team: Team;
   standing: Standing;
-  /** 'Tie' rows render level ('6='). */
+  /** A shared place renders level: `T6`, with "tied for 6th" spoken. */
   shared: boolean;
   /** '4/16 GP' — counted of scheduled league games. */
   gpText: string;

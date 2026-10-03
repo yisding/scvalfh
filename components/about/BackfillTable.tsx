@@ -39,7 +39,7 @@ export function BackfillTable({ rows }: BackfillTableProps) {
     );
   }
   return (
-    <ul className="m-0 flex max-w-[66ch] list-none flex-col gap-3 p-0">
+    <ul className="m-0 flex max-w-prose list-none flex-col gap-3 p-0">
       {rows.map((row) => (
         <li key={row.contestId} className="sx-card p-4 text-meta text-ink-2">
           <p className="m-0 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">

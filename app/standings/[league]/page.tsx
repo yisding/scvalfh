@@ -10,6 +10,7 @@ import DivisionTabs from '../../../components/standings/DivisionTabs';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
+import { HISTORY_LEAGUE } from '../../../lib/leagues';
 
 import { getStandingsPageData, leagueChips, leaderClause, leagueHrefs } from '../standings-data';
 
@@ -65,11 +66,16 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   const multi = summary.divisions.length > 1;
   const tabs = data.views.map((view) => ({ href: `#${view.division}`, label: view.kicker }));
 
-  // The page disclosure: the GD paragraph and each generic per-division sentence once.
+  // The page disclosure: the GD paragraph and each generic per-division sentence once. The GD
+  // scale is in words ("De Anza's is 36"), not "|GD| max 36"; a single-division league names no
+  // division (SPEC §10.3).
+  const gdScale = multi
+    ? `Bars are scaled to each division's own biggest goal difference (${data.views
+        .map((v) => `${v.label}'s is ${v.gdDomain}`)
+        .join(', ')}), so bars in different divisions are not comparable.`
+    : `Bars are scaled to the league's biggest goal difference (${data.views[0]?.gdDomain ?? 0}).`;
   const legend = [
-    `GD = league goals for minus goals against. Bars are scaled per division (${data.views
-      .map((v) => `${v.label} |GD| max ${v.gdDomain}`)
-      .join(', ')}), so bars in different divisions are not comparable. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
+    `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.',
     ...new Set(data.views.flatMap((view) => view.legendNotes)),
   ];
@@ -143,21 +149,40 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
         ))}
       </div>
 
-      <details className="sx-inset sx-disclosure mt-6 max-w-prose">
-        <summary>How these tables are computed ({legend.length} notes)</summary>
+      {/* The same shape as /schedule's key ("How to read this page"): `max-w-3xl` and a plain
+          summary with no note count, so the site's how-to-read disclosures look like one
+          component. The paragraphs inside keep the prose measure. */}
+      <details className="sx-inset sx-disclosure mt-6 max-w-3xl">
+        <summary>How to read these tables</summary>
         {legend.map((note) => (
-          <p key={note} className="mb-0">
+          <p key={note} className="mb-0 max-w-prose">
             {note}
           </p>
         ))}
       </details>
 
+      {/* The pills sit on the canvas, where the default surface-2 fill all but vanished in light:
+          the surface plus a 1px ring makes them read as buttons, like the division pills. Only the
+          history league has a finished season to compare with (SPEC §8.1). */}
       <div className="mt-6 flex flex-wrap gap-2">
         {summary.links.map((link) => (
-          <ExternalLink key={link.href} href={link.href} className="sx-pill">
+          <ExternalLink
+            key={link.href}
+            href={link.href}
+            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+          >
             {link.label}
           </ExternalLink>
         ))}
+        {summary.id === HISTORY_LEAGUE ? (
+          <Link
+            href="/history/2025-26"
+            prefetch={false}
+            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+          >
+            Last season&rsquo;s final tables
+          </Link>
+        ) : null}
       </div>
     </div>
   );

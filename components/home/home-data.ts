@@ -60,6 +60,7 @@ import type { SearchIndex } from '../../lib/search';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
+import { plural } from '../ui/plural';
 
 import type {
   HomeColors,
@@ -92,8 +93,6 @@ function clock(time: string): string {
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
 }
-
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 /** 'A', 'A & B', 'A, B & C'. */
 function joinAmp(names: readonly string[]): string {
@@ -145,6 +144,31 @@ function leagueDay(
         [...all.filter((g) => g.status === 'final'), ...all.filter((g) => g.status !== 'final')]
       : all;
   return { date, games, total: games.length, isToday: date === today };
+}
+
+/** A contest that counts in one of this league's tables. */
+function countsInLeague(game: Game, league: LeagueId): boolean {
+  return game.countsFor !== null && getDivision(game.countsFor).leagueId === league;
+}
+
+/**
+ * The first day AFTER `after` with a league game for this league, so a slate of non-league games
+ * can say when league play resumes. Read from EVERY upcoming playable game of the league rather
+ * than the slate's own day, so a long run of non-league dates cannot hide it. `games` is that
+ * day's league games only, in kickoff order; `total` counts every contest of the league that day,
+ * which is what the panel's other `All N on <date>` counts and the /scores page list.
+ */
+function nextLeagueDay(league: LeagueId, after: string, today: string): HomeDay | null {
+  const date = getUpcoming(Number.MAX_SAFE_INTEGER, undefined, { league }).find(
+    (g) => countsInLeague(g, league) && g.dateKey > after,
+  )?.dateKey;
+  if (!date) return null;
+  const day = leagueDay(league, date, today, { playable: true });
+  return {
+    ...day,
+    games: day.games.filter((g) => countsInLeague(g, league)),
+    total: getGames({ league, date }).length,
+  };
 }
 
 /** The most recent played day with nothing reported for this league, or null (the common case). */
@@ -225,9 +249,9 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
       lead: `${short} league play starts ${shortDate(firstLeague)}.`,
       body:
         nonLeague > 0
-          ? `These tables count league games only, so the ${nonLeague} non-league ${
-              nonLeague === 1 ? 'game' : 'games'
-            } played so far ${nonLeague === 1 ? 'is' : 'are'} on the schedule and in the overall records, not in the standings.`
+          ? `These tables count league games only, so the ${plural(nonLeague, 'non-league game')} played so far ${
+              nonLeague === 1 ? 'is' : 'are'
+            } on the schedule and in the overall records, not in the standings.`
           : 'No games have been played yet, so every record below is empty on purpose.',
       link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
     };
@@ -528,6 +552,11 @@ export interface HomeLeaguePanel {
   latest: HomeDay | null;
   unreported: HomeDay | null;
   slate: HomeDay | null;
+  /**
+   * The first day after the slate's with a league game, so a slate of non-league games can say
+   * when league play resumes (`NextSlate`). Null when there is no slate or no league game after it.
+   */
+  nextLeague: HomeDay | null;
   /** The first league contest of the season, for an empty "Latest scores" block. */
   firstGame: string | null;
   divisions: MiniDivisionView[];
@@ -558,6 +587,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
     latest: latestDate ? leagueDay(league.id, latestDate, today, { finalsFirst: true }) : null,
     unreported: unreported ? leagueDay(league.id, unreported, today) : null,
     slate: slateDate ? leagueDay(league.id, slateDate, today, { playable: true }) : null,
+    nextLeague: slateDate ? nextLeagueDay(league.id, slateDate, today) : null,
     firstGame,
     divisions: league.divisions.map((d) => miniDivision(league, d, single)),
     pointsLegend: `PTS: ${league.rules.citations.points}.`,
@@ -568,7 +598,13 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
       groups: league.divisions.map((d) => ({
         id: d.id,
         heading: single ? null : d.label,
-        tiles: getTeams({ division: d.id }).map((t) => pinTileView(t, league.shortName, single ? null : d.label)),
+        // A–Z by the short name the tile prints, so a reader scans one alphabetical run per
+        // division instead of the registry's order. Sorted here on the server, once, so the client
+        // renders exactly the order the HTML shipped with.
+        tiles: getTeams({ division: d.id })
+          .slice()
+          .sort((a, b) => a.shortName.localeCompare(b.shortName, 'en'))
+          .map((t) => pinTileView(t, league.shortName, single ? null : d.label)),
       })),
     },
     postseason: postseasonView(league, phase, sectionOf(league.id).noChampionshipNote),
@@ -589,16 +625,6 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
 
 // ---------------------------------------------------------------- my-team views
 
-/** A recap longer than this is cut at a word (the card clamps to two lines anyway; keeps the 60 KB budget). */
-const RECAP_MAX = 120;
-
-function capRecap(recap: string | null): string | null {
-  if (!recap) return null;
-  if (recap.length <= RECAP_MAX) return recap;
-  const cut = recap.slice(0, RECAP_MAX);
-  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), 60)).trimEnd()}…`;
-}
-
 /** One score line: the registry short name ("St Ignatius" on a 358px card), glyph, weight, chip. */
 function homeSide(side: SideView): HomeLastDisplay['home'] {
   return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
@@ -616,6 +642,7 @@ function slimDisplay(display: GameDisplay): HomeLastDisplay {
   if (display.leagueTag) marks.leagueTag = display.leagueTag;
   if (display.postseasonTag) marks.postseasonTag = display.postseasonTag;
   return {
+    kind: display.kind === 'unreported' ? 'unreported' : 'final',
     statusLabel: display.statusLabel,
     statusTone: display.statusTone,
     ...(Object.keys(marks).length > 0 ? { marks } : {}),
@@ -632,7 +659,6 @@ function lastGameView(game: Game, slug: string): HomeLastGame {
     mineIsHome: game.home.slug === slug,
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
-    recap: capRecap(game.recap),
     href: gameHref(game.contestId),
   };
 }
@@ -709,8 +735,12 @@ export function buildTeamViews(): HomeTeamView[] {
     const context = contexts.get(team.division)?.get(team.id);
     const standing = getStandingFor(team.slug);
     const games = getGames({ teamId: team.id }).sort(byKickoff);
-    const finals = games.filter((g) => g.status === 'final');
-    const last = finals.length > 0 ? finals[finals.length - 1] : null;
+    // The last PLAYED game: a final, or a game whose date has come and whose score has not
+    // (score-pending), so a card never sits on an older "Last" after a newer game was played.
+    const playedGames = games.filter(
+      (g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= today,
+    );
+    const last = playedGames.at(-1) ?? null;
     const next =
       games.find(
         (g) =>

@@ -8,8 +8,10 @@ import type { GameModel } from './game-model';
  *
  * `GameSourceLine` is owner decision D2's transparency rule on one contest: when the published score
  * is High School on SI's (si.com) — MaxPreps had no contest for an official fixture, had the
- * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note
- * and both sources linked: `Score via High School on SI (si.com): <rule note>.`
+ * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note:
+ * `Score via High School on SI (si.com): <rule note>.` Both sources are linked, but a link that is
+ * already one of the final's result pills directly above (`GameModel.resultLinks`, where si.com's
+ * game page is the accent pill) is not repeated here.
  *
  * `SourceDisagreement` is the site's credibility mechanism applied to one contest (DESIGN §9,
  * SPEC §5.7): when MaxPreps and si.com publish different numbers we show which one we publish and
@@ -17,8 +19,10 @@ import type { GameModel } from './game-model';
  * scoreboard, because a disagreement buried in a footer is a disagreement hidden.
  *
  * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
- * sources site-wide, and this block carries the deep links for THIS contest and these two schools
- * (DESIGN §7.15).
+ * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
+ * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
+ * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
+ * line — each link has one home.
  */
 
 export interface GameSourceLineProps {
@@ -29,6 +33,11 @@ export interface GameSourceLineProps {
 export function GameSourceLine({ model, className }: GameSourceLineProps) {
   const { source } = model;
   if (!source) return null;
+  // Each link has one home (F-71c): a source page that is already a result pill stays there.
+  const pills = new Set(model.resultLinks.map((link) => link.href));
+  const sbliveUrl = source.sbliveUrl && !pills.has(source.sbliveUrl) ? source.sbliveUrl : null;
+  const maxprepsUrl =
+    source.maxprepsUrl && !pills.has(source.maxprepsUrl) ? source.maxprepsUrl : null;
   return (
     <aside
       className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
@@ -38,15 +47,15 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
         <span aria-hidden="true">&dagger; </span>
         {source.text}
       </p>
-      {source.sbliveUrl || source.maxprepsUrl ? (
+      {sbliveUrl || maxprepsUrl ? (
         <p className="m-0 flex flex-wrap gap-x-4">
-          {source.sbliveUrl ? (
-            <ExternalLink href={source.sbliveUrl} className="sx-action no-underline">
+          {sbliveUrl ? (
+            <ExternalLink href={sbliveUrl} className="sx-action no-underline">
               si.com&rsquo;s page
             </ExternalLink>
           ) : null}
-          {source.maxprepsUrl ? (
-            <ExternalLink href={source.maxprepsUrl} className="sx-action no-underline">
+          {maxprepsUrl ? (
+            <ExternalLink href={maxprepsUrl} className="sx-action no-underline">
               MaxPreps&rsquo; page
             </ExternalLink>
           ) : null}
@@ -126,58 +135,55 @@ export interface GameElsewhereProps {
 }
 
 export function GameElsewhere({ model, className }: GameElsewhereProps) {
-  const { game, away, home } = model;
-  const sides = [away, home].flatMap((side) =>
-    side.team
-      ? [{ name: side.name, maxprepsUrl: side.team.external.maxprepsTeamUrl, sbliveUrl: side.sbliveUrl }]
+  const { display, away, home } = model;
+  const teamRows = [away, home].flatMap((side) =>
+    side.team && (side.team.external.maxprepsTeamUrl || side.sbliveUrl)
+      ? [
+          {
+            slug: side.team.slug,
+            name: side.name,
+            shortName: side.team.shortName,
+            maxprepsUrl: side.team.external.maxprepsTeamUrl,
+            sbliveUrl: side.sbliveUrl,
+          },
+        ]
       : [],
   );
-  const teamRows = sides.filter((side) => side.maxprepsUrl || side.sbliveUrl);
-
-  // This contest first — the box score is the one accent pill — then one row per school, so the
-  // links scan by team instead of repeating each school's name in four equal-weight pills.
-  const gameLinks: Array<{ href: string; label: string; accent?: boolean }> = [];
-  if (game.urls.maxpreps) {
-    gameLinks.push({ href: game.urls.maxpreps, label: 'MaxPreps box score for this game', accent: true });
-  }
-  if (game.urls.sblive) gameLinks.push({ href: game.urls.sblive, label: 'si.com page for this game' });
+  // The cross-check sentence is about a SCORE, so it only belongs on a game that has one.
+  const isFinal = display.kind === 'final';
+  if (teamRows.length === 0 && !isFinal) return null;
 
   return (
     <section className={className} aria-labelledby="game-sources-kicker">
       <SectionHeader kicker="Elsewhere" as="h2" id="game-sources-kicker" />
-      {gameLinks.length > 0 ? (
-        <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-          {gameLinks.map((link) => (
-            <li key={link.href}>
-              <ExternalLink
-                href={link.href}
-                // ExternalLink adds a `text-accent` utility, which would beat the pill's
-                // accent-ink (accent on the wash is 4.37:1 in dark); `!` keeps accent-ink.
-                className={link.accent ? 'sx-pill sx-pill-accent text-accent-ink!' : 'sx-pill'}
-              >
-                {link.label}
-              </ExternalLink>
-            </li>
-          ))}
-        </ul>
-      ) : null}
       {teamRows.length > 0 ? (
-        <div className={`sx-card sx-flush sx-bleed${gameLinks.length > 0 ? ' mt-4' : ''}`}>
+        <div className="sx-card sx-flush sx-bleed">
+          {/* One row per school, so the links scan by team instead of repeating each school's
+              name in four equal-weight pills. The visible name is the SHORT one (F-26c): the full
+              "St. Ignatius College Preparatory" wrapped its row at 390, and the full name is still
+              what each pill announces. The pills are raised to the surface with the hairline
+              ring, the site's capsule for a secondary link (F-56g). */}
           <ul className="sx-list">
             {teamRows.map((side) => (
               <li
-                key={side.name}
+                key={side.slug}
                 className="flex min-h-row-1 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2"
               >
-                <span className="mr-auto min-w-0 text-body text-ink">{side.name}</span>
+                <span className="mr-auto min-w-0 text-body text-ink">{side.shortName}</span>
                 <span className="flex flex-wrap gap-2">
                   {side.maxprepsUrl ? (
-                    <ExternalLink href={side.maxprepsUrl} className="sx-pill">
+                    <ExternalLink
+                      href={side.maxprepsUrl}
+                      className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    >
                       <span className="sr-only">{side.name} on </span>MaxPreps
                     </ExternalLink>
                   ) : null}
                   {side.sbliveUrl ? (
-                    <ExternalLink href={side.sbliveUrl} className="sx-pill">
+                    <ExternalLink
+                      href={side.sbliveUrl}
+                      className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    >
                       <span className="sr-only">{side.name} on </span>si.com
                     </ExternalLink>
                   ) : null}
@@ -187,12 +193,20 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
           </ul>
         </div>
       ) : null}
-      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-        Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When
-        MaxPreps has no result for an official league game, or its row is clearly wrong, we publish
-        si.com&rsquo;s score and mark it; when both have a score and disagree, we publish
-        MaxPreps&rsquo; and show the disagreement rather than choosing quietly.
-      </p>
+      {isFinal ? (
+        <p
+          className={
+            teamRows.length > 0
+              ? 'mt-3 mb-0 max-w-prose text-meta text-ink-3'
+              : 'm-0 max-w-prose text-meta text-ink-3'
+          }
+        >
+          Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When
+          MaxPreps has no result for an official league game, or its row is clearly wrong, we publish
+          si.com&rsquo;s score and mark it; when both have a score and disagree, we publish
+          MaxPreps&rsquo; and show the disagreement rather than choosing quietly.
+        </p>
+      ) : null}
     </section>
   );
 }

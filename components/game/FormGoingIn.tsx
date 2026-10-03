@@ -1,4 +1,7 @@
+import Link from 'next/link';
+
 import FormStrip from '../ui/FormStrip';
+import GhostMonogram from '../ui/GhostMonogram';
 import ResultChip, { CHIP_LABEL } from '../ui/ResultChip';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -15,7 +18,11 @@ import type { GameModel, GameSideModel } from './game-model';
  * instead of an empty row of boxes.
  *
  * An opponent outside the 43 teams this site follows has no record here at all (DESIGN §8), so its
- * row says so in words (SPEC §10.6).
+ * row says so in words (SPEC §10.6), beside the same GhostMonogram tile its game rows use.
+ *
+ * A member side's name is a link to its team page — the natural next step from "how were they
+ * playing coming in" is "show me their season". It is a standalone link, so it carries
+ * `.sx-action`'s 24px box (WCAG 2.5.8); the short name, because the strip shares its line.
  */
 export interface FormGoingInProps {
   model: GameModel;
@@ -25,10 +32,30 @@ export interface FormGoingInProps {
 function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: number }) {
   return (
     <li className="flex min-h-row-1 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
-      <span className="flex min-w-0 shrink-0 items-center gap-2.5">
-        {side.team ? <TeamMonogram team={side.team} size={24} /> : null}
-        <span className="truncate text-body text-ink">{side.name}</span>
-      </span>
+      {side.team ? (
+        // `max-w-full` + `min-w-0` (not `shrink-0`): in this wrapping row a name wider than the
+        // card truncates inside the link instead of pushing the page sideways at 320.
+        // `prefetch={false}`: one link per form row, the policy for every per-row link
+        // (tests/ui/prefetch-policy.test.ts).
+        <span className="flex min-w-0 max-w-full items-center gap-2.5">
+          <TeamMonogram team={side.team} size={24} />
+          <Link
+            href={`/teams/${side.team.slug}`}
+            prefetch={false}
+            className="sx-action min-w-0 gap-1 text-body text-accent no-underline hover:underline"
+          >
+            <span className="truncate">{side.team.shortName}</span>
+            <span aria-hidden="true" className="shrink-0 text-micro">
+              &rsaquo;
+            </span>
+          </Link>
+        </span>
+      ) : (
+        <span className="flex min-w-0 shrink-0 items-center gap-2.5">
+          <GhostMonogram name={side.name} size={24} />
+          <span className="truncate text-body text-ink">{side.name}</span>
+        </span>
+      )}
       {side.team ? (
         // The strip and "→ then [chip]" are ONE unit that never splits: when it does not fit
         // beside the name it moves whole, so the outcome chip never sits alone on a line. Below

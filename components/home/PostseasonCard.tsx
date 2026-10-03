@@ -55,8 +55,9 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
             <div key={term} className="min-w-0">
               <dt className="text-micro font-medium text-ink-3">{term}</dt>
               {/* "Wed Nov 11": when a 3-up column is too narrow (320px) it breaks after the weekday,
-                  never inside "Nov 11". */}
-              <dd className="sx-num m-0 text-meta text-ink sm:text-body">
+                  never inside "Nov 11". Sans with tabular figures, not `.sx-num` mono: a date in a
+                  sentence-like fact is not a column of numbers. */}
+              <dd className="m-0 text-meta text-ink tabular-nums sm:text-body">
                 {shortDate(date).slice(0, 3)} <span className="whitespace-nowrap">{monthDay(date)}</span>
               </dd>
             </div>

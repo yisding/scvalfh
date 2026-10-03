@@ -313,3 +313,57 @@ describe('the /standings overview', () => {
     expect(text).not.toContain('Gabilan');
   });
 });
+
+describe('status chips, rank rule and level reason (UI pass, from config)', () => {
+  const texts = (league: string) =>
+    Object.fromEntries(
+      sd.getStandingsPageData(league).views.map((v) => [v.division, v.statusGroups.map((g) => g.statusText)]),
+    );
+
+  it('each chip is the ladder rung’s own label; MCAL’s carry no CCS concept', () => {
+    expect(texts('scval')['de-anza'], 'components/standings/standings-view.ts SCVAL statusText').toEqual([
+      'Automatic qualifier',
+      'Play-in game Oct 30',
+      'At-large consideration',
+      'No automatic path',
+    ]);
+    expect(texts('bval')['santa-teresa'], 'components/standings/standings-view.ts BVAL statusText').toEqual([
+      'Hosts the play-in Oct 31',
+      'No automatic-berth route',
+    ]);
+    expect(texts('pcal').pcal).toEqual(['Automatic qualifier', 'No automatic-berth route']);
+    const mcal = texts('mcal')['marin-county'];
+    expect(mcal, 'components/standings/standings-view.ts MCAL statusText').toEqual([
+      'Semifinal bye',
+      'MCAL tournament',
+      'Below the tournament line',
+    ]);
+    for (const t of mcal) expect(t).not.toMatch(/CCS|automatic qualifier|at-large/i);
+  });
+
+  it('the rank rule and the level reason come from each league’s citations, never nested parentheses', () => {
+    const [deAnza] = sd.getStandingsPageData('scval').views;
+    expect(deAnza.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
+      'SCVAL ranks by points (Art. VI §2), and so do we.',
+    );
+    expect(deAnza.levelReason).toBe('Article VI §7 decides it with a coin flip');
+    const [mcal] = sd.getStandingsPageData('mcal').views;
+    expect(mcal.rankRule).toBe('MCAL ranks by points (MCAL Handbook §7a), and so do we.');
+    expect(mcal.levelReason, 'components/standings/standings-view.ts MCAL levelReason').toBe(
+      'a play-in on Fri Oct 23 decides it, MCAL Tie-Breaking Criteria',
+    );
+  });
+
+  it('the Notes word a reciprocal place swap once, with the league’s own rule (rendered)', async () => {
+    const scvalHtml = await renderLeague('scval');
+    const scval = textOf(scvalHtml);
+    expect(scval, 'components/standings/StandingsNotes.tsx swap').toContain('MaxPreps lists them the other way round');
+    expect(scval).toContain('SCVAL ranks by points (Art. VI §2), and so do we.');
+    expect(scval, 'components/standings/PlayoffStatusBand.tsx chip').toContain('Automatic qualifier');
+    // One tie notation site-wide: `T7` / `T-7th`, never `7=`.
+    expect(scvalHtml, 'app/standings/[league]/page.tsx tie mark').not.toMatch(/\d=</);
+    const mcal = textOf(await renderLeague('mcal'));
+    expect(mcal, 'app/standings/[league]/page.tsx mcal: SCVAL citation').not.toContain('Article VI');
+    expect(renderOverview(), 'app/standings/page.tsx tie mark').not.toMatch(/\d=</);
+  });
+});

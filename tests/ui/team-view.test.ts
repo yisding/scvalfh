@@ -95,12 +95,10 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
         expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe(scope);
         const sub = view.placeSub(v);
-        // The tile's VALUE is the ordinal; the sub-line completes it and never opens with "tied".
-        expect(sub, `components/teams/team-view.ts placeSub ${team.slug}`).toMatch(
-          new RegExp(`^of ${division.expectedTeams} in ${scope.replace('.', '\\.')}( \\(tied\\))?$`),
-        );
-        expect(sub.endsWith('(tied)'), `components/teams/team-view.ts placeSub tie ${team.slug}`).toBe(
-          !!v.standing?.tiebreak.shared,
+        // The tile's VALUE is the ordinal (T-prefixed when level); the sub-line only completes it,
+        // so a shared place is never written a second way under the value.
+        expect(sub, `components/teams/team-view.ts placeSub ${team.slug}`).toBe(
+          `of ${division.expectedTeams} in ${scope}`,
         );
         expect(v.standingsHref, `components/teams/team-view.ts standingsHref ${team.slug}`).toBe(
           `/standings/${division.leagueId}#${division.id}`,
@@ -121,9 +119,9 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
   });
 
   it('single-division leagues read "of N in <league short>"', () => {
-    expect(view.placeSub(view.buildTeamPageView('tamalpais')!).replace(' (tied)', '')).toBe('of 9 in MCAL');
-    expect(view.placeSub(view.buildTeamPageView('carmel')!).replace(' (tied)', '')).toBe('of 7 in PCAL');
-    expect(view.placeSub(view.buildTeamPageView('leigh')!).replace(' (tied)', '')).toBe('of 6 in Mt. Hamilton');
+    expect(view.placeSub(view.buildTeamPageView('tamalpais')!)).toBe('of 9 in MCAL');
+    expect(view.placeSub(view.buildTeamPageView('carmel')!)).toBe('of 7 in PCAL');
+    expect(view.placeSub(view.buildTeamPageView('leigh')!)).toBe('of 6 in Mt. Hamilton');
   });
 });
 
@@ -314,6 +312,119 @@ describe('/teams (app/teams/page.tsx)', () => {
   });
 });
 
+describe('the NEXT card and the identity place line (UI pass, league-aware)', () => {
+  it('an opponent’s record line is scoped to its own league: never a division label for PCAL or MCAL', () => {
+    const ranked = (league: string) =>
+      data.getTeams({ league }).find((t) => data.getStandingFor(t.slug)?.hasReportedResults)!;
+    const scval = ranked('scval');
+    const mcal = ranked('mcal');
+    const heading = leagues.divisionHeading(scval.division)!;
+    expect(view.opponentRecordLine(scval, 'scval'), 'components/teams/team-view.ts same league').toMatch(
+      new RegExp(` in ${heading}$`),
+    );
+    expect(view.opponentRecordLine(scval, 'bval'), 'components/teams/team-view.ts cross-league').toMatch(
+      new RegExp(` in SCVAL ${heading}$`),
+    );
+    expect(view.opponentRecordLine(mcal, 'mcal')).toMatch(/ in MCAL$/);
+    expect(view.opponentRecordLine(mcal, 'scval')).toMatch(/ in MCAL$/);
+    expect(view.opponentRecordLine(undefined, 'scval')).toBeNull();
+  });
+
+  it('every team’s NEXT card: an earlier meeting is a real final, and MCAL cards carry no CCS concept', () => {
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      const card = v.nextCard;
+      if (card.kind === 'game' && card.earlier) {
+        expect(card.earlier.text, `components/teams/team-view.ts ${team.slug} earlier`).toMatch(
+          /^Earlier: (won|lost|tied) \d+–\d+/,
+        );
+      }
+      if (card.kind !== 'none') expect(card.record ?? '').not.toContain('0-0-0');
+      if (team.league === 'mcal' && card.kind !== 'none') {
+        // The strings the card prints (the Team and Game objects it carries are data, not copy).
+        const printed = [
+          card.dateLabel,
+          card.opponentName,
+          card.record ?? '',
+          ...(card.kind === 'game'
+            ? [card.place ?? '', card.earlier?.text ?? '', ...card.chips.map((c) => c.label)]
+            : []),
+        ].join(' ');
+        expect(printed, `components/teams/team-view.ts ${team.slug} nextCard`).not.toMatch(
+          /\bCCS\b|automatic qualifier/i,
+        );
+      }
+    }
+  });
+
+  it('the identity card states the place on its own line, T-prefixed when level', async () => {
+    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
+    const { ordinal } = await import('../../lib/format');
+    let checked = 0;
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      if (!v.hasResults || !v.standing) continue;
+      checked += 1;
+      const html = renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] }));
+      const text = textOf(html);
+      const place = ordinal(v.standing.computed.place);
+      const scope = view.placeScope(v.divisionSize, v.scopeLabel);
+      expect(text, `components/teams/TeamIdentity.tsx ${team.slug} identity line`).toContain(v.identityLine);
+      if (v.standing.tiebreak.shared) {
+        expect(text, `components/teams/TeamIdentity.tsx ${team.slug} level place`).toContain(`T-${place}`);
+        expect(text).toContain(`tied for ${place}`);
+      } else {
+        expect(text, `components/teams/TeamIdentity.tsx ${team.slug} place`).toContain(`${place} ${scope}`);
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+
+  it('the Place tile writes a level place the same way: T-prefixed value, "tied for" spoken', async () => {
+    const { TeamStatTiles } = await import('../../components/teams/TeamStatTiles');
+    const { ordinal } = await import('../../lib/format');
+    let checked = 0;
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      if (!v.hasResults || !v.standing) continue;
+      checked += 1;
+      const text = textOf(renderToStaticMarkup(createElement(TeamStatTiles, { view: v })));
+      const place = ordinal(v.standing.computed.place);
+      expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} sub`).not.toContain('(tied)');
+      if (v.standing.tiebreak.shared) {
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} level place`).toContain(`T-${place}`);
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} spoken`).toContain(`tied for ${place}`);
+      } else {
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} place`).not.toContain(`T-${place}`);
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+
+  it('the Splits card never prints 0-0-0 for a venue with no league games', async () => {
+    const { TeamSplits } = await import('../../components/teams/TeamSplits');
+    let empty = 0;
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      const text = textOf(renderToStaticMarkup(createElement(TeamSplits, { view: v })));
+      expect(text, `components/teams/TeamSplits.tsx ${team.slug}`).not.toContain('0-0-0');
+      const league = v.hasResults && v.standing ? v.standing.computed : null;
+      if (!league) continue;
+      const splits = [
+        [league.homeRecord, 'no home league games'],
+        [league.awayRecord, 'no away league games'],
+        [league.neutralRecord, 'no neutral-site league games'],
+      ] as const;
+      for (const [record, words] of splits) {
+        if (record.w + record.l + record.t > 0) continue;
+        empty += 1;
+        expect(text, `components/teams/TeamSplits.tsx ${team.slug} empty split`).toContain(words);
+      }
+    }
+    expect(empty, 'the corpus has an empty split to check').toBeGreaterThan(0);
+  });
+});
+
 describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
   let zeroed: { d: Data; v: View; renderTeam: (slug: string) => Promise<string> };
   const slug = 'marin-academy';
@@ -348,5 +459,15 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     expect(text, 'components/teams/TeamPlayoffLine.tsx gp 0').toContain('No results reported yet.');
     expect(text, 'app/teams/[slug]/page.tsx gp 0').not.toMatch(/0-0-0/);
     expect(text, 'app/teams/[slug]/page.tsx gp 0: no CCS on MCAL').not.toContain('CCS');
+  });
+
+  it('the identity card prints no place line at all (never an em dash in a sentence)', async () => {
+    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
+    const v = zeroed.v.buildTeamPageView(slug)!;
+    const text = textOf(renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] })));
+    expect(text, 'components/teams/TeamIdentity.tsx gp 0').toContain(v.identityLine);
+    expect(text, 'components/teams/TeamIdentity.tsx gp 0: place line').not.toContain(
+      zeroed.v.placeScope(v.divisionSize, v.scopeLabel),
+    );
   });
 });

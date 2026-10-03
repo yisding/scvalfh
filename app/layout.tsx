@@ -5,6 +5,7 @@ import Attribution from '@/components/layout/Attribution';
 import BottomTabBar from '@/components/layout/BottomTabBar';
 import SiteHeader from '@/components/layout/SiteHeader';
 import { BUILD_INSTANT } from '@/components/layout/build-instant';
+import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
 import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
 import { buildPrefsScript } from '@/components/layout/prefs-script';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site-url';
@@ -109,6 +110,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* Unlayered on purpose: it must outrank every @layer, utilities included. Tailwind
             cannot generate one selector per league id (components/layout/league-scope-css.ts). */}
         <style dangerouslySetInnerHTML={{ __html: SCOPE_CSS }} />
+        {/* Scrolls a <details> the reader just opened into view when its panel lands under the
+            phone tab bar; see components/layout/disclosure-script.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: DISCLOSURE_SCRIPT }} />
       </head>
       <body>
         <a
@@ -118,7 +122,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <PinnedTeamMarks />
-        <SiteHeader snapshotAt={snapshotAt} slugLeague={SLUG_LEAGUE} />
+        <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} slugLeague={SLUG_LEAGUE} />
         {/* `tabIndex={-1}` is what makes the skip link actually MOVE focus. Without it only
             browsers that implement the sequential-focus-navigation starting point continue from
             here; elsewhere `#main` scrolls into view while focus stays on <body> and a screen

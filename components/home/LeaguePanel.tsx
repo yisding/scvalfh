@@ -16,8 +16,10 @@ import PostseasonCard from './PostseasonCard';
  * One league's home panel (SPEC §10.1). Every league's panel is in the static HTML; the scope
  * stylesheet shows only the effective league's (`data-scope="<id>"`) before first paint, so a
  * remembered league never costs a layout shift and nothing is reordered with CSS: DOM order is the
- * reading order — where the season is, what just happened, the table, what is next, the teams, the
- * postseason, the other leagues.
+ * reading order — where the season is, what just happened, what is still to play (plus when league
+ * play resumes, if everything on that day is non-league), the table, the teams, the postseason,
+ * the other leagues. "Still to play" sits above the tables because on a game day it is the second
+ * question the page answers, and below the tables it was far down a phone.
  *
  * The heading `#league-<id>` is where focus lands after "Show <SHORT> here" (SPEC §8.2). Every id
  * inside includes the league id or comes from `useId()`, because all four panels share one page.
@@ -70,6 +72,16 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
         </section>
       )}
 
+      <NextSlate
+        date={slate?.date ?? null}
+        games={slate?.games ?? []}
+        total={slate?.total ?? 0}
+        isToday={slate?.isToday ?? false}
+        kicker={latest ? undefined : 'First games'}
+        nextLeague={panel.nextLeague}
+        after={panel.afterSchedule}
+      />
+
       <div className={multi ? 'flex flex-col gap-y-section md:grid md:grid-cols-2 md:gap-x-6' : undefined}>
         {panel.divisions.map((division, i) => (
           <MiniStandings
@@ -82,15 +94,6 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
           />
         ))}
       </div>
-
-      <NextSlate
-        date={slate?.date ?? null}
-        games={slate?.games ?? []}
-        total={slate?.total ?? 0}
-        isToday={slate?.isToday ?? false}
-        kicker={latest ? undefined : 'First games'}
-        after={panel.afterSchedule}
-      />
 
       <LeagueTeams view={panel.teams} />
       <PostseasonCard view={panel.postseason} />

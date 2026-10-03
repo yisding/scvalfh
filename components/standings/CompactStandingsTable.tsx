@@ -35,11 +35,13 @@ function Place({ standing }: { standing: Standing }) {
     );
   }
   const { place } = standing.computed;
+  // A level place reads `T7`, as every table on the site prints it (StandingsTable, the playoff
+  // projection): never a second notation such as `7=` beside it.
   return standing.tiebreak.shared ? (
-    <>
-      <span aria-hidden="true">{place}=</span>
+    <span className="whitespace-nowrap">
+      <span aria-hidden="true">T{place}</span>
       <span className="sr-only">tied for {ordinal(place)}</span>
-    </>
+    </span>
   ) : (
     <>{place}</>
   );

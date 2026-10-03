@@ -19,74 +19,103 @@ import { placeSub } from './team-view';
  * PTS sits under the league record because it is the official ordering key in all four leagues —
  * 3 for a win, 1 for a tie — which is also why PLACE is the one hero figure here. GP and MAX are
  * counts, not scores: `0/12` GP is a true count for a team with nothing reported, while MAX is a
- * ceiling, never a projection. The counting rules sit in one labelled disclosure under the tiles
- * (brief §4.22).
+ * ceiling, never a projection.
+ *
+ * Placement follows the §3.7 wireframe's priority: LAST and NEXT come first, then these tiles, as
+ * one full-width band after the pair (the caller places them and passes `className` for the gap).
+ * The place itself is not lost by moving them down: the identity card's second meta line states
+ * it. The counting rules are generic boilerplate, so they sit in one labelled disclosure under the
+ * tiles (brief §4.22).
+ *
+ * The tiles are a `<dl>` (StatTile `inList`): eight label/value pairs, announced as such. The two
+ * values that only read well to the eye carry a spoken form: Streak "L5" is "5 losses in a row",
+ * Goals F / A "0 / 52" is "0 for, 52 against".
  */
-export function TeamStatTiles({ view }: { view: TeamPageView }) {
+const STREAK_WORD = { W: ['win', 'wins'], L: ['loss', 'losses'], T: ['tie', 'ties'] } as const;
+
+export function TeamStatTiles({ view, className }: { view: TeamPageView; className?: string }) {
   const { standing, hasResults, context } = view;
   const league = hasResults && standing ? standing.computed : null;
   const overall = hasResults && standing ? standing.overall : null;
   const left = context ? context.remaining : null;
+  const streak = league?.streak ?? null;
+  // A level place reads `T-7th` with "tied for 7th" spoken, exactly as the identity card says it.
+  const sharedPlace = league !== null && (standing?.tiebreak.shared ?? false);
+  const streakSpoken = streak
+    ? `${plural(streak.count, STREAK_WORD[streak.result][0], STREAK_WORD[streak.result][1])} in a row`
+    : undefined;
 
   return (
-    <div className="mt-6">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+    <div className={className}>
+      <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <StatTile
           label="Place"
-          value={league ? ordinal(league.place) : null}
+          value={league ? `${sharedPlace ? 'T-' : ''}${ordinal(league.place)}` : null}
+          srValue={league && sharedPlace ? `tied for ${ordinal(league.place)}` : undefined}
           sub={placeSub(view)}
           emphasis="hero"
           variant="card"
+          inList
         />
         <StatTile
           label="League"
           variant="card"
+          inList
           value={league ? recordString(league) : null}
           sub={league ? `${league.pts} pts · ${league.gp} played` : 'league games only'}
         />
         <StatTile
           label="GP"
           variant="card"
+          inList
           value={context ? `${context.counted}/${context.scheduled}` : null}
           sub={
             left === null
               ? 'league games counted'
               : left === 0
                 ? 'no league games left'
-                : `${left} league ${left === 1 ? 'game' : 'games'} left`
+                : `${plural(left, 'league game')} left`
           }
         />
         <StatTile
           label="Max"
           variant="card"
+          inList
           value={context ? context.maxPts : null}
           sub="points still reachable"
         />
         <StatTile
           label="Overall"
           variant="card"
+          inList
           value={overall ? recordString(overall) : null}
           sub={overall ? `${plural(overall.gp, 'game')}, all opponents` : 'all opponents'}
         />
         <StatTile
           label="Streak"
           variant="card"
+          inList
           value={league ? streakString(league.streak) : null}
+          srValue={streakSpoken}
           sub="league games"
         />
         <StatTile
           label="Goals F / A"
+          srLabel="Goals for and against"
           variant="card"
+          inList
           value={league ? `${league.gf} / ${league.ga}` : null}
+          srValue={league ? `${league.gf} for, ${league.ga} against` : undefined}
           sub={league ? `${perGame(league.gf, league.gp)} scored per game` : 'league games only'}
         />
         <StatTile
           label="Goal diff"
           variant="card"
+          inList
           value={league ? signedGd(league.gd) : null}
           sub={league ? `${perGame(league.ga, league.gp)} conceded per game` : 'league games only'}
         />
-      </div>
+      </dl>
       <details className="sx-disclosure mt-3">
         <summary>How these numbers are counted</summary>
         <p className="mt-1 mb-2 max-w-prose text-meta text-ink-2">

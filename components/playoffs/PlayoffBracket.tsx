@@ -4,7 +4,7 @@ import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
 import type { TeamSlug } from '../../lib/types';
 import GameRow from '../ui/GameRow';
-import { ScoreGlyph } from '../ui/ScoreCell';
+import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame, type SideView } from '../ui/game-view';
@@ -68,11 +68,7 @@ function BracketLine({
       ) : (
         <span className="inline-block shrink-0" style={{ width: 20 }} />
       )}
-      <span
-        className={`min-w-0 flex-1 truncate text-meta ${
-          side.weight === 'winner' ? 'font-semibold text-ink' : 'text-ink-2'
-        }`}
-      >
+      <span className={`min-w-0 flex-1 truncate text-meta ${nameClass(side)}`}>
         {sideLabel(side)}
       </span>
       {showScore ? <ScoreGlyph side={side} size="meta" /> : null}
@@ -148,7 +144,9 @@ export function PlayoffBracket({
               {round.name}
               <span className="text-meta font-normal text-ink-2">{round.dateLabel}</span>
             </RoundHeading>
-            <ol className="sx-list sx-card sx-flush">
+            {/* A full-bleed band below md, like every other game list (GameRow pads itself
+                with the 16px gutter); the desktop tree below never bleeds. */}
+            <ol className="sx-list sx-card sx-flush sx-bleed">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole

@@ -34,7 +34,7 @@ import {
   statusesOf,
   type LeagueConfig,
 } from '../../lib/leagues';
-import { outcomesFor, statusBadge, statusLegend } from '../../lib/standings';
+import { outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend } from '../../lib/standings';
 import type {
   CrossCheckRow,
   DivisionId,
@@ -55,14 +55,21 @@ export interface StatusTeam {
   slug: TeamSlug;
   name: string;
   place: number;
-  /** Level with another team, so the marker is "5=" and the line is unsettled. */
+  /** Level with another team, so the marker is "T-5th" and the line is unsettled. */
   shared: boolean;
 }
 
 export interface StatusGroup {
   status: PlayoffStatus;
-  /** A word or letters — never a hue on its own (DESIGN §6.5). */
+  /** The ladder's code (`statusBadge`): a word or letters — never a hue on its own (DESIGN §6.5). */
   badge: string;
+  /**
+   * The status in words: the ladder rung's own label (`playoffOutcomeLabel`) — "Automatic
+   * qualifier", "Play-in game Oct 30", "Semifinal bye", "MCAL tournament" — the same phrases
+   * /playoffs prints, never a code like "AQ" a reader has to decode. The status band's chip.
+   */
+  statusText: string;
+  /** The rung's verbatim legend from config (`statusLegend`, SPEC §5.7 / §10.3). */
   label: string;
   teams: StatusTeam[];
 }
@@ -155,6 +162,17 @@ export interface DivisionView {
   officialSchedule: { href: string; label: string };
   /** `Scheduled per <SHORT>` — the source line beside the official schedule link. */
   scheduledPer: string;
+  /**
+   * The Notes block's sentence after a place difference MaxPreps' win-percentage order explains:
+   * `<SHORT> ranks by points (<citations.pointsShort>), and so do we.` (from config).
+   */
+  rankRule: string;
+  /**
+   * What settles a place we hold LEVEL, for "level 7th here (<levelReason>)": the league's
+   * `rules.unresolvedSuffix` without its leading "— " (and any trailing citation in parentheses
+   * turned into a comma clause, so the Notes' own parentheses never nest).
+   */
+  levelReason: string;
   sourceUrl: string;
   throughDate: string | null;
   leagueFinals: number;
@@ -166,6 +184,23 @@ export interface DivisionView {
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
   return source === 'bval-docx' ? 'Official schedule (Google Doc)' : 'Official schedule (PDF)';
+}
+
+/** `SCVAL ranks by points (Art. VI §2), and so do we.` — from the league's citations. */
+export function rankRuleText(league: LeagueConfig): string {
+  return `${league.shortName} ranks by points (${league.rules.citations.pointsShort}), and so do we.`;
+}
+
+/**
+ * `Article VI §7 decides it with a coin flip`; MCAL's `a play-in on Fri Oct 23 decides it, MCAL
+ * Tie-Breaking Criteria` (its trailing parenthetical becomes a clause, so "(…(…))" never prints).
+ */
+export function levelReasonText(league: LeagueConfig): string {
+  const reason = league.rules.unresolvedSuffix
+    .replace(/^—\s*/, '')
+    .replace(/\s*\(([^()]*)\)\s*$/, ', $1')
+    .trim();
+  return reason || 'the league decides it';
 }
 
 /** `⚑ 1 official league result missing — listed below the table.` / `… results …` */
@@ -293,6 +328,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
       statusGroups.push({
         status,
         badge: statusBadge(input.division, status),
+        statusText: playoffOutcomeLabel(input.division, [status]),
         label: statusLegend(input.division, status),
         teams,
       });
@@ -375,11 +411,12 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
 
   const footnotes: string[] = [];
   if (input.pendingLeagueGames > 0) {
-    const plural = input.pendingLeagueGames === 1 ? 'game has' : 'games have';
+    // In words, not a list of column codes ("not in W-L-T, PTS, GF, GA, GD…"): "anywhere above"
+    // is the whole claim and every reader can check it.
     footnotes.push(
-      `${input.pendingLeagueGames} league ${plural} been played with no score published, so ${
-        input.pendingLeagueGames === 1 ? 'it counts' : 'they count'
-      } for nothing above — not in W-L-T, PTS, GF, GA, GD, the streak or the last 5.`,
+      input.pendingLeagueGames === 1
+        ? "1 league game was played but has no score yet, so it isn't counted anywhere above."
+        : `${input.pendingLeagueGames} league games were played but have no score yet, so they aren't counted anywhere above.`,
     );
   }
   if (input.leagueFinals === 0) {
@@ -423,6 +460,8 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
       label: officialScheduleLabel(config.official.source),
     },
     scheduledPer: `Scheduled per ${league.shortName}`,
+    rankRule: rankRuleText(league),
+    levelReason: levelReasonText(league),
     sourceUrl: leagueStandingsUrl(input.division),
     throughDate: input.throughDate,
     leagueFinals: input.leagueFinals,

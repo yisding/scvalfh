@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
-import { LEAGUES, SECTIONS } from '../../lib/leagues';
+import { HISTORY_LEAGUE, LEAGUES, SECTIONS, getLeague } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
 import { SITE_SCOPE_NOTE } from './site-url';
@@ -15,14 +15,15 @@ import { SITE_SCOPE_NOTE } from './site-url';
  *
  * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
  * alignment and rules the site follows (each linked to its official site), the scope note naming
- * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about, and the
- * not-affiliated line. The league and section lists are built from lib/leagues.ts in config
+ * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
+ * to last season's archive (the history league's, the only league with a past season here), and
+ * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
  * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL" and can never drift from the config.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
- * of warning that the nightly update may be failing. Always visible, never a tooltip. The attribution
- * posture in SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back
- * on every row, and say on every page where the numbers came from.
+ * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
+ * SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back on every
+ * row, and say on every page where the numbers came from.
  *
  * `links` carries the page-specific deep links — the team's or the game's own source page.
  */
@@ -89,13 +90,19 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           </p>
           <p className="mt-2 mb-0">{SITE_SCOPE_NOTE}</p>
         </div>
-        {/* The deep links and "About & sources" are standalone actions, not words in a sentence, so
-            each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in the paragraph
-            above do not: they sit inside a sentence, which is the case 2.5.8 exempts. */}
+        {/* The deep links, "About & sources" and the archive link are standalone actions, not words
+            in a sentence, so each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose
+            links in the paragraph above do not: they sit inside a sentence, which is the case 2.5.8
+            exempts. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
           <Link href="/about" className="sx-action text-accent hover:underline">
             About &amp; sources
+          </Link>
+          {/* The phone's only way to last season: the five-tab bar has no History entry (the
+              desktop nav does), so the footer carries it at every width. */}
+          <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
+            {`${getLeague(HISTORY_LEAGUE).shortName} 2025-26 archive`}
           </Link>
           {links && links.length > 0 ? (
             <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
@@ -107,7 +114,7 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
             </div>
           ) : null}
         </div>
-        {/* The divider spans the whole footer grid; only the sentence is capped at 65ch. */}
+        {/* The divider spans the whole footer grid; only the sentence is capped at the prose measure. */}
         <div className="mt-6 border-t border-divider pt-4 md:col-span-2">
           <p className="m-0 max-w-prose text-meta text-ink-3">
             Unofficial; not affiliated with {notAffiliated} or SI. Records are computed from

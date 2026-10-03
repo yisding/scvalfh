@@ -10,6 +10,8 @@
  * (`leagueTag`, `postseasonTag`, `sourceMark`), and the never-0-0 rule is walked over every game of
  * every league in the bundled snapshot (invariants only, SPEC §13.6).
  */
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { describeCancelled, describeGame, signedMargin } from '../../components/ui/game-view';
@@ -272,6 +274,56 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(describeGame(sb).sourceMark).toBe('si.com');
     expect(describeGame(final(3, 1)).sourceMark).toBeNull();
     expect(describeCancelled(game()).sourceMark).toBeNull();
+  });
+});
+
+describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league-aware)', () => {
+  const nonMember = (extra: Partial<Game> = {}) =>
+    final(1, 3, {
+      countsFor: null,
+      isLeague: false,
+      away: { teamId: 'x-id', slug: null, name: 'Scripps Ranch', score: 3, result: null },
+      ...extra,
+    });
+
+  it('a side outside the registry carries NON_MEMBER_NOTE on the scoreboard, counted from the registry', async () => {
+    const { ScoreBoard } = await import('../../components/ui/ScoreBoard');
+    const { NON_MEMBER_NOTE } = await import('../../components/ui/GameRow');
+    const { TEAMS } = await import('../../lib/teams');
+    expect(NON_MEMBER_NOTE, 'components/ui/GameRow.tsx NON_MEMBER_NOTE').toBe(
+      `Not one of the ${TEAMS.length} teams this site follows`,
+    );
+    const html = renderToStaticMarkup(createElement(ScoreBoard, { game: nonMember() }));
+    expect(html, 'components/ui/ScoreBoard.tsx non-member sub').toContain(NON_MEMBER_NOTE);
+    expect(html).not.toMatch(/SCVAL school/);
+  });
+
+  it('the game-log rule follows display.isNonLeague: a postseason game takes no NL rule', async () => {
+    const { gameLogRowClass } = await import('../../components/ui/GameRow');
+    expect(gameLogRowClass(final(2, 1)), 'components/ui/GameRow.tsx league').not.toContain('sx-nonleague');
+    expect(gameLogRowClass(nonMember())).toContain('sx-nonleague');
+    // MaxPreps' own league flag is evidence, never the classification (SPEC §10.4).
+    expect(gameLogRowClass(final(2, 1, { isLeague: true, countsFor: null }))).toContain('sx-nonleague');
+    const postseason = final(2, 1, {
+      countsFor: null,
+      isLeague: false,
+      postseason: { kind: 'ccs', leagueId: null, via: 'config-pairing' },
+    });
+    expect(gameLogRowClass(postseason), 'components/ui/GameRow.tsx postseason').not.toContain('sx-nonleague');
+  });
+
+  it('the row’s sentence says the chips in words, and every link is gameHref', async () => {
+    const { GameRow } = await import('../../components/ui/GameRow');
+    const sb = final(3, 1, {
+      contestId: 'sblive:6541425',
+      provenance: { scores: 'sblive', schedule: 'pcal-pdf', fetchedAt: '2026-10-02T15:00:00.000Z' },
+    });
+    const html = renderToStaticMarkup(createElement(GameRow, { game: sb }));
+    expect(html, 'components/ui/GameRow.tsx sentence').toContain('SCVAL league game.');
+    expect(html, 'components/ui/GameRow.tsx gameHref').toContain('href="/game/sblive-6541425"');
+    expect(html).not.toContain('href="/game/sblive:6541425"');
+    const nl = renderToStaticMarkup(createElement(GameRow, { game: nonMember() }));
+    expect(nl).toContain(' Non-league.');
   });
 });
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import LastUpdated from '../ui/LastUpdated';
+import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import { SITE_NAME } from './site-url';
@@ -14,26 +15,31 @@ import TopNav from './TopNav';
  *
  * Phone: 48px, one line: the FH mark + "NorCal", the freshness stamp (from 360px), the theme
  * toggle. The stamp lives INSIDE the bar rather than occupying its own row, which returns that
- * row's height to the fold on every page.
+ * row's height to the fold on every page. Past 36 hours it becomes the stale pill instead
+ * (LastUpdated), so a failing nightly update shows at the top of every page, not only in the
+ * footer — unless every league's season is over, when the update stops on purpose and the stamp
+ * stays a plain date (`seasonComplete`).
  *
- * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–1023 drops the stamp so
- * the nav fits; it comes back from 1024, where the freshness fact outranks the spelled-out
- * wordmark, which waits until 1280 ("Field Hockey" plus the stamp left 4px of slack at 1024).
+ * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–895 drops the stamp so
+ * the nav fits; it comes back from 896 in its short month-day form ("Updated Sep 30 12:48 PM", the
+ * widest it gets, needs 876px with "SCVAL"), with the weekday from 1024; the spelled-out wordmark
+ * waits until 1280.
  *
  * Re-measured for the rename with the static Geist table (tests/ui/text-metrics.ts, 12px/500,
  * scaled to 16px; no browser here, so these are text widths, not a layout run): "NorCal" 56.6px
  * against "SCVAL" 55.5px, and " Field Hockey" is unchanged at 109.1px. Every budget therefore
  * moves by ≈ 1px (≈ 1.2px allowing for the bold face): 320px keeps mark 28 + gap 8 + ≈ 58 +
- * toggle 44 well inside its 288px row; 360px still fits the compact stamp; 768–1023 still drops
- * the stamp for the seven links; 1024 keeps the stamp with the short wordmark; and the 4px of
- * slack that kept "Field Hockey" out at 1024 becomes ≈ 3px, so the spelled-out wordmark still
- * waits for 1280. The accessible name of the home link
+ * toggle 44 well inside its 288px row; 360px still fits the compact stamp; 768–895 still drops
+ * the stamp for the seven links; the 20px to spare at 896 with the widest stamp becomes ≈ 19px;
+ * and the spelled-out wordmark still waits for 1280. The accessible name of the home link
  * is always SITE_NAME ("NorCal Field Hockey"). Content is capped at 1200px, with the same
  * 16 / 24 / 32px gutter as <main>.
  */
 export interface SiteHeaderProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
   snapshotAt: string;
+  /** The instant staleness is measured against (the build instant). Omit to never show stale. */
+  now?: string;
   /** `{ slug: league }` for every team, so the nav can follow the page's league (SPEC §8.3). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
@@ -42,7 +48,10 @@ export interface SiteHeaderProps {
 const [WORDMARK_SHORT, ...WORDMARK_REST] = SITE_NAME.split(' ');
 const WORDMARK_TAIL = WORDMARK_REST.join(' ');
 
-export function SiteHeader({ snapshotAt, slugLeague }: SiteHeaderProps) {
+export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
+  // After every league's season ends the nightly update stops on purpose; the stale pill would
+  // then shout "Updated 9 days ago" in every header, so the stamp stays a plain date.
+  const seasonComplete = getSitePhase() === 'complete';
   return (
     <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">
       <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
@@ -50,11 +59,13 @@ export function SiteHeader({ snapshotAt, slugLeague }: SiteHeaderProps) {
             left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
             1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp), so
             the accessible name never changes; its leading space keeps the computed name from
-            reading "NorCalField Hockey". */}
+            reading "NorCalField Hockey". The 6px of padding, cancelled by the negative margin, is
+            room for the focus ring INSIDE the link: drawn outside, it ran into the screen edge
+            and through the badge. */}
         <Link
           href="/"
           prefetch={false}
-          className="inline-flex h-full shrink-0 items-center gap-2 text-ink no-underline"
+          className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-2 rounded-chip px-1.5 text-ink no-underline focus-visible:-outline-offset-2"
         >
           <span
             aria-hidden="true"
@@ -70,13 +81,19 @@ export function SiteHeader({ snapshotAt, slugLeague }: SiteHeaderProps) {
         </Link>
         <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
         <span className="ml-auto flex shrink-0 items-center gap-2">
-          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–1023
-              where the seven nav links need the room; back from 1024 (about 100px of slack
-              there with the short wordmark). */}
+          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
+              where the seven nav links need the room; back from 896 (56rem, ≈ 19px to spare at the
+              widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
+              min-width variants by value only within one unit, and every px one sorts BEFORE
+              `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default font size, as `md` and
+              `lg` do: at a 24px default the phone stamp starts at 540px, so a 390px screen drops
+              it rather than scrolling sideways. */}
           <LastUpdated
             at={snapshotAt}
+            now={now}
+            seasonComplete={seasonComplete}
             variant="compact"
-            className="hidden min-[360px]:inline md:hidden lg:inline"
+            className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
           />
           <ThemeToggle />
         </span>

@@ -64,7 +64,7 @@ export default function StandingsPage() {
           <a
             key={league.id}
             href={`#${league.id}`}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11`}
+            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
           >
             Jump to {league.shortName} &darr;
           </a>

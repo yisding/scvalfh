@@ -1,3 +1,5 @@
+import { getGameDates, getLatestResultsDate, getToday } from '../../lib/data';
+import { LEAGUE_IDS } from '../../lib/leagues';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
@@ -13,11 +15,18 @@ import { navLeagueHrefs } from './TopNav';
  * fails any label over 56px, so none truncates at any supported width.
  *
  * After hydration Scores, Table and Playoffs follow the page's league, else the remembered one
- * (`/schedule/<id>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
+ * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
  * static HTML keeps the index hrefs.
  *
- * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current="page"`, accent
- * ink, a wash capsule behind its glyph AND a heavier label — never color alone.
+ * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current`, accent ink, a
+ * wash capsule behind its glyph AND a heavier label — never color alone. `aria-current` is "page"
+ * on the tab's own route and "true" inside its section (a team page under Teams; a day or game page
+ * under Scores, which used to leave the bar with nothing lit), see NavLink.tsx.
+ *
+ * Scores opens on the latest results, not on the top of a season-long list: its href carries the
+ * date as a fragment (see scoresHrefs below), and so does each of its league targets
+ * (`/schedule/<id>#<date>`, that league's own latest results). The desktop TopNav's Schedule link
+ * stays plain `/schedule`, a page that also has the timeline rail to jump with.
  */
 const ICON_PROPS = {
   width: 20,
@@ -29,6 +38,33 @@ const ICON_PROPS = {
   strokeLinecap: 'round' as const,
   strokeLinejoin: 'round' as const,
 };
+
+/**
+ * The Scores tab's landing date, across every league or within one: the latest day at or before
+ * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
+ * result it is the next day with a contest; with no contests at all, none. Each day on the
+ * /schedule index's "Every game day" list (components/schedule/ScheduleIndex.tsx) and each date
+ * group on /schedule/<id> (components/schedule/ScheduleList.tsx) carries its date key as its `id`.
+ */
+function scoresDate(league?: LeagueId): string | null {
+  const today = getToday();
+  const filter = league ? { league } : {};
+  return getLatestResultsDate(undefined, filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
+}
+
+const withDate = (path: string, date: string | null) => (date ? `${path}#${date}` : path);
+
+/**
+ * `/schedule#<date>` for the Scores tab, plus its per-league targets `/schedule/<id>#<date>`.
+ * Computed at build time like every other page fact, so it costs no client JavaScript. NavLink
+ * compares only the path part, so the tab is still current on /schedule and /schedule/<id>.
+ */
+function scoresHrefs(): { href: string; leagueHrefs: Readonly<Record<LeagueId, string>> } {
+  return {
+    href: withDate('/schedule', scoresDate()),
+    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(`/schedule/${id}`, scoresDate(id))])),
+  };
+}
 
 export const TABS = [
   {
@@ -44,6 +80,7 @@ export const TABS = [
   {
     href: '/schedule',
     label: 'Scores',
+    // Replaced per build by scoresHrefs() in BottomTabBar below.
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
         <rect x="3" y="4" width="14" height="13" rx="1.5" />
@@ -56,7 +93,8 @@ export const TABS = [
     label: 'Table',
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
-        <path d="M3 5h14M3 10h14M3 15h14" />
+        {/* A ranked list: a rank mark, then the row. Three bare lines read as a menu icon. */}
+        <path d="M3 5h1.5M7.5 5H17M3 10h1.5M7.5 10H17M3 15h1.5M7.5 15H17" />
       </svg>
     ),
   },
@@ -77,8 +115,9 @@ export const TABS = [
     label: 'Playoffs',
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
-        <path d="M4 4v8a6 6 0 0 0 12 0V4z" />
-        <path d="M8 18h4" />
+        {/* A trophy: cup, two handles, and a stem that reaches its base. A cup over a detached
+            dash did not read as a trophy at 20px. */}
+        <path d="M6 3h8v5a4 4 0 0 1-8 0zM6 5H4a2 2 0 0 0 2 3M14 5h2a2 2 0 0 1-2 3M10 12v4.5M7 17h6" />
       </svg>
     ),
   },
@@ -91,6 +130,7 @@ export function BottomTabBar({
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }) {
   const hrefs = navLeagueHrefs();
+  const scores = scoresHrefs();
   return (
     <nav
       aria-label="Sections"
@@ -101,11 +141,11 @@ export function BottomTabBar({
         {TABS.map((tab) => (
           <li key={tab.href} className="min-w-0 flex-1">
             <NavLink
-              href={tab.href}
+              href={tab.href === '/schedule' ? scores.href : tab.href}
               variant="tab"
               label={tab.label}
               glyph={tab.glyph}
-              leagueHrefs={hrefs[tab.href]}
+              leagueHrefs={tab.href === '/schedule' ? scores.leagueHrefs : hrefs[tab.href]}
               slugLeague={hrefs[tab.href] ? slugLeague : undefined}
             />
           </li>

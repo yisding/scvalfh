@@ -42,7 +42,9 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
           : ''}
       </p>
       {conflicts.length > 0 ? (
-        <div className="sx-card sx-flush mt-4 max-w-[66ch]">
+        // Capped at the same `max-w-prose` as the paragraph above it, so the card's right edge
+        // sits on the text's edge (a private 66ch here once ran 10px past it).
+        <div className="sx-card sx-flush mt-4 max-w-prose">
           {/* The `px-3` on the middle column puts a gutter BETWEEN the two right-aligned source
               heads: without it they render as one run-together string, "MAXPREPSSBLIVE/SI".
               The score columns are shrink-wrapped (`w-px` + nowrap) so the Game text gets the
@@ -93,7 +95,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
             {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our backfill
             rules did not publish. Each stays unreported here, with the reason:
           </p>
-          <ul className="sx-list mt-2 max-w-[66ch]">
+          <ul className="sx-list mt-2 max-w-prose">
             {sbliveOnlyScored.map((row) => (
               <li
                 key={row.contestId}

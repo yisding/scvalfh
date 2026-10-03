@@ -288,6 +288,34 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     }
   });
 
+  it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
+    const d = await import('../../lib/data');
+    const { describeGame } = await import('../../components/ui/game-view');
+    const { gameHref } = await import('../../lib/game-id');
+    const { PinnedCard } = await import('../../components/home/MyTeamCard');
+    let pending = 0;
+    for (const v of data.teamViews) {
+      const team = d.getTeamBySlug(v.team.slug)!;
+      const played = d
+        .getGames({ teamId: team.id })
+        .filter((g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= data.today)
+        .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name));
+      const newest = played.at(-1);
+      expect(v.last?.href ?? null, `${HD}: ${v.team.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
+      if (!newest || !v.last) continue;
+      expect(Object.hasOwn(v.last, 'recap'), `${HD}: ${v.team.slug} carries no recap`).toBe(false);
+      const unreported = describeGame(newest, v.team.slug).kind === 'unreported';
+      expect(v.last.display.kind, `${HD}: ${v.team.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
+      if (!unreported) continue;
+      pending += 1;
+      const text = textOf(renderToStaticMarkup(createElement(PinnedCard, { view: v, onUnpin: () => {} })));
+      expect(text, `components/home/MyTeamCard.tsx: ${v.team.slug} unreported last`).toMatch(/score not reported/i);
+      if (v.last.display.note) expect(text, `components/home/MyTeamCard.tsx: ${v.team.slug} note`).toContain(v.last.display.note);
+    }
+    // The corpus has at least one such team, so the unreported branch is never vacuous.
+    expect(pending, `${HD}: a newest played game that is score-pending`).toBeGreaterThan(0);
+  });
+
   // The card text is 288px wide at 320 (px-4 in a 320px card); the line is one truncated h-6 row,
   // so the STATUS must fit whole or the reader sees only the prefix. Widths: tests/ui/text-metrics.ts
   // (Geist 12px/500) scaled to the 14px meta size — an over-estimate for the 400 weight.

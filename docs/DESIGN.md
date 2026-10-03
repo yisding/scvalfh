@@ -2142,10 +2142,13 @@ followed by real deep links — the league page on both sources site-wide, and t
 `GameRow`. Plus the snapshot timestamp in Pacific, a link to `/about`, and the not-affiliated
 line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
 
-**Stale-snapshot treatment** (`editorial`): at > 36h the stamp switches to `--sx-text` body ink
-on `--sx-accent-wash` and reads **"Last updated 2 days ago — the nightly update may be
-failing,"** with a link to `/about#updates`. Never hide a failure behind a timestamp nobody
-reads.
+**Stale-snapshot treatment** (`editorial`): at > 36h the footer stamp switches to `--sx-text`
+body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be
+missing. Why?"**, the *Why?* linking to `/about#updates`; the top bar's compact stamp becomes a
+single pill link, **"Updated 2 days ago"**, to the same place. Neither appears once
+`getSitePhase() === 'complete'`: the nightly update stops on purpose then, and the footer reads
+*"Season complete — final update <date>."* in quiet grey. Never hide a failure behind a
+timestamp nobody reads.
 
 ### 7.16 Small shared pieces
 
@@ -2182,7 +2185,7 @@ because a skeleton reads as real data.
 | **Team not in the CCS field** | `/teams/[slug]` | The playoffs block reads *"Homestead is not in the CCS field"* with a link to the bracket, rather than disappearing. |
 | **Pinned team removed from the snapshot** | `/`, `/teams/[slug]` | `MyTeamCard` catches the unknown slug, clears storage, renders `PinPrompt`, and says *"That team is no longer in the data."* |
 | **`localStorage` unavailable** | `/`, `PinControl`, `ThemeToggle` | Every access is in `try/catch`. Pin falls back to `PinPrompt` with the button hidden; the theme toggle still works for the session and simply doesn't persist. **The page is fully correct without storage.** |
-| **Snapshot stale** (> 36h) | every page | §7.15 — the stamp becomes body ink and reads *"the nightly update may be failing."* |
+| **Snapshot stale** (> 36h) | every page | §7.15 — the footer stamp becomes body ink and reads *"Not updated since <date>, so newer scores may be missing. Why?"*; the top bar shows the pill *"Updated N days ago"*, linking to `/about#updates`. Neither shows when `getSitePhase() === 'complete'`. |
 | **A standings disagreement with MaxPreps** | `/standings`, `/about#cross-check` | A `⚑` on the row and a footnote: *"Fremont: we compute 1-4-0, MaxPreps shows 2-4-0 (MaxPreps ↗). We show our computation."* §9. |
 
 ---

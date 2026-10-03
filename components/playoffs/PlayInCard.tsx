@@ -48,19 +48,27 @@ export interface PlayInCardProps {
 
 function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
   const [first, ...rest] = side.contenders;
+  // The right-hand side mirrors at md (`flex-row-reverse`, right-aligned text); on a phone the two
+  // sides STACK, each a full-width row reading left to right, so the names stay in a column.
   const mirror = align === 'end' ? ' md:flex-row-reverse md:text-right' : '';
   const row = `flex min-w-0 items-center gap-2${mirror}`;
   const host = side.host ? ' (host)' : '';
+  // The sub line is sans: the seat ("Santa Teresa #1") is a label, and only the record's digits
+  // are mono (DESIGN §4.3). The seat is one unbreakable unit, so a wrap can never strand "#1" (or
+  // "(host)") on its own line.
+  const seat = (
+    <span className="whitespace-nowrap">
+      {side.label}
+      {host}
+    </span>
+  );
   if (!first) {
     return (
       <span className={row}>
         <span className="inline-block size-7 shrink-0" aria-hidden="true" />
         <span className="min-w-0">
           <span className="block truncate text-body text-ink-2">TBD</span>
-          <span className="block text-meta text-ink-2">
-            {side.label}
-            {host}
-          </span>
+          <span className="block text-meta text-ink-2">{seat}</span>
         </span>
       </span>
     );
@@ -76,20 +84,22 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
         <span className="block text-body text-ink md:truncate">
           {side.contenders.map((c) => c.team.shortName).join(' or ')}
         </span>
-        <span className="sx-num block text-meta text-ink-2">
-          {side.label}
-          {host}
+        <span className="block text-meta text-ink-2">
+          {seat}
+          {/* In the two-up grid from lg until xl the half-width side cannot hold both on one line,
+              and a free wrap left "·" at the start of a line; the record takes its own line there
+              instead. On a phone the side is a full-width stacked row, so it fits inline. */}
           {rest.length === 0 && first.standing?.hasReportedResults ? (
             <>
-              <span className="max-md:hidden lg:max-xl:hidden"> &middot;</span>{' '}
-              <span className="whitespace-nowrap max-md:block lg:max-xl:block">
+              <span className="lg:max-xl:hidden"> &middot;</span>{' '}
+              <span className="sx-num whitespace-nowrap lg:max-xl:block">
                 {recordString(first.standing.computed)}
               </span>
             </>
           ) : rest.length > 0 ? (
             <>
-              <span className="max-md:hidden lg:max-xl:hidden"> &middot;</span>{' '}
-              <span className="whitespace-nowrap max-md:block lg:max-xl:block">not settled</span>
+              <span className="lg:max-xl:hidden"> &middot;</span>{' '}
+              <span className="whitespace-nowrap lg:max-xl:block">not settled</span>
             </>
           ) : null}
         </span>
@@ -130,9 +140,17 @@ export function PlayInCard({
           </span>
         ) : null}
       </Title>
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3" aria-hidden="true">
+      {/* Phone: the sides stack, and the connector is a divider row between them (a hairline
+          either side of the pill), so each side has the card's full width and its name and seat
+          line stay one tidy row at 320. From md: the mirrored three-column pairing. */}
+      <div
+        className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:gap-3"
+        aria-hidden="true"
+      >
         <Side side={sides[0]} align="start" />
-        <span className="sx-badge">{connector}</span>
+        <span className="flex items-center gap-3 max-md:before:h-px max-md:before:flex-1 max-md:before:bg-divider max-md:after:h-px max-md:after:flex-1 max-md:after:bg-divider md:block">
+          <span className="sx-badge">{connector}</span>
+        </span>
         <Side side={sides[1]} align="end" />
       </div>
       {purpose ? (

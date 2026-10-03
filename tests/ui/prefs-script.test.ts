@@ -8,7 +8,7 @@ import vm from 'node:vm';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUE_KEY, PREFS_RESTAMP, buildPrefsScript } from '../../components/layout/prefs-script';
-import { PINNED_TEAM_KEY } from '../../components/layout/pinned-team-script';
+import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/layout/pinned-team-script';
 import { TEAMS } from '../../lib/teams';
 import { LEAGUE_IDS } from '../../lib/leagues';
 
@@ -132,5 +132,18 @@ describe('buildPrefsScript', () => {
     expect(() => buildPrefsScript({ leagueIds: ["x'y"], slugLeague: {} })).toThrow();
     expect(() => buildPrefsScript({ leagueIds: ['scval'], slugLeague: { 'a</script>': 'scval' } })).toThrow();
     expect(() => buildPrefsScript({ leagueIds: ['scval'], slugLeague: { a: 'nope' } })).toThrow();
+  });
+});
+
+/**
+ * The row-marking pass (components/layout/pinned-team-script.ts) must stay registry-agnostic: a
+ * hard-coded slug list there once made the script bail before marking any row for a pin on a team
+ * outside one league. Validating the pin against the registry is the prefs script's job.
+ */
+describe('PINNED_TEAM_SCRIPT', () => {
+  it('carries no slug list and stamps nothing on <html>', () => {
+    for (const t of TEAMS) expect(PINNED_TEAM_SCRIPT).not.toContain(t.slug);
+    expect(PINNED_TEAM_SCRIPT).not.toContain('data-has-pin');
+    expect(PINNED_TEAM_SCRIPT).not.toContain('documentElement');
   });
 });

@@ -62,7 +62,11 @@ export default function SchedulePage() {
       {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
       <p className="m-0 mt-4 flex flex-wrap gap-2">
         {leagues.map((league) => (
-          <a key={league.id} href={`#${league.id}`} className={`sx-jump sx-jump-${league.id} sx-pill min-h-11`}>
+          <a
+            key={league.id}
+            href={`#${league.id}`}
+            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
+          >
             Jump to {league.shortName} &darr;
           </a>
         ))}

@@ -1,14 +1,14 @@
 import Link from 'next/link';
 
 import type { StandingContext } from '../../lib/data';
-import { EM_DASH, ordinal, recordString, streakString, winPct } from '../../lib/format';
+import { EM_DASH, ordinal, recordString, recordWords, streakString, winPct } from '../../lib/format';
 import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
 import { GoalDiffCell } from './GoalDiffBar';
-import { formStripName } from './plural';
+import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
 
 /**
@@ -19,11 +19,11 @@ import TeamMonogram from './TeamMonogram';
  * DESIGN §1.2's "no PTS column" and §11.8's win-percentage sort predate the by-laws PDF and are
  * superseded by it.
  *
- * SHARED PLACES ARE REAL. Article VI §7 ends in a coin flip we cannot compute, so two or more
- * teams can carry the same `computed.place` with `tiebreak.shared === true`. Those rows render
- * LEVEL — the same number with an `=` marker — and `tiebreak.note` (which already cites the
- * article) goes into the footnotes. On the live snapshot that means De Anza has two 6th places
- * and El Camino has two 4th places and therefore NO 5th place and no at-large row.
+ * SHARED PLACES ARE REAL. Every league's chain ends in a step we cannot compute (a coin flip, a
+ * blind draw, a play-in), so two or more teams can carry the same `computed.place` with
+ * `tiebreak.shared === true`. Those rows render LEVEL — the same number with the US sports-page
+ * `T` prefix ("T7", never the British "7=") — and `tiebreak.note` (which already cites the rule)
+ * goes into the footnotes. Two teams level on 7th leave no 8th.
  *
  * A row with `hasReportedResults === false` sorts last, renders its rank as an em dash
  * and, in the phone and desktop tables, ONE "No results yet" cell across the data columns (the
@@ -124,7 +124,12 @@ function tableName(division: DivisionId): string {
   return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
 
-/** The colour comes from the cell (rank is ink-3 in every variant). '1', '6=' for a shared place, an em dash for a team with no reported results. */
+/**
+ * The colour comes from the cell (rank is ink-3 in every variant). '1', 'T7' for a shared place,
+ * an em dash for a team with no reported results. `whitespace-nowrap`: the phone and mini place
+ * column is 20px of content at 320 and "T7" is ~16px of 13px mono, so it must never break into
+ * a "T" over a "7".
+ */
 function PlaceCell({ standing }: { standing: Standing }) {
   if (!standing.hasReportedResults) {
     return (
@@ -137,8 +142,8 @@ function PlaceCell({ standing }: { standing: Standing }) {
   const { place } = standing.computed;
   if (standing.tiebreak.shared) {
     return (
-      <span className="sx-num">
-        <span aria-hidden="true">{place}=</span>
+      <span className="sx-num whitespace-nowrap">
+        <span aria-hidden="true">T{place}</span>
         <span className="sr-only">tied for {ordinal(place)}</span>
       </span>
     );
@@ -165,6 +170,22 @@ function FlagMark({ name }: { name: string }) {
   );
 }
 
+/**
+ * A column-head abbreviation: the short form is what a sighted reader scans ("GF"), the long form
+ * is what a screen reader announces with every cell it reaches in that column ("Goals for") —
+ * a bare "G F" or "P C T" spelled out on every cell is noise. The sr-only span is
+ * `position: absolute`, so the `<th>` holding it must be positioned: every sticky head already
+ * is; a static one (the mini table's) carries `relative`.
+ */
+function Abbr({ short, long }: { short: string; long: string }) {
+  return (
+    <>
+      <span aria-hidden="true">{short}</span>
+      <span className="sr-only">{long}</span>
+    </>
+  );
+}
+
 function dash(value: number | null, hasResults: boolean, render = (v: number) => String(v)) {
   if (!hasResults || value === null) return EM_DASH;
   return render(value);
@@ -175,8 +196,8 @@ function dash(value: number | null, hasResults: boolean, render = (v: number) =>
  *
  * `prefetch={false}` for the same reason as the nav (components/layout/NavLink.tsx) and the team
  * tiles: every team route is STATIC, and Next 16's default `auto` downloads a static route in full
- * the moment the link enters the viewport. Fifteen rows in one viewport is fifteen whole team pages
- * — measured at 97 KB on the wire and 876 KB decoded on /standings, against a 35 KB document.
+ * the moment the link enters the viewport. SCVAL's fifteen rows in one viewport are fifteen whole
+ * team pages — measured at 97 KB on the wire and 876 KB decoded, against a 35 KB document.
  * Navigation still fetches on click.
  */
 function RowLink({ href, label, className }: { href: string; label: string; className?: string }) {
@@ -198,9 +219,10 @@ function rowLabel(row: StandingsRowData): string {
   const place = standing.tiebreak.shared
     ? `tied for ${ordinal(standing.computed.place)}`
     : ordinal(standing.computed.place);
-  return `${team.name}, ${place} in ${tableName(team.division)}, ${recordString(
+  // The record in WORDS: "4-1-0" read aloud is a subtraction or a date, depending on the voice.
+  return `${team.name}, ${place} in ${tableName(team.division)}, ${recordWords(
     standing.computed,
-  )}, ${standing.computed.pts} points`;
+  )}, ${plural(standing.computed.pts, 'point')}`;
 }
 
 
@@ -219,9 +241,9 @@ export function collectStandingsNotes(
   const { rows, gdDomain, division, variant } = props;
   if (variant !== 'archive') {
     legend.push(
-      `GD = league goals for minus goals against. Bars are scaled per division (${tableName(
+      `GD = league goals for minus goals against. Bars are scaled per division, to ${tableName(
         division,
-      )}: |GD| max ${gdDomain}), so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in W-L-T, not in GF / GA / GD.`,
+      )}’s biggest goal difference (${gdDomain}), so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     );
     legend.push(`PTS: ${leagueOfDivision(division).rules.citations.points}.`);
   }
@@ -306,7 +328,7 @@ const COL = {
   home: 'w-[3.25rem] xl:w-[4rem]', // Home
   away: 'w-[3.25rem] xl:w-[4rem]', // Away
   neut: 'w-[3.25rem] xl:w-[4rem]', // Neut
-  l5: 'w-[8.875rem] xl:w-[9.25rem]', // L5: five 20px chips, 4px apart
+  l5: 'w-[8.875rem] xl:w-[9.25rem]', // Last 5: five 20px chips, 4px apart, right-aligned
 } as const;
 type DesktopCol = keyof typeof COL;
 
@@ -335,24 +357,31 @@ function desktopCols(gp: boolean, left: boolean, max: boolean): DesktopCol[] {
   ];
 }
 
-const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: string }> = {
+/**
+ * Each desktop head: `long` (when set) is what a screen reader hears with every cell of the column
+ * (`Abbr`). GP, Left and Max carry a `title` instead and stay plain words. The team head is the
+ * table's own name (`tableName`), filled in per render: see the phone head.
+ */
+const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: string; long?: string }> = {
   place: { label: '#', right: false },
   team: { label: 'Team', right: false },
   gp: { label: 'GP', right: true, title: 'League games counted of those scheduled' },
-  pts: { label: 'Pts', right: true },
+  pts: { label: 'Pts', right: true, long: 'Points' },
   left: { label: 'Left', right: true, title: 'League games with no counted result yet' },
   max: { label: 'Max', right: true, title: 'The most points still reachable' },
   league: { label: 'League', right: true },
-  pct: { label: 'Pct', right: true },
+  pct: { label: 'Pct', right: true, long: 'Win percentage' },
   overall: { label: 'Overall', right: true },
-  gf: { label: 'GF', right: true },
-  ga: { label: 'GA', right: true },
-  gd: { label: 'GD', right: true },
-  stk: { label: 'Stk', right: true },
+  gf: { label: 'GF', right: true, long: 'Goals for' },
+  ga: { label: 'GA', right: true, long: 'Goals against' },
+  gd: { label: 'GD', right: true, long: 'Goal difference' },
+  stk: { label: 'Stk', right: true, long: 'Streak' },
   home: { label: 'Home', right: true },
   away: { label: 'Away', right: true },
-  neut: { label: 'Neut', right: true },
-  l5: { label: 'L5', right: false },
+  neut: { label: 'Neut', right: true, long: 'Neutral site' },
+  // Right-aligned, head and strip: a team with fewer than five results then ends on its NEWEST
+  // chip at the same x as every other row.
+  l5: { label: 'Last 5', right: true },
 };
 
 export function StandingsTable(props: StandingsTableProps) {
@@ -411,9 +440,19 @@ export function StandingsTable(props: StandingsTableProps) {
                   <th scope="col" className="w-[2.75rem] pl-gutter pr-2">
                     #
                   </th>
-                  <th scope="col">Team</th>
+                  {/* The sticky head names the TABLE (its division heading, or the league's short
+                      name for a one-table league), not "Team": once the section heading has
+                      scrolled away under the chrome, this is the only thing on screen that says
+                      which table you are in. A screen reader still hears "… team" as the column's
+                      name. `whitespace-normal`: the head's nowrap made "EL CAMINO" the team
+                      column's minimum width, which pushed the table 18px past a 390 screen under a
+                      24px browser font; it wraps there instead. */}
+                  <th scope="col" className="whitespace-normal">
+                    {tableName(props.division)}
+                    <span className="sr-only"> team</span>
+                  </th>
                   <th scope="col" className="w-8 text-right">
-                    Pts
+                    <Abbr short="Pts" long="Points" />
                   </th>
                   {/* The League head (52px of 12px caps) is wider than its numerals (40px), and
                       the numerals carry 8px of right padding so they never run into the GD track
@@ -429,16 +468,16 @@ export function StandingsTable(props: StandingsTableProps) {
                   {/* 768-1023: the phone table spans a 720px card, so it shows four more of the
                       desktop columns instead of a 480px team cell with nothing in it. */}
                   <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
-                    Pct
+                    <Abbr short="Pct" long="Win percentage" />
                   </th>
                   <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
-                    GF
+                    <Abbr short="GF" long="Goals for" />
                   </th>
                   <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
-                    GA
+                    <Abbr short="GA" long="Goals against" />
                   </th>
                   <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
-                    Stk
+                    <Abbr short="Stk" long="Streak" />
                   </th>
                   {/* Column budget at 390: 44 (#) + 146 (Team) + 32 (PTS) + 68 (League: 8 + 52
                       + 8) + 100 (GD: 56 track + 4 + 24 numeral, three 13px mono glyphs, + 16
@@ -454,7 +493,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     scope="col"
                     className="w-[44px] pr-gutter text-right min-[375px]:w-[100px]"
                   >
-                    GD
+                    <Abbr short="GD" long="Goal difference" />
                   </th>
                 </tr>
               </thead>
@@ -467,7 +506,9 @@ export function StandingsTable(props: StandingsTableProps) {
                       key={row.team.id}
                       data-team-slug={row.team.slug}
                       className={trClass(row)}
-                      style={{ height: 68, ...cut(index) }}
+                      // A token in rem, not 68px: the row grows with the reader's browser text
+                      // size, so the absolutely placed line 2 never rides up over line 1.
+                      style={{ height: 'var(--spacing-row)', ...cut(index) }}
                     >
                       {/* Line 1 is top-aligned at 10px; the 13px numerals take 12px so their
                           20px line box centres on the 24px name line. */}
@@ -504,24 +545,32 @@ export function StandingsTable(props: StandingsTableProps) {
                             table cannot do. The <tr> is `position: relative`, so absolute placement
                             here spans the row. It is inert (the chips carry no links in this
                             variant), hence `pointer-events-none`: the row link stays whole.
-                            Budget at 320: 44 + 116 (five 20px chips, 4px apart) + 8 + ~101
-                            ("10-1-0 overall" at 13px mono) = 269 of 304. */}
+                            The strip sits in a fixed 116px box (five 20px chips, 4px apart),
+                            right-aligned, so a team with fewer than five results still has its
+                            NEWEST chip and the overall record at the same x as every other row.
+                            The box is in px, not rem, because the chips are: a 7.25rem box grew
+                            to 174px under a 24px browser font around the same 116px of chips
+                            and squeezed the record onto three lines, up into line 1.
+                            Budget at 320: 44 + 116 + 8 + ~95 ("10-1-0" in 13px mono, then
+                            " overall" in 13px sans, narrower than mono) = 263 of 304. */}
                         {has ? (
                           <span className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center gap-2 pl-[2.75rem] pr-gutter text-meta text-ink-3">
-                            <FormStrip
-                              entries={toFormEntries(s.computed.last5)}
-                              size={20}
-                              label={formLabel(row)}
-                            />
+                            <span className="flex w-[116px] shrink-0 justify-end">
+                              <FormStrip
+                                entries={toFormEntries(s.computed.last5)}
+                                size={20}
+                                label={formLabel(row)}
+                              />
+                            </span>
                             {/* GP leads the overall record; below 375 the record gives way
-                                (44 + 116 + 8 + ~56 "6/12 GP" + 8 + ~101 is 333 of 304 at 320). */}
+                                (44 + 116 + 8 + ~56 "6/12 GP" + 8 + ~95 is 327 of 304 at 320). */}
                             {showGp ? (
                               <span className="sx-num shrink-0 text-cell text-ink-3">{gpText(ctx(row))} GP</span>
                             ) : null}
-                            <span
-                              className={`sx-num text-cell text-ink-3${showGp ? ' max-[374px]:hidden' : ''}`}
-                            >
-                              {recordString(s.overall)} overall
+                            {/* Mono for the digits only (they stack down the rows); the word is
+                                prose and stays sans. */}
+                            <span className={`text-cell text-ink-3${showGp ? ' max-[374px]:hidden' : ''}`}>
+                              <span className="sx-num">{recordString(s.overall)}</span> overall
                             </span>
                           </span>
                         ) : null}
@@ -591,6 +640,15 @@ export function StandingsTable(props: StandingsTableProps) {
                 <tr>
                   {cols.map((col) => {
                     const head = DESKTOP_HEAD[col];
+                    if (col === 'team') {
+                      // The table's name, not "Team" (see the phone head above).
+                      return (
+                        <th key={col} scope="col">
+                          {tableName(props.division)}
+                          <span className="sr-only"> team</span>
+                        </th>
+                      );
+                    }
                     return (
                       <th
                         key={col}
@@ -598,7 +656,7 @@ export function StandingsTable(props: StandingsTableProps) {
                         title={head.title}
                         className={head.right ? 'text-right' : undefined}
                       >
-                        {head.label}
+                        {head.long ? <Abbr short={head.label} long={head.long} /> : head.label}
                       </th>
                     );
                   })}
@@ -668,7 +726,7 @@ export function StandingsTable(props: StandingsTableProps) {
                         return <td key={col} className="sx-num text-right text-ink-2">{recordString(s.computed.neutralRecord)}</td>;
                       case 'l5':
                         return (
-                          <td key={col}>
+                          <td key={col} className="text-right">
                             <FormStrip
                               entries={toFormEntries(s.computed.last5)}
                               size={20}
@@ -685,12 +743,15 @@ export function StandingsTable(props: StandingsTableProps) {
                       key={row.team.id}
                       data-team-slug={row.team.slug}
                       className={trClass(row)}
-                      style={{ height: 52, ...cut(index) }}
+                      // rem, not px: the row grows with the browser text size.
+                      style={{ height: 'var(--spacing-row-1)', ...cut(index) }}
                     >
                       <td className="text-ink-3">
                         <PlaceCell standing={s} />
                       </td>
-                      <th scope="row" className="text-left font-normal">
+                      {/* `aria-label`: the row header is re-announced on every cell, and without
+                          it carries the row link's whole sentence (see the phone variant). */}
+                      <th scope="row" aria-label={row.team.name} className="text-left font-normal">
                         <RowLink href={hrefOf(row)} label={rowLabel(row)} />
                         <span className="flex items-center gap-3">
                           <TeamMonogram team={row.team} size={24} />
@@ -725,11 +786,18 @@ export function StandingsTable(props: StandingsTableProps) {
           {variant === 'mini' ? (
             <>
               {/* A VISIBLE head, static (`[&_th]:static`): the mini table is four rows on the home
-                  page, too short for a sticky head to earn its keep.
-                  The GD plot here keys off the CARD's width (`@container` on the card), not the
-                  viewport: the home grid puts two minis side by side at 768 (348px each), where
-                  the 56px plot would leave the team column under 100px and truncate "St
-                  Francis". Below a 375px card only the signed numeral shows. */}
+                  page, too short for a sticky head to earn its keep. A head holding an `Abbr`
+                  takes `relative` back, for its sr-only long form.
+                  Columns run # · Team · (GP) · Pts · League · GD, the full table's order, so the
+                  ordering key sits next to the name. Pts is 32px; League is 68px with 8px a side,
+                  so its 52px head never touches "PTS". Fixed columns: 44 + 32 + 68 + 100 = 244,
+                  which leaves 146px for the team in a 390 card (less the 36px GP column where it
+                  shows).
+                  The GD plot keys off the CARD's width (`@container` on the card), not the
+                  viewport. The query is in rem (23.4375rem = 375px at the default 16px), so under
+                  a larger browser text size the plot drops out earlier and the name keeps the room
+                  it needs; the name also wraps to two lines rather than truncating. Below that
+                  card width only the signed numeral shows. */}
               <thead className="[&_th]:static">
                 <tr>
                   <th scope="col" className="w-[2.75rem] pl-gutter pr-2">
@@ -741,17 +809,17 @@ export function StandingsTable(props: StandingsTableProps) {
                       GP
                     </th>
                   ) : null}
-                  <th scope="col" className="w-[52px] text-right">
-                    League
+                  <th scope="col" className="relative w-8 text-right">
+                    <Abbr short="Pts" long="Points" />
                   </th>
-                  <th scope="col" className="w-11 pr-2 text-right">
-                    Pts
+                  <th scope="col" className="w-[68px] px-2 text-right">
+                    League
                   </th>
                   <th
                     scope="col"
-                    className="w-[44px] pr-gutter text-right @min-[375px]:w-[100px]"
+                    className="relative w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]"
                   >
-                    GD
+                    <Abbr short="GD" long="Goal difference" />
                   </th>
                 </tr>
               </thead>
@@ -764,16 +832,19 @@ export function StandingsTable(props: StandingsTableProps) {
                       key={row.team.id}
                       data-team-slug={row.team.slug}
                       className={trClass(row)}
-                      style={{ height: 52 }}
+                      // rem, not px: the row grows with the browser text size.
+                      style={{ height: 'var(--spacing-row-1)' }}
                     >
                       <td className="w-[2.75rem] pl-gutter pr-2 text-ink-3">
                         <PlaceCell standing={s} />
                       </td>
-                      <th scope="row" className="max-w-0 text-left font-normal">
+                      <th scope="row" aria-label={row.team.name} className="max-w-0 text-left font-normal">
                         <RowLink href={hrefOf(row)} label={rowLabel(row)} />
                         <span className="flex items-center gap-2">
                           <TeamMonogram team={row.team} size={24} />
-                          <span className="min-w-0 truncate text-body text-ink">
+                          {/* Two lines, never an ellipsis: under a large browser text size the
+                              name wraps inside the row instead of losing its second word. */}
+                          <span className="min-w-0 line-clamp-2 break-words text-body text-ink">
                             {row.team.shortName}
                           </span>
                         </span>
@@ -784,14 +855,14 @@ export function StandingsTable(props: StandingsTableProps) {
                           {gpText(ctx(row))}
                         </td>
                       ) : null}
-                      <td className="sx-num w-[52px] text-right font-medium text-ink">
+                      <td className="sx-num w-8 text-right text-body font-bold text-ink">
+                        {has ? s.computed.pts : EM_DASH}
+                      </td>
+                      <td className="sx-num w-[68px] px-2 text-right font-medium text-ink">
                         {has ? recordString(s.computed) : EM_DASH}
                         {has ? <BackfillMark context={ctx(row)} /> : null}
                       </td>
-                      <td className="sx-num w-11 pr-2 text-right text-body font-bold text-ink">
-                        {has ? s.computed.pts : EM_DASH}
-                      </td>
-                      <td className="w-[44px] pr-gutter text-right @min-[375px]:w-[100px]">
+                      <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
                         {has ? (
                           <GoalDiffCell
                             value={s.computed.gd}
@@ -799,7 +870,7 @@ export function StandingsTable(props: StandingsTableProps) {
                             track={56}
                             numberWidth={24}
                             numberClassName="text-cell"
-                            barClassName="hidden @min-[375px]:block"
+                            barClassName="hidden @min-[23.4375rem]:block"
                           />
                         ) : (
                           <NoGoalDiff />
@@ -834,12 +905,13 @@ export function StandingsTable(props: StandingsTableProps) {
                     key={row.team.id}
                     data-team-slug={row.team.slug}
                     className={trClass(row)}
-                    style={{ height: 52 }}
+                    // rem, not px: the row grows with the browser text size.
+                    style={{ height: 'var(--spacing-row-1)' }}
                   >
                     <td className="w-[2.75rem] pl-4 pr-2 text-ink-3 md:pl-5">
                       <PlaceCell standing={row.standing} />
                     </td>
-                    <th scope="row" className="text-left font-normal">
+                    <th scope="row" aria-label={row.team.name} className="text-left font-normal">
                       <RowLink href={hrefOf(row)} label={rowLabel(row)} />
                       <span className="flex items-center gap-2">
                         <TeamMonogram team={row.team} size={24} />

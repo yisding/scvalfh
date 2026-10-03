@@ -1,5 +1,7 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
+
 import { useIsHydrated, useStoredValue, writeStored } from '../ui/local-store';
 
 import { THEME_STORAGE_KEY } from './theme-script';
@@ -21,10 +23,37 @@ import { THEME_STORAGE_KEY } from './theme-script';
  * and `color-scheme` on `:root` (set by the CSS tokens) keeps form controls and scrollbars in step.
  * The pre-paint script in layout.tsx has already stamped the attribute, so there is no flash: this
  * component renders the neutral glyph on the server and the real one after hydration.
+ *
+ * The cycle depends on the OS scheme, so that the FIRST tap always changes the page. A fixed
+ * System → Light → Dark cycle spent its first tap on a no-op for every reader whose phone was
+ * already light: System and Light paint the same page, and the reader concluded the button was
+ * broken. Now System goes to the theme OPPOSITE the OS, then to the OS-matching explicit theme,
+ * then back to System. On a dark OS that is the old System → Light → Dark; on a light OS it is
+ * System → Dark → Light. The OS scheme is a `useSyncExternalStore` read of the media query, with
+ * `false` (light) as the server snapshot, so the hydrating render matches the HTML and the
+ * sentence settles a render later, the same way the stored theme already does.
  */
 type Theme = 'system' | 'light' | 'dark';
 
-const ORDER: Theme[] = ['system', 'light', 'dark'];
+const DARK_QUERY = '(prefers-color-scheme: dark)';
+
+function subscribeOsScheme(onChange: () => void): () => void {
+  const query = window.matchMedia(DARK_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+const osIsDark = () => window.matchMedia(DARK_QUERY).matches;
+const serverOsIsDark = () => false;
+
+/** The theme after `theme`, given the OS scheme. */
+function nextTheme(theme: Theme, osDark: boolean): Theme {
+  const osMatching: Theme = osDark ? 'dark' : 'light';
+  const osOpposite: Theme = osDark ? 'light' : 'dark';
+  if (theme === 'system') return osOpposite;
+  if (theme === osOpposite) return osMatching;
+  return 'system';
+}
 const SVG_PROPS = {
   width: 20,
   height: 20,
@@ -75,13 +104,16 @@ export function ThemeToggle({ className }: { className?: string }) {
   const stored = useStoredValue(THEME_STORAGE_KEY);
   const theme: Theme =
     hydrated && (stored === 'dark' || stored === 'light') ? stored : 'system';
-  const next = ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length];
+  const osDark = useSyncExternalStore(subscribeOsScheme, osIsDark, serverOsIsDark);
+  const next = nextTheme(theme, osDark);
 
+  // The focus ring is drawn 2px INSIDE the 44px circle: at the default 2px outside, it ran 2px
+  // past the top and bottom of the 48px phone bar.
   return (
     <button
       type="button"
       onClick={() => applyTheme(next)}
-      className={`sx-tap inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink${
+      className={`sx-tap inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink focus-visible:-outline-offset-2${
         className ? ` ${className}` : ''
       }`}
     >

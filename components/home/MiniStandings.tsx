@@ -23,8 +23,13 @@ import type { MiniDivisionView, MiniRow } from './home-data';
  *
  * A single-division league (PCAL, MCAL) shows NO division label: its kicker is `League table`.
  *
- * The GD plot keys off the card's width (`@container`): below a 375px card only the signed numeral
- * shows, and the sentences about bars are dropped with it.
+ * The GD plot keys off the card's width (`@container`): below a 23.4375rem card (375px at the
+ * default text size, wider under a larger one) only the signed numeral shows, and the sentences
+ * about bars are dropped with it — the SAME query, in the same unit, so every sentence about the
+ * bars stays in step with whether any bars are drawn. The bar scale is said in words ("bars scaled
+ * to De Anza's biggest goal difference (36)"), not as "|GD| max 36".
+ *
+ * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
  */
 export interface MiniStandingsProps {
   division: MiniDivisionView;
@@ -58,8 +63,8 @@ function PlaceCell({ row }: { row: MiniRow }) {
   }
   if (row.shared) {
     return (
-      <span className="sx-num">
-        <span aria-hidden="true">{row.place}=</span>
+      <span className="sx-num whitespace-nowrap">
+        <span aria-hidden="true">T{row.place}</span>
         <span className="sr-only">tied for {ordinal(row.place)}</span>
       </span>
     );
@@ -71,7 +76,7 @@ const COLS = 6;
 
 /**
  * How many rows the mini table shows: `miniRows`, stretched to keep a place shared AT the cutoff
- * whole — a parent never sees a rival in "4=" and their own team, equally 4th, missing. Only
+ * whole — a parent never sees a rival in "T4" and their own team, equally 4th, missing. Only
  * teams with results and the SAME shared place extend it, so an unplayed table (or the next tied
  * cluster) never stretches the card.
  */
@@ -132,7 +137,7 @@ export function MiniStandings({ division, href, showDivisionLabel, home, legend,
               <th scope="col" className="w-11 pr-2 text-right">
                 Pts
               </th>
-              <th scope="col" className="w-[44px] pr-gutter text-right @min-[375px]:w-[100px]">
+              <th scope="col" className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
                 GD
               </th>
             </tr>
@@ -154,19 +159,24 @@ export function MiniStandings({ division, href, showDivisionLabel, home, legend,
         <div className="px-gutter md:px-0">
           <p className="mt-2 mb-0 text-meta text-ink-3">
             Top {shown.length} of {division.total}
-            <span className="hidden @min-[375px]:inline">
+            <span className="hidden @min-[23.4375rem]:inline">
               {' '}
-              &middot; GD bars scaled to {where} alone (|GD| max {division.gdDomain})
+              &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
             </span>
           </p>
           {legend ? (
             <details className="sx-disclosure mt-3">
               <summary>How to read {showDivisionLabel ? 'these tables' : 'this table'}</summary>
               <p className="m-0 max-w-prose text-meta text-ink-2">
-                {legend} GP is league games with a counted result.{' '}
-                {showDivisionLabel
-                  ? 'GD bars are scaled per division, so two divisions’ bars are not comparable.'
-                  : 'GD bars are scaled to this table alone.'}
+                {legend} GP is league games with a counted result.
+                {/* Under the same container query as the bars: below it no bar is drawn, so no
+                    sentence about bars is printed either. */}
+                <span className="hidden @min-[23.4375rem]:inline">
+                  {' '}
+                  {showDivisionLabel
+                    ? 'GD bars are scaled per division, so two divisions’ bars are not comparable.'
+                    : 'GD bars are scaled to this table alone.'}
+                </span>
               </p>
             </details>
           ) : null}
@@ -211,7 +221,7 @@ function MiniRowView({
         <td className="sx-num w-8 text-right text-[11px] text-ink-2">{has ? row.gp : EM_DASH}</td>
         <td className="sx-num w-[52px] text-right font-medium text-ink">{has ? row.record : EM_DASH}</td>
         <td className="sx-num w-11 pr-2 text-right text-body font-bold text-ink">{has ? row.pts : EM_DASH}</td>
-        <td className="w-[44px] pr-gutter text-right @min-[375px]:w-[100px]">
+        <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
           {has ? (
             <GoalDiffCell
               value={row.gd}
@@ -219,7 +229,7 @@ function MiniRowView({
               track={56}
               numberWidth={24}
               numberClassName="text-cell"
-              barClassName="hidden @min-[375px]:block"
+              barClassName="hidden @min-[23.4375rem]:block"
             />
           ) : (
             <span className="sx-num text-ink-3">

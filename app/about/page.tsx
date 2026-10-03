@@ -287,7 +287,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
         <li>Goal differential between the head-to-head tied teams ({stages['h2h-goal-diff']}).</li>
         <li>
           A coin flip. This site cannot compute a coin flip, so teams that reach this step render as{' '}
-          <b className="font-semibold text-ink">tied at the same place</b> (a shared &ldquo;6=&rdquo;
+          <b className="font-semibold text-ink">tied at the same place</b> (a shared &ldquo;T6&rdquo;
           instead of a 6th and a 7th), with a footnote citing this rule. ({stages['coin-flip']})
         </li>
       </ol>
@@ -750,7 +750,7 @@ export default function AboutPage() {
           {dropped.length === 0 ? (
             <p className="mt-stack max-w-prose text-body text-ink-2">Nothing was dropped in the most recent run.</p>
           ) : (
-            <ul className="sx-list mt-stack max-w-[66ch]">
+            <ul className="sx-list mt-stack max-w-prose">
               {dropped.map((d) => (
                 <li key={d.contestId} className="py-3 text-meta text-ink-2">
                   <span className="block text-body text-ink">
@@ -849,26 +849,29 @@ export default function AboutPage() {
                 );
               })}
             <h3>CCS key dates</h3>
+            {/* The dates sit inside sentences, so they stay in the prose's sans with tabular
+                figures (`tabular-nums`), not mono `sx-num`: mono is for digits that stack in a
+                column (DESIGN §4.3), and a mono date mid-line read as a pasted code fragment. */}
             <ul className="list-disc">
               <li>
                 Entries due &amp; seeding meeting:{' '}
-                <span className="sx-num">
+                <span className="tabular-nums">
                   {dateWithYear(playoffs.keyDates.entriesDue)}, {timeOfDayPT(playoffs.keyDates.entriesDue)}
                 </span>{' '}
-                / <span className="sx-num">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
+                / <span className="tabular-nums">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
               </li>
               <li>
-                Quarterfinals: <span className="sx-num">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
+                Quarterfinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
               </li>
               <li>
-                Semifinals: <span className="sx-num">{dateWithYear(playoffs.keyDates.semifinals)}</span>
+                Semifinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.semifinals)}</span>
               </li>
               <li>
-                Final: <span className="sx-num">{dateWithYear(playoffs.keyDates.finals)}</span>
+                Final: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.finals)}</span>
               </li>
               <li>
                 Committee evaluation:{' '}
-                <span className="sx-num">
+                <span className="tabular-nums">
                   {dateWithYear(playoffs.keyDates.evaluationMeeting)}, {timeOfDayPT(playoffs.keyDates.evaluationMeeting)}
                 </span>
               </li>

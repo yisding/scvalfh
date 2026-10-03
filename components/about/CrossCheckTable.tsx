@@ -56,10 +56,11 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
   return (
     <div className="flex flex-col gap-stack">
       {groups.map(({ team, detail, rows }) => (
-        // The group is capped at the prose measure (66ch, the same cap as `.sx-prose`), so the
-        // header's right-aligned link lines up with the card edge below it and the card's right
-        // edge lines up with the paragraphs above.
-        <div key={team.id} className="max-w-[66ch]">
+        // The group is capped at the prose measure (`max-w-prose`, the theme's one prose token,
+        // which the ledes and the `max-w-prose` paragraphs on this page use too), so the header's
+        // right-aligned link lines up with the card edge below it and the card's right edge lines
+        // up with the paragraphs around it. A private `66ch` here once sat 10px past them.
+        <div key={team.id} className="max-w-prose">
           {/* The monogram holds the first line; the name, its flag and the table link wrap in
               their own box. The flag is glued to the name's last word (a no-break space), so a
               long name like "St. Ignatius College Preparatory" never leaves it alone on a line;
