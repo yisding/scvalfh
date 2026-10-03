@@ -308,6 +308,15 @@ describe('/teams (app/teams/page.tsx)', () => {
     for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
     expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
     expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
+    // The pinned row says so in words, not with the accent rule alone: every row's link carries the
+    // hidden note the pinned-team CSS reveals (the old tiles did too).
+    const links = [...html.matchAll(/<tr data-team-slug="[^"]+"[\s\S]*?<a [^>]*href="\/teams\/[^"]+"[^>]*>([\s\S]*?)<\/a>/g)];
+    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(43);
+    for (const [, inner] of links) {
+      expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
+        '<span class="sr-only"><span class="sx-pin-note">Your team. </span></span>',
+      );
+    }
     // Six tables, one per division, each in a group wrapper the finder can hide.
     expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(6);
     expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(2 + 4 + 6);

@@ -18,6 +18,10 @@ import type { StandingsRowData } from '../ui/StandingsTable';
  * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
  * A team with no results gets an em-dash place and em dashes for W-L-T and PTS — never 0-0-0.
  *
+ * The pinned team's row (the head script and `PinnedTeamMarks` stamp `data-pinned` on its
+ * `data-team-slug`) draws the accent rule and reveals a hidden "Your team." at the start of its
+ * link, as the standings rows and the old /teams tiles do.
+ *
  * `filterable` (the /teams page, whose `TeamFinder` filters these tables in place): each team row
  * carries `data-team-tile="<slug>"` and the ladder row `data-hide-while-searching`, the hooks the
  * finder's filter mode toggles.
@@ -106,6 +110,12 @@ export function CompactStandingsTable({
                     prefetch={false}
                     className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline"
                   >
+                    {/* Only the pinned team's row displays this (app/globals.css: the row's
+                        `data-team-slug` gets `data-pinned`), so the accent rule is never the only
+                        thing saying "this is your team"; it is the link's name, before the school. */}
+                    <span className="sr-only">
+                      <span className="sx-pin-note">Your team. </span>
+                    </span>
                     <TeamMonogram team={row.team} size={24} />
                     <span className="min-w-0 truncate text-body">{row.team.shortName}</span>
                   </Link>
