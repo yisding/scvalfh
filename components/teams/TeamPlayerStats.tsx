@@ -97,10 +97,11 @@ function Goalie({ card }: { card: GoalieCard }) {
         {card.stats.map((s) => (
           <div key={s.label} className="min-w-0">
             <dt className="text-micro text-ink-3">{s.label}</dt>
-            <dd className="sx-num m-0 text-lead font-semibold text-ink">{s.text}</dd>
+            <dd className="sx-num m-0 text-lead font-semibold text-ink">{s.text ?? <Dash />}</dd>
           </div>
         ))}
       </dl>
+      {card.flag ? <p className="mt-3 mb-0 text-meta text-ink-2">{card.flag}</p> : null}
     </div>
   );
 }
@@ -127,7 +128,7 @@ export function TeamPlayerStats({ view }: { view: PlayerStatsView }) {
         {view.status === 'error'
           ? 'The last stats update failed and there was no earlier copy to fall back on.'
           : view.status === 'pending'
-            ? 'No stats update has covered this team yet. It will appear after the next one.'
+            ? 'No stats update has covered this team yet. They will appear once a run collects them.'
             : 'Nobody has entered any on MaxPreps this season.'}
       </EmptyState>
     );
@@ -176,6 +177,15 @@ export function TeamPlayerStats({ view }: { view: PlayerStatsView }) {
           MaxPreps{view.updated ? `, last updated ${view.updated}` : ''}.
           {view.more ? ' Shooting and more lists only players with at least one of those stats.' : ''}
         </p>
+        {view.goalies.length > 0 ? (
+          <p className="mt-1 mb-0">
+            Goalkeeping is as entered too, including opponent shots on goal, which can disagree with the
+            saves beside it.
+            {view.showsSavePercent
+              ? ' Save % is the one figure worked out here: saves divided by saves plus goals against, left out where the entered figures cannot all be right.'
+              : ''}
+          </p>
+        ) : null}
         {view.gamesSince > 0 ? (
           <p className="mt-1 mb-0 text-ink-2">
             {teamName} has played {view.gamesSince} {view.gamesSince === 1 ? 'game' : 'games'} since

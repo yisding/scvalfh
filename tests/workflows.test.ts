@@ -107,6 +107,126 @@ describe('the player stats step', () => {
   });
 });
 
+/**
+ * The Test step runs after the stats step, which is allowed to fail; a stats file the suite refuses
+ * must not cost the snapshot commit either. The step's own shell runs here, in a scratch git repo
+ * whose `pnpm test` fails whenever a data file says "bad".
+ */
+describe('the Test step never lets a stats file block the snapshot', () => {
+  const step = stepBody(update, 'Test');
+  const script = runBlock(step);
+  const committed = '{"stats":"good"}\n';
+
+  function repo(files: { stats?: string; snapshot?: string }) {
+    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-test-step-'));
+    const git = (...args: string[]) => {
+      const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.com', ...args], { cwd: dir, encoding: 'utf8' });
+      if (r.status !== 0) throw new Error(`git ${args.join(' ')}: ${r.stderr}`);
+    };
+    mkdirSync(path.join(dir, 'data'));
+    writeFileSync(path.join(dir, 'data', 'player-stats.json'), committed);
+    writeFileSync(path.join(dir, 'data', 'snapshot.json'), '{"snapshot":"good"}\n');
+    git('init', '-q');
+    git('add', '.');
+    git('commit', '-q', '-m', 'init');
+    // What this run's fetch steps wrote.
+    if (files.stats) writeFileSync(path.join(dir, 'data', 'player-stats.json'), files.stats);
+    if (files.snapshot) writeFileSync(path.join(dir, 'data', 'snapshot.json'), files.snapshot);
+    const bin = path.join(dir, '.bin');
+    mkdirSync(bin);
+    // `pnpm test` passes unless a data file says "bad"; every call is logged.
+    writeFileSync(
+      path.join(bin, 'pnpm'),
+      '#!/usr/bin/env bash\necho "pnpm $*" >> "$CALLS"\n! grep -q bad data/player-stats.json data/snapshot.json\n',
+      { mode: 0o755 },
+    );
+    return { dir, bin };
+  }
+
+  function runStep(files: { stats?: string; snapshot?: string }) {
+    const { dir, bin } = repo(files);
+    const output = path.join(dir, '.github-output');
+    const calls = path.join(dir, '.calls');
+    writeFileSync(output, '');
+    writeFileSync(calls, '');
+    // GitHub's default shell for `run:` on ubuntu is `bash -e -o pipefail`.
+    const res = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
+      cwd: dir,
+      encoding: 'utf8',
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: output, CALLS: calls },
+    });
+    return {
+      code: res.status,
+      stats: readFileSync(path.join(dir, 'data', 'player-stats.json'), 'utf8'),
+      output: readFileSync(output, 'utf8'),
+      calls: readFileSync(calls, 'utf8').trim().split('\n').filter(Boolean),
+    };
+  }
+
+  it('found the step and its script', () => {
+    expect(step).toContain('id: test');
+    expect(step).not.toMatch(/continue-on-error/);
+    expect(script).toContain('git checkout -- data/player-stats.json');
+  });
+
+  it('passes as it is when the suite passes, keeping the new stats', () => {
+    const r = runStep({ stats: '{"stats":"new"}\n' });
+    expect(r.code).toBe(0);
+    expect(r.stats).toBe('{"stats":"new"}\n');
+    expect(r.calls).toEqual(['pnpm test']);
+    expect(r.output).toBe('');
+  });
+
+  it('restores the committed stats file and passes when only the new one failed the suite', () => {
+    const r = runStep({ stats: '{"stats":"bad"}\n' });
+    expect(r.code).toBe(0);
+    expect(r.stats).toBe(committed);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test']);
+    expect(r.output).toContain('stats_restored=true');
+  });
+
+  it('still fails when the suite fails with the committed stats file restored', () => {
+    const r = runStep({ stats: '{"stats":"bad"}\n', snapshot: '{"snapshot":"bad"}\n' });
+    expect(r.code).toBe(1);
+    expect(r.stats).toBe(committed);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test']);
+  });
+
+  it('fails at once, restoring nothing, when the stats file did not change', () => {
+    const r = runStep({ snapshot: '{"snapshot":"bad"}\n' });
+    expect(r.code).toBe(1);
+    expect(r.calls).toEqual(['pnpm test']);
+    expect(r.output).toBe('');
+  });
+
+  it('runs before the commit step, which reads the restored file as no stats change', () => {
+    expect(update.indexOf('- name: Test')).toBeLessThan(update.indexOf('- name: Commit the data that changed'));
+    expect(stepBody(update, 'Commit the data that changed')).toContain(
+      'if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi',
+    );
+  });
+});
+
+/** The `run: |` block of a step, dedented: the shell GitHub runs. */
+function runBlock(step: string): string {
+  const lines = step.split('\n');
+  const at = lines.findIndex((l) => /^\s*run: \|\s*$/.test(l));
+  if (at < 0) return '';
+  const body: string[] = [];
+  let indent = -1;
+  for (const line of lines.slice(at + 1)) {
+    if (line.trim() === '') {
+      body.push('');
+      continue;
+    }
+    const n = line.length - line.trimStart().length;
+    if (indent < 0) indent = n;
+    if (n < indent) break;
+    body.push(line.slice(indent));
+  }
+  return `${body.join('\n').trimEnd()}\n`;
+}
+
 /** The body of one named step: from its `- name:` line to the next step (or the file's end). */
 function stepBody(text: string, name: string): string {
   const start = text.indexOf(`- name: ${name}\n`);
@@ -124,7 +244,7 @@ describe('the teamViews budget gates ci, never the data cron', () => {
   });
 
   it('update-data.yml and deploy-cloudflare.yml never set CI_GATE', () => {
-    expect(stepBody(update, 'Test')).toContain('run: pnpm test');
+    expect(stepBody(update, 'Test')).toMatch(/^\s*pnpm test$/m);
     for (const text of [update, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
   });
 });

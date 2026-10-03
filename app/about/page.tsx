@@ -99,7 +99,6 @@ function plural(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }
 
-
 const DROP_REASON_WORDS: Readonly<Record<DroppedContest['reason'], string>> = {
   'ghost-team': 'MaxPreps ghost team',
   'excluded-by-config': 'not a real game',
@@ -420,6 +419,7 @@ export default function AboutPage() {
   const historySeason = getHistorySeason();
   const historyAvailable = getAvailableHistoryLeagues();
   const historyUnavailable = getUnavailableHistoryLeagues();
+  const historyPublishedOnly = historyUnavailable.filter((l) => (l.entry.alsoPublished?.length ?? 0) > 0);
 
   return (
     // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
@@ -489,8 +489,9 @@ export default function AboutPage() {
                   reports. Each team page&rsquo;s roster and season player stats come from MaxPreps
                   too, for all {counts.teams} teams in all four leagues: whatever the coach entered,
                   with anything nobody published left blank. Other public sources, such as a school&rsquo;s
-                  own athletics site, only fill a blank MaxPreps leaves, and the team page marks every
-                  value that came from one.
+                  own athletics site, only fill a blank MaxPreps leaves: the team page marks every roster
+                  value that came from one, and its Sources row links each page behind those values and
+                  behind the coaches it names.
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">
@@ -601,10 +602,25 @@ export default function AboutPage() {
             has final standings and all-league awards for{' '}
             {listWords(historyAvailable.map((l) => getLeague(l.id).shortName))}, each from that
             league&rsquo;s own documents (SCVAL&rsquo;s two PDFs; BVAL&rsquo;s standings sheet and all-league
-            documents), because MaxPreps only ever serves the current season.{' '}
-            {listWords(historyUnavailable.map((l) => getLeague(l.id).shortName))} {historyUnavailable.length === 1 ? 'is' : 'are'}{' '}
-            marked unavailable: no official {historySeason} standings were reachable, and we do not
-            fill the gap with standings or awards from third-party sites or newspapers.
+            documents), because MaxPreps only ever serves the current season.
+            {historyUnavailable.length > 0 ? (
+              <>
+                {' '}
+                {listWords(historyUnavailable.map((l) => getLeague(l.id).shortName))}{' '}
+                {historyUnavailable.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
+                {historySeason} final standings, and we do not fill the gap with standings or awards from
+                third-party sites or newspapers.
+              </>
+            ) : null}
+            {historyPublishedOnly.length > 0 ? (
+              <>
+                {' '}
+                The archive links what {listWords(historyPublishedOnly.map((l) => getLeague(l.id).shortName))}{' '}
+                did publish officially (
+                {listWords(historyPublishedOnly.flatMap((l) => (l.entry.alsoPublished ?? []).map((d) => d.label)))}
+                ), without reproducing it.
+              </>
+            ) : null}
           </p>
           <p id="clubs-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
             Club field hockey: the{' '}

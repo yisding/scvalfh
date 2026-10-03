@@ -29,8 +29,9 @@ import type { LeagueId } from '../../../lib/types';
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
  * per league (`#scval #bval #pcal #mcal`). A league whose own end-of-season documents we could
  * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
- * record-only tables and the all-league awards; a league we could not read an official 2025-26
- * source for (PCAL, MCAL) says so, with the reason, and shows nothing in its place. Everything is
+ * record-only tables and the all-league awards; a league we found no official 2025-26 final
+ * standings for (PCAL, MCAL) says so, with the reason, links any official document it did publish
+ * (MCAL's all-league team), and shows no table in its place. Everything is
  * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
  * page is the only place last season's numbers live, and it is not part of the nightly snapshot.
@@ -45,13 +46,19 @@ const LEAGUES = getHistoryLeagues();
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
+/** "PCAL and MCAL are", "MCAL is", or null when every league has its tables. */
+const UNAVAILABLE_SUBJECT = UNAVAILABLE.length
+  ? `${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'}`
+  : null;
 
 export const metadata: Metadata = {
   title: `${SEASON} final standings`,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
     ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
-    ` ${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'} marked unavailable: no official ${SEASON} standings were reachable.`,
+    (UNAVAILABLE_SUBJECT
+      ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
+      : ''),
   alternates: { canonical: '/history/2025-26' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/history/2025-26' },
 };
@@ -136,7 +143,9 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
             <section
               key={d.division}
               className={`min-w-0 lg:grid lg:grid-rows-subgrid ${SPAN_CLASS[rows]}`}
-              id={d.division}
+              // A single-division league can share its id with that division (PCAL's division is
+              // `pcal`): the league section already carries it, and an id must be unique.
+              id={d.division === leagueId ? undefined : d.division}
               aria-label={`${league.shortName} ${label}`}
             >
               {/* `nowrap` on the season: a season identifier is one token, and as a shrinkable
@@ -200,8 +209,8 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
         ) : (
           <p className="m-0">
             Source: bval.org &mdash;{' '}
-            {/* The provenance URL is the CSV export the build reads; readers get the sheet itself. */}
-            <ExternalLink href={p.standingsSheet.replace('/export?format=csv', '/edit')}>
+            {/* `standingsSheet` is the CSV export the build reads; readers get the sheet itself. */}
+            <ExternalLink href={p.standingsSheetView}>
               {SEASON} final standings (Google Sheet)
             </ExternalLink>
             {Object.entries(p.allLeagueDocs).map(([division, url], i, all) =>
@@ -215,9 +224,10 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
             )}
             . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the live MaxPreps
             snapshot the rest of the site uses &mdash; MaxPreps only ever serves the current season. Records are
-            league and overall W-L-T exactly as the sheet prints them; it carries no points or goals, so none
-            are shown or computed. JV is not shown: the sheet lists JV records but gives a JV place for one
-            school only.
+            the sheet&rsquo;s league and overall records, written without the spaces it puts around each
+            hyphen (its &ldquo;8 - 1 - 1&rdquo; is 8-1-1 here); a record it prints without a ties field stays
+            W-L. It carries no points or goals, so none are shown or computed. JV is not shown: the sheet
+            lists JV records but gives a JV place for one school only.
           </p>
         )}
         {unpublishedTies.length > 0 ? (
@@ -250,7 +260,21 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
       <div className="sx-card mt-4 p-4 sm:p-5">
         <p className="m-0 text-lead text-ink">Unavailable</p>
         <p className="m-0 mt-2 max-w-prose text-body text-ink-2">{entry.reason}</p>
-        <p className="m-0 mt-3 max-w-prose text-meta text-ink-3">
+        {entry.alsoPublished?.length ? (
+          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+            Official, from {league.shortName}:{' '}
+            {entry.alsoPublished.map((doc, i) => (
+              <span key={doc.url}>
+                {i > 0 ? ' · ' : ''}
+                <ExternalLink href={doc.url}>{doc.label}</ExternalLink>
+              </span>
+            ))}
+            .
+          </p>
+        ) : null}
+        {/* `break-words`: the checked list quotes whole URLs, which would otherwise widen a
+            320px page past the screen. */}
+        <p className="m-0 mt-3 max-w-prose break-words text-meta text-ink-3">
           Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
           <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
             the {league.shortName} standings page
@@ -266,7 +290,6 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
 export default function HistoryPage() {
   const tabs = LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
-  const unavailable = listWords(UNAVAILABLE.map((l) => short(l.id)));
 
   return (
     // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
@@ -278,8 +301,12 @@ export default function HistoryPage() {
         description={
           <>
             Final standings and all-league awards for {available}, from each league&rsquo;s own documents.{' '}
-            {unavailable} {UNAVAILABLE.length === 1 ? 'is' : 'are'} unavailable: no official {SEASON} standings
-            were reachable. This page doesn&rsquo;t change.
+            {UNAVAILABLE_SUBJECT ? (
+              <>
+                {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
+              </>
+            ) : null}
+            This page doesn&rsquo;t change.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a league" />}

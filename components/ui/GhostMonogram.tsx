@@ -50,7 +50,7 @@ export function ghostInitials(name: string): string {
 export function GhostMonogram({ name, size = 24, className, title }: GhostMonogramProps) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center border border-hairline bg-surface-2 font-sans font-semibold leading-none text-ink-3${
+      className={`sx-monogram bg-surface-2 text-ink-3${
         className ? ` ${className}` : ''
       }`}
       style={{

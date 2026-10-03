@@ -55,6 +55,8 @@ function runScript(out: string, ...extra: string[]) {
   );
   return { code: res.status, stdout: res.stdout, stderr: res.stderr };
 }
+/** Whether a team belongs to a league whose every team has a capture. */
+const fixtured = (t: { slug: string }) => FIXTURED.includes(TEAMS.find((x) => x.slug === t.slug)!.league);
 const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-')), 'rosters.json');
 const read = (file: string) => JSON.parse(readFileSync(file, 'utf8')) as Rosters;
 /** A team's entry without the stamp of when its rows were read. */
@@ -120,6 +122,31 @@ describe('data/rosters.json', () => {
         expect(unstamped(a), team.slug).toEqual(unstamped(b));
       }
     }
+    // The file around the rows: the same season and source (notes included), and the same
+    // counts over the fixtured leagues' teams. The other leagues are pending in a build with no
+    // previous file, so the file-wide counts are compared by the build below.
+    expect(built.season).toBe(raw.season);
+    expect(built.source).toEqual(raw.source);
+    expect(countRosters(built.teams.filter(fixtured))).toEqual(countRosters(raw.teams.filter(fixtured)));
+  });
+
+  it('is, top level and counts included, what the script rebuilds over the committed file', () => {
+    // The committed file as the previous one, with a fixtured team's row edited so the run cannot
+    // leave the file as it was: the rebuild re-reads that team from its capture, keeps every other
+    // league's rows, and must come out as the committed file apart from when it was read.
+    const out = tmpOut();
+    const previous = structuredClone(raw);
+    const edited = previous.teams.find((t) => fixtured(t) && t.players.length)!;
+    edited.players[0].jersey = edited.players[0].jersey === '99' ? '98' : '99';
+    writeFileSync(out, JSON.stringify(previous), 'utf8');
+    const { code, stderr, stdout } = runScript(out, '--leagues', FIXTURED.join(','), '--fetched-at', '2030-01-01T00:00:00.000Z');
+    expect(code, stderr).toBe(0);
+    expect(stdout).toContain('wrote ');
+    const built = read(out);
+    const withoutStamps = (f: Rosters) => ({ ...f, fetchedAt: null, teams: f.teams.map(unstamped) });
+    expect(withoutStamps(built)).toEqual(withoutStamps(raw));
+    expect(built.counts).toEqual(raw.counts);
+    expect(built.fetchedAt).toBe('2030-01-01T00:00:00.000Z');
   });
 
   it('refuses a team under another team\'s id or division, a missing team, and a stranger', () => {
@@ -356,6 +383,99 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     const both = runScript(out, '--capture', path.dirname(out));
     expect(both.code).toBe(1);
     expect(both.stderr).toContain('cannot be combined with --fixtures');
+  });
+});
+
+describe('scripts/fetch-rosters.ts over a previous file that is not valid whole', () => {
+  /** The script offline over `fixtures` (default: the captures), with `previous` as the file it updates. */
+  function runOver(previous: string, leagues: string, fixtures = FIXTURE_DIR) {
+    const out = tmpOut();
+    writeFileSync(out, previous, 'utf8');
+    const res = spawnSync(
+      path.join(REPO, 'node_modules', '.bin', 'tsx'),
+      [path.join(REPO, 'scripts', 'fetch-rosters.ts'), '--fixtures', fixtures, '--leagues', leagues, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z'],
+      { cwd: REPO, encoding: 'utf8' },
+    );
+    return { code: res.status, stdout: res.stdout, stderr: res.stderr, out };
+  }
+  const emptyDir = () => mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
+  const at = (file: Rosters, slug: string) => file.teams.findIndex((t) => t.slug === slug);
+
+  it('drops only the stale row (one BVAL division flipped), names it, and keeps every other team', () => {
+    // Before: the whole file was refused and all 28 rows outside the run went to pending.
+    const previous = structuredClone(raw);
+    previous.teams[at(previous, 'leigh')].division = 'santa-teresa';
+    const { code, stdout, stderr, out } = runOver(JSON.stringify(previous), 'scval');
+    // An uncovered team lost its row: the scheduler is told, and the file is still written.
+    expect(code, stderr).toBe(1);
+    expect(stderr).toMatch(/WARN previous .*: 1 row\(s\) do not validate and are dropped/);
+    expect(stderr).toMatch(/WARN {3}leigh: .*not the registry team's/);
+    expect(stdout).toContain('BVAL  12 teams · not in this run · 11 kept as they were · 1 pending, previous row dropped (leigh)');
+    expect(stdout).not.toMatch(/BVAL .*\(kept as they were\)/);
+    expect(stdout).toContain('PCAL   7 teams · not in this run (kept as they were)');
+    const built = read(out);
+    expect(RostersSchema.safeParse(built).success).toBe(true);
+    for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
+      const row = built.teams.find((t) => t.slug === team.slug)!;
+      if (team.slug === 'leigh') expect(row, team.slug).toEqual(pendingRoster(team));
+      else expect(row, team.slug).toEqual(raw.teams.find((t) => t.slug === team.slug));
+    }
+  });
+
+  it('a team whose previous row was dropped has nothing to carry: a failed fetch is an error, the others carry', () => {
+    const previous = structuredClone(raw);
+    previous.teams[at(previous, 'leigh')].teamId = TEAMS[0].id;
+    // Every BVAL team fails to read (no captures at all).
+    const { code, stderr, out } = runOver(JSON.stringify(previous), 'bval', emptyDir());
+    expect(code).toBe(1);
+    expect(stderr).toMatch(/WARN leigh: .*ENOENT.*\(its previous row was dropped: nothing to carry forward\)/);
+    const built = read(out);
+    expect(built.teams[at(built, 'leigh')].status).toBe('error');
+    for (const team of teamsInLeague('bval').filter((t) => t.slug !== 'leigh')) {
+      expect(built.teams[at(built, team.slug)].status, team.slug).toBe('carried-forward');
+    }
+  });
+
+  it('keeps every row when only the counts lie, says so, and rewrites the file with true counts', () => {
+    const previous = structuredClone(raw);
+    previous.counts.players += 1;
+    const { code, stderr, out } = runOver(JSON.stringify(previous), 'scval');
+    expect(code, stderr).toBe(0);
+    expect(stderr).toMatch(/does not validate as a whole \(.*counts do not match the rows/);
+    const built = read(out);
+    expect(built.counts).toEqual(raw.counts);
+    for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
+      expect(built.teams[at(built, team.slug)], team.slug).toEqual(raw.teams[at(raw, team.slug)]);
+    }
+  });
+
+  it('stops without writing when the previous file is not JSON', () => {
+    for (const text of ['{"teams": [', '<!doctype html>']) {
+      const { code, stdout, stderr, out } = runOver(text, 'scval');
+      expect(code, stdout).toBe(1);
+      expect(stderr).toMatch(/FAILED: the previous .* cannot be read: not JSON/);
+      expect(stderr).toContain('Nothing written');
+      expect(readFileSync(out, 'utf8')).toBe(text);
+    }
+  });
+
+  it('ignores a previous file from another season: nothing kept, nothing carried', () => {
+    const previous = { ...structuredClone(raw), season: '25-26' };
+    const scoped = runOver(JSON.stringify(previous), 'scval');
+    expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
+    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 43 row\(s\) are ignored, as if absent/);
+    expect(scoped.stdout).not.toContain('kept as they were');
+    const built = read(scoped.out);
+    expect(built.season).toBe(raw.season);
+    for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
+      expect(built.teams[at(built, team.slug)], team.slug).toEqual(pendingRoster(team));
+    }
+    // A failed fetch never carries last season's roster into this one.
+    const failed = runOver(JSON.stringify(previous), 'bval', emptyDir());
+    expect(failed.code).toBe(1);
+    for (const team of teamsInLeague('bval')) {
+      expect(read(failed.out).teams[at(raw, team.slug)].status, team.slug).toBe('error');
+    }
   });
 });
 

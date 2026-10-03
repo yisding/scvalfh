@@ -48,7 +48,7 @@ export function TeamMonogram({
   const { primary, secondary, onPrimary } = team.colors;
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center border border-hairline font-sans font-semibold leading-none${
+      className={`sx-monogram${
         className ? ` ${className}` : ''
       }`}
       style={{

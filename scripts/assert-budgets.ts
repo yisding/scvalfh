@@ -85,8 +85,9 @@ if (!workerOnly) {
   check('/schedule HTML gzip', gz(file('schedule.html')), 0.5 * baseline.schedule.htmlGzip, '0.5 × schedule');
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
-  // Every team page, all 43: the largest was ~39 KB gzip (3.9 × baseline) with both the Roster and
-  // the Player stats section; 6.0 × leaves room for a busy week of games, not for a table per player.
+  // Every team page, all 43: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
+  // 4.2 × the 9,681 B baseline) with both the Roster and the Player stats section; 6.0 × leaves room
+  // for a busy week of games, not for a table per player.
   const teamDir = path.join(APP, 'teams');
   const teamPages = existsSync(teamDir) ? readdirSync(teamDir).filter((f) => f.endsWith('.html')).sort() : [];
   if (teamPages.length === 0) failures.push(`${teamDir} has no prerendered team pages — run \`pnpm build\` first`);

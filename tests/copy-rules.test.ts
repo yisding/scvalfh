@@ -1,12 +1,13 @@
 /**
  * scripts/copy-rules.ts: the rules scripts/assert-copy.ts holds every built page to — nothing
  * claims rosters or player stats are SCVAL-only now that they cover all four leagues, and no page
- * shows what data/clubs.json keeps but never renders (an affiliation's basis, a source's quote).
+ * shows what data/clubs.json keeps but never renders (an affiliation's basis, a source's quote);
+ * and how it cuts the history page into one section per league.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAK_MIN_FRAGMENT, SCVAL_ONLY_CLAIM, affiliationLeaks } from '../scripts/copy-rules';
+import { LEAK_MIN_FRAGMENT, SCVAL_ONLY_CLAIM, affiliationLeaks, sectionById } from '../scripts/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([
@@ -91,5 +92,46 @@ describe('affiliationLeaks (data/clubs.json: quotes and bases are kept, never re
     expect('short bit'.replace(/[^a-z0-9]/gi, '').length).toBeLessThan(LEAK_MIN_FRAGMENT);
     expect(affiliationLeaks('<p>… short bit …</p>', file)).toEqual([]);
     expect(affiliationLeaks('<p>Pat Example · U19 Hawks Blue · Current, as of Jul 8, 2026</p>', file)).toEqual([]);
+  });
+});
+
+describe('sectionById: one league\'s section of the history page', () => {
+  type Attrs = (id: string) => string;
+  const idFirst: Attrs = (id) => `id="${id}" aria-label="${id}" class="min-w-0"`;
+  const idLast: Attrs = (id) => `class="min-w-0 lg:grid" aria-label="${id}" id="${id}"`;
+  /** A league section holding its division sections, as app/history/2025-26 renders it. */
+  const league = (id: string, attrs: Attrs, divisionAttrs: Attrs, divisions: string[], tail: string) =>
+    `<section ${attrs(id)}><h2>${id}</h2>` +
+    divisions.map((d) => `<section ${divisionAttrs(d)}><p>${d}</p></section>`).join('') +
+    `${tail}</section>`;
+
+  it('finds the id anywhere in the start tag, and takes the nested division sections with it', () => {
+    for (const [attrs, divisionAttrs] of [[idFirst, idLast], [idLast, idFirst], [idFirst, idFirst], [idLast, idLast]]) {
+      const html =
+        '<main>' +
+        league('scval', attrs, divisionAttrs, ['de-anza', 'el-camino'], '') +
+        league('bval', attrs, divisionAttrs, ['mt-hamilton', 'santa-teresa'], '<p>BVAL tail</p>') +
+        league('pcal', attrs, divisionAttrs, [], '<p>Unavailable</p>') +
+        '</main>';
+      const bval = sectionById(html, 'bval');
+      expect(bval).toBe(league('bval', attrs, divisionAttrs, ['mt-hamilton', 'santa-teresa'], '<p>BVAL tail</p>'));
+      // A division is a section of its own too; the last league runs to its own close.
+      expect(sectionById(html, 'mt-hamilton')).toBe(`<section ${divisionAttrs('mt-hamilton')}><p>mt-hamilton</p></section>`);
+      expect(sectionById(html, 'pcal')).toBe(league('pcal', attrs, divisionAttrs, [], '<p>Unavailable</p>'));
+    }
+  });
+
+  it('matches the id attribute exactly, not a data- attribute, a longer id or another element', () => {
+    const html =
+      '<div id="bval"></div><section data-id="bval"><p>a</p></section><section id="bval-old"><p>b</p></section>' +
+      '<section class="x" id="bval"><p>c</p></section>';
+    expect(sectionById(html, 'bval')).toBe('<section class="x" id="bval"><p>c</p></section>');
+    expect(sectionById(html, 'mcal')).toBe('');
+  });
+
+  it('runs to the end of the markup when the section is never closed', () => {
+    expect(sectionById('<p>x</p><section id="a"><section id="b"></section><p>y</p>', 'a')).toBe(
+      '<section id="a"><section id="b"></section><p>y</p>',
+    );
   });
 });

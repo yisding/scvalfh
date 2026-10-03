@@ -47,7 +47,7 @@ import path from 'node:path';
 import { getClubsFile } from '../lib/clubs';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
-import { SCVAL_ONLY_CLAIM, affiliationLeaks } from './copy-rules';
+import { SCVAL_ONLY_CLAIM, affiliationLeaks, sectionById } from './copy-rules';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -162,13 +162,8 @@ if (!existsSync(historyPath)) {
   const main = mainOf(historyFile, html);
   forbid(historyFile, main, /SCVAL[- ]only/i, 'says the archive is SCVAL-only');
   forbid(historyFile, main, /Only SCVAL/i, 'says only SCVAL has an archive');
-  /** A league's `<section id="<league>" …>…</section>`: sections are not nested at this level. */
-  const sectionOf = (id: string): string => {
-    const start = main.indexOf(`<section id="${id}"`);
-    if (start < 0) return '';
-    const next = main.indexOf('<section id="', start + 1);
-    return main.slice(start, next < 0 ? main.length : next);
-  };
+  /** A league's `<section … id="<league>" …>…</section>`, its division sections included. */
+  const sectionOf = (id: string): string => sectionById(main, id);
   const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
   for (const { id, entry } of getHistoryLeagues()) {
     const section = sectionOf(id);

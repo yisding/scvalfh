@@ -540,18 +540,26 @@
         "retrievedOn": "2026-10-03",
         "source": "bval-sheet",
         "standingsIndex": "https://bval.org/standings/",
-        "standingsSheet": "https://docs.google.com/spreadsheets/d/1lXPbU5WJsgr6cpo3sJZBIJBChMXjNC-_/export?format=csv"
+        "standingsSheet": "https://docs.google.com/spreadsheets/d/1lXPbU5WJsgr6cpo3sJZBIJBChMXjNC-_/export?format=csv",
+        "standingsSheetView": "https://docs.google.com/spreadsheets/d/1lXPbU5WJsgr6cpo3sJZBIJBChMXjNC-_/edit"
       },
       "status": "available"
     },
     "mcal": {
+      "alsoPublished": [
+        {
+          "label": "2025 All-MCAL Field Hockey Team",
+          "url": "https://www.mcalsports.org/FieldHockey.htm#FH25"
+        }
+      ],
       "checked": [
-        "https://www.mcalsports.org/FieldHockey.htm (blocked by a JavaScript bot challenge)",
-        "https://www.mcalsports.org/Playoffs/FieldHockeyPlayoff_25.pdf (404)"
+        "https://www.mcalsports.org/FieldHockey.htm (loads; its \"League Standings\" link is MaxPreps' 2026-27 table, and no 2025 standings are posted)",
+        "https://www.mcalsports.org/ (no standings or results archive)",
+        "https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_25.pdf (404; the name follows the 2026 sheet, FieldHockeyPlayoffs_26.pdf, and the singular FieldHockeyPlayoff_25.pdf is a 404 too)"
       ],
       "checkedOn": "2026-10-03",
       "league": "Marin County Athletic League",
-      "reason": "No official 2025-26 final standings were reachable. mcalsports.org sits behind a bot check that our fetcher cannot pass, and its 2025 field hockey playoff sheet is no longer served. We do not show standings or awards from newspapers or third-party sites.",
+      "reason": "MCAL published no 2025-26 final standings of its own. Its field hockey page links \"League Standings\" to MaxPreps' current-season table, and it posts no 2025 play-off sheet. The league's official 2025 All-MCAL team is posted on the same page and is linked here, not reproduced: this archive shows a league's awards only beside its official final standings. We do not show standings from newspapers or third-party sites.",
       "status": "unavailable"
     },
     "pcal": {

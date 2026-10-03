@@ -2594,7 +2594,7 @@ unknown param is a 404 (including its OG image).
 | `/teams`, `/teams/[slug]` | find my school (grouped section → league → division); one team | 1 and 43 |
 | `/playoffs` | the CCS picture: `#scval #bval #pcal`, key dates, bracket | 1 |
 | `/playoffs/[league]` | league tournaments: `/playoffs/mcal` | 1 |
-| `/history/2025-26`, `/about` | SCVAL-only history (labelled so); per-league rules, health, sources, backfills, dropped contests | 1 each |
+| `/history/2025-26`, `/about` | 2025-26 history by league (SCVAL and BVAL tables and awards; PCAL and MCAL marked unavailable, with the reason); per-league rules, health, sources, backfills, dropped contests | 1 each |
 
 Headings on the grouped pages (`/standings`, `/teams`): a section is an h2 `SectionHeader`
 (kicker `Central Coast Section` or `North Coast Section`), each league an h3, each division a plain

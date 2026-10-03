@@ -90,3 +90,24 @@ export function affiliationLeaks(
   }
   return leaks;
 }
+
+/**
+ * The `<section …>…</section>` element whose start tag carries `id="<id>"`, wherever that attribute
+ * sits in the tag (React renders a division's `className` before its `id`, a league's after), up to
+ * its own closing tag: sections nested inside it (a league's division sections) are part of it, a
+ * sibling section is not. '' when no section carries that id.
+ */
+export function sectionById(html: string, id: string): string {
+  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const start = new RegExp(String.raw`<section\b[^>]*\sid=(?:"${escaped}"|'${escaped}')[^>]*>`, 'i').exec(html);
+  if (!start) return '';
+  const tag = /<(\/?)section\b[^>]*>/gi;
+  tag.lastIndex = start.index + start[0].length;
+  let depth = 1;
+  for (let m = tag.exec(html); m; m = tag.exec(html)) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return html.slice(start.index, m.index + m[0].length);
+  }
+  // Never closed: everything after it is inside it.
+  return html.slice(start.index);
+}
