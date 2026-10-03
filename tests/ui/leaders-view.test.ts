@@ -31,6 +31,7 @@ import { statText } from '../../components/teams/player-stats-view';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { recordString } from '../../lib/format';
 import { getPlayerStats } from '../../lib/player-stats';
+import { getPriorSeason } from '../../lib/prior-season-data';
 import { getRatings } from '../../lib/ratings';
 import {
   FIELD_STAT_KEYS,
@@ -157,7 +158,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       expect(row.team.href, row.team.slug).toBe(`/teams/${row.team.slug}#elo`);
     }
     // Every rated team under the minimum is named in the notes, with its games.
-    const below = getRatings().ratings.filter((r) => r.games < min);
+    const below = getRatings().ratings.filter((r) => r.games > 0 && r.games < min);
     const note = view.schoolNotes.find((n) => n.startsWith('The Elo board needs'));
     if (below.length > 0) {
       for (const r of below) expect(note, r.slug).toContain(`${getTeamBySlug(r.slug)!.name} (${r.games})`);
@@ -321,6 +322,13 @@ describe('buildLeadersView — schools, over synthetic games', () => {
       'The Elo board needs at least 3 games against the four leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
+    // No prior season in these sources: every team starts at average, and the note says nothing of one.
+    expect(elo.note).not.toContain('started the season');
+  });
+
+  it('starts the committed board from last season, and says so', () => {
+    const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
+    expect(board.note).toContain(`started the season from its ${getPriorSeason().season} rating`);
   });
 
   it('shares an Elo place between equal ratings', () => {

@@ -32,6 +32,7 @@ import {
 import { gameWhen, monthDay, ordinal, recordString, shortDate, timeOfDayPT } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
+import { getPriorSeason } from '../../lib/prior-season-data';
 import { outcomesFor } from '../../lib/standings';
 import type {
   DivisionId,
@@ -73,12 +74,16 @@ export interface UnbeatenOpponent {
  * /leaders' Elo board when the board lists it, read off that board so the two cannot disagree.
  */
 export interface TeamEloView {
-  /** Whole Elo points; null when the team has no counted final. */
+  /** Whole Elo points; null when the team has neither a final this season nor a start from last. */
   elo: number | null;
-  /** The finals its rating counts: every final against one of the four leagues' teams. */
+  /** This season's finals its rating counts: every final against one of the four leagues' teams. */
   games: number;
-  /** Rated on fewer games than the Elo board's minimum, so not on the board yet. */
+  /** Rated from last season alone: no counted final yet this season. */
+  preseason: boolean;
+  /** Played this season, but fewer games than the Elo board's minimum, so not on the board yet. */
   provisional: boolean;
+  /** The season every rating starts from ("2025-26"); null when they start at average. */
+  seededFrom: string | null;
   /** The Elo board's minimum games. */
   minGames: number;
   /** Its place in the board's top 10, as the board prints it; null when the board does not list it. */
@@ -89,14 +94,17 @@ let eloBoard: EloBoardView | null = null;
 
 /** The Elo card for one team, from the same board /leaders prints (built once per process). */
 export function teamElo(slug: TeamSlug): TeamEloView {
-  eloBoard ??= buildEloBoard(getTeams(), getGames());
+  eloBoard ??= buildEloBoard(getTeams(), getGames(), getPriorSeason());
   const rating = eloBoard.ratingBySlug.get(slug);
   const row = eloBoard.board.rows.find((r) => r.team.slug === slug);
   const minGames = eloBoard.minimum.min;
+  const games = rating?.games ?? 0;
   return {
     elo: rating?.elo ?? null,
-    games: rating?.games ?? 0,
-    provisional: rating !== undefined && rating.games < minGames,
+    games,
+    preseason: rating !== undefined && games === 0,
+    provisional: rating !== undefined && games > 0 && games < minGames,
+    seededFrom: eloBoard.seededFrom,
     minGames,
     boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
   };

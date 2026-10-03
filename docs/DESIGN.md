@@ -3024,22 +3024,30 @@ an estimate, linked to its method, and never a status: it orders no table, berth
 
 ### 20.1 The rating
 
-The Elo scale (1500 is the average rated team; 400 points is about 10-to-1), fitted to the whole
+Elo points (1500 is the average rated team; 400 points is about 10-to-1), fitted to the whole
 season at once rather than game by game, because one season of about ten games a team leaves
-classic Elo near its starting value and the site has no earlier season to start from. The fit is
-least squares on goal margin capped at 5, with a home edge where a game has a host and a pull of
-one game's worth toward average; 140 points is a goal. It counts every final between two of the 43
-teams and nothing else: no forfeit, no game against a school outside the four leagues. A given
+classic Elo near where it started. The fit is least squares on goal margin capped at 5, with a home
+edge where a game has a host, and each team starts from its rating over last season's finals
+(`data/prior-season.json`, read once a season by `pnpm fetch-prior-season`), carried over in full
+and counting for one game. 175 points is a goal: the value that best fits Elo's expected-score
+curve over two replayed seasons. It counts every final between two of the 43 teams and nothing
+else: no forfeit, no game against a school outside the four leagues, this season or last. A given
 snapshot always builds the same numbers (one linear solve in a fixed order).
+
+Replayed day by day, each day predicted from only the games before it, the start from last season
+raised the winners picked from 79% to 89% in 2026 (through Oct 2) and from 84% to 88% in 2025-26;
+the README's "How Elo ratings are computed" has the rest. No page prints a win probability for a
+game; the board's note says only what a 400-point gap means on the scale.
 
 ### 20.2 Where it shows
 
 | Place | What |
 |---|---|
-| Team page, under the stat tiles (`#elo`) | One wide card: "Elo rating", the figure, and a sub-line (the team's place on the board when the board lists it, "provisional, from N games" below the board's minimum, otherwise "from N games"), then one sentence on what the number means and `How it is computed` → `/leaders#elo-rating`. A team with no counted final shows the dash, read as "not rated", never 1500. The card is a `<dl>` group, as the tiles are. A team page never names a place below the board's top 10. |
-| `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over the games the fit counts (half the median, rounded up); the teams under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found. |
+| Team page, under the stat tiles (`#elo`) | One wide card: "Elo rating", the figure, and a sub-line (the team's place on the board when the board lists it, "preseason, from 2025-26" before its first counted final, "provisional, from N games" below the board's minimum, otherwise "from N games"), then a sentence or two on what the number means and `How it is computed` → `/leaders#elo-rating`. A team with neither a final this season nor one last season shows the dash, read as "not rated", never 1500. The card is a `<dl>` group, as the tiles are. A team page never names a place below the board's top 10. |
+| `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over this season's games the fit counts (half the median, rounded up); the teams that have played but are under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found and the season it started from. |
 
 ### 20.3 Budgets
 
 `/leaders` gains a tenth board of at most 15 rows and stays inside its 1.0 × standings HTML budget
-(§16). The team page gains one card of about 800 bytes of HTML before gzip.
+(§16). The team page gains one card of about 800 bytes of HTML before gzip. The server bundle gains
+`data/prior-season.json` (about 100 KB raw, one line per game), which no page sends to a browser.
