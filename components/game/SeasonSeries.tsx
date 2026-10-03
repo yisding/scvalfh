@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
+import { gameHref } from '../../lib/game-id';
 import { GameLogRowBody, gameLogRowClass } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
+import { plural } from '../ui/plural';
 
 import type { GameModel } from './game-model';
 
@@ -9,14 +11,16 @@ import type { GameModel } from './game-model';
  * THESE TWO THIS SEASON (DESIGN §3.5) — every contest between the same two schools, in date order,
  * with the game being viewed marked rather than linked to itself.
  *
- * Why it earns its place on a per-game page: By-Laws Article VI §3 makes head-to-head record the
- * FIRST tiebreak once two division teams finish level on points, and Article VI §1 schedules a
- * double round robin, so "these two" is a two-game story the standings will eventually turn on.
+ * Why it earns its place on a per-game page: every league here plays a double round robin and
+ * breaks ties on head-to-head (SCVAL Article VI §3, BVAL §6b, MCAL's head-to-head winning
+ * percentage, PCAL §23.3 for its top places), so "these two" is a two-game story the standings may
+ * eventually turn on. The note under the list cites the game's own league.
  *
  * Each meeting is the team page's game-log row (`GameLogRowBody` + `gameLogRowClass`), not a
- * look-alike, so the two lists share columns, the short name at 14px, the aligned score grid and
- * the clock face for an upcoming meeting. Only the wrapper is this component's: a link per
- * meeting, and the meeting on this page as a non-link `aria-current="page"` band on surface-2.
+ * look-alike, so the two lists share columns, the short name at 14px, the aligned score grid, the
+ * league/postseason chips and the clock face for an upcoming meeting. Only the wrapper is this
+ * component's: a link per meeting, and the meeting on this page as a non-link
+ * `aria-current="page"` band on surface-2.
  *
  * Every score goes through `describeGame` + `ScoreGlyph` inside that row, so an unreported
  * meeting renders two en dashes and never `0 – 0` (DESIGN §5.2, §5.3).
@@ -33,7 +37,7 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
   // Whose side the results, scores and "vs/at" are told from rides in the header meta, where a
   // reader looks before the rows, instead of a footnote under them. One meeting needs no such
   // note: there is nothing to compare it with.
-  const meta = `${n} ${n === 1 ? 'meeting' : 'meetings'}${
+  const meta = `${plural(n, 'meeting')}${
     n > 1 && series.perspective.team ? ` · from ${series.perspective.team.shortName}’s side` : ''
   }`;
 
@@ -60,7 +64,7 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
                 // the link scrolls into view, and the series is one game page per meeting.
                 // Navigation still fetches on click.
                 <Link
-                  href={`/game/${game.contestId}`}
+                  href={gameHref(game.contestId)}
                   prefetch={false}
                   className={`sx-tap no-underline ${gameLogRowClass(game)}`}
                 >

@@ -1,0 +1,77 @@
+/**
+ * PROTOTYPE (research only) of id-first si.com side resolution. Pure function over a registry list
+ * built from the two seeds + the si.com school ids verified in this directory.
+ */
+import fs from 'node:fs';
+import { extractReactProps } from '/home/user/scvalfh/lib/sources/sblive.ts';
+const R = '/tmp/claude-0/-home-user-scvalfh/0444ea9a-b6af-5b0a-9392-aefc3995ec6d/scratchpad/research/';
+const D = R + 'web-ncs/alias-audit/';
+
+type Reg = { slug: string; keys: string[]; sbliveTeamId?: string; sbliveSchoolId?: string };
+const norm = (s: string) => { const f = s.toLowerCase().replace(/[^a-z0-9]+/g, ''); return f.endsWith('highschool') ? f.slice(0, -10) : f; };
+// Verified si.com school ids (image /school/{id}/ or team page query.team.school.id).
+const SCHOOL: Record<string, string> = {
+  'university-sf': '259', 'los-altos': '12174', 'santa-clara': '13089', tamalpais: '13445', 'marin-catholic': '163',
+  'lick-wilmerding': '263', 'convent-sacred-heart': '6922', cupertino: '11002', fremont: '11003', homestead: '11004',
+  'valley-christian': '319', hollister: '12876', greenfield: '11486', carmel: '10223', salinas: '12870',
+};
+const TEAMID_EXTRA: Record<string, string> = { 'convent-sacred-heart': '512325' };
+const seeds = [...JSON.parse(fs.readFileSync(R + 'registry-seed.json', 'utf8')).teams, ...JSON.parse(fs.readFileSync(R + 'registry-seed-ncs.json', 'utf8')).teams];
+const REG: Reg[] = seeds.map((t: any) => ({
+  slug: t.slug,
+  keys: [t.slug, t.name, t.shortName, ...(t.aliases ?? [])].filter(Boolean).map(norm), // acronyms deliberately excluded
+  sbliveTeamId: t.sbliveTeamId ?? TEAMID_EXTRA[t.slug],
+  sbliveSchoolId: SCHOOL[t.slug],
+}));
+/** si.com names that >1 California si.com team uses (probe.json buckets + team pages). Name-only never resolves these. */
+export const STATEWIDE_AMBIGUOUS = new Set(['university', 'losaltos', 'santaclara'].map(norm));
+const byTeam = new Map(REG.filter((r) => r.sbliveTeamId).map((r) => [r.sbliveTeamId!, r]));
+const bySchool = new Map(REG.filter((r) => r.sbliveSchoolId).map((r) => [r.sbliveSchoolId!, r]));
+const byKey = new Map<string, Reg>(); for (const r of REG) for (const k of r.keys) byKey.set(k, r);
+
+export function idsFrom(webPath?: string | null, rawId?: string | number | null, image?: string | null) {
+  const teamId = (webPath && /\/teams\/(\d+)-/.exec(webPath)?.[1]) || (rawId != null ? String(rawId) : null) || (image && /\/uploads\/production\/team\/(\d+)-/.exec(image)?.[1]) || null;
+  const schoolId = (image && /\/uploads\/production\/school\/(\d+)\//.exec(image)?.[1]) || null;
+  return { teamId, schoolId };
+}
+export function resolveSide(name: string, ids: { teamId: string | null; schoolId: string | null }): string | null {
+  if (ids.teamId && byTeam.has(ids.teamId)) return byTeam.get(ids.teamId)!.slug;          // 1. team id
+  if (ids.schoolId && bySchool.has(ids.schoolId)) return bySchool.get(ids.schoolId)!.slug; // 2. school id
+  const key = norm(name);
+  if (STATEWIDE_AMBIGUOUS.has(key)) return null;                                          // 3. ambiguous names need an id
+  const t = byKey.get(key);
+  if (!t) return null;
+  if (ids.teamId && t.sbliveTeamId && ids.teamId !== t.sbliveTeamId) return null;          // 4. contradicting id → different school
+  if (ids.schoolId && t.sbliveSchoolId && ids.schoolId !== t.sbliveSchoolId) return null;
+  return t.slug;                                                                          // 5. name fallback
+}
+
+// ---- run over every live capture in this directory
+const out: string[] = [];
+for (const f of fs.readdirSync(D).filter((f) => f.startsWith('standings-'))) {
+  const p: any = extractReactProps(fs.readFileSync(D + f, 'utf8'), 'organizations/Standings')[0].props;
+  for (const r of p.query.organization.teamStandings) out.push(`${f}\t${r.team.name}\t${JSON.stringify(idsFrom(r.team.webPath, r.team.id, r.team.image))}\t-> ${resolveSide(r.team.name, idsFrom(r.team.webPath, r.team.id, r.team.image))}`);
+}
+for (const f of fs.readdirSync(D).filter((f) => f.startsWith('scores-'))) {
+  const p: any = extractReactProps(fs.readFileSync(D + f, 'utf8'), 'games/GenderSportIndex')[0].props;
+  for (const n of p.query.scoreboardDate.games.nodes) for (const gt of n.gameTeams) {
+    const ids = idsFrom(gt.team.webPath, gt.team.id, gt.team.image);
+    out.push(`${f}\t${gt.team.name}\t${JSON.stringify(ids)}\t-> ${resolveSide(gt.team.name, ids)}`);
+  }
+}
+// Regression cases requested by the design gap
+const cases: Array<[string, string | null, string | null, string | null]> = [
+  ['University', '458756', null, null], ['University', '999999', null, null], ['University', null, '11359', null],
+  ['University', null, null, null], ['University', '456869', null, 'university-sf'], ['University', null, '259', 'university-sf'],
+  ['Los Altos', '458731', null, null], ['Los Altos', null, '11179', null], ['Los Altos', '458850', null, 'los-altos'],
+  ['Santa Clara', '456804', null, null], ['Santa Clara', null, '111', null], ['Santa Clara', '496839', null, 'santa-clara'],
+  ['Tamalpais', null, null, 'tamalpais'], ['Convent & Stuart Hall', null, '6922', 'convent-sacred-heart'],
+];
+let fails = 0;
+for (const [name, teamId, schoolId, want] of cases) {
+  const got = resolveSide(name, { teamId, schoolId });
+  if (got !== want) { fails++; out.push(`FAIL ${name} ${teamId} ${schoolId} want ${want} got ${got}`); }
+}
+out.push(`regression cases: ${cases.length - fails}/${cases.length} pass`);
+fs.writeFileSync(D + 'proto-resolver.out.txt', out.join('\n') + '\n');
+console.log(out.join('\n'));

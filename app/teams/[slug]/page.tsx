@@ -2,47 +2,55 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import TeamGameLog from '@/components/teams/TeamGameLog';
-import TeamIdentity from '@/components/teams/TeamIdentity';
-import TeamNextGame from '@/components/teams/TeamNextGame';
-import TeamOfficialFixtures from '@/components/teams/TeamOfficialFixtures';
-import TeamPlayerStats from '@/components/teams/TeamPlayerStats';
-import TeamPlayoffLine from '@/components/teams/TeamPlayoffLine';
-import TeamRoster from '@/components/teams/TeamRoster';
-import TeamSplits from '@/components/teams/TeamSplits';
-import TeamStatTiles from '@/components/teams/TeamStatTiles';
-import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
-import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
-import { buildRosterView } from '@/components/teams/roster-view';
-import { buildTeamPageView } from '@/components/teams/team-view';
-import EmptyState from '@/components/ui/EmptyState';
-import ExternalLink from '@/components/ui/ExternalLink';
-import FormStrip from '@/components/ui/FormStrip';
-import { GameCard, GameRow } from '@/components/ui/GameRow';
-import MarginStrip from '@/components/ui/MarginStrip';
-import SectionHeader from '@/components/ui/SectionHeader';
-import { OG_BASE } from '@/components/layout/site-url';
-import { getTeamSlugs } from '@/lib/data';
-import { ordinal, recordString, shortDate } from '@/lib/format';
-import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/history';
-import { DIVISION_LABELS } from '@/lib/season';
+import TeamGameLog from '../../../components/teams/TeamGameLog';
+import TeamIdentity from '../../../components/teams/TeamIdentity';
+import TeamNextGame from '../../../components/teams/TeamNextGame';
+import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
+import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
+import TeamPlayoffLine from '../../../components/teams/TeamPlayoffLine';
+import TeamRoster from '../../../components/teams/TeamRoster';
+import TeamSplits from '../../../components/teams/TeamSplits';
+import TeamStatTiles from '../../../components/teams/TeamStatTiles';
+import TeamUnbeaten from '../../../components/teams/TeamUnbeaten';
+import {
+  buildPlayerStatsView,
+  type PlayerStatsView,
+} from '../../../components/teams/player-stats-view';
+import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
+import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+import EmptyState from '../../../components/ui/EmptyState';
+import ExternalLink from '../../../components/ui/ExternalLink';
+import FormStrip from '../../../components/ui/FormStrip';
+import { GameCard, GameRow } from '../../../components/ui/GameRow';
+import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
+import MarginStrip from '../../../components/ui/MarginStrip';
+import { formStripName, plural } from '../../../components/ui/plural';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import { OG_BASE } from '../../../components/layout/site-url';
+import { getTeamSlugs } from '../../../lib/data';
+import { ordinal, recordString, shortDate } from '../../../lib/format';
+import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
+import { divisionHeading, leagueOfDivision } from '../../../lib/leagues';
+import type { DivisionId, LeagueId } from '../../../lib/types';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
  *
- * Fifteen static pages, one per member of the official SCVAL alignment. There is ONE source order
+ * 43 static pages, one per member of each league's official alignment. There is ONE source order
  * at every width, so the DOM order matches the visual order at every breakpoint (DESIGN §10.5):
- * identity (whose meta line states the place: "where do we stand") → Last ("what just happened")
- * → Next ("when is the next one") → the stat tiles and their disclosure → Form / Margin → the
- * rest. The tiles used to sit between the identity card and Last, which pushed the Next game's
- * date and opponent off the first phone screen on every team.
+ * identity (whose second meta line states the place: "where do we stand") → Last ("what just
+ * happened") → Next ("when is the next one") → the stat tiles and their disclosure, with the
+ * standings and official-schedule links → Form / Margin → the rest. The tiles used to sit between
+ * the identity card and Last, which pushed the Next game's date and opponent off the first phone
+ * screen on every team.
  *
- * Layout (modernization brief §5.7): the identity hero card, then ONE grid whose children stay in
- * that DOM order. One column on a phone. From 768px Last and Next pair up (both cards stretch to
- * the row, so the pair ends level) and every section after them takes both columns until 1024px.
- * Rows are separated by space, never by a rule. From 768px the Last card is the `GameCard` (time,
- * both teams, recap, Game page / Box score / NFHS stream links) instead of the phone's expanded
- * `GameRow`, so it fills its half of the row like the Next card does.
+ * Layout (modernization brief §5.7): the identity hero card and the league's health note, then ONE
+ * grid whose children stay in that DOM order. One column on a phone. From 768px Last and Next pair
+ * up (both cards stretch to the row, so the pair ends level) and every section after them takes
+ * both columns until 1024px. Rows are separated by space, never by a rule. From 768px the Last
+ * card is the `GameCard` (time, both teams, recap, Game page / Box score / NFHS stream links)
+ * instead of the phone's expanded `GameRow`, so it fills its half of the row like the Next card
+ * does.
  *
  * At 1024px+ a strict pairing left 250–350px holes beside every tall section (Form beside Margin,
  * Who we haven't beaten beside the League game log). So the two tallest sections SPAN two rows
@@ -50,11 +58,11 @@ import { DIVISION_LABELS } from '@/lib/season';
  * order), so reading order = DOM order = row-major visual order:
  *
  *     Last           | Next
- *     Stat tiles (both columns; one 6-up band from 1280px)
+ *     Stat tiles and the standings / official-schedule links (both columns)
  *     Form           | Margin (2 rows)
  *     Splits         |   ″
- *     CCS picture    | Who we haven't beaten
- *     League log (2) | On SCVAL's schedule only
+ *     Postseason     | Who we haven't beaten
+ *     League log (2) | On <SHORT>’s schedule only
  *        ″           | Non-league
  *     Elsewhere (both columns, or under Non-league — see `logOutweighs` below)
  *     Player stats (both columns)
@@ -71,19 +79,32 @@ import { DIVISION_LABELS } from '@/lib/season';
  * share one wrapper, `display: contents` below 1024px and a flex column from there, and Elsewhere
  * moves up into the hole, still after Non-league in both reading and visual order:
  *
- *     CCS picture    | Who we haven't beaten
+ *     Postseason     | Who we haven't beaten
  *     League log     | Non-league
  *        ″           | Elsewhere
  *
- * A team with no results still gets this whole page: identity, links, the CCS line, the
+ * A team with no results still gets this whole page: identity, links, the postseason line, the
  * official-schedule fixtures and every empty state (DESIGN §8).
  *
  * The player stats and the roster come after every game section: they answer "who is on this
  * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
  * rows each they would push those below the fold. Stats lead, since they change after every game.
+ * Both are SCVAL-only (SPEC §0.2 item 12): `buildPlayerStatsView` / `buildRosterView` return null
+ * for a team lib/rosters.ts and data/player-stats.json do not hold, and then the section is not
+ * rendered at all — a BVAL, PCAL or MCAL page shows no empty state about a roster or stats nobody
+ * collected for it. The meta description names player stats and the roster only for a team whose
+ * page shows them.
+ *
+ * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
+ * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
+ * description ends `… goal margins and CCS picture.` or `… goal margins and MCAL tournament
+ * picture.` An MCAL page carries no CCS concept inside `<main>` (SPEC §10.9). The standings link
+ * goes to `/standings/<league>#<division>`, and the official-schedule link to the division's own
+ * official schedule (config). The postseason section's anchor is `#postseason` on every page, so
+ * no MCAL URL carries a CCS concept either.
  */
 
-/** All 15 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 43 prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -97,11 +118,15 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   const { team, standing, hasResults } = view;
   const record =
     hasResults && standing
-      ? `${recordString(standing.computed)} in ${view.divisionLabel} (${standing.computed.pts} pts)`
-      : `${view.divisionLabel} division — no results reported`;
+      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${standing.computed.pts} pts)`
+      : `${view.scopeLabel} — no results reported`;
+  const extras = rosterExtras(
+    buildPlayerStatsView(team.slug, [...view.leagueLog, ...view.nonLeagueLog]),
+    buildRosterView(team.slug),
+  );
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey: ${record}. Schedule, results, goal margins, CCS picture, player stats and roster. Unofficial, rebuilt nightly from MaxPreps.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonKicker(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -110,6 +135,37 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       url: `/teams/${team.slug}`,
     },
   };
+}
+
+/**
+ * `player stats, roster, ` for the description, naming only what this page shows: stats when the
+ * coach has entered some, the roster when it lists players. Empty for every team outside the
+ * rosters' league (both views are null there), so those descriptions are unchanged.
+ */
+function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null): string {
+  const parts: string[] = [];
+  if (stats && (stats.scoring || stats.more || stats.goalies.length > 0)) parts.push('player stats');
+  if (roster && roster.rows.length > 0) parts.push('roster');
+  return parts.map((p) => `${p}, `).join('');
+}
+
+/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` (MCAL), by `postseason.kind`. */
+function postseasonKicker(view: TeamPageView): string {
+  return view.league.postseasonKind === 'league-tournament'
+    ? `${view.league.shortName} tournament picture`
+    : 'CCS picture';
+}
+
+/**
+ * Where last season's row sat: the division heading (`El Camino`), prefixed by that division's
+ * league when this team plays in another league now, so no page reads as if "El Camino" were a
+ * division of its own league.
+ */
+function lastSeasonScope(division: DivisionId, league: LeagueId): string {
+  const owner = leagueOfDivision(division);
+  const heading = divisionHeading(division);
+  if (heading === null) return owner.shortName;
+  return owner.id === league ? heading : `${owner.shortName} ${heading}`;
 }
 
 export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
@@ -128,11 +184,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leaguePlayed,
     leagueScheduled,
   } = view;
-  // Last season's varsity row from the 2025-26 SCVAL standings PDF, and the size of that
-  // division as it was then (the alignment can change between seasons).
+  // Last season's varsity row from the 2025-26 standings PDF (the history league only: any other
+  // slug has no rows), and the size of that division as it was then (the alignment can change
+  // between seasons).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
+  const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
+  // Both null outside the rosters' league (SCVAL only): no section, no empty state.
   const roster = buildRosterView(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
@@ -155,6 +214,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     <div className="pb-section-lg">
       <TeamIdentity view={view} knownSlugs={getTeamSlugs()} />
 
+      <LeagueHealthNote leagueId={team.league} className="mt-4" />
+
       <div className="mt-6 grid gap-y-section md:grid-cols-2 md:gap-x-6 lg:gap-x-10 lg:gap-y-section-lg">
         {/* LAST and NEXT: the two questions a parent on the turf actually has. "All games" jumps
             to the full league log (`#league-log`), otherwise seven sections further down. */}
@@ -163,7 +224,13 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             kicker="Last"
             meta={
               last
-                ? `${shortDate(last.dateLocal)} · ${last.isLeague ? 'League' : 'Non-league'}`
+                ? `${shortDate(last.dateLocal)} · ${
+                    last.countsFor !== null
+                      ? 'League'
+                      : last.postseason !== null
+                        ? 'Postseason'
+                        : 'Non-league'
+                  }`
                 : undefined
             }
             action={{ href: '#league-log', label: 'All games' }}
@@ -184,9 +251,30 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           )}
         </section>
 
-        <TeamNextGame card={view.nextCard} teamName={team.name} />
+        <TeamNextGame card={view.nextCard} teamName={team.name} league={view.league} />
 
-        <TeamStatTiles view={view} className="min-w-0 md:col-span-2" />
+        {/* The tiles and the two league links are one grid item, so the links keep their 16px
+            under the tiles instead of a section gap. Both columns from 768px. */}
+        <div className="min-w-0 md:col-span-2">
+          <TeamStatTiles view={view} className="min-w-0" />
+          {/* On the canvas, so the pills take the card's surface and ring (surface-2 on hover):
+              the grey pill fill all but vanished there in light mode. */}
+          <p className="mt-4 mb-0 flex flex-wrap gap-2">
+            <Link
+              href={view.standingsHref}
+              prefetch={false}
+              className="sx-pill bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
+            >
+              {view.standingsLabel} &rarr;
+            </Link>
+            <ExternalLink
+              href={view.officialScheduleUrl}
+              className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            >
+              Official {view.league.shortName} schedule
+            </ExternalLink>
+          </p>
+        </div>
 
         {/* A team with no reported results gets ONE empty state here, not an empty form strip
             beside an empty chart (DESIGN §8). */}
@@ -202,12 +290,12 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   <FormStrip
                     entries={formEntries}
                     size={24}
-                    label={`${team.name} last ${formEntries.length} league games`}
+                    label={formStripName(team.name, formEntries.length)}
                   />
                 </div>
                 {nonLeagueLog.length > 0 ? (
                   <p className="mt-2 mb-0 text-meta text-ink-3">
-                    {`+ ${nonLeagueLog.length} non-league ${nonLeagueLog.length === 1 ? 'game' : 'games'}, not counted here`}
+                    {`+ ${plural(nonLeagueLog.length, 'other game')}, not counted here`}
                   </p>
                 ) : null}
               </div>
@@ -215,7 +303,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
 
             <section className="min-w-0 md:max-lg:col-span-2 lg:row-span-2">
               <SectionHeader kicker="Margin by league game" meta={`${leaguePlayed} played`} />
-              {/* `slots`: the team's real league slate (12 in De Anza, 14 in El Camino). */}
+              {/* `slots`: the team's real league slate (`leagueScheduled`, from the official
+                  schedule or the league's games per team). */}
               <div className="sx-card p-4 md:p-5">
                 <MarginStrip
                   entries={marginEntries}
@@ -252,15 +341,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <TeamSplits view={view} />
         </section>
 
-        <section id="ccs" className="min-w-0 md:max-lg:col-span-2">
-          <SectionHeader kicker="CCS picture" meta="Not official" />
+        <section id="postseason" className="min-w-0 md:max-lg:col-span-2">
+          <SectionHeader kicker={postseasonKicker(view)} meta="Not official" />
           <TeamPlayoffLine view={view} />
         </section>
 
         <section className="min-w-0 md:max-lg:col-span-2">
           <SectionHeader
             kicker="Who we haven't beaten"
-            meta={`${DIVISION_LABELS[team.division]} only`}
+            meta={`${view.scopeLabel} only`}
           />
           <TeamUnbeaten view={view} />
         </section>
@@ -276,13 +365,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <SectionHeader
             kicker="League game log"
             meta={`${leaguePlayed} of ${leagueScheduled}`}
-            action={{ href: `/standings#${team.division}`, label: 'Standings' }}
+            action={{ href: view.standingsHref, label: 'Standings' }}
           />
           <TeamGameLog
             games={leagueLog}
             perspective={team.slug}
             emptyHeading={`No league games are published for ${team.name}.`}
-            emptyBody={`The official ${DIVISION_LABELS[team.division]} schedule has ${leagueScheduled} division games for them; none of those fixtures has a contest in any data source.`}
+            emptyBody={`The official ${view.league.shortName} schedule has ${plural(
+              leagueScheduled,
+              `${view.league.gamesWord} game`,
+            )} for them; none of those fixtures has a contest in any data source.`}
           />
         </section>
 
@@ -291,8 +383,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             className={fixturesSpan ? 'min-w-0 md:col-span-2' : 'min-w-0 md:max-lg:col-span-2'}
           >
             <SectionHeader
-              kicker="On SCVAL's schedule only"
-              meta={`${officialFixtures.length} fixture${officialFixtures.length === 1 ? '' : 's'}`}
+              kicker={`On ${view.league.shortName}’s schedule only`}
+              meta={plural(officialFixtures.length, 'fixture')}
             />
             <TeamOfficialFixtures
               fixtures={officialFixtures}
@@ -307,12 +399,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             League log. `contents` keeps them two grid items below 1024px either way. */}
         <div className={logOutweighs ? 'contents lg:flex lg:flex-col lg:gap-y-section-lg' : 'contents'}>
           <section className="min-w-0 md:max-lg:col-span-2">
-            <SectionHeader kicker="Non-league" meta={`${nonLeagueLog.length} games`} />
+            <SectionHeader
+              kicker={view.postseasonCount > 0 ? 'Non-league and postseason' : 'Non-league'}
+              meta={plural(nonLeagueLog.length, 'game')}
+            />
             <TeamGameLog
               games={nonLeagueLog}
               perspective={team.slug}
               emptyHeading={`${team.name} has no non-league games this season.`}
-              emptyBody="Every game on their schedule counts toward the division record."
+              emptyBody={`Every game on their schedule counts toward the ${view.scopeLabel} table.`}
             />
           </section>
 
@@ -353,18 +448,19 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                     href={sblive}
                     className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
                   >
-                    SBLive / SI: {team.name}
+                    High School on SI (si.com): {team.name}
                   </ExternalLink>
                 </li>
               ) : null}
             </ul>
-            {/* Last season in one line, record exactly as the 2025-26 SCVAL PDF printed it ("1-13";
-                the PDF drops a zero tie count on some rows). The site-wide disclaimer that sat here
-                is the footer's, so it is no longer repeated on every team page. */}
+            {/* Last season in one line, record exactly as the 2025-26 standings PDF printed it
+                ("1-13"; the PDF drops a zero tie count on some rows). The site-wide disclaimer
+                that sat here is the footer's, so it is no longer repeated on every team page. The
+                link text keeps "2025-26" on one line rather than breaking at its hyphen. */}
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
                 Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}
-                {DIVISION_LABELS[history.division]}, {history.row.leagueRecord} &mdash;{' '}
+                {historyScope}, {history.row.leagueRecord} &mdash;{' '}
                 <Link
                   href={`/history/2025-26#${history.division}`}
                   prefetch={false}
@@ -391,7 +487,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <section className="min-w-0 md:col-span-2" id="roster">
             <SectionHeader
               kicker="Roster"
-              meta={rosterCount > 0 ? `${rosterCount} player${rosterCount === 1 ? '' : 's'}` : undefined}
+              meta={rosterCount > 0 ? plural(rosterCount, 'player') : undefined}
             />
             <TeamRoster view={roster} />
           </section>

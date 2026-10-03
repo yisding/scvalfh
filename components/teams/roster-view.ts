@@ -307,9 +307,14 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
   return links;
 }
 
-export function buildRosterView(slug: TeamSlug): RosterView | undefined {
+/**
+ * null for a team lib/rosters.ts does not hold: rosters are SCVAL-only (SPEC §0.2 item 12), so a
+ * BVAL, PCAL or MCAL page gets no roster section at all — never an empty state that would read as
+ * the team hiding its roster. Never throws for a registry slug.
+ */
+export function buildRosterView(slug: TeamSlug): RosterView | null {
   const team = getEnrichedTeamRoster(slug);
-  if (!team) return undefined;
+  if (!team) return null;
 
   const varsity = team.players.filter((p) => p.level !== 'jv');
   const players = sortedPlayers({ players: varsity });

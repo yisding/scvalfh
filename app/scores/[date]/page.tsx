@@ -2,32 +2,45 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import GameList from '@/components/schedule/GameList';
-import OfficialFixtures from '@/components/schedule/OfficialFixtures';
-import SeasonCalendar from '@/components/schedule/SeasonCalendar';
-import { daySummary } from '@/components/schedule/day-summary';
-import { gameWord } from '@/components/schedule/filter-data';
-import EmptyState from '@/components/ui/EmptyState';
-import SectionHeader from '@/components/ui/SectionHeader';
-import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE } from '@/components/layout/site-url';
-import { getGameDates, getGames, getOfficialFixtures, getToday } from '@/lib/data';
-import { longDate, monthDay, parseLocal, shortDate } from '@/lib/format';
-import { getTeamBySlug } from '@/lib/teams';
+import GameList from '../../../components/schedule/GameList';
+import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
+import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
+import { dayGroups, daySummary, leaguesInvolved } from '../../../components/schedule/day-summary';
+import { gameWord } from '../../../components/schedule/filter-data';
+import EmptyState from '../../../components/ui/EmptyState';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import PageHeader from '../../../components/layout/PageHeader';
+import { OG_BASE, SITE_NAME } from '../../../components/layout/site-url';
+import {
+  getGameDates,
+  getGames,
+  getLeagueSummaries,
+  getOfficialFixtures,
+  getTeamBySlug,
+  getToday,
+} from '../../../lib/data';
+import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
  *
  * One prerendered page per date that actually has a contest (49 today), which is what makes the
- * "Day page" link on every /schedule date header a real URL instead of a clipboard trick. Unknown
+ * "Day page" link on every schedule date header a real URL instead of a clipboard trick. Unknown
  * dates `notFound()` rather than rendering an empty day, because an empty day and a day with no
  * games are different claims and only one of them is true.
  *
  * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
  * a link to an empty Sunday would be a dead end. "Pick a date" (SeasonCalendar) jumps straight to
- * any of them, and links only the days that have contests for the same reason.
+ * any of them, every league's days included, and links only the days that have contests for the
+ * same reason.
+ *
+ * Grouped by league (SPEC §10.4): one group per league — its counted league games and its
+ * postseason games, `<SHORT> · <n> league games` — then `Non-league · <n>` for the rest; a game
+ * appears once. The unreported official fixtures of the day are one block per league: on a past
+ * day `Scheduled by <SHORT>, not reported` (SPEC §10.4); today and on a day still to come, more of
+ * the day ("Also on <SHORT>’s schedule for this day…"), never a missing result.
  */
-/** A registry team renders by its short name; a non-SCVAL opponent is a name and nothing else. */
+/** A registry team renders by its short name; anyone else is a name and nothing else. */
 function sideName(slug: string | null, fallback: string): string {
   const team = slug ? getTeamBySlug(slug) : undefined;
   return team ? team.shortName : fallback;
@@ -55,7 +68,7 @@ export async function generateMetadata({
     alternates: { canonical: `/scores/${date}` },
     openGraph: {
       ...OG_BASE,
-      title: `${title} — SCVAL Field Hockey`,
+      title: `${title} — ${SITE_NAME}`,
       description: summary.sentence,
       url: `/scores/${date}`,
     },
@@ -75,9 +88,17 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const next = index < dates.length - 1 ? dates[index + 1] : null;
   const today = getToday();
   const fixtures = getOfficialFixtures().filter((fixture) => fixture.dateKey === date);
-  /* `game.official.scheduledDate` is the date on the SCVAL grid. When it differs from the date the
-     game is actually on, the game moved — worth one sentence, because a parent looking at the
-     printed schedule will otherwise think we have the wrong day (SPEC §1.3). */
+  const fixtureLeagues = getLeagueSummaries()
+    .map((league) => ({ league, rows: fixtures.filter((f) => f.league === league.id) }))
+    .filter((block) => block.rows.length > 0);
+  const groups = dayGroups(games);
+  /* The leagues whose /schedule/<league> lists this date: every league with a side in one of the
+     day's games (a cross-league game is on both leagues' lists), config order. */
+  const involved = new Set(leaguesInvolved(games));
+  const seasonLeagues = getLeagueSummaries().filter((league) => involved.has(league.id));
+  /* `game.official.scheduledDate` is the date on the league's official schedule. When it differs
+     from the date the game is actually on, the game moved — worth one sentence, because a parent
+     looking at the printed schedule will otherwise think we have the wrong day. */
   const moved = games.filter((game) => game.official && game.official.scheduledDate !== date);
 
   /* The day has arrived and not one score has been published. The day still renders in full, with
@@ -96,7 +117,8 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
      (`bg-surface shadow-[var(--sx-ring)]`), so in light mode they read as buttons rather than as
      the surface-2 fact badges beside the h1; accent on surface is the strongest pairing the pill
      has. At the ends of the season the missing pill is a short badge — "First day" / "Last day",
-     with " of the season" for screen readers only — so the row stays one line at 390. */
+     with " of the season" for screen readers only — so the steppers stay one line at 390. On a
+     day with several leagues the "Full season" group wraps under them as one unit. */
   const dayNav = (
     <nav aria-label="Other days" className="flex flex-wrap items-center gap-2">
       {previous ? (
@@ -127,16 +149,42 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
           Last day<span className="sr-only"> of the season</span>
         </span>
       )}
-      {/* A plain <a>, a document navigation on purpose: the browser keeps re-running its fragment
-          scroll while /schedule's content-visibility groups settle, so the date's header lands
-          under the top bar for every date. A client <Link> scrolls once, and only lands for dates
-          within ScheduleList's ±7-day laid-out window around the Scores tab's date. */}
-      <a
-        href={`/schedule#${date}`}
-        className="sx-action min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
-      >
-        Full season
-      </a>
+      {/* The full season is a league's page (/schedule/<league>), aimed at this date's group,
+          which every league with a side in one of the day's games has (a day with no league side
+          at all would fall back to /schedule's index row for it). One league: "Full season".
+          Several: "Full season" then one short-name link per league, each named in full for
+          screen readers. Plain <a>s, document navigations on purpose: the browser keeps re-running
+          its fragment scroll while the list's content-visibility groups settle, so the date's
+          header lands under the top bar for every date. A client <Link> scrolls once, and only
+          lands for dates within ScheduleList's ±7-day laid-out window around the Scores tab's
+          date. */}
+      {seasonLeagues.length <= 1 ? (
+        <a
+          href={seasonLeagues[0] ? `/schedule/${seasonLeagues[0].id}#${date}` : `/schedule#${date}`}
+          className="sx-action min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+        >
+          Full season
+          {seasonLeagues[0] ? (
+            <span className="sr-only">{`: the ${seasonLeagues[0].shortName} schedule, at ${shortDate(date)}`}</span>
+          ) : null}
+        </a>
+      ) : (
+        <span className="inline-flex flex-wrap items-center gap-x-1">
+          <span aria-hidden="true" className="text-meta text-ink-3">
+            Full season
+          </span>
+          {seasonLeagues.map((league) => (
+            <a
+              key={league.id}
+              href={`/schedule/${league.id}#${date}`}
+              className="sx-action min-h-11 rounded-full px-2 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+            >
+              {league.shortName}
+              <span className="sr-only">{` full season, at ${shortDate(date)}`}</span>
+            </a>
+          ))}
+        </span>
+      )}
     </nav>
   );
 
@@ -168,7 +216,8 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         aside={dayNav}
       />
 
-      {/* Its own block under the header, closed by default so the day's games stay in the fold. */}
+      {/* Its own block under the header, closed by default so the day's games stay in the fold.
+          Every league's game days: the day page is all-league. */}
       <SeasonCalendar dates={dates} current={date} className="mt-4 md:mt-6" />
 
       {nothingReportedYet ? (
@@ -179,20 +228,44 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </p>
       ) : null}
 
-      <div className="mt-8 md:mt-10">
-        {games.length > 0 ? (
-          // Two or more cards fill the row, so they end where the pager, the fixtures card and
-          // the disclosure below end; a lone card stays card-sized rather than 1200px wide.
-          <GameList games={games} tracks={games.length > 1 ? 'fit' : 'fill'} />
-        ) : (
+      {groups.length >= 2 ? (
+        <nav aria-label="Leagues on this day" className="mt-6 flex flex-wrap gap-2">
+          {groups.map((group) => (
+            <a
+              key={group.id}
+              href={`#${group.id}`}
+              className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            >
+              {group.kicker}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+
+      {games.length > 0 ? (
+        groups.map((group, index) => (
+          <section
+            key={group.id}
+            id={group.id}
+            aria-labelledby={`${group.id}-heading`}
+            className={index === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+          >
+            <SectionHeader id={`${group.id}-heading`} kicker={group.kicker} />
+            {/* Two or more cards fill the row, so they end where the pager, the fixtures card
+                and the disclosure below end; a lone card stays card-sized rather than 1200px wide. */}
+            <GameList games={group.games} tracks={group.games.length > 1 ? 'fit' : 'fill'} />
+          </section>
+        ))
+      ) : (
+        <div className="mt-8 md:mt-10">
           <EmptyState heading="No contests on this date." />
-        )}
-      </div>
+        </div>
+      )}
 
       {moved.length > 0 ? (
         <p className="sx-inset mt-stack mb-0 max-w-prose">
           {moved.length === 1 ? 'One game here was moved' : `${moved.length} games here were moved`}{' '}
-          from the date on SCVAL&rsquo;s official grid:{' '}
+          from the date on the league&rsquo;s official schedule:{' '}
           {moved
             .map(
               (game) =>
@@ -206,41 +279,48 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </p>
       ) : null}
 
-      {/* Fixtures on SCVAL's grid that no source lists. A day that has not come yet introduces
-          them as more of the day ("Also on SCVAL's schedule…"), never as a missing result: its
-          visible lead replaces the kicker, and an sr-only h2 keeps the same heading as a past day
-          for screen readers moving by headings. A past day keeps the section and its note. The
-          date column would repeat the h1, so it goes. */}
-      {fixtures.length > 0 ? (
+      {/* Fixtures on a league's official schedule that no source lists, one block per league. A
+          day that has not come yet (or is today) introduces them as more of the day ("Also on
+          <SHORT>’s schedule…"), never as a missing result: its visible lead replaces the kicker,
+          and an sr-only h2 in the lead's own words keeps a heading for screen readers moving by
+          headings, as a past day's SPEC §10.4 kicker does. The date column would repeat the h1,
+          so it goes. */}
+      {fixtureLeagues.map(({ league, rows }) =>
         date >= today ? (
-          <section aria-labelledby="scval-only" className="mt-section md:mt-section-lg">
-            <h2 id="scval-only" className="sr-only">
-              On SCVAL&rsquo;s schedule only
+          <section
+            key={league.id}
+            aria-labelledby={`${league.id}-schedule-only`}
+            className="mt-section md:mt-section-lg"
+          >
+            <h2 id={`${league.id}-schedule-only`} className="sr-only">
+              {`Also on ${league.shortName}’s schedule`}
             </h2>
             <OfficialFixtures
-              fixtures={fixtures}
+              fixtures={rows}
+              leagueId={league.id}
               today={today}
               variant="plain"
               showDate={false}
-              lead="Also on SCVAL’s schedule for this day, but not listed by any source:"
+              lead={`Also on ${league.shortName}’s schedule for this day, but not listed by any source:`}
             />
           </section>
         ) : (
-          <section className="mt-section md:mt-section-lg">
-            <SectionHeader kicker="On SCVAL's schedule only" />
-            <OfficialFixtures fixtures={fixtures} today={today} variant="plain" showDate={false} />
+          <section key={league.id} className="mt-section md:mt-section-lg">
+            <SectionHeader kicker={`Scheduled by ${league.shortName}, not reported`} />
+            <OfficialFixtures fixtures={rows} leagueId={league.id} today={today} variant="plain" showDate={false} />
           </section>
-        )
-      ) : null}
+        ),
+      )}
 
       {/* One always-visible line under the day's games instead of a caption plus a "How scores
           are shown" disclosure: the zone every time here is in, the two states a reader can
-          mistake for each other, and the full table. "Unofficial" is not repeated here; the
-          footer says it on every page. The link sits inside the sentence, so it needs no 24px
-          box of its own (WCAG 2.5.8's inline exception). */}
+          mistake for each other, the si.com mark, and the full table. "Unofficial" is not
+          repeated here; the footer says it on every page. The link sits inside the sentence, so
+          it needs no 24px box of its own (WCAG 2.5.8's inline exception). */}
       <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
         All times Pacific. A dash means no score has been reported;{' '}
-        <span className="sx-num">0</span> is a real zero.{' '}
+        <span className="sx-num">0</span> is a real zero; a &dagger; marks a score published from
+        si.com under the site&rsquo;s backfill rule.{' '}
         <Link href="/about#conventions" prefetch={false} className="text-accent">
           How every state is shown
         </Link>

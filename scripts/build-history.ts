@@ -27,7 +27,7 @@ import {
   type AllLeagueBlock,
   type HistoryStandingsBlock,
 } from '../lib/sources/scval-pdf';
-import { DIVISION_LABELS, DIVISIONS } from '../lib/season';
+import { divisionsOf } from '../lib/leagues';
 
 interface Args {
   from: string | null;
@@ -123,9 +123,10 @@ async function main(): Promise<number> {
   }
   for (const p of problems) console.warn(`WARN ${p}`);
 
-  const divisions = DIVISIONS.map((division) => ({
+  // History is SCVAL-only (SPEC §7.13): never ALL_DIVISIONS.
+  const divisions = divisionsOf('scval').map(({ id: division, label }) => ({
     division,
-    label: DIVISION_LABELS[division],
+    label,
     standings: {
       varsity: pick(standings, division, 'varsity')?.rows ?? [],
       jv: pick(standings, division, 'jv')?.rows ?? [],

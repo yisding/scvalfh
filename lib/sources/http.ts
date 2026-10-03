@@ -34,7 +34,7 @@ const UA_HOMEPAGE = (() => {
 })();
 
 export const POLITE_USER_AGENT =
-  'scvalfh/1.0 (SCVAL girls field hockey scoreboard; unofficial fan site; ' +
+  'scvalfh/1.0 (NorCal girls field hockey scoreboard; unofficial fan site; ' +
   `+${UA_HOMEPAGE}; contact: ${UA_CONTACT})`;
 
 /**

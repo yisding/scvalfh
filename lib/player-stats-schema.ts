@@ -6,8 +6,12 @@
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
  * is about to overwrite — the same split as lib/rosters-schema.ts / lib/rosters.ts.
  *
+ * Player stats are SCVAL-only, like the rosters they join to (SPEC §0.2 item 12, §4.2): slugs are
+ * checked against the registry's teams of HISTORY_LEAGUE, and the file holds exactly one entry per
+ * such team (teamsInLeague(HISTORY_LEAGUE).length, 15), never one per registry team.
+ *
  * Invariants:
- *   1. exactly 15 teams, unique slugs
+ *   1. exactly one team per SCVAL registry team, unique slugs
  *   2. a stat the team does not track is null for every player; a tracked one is a number or null
  *      (null only when the player is missing from the table that carries it)
  *   3. a team's status says what its players[] are: read this run, published nothing, carried
@@ -16,6 +20,14 @@
  */
 
 import { z } from 'zod';
+
+import { HISTORY_LEAGUE } from './leagues';
+import { teamsInLeague } from './teams';
+
+/** Player stats are SCVAL-only (SPEC §0.2 #12): one per registry team of HISTORY_LEAGUE. */
+const STATS_SLUGS: ReadonlySet<string> = new Set(teamsInLeague(HISTORY_LEAGUE).map((t) => t.slug));
+/** How many teams a player-stats file holds: teamsInLeague(HISTORY_LEAGUE).length. */
+export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;
 
 /** What a field player's line can hold, in display order. */
 export const FIELD_STAT_KEYS = [
@@ -49,12 +61,10 @@ export type GoalieStatKey = (typeof GOALIE_STAT_KEYS)[number];
 export type FieldStats = Record<FieldStatKey, number | null>;
 export type GoalieStats = Record<GoalieStatKey, number | null>;
 
-const teamSlug = z.enum([
-  'cupertino', 'fremont', 'homestead', 'los-altos', 'saint-francis',
-  'st-ignatius', 'valley-christian',
-  'los-gatos', 'lynbrook', 'mitty', 'monta-vista',
-  'palo-alto', 'presentation', 'santa-clara', 'saratoga',
-]);
+const teamSlug = z
+  .string()
+  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+  .refine((slug) => STATS_SLUGS.has(slug), `not a registry slug of league ${HISTORY_LEAGUE}`);
 
 /** Same scheme check as lib/rosters-schema.ts: these end up in an href. */
 const httpUrl = z
@@ -159,10 +169,13 @@ export const PlayerStatsFileSchema = z
       builtBy: z.string().min(1),
       notes: z.array(z.string()),
     }),
-    teams: z.array(TeamPlayerStatsSchema).length(15),
+    teams: z.array(TeamPlayerStatsSchema).length(PLAYER_STATS_TEAM_COUNT),
     counts: PlayerStatsCountsSchema,
   })
-  .refine((f) => new Set(f.teams.map((t) => t.slug)).size === 15, 'team slugs are not unique')
+  .refine(
+    (f) => new Set(f.teams.map((t) => t.slug)).size === PLAYER_STATS_TEAM_COUNT,
+    'team slugs are not unique',
+  )
   .refine((f) => {
     const c = countPlayerStats(f.teams);
     return (Object.keys(c) as Array<keyof typeof c>).every((k) => c[k] === f.counts[k]);

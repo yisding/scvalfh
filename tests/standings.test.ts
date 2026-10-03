@@ -1,21 +1,29 @@
 import { describe, expect, it } from 'vitest';
 
+import { classifyGames } from '../lib/classify';
+import { ALL_DIVISIONS, divisionsOf } from '../lib/leagues';
 import { normalizeGames } from '../lib/normalize';
 import {
   computeStandings,
-  crossoverPairings,
   divisionGames,
+  leaguePairings,
   outcomesFor,
   playoffOutcomeLabel,
   playoffOutcomes,
-  playoffStatus,
+  playoffStatusFor,
 } from '../lib/standings';
-import { TEAMS, resolveTeam } from '../lib/teams';
+import { TEAMS, resolveTeam, teamsInLeague } from '../lib/teams';
 import type { Game, Standing } from '../lib/types';
-import { allScheduleRows, game } from './helpers';
+import { game } from './game-builder';
+import { allScheduleRows } from './helpers';
 
-const live = normalizeGames(allScheduleRows(), { fetchedAt: '2026-09-29T15:00:00.000Z' }).games;
+/** The SCVAL corpus (15 schedules, 2026-09-29), classified exactly as the pipeline does. */
+const live = classifyGames(
+  normalizeGames(allScheduleRows(), { fetchedAt: '2026-09-29T15:00:00.000Z' }).games,
+);
 const liveStandings = computeStandings(live);
+const SCVAL_DIVISIONS = new Set(divisionsOf('scval').map((d) => d.id));
+const scvalStandings = liveStandings.filter((s) => SCVAL_DIVISIONS.has(s.division));
 
 function row(rows: Standing[], slug: string): Standing {
   const found = rows.find((r) => r.slug === slug);
@@ -23,7 +31,7 @@ function row(rows: Standing[], slug: string): Standing {
   return found;
 }
 
-function order(rows: Standing[], division: 'de-anza' | 'el-camino'): string[] {
+function order(rows: Standing[], division: string): string[] {
   return rows
     .filter((r) => r.division === division)
     .sort((a, b) => a.computed.place - b.computed.place || a.slug.localeCompare(b.slug))
@@ -31,15 +39,20 @@ function order(rows: Standing[], division: 'de-anza' | 'el-camino'): string[] {
 }
 
 describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie)', () => {
-  it('includes every one of the 15 registry teams', () => {
-    expect(liveStandings.length).toBe(15);
+  it('includes every registry team once, and all 15 SCVAL teams', () => {
+    expect(liveStandings.length).toBe(TEAMS.length);
     for (const team of TEAMS) {
-      expect(liveStandings.some((s) => s.teamId === team.id), team.slug).toBe(true);
+      expect(liveStandings.filter((s) => s.teamId === team.id), team.slug).toHaveLength(1);
+    }
+    expect(scvalStandings).toHaveLength(teamsInLeague('scval').length);
+    expect(scvalStandings).toHaveLength(15);
+    for (const d of ALL_DIVISIONS) {
+      expect(liveStandings.filter((s) => s.division === d.id), d.id).toHaveLength(d.expectedTeams);
     }
   });
 
   it('awards 3 points per win and 1 per tie', () => {
-    for (const s of liveStandings) {
+    for (const s of scvalStandings) {
       expect(s.computed.pts).toBe(3 * s.computed.w + s.computed.t);
     }
     const mitty = row(liveStandings, 'mitty');
@@ -55,6 +68,7 @@ describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie
     for (const g of counted) {
       expect(g.isLeague).toBe(true);
       expect(g.leagueDivision).toBe('de-anza');
+      expect(g.countsFor).toBe('de-anza');
       expect(g.status).toBe('final');
     }
     const losAltos = row(liveStandings, 'los-altos');
@@ -256,38 +270,45 @@ describe('standings: Article VI tiebreakers, one scenario per step', () => {
 
 describe('standings: Article VII projections', () => {
   it('maps place to a qualification status', () => {
-    expect(playoffStatus(1)).toBe('aq');
-    expect(playoffStatus(3)).toBe('aq');
-    expect(playoffStatus(4)).toBe('play-in');
-    expect(playoffStatus(5)).toBe('at-large');
-    expect(playoffStatus(6)).toBe('out');
-    expect(playoffStatus(8)).toBe('out');
+    for (const division of ['de-anza', 'el-camino']) {
+      expect(playoffStatusFor(division, 1)).toBe('aq');
+      expect(playoffStatusFor(division, 3)).toBe('aq');
+      expect(playoffStatusFor(division, 4)).toBe('play-in');
+      expect(playoffStatusFor(division, 5)).toBe('at-large');
+      expect(playoffStatusFor(division, 6)).toBe('out');
+      expect(playoffStatusFor(division, 8)).toBe('out');
+    }
   });
 
   it('attaches the status to every standings row', () => {
     for (const s of liveStandings) {
-      expect(s.playoffStatus).toBe(playoffStatus(s.computed.place));
+      expect(s.playoffStatus).toBe(playoffStatusFor(s.division, s.computed.place));
     }
   });
 
   it('pairs the crossover by seed and marks the #4 play-in', () => {
-    const pairings = crossoverPairings(liveStandings);
-    expect(pairings.map((p) => p.seed)).toEqual([1, 2, 3, 4]);
+    const pairings = leaguePairings(liveStandings, live, 'scval');
+    expect(pairings.map((p) => p.id)).toEqual([
+      'scval-crossover-1', 'scval-crossover-2', 'scval-crossover-3', 'scval-crossover-4',
+    ]);
     expect(pairings.filter((p) => p.isPlayIn).length).toBe(1);
     expect(pairings[3].isPlayIn).toBe(true);
-    expect(pairings[0].deAnza).toHaveLength(1);
-    expect(pairings[0].elCamino).toHaveLength(1);
+    expect(pairings[0].seats[0]).toHaveLength(1);
+    expect(pairings[0].seats[1]).toHaveLength(1);
+    expect(pairings[0].seatLabels).toEqual(['De Anza #1', 'El Camino #1']);
+    expect(pairings[0].date).toBe('2026-10-30');
+    expect(pairings[0].game).toBeNull();
     expect(pairings[3].label).toMatch(/7th automatic qualifier/);
   });
 
   it('spreads a level place across every slot it occupies', () => {
-    expect(playoffOutcomes(1)).toEqual(['aq']);
-    expect(playoffOutcomes(3, 2)).toEqual(['aq', 'play-in']);
-    expect(playoffOutcomes(4, 2)).toEqual(['play-in', 'at-large']);
-    expect(playoffOutcomes(5, 2)).toEqual(['at-large', 'out']);
-    expect(playoffOutcomes(2, 3)).toEqual(['aq', 'play-in']);
-    expect(playoffOutcomeLabel(['aq'])).toBe('Automatic qualifier');
-    expect(playoffOutcomeLabel(['aq', 'play-in'])).toMatch(
+    expect(playoffOutcomes('de-anza', 1)).toEqual(['aq']);
+    expect(playoffOutcomes('de-anza', 3, 2)).toEqual(['aq', 'play-in']);
+    expect(playoffOutcomes('de-anza', 4, 2)).toEqual(['play-in', 'at-large']);
+    expect(playoffOutcomes('de-anza', 5, 2)).toEqual(['at-large', 'out']);
+    expect(playoffOutcomes('de-anza', 2, 3)).toEqual(['aq', 'play-in']);
+    expect(playoffOutcomeLabel('de-anza', ['aq'])).toBe('Automatic qualifier');
+    expect(playoffOutcomeLabel('de-anza', ['aq', 'play-in'])).toMatch(
       /^Automatic qualifier or the Oct 30 play-in — Article VI §7/,
     );
   });
@@ -322,8 +343,8 @@ describe('standings: Article VII projections', () => {
     expect(outcomesFor(fremont)).toEqual(['aq', 'play-in']);
     expect(outcomesFor(cupertino)).toEqual(['aq', 'play-in']);
 
-    const playIn = crossoverPairings(rows).find((p) => p.isPlayIn)!;
-    expect(playIn.deAnza.map((seat) => seat.slug).sort()).toEqual(['cupertino', 'fremont']);
+    const playIn = leaguePairings(rows, games, 'scval').find((p) => p.isPlayIn)!;
+    expect(playIn.seats[0].map((seat) => seat.slug).sort()).toEqual(['cupertino', 'fremont']);
   });
 
   it('keeps the at-large slot alive when a tie straddles the 4th/5th boundary', () => {

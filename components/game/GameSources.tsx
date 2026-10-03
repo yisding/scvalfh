@@ -4,20 +4,68 @@ import SectionHeader from '../ui/SectionHeader';
 import type { GameModel } from './game-model';
 
 /**
- * The two source blocks of a game page.
+ * The source blocks of a game page.
+ *
+ * `GameSourceLine` is owner decision D2's transparency rule on one contest: when the published score
+ * is High School on SI's (si.com) — MaxPreps had no contest for an official fixture, had the
+ * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note:
+ * `Score via High School on SI (si.com): <rule note>.` Both sources are linked, but a link that is
+ * already one of the final's result pills directly above (`GameModel.resultLinks`, where si.com's
+ * game page is the accent pill) is not repeated here.
  *
  * `SourceDisagreement` is the site's credibility mechanism applied to one contest (DESIGN §9,
- * SPEC §5.7): when MaxPreps and SBLive publish different numbers we show MaxPreps', say so on the
- * page, and link both sources so a reader can check. It sits directly under the scoreboard, because
- * a disagreement buried in a footer is a disagreement hidden.
+ * SPEC §5.7): when MaxPreps and si.com publish different numbers we show which one we publish and
+ * why, say so on the page, and link both sources so a reader can check. It sits directly under the
+ * scoreboard, because a disagreement buried in a footer is a disagreement hidden.
  *
  * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
  * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
- * The links for THIS contest are not repeated here (F-71c): a final's box score and stream sit
- * under the recap, and every other per-game link is in DETAILS. Each link has one home, except this
- * file's own pair: a disagreement cites both sources even when the box score is also linked under
- * the recap.
+ * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
+ * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
+ * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
+ * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
+ * when that page is also a result pill under the recap.
  */
+
+export interface GameSourceLineProps {
+  model: GameModel;
+  className?: string;
+}
+
+export function GameSourceLine({ model, className }: GameSourceLineProps) {
+  const { source } = model;
+  if (!source) return null;
+  // Each link has one home (F-71c): a source page that is already a result pill stays there.
+  const pills = new Set(model.resultLinks.map((link) => link.href));
+  const sbliveUrl = source.sbliveUrl && !pills.has(source.sbliveUrl) ? source.sbliveUrl : null;
+  const maxprepsUrl =
+    source.maxprepsUrl && !pills.has(source.maxprepsUrl) ? source.maxprepsUrl : null;
+  return (
+    <aside
+      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      aria-label="Where this score comes from"
+    >
+      <p className="m-0">
+        <span aria-hidden="true">&dagger; </span>
+        {source.text}
+      </p>
+      {sbliveUrl || maxprepsUrl ? (
+        <p className="m-0 flex flex-wrap gap-x-4">
+          {sbliveUrl ? (
+            <ExternalLink href={sbliveUrl} className="sx-action no-underline">
+              si.com&rsquo;s page
+            </ExternalLink>
+          ) : null}
+          {maxprepsUrl ? (
+            <ExternalLink href={maxprepsUrl} className="sx-action no-underline">
+              MaxPreps&rsquo; page
+            </ExternalLink>
+          ) : null}
+        </p>
+      ) : null}
+    </aside>
+  );
+}
 
 export interface SourceDisagreementProps {
   model: GameModel;
@@ -34,14 +82,14 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
     >
       <p className="m-0">
         <span aria-hidden="true">&#9873; </span>
-        {/* The sentence is written by lib/crosscheck.ts and carries both numbers already. */}
+        {/* The sentence is written by the pipeline and carries both numbers already. */}
         {conflict.note}
       </p>
       {conflict.sbliveUrl || conflict.maxprepsUrl ? (
         <p className="m-0 flex flex-wrap gap-x-4">
           {conflict.sbliveUrl ? (
             <ExternalLink href={conflict.sbliveUrl} className="sx-action no-underline">
-              SBLive&rsquo;s page
+              si.com&rsquo;s page
             </ExternalLink>
           ) : null}
           {conflict.maxprepsUrl ? (
@@ -49,6 +97,34 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
               MaxPreps&rsquo; page
             </ExternalLink>
           ) : null}
+        </p>
+      ) : null}
+    </aside>
+  );
+}
+
+/**
+ * MaxPreps' own result flags contradict the score it published (a 0-0 game flagged W/L, most
+ * likely a shootout), and no si.com score replaced it: say so under the scoreboard, and what the
+ * site counts, so "Tie" here never silently disagrees with MaxPreps or the recap.
+ */
+export function ResultFlagConflict({ model, className }: SourceDisagreementProps) {
+  if (!model.resultConflictNote) return null;
+  const url = model.game.urls.maxpreps;
+  return (
+    <aside
+      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      aria-label="MaxPreps’ result flags disagree with the score"
+    >
+      <p className="m-0">
+        <span aria-hidden="true">&#9873; </span>
+        {model.resultConflictNote}
+      </p>
+      {url ? (
+        <p className="m-0">
+          <ExternalLink href={url} className="sx-action no-underline">
+            MaxPreps&rsquo; page
+          </ExternalLink>
         </p>
       ) : null}
     </aside>
@@ -110,7 +186,7 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
                       href={side.sbliveUrl}
                       className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
                     >
-                      <span className="sr-only">{side.name} on </span>SBLive/SI
+                      <span className="sr-only">{side.name} on </span>si.com
                     </ExternalLink>
                   ) : null}
                 </span>
@@ -127,8 +203,10 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
               : 'm-0 max-w-prose text-meta text-ink-3'
           }
         >
-          Scores come from MaxPreps and are cross-checked against SBLive/SI. When the two disagree
-          we publish MaxPreps&rsquo; number and show the disagreement rather than choosing quietly.
+          Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When
+          MaxPreps has no result for an official league game, or its row is clearly wrong, we publish
+          si.com&rsquo;s score and mark it; when both have a score and disagree, we publish
+          MaxPreps&rsquo; and show the disagreement rather than choosing quietly.
         </p>
       ) : null}
     </section>

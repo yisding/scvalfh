@@ -19,7 +19,7 @@ import {
   parseStandingsPdfText,
   SCVAL_HISTORY_PDFS,
 } from '../lib/sources/scval-pdf';
-import { getTeamBySlug } from '../lib/teams';
+import { getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { REPO } from './helpers';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
@@ -98,10 +98,10 @@ describe('history: the standings PDF', () => {
     expect(blocks.flatMap((b) => b.rows).every((r) => r.overallRecord === null)).toBe(true);
   });
 
-  it('resolves every PDF spelling to a registry slug', () => {
+  it('resolves every PDF spelling to a registry slug of SCVAL', () => {
     for (const row of blocks.flatMap((b) => b.rows)) {
       expect(row.slug, `unresolved: ${row.name}`).not.toBeNull();
-      expect(getTeamBySlug(row.slug as string)).toBeDefined();
+      expect(getTeamBySlug(row.slug as string)?.league).toBe('scval');
     }
   });
 
@@ -253,6 +253,34 @@ describe('history: the committed JSON file', () => {
   it('is key-sorted, so a rebuild produces no spurious diff', () => {
     const keys = Object.keys(history);
     expect(keys).toEqual([...keys].sort());
+  });
+});
+
+describe('history: SCVAL-scoped (SPEC §0.2 #12, §4.2)', () => {
+  it('names only the 15 SCVAL registry teams and the two SCVAL divisions', () => {
+    const scval = teamsInLeague('scval');
+    expect(scval).toHaveLength(15);
+    const slugs = new Set(scval.map((t) => t.slug));
+    const rows = history.divisions.flatMap((d) => [...d.standings.varsity, ...d.standings.jv]);
+    for (const r of rows) if (r.slug !== null) expect(slugs.has(r.slug), r.slug).toBe(true);
+    // Every SCVAL team that played varsity in 2025-26 appears exactly once in a varsity table.
+    const varsity = history.divisions.flatMap((d) => d.standings.varsity.map((r) => r.slug));
+    expect(new Set(varsity).size).toBe(varsity.length);
+    expect(varsity.length).toBe(scval.length);
+  });
+
+  it('refuses a slug or a division from another league', async () => {
+    const { HistorySchema } = await import('../lib/history');
+    expect(HistorySchema.safeParse(history).success).toBe(true);
+    const foreign = structuredClone(history);
+    foreign.divisions[0].standings.varsity[0].slug = 'leigh';
+    expect(HistorySchema.safeParse(foreign).success).toBe(false);
+    const badDivision = structuredClone(history);
+    (badDivision.divisions[0] as { division: string }).division = 'mt-hamilton';
+    expect(HistorySchema.safeParse(badDivision).success).toBe(false);
+    const oneDivision = structuredClone(history);
+    oneDivision.divisions.pop();
+    expect(HistorySchema.safeParse(oneDivision).success).toBe(false);
   });
 });
 

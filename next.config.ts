@@ -1,7 +1,11 @@
 import type { NextConfig } from 'next';
 
 /**
- * The site is ten static route families built from one JSON snapshot, so there is nothing to
+ * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
+ * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
+ * `/teams/[slug]`, `/playoffs`, `/playoffs/[league]`, `/history/2025-26`, `/about`, plus the OG
+ * images beside them and the metadata routes (icons, manifest, sitemap, robots) — every one
+ * prerendered (`dynamicParams = false` on each dynamic segment, SPEC §8.1), so there is nothing to
  * configure for data. Notably absent, on purpose:
  *
  *  - `cacheComponents` stays OFF. Every page is prerendered from the snapshot at build time, so
@@ -16,15 +20,20 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /**
-   * The in-memory cache that `vinext start` seeds with every prerendered page at startup (vinext
-   * reads this key from next.config too; `next start` serves the same pages from disk). The default
-   * is 50 MB, and the prerendered HTML + RSC of all 230 pages is just over that: the handler then
-   * evicts the earliest-seeded routes (/about, /schedule, every /game page, …) while seeding, and
-   * their first request renders on demand instead of serving the build, which
-   * scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`. 256 MB holds the whole season with
-   * room for the recaps and scores still to come; actual use is bounded by the content size.
+   * The in-memory cache that `vinext start` seeds with every prerendered route at startup (vinext
+   * reads this key from next.config too; `next start` serves the same pages from disk). When the
+   * prerender outgrows it, the handler evicts the earliest-seeded routes (/about, /schedule, every
+   * /game page, …) while seeding, and their first request renders on demand instead of serving the
+   * build, which scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`.
+   *
+   * Measured after `pnpm build:vinext` on 2026-10-02 (43 teams, 364 games, 57 game days; SPEC
+   * §12.3): dist/server/prerendered-routes holds 127,990,691 bytes — 481 .html (72,165,532), 480 .rsc
+   * (37,982,253) and 482 .route bodies (17,842,906; the OG images, icons, manifest, sitemap and
+   * robots, which vinext seeds into the same cache). The rule is at least 2 × that total
+   * (255,981,382 bytes); 384 MB (3.1 ×) also covers the rest of the season, whose game, date and
+   * recap pages are still to come. Actual use is bounded by the content size, not by this ceiling.
    */
-  cacheMaxMemorySize: 256 * 1024 * 1024,
+  cacheMaxMemorySize: 384 * 1024 * 1024,
 
   /**
    * DESIGN §13: HTML is `s-maxage=300, stale-while-revalidate=86400`.

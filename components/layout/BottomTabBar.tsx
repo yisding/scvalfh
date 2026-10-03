@@ -1,13 +1,22 @@
 import { getGameDates, getLatestResultsDate, getToday } from '../../lib/data';
+import { LEAGUE_IDS } from '../../lib/leagues';
+import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
+import { navLeagueHrefs } from './TopNav';
 
 /**
  * The phone bottom bar (DESIGN §1.3, §3.1, R-3). FIVE tabs, because "find my school" was a
  * top-three task with no phone nav entry. The bar is 56px tall plus the safe-area inset; each tab
  * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
- * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤6 characters at
- * 12px, so they do not truncate at any supported width.
+ * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
+ * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
+ * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
+ * fails any label over 56px, so none truncates at any supported width.
+ *
+ * After hydration Scores, Table and Playoffs follow the page's league, else the remembered one
+ * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
+ * static HTML keeps the index hrefs.
  *
  * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current`, accent ink, a
  * wash capsule behind its glyph AND a heavier label — never color alone. `aria-current` is "page"
@@ -15,8 +24,9 @@ import NavLink from './NavLink';
  * under Scores, which used to leave the bar with nothing lit), see NavLink.tsx.
  *
  * Scores opens on the latest results, not on the top of a season-long list: its href carries the
- * date as a fragment (see scoresHref below). The desktop TopNav's Schedule link stays plain
- * `/schedule`, a page that also has the timeline rail to jump with.
+ * date as a fragment (see scoresHrefs below), and so does each of its league targets
+ * (`/schedule/<id>#<date>`, that league's own latest results). The desktop TopNav's Schedule link
+ * stays plain `/schedule`, a page that also has the timeline rail to jump with.
  */
 const ICON_PROPS = {
   width: 20,
@@ -30,21 +40,33 @@ const ICON_PROPS = {
 };
 
 /**
- * `/schedule#<date>` for the Scores tab. The date is the latest day at or before "today" (the
- * snapshot's Pacific day, never the clock) with at least one final; before the first result it is
- * the next day with a contest; with no contests at all it is plain `/schedule`. Each date group on
- * /schedule carries its date key as its `id` (components/schedule/ScheduleList.tsx).
- *
- * Computed at build time like every other page fact, so it costs no client JavaScript. NavLink
- * compares only the path part, so the tab is still current on /schedule itself.
+ * The Scores tab's landing date, across every league or within one: the latest day at or before
+ * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
+ * result it is the next day with a contest; with no contests at all, none. Each day on the
+ * /schedule index's "Every game day" list (components/schedule/ScheduleIndex.tsx) and each date
+ * group on /schedule/<id> (components/schedule/ScheduleList.tsx) carries its date key as its `id`.
  */
-function scoresHref(): string {
+function scoresDate(league?: LeagueId): string | null {
   const today = getToday();
-  const date = getLatestResultsDate() ?? getGameDates().find((d) => d >= today) ?? null;
-  return date ? `/schedule#${date}` : '/schedule';
+  const filter = league ? { league } : {};
+  return getLatestResultsDate(undefined, filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
 }
 
-const TABS = [
+const withDate = (path: string, date: string | null) => (date ? `${path}#${date}` : path);
+
+/**
+ * `/schedule#<date>` for the Scores tab, plus its per-league targets `/schedule/<id>#<date>`.
+ * Computed at build time like every other page fact, so it costs no client JavaScript. NavLink
+ * compares only the path part, so the tab is still current on /schedule and /schedule/<id>.
+ */
+function scoresHrefs(): { href: string; leagueHrefs: Readonly<Record<LeagueId, string>> } {
+  return {
+    href: withDate('/schedule', scoresDate()),
+    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(`/schedule/${id}`, scoresDate(id))])),
+  };
+}
+
+export const TABS = [
   {
     href: '/',
     label: 'Home',
@@ -58,7 +80,7 @@ const TABS = [
   {
     href: '/schedule',
     label: 'Scores',
-    // Replaced per build by scoresHref() in BottomTabBar below.
+    // Replaced per build by scoresHrefs() in BottomTabBar below.
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
         <rect x="3" y="4" width="14" height="13" rx="1.5" />
@@ -90,7 +112,7 @@ const TABS = [
   },
   {
     href: '/playoffs',
-    label: 'CCS',
+    label: 'Playoffs',
     glyph: (
       <svg {...ICON_PROPS} aria-hidden="true">
         {/* A trophy: cup, two handles, and a stem that reaches its base. A cup over a detached
@@ -101,8 +123,14 @@ const TABS = [
   },
 ];
 
-export function BottomTabBar() {
-  const scores = scoresHref();
+export function BottomTabBar({
+  slugLeague,
+}: {
+  /** `{ slug: league }` for every team (the same map the prefs script embeds). */
+  slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
+}) {
+  const hrefs = navLeagueHrefs();
+  const scores = scoresHrefs();
   return (
     <nav
       aria-label="Sections"
@@ -113,10 +141,12 @@ export function BottomTabBar() {
         {TABS.map((tab) => (
           <li key={tab.href} className="min-w-0 flex-1">
             <NavLink
-              href={tab.href === '/schedule' ? scores : tab.href}
+              href={tab.href === '/schedule' ? scores.href : tab.href}
               variant="tab"
               label={tab.label}
               glyph={tab.glyph}
+              leagueHrefs={tab.href === '/schedule' ? scores.leagueHrefs : hrefs[tab.href]}
+              slugLeague={hrefs[tab.href] ? slugLeague : undefined}
             />
           </li>
         ))}

@@ -15,9 +15,9 @@ import { EM_DASH } from '../../lib/format';
  *   the card is compact (12px padding, a 24px value, a 12px sub, no 96px floor) so the six tiles
  *   take three short rows.
  *
- * `inList` (the team page's six tiles): the tiles are a `<dl>`, one name/value group per tile, so
- * a screen reader announces "list, 6 items" and pairs each label with its number instead of
- * reading 18 loose lines. The card's wrapper div becomes the `<dl>`'s group div, with `<dt>` (the
+ * `inList` (the team page's eight tiles): the tiles are a `<dl>`, one name/value group per tile,
+ * so a screen reader announces "list, 8 items" and pairs each label with its number instead of
+ * reading 24 loose lines. The card's wrapper div becomes the `<dl>`'s group div, with `<dt>` (the
  * label) and `<dd>` (the value, then the sub) as its DIRECT children, which is the only shape a
  * `<dl>` group may take (axe `dlitem` / `definition-list`). Only a card without an `href` can do
  * that: a linked tile's children sit inside the `<Link>`, and the label must come first, which the

@@ -13,18 +13,38 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { matchOfficialFixtures } from '../lib/official/match';
 import {
-  SCVAL_SCHEDULE_PDFS,
-  applyOfficialFixtures,
   carryOfficialForward,
   diffMembership,
   findStandingsPdfLink,
   listFieldHockeyLinks,
   parseSchedulePdfText,
+  scvalPdfDivisions,
+  scvalScheduleUrl,
 } from '../lib/sources/scval-pdf';
 import { teamsInDivision } from '../lib/teams';
-import type { OfficialFixture } from '../lib/types';
+import type { Game, OfficialFixture, OfficialStamp } from '../lib/types';
 import { REPO, game } from './helpers';
+
+/** The SCVAL matcher (moved from scval-pdf.ts to lib/official/match.ts as the 'legacy' matcher). */
+const applyOfficialFixtures = (games: readonly Game[], fixtures: readonly OfficialFixture[]) =>
+  matchOfficialFixtures(games, fixtures, { matcher: 'legacy', isExcluded: () => false, rescheduleWindowDays: 14 });
+
+/** The widened stamp the legacy matcher writes for a De Anza / El Camino fixture. */
+const stamp = (
+  division: string,
+  scheduledDate: string,
+  away: string,
+  home: string,
+  pass: OfficialStamp['pass'] = 'same-date',
+): OfficialStamp => ({
+  scheduledDate,
+  division,
+  source: 'scval-pdf',
+  fixtureId: `${division}:${scheduledDate}:${away}@${home}`,
+  pass,
+});
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
 const daText = readFileSync(path.join(FIX, 'da-pdftotext.txt'), 'utf8');
@@ -36,8 +56,12 @@ const ec = parseSchedulePdfText(ecText, 'el-camino');
 
 describe('scval-pdf: urls', () => {
   it('uses https, because http 302s', () => {
-    expect(SCVAL_SCHEDULE_PDFS['de-anza']).toMatch(/^https:\/\/scval\.com\//);
-    expect(SCVAL_SCHEDULE_PDFS['el-camino']).toMatch(/^https:\/\/scval\.com\//);
+    expect(scvalScheduleUrl('de-anza')).toMatch(/^https:\/\/scval\.com\//);
+    expect(scvalScheduleUrl('el-camino')).toMatch(/^https:\/\/scval\.com\//);
+  });
+
+  it('parses only the live-PDF (SCVAL) divisions', () => {
+    expect(scvalPdfDivisions()).toEqual(['de-anza', 'el-camino']);
   });
 });
 
@@ -172,8 +196,11 @@ describe('scval-pdf: membership diff', () => {
 
 describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
   const fixture = (dateKey: string, away: string, home: string): OfficialFixture => ({
+    id: `de-anza:${dateKey}:${away}@${home}`,
+    league: 'scval',
     division: 'de-anza',
     dateKey,
+    time: null,
     awayName: away.toUpperCase(),
     homeName: home.toUpperCase(),
     awaySlug: away as OfficialFixture['awaySlug'],
@@ -186,7 +213,7 @@ describe('scval-pdf: matching fixtures to MaxPreps contests', () => {
     const res = applyOfficialFixtures([g], [fixture('2026-09-09', 'homestead', 'valley-christian')]);
     expect(res.matched).toBe(1);
     expect(res.unmatched).toHaveLength(0);
-    expect(res.games[0].official).toEqual({ scheduledDate: '2026-09-09', source: 'scval-pdf' });
+    expect(res.games[0].official).toEqual(stamp('de-anza', '2026-09-09', 'homestead', 'valley-christian'));
   });
 
   it('lists a fixture with no contest', () => {
@@ -354,8 +381,11 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
     away: string,
     home: string,
   ): OfficialFixture => ({
+    id: `${division}:${dateKey}:${away}@${home}`,
+    league: 'scval',
     division,
     dateKey,
+    time: null,
     awayName: away.toUpperCase(),
     homeName: home.toUpperCase(),
     awaySlug: away as OfficialFixture['awaySlug'],
@@ -367,11 +397,11 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
   const previousGames = [
     {
       ...game({ home: 'los-altos', away: 'cupertino', hs: 2, as: 1, date: '2026-09-23' }),
-      official: { scheduledDate: '2026-09-23', source: 'scval-pdf' as const },
+      official: stamp('de-anza', '2026-09-23', 'cupertino', 'los-altos'),
     },
     {
       ...game({ home: 'lynbrook', away: 'saratoga', hs: 0, as: 3, date: '2026-09-24' }),
-      official: { scheduledDate: '2026-09-24', source: 'scval-pdf' as const },
+      official: stamp('el-camino', '2026-09-24', 'saratoga', 'lynbrook'),
     },
   ];
   /** The SAME two contests (same contestIds) as a fresh run produces them: no `official`. */
@@ -391,7 +421,7 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
     expect(res.carried).toBe(1);
     const byDivision = new Map(res.games.map((g) => [g.leagueDivision, g.official]));
     // De Anza's unmatched fixtures and markers survive one failed PDF …
-    expect(byDivision.get('de-anza')).toEqual({ scheduledDate: '2026-09-23', source: 'scval-pdf' });
+    expect(byDivision.get('de-anza')).toEqual(stamp('de-anza', '2026-09-23', 'cupertino', 'los-altos'));
     // … and El Camino, which WAS read this run, keeps exactly what this run said about it.
     expect(byDivision.get('el-camino')).toBeUndefined();
   });
@@ -413,7 +443,7 @@ describe('scval-pdf: SPEC §5.3 per-division carry-forward', () => {
   it('never overwrites a marker this run produced', () => {
     const thisRun = freshGames().map((g) =>
       g.leagueDivision === 'de-anza'
-        ? { ...g, official: { scheduledDate: '2026-09-21', source: 'scval-pdf' as const } }
+        ? { ...g, official: stamp('de-anza', '2026-09-21', 'cupertino', 'los-altos') }
         : g,
     );
     const res = carryOfficialForward(['de-anza'], previous, thisRun);

@@ -1,0 +1,102 @@
+{
+ "game-6499423-carmel-vs-stevenson.html": {
+  "id": "6499423",
+  "date": "2026-09-29T16:00:00.000-07:00",
+  "statusId": 3,
+  "gameTypeLabel": "League",
+  "locationText": "Pebble Beach, CA",
+  "teams": [
+   {
+    "name": "Carmel",
+    "sbliveId": "458529",
+    "isHome": false,
+    "score": "0",
+    "result": "LOSS",
+    "overall": "3-4"
+   },
+   {
+    "name": "Stevenson",
+    "sbliveId": "456854",
+    "isHome": true,
+    "score": "9",
+    "result": "WIN",
+    "overall": "5-2-1"
+   }
+  ]
+ },
+ "game-6541425-greenfield-vs-santa-catalina.html": {
+  "id": "6541425",
+  "date": "2026-09-04T16:45:00.000-07:00",
+  "statusId": 3,
+  "gameTypeLabel": "League",
+  "locationText": "Monterey, CA",
+  "teams": [
+   {
+    "name": "Greenfield",
+    "sbliveId": "458776",
+    "isHome": false,
+    "score": "0",
+    "result": "LOSS",
+    "overall": "0-1"
+   },
+   {
+    "name": "Santa Catalina",
+    "sbliveId": "458109",
+    "isHome": true,
+    "score": "1",
+    "result": "WIN",
+    "overall": "1-0"
+   }
+  ]
+ },
+ "game-6543072-hollister-vs-greenfield.html": {
+  "id": "6543072",
+  "date": "2026-09-30T16:00:00.000-07:00",
+  "statusId": 3,
+  "gameTypeLabel": "Non League",
+  "locationText": "Greenfield, CA",
+  "teams": [
+   {
+    "name": "Hollister",
+    "sbliveId": "459010",
+    "isHome": false,
+    "score": "3",
+    "result": "WIN",
+    "overall": "5-3"
+   },
+   {
+    "name": "Greenfield",
+    "sbliveId": "458776",
+    "isHome": true,
+    "score": "1",
+    "result": "LOSS",
+    "overall": "0-5"
+   }
+  ]
+ },
+ "game-6641900-york-vs-salinas.html": {
+  "id": "6641900",
+  "date": "2026-09-30T16:00:00.000-07:00",
+  "statusId": 3,
+  "gameTypeLabel": "League",
+  "locationText": "Salinas, CA",
+  "teams": [
+   {
+    "name": "York",
+    "sbliveId": "456851",
+    "isHome": false,
+    "score": "1",
+    "result": "TIE",
+    "overall": "0-0-1"
+   },
+   {
+    "name": "Salinas",
+    "sbliveId": "459009",
+    "isHome": true,
+    "score": "1",
+    "result": "TIE",
+    "overall": "1-3-1"
+   }
+  ]
+ }
+}

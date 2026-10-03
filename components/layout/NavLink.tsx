@@ -3,11 +3,15 @@
 import Link, { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { useEffectiveLeague } from '../ui/use-league';
+import type { LeagueId, TeamSlug } from '../../lib/types';
+
 /**
  * The only reason any navigation on this site is a client component: `aria-current` and the
- * active ink need the current path (DESIGN §1.3, §3.1), and the pending wash needs the link's own
- * navigation status. ONE module serves both the desktop TopNav and the phone BottomTabBar, rather
- * than one per bar (see components/ui/PinControl.tsx for the app's full client-module list).
+ * active ink need the current path (DESIGN §1.3, §3.1), the league-aware target needs the
+ * remembered league, and the pending wash needs the link's own navigation status. ONE module
+ * serves both the desktop TopNav and the phone BottomTabBar, rather than one per bar (see
+ * components/ui/PinControl.tsx for the app's full client-module list).
  *
  * `prefetch={false}` on every nav link, deliberately. Every route on this site is STATIC, and
  * Next 16's default `auto` prefetches a static route in full — data included — the moment the link
@@ -30,6 +34,17 @@ import { usePathname } from 'next/navigation';
  * 01-app/03-api-reference/04-functions/use-link-status.md), which is why each variant's contents
  * are their own inner component. They return the capsule span as a DIRECT child of the `<a>`, which
  * `.sx-navtop:focus-visible > .sx-indicator` (globals.css) depends on.
+ *
+ * League-aware targets (SPEC §8.3). Scores, Table and Playoffs carry `leagueHrefs` (built by the
+ * server bars from the league config) and every link gets `slugLeague` (the same `{slug: league}`
+ * map the prefs script embeds). After hydration the link points at `leagueHrefs[L] ?? href`, where L
+ * is the PAGE's league when the path names one (`/standings|schedule|playoffs/<id>`, or
+ * `/teams/<slug>` through `slugLeague`), else the effective (remembered) league, else none. The
+ * server HTML is always the index `href`, so there is no hydration mismatch and the nav works
+ * with JS off; storage is never written here. The ACTIVE state is computed from the path part of
+ * the base `href` (and of the league targets), so `/standings/bval` lights Table, `/playoffs/mcal`
+ * lights Playoffs, and a `#hash` target (`/playoffs#bval`, `/schedule#<date>`) never breaks
+ * `aria-current`.
  */
 export interface NavLinkProps {
   /**
@@ -40,8 +55,14 @@ export interface NavLinkProps {
   /** 'tab' is the bottom-bar item (56px tall, an equal fifth of the bar); 'top' is the desktop nav link. */
   variant: 'tab' | 'top';
   label: string;
+  /** Visually hidden words after the label (History: ' (SCVAL 2025-26)'). */
+  srSuffix?: string;
   /** A 20px inline SVG glyph for the tab variant. */
   glyph?: React.ReactNode;
+  /** The link target per league, e.g. { bval: '/standings/bval', … }. Serializable. */
+  leagueHrefs?: Readonly<Partial<Record<LeagueId, string>>>;
+  /** `{ slug: league }` for every team, so `/teams/<slug>` has a page league. */
+  slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
 
 /**
@@ -58,12 +79,24 @@ const SECTION_PREFIXES: Readonly<Record<string, readonly string[]>> = {
  * /teams, a day or game page under /schedule), otherwise null. Both draw the capsule; the ARIA
  * value tells a screen reader which of the two it is ("current page" against "current item"), and
  * forced colours outline either (globals.css matches any `aria-current` but "false").
+ *
+ * A league page the link itself can point at (`/standings/bval` for Table, `/playoffs/mcal` for
+ * Playoffs) is `'page'`, not `'true'`: after hydration it IS the link's target.
  */
-type ActiveState = 'page' | 'true' | null;
+export type ActiveState = 'page' | 'true' | null;
 
-function activeState(pathname: string, href: string): ActiveState {
-  const path = href.split('#')[0];
+const pathOf = (href: string) => href.split('#')[0];
+
+export function activeState(
+  pathname: string,
+  href: string,
+  leagueHrefs?: Readonly<Partial<Record<string, string>>>,
+): ActiveState {
+  const path = pathOf(href);
   if (pathname === path) return 'page';
+  if (Object.values(leagueHrefs ?? {}).some((h) => h !== undefined && pathOf(h) === pathname)) {
+    return 'page';
+  }
   // Home is exact-match only: every path starts with "/".
   if (path === '/') return null;
   if (pathname.startsWith(`${path}/`)) return 'true';
@@ -71,8 +104,61 @@ function activeState(pathname: string, href: string): ActiveState {
   return null;
 }
 
+/** Prefix matching on the BASE href: '/standings' is active on '/standings' and '/standings/bval'. */
+export function isActive(
+  pathname: string,
+  href: string,
+  leagueHrefs?: Readonly<Partial<Record<string, string>>>,
+): boolean {
+  return activeState(pathname, href, leagueHrefs) !== null;
+}
+
+const hasOwn = (o: object, k: string) => Object.prototype.hasOwnProperty.call(o, k);
+
+/**
+ * The league a path is ABOUT, if any: `/standings/<id>`, `/schedule/<id>`, `/playoffs/<id>` for a
+ * known league id, or `/teams/<slug>` for a known slug. `known` is the set of league ids.
+ */
+export function pageLeagueOf(
+  pathname: string | null | undefined,
+  known: ReadonlySet<string>,
+  slugLeague?: Readonly<Record<string, string>>,
+): string | null {
+  if (!pathname) return null;
+  const m = /^\/(standings|schedule|playoffs|teams)\/([^/?#]+)\/?$/.exec(pathname);
+  if (!m) return null;
+  const [, family, param] = m;
+  if (family === 'teams') {
+    return slugLeague && hasOwn(slugLeague, param) ? slugLeague[param] : null;
+  }
+  return known.has(param) ? param : null;
+}
+
+/** The link target: `leagueHrefs[L] ?? href` with L = page league, else the effective league. */
+export function navTarget(args: {
+  href: string;
+  leagueHrefs?: Readonly<Partial<Record<string, string>>>;
+  slugLeague?: Readonly<Record<string, string>>;
+  pathname: string | null | undefined;
+  effectiveLeague: string | null;
+}): string {
+  const { href, leagueHrefs, slugLeague, pathname, effectiveLeague } = args;
+  if (!leagueHrefs) return href;
+  const known = new Set<string>([...Object.keys(leagueHrefs), ...Object.values(slugLeague ?? {})]);
+  const league = pageLeagueOf(pathname, known, slugLeague) ?? effectiveLeague;
+  return (league !== null && hasOwn(leagueHrefs, league) ? leagueHrefs[league] : undefined) ?? href;
+}
+
 /** The top-nav capsule. `lit` is the active OR pending look. */
-function TopFace({ label, active }: { label: string; active: boolean }) {
+function TopFace({
+  label,
+  suffix,
+  active,
+}: {
+  label: string;
+  suffix?: React.ReactNode;
+  active: boolean;
+}) {
   const { pending } = useLinkStatus();
   const lit = active || pending;
   // The 44px link box is the target; the 36px capsule inside it is the visible state. The lit
@@ -89,6 +175,7 @@ function TopFace({ label, active }: { label: string; active: boolean }) {
       }`}
     >
       {label}
+      {suffix}
     </span>
   );
 }
@@ -96,10 +183,12 @@ function TopFace({ label, active }: { label: string; active: boolean }) {
 /** The tab's glyph capsule and label. */
 function TabFace({
   label,
+  suffix,
   glyph,
   active,
 }: {
   label: string;
+  suffix?: React.ReactNode;
   glyph: React.ReactNode;
   active: boolean;
 }) {
@@ -129,14 +218,19 @@ function TabFace({
         }`}
       >
         {label}
+        {suffix}
       </span>
     </>
   );
 }
 
-export function NavLink({ href, variant, label, glyph }: NavLinkProps) {
+export function NavLink({ href, variant, label, srSuffix, glyph, leagueHrefs, slugLeague }: NavLinkProps) {
   const pathname = usePathname();
-  const state = activeState(pathname ?? '/', href);
+  const { league, ready } = useEffectiveLeague();
+  const state = activeState(pathname ?? '/', href, leagueHrefs);
+  // Before hydration (and in the static HTML) the target is the index href.
+  const target = ready ? navTarget({ href, leagueHrefs, slugLeague, pathname, effectiveLeague: league }) : href;
+  const suffix = srSuffix ? <span className="sr-only">{srSuffix}</span> : null;
 
   if (variant === 'top') {
     // `.sx-navtop` moves the focus ring from the link box onto the capsule (globals.css). The
@@ -144,12 +238,12 @@ export function NavLink({ href, variant, label, glyph }: NavLinkProps) {
     // inherits.
     return (
       <Link
-        href={href}
+        href={target}
         prefetch={false}
         aria-current={state ?? undefined}
         className="sx-navtop group inline-flex h-11 items-center text-ink-2 no-underline"
       >
-        <TopFace label={label} active={state !== null} />
+        <TopFace label={label} suffix={suffix} active={state !== null} />
       </Link>
     );
   }
@@ -157,15 +251,15 @@ export function NavLink({ href, variant, label, glyph }: NavLinkProps) {
   // The active tab's non-colour cues are `aria-current`, the capsule behind the glyph and the
   // heavier label; forced colours draw an outline on `.sx-indicator` (globals.css). The focus ring
   // is drawn 4px INSIDE the 56px cell with the card radius: outside it, the bar's edge and the
-  // screen's clipped the Home and CCS rings.
+  // screen's clipped the Home and Playoffs rings.
   return (
     <Link
-      href={href}
+      href={target}
       prefetch={false}
       aria-current={state ?? undefined}
       className="flex h-14 w-full flex-col items-center justify-center gap-1 text-ink-2 no-underline transition-colors duration-[var(--sx-dur-tap)] active:bg-surface-2 focus-visible:-outline-offset-4 focus-visible:rounded-card"
     >
-      <TabFace label={label} glyph={glyph} active={state !== null} />
+      <TabFace label={label} suffix={suffix} glyph={glyph} active={state !== null} />
     </Link>
   );
 }

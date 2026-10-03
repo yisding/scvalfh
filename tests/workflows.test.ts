@@ -8,11 +8,15 @@
  * ships untested). These read both files as text and hold them to each other.
  */
 
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { gameIdToParam } from '../lib/game-id';
+import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
 import { REPO } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
@@ -87,5 +91,152 @@ describe('the player stats step', () => {
 
   it('passes the manual --force through, as fetch-data does', () => {
     expect(step).toContain("inputs.force) && '--force'");
+  });
+});
+
+/** The body of one named step: from its `- name:` line to the next step (or the file's end). */
+function stepBody(text: string, name: string): string {
+  const start = text.indexOf(`- name: ${name}\n`);
+  if (start < 0) return '';
+  const rest = text.slice(start + 1);
+  const next = rest.search(/\n\s*- (name|uses): /);
+  return next < 0 ? rest : rest.slice(0, next);
+}
+
+describe('the teamViews budget gates ci, never the data cron', () => {
+  it('ci.yml sets CI_GATE on its Test step', () => {
+    const test = stepBody(read('ci.yml'), 'Test');
+    expect(test).toContain('run: pnpm test');
+    expect(test).toMatch(/env:\s*\n\s*CI_GATE: '1'/);
+  });
+
+  it('update-data.yml and deploy-cloudflare.yml never set CI_GATE', () => {
+    expect(stepBody(update, 'Test')).toContain('run: pnpm test');
+    for (const text of [update, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
+  });
+});
+
+describe('the manual fetch inputs', () => {
+  const fetch = stepBody(update, 'Fetch data');
+
+  it('passes accept_regression as --accept-regression, through env and validated', () => {
+    expect(update).toMatch(/^ {6}accept_regression:\n {8}description: /m);
+    expect(fetch).toContain("ACCEPT_REGRESSION: ${{ github.event_name == 'workflow_dispatch' && inputs.accept_regression || '' }}");
+    expect(fetch).toContain('[[ "$ACCEPT_REGRESSION" =~ ^[a-z0-9,-]+$ ]]');
+    expect(fetch).toContain('args+=(--accept-regression "$ACCEPT_REGRESSION")');
+    // Never interpolated into the script itself.
+    expect(fetch.slice(fetch.indexOf('run: |'))).not.toContain('inputs.');
+  });
+});
+
+describe('the Stage D gate runs the cloudflare job’s checks', () => {
+  const ci = read('ci.yml');
+  const gate = readFileSync(path.join(REPO, 'scripts', 'stage-gate-d.sh'), 'utf8');
+
+  it('requires the Build Output config and fails on an env file in the Worker output', () => {
+    for (const text of [ci, gate]) {
+      expect(text).toContain('node scripts/assert-vinext-prerender.mjs --cloudflare');
+      expect(text).toContain('pnpm exec tsx scripts/assert-budgets.ts --worker-only');
+      expect(text).toContain('test -f .cloudflare/output/v0/config.json');
+      expect(text).toContain(`find .cloudflare/output \\( -name '.dev.vars*' -o -name '.env*' \\) -print`);
+    }
+  });
+});
+
+/**
+ * scripts/assert-prerender.ts over a synthetic `.next/server/app` that holds exactly what the
+ * build prerenders for data/snapshot.json, plus whatever a case adds. `next start` caches the 404
+ * of an unknown param's opengraph-image there (a 0-byte `.body` + a `.meta` with status 404), so
+ * the assertion must still pass on a `.next` that has served the smoke script or a crawler.
+ */
+describe('assert:prerender on a .next that has served traffic', () => {
+  const SNAPSHOT = path.join(REPO, 'data', 'snapshot.json');
+  const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as {
+    games: Array<{ contestId: string; dateKey: string }>;
+    supersededGames?: Record<string, string>;
+    teams: Array<{ slug: string }>;
+  };
+  const OK_META = JSON.stringify({ status: 200, headers: { 'content-type': 'image/png' } });
+  const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
+
+  function tree(extra: Record<string, string>): string {
+    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-prerender-'));
+    const app = path.join(root, '.next', 'server', 'app');
+    const put = (rel: string, body = '') => {
+      mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
+      writeFileSync(path.join(app, rel), body);
+    };
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26']) {
+      put(`${p}.html`);
+    }
+    put('opengraph-image.body');
+    put('standings/opengraph-image.body');
+    const families: Record<string, string[]> = {
+      standings: [...LEAGUE_IDS],
+      schedule: [...LEAGUE_IDS],
+      playoffs: [...TOURNAMENT_LEAGUE_IDS],
+      game: [
+        ...snapshot.games.map((g) => gameIdToParam(g.contestId)),
+        ...Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam),
+      ],
+      scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
+      teams: snapshot.teams.map((t) => t.slug),
+    };
+    for (const [family, params] of Object.entries(families)) {
+      for (const p of params) {
+        put(`${family}/${p}.html`);
+        put(`${family}/${p}/opengraph-image.body`, 'png');
+        put(`${family}/${p}/opengraph-image.meta`, OK_META);
+      }
+    }
+    for (const [rel, body] of Object.entries(extra)) put(rel, body);
+    return root;
+  }
+
+  function run(root: string) {
+    const res = spawnSync(
+      path.join(REPO, 'node_modules', '.bin', 'tsx'),
+      [path.join(REPO, 'scripts', 'assert-prerender.ts')],
+      { cwd: root, encoding: 'utf8', env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } },
+    );
+    if (res.error) throw res.error;
+    return { status: res.status, output: `${res.stdout}${res.stderr}` };
+  }
+
+  const notFound = (rel: string) => ({ [`${rel}.body`]: '', [`${rel}.meta`]: NOT_FOUND_META });
+
+  it('passes on the build alone', () => {
+    const r = run(tree({}));
+    expect(r.output).toContain('assert-prerender: ok');
+    expect(r.status).toBe(0);
+  });
+
+  it('ignores the opengraph-image 404s next start cached for unknown params', () => {
+    const r = run(
+      tree({
+        ...notFound('standings/nope/opengraph-image'),
+        ...notFound('standings/__proto__/opengraph-image'),
+        ...notFound('schedule/nope/opengraph-image'),
+        ...notFound('playoffs/scval/opengraph-image'),
+        ...notFound('scores/2026-01-01/opengraph-image'),
+        ...notFound('teams/nope/opengraph-image'),
+        ...notFound('game/sblive:1/opengraph-image'),
+      }),
+    );
+    expect(r.output).toContain('ignoring 7 opengraph-image 404(s)');
+    expect(r.output).toContain('assert-prerender: ok');
+    expect(r.status).toBe(0);
+  });
+
+  it('still fails on a served card without its page, with or without a .meta', () => {
+    const extras: Array<Record<string, string>> = [
+      { 'standings/nope/opengraph-image.body': 'png', 'standings/nope/opengraph-image.meta': OK_META },
+      { 'standings/nope/opengraph-image.body': 'png' },
+    ];
+    for (const extra of extras) {
+      const r = run(tree(extra));
+      expect(r.output).toContain('FAIL standings/: opengraph-image without its page: standings/nope/opengraph-image');
+      expect(r.status).toBe(1);
+    }
   });
 });

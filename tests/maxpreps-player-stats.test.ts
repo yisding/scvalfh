@@ -21,9 +21,13 @@ import {
   playerStatsUrl,
   teamStatsPageUrl,
 } from '../lib/sources/maxpreps-player-stats';
+import { HISTORY_LEAGUE } from '../lib/leagues';
 import { SPORT_SEASON_ID } from '../lib/season';
-import { TEAMS } from '../lib/teams';
+import { teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';
+
+/** Player stats are SCVAL-only (SPEC §0.2 item 12): the 15 captures are the HISTORY_LEAGUE teams'. */
+const TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 const raw = (slug: string): unknown =>
   JSON.parse(readFileSync(path.join(FIXTURE_DIR, `stats-${slug}.json`), 'utf8')) as unknown;

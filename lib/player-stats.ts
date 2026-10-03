@@ -6,6 +6,9 @@
  * the reason lib/rosters.ts gives: a Worker has no project filesystem. Validated once at module
  * scope, so a bad file fails at import time rather than half-way through a render.
  * `SCVAL_PLAYER_STATS` swaps in another file through node:fs (Node only; never set it on a Worker).
+ *
+ * SCVAL-only (SPEC §0.2 item 12): the file holds the HISTORY_LEAGUE teams, so getTeamPlayerStats
+ * returns undefined for a BVAL, PCAL or MCAL slug, and the team page shows no stats section.
  */
 
 import { readFileSync } from 'node:fs';

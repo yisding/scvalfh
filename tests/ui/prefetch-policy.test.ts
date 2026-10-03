@@ -154,27 +154,37 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
   });
 
   it('keeps the prop on the call sites a measurement named, by href', () => {
-    const WANT: [string, string][] = [
+    // A string matches as a substring of the tag; a RegExp with `.test()`. The two game links take
+    // either form because their owners switch them to `gameHref` only in Stage C (SPEC §10.2), and
+    // this test has to pass before that; tests/legacy-imports.test.ts then bans the raw
+    // `/game/${…}` template in app/ and components/, so the old form cannot come back.
+    const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
+    const WANT: [string, string | RegExp][] = [
       ['components/ui/StandingsTable.tsx', 'href={href}'],
       ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
       ['components/playoffs/PlayoffProjection.tsx', '/teams/${row.team.slug}'],
-      ['components/playoffs/PlayoffBracket.tsx', '/game/${game.contestId}'],
+      ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/teams/TeamTile.tsx', '/teams/${team.slug}'],
       ['components/teams/TeamUnbeaten.tsx', '/teams/${opponent.slug}'],
       ['components/about/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
       ['components/about/AwardsBlock.tsx', '/teams/${team.slug}'],
       ['components/about/CrossCheckTable.tsx', '/teams/${team.slug}'],
-      ['components/game/SeasonSeries.tsx', '/game/${game.contestId}'],
+      ['components/game/SeasonSeries.tsx', GAME_LINK],
       ['components/schedule/DateHeader.tsx', 'href={shareHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
       ['components/ui/StatTile.tsx', 'href={href}'],
+      // The team finder's "Divisions and leagues" results and the link-mode league chips are
+      // per-row links rendered by a helper inside a .map().
+      ['components/search/TeamFinder.tsx', 'href={group.href}'],
+      ['components/layout/LeagueSwitcher.tsx', 'href={href}'],
     ];
     for (const [rel, href] of WANT) {
       const src = readFileSync(path.join(ROOT, rel), 'utf8');
-      const tags = linkTags(src, blanked(src)).filter((t) => t.text.includes(href));
-      expect(tags.length, `${rel} ${href}`).toBeGreaterThan(0);
+      const matches = (text: string) => (typeof href === 'string' ? text.includes(href) : href.test(text));
+      const tags = linkTags(src, blanked(src)).filter((t) => matches(t.text));
+      expect(tags.length, `${rel} ${String(href)}`).toBeGreaterThan(0);
       for (const tag of tags) {
-        expect(/prefetch=\{false\}/.test(tag.text), `${rel}:${tag.line} ${href}`).toBe(true);
+        expect(/prefetch=\{false\}/.test(tag.text), `${rel}:${tag.line} ${String(href)}`).toBe(true);
       }
     }
   });

@@ -5,27 +5,31 @@ import { ordinal } from '../../lib/format';
 import type { StatusGroup } from './standings-view';
 
 /**
- * The Article VII §2 markers AND their legend, in one block under each division's table.
+ * The league ladder's markers AND their legend, in one block under each division's table
+ * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
+ * the CCS picture; for MCAL it is the MCAL tournament line, with no CCS concept at all.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
  * it as term-then-teams also means the legend can never drift out of sync with the markers — they
  * are the same list.
  *
- * Every status is written out in WORDS ("Automatic qualifier", "Play-in game Oct 30", "At-large
- * consideration", "No automatic path" — `PLAYOFF_STATUS_LABELS`, the phrases /playoffs uses) on a
- * sentence-case chip, never a code like "AQ" or "NO AQ", so nothing here is carried by color or
- * by jargon (DESIGN §6.5, channels 1 and 2). Only the automatic-qualifier chip takes the accent
- * wash, because there the accent already means "berth". Beside the chip the term names the place
- * range ("Places 1–3", "5th place"), and for the play-in also what the game decides ("4th place ·
- * winner takes SCVAL's 7th automatic CCS spot"), the one consequence its chip cannot say. The
- * Article VII §2 text itself is cited once per page, in the standings disclosure.
+ * Every status is written out in WORDS on a sentence-case chip: the ladder rung's own label
+ * (`StatusGroup.statusText` — "Automatic qualifier", "Play-in game Oct 30", "Semifinal bye",
+ * "MCAL tournament"), the phrase /playoffs uses, never a code like "AQ" a reader has to decode, so
+ * nothing here is carried by color or by jargon (DESIGN §6.5, channels 1 and 2). Only the
+ * automatic-qualifier chip takes the accent wash, because there the accent already means "berth".
+ * Beside the chip the term keeps the rung's verbatim legend from config (`statusLegend`, SPEC §5.7
+ * / §10.3: its place range, dates, hosts and pairings), so a play-in row also says what the game
+ * decides — the one consequence its chip cannot. The league's qualification rule is cited once
+ * per page.
  *
  * Each team is a pill link to its page with its place beside the name, so the band reads as a
  * row of facts rather than a `·`-separated sentence.
  *
  * A shared place is rendered `T-5th`, the pill-sized form of the table's `T5`, and `caveat` says
- * in words that the cut is unsettled — Article VI §7's coin flip is the league's to run, not ours.
+ * in words that the line is unsettled — the league's last step (a coin flip, a draw, a play-in)
+ * is the league's to run, not ours.
  *
  * The caller passes `flex flex-col` with the card classes: from `lg` the band stretches to the
  * Notes inset beside it, and the link row's `mt-auto` keeps it on the bottom edge, level with
@@ -34,6 +38,11 @@ import type { StatusGroup } from './standings-view';
  */
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
+  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand`. */
+  heading?: string;
+  /** `/playoffs#<league>` or `/playoffs/<league>`. */
+  href?: string;
+  linkText?: string;
   groups: StatusGroup[];
   caveat: string | null;
   /** Teams with `hasReportedResults === false`. */
@@ -43,6 +52,9 @@ export interface PlayoffStatusBandProps {
 
 export function PlayoffStatusBand({
   divisionLabel,
+  heading = 'CCS qualifying, as things stand',
+  href = '/playoffs',
+  linkText = 'Playoff picture',
   groups,
   caveat,
   unrankedTeams,
@@ -51,21 +63,27 @@ export function PlayoffStatusBand({
   return (
     <div className={className}>
       <h3 className="m-0 text-lead text-ink">
-        <span className="sr-only">{divisionLabel}: </span>CCS qualifying, as things stand
+        <span className="sr-only">{divisionLabel}: </span>
+        {heading}
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
-            term column is 14rem there, just past the widest place-range term ("At-large
-            consideration" chip + "5th place", ~213px), so those terms stay on one line and the
-            pills get ~424px at 768: three AQ pills fit on one row. The play-in term's
-            consequence clause wraps under its chip, and the dt's flex-wrap also absorbs a larger
-            browser font. A fixed track, not `auto`: each row is its own grid, and a fixed width
-            keeps the pill column aligned across rows. From lg the band shares its row with the
-            Notes inset, so the term sits above its teams instead. */}
+            term column is 16rem there (256px of the 672px card at 768), a balance between two
+            failures. Wider (22rem) left 296px of pills, so a three-team automatic-qualifier row
+            broke onto two rows beside a short term; narrower (11rem) broke a legend such as "4th
+            place — play-in Fri Oct 30 for the SCVAL 7th berth" into five lines beside a mostly
+            empty pill column. At 16rem the automatic-qualifier legends ("Places 1-3 — automatic
+            CCS qualifier", ~240px) sit on one line under their chip, the pills get ~392px, which
+            holds three typical pills (~340px), and the longest legends (~550px, BVAL's play-in
+            and PCAL's at-large route) take three lines under the chip. The term wraps
+            (`flex-wrap`), which also absorbs a larger browser font. A fixed track, not `auto`:
+            each row is its own grid, and a fixed width keeps the pill column aligned across
+            rows. From lg the band shares its row with the Notes inset, so the term sits above
+            its teams instead. */}
         {groups.map((group) => (
           <div
             key={group.status}
-            className="grid gap-3 py-3 md:grid-cols-[minmax(0,14rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
+            className="grid gap-3 py-3 md:grid-cols-[minmax(0,16rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's
@@ -114,7 +132,7 @@ export function PlayoffStatusBand({
       {unrankedTeams.length > 0 ? (
         <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
           {unrankedTeams.join(', ')} {unrankedTeams.length === 1 ? 'has' : 'have'} no published
-          result, so no place and no playoff status is projected.
+          result, so no place and no postseason status is projected.
         </p>
       ) : null}
       {/* A standalone action, like the Notes link row beside it: a <div>, so the in-prose
@@ -122,11 +140,11 @@ export function PlayoffStatusBand({
           the stretched card from lg (the caller's `flex flex-col`); `pt-4` is the old gap. */}
       <div className="mt-auto pt-4">
         <Link
-          href="/playoffs"
+          href={href}
           prefetch={false}
           className="sx-action text-meta font-medium text-accent hover:underline"
         >
-          Playoff picture
+          {linkText}
         </Link>
       </div>
     </div>

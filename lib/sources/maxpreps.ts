@@ -12,7 +12,9 @@
 import { z } from 'zod';
 
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from './http';
+import type { RawResponse } from '../pipeline/contract';
 import { BOOTSTRAP_URL, MAXPREPS_API, SPORT_SEASON_ID } from '../season';
+import type { DroppedContest } from '../types';
 
 // ---------------------------------------------------------------- schemas
 
@@ -83,10 +85,17 @@ export type StandingsRow = z.infer<typeof StandingsRowSchema>;
 
 export const StandingsResponseSchema = envelope(z.array(StandingsRowSchema));
 
-/** One entry of contest.teams[] (SPEC §1.1b). */
+/**
+ * One entry of contest.teams[] (SPEC §1.1b).
+ *
+ * `teamId` and `name` are nullable: an opponent MaxPreps has not named yet ("TBA") arrives as
+ * `teamId: null, name: null, isTeamTBA: true` (Ann Sobrato 64c8188b, Stevenson 55207683, University
+ * 64e0b2e5 on 2026-10-02), and one such row must never reject a whole feed. `splitTbaRows` removes
+ * those rows before anything reads a side (SPEC §7.6 step 1).
+ */
 export const ContestTeamSchema = z.looseObject({
-  teamId: z.string(),
-  name: z.string(),
+  teamId: z.string().nullable(),
+  name: z.string().nullable(),
   city: z.string().nullable().optional(),
   state: z.string().nullable().optional(),
   formattedName: z.string().nullable().optional(),
@@ -125,7 +134,8 @@ export const ContestSchema = z.looseObject({
 });
 
 export const TeamCalculatedSchema = z.looseObject({
-  teamId: z.string(),
+  /** null for an unnamed (TBA) side, like ContestTeamSchema.teamId. */
+  teamId: z.string().nullable(),
   resultString: z.string().nullable().optional(),
   calculatedTeamContestResult: z.number().nullable().optional(),
   currentLiveScore: z.number().nullable().optional(),
@@ -167,6 +177,46 @@ export const ScheduleRowSchema = z.looseObject({
 export type ScheduleRow = z.infer<typeof ScheduleRowSchema>;
 
 export const ScheduleResponseSchema = envelope(z.array(ScheduleRowSchema));
+
+/** MaxPreps' placeholder GUID for an unnamed side. */
+export const TBA_TEAM_ID = '00000000-0000-0000-0000-000000000000';
+
+/** A side MaxPreps has not named: null or all-zero teamId, or a null name. */
+export function isTbaSide(team: Pick<ContestTeam, 'teamId' | 'name'>): boolean {
+  return team.teamId === null || team.teamId === TBA_TEAM_ID || team.name === null;
+}
+
+/**
+ * SPEC §7.6 step 1: remove every row with a TBA side and record it, one `DroppedContest` per row,
+ * with reason 'tba-opponent'. Pure; the order of the kept rows is the input order.
+ */
+export function splitTbaRows(rows: readonly ScheduleRow[]): {
+  rows: ScheduleRow[];
+  dropped: DroppedContest[];
+} {
+  const kept: ScheduleRow[] = [];
+  const dropped: DroppedContest[] = [];
+  for (const row of rows) {
+    const teams = row.contest.teams;
+    if (!teams.some(isTbaSide)) {
+      kept.push(row);
+      continue;
+    }
+    const named = teams.filter((t) => !isTbaSide(t)).map((t) => t.name as string);
+    const date = row.contest.date ? row.contest.date.slice(0, 10) : null;
+    dropped.push({
+      contestId: row.contest.contestId,
+      reason: 'tba-opponent',
+      note:
+        named.length > 0
+          ? `MaxPreps lists ${named.join(' and ')} against an opponent it has not named yet (TBA).`
+          : 'MaxPreps lists this contest without naming its teams (TBA).',
+      dateKey: date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null,
+      teams: named,
+    });
+  }
+  return { rows: kept, dropped };
+}
 
 /** GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2 (SPEC §1.1c). */
 export const ContestIdsByDateSchema = envelope(
@@ -416,6 +466,19 @@ export class MaxPrepsClient {
       Math.max(0, opts.spacingMs ?? 500),
       this.sleep,
     );
+  }
+
+  /**
+   * The raw body and HTTP status of one MaxPreps resource, through the same gate (<= 3 concurrent,
+   * >= 500 ms between request starts), retries/backoff and User-Agent as every other read
+   * (SPEC §7.2-§7.3: LiveTransport's MaxPreps rows). Nothing is parsed or validated here: the
+   * pipeline step that owns the resource does that. A non-2xx answer still throws `MaxPrepsError`
+   * (with `httpStatus`) after the retry policy, so a 4xx/5xx is never returned silently.
+   */
+  async raw(url: string): Promise<RawResponse> {
+    const accept = url.startsWith(MAXPREPS_API) ? 'application/json' : 'text/html';
+    const res = await this.gate.run(() => this.attempt(url, accept));
+    return { url: res.meta.url, httpStatus: res.meta.httpStatus, body: res.data };
   }
 
   /** Raw text with retry/backoff. Used for the HTML bootstrap read. */

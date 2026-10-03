@@ -2,7 +2,7 @@
 /**
  * Fetch every SCVAL team's MaxPreps roster page into data/rosters.json (SPEC §1.1j).
  *
- *   pnpm fetch-rosters                     live: 15 roster pages, one per registry team
+ *   pnpm fetch-rosters                     live: one roster page per SCVAL team (rosters stay SCVAL-only)
  *   pnpm fetch-rosters --fixtures <dir>    offline: read roster-<slug>.html captures
  *   pnpm fetch-rosters --out <path>        write somewhere else
  *   pnpm fetch-rosters --dry-run           parse and report, write nothing
@@ -18,19 +18,22 @@
  * lands here as that same per-team failure — never as a wrong grade beside a name.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
-import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { parseRosterPage, rosterUrl } from '../lib/sources/maxpreps-roster';
+import { MaxPrepsClient } from "../lib/sources/maxpreps";
+import { parseRosterPage, rosterUrl } from "../lib/sources/maxpreps-roster";
 import {
   RostersSchema,
   countRosters,
   type Rosters,
   type TeamRoster,
-} from '../lib/rosters-schema';
-import { SEASON_YEAR } from '../lib/season';
-import { TEAMS } from '../lib/teams';
+} from "../lib/rosters-schema";
+import { SEASON_YEAR } from "../lib/season";
+import { teamsInLeague } from "../lib/teams";
+
+/** Rosters stay SCVAL-only (SPEC §7.13): the other leagues in the registry have no roster capture. */
+const ROSTER_TEAMS = teamsInLeague("scval");
 
 interface Args {
   fixtures: string | null;
@@ -42,7 +45,7 @@ interface Args {
 function parseArgs(argv: readonly string[]): Args {
   const out: Args = {
     fixtures: null,
-    out: path.join(process.cwd(), 'data', 'rosters.json'),
+    out: path.join(process.cwd(), "data", "rosters.json"),
     dryRun: false,
     fetchedAt: null,
   };
@@ -54,10 +57,10 @@ function parseArgs(argv: readonly string[]): Args {
       i += 1;
       return v;
     };
-    if (arg === '--fixtures') out.fixtures = path.resolve(next());
-    else if (arg === '--out') out.out = path.resolve(next());
-    else if (arg === '--dry-run') out.dryRun = true;
-    else if (arg === '--fetched-at') out.fetchedAt = next();
+    if (arg === "--fixtures") out.fixtures = path.resolve(next());
+    else if (arg === "--out") out.out = path.resolve(next());
+    else if (arg === "--dry-run") out.dryRun = true;
+    else if (arg === "--fetched-at") out.fetchedAt = next();
     else throw new Error(`unknown flag: ${arg}`);
   }
   return out;
@@ -67,7 +70,7 @@ function parseArgs(argv: readonly string[]): Args {
 function stableStringify(value: unknown): string {
   const normalize = (node: unknown): unknown => {
     if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
+    if (node && typeof node === "object") {
       const out: Record<string, unknown> = {};
       for (const key of Object.keys(node as Record<string, unknown>).sort()) {
         const v = (node as Record<string, unknown>)[key];
@@ -84,7 +87,9 @@ function stableStringify(value: unknown): string {
 function loadPrevious(file: string): Rosters | null {
   if (!existsSync(file)) return null;
   try {
-    const parsed = RostersSchema.safeParse(JSON.parse(readFileSync(file, 'utf8')) as unknown);
+    const parsed = RostersSchema.safeParse(
+      JSON.parse(readFileSync(file, "utf8")) as unknown,
+    );
     return parsed.success ? parsed.data : null;
   } catch {
     return null;
@@ -92,10 +97,10 @@ function loadPrevious(file: string): Rosters | null {
 }
 
 const NOTES = [
-  'Rows come from each team\'s MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps\' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page\'s rendered table; a disagreement fails the team rather than publishing a wrong value.',
-  'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.',
-  'Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.',
-  'A team with status carried-forward keeps the previous file\'s rows after a failed fetch; its own fetchedAt says when those rows were read.',
+  "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
+  "Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.",
+  "Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.",
+  "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
 async function main(): Promise<number> {
@@ -107,11 +112,11 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-rosters: offline, from ${args.fixtures}`
-      : `fetch-rosters: ${TEAMS.length} MaxPreps roster pages`,
+      : `fetch-rosters: ${ROSTER_TEAMS.length} MaxPreps roster pages`,
   );
 
   const teams: TeamRoster[] = await Promise.all(
-    TEAMS.map(async (team): Promise<TeamRoster> => {
+    ROSTER_TEAMS.map(async (team): Promise<TeamRoster> => {
       const url = rosterUrl(team);
       const base = {
         slug: team.slug,
@@ -123,21 +128,24 @@ async function main(): Promise<number> {
       try {
         let html: string;
         if (args.fixtures) {
-          html = readFileSync(path.join(args.fixtures, `roster-${team.slug}.html`), 'utf8');
+          html = readFileSync(
+            path.join(args.fixtures, `roster-${team.slug}.html`),
+            "utf8",
+          );
         } else {
-          if (!url) throw new Error('no MaxPreps team URL in the registry');
+          if (!url) throw new Error("no MaxPreps team URL in the registry");
           html = (await client.text(url)).data;
         }
         // A team with no data coverage has a placeholder registry id (no standings row to read a
         // GUID from), so the page's own id cannot be asserted against it; every other must match.
         const page = parseRosterPage(html, {
-          expectedTeamId: team.dataCoverage === 'none' ? undefined : team.id,
+          expectedTeamId: team.dataCoverage === "none" ? undefined : team.id,
           url: url ?? team.slug,
         });
         return {
           ...base,
           maxprepsTeamId: page.teamId,
-          status: page.players.length ? 'ok' : 'empty',
+          status: page.players.length ? "ok" : "empty",
           athleteCount: page.athleteCount,
           staffCount: page.staffCount,
           players: page.players,
@@ -154,14 +162,14 @@ async function main(): Promise<number> {
           return {
             ...prior,
             ...base,
-            status: 'carried-forward',
+            status: "carried-forward",
             error,
           };
         }
         return {
           ...base,
           maxprepsTeamId: null,
-          status: 'error',
+          status: "error",
           athleteCount: null,
           staffCount: null,
           players: [],
@@ -177,32 +185,36 @@ async function main(): Promise<number> {
   const rosters: Rosters = {
     season: SEASON_YEAR,
     fetchedAt,
-    source: { id: 'maxpreps-html', builtBy: 'scripts/fetch-rosters.ts', notes: NOTES },
+    source: {
+      id: "maxpreps-html",
+      builtBy: "scripts/fetch-rosters.ts",
+      notes: NOTES,
+    },
     teams,
     counts: countRosters(teams),
   };
 
   const validated = RostersSchema.safeParse(rosters);
   if (!validated.success) {
-    console.error('FAILED: the assembled file does not validate:');
+    console.error("FAILED: the assembled file does not validate:");
     for (const issue of validated.error.issues.slice(0, 10)) {
-      console.error(`  ${issue.path.join('.') || '(root)'}: ${issue.message}`);
+      console.error(`  ${issue.path.join(".") || "(root)"}: ${issue.message}`);
     }
     return 1;
   }
 
-  console.log('');
+  console.log("");
   for (const t of teams) {
     const n = t.players.length;
-    const pct = (k: (p: TeamRoster['players'][number]) => boolean) =>
-      n ? `${String(t.players.filter(k).length).padStart(2)}` : ' -';
+    const pct = (k: (p: TeamRoster["players"][number]) => boolean) =>
+      n ? `${String(t.players.filter(k).length).padStart(2)}` : " -";
     console.log(
       `${t.slug.padEnd(17)} ${t.status.padEnd(15)} ${String(n).padStart(2)} players · ` +
         `grade ${pct((p) => p.grade !== null)} · pos ${pct((p) => p.position !== null)} · ` +
         `# ${pct((p) => p.jersey !== null)} · ht ${pct((p) => p.height !== null)} · ` +
         `C ${pct((p) => p.isCaptain)}` +
-        (t.warnings.length ? ` · ${t.warnings.join('; ')}` : '') +
-        (t.error ? ` · ERROR ${t.error}` : ''),
+        (t.warnings.length ? ` · ${t.warnings.join("; ")}` : "") +
+        (t.error ? ` · ERROR ${t.error}` : ""),
     );
   }
   const c = rosters.counts;
@@ -213,11 +225,11 @@ async function main(): Promise<number> {
   );
 
   if (args.dryRun) {
-    console.log('\ndry run: nothing written');
+    console.log("\ndry run: nothing written");
     return c.errors ? 1 : 0;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(rosters), 'utf8');
+  writeFileSync(args.out, stableStringify(rosters), "utf8");
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
   return c.errors ? 1 : 0;
 }
@@ -225,6 +237,8 @@ async function main(): Promise<number> {
 main()
   .then((code) => process.exit(code))
   .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
+    console.error(
+      `FAILED: ${err instanceof Error ? err.message : String(err)}`,
+    );
     process.exit(1);
   });

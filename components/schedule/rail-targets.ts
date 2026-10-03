@@ -8,9 +8,9 @@
  * is still shown, using the pure mapping below, and restores the server's hrefs and text once
  * every group is shown again. Without JavaScript none of this runs and the rail is unchanged.
  *
- * Pure and dependency-free on purpose: it is bundled into `/schedule`'s one client module, so it
- * formats its own two date strings rather than pulling `lib/format` (and `lib/season`) into the
- * client, and it never reads a clock. tests/ui/rail-targets.test.ts holds the formatting to
+ * Pure and dependency-free on purpose: it is bundled into `/schedule/<league>`'s one client module,
+ * so it formats its own two date strings rather than pulling `lib/format` into the client, and it
+ * never reads a clock. tests/ui/rail-targets.test.ts holds the formatting to
  * `lib/format`'s output for every date in the snapshot.
  */
 

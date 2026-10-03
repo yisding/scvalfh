@@ -1,6 +1,6 @@
 # Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
-# stats, and commit data/snapshot.json and data/player-stats.json only where the CONTENT actually
-# changed.
+# stats (SCVAL only), and commit data/snapshot.json and data/player-stats.json only where the
+# CONTENT actually changed.
 #
 # Schedule (SPEC §5.2 — one to two runs a day, never more):
 #   0 5  UTC = 10:00 PM Pacific during PDT — catches the evening's results once coaches enter them
@@ -9,20 +9,30 @@
 # (UTC-7/-8) — never ahead. So the disagreement is one-sided: it needs a month at the DECEMBER end,
 # where the Nov 30 evening run is 2026-12-01T05:00Z, and none at the August end, where the earliest
 # Pacific-August instant (Aug 1 00:00 PDT) is already 2026-08-01T07:00Z. A UTC-July fire is always
-# Pacific July, which `inSeasonWindow` (lib/season.ts, Pacific months 8-11) rejects every
-# time — 62 runs a season that each did a checkout, an apt install, `pnpm install --frozen-lockfile`
-# and the whole test suite before correctly writing nothing. Hence 8-12, with the script's own
+# Pacific July, which the season-window guard (lib/pipeline/steps/window.ts: the sections' season
+# windows, Aug 1 – Nov 30 Pacific) rejects every time — 62 runs a season that each did a checkout,
+# an apt install, `pnpm install --frozen-lockfile` and the whole test suite before correctly
+# writing nothing. Hence 8-12, with the scripts' own
 # Aug 1 – Nov 30 Pacific guard still the single source of truth for the window: an out-of-season
-# cron fires, both scripts exit 0 and write nothing.
+# cron fires, both scripts exit 0 and write nothing (fetch-player-stats imports the same
+# `inSeasonWindow` from lib/pipeline/steps/window.ts).
 #
 # Player stats ride the same run because they move after every game, as the scores do, and the
-# same commit, so a refresh is still one deploy. Their fetch is allowed to fail: a MaxPreps hiccup
-# on the stats endpoint must never cost the day's scores. deploy-cloudflare.yml ships these commits
+# same commit, so a refresh is still one deploy. They are SCVAL-only (the 15 teams in
+# lib/rosters.ts; SPEC §0.2 item 12). Their fetch is allowed to fail: a MaxPreps hiccup on the
+# stats endpoint must never cost the day's scores. deploy-cloudflare.yml ships these commits
 # without a ci run of its own only because it recognises them; the commit step below says how, and
 # tests/workflows.test.ts holds the two files to it.
 #
 # The push deliberately does NOT carry [skip ci]: the commit is what triggers the hosting
 # provider's rebuild, which is the entire point of the job.
+#
+# Four leagues (SPEC §7.5, §7.14): a league that cannot be refreshed is FROZEN or DEGRADED inside
+# the snapshot (its reasons are published on the site) and the run still exits 0 and commits. The
+# job fails, and commits nothing, only on a run abort (fetch-data exits 1: season ids changed, the
+# assembled snapshot failed validation, or a systemic outage), which keeps the previous snapshot.
+# After a successful run it keeps one open issue per official schedule revised upstream and per
+# league frozen in this run AND the previous one.
 
 name: update-data
 
@@ -40,9 +50,19 @@ on:
         description: 'Skip the SBLive score cross-check'
         type: boolean
         default: false
+      leagues:
+        description: 'Only these leagues, comma-separated (e.g. bval,pcal); the others are carried forward, frozen'
+        type: string
+        default: ''
+      accept_regression:
+        description: 'Skip the finals-regression guard for these leagues this run, comma-separated (e.g. bval)'
+        type: string
+        default: ''
 
 permissions:
   contents: write
+  # One issue per revised official schedule / long-frozen league (see "Open or update issues").
+  issues: write
 
 # Never let two refreshes race on the same branch; a queued run would only rewrite what the
 # in-flight one is about to commit.
@@ -53,7 +73,9 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # The fetch step alone may take 20 minutes (56 MaxPreps requests at ≥500 ms apart plus the
+    # official, si.com, VNN and CCS sources, with retries); install and test come on top.
+    timeout-minutes: 40
 
     steps:
       - name: Check out
@@ -62,9 +84,9 @@ jobs:
           # A shallow clone is enough; we only ever add one commit on top of the default branch.
           fetch-depth: 1
 
-      # pdftotext, for the two official SCVAL schedule PDFs. Without it lib/sources/scval-pdf.ts
-      # reports SourceStatus 'skipped' rather than failing and the previous run's fixtures are
-      # carried forward, so a bad apt mirror must NOT take the whole day's score refresh with it.
+      # pdftotext, for the two official SCVAL schedule PDFs (BVAL, PCAL and MCAL fixtures are bundled
+      # under data/official/). Without it the SCVAL PDF sources fail and the previous run's SCVAL
+      # fixtures are carried forward, so a bad apt mirror must NOT take the whole day's refresh with it.
       - name: Install poppler-utils (pdftotext)
         continue-on-error: true
         run: |
@@ -90,16 +112,41 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Exit 1 only on a run abort (nothing written, the previous snapshot stays); a frozen or
+      # degraded league is a published state, not a failure. Inputs reach the command through env,
+      # never by interpolating them into the script.
       - name: Fetch data
-        run: pnpm fetch-data ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '--force' || '' }} ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_sblive) && '--no-sblive' || '' }}
+        timeout-minutes: 20
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+          SKIP_SBLIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_sblive && '1' || '' }}
+          LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}
+          ACCEPT_REGRESSION: ${{ github.event_name == 'workflow_dispatch' && inputs.accept_regression || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          [ -n "$SKIP_SBLIVE" ] && args+=(--no-sblive)
+          if [ -n "$LEAGUES" ]; then
+            [[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid leagues input: $LEAGUES"; exit 1; }
+            args+=(--leagues "$LEAGUES")
+          fi
+          if [ -n "$ACCEPT_REGRESSION" ]; then
+            [[ "$ACCEPT_REGRESSION" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid accept_regression input: $ACCEPT_REGRESSION"; exit 1; }
+            args+=(--accept-regression "$ACCEPT_REGRESSION")
+          fi
+          pnpm fetch-data "${args[@]}"
 
       # Never fatal. The script exits 1 when a team's call failed, having still written the file
       # with that team's previous rows carried forward (status 'carried-forward'), which is worth
       # committing; a crash before it writes leaves the committed file as it was. Either way the
       # snapshot above still ships. It writes nothing when only its fetchedAt stamps would change.
+      # Its own timeout keeps a hung stats endpoint from eating the job's budget (15 SCVAL teams,
+      # one request each at the MaxPreps politeness gate's pace, take well under a minute).
       - name: Fetch player stats
         id: stats
         continue-on-error: true
+        timeout-minutes: 10
         run: pnpm fetch-player-stats ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '--force' || '' }}
 
       # The suite validates what was just written: the snapshot's schema invariants, the never-0-0
@@ -107,6 +154,67 @@ jobs:
       # rosters. A bad file must not be committed.
       - name: Test
         run: pnpm test
+
+      # One open issue per official schedule revised upstream (a stale official-revision-check
+      # row) and per league frozen in this run AND the previous one, each with the published
+      # reasons as its body. Edited in place on later runs: never more than one open issue per
+      # title. Runs before the commit step, which may restore the unchanged files.
+      - name: Open or update issues
+        # Bookkeeping only: a GitHub API hiccup here must never cost the day's snapshot commit.
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          PREV="${RUNNER_TEMP:-/tmp}/previous-meta-for-issues.json"
+          git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || echo '{}' > "$PREV"
+          OUT="${RUNNER_TEMP:-/tmp}/issues"
+          rm -rf "$OUT" && mkdir -p "$OUT"
+          node -e '
+            const fs = require("node:fs");
+            const path = require("node:path");
+            const [prevPath, outDir] = process.argv.slice(1);
+            const snap = JSON.parse(fs.readFileSync("data/snapshot.json", "utf8"));
+            const meta = JSON.parse(fs.readFileSync("data/snapshot.meta.json", "utf8"));
+            let prev = {};
+            try { prev = JSON.parse(fs.readFileSync(prevPath, "utf8")); } catch {}
+            const leagues = new Map((snap.season?.leagues ?? []).map((l) => [l.id, l]));
+            const out = [];
+            for (const row of snap.sources ?? []) {
+              if (row.kind !== "official-revision-check" || row.status !== "stale") continue;
+              const league = leagues.get(row.scope?.league);
+              if (!league) continue;
+              const division = league.divisions.length > 1 ? league.divisions.find((d) => d.id === row.scope?.division) : null;
+              const title = `Official schedule revised: ${league.shortName}${division ? ` ${division.label}` : ""}`;
+              out.push({ title, body: `${row.error ?? "The upstream document changed after our bundled copy."}\n\nChecked: ${row.url}\nRun: ${meta.fetchedAt}` });
+            }
+            const prevFrozen = new Set((prev.leagues ?? []).filter((l) => l.state === "frozen").map((l) => l.id));
+            for (const h of snap.leagueHealth ?? []) {
+              if (h.state !== "frozen" || !prevFrozen.has(h.leagueId)) continue;
+              const league = leagues.get(h.leagueId);
+              const since = h.lastFreshAt
+                ? new Date(h.lastFreshAt).toLocaleString("en-US", { timeZone: "America/Los_Angeles", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+                : "the start of the season";
+              out.push({ title: `${league?.shortName ?? h.leagueId} frozen since ${since}`, body: `${h.reasons.join("\n\n") || "Frozen."}\n\nRun: ${meta.fetchedAt}` });
+            }
+            out.forEach((issue, i) => {
+              fs.writeFileSync(path.join(outDir, `${i}.title`), issue.title);
+              fs.writeFileSync(path.join(outDir, `${i}.body`), issue.body);
+            });
+            console.log(`${out.length} ${out.length === 1 ? "issue" : "issues"} to open or update`);
+          ' "$PREV" "$OUT"
+          for title_file in "$OUT"/*.title; do
+            [ -e "$title_file" ] || continue
+            title=$(cat "$title_file")
+            body_file="${title_file%.title}.body"
+            number=$(gh issue list --state open --limit 100 --search "in:title \"$title\"" --json number,title \
+              --jq "map(select(.title == \"$title\")) | first | .number // empty")
+            if [ -n "$number" ]; then
+              gh issue edit "$number" --body-file "$body_file"
+            else
+              gh issue create --title "$title" --body-file "$body_file"
+            fi
+          done
 
       - name: Commit the data that changed
         id: commit
@@ -164,16 +272,18 @@ jobs:
             SUMMARY=$(node -e '
               const meta = require("./data/snapshot.meta.json");
               // meta.today is the PACIFIC date; meta.fetchedAt is UTC and would read as tomorrow
-              // for the 10 PM Pacific run.
+              // for the 10 PM Pacific run. commitSummary is per league, e.g.
+              // "SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4".
               const day = meta.today ?? meta.fetchedAt.slice(0, 10);
               const c = meta.counts;
-              process.stdout.write(`${day} (${c.games} games, ${c.finals} finals)`);
+              const summary = meta.commitSummary ?? `${c.games} games, ${c.finals} finals`;
+              process.stdout.write(`${day} · ${summary}`);
             ')
-            git add data/snapshot.json data/snapshot.meta.json
             if [ "$STATS" = "true" ]; then
-              git add data/player-stats.json
+              git add data/snapshot.json data/snapshot.meta.json data/player-stats.json
               git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})"
             else
+              git add data/snapshot.json data/snapshot.meta.json
               git commit -m "data: refresh snapshot ${SUMMARY}"
             fi
           else

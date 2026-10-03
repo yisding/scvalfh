@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import {
+  dateWithYear,
   formatStamp,
   hoursBetween,
   monthDay,
@@ -27,6 +28,12 @@ import {
  * staleness at view time, so the caller passes the BUILD instant: if the nightly fetch fails but
  * the build still runs, `fetchedAt` is old against a fresh build and the warning appears — which
  * is exactly the failure this state is for.
+ *
+ * `seasonComplete`: once every league's season is over the nightly update stops on purpose, so an
+ * old stamp is not a failure. Then the stamp's stale state reads `Season complete — final update
+ * <date>.` in the quiet grey instead of the alarm, and the top bar keeps its plain "Updated …"
+ * stamp instead of the pill (SPEC §10.2; SiteHeader and Attribution pass
+ * `getSitePhase() === 'complete'`).
  */
 export interface LastUpdatedProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
@@ -35,6 +42,8 @@ export interface LastUpdatedProps {
   now?: string;
   /** 'compact' is the top-bar form: "Updated Fri Oct 2 3:48 AM" (the weekday drops where narrow). */
   variant?: 'stamp' | 'compact';
+  /** Every league's season is over: an old stamp is the final update, not a failing one. */
+  seasonComplete?: boolean;
   className?: string;
 }
 
@@ -46,14 +55,22 @@ function daysAgo(ageHours: number): string {
   return days === 1 ? '1 day ago' : `${days} days ago`;
 }
 
-export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdatedProps) {
+export function LastUpdated({
+  at,
+  now,
+  variant = 'stamp',
+  seasonComplete = false,
+  className,
+}: LastUpdatedProps) {
   const local = toLocalTimestamp(at);
   const ageHours = now ? hoursBetween(at, now) : 0;
   const stale = ageHours > STALE_AFTER_HOURS;
+  // An old stamp is only an alarm while some league is still playing.
+  const alarm = stale && !seasonComplete;
   const extra = className ? ` ${className}` : '';
 
   if (variant === 'compact') {
-    if (stale) {
+    if (alarm) {
       // One link, not a stamp plus a warning: the 48px bar has room for one short phrase, and the
       // phrase is the way to the explanation. A standalone link, so it carries its own 24px box
       // (`sx-action`, WCAG 2.5.8). `py-0.5` makes the 20px line a centred 24px box even where the
@@ -88,7 +105,19 @@ export function LastUpdated({ at, now, variant = 'stamp', className }: LastUpdat
     );
   }
 
-  if (stale) {
+  if (stale && seasonComplete) {
+    return (
+      <span className={`text-meta text-ink-2${extra}`}>
+        Season complete &mdash; final update{' '}
+        <time dateTime={at} className="tabular-nums">
+          {dateWithYear(local)}
+        </time>
+        .
+      </span>
+    );
+  }
+
+  if (alarm) {
     // A sentence, so it wraps on a phone: the chip radius rather than a full pill, which turns a
     // two-line box into a lozenge.
     return (

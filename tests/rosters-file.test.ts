@@ -10,9 +10,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema';
+import { ROSTER_TEAM_COUNT, RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema';
 import { getRosters, getTeamRoster, sortedPlayers } from '../lib/rosters';
-import { TEAMS } from '../lib/teams';
+import { TEAMS, teamsInLeague } from '../lib/teams';
+
+/** Rosters stay SCVAL-only (SPEC §0.2 #12, §4.2). */
+const SCVAL_TEAMS = teamsInLeague('scval');
 import { FIXTURE_DIR, REPO } from './helpers';
 
 const FILE = path.join(REPO, 'data', 'rosters.json');
@@ -25,11 +28,11 @@ describe('data/rosters.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('has one entry per registry team, in registry order, keyed by the registry id', () => {
-    expect(raw.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
-    expect(raw.teams.map((t) => t.teamId)).toEqual(TEAMS.map((t) => t.id));
+  it('has one entry per SCVAL registry team, in registry order, keyed by the registry id', () => {
+    expect(raw.teams.map((t) => t.slug)).toEqual(SCVAL_TEAMS.map((t) => t.slug));
+    expect(raw.teams.map((t) => t.teamId)).toEqual(SCVAL_TEAMS.map((t) => t.id));
     for (const t of raw.teams) {
-      const team = TEAMS.find((x) => x.slug === t.slug)!;
+      const team = SCVAL_TEAMS.find((x) => x.slug === t.slug)!;
       expect(t.division).toBe(team.division);
       if (team.dataCoverage !== 'none') expect(t.maxprepsTeamId).toBe(team.id);
     }
@@ -63,7 +66,24 @@ describe('data/rosters.json', () => {
   it('every team was read this run — nothing carried forward, nothing failed', () => {
     expect(raw.teams.every((t) => t.status === 'ok' || t.status === 'empty')).toBe(true);
     expect(raw.counts.errors).toBe(0);
-    expect(raw.teams).toHaveLength(15);
+    expect(raw.teams).toHaveLength(SCVAL_TEAMS.length);
+  });
+
+  it('is SCVAL-scoped: 15 teams, and refuses a team of another league or division', () => {
+    expect(SCVAL_TEAMS).toHaveLength(15);
+    expect(ROSTER_TEAM_COUNT).toBe(SCVAL_TEAMS.length);
+    expect(TEAMS.length).toBeGreaterThan(SCVAL_TEAMS.length);
+    const leigh = TEAMS.find((t) => t.slug === 'leigh')!;
+    const foreign = structuredClone(raw);
+    foreign.teams[0] = { ...foreign.teams[0], slug: leigh.slug, teamId: leigh.id };
+    expect(RostersSchema.safeParse(foreign).success).toBe(false);
+    const badDivision = structuredClone(raw);
+    badDivision.teams[0].division = 'mt-hamilton';
+    expect(RostersSchema.safeParse(badDivision).success).toBe(false);
+    const short = structuredClone(raw);
+    short.teams.pop();
+    short.counts = countRosters(short.teams);
+    expect(RostersSchema.safeParse(short).success).toBe(false);
   });
 
   it('never stores an invented value: a blank upstream is null', () => {

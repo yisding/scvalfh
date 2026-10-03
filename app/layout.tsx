@@ -6,11 +6,14 @@ import BottomTabBar from '@/components/layout/BottomTabBar';
 import SiteHeader from '@/components/layout/SiteHeader';
 import { BUILD_INSTANT } from '@/components/layout/build-instant';
 import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
+import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
+import { buildPrefsScript } from '@/components/layout/prefs-script';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site-url';
 import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
 import { THEME_SCRIPT } from '@/components/layout/theme-script';
 import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';
-import { getFetchedAt } from '@/lib/data';
+import { getFetchedAt, getTeams } from '@/lib/data';
+import { LEAGUE_IDS } from '@/lib/leagues';
 
 import './globals.css';
 
@@ -45,7 +48,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — 2026 scores, standings and CCS playoffs`,
+    default: `${SITE_NAME} — 2026 scores, standings and playoffs`,
     template: `%s — ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -76,6 +79,17 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * `{ slug: league }` for every team: embedded in the prefs script (to validate a pin and derive its
+ * league before first paint) and handed to the nav (so `/teams/<slug>` has a page league). Built
+ * once per process; one object, so the RSC payload can refer back to it.
+ */
+const SLUG_LEAGUE: Readonly<Record<string, string>> = Object.fromEntries(
+  getTeams().map((t) => [t.slug, t.league]),
+);
+const PREFS_SCRIPT = buildPrefsScript({ leagueIds: LEAGUE_IDS, slugLeague: SLUG_LEAGUE });
+const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
+
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const snapshotAt = getFetchedAt();
   return (
@@ -89,6 +103,13 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
             components/layout/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
+        {/* The remembered league (SPEC §8.2), a SEPARATE blocking script: stamps data-js,
+            data-league, data-pin and data-pin-stale on <html> before first paint, so the scope
+            stylesheet below paints the right home panel first (CLS 0, no reordering). */}
+        <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
+        {/* Unlayered on purpose: it must outrank every @layer, utilities included. Tailwind
+            cannot generate one selector per league id (components/layout/league-scope-css.ts). */}
+        <style dangerouslySetInnerHTML={{ __html: SCOPE_CSS }} />
         {/* Scrolls a <details> the reader just opened into view when its panel lands under the
             phone tab bar; see components/layout/disclosure-script.ts. */}
         <script dangerouslySetInnerHTML={{ __html: DISCLOSURE_SCRIPT }} />
@@ -101,7 +122,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <PinnedTeamMarks />
-        <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} />
+        <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} slugLeague={SLUG_LEAGUE} />
         {/* `tabIndex={-1}` is what makes the skip link actually MOVE focus. Without it only
             browsers that implement the sequential-focus-navigation starting point continue from
             here; elsewhere `#main` scrolls into view while focus stays on <body> and a screen
@@ -115,7 +136,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           {children}
         </main>
         <Attribution snapshotAt={snapshotAt} now={BUILD_INSTANT} />
-        <BottomTabBar />
+        <BottomTabBar slugLeague={SLUG_LEAGUE} />
       </body>
     </html>
   );

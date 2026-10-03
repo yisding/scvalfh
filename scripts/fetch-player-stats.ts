@@ -3,7 +3,11 @@
  * Fetch every SCVAL team's MaxPreps season player stats into data/player-stats.json (SPEC §1.1k),
  * joined to data/rosters.json on the career id.
  *
- *   pnpm fetch-player-stats                     live: 15 small JSON calls, one per team
+ * Rosters and player stats stay SCVAL-only (SPEC §0.2 item 12, §4.2, §7.13): the teams are
+ * teamsInLeague(HISTORY_LEAGUE), the 15 SCVAL teams data/rosters.json holds, never the whole
+ * 43-team registry. BVAL, PCAL and MCAL team pages show no player stats.
+ *
+ *   pnpm fetch-player-stats                     live: one small JSON call per SCVAL team (15)
  *   pnpm fetch-player-stats --fixtures <dir>    offline: read stats-<slug>.json captures
  *   pnpm fetch-player-stats --rosters <path>    join against another rosters file
  *   pnpm fetch-player-stats --out <path>        write somewhere else
@@ -18,7 +22,8 @@
  * the roster is still published, under the stats sheet's own short name, with a warning.
  *
  * Two guards keep the scheduled run from churning the repository. Outside the season window
- * (lib/season.ts, Pacific, the date of `--fetched-at`) it fetches and writes nothing. And when the
+ * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/leagues.ts' section windows,
+ * Aug 1 – Nov 30 Pacific, on the date of `--fetched-at`) it fetches and writes nothing. And when the
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *
@@ -31,7 +36,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { localDateKey } from '../lib/format';
+import { localDateKey, monthDay } from '../lib/format';
+import { HISTORY_LEAGUE, getLeague, seasonWindowBounds } from '../lib/leagues';
+import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
   countPlayerStats,
@@ -49,8 +56,11 @@ import {
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
-import { SEASON_YEAR, inSeasonWindow } from '../lib/season';
-import { TEAMS } from '../lib/teams';
+import { SEASON_YEAR } from '../lib/season';
+import { teamsInLeague } from '../lib/teams';
+
+/** Player stats stay SCVAL-only, like the rosters they join to (SPEC §0.2 item 12, §7.13). */
+const STATS_TEAMS = teamsInLeague(HISTORY_LEAGUE);
 
 interface Args {
   fixtures: string | null;
@@ -129,8 +139,9 @@ async function main(): Promise<number> {
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
   if (!args.force && !inSeasonWindow(today)) {
+    const { start, end } = seasonWindowBounds();
     console.log(
-      `out of season: ${today} is outside Aug 1 – Nov 30 Pacific. ` +
+      `out of season: ${today} is outside ${monthDay(start)} – ${monthDay(end)} Pacific. ` +
         'Nothing fetched, nothing written. Re-run with --force to override.',
     );
     return 0;
@@ -142,11 +153,11 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-player-stats: offline, from ${args.fixtures}`
-      : `fetch-player-stats: ${TEAMS.length} MaxPreps stats rollups`,
+      : `fetch-player-stats: ${STATS_TEAMS.length} MaxPreps stats rollups (${getLeague(HISTORY_LEAGUE).shortName} only)`,
   );
 
   const teams: TeamPlayerStats[] = await Promise.all(
-    TEAMS.map(async (team): Promise<TeamPlayerStats> => {
+    STATS_TEAMS.map(async (team): Promise<TeamPlayerStats> => {
       const roster = rosters.teams.find((t) => t.slug === team.slug);
       const maxprepsTeamId = roster?.maxprepsTeamId ?? null;
       const base = {

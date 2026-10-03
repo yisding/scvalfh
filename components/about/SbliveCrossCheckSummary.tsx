@@ -4,11 +4,11 @@ import type { SbliveCrossCheck } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
 
 /**
- * The SBLive/SI score cross-check (SPEC §5.7, DESIGN §9, /about#cross-check).
- *
- * MaxPreps is never overwritten: a game where the two sources publish different numbers is
- * shown with the MaxPreps score (and listed below), and a game SBLive has scored that MaxPreps
- * has not is left unreported on this site rather than backfilled from a secondary source.
+ * The si.com (High School on SI, formerly SBLive) score cross-check (SPEC §10.8, DESIGN §9,
+ * /about#cross-check), under owner decision D2: MaxPreps is the primary source; si.com's score is
+ * published only when MaxPreps has no result for an official league game or its row is clearly
+ * wrong (those rows are listed under /about#backfills). A plain disagreement keeps MaxPreps' score
+ * and is listed below; a si.com-only score we did NOT publish is listed with the reason.
  */
 export interface SbliveCrossCheckSummaryProps {
   cross: SbliveCrossCheck;
@@ -25,15 +25,20 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
   return (
     <div>
       <p className="max-w-prose text-body text-ink-2">
-        As of the {formatStamp(sbliveFetchedAt)} run, {compared} MaxPreps game
-        {compared === 1 ? '' : 's'} matched an SBLive/SI row by date and teams. {scored} of{' '}
+        MaxPreps is our primary source. When MaxPreps has no result for an official league game, or
+        its row is clearly wrong, we publish High School on SI&rsquo;s score and mark it (see{' '}
+        <a href="#backfills" className="text-accent hover:underline">
+          Backfills
+        </a>
+        ). As of the {formatStamp(sbliveFetchedAt)} run, {compared} MaxPreps game
+        {compared === 1 ? '' : 's'} matched a si.com row by date and teams. {scored} of{' '}
         {compared === 1 ? 'those' : 'them'} had a score on both sides: {agreements} agreed on both
         numbers exactly
         {conflicts.length > 0
-          ? `, ${conflicts.length} disagreed. We publish MaxPreps' score either way, and every disagreement is listed below with a deep link.`
+          ? `, ${conflicts.length} disagreed. Where neither of the clearly-wrong checks applies we publish MaxPreps’ score, and every disagreement is listed below.`
           : ' and none disagreed.'}
         {unscored > 0
-          ? ` The other ${unscored} ${unscored === 1 ? 'has' : 'have'} no score on SBLive/SI yet.`
+          ? ` The other ${unscored} ${unscored === 1 ? 'has' : 'have'} no score on si.com yet.`
           : ''}
       </p>
       {conflicts.length > 0 ? (
@@ -47,7 +52,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
               trail after the last letter of a right-aligned head. */}
           <table className="sx-table text-meta">
             <caption className="sr-only">
-              Games where MaxPreps and SBLive/SI publish different scores
+              Games where MaxPreps and si.com publish different scores
             </caption>
             <thead>
               <tr>
@@ -58,7 +63,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
                   MaxPreps
                 </th>
                 <th scope="col" className="w-px pl-3 pr-4 text-right tracking-normal">
-                  SBLive/SI
+                  si.com
                 </th>
               </tr>
             </thead>
@@ -86,10 +91,9 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
       {sbliveOnlyScored.length > 0 ? (
         <div className="mt-stack">
           <p className="max-w-prose text-body text-ink-2">
-            SBLive/SI has published a score for {sbliveOnlyScored.length} game
-            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not. We do not backfill
-            scores from a secondary source, so these stay unreported on this site until MaxPreps
-            publishes them:
+            si.com has a score for {sbliveOnlyScored.length} game
+            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our backfill
+            rules did not publish. Each stays unreported here, with the reason:
           </p>
           <ul className="sx-list mt-2 max-w-prose">
             {sbliveOnlyScored.map((row) => (
@@ -99,10 +103,11 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
               >
                 <span>
                   {row.label} <span className="text-ink-3">&middot; {row.dateKey}</span>
+                  {row.note ? <span className="block text-ink-3">{row.note}</span> : null}
                 </span>
                 {row.sbliveUrl ? (
                   <ExternalLink href={row.sbliveUrl} arrow={false}>
-                    SBLive/SI
+                    si.com
                   </ExternalLink>
                 ) : null}
               </li>

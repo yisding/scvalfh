@@ -1,39 +1,35 @@
 import { ImageResponse } from 'next/og';
 
+import { leagueRowText } from '@/components/home/home-data';
 import { SITE_NAME } from '@/components/layout/site-url';
-import { getAllStandings, getFetchedAt, getTeamById } from '@/lib/data';
-import { DIVISION_LABELS } from '@/lib/season';
-import { formatStamp, recordString } from '@/lib/format';
-import type { Division } from '@/lib/types';
+import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
+import { shortDate } from '@/lib/format';
 
 /**
- * The root OG card (DESIGN §1.1). TEXT ONLY: no logo file, no school colors and no third-party
- * image request — the same constraint that made TeamMonogram a color square instead of a hotlinked
- * mascot. It names both division leaders, because that is the one fact a link preview can carry.
+ * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image
+ * request — the same constraint that made TeamMonogram a color square instead of a hotlinked mascot.
  *
- * If a division is tied at the top, BOTH teams are named: By-Laws Article VI §2 — "if there is a
- * tie at the top both teams shall be declared division champions".
+ * One row per league, config order: `SCVAL  De Anza: St Ignatius 18 pts · El Camino: Los Gatos 21
+ * pts` — the leader(s) of each division with their points. A single-division league has no
+ * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
+ * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
  */
-export const alt = `${SITE_NAME} — 2026 standings, scores and CCS playoffs`;
+export const alt = `${SITE_NAME} — 2026 standings, scores and playoffs`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-function leadersFor(division: Division) {
-  const rows = getAllStandings()[division].filter((s) => s.hasReportedResults);
-  const top = rows.filter((s) => s.computed.place === 1);
-  return top.map((s) => {
-    const team = getTeamById(s.teamId);
-    return {
-      // shortName, not name: "St. Ignatius College Preparatory" wraps to three lines at 1200px.
-      name: team?.shortName ?? s.slug,
-      record: recordString(s.computed),
-      pts: s.computed.pts,
-    };
-  });
-}
-
 export default function OpengraphImage() {
-  const divisions: Division[] = ['de-anza', 'el-camino'];
+  const leagues = getLeagueSummaries();
+  const through = getLatestResultsDate();
+  const rows = leagues.map((league) => ({
+    id: league.id,
+    shortName: league.shortName,
+    text: leagueRowText(league.divisions),
+  }));
+  const footer = `${leagues.length} leagues · ${getTeams().length} teams · ${
+    through ? `results through ${shortDate(through)}` : 'no results yet'
+  }`;
+
   return new ImageResponse(
     (
       <div
@@ -50,79 +46,32 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 26,
-              letterSpacing: 4,
-              textTransform: 'uppercase',
-              color: '#919ba5',
-            }}
-          >
-            SCVAL girls varsity field hockey
-          </div>
-          <div style={{ display: 'flex', marginTop: 8, height: 2, background: '#3d444d' }} />
-          <div style={{ display: 'flex', marginTop: 28, fontSize: 68, fontWeight: 600 }}>
-            Fall 2026 scores &amp; standings
-          </div>
+          <div style={{ display: 'flex', fontSize: 64, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
+          <div style={{ display: 'flex', marginTop: 16, height: 2, background: '#3d444d' }} />
         </div>
 
-        <div style={{ display: 'flex', gap: 48 }}>
-          {divisions.map((division) => {
-            const leaders = leadersFor(division);
-            return (
-              <div
-                key={division}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  borderTop: '2px solid #3d444d',
-                  paddingTop: 20,
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    fontSize: 24,
-                    letterSpacing: 4,
-                    textTransform: 'uppercase',
-                    color: '#919ba5',
-                  }}
-                >
-                  {DIVISION_LABELS[division]}
-                </div>
-                {leaders.length === 0 ? (
-                  <div style={{ display: 'flex', marginTop: 12, fontSize: 34, color: '#aab4bf' }}>
-                    No results yet
-                  </div>
-                ) : (
-                  leaders.map((leader) => (
-                    <div
-                      key={leader.name}
-                      style={{ display: 'flex', flexDirection: 'column', marginTop: 14 }}
-                    >
-                      <div style={{ display: 'flex', fontSize: 44, fontWeight: 600 }}>
-                        {leader.name}
-                      </div>
-                      <div style={{ display: 'flex', marginTop: 6, fontSize: 28, color: '#aab4bf' }}>
-                        {leader.record} &middot; {leader.pts} pts
-                      </div>
-                    </div>
-                  ))
-                )}
-                {leaders.length > 1 ? (
-                  <div style={{ display: 'flex', marginTop: 8, fontSize: 22, color: '#919ba5' }}>
-                    Tied at the top — both are division champions (Article VI §2)
-                  </div>
-                ) : null}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {rows.map((row) => (
+            <div
+              key={row.id}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                paddingTop: 14,
+                paddingBottom: 14,
+                borderBottom: '1px solid #3d444d',
+              }}
+            >
+              <div style={{ display: 'flex', width: 170, flexShrink: 0, fontSize: 32, lineHeight: 1.15, fontWeight: 600 }}>
+                {row.shortName}
               </div>
-            );
-          })}
+              <div style={{ display: 'flex', flex: 1, fontSize: 28, lineHeight: 1.3, color: '#d5dbe1' }}>{row.text}</div>
+            </div>
+          ))}
         </div>
 
-        <div style={{ display: 'flex', fontSize: 22, color: '#919ba5' }}>
-          As of {formatStamp(getFetchedAt())} &middot; unofficial &middot; data from MaxPreps
+        <div style={{ display: 'flex', fontSize: 24, color: '#919ba5' }}>
+          {footer} &middot; unofficial
         </div>
       </div>
     ),

@@ -11,20 +11,31 @@
  *   5. league flag from teams[].contestType === 0
  *   6. store both date forms (naive local + UTC)
  *   7. opponent identity by GUID; a non-member is a name only
+ *
+ * SPEC §7.6 adds, in pipeline order (all pure):
+ *   1. `splitTbaRows` (lib/sources/maxpreps.ts) — a row with an unnamed side is dropped and recorded;
+ *      `normalizeGames` applies it too, so raw feed rows can be passed straight in
+ *   2. `normalizeGames` — plus `contestTypes`, `provenance.resultConflict`, and the `countsFor` /
+ *      `postseason` placeholders that lib/classify.ts fills
+ *   3. `applyExclusions` — DATA_QUALITY ghosts and excluded contests
+ *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { resolveTeam } from './teams';
+import type { DataQualityConfig } from './leagues';
+import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,
   Decider,
-  Division,
+  DivisionId,
+  DroppedContest,
   Game,
   GameSide,
   GameStatus,
   Outcome,
+  SeasonWindow,
   SourceId,
 } from './types';
-import type { ContestTeam, ScheduleRow } from './sources/maxpreps';
+import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
 
 export interface NormalizeOptions {
   /** ISO UTC stamp written into every Game.provenance.fetchedAt. */
@@ -35,12 +46,17 @@ export interface NormalizeOptions {
 
 export interface NormalizeResult {
   games: Game[];
+  /**
+   * Contests removed on purpose (SPEC §7.6): here only 'tba-opponent', one entry per TBA row, for a
+   * contest that no other row published. Deleted and malformed rows are counted in `stats`.
+   */
+  dropped: DroppedContest[];
   /** Non-fatal oddities worth a log line (SPEC §5.5.5 "log, don't pick silently"). */
   warnings: string[];
   stats: {
     rows: number;
     unique: number;
-    dropped: { deleted: number; malformed: number };
+    dropped: { deleted: number; malformed: number; tba: number };
     finals: number;
     pending: number;
     league: number;
@@ -131,12 +147,12 @@ export function cleanRecap(description: string | null | undefined): string | nul
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function sideOf(team: ContestTeam, score: number | null): GameSide {
+function sideOf(team: ContestTeam, name: string, score: number | null): GameSide {
   const known = resolveTeam(team.teamId);
   return {
     teamId: known ? known.id : team.teamId || null,
     slug: known ? known.slug : null,
-    name: known ? known.name : team.name,
+    name: known ? known.name : name,
     ...(team.city ? { city: team.city } : {}),
     score,
     result: toOutcome(team.result),
@@ -151,6 +167,67 @@ function completeness(row: ScheduleRow): number {
   return scored * 10 + stateRank + (cf.canonicalUrl ? 1 : 0);
 }
 
+/** The result a score implies for `own` against `other`. */
+function impliedOutcome(own: number, other: number): Outcome {
+  return own > other ? 'W' : own < other ? 'L' : 'T';
+}
+
+/**
+ * Score per teamId of one row, when that row is a final with two numbers; null otherwise.
+ * Used to compare the two feeds' copies of one contest (D2 rule 4a, "the two rows disagree").
+ */
+function finalScoreByTeam(row: ScheduleRow): Map<string, number> | null {
+  if (row.calculatedFields.contestState !== 4) return null;
+  const teams = row.contest.teams;
+  if (teams.length !== 2 || teams.some((t) => t.score === null || !t.teamId)) return null;
+  return new Map(teams.map((t) => [t.teamId as string, t.score as number]));
+}
+
+function scoreLine(row: ScheduleRow): string {
+  return row.contest.teams.map((t) => `${t.name ?? 'TBA'} ${t.score ?? '–'}`).join(', ');
+}
+
+/**
+ * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
+ * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
+ * disagree on the score. One plain sentence, or undefined.
+ */
+function resultConflictOf(
+  home: GameSide,
+  away: GameSide,
+  copies: readonly ScheduleRow[],
+): string | undefined {
+  const notes: string[] = [];
+  if (home.score !== null && away.score !== null) {
+    const wrong = [
+      { side: home, own: home.score, other: away.score },
+      { side: away, own: away.score, other: home.score },
+    ].filter(({ side, own, other }) => side.result !== null && side.result !== impliedOutcome(own, other));
+    if (wrong.length > 0) {
+      notes.push(
+        `MaxPreps marks ${home.name} ${home.result ?? 'unflagged'} and ${away.name} ${away.result ?? 'unflagged'} ` +
+          `on a ${home.score}-${away.score} score.`,
+      );
+    }
+  }
+  const scored = copies
+    .map((row) => ({ row, byTeam: finalScoreByTeam(row) }))
+    .filter((c): c is { row: ScheduleRow; byTeam: Map<string, number> } => c.byTeam !== null);
+  const [first, ...rest] = scored;
+  const differing = first
+    ? rest.find(({ byTeam }) =>
+        [...first.byTeam].some(([teamId, score]) => byTeam.has(teamId) && byTeam.get(teamId) !== score),
+      )
+    : undefined;
+  if (first && differing) {
+    notes.push(
+      `MaxPreps' two team feeds disagree on the score (${scoreLine(first.row)} in one; ` +
+        `${scoreLine(differing.row)} in the other).`,
+    );
+  }
+  return notes.length > 0 ? notes.join(' ') : undefined;
+}
+
 export function normalizeGames(
   rows: readonly ScheduleRow[],
   opts: NormalizeOptions,
@@ -159,15 +236,21 @@ export function normalizeGames(
   const stats = {
     rows: rows.length,
     unique: 0,
-    dropped: { deleted: 0, malformed: 0 },
+    dropped: { deleted: 0, malformed: 0, tba: 0 },
     finals: 0,
     pending: 0,
     league: 0,
   };
 
+  // --- §7.6 step 1: rows with an unnamed (TBA) side never become games. A no-op when the caller
+  // already split them off per feed.
+  const split = splitTbaRows(rows);
+  stats.dropped.tba = split.dropped.length;
+
   // --- 1 + 2: dedupe on contestId, dropping Deleted rows first.
   const best = new Map<ContestId, ScheduleRow>();
-  for (const row of rows) {
+  const copies = new Map<ContestId, ScheduleRow[]>();
+  for (const row of split.rows) {
     if (row.calculatedFields.contestState === 1) {
       stats.dropped.deleted += 1;
       continue;
@@ -175,11 +258,14 @@ export function normalizeGames(
     const id = row.contest.contestId;
     const prior = best.get(id);
     if (!prior || completeness(row) > completeness(prior)) best.set(id, row);
+    const list = copies.get(id);
+    if (list) list.push(row);
+    else copies.set(id, [row]);
   }
 
   const games: Game[] = [];
-  for (const row of best.values()) {
-    const game = toGame(row, opts, warnings);
+  for (const [id, row] of best) {
+    const game = toGame(row, copies.get(id) ?? [row], opts, warnings);
     if (!game) {
       stats.dropped.malformed += 1;
       continue;
@@ -194,16 +280,25 @@ export function normalizeGames(
       : a.dateLocal.localeCompare(b.dateLocal),
   );
 
+  // A TBA row whose contest another feed published with both sides named is not a dropped contest.
+  const published = new Set(games.map((g) => g.contestId));
+  const dropped = split.dropped.filter((d) => {
+    if (!published.has(d.contestId)) return true;
+    warnings.push(`contest ${d.contestId}: a TBA copy was ignored; another feed names both sides`);
+    return false;
+  });
+
   stats.unique = games.length;
   stats.finals = games.filter((g) => g.status === 'final').length;
   stats.pending = games.filter((g) => g.status === 'score-pending').length;
   stats.league = games.filter((g) => g.isLeague).length;
 
-  return { games, warnings, stats };
+  return { games, dropped, warnings, stats };
 }
 
 function toGame(
   row: ScheduleRow,
+  copies: readonly ScheduleRow[],
   opts: NormalizeOptions,
   warnings: string[],
 ): Game | null {
@@ -243,6 +338,12 @@ function toGame(
     return null;
   }
 
+  // splitTbaRows already removed every row with an unnamed side; this only narrows the types.
+  if (first.name === null || second.name === null) {
+    warnings.push(`contest ${c.contestId}: a side has no name — dropped`);
+    return null;
+  }
+
   // --- 3: a missing score stays null, forever.
   const homeScore = first.score ?? null;
   const awayScore = second.score ?? null;
@@ -277,13 +378,17 @@ function toGame(
           .join(', ')})`;
   if (leagueFlagConflict) warnings.push(`contest ${c.contestId}: ${leagueFlagConflict}`);
 
-  const home = sideOf(first, keepScores ? homeScore : null);
-  const away = sideOf(second, keepScores ? awayScore : null);
+  const home = sideOf(first, first.name, keepScores ? homeScore : null);
+  const away = sideOf(second, second.name, keepScores ? awayScore : null);
+
+  // --- D2 rule 4a evidence, on finals only.
+  const resultConflict = status === 'final' ? resultConflictOf(home, away, copies) : undefined;
+  if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
 
   // --- 7 + leagueDivision: set only when BOTH sides are registry members of the same division.
   const homeTeam = resolveTeam(first.teamId);
   const awayTeam = resolveTeam(second.teamId);
-  const leagueDivision: Division | null =
+  const leagueDivision: DivisionId | null =
     homeTeam && awayTeam && homeTeam.division === awayTeam.division ? homeTeam.division : null;
 
   const otPeriods = cf.overtimePeriodsPlayed ?? 0;
@@ -316,6 +421,11 @@ function toGame(
     status,
     isLeague,
     leagueDivision,
+    // Raw per-row contestType, in the same home/away slots as the sides.
+    contestTypes: { home: first.contestType, away: second.contestType },
+    // Placeholders: lib/classify.ts classifyGames sets both (pipeline step 10).
+    countsFor: null,
+    postseason: null,
     otPeriods,
     isOt: otPeriods > 0,
     isForfeit,
@@ -335,6 +445,7 @@ function toGame(
       fetchedAt: opts.fetchedAt,
       ...(c.modifiedOn ? { maxprepsModifiedOn: c.modifiedOn } : {}),
       ...(leagueFlagConflict ? { leagueFlagConflict } : {}),
+      ...(resultConflict ? { resultConflict } : {}),
     },
   };
   return game;
@@ -361,12 +472,129 @@ function httpUrlOrNull(
   return null;
 }
 
-/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
-export function seasonWindowOf(games: readonly Game[]): {
-  firstGame: string | null;
-  lastLeagueGame: string | null;
-  lastGame: string | null;
+function droppedRow(
+  game: Game,
+  reason: DroppedContest['reason'],
+  note: string,
+): DroppedContest {
+  return {
+    contestId: game.contestId,
+    reason,
+    note,
+    dateKey: game.dateKey,
+    teams: [game.home.name, game.away.name],
+  };
+}
+
+/**
+ * SPEC §7.6 step 3: drop every contest with a side in `dq.ghostTeamIds` ('ghost-team') and every
+ * contest in `dq.excludedContestIds` ('excluded-by-config'); a contest that is both is recorded once,
+ * as 'ghost-team'. `unused` lists the excluded ids that no longer appear among `games`, in config
+ * order; the caller logs each once as `exclusion no longer needed: <id>`. Order is kept.
+ */
+export function applyExclusions(
+  games: readonly Game[],
+  dq: DataQualityConfig,
+): { games: Game[]; dropped: DroppedContest[]; unused: ContestId[] } {
+  const ghosts = new Map(Object.entries(dq.ghostTeamIds));
+  const excluded = new Map(Object.entries(dq.excludedContestIds));
+  const kept: Game[] = [];
+  const dropped: DroppedContest[] = [];
+  const seen = new Set<ContestId>();
+  for (const game of games) {
+    seen.add(game.contestId);
+    const ghostId = [game.home.teamId, game.away.teamId].find(
+      (id): id is string => id !== null && ghosts.has(id),
+    );
+    if (ghostId !== undefined) {
+      dropped.push(droppedRow(game, 'ghost-team', ghosts.get(ghostId) as string));
+      continue;
+    }
+    const why = excluded.get(game.contestId);
+    if (why !== undefined) {
+      dropped.push(droppedRow(game, 'excluded-by-config', why));
+      continue;
+    }
+    kept.push(game);
+  }
+  const unused = [...excluded.keys()].filter((id) => !seen.has(id));
+  return { games: kept, dropped, unused };
+}
+
+/** final-with-score > score-pending > scheduled (then live/postponed/canceled last). */
+function phantomStatusRank(g: Game): number {
+  if (g.status === 'final' && g.home.score !== null && g.away.score !== null) return 3;
+  if (g.status === 'score-pending') return 2;
+  if (g.status === 'scheduled') return 1;
+  return 0;
+}
+
+/** Negative when `a` is the better row to keep (SPEC §7.6 step 4 preference order). */
+function comparePhantom(a: Game, b: Game): number {
+  const status = phantomStatusRank(b) - phantomStatusRank(a);
+  if (status !== 0) return status;
+  const leagueTyped = (g: Game) => (g.contestTypes.home === 0 || g.contestTypes.away === 0 ? 1 : 0);
+  const typed = leagueTyped(b) - leagueTyped(a);
+  if (typed !== 0) return typed;
+  const am = a.provenance.maxprepsModifiedOn ?? '';
+  const bm = b.provenance.maxprepsModifiedOn ?? '';
+  if (am !== bm) return am > bm ? -1 : 1;
+  return a.contestId < b.contestId ? -1 : a.contestId > b.contestId ? 1 : 0;
+}
+
+/**
+ * SPEC §7.6 step 4: ONLY contests whose two sides are registry members of the SAME division are
+ * grouped, by (dateKey, unordered teamId pair); each group keeps one contest (final with a score >
+ * score-pending > scheduled, then a contestType 0 row, then the later `maxprepsModifiedOn`, then the
+ * smaller contestId) and records the others as 'phantom-duplicate'. Any other pair — a non-league
+ * double-header, a cross-division or non-member game — is never touched. Order is kept.
+ *
+ * `preferred` (optional) ranks above everything else: a group keeps a preferred contest over any other
+ * (the pipeline prefers this run's rows over games carried from the previous snapshot).
+ */
+export function dedupePhantomPairs(
+  games: readonly Game[],
+  opts: { preferred?: (game: Game) => boolean } = {},
+): {
+  games: Game[];
+  dropped: DroppedContest[];
 } {
+  const preferred = opts.preferred ?? (() => false);
+  const order = (a: Game, b: Game): number =>
+    (preferred(a) === preferred(b) ? 0 : preferred(a) ? -1 : 1) || comparePhantom(a, b);
+  const groups = new Map<string, Game[]>();
+  for (const game of games) {
+    const home = game.home.teamId ? getTeamById(game.home.teamId) : undefined;
+    const away = game.away.teamId ? getTeamById(game.away.teamId) : undefined;
+    if (!home || !away || home.id === away.id || home.division !== away.division) continue;
+    const pair = [home.id, away.id].sort().join('|');
+    const key = `${game.dateKey}|${pair}`;
+    const list = groups.get(key);
+    if (list) list.push(game);
+    else groups.set(key, [game]);
+  }
+
+  const losers = new Map<ContestId, Game>();
+  const dropped: DroppedContest[] = [];
+  for (const group of groups.values()) {
+    if (group.length < 2) continue;
+    const [keep, ...rest] = [...group].sort(order);
+    for (const g of rest) {
+      losers.set(g.contestId, g);
+      dropped.push(
+        droppedRow(
+          g,
+          'phantom-duplicate',
+          `MaxPreps lists ${g.home.name} and ${g.away.name} twice on ${g.dateKey}; kept contest ${keep.contestId}.`,
+        ),
+      );
+    }
+  }
+  return { games: games.filter((g) => !losers.has(g.contestId)), dropped };
+}
+
+/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
+export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
   const dates = games.map((g) => g.dateLocal).sort();
   const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
   return {

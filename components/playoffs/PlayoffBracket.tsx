@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/teams';
+import { getTeamBySlug } from '../../lib/data';
+import { gameHref } from '../../lib/game-id';
 import type { TeamSlug } from '../../lib/types';
 import GameRow from '../ui/GameRow';
-import { ScoreGlyph } from '../ui/ScoreCell';
+import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame, type SideView } from '../ui/game-view';
@@ -37,25 +38,6 @@ export interface PlayoffBracketProps {
    */
   headingLevel?: 'h3' | 'h4';
   className?: string;
-}
-
-/**
- * The name's weight and ink, three ways rather than "winner or not": the winner is 600 in ink, the
- * loser 400 in ink-2, and a LEVEL side (an upcoming game, a tie) is 400 in full ink, so an unplayed
- * pairing does not read as two losers. A cancelled or postponed game's names step back to ink-2.
- * The same rule as `nameClass` in components/ui/ScoreCell.tsx (G-2), written inline here so the
- * bracket does not depend on that export landing first.
- */
-const NAME_CLASS: Record<SideView['weight'], string> = {
-  winner: 'font-semibold text-ink',
-  loser: 'font-normal text-ink-2',
-  level: 'font-normal text-ink',
-};
-
-function nameClass(side: SideView): string {
-  return side.chip === 'cancelled' || side.chip === 'postponed'
-    ? 'font-normal text-ink-2'
-    : NAME_CLASS[side.weight];
 }
 
 function sideLabel(side: SideView): string {
@@ -118,7 +100,7 @@ function BracketCard({
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and a full bracket is fourteen game pages. Navigation still fetches on click. */}
       {named ? (
-        <Link href={`/game/${game.contestId}`} prefetch={false} className="block py-1 no-underline">
+        <Link href={gameHref(game.contestId)} prefetch={false} className="block py-1 no-underline">
           <span className="sr-only">{display.sentence}</span>
           <span className="block" aria-hidden="true">
             <BracketLine side={display.away} seed={seeds.away} showScore={display.showScores} />
@@ -167,7 +149,7 @@ export function PlayoffBracket({
             <ol className="sx-list sx-card sx-flush sx-bleed">
               {round.games.map((entry) => (
                 <li key={entry.game.contestId}>
-                  {/* Every CCS game is isLeague=false, so the NL tag would mark the whole
+                  {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
                   <GameRow game={entry.game} showRecap={false} showNonLeague={false} />
                 </li>

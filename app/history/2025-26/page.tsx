@@ -1,40 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import AwardsBlock from '@/components/about/AwardsBlock';
-import HistoryStandingsTable from '@/components/about/HistoryStandingsTable';
-import ExternalLink from '@/components/ui/ExternalLink';
-import PageHeader from '@/components/layout/PageHeader';
-import DivisionTabs from '@/components/standings/DivisionTabs';
-import TeamMonogram from '@/components/ui/TeamMonogram';
-import SectionHeader from '@/components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
-import { getTeamBySlug } from '@/lib/data';
+import AwardsBlock from '../../../components/about/AwardsBlock';
+import HistoryStandingsTable from '../../../components/about/HistoryStandingsTable';
+import ExternalLink from '../../../components/ui/ExternalLink';
+import PageHeader from '../../../components/layout/PageHeader';
+import DivisionTabs from '../../../components/standings/DivisionTabs';
+import TeamMonogram from '../../../components/ui/TeamMonogram';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site-url';
+import { getTeamBySlug } from '../../../lib/data';
 import {
   getHistoryAwards,
   getHistoryChampions,
   getHistorySeason,
   getHistorySources,
   getHistoryStandings,
-} from '@/lib/history';
-import { DIVISIONS, DIVISION_LABELS } from '@/lib/season';
+} from '../../../lib/history';
+import { HISTORY_LEAGUE, divisionsOf, getLeague } from '../../../lib/leagues';
 
 /**
- * `/history/2025-26` (DESIGN §1.1, §3.9) — final standings for both divisions, both levels, plus
- * the all-league awards, built once from the two scval.com end-of-season PDFs
+ * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — SCVAL ONLY: final standings for both
+ * divisions, both levels, plus the all-league awards, built once from the two scval.com
+ * end-of-season PDFs
  * (`scripts/build-history.ts`). MaxPreps cannot serve a prior season at all — the year segment of
  * its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this page is
  * the only place last season's numbers live, and it is not part of the nightly snapshot.
  *
+ * No other league has a prior season here, so the page is labelled with the league everywhere
+ * and reads its divisions from `divisionsOf(HISTORY_LEAGUE)` (never every division on the site).
+ *
  * The header says only what a reader needs before the tables (what this is, where it came from,
- * that it does not change) in a two-sentence lede; the provenance detail (built once, why not MaxPreps,
- * why there is no overall record) sits in the source note at the foot. A long lede here pushed
- * the first standings row under the phone tab bar.
+ * that it does not change, and that no other league has one) in a short lede; the provenance
+ * detail (built once, why not MaxPreps, why there is no overall record) sits in the source note at
+ * the foot. A long lede here pushed the first standings row under the phone tab bar.
  */
+const HISTORY = getLeague(HISTORY_LEAGUE);
+const DIVISIONS = divisionsOf(HISTORY_LEAGUE);
+const PAGE_TITLE = `${HISTORY.shortName} 2025-26`;
+
 export const metadata: Metadata = {
-  title: '2025-26 season archive',
+  title: PAGE_TITLE,
   description:
-    'Final SCVAL De Anza and El Camino girls varsity and JV field hockey standings and all-league awards from the 2025-26 season, from the official scval.com PDFs.',
+    `Final ${HISTORY.shortName} ${DIVISIONS.map((d) => d.label).join(' and ')} girls varsity and JV field hockey standings and all-league awards from the 2025-26 season, from the official league PDFs.`,
   alternates: { canonical: '/history/2025-26' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/history/2025-26' },
 };
@@ -44,8 +52,8 @@ export default function HistoryPage() {
   const champions = getHistoryChampions();
   const sources = getHistorySources();
   const tabs = DIVISIONS.map((division) => ({
-    href: `#${division}`,
-    label: DIVISION_LABELS[division],
+    href: `#${division.id}`,
+    label: division.label,
   }));
 
   return (
@@ -54,11 +62,12 @@ export default function HistoryPage() {
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
         eyebrow="Archive"
-        title={`${season} season archive`}
+        title={`${HISTORY.shortName} ${season}`}
         description={
           <>
-            Final varsity and JV standings and all-league awards from SCVAL&rsquo;s end-of-season
-            PDFs. This page doesn&rsquo;t change.
+            Final varsity and JV standings and all-league awards from {HISTORY.shortName}&rsquo;s
+            end-of-season PDFs. This page doesn&rsquo;t change. Prior-season results are available
+            for {HISTORY.shortName} only.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a division" />}
@@ -84,7 +93,7 @@ export default function HistoryPage() {
                 {team ? <TeamMonogram team={team} size={40} /> : null}
                 <div className="col-start-2 min-w-0">
                   <p className="m-0 text-micro font-medium text-ink-3">
-                    {DIVISION_LABELS[division]} champion
+                    {DIVISIONS.find((d) => d.id === division)?.label ?? division} champion
                   </p>
                   <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{row.name}</p>
                   <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
@@ -101,12 +110,11 @@ export default function HistoryPage() {
           though El Camino's varsity table has one more row than De Anza's. Below lg the sections
           simply stack. */}
       <div className="mt-section grid gap-y-section md:mt-section-lg md:gap-y-section-lg lg:grid-cols-2 lg:grid-rows-[repeat(8,auto)] lg:gap-x-10 lg:gap-y-0">
-      {DIVISIONS.map((division) => {
+      {DIVISIONS.map(({ id: division, label }) => {
         const varsity = getHistoryStandings(division, 'varsity');
         const jv = getHistoryStandings(division, 'jv');
         const varsityAwards = getHistoryAwards(division, 'varsity');
         const jvAwards = getHistoryAwards(division, 'jv');
-        const label = DIVISION_LABELS[division];
         return (
           <section
             key={division}
@@ -148,8 +156,9 @@ export default function HistoryPage() {
         <ExternalLink href={sources.standingsPdf}>2025-26 final standings (PDF)</ExternalLink> and{' '}
         <ExternalLink href={sources.allLeaguePdf}>2025-26 all-league awards (PDF)</ExternalLink>.
         This page is built once from those PDFs, not from the live MaxPreps snapshot the rest of
-        the site uses &mdash; MaxPreps only ever serves the current season. SCVAL&rsquo;s final
-        PDFs list league records only; their overall-record column was empty for this season.
+        the site uses &mdash; MaxPreps only ever serves the current season.{' '}
+        {HISTORY.shortName}&rsquo;s final PDFs list league records only; their overall-record
+        column was empty for this season.
         Full attribution and update details are on the{' '}
         <Link href="/about" className="text-accent hover:underline">
           About &amp; sources

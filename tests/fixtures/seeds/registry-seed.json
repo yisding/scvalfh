@@ -1,0 +1,1962 @@
+{
+  "schema": "scvalfh-registry-seed/1",
+  "generatedOn": "2026-10-02",
+  "season": {
+    "year": "26-27",
+    "sportSeasonId": "e302eb3e-1a32-4f2d-934b-6f9d454f721e",
+    "allSeasonId": "bfacc9ec-145e-4659-ba7e-0824d163d5fc",
+    "sectionId": "d9a9ef9c-db12-4669-888b-40ac8462a575",
+    "sectionName": "Central Coast Section",
+    "genderSport": "girls,fieldhockey",
+    "level": "Varsity"
+  },
+  "conventions": {
+    "slug": "Ours, kebab-case, never derived by string munging. The 15 SCVAL slugs are unchanged (localStorage pins, /teams/<slug> URLs and fixture names depend on them).",
+    "abbr": "Ours, 2 letters, UNIQUE across all 34 teams in all leagues. The 15 SCVAL abbrs are unchanged. New ones were chosen to avoid every existing abbr: Leigh LE / Leland LD; Prospect PS (PR = Presentation); Silver Creek SK (SC = Santa Clara); Westmont WM (WG = Willow Glen); Carmel CA (CU = Cupertino, CH = Christopher); Santa Catalina CT (SC taken; PCAL code CAT); Salinas SA (SG = Saratoga); Greenfield GR (GI = Gilroy).",
+    "acronym": "MaxPreps schoolNameAcronym, copied verbatim. NOT unique: CHS = Cupertino/Christopher/Carmel, HHS = Homestead/Hollister, LHS = Lynbrook/Leigh/Leland, SHS = Saratoga/Stevenson/Salinas, SCHS = Santa Clara/Silver Creek/Santa Catalina, PHS = Presentation/Prospect, GHS = Gilroy/Greenfield. lib/teams.ts must STOP asserting acronym uniqueness and must STOP feeding acronyms into the BY_KEY alias table (only types.ts/snapshot-schema.ts/teams.ts use the field). SICP stays as an explicit alias of St. Ignatius.",
+    "aliases": "Every spelling seen in MaxPreps (schoolName), si.com (team names), the official league pages/grids (BVAL docx headers, SCVAL PDF uppercase forms, CCS alignment), plus the '<Name> <Mascot>' and '<Name> High School' forms. Checked: no two teams share a normalizeTeamKey() key across [id, slug, name, shortName, aliases].",
+    "officialCodes": "NEW optional field. Short codes used only inside an official fixture grid (PCAL PDF: CAR/GRE/HOL/MON/SAL/CAT/SCAT/STE; BVAL docx: 'WG'). Kept OUT of aliases on purpose so 2-3 letter tokens never enter the global resolver; a per-league grid parser should map them.",
+    "division": "DivisionId strings are globally unique: de-anza, el-camino (SCVAL, unchanged), mt-hamilton, santa-teresa (BVAL), pcal (PCAL's single division; MaxPreps calls it 'Pacific Coast - Gabilan', which is NOT a PCAL field hockey division name and must not be shown to users). 'santa-teresa' is a DIVISION id; Santa Teresa High School (a BVAL member) does not field field hockey.",
+    "colors": "schoolColor1/schoolColor2 from the MaxPreps league standings row, hex without '#'. Prospect is not in any standings table, so its colours come from teams/{id}/sportseasons/{ssid}/v1. Several unrelated schools share 222222/C8880A (likely MaxPreps defaults).",
+    "dataCoverage": "'full' = schedule-calculated returned >= 1 row on 2026-10-02 (SCVAL counts from repo fixtures). All 34 are 'full'.",
+    "shortName": "<= 14 chars for the 176px control; no same-named schools exist among the 34, so no '(City)' qualifiers were needed. 'Santa Catalina' is exactly 14 and 'Silver Creek' 12: PICKER_BREAKS must be re-measured."
+  },
+  "ccs": {
+    "autoQualifiers": {
+      "scval": 7,
+      "bval": 4,
+      "pcal": 2
+    },
+    "atLarge": 3,
+    "total": 16,
+    "format": "Single elimination, two divisions of 8: overall ranks 1-8 -> Division 1, 9-16 -> Division 2 (seeds display 1-8 within each). High seed (bottom line) hosts QF and SF per bylaws; live iCal says SF/F at neutral sites -> treat SF/F sites as TBD.",
+    "selectionCommittee": "ADAC rep + 2 SCVAL + 2 BVAL + 1 PCAL; criteria (no order): head to head, common opponent, significant wins, strength of league, league finish, strength of schedule; avoid first-round league-mates 'if possible'.",
+    "overtime": "Two 10-minute 7v7 sudden-victory periods, then 5-player shootouts, then a second shootout round, then sudden victory: a playoff game can show a tied score with a winner ('(W)' on MaxPreps).",
+    "keyDates": {
+      "endOfLeagueSeason": "2026-10-31",
+      "entriesDue": "2026-11-02T12:00:00",
+      "seedingMeeting": "2026-11-02T13:00:00",
+      "quarterfinals": "2026-11-07",
+      "semifinals": "2026-11-11",
+      "finals": "2026-11-14",
+      "evaluationMeeting": "2026-11-19T16:00:00"
+    },
+    "maxprepsTournament": {
+      "tournamentId": "b97830de-ad65-4dc2-b4be-b76080093330",
+      "division1BracketId": "30408977-466b-441e-ac1a-18a5cf483aa6",
+      "division2BracketId": "b9c27987-34de-415a-b599-3dbec8f1e23d",
+      "url": "https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm",
+      "published": false
+    },
+    "sources": {
+      "bylaws": "https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf",
+      "bylawsResolved": "https://d2o2figo6ddd0g.cloudfront.net/y/r/hhm5n1zwjj7l7d/field_hockey_bylaws_2026-27.pdf",
+      "alignment": "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+      "alignmentResolved": "https://d2o2figo6ddd0g.cloudfront.net/x/6/oveyqe9ewyzm4m/League_Alignments_2026-27.pdf",
+      "committeeReport2025": "https://d2o2figo6ddd0g.cloudfront.net/s/h/fa3btnwwnzoive/FH_Sport_Cmt._report_2025.pdf",
+      "index": "https://cifccs.org/sports/fh/index",
+      "ical": "https://cifccs.org/calendar/Field_Hockey?print=ical"
+    },
+    "citations": {
+      "allocation": "CCS Field Hockey Bylaws 2026-27 §4a: BVAL 4 | PCAL 3 to 2 | SCVAL 7 | 3 At-Larges; SCVAL By-Laws Art. VII §1 agrees",
+      "change": "CCS FH Committee Report 2025-11-20 §IV: 'reduce PCAL AQ's to 2 from 3. Motion Carried 5-1.'"
+    }
+  },
+  "leagues": [
+    {
+      "id": "scval",
+      "name": "Santa Clara Valley Athletic League",
+      "shortName": "SCVAL",
+      "officialUrl": "https://scval.com/fallSports/Fall_index.html",
+      "sbliveLeagueSlugs": [
+        "4242-santa-clara-valley-de-anza",
+        "4243-santa-clara-valley-el-camino"
+      ],
+      "divisions": [
+        {
+          "id": "de-anza",
+          "label": "De Anza",
+          "maxprepsLeagueId": "ea062dfe-9fb9-45c7-9839-0801993d6ac6",
+          "maxprepsName": "Santa Clara Valley - De Anza",
+          "maxprepsSlug": "santa-clara-valley--de-anza",
+          "maxprepsCanonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--de-anza/?leagueid=ea062dfe-9fb9-45c7-9839-0801993d6ac6",
+          "maxprepsTeamCount": 7,
+          "officialTeamCount": 8,
+          "registryTeamCount": 7,
+          "officialScheduleUrl": "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf",
+          "officialScheduleFormat": "pdf (parsed today by lib/sources/scval-pdf.ts)",
+          "notInRegistry": [
+            "Wilcox (on the official grid; not fielding a team; MaxPreps empty shell 4169ba3d-78d4-48ed-a4a4-2b79af41d3ee)"
+          ]
+        },
+        {
+          "id": "el-camino",
+          "label": "El Camino",
+          "maxprepsLeagueId": "7bdfb2a7-8dde-4a21-88c9-832f1593554d",
+          "maxprepsName": "Santa Clara Valley - El Camino",
+          "maxprepsSlug": "santa-clara-valley--el-camino",
+          "maxprepsCanonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--el-camino/?leagueid=7bdfb2a7-8dde-4a21-88c9-832f1593554d",
+          "maxprepsTeamCount": 8,
+          "officialTeamCount": 8,
+          "registryTeamCount": 8,
+          "officialScheduleUrl": "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf",
+          "officialScheduleFormat": "pdf (parsed today by lib/sources/scval-pdf.ts)"
+        }
+      ],
+      "rules": {
+        "confidence": "verified",
+        "pointsPerWin": 3,
+        "pointsPerTie": 1,
+        "pointsPerLoss": 0,
+        "orderBy": "points",
+        "leagueGames": "division games only, double round robin (Art. VI §1)",
+        "classification": {"rule": "contest-type", "countsIf": "final AND MaxPreps contestType 0 on either team row (Game.isLeague) AND both sides registry members of the division (Game.leagueDivision) -- unchanged from lib/standings.ts divisionGames(); SCVAL tables byte-identical [V test]", "spec": "research/classification/CLASSIFICATION-SPEC.md"},
+        "tiesPossible": true,
+        "overtime": "one 7-minute 7v7 sudden-victory period, then the game ends tied (Art. IV)",
+        "tiebreaks": [
+          "head-to-head",
+          "division-wins",
+          "h2h-goals-against",
+          "h2h-goal-diff",
+          "coin-flip"
+        ],
+        "citations": {
+          "points": "SCVAL Field Hockey By-Laws 2026-27, Art. VI §2",
+          "tiebreaks": "Art. VI §3-7",
+          "qualifiers": "Art. VII §1-2"
+        },
+        "bylawsUrl": "https://scval.com/fallSports/1%2026-27%20SCVAL%20Field%20Hockey%20By-Laws.pdf"
+      },
+      "playoff": {
+        "autoBerths": 7,
+        "ladder": [
+          {
+            "division": "*",
+            "places": [
+              1,
+              3
+            ],
+            "status": "aq",
+            "label": "Automatic CCS berth (Art. VII §2)"
+          },
+          {
+            "division": "*",
+            "places": [
+              4,
+              4
+            ],
+            "status": "play-in",
+            "label": "4th-place crossover play-in Fri Oct 30; winner = SCVAL 7th AQ"
+          },
+          {
+            "division": "*",
+            "places": [
+              5,
+              5
+            ],
+            "status": "at-large",
+            "label": "Submitted to CCS for at-large consideration (with the play-in loser)"
+          },
+          {
+            "division": "*",
+            "places": [
+              6,
+              99
+            ],
+            "status": "out",
+            "label": "No CCS route via the league"
+          }
+        ],
+        "crossover": {
+          "date": "2026-10-30",
+          "sides": [
+            "de-anza",
+            "el-camino"
+          ],
+          "pairs": "#1v#1, #2v#2, #3v#3 (ordering), #4v#4 (play-in for the 7th AQ)"
+        }
+      },
+      "keyDates": {
+        "leaguePlay": [
+          "2026-09-09",
+          "2026-10-28"
+        ],
+        "crossover": "2026-10-30",
+        "datesSource": "repo docs/DESIGN.md + official SCVAL PDFs"
+      }
+    },
+    {
+      "id": "bval",
+      "name": "Blossom Valley Athletic League",
+      "shortName": "BVAL",
+      "officialUrl": "https://bval.org/field-hockey/",
+      "sbliveLeagueSlugs": [
+        "4175-blossom-valley-mount-hamilton"
+      ],
+      "sbliveNote": "4175 is mis-bucketed: it holds 9 BVAL teams from BOTH divisions (not Christopher/Gilroy, which sit in PCAL bucket 4231; not Silver Creek, unbucketed 547018). Use only to harvest team paths, never for membership.",
+      "divisions": [
+        {
+          "id": "mt-hamilton",
+          "label": "Mt. Hamilton",
+          "maxprepsLeagueId": "8ec791a6-463e-4313-86de-1bd02671054a",
+          "maxprepsName": "Blossom Valley - Mount Hamilton",
+          "maxprepsSlug": "blossom-valley--mount-hamilton",
+          "maxprepsCanonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/blossom-valley--mount-hamilton/?leagueid=8ec791a6-463e-4313-86de-1bd02671054a",
+          "maxprepsTeamCount": 6,
+          "officialTeamCount": 6,
+          "registryTeamCount": 6,
+          "officialScheduleUrl": "https://docs.google.com/document/d/150BDI14JosnaB71NoTwYyLp1AFfXSVXb/edit",
+          "officialScheduleDownload": "https://drive.google.com/uc?export=download&id=150BDI14JosnaB71NoTwYyLp1AFfXSVXb",
+          "officialScheduleFormat": "docx on Google Drive (unauthenticated download); lines 'Away @ Home [time]' under date headings; revised 9/20/26",
+          "officialScheduleJson": "web/bval-official-schedule-2026.json",
+          "leagueGamesPerTeam": 10
+        },
+        {
+          "id": "santa-teresa",
+          "label": "Santa Teresa",
+          "maxprepsLeagueId": "7c899b2d-07fa-4664-976c-a4f57d12eeec",
+          "maxprepsName": "Blossom Valley - Santa Teresa",
+          "maxprepsSlug": "blossom-valley--santa-teresa",
+          "maxprepsCanonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/blossom-valley--santa-teresa/?leagueid=7c899b2d-07fa-4664-976c-a4f57d12eeec",
+          "maxprepsTeamCount": 5,
+          "officialTeamCount": 6,
+          "registryTeamCount": 6,
+          "maxprepsMissing": [
+            "prospect"
+          ],
+          "officialScheduleUrl": "https://docs.google.com/document/d/1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD/edit",
+          "officialScheduleDownload": "https://drive.google.com/uc?export=download&id=1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD",
+          "officialScheduleFormat": "docx on Google Drive (unauthenticated download); revised 9/22/26",
+          "officialScheduleJson": "web/bval-official-schedule-2026.json",
+          "leagueGamesPerTeam": 10
+        }
+      ],
+      "rules": {
+        "confidence": "verified",
+        "pointsPerWin": 3,
+        "pointsPerTie": 1,
+        "pointsPerLoss": 0,
+        "orderBy": "points",
+        "leagueGames": "division games only, home-and-home double round robin (official 2026-27 schedules)",
+        "classification": {"rule": "official-fixtures", "countsIf": "final AND applyOfficialFixtures matched it to an official fixture of THIS division (stamp official.division); MaxPreps contestType ignored", "why": "Prospect's official Santa Teresa games vs Live Oak (9/29 final 6-0, 10/15) and Sobrato (10/6, 10/22) are contestType 1,1 [V]", "fixtures": "research/web/bval-sched-A.txt (Mt. Hamilton, 30) + bval-sched-B.txt (Santa Teresa, 30); exclude the CCS play-in line", "fallbackIfNoFixtures": "contest-type (never membership-only); mark source degraded", "spec": "research/classification/CLASSIFICATION-SPEC.md"},
+        "tiesPossible": true,
+        "overtime": "one 7-minute 7v7 sudden-victory period in varsity, then the game ends tied (§1a)",
+        "coChampions": "teams tied on points are co-champions (§6a); the tiebreak chain decides the CCS representative/order",
+        "tiebreaks": [
+          "head-to-head (3+ teams: mini-league 3/1/0 among the tied)",
+          "division-wins",
+          "h2h-goal-diff",
+          "division-goals-against",
+          "coin-flip"
+        ],
+        "citations": {
+          "points": "BVAL Field Hockey By-Laws (rev. 8/13/24) §6a",
+          "tiebreaks": "§6b-f",
+          "qualifiers": "§7a (updated 11/19/2023)",
+          "realignment": "§8"
+        },
+        "bylawsUrl": "https://docs.google.com/document/d/1sI0CxQMZ0m8T6tJWt6Cd3btjTNcGwAgz/edit"
+      },
+      "playoff": {
+        "autoBerths": 4,
+        "ladder": [
+          {
+            "division": "mt-hamilton",
+            "places": [
+              1,
+              3
+            ],
+            "status": "aq",
+            "label": "BVAL #1-#3 automatic CCS berth (§7a)"
+          },
+          {
+            "division": "mt-hamilton",
+            "places": [
+              4,
+              4
+            ],
+            "status": "play-in",
+            "label": "Play-in at the Santa Teresa champion, Sat Oct 31 11am; winner = BVAL #4"
+          },
+          {
+            "division": "mt-hamilton",
+            "places": [
+              5,
+              99
+            ],
+            "status": "out",
+            "label": "No automatic-berth route (at-large is the CCS committee's call)"
+          },
+          {
+            "division": "santa-teresa",
+            "places": [
+              1,
+              1
+            ],
+            "status": "play-in",
+            "label": "Hosts the play-in vs Mt. Hamilton #4, Sat Oct 31 11am; winner = BVAL #4"
+          },
+          {
+            "division": "santa-teresa",
+            "places": [
+              2,
+              99
+            ],
+            "status": "out",
+            "label": "No automatic-berth route (at-large is the CCS committee's call)"
+          }
+        ],
+        "playIn": {
+          "date": "2026-10-31T11:00:00",
+          "home": "santa-teresa #1",
+          "away": "mt-hamilton #4",
+          "countsAsLeagueGame": false
+        }
+      },
+      "keyDates": {
+        "leaguePlay": {
+          "mt-hamilton": [
+            "2026-09-17",
+            "2026-10-30"
+          ],
+          "santa-teresa": [
+            "2026-09-18",
+            "2026-10-30"
+          ]
+        },
+        "playIn": "2026-10-31",
+        "postSeasonMeeting": "2026-11-10"
+      },
+      "standingsPage": {
+        "url": "https://bval.org/standings/",
+        "note": "Points to MaxPreps for live standings; end-of-season xlsx only (latest 2025-26)."
+      }
+    },
+    {
+      "id": "pcal",
+      "name": "Pacific Coast Athletic League",
+      "shortName": "PCAL",
+      "officialUrl": "https://pcalathletics.org/field-hockey/",
+      "sbliveLeagueSlugs": [
+        "4231-pacific-coast-gabilan",
+        "4232-pacific-coast-mission"
+      ],
+      "sbliveNote": "4231 holds Christopher and Gilroy (BVAL) plus North Salinas/Notre Dame (no 2026 team); 4232 holds Stevenson, Carmel, York, Santa Catalina, Salinas, Greenfield. Use only to harvest team paths.",
+      "divisions": [
+        {
+          "id": "pcal",
+          "label": "PCAL",
+          "singleDivision": true,
+          "maxprepsLeagueId": "50ac53cd-e46f-4df9-824b-5a954c583b95",
+          "maxprepsName": "Pacific Coast - Gabilan",
+          "maxprepsSlug": "pacific-coast--gabilan",
+          "maxprepsCanonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/pacific-coast--gabilan/?leagueid=50ac53cd-e46f-4df9-824b-5a954c583b95",
+          "maxprepsTeamCount": 7,
+          "officialTeamCount": 7,
+          "registryTeamCount": 7,
+          "officialScheduleUrl": "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf",
+          "officialScheduleFormat": "1-page PDF grid (14 rounds x 3 games + bye, codes CAR/GRE/HOL/MON/SAL/CAT/STE); already transcribed to research/web/pcal-official-schedule-2026.json",
+          "leagueGamesPerTeam": 12,
+          "ignoredMaxprepsLeagues": [
+            {
+              "leagueId": "6e1f97d4-5211-4d98-bf59-282cd754bc5c",
+              "name": "Pacific Coast - Mission",
+              "reason": "0 teams: standings HTTP 400 'League teams not found.'; no contests; not a PCAL field hockey division"
+            }
+          ]
+        }
+      ],
+      "rules": {
+        "confidence": "verified",
+        "pointsPerWin": 3,
+        "pointsPerTie": 1,
+        "pointsPerLoss": 0,
+        "orderBy": "points",
+        "leagueGames": "single division, double round robin (2026 schedule; Sports Rules §1.4-1.5)",
+        "classification": {"rule": "official-fixtures", "countsIf": "final AND applyOfficialFixtures matched it to an official PCAL fixture; MaxPreps contestType ignored", "fixtures": "research/web/pcal-official-schedule-2026.json (42); 34/42 present on MaxPreps 2026-10-02", "fallbackIfNoFixtures": "contest-type (never membership-only); mark source degraded", "spec": "research/classification/CLASSIFICATION-SPEC.md"},
+        "officialFixtureScoreFallback": {"source": "sblive", "enabled": true, "spec": "DOSSIER.md F4", "eligible": "official fixture UNMATCHED by applyOfficialFixtures (no MaxPreps contest at all) AND dated before today; never a fixture with a MaxPreps contest, even score-pending (SPEC 5.7 unchanged there)", "fetch": "si.com team-games pages, Chrome UA, greedy set cover of eligible pairs, max 7 per run, skip if none eligible", "candidate": "webPath /california/field-hockey/games/, statusId 3, both scores int, BOTH sides resolved by si.com numeric team id to the fixture's two registry teams, no withdrawn/JV-only side, not already joined to a MaxPreps contest", "match": "unordered pair + nearest date within 14 days of the official date; dedupe by sbliveGameId; >1 distinct scored candidate => no fill + warn", "ignore": ["gameTypeLabel", "leagueRecord"], "emit": "contestId 'sblive:<id>', home/away from the grid, status final, isLeague true, provenance.scores 'sblive', urls.maxpreps null, urls.sblive game url; counted in standings with a dagger footnote", "supersededBy": "a MaxPreps contest for the same fixture (then any score difference is an ordinary scoreConflict)", "verified20261002": [{"fixture": "2026-09-04 GRE@CAT", "sbliveGameId": "6541425", "score": "Greenfield 0, Santa Catalina 1", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6541425-greenfield-vs-santa-catalina"}, {"fixture": "2026-09-30 HOL@GRE", "sbliveGameId": "6543072", "score": "Hollister 3, Greenfield 1", "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6543072-hollister-vs-greenfield"}], "notFilledButPending": [{"fixture": "2026-09-29 CAR@STE", "maxprepsContestState": 5, "sbliveGameId": "6499423", "sbliveScore": "Stevenson 9, Carmel 0"}], "tableWithFill20261002": "STE 15, HOL 15, CAR 12, MON 9, SAL 6, CAT 3, GRE 0 (MaxPreps-only: STE 15, CAR 12, HOL 12, MON 9, SAL 6, GRE 0, CAT 0)", "sbliveTeamIds": {"stevenson": "456854", "carmel": "458529", "hollister": "459010", "monterey": "458839", "salinas": "459009", "greenfield": "458776", "santa-catalina": "458109"}},
+        "tiesPossible": true,
+        "tiesNote": "[U] §1.6.4 OT applies 'in Varsity league single round robin or bracket play only'; in the 2026 double round robin a regulation tie probably stands. Either way a tie scores 1 point.",
+        "coChampions": "2-way tie = co-champions, 3-way = tri-champions (§1.7, By-laws §22.3)",
+        "tiebreaks": [
+          "head-to-head (league contests; 3-way: three-way H2H then two-way)",
+          "record-vs-each-lower-placed-team-in-order",
+          "ccs-points (N/A for field hockey [U])",
+          "coin-flip"
+        ],
+        "tiebreakForSecond": [
+          "head-to-head",
+          "record-vs-each-higher-placed-team-from-champion-down",
+          "record-vs-each-lower-placed-team-in-order",
+          "ccs-points (N/A [U])",
+          "coin-flip"
+        ],
+        "citations": {
+          "points": "PCAL Sports Rules Field Hockey (Jan 2022) §1.7",
+          "qualifiers": "§1.8.1 (top two of the final round-robin standings)",
+          "tiebreaks": "§1.8.2 -> PCAL By-laws (rev. May 2025) §23.3.1-23.3.3",
+          "atLarge": "By-laws §23.4"
+        },
+        "rulesUrl": "https://pcalathletics.org/wp-content/pdf/Sports-Rules-Field-Hockey-Jan-2022.pdf",
+        "bylawsUrl": "https://pcalathletics.org/wp-content/pdf/PCAL-By-Laws.Final_.Rev-May-2025-2.pdf"
+      },
+      "playoff": {
+        "autoBerths": 2,
+        "ladder": [
+          {
+            "division": "pcal",
+            "places": [
+              1,
+              2
+            ],
+            "status": "aq",
+            "label": "PCAL automatic CCS berth (§1.8.1)"
+          },
+          {
+            "division": "pcal",
+            "places": [
+              3,
+              99
+            ],
+            "status": "out",
+            "label": "No automatic berth; may apply for at-large (By-laws §23.4)"
+          }
+        ]
+      },
+      "keyDates": {
+        "leaguePlay": [
+          "2026-09-02",
+          "2026-10-29"
+        ],
+        "lastAllowedLeagueDate": "2026-10-31"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Wilcox",
+      "league": "scval",
+      "division": "de-anza",
+      "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
+      "reason": "On the official SCVAL grid and CCS alignment but not fielding a team (repo WITHDRAWN_SCHOOL_NAMES); MaxPreps 26-27 shell with no league and 0 schedule rows. si.com still lists it (485528) in bucket 4243."
+    },
+    {
+      "name": "York",
+      "league": "pcal",
+      "division": "pcal",
+      "maxprepsTeamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
+      "reason": "JV only (PCAL PDF 'York (YOR) - JV ONLY'; grid slot 'CAT/YOR'); in the CCS alignment; MaxPreps varsity shell with 0 schedule rows. Mascot Falcons (MaxPreps URL york-falcons, si.com 456851-york-falcons). Add to a per-league withdrawn/JV-only list so 'York' grid tokens are dropped silently.",
+      "withdrawnNames": ["York", "YORK", "YOR", "York Falcons", "York School"],
+      "sbliveTeamId": "456851",
+      "sbliveNote": "[V 2026-10-02] si.com files the CAT/YOR grid slots under York: 9/30 'York 1 @ Salinas 1' (TIE, Final, game 6641900) and 10/29 'Salinas @ York' (6545421). The 1-1 differs from MaxPreps CAT@SAL 9/30 Salinas 1-0, so it is the JV game or a mis-entry [U]. Cross-checks and the sblive fallback must DROP York rows, never attribute them to Santa Catalina."
+    },
+    {
+      "name": "North Salinas",
+      "maxprepsTeamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
+      "reason": "MaxPreps 26-27 shell, no league, 0 schedule rows; not in the CCS alignment; si.com bucket 4231 lists it (459006) but no 2026 games."
+    },
+    {
+      "name": "Notre Dame (Salinas)",
+      "maxprepsTeamId": "9d178297-4c8d-4c2e-851f-c9053d575004",
+      "reason": "MaxPreps 26-27 shell, no league, 0 schedule rows; not in the CCS alignment; si.com 456837 in bucket 4231 with no 2026 games. Name collides with Notre Dame (Belmont, WBAL; no field hockey)."
+    },
+    {
+      "name": "Gunn, San Jose, North Monterey County, University Prep Academy, Marina (CCS)",
+      "reason": "teams/{id}/sportseasons returns 400 'Team does not exist' for 26-27. NB the si.com 'Marina (CA)' with 13 games is Marina HS (Huntington Beach, Southern Section), not Marina (Monterey County)."
+    }
+  ],
+  "teams": [
+    {
+      "id": "1dc4836b-4daf-4573-b525-27b474bd5366",
+      "slug": "st-ignatius",
+      "name": "St. Ignatius College Preparatory",
+      "shortName": "St Ignatius",
+      "abbr": "SI",
+      "acronym": "SICP",
+      "mascot": "Wildcats",
+      "city": "San Francisco",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "034CB2"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/",
+      "aliases": [
+        "St. Ignatius College Preparatory",
+        "ST. IGNATIUS",
+        "Saint Ignatius",
+        "St. Ignatius",
+        "St Ignatius",
+        "SICP",
+        "St. Ignatius College Prep",
+        "St. Ignatius Wildcats",
+        "St. Ignatius College Preparatory High School"
+      ],
+      "sbliveTeamId": "456831",
+      "sbliveSlug": "456831-st-ignatius-wildcats",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 18,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+      "slug": "saint-francis",
+      "name": "Saint Francis",
+      "shortName": "St Francis",
+      "abbr": "SF",
+      "acronym": "SFHS",
+      "mascot": "Lancers",
+      "city": "Mountain View",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "503604",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/mountain-view/saint-francis-lancers/field-hockey/",
+      "aliases": [
+        "Saint Francis",
+        "ST. FRANCIS",
+        "St. Francis",
+        "St Francis",
+        "Saint Francis Lancers",
+        "Saint Francis High School",
+        "Saint Francis (Mountain View)"
+      ],
+      "sbliveTeamId": "457982",
+      "sbliveSlug": "457982-saint-francis-lancers",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 23,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "0279f2de-d5ce-484d-b210-2286ded42058",
+      "slug": "los-altos",
+      "name": "Los Altos",
+      "shortName": "Los Altos",
+      "abbr": "LA",
+      "acronym": "LAHS",
+      "mascot": "Eagles",
+      "city": "Los Altos",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/los-altos/los-altos-eagles/field-hockey/",
+      "aliases": [
+        "Los Altos",
+        "LOS ALTOS",
+        "Los Altos Eagles",
+        "Los Altos High School"
+      ],
+      "sbliveTeamId": "458850",
+      "sbliveSlug": "458850-los-altos-eagles",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 21,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "8a8c04d2-5606-44cf-9993-34db55474240",
+      "slug": "valley-christian",
+      "name": "Valley Christian",
+      "shortName": "Valley Chr.",
+      "abbr": "VC",
+      "acronym": "VCHS",
+      "mascot": "Warriors",
+      "city": "San Jose",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "046DFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/valley-christian-warriors/field-hockey/",
+      "aliases": [
+        "Valley Christian",
+        "VALLEY CHRISTIAN",
+        "Valley Christian Warriors",
+        "Valley Christian High School",
+        "Valley Christian (San Jose)"
+      ],
+      "sbliveTeamId": "480709",
+      "sbliveSlug": "480709-valley-christian-warriors",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 22,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
+      "slug": "fremont",
+      "name": "Fremont",
+      "shortName": "Fremont",
+      "abbr": "FR",
+      "acronym": "FHS",
+      "mascot": "Firebirds",
+      "city": "Sunnyvale",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/sunnyvale/fremont-firebirds/field-hockey/",
+      "aliases": [
+        "Fremont",
+        "FREMONT",
+        "Fremont Firebirds",
+        "Fremont High School",
+        "Fremont (Sunnyvale)"
+      ],
+      "sbliveTeamId": "496836",
+      "sbliveSlug": "496836-fremont-firebirds",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 22,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "97ffffbe-54ba-4c25-86bb-41332627f64e",
+      "slug": "cupertino",
+      "name": "Cupertino",
+      "shortName": "Cupertino",
+      "abbr": "CU",
+      "acronym": "CHS",
+      "mascot": "Pioneers",
+      "city": "Cupertino",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/cupertino/cupertino-pioneers/field-hockey/",
+      "aliases": [
+        "Cupertino",
+        "CUPERTINO",
+        "Cupertino Pioneers",
+        "Cupertino High School"
+      ],
+      "sbliveTeamId": "458665",
+      "sbliveSlug": "458665-cupertino-pioneers",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 7
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 16,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "738a2432-7acb-4ad6-b041-115ec0f331c2",
+      "slug": "homestead",
+      "name": "Homestead",
+      "shortName": "Homestead",
+      "abbr": "HM",
+      "acronym": "HHS",
+      "mascot": "Mustangs",
+      "city": "Cupertino",
+      "league": "scval",
+      "division": "de-anza",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/cupertino/homestead-mustangs/field-hockey/",
+      "aliases": [
+        "Homestead",
+        "HOMESTEAD",
+        "Homestead Mustangs",
+        "Homestead High School"
+      ],
+      "sbliveTeamId": "458667",
+      "sbliveSlug": "458667-homestead-mustangs",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "de-anza",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf"
+        ],
+        "scheduleRows": 18,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+      "slug": "mitty",
+      "name": "Archbishop Mitty",
+      "shortName": "Mitty",
+      "abbr": "MI",
+      "acronym": "AMHS",
+      "mascot": "Monarchs",
+      "city": "San Jose",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/archbishop-mitty-monarchs/field-hockey/",
+      "aliases": [
+        "Archbishop Mitty",
+        "MITTY",
+        "Mitty",
+        "Archbishop Mitty Monarchs",
+        "Archbishop Mitty High School",
+        "Mitty High School"
+      ],
+      "sbliveTeamId": "464806",
+      "sbliveSlug": "464806-archbishop-mitty-monarchs",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 21,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+      "slug": "los-gatos",
+      "name": "Los Gatos",
+      "shortName": "Los Gatos",
+      "abbr": "LG",
+      "acronym": "LGHS",
+      "mascot": "Wildcats",
+      "city": "Los Gatos",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "D5350B",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/los-gatos/los-gatos-wildcats/field-hockey/",
+      "aliases": [
+        "Los Gatos",
+        "LOS GATOS",
+        "Los Gatos Wildcats",
+        "Los Gatos High School"
+      ],
+      "sbliveTeamId": "458802",
+      "sbliveSlug": "458802-los-gatos-wildcats",
+      "vnnSiteId": "2634860",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 19,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+      "slug": "palo-alto",
+      "name": "Palo Alto",
+      "shortName": "Palo Alto",
+      "abbr": "PA",
+      "acronym": "PAHS",
+      "mascot": "Vikings",
+      "city": "Palo Alto",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "005B34",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/palo-alto/palo-alto-vikings/field-hockey/",
+      "aliases": [
+        "Palo Alto",
+        "PALO ALTO",
+        "Paly",
+        "Palo Alto Vikings",
+        "Palo Alto High School"
+      ],
+      "sbliveTeamId": "480707",
+      "sbliveSlug": "480707-palo-alto-vikings",
+      "vnnSiteId": "2635290",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 20,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "e1db3a4f-3bcf-4281-a574-d313212296a1",
+      "slug": "presentation",
+      "name": "Presentation",
+      "shortName": "Presentation",
+      "abbr": "PR",
+      "acronym": "PHS",
+      "mascot": "Panthers",
+      "city": "San Jose",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/presentation-panthers/field-hockey/",
+      "aliases": [
+        "Presentation",
+        "PRESENTATION",
+        "Presentation Panthers",
+        "Presentation High School",
+        "Presentation HS"
+      ],
+      "sbliveTeamId": "457986",
+      "sbliveSlug": "457986-presentation-panthers",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 19,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
+      "slug": "santa-clara",
+      "name": "Santa Clara",
+      "shortName": "Santa Clara",
+      "abbr": "SC",
+      "acronym": "SCHS",
+      "mascot": "Bruins",
+      "city": "Santa Clara",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "FFC005"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/santa-clara/santa-clara-bruins/field-hockey/",
+      "aliases": [
+        "Santa Clara",
+        "SANTA CLARA",
+        "Santa Clara Bruins",
+        "Santa Clara High School"
+      ],
+      "sbliveTeamId": "496839",
+      "sbliveSlug": "496839-santa-clara-bruins",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 19,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
+      "slug": "saratoga",
+      "name": "Saratoga",
+      "shortName": "Saratoga",
+      "abbr": "SG",
+      "acronym": "SHS",
+      "mascot": "Falcons",
+      "city": "Saratoga",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/saratoga/saratoga-falcons/field-hockey/",
+      "aliases": [
+        "Saratoga",
+        "SARATOGA",
+        "Saratoga Falcons",
+        "Saratoga High School"
+      ],
+      "sbliveTeamId": "458805",
+      "sbliveSlug": "458805-saratoga-falcons",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 17,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
+      "slug": "lynbrook",
+      "name": "Lynbrook",
+      "shortName": "Lynbrook",
+      "abbr": "LY",
+      "acronym": "LHS",
+      "mascot": "Vikings",
+      "city": "San Jose",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/lynbrook-vikings/field-hockey/",
+      "aliases": [
+        "Lynbrook",
+        "LYNBROOK",
+        "Lynbrook Vikings",
+        "Lynbrook High School"
+      ],
+      "sbliveTeamId": "458669",
+      "sbliveSlug": "458669-lynbrook-vikings",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 7
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 20,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "405614ad-a015-4270-b527-18e899c90824",
+      "slug": "monta-vista",
+      "name": "Monta Vista",
+      "shortName": "Monta Vista",
+      "abbr": "MV",
+      "acronym": "MVHS",
+      "mascot": "Matadors",
+      "city": "Cupertino",
+      "league": "scval",
+      "division": "el-camino",
+      "dataCoverage": "full",
+      "colors": [
+        "754ACC",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/cupertino/monta-vista-matadors/field-hockey/",
+      "aliases": [
+        "Monta Vista",
+        "MONTA VISTA",
+        "Monta Vista Matadors",
+        "Monta Vista High School"
+      ],
+      "sbliveTeamId": "458672",
+      "sbliveSlug": "458672-monta-vista-matadors",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "el-camino",
+          "place": 8
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf"
+        ],
+        "scheduleRows": 18,
+        "scheduleContestType0Rows": null,
+        "scheduleSource": "repo tests/fixtures/maxpreps (captured earlier)",
+        "sbliveBucket": "see lib/sblive.ts (4242/4243; buckets mis-sorted)"
+      }
+    },
+    {
+      "id": "c81780c9-d396-45a1-a7f9-0aae05905a97",
+      "slug": "branham",
+      "name": "Branham",
+      "shortName": "Branham",
+      "abbr": "BR",
+      "acronym": "BHS",
+      "mascot": "Bruins",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "046DFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/branham-bruins/field-hockey/",
+      "aliases": [
+        "Branham",
+        "BRANHAM",
+        "Branham Bruins",
+        "Branham High School"
+      ],
+      "sbliveTeamId": "458510",
+      "sbliveSlug": "458510-branham-bruins",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 15,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "773e862d-e186-44aa-b268-461b4064ce52",
+      "slug": "christopher",
+      "name": "Christopher",
+      "shortName": "Christopher",
+      "abbr": "CH",
+      "acronym": "CHS",
+      "mascot": "Cougars",
+      "city": "Gilroy",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/gilroy/christopher-cougars/field-hockey/",
+      "aliases": [
+        "Christopher",
+        "CHRISTOPHER",
+        "Christopher Cougars",
+        "Christopher High School",
+        "Christopher (Gilroy)"
+      ],
+      "sbliveTeamId": "458687",
+      "sbliveSlug": "458687-christopher-cougars",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 21,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4231,
+        "note": "si.com puts this school in bucket 4231 Pacific Coast - Gabilan (mis-bucketed); id is still valid."
+      }
+    },
+    {
+      "id": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
+      "slug": "gilroy",
+      "name": "Gilroy",
+      "shortName": "Gilroy",
+      "abbr": "GI",
+      "acronym": "GHS",
+      "mascot": "Mustangs",
+      "city": "Gilroy",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/gilroy/gilroy-mustangs/field-hockey/",
+      "aliases": [
+        "Gilroy",
+        "GILROY",
+        "Gilroy Mustangs",
+        "Gilroy High School"
+      ],
+      "sbliveTeamId": "458690",
+      "sbliveSlug": "458690-gilroy-mustangs",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 20,
+        "scheduleContestType0Rows": 11,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4231,
+        "note": "si.com puts this school in bucket 4231 Pacific Coast - Gabilan (mis-bucketed); id is still valid."
+      }
+    },
+    {
+      "id": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
+      "slug": "leigh",
+      "name": "Leigh",
+      "shortName": "Leigh",
+      "abbr": "LE",
+      "acronym": "LHS",
+      "mascot": "Longhorns",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/leigh-longhorns/field-hockey/",
+      "aliases": [
+        "Leigh",
+        "LEIGH",
+        "Leigh Longhorns",
+        "Leigh High School"
+      ],
+      "sbliveTeamId": "458515",
+      "sbliveSlug": "458515-leigh-longhorns",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 24,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+      "slug": "leland",
+      "name": "Leland",
+      "shortName": "Leland",
+      "abbr": "LD",
+      "acronym": "LHS",
+      "mascot": "Chargers",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "046DFF",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/leland-chargers/field-hockey/",
+      "aliases": [
+        "Leland",
+        "LELAND",
+        "Leland Chargers",
+        "Leland High School"
+      ],
+      "sbliveTeamId": "459053",
+      "sbliveSlug": "459053-leland-chargers",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 20,
+        "scheduleContestType0Rows": 13,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175,
+        "note": "Moved up from Santa Teresa (2025 ST champion) for 2026. MaxPreps has two unscored phantom contestType-0 rows vs Westmont (2026-09-03, 09-10) and an extra unscored row vs Gilroy (2026-09-29) not on the official grid."
+      }
+    },
+    {
+      "id": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
+      "slug": "willow-glen",
+      "name": "Willow Glen",
+      "shortName": "Willow Glen",
+      "abbr": "WG",
+      "acronym": "WGHS",
+      "mascot": "Rams",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "mt-hamilton",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/willow-glen-rams/field-hockey/",
+      "aliases": [
+        "Willow Glen",
+        "WILLOW GLEN",
+        "Willow Glen Rams",
+        "Willow Glen High School"
+      ],
+      "officialCodes": [
+        "WG"
+      ],
+      "sbliveTeamId": "459057",
+      "sbliveSlug": "459057-willow-glen-rams",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "mt-hamilton",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 17,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "8c56113f-9229-43a2-a56e-4f8443494857",
+      "slug": "del-mar",
+      "name": "Del Mar",
+      "shortName": "Del Mar",
+      "abbr": "DM",
+      "acronym": "DMHS",
+      "mascot": "Dons",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/del-mar-dons/field-hockey/",
+      "aliases": [
+        "Del Mar",
+        "DEL MAR",
+        "Del Mar Dons",
+        "Del Mar High School",
+        "Del Mar (San Jose)"
+      ],
+      "sbliveTeamId": "458513",
+      "sbliveSlug": "458513-del-mar-dons",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "santa-teresa",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 10,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
+      "slug": "live-oak",
+      "name": "Live Oak",
+      "shortName": "Live Oak",
+      "abbr": "LO",
+      "acronym": "LOHS",
+      "mascot": "Acorns",
+      "city": "Morgan Hill",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/morgan-hill/live-oak-acorns/field-hockey/",
+      "aliases": [
+        "Live Oak",
+        "LIVE OAK",
+        "Live Oak Acorns",
+        "Live Oak High School",
+        "Live Oak (Morgan Hill)"
+      ],
+      "sbliveTeamId": "458848",
+      "sbliveSlug": "458848-live-oak-acorns",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "santa-teresa",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 12,
+        "scheduleContestType0Rows": 8,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
+      "slug": "prospect",
+      "name": "Prospect",
+      "shortName": "Prospect",
+      "abbr": "PS",
+      "acronym": "PHS",
+      "mascot": "Panthers",
+      "city": "Saratoga",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/saratoga/prospect-panthers/field-hockey/",
+      "aliases": [
+        "Prospect",
+        "PROSPECT",
+        "Prospect Panthers",
+        "Prospect High School",
+        "Prospect (Saratoga)"
+      ],
+      "sbliveTeamId": "458517",
+      "sbliveSlug": "458517-prospect-panthers",
+      "verified": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "teams/{id}/sportseasons/{ssid}/v1 schoolColor1/2 (not in any standings table)",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 18,
+        "scheduleContestType0Rows": 6,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175,
+        "note": "Official BVAL Santa Teresa member (bval.org, CCS alignment) but MaxPreps leagueId is the all-zero GUID: absent from the Santa Teresa standings table; its Live Oak and Sobrato league games are flagged contestType 1. Add it to santa-teresa from this registry, not from MaxPreps."
+      }
+    },
+    {
+      "id": "30d65e43-1478-45b5-90de-fd69689344f8",
+      "slug": "silver-creek",
+      "name": "Silver Creek",
+      "shortName": "Silver Creek",
+      "abbr": "SK",
+      "acronym": "SCHS",
+      "mascot": "Raiders",
+      "city": "San Jose",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "CC4E10",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-jose/silver-creek-raiders/field-hockey/",
+      "aliases": [
+        "Silver Creek",
+        "SILVER CREEK",
+        "Silver Creek Raiders",
+        "Silver Creek High School"
+      ],
+      "sbliveTeamId": "547018",
+      "sbliveSlug": "547018-silver-creek-raiders",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "santa-teresa",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 13,
+        "scheduleContestType0Rows": 10,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": "unbucketed (found via WebSearch)"
+      }
+    },
+    {
+      "id": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
+      "slug": "sobrato",
+      "name": "Ann Sobrato",
+      "shortName": "Sobrato",
+      "abbr": "SO",
+      "acronym": "ASHS",
+      "mascot": "Bulldogs",
+      "city": "Morgan Hill",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "8F0018",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/morgan-hill/ann-sobrato-bulldogs/field-hockey/",
+      "aliases": [
+        "Ann Sobrato",
+        "Sobrato",
+        "SOBRATO",
+        "ANN SOBRATO",
+        "Ann Sobrato Bulldogs",
+        "Sobrato Bulldogs",
+        "Ann Sobrato High School",
+        "Sobrato High School"
+      ],
+      "sbliveTeamId": "458846",
+      "sbliveSlug": "458846-ann-sobrato-bulldogs",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "santa-teresa",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 16,
+        "scheduleContestType0Rows": 8,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175,
+        "note": "MaxPreps/si.com name 'Ann Sobrato'; BVAL and CCS call it 'Sobrato'."
+      }
+    },
+    {
+      "id": "1959d651-408f-4764-94a5-144cea89c499",
+      "slug": "westmont",
+      "name": "Westmont",
+      "shortName": "Westmont",
+      "abbr": "WM",
+      "acronym": "WHS",
+      "mascot": "Warriors",
+      "city": "Campbell",
+      "league": "bval",
+      "division": "santa-teresa",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "CC0022"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/campbell/westmont-warriors/field-hockey/",
+      "aliases": [
+        "Westmont",
+        "WESTMONT",
+        "Westmont Warriors",
+        "Westmont High School",
+        "Westmont (Campbell)"
+      ],
+      "sbliveTeamId": "458520",
+      "sbliveSlug": "458520-westmont-warriors",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "santa-teresa",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://bval.org/field-hockey/"
+        ],
+        "scheduleRows": 21,
+        "scheduleContestType0Rows": 12,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4175
+      }
+    },
+    {
+      "id": "91994f1e-57af-4fda-9fe0-45c923078af6",
+      "slug": "carmel",
+      "name": "Carmel",
+      "shortName": "Carmel",
+      "abbr": "CA",
+      "acronym": "CHS",
+      "mascot": "Padres",
+      "city": "Carmel",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/carmel/carmel-padres/field-hockey/",
+      "aliases": [
+        "Carmel",
+        "CARMEL",
+        "Carmel Padres",
+        "Carmel High School"
+      ],
+      "officialCodes": [
+        "CAR"
+      ],
+      "sbliveTeamId": "458529",
+      "sbliveSlug": "458529-carmel-padres",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 21,
+        "scheduleContestType0Rows": 13,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4232
+      }
+    },
+    {
+      "id": "0bb5dbd8-6792-415b-8118-196ee0132b56",
+      "slug": "greenfield",
+      "name": "Greenfield",
+      "shortName": "Greenfield",
+      "abbr": "GR",
+      "acronym": "GHS",
+      "mascot": "Bruins",
+      "city": "Greenfield",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/greenfield/greenfield-bruins/field-hockey/",
+      "aliases": [
+        "Greenfield",
+        "GREENFIELD",
+        "Greenfield Bruins",
+        "Greenfield High School"
+      ],
+      "officialCodes": [
+        "GRE"
+      ],
+      "sbliveTeamId": "458776",
+      "sbliveSlug": "458776-greenfield-bruins",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 7
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 7,
+        "scheduleContestType0Rows": 7,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4232
+      }
+    },
+    {
+      "id": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+      "slug": "hollister",
+      "name": "Hollister",
+      "shortName": "Hollister",
+      "abbr": "HO",
+      "acronym": "HHS",
+      "mascot": "Haybalers",
+      "city": "Hollister",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/hollister/hollister-haybalers/field-hockey/",
+      "aliases": [
+        "Hollister",
+        "HOLLISTER",
+        "Hollister Haybalers",
+        "San Benito",
+        "San Benito High School",
+        "San Benito Haybalers",
+        "Hollister (San Benito)"
+      ],
+      "officialCodes": [
+        "HOL"
+      ],
+      "sbliveTeamId": "459010",
+      "sbliveSlug": "459010-hollister-haybalers",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 11,
+        "scheduleContestType0Rows": 8,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4231,
+        "note": "School is San Benito High School [U: PCAL PDF author metadata 'San Benito High School'; MaxPreps/PCAL/si.com all say 'Hollister']."
+      }
+    },
+    {
+      "id": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+      "slug": "monterey",
+      "name": "Monterey",
+      "shortName": "Monterey",
+      "abbr": "MO",
+      "acronym": "MHS",
+      "mascot": "Toreadors",
+      "city": "Monterey",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/monterey/monterey-toreadors/field-hockey/",
+      "aliases": [
+        "Monterey",
+        "MONTEREY",
+        "Monterey Toreadors",
+        "Monterey Toreadores",
+        "Monterey High School"
+      ],
+      "officialCodes": [
+        "MON"
+      ],
+      "sbliveTeamId": "458839",
+      "sbliveSlug": "458839-monterey-toreadores",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 9,
+        "scheduleContestType0Rows": 9,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4231
+      }
+    },
+    {
+      "id": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+      "slug": "salinas",
+      "name": "Salinas",
+      "shortName": "Salinas",
+      "abbr": "SA",
+      "acronym": "SHS",
+      "mascot": "Cowboys",
+      "city": "Salinas",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "754ACC",
+        "FFC005"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/salinas/salinas-cowboys/field-hockey/",
+      "aliases": [
+        "Salinas",
+        "SALINAS",
+        "Salinas Cowboys",
+        "Salinas High School"
+      ],
+      "officialCodes": [
+        "SAL"
+      ],
+      "sbliveTeamId": "459009",
+      "sbliveSlug": "459009-salinas-cowboys",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 13,
+        "scheduleContestType0Rows": 13,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4232
+      }
+    },
+    {
+      "id": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+      "slug": "santa-catalina",
+      "name": "Santa Catalina",
+      "shortName": "Santa Catalina",
+      "abbr": "CT",
+      "acronym": "SCHS",
+      "mascot": "Cougars",
+      "city": "Monterey",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/monterey/santa-catalina-cougars/field-hockey/",
+      "aliases": [
+        "Santa Catalina",
+        "SANTA CATALINA",
+        "Santa Catalina Cougars",
+        "Santa Catalina School",
+        "Santa Catalina (Monterey)"
+      ],
+      "officialCodes": [
+        "CAT",
+        "SCAT",
+        "CAT/YOR"
+      ],
+      "sbliveTeamId": "458109",
+      "sbliveSlug": "458109-santa-catalina-cougars",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 8,
+        "scheduleContestType0Rows": 8,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4232,
+        "note": "Varsity only; PCAL grid pairs it with York JV as 'CAT/YOR' — the varsity game is Santa Catalina's."
+      }
+    },
+    {
+      "id": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+      "slug": "stevenson",
+      "name": "Stevenson",
+      "shortName": "Stevenson",
+      "abbr": "ST",
+      "acronym": "SHS",
+      "mascot": "Pirates",
+      "city": "Pebble Beach",
+      "league": "pcal",
+      "division": "pcal",
+      "dataCoverage": "full",
+      "colors": [
+        "005B34",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/pebble-beach/stevenson-pirates/field-hockey/",
+      "aliases": [
+        "Stevenson",
+        "STEVENSON",
+        "Stevenson Pirates",
+        "Stevenson School",
+        "Robert Louis Stevenson",
+        "Robert Louis Stevenson School",
+        "Stevenson (Pebble Beach)"
+      ],
+      "officialCodes": [
+        "STE"
+      ],
+      "sbliveTeamId": "456854",
+      "sbliveSlug": "456854-stevenson-pirates",
+      "verified": {
+        "maxprepsStandingsRow": {
+          "leagueTable": "pcal",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "officialAlignment": [
+          "https://cifccs.org/governance/league_and_conference_pdf/League_Alignments_2026-27.pdf",
+          "https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf"
+        ],
+        "scheduleRows": 24,
+        "scheduleContestType0Rows": 12,
+        "scheduleSource": "schedule-calculated/v1 fetched 2026-10-02",
+        "sbliveBucket": 4232,
+        "note": "Full name Robert Louis Stevenson School [U, common knowledge]; MaxPreps/PCAL/si.com say 'Stevenson'."
+      }
+    }
+  ]
+}
