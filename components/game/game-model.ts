@@ -760,12 +760,13 @@ export function buildGameModel(param: string): GameModel | undefined {
       // Short names, as the meeting rows above it ("at St Ignatius") and the team pills print
       // them; a side outside the registry has no short name and keeps its own. Not `side.label`:
       // that only shortens names over 24 characters, so "Saint Francis" would survive beside
-      // "St Francis".
+      // "St Francis". An abbreviated short name ("Lick-Wilm.", "Valley Chr.") gives way to the
+      // full name: its period reads as a sentence break, and a screen reader spells it out.
       summary: seriesSummary(
         game,
         games,
-        home.team?.shortName ?? home.name,
-        away.team?.shortName ?? away.name,
+        home.team && !home.team.shortName.endsWith('.') ? home.team.shortName : home.name,
+        away.team && !away.team.shortName.endsWith('.') ? away.team.shortName : away.name,
       ),
       tiebreakNote: division ? tiebreakNoteFor(division) : null,
       perspective,

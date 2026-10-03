@@ -35,10 +35,11 @@ import { describeGame, statusLabelIsTime, type SideView } from './game-view';
  *
  * Names WRAP (two lines at most, balanced) instead of truncating: "St. Ignatius College
  * Preparatory" was cut to "St. Ignatius Colle…" on a phone. Between 768 and 1023px, where the
- * three-column board leaves each name the least room, a name longer than 20 characters (too long
- * for that band's two-line clamp; today "St. Ignatius College Preparatory", "Convent of the
- * Sacred Heart" and "San Francisco University") is swapped for its short name. Every other name
- * prints in full at every width.
+ * three-column board leaves each name the least room (about 217px at 768), a name longer than 27
+ * characters (too long for that band's two-line clamp; today only "St. Ignatius College
+ * Preparatory") is swapped for its short name. "Convent of the Sacred Heart" (27) and "San
+ * Francisco University" (24) were measured at 768 and fit in two lines. Every other name prints in
+ * full at every width.
  */
 export interface ScoreBoardSideMeta {
   sub?: string | null;
@@ -66,9 +67,9 @@ function BoardSide({
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   const fullName = team ? team.name : side.name;
   // Only a name too long for the 768–1023 band's two-line clamp swaps to its short form there;
-  // "Valley Christian" and "Archbishop Mitty" fit in full. A side outside the registry has its
-  // name as its shortName, so it never swaps.
-  const swapShort = fullName.length > 20 && side.shortName !== fullName;
+  // "Convent of the Sacred Heart" (27 characters, the longest that fits) prints in full. A side
+  // outside the registry has its name as its shortName, so it never swaps.
+  const swapShort = fullName.length > 27 && side.shortName !== fullName;
   const subLine = sub ?? (team ? null : NON_MEMBER_NOTE);
   return (
     <div

@@ -201,8 +201,9 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           ) : null}
           {/* A final's result links live HERE, directly under the recap (F-73/F-85): on a phone they
               are above the tab bar rather than at the foot of the DETAILS card, and they appear
-              once on the page — GameDetails and GameElsewhere both leave them out. The accent
-              pill is the source the score came from. */}
+              once on the page (GameDetails and GameElsewhere leave them out; only the
+              disagreement notes below cite a source page again). The accent pill is the source
+              the score came from. */}
           {resultLinks.length > 0 ? (
             <p className={game.recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
               {resultLinks.map((link) => (
