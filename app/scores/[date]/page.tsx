@@ -127,12 +127,16 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
           Last day<span className="sr-only"> of the season</span>
         </span>
       )}
-      <Link
+      {/* A plain <a>, a document navigation on purpose: the browser keeps re-running its fragment
+          scroll while /schedule's content-visibility groups settle, so the date's header lands
+          under the top bar for every date. A client <Link> scrolls once, and only lands for dates
+          within ScheduleList's ±7-day laid-out window around the Scores tab's date. */}
+      <a
         href={`/schedule#${date}`}
         className="sx-action min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
       >
         Full season
-      </Link>
+      </a>
     </nav>
   );
 
@@ -203,11 +207,16 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       ) : null}
 
       {/* Fixtures on SCVAL's grid that no source lists. A day that has not come yet introduces
-          them as more of the day ("Also on SCVAL's schedule…"), never as a missing result; a past
-          day keeps the section and its note. The date column would repeat the h1, so it goes. */}
+          them as more of the day ("Also on SCVAL's schedule…"), never as a missing result: its
+          visible lead replaces the kicker, and an sr-only h2 keeps the same heading as a past day
+          for screen readers moving by headings. A past day keeps the section and its note. The
+          date column would repeat the h1, so it goes. */}
       {fixtures.length > 0 ? (
         date >= today ? (
-          <section aria-label="On SCVAL's schedule only" className="mt-section md:mt-section-lg">
+          <section aria-labelledby="scval-only" className="mt-section md:mt-section-lg">
+            <h2 id="scval-only" className="sr-only">
+              On SCVAL&rsquo;s schedule only
+            </h2>
             <OfficialFixtures
               fixtures={fixtures}
               today={today}

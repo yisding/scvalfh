@@ -108,9 +108,12 @@ export function railSr(marker: RailMarker, target: string): string {
 }
 
 /**
- * The visible label for a re-aimed chip, or `null` to keep the server's. Only the season-end
- * chips print a date (`↑ Aug 24`, `↓ Oct 28`), so only they change; `Sep` and `Today` stay.
+ * The visible label for a re-aimed chip, or `null` to keep the server's. The season-end chips
+ * print the shown date (`↑ Aug 24`, `↓ Oct 28`). A Today chip re-aimed past today says "Next", so
+ * its visible label stays inside its "Next shown contest, …" name (WCAG 2.5.3 Label in Name) and a
+ * sighted user is not told "Today" before landing on a later day. `Sep` keeps its label.
  */
 export function railLabel(marker: RailMarker, target: string): string | null {
+  if (marker.kind === 'today') return target === marker.date ? null : 'Next';
   return marker.kind === 'up' || marker.kind === 'down' ? railMonthDay(target) : null;
 }

@@ -26,7 +26,8 @@ import GameList from './GameList';
  * groups that then render around the target swap their estimates for real heights and shove it off
  * its mark. So the days around the Scores tab's landing date (`landingDate` below) are never
  * skipped at all: `[content-visibility:visible]` lays them out from the first frame, and the one
- * scroll lands where the hard load does.
+ * scroll lands where the hard load does. A day page's "Full season" link can aim at any date, so it
+ * is a plain `<a>` (a document navigation) and gets the hard load's settling scroll instead.
  *
  * Each date header links to that day's own prerendered page, `/scores/[date]` ("Day page"), so a
  * single day can be opened, bookmarked or sent on.

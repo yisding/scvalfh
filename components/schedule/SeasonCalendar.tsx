@@ -11,9 +11,10 @@ import { longDate, parseLocal, weekdayIndex } from '../../lib/format';
  * JavaScript, it opens with JavaScript off, and it starts closed so the day's games stay in the
  * fold.
  *
- * Built from the date keys alone: `parseLocal` and `weekdayIndex` are string and integer
- * arithmetic (lib/format), so nothing here reads a clock and the grid is part of the reproducible
- * build. Weeks run Monday first, because the season is weeknight league play with a Saturday tail.
+ * Built from the date keys alone: `parseLocal` splits the key and `weekdayIndex` reads the weekday
+ * of a UTC date built from its parts (lib/format), so nothing here reads a clock and the grid is
+ * part of the reproducible build. Weeks run Monday first, because the season is weeknight league
+ * play with a Saturday tail.
  *
  * Each month is a plain `<table>` (not `.sx-table`, which is a data-table skin): a caption
  * ("September 2026"), one column head per weekday — a letter on screen, the whole name to a

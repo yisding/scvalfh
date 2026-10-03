@@ -29,7 +29,8 @@ export interface OfficialFixturesProps {
   variant?: 'details' | 'plain';
   /**
    * Replaces the note above the list with a lead-in sentence (a day page's "Also on SCVAL's
-   * schedule for this day…"); the note's explanation and grid links then follow the list.
+   * schedule for this day, but not listed by any source:"). Since the lead already says that, only
+   * the rest of the note follows the list: no start time or score, no record, the grid links.
    */
   lead?: React.ReactNode;
   /** false drops the date column, for a list that is all one day (a /scores/[date] page). */
@@ -104,13 +105,27 @@ export function OfficialFixtures({
   className,
 }: OfficialFixturesProps) {
   if (fixtures.length === 0) return null;
+  const grids = (
+    <>
+      Official grids: <ExternalLink href={SOURCE_LINKS.scvalDeAnzaSchedule}>De Anza</ExternalLink>{' '}
+      · <ExternalLink href={SOURCE_LINKS.scvalElCaminoSchedule}>El Camino</ExternalLink>.
+    </>
+  );
   // What these rows are and where SCVAL publishes them (the same note as the team page's list).
   const note = (
     <>
       SCVAL&rsquo;s official schedule lists these games, but none of our sources (MaxPreps,
-      SBLive/SI) do, so there is no start time or score for them and they count in no record here.
-      Official grids: <ExternalLink href={SOURCE_LINKS.scvalDeAnzaSchedule}>De Anza</ExternalLink>{' '}
-      · <ExternalLink href={SOURCE_LINKS.scvalElCaminoSchedule}>El Camino</ExternalLink>.
+      SBLive/SI) do, so there is no start time or score for them and they count in no record here.{' '}
+      {grids}
+    </>
+  );
+  // After a lead, which has already said "on SCVAL's schedule, not listed by any source", only
+  // the rest of the note, in the number the list has.
+  const one = fixtures.length === 1;
+  const followUp = (
+    <>
+      So there is no start time or score for {one ? 'it' : 'them'}, and{' '}
+      {one ? 'it counts' : 'they count'} in no record here. {grids}
     </>
   );
   const rows = <FixtureRows fixtures={fixtures} today={today} showDate={showDate} />;
@@ -126,7 +141,7 @@ export function OfficialFixtures({
         {/* Full content width: on /scores/[date] it shares the right edge of the day's cards,
             the pager and the line under it. */}
         <div className="sx-card sx-flush sx-bleed">{rows}</div>
-        {lead ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">{note}</p> : null}
+        {lead ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">{followUp}</p> : null}
       </div>
     );
   }
