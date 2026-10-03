@@ -12,8 +12,8 @@ import type { PostseasonView } from './home-data';
  *
  * - CCS leagues (SCVAL, BVAL, PCAL): the league's share of the 16-team CCS field as a meter — one
  *   ratio against a limit, so a meter, not a chart — its qualification sentence, the CCS dates and
- *   `CCS playoffs →` to the league's section of /playoffs. NO percentages and no projection model:
- *   the CCS committee, not this site, assigns berths.
+ *   `CCS playoffs →` to the league's section of /playoffs. The meter is the allocation, not a
+ *   projection: the CCS committee, not this site, assigns berths.
  * - A league tournament (MCAL, North Coast Section): NO meter and no CCS date or word at all — the
  *   NCS holds no field hockey championship. One line of rounds and dates, the section's note and
  *   `Bracket →` to /playoffs/<league>.

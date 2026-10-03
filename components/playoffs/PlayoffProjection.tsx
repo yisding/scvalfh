@@ -21,8 +21,7 @@ import {
  *
  *  - **Every status is a written word.** `label` comes from the league's ladder in config —
  *    "Automatic qualifier", "Play-in game Oct 30", "Hosts the play-in Oct 31", "No automatic-berth
- *    route", "No results reported". There are NO percentages anywhere on this page, because there is
- *    no model.
+ *    route", "No results reported".
  *  - **The ladder line is a labelled separator row** ("AQ line", "Play-in host"), as on /standings:
  *    a 2px rule AND words, so the rule is never the only cue (WCAG 1.3.1).
  *  - **Shared places render level** — `T6`, the US tie mark, with an sr-only "tied for 6th" — and
@@ -149,6 +148,7 @@ export function ProjectionKey({
           {showLine ? 'The labelled 2px rule marks the end of the division’s automatic or play-in places. ' : ''}
           {qualification}
         </p>
+        {/* True while no model feeds this page (DESIGN §19.2): a change that adds one rewrites it. */}
         <p className="m-0">
           Every status in the tables is a written word. There are no probabilities on this page, because
           there is no model behind it &mdash; only the league points played so far.

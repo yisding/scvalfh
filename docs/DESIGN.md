@@ -2984,3 +2984,31 @@ back from 896px with about 33px to spare, and its weekday from 1024 (about 95px 
 
 `/teams` HTML gzip stays within 3.0 x its baseline: 24.3 KB on 2026-10-03 (it was 23.2 KB with the
 tiles), against 28.4 KB.
+
+## 19. Probabilities amendment (2026-10)
+
+The site was designed to show no probabilities anywhere, because it had no model to compute them
+from (§3.8, §6.1, §6.2, §7.11). The owner retired that rule on 2026-10-03, ahead of team ratings
+fitted to the season's results. This section wins where §1-§18 disagree. Everything else stands:
+a status is still a written word, never a color alone (§7.11, WCAG 1.3.1), nothing on the site is
+official, and the copy rules of §15.8 apply to any new number.
+
+### 19.1 Decisions this reverses
+
+| Earlier decision | Now |
+|---|---|
+| §6.2 "Playoff-berth probability bars. *Nothing.* We have no probability model." | No longer ruled out, and not built. A berth probability needs a model of the games still to play; until one exists, the `BerthMeter` and the projection's written statuses are the playoff picture. |
+| §6.1 the playoff projection is a table of status words because "we have no probability model" | Still a table of status words, because a team's place under its league's by-laws is a categorical outcome. The "no model" reason is withdrawn. |
+| §7.11 "There are **no percentages anywhere**, because there is no model" | Withdrawn. The projection card keeps its written statuses and its "Nothing here is official" cap. |
+| §3.8's wireframe line "No probabilities — we have no model." | It describes `/playoffs` as it is: see 19.2. |
+
+### 19.2 What a probability must be
+
+A probability may appear where a model the site documents computes it from the snapshot's results.
+It is never invented or entered by hand, it reads as an estimate, and its page links to how it is
+computed, as the standings link to their rules. It never replaces or reorders a by-law status: a
+place in a table, a berth and a seed come from the league's rules alone.
+
+`/playoffs` still says "There are no probabilities on this page, because there is no model behind
+it", which stays true while no model feeds that page. A change that puts a probability there
+rewrites that sentence in the same commit.
