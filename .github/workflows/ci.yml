@@ -99,10 +99,11 @@ jobs:
 
       # Every route is prerendered from the snapshot, so a dynamic route here means something
       # lost its generateStaticParams — the site would start rendering on demand. The counts are
-      # EXACT and derived from data/snapshot.json and lib/leagues.ts (fixed pages; standings and
-      # schedule per league; playoffs per league-tournament league; every game plus the
-      # superseded-game stubs; every game date; the 43 teams), no prerendered path may contain ':'
-      # (a raw `sblive:` id), and each family with an OG image has page/image parity BY NAME.
+      # EXACT and derived from data/snapshot.json, lib/leagues.ts and data/clubs.json (fixed pages;
+      # standings and schedule per league; playoffs per league-tournament league; every game plus
+      # the superseded-game stubs; every game date; the 43 teams; the clubs of data/clubs.json), no
+      # prerendered path may contain ':' (a raw `sblive:` id), and each family with an OG image has
+      # page/image parity BY NAME.
       - name: Assert every route is static
         run: pnpm assert:prerender
 
@@ -115,7 +116,8 @@ jobs:
 
       # SPEC §10.9 over the built HTML: no "Gabilan" (except the lowercase MaxPreps URL slug), no
       # "eliminated", no division label on a single-division league, no CCS concept inside <main>
-      # of an MCAL page, and the old /standings#de-anza / #el-camino anchors still there.
+      # of an MCAL page, the old /standings#de-anza / #el-camino anchors still there, and nowhere
+      # a club affiliation's basis or source quote, which data/clubs.json keeps but never renders.
       - name: Assert copy honesty in the built pages
         run: pnpm assert:copy
 

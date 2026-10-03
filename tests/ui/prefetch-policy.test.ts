@@ -177,6 +177,11 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],
       ['components/layout/LeagueSwitcher.tsx', 'href={href}'],
+      // The clubs pages (DESIGN §17): a club line per roster row, a link per club on /clubs, and a
+      // school link per player row on a club page.
+      ['components/teams/TeamRoster.tsx', 'href={club.href}'],
+      ['components/clubs/ClubList.tsx', 'href={club.href}'],
+      ['components/clubs/ClubPlayers.tsx', 'href={row.school.href}'],
     ];
     for (const [rel, href] of WANT) {
       const src = readFileSync(path.join(ROOT, rel), 'utf8');

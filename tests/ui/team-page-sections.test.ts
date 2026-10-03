@@ -1,8 +1,9 @@
 /**
  * Page-level wiring of the team page (app/teams/[slug]/page.tsx): every registry team of every
  * league renders both a Player stats and a Roster section, once each, in that order, and neither
- * says another league's data is missing because it is "SCVAL only". tests/ui/roster-view.test.ts
- * and player-stats-view.test.ts hold the view builders; this renders the real route.
+ * says another league's data is missing because it is "SCVAL only". Every roster section links
+ * /clubs (DESIGN §17.4), empty rosters included. tests/ui/roster-view.test.ts and
+ * player-stats-view.test.ts hold the view builders; this renders the real route.
  */
 
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -40,12 +41,24 @@ describe('the team page, every league', () => {
     }
   });
 
-  it('every one of the 43 teams renders both sections', async () => {
+  it('every one of the 43 teams renders both sections, and the roster links the club pages', async () => {
     for (const team of TEAMS) {
       const html = await render(team.slug);
       expect(html, team.slug).toContain('id="player-stats"');
       expect(html, team.slug).toContain('id="roster"');
+      const roster = html.slice(html.search(/<section[^>]*\bid="roster"/));
+      expect(roster, team.slug).toMatch(/<a [^>]*href="\/clubs"[^>]*>Club teams/);
     }
+  });
+
+  it('shows club lines and their footnote only where a rostered player has a club', async () => {
+    const footnote = 'Club lines link to the club’s page on this site';
+    const si = await render('st-ignatius');
+    expect(si).toContain('href="/clubs/sf-hawks"');
+    expect(si).toContain(footnote);
+    const vc = await render('valley-christian');
+    expect(vc).not.toContain(footnote);
+    expect(vc).not.toContain('href="/clubs/');
   });
 
   it('says honestly what a team without a roster or stats has', async () => {

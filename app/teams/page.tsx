@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
@@ -31,6 +32,9 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * single-division league). The division wrapper carries the division id unless it equals the
  * league id (PCAL), so `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the
  * page is unique (SPEC §8.1).
+ *
+ * One quiet line under the list links /clubs (DESIGN §17.1), which is not in the nav. It sits
+ * outside `#team-list`, so the finder never hides it, and adds no heading and no group wrapper.
  */
 export const metadata: Metadata = {
   title: 'Teams',
@@ -116,6 +120,13 @@ export default function TeamsPage() {
           every page, one line below. The alignment source is already in the page description. */}
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
         Records are league games only. A dash means no results have been reported yet.
+      </p>
+      <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
+        Club field hockey: the{' '}
+        <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
+          club teams
+        </Link>{' '}
+        page lists youth field hockey clubs and, for each, the players here a public page ties to it.
       </p>
     </div>
   );
