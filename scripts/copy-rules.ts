@@ -21,7 +21,7 @@ export const SCVAL_ONLY_CLAIM = new RegExp(
   'i',
 );
 
-// ---------------------------------------------------------------- clubs (SPEC §1.1j2, DESIGN §16.2)
+// ---------------------------------------------------------------- clubs (SPEC §1.1j2, DESIGN §17.2)
 
 /** The slice of data/clubs.json the leak rule reads. Type-only, so this file stays pure. */
 interface LeakAffiliation {

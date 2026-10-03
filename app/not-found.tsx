@@ -21,6 +21,7 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/standings', name: 'Standings — every league', description: `${LEAGUE_LIST} tables` },
   { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
   { href: '/teams', name: 'Find a team', description: 'Search by school, city or mascot' },
+  { href: '/leaders', name: 'Season leaders', description: 'Top scorers, keepers and records, every league' },
   { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
   {
     href: '/history/2025-26',
@@ -33,14 +34,14 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
  * links are the real navigation rather than a single "go home": one card per top-level page
- * (the seven desktop nav destinations, the History archive among them, which covers the leagues
+ * (the eight desktop nav destinations, the History archive among them, which covers the leagues
  * with a published 2025-26 table), with its name over a one-line description, so nothing is a
  * sentence squeezed into a pill.
  *
- * The copy does not claim these seven are every page on the site — there are hundreds of team,
+ * The copy does not claim these eight are every page on the site — there are hundreds of team,
  * game and day pages — only that each of those is reachable from one of them, which is true.
- * Seven cards run two-up from sm and four-up from lg (a row of four, then three). Each card is
- * h-full so a row stays even when one description wraps in the narrower four-up column.
+ * Eight cards run two-up from sm and four-up from lg (two rows of four). Each card is h-full so a
+ * row stays even when one description wraps in the narrower four-up column.
  */
 export default function NotFound() {
   return (

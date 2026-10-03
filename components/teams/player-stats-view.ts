@@ -217,6 +217,24 @@ function byTimeInGoal(a: PlayerStatLine, b: PlayerStatLine): number {
 }
 
 /**
+ * Finals played after MaxPreps' "last updated" stamp: games the totals do not include yet. Both
+ * stamps are naive local time in the same zone: on 2026-10-02 the finals at or before each team's
+ * update matched MaxPreps' own games-played total on 9 of 10 teams (Palo Alto's total is one game
+ * ahead of the snapshot). Compared whole, not by date, so a game later on the day of the update
+ * counts (Santa Clara: updated 11:15, played at 16:00). Shared with the /leaders page, so both
+ * pages say the same thing about the same team.
+ */
+export function gamesSinceUpdate(lastUpdated: string | null, games: readonly Game[]): number {
+  const updatedAt = lastUpdated?.slice(0, 19) ?? null;
+  if (!updatedAt) return 0;
+  return new Set(
+    games
+      .filter((g) => g.status === 'final' && g.dateLocal.slice(0, 19) > updatedAt)
+      .map((g) => g.contestId),
+  ).size;
+}
+
+/**
  * The player stats section for any registry team, in every league. null only for a slug
  * data/player-stats.json does not hold (not a registry team). A team whose coach enters no stats
  * still gets a view, with no tables, and the section says so (status 'none'); one no run has
@@ -235,19 +253,8 @@ export function buildPlayerStatsView(
 ): PlayerStatsView | null {
   if (!team) return null;
 
-  // Both stamps are naive local time in the same zone: on 2026-10-02 the finals at or before each
-  // team's update matched MaxPreps' own games-played total on 9 of 10 teams (Palo Alto's total is
-  // one game ahead of the snapshot). Compared whole, not by date, so a game later on the day of
-  // the update counts (Santa Clara: updated 11:15, played at 16:00).
-  const updatedAt = team.lastUpdated?.slice(0, 19) ?? null;
-  const updatedDay = updatedAt?.slice(0, 10) ?? null;
-  const gamesSince = updatedAt
-    ? new Set(
-        games
-          .filter((g) => g.status === 'final' && g.dateLocal.slice(0, 19) > updatedAt)
-          .map((g) => g.contestId),
-      ).size
-    : 0;
+  const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
+  const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
   const scoring = table(team, SCORING, field, () => true);

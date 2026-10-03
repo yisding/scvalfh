@@ -312,7 +312,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'clubs']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'clubs']) {
       put(`${p}.html`);
     }
     // The history page: a section per league, and a division anchor for every available league.
@@ -340,7 +340,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
         put(`${family}/${p}/opengraph-image.meta`, OK_META);
       }
     }
-    // One page per club of data/clubs.json (DESIGN §16), and no OG card: the clubs pages take the
+    // One page per club of data/clubs.json (DESIGN §17), and no OG card: the clubs pages take the
     // root one.
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);

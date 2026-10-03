@@ -403,7 +403,7 @@ exist and not be linked. Like the first sweep, this one is research, not a scrip
 
 **(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
-DESIGN §16). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds 13
+DESIGN §17). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds 13
 youth field hockey clubs and 72 affiliations, each a tie between a player on the 43 tracked varsity
 rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one

@@ -5,7 +5,7 @@ import SectionHeader from '../ui/SectionHeader';
 import type { ClubHostLink, ClubPageView } from './club-view';
 
 /**
- * A club page's "Where this comes from" (DESIGN §16.1): the club's own roster pages, then the pages
+ * A club page's "Where this comes from" (DESIGN §17.1): the club's own roster pages, then the pages
  * the club record was read from, then when, and how players are matched.
  *
  * The roster pages are why the players section can stay narrow: a club's own roster names many more

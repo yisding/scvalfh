@@ -21,7 +21,7 @@ import type { TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
 
 /**
- * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §16),
+ * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
  * derived from lib/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
  * every word a club page or a club line prints about a club tie is chosen here, in one module.
  *
@@ -31,7 +31,7 @@ import { plural } from '../ui/plural';
  *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here, and
- *     a per-row confidence mark is not built (DESIGN §16.6);
+ *     a per-row confidence mark is not built (DESIGN §17.6);
  *   - `unknown` is never worded as current: it reads "Listed by <source>, <date>", and on the
  *     roster its group is "Listed club";
  *   - link labels come from the source kind and the host, never from a URL path — apart from the
@@ -175,7 +175,7 @@ export function sourceName(src: Pick<AffiliationSource, 'url' | 'kind'>, pageClu
 }
 
 /**
- * A tie's status in words (DESIGN §16.3), on `pageClub`'s page:
+ * A tie's status in words (DESIGN §17.3), on `pageClub`'s page:
  *
  *   asOf          current                      past                     unknown
  *   day/month/yr  Current, as of Jul 8, 2026   Earlier, Jul 18, 2025    Listed by the Gilroy Dispatch, Jul 18, 2025
@@ -319,7 +319,7 @@ export interface ClubRegionGroup {
 
 export interface ClubsIndexView {
   lede: string;
-  /** The regions that have a club, in CLUB_REGIONS order; clubs in getClubs() order (DESIGN §16.5). */
+  /** The regions that have a club, in CLUB_REGIONS order; clubs in getClubs() order (DESIGN §17.5). */
   regions: ClubRegionGroup[];
   /** The searched areas (lib/clubs.ts SEARCHED_REGIONS) with no club, as headings: ['Peninsula', 'Central Coast']. */
   regionsWithoutClubs: string[];

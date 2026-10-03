@@ -6,12 +6,12 @@ import SectionHeader from '../ui/SectionHeader';
 import type { ClubPageView, ClubPlayerRow } from './club-view';
 
 /**
- * A club page's players (DESIGN §16.1): only players on the tracked varsity rosters, each with the
+ * A club page's players (DESIGN §17.1): only players on the tracked varsity rosters, each with the
  * public pages that tie them to the club. Current ties first, then earlier or merely listed ones;
  * school, then name, within each. The lede says recall is partial, as the empty state does: under
  * a count, a bare list otherwise reads as every tracked player the club has.
  *
- * Privacy (DESIGN §16.2): a row is a roster row of this site, by its own spelling, and shows what
+ * Privacy (DESIGN §17.2): a row is a roster row of this site, by its own spelling, and shows what
  * the team page already shows (name, school, grade) plus the club team, the status in words and
  * the links. The quotes, the basis and the confidence the data file keeps are not in the view at
  * all (components/clubs/club-view.ts), so nothing here can print them.
@@ -29,7 +29,7 @@ import type { ClubPageView, ClubPlayerRow } from './club-view';
  * the sr-only name and the label in ONE span: `.sx-action` is inline-flex and would otherwise trim
  * the space between them.
  *
- * The two groups get an h3 each only when both exist (DESIGN §16.3): a lone "Current" over
+ * The two groups get an h3 each only when both exist (DESIGN §17.3): a lone "Current" over
  * the only list adds a heading level and no information, and every row states its own status.
  */
 

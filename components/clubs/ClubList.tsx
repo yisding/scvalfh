@@ -4,7 +4,7 @@ import { listWords } from '../../lib/format';
 import type { ClubIndexRow } from './club-view';
 
 /**
- * One region's clubs on /clubs (DESIGN §16.5): the display name linking the club's page, then the
+ * One region's clubs on /clubs (DESIGN §17.5): the display name linking the club's page, then the
  * full name and city, how many tracked players a public page ties to it (current and earlier
  * stated apart), and their schools.
  *

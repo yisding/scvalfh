@@ -92,12 +92,12 @@ export function LastUpdated({
         <span className="font-sans text-micro text-ink-3">Updated</span>{' '}
         <time dateTime={at}>
           {/* The weekday is the first thing to go: below 640px, where this sits in the 48px phone
-              bar beside the wordmark and the theme toggle (DESIGN §1.3, R-5), and at 896–1023
-              beside the seven nav links. "Wed Sep 30" does not fit in either next to the time.
+              bar beside the wordmark and the theme toggle (DESIGN §1.3, R-5), and at 944–1279
+              beside the eight nav links. "Wed Nov 30" does not fit in either next to the time.
               `hidden` removes a span from the accessibility tree too, so exactly one date is ever
               announced. */}
-          <span className="sm:hidden md:inline lg:hidden">{monthDay(local)}</span>
-          <span className="hidden sm:inline md:hidden lg:inline">{shortDate(local)}</span>{' '}
+          <span className="sm:hidden md:inline xl:hidden">{monthDay(local)}</span>
+          <span className="hidden sm:inline md:hidden xl:inline">{shortDate(local)}</span>{' '}
           {timeOfDay(local)}
           <span className="sr-only"> Pacific time</span>
         </time>

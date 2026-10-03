@@ -28,14 +28,16 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
 }
 
 /**
- * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3). History keeps its short
- * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
+ * The desktop nav: eight links, no sidebar, no bottom bar (DESIGN §1.3, §16). History keeps its
+ * short visible label; an sr-only suffix says what it holds (its page is titled with the same
+ * words). Leaders has no phone tab (the bar keeps its five); the footer links it at every width.
  */
 export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
   { href: '/', label: 'Home' },
   { href: '/standings', label: 'Standings' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },
+  { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
   { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
   { href: '/about', label: 'About' },

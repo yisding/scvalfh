@@ -30,7 +30,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
  * accessible name leads with the player's name, so a screen reader's links list tells them apart.
  *
- * A player a public page ties to a youth club gets a club line (DESIGN §16.4) between the facts and
+ * A player a public page ties to a youth club gets a club line (DESIGN §17.4) between the facts and
  * the profile links: "Club: SF Hawks", "Club: NorCal Impact · Earlier clubs: Fly FHC, Lightning",
  * "Listed club: Fly FHC" for a club a source names with no date that makes it current. It answers
  * "where does she play" next to the facts and keeps the off-site links as the row's last line. It

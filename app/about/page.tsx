@@ -47,7 +47,7 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
  * from their config citations), each league's data health, every si.com backfill, every contest
  * dropped on purpose, the published cross-checks, the update cadence, privacy and the
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
- * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §16.1),
+ * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §17.1),
  * which links /clubs: hand research, not part of the twice-daily update.
  */
 const DESCRIPTION =

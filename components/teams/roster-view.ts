@@ -28,7 +28,7 @@ import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
  *     posture: trust comes from showing the disagreement, not from silently picking a side);
  *   - a player's own recruiting pages (NCSA and the like) are linked from that player's row;
  *   - a player a public page ties to a club gets a club line linking that club's page on this site
- *     (DESIGN §16.4), current clubs first; a club a source only lists, with no date that makes it
+ *     (DESIGN §17.4), current clubs first; a club a source only lists, with no date that makes it
  *     current, is never worded as current. The words are components/clubs/club-view.ts'
  *     (`playerClubGroups`), so the team page and the club pages say the same thing.
  */

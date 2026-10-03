@@ -2,9 +2,9 @@ import ExternalLink from '../ui/ExternalLink';
 import type { ClubProgramRow, ClubProgramsSource } from './club-view';
 
 /**
- * A club page's "Teams and programs" (DESIGN §16.1): what the club lists on its own pages, each
+ * A club page's "Teams and programs" (DESIGN §17.1): what the club lists on its own pages, each
  * with the page it was read from. The heading is not the spec's "Teams the club runs" (DESIGN
- * §16.6): the lists include tournaments, camps, clinics and private lessons, which are not teams.
+ * §17.6): the lists include tournaments, camps, clinics and private lessons, which are not teams.
  *
  * The players' row pattern (components/clubs/ClubPlayers.tsx): the name, the detail when the club
  * gives one, then the source link on its own line. Most clubs list several programs on one page,

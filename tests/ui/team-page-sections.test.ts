@@ -2,7 +2,7 @@
  * Page-level wiring of the team page (app/teams/[slug]/page.tsx): every registry team of every
  * league renders both a Player stats and a Roster section, once each, in that order, and neither
  * says another league's data is missing because it is "SCVAL only". Every roster section links
- * /clubs (DESIGN §16.4), empty rosters included. tests/ui/roster-view.test.ts and
+ * /clubs (DESIGN §17.4), empty rosters included. tests/ui/roster-view.test.ts and
  * player-stats-view.test.ts hold the view builders; this renders the real route.
  */
 

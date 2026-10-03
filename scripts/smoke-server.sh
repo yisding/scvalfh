@@ -17,7 +17,7 @@
 # What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
 # schedule, playoffs; the superseded-game stubs are prerendered with a canonical to their MaxPreps
-# game and kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §16; no
+# game and kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §17; no
 # OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, /standings/scval, /standings/bval,
 # /playoffs #scval #bval #pcal #key-dates, a /schedule row per game day); every page the sitemap
@@ -162,7 +162,7 @@ from_build /sitemap.xml
 locs=$(grep -oE '<loc>[^<]+</loc>' "$tmp/b" | sed -E 's#</?loc>##g' || true)
 paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
-for path in / /about /standings /schedule /playoffs /teams /history/2025-26 /clubs \
+for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs \
   /standings/bval /standings/mcal /schedule/scval /schedule/mcal /playoffs/mcal; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done

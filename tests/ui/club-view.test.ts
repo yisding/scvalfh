@@ -1,6 +1,6 @@
 /**
  * `components/clubs/club-view.ts` and the clubs routes (/clubs, /clubs/[slug]) over the committed
- * data/clubs.json, data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §16).
+ * data/clubs.json, data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17).
  *
  * The pages make promises a test can hold them to:
  *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and
@@ -9,7 +9,7 @@
  *     to the build;
  *   - honesty: a tie that is only listed is never worded as current, and every row links the
  *     pages it rests on, each labelled by its kind and host, never by its path;
- *   - order: regions in CLUB_REGIONS order, clubs in lib/clubs.ts' display order (DESIGN §16.5),
+ *   - order: regions in CLUB_REGIONS order, clubs in lib/clubs.ts' display order (DESIGN §17.5),
  *     players current first, then by school and name.
  *
  * The data is hand research that changes only with a new sweep (tests/clubs-file.test.ts), so the
@@ -83,7 +83,7 @@ function sectionOf(html: string, id: string): string {
 const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 const squashWs = (t: string) => t.replace(/\s+/g, '');
 
-describe('status words (DESIGN §16.3)', () => {
+describe('status words (DESIGN §17.3)', () => {
   it('words every pinned tie as the table says', () => {
     const PINS: Array<[string, string, string]> = [
       ['Storey Lewis', 'sf-hawks', 'Current, as of Aug 27, 2026'],

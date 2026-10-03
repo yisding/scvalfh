@@ -15,7 +15,7 @@ import { gameHref } from '@/lib/game-id';
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the 43 team pages,
- * `/clubs/<slug>` per club of data/clubs.json (DESIGN §16.1), one page per date with a contest, and
+ * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
  * one per game. The clubs come in lib/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
@@ -38,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/schedule'), lastModified, changeFrequency: 'daily', priority: 0.8 },
     { url: url('/teams'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/playoffs'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
+    { url: url('/leaders'), lastModified, changeFrequency: 'daily', priority: 0.6 },
     { url: url('/history/2025-26'), lastModified, changeFrequency: 'yearly', priority: 0.3 },
     { url: url('/about'), lastModified, changeFrequency: 'monthly', priority: 0.3 },
     { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly', priority: 0.4 },

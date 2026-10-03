@@ -1,6 +1,6 @@
 /**
  * The Zod contract for data/clubs.json — the youth field hockey clubs around the 43 schools, and
- * which players on the tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §16).
+ * which players on the tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, not a script's output: it was written by hand on its `capturedAt` date,
  * every affiliation checked twice (a checker re-opened each source, then an independent refuter

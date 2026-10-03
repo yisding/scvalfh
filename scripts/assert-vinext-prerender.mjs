@@ -20,7 +20,7 @@
  * (never read from the built sitemap, which would be circular), `game/<param>` for every game plus
  * one stub per `supersededGames` key (param = lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`),
  * `scores/<date>` for every distinct game date, `teams/<slug>` for the 43 teams. The clubs pages
- * are derived from data/clubs.json instead (DESIGN §16, SPEC §1.1j2), read from the repo root as
+ * are derived from data/clubs.json instead (DESIGN §17, SPEC §1.1j2), read from the repo root as
  * the snapshot is: the fixed page `clubs`, and `clubs/<slug>` for exactly its slugs, with no OG card
  * (they take the root one). No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
@@ -62,7 +62,7 @@ const fileSet = new Set(files);
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
-const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26', 'clubs'];
+const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs'];
 const metadata = ['icon', 'apple-icon', 'icon-192', 'icon-512', 'opengraph-image', 'standings/opengraph-image',
   'manifest.webmanifest', 'sitemap.xml', 'robots.txt'];
 const missing = [

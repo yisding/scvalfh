@@ -1,6 +1,6 @@
 /**
- * data/clubs.json (SPEC §1.1j2, DESIGN §16): the committed file validates and holds every
- * load-time invariant; lib/clubs.ts serves it in display order (DESIGN §16.5); and a bad file —
+ * data/clubs.json (SPEC §1.1j2, DESIGN §17): the committed file validates and holds every
+ * load-time invariant; lib/clubs.ts serves it in display order (DESIGN §17.5); and a bad file —
  * built in memory from the real one, never written to disk — is refused at load with a message
  * that names what is wrong (the path, or the team, player and club).
  *
@@ -289,7 +289,7 @@ describe('data/clubs.json', () => {
 });
 
 describe('lib/clubs.ts', () => {
-  it('orders clubs by region, then most tied players, then display name (DESIGN §16.5)', () => {
+  it('orders clubs by region, then most tied players, then display name (DESIGN §17.5)', () => {
     expect(getClubSlugs()).toEqual([
       'sf-hawks',
       'pac-heights',

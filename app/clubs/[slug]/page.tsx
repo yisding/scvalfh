@@ -14,7 +14,7 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/clubs';
 
 /**
- * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §16.1, SPEC §1.1j2).
+ * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
  *
  * One static page per club in data/clubs.json, in lib/clubs.ts' display order. A club no tracked
  * player is tied to still gets its page, with an honest empty state (DESIGN §8): what the club is,
@@ -23,9 +23,9 @@ import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../
  * Source order is reading order: identity (the display name, the full name under it in the same
  * h1, the city and founding year, the website), then the players from the tracked rosters, then
  * the club's teams and programs, then where all of it comes from. The eyebrow links back to
- * /clubs: the page is not in the nav (DESIGN §16.1, §16.6), so this is the way back.
+ * /clubs: the page is not in the nav (DESIGN §17.1, §17.6), so this is the way back.
  *
- * Privacy (DESIGN §16.2). Only players already on the tracked varsity rosters are named, each by
+ * Privacy (DESIGN §17.2). Only players already on the tracked varsity rosters are named, each by
  * the roster's own spelling. A source's verbatim quote, an affiliation's basis and its confidence
  * are never rendered (they are not in the view, components/clubs/club-view.ts), and the metadata
  * names no player at all: a title or description travels further than the page. The club record
@@ -33,7 +33,7 @@ import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../
  *
  * Heading outline: h1 → h2 Players (→ an h3 per group, only when there are two) → h2 Teams and
  * programs (when the club lists any) → h2 Where this comes from (→ h3 labels). The page takes the
- * root OG card: there is no per-club card (DESIGN §16.6), so ROOT_OG_IMAGE is safe to spread here.
+ * root OG card: there is no per-club card (DESIGN §17.6), so ROOT_OG_IMAGE is safe to spread here.
  */
 
 /** Every club prerendered; anything else is a 404 rather than a runtime render. */

@@ -33,7 +33,7 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * league id (PCAL), so `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the
  * page is unique (SPEC §8.1).
  *
- * One quiet line under the list links /clubs (DESIGN §16.1), which is not in the nav. It sits
+ * One quiet line under the list links /clubs (DESIGN §17.1), which is not in the nav. It sits
  * outside `#team-list`, so the finder never hides it, and adds no heading and no group wrapper.
  */
 export const metadata: Metadata = {

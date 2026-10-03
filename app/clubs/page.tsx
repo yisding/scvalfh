@@ -8,7 +8,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/rosters';
 
 /**
- * /clubs — "Which clubs do players here play for?" (DESIGN §16.1, SPEC §1.1j2).
+ * /clubs — "Which clubs do players here play for?" (DESIGN §17.1, SPEC §1.1j2).
  *
  * The youth field hockey clubs of data/clubs.json — the clubs around these schools, plus any other
  * club a tracked player is tied to (HTC trains in La Jolla) — and, for each, how many players on
@@ -19,12 +19,12 @@ import { getRosters } from '../../lib/rosters';
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
  * the South Bay, the East Bay, Marin, the Central Coast, then the rest: lib/clubs-schema.ts
  * CLUB_REGIONS), then the h2 "How players are matched" (`#how-matched`, which every club page
- * links). Within a region, the clubs with the most tied players come first (DESIGN §16.5,
+ * links). Within a region, the clubs with the most tied players come first (DESIGN §17.5,
  * lib/clubs.ts), so a reader meets the clubs that answer the question before the ones that do not.
  *
  * A list, not a table (DESIGN §10.8): components/clubs/ClubList.tsx. The page is not in the nav
  * (the spec keeps the navigation unchanged); /teams, every team page's roster and /about link it.
- * It takes the root OG card: there is no clubs card (DESIGN §16.6).
+ * It takes the root OG card: there is no clubs card (DESIGN §17.6).
  */
 export const metadata: Metadata = {
   title: 'Club teams',

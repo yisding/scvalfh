@@ -22,7 +22,7 @@
  *     per-league pages (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL
  *     and an MCAL team page, and the first /game/, /scores/, /teams/ and /clubs/ page of the
  *     sitemap, plus its first /game/sblive-* page when it lists one (a si.com-only game) and its
- *     first /clubs/ page whose club no tracked player is tied to (DESIGN §16). The sitemap lists the
+ *     first /clubs/ page whose club no tracked player is tied to (DESIGN §17). The sitemap lists the
  *     clubs with the most tied players first, so the first club page is the longest player list
  *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
  *     sources through axe with no player rows (/clubs/pac-heights today).
@@ -88,6 +88,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/teams/tamalpais',
   '/playoffs',
   '/playoffs/mcal',
+  '/leaders',
   '/about',
   '/history/2025-26',
   '/clubs',

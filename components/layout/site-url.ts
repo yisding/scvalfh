@@ -42,9 +42,9 @@ export const OG_BASE = {
 
 /**
  * The root card, for the routes with NO `opengraph-image.tsx` of their own: /schedule, /teams,
- * /playoffs, /about and /history/2025-26. Without it those five pages carried
+ * /playoffs, /leaders, /about and /history/2025-26. Without it those pages carried
  * `twitter:card=summary_large_image` and no image of any kind. /clubs and /clubs/[slug] take it
- * too: there is no clubs card (DESIGN §16.6).
+ * too: there is no clubs card (DESIGN §17.6).
  *
  * Never spread this into a segment that HAS its own image file. Next attaches a file-based image
  * only when that segment's metadata does not declare `openGraph.images`

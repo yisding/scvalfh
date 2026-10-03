@@ -85,7 +85,7 @@ beforeAll(async () => {
   }
   for (const card of home.leagueCards) s.push({ producer: HD, label: `${card.shortName} league card`, league: card.id, value: card });
   for (const tv of home.teamViews) {
-    const slug = tv.team.slug;
+    const slug = tv.slug;
     s.push({ producer: HD, label: `teamViews[${slug}]`, league: leagueOfSlug.get(slug) ?? null, value: tv });
     s.push({ producer: HD, label: `teamViews[${slug}].next`, league: leagueOfSlug.get(slug) ?? null, value: tv.next, unplayed: true });
   }

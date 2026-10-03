@@ -4,7 +4,7 @@
  *
  * The section makes three promises a test can hold it to: it is varsity only, a blank is never
  * filled with a guess, and every value that did not come from MaxPreps is marked and sourced. A
- * fourth is the club line (DESIGN §16.4): a club a source only lists is never worded as current,
+ * fourth is the club line (DESIGN §17.4): a club a source only lists is never worded as current,
  * and every club line links that club's page on this site, which cites the sources.
  */
 
@@ -230,7 +230,7 @@ describe('buildRosterView', () => {
   });
 });
 
-describe('buildRosterView: club lines (DESIGN §16.4)', () => {
+describe('buildRosterView: club lines (DESIGN §17.4)', () => {
   const rowOf = (slug: string, name: string) => views.find((v) => v.slug === slug)!.view.rows.find((r) => r.name === name)!;
   const pairs = (slug: string, name: string) => rowOf(slug, name).clubs.map((g) => [g.label, g.clubs.map((c) => c.name)]);
 

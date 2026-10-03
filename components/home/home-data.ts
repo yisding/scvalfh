@@ -101,8 +101,8 @@ function joinAmp(names: readonly string[]): string {
 }
 
 function colorsOf(team: Team): HomeColors {
-  const { primary, secondary, onPrimary } = team.colors;
-  return { primary, secondary, onPrimary };
+  const { primary, onPrimary } = team.colors;
+  return { primary, onPrimary };
 }
 
 function shortNameOf(side: Game['home']): string {
@@ -778,16 +778,8 @@ export function buildTeamViews(): HomeTeamView[] {
     const tieBadges =
       line && outcomes.length > 1 ? `${outcomes.map((o) => statusBadge(team.division, o)).join(' or ')} (tied)` : null;
     return {
-      team: {
-        abbr: team.abbr,
-        name: team.name,
-        colors: colorsOf(team),
-        slug: team.slug,
-        shortName: team.shortName,
-        leagueId: team.league,
-        leagueShort: league.shortName,
-        divisionHeading: heading,
-      },
+      // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
+      slug: team.slug,
       meta: [hasResults && place ? place : 'No results yet', heading, league.shortName]
         .filter((part): part is string => !!part)
         .join(' · '),
