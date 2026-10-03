@@ -12,32 +12,32 @@ import { LEAGUES } from '../../lib/leagues';
 
 /**
  * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all four leagues: the
- * players with the most points, assists, saves and clean sheets, and the clubs with the best
+ * players with the most points, assists, saves and clean sheets, and the schools with the best
  * records, the most goals per game, the fewest allowed and the most clean sheets.
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
- * team page and a club's record is the one in its standings row. Two sections, `#players` and
- * `#clubs`, each a grid of boards that is one column on a phone and two from 1024px; every board
+ * team page and a school's record is the one in its standings row. Two sections, `#players` and
+ * `#schools`, each a grid of boards that is one column on a phone and two from 1024px; every board
  * has its own anchor (`#most-points`, `#best-record`, …).
  *
  * The player boards can only rank what coaches enter, so the page says so up front, every board
  * says how many teams it covers and which it leaves out, and the notes under the section name the
- * teams whose totals are behind the scores. The club boards cover every team.
+ * teams whose totals are behind the scores. The school boards cover every team.
  */
 
 const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
 
 export const metadata: Metadata = {
   title: 'Season leaders',
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: most points, assists, saves and clean sheets, and the clubs with the best records.`,
+  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: most points, assists, saves and clean sheets, and the schools with the best records.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/leaders' },
 };
 
 const TABS = [
   { href: '#players', label: 'Players' },
-  { href: '#clubs', label: 'Clubs' },
+  { href: '#schools', label: 'Schools' },
 ];
 
 export default function LeadersPage() {
@@ -52,8 +52,8 @@ export default function LeadersPage() {
         title="Season leaders"
         description={
           <>
-            The top players and clubs across {SHORT_NAMES}. Player numbers are what each coach
-            enters on MaxPreps; club records are computed from every final on this site.
+            The top players and schools across {SHORT_NAMES}. Player numbers are what each coach
+            enters on MaxPreps; school records are computed from every final on this site.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={TABS} label="Jump to a leaderboard" />}
@@ -82,20 +82,20 @@ export default function LeadersPage() {
         </div>
       </section>
 
-      <section id="clubs" aria-label="Club leaders" className="mt-section min-w-0 scroll-mt-24 md:mt-section-lg">
+      <section id="schools" aria-label="School leaders" className="mt-section min-w-0 scroll-mt-24 md:mt-section-lg">
         <SectionHeader
           size="lg"
-          kicker="Clubs"
+          kicker="Schools"
           meta={view.resultsThrough ? `Every final through ${view.resultsThrough}` : 'No finals yet'}
         />
         <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">
-          {view.clubs.map((board) => (
+          {view.schools.map((board) => (
             <LeaderBoardTable key={board.id} board={board} />
           ))}
         </div>
-        {view.clubNotes.length > 0 ? (
+        {view.schoolNotes.length > 0 ? (
           <div className="mt-section max-w-prose space-y-2 text-meta text-ink-3">
-            {view.clubNotes.map((note) => (
+            {view.schoolNotes.map((note) => (
               <p key={note} className="m-0">
                 {note}
               </p>

@@ -23,7 +23,7 @@ import { plural } from '../ui/plural';
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * Clubs (data/snapshot.json): best record, best league record, goals scored and allowed per game,
+ * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
  * and clean sheets. Records are the `Standing` rows the standings and team pages print (`overall`
  * is every final, `computed` the league games the table counts), so a team's record here is its
  * record everywhere. Clean sheets and the per-game rates come from the same finals, with forfeits
@@ -74,7 +74,7 @@ export interface LeaderRow {
   /** 1-based; tied rows share it. */
   rank: number;
   tied: boolean;
-  /** The player's name on a player board, the club's on a club board. */
+  /** The player's name on a player board, the school's on a school board. */
   name: string;
   team: LeaderTeamRef;
   /** One per column. */
@@ -84,7 +84,7 @@ export interface LeaderRow {
 export interface LeaderBoard {
   /** The board's anchor: `/leaders#most-points`. */
   id: string;
-  kind: 'player' | 'club';
+  kind: 'player' | 'school';
   /** "Most points" */
   title: string;
   /** Beside the heading: "From 27 teams", "At least 5 games". */
@@ -105,11 +105,11 @@ export interface LeaderBoard {
 
 export interface LeadersView {
   players: LeaderBoard[];
-  clubs: LeaderBoard[];
+  schools: LeaderBoard[];
   /** Under the player boards: whose stats are missing, behind or carried forward. */
   playerNotes: string[];
-  /** Under the club boards: what the records count and who has not played enough to qualify. */
-  clubNotes: string[];
+  /** Under the school boards: what the records count and who has not played enough to qualify. */
+  schoolNotes: string[];
   /** Teams with at least one player stat line. */
   statTeams: number;
   teamCount: number;
@@ -369,9 +369,9 @@ function playerBoard(
   };
 }
 
-// ---------------------------------------------------------------- clubs
+// ---------------------------------------------------------------- schools
 
-interface ClubLine {
+interface SchoolLine {
   team: Team;
   overall: ComputedRecord;
   league: ComputedRecord;
@@ -382,7 +382,7 @@ interface ClubLine {
   cleanSheets: number;
 }
 
-function clubLine(team: Team, standing: Standing, games: readonly Game[]): ClubLine {
+function schoolLine(team: Team, standing: Standing, games: readonly Game[]): SchoolLine {
   let goalGames = 0;
   let gf = 0;
   let ga = 0;
@@ -415,8 +415,8 @@ const rateText = (goals: number, games: number) => rate(goals, games).toFixed(2)
 function recordBoard(
   id: string,
   title: string,
-  lines: readonly ClubLine[],
-  pick: (l: ClubLine) => ComputedRecord,
+  lines: readonly SchoolLine[],
+  pick: (l: SchoolLine) => ComputedRecord,
   min: number,
   unitWord: string,
   note: string,
@@ -430,9 +430,9 @@ function recordBoard(
         pick(b).gd - pick(a).gd ||
         byName(a.team.name, b.team.name),
     );
-  const same = (a: ClubLine, b: ClubLine) =>
+  const same = (a: SchoolLine, b: SchoolLine) =>
     pick(a).winPct === pick(b).winPct && pick(a).w === pick(b).w && pick(a).gd === pick(b).gd;
-  return clubBoard(id, title, `At least ${plural(min, unitWord)}`, sorted, same, {
+  return schoolBoard(id, title, `At least ${plural(min, unitWord)}`, sorted, same, {
     columns: [
       { key: 'record', label: 'W-L-T', title: 'Wins, losses and ties', cell: (l) => recordCell(pick(l)) },
       { key: 'pct', label: 'Pct', title: 'Win percentage', cell: (l) => pctCell(pick(l)) },
@@ -444,29 +444,29 @@ function recordBoard(
   });
 }
 
-function clubBoard(
+function schoolBoard(
   id: string,
   title: string,
   meta: string,
-  sorted: readonly ClubLine[],
-  same: (a: ClubLine, b: ClubLine) => boolean,
+  sorted: readonly SchoolLine[],
+  same: (a: SchoolLine, b: SchoolLine) => boolean,
   spec: {
-    columns: Array<LeaderColumn & { cell: (l: ClubLine) => LeaderCell }>;
+    columns: Array<LeaderColumn & { cell: (l: SchoolLine) => LeaderCell }>;
     rankedBy: number;
     note: string;
     empty: string;
     /** `listed`: whether any row is listed above the tie (then it is "N more teams"). */
-    more?: (count: number, place: number, sample: ClubLine, listed: boolean) => string;
+    more?: (count: number, place: number, sample: SchoolLine, listed: boolean) => string;
   },
 ): LeaderBoard {
   const { rows, dropped } = rankBoard(sorted, same);
   const teams = (count: number) => plural(count, rows.length ? 'more team' : 'team');
   return {
     id,
-    kind: 'club',
+    kind: 'school',
     title,
     meta,
-    caption: `${title}, clubs in all four leagues, this season`,
+    caption: `${title}, schools in all four leagues, this season`,
     columns: spec.columns.map(({ key, label, title: t }) => ({ key, label, title: t })),
     rankedBy: spec.rankedBy,
     rows: rows.map(({ item: l, rank, tied }) => ({
@@ -491,10 +491,10 @@ function clubBoard(
  * given), but fewer than `min` of the games this board counts.
  */
 function belowMinimum(
-  lines: readonly ClubLine[],
-  gp: (l: ClubLine) => number,
+  lines: readonly SchoolLine[],
+  gp: (l: SchoolLine) => number,
   min: number,
-  played: (l: ClubLine) => number = gp,
+  played: (l: SchoolLine) => number = gp,
 ): string[] {
   return lines
     .filter((l) => played(l) > 0 && gp(l) < min)
@@ -550,16 +550,16 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
     );
   }
 
-  // ---- clubs
+  // ---- schools
   const standingById = new Map(standings.map((s) => [s.teamId, s]));
   const lines = teams.flatMap((t) => {
     const s = standingById.get(t.id);
-    return s ? [clubLine(t, s, games)] : [];
+    return s ? [schoolLine(t, s, games)] : [];
   });
   const overallMin = qualifyingMinimum(lines.map((l) => l.overall.gp));
   const leagueMin = qualifyingMinimum(lines.map((l) => l.league.gp));
 
-  const clubs: LeaderBoard[] = [
+  const schools: LeaderBoard[] = [
     recordBoard(
       'best-record',
       'Best record',
@@ -578,7 +578,7 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
       'league game',
       'League games only, as the standings count them. Leagues play different numbers of league games, so this compares percentages, not points.',
     ),
-    clubBoard(
+    schoolBoard(
       'most-goals',
       'Most goals per game',
       `At least ${plural(overallMin.min, 'game')}`,
@@ -606,7 +606,7 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
           : `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
-    clubBoard(
+    schoolBoard(
       'fewest-goals-allowed',
       'Fewest goals allowed per game',
       `At least ${plural(overallMin.min, 'game')}`,
@@ -630,8 +630,8 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
         empty: `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
-    clubBoard(
-      'club-clean-sheets',
+    schoolBoard(
+      'school-clean-sheets',
       'Most clean sheets',
       `From all ${plural(lines.length, 'team')}`,
       lines
@@ -652,26 +652,26 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
     ),
   ];
 
-  const clubNotes: string[] = [];
+  const schoolNotes: string[] = [];
   const notYet = (below: string[]) => (below.length ? `; not there yet: ${listWords(below)}.` : '.');
   const overallBelow = belowMinimum(lines, (l) => l.overall.gp, overallMin.min);
   // The rate boards count only games with goals, and a forfeit has none, so a forfeit can leave a
-  // club past the record minimum and short of the rate one: it is named for each it misses.
+  // school past the record minimum and short of the rate one: it is named for each it misses.
   const rateBelow = belowMinimum(lines, (l) => l.goalGames, overallMin.min, (l) => l.overall.gp);
   const leagueBelow = belowMinimum(lines, (l) => l.league.gp, leagueMin.min);
   if (overallMin.median > 0) {
     const lead = `need at least ${plural(overallMin.min, 'result')}, half the median of ${overallMin.median}`;
     if (rateBelow.join() === overallBelow.join()) {
-      clubNotes.push(`Records and goals per game ${lead}${notYet(overallBelow)}`);
+      schoolNotes.push(`Records and goals per game ${lead}${notYet(overallBelow)}`);
     } else {
-      clubNotes.push(`Records ${lead}${notYet(overallBelow)}`);
-      clubNotes.push(
+      schoolNotes.push(`Records ${lead}${notYet(overallBelow)}`);
+      schoolNotes.push(
         `Goals per game need at least ${plural(overallMin.min, 'game')} with goals counted (a forfeit has none)${notYet(rateBelow)}`,
       );
     }
   }
   if (leagueMin.median > 0) {
-    clubNotes.push(
+    schoolNotes.push(
       `The league record needs at least ${plural(leagueMin.min, 'league result')}, half the median of ${leagueMin.median}${notYet(leagueBelow)}`,
     );
   }
@@ -679,9 +679,9 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   const finals = games.filter((g) => g.status === 'final').map((g) => g.dateKey).sort();
   return {
     players,
-    clubs,
+    schools,
     playerNotes,
-    clubNotes,
+    schoolNotes,
     statTeams: withStats.length,
     teamCount: teams.length,
     resultsThrough: finals.length ? shortDate(finals[finals.length - 1]) : null,

@@ -2729,12 +2729,12 @@ else stands: static rendering, "today" from the snapshot, no new hue (§6.4, §1
 
 | URL | Answers | Pages |
 |---|---|---|
-| `/leaders` | "Who leads the whole site?" `#players` (most points, assists, saves, clean sheets) and `#clubs` (best record, best league record, most goals per game, fewest goals allowed per game, most clean sheets); each board has its own anchor (`#most-points`, `#best-record`, …) | 1 |
+| `/leaders` | "Who leads the whole site?" `#players` (most points, assists, saves, clean sheets) and `#schools` (best record, best league record, most goals per game, fewest goals allowed per game, most clean sheets); each board has its own anchor (`#most-points`, `#best-record`, …) | 1 |
 
 The page is built by `components/leaders/leaders-view.ts` from the two files every other page reads,
-so a player's line is the one on their team page and a club's record is the one in its standings row.
+so a player's line is the one on their team page and a school's record is the one in its standings row.
 Each board is one table (`components/leaders/LeaderBoardTable.tsx`): place, name (the player's team
-and league on a second line, or the club's league), and at most three numeric columns, so a 320px
+and league on a second line, or the school's league), and at most three numeric columns, so a 320px
 phone needs no scroller. The column a board ranks on is bold. Boards sit one per row on a phone and
 two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/schedule`).
 
@@ -2753,12 +2753,12 @@ two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/s
   the two lists (the teams that do enter the stat, or the teams with stats that do not), the section
   names every team with no stats at all, and every team whose totals are behind its finals, by the
   team page's own `gamesSinceUpdate` rule. "Clean sheets" are MaxPreps' goalkeeper shutouts.
-- **Club boards cover every team.** Records are the `Standing` rows (`overall`: every final;
+- **School boards cover every team.** Records are the `Standing` rows (`overall`: every final;
   `computed`: the league games the table counts). Clean sheets and goals per game come from the same
   finals, with forfeits left out as the standings leave them out of goals (§11.6). A record or a rate
   needs at least half the median team's number of results, rounded up (a 1-0 team does not top a
   table of ten-game seasons); the teams below the line are named with their count. A forfeit counts
-  toward a record but not toward a rate, so a club that the rate boards leave out for that reason
+  toward a record but not toward a rate, so a school that the rate boards leave out for that reason
   is named in a sentence of its own. The league-record
   board compares win percentages, not points, because leagues play different numbers of league games.
 - **The pinned team.** Every row carries `data-team-slug`, so the pinned-team script and

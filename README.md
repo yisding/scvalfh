@@ -53,7 +53,7 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues) |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
-| `/leaders` | Season leaders across all four leagues (`#players`, `#clubs`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the clubs with the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
+| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL and MCAL shown as unavailable |
 | `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
 
@@ -286,7 +286,7 @@ points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts") across
 A player can only appear where the coach tracks that stat, so each board says how many teams it
 covers and names the ones it leaves out, a 0 never makes a board, and the page names every team
 with no stats and every team whose totals are behind its finals (the team page's "games since"
-rule, shared through `gamesSinceUpdate`). The club boards on the same page come from the snapshot
+rule, shared through `gamesSinceUpdate`). The school boards on the same page come from the snapshot
 instead and cover all 43 teams: overall and league records are the `Standing` rows the standings
 print, clean sheets and goals per game are counted from the finals with forfeits left out, and a
 record or a rate needs at least half the median team's number of results (the teams below that

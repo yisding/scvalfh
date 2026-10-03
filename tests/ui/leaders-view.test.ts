@@ -1,10 +1,10 @@
 /**
  * `components/leaders/leaders-view.ts`, `LeaderBoardTable` and the /leaders page (DESIGN §16).
  *
- * The page's promises: a player's number is the one on their team page and a club's record the one
+ * The page's promises: a player's number is the one on their team page and a school's record the one
  * in its standings row; a board ranks with shared places (1, 2, 2, 4) and never lists more than its
  * cap; a 0 or an untracked stat never puts a player on a board; every team a board cannot cover is
- * named; a club needs a minimum number of results to lead a record or a rate; clean sheets leave
+ * named; a school needs a minimum number of results to lead a record or a rate; clean sheets leave
  * forfeits out, as goals do.
  *
  * Two data sets, as tests/ui/player-stats-view.test.ts has: the rules are asserted over the
@@ -46,7 +46,7 @@ import type { Game } from '../../lib/types';
 import { game } from '../helpers';
 
 const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
-const CLUB_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'club-clean-sheets'];
+const SCHOOL_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets'];
 
 /** The board's ranked cell, as printed. */
 const ranked = (board: LeaderBoard, i: number) => board.rows[i].cells[board.rankedBy].text;
@@ -75,15 +75,15 @@ describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
   const stats = getPlayerStats().teams;
 
-  it('builds the four player boards and the five club boards, with unique anchors', () => {
+  it('builds the four player boards and the five school boards, with unique anchors', () => {
     expect(view.players.map((b) => b.id)).toEqual(PLAYER_IDS);
-    expect(view.clubs.map((b) => b.id)).toEqual(CLUB_IDS);
+    expect(view.schools.map((b) => b.id)).toEqual(SCHOOL_IDS);
     expect(view.teamCount).toBe(getTeams().length);
     expect(view.statTeams).toBe(stats.filter((t) => t.players.length > 0).length);
   });
 
   it('ranks every board with shared places and keeps to its cap', () => {
-    for (const board of [...view.players, ...view.clubs]) {
+    for (const board of [...view.players, ...view.schools]) {
       expectRanked(board);
       expect(board.columns[board.rankedBy], board.id).toBeDefined();
       for (const row of board.rows) expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
@@ -116,8 +116,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
     }
   });
 
-  it("prints each club's record as its standings row has it, and only for a club past the minimum", () => {
-    const [record, league] = view.clubs;
+  it("prints each school's record as its standings row has it, and only for a school past the minimum", () => {
+    const [record, league] = view.schools;
     const minOf = (board: LeaderBoard) => Number(/At least (\d+)/.exec(board.meta)![1]);
     for (const row of record.rows) {
       const s = getStandingFor(row.team.slug)!;
@@ -131,8 +131,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
     }
   });
 
-  it('counts a club clean sheet from the finals, forfeits left out', () => {
-    const board = view.clubs.find((b) => b.id === 'club-clean-sheets')!;
+  it('counts a school clean sheet from the finals, forfeits left out', () => {
+    const board = view.schools.find((b) => b.id === 'school-clean-sheets')!;
     for (const row of board.rows) {
       const team = getTeamBySlug(row.team.slug)!;
       const shutouts = getGames({ teamId: team.slug, status: 'final' }).filter((g) => {
@@ -262,7 +262,7 @@ function roundRobin(slugs: string[], score: (h: string, a: string) => [number, n
   return out;
 }
 
-describe('buildLeadersView — clubs, over synthetic games', () => {
+describe('buildLeadersView — schools, over synthetic games', () => {
   // Four teams of four leagues play each other twice (6 games each); Del Mar plays once, a 1-0 win.
   const four = ['mitty', 'leigh', 'stevenson', 'tamalpais'];
   const strength: Record<string, number> = { mitty: 4, leigh: 1, stevenson: 3, tamalpais: 2 };
@@ -274,15 +274,15 @@ describe('buildLeadersView — clubs, over synthetic games', () => {
     game({ home: 'stevenson', away: 'mitty', hs: 1, as: 0, league: false, forfeit: true, date: '2026-09-21' }),
   ];
   const view = buildLeadersView(sources(games));
-  const board = (id: string) => view.clubs.find((b) => b.id === id)!;
+  const board = (id: string) => view.schools.find((b) => b.id === id)!;
 
-  it('leaves a club under the minimum off the record and rate boards, and names it', () => {
+  it('leaves a school under the minimum off the record and rate boards, and names it', () => {
     const record = board('best-record');
     // gp: mitty 7, stevenson 7, leigh 7, tamalpais 6, del-mar 1 → median 7, minimum 4.
     expect(record.meta).toBe('At least 4 games');
     expect(record.rows.map((r) => r.team.slug)).not.toContain('del-mar');
     expect(board('most-goals').rows.map((r) => r.team.slug)).not.toContain('del-mar');
-    expect(view.clubNotes[0]).toContain('Del Mar (1)');
+    expect(view.schoolNotes[0]).toContain('Del Mar (1)');
     // Mitty won all six it played on the field and lost the forfeit: 6-1-0.
     expect(record.rows[0]).toMatchObject({ rank: 1, tied: false, name: 'Archbishop Mitty' });
     expect(record.rows[0].cells.map((c) => c.text)).toEqual(['6-1-0', '.857', '+12']);
@@ -290,7 +290,7 @@ describe('buildLeadersView — clubs, over synthetic games', () => {
   });
 
   it('counts clean sheets and goals per game without the forfeit', () => {
-    const cs = board('club-clean-sheets');
+    const cs = board('school-clean-sheets');
     // Nobody keeps a clean sheet in the round robin (every side scores at least 1); Del Mar's 1-0
     // over Leigh is the only one, and Stevenson's 1-0 forfeit is not.
     expect(cs.rows.map((r) => [r.team.slug, r.cells[cs.rankedBy].text])).toEqual([['del-mar', '1']]);
@@ -304,7 +304,7 @@ describe('buildLeadersView — clubs, over synthetic games', () => {
     // Every team concedes 2 a game when every score is 2-2.
     const even = roundRobin(four, () => [2, 2]);
     const v = buildLeadersView(sources(even));
-    const allowed = v.clubs.find((b) => b.id === 'fewest-goals-allowed')!;
+    const allowed = v.schools.find((b) => b.id === 'fewest-goals-allowed')!;
     expect(allowed.rows.map((r) => [r.rank, r.tied])).toEqual([
       [1, true],
       [1, true],
@@ -313,7 +313,7 @@ describe('buildLeadersView — clubs, over synthetic games', () => {
     ]);
     expect(allowed.rows.map((r) => r.name)).toEqual([...allowed.rows.map((r) => r.name)].sort((a, b) => a.localeCompare(b)));
     // A season of draws keeps no clean sheet at all: the board says so instead of an empty table.
-    const cs = v.clubs.find((b) => b.id === 'club-clean-sheets')!;
+    const cs = v.schools.find((b) => b.id === 'school-clean-sheets')!;
     expect(cs.rows).toEqual([]);
     expect(cs.empty).toBe('No team has kept a clean sheet yet.');
   });
@@ -400,7 +400,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       expect(b.rows, b.id).toEqual([]);
       expect(b.empty, b.id).toMatch(/^No team enters .+ on MaxPreps yet\.$/);
     }
-    expect(v.clubNotes).toEqual([]);
+    expect(v.schoolNotes).toEqual([]);
     expect(v.resultsThrough).toBeNull();
   });
 });
@@ -421,7 +421,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     ];
     const v = buildLeadersView(sources(games));
     const rows = (id: string) =>
-      v.clubs.find((b) => b.id === id)!.rows.map((r) => [r.rank, r.tied, r.team.slug, r.cells[0].text]);
+      v.schools.find((b) => b.id === id)!.rows.map((r) => [r.rank, r.tied, r.team.slug, r.cells[0].text]);
     expect(rows('fewest-goals-allowed')).toEqual([
       [1, false, 'mitty', '4'],
       [2, false, 'stevenson', '2'],
@@ -437,11 +437,11 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
       [3, true, 'tamalpais', '2'],
     ]);
     for (const id of ['most-goals', 'fewest-goals-allowed']) {
-      expect(v.clubs.find((b) => b.id === id)!.note, id).toContain('Equal rates are split by more games played.');
+      expect(v.schools.find((b) => b.id === id)!.note, id).toContain('Equal rates are split by more games played.');
     }
   });
 
-  it('names a club that meets the record minimum but not the goals one because of a forfeit', () => {
+  it('names a school that meets the record minimum but not the goals one because of a forfeit', () => {
     // Four teams play each other twice (6 games); Del Mar plays three of them and wins a forfeit
     // over the fourth: 4 results for its record, 3 games with goals counted.
     const four = ['mitty', 'leigh', 'stevenson', 'tamalpais'];
@@ -453,16 +453,16 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
       game({ home: 'del-mar', away: 'tamalpais', hs: 1, as: 0, league: false, official: null, forfeit: true, date: '2026-10-04' }),
     ];
     const v = buildLeadersView(sources(games));
-    const slugs = (id: string) => v.clubs.find((b) => b.id === id)!.rows.map((r) => r.team.slug);
+    const slugs = (id: string) => v.schools.find((b) => b.id === id)!.rows.map((r) => r.team.slug);
     // gp: the four 7 each, Del Mar 4 → median 7, minimum 4.
-    expect(v.clubs.find((b) => b.id === 'best-record')!.meta).toBe('At least 4 games');
+    expect(v.schools.find((b) => b.id === 'best-record')!.meta).toBe('At least 4 games');
     expect(slugs('best-record')).toContain('del-mar');
     expect(slugs('most-goals')).not.toContain('del-mar');
     expect(slugs('fewest-goals-allowed')).not.toContain('del-mar');
-    expect(v.clubNotes).toContain(
+    expect(v.schoolNotes).toContain(
       'Records need at least 4 results, half the median of 7.',
     );
-    expect(v.clubNotes).toContain(
+    expect(v.schoolNotes).toContain(
       'Goals per game need at least 4 games with goals counted (a forfeit has none); not there yet: Del Mar (3).',
     );
   });
@@ -471,7 +471,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const games = roundRobin(['mitty', 'leigh', 'stevenson'], () => [2, 1]);
     games.push(game({ home: 'del-mar', away: 'mitty', hs: 1, as: 3, league: false, official: null, date: '2026-10-01' }));
     const v = buildLeadersView(sources(games));
-    expect(v.clubNotes[0]).toBe(
+    expect(v.schoolNotes[0]).toBe(
       // 4 games each for the three, 1 for Del Mar: median 4, minimum 2.
       'Records and goals per game need at least 2 results, half the median of 4; not there yet: Del Mar (1).',
     );
@@ -480,7 +480,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
   it('says which part of the most-goals minimum is missing when the board is empty', () => {
     // Nobody has scored: every team qualifies on games, none has a goal.
     const scoreless = roundRobin(['mitty', 'leigh', 'stevenson'], () => [0, 0]);
-    const goals = (g: Game[]) => buildLeadersView(sources(g)).clubs.find((b) => b.id === 'most-goals')!;
+    const goals = (g: Game[]) => buildLeadersView(sources(g)).schools.find((b) => b.id === 'most-goals')!;
     expect(goals(scoreless).rows).toEqual([]);
     expect(goals(scoreless).empty).toBe('None of the teams with at least 2 games has scored yet.');
     expect(goals([]).empty).toBe('No team has played 1 game yet.');
@@ -551,8 +551,8 @@ describe('LeaderBoardTable and the /leaders page', () => {
   it('renders both sections and every board anchor', () => {
     const html = renderToStaticMarkup(LeadersPage());
     expect(html).toMatch(/<section id="players"/);
-    expect(html).toMatch(/<section id="clubs"/);
-    for (const id of [...PLAYER_IDS, ...CLUB_IDS]) expect(html, id).toContain(`<section id="${id}"`);
+    expect(html).toMatch(/<section id="schools"/);
+    for (const id of [...PLAYER_IDS, ...SCHOOL_IDS]) expect(html, id).toContain(`<section id="${id}"`);
     expect(html).toContain('<h1');
     expect(html).not.toMatch(/eliminat/i);
   });

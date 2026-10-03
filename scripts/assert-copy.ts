@@ -26,7 +26,7 @@
  *    nothing is shown for it that we could not read from an official source;
  *  - an available league's tables are the data's: every varsity row's league record is on the page.
  * `leaders.html` (the site-wide leaderboards):
- *  - has `id="players"`, `id="clubs"` and the anchor of every board the view model builds;
+ *  - has `id="players"`, `id="schools"` and the anchor of every board the view model builds;
  *  - names every team that has entered no player stats, so no player board reads as if it covered
  *    all 43 teams.
  * And: `playoffs/mcal.html` contains "North Coast Section"; `standings.html` keeps the old anchors
@@ -183,13 +183,13 @@ if (!existsSync(historyPath)) {
   } else {
     const main = mainOf(file, readFileSync(p, 'utf8'));
     const view = buildLeadersView();
-    for (const id of ['players', 'clubs', ...[...view.players, ...view.clubs].map((b) => b.id)]) {
+    for (const id of ['players', 'schools', ...[...view.players, ...view.schools].map((b) => b.id)]) {
       if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
     }
-    // The Players section only: a team with no stats can still be named on a club board, which
+    // The Players section only: a team with no stats can still be named on a school board, which
     // says nothing about its players.
     const start = main.indexOf('<section id="players"');
-    const end = main.indexOf('<section id="clubs"');
+    const end = main.indexOf('<section id="schools"');
     // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
     const players = (start >= 0 && end > start ? main.slice(start, end) : '')
       .replace(/&#x27;|&#39;/g, "'")

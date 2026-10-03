@@ -150,7 +150,7 @@ export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
                   <span aria-hidden="true">#</span>
                   <span className="sr-only">Place</span>
                 </th>
-                <th scope="col">{board.kind === 'player' ? 'Player' : 'Team'}</th>
+                <th scope="col">{board.kind === 'player' ? 'Player' : 'School'}</th>
                 {board.columns.map((c, i) => (
                   <th key={c.key} scope="col" className={`${GUTTER[c.key] ?? 'pl-2'} text-right ${i === last ? 'pr-4' : ''}`}>
                     <span aria-hidden="true">{c.label}</span>
