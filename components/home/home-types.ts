@@ -11,24 +11,22 @@
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
+import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
 import type { GameDisplay, SideView } from '../ui/game-view';
 
-/** The colors `TeamMonogram` draws with (no provenance field: it is never rendered). */
-export type HomeColors = Pick<TeamColors, 'primary' | 'secondary' | 'onPrimary'>;
+/**
+ * The colors a small `TeamMonogram` draws with: the fill and its ink. The second school color is
+ * drawn only from 40px, and every home client tile is 20 or 24px, so it is not shipped.
+ */
+export type HomeColors = Pick<TeamColors, 'primary' | 'onPrimary'>;
 
-/** Exactly the identity fields the card renders. `TeamMonogram` needs the first three. */
-export interface HomeTeamIdentity {
-  abbr: string;
-  name: string;
-  colors: HomeColors;
-  slug: string;
-  shortName: string;
-  leagueId: LeagueId;
-  leagueShort: string;
-  /** null for a single-division league (PCAL, MCAL): never a division label there. */
-  divisionHeading: string | null;
-}
+/**
+ * The identity fields the pinned card renders. They come from the 43-team search index the card
+ * already receives for its finder (`TeamSearchEntry`), joined on `HomeTeamView.slug`, so the page
+ * does not ship every team's name, short name and colors twice.
+ */
+export type HomeCardTeam = Pick<TeamSearchEntry, 'slug' | 'name' | 'shortName' | 'abbr' | 'colors'>;
 
 /** One side of the last game: what a score line draws (the name is the registry short name). */
 export type HomeSide = Pick<SideView, 'name' | 'glyph' | 'hasScore' | 'weight' | 'chip'>;
@@ -117,7 +115,8 @@ export interface HomeOfficialFixture {
 }
 
 export interface HomeTeamView {
-  team: HomeTeamIdentity;
+  /** The join to the search index's entry, which holds the identity the card draws (`HomeCardTeam`). */
+  slug: string;
   /** '1st · De Anza · SCVAL' | 'tied 1st · Santa Teresa · BVAL' | 'No results yet · MCAL'. */
   meta: string;
   /** '6 of 12 played' while league games are left, else null. */

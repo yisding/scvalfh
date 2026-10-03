@@ -6,6 +6,8 @@
  * matches a team: those are separate group entries ("Divisions and leagues").
  */
 
+import type { TeamColors } from './types';
+
 export interface TeamSearchEntry {
   kind: 'team';
   slug: string; name: string; shortName: string; abbr: string;
@@ -13,7 +15,7 @@ export interface TeamSearchEntry {
   leagueId: string; leagueShort: string; sectionShort: 'CCS' | 'NCS';
   /** null for single-division leagues. */
   divisionLabel: string | null;
-  colors: { primary: string; onPrimary: string };
+  colors: Pick<TeamColors, 'primary' | 'onPrimary'>;
   /** Normalized keys. NEVER league or division labels. No acronyms, no grid codes. */
   keys: { whole: string[]; nameTokens: string[]; cityTokens: string[]; mascotTokens: string[] };
 }
@@ -31,7 +33,7 @@ export interface SearchIndex { teams: TeamSearchEntry[]; groups: GroupSearchEntr
 export interface SearchInputTeam {
   slug: string; name: string; shortName: string; abbr: string; city: string; mascot: string;
   aliases: string[]; leagueId: string; division: string;
-  colors: { primary: string; onPrimary: string };
+  colors: Pick<TeamColors, 'primary' | 'onPrimary'>;
 }
 
 export interface SearchResult {

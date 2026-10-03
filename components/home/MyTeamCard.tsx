@@ -16,7 +16,13 @@ import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
 import { UNPIN_ID, focusUnpin } from './FindYourTeam';
-import { postseasonCardLine, type HomeColors, type HomeLastDisplay, type HomeSide, type HomeTeamView } from './home-types';
+import {
+  postseasonCardLine,
+  type HomeCardTeam,
+  type HomeLastDisplay,
+  type HomeSide,
+  type HomeTeamView,
+} from './home-types';
 
 /**
  * The My-team slot (SPEC §10.1, §8.2; DESIGN §3.1, §7.12) — the one optional personalization.
@@ -73,18 +79,16 @@ const BOX = [
 export interface MyTeamCardProps {
   /** All 43, pre-serialized by the server. */
   views: HomeTeamView[];
-  /** The 43-team search index for the compact prompt's finder. */
+  /**
+   * The 43-team search index for the compact prompt's finder. It is also where the pinned card
+   * reads the team's name, short name and colors, joined on `HomeTeamView.slug`.
+   */
   index: SearchIndex;
 }
 
 /** An in-card label ("Last", "Next", "Form"): 12px sans, sentence case, ink-3. Not a heading. */
 function Kicker({ children }: { children: React.ReactNode }) {
   return <span className="text-micro font-medium text-ink-3">{children}</span>;
-}
-
-/** `TeamMonogram` takes a registry `TeamColors`; it never reads the provenance field. */
-export function monogramTeam(t: { abbr: string; name: string; colors: HomeColors }) {
-  return { abbr: t.abbr, name: t.name, colors: { ...t.colors, source: 'placeholder' as const } };
 }
 
 /** The full `GameDisplay` `StatusLabel` and `ScoreGlyph` take, rebuilt from the slim server view. */
@@ -134,8 +138,16 @@ function ScoreLine({ side }: { side: GameDisplay['home'] }) {
 }
 
 /** Exported so the states can be rendered and inspected without a browser. */
-export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () => void }) {
-  const { team, last, next } = view;
+export function PinnedCard({
+  view,
+  team,
+  onUnpin,
+}: {
+  view: HomeTeamView;
+  team: HomeCardTeam;
+  onUnpin: () => void;
+}) {
+  const { last, next } = view;
   const display = last ? fullDisplay(last.display) : null;
   const [first, second] = display && last
     ? last.mineIsHome
@@ -150,7 +162,7 @@ export function PinnedCard({ view, onUnpin }: { view: HomeTeamView; onUnpin: () 
       aria-label={`My team: ${team.name}`}
     >
       <div className="flex h-11 shrink-0 items-center gap-2">
-        <TeamMonogram team={monogramTeam(team)} size={24} />
+        <TeamMonogram team={team} size={24} />
         <Link
           href={`/teams/${team.slug}`}
           prefetch={false}
@@ -368,9 +380,11 @@ export function unpinFocusTarget(slug: string | null): HTMLElement | null {
 }
 
 export function MyTeamCard({ views, index }: MyTeamCardProps) {
-  const slugs = views.map((v) => v.team.slug);
+  const slugs = views.map((v) => v.slug);
   const { pinned, ready, stalePin, unpin } = usePinnedTeam(slugs);
-  const view = ready && pinned ? (views.find((v) => v.team.slug === pinned) ?? null) : null;
+  const view = ready && pinned ? (views.find((v) => v.slug === pinned) ?? null) : null;
+  // Both lists are built from the same 43 registry teams, so a view always has its entry.
+  const team = view ? (index.teams.find((t) => t.slug === view.slug) ?? null) : null;
 
   const handleUnpin = () => {
     const slug = pinned;
@@ -378,8 +392,8 @@ export function MyTeamCard({ views, index }: MyTeamCardProps) {
   };
 
   let content: React.ReactNode;
-  if (view) {
-    content = <PinnedCard view={view} onUnpin={handleUnpin} />;
+  if (view && team) {
+    content = <PinnedCard view={view} team={team} onUnpin={handleUnpin} />;
   } else if (ready && stalePin) {
     content = <StalePin onUnpin={() => unpin({ focus: () => unpinFocusTarget(null) })} />;
   } else {

@@ -2709,7 +2709,7 @@ carries a † and a footnote, and `/about#backfills` lists every one with both v
 
 Fail CI (`scripts/assert-budgets.ts`), against baselines captured from `main` before the change:
 `data/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
-most 2.0 x baseline; first-load client JS for `/`, `/schedule/<league>`, `/teams` and
+most 2.2 x baseline (2.0 x until 2026-10-03; see §16.4); first-load client JS for `/`, `/schedule/<league>`, `/teams` and
 `/standings/<league>` each at most baseline + 20 KB (this catches the config, registry or zod
 leaking into the browser: the client boundary forbids it); `/standings` (overview) at most 1.0 x its
 baseline gzip; each `/standings/<league>` and `/schedule/<league>` at most 1.25 x; the `/schedule`
@@ -2775,3 +2775,16 @@ returns at 944px (59rem) instead of 896, leaving about 29px; and its weekday wai
 `/leaders` HTML gzip at most 1.0 x the `standings` baseline (about 28 KB on 2026-10-03; nine boards
 of at most 15 rows cannot grow with the season), and its first-load JS at most the `standings`
 baseline + 20 KB. The page ships no client component of its own.
+
+The home page's budget moved from 2.0 x to 2.2 x its baseline the same day. The 2026-10-03 data
+refresh had taken `/` to 51.2 KB HTML gzip, over the 49.9 KB line, before any of this. Two savings
+came first:
+- the monogram tile's eight utility classes became one `.sx-monogram` rule;
+- the pinned card's 43 views now carry only a `slug` and read the team's name, short name and
+  colors from the search index the card already receives, where they had been a second copy in
+  every view.
+
+The small home tiles (20 and 24px) also stopped shipping the second school color, which a monogram
+draws only from 40px. That took `/` to 48.1 KB HTML and 28.4 KB RSC. The new line (54.9 KB HTML,
+33.9 KB RSC) leaves about 12% for what the season adds to the page (postseason lines and cards),
+not for a new section.

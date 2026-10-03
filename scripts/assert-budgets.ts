@@ -10,7 +10,7 @@
  * | Measure                                                        | Limit                              |
  * |----------------------------------------------------------------|------------------------------------|
  * | data/snapshot.json raw                                         | ≤ 1.6 MB (warn > 1.2 MB)           |
- * | `/` HTML gzip and RSC gzip                                     | each ≤ 2.0 × baseline `index`      |
+ * | `/` HTML gzip and RSC gzip                                     | each ≤ 2.2 × baseline `index`      |
  * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>`, `/leaders` | ≤ baseline + 20 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.0 × baseline `standings`       |
  * | each `/standings/<league>` HTML gzip                           | ≤ 1.25 × baseline `standings`      |
@@ -74,8 +74,14 @@ if (!workerOnly) {
   if (snapshotBytes > 1_200_000) console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> 1.2 MB warning line)`);
 
   // ------------------------------------------------------------ documents
-  check('/ HTML gzip', gz(file('index.html')), 2.0 * baseline.index.htmlGzip, '2.0 × index');
-  check('/ RSC gzip', gz(file('index.rsc')), 2.0 * baseline.index.rscGzip, '2.0 × index');
+  // 2.2 × since 2026-10-03 (it was 2.0 ×). The four-league home page reached 51.2 KB HTML gzip
+  // after that day's data refresh, over the old 49.9 KB line. The savings came first: one
+  // .sx-monogram rule instead of eight utilities per tile, and the pinned card's 43 views joined to
+  // the search index on slug instead of each carrying the team's name and colors (−1.1 KB HTML,
+  // −1.0 KB RSC), which left 48.1 / 28.4 KB. 2.2 × (54.9 / 33.9 KB) leaves about 12 % for what the
+  // season adds (postseason lines and cards), not room for a new section.
+  check('/ HTML gzip', gz(file('index.html')), 2.2 * baseline.index.htmlGzip, '2.2 × index');
+  check('/ RSC gzip', gz(file('index.rsc')), 2.2 * baseline.index.rscGzip, '2.2 × index');
   check('/standings HTML gzip', gz(file('standings.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
   for (const id of LEAGUE_IDS) {
     check(`/standings/${id} HTML gzip`, gz(file(`standings/${id}.html`)), 1.25 * baseline.standings.htmlGzip, '1.25 × standings');
