@@ -20,18 +20,22 @@ import TopNav from './TopNav';
  * footer — unless every league's season is over, when the update stops on purpose and the stamp
  * stays a plain date (`seasonComplete`).
  *
- * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–895 drops the stamp so
- * the nav fits; it comes back from 896 in its short month-day form ("Updated Sep 30 12:48 PM", the
- * widest it gets, needs 876px with "SCVAL"), with the weekday from 1024; the spelled-out wordmark
- * waits until 1280.
+ * From 768px: 64px, the wordmark + the eight nav links + the toggle. 768–943 drops the stamp so
+ * the nav fits; it comes back from 944 in its short month-day form, with the weekday from 1280; the
+ * spelled-out wordmark waits until 1280 too. Measured in Chromium (2026-10-03, with the eighth
+ * link, Leaders, and the widest stamp, "Updated Nov 30 12:48 PM", forced in): at 768 the nav
+ * capsules' 8px side padding (NavLink.tsx) leaves 15px between the nav and the toggle's gap, with
+ * the toggle on the content edge (at 10px it sat 21px into the gutter); the stamp leaves ≈ 29px at
+ * 944 (59rem), ≈ 33px at 1024 (where the capsules and the nav's margin grow) and ≈ 61px at 1280
+ * with the weekday and the full wordmark. With the weekday at 1024 it left ≈ 3px, which is why the
+ * weekday waits for 1280. The stale pill ("Updated 12 days ago") is narrower than the widest stamp.
  *
  * Re-measured for the rename with the static Geist table (tests/ui/text-metrics.ts, 12px/500,
  * scaled to 16px; no browser here, so these are text widths, not a layout run): "NorCal" 56.6px
  * against "SCVAL" 55.5px, and " Field Hockey" is unchanged at 109.1px. Every budget therefore
  * moves by ≈ 1px (≈ 1.2px allowing for the bold face): 320px keeps mark 28 + gap 8 + ≈ 58 +
- * toggle 44 well inside its 288px row; 360px still fits the compact stamp; 768–895 still drops
- * the stamp for the seven links; the 20px to spare at 896 with the widest stamp becomes ≈ 19px;
- * and the spelled-out wordmark still waits for 1280. The accessible name of the home link
+ * toggle 44 well inside its 288px row; 360px still fits the compact stamp; and the spelled-out
+ * wordmark still waits for 1280. The accessible name of the home link
  * is always SITE_NAME ("NorCal Field Hockey"). Content is capped at 1200px, with the same
  * 16 / 24 / 32px gutter as <main>.
  */
@@ -79,10 +83,10 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
             {WORDMARK_TAIL}
           </span>
         </Link>
-        <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
+        <TopNav className="ml-3 hidden md:block lg:ml-6" slugLeague={slugLeague} />
         <span className="ml-auto flex shrink-0 items-center gap-2">
-          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
-              where the seven nav links need the room; back from 896 (56rem, ≈ 19px to spare at the
+          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–943
+              where the eight nav links need the room; back from 944 (59rem, ≈ 29px to spare at the
               widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
               min-width variants by value only within one unit, and every px one sorts BEFORE
               `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
@@ -93,7 +97,7 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
             now={now}
             seasonComplete={seasonComplete}
             variant="compact"
-            className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
+            className="hidden min-[22.5rem]:inline md:hidden min-[59rem]:inline"
           />
           <ThemeToggle />
         </span>

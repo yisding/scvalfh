@@ -1,0 +1,116 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
+import { buildLeadersView } from '../../components/leaders/leaders-view';
+import PageHeader from '../../components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import DivisionTabs from '../../components/standings/DivisionTabs';
+import SectionHeader from '../../components/ui/SectionHeader';
+import { listWords } from '../../lib/format';
+import { LEAGUES } from '../../lib/leagues';
+
+/**
+ * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all four leagues: the
+ * players with the most points, assists, saves and clean sheets, and the clubs with the best
+ * records, the most goals per game, the fewest allowed and the most clean sheets.
+ *
+ * One static page, built by components/leaders/leaders-view.ts from the two files every other page
+ * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
+ * team page and a club's record is the one in its standings row. Two sections, `#players` and
+ * `#clubs`, each a grid of boards that is one column on a phone and two from 1024px; every board
+ * has its own anchor (`#most-points`, `#best-record`, …).
+ *
+ * The player boards can only rank what coaches enter, so the page says so up front, every board
+ * says how many teams it covers and which it leaves out, and the notes under the section name the
+ * teams whose totals are behind the scores. The club boards cover every team.
+ */
+
+const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
+
+export const metadata: Metadata = {
+  title: 'Season leaders',
+  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: most points, assists, saves and clean sheets, and the clubs with the best records.`,
+  alternates: { canonical: '/leaders' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/leaders' },
+};
+
+const TABS = [
+  { href: '#players', label: 'Players' },
+  { href: '#clubs', label: 'Clubs' },
+];
+
+export default function LeadersPage() {
+  const view = buildLeadersView();
+
+  return (
+    // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
+    // (6rem); from md the pills sit in the title row and do not stick (as on /history).
+    <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
+      <PageHeader
+        eyebrow="All four leagues"
+        title="Season leaders"
+        description={
+          <>
+            The top players and clubs across {SHORT_NAMES}. Player numbers are what each coach
+            enters on MaxPreps; club records are computed from every final on this site.
+          </>
+        }
+        aside={<DivisionTabs variant="inline" tabs={TABS} label="Jump to a leaderboard" />}
+        asideClassName="hidden md:block"
+      />
+
+      <DivisionTabs variant="bar" tabs={TABS} label="Jump to a leaderboard" className="mt-4" />
+
+      <section id="players" aria-label="Player leaders" className="mt-8 min-w-0 scroll-mt-24 md:mt-10">
+        <SectionHeader
+          size="lg"
+          kicker="Players"
+          meta={`${view.statTeams} of ${view.teamCount} teams enter player stats`}
+        />
+        <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">
+          {view.players.map((board) => (
+            <LeaderBoardTable key={board.id} board={board} />
+          ))}
+        </div>
+        <div className="mt-section max-w-prose space-y-2 text-meta text-ink-3">
+          {view.playerNotes.map((note) => (
+            <p key={note} className="m-0">
+              {note}
+            </p>
+          ))}
+        </div>
+      </section>
+
+      <section id="clubs" aria-label="Club leaders" className="mt-section min-w-0 scroll-mt-24 md:mt-section-lg">
+        <SectionHeader
+          size="lg"
+          kicker="Clubs"
+          meta={view.resultsThrough ? `Every final through ${view.resultsThrough}` : 'No finals yet'}
+        />
+        <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">
+          {view.clubs.map((board) => (
+            <LeaderBoardTable key={board.id} board={board} />
+          ))}
+        </div>
+        {view.clubNotes.length > 0 ? (
+          <div className="mt-section max-w-prose space-y-2 text-meta text-ink-3">
+            {view.clubNotes.map((note) => (
+              <p key={note} className="m-0">
+                {note}
+              </p>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <p className="mt-section max-w-prose text-meta text-ink-3 md:mt-section-lg">
+        Full attribution and update details are on the{' '}
+        <Link href="/about" prefetch={false} className="text-accent hover:underline">
+          About &amp; sources
+        </Link>{' '}
+        page.
+      </p>
+    </div>
+  );
+}

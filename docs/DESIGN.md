@@ -2716,3 +2716,62 @@ baseline gzip; each `/standings/<league>` and `/schedule/<league>` at most 1.25 
 index at most 0.5 x; `/teams` at most 3.0 x; `/playoffs` at most 2.0 x; the Cloudflare Worker at
 most baseline + 600 KB. The original §13 budgets (LCP, TBT, CLS, 40 KB of app JS beyond the
 framework) still apply.
+
+## 16. Leaders amendment (2026-10)
+
+The site gains one page, `/leaders`: leaderboards across all four leagues. §1.2 kept "who's hot"
+style material off the site because it served a coach rather than a parent; the owner has since
+asked for site-wide leaders, so this section adds them and wins where §1-§15 disagree. Everything
+else stands: static rendering, "today" from the snapshot, no new hue (§6.4, §15.5), no new chart
+(decision 8: the boards are tables), and the copy rules of §15.8.
+
+### 16.1 The page
+
+| URL | Answers | Pages |
+|---|---|---|
+| `/leaders` | "Who leads the whole site?" `#players` (most points, assists, saves, clean sheets) and `#clubs` (best record, best league record, most goals per game, fewest goals allowed per game, most clean sheets); each board has its own anchor (`#most-points`, `#best-record`, …) | 1 |
+
+The page is built by `components/leaders/leaders-view.ts` from the two files every other page reads,
+so a player's line is the one on their team page and a club's record is the one in its standings row.
+Each board is one table (`components/leaders/LeaderBoardTable.tsx`): place, name (the player's team
+and league on a second line, or the club's league), and at most three numeric columns, so a 320px
+phone needs no scroller. The column a board ranks on is bold. Boards sit one per row on a phone and
+two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/schedule`).
+
+### 16.2 Ranking and honesty
+
+- **Shared places.** Standard competition ranking (1, 2, 2, 4), printed as `T2` with "tied for 2nd"
+  for a screen reader, as the standings tables do; tied rows are listed by name. A board lists the
+  places up to 10th and never more than 15 rows: a tie for the last place shown that would pass 15 is
+  counted in a line ("4 more players share 10th, with 2 assists each.") instead.
+- **Player boards rank only what coaches enter.** A stat a team does not track is null for its
+  players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
+  meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
+  the two lists (the teams that do enter the stat, or the teams with stats that do not), the section
+  names every team with no stats at all, and every team whose totals are behind its finals, by the
+  team page's own `gamesSinceUpdate` rule. "Clean sheets" are MaxPreps' goalkeeper shutouts.
+- **Club boards cover every team.** Records are the `Standing` rows (`overall`: every final;
+  `computed`: the league games the table counts). Clean sheets and goals per game come from the same
+  finals, with forfeits left out as the standings leave them out of goals (§11.6). A record or a rate
+  needs at least half the median team's number of results, rounded up (a 1-0 team does not top a
+  table of ten-game seasons); the teams below the line are named with their count. The league-record
+  board compares win percentages, not points, because leagues play different numbers of league games.
+- **The pinned team.** Every row carries `data-team-slug`, so the pinned-team script and
+  `PinnedTeamMarks` draw the accent rule and the hidden "Your team" note on the pinned team's rows (on
+  a player board, all of its players).
+
+### 16.3 Navigation and the top bar
+
+Leaders is the eighth desktop nav link (after Teams). The phone bar keeps its five tabs (§15.1); the
+footer links `/leaders` at every width, as it does the archive, and every team page's Player stats
+heading links to `/leaders#players`. Eight links needed room in the 64px bar, measured in Chromium
+with the widest stamp ("Updated Nov 30 12:48 PM") forced in: the nav capsules' side padding is 8px
+below 1024px (it was 10px, which put the theme toggle 21px into the right gutter at 768); the stamp
+returns at 944px (59rem) instead of 896, leaving about 29px; and its weekday waits for 1280, since at
+1024 it left about 3px. `components/layout/SiteHeader.tsx` records the numbers.
+
+### 16.4 Budgets
+
+`/leaders` HTML gzip at most 1.0 x the `standings` baseline (about 28 KB on 2026-10-03; nine boards
+of at most 15 rows cannot grow with the season), and its first-load JS at most the `standings`
+baseline + 20 KB. The page ships no client component of its own.

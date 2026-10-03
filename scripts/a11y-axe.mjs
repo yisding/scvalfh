@@ -71,6 +71,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/teams/tamalpais',
   '/playoffs',
   '/playoffs/mcal',
+  '/leaders',
   '/about',
   '/history/2025-26',
 ];

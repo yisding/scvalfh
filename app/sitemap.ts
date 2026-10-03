@@ -33,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/schedule'), lastModified, changeFrequency: 'daily', priority: 0.8 },
     { url: url('/teams'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/playoffs'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
+    { url: url('/leaders'), lastModified, changeFrequency: 'daily', priority: 0.6 },
     { url: url('/history/2025-26'), lastModified, changeFrequency: 'yearly', priority: 0.3 },
     { url: url('/about'), lastModified, changeFrequency: 'monthly', priority: 0.3 },
   ];

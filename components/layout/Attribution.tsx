@@ -104,6 +104,10 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
             2025-26 archive
           </Link>
+          {/* Likewise for /leaders: a desktop nav link, no phone tab. */}
+          <Link href="/leaders" prefetch={false} className="sx-action text-accent hover:underline">
+            Season leaders
+          </Link>
           {links && links.length > 0 ? (
             <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
               {links.map((l) => (

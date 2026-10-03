@@ -11,7 +11,7 @@
  * |----------------------------------------------------------------|------------------------------------|
  * | data/snapshot.json raw                                         | ≤ 1.6 MB (warn > 1.2 MB)           |
  * | `/` HTML gzip and RSC gzip                                     | each ≤ 2.0 × baseline `index`      |
- * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>` | ≤ baseline + 20 KB |
+ * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>`, `/leaders` | ≤ baseline + 20 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.0 × baseline `standings`       |
  * | each `/standings/<league>` HTML gzip                           | ≤ 1.25 × baseline `standings`      |
  * | each `/schedule/<league>` HTML gzip                            | ≤ 1.25 × baseline `schedule`       |
@@ -19,6 +19,7 @@
  * | `/teams` HTML gzip                                             | ≤ 3.0 × baseline `teams`           |
  * | `/playoffs` HTML gzip                                          | ≤ 2.0 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
+ * | `/leaders` HTML gzip                                           | ≤ 1.0 × baseline `standings`       |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 600 KB                |
  *
  * The first-load JS budget is what catches config, the registry or zod leaking into the browser
@@ -85,6 +86,9 @@ if (!workerOnly) {
   check('/schedule HTML gzip', gz(file('schedule.html')), 0.5 * baseline.schedule.htmlGzip, '0.5 × schedule');
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
+  // Nine boards of at most 15 rows each (components/leaders/leaders-view.ts), so the page cannot
+  // grow with the season the way a schedule does: ~28 KB on 2026-10-03.
+  check('/leaders HTML gzip', gz(file('leaders.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
   // Every team page, all 43: the largest was ~39 KB gzip (3.9 × baseline) with both the Roster and
   // the Player stats section; 6.0 × leaves room for a busy week of games, not for a table per player.
   const teamDir = path.join(APP, 'teams');
@@ -107,6 +111,7 @@ if (!workerOnly) {
       ['/teams', 'teams'],
       ['/teams/[slug]', 'teams'],
       ['/standings/[league]', 'standings'],
+      ['/leaders', 'standings'],
     ];
     for (const [route, base] of js) {
       const row = stats.find((r) => r.route === route);

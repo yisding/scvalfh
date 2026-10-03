@@ -190,7 +190,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders']) {
       put(`${p}.html`);
     }
     // The history page: a section per league, and a division anchor for every available league.
