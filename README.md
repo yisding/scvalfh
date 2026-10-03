@@ -50,12 +50,12 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 43 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (`#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
-| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
+| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the highest Elo rating (top 10, `#elo-rating`), the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL and MCAL shown as unavailable |
 | `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
 
@@ -633,6 +633,39 @@ order, and a game counts only when both teams are matched by si.com's own team i
 alone. A MaxPreps game that later appears for a filled fixture takes over, and the old si.com game
 page becomes a link to it. `--no-sblive` turns the whole thing off. The exact rules are in
 `docs/DATA-SOURCES.md`.
+
+## How Elo ratings are computed
+
+Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is printed on its team page (`#elo`), and
+the ten highest are a board on `/leaders` (`#elo-rating`). It is on the Elo scale (1500 is the
+average rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not
+computed game by game. Classic Elo starts everyone at 1500 and moves two ratings after each game,
+which with one season and about ten games a team leaves it mostly at its starting value; the site
+has no earlier season's games to start from. Instead every final between two of the 43 teams is
+fitted at once, at every build:
+
+- **The fit.** The strengths for which `home − away + home edge ≈ goal margin` holds best over the
+  whole season, by least squares, with each margin capped at 5 goals (a score run up past five
+  earns nothing more) and a small pull toward an average team, so two games cannot make a
+  rating on their own. The home edge applies only where a game has a host. Because the season is
+  fitted as a whole, a win over a strong team counts for more than the same win over a weak one,
+  and a team's rating can move on a day it did not play, when an opponent's later results show it
+  was stronger or weaker than it looked.
+- **The scale.** Elo = 1500 + 140 × (strength in goals − the average). 140 points a goal comes
+  from the season so far: fitted on only the games before each day from Sep 8 to Oct 2, the
+  ratings missed that day's capped margins by 2.07 goals (root mean square) and picked the winner
+  of 89% of the games that had one; with margins that spread, a 2.9-goal (400-point) favorite
+  comes out ahead about 92% of the time.
+- **What counts.** Every final between two of the 43 teams, league or not, postseason included,
+  with its published score (a si.com backfill too). Forfeits, finals without a score and games
+  against schools outside the four leagues are left out.
+- **The board.** A team needs half the median team's counted games to be on the `/leaders` board,
+  as the record boards do; below that its team page shows the rating as provisional. A team page
+  names its place only when the board lists it (the top 10).
+- **Known soft spot.** MCAL links to the other three leagues through very few games (on
+  2026-10-03, five: four of them San Francisco University at one neutral-site event), so how MCAL
+  teams compare with the CCS leagues rests on those few results and can move several dozen points
+  when one more cross-league game is played.
 
 ## Known limitations
 

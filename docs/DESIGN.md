@@ -3012,3 +3012,34 @@ place in a table, a berth and a seed come from the league's rules alone.
 `/playoffs` still says "There are no probabilities on this page, because there is no model behind
 it", which stays true while no model feeds that page. A change that puts a probability there
 rewrites that sentence in the same commit.
+
+## 20. Elo ratings amendment (2026-10)
+
+Every team gets an Elo rating: on its own page, and the ten highest on `/leaders`. This section
+wins where §1-§19 disagree. Everything else stands: static rendering, "today" from the snapshot,
+no new hue (§6.4, §15.5) and no new chart (decision 8: the rating is a card and a table). It is the
+first number on the site that comes from a model, so it keeps §19.2: computed from the snapshot's
+results by a documented model (`lib/ratings.ts`; README "How Elo ratings are computed"), read as
+an estimate, linked to its method, and never a status: it orders no table, berth or seed.
+
+### 20.1 The rating
+
+The Elo scale (1500 is the average rated team; 400 points is about 10-to-1), fitted to the whole
+season at once rather than game by game, because one season of about ten games a team leaves
+classic Elo near its starting value and the site has no earlier season to start from. The fit is
+least squares on goal margin capped at 5, with a home edge where a game has a host and a pull of
+one game's worth toward average; 140 points is a goal. It counts every final between two of the 43
+teams and nothing else: no forfeit, no game against a school outside the four leagues. A given
+snapshot always builds the same numbers (one linear solve in a fixed order).
+
+### 20.2 Where it shows
+
+| Place | What |
+|---|---|
+| Team page, under the stat tiles (`#elo`) | One wide card: "Elo rating", the figure, and a sub-line (the team's place on the board when the board lists it, "provisional, from N games" below the board's minimum, otherwise "from N games"), then one sentence on what the number means and `How it is computed` → `/leaders#elo-rating`. A team with no counted final shows the dash, read as "not rated", never 1500. The card is a `<dl>` group, as the tiles are. A team page never names a place below the board's top 10. |
+| `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over the games the fit counts (half the median, rounded up); the teams under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found. |
+
+### 20.3 Budgets
+
+`/leaders` gains a tenth board of at most 15 rows and stays inside its 1.0 × standings HTML budget
+(§16). The team page gains one card of about 800 bytes of HTML before gzip.

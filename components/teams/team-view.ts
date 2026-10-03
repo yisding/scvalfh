@@ -46,6 +46,7 @@ import type {
   TeamSlug,
 } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { buildEloBoard, type EloBoardView } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame } from '../ui/game-view';
@@ -65,6 +66,40 @@ export interface UnbeatenOpponent {
   nextDate: string | null;
   /** Official fixtures against them with no published contest (never a result). */
   unreportedFixtures: number;
+}
+
+/**
+ * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings.ts, and its place on
+ * /leaders' Elo board when the board lists it, read off that board so the two cannot disagree.
+ */
+export interface TeamEloView {
+  /** Whole Elo points; null when the team has no counted final. */
+  elo: number | null;
+  /** The finals its rating counts: every final against one of the four leagues' teams. */
+  games: number;
+  /** Rated on fewer games than the Elo board's minimum, so not on the board yet. */
+  provisional: boolean;
+  /** The Elo board's minimum games. */
+  minGames: number;
+  /** Its place in the board's top 10, as the board prints it; null when the board does not list it. */
+  boardPlace: { rank: number; tied: boolean } | null;
+}
+
+let eloBoard: EloBoardView | null = null;
+
+/** The Elo card for one team, from the same board /leaders prints (built once per process). */
+export function teamElo(slug: TeamSlug): TeamEloView {
+  eloBoard ??= buildEloBoard(getTeams(), getGames());
+  const rating = eloBoard.ratingBySlug.get(slug);
+  const row = eloBoard.board.rows.find((r) => r.team.slug === slug);
+  const minGames = eloBoard.minimum.min;
+  return {
+    elo: rating?.elo ?? null,
+    games: rating?.games ?? 0,
+    provisional: rating !== undefined && rating.games < minGames,
+    minGames,
+    boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
+  };
 }
 
 /** The league facts a team page writes into its copy, all from config (lib/leagues.ts). */
@@ -141,6 +176,8 @@ export interface TeamPageView {
   formEntries: FormEntry[];
   /** Everything the NEXT card prints, derived here so TeamNextGame stays presentational. */
   nextCard: NextCard;
+  /** The Elo card under the stat tiles. */
+  elo: TeamEloView;
   today: string;
 }
 
@@ -586,6 +623,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     unbeaten: buildUnbeaten(team, leagueLog, today),
     formEntries,
     nextCard: buildNextCard(team, next, officialFixtures, today, league),
+    elo: teamElo(team.slug),
     today,
   };
 }

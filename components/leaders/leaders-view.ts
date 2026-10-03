@@ -2,6 +2,7 @@ import { getSnapshot } from '../../lib/data';
 import { listWords, ordinal, recordString, recordWords, shortDate, signedGd, winPct } from '../../lib/format';
 import { getLeague } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
+import { ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, computeRatings, type TeamRating } from '../../lib/ratings';
 import type {
   FieldStatKey,
   GoalieStatKey,
@@ -23,13 +24,15 @@ import { plural } from '../ui/plural';
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
- * and clean sheets. Records are the `Standing` rows the standings and team pages print (`overall`
+ * Schools (data/snapshot.json): the highest Elo rating (lib/ratings.ts, DESIGN §20), best record,
+ * best league record, goals scored and allowed per game, and clean sheets. Records are the `Standing` rows the standings and team pages print (`overall`
  * is every final, `computed` the league games the table counts), so a team's record here is its
  * record everywhere. Clean sheets and the per-game rates come from the same finals, with forfeits
  * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a
  * minimum number of results, half the median team's, so a 1-0 team does not top a table of
- * 10-game seasons; the teams below it are named.
+ * 10-game seasons; the teams below it are named. The Elo board's minimum counts the games its fit
+ * counts (finals between two registry teams), by the same rule; a team under it is still rated on
+ * its own page, as provisional.
  *
  * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
  * and tied rows are listed by name. A board shows the places up to 10th; a tie for the last place
@@ -444,19 +447,21 @@ function recordBoard(
   });
 }
 
-function schoolBoard(
+function schoolBoard<L extends { team: Team }>(
   id: string,
   title: string,
   meta: string,
-  sorted: readonly SchoolLine[],
-  same: (a: SchoolLine, b: SchoolLine) => boolean,
+  sorted: readonly L[],
+  same: (a: L, b: L) => boolean,
   spec: {
-    columns: Array<LeaderColumn & { cell: (l: SchoolLine) => LeaderCell }>;
+    columns: Array<LeaderColumn & { cell: (l: L) => LeaderCell }>;
     rankedBy: number;
     note: string;
     empty: string;
     /** `listed`: whether any row is listed above the tie (then it is "N more teams"). */
-    more?: (count: number, place: number, sample: SchoolLine, listed: boolean) => string;
+    more?: (count: number, place: number, sample: L, listed: boolean) => string;
+    /** The team page anchor a row links to: '#elo'. */
+    anchor?: string;
   },
 ): LeaderBoard {
   const { rows, dropped } = rankBoard(sorted, same);
@@ -474,7 +479,7 @@ function schoolBoard(
       rank,
       tied,
       name: l.team.name,
-      team: teamRef(l.team),
+      team: teamRef(l.team, spec.anchor),
       cells: spec.columns.map((c) => c.cell(l)),
     })),
     more: dropped
@@ -483,6 +488,66 @@ function schoolBoard(
       : null,
     note: spec.note,
     empty: spec.empty,
+  };
+}
+
+// ---------------------------------------------------------------- the Elo board
+
+export interface EloBoardView {
+  /** The `#elo-rating` board: the top 10 places among the teams past the minimum. */
+  board: LeaderBoard;
+  /** Every rated team's rating, by slug (provisional ones included). */
+  ratingBySlug: Map<TeamSlug, TeamRating>;
+  /** The board's minimum: half the median of the rated teams' counted games. */
+  minimum: { min: number; median: number };
+  /** "Del Mar (1)": rated teams under the minimum, fewest games first. */
+  below: string[];
+}
+
+/**
+ * The Elo board (DESIGN §20), from the same teams and games as the rest of the page. Exported
+ * because each team page reads its own place on it: a team page says "3rd on the Elo board"
+ * only for a row this board lists, so the two cannot disagree.
+ */
+export function buildEloBoard(teams: readonly Team[], games: readonly Game[]): EloBoardView {
+  const table = computeRatings(teams, games);
+  const teamById = new Map(teams.map((t) => [t.id, t]));
+  const lines = table.ratings.map((rating) => ({ team: teamById.get(rating.teamId)!, rating }));
+  const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
+  const sorted = lines
+    .filter((l) => l.rating.games >= minimum.min)
+    .sort((a, b) => b.rating.elo - a.rating.elo || byName(a.team.name, b.team.name));
+  const homeEdge = table.homeEdge > 0 ? `, allowing a home edge of ${plural(table.homeEdge, 'point')}` : '';
+  const board = schoolBoard(
+    'elo-rating',
+    'Highest Elo rating',
+    `At least ${plural(minimum.min, 'game')}`,
+    sorted,
+    (a, b) => a.rating.elo === b.rating.elo,
+    {
+      columns: [
+        { key: 'gp', label: 'GP', title: 'Games counted', cell: (l) => num(l.rating.games) },
+        { key: 'elo', label: 'Elo', title: 'Elo rating', cell: (l) => ({ text: String(l.rating.elo) }) },
+      ],
+      rankedBy: 1,
+      anchor: '#elo',
+      note:
+        `Every final between two of the ${plural(teams.length, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
+        `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the four leagues are left out.`,
+      empty:
+        lines.length === 0
+          ? `No final between two of the ${plural(teams.length, 'team')} yet.`
+          : `No team has played ${plural(minimum.min, 'game')} yet.`,
+    },
+  );
+  return {
+    board,
+    ratingBySlug: new Map(lines.map((l) => [l.team.slug, l.rating])),
+    minimum,
+    below: lines
+      .filter((l) => l.rating.games < minimum.min)
+      .sort((a, b) => a.rating.games - b.rating.games || byName(a.team.name, b.team.name))
+      .map((l) => `${l.team.name} (${l.rating.games})`),
   };
 }
 
@@ -559,7 +624,9 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   const overallMin = qualifyingMinimum(lines.map((l) => l.overall.gp));
   const leagueMin = qualifyingMinimum(lines.map((l) => l.league.gp));
 
+  const elo = buildEloBoard(teams, games);
   const schools: LeaderBoard[] = [
+    elo.board,
     recordBoard(
       'best-record',
       'Best record',
@@ -673,6 +740,11 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   if (leagueMin.median > 0) {
     schoolNotes.push(
       `The league record needs at least ${plural(leagueMin.min, 'league result')}, half the median of ${leagueMin.median}${notYet(leagueBelow)}`,
+    );
+  }
+  if (elo.minimum.median > 0) {
+    schoolNotes.push(
+      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the four leagues’ teams, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 
