@@ -1,10 +1,12 @@
 import { shortDate, toLocalTimestamp } from '../../lib/format';
 import {
   getEnrichedTeamRoster,
+  getRosters,
   sortedPlayers,
   type EnrichmentSource,
   type MergedPlayer,
   type MergedTeamRoster,
+  type OtherRosters,
   type ProfilePlatform,
   type RosterConflict,
 } from '../../lib/rosters';
@@ -36,15 +38,51 @@ const POSITION_WORDS: Record<string, string> = {
   G: 'Goalkeeper',
 };
 
-/** How a conflict sentence names the source that disagrees. */
+/**
+ * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier
+ * season is named by its URL instead (seasonPage below): the `maxpreps-career` and `maxpreps-jv`
+ * kinds cover those pages too, since they give a dated class year the same way a career page does.
+ * `news` covers student papers and local news alike (the Redwood Bark, BenitoLink), so it says
+ * neither.
+ */
 const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
   'school-site': 'the school site',
   'school-pdf': "the school's roster PDF",
-  news: 'a school paper',
+  news: 'a news story',
   'maxpreps-jv': "MaxPreps' JV roster",
   'maxpreps-career': 'a MaxPreps career page',
   'maxpreps-team': "MaxPreps' team page",
 };
+
+/** How the † footnote names each kind of source a shown value came from. */
+const FOOTNOTE_WORDS: Record<EnrichmentSource['kind'], [one: string, many: string]> = {
+  'school-site': ["the school's athletics site", "the school's athletics site"],
+  'school-pdf': ["the school's roster PDF", "the school's roster PDF"],
+  news: ['a news story', 'news stories'],
+  'maxpreps-jv': ["MaxPreps' JV roster", "MaxPreps' JV rosters"],
+  'maxpreps-career': ['a MaxPreps career page', 'MaxPreps career pages'],
+  'maxpreps-team': ["MaxPreps' team page", "MaxPreps' team page"],
+};
+
+/**
+ * A MaxPreps roster page of a given season ("/field-hockey/25-26/roster/", "/field-hockey/jv/25-26/
+ * roster/"): what it is, so a label says "MaxPreps 2025-26 roster" rather than "career". null for
+ * anything else (a career page, a current-season page with no year in its path).
+ */
+export function seasonPage(url: string): { season: string; jv: boolean; label: string } | null {
+  const m = /^https:\/\/www\.maxpreps\.com\/.+\/field-hockey\/(?:(jv|freshman)\/)?(\d{2})-(\d{2})\/roster\/?$/.exec(url);
+  if (!m) return null;
+  const season = `20${m[2]}-${m[3]}`;
+  const level = m[1] === 'jv' ? ' JV' : m[1] === 'freshman' ? ' freshman' : '';
+  return { season, jv: m[1] === 'jv', label: `${season}${level} roster` };
+}
+
+/** Seasons between a page's season ("2025-26") and the roster file's ("26-27"): 1. */
+function seasonsSince(pageSeason: string): number {
+  const current = /^(\d{2})-\d{2}$/.exec(getRosters().season);
+  const page = /^20(\d{2})-\d{2}$/.exec(pageSeason);
+  return current && page ? Number(current[1]) - Number(page[1]) : 0;
+}
 
 /** A row's link text, and how the footnote names the platform. */
 const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }> = {
@@ -94,8 +132,19 @@ export interface RosterConflictLine {
   field: string;
   /** What the list shows; null when it shows nothing for that field. */
   shown: string | null;
+  /** What the other source shows, in the list's words ("freshman" on a 2025-26 roster). */
   other: string;
-  /** "the school site", "a school paper" … */
+  /**
+   * The grade that value means now, when the source is an earlier season's roster ("sophomore"
+   * for a 2025-26 freshman); null when `other` is already this season's.
+   */
+  now: string | null;
+  /**
+   * true when `other` is this season's grade worked out from a dated class year on a MaxPreps
+   * career page, which shows a class year, not this grade.
+   */
+  derived: boolean;
+  /** "the school site", "a news story", "MaxPreps' 2025-26 roster" … */
   sourceLabel: string;
   sourceUrl: string;
 }
@@ -128,12 +177,14 @@ export interface RosterView {
   rosterUrl: string | null;
   /** "Fri Oct 2": when MaxPreps was read (older than the file when carried forward). */
   asOf: string | null;
+  /** The kinds of source the †-marked values came from, as the footnote names them. */
+  elsewhereSources: string[];
   /**
-   * Another public source (a school site, a paper, MaxPreps' JV and career pages) was looked at
-   * for this team: the enrichment file lists a source or notes for it. The empty state may only
-   * say "no other source has a roster" when this is true.
+   * What other public sources showed for the current roster, as the enrichment file records it
+   * per team (lib/rosters.ts `OtherRosters`). The empty state says only what this says: "none" is
+   * the one case that may claim no other source has a roster.
    */
-  otherSourcesChecked: boolean;
+  otherRosters: OtherRosters;
 }
 
 function gradeWord(grade: number): string {
@@ -149,6 +200,44 @@ function conflictValue(field: RosterConflict['field'], value: string): string {
   if (field === 'grade' && /^\d+$/.test(value)) return gradeWord(Number(value)).toLowerCase();
   if (field === 'position') return positionWords(value.split(/\s*[,/]\s*/)).toLowerCase();
   return value;
+}
+
+/**
+ * One recorded disagreement as the list states it. A grade from an earlier season's roster is
+ * stored a season on (a 2025-26 freshman is stored as 10); the line says what that page shows and
+ * what it means now, so it never prints a grade the page does not show.
+ */
+function conflictLine(p: MergedPlayer, c: RosterConflict, i: number): RosterConflictLine {
+  const page = seasonPage(c.source);
+  const base = {
+    key: `${p.athleteId ?? p.fullName}-${c.field}-${i}`,
+    name: p.fullName,
+    field: FIELD_WORDS[c.field],
+    shown: c.kept === null ? null : conflictValue(c.field, c.kept),
+    sourceUrl: c.source,
+  };
+  if (page) {
+    const sourceLabel = `MaxPreps' ${page.label}`;
+    const since = seasonsSince(page.season);
+    const then = Number(c.other) - since;
+    if (c.field === 'grade' && /^\d+$/.test(c.other) && since > 0 && then >= 9) {
+      return {
+        ...base,
+        other: conflictValue('grade', String(then)),
+        now: conflictValue('grade', c.other),
+        derived: false,
+        sourceLabel,
+      };
+    }
+    return { ...base, other: conflictValue(c.field, c.other), now: null, derived: false, sourceLabel };
+  }
+  return {
+    ...base,
+    other: conflictValue(c.field, c.other),
+    now: null,
+    derived: c.field === 'grade' && c.kind === 'maxpreps-career',
+    sourceLabel: KIND_WORDS[c.kind],
+  };
 }
 
 /** A provenance tag that is not MaxPreps — the enrichment record, with its source URL. */
@@ -213,7 +302,10 @@ const PROVENANCE_USE: Record<keyof MergedPlayer['provenance'], SourceUse> = {
 /** More pages than this from one site and kind fold into that site's team page. */
 const FOLD_OVER = 2;
 
-function siteLabel(kind: EnrichmentSource['kind'], host: string): string {
+/** A source link's label: the site, or for MaxPreps what the page is (by its URL, not its kind). */
+function siteLabel(kind: EnrichmentSource['kind'], host: string, url: string): string {
+  const page = kind.startsWith('maxpreps-') ? seasonPage(url) : null;
+  if (page) return `MaxPreps ${page.label}`;
   switch (kind) {
     case 'maxpreps-team':
       return 'MaxPreps team page';
@@ -292,7 +384,7 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
   if (team.rosterUrl) links.push({ label: 'MaxPreps roster', url: team.rosterUrl });
   for (const group of groups.values()) {
     const { host, kind } = group[0];
-    const label = siteLabel(kind, host);
+    const label = siteLabel(kind, host, group[0].url);
     // MaxPreps career and JV pages are never folded: each backs up values the roster page lacks.
     if (group.length > FOLD_OVER && !kind.startsWith('maxpreps-')) {
       const teamPage = team.sources.find(
@@ -305,7 +397,7 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
         continue;
       }
     }
-    const labels = group.map((e) => `${label}: ${usesText(e.uses)}`);
+    const labels = group.map((e) => `${siteLabel(e.kind, e.host, e.url)}: ${usesText(e.uses)}`);
     group.forEach((e, i) => {
       // Two pages that would read the same ("lahstalon.org: grade" twice) say whose values they hold.
       const clash = labels.filter((l) => l === labels[i]).length > 1;
@@ -315,6 +407,28 @@ function sourceLinks(team: MergedTeamRoster, players: MergedPlayer[]): RosterSou
     });
   }
   return links;
+}
+
+/**
+ * The kinds of page the list's †-marked values came from, in first-use order, as the footnote
+ * names them ("the school's athletics site", "a news story", "MaxPreps' 2025-26 roster"): the
+ * footnote names only sources this team's list actually uses.
+ */
+function elsewhereSources(players: MergedPlayer[]): string[] {
+  const urls = new Map<string, Set<string>>();
+  for (const p of players) {
+    for (const tag of Object.values(p.provenance)) {
+      const source = elsewhereSource(tag);
+      if (!source) continue;
+      const page = source.kind.startsWith('maxpreps-') ? seasonPage(source.source) : null;
+      const key = page ? `MaxPreps' ${page.label}` : source.kind;
+      urls.set(key, (urls.get(key) ?? new Set()).add(source.source));
+    }
+  }
+  return [...urls].map(([key, set]) => {
+    const words = FOOTNOTE_WORDS[key as EnrichmentSource['kind']];
+    return words ? words[set.size === 1 ? 0 : 1] : key;
+  });
 }
 
 /**
@@ -332,17 +446,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
   const players = sortedPlayers({ players: varsity });
   const rows = players.map(rowFor);
 
-  const conflicts: RosterConflictLine[] = players.flatMap((p) =>
-    p.conflicts.map((c, i) => ({
-      key: `${p.athleteId ?? p.fullName}-${c.field}-${i}`,
-      name: p.fullName,
-      field: FIELD_WORDS[c.field],
-      shown: c.kept === null ? null : conflictValue(c.field, c.kept),
-      other: conflictValue(c.field, c.other),
-      sourceLabel: KIND_WORDS[c.kind],
-      sourceUrl: c.source,
-    })),
-  );
+  const conflicts: RosterConflictLine[] = players.flatMap((p) => p.conflicts.map((c, i) => conflictLine(p, c, i)));
 
   return {
     teamName: team.name,
@@ -364,6 +468,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     sources: sourceLinks(team, players),
     rosterUrl: team.rosterUrl,
     asOf: team.fetchedAt ? shortDate(toLocalTimestamp(team.fetchedAt)) : null,
-    otherSourcesChecked: team.sources.length > 0 || team.enrichmentNotes.length > 0,
+    elsewhereSources: elsewhereSources(players),
+    otherRosters: team.otherRosters,
   };
 }

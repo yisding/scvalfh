@@ -4,6 +4,11 @@
  *
  * Unlike data/rosters.json there is no byte-for-byte rebuild check: stats move after every game,
  * so the committed file is expected to be newer than the captures in tests/fixtures/maxpreps.
+ *
+ * The scheduled refresh (.github/workflows/update-data.yml) runs this suite over the file it just
+ * wrote, so the checks on the COMMITTED file accept every status the schema allows: a team's first
+ * transient failure ('error') or a team no run has covered yet ('pending') is an honest state the
+ * script publishes. Coverage (every team read) is asserted on files built from the captures.
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -24,6 +29,8 @@ import {
   type PlayerStatsFile,
 } from '../lib/player-stats-schema';
 import { getRosters } from '../lib/rosters';
+import { RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema';
+import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '../lib/sources/maxpreps-player-stats';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO } from './helpers';
@@ -78,7 +85,10 @@ describe('data/player-stats.json', () => {
     withPageId.teams[i].maxprepsTeamId = TEAMS[i].id;
     expect(PlayerStatsFileSchema.safeParse(withPageId).success).toBe(false);
     const withRows = structuredClone(base);
-    withRows.teams[i].players = structuredClone(raw.teams.find((t) => t.players.length)!.players.slice(0, 1));
+    // Any stat line will do (the committed file may hold none today): a pending team can hold none.
+    withRows.teams[i].players = [
+      { careerId: null, careerUrl: null, athleteId: null, fullName: 'A. Player', shortName: 'A. Player', jersey: null, onRoster: false, field: null, goalkeeping: null },
+    ];
     withRows.counts = countPlayerStats(withRows.teams);
     expect(PlayerStatsFileSchema.safeParse(withRows).success).toBe(false);
   });
@@ -148,9 +158,14 @@ describe('data/player-stats.json', () => {
     }
   });
 
-  it('every SCVAL team was covered: its coach published stats or MaxPreps says none', () => {
-    for (const team of teamsInLeague('scval')) {
-      expect(['ok', 'none', 'carried-forward'], team.slug).toContain(getTeamPlayerStats(team.slug)!.status);
+  it('gives every team a status the schema allows, and a failed or uncovered one says so honestly', () => {
+    // error and pending are published states (a new team's first transient failure, a league no
+    // run has covered): the scheduled refresh tests this file before committing it, so they must
+    // not fail the suite. Coverage is asserted on the fixture builds below.
+    for (const t of raw.teams) {
+      expect(['ok', 'none', 'carried-forward', 'error', 'pending'], t.slug).toContain(t.status);
+      if (t.status === 'error' || t.status === 'carried-forward') expect(t.error, t.slug).toBeTruthy();
+      else expect(t.error, t.slug).toBeNull();
     }
   });
 });
@@ -201,7 +216,8 @@ describe('playerStatsContentKey', () => {
   it('ignores a failure\'s message text, which can carry a duration, but not the status', () => {
     const failed = (msg: string) => {
       const f = structuredClone(raw);
-      const t = f.teams.find((x) => x.players.length)!;
+      // A team with rows when the file has one; any team otherwise (carried-forward may hold none).
+      const t = f.teams.find((x) => x.players.length) ?? f.teams[0];
       Object.assign(t, { status: 'carried-forward', error: msg });
       f.counts = countPlayerStats(f.teams);
       return f;
@@ -232,6 +248,10 @@ describe('scripts/fetch-player-stats.ts --fixtures', () => {
     const built = PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
     expect(built.counts.teamsWithStats).toBe(10);
     expect(built.counts.errors).toBe(0);
+    // Every SCVAL team was covered: its coach published stats or MaxPreps says none.
+    for (const team of teamsInLeague('scval')) {
+      expect(['ok', 'none'], team.slug).toContain(built.teams.find((t) => t.slug === team.slug)!.status);
+    }
     // Everything but SCVAL is outside this run and, with no previous file, pending.
     expect(built.teams).toHaveLength(43);
     for (const t of built.teams.filter((x) => !teamsInLeague('scval').some((s) => s.slug === x.slug))) {
@@ -362,12 +382,99 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
   });
 
   it('reads a team on its registry id when its roster has no page id yet', () => {
-    // data/rosters.json holds no page id for a pending team; the registry id is MaxPreps' own.
+    // Leigh's roster was never read (pending: no page id, no players), but its stats capture is
+    // there. The registry id is MaxPreps' own team GUID, so the team is still read on it, and the
+    // response's teamId is checked against it; every row is then "not on the roster".
+    const leigh = TEAMS.find((t) => t.slug === 'leigh')!;
+    expect(existsSync(path.join(FIXTURE_DIR, 'stats-leigh.json'))).toBe(true);
+    const rosters = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
+    rosters.teams[rosters.teams.findIndex((t) => t.slug === leigh.slug)] = pendingRoster(leigh);
+    rosters.counts = countRosters(rosters.teams);
+    expect(RostersSchema.safeParse(rosters).success).toBe(true);
+    const rostersPath = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-rosters-')), 'rosters.json');
+    writeFileSync(rostersPath, JSON.stringify(rosters), 'utf8');
+
     const out = tmpOut();
-    const { stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
-    // It tried the capture for the BVAL team (and failed on the missing file), not on a missing id.
-    expect(stderr).toContain('ENOENT');
+    const { stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval', '--rosters', rostersPath);
     expect(stderr).not.toContain('no MaxPreps team id');
+    const row = read(out).teams.find((t) => t.slug === leigh.slug)!;
+    expect(row.status, stderr).toBe('ok');
+    expect(row.maxprepsTeamId).toBe(leigh.id);
+    expect(row.players.length).toBeGreaterThan(0);
+    for (const line of row.players) {
+      expect(line.onRoster, line.shortName).toBe(false);
+      expect(line.athleteId, line.shortName).toBeNull();
+      expect(line.fullName, line.shortName).toBe(line.shortName);
+    }
+    expect(row.warnings.filter((w) => w.endsWith('has stats but is not on the MaxPreps roster'))).toHaveLength(row.players.length);
+  });
+
+  it('drops only a stale previous row (a team under another team\'s id), names it, and keeps the rest', () => {
+    // Before: the whole file was refused and every row outside the run went to pending, exit 0.
+    const previous = structuredClone(raw);
+    const i = previous.teams.findIndex((t) => t.slug === 'leigh');
+    previous.teams[i].teamId = TEAMS[0].id;
+    const out = tmpOut();
+    writeFileSync(out, JSON.stringify(previous), 'utf8');
+    const { code, stdout, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
+    expect(code, stderr).toBe(1); // an uncovered team lost its row: the scheduler is told
+    expect(stderr).toMatch(/WARN previous .*: 1 row\(s\) do not validate and are dropped/);
+    expect(stderr).toMatch(/WARN {3}leigh: .*teamId is not the registry team's/);
+    expect(stdout).toContain('BVAL  12 teams · not in this run · 11 kept as they were · 1 pending, previous row dropped (leigh)');
+    expect(stdout).not.toMatch(/BVAL .*\(kept as they were\)/);
+    const built = read(out);
+    for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
+      const row = built.teams.find((t) => t.slug === team.slug)!;
+      if (team.slug === 'leigh') expect(row, team.slug).toEqual(pendingPlayerStats(team));
+      else expect(row, team.slug).toEqual(raw.teams.find((t) => t.slug === team.slug));
+    }
+  });
+
+  it('a team whose previous row was dropped has nothing to carry: a failed fetch is an error', () => {
+    const victim = TEAMS.find((t) => t.league === 'bval' && !existsSync(path.join(FIXTURE_DIR, `stats-${t.slug}.json`)))!;
+    const out = tmpOut();
+    buildFromFixtures(out, '2026-10-02T14:00:00.000Z');
+    const previous = structuredClone(read(out)) as PlayerStatsFile;
+    // A row that was read (none), but under another team's id: it does not validate, so it is dropped.
+    Object.assign(previous.teams.find((t) => t.slug === victim.slug)!, { status: 'none', maxprepsTeamId: victim.id, fetchedAt: '2026-10-01T00:00:00.000Z', teamId: TEAMS[0].id });
+    writeFileSync(out, JSON.stringify(previous), 'utf8');
+    const { code, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
+    expect(code).toBe(1);
+    expect(stderr).toMatch(new RegExp(`WARN ${victim.slug}: .*ENOENT.*\\(its previous row was dropped: nothing to carry forward\\)`));
+    expect(read(out).teams.find((t) => t.slug === victim.slug)!.status).toBe('error');
+  });
+
+  it('stops without writing when the previous file is not JSON', () => {
+    const out = tmpOut();
+    writeFileSync(out, '{"teams": [', 'utf8');
+    const { code, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
+    expect(code).toBe(1);
+    expect(stderr).toMatch(/FAILED: the previous .* cannot be read: not JSON/);
+    expect(readFileSync(out, 'utf8')).toBe('{"teams": [');
+  });
+
+  it('ignores a previous file from another season: nothing kept, nothing carried', () => {
+    const previous = { ...structuredClone(raw), season: '25-26' };
+    const out = tmpOut();
+    writeFileSync(out, JSON.stringify(previous), 'utf8');
+    const scoped = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
+    expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
+    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 43 row\(s\) are ignored, as if absent/);
+    expect(scoped.stdout).not.toContain('kept as they were');
+    const built = read(out);
+    expect(built.season).toBe(raw.season);
+    for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
+      expect(built.teams.find((t) => t.slug === team.slug), team.slug).toEqual(pendingPlayerStats(team));
+    }
+    // A failed fetch never carries last season's stats into this one.
+    const last = structuredClone(read(out)) as PlayerStatsFile;
+    const victim = TEAMS.find((t) => t.league === 'bval' && !existsSync(path.join(FIXTURE_DIR, `stats-${t.slug}.json`)))!;
+    Object.assign(last.teams.find((t) => t.slug === victim.slug)!, { status: 'none', maxprepsTeamId: victim.id, fetchedAt: '2025-10-01T00:00:00.000Z' });
+    last.season = '25-26';
+    writeFileSync(out, JSON.stringify(last), 'utf8');
+    const failed = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
+    expect(failed.code).toBe(1);
+    expect(read(out).teams.find((t) => t.slug === victim.slug)!.status).toBe('error');
   });
 
   it('rejects an unknown league, and --capture together with --fixtures', () => {

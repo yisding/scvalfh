@@ -35,6 +35,12 @@
  * 'pending' when the file has none). The process exits 1 when a team the run covered failed, so a
  * scheduler notices; the report ends with one line per league. A team MaxPreps has no stats for is
  * status 'none' — that is the coach's choice, not a failure.
+ *
+ * The previous file is salvaged row by row (readPreviousFile): a row that no longer validates on
+ * its own (a slug gone from the registry, a changed id, a broken status) is dropped and named in
+ * the log, and that team alone has nothing to keep — pending when out of scope, which also exits 1
+ * and is never reported as "kept as they were". A file from another season keeps nothing (its
+ * teams read as absent). A file that is not JSON at all stops the run: exit 1, nothing written.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -42,17 +48,22 @@ import path from 'node:path';
 
 import { localDateKey, monthDay } from '../lib/format';
 import {
+  describePrevious,
   formatLeagueSummary,
   inScope,
   parseLeaguesFlag,
+  readPreviousFile,
+  runExitCode,
   stableStringify,
   summarizeByLeague,
+  type PreviousFile,
 } from '../lib/fetch-scope';
 import { seasonWindowBounds } from '../lib/leagues';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
   PlayerStatsPartialSchema,
+  TeamPlayerStatsSchema,
   countPlayerStats,
   playerStatsContentKey,
   type PlayerStatsFile,
@@ -118,18 +129,18 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists and still validates; its rows are what a failed or out-of-scope
- * team keeps. Read with the partial schema so a file written before every team was in the registry
- * (the 15 SCVAL teams) still counts: the teams it lacks are simply pending.
+ * The previous file, if it exists, salvaged row by row (lib/fetch-scope.ts readPreviousFile): its
+ * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
+ * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
+ * pending.
  */
-function loadPrevious(file: string): PlayerStatsFile | null {
+function loadPrevious(file: string): PreviousFile<TeamPlayerStats, PlayerStatsFile> | null {
   if (!existsSync(file)) return null;
-  try {
-    const parsed = PlayerStatsPartialSchema.safeParse(JSON.parse(readFileSync(file, 'utf8')) as unknown);
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
-  }
+  return readPreviousFile(readFileSync(file, 'utf8'), {
+    season: SEASON_YEAR,
+    row: TeamPlayerStatsSchema,
+    file: PlayerStatsPartialSchema,
+  });
 }
 
 const NOTES = [
@@ -152,7 +163,19 @@ async function main(): Promise<number> {
     );
     return 0;
   }
-  const previous = loadPrevious(args.out);
+  const loaded = loadPrevious(args.out);
+  if (loaded && !loaded.readable) {
+    console.error(
+      `FAILED: the previous ${path.relative(process.cwd(), args.out)} cannot be read: ${loaded.reason}. ` +
+        'Nothing written: fix or remove it, then re-run.',
+    );
+    return 1;
+  }
+  const previous = loaded;
+  if (previous) {
+    for (const line of describePrevious(previous, path.relative(process.cwd(), args.out))) console.warn(line);
+  }
+  const dropped = new Set(previous?.dropped.map((d) => d.slug) ?? []);
   const rosters = RostersSchema.parse(JSON.parse(readFileSync(args.rosters, 'utf8')) as unknown);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
 
@@ -170,7 +193,7 @@ async function main(): Promise<number> {
     TEAMS.map(async (team): Promise<TeamPlayerStats> => {
       // A league outside this run is not fetched: its previous row stays as it was.
       if (!inScope(team, args.leagues)) {
-        return previous?.teams.find((t) => t.slug === team.slug) ?? pendingPlayerStats(team);
+        return previous?.rows.get(team.slug) ?? pendingPlayerStats(team);
       }
       const roster = rosters.teams.find((t) => t.slug === team.slug);
       // The page's own id when the roster read one; else the registry id, which is MaxPreps' team
@@ -198,11 +221,13 @@ async function main(): Promise<number> {
           page = await fetchPlayerStats(
             client,
             maxprepsTeamId,
+            // The body exactly as MaxPreps sent it, before it is decoded or validated: a drifted or
+            // non-JSON answer is captured too, and replays (--fixtures) into the same failure.
             capture
-              ? (raw) =>
+              ? (body) =>
                   writeFileSync(
                     path.join(capture, `stats-${team.slug}.json`),
-                    `${JSON.stringify(raw)}\n`,
+                    body.endsWith('\n') ? body : `${body}\n`,
                     'utf8',
                   )
               : undefined,
@@ -246,8 +271,11 @@ async function main(): Promise<number> {
         };
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
-        console.warn(`WARN ${team.slug}: ${error}`);
-        const prior = previous?.teams.find((t) => t.slug === team.slug);
+        console.warn(
+          `WARN ${team.slug}: ${error}` +
+            (dropped.has(team.slug) ? ' (its previous row was dropped: nothing to carry forward)' : ''),
+        );
+        const prior = previous?.rows.get(team.slug);
         // Any row that was actually read (ok, none, or itself carried forward) is still true: a
         // team with no stats stays "coach entered none", not "could not be read".
         if (prior && prior.status !== 'error' && prior.status !== 'pending') {
@@ -296,31 +324,37 @@ async function main(): Promise<number> {
         (t.error ? ` · ERROR ${t.error}` : ''),
     );
   }
-  const byLeague = summarizeByLeague(teams, args.leagues);
+  const byLeague = summarizeByLeague(teams, args.leagues, dropped);
   console.log('');
   for (const l of byLeague) console.log(formatLeagueSummary(l));
-  // Only teams this run covered decide the exit code: a league left out of the run is not a failure.
+  // A covered team that failed decides the exit code, and so does an uncovered one whose previous
+  // row was dropped (it is pending now); a league left out of the run is otherwise not a failure.
   const failed = byLeague.reduce((n, l) => n + l.failed, 0);
+  const lost = byLeague.reduce((n, l) => n + l.dropped.length, 0);
+  const exitCode = runExitCode(byLeague);
   const c = file.counts;
   console.log(
     `\n${c.players} player stat lines on ${c.teamsWithStats} of ${c.teams} teams · ` +
-      `${c.goalkeepers} goalkeepers · ${failed} team(s) failed this run`,
+      `${c.goalkeepers} goalkeepers · ${failed} team(s) failed this run` +
+      (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );
 
   if (args.dryRun) {
     console.log('\ndry run: nothing written');
-    return failed ? 1 : 0;
+    return exitCode;
   }
-  if (previous && playerStatsContentKey(previous) === playerStatsContentKey(validated.data)) {
+  // Only a previous file that validates whole (and lost no row) can be left in place.
+  const whole = previous?.whole;
+  if (whole && playerStatsContentKey(whole) === playerStatsContentKey(validated.data)) {
     console.log(
-      `\nno change since ${previous.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
+      `\nno change since ${whole.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
     );
-    return failed ? 1 : 0;
+    return exitCode;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
   writeFileSync(args.out, stableStringify(file), 'utf8');
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return failed ? 1 : 0;
+  return exitCode;
 }
 
 main()

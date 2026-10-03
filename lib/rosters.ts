@@ -6,12 +6,14 @@
  *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
  *     on a weekly schedule, not by the twice-daily cron).
  *   - data/rosters-enrichment.json is what other public sources add — school athletics sites, a
- *     school roster PDF, school papers, MaxPreps career and JV pages — joined on team slug +
+ *     school roster PDF, school and local papers, MaxPreps career, JV and earlier-season pages — joined on team slug +
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
  *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
  *     profiles (NCSA and the like). `getEnrichedTeamRoster` merges the two and says, per field,
  *     where each value came from. Both files hold one entry per registry team (43); a team no run
  *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
+ *     A team's entry may also say what other public sources showed for its current roster
+ *     (`otherRosters`, below), which is what a team page with no MaxPreps players may claim.
  *
  * Both are imported so the build bundles them, for the reason lib/history.ts and lib/data.ts give:
  * a Worker has no project filesystem. Both are validated once at module scope, and the merge rules
@@ -22,6 +24,7 @@
 
 import { readFileSync } from 'node:fs';
 
+import { z } from 'zod';
 import bundledEnrichment from '../data/rosters-enrichment.json';
 import bundledRosters from '../data/rosters.json';
 import {
@@ -77,6 +80,44 @@ function readOverride(envName: string, bundled: unknown): unknown {
 function failValidation(what: string, issues: Array<{ path: PropertyKey[]; message: string }>): never {
   const lines = issues.slice(0, 10).map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
   throw new Error(`${what} failed validation:\n${lines.join('\n')}`);
+}
+
+/**
+ * What other public sources showed for a team's CURRENT roster — the one claim a team page with
+ * no MaxPreps players makes about them, so it is recorded per team rather than inferred:
+ *   none         looked, and no other source publishes a current roster (`note`: what was looked at)
+ *   partial      a source lists current players, but not in a form that can be joined to MaxPreps
+ *                rows (Marin Academy: first name, last initial and class year); `summary` says what
+ *                it lists and `source` links it
+ *   not-checked  nobody looked; the default for a team whose entry does not say
+ * It sits beside lib/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
+ * validated here, at load.
+ */
+const httpsUrl = z
+  .string()
+  .url()
+  .refine((v) => v.startsWith('https://'), 'expected an https URL');
+const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+
+export const OtherRostersSchema = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('none'), checkedOn: day, note: z.string().min(1) }).strict(),
+  z
+    .object({ status: z.literal('partial'), checkedOn: day, source: httpsUrl, summary: z.string().min(1) })
+    .strict(),
+  z.object({ status: z.literal('not-checked') }).strict(),
+]);
+export type OtherRosters = z.infer<typeof OtherRostersSchema>;
+
+const NOT_CHECKED: OtherRosters = { status: 'not-checked' };
+
+const OtherRostersFileSchema = z.object({
+  teams: z.array(z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional() })),
+});
+
+function loadOtherRosters(): Map<string, OtherRosters> {
+  const parsed = OtherRostersFileSchema.safeParse(readOverride('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment));
+  if (!parsed.success) failValidation('rosters-enrichment otherRosters', parsed.error.issues);
+  return new Map(parsed.data.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
 }
 
 function loadRosters(): Rosters {
@@ -145,6 +186,7 @@ export function classOf(season: string, grade: number): number {
 
 const rosters = loadRosters();
 const enrichment = loadEnrichment(rosters);
+const OTHER_ROSTERS = loadOtherRosters();
 const BASE_BY_SLUG = new Map<string, TeamRoster>(rosters.teams.map((t) => [t.slug, t]));
 const ENRICHMENT_BY_SLUG = new Map<string, EnrichedTeam>(enrichment.teams.map((t) => [t.slug, t]));
 
@@ -190,6 +232,8 @@ export interface MergedTeamRoster extends Omit<TeamRoster, 'players'> {
   sources: EnrichmentSource[];
   /** The enrichment file's notes for this team (what was tried, what was left out). */
   enrichmentNotes: string[];
+  /** What other public sources showed for the current roster ('not-checked' unless the file says). */
+  otherRosters: OtherRosters;
 }
 
 function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlayer {
@@ -242,6 +286,7 @@ export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefi
     coaches: extra?.coaches ?? [],
     sources: extra?.sources ?? [],
     enrichmentNotes: extra?.notes ?? [],
+    otherRosters: OTHER_ROSTERS.get(slug) ?? NOT_CHECKED,
   };
 }
 

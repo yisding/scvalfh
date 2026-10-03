@@ -162,6 +162,55 @@ describe('data/rosters-enrichment.json', () => {
     expect(new Set(merged.players.map((p) => p.jersey)).size).toBe(merged.players.length);
   });
 
+  it('leaves a grade blank where its sources disagree, and records every one of them as a conflict', () => {
+    // DATA-SOURCES: "grades whose sources disagree are left blank rather than guessed". The one
+    // place a disagreement is recorded is the player's conflicts; a blank grade's conflicts carry
+    // kept: null and at least two different values.
+    const blanked: string[] = [];
+    for (const t of raw.teams) {
+      for (const p of t.players) {
+        const open = p.conflicts.filter((c) => c.field === 'grade' && c.kept === null);
+        if (open.length === 0) continue;
+        blanked.push(`${t.slug}/${p.fullName}`);
+        expect(p.grade, `${t.slug} ${p.fullName}`).toBeNull();
+        expect(new Set(open.map((c) => c.other)).size, `${t.slug} ${p.fullName}`).toBeGreaterThan(1);
+      }
+    }
+    expect(blanked.sort()).toEqual([
+      'berkeley/Anisa Alejandrino',
+      'leland/Anna Lychagina',
+      'leland/Michaela Reichmuth',
+      'redwood/Audrey Dickerman',
+      'redwood/Eloise Tonderys',
+      'salinas/Ana Garcia',
+      'salinas/Kaylah Arriola',
+      'salinas/Mireille Gonzalez-morales',
+    ]);
+  });
+
+  it('says what other sources showed for every team MaxPreps lists nobody for, and validates it at load', () => {
+    const recorded = Object.fromEntries(
+      (raw.teams as Array<{ slug: string; otherRosters?: { status: string } }>)
+        .filter((t) => t.otherRosters)
+        .map((t) => [t.slug, t.otherRosters!.status]),
+    );
+    expect(recorded).toEqual({
+      'del-mar': 'none',
+      'silver-creek': 'none',
+      sobrato: 'none',
+      monterey: 'none',
+      'santa-catalina': 'none',
+      'marin-academy': 'partial',
+    });
+    for (const t of base.teams.filter((x) => x.status === 'empty')) expect(recorded[t.slug], t.slug).toBeDefined();
+    // A team the file says nothing about has not been checked, and its view says so.
+    expect(getEnrichedTeamRoster('cupertino')!.otherRosters).toEqual({ status: 'not-checked' });
+    // A partial list must say what it lists and link it.
+    const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
+    bad.teams.find((t) => t.slug === 'marin-academy')!.otherRosters = { status: 'partial', checkedOn: '2026-10-03' };
+    expect(loadError(bad as unknown as RosterEnrichment)).toMatch(/otherRosters failed validation/);
+  });
+
   it('tags every filled value with a source, a kind and a confidence', () => {
     for (const t of raw.teams) {
       for (const e of t.players) {
@@ -317,7 +366,9 @@ describe('recruiting profiles', () => {
     for (const t of others) expect(t.sources.length + t.notes.length, t.slug).toBeGreaterThan(0);
     const fills = (kind: 'grade' | 'positions' | 'jersey' | 'height') =>
       others.flatMap((t) => t.players).filter((p) => p[kind] !== null).length;
-    expect([fills('grade'), fills('positions')]).toEqual([85, 5]);
+    // 82 grades: 85 were filled on 2026-10-03; three were then blanked because their sources
+    // disagree (Leland's Michaela Reichmuth, Redwood's Audrey Dickerman and Eloise Tonderys).
+    expect([fills('grade'), fills('positions')]).toEqual([82, 5]);
     // Jersey numbers and heights are never filled for these leagues (the README says so).
     expect([fills('jersey'), fills('height')]).toEqual([0, 0]);
     // A position MaxPreps lists only for the previous season is never filled.
@@ -327,8 +378,14 @@ describe('recruiting profiles', () => {
       }
     }
     const profiles = others.flatMap((t) => t.players.flatMap((p) => p.profiles));
-    expect(profiles.length).toBe(28);
-    expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(26);
+    expect(profiles.length).toBe(29);
+    expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(27);
+    // Westmont's Teya Halali: SportsRecruits says class of 2029, which a 2026-27 sophomore is.
+    const teya = raw.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!;
+    expect(teya.profiles).toEqual([
+      expect.objectContaining({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/teya_halali', classOf: 2029 }),
+    ]);
+    expect(base.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!.grade).toBe(10);
   });
 
   it('reaches the merged view', () => {

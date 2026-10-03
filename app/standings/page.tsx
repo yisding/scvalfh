@@ -6,7 +6,7 @@ import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE } from '../../components/layout/site-url';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { shortDate } from '../../lib/format';
+import { listWords, shortDate } from '../../lib/format';
 
 import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from './standings-data';
 
@@ -40,12 +40,6 @@ export function generateMetadata(): Metadata {
     alternates: { canonical: '/standings' },
     openGraph: { ...OG_BASE, title: 'Standings — every league', description, url: '/standings' },
   };
-}
-
-/** 'SCVAL, BVAL, PCAL and MCAL' */
-function listWords(words: readonly string[]): string {
-  if (words.length <= 1) return words.join('');
-  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
 }
 
 export default function StandingsPage() {

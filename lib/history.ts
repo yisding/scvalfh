@@ -3,8 +3,8 @@
  *
  * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
  * league's own end-of-season documents (SCVAL's two PDFs, BVAL's Google Sheet and all-league
- * documents; PCAL and MCAL published nothing we could reach, and are marked 'unavailable' with the
- * reason, never filled from a third party). MaxPreps cannot serve a prior season at all — the year segment of
+ * documents; for PCAL and MCAL we found no official final standings, so they are marked
+ * 'unavailable' with the reason, never filled from a third party). MaxPreps cannot serve a prior season at all — the year segment of
  * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
  * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
  *
@@ -100,6 +100,8 @@ function leagueSchema(leagueId: LeagueId) {
           builtBy: z.string(),
           /** The official Google Sheet of final standings (the CSV export is what the build reads). */
           standingsSheet: z.string().url(),
+          /** The same sheet as a reader opens it: what the page links. */
+          standingsSheetView: z.string().url(),
           /** The bval.org page that links it. */
           standingsIndex: z.string().url(),
           /** division -> the official all-league document, or null when there is none. */
@@ -145,6 +147,12 @@ function leagueSchema(leagueId: LeagueId) {
     checkedOn: isoDate,
     /** What we looked at, so the claim is checkable. */
     checked: z.array(z.string().min(1)).min(1),
+    /**
+     * Official documents the league did publish for the season that are not final standings (MCAL's
+     * 2025 all-league team). The page links them from the card; nothing in them is stored, since
+     * there is no awards-only state: an entry is either a league's final standings or unavailable.
+     */
+    alsoPublished: z.array(z.object({ label: z.string().min(1), url: z.string().url() })).optional(),
   });
 
   return z.discriminatedUnion('status', [available, unavailable]);

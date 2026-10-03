@@ -127,14 +127,23 @@ run), `empty` (page read, MaxPreps lists nobody), `carried-forward` (this run fa
 file's rows, with their own `fetchedAt`), `error` (failed, nothing to carry) or `pending` (no run
 has covered the team: nothing fetched, nothing claimed). `pending` is the honest placeholder the
 file was seeded with for BVAL, PCAL and MCAL (and what `--leagues` leaves for a team the file has
-no row for) until a run read them; the team page says "has not been collected yet" for it. A
-previous file with fewer teams than the registry (the 15-team file this one grew from) still
-counts as the previous file: `RostersPartialSchema` reads it, and the teams it lacks are pending.
+no row for) until a run read them; the team page says "has not been collected yet" for it.
+
+The previous file is salvaged row by row (`readPreviousFile` in `lib/fetch-scope.ts`): each row is
+held to the team schema on its own, and a row that no longer validates (a slug gone from the
+registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
+named in the log. That team alone has nothing to keep: it is `pending` if the run does not cover it
+(its league line says so, and the run exits 1) and `error` if the run covers it and the fetch
+fails. A previous file from another season is ignored as if absent: last season's rows are never
+kept or carried forward. A previous file that is not JSON (or has no `teams[]`) stops the run: exit
+1, nothing written. A file with fewer teams than the registry (the 15-team file this one grew from)
+still counts; the teams it lacks are pending.
 
 Failures are scoped to the team, and `--leagues scval,bval` scopes a run to leagues as
-`fetch-data --leagues` does: a league outside the run keeps the previous file's rows byte for byte,
-and one league's pages failing never stops another's from being read and written. The exit code is
-1 when a team the run covered failed (a scheduler notices); the file is written regardless.
+`fetch-data --leagues` does: a league outside the run keeps the previous file's valid rows as they
+were, and one league's pages failing never stops another's from being read and written. The exit
+code is 1 when a team the run covered failed, or when a team outside the run lost its previous row
+(it is pending now), so a scheduler notices either; the file is written regardless.
 `--capture <dir>` saves every page read as `<dir>/roster-<slug>.html`, the fixture layout
 `--fixtures` and `tests/fixtures/maxpreps` use.
 
@@ -197,8 +206,13 @@ cross-check (17/17 for Los Altos, 13/13 for Cupertino).
 **Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** The overlay has one
 entry per registry team (43), joined on `slug + athleteId`; its rules below hold for every league.
 SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03 (the second sweep's tables
-follow the SCVAL one). The roster section claims "no other public source" only for a team whose
-entry lists a source or a note (`RosterView.otherSourcesChecked`); all 43 entries now do. Where a coach left
+follow the SCVAL one). What a team page with no MaxPreps players says about other sources is
+recorded per team, not inferred: `otherRosters` (validated in `lib/rosters.ts`) is `none` (looked,
+no current roster anywhere: Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina), `partial`
+(a source lists current players in a form that cannot be joined, with a link: Marin Academy's
+school page, 18 players as first name, last initial and class year) or, when absent, not checked.
+Only `none` lets the page say "no other public source we checked has a current roster". The
+coaches and sources found for such a team still show under its empty state. Where a coach left
 MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
 teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)
 found these for SCVAL, all **[V]** against the page on that date:
@@ -231,33 +245,36 @@ below). Fills and links by team, measured from the file; "MP rows" is MaxPreps' 
 | Christopher | 20 | 0 | 0 | 4 SR | 0 | Coach only; no school roster |
 | Gilroy | 17 | 0 | 0 | 2 NCSA | 0 | Coach only; no school roster |
 | Leigh | 20 | 0 | 0 | 3 (2 NCSA, 1 SR) | 0 | School page is stale (not used) |
-| Leland | 20 | 19 | 0 | 0 | 0 | `lelandathletics.com` per-player pages ("Grade N"); one grade left blank where sources disagree |
+| Leland | 20 | 18 | 0 | 0 | 4 | `lelandathletics.com` per-player pages ("Grade N"); two grades left blank where sources disagree |
 | Willow Glen | 27 | 0 | 1 | 2 SR | 0 | `willowglenathletics.com` roster (Home Campus) agrees with MaxPreps on all 27 numbers and grades; one goalkeeper position |
 | Live Oak | 14 | 4 | 0 | 0 | 0 | Grades derived from other-sport class years on MaxPreps career pages |
 | Prospect | 21 | 0 | 0 | 0 | 0 | Coach only |
-| Westmont | 17 | 0 | 0 | 0 | 0 | Official VNN roster is empty for 2026-27 |
+| Westmont | 17 | 0 | 0 | 1 SR | 0 | Official VNN roster is empty for 2026-27 |
 | Del Mar, Silver Creek, Sobrato | 0 | 0 | 0 | 0 | 0 | No MaxPreps players, no school roster (Sobrato's page is 2024-25) |
 | Carmel | 19 | 0 | 0 | 0 | 0 | Head coach from the school directory |
 | Greenfield | 12 | 0 | 0 | 0 | 0 | No public source beyond MaxPreps |
 | Hollister | 16 | 0 | 3 | 1 NCSA | 1 | BenitoLink 2026-09-25: three captains' positions; one grade disagreement kept as MaxPreps |
-| Salinas | 21 | 17 | 0 | 0 | 0 | `salinascowboys.com` per-player pages; four grades left blank where sources disagree |
+| Salinas | 21 | 17 | 0 | 0 | 6 | `salinascowboys.com` per-player pages; four grades left blank where sources disagree |
 | Stevenson | 14 | 0 | 0 | 2 Hudl | 0 | Coach; Hudl links |
 | Monterey, Santa Catalina | 0 | 0 | 0 | 0 | 0 | MaxPreps rosters empty; no school roster found |
 | Archie Williams | 20 | 6 | 0 | 2 NCSA | 0 | The Pitch (2024, 2025) class years, MaxPreps career pages |
-| Redwood | 19 | 16 | 0 | 0 | 2 | Redwood Bark (Sept 2026), MaxPreps 2025-26 and 2024-25 rosters |
+| Redwood | 19 | 14 | 0 | 0 | 5 | Redwood Bark (Sept 2026), MaxPreps 2025-26 and 2024-25 rosters; two grades left blank where sources disagree |
 | Tamalpais | 21 | 0 | 0 | 4 (2 SR, 2 NCSA) | 0 | Team Google Sites page did not load |
-| Berkeley | 15 | 13 | 1 | 0 | 1 | MaxPreps JV and career pages; Berkeley High Jacket 2026-09-25 |
+| Berkeley | 15 | 13 | 1 | 0 | 2 | MaxPreps JV and career pages; Berkeley High Jacket 2026-09-25; one grade left blank where sources disagree |
 | Lick-Wilmerding | 18 | 0 | 0 | 2 (1 SR, 1 NCSA) | 1 | `m.lwhs.org` roster (15 names, graduating year, hometown) agrees except one grade |
 | University | 18 | 0 | 0 | 5 (4 SR, 1 NCSA) | 0 | School athletics site returned HTTP 500 |
 | Marin Catholic | 20 | 10 | 0 | 0 | 0 | `marincatholic.org` team page (graduating year → grade) |
 | Convent | 18 | 0 | 0 | 1 SR | 0 | MaxPreps already complete |
-| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list is first name and last initial only; MaxPreps has no rows to join |
+| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list (18 players) is first name, last initial and class year only; MaxPreps has no rows to join |
 
 Where nothing could be filled, the entry still records the coaches found and a note saying what
-was looked at, so the page does not say "nothing checked". Grades that two sources disagree on
-are left blank rather than guessed (Leland 1, Salinas 4, Berkeley 1), and every disagreement
-with MaxPreps is recorded under `conflicts` (5 in these three leagues: Hollister 1, Redwood 2,
-Berkeley 1, Lick-Wilmerding 1). **Prior-season positions are not filled**:
+was looked at. Grades that two sources disagree on are left blank rather than guessed (Leland 2,
+Salinas 4, Redwood 2, Berkeley 1), and the disagreement is recorded in one place, the player's
+`conflicts`, one entry per disagreeing source with `kept: null` (Leland 4, Salinas 6, Redwood 5,
+Berkeley 2). The one blank grade with no second source, Salinas' Teagan Dickison Elias (her school
+page merges two profiles, grades 11 and 10), is explained in the team's notes. A source that
+disagrees with a value MaxPreps has is a conflict too, with MaxPreps' value kept (Hollister 1,
+Lick-Wilmerding 1), so these three leagues carry 19 conflicts. **Prior-season positions are not filled**:
 MaxPreps' `/25-26/roster/` pages for BVAL and PCAL teams exist (unlike the SCVAL sweep, where
 they were empty) and list positions for 33 returning players (Christopher 5, Leland 8, Westmont 9,
 Hollister 3, Salinas 8), but positions change between seasons (Carmel's Hayden Murillo was M,
@@ -274,32 +291,42 @@ for being wrong. The only thing removed was the 33 low-confidence prior-season p
 Rules of the overlay, enforced by `lib/rosters-schema.ts` and re-checked against the base file in
 `lib/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is
 counted, never added); it fills a field **only where MaxPreps is null**; where a source disagrees
-with MaxPreps (SCVAL: 10 numbers, 1 position; BVAL, PCAL and MCAL: 5 grades) MaxPreps stays and the disagreement is stored under
-`conflicts`; every filled value carries `kind`, `source` URL and `confidence` (`high` = an official
+with MaxPreps (SCVAL: 9 numbers, 1 position, 1 grade; BVAL, PCAL and MCAL: 2 grades) MaxPreps stays and the disagreement is stored under
+`conflicts`, which also hold, with `kept: null`, the sources of a grade left blank because they
+disagree with each other (17 entries for 8 BVAL, PCAL and MCAL players); every filled value carries `kind`, `source` URL and `confidence` (`high` = an official
 2026-27 school roster or MaxPreps' own data for the same career; `medium` = a profile field that is
 not season-dated, a school-paper statement, or a grade **derived** from a dated MaxPreps class year
 plus the years elapsed, flagged `derived: true`; `low` = a profile field not tied to the season).
 Net on 2026-10-02 for SCVAL: 133 grades, 9 positions, 23 heights and the Los Gatos varsity/JV split added to
 the 341 MaxPreps rows → 303 with a grade, 108 with a position, 49 with a height. Net on 2026-10-03
-for the other leagues (MaxPreps alone → with the overlay): BVAL 173 players, grades 139 → 162,
+for the other leagues (MaxPreps alone → with the overlay): BVAL 173 players, grades 139 → 161,
 positions 63 → 64; PCAL 82 players, grades 49 → 66, positions 32 → 35; MCAL 149 players, grades 85 →
-130, positions 62 → 63; no height or jersey in any of them. All four leagues together: 745 players,
-443 → 661 with a grade, 256 → 270 with a position, 26 → 49 with a height, 424 with a number
-(unchanged). Position coverage
+128, positions 62 → 63; no height or jersey in any of them (three grades first filled on 2026-10-03
+were blanked when their sources were found to disagree: Leland's Michaela Reichmuth, Redwood's
+Audrey Dickerman and Eloise Tonderys). All four leagues together: 745 players, 443 → 658 with a
+grade, 256 → 270 with a position, 26 → 49 with a height, 424 with a number (unchanged). Position coverage
 is the real gap: **no current-season public source lists positions** for 8 of the 16 SCVAL programs
 and for most BVAL, PCAL and MCAL programs.
 MaxPreps' per-level pages (`/jv/roster/`, `/freshman/roster/`) and prior-season pages
-(`/25-26/roster/`) were empty for every team checked except Homestead JV (25), Palo Alto JV (25),
-Monta Vista JV (12) and Los Gatos JV (2). This sweep is not a script: re-running it is research.
+(`/25-26/roster/`) were empty for every SCVAL team checked in the 2026-10-02 sweep except Homestead
+JV (25), Palo Alto JV (25), Monta Vista JV (12) and Los Gatos JV (2). That does not hold for the
+other leagues. 2026-27 JV pages list players for Leigh (18), Tamalpais (22), Greenfield (3) and
+Salinas (1: Lillian Isbell, who is also on varsity), all read 2026-10-03; one Leigh career
+(`k2kl80co8kck4`) is varsity "Adriana Yam" #43 G and JV "Ayva Garcia" #44 G, and the varsity row is
+the one used. 2025-26 roster pages exist for BVAL, PCAL and MCAL teams and are where most derived
+grades come from (Leland, Redwood, Berkeley); Carmel's lists 8 of its 19 current players, every
+grade agreeing a year on (MaxPreps already has all 19, so nothing is filled). The labels on the
+page name such a page by its URL ("MaxPreps 2025-26 roster"), although the overlay files it under
+the `maxpreps-career` or `maxpreps-jv` kind. This sweep is not a script: re-running it is research.
 
 **Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`, all four leagues).** A second sweep on
 2026-10-02 looked for each rostered SCVAL player's own recruiting profile, in two passes the same day.
 It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
 Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
-On 2026-10-03 the same rules found 28 more for 26 players: BVAL 11 for 11 (7 SportsRecruits, 4 NCSA:
-Christopher 4, Gilroy 2, Leigh 3, Willow Glen 2), PCAL 3 for 3 (1 NCSA, 2 Hudl: Hollister 1,
+On 2026-10-03 the same rules found 29 more for 27 players: BVAL 12 for 12 (8 SportsRecruits, 4 NCSA:
+Christopher 4, Gilroy 2, Leigh 3, Willow Glen 2, Westmont 1), PCAL 3 for 3 (1 NCSA, 2 Hudl: Hollister 1,
 Stevenson 2), MCAL 14 for 12 (8 SportsRecruits, 6 NCSA: Tamalpais 4, University 5, Archie Williams 2,
-Lick-Wilmerding 2, Convent 1). **All four leagues: 98 profiles for 82 players, 52 SportsRecruits,
+Lick-Wilmerding 2, Convent 1). **All four leagues: 99 profiles for 83 players, 53 SportsRecruits,
 29 Hudl and 17 NCSA.**
 
 | Team | Found | How it was tied to the player |
@@ -348,9 +375,10 @@ Gotchas, all **[V]**:
 BVAL, PCAL and MCAL differences, all **[V]** on 2026-10-03: NCSA pages answered WebFetch there
 (not curl), so those profiles were read rather than matched on a search result, but NCSA slugs
 resolve by name whatever school is in the path, so sport, school and class year were checked on
-every hit. Not linked: Adriana Yam (NCSA page is women's ice hockey, class of 2029), Teya Halali
-(SportsRecruits says class of 2029, the roster shows a sophomore), Julia Ahlstrand and Sofia
-O'Riordan (class year disagrees), Chloe Arwin (a SportsRecruits page that names no school and
+every hit. Teya Halali's SportsRecruits page (Westmont) is linked: it says class of 2029, Campbell,
+CA, and a 2026-27 sophomore is class of 2029 (it was first left out on a miscounted class year).
+Not linked: Adriana Yam (NCSA page is women's ice hockey, class of 2029), Julia Ahlstrand and Sofia
+O'Riordan of Convent (class year disagrees), Chloe Arwin (a SportsRecruits page that names no school and
 no state, only "Mill Valley"; dropped because it meets neither linking condition), and bare pages
 with no school or hometown. SportsRecruits `nfhca.`
 pages are client-rendered: the evidence is the title and meta description (class year, position,
@@ -385,8 +413,10 @@ registry order. The same adapter reads every league and throws on any drift. A t
 placeholder BVAL, PCAL and MCAL were seeded with until a run read them). A team is read on its
 roster's page id, or on its registry id when the roster has none (the registry id is MaxPreps' team
 GUID, and the response's own `teamId` is checked against it). `--leagues` and per-team failure
-scoping work exactly as for rosters (§1.1j); `--capture <dir>` saves each decoded response as
-`<dir>/stats-<slug>.json`. This is the call the team's `/stats/`
+scoping, the row-by-row salvage of the previous file and the exit code work exactly as for rosters
+(§1.1j). `--capture <dir>` saves each response body as received, before it is decoded or validated,
+as `<dir>/stats-<slug>.json`, so a drifted or non-JSON answer is captured too and replays
+(`--fixtures`) into the same failure. This is the call the team's `/stats/`
 page makes from the browser (page `/team/stats`, function `eM` in that build); the page itself
 server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
 (`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
@@ -432,9 +462,22 @@ Gotchas, all **[V]**:
   of 9 / 94 / 12); the other 15 are `none` (MaxPreps: "No data was found"). The SCVAL fixture build
   of 2026-10-02 holds 121 players: the committed file's 122 is a later read (Mitty has 16 rows, the
   capture 15). Every team with stats tracks games, goals and points; 23 of the 28 track assists;
-  shots on goal 10, shots and game-winning goals 8 each, minutes and steals 4 each; goalkeeping ranges
-  from saves only to the full ten columns (Valley Christian). Some teams stop entering: Presentation's last update was
+  shots on goal 10, shots and game-winning goals 8 each, minutes and steals 4 each. Goalkeeping: 21 of
+  the 28 track at least one goalie stat and 7 track none (Fremont, Homestead, Presentation,
+  Christopher, Prospect, Archie Williams, Lick-Wilmerding). All 21 track games and 18 track saves;
+  the narrowest are two columns (games and saves on five teams, games and losses on Hollister), Leigh
+  tracks games, minutes, shutouts and wins but no saves, Santa Clara six columns without saves, and
+  Valley Christian and Stevenson all ten. Some teams stop entering: Presentation's last update was
   Sep 10, Monta Vista's Sep 12.
+- Goalkeeping is shown as entered, and the entries do not always agree with each other. On
+  2026-10-03, 11 goalie lines on four teams (Leland 1, Tamalpais 2, University 3, Convent 5) have
+  fewer opponent shots on goal than saves plus goals against (Leland: 10 shots on goal, 36 saves, 9
+  against). The team page labels the stat "Opp. shots on goal" (not "shots faced"), prints those
+  cards' figures with a note that they cannot all be right, and works out no Save % for them; Save %
+  (saves over saves plus goals against) is the one goalkeeping figure the site computes, and the
+  page says so. MaxPreps also lists field players in the goalie group with the team's full game
+  count (University's leading scorer, 16 games and 2 saves), so cards are ordered by minutes in
+  goal, then decisions, saves and goals against, and games last.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
 - Budget: 43 calls of 0.2–35 KB (one per registry team), at the primary client's courtesy ceiling
@@ -547,10 +590,14 @@ redirects.
   - **PCAL** — `unavailable`. pcalathletics.org/field-hockey/ shows only the current 2026 schedules;
     the History pages stop at 2024-25; no 2025-26 standings page or document was found. MaxPreps
     snippets and third-party all-league lists exist but are not official and are not used.
-  - **MCAL** — `unavailable`. mcalsports.org/FieldHockey.htm is behind a Sucuri JavaScript challenge
-    our fetcher cannot pass, and `Playoffs/FieldHockeyPlayoff_25.pdf` returns 404. School-newspaper and
-    third-party reports exist for the 2025 tournament and all-league teams; they are not official
-    standings and are not used, and no champion is stated.
+  - **MCAL** — `unavailable`. mcalsports.org loads (a first request is sometimes answered with a
+    Sucuri redirect, HTTP 307; the cron reads its `Schedir.htm`), but MCAL posts no standings of its
+    own: both standings links on `FieldHockey.htm` point to MaxPreps' current-season (2026-27) league
+    table, and `Playoffs/FieldHockeyPlayoffs_25.pdf` (the 2026 sheet's naming) and
+    `FieldHockeyPlayoff_25.pdf` both return 404 (checked 2026-10-03). The league **does** publish an
+    official 2025 all-league list: "2025 All-MCAL Field Hockey Team" at
+    `https://www.mcalsports.org/FieldHockey.htm#FH25`. The MCAL card links it (`alsoPublished`) and
+    does not ingest it, because the schema has no awards-only state. No champion is stated.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
     extend `scripts/build-history.ts`, and the schema (`lib/history.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL and MCAL are single-division).
@@ -1221,7 +1268,9 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   (SCVAL 2026-10-02; BVAL, PCAL, MCAL 2026-10-03, recall partial in each). A team's page that does
   not parse fails that team (carried forward, or `error`), never writes a wrong value; a team no run
   has covered is `pending`. No current-season public source lists positions for most programs, no
-  BVAL, PCAL or MCAL source publishes a height or a 2026-27 number MaxPreps lacks, and 6 teams (Del
+  BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
+  publishes a height or a 2026-27 number MaxPreps lacks (some players' NCSA recruiting profiles do
+  list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26

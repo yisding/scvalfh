@@ -1,3 +1,4 @@
+import { listWords } from '../../lib/format';
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
@@ -26,6 +27,9 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * facts — its own line, so a link never dangles off the end of a wrapped fact line. Alone on its
  * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
  * accessible name leads with the player's name, so a screen reader's links list tells them apart.
+ *
+ * A team with no list still shows the coaches and sources the enrichment file found for it, under
+ * the empty state, and the empty state says only what the file records about other sources.
  */
 
 /** "†" for sighted readers; a short spoken note instead of the glyph for a screen reader. */
@@ -78,9 +82,53 @@ function Profiles({ row }: { row: RosterRow }) {
   );
 }
 
-/** "NCSA", "NCSA and SportsRecruits", "NCSA, Hudl and SportsRecruits". */
-function listWords(words: string[]): string {
-  return words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`;
+function Coaches({ view }: { view: RosterView }) {
+  if (view.coaches.length === 0) return null;
+  return (
+    <div className="mt-6">
+      <SectionHeader as="h3" size="label" kicker="Coaches" />
+      <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
+        {view.coaches.map((coach) => (
+          <li key={coach.key} className="min-w-0">
+            <span className="block text-body text-ink">{coach.name}</span>
+            {coach.role ? <span className="block text-meta text-ink-3">{coach.role}</span> : null}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Sources({ view }: { view: RosterView }) {
+  if (view.sources.length === 0) return null;
+  return (
+    <div className="mt-6">
+      <SectionHeader as="h3" size="label" kicker="Sources" />
+      <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+        {view.sources.map((s) => (
+          <li key={s.url}>
+            <ExternalLink href={s.url} className="sx-pill">
+              {s.label}
+            </ExternalLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** The empty state's second sentence for a team MaxPreps lists nobody for: what the file records. */
+function OtherRostersText({ view }: { view: RosterView }) {
+  const other = view.otherRosters;
+  if (other.status === 'none') return <>No other public source we checked has a current roster either.</>;
+  if (other.status === 'partial') {
+    return (
+      <>
+        {other.summary} <ExternalLink href={other.source}>See that list</ExternalLink>.
+      </>
+    );
+  }
+  return <>We have not checked other public sources for this team.</>;
 }
 
 export function TeamRoster({ view }: { view: RosterView }) {
@@ -90,25 +138,32 @@ export function TeamRoster({ view }: { view: RosterView }) {
     const action = view.rosterUrl
       ? { href: view.rosterUrl, label: 'Check MaxPreps', external: true }
       : undefined;
+    // Coaches and their sources come from the enrichment file, not the MaxPreps list, so a team
+    // with no list still shows them.
+    const hasCoaches = view.coaches.length > 0;
     return (
-      <EmptyState
-        heading={
-          view.status === 'error'
-            ? `${teamName}'s roster could not be read.`
-            : view.status === 'pending'
-              ? `${teamName}'s roster has not been collected yet.`
-              : `MaxPreps lists no players for ${teamName}.`
-        }
-        action={action}
-      >
-        {view.status === 'error'
-          ? 'The last roster update failed and there was no earlier list to fall back on.'
-          : view.status === 'pending'
-            ? 'No roster update has covered this team yet. It will appear after the next one.'
-            : view.otherSourcesChecked
-              ? 'No other public source we checked has a current roster either.'
-              : 'We have not checked other public sources for this team.'}
-      </EmptyState>
+      <div>
+        <EmptyState
+          heading={
+            view.status === 'error'
+              ? `${teamName}'s roster could not be read.`
+              : view.status === 'pending'
+                ? `${teamName}'s roster has not been collected yet.`
+                : `MaxPreps lists no players for ${teamName}.`
+          }
+          action={action}
+        >
+          {view.status === 'error' ? (
+            'The last roster update failed and there was no earlier list to fall back on.'
+          ) : view.status === 'pending' ? (
+            'No roster update has covered this team yet. It will appear once a run collects it.'
+          ) : (
+            <OtherRostersText view={view} />
+          )}
+        </EmptyState>
+        <Coaches view={view} />
+        {hasCoaches ? <Sources view={view} /> : null}
+      </div>
     );
   }
 
@@ -176,9 +231,9 @@ export function TeamRoster({ view }: { view: RosterView }) {
         </p>
         {view.hasElsewhere ? (
           <p className="mt-1 mb-0">
-            <span aria-hidden="true">&dagger;</span> From another public source &mdash; the
-            school&rsquo;s athletics site, a school paper, or MaxPreps&rsquo; JV and career pages
-            &mdash; where MaxPreps has it blank.
+            <span aria-hidden="true">&dagger;</span> From another public source
+            {view.elsewhereSources.length > 0 ? <> ({listWords(view.elsewhereSources)})</> : null} where
+            MaxPreps has it blank; each source is linked under Sources.
             {view.hasDerivedGrade
               ? ' A few grades are worked out from a class year listed for an earlier season.'
               : ''}
@@ -205,21 +260,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
         ) : null}
       </div>
 
-      {view.coaches.length > 0 ? (
-        <div className="mt-6">
-          <SectionHeader as="h3" size="label" kicker="Coaches" />
-          <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
-            {view.coaches.map((coach) => (
-              <li key={coach.key} className="min-w-0">
-                <span className="block text-body text-ink">{coach.name}</span>
-                {coach.role ? (
-                  <span className="block text-meta text-ink-3">{coach.role}</span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      <Coaches view={view} />
 
       {view.conflicts.length > 0 ? (
         <div className="mt-6">
@@ -228,28 +269,17 @@ export function TeamRoster({ view }: { view: RosterView }) {
             {view.conflicts.map((c) => (
               <li key={c.key}>
                 <span className="text-ink">{c.name}</span>: {c.field}{' '}
-                {c.shown === null ? 'not listed here' : `${c.shown} here`}, {c.other} on{' '}
-                <ExternalLink href={c.sourceUrl}>{c.sourceLabel}</ExternalLink>.
+                {c.shown === null ? 'not listed here' : `${c.shown} here`}, {c.other}
+                {c.derived ? ', worked out from ' : ' on '}
+                <ExternalLink href={c.sourceUrl}>{c.sourceLabel}</ExternalLink>
+                {c.now ? `, so ${c.now} now` : ''}.
               </li>
             ))}
           </ul>
         </div>
       ) : null}
 
-      {view.sources.length > 0 ? (
-        <div className="mt-6">
-          <SectionHeader as="h3" size="label" kicker="Sources" />
-          <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-            {view.sources.map((s) => (
-              <li key={s.url}>
-                <ExternalLink href={s.url} className="sx-pill">
-                  {s.label}
-                </ExternalLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      <Sources view={view} />
     </div>
   );
 }

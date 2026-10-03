@@ -12,7 +12,9 @@
  * committed data: if a parser drifts, the numbers on /history/2025-26 drift with it.
  */
 
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -78,6 +80,7 @@ interface HistoryFile {
       provenance: {
         source: string;
         standingsSheet: string;
+        standingsSheetView: string;
         standingsIndex: string;
         allLeagueDocs: Record<string, string | null>;
         retrievedOn: string;
@@ -85,8 +88,14 @@ interface HistoryFile {
       };
       divisions: FileDivision[];
     };
-    pcal: { status: 'unavailable'; reason: string; checkedOn: string; checked: string[] };
-    mcal: { status: 'unavailable'; reason: string; checkedOn: string; checked: string[] };
+    pcal: { status: 'unavailable'; reason: string; checkedOn: string; checked: string[]; alsoPublished?: unknown };
+    mcal: {
+      status: 'unavailable';
+      reason: string;
+      checkedOn: string;
+      checked: string[];
+      alsoPublished?: Array<{ label: string; url: string }>;
+    };
   };
 }
 
@@ -506,6 +515,9 @@ describe('history: the committed BVAL entry', () => {
   it('names its provenance: the official sheet, the index page, both documents and the day it was read', () => {
     expect(bval.provenance.source).toBe('bval-sheet');
     expect(bval.provenance.standingsSheet).toBe(BVAL_HISTORY_SOURCES.standingsSheet);
+    // The page links the sheet a reader opens, not the CSV export the build reads.
+    expect(bval.provenance.standingsSheetView).toBe(BVAL_HISTORY_SOURCES.standingsSheetView);
+    expect(bval.provenance.standingsSheetView).toMatch(/\/edit$/);
     expect(bval.provenance.standingsIndex).toBe('https://bval.org/standings/');
     expect(bval.provenance.allLeagueDocs).toEqual(BVAL_HISTORY_SOURCES.allLeagueDocs);
     expect(bval.provenance.retrievedOn).toBe('2026-10-03');
@@ -524,12 +536,33 @@ describe('history: PCAL and MCAL are explicitly unavailable', () => {
   it('says so, with a reason and what was checked, and carries no standings or awards', () => {
     for (const league of [file.leagues.pcal, file.leagues.mcal]) {
       expect(league.status).toBe('unavailable');
-      expect(league.reason).toMatch(/^No official 2025-26 final standings were reachable\./);
-      expect(league.reason).toMatch(/third-party|newspapers/);
+      expect(league.reason).toMatch(/third-party/);
       expect(league.checkedOn).toBe('2026-10-03');
       expect(league.checked.length).toBeGreaterThan(0);
       expect('divisions' in league).toBe(false);
     }
+    expect(file.leagues.pcal.reason).toMatch(/^No official 2025-26 final standings were reachable\./);
+    expect(file.leagues.pcal.alsoPublished).toBeUndefined();
+  });
+
+  it('says MCAL posts no standings of its own, not that its site is unreachable', () => {
+    const mcal = file.leagues.mcal;
+    expect(mcal.reason).toMatch(/^MCAL published no 2025-26 final standings of its own\./);
+    expect(mcal.reason).toMatch(/MaxPreps' current-season table/);
+    expect(JSON.stringify(mcal)).not.toMatch(/bot (check|challenge)|cannot pass/i);
+    // The playoff sheet that was looked for is named the way the league names its 2026 one.
+    expect(mcal.checked.join(' ')).toContain('Playoffs/FieldHockeyPlayoffs_25.pdf (404');
+  });
+
+  it('links MCAL\'s official 2025 all-league team without storing any of it', async () => {
+    expect(file.leagues.mcal.alsoPublished).toEqual([
+      { label: '2025 All-MCAL Field Hockey Team', url: 'https://www.mcalsports.org/FieldHockey.htm#FH25' },
+    ]);
+    const { HistorySchema } = await import('../lib/history');
+    // A link is all it may be: an awards block on an unavailable league is not part of the schema.
+    const withAwards = structuredClone(file) as unknown as { leagues: { mcal: Record<string, unknown> } };
+    withAwards.leagues.mcal.alsoPublished = [{ label: 'x', url: 'not a url' }];
+    expect(HistorySchema.safeParse(withAwards).success).toBe(false);
   });
 
   it('does not name a champion or a winner anywhere', () => {
@@ -624,4 +657,52 @@ describe('history: the league-aware read API', () => {
     // SCVAL's "2-10" rows are stored with t: 0 by its parser (unchanged); only BVAL carries null.
     expect(h.getHistoryUnpublishedTies('scval')).toEqual([]);
   });
+});
+
+// ------------------------------------------------------------------------------ the build script
+
+describe('scripts/build-history.ts', () => {
+  const tsx = path.join(REPO, 'node_modules', '.bin', 'tsx');
+  const script = path.join(REPO, 'scripts', 'build-history.ts');
+  /** Run the script; returns its exit code and everything it printed. */
+  const run = (args: string[]) => {
+    try {
+      const out = execFileSync(tsx, [script, ...args], { cwd: REPO, stdio: 'pipe', encoding: 'utf8' });
+      return { code: 0, out };
+    } catch (err) {
+      const e = err as { status?: number; stdout?: string; stderr?: string };
+      return { code: e.status ?? 1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
+    }
+  };
+  const offline = ['--from', 'tests/fixtures/scval', '--bval-from', 'tests/fixtures/bval'];
+
+  it('rebuilds the committed file byte for byte from the fixtures (the file is generated, never hand-edited)', () => {
+    const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-history-')), 'history.json');
+    const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', out]);
+    expect(r.code, r.out).toBe(0);
+    expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'));
+  }, 30_000);
+
+  it('requires a valid --retrieved-on with --bval-from, rather than stamping today on old files', () => {
+    const missing = run([...offline, '--dry-run']);
+    expect(missing.code).toBe(1);
+    expect(missing.out).toMatch(/--bval-from needs --retrieved-on YYYY-MM-DD/);
+    const bad = run([...offline, '--retrieved-on', '2026-02-30', '--dry-run']);
+    expect(bad.code).toBe(1);
+    expect(bad.out).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
+  }, 30_000);
+
+  it('writes nothing, and exits 1, when a school does not resolve', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-bval-'));
+    for (const f of readdirSync(BVAL_FIX)) {
+      const text = readFileSync(path.join(BVAL_FIX, f), 'utf8');
+      writeFileSync(path.join(dir, f), f.startsWith('standings') ? text.replace('2,Gilroy,', '2,Gilroyx,') : text);
+    }
+    const out = path.join(dir, 'history.json');
+    const r = run(['--from', 'tests/fixtures/scval', '--bval-from', dir, '--retrieved-on', '2026-10-03', '--out', out]);
+    expect(r.code).toBe(1);
+    expect(r.out).toMatch(/nothing written/);
+    expect(r.out).toMatch(/"Gilroyx" resolves to no registry team/);
+    expect(existsSync(out)).toBe(false);
+  }, 30_000);
 });

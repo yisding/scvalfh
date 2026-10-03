@@ -3,10 +3,11 @@
   "capturedAt": "2026-10-03",
   "notes": [
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays. The same rules apply to all four leagues (SCVAL, BVAL, PCAL, MCAL); a team with no public source beyond MaxPreps has empty lists.",
-    "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career, maxpreps-team) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season. For BVAL, PCAL and MCAL, a position that MaxPreps lists only for a PRIOR season (2025-26 roster, same career id) is not filled: positions change between seasons.",
-    "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV. Where a school roster and MaxPreps disagree on a grade, or a derived grade would contradict a school statement, the grade is left blank or recorded as a conflict, never guessed.",
+    "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career, maxpreps-team; maxpreps-career also covers MaxPreps' earlier-season roster pages, such as /field-hockey/25-26/roster/, which give a dated class year the same way, and maxpreps-jv is a JV roster page of either season) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season. For BVAL, PCAL and MCAL, a position that MaxPreps lists only for a PRIOR season (2025-26 roster, same career id) is not filled: positions change between seasons.",
+    "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV. Where sources disagree on a grade MaxPreps leaves blank (a school page against MaxPreps' own earlier-season or career data, or a paper against either), the grade is left blank and every disagreeing source is recorded under the player's conflicts with kept: null; nothing is guessed.",
     "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
-    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL) or 2026-10-03 (BVAL, PCAL, MCAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL and MCAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md."
+    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL) or 2026-10-03 (BVAL, PCAL, MCAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL and MCAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
+    "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked."
   ],
   "season": "26-27",
   "teams": [
@@ -5178,7 +5179,8 @@
       ],
       "notes": [
         "MaxPreps has every field except height. The school's field hockey page (leigh.cuhsd.org/apps/pages/FieldHockey) lists coaches but looks stale (it mentions a fan-gear store closing 8/14 and names Clovis and Kelli Mirassou), publishes no roster, and was not used; MaxPreps' 26-27 staff list is used for coaches.",
-        "Not an NCSA match: the 'Adriana Yam' page under Leigh is a women's ice hockey profile (class of 2029), so it is not linked."
+        "Not an NCSA match: the 'Adriana Yam' page under Leigh is a women's ice hockey profile (class of 2029), so it is not linked.",
+        "One MaxPreps career (k2kl80co8kck4) is on two 2026-27 Leigh rosters under two names: varsity 'Adriana Yam' #43 G and JV 'Ayva Garcia' #44 G. The varsity row stored here, Adriana Yam, is the one the varsity roster page lists; the JV name is not used."
       ],
       "players": [
         {
@@ -5265,8 +5267,8 @@
         }
       ],
       "notes": [
-        "Anna Lychagina's grade is left blank: the school profile (Grade 11) and MaxPreps' 2025-26 JV row (grade 9, so 10 now) disagree and nothing else settles it.",
-        "Grades come from the school's per-player profile pages (the roster table itself has none); 16 are confirmed by MaxPreps' 2025-26 rosters or a dated class year on the career page, 3 are medium (Sophia Avery Chu and Hajin Audrey Kim rest on the profile alone; Michaela Reichmuth's sources split 2 to 1), 1 is left blank (see above).",
+        "Two grades are left blank because their sources disagree, and each disagreement is recorded under the player's conflicts: Anna Lychagina (school profile 11; MaxPreps' 2025-26 JV row grade 9, so 10 now) and Michaela Reichmuth (school profile 10, as is a MaxPreps soccer entry; MaxPreps' 2025-26 JV field hockey row grade 10, so 11 now).",
+        "Grades come from the school's per-player profile pages (the roster table itself has none); 16 are confirmed by MaxPreps' 2025-26 rosters or a dated class year on the career page, 2 are medium (Sophia Avery Chu and Hajin Audrey Kim rest on the profile alone), 2 are left blank (see above).",
         "MaxPreps' 26-27 Leland row has no grade, number, position or height for any of the 20 players. No source publishes 2026-27 numbers or positions; MaxPreps' 2025-26 roster lists a position for 8 returning players but, being a different season, none was filled. 'Avery Chu' and 'Audrey Kim' on the 2025-26 JV roster are different careerids from 'Sophia Avery Chu' and 'Hajin Audrey Kim' and were not joined.",
         "No field hockey profile found: NCSA direct lookups (Leland school page 'leland-high-school1') 404 or belong to another sport or school; one bare SportsRecruits '11v11 Roster Member' page for Taytem Condit was not linked."
       ],
@@ -5588,21 +5590,31 @@
         },
         {
           "athleteId": "54c04688-4a3c-4d46-a800-8873814e954b",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "School player profile (Grade 10, 2026 Field Hockey); not season-dated. MaxPreps' 2025-26 girls JV soccer entry on her career page (Freshman, so 10 now) agrees with it.",
+              "other": "10",
+              "source": "https://www.lelandathletics.com/player/michaela-reichmuth/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-jv",
+              "note": "MaxPreps' 2025-26 JV field hockey roster, same career id: grade 10 (So.), so 11 now.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/san-jose/leland-chargers/field-hockey/jv/25-26/roster/"
+            }
+          ],
           "fullName": "Michaela Reichmuth",
-          "grade": {
-            "confidence": "medium",
-            "derived": false,
-            "kind": "school-site",
-            "note": "School profile says Grade 10. MaxPreps' 2025-26 Soccer JV row for the same careerid says Freshman (so 10 now), which agrees; MaxPreps' 2025-26 JV field hockey row says grade 10 (so 11), which does not. Two sources against one.",
-            "source": "https://www.lelandathletics.com/player/michaela-reichmuth/",
-            "value": 10
-          },
+          "grade": null,
           "height": null,
           "jersey": null,
           "level": null,
           "levelSource": null,
-          "note": null,
+          "note": "Grade left blank: the sources disagree (10 against 11); see the conflicts.",
           "positions": null,
           "profiles": [],
           "sourceName": null
@@ -5666,6 +5678,37 @@
           "level": null,
           "levelSource": null,
           "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "723fd21e-fa5e-452b-8cf6-e34c56d49d58",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "School player profile (Grade 11, 2026 Field Hockey); not season-dated.",
+              "other": "11",
+              "source": "https://www.lelandathletics.com/player/anna-lychagina/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-jv",
+              "note": "MaxPreps' 2025-26 JV field hockey roster, same career id: grade 9 (Fr.), so 10 now.",
+              "other": "10",
+              "source": "https://www.maxpreps.com/ca/san-jose/leland-chargers/field-hockey/jv/25-26/roster/"
+            }
+          ],
+          "fullName": "Anna Lychagina",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Grade left blank: the sources disagree (11 against 10); see the conflicts.",
           "positions": null,
           "profiles": [],
           "sourceName": null
@@ -5827,6 +5870,11 @@
       "notes": [
         "MaxPreps publishes no athletes for Del Mar (status empty); the school's field hockey page and team overview publish no roster either, so there are no players to enrich. MaxPreps' staff list also names Brandon Cedillo (the school's Brandon Cedillo Mora)."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "note": "The school's field hockey page and Sports Teams overview name the coach but publish no roster.",
+        "status": "none"
+      },
       "players": [],
       "slug": "del-mar",
       "sources": [
@@ -6004,6 +6052,11 @@
       "notes": [
         "MaxPreps publishes no athletes for Silver Creek (status empty); the school's fall sports page lists field hockey but no roster or coach, so there are no players to enrich. The coach is as MaxPreps lists her. (silvercreekathletics.com is a different school, in Indiana, and was not used.)"
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "note": "The school's fall sports page lists field hockey but no roster or coach.",
+        "status": "none"
+      },
       "players": [],
       "slug": "silver-creek",
       "sources": [
@@ -6034,6 +6087,11 @@
       "notes": [
         "MaxPreps publishes no athletes for Sobrato (status empty). The school's own roster page (roster.php?sport=582) still shows the 2024-25 names, none of them current, so it was not used; there are no players to enrich."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "note": "The school's roster page (roster.php?sport=582) still shows the 2024-25 names, none of them current.",
+        "status": "none"
+      },
       "players": [],
       "slug": "sobrato",
       "sources": [
@@ -6079,9 +6137,31 @@
       "notes": [
         "The official athletics site (westmontathletics.com, VNN) has an empty 2026-27 roster and an empty 2025-26 one; only 2024-25 is populated. MaxPreps' staff list names Gordon Pound as Head Coach alongside Trish Casillas; the school page names Casillas, so Pound's entry is as MaxPreps lists it.",
         "Positions are blank on MaxPreps for all 17 rows. MaxPreps' 2025-26 roster (same career ids) lists a position for 9 returning players, but it is a different season and positions change between seasons, so none was filled.",
-        "Not linked: Teya Halali's SportsRecruits page says class of 2029 (Midfield/Defense, Campbell, CA) while the roster shows a sophomore (class of 2028); NCSA direct lookups found only other sports or other people (Eleanor Graham, Natalie Flores, Charlotte Hannagan, Alyssa Sanchez)."
+        "Teya Halali's SportsRecruits page (class of 2029, Midfield/Defense, Campbell, CA) is linked: a 2026-27 sophomore is class of 2029, so it agrees with the roster. NCSA direct lookups found only other sports or other people (Eleanor Graham, Natalie Flores, Charlotte Hannagan, Alyssa Sanchez)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "2ae5b3b7-538c-47d2-a75c-432c7d365822",
+          "conflicts": [],
+          "fullName": "Teya Halali",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com): class of 2029, which agrees with the roster's sophomore (So.) in 2026-27; Midfield, Defense; hometown given as Campbell, CA. It names no school.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/teya_halali"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "westmont",
       "sources": [
         {
@@ -6110,7 +6190,7 @@
       ],
       "notes": [
         "The school publishes no field hockey roster or team page (the athletics page and coaches directory list a coach only). MaxPreps already fills grade and number for all 19 rows and position for 18; the one blank position (Grace Grahl) and every height have no public source.",
-        "Prior-season and JV MaxPreps pages and NCSA, SportsRecruits and Hudl searches found nothing for the current 19 players: the Carmel NCSA field hockey profiles that exist belong to graduates (class of 2026 and earlier)."
+        "MaxPreps' 2025-26 Carmel roster lists 8 of the current 19 players (same career ids), and every one of their grades agrees with this season's (a year on); MaxPreps already has all 19 grades, so it fills nothing. The 2026-27 JV page and NCSA, SportsRecruits and Hudl searches found nothing for the current players: the Carmel NCSA field hockey profiles that exist belong to graduates (class of 2026 and earlier)."
       ],
       "players": [],
       "slug": "carmel",
@@ -6280,6 +6360,11 @@
       "notes": [
         "MaxPreps lists no 2026-27 roster for Monterey (status empty), so there are no rows to enrich. No school roster, PDF or school-paper piece was found; the most recent MaxPreps roster page is 2024-25. MaxPreps' team page names the coaches only as R. McCormick and T. Fernandez Herrera."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "note": "No school roster, roster PDF or school-paper piece was found; MaxPreps' most recent roster page is 2024-25.",
+        "status": "none"
+      },
       "players": [],
       "slug": "monterey",
       "sources": []
@@ -6293,10 +6378,11 @@
         }
       ],
       "notes": [
-        "The school's Home Campus roster lists the same 21 names as MaxPreps and nothing else; grade comes from each player's own page there (17 filled, medium). Four are left blank on purpose: Kaylah Arriola and Ana Garcia (page grade 11 vs MaxPreps' 2025-26 class year Jr.), Mireille Gonzalez-morales (page 12 vs a MaxPreps soccer entry as a Sophomore) and Teagan Dickison Elias (the page merges two profiles with grades 11 and 10).",
+        "The school's Home Campus roster lists the same 21 names as MaxPreps and nothing else; grade comes from each player's own page there (17 filled, medium). Four are left blank on purpose. Three disagree with MaxPreps' own data, recorded under each player's conflicts: Kaylah Arriola and Ana Garcia (page grade 11; MaxPreps' 2025-26 roster Jr., so 12 now) and Mireille Gonzalez-morales (page 12; a MaxPreps 2025-26 JV soccer entry as a Sophomore, so 11 now). The fourth, Teagan Dickison Elias, has no second source: her page merges two profiles with grades 11 and 10.",
         "Jersey numbers and positions are blank on every Home Campus page. MaxPreps' 2025-26 roster (same career ids) lists a position for 8 returning players; it is a different season, so none was filled, and 2025-26 numbers are not carried forward.",
         "Coaches: the school's directory lists Stan Marple for Field Hockey, but MaxPreps' team page names L. Prevatt as head coach and C. Babcock as assistant. The directory is undated, so the two were not reconciled.",
-        "No SportsRecruits, Hudl or NCSA field hockey profile was found for any current Salinas player (the Salinas NCSA field hockey profiles that exist are class of 2020 and earlier, and North Salinas)."
+        "No SportsRecruits, Hudl or NCSA field hockey profile was found for any current Salinas player (the Salinas NCSA field hockey profiles that exist are class of 2020 and earlier, and North Salinas).",
+        "Lillian Isbell is on the varsity roster and is also the only player on MaxPreps' 2026-27 Salinas JV roster (same career id); she is listed here as varsity."
       ],
       "players": [
         {
@@ -6655,6 +6741,99 @@
           "positions": null,
           "profiles": [],
           "sourceName": null
+        },
+        {
+          "athleteId": "ff977787-1f72-421e-821d-e296a5437a80",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "Home Campus player page shows \"Grade 11\" with 2026 Field Hockey in its season list; the page is not season-dated.",
+              "other": "11",
+              "source": "https://www.salinascowboys.com/player/kaylah-arriola"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps' 2025-26 Salinas roster, same career id: classYear 11 (Jr.), so 12 now.",
+              "other": "12",
+              "source": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/field-hockey/25-26/roster/"
+            }
+          ],
+          "fullName": "Kaylah Arriola",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Grade left blank: the sources disagree (11 against 12); see the conflicts.",
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5d23b122-e6ad-487b-9384-f3b515f7e90e",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "Home Campus player page shows \"Grade 11\" with 2026 Field Hockey in its season list; the page is not season-dated.",
+              "other": "11",
+              "source": "https://www.salinascowboys.com/player/ana-garcia"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps' 2025-26 Salinas roster, same career id: classYear 11 (Jr.), so 12 now.",
+              "other": "12",
+              "source": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/field-hockey/25-26/roster/"
+            }
+          ],
+          "fullName": "Ana Garcia",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Grade left blank: the sources disagree (11 against 12); see the conflicts.",
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a651399b-ac86-401c-b49e-96eca2d40704",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "Home Campus player page shows \"Grade 12\" with 2026 Field Hockey in its season list; the page is not season-dated.",
+              "other": "12",
+              "source": "https://www.salinascowboys.com/player/mireille-gonzalez-morales"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps career page: 2025-26 girls JV soccer as Sophomore, so 11 now.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/athletes/mireille-gonzalez-morales/?careerid=hrut1f53qvun7"
+            }
+          ],
+          "fullName": "Mireille Gonzalez-morales",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": "Grade left blank: the sources disagree (12 against 11); see the conflicts.",
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "salinas",
@@ -6687,6 +6866,11 @@
       "notes": [
         "MaxPreps lists no 2026-27 roster for Santa Catalina (status empty), so there are no rows to enrich. No school roster, PDF or school-paper piece was found."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "note": "No school roster, roster PDF or school-paper piece was found.",
+        "status": "none"
+      },
       "players": [],
       "slug": "santa-catalina",
       "sources": []
@@ -6962,7 +7146,8 @@
         "The school page lists co-head coaches Aline Brown Copp and Hadley Bell; MaxPreps lists 'Aline Copp' and 'Hadley Maunz' as head coaches. The school's spelling is recorded.",
         "No school roster page exists: grades come from MaxPreps rosters/career pages of earlier seasons (derived) and the school paper.",
         "Not filled, no usable source: Milla Bach, Elsie Edelson and Margaret Schwartz. MaxPreps' 2025-26 roster lists 'Maggie Schwartz' (Jr.) under another career id; not applied because the identity rests on the name alone.",
-        "MaxPreps' 2025-26 Redwood roster gives jersey numbers and positions, which are not season-dated for 2026-27 and are not used."
+        "MaxPreps' 2025-26 Redwood roster gives jersey numbers and positions, which are not season-dated for 2026-27 and are not used.",
+        "Two grades are left blank because their sources disagree, each disagreement recorded under the player's conflicts: Audrey Dickerman and Eloise Tonderys are juniors in the Redwood Bark (and Dickerman class of 2028 on her career page) but freshmen on MaxPreps' 2025-26 roster, so sophomores now."
       ],
       "players": [
         {
@@ -7033,27 +7218,36 @@
           "conflicts": [
             {
               "field": "grade",
-              "kept": "11",
+              "kept": null,
               "kind": "maxpreps-career",
-              "note": "MaxPreps' 2025-26 Redwood roster lists her as Fr. (-> grade 10 now); her career page (class of 2028) and the school paper say junior (11). The two MaxPreps values disagree, so the grade is medium confidence.",
+              "note": "MaxPreps career page: graduatingClass 2028, a junior in 2026-27.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/larkspur/redwood-giants/athletes/audrey-dickerman/?careerid=i3abbfo3gdlvf"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "news",
+              "note": "Redwood Bark, 2026-09-23: 'Junior Audrey Dickerman'.",
+              "other": "11",
+              "source": "https://redwoodbark.org/112168/sports/girls-varsity-field-hockey-dominates-marin-academy-in-5-1-victory/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps' 2025-26 Redwood roster, same career id: classYear 9 (Fr.), so 10 now.",
               "other": "10",
               "source": "https://www.maxpreps.com/ca/larkspur/redwood-giants/field-hockey/25-26/roster/"
             }
           ],
           "fullName": "Audrey Dickerman",
-          "grade": {
-            "confidence": "medium",
-            "derived": false,
-            "kind": "maxpreps-career",
-            "note": "MaxPreps career page: graduatingClass 2028, classYear 11 (read for this career, not season-dated). The Redwood Bark (2026-09-23) also says 'Junior Audrey Dickerman'.",
-            "source": "https://www.maxpreps.com/ca/larkspur/redwood-giants/athletes/audrey-dickerman/?careerid=i3abbfo3gdlvf",
-            "value": 11
-          },
+          "grade": null,
           "height": null,
           "jersey": null,
           "level": null,
           "levelSource": null,
-          "note": null,
+          "note": "Grade left blank: the sources disagree (11 against 10); see the conflicts.",
           "positions": null,
           "profiles": [],
           "sourceName": null
@@ -7189,27 +7383,28 @@
           "conflicts": [
             {
               "field": "grade",
-              "kept": "11",
+              "kept": null,
+              "kind": "news",
+              "note": "Redwood Bark, 2026-09-23: 'Junior Eloise Tonderys'.",
+              "other": "11",
+              "source": "https://redwoodbark.org/112168/sports/girls-varsity-field-hockey-dominates-marin-academy-in-5-1-victory/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
               "kind": "maxpreps-career",
-              "note": "MaxPreps' 2025-26 Redwood roster lists her as Fr. (-> grade 10 now); the Redwood Bark calls her a junior (11). MaxPreps' career page for her has no class year. The paper value is kept; medium confidence.",
+              "note": "MaxPreps' 2025-26 Redwood roster, same career id: classYear 9 (Fr.), so 10 now. Her career page has no class year.",
               "other": "10",
               "source": "https://www.maxpreps.com/ca/larkspur/redwood-giants/field-hockey/25-26/roster/"
             }
           ],
           "fullName": "Eloise Tonderys",
-          "grade": {
-            "confidence": "medium",
-            "derived": false,
-            "kind": "news",
-            "note": "Redwood Bark, 2026-09-23: 'Junior Eloise Tonderys noted the opposing team's speed and stick skills.'",
-            "source": "https://redwoodbark.org/112168/sports/girls-varsity-field-hockey-dominates-marin-academy-in-5-1-victory/",
-            "value": 11
-          },
+          "grade": null,
           "height": null,
           "jersey": null,
           "level": null,
           "levelSource": null,
-          "note": null,
+          "note": "Grade left blank: the sources disagree (11 against 10); see the conflicts.",
           "positions": null,
           "profiles": [],
           "sourceName": null
@@ -7650,9 +7845,17 @@
               "field": "grade",
               "kept": null,
               "kind": "maxpreps-career",
-              "note": "MaxPreps' own entries for this career disagree: the career page lists 2025-26 varsity girls lacrosse as Junior (-> 12) while the 2025-26 JV field hockey roster (same career id) lists Fr. (-> 10). Grade left blank.",
+              "note": "MaxPreps career page: 2025-26 varsity girls lacrosse as Junior, so 12 now. The 2025-26 JV field hockey roster for the same career id disagrees (see the next conflict); grade left blank.",
               "other": "12",
               "source": "https://www.maxpreps.com/ca/berkeley/berkeley-yellowjackets/athletes/anisa-alejandrino/?careerid=15uclpec602ff"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-jv",
+              "note": "MaxPreps' 2025-26 JV field hockey roster, same career id: Fr., so 10 now.",
+              "other": "10",
+              "source": "https://www.maxpreps.com/ca/berkeley/berkeley-yellowjackets/field-hockey/jv/25-26/roster/"
             }
           ],
           "fullName": "Anisa Alejandrino",
@@ -8050,7 +8253,7 @@
       ],
       "notes": [
         "MaxPreps already has grade and position for all 18 rows and number for 16 (the two goalkeepers have none). The school's athletics site (sfuhsathletics.org/teams/9867, Field Hockey - V) returned HTTP 500 on 2026-10-03, so no school roster could be read; a search engine reported its roster as unpublished.",
-        "Two bare SportsRecruits pages (Stella Brilliant 2028, Rachel Flynn 2027) agree with the roster grade but name no school or hometown, so they are not linked; Julia Ahlstrand's page says 2027 while MaxPreps shows Jr., so it is not linked either."
+        "Two bare SportsRecruits pages (Stella Brilliant 2028, Rachel Flynn 2027) agree with the roster grade but name no school or hometown, so they are not linked."
       ],
       "players": [
         {
@@ -8464,6 +8667,12 @@
       "notes": [
         "MaxPreps lists no 2026-27 roster for Marin Academy (0 rows) although the team has played MCAL games, so there is no MaxPreps row to join to and nothing is filled. The school page shows 18 players only as first name + last initial + class year; MaxPreps' 2025-26 roster (20 names) belongs to another season. Names are not added."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-10-03",
+        "source": "https://www.ma.org/athletics/athletic-teams/team-details/~athletics-team-id/175",
+        "status": "partial",
+        "summary": "The school's team page lists 18 current players, but only by first name, last initial and class year, so they cannot be matched to MaxPreps and are not listed here."
+      },
       "players": [],
       "slug": "marin-academy",
       "sources": [
