@@ -1,0 +1,3296 @@
+{
+  "builtBy": "research on 2026-10-03: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, MaxPreps career club teams, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked by a checker that re-opened each source and then by an independent refuter",
+  "capturedAt": "2026-10-03",
+  "season": "26-27",
+  "notes": [
+    "Which club field hockey teams the players on the 43 tracked varsity rosters play (or played) for, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV are out of scope). A club's own roster lists many more players, who are not named here: the club's roster pages are linked instead.",
+    "The linking rule is the one data/rosters-enrichment.json uses for recruiting profiles, applied to clubs: a public page must name the player and a field hockey club, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A class year that disagrees with the roster grade rules a match out; a name alone never makes one. Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts.",
+    "Every affiliation was checked twice on 2026-10-03: a checker re-opened each source and applied the rule, then an independent refuter re-opened the sources and tried to break it (another person of the same name, a quote not on the page, a misidentified club, a class year that disagrees, a stale listing). Only affiliations that survived both are here. Each source keeps its URL, kind and a verbatim quote; basis says what the match rests on.",
+    "status: current = the source reflects the 2025-26 or 2026-27 club seasons (dated August 2025 or later, a club's current-players page, or a live recruiting profile that lists the club); past = dated earlier, an alumni list, or a club the player's own page lists for earlier years; unknown = listed with no usable date. asOf is the date or season the source gives. confidence: high = one first-hand page names player, club and school (or is the player's own profile); medium = the match rests on a club roster's class-year heading plus the club's location, on a team nickname standing for the school, or on a single self-reported line.",
+    "clubs[] are the youth field hockey clubs around the 43 schools (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast) plus any club a rostered player is tied to. Each record was read from the club's own site on 2026-10-03 and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them.",
+    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows), Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, USA Field Hockey and MAX Field Hockey event lists. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
+  ],
+  "clubs": [
+    {
+      "slug": "pac-heights",
+      "name": "Pacific Heights Field Hockey Club",
+      "shortName": "Pac Heights",
+      "aliases": [
+        "Pac Heights Field Hockey Club",
+        "Pac Heights Hockey Club",
+        "Pacific Heights Hockey Club",
+        "Pac Heights FHC"
+      ],
+      "website": "https://www.pacheightshockey.com/",
+      "city": "San Francisco",
+      "region": "san-francisco",
+      "youth": true,
+      "description": "San Francisco field hockey club for grades K-12, with an Academy for grades K-6 and U14, U16 and U19 teams for grades 7-12, running seasonal training and skills sessions.",
+      "founded": 2025,
+      "programs": [
+        {
+          "name": "Academy (grades K-6)",
+          "detail": "Winter 2025-26 (most recent posted season): Dec 1, 2025 to Feb 25, 2026, Mondays and Wednesdays; Academy Group for K-4 and Academy Elite for 5-6",
+          "source": "https://www.pacheightshockey.com/winter25"
+        },
+        {
+          "name": "U14, U16 and U19 teams (grades 7-12)",
+          "detail": "Winter 2025-26 (most recent posted season): two practices a week, two local weekend tournaments and two Bay Area club scrimmages",
+          "source": "https://www.pacheightshockey.com/winter25"
+        },
+        {
+          "name": "Fall Training (U12, U14, U16, U19)",
+          "detail": "Fall 2025, grades 5-12, no tryouts: Saturdays Aug 30 to Oct 25, 2025 at Paul Goode Field; registration closed and no Fall 2026 page is posted",
+          "source": "https://www.pacheightshockey.com/fall-2025-training"
+        },
+        {
+          "name": "Individual and group training sessions",
+          "detail": "Bookable one-hour private lessons and small-group sessions (U18, U16 and U14, and beginner groups); no dates posted",
+          "source": "https://www.pacheightshockey.com/book-online"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.pacheightshockey.com/",
+          "what": "Home page: K-12 club in San Francisco; menu still lists Fall 2025 and Winter 2025 programs"
+        },
+        {
+          "url": "https://www.pacheightshockey.com/winter25",
+          "what": "Winter 2025-26 Academy and U14-U19 programs"
+        },
+        {
+          "url": "https://www.pacheightshockey.com/fall-2025-training",
+          "what": "Fall 2025 training age groups, schedule and site"
+        },
+        {
+          "url": "https://www.pacheightshockey.com/_files/ugd/1b08f3_df94e462254640dda7224c8f8af84fbd.pdf",
+          "what": "Club overview PDF: age groups, planned seasons, new-club status, based in Pacific Heights, San Francisco"
+        },
+        {
+          "url": "https://www.pacheightshockey.com/pages-sitemap.xml",
+          "what": "Site page list used to confirm there is no roster or team-list page"
+        },
+        {
+          "url": "https://www.ncfha.org/youth",
+          "what": "NCFHA youth club directory: listed separately as 'Pac Heights Field Hockey Club', San Francisco"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "sf-hawks",
+      "name": "San Francisco Youth Field Hockey Club",
+      "shortName": "SF Hawks",
+      "aliases": [
+        "San Francisco Youth Field Hockey",
+        "SF Youth Field Hockey",
+        "San Francisco Youth FHC",
+        "San Francisco Hawks",
+        "Hawks Field Hockey",
+        "U16 Hawks Blue",
+        "U19 Hawks Blue"
+      ],
+      "website": "https://sfyouthfieldhockey.com/",
+      "city": "San Francisco",
+      "region": "san-francisco",
+      "youth": true,
+      "description": "San Francisco youth club for boys and girls in grades K-12 that runs fall, winter and spring seasons and summer camps, organized into two-year U06 to U19 age groups.",
+      "founded": 2017,
+      "programs": [
+        {
+          "name": "U19",
+          "detail": "Typically grades 11-12; 2026-27 club season (fall 2026, winter 2026-27, spring 2027); practices 3 times a week in winter and spring",
+          "source": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "name": "U16",
+          "detail": "Typically grades 9-10; 2026-27 club season (fall 2026, winter 2026-27, spring 2027); practices 3 times a week in winter and spring",
+          "source": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "name": "U14",
+          "detail": "Typically grades 7-8; 2026-27 club season; practices twice a week in fall, winter and spring",
+          "source": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "name": "U12",
+          "detail": "Typically grades 5-6; 2026-27 club season; practices twice a week in fall, winter and spring",
+          "source": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "name": "U06, U08 and U10",
+          "detail": "Typically TK through 4th grade; 2026-27 club season; practices once a week in fall, winter and spring",
+          "source": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "name": "Winter 2026-27 teams (U06-U19)",
+          "detail": "Dec 6 to Mar 7 (U06 and U08 end Feb 28); one to three teams per age group placed as Blue (most advanced), Yellow or White after a first-week evaluation, no tryouts",
+          "source": "https://sfyouthfieldhockey.com/teams/"
+        },
+        {
+          "name": "U19 Hawks Blue",
+          "detail": "Blue-tier U19 team with a SportsRecruits roster page listing players by class year (2027 to 2029)",
+          "source": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue"
+        },
+        {
+          "name": "U16 Hawks Blue",
+          "detail": "Blue-tier U16 team with a SportsRecruits roster page listing players by class year (2029 and 2030)",
+          "source": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue"
+        },
+        {
+          "name": "Field player and goalie skill sessions (U12-U19)",
+          "detail": "Add-on winter sessions on Sundays, Dec 6 to Feb 28: stick skills and hitting, and goalkeeper training",
+          "source": "https://sfyouthfieldhockey.com/teams/"
+        },
+        {
+          "name": "Indoor season",
+          "detail": "U14 girls, U16 girls, U19 girls and U19 boys teams; Oct 20 to Feb 28, once a week; U16 and U19 girls qualify in December for the national indoor tournaments in February",
+          "source": "https://sfyouthfieldhockey.com/summer-camps/"
+        }
+      ],
+      "rosterPages": [
+        "https://sfyouthfieldhockey.com/current-players/",
+        "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC",
+        "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+        "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue"
+      ],
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/",
+          "what": "Club home page: tagline, K-12 boys and girls, two-year age groups, seasons, 'Since 2017'"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/program-overview/",
+          "what": "2026-27 age groups with typical grades and practice frequency"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/teams/",
+          "what": "Winter 2026-27 team tiers, dates, practice site and skill sessions (linked from the 'Fall Teams' menu item)"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "what": "Current Players page: players grouped under Class of 2027 to 2031 headings with position and number; no school or hometown"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC",
+          "what": "SportsRecruits organization page: San Francisco, link to club site, teams U16 Hawks Blue and U19 Hawks Blue with players"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/club-history/",
+          "what": "Club timeline: first practice spring 2017, Hawks name chosen fall 2019"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "fly-fhc",
+      "name": "Fly Field Hockey Club",
+      "shortName": "Fly FHC",
+      "aliases": [
+        "Fly",
+        "Fly Field Hockey",
+        "San Jose Fly",
+        "San Jose Fly FH Club",
+        "San Jose Fly Field Hockey",
+        "San Jose Fly Field Hockey Club",
+        "San Jose Fly Field Hockey Club, LLC"
+      ],
+      "website": "https://flyfhc.com/",
+      "city": "Los Altos",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Los Altos girls' field hockey club with spring U12 to U19 teams and advanced Black teams, plus summer, fall youth and winter high performance programs for grades 3-12.",
+      "founded": 2001,
+      "programs": [
+        {
+          "name": "Spring Club U19",
+          "detail": "Girls in 11th-12th grade; mid-January to mid-May 2026; Saturdays 8-10am and Sundays 3:30-5:30pm at Los Altos HS (stadium turf)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Spring Club U16",
+          "detail": "Girls in 9th-10th grade; mid-January to mid-May 2026; Los Altos HS (stadium turf)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Spring Club U14",
+          "detail": "Girls in 7th-8th grade; mid-January to mid-May 2026; Los Altos HS (back turf)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Spring Club U12",
+          "detail": "Girls in 3rd-6th grade; mid-January to mid-May 2026; Los Altos HS (back turf)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Black (Advanced) Teams U14, U16, U19",
+          "detail": "Fielded each spring; extra weekly practice; tryout held in December (other spring teams need no tryout)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Summer Fly Training Camp",
+          "detail": "Ages 8-19, boys or girls, open to non-members; Mon and Wed 6-8pm, June 8 - July 1, 2026 at Wilcox HS (Santa Clara)",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "Fall Youth Program",
+          "detail": "Girls in grades 3-8; Sundays 8-10am plus Saturday game days, Sept 6 - Nov 8, 2026 at Los Altos HS back turf",
+          "source": "https://flyfhc.com/programs/"
+        },
+        {
+          "name": "High Performance Training (winter and summer mini-sets)",
+          "detail": "Experienced players in grades 4-12; four 2-hour Sunday sessions; the page still shows the Nov 30 - Dec 21, 2025 session at Los Altos HS",
+          "source": "https://flyfhc.com/programs/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://flyfhc.com/programs/",
+          "what": "Programs page: spring club age groups, Black teams, summer camp, fall youth program, high performance training; says no roster information"
+        },
+        {
+          "url": "https://www.ncfha.org/youth",
+          "what": "NCFHA youth directory entry quoting the club: since 2001, 4th-12th grade girls, Los Altos"
+        },
+        {
+          "url": "https://sanjoseflyfieldhockey.teamsnapsites.com/",
+          "what": "Older club site (San Jose Fly Field Hockey LLC, 2023 footer): Los Altos address, no roster"
+        },
+        {
+          "url": "https://www.sportsengine.com/org/san-jose-fly-field-hockey-club",
+          "what": "SportsEngine directory listing: Los Altos address, old domain sanjosefly.com"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "infinity",
+      "name": "Infinity Sports Club",
+      "shortName": "Infinity",
+      "aliases": [
+        "Infinity Sports",
+        "Infinity Field Hockey",
+        "Infinity Field Hockey Club",
+        "Gilroy Infinity"
+      ],
+      "website": "https://www.infinitysportsclub.org/",
+      "city": "Gilroy",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Gilroy nonprofit sports club whose field hockey program serves girls ages 10-18 on U14, U16 and U19 teams, with a spring season from February to May.",
+      "founded": 2001,
+      "programs": [
+        {
+          "name": "U19",
+          "detail": "Spring season, early Feb to mid-May (elite teams from January); club-wide levels National, Elite, Intermediate, Beginner",
+          "source": "https://www.infinitysportsclub.org/field-hockey"
+        },
+        {
+          "name": "U16",
+          "detail": "Spring season, early Feb to mid-May; club-wide levels National, Elite, Intermediate, Beginner; 1:15 coach-to-player ratio",
+          "source": "https://www.infinitysportsclub.org/field-hockey"
+        },
+        {
+          "name": "U14",
+          "detail": "Spring season; has its own coach on the coaches page; same club-wide levels",
+          "source": "https://www.infinitysportsclub.org/field-hockey-coaches"
+        },
+        {
+          "name": "Field hockey camps",
+          "detail": "Summer, winter and school-break camps, boys and girls ages 8-18 unless noted",
+          "source": "https://www.infinitysportsclub.org/sports-camps"
+        },
+        {
+          "name": "Tournaments",
+          "detail": "Site lists Stanford 6v6, Cal Berkeley 6v6, UC Davis 7v7, Spring Fling 7v7 (Infinity-hosted), Lyon's Youth and CalCup 11v11",
+          "source": "https://www.infinitysportsclub.org/programs-1"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.infinitysportsclub.org/field-hockey",
+          "what": "Program description: girls ages 10-18, levels, spring season dates, December 1 registration opening"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/our-teams-copy",
+          "what": "Teams page: headings U19, U16, U14 only, no players"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/field-hockey-coaches",
+          "what": "Coaches page: U16/U19 and U14 coach assignments (coach names not recorded)"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/registration",
+          "what": "Field hockey registration page: 2026 registration closed"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/programs-1",
+          "what": "Field hockey tournaments list"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/sports-camps",
+          "what": "Camps page: ages 8-18, summer, winter and school breaks"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "lightning",
+      "name": "Lightning Youth Field Hockey",
+      "shortName": "Lightning",
+      "aliases": [
+        "Lightning Field Hockey",
+        "Lightning Field Hockey Club",
+        "Lightning FHC",
+        "Stanford Lightning",
+        "Lightning Black",
+        "Lightning Red"
+      ],
+      "website": "https://www.lightningfieldhockey.org/",
+      "city": "Los Altos Hills",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Parent-volunteer-led nonprofit in Los Altos Hills for boys and girls in grades 1-12, with U8 to U19 teams; Fall 2026 practices are on weekends at Foothill College.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Fall 2026 season, U8 to U19 age groups",
+          "detail": "Boys and girls, grades 1-12; Aug 22 - Dec 20, 2026; Saturdays 10am-12pm and Sundays 10:45am-12:45pm at Foothill College; 2026/27 cut-offs include U19 born after Jul 31, 2007 and U16 after Jul 31, 2010; spring (Jan-May) and summer (Jun-Jul) seasons also listed",
+          "source": "https://www.lightningfieldhockey.org/"
+        },
+        {
+          "name": "U08 Mixed",
+          "detail": "Boys and girls; latest team page is 2025 Fall",
+          "source": "https://www.lightningfieldhockey.org/page/show/9155770-u08-mixed"
+        },
+        {
+          "name": "U10 Mixed",
+          "detail": "Boys and girls; latest team page is 2025 Fall",
+          "source": "https://www.lightningfieldhockey.org/page/show/9155771-u10-mixed"
+        },
+        {
+          "name": "U12 Mixed",
+          "detail": "Boys and girls; latest team page is 2025 Fall",
+          "source": "https://www.lightningfieldhockey.org/page/show/9155772-u12-mixed"
+        },
+        {
+          "name": "U14/U16 Girls",
+          "detail": "Girls; latest team page is 2025 Fall",
+          "source": "https://www.lightningfieldhockey.org/page/show/9155773-u14-u16g"
+        },
+        {
+          "name": "U16/U19 Girls",
+          "detail": "Girls; latest team page is 2025 Fall",
+          "source": "https://www.lightningfieldhockey.org/page/show/9155774-u16-u19-girls"
+        }
+      ],
+      "rosterPages": [
+        "https://www.lightningfieldhockey.org/roster/show/9155774?subseason=950528",
+        "https://www.lightningfieldhockey.org/roster/show/9155773?subseason=950528"
+      ],
+      "sources": [
+        {
+          "url": "https://www.lightningfieldhockey.org/",
+          "what": "Club home page: Operated in Los Altos Hills, Fall 2026 season dates and practice times, age groups, seasons"
+        },
+        {
+          "url": "https://www.lightningfieldhockey.org/page/show/9155774-u16-u19-girls",
+          "what": "U16/U19 Girls team page (latest season shown: 2025 Fall)"
+        },
+        {
+          "url": "https://www.lightningfieldhockey.org/roster/show/9155774?subseason=950528",
+          "what": "U16/U19 Girls roster, 2025 Fall season"
+        },
+        {
+          "url": "https://www.lightningfieldhockey.org/roster/show/9155773?subseason=950528",
+          "what": "U14/U16 Girls roster, 2025 Fall season"
+        },
+        {
+          "url": "https://www.ncfha.org/youth",
+          "what": "NCFHA youth directory entry: lists the club under Fremont"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "norcal-impact",
+      "name": "NorCal Impact Field Hockey Club",
+      "shortName": "NorCal Impact",
+      "aliases": [
+        "Norcal Impact",
+        "NorCal Impact FHC",
+        "NorCal Impact FH Club",
+        "Impact",
+        "Impact - U19 Wolves",
+        "Impact - Badgers",
+        "Impact - Cheetahs"
+      ],
+      "website": "https://norcalimpactfh.weebly.com/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Bay Area club with U16 and U19 teams training on winter and spring weekends in San Jose and at Stanford, plus summer high school training and a fall 7v7 youth league.",
+      "founded": 2008,
+      "programs": [
+        {
+          "name": "U19",
+          "detail": "Own weekend training block after U16; winter 2026 (Jan-Feb, indoor and turf at Archbishop Mitty HS and Stanford) and spring 2026 (Mar-May, Willow Glen HS turf)",
+          "source": "https://norcalimpactfh.weebly.com/club-training.html"
+        },
+        {
+          "name": "U16",
+          "detail": "Own weekend training block; some U16 players are invited to train with U19 at the coaches' discretion; winter and spring 2026 sessions",
+          "source": "https://norcalimpactfh.weebly.com/club-training.html"
+        },
+        {
+          "name": "Select travel squads",
+          "detail": "Selected squads for the Winter Escape Recruiting Showcase (U19), UC Davis 11v11 (U19), USAFH Regional Club Championships and Cal Cup; guest players invited to fill rosters; winter and spring 2026",
+          "source": "https://norcalimpactfh.weebly.com/tournaments.html"
+        },
+        {
+          "name": "Summer High School Training 2026",
+          "detail": "Skills stations and 7v7 for high school players; Mon and Wed evenings June 15 - July 15, 2026 at Archbishop Mitty HS turf",
+          "source": "https://norcalimpactfh.weebly.com/summer-high-school-training.html"
+        },
+        {
+          "name": "5-Day Summer Camp 2026",
+          "detail": "Rising grades 4-9, all skill levels; two weeklong sessions (June 22-26 and July 13-17, 2026) at Archbishop Mitty HS turf, offered with the Mitty coaching staff",
+          "source": "https://norcalimpactfh.weebly.com/5-day-summer-camp-2026.html"
+        },
+        {
+          "name": "Fall 7v7 league (U12 and U14)",
+          "detail": "Younger, typically middle-school-age players; held at Willow Glen HS; page gives no dates",
+          "source": "https://norcalimpactfh.weebly.com/training--tournaments.html"
+        }
+      ],
+      "rosterPages": [
+        "https://norcalimpactfh.weebly.com/player-directory.html",
+        "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards"
+      ],
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/",
+          "what": "Club home page; active, with news posts dated through Sept 21, 2026"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/about-us.html",
+          "what": "Club history: started in 2008 in Saratoga; trains players from around the Bay Area; players represent 13 schools"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/about-our-club.html",
+          "what": "Winter and spring sessions, U16 and U19 teams, tryouts in early January, how to join"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/club-training.html",
+          "what": "Winter 2026 training sites and schedule by age group"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/tournaments.html",
+          "what": "Winter and spring 2026 tournaments and travel squads"
+        },
+        {
+          "url": "https://www.ncfha.org/youth",
+          "what": "NCFHA youth directory entry: founded 2008 in Saratoga, listed under Campbell"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "performance-fh",
+      "name": "Performance Field Hockey",
+      "shortName": null,
+      "aliases": [
+        "Performance FHC",
+        "Performance Hockey",
+        "Performance Hockey, LLC"
+      ],
+      "website": "https://www.performancefieldhockey.com/",
+      "city": "Los Gatos",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Los Gatos youth field hockey program with Sunday winter and spring practices and a summer camp for elementary, middle and high school players, held at Los Gatos High School.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Elementary + Middle School Sunday practices",
+          "detail": "Grades 3-5 and 6-8 with separate instruction on the same field; Winter 2026 Jan 11 - Mar 8 and Spring 2026 Mar 15 - May 17, Sundays 8:30-10:30am",
+          "source": "https://www.performancefieldhockey.com/program-info"
+        },
+        {
+          "name": "High School Development Sunday practices",
+          "detail": "Winter 2026 Jan 11 - Mar 8 and Spring 2026 Mar 15 - May 17, Sundays 10am-noon",
+          "source": "https://www.performancefieldhockey.com/program-info"
+        },
+        {
+          "name": "Summer Intensive 2026: Grades 1-5 + Middle School",
+          "detail": "All levels; Mon and Wed 5:00-6:30pm plus Friday scrimmage 4:30-6:00pm; June 15 - July 17, 2026",
+          "source": "https://www.performancefieldhockey.com/registration"
+        },
+        {
+          "name": "Summer Intensive 2026: High School (including incoming freshmen)",
+          "detail": "All levels; Mon and Wed 6:00-8:00pm plus Friday scrimmage 6:00-7:30pm; June 15 - July 17, 2026",
+          "source": "https://www.performancefieldhockey.com/registration"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.performancefieldhockey.com/",
+          "what": "Home page (no roster; contains two 2009 testimonials)"
+        },
+        {
+          "url": "https://www.performancefieldhockey.com/program-info",
+          "what": "Winter 2026, Spring 2026 and Summer 2026 schedules, practice location, FAQ"
+        },
+        {
+          "url": "https://www.performancefieldhockey.com/registration",
+          "what": "Summer Intensive June 15 - July 17, 2026 schedule and registration steps"
+        },
+        {
+          "url": "https://www.performancefieldhockey.com/contact-us",
+          "what": "Office in San Jose; practice location The Meadow, 2 New York Ave., Los Gatos"
+        },
+        {
+          "url": "https://www.performancefieldhockey.com/our-story",
+          "what": "Program history blurb (general, no founding year)"
+        },
+        {
+          "url": "https://www.performancefieldhockey.com/coaching-staff",
+          "what": "Coaching staff page (coaches only, no players)"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "sj-khalsa",
+      "name": "San Jose Khalsa Field Hockey Club",
+      "shortName": "San Jose Khalsa",
+      "aliases": [
+        "SJK",
+        "SJK Hockey Club",
+        "SJK Juniors",
+        "Khalsa",
+        "Khalsa Youth Sports Club"
+      ],
+      "website": "https://sjkfieldhockey.com/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "San Jose club founded in 1985 serving youth through adults, with SJK Juniors (U8-U16), a summer camp, open practices and tournaments, and the Khalsa Cup each Labor Day weekend.",
+      "founded": 1985,
+      "programs": [
+        {
+          "name": "SJK Juniors",
+          "detail": "Youth development program, ages U8-U16, skill-based groups, season-long coaching",
+          "source": "https://sjkfieldhockey.com/programs"
+        },
+        {
+          "name": "Summer Camp",
+          "detail": "All levels welcome, week-long blocks, summer",
+          "source": "https://sjkfieldhockey.com/programs"
+        },
+        {
+          "name": "Open Practices & Tournaments",
+          "detail": "Youth to adult, competitive play",
+          "source": "https://sjkfieldhockey.com/programs"
+        },
+        {
+          "name": "Khalsa Cup 2026",
+          "detail": "7-a-side tournament, Sept 5-6, 2026, University of the Pacific, Stockton; ten divisions including Women and Under-16/14/12/10/08",
+          "source": "https://sjkfieldhockey.com/events/khalsa-cup-2026"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://sjkfieldhockey.com/",
+          "what": "Home page: established 1985, U8-Adult, program cards, Khalsa Cup 2026 on the calendar"
+        },
+        {
+          "url": "https://sjkfieldhockey.com/programs",
+          "what": "Programs page: SJK Juniors (ages U8-U16), Summer Camp, Open Practices & Tournaments"
+        },
+        {
+          "url": "https://sjkfieldhockey.com/events",
+          "what": "Events page: only Khalsa Cup 2026 listed"
+        },
+        {
+          "url": "https://sjkfieldhockey.com/events/khalsa-cup-2026",
+          "what": "Khalsa Cup 2026 page: ten 7-a-side divisions, rosters due Aug 28, 2026"
+        },
+        {
+          "url": "https://tournament.sjkfieldhockey.com/t/khalsa-cup-2026",
+          "what": "Tournament portal: registration closed, every division shows 0 teams, no rosters"
+        },
+        {
+          "url": "https://www.sjkhockey.com/copy-of-about",
+          "what": "Older club site SJK Juniors page: describes the program as for boys aged 13 and up, Saturday evenings in Union City"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "stryker",
+      "name": "Stryker Field Hockey Club",
+      "shortName": "Stryker",
+      "aliases": [
+        "Strykers",
+        "Stryker Field Hockey",
+        "Stryker East Shore"
+      ],
+      "website": "https://stryker-field-hockey.sportngin.com/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "San Jose-area nonprofit youth field hockey club for girls ages 8-19 (U8 to U19), with a January-May spring season and a fall season for players under 14.",
+      "founded": 2009,
+      "programs": [
+        {
+          "name": "Spring season",
+          "detail": "Ages 8-19, January-May; age groups U19, U16, U14, U12, U10, U8 (no season later than 2022 is posted)",
+          "source": "https://stryker-field-hockey.sportngin.com/page/show/4375778-registration"
+        },
+        {
+          "name": "Fall youth season",
+          "detail": "Players under 14 or through 8th grade who are not on a high school team; U14 and U12 levels (latest fall season posted is 2022)",
+          "source": "https://stryker-field-hockey.sportngin.com/page/show/4375778-registration"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://stryker-field-hockey.sportngin.com/about",
+          "what": "About page: nonprofit, began 2009, serves around one hundred girls ages 8-18, practice season February to May"
+        },
+        {
+          "url": "https://stryker-field-hockey.sportngin.com/page/show/4375778-registration",
+          "what": "General registration page: spring season ages 8-19 January-May; fall season for players under 14"
+        },
+        {
+          "url": "https://stryker-field-hockey.sportngin.com/page/show/4378138-faqs",
+          "what": "FAQs: age groups U19, U16, U14, U12, U10, U8; tournament team levels"
+        },
+        {
+          "url": "https://stryker-field-hockey.sportngin.com/",
+          "what": "Home page: Fall 2022 youth season and Spring 2022 dates; registrations shown as not currently available"
+        },
+        {
+          "url": "https://stryker-field-hockey.sportngin.com/news",
+          "what": "News page: newest item dated 12/22/2021"
+        },
+        {
+          "url": "https://bafha.org/schedule/youth-hockey/",
+          "what": "BAFHA youth directory entry: Stryker (San Jose, Campbell), teams U19 to U10, fall season for U14 players not in high school"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "hayward-hawks",
+      "name": "Hayward Hawks Field Hockey",
+      "shortName": "Hayward Hawks",
+      "aliases": [
+        "Hayward Hawks FHC"
+      ],
+      "website": "https://haywardhawksfhc.playbookapi.com/programs/register/",
+      "city": "Fremont",
+      "region": "east-bay",
+      "youth": true,
+      "description": "Fremont-based nonprofit youth field hockey club that lists U8, U12 and U14-16 fall 2026 programs on its Playbook registration site.",
+      "founded": 2021,
+      "programs": [
+        {
+          "name": "U8 Fall season",
+          "detail": "Fall; dates not shown on the listing page",
+          "source": "https://haywardhawksfhc.playbookapi.com/programs/register/"
+        },
+        {
+          "name": "U12 Fall season",
+          "detail": "Fall; dates not shown on the listing page",
+          "source": "https://haywardhawksfhc.playbookapi.com/programs/register/"
+        },
+        {
+          "name": "U14-16 Fall season",
+          "detail": "Sept 1 - Dec 31, 2026; no age restriction shown",
+          "source": "https://haywardhawksfhc.playbookapi.com/programs/more_info/club/55889/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://haywardhawksfhc.playbookapi.com/programs/register/",
+          "what": "Club's Playbook registration site (page title Hayward Hawks FHC): lists Hayward Hawks U12, U14-16 and U8 Fall season programs"
+        },
+        {
+          "url": "https://haywardhawksfhc.playbookapi.com/programs/more_info/club/55889/",
+          "what": "U14-16 Fall season program page: 09/01/2026 - 12/31/2026, location TBA"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/",
+          "what": "Fall 2026 NorCal newsletter listing 'Hayward Hawks: U8-U19, weekends through December'"
+        },
+        {
+          "url": "https://www.bizprofile.net/ca/fremont/hayward-hawks-field-hockey",
+          "what": "California filing summary: nonprofit public benefit corporation filed Sept 27, 2021, Fremont, status Active"
+        },
+        {
+          "url": "https://www.usafieldhockey.com/news/2024/april/11/growing-boys-field-hockey-in-the-east-bay",
+          "what": "2024 USA Field Hockey article describing the club and a practice at Irvington Community Park, Fremont"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "lions",
+      "name": "Lions Hockey Club",
+      "shortName": "Lions",
+      "aliases": [
+        "Lions Field Hockey",
+        "Lions Field Hockey Club",
+        "Lions Hockey",
+        "USA XVI Field Hockey Academy"
+      ],
+      "website": "https://lionshockey.club/",
+      "city": "Fremont",
+      "region": "east-bay",
+      "youth": true,
+      "description": "Fremont nonprofit field hockey club for K-12 girls and boys, with U-10, U-12 and U-14 team sign-ups and Sunday practices at Irvington Community Park.",
+      "founded": 2005,
+      "programs": [
+        {
+          "name": "U-10",
+          "detail": "Team sign-up listed on the home page; girls and boys; no season dates posted",
+          "source": "https://lionshockey.club/"
+        },
+        {
+          "name": "U-12",
+          "detail": "Team sign-up listed on the home page; girls and boys; no season dates posted",
+          "source": "https://lionshockey.club/"
+        },
+        {
+          "name": "U-14",
+          "detail": "Team sign-up listed on the home page; girls and boys; no season dates posted",
+          "source": "https://lionshockey.club/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://lionshockey.club/",
+          "what": "Home page: U-10, U-12 and U-14 team sign-ups, Sunday 1:00-3:00 pm practice at Irvington Community Park Turf Field, Fremont; K-12 program text"
+        },
+        {
+          "url": "https://lionshockey.club/index.php/1-2/",
+          "what": "About page: founded in 2005, 501(c)(3) nonprofit, K-12 program, strongest teams U10/U12/U14"
+        },
+        {
+          "url": "https://www.ncfha.org/youth",
+          "what": "NCFHA youth club directory entry for Lions Hockey Club, Fremont, CA"
+        },
+        {
+          "url": "https://lionshockey.club/wp-sitemap-posts-page-1.xml",
+          "what": "Site page list with last-modified dates (home page 2024-03-13, other pages 2024-01-19)"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/tournaments.html",
+          "what": "NorCal Impact Spring 2026 schedule listing a Lions 7v7 Championship Tourney at Irvington High School, Fremont (date TBD)"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "golden-gate-rippers",
+      "name": "Golden Gate Rippers",
+      "shortName": "Rippers",
+      "aliases": [
+        "Golden Gate Rippers Field Hockey Club",
+        "Golden Gate Rippers Field Hockey",
+        "Rippers Field Hockey",
+        "Golden Gate Lacrosse Club"
+      ],
+      "website": "https://www.goldengaterippers.com/",
+      "city": "Mill Valley",
+      "region": "marin",
+      "youth": true,
+      "description": "Marin County club for grades K-12 offering field hockey in fall (K-8 only), winter, spring and summer, with practices mainly on the turf field at Redwood High School.",
+      "founded": 2019,
+      "programs": [
+        {
+          "name": "Fall K-8 season",
+          "detail": "Fall 2026: Saturdays Sep 12 to Nov 13, 2026; grades K-4 and 5-8; all skill levels; high schoolers are in their school seasons",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/fall-season"
+        },
+        {
+          "name": "Winter skills clinic",
+          "detail": "Grades K-12; most recent posted clinic is 2025-26 (six sessions, Dec 6, 2025 to Jan 24, 2026); no 2026-27 dates posted",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/winter-skills"
+        },
+        {
+          "name": "Spring club season",
+          "detail": "Spring 2026 (most recent posted): Sundays Feb 1 to May 10, 2026; grades K-4, 5-8 and 9-12; teams tiered Blue and Red by ability, level and graduation year, not grade-pure",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/spring-season"
+        },
+        {
+          "name": "Weekday spring skills practices and goalie clinic",
+          "detail": "Spring 2026: small-group weekday sessions for grades K-4, 5-8 and 9-12, plus a weekday goalie clinic",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/spring-season"
+        },
+        {
+          "name": "High school extra hitting and shooting session",
+          "detail": "Spring 2026: Sundays for grades 9-12, before team practice",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/spring-season"
+        },
+        {
+          "name": "Summer camps",
+          "detail": "Summer 2026: July weekend scrimmage camps for incoming grades 6-10, weekday camps for girls K-8 run with a lacrosse partner, and an August camp for incoming grades 1-12",
+          "source": "https://www.goldengaterippers.com/content/field-hockey/summer-camps"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.goldengaterippers.com/",
+          "what": "Home page: club name, Marin County, Mill Valley office address, site titled Golden Gate Lacrosse Club"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey",
+          "what": "Field hockey overview: established 2019, K-12, program list"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/about-us",
+          "what": "About: started 2017 as a lacrosse club, field hockey added 2019, teams tiered and not grade-pure"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/fall-season",
+          "what": "Fall 2026 season dates, grades and location"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/spring-season",
+          "what": "Spring 2026 season, Blue and Red teams, weekday sessions"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/winter-skills",
+          "what": "2025-26 winter skills clinic"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "htc",
+      "name": "HTC Field Hockey Club",
+      "shortName": "HTC",
+      "aliases": [
+        "HTC Field Hockey",
+        "HTC California",
+        "HTC-CA",
+        "HTC CA",
+        "HTC High Performance",
+        "HTC (High Performance )"
+      ],
+      "website": "https://www.htcfieldhockey.com/",
+      "city": "Madison, CT (HTC California trains in La Jolla, CA)",
+      "region": "elsewhere",
+      "youth": true,
+      "description": "Connecticut-based club with programs in several states; HTC California trains grades 6-12 (U14, U16, U19) in La Jolla and Chula Vista, plus a tryout-only High Performance group.",
+      "founded": 2009,
+      "programs": [
+        {
+          "name": "HTC California Club (U14/U16/U19)",
+          "detail": "Grades 6-12, no tryout; Tue/Thu evenings at The Bishop's School, La Jolla; winter, spring and summer 2026 sessions",
+          "source": "https://www.htcfieldhockey.com/club/springseason2026/"
+        },
+        {
+          "name": "HTC California High Performance",
+          "detail": "Tryout and invitation required, year-round; Mon/Wed at The Bishop's School and weekends in Chula Vista or La Jolla; winter and spring 2026",
+          "source": "https://www.htcfieldhockey.com/club/hpwinterseason2026/"
+        },
+        {
+          "name": "U19 Black",
+          "detail": "High Performance training team listed for winter 2026",
+          "source": "https://www.htcfieldhockey.com/club/hpwinterseason2026/"
+        },
+        {
+          "name": "U16 Royal Blue",
+          "detail": "High Performance training team listed for winter 2026",
+          "source": "https://www.htcfieldhockey.com/club/hpwinterseason2026/"
+        },
+        {
+          "name": "U16/U19 Tigers",
+          "detail": "High Performance training team (U16 and U19 combined) listed for winter 2026",
+          "source": "https://www.htcfieldhockey.com/club/hpwinterseason2026/"
+        },
+        {
+          "name": "Summer 2026 Club and High Performance/College Training",
+          "detail": "June 16-July 23, 2026 at The Bishop's School; club for U14/U16/U19, High Performance and college training by evaluation",
+          "source": "https://www.htcfieldhockey.com/club/htc-california-summer-club-2026-the-bishops-school-site-june-july/"
+        },
+        {
+          "name": "HTC San Diego Fall Club Season 2026",
+          "detail": "Sept 15-Oct 29, 2026, Tue/Thu at The Bishop's School; fundamentals for grades 6-8 and high schoolers not in a fall high school season",
+          "source": "https://www.htcfieldhockey.com/club/htc-san-diego-fall-club/"
+        },
+        {
+          "name": "HTC-CA Youth Fall Clinic 2026",
+          "detail": "Boys and girls in grades K-5; Wednesdays Sept 16-Oct 21, 2026 at The Bishop's School",
+          "source": "https://www.htcfieldhockey.com/events/2026-htc-ca-youth-fall-clinic/"
+        }
+      ],
+      "rosterPages": [
+        "https://nfhca.sportsrecruits.com/organization/htcfieldhockey",
+        "https://nfhca.sportsrecruits.com/organization/htcfieldhockey/htc_california",
+        "https://nfhca.sportsrecruits.com/organization/htcfieldhockey/htc_east_coast"
+      ],
+      "sources": [
+        {
+          "url": "https://www.htcfieldhockey.com/about/",
+          "what": "About page: club owner's resume lists HTC Field Hockey Club 2009-present; multiple training sites, athletes from 5 states"
+        },
+        {
+          "url": "https://www.htcfieldhockey.com/club/htc-san-diego-fall-club/",
+          "what": "HTC San Diego Fall Season 2026: dates, eligibility, venue"
+        },
+        {
+          "url": "https://www.htcfieldhockey.com/club/springseason2026/",
+          "what": "HTC California Club Spring Season 2026: grades 6-12, U14/U16/U19, no tryout"
+        },
+        {
+          "url": "https://www.htcfieldhockey.com/club/hpwinterseason2026/",
+          "what": "HTC California High Performance Winter Season 2026: tryout and invitation, training teams, venues"
+        },
+        {
+          "url": "https://www.htcfieldhockey.com/club/",
+          "what": "Club Information and FAQ page: site list including HTC San Diego at the Chula Vista Elite Athlete Training Center (page text labeled 2023/2024)"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/htcfieldhockey",
+          "what": "SportsRecruits organization page: Madison, Connecticut; teams HTC - East Coast and HTC - California with athlete rosters"
+        }
+      ],
+      "checkedOn": "2026-10-03"
+    }
+  ],
+  "affiliations": [
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "a1861648-3e4b-469b-ac73-01011a712330",
+      "fullName": "Caitlyn Hughes",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/caitlyn_hughes4",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Midfield, Forward • San Francisco Youth Field Hockey Club • Burlingame, 11v11 Roster Member",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Caitlyn Hughes, 2028 #36, Midfield, Forward",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Two independent pages meet the rule: the Stick Together 2026-07-08 roster of the U16 SF Hawks (the SF Youth Field Hockey Club's Hawks) names Caitlyn Hughes, St. Ignatius '28, and her own SportsRecruits profile caitlyn_hughes4 lists San Francisco Youth Field Hockey Club, class 2028, with St. Ignatius varsity in her bio; the club's U19 Hawks Blue team page and current-players list agree. Note the profile that lists the club is caitlyn_hughes4, not the linked caitlyn_hughes3 (St. Ignatius 2028, no club); she also appears on the U16 NCC roster."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "98db9697-092f-4c09-a01a-9189d82330c7",
+      "fullName": "Clara Brunello",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/clara_brunello2",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Midfield • San Francisco Youth Field Hockey Club • Burlingame, 11v11 Roster Member",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Clara Brunello, 2028 #56, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Stick Together 2026-07-08 roster of the U16 SF Hawks names Clara Brunello, St. Ignatius '28, which agrees with grade 11; her own (linked) SportsRecruits profile lists San Francisco Youth Field Hockey Club with class 2028, and the club's U19 Hawks Blue team page lists her at #56. Club identity is confirmed on sfyouthfieldhockey.com (Hawks is its team name; its U16 squad qualified for the 2026 National Club Championships)."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "8a84bf39-96a1-49dc-9127-738923b07ee2",
+      "fullName": "Dylan Powell",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/dylan_powell3",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Forward • St. Ignatius College Preparatory Girls Field Hockey • San Francisco, CA • I’ve been playing field hockey for four years and am currently a forward for both the San Francisco Hawks club team and Saint Ignatius College Prep varsity team.",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/st-ignatius-college-preparatory1/dylan-powell41",
+          "kind": "ncsa",
+          "quote": "Club: San Francisco Hawks",
+          "statedSchool": "St Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/player-accomplishments/",
+          "kind": "club-site",
+          "quote": "Dylan Powell Scholar of Distinction",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own linked SportsRecruits field hockey profile says she is currently a forward for the San Francisco Hawks club team and Saint Ignatius varsity, class 2027, San Francisco; NCSA (curl hit Cloudflare, re-read via WebFetch) lists Club: San Francisco Hawks, and the club's own accomplishments page names Dylan Powell. The profile carries no date, so status is current only under the live-profile rule and asOf is null; she is not on the club's U19 Hawks Blue or current-players lists, which are partial."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "291464ef-7812-41ab-920b-bcb0e341e772",
+      "fullName": "Gianna Monge",
+      "club": "sf-hawks",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Gianna Monge Forward",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/gianna_monge4",
+          "kind": "sportsrecruits",
+          "quote": "2029 • Forward • St. Ignatius College Preparatory Girls Field Hockey • Daly City, California",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Stick Together 2026-07-08 roster of the U16 SF Hawks names Gianna Monge, St. Ignatius '29 (agrees with grade 10), which meets the rule by itself; the club's own current-players page lists her under Class of 2029 as Forward, and her linked SportsRecruits profile (St. Ignatius, 2029, Forward, Daly City) matches. Her profile does not name the club, so the affiliation rests on the news roster plus the club page."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
+      "fullName": "Gigi Colant",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/gabriella_colant4",
+          "kind": "sportsrecruits",
+          "quote": "My name is Gigi Colant. I am a dedicated and passionate soccer player for San Francisco Glens Academy Girls Academy 09. Currently I am a Junior at Saint Ignatius College Prep School, Class of 2027, in San Francisco, Ca.",
+          "statedSchool": "Saint Ignatius College Prep School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.hudl.com/profile/23576483",
+          "kind": "hudl",
+          "quote": "Watch Gigi Colant's videos and highlights on Hudl. More info: St. Ignatius College Prep - Women's Soccer Varsity / D / Class of 2027 / San Francisco, CA",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits profile (a soccer page, not the linked NFHCA one) says \"My name is Gigi Colant\", names Saint Ignatius, Class of 2027, San Francisco, and says she plays with SF Youth Hawks Field Hockey, which meets (a)(b)(c); it was written as a junior (2025-26). Medium because that single self-reported sentence in a soccer profile is the only source: the NFHCA field hockey profiles (gabriella_colant3, _5) name no club and she is on none of the club's pages."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "ef619b65-0ca7-48ba-97da-8e3b4411632a",
+      "fullName": "Hazel Stang",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/hazel_stang",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Defense, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA",
+          "statedSchool": "St Ignatius College Preparatory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Hazel Stang | St. Ignatius '28",
+          "statedSchool": "St. Ignatius",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Hazel Stang, 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey",
+          "kind": "sportsrecruits",
+          "quote": "Hazel Stang, 2028 #22, Defense, Midfield",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile (the page the site already links) lists San Francisco Youth Field Hockey Club, class 2028, San Francisco, and her St. Ignatius varsity highlights; the SI team page lists the same profile with jersey #22, matching the MaxPreps roster. The Stick Together article of 2026-07-08 independently puts 'Hazel Stang | St. Ignatius '28' on the roster of U16 SF Hawks at the 2026 National Club Championships, and the club's U19 Hawks Blue page lists her as 2028."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "fullName": "Maggie Magnano",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/margaret_magnano",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Defense, Midfield • San Francisco Youth Field Hockey Club • San Rafael, CA",
+          "statedSchool": "St. Ignatius Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey",
+          "kind": "sportsrecruits",
+          "quote": "Margaret Magnano, 2027 #7, Defense, Midfield",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/st-ignatius-college-preparatory1/margaret-magano",
+          "kind": "ncsa",
+          "quote": "Club SF Hawks",
+          "statedSchool": "St Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Margaret Magnano, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits profile (the linked one, under legal name Margaret) lists San Francisco Youth Field Hockey Club, class 2027, and 'Varsity Starter, St. Ignatius Prep'; the St. Ignatius team page lists this same profile with jersey #7 and defense, matching 'Maggie Magnano' on the MaxPreps roster. NCSA ('Maggie Magnano '27', St Ignatius College Preparatory, Club SF Hawks) and the club's U19 Hawks Blue page agree. NCSA's older '2027 SF Hawks (U16s)' entry is stale, so U19 Hawks Blue is used for the team."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
+      "fullName": "Olivia Van De Braak",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/olivia_van_de_braak1",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Defense, Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Olivia van de Braak | St. Ignatius '28",
+          "statedSchool": "St. Ignatius",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://maxfh.longstreth.com/national-player-invitational-2028/",
+          "kind": "event",
+          "quote": "Olivia Van De Braak CA St Ignatius College Prep San Francisco Youth FHC",
+          "statedSchool": "St Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": "2025-05-20"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Olivia Van de Braak, 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile (the linked one) lists San Francisco Youth Field Hockey Club and class 2028, and its bio says 'I play for St. Ignatius College Prep and San Francisco Hawks'. The Stick Together article of 2026-07-08 lists 'Olivia van de Braak | St. Ignatius '28' on the U16 SF Hawks 2026 National Club Championships roster. The MAX Class of 2028 Top 100 invitational list (event 2025-05-20) and the club's U19 Hawks Blue page agree. The MAX page is dated before Aug 2025, so it is only corroboration."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "e1fceb71-79e3-46cf-80e6-c3de7ff7ad89",
+      "fullName": "Scarlett Gammack",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/scarlett_gammack",
+          "kind": "sportsrecruits",
+          "quote": "Upon moving back to the states, she joined the SF Hawks, and began playing for USA Field Hockey.",
+          "statedSchool": "St. Ignatius",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2030 Mimi Bakker Back | #3 Scarlett Gammack Forward | #71",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/stignatiuscollegepreparatorygirlsfieldhockey",
+          "kind": "sportsrecruits",
+          "quote": "Scarlett Gammack, 2030 #9",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "A second SportsRecruits profile of hers (scarlett_gammack, not the linked scarlett_gammack2) shows class 2030, San Francisco, Forward, says she joined the SF Hawks, and says she will join the St. Ignatius Wildcats coached by Michelle Van De Braak. The club's Current Players list shows her under Class of 2030 as a Forward, and the St. Ignatius team page lists her as 2030 #9 (roster jersey 9, position F). The school mention is future tense because the bio was written before she started 9th grade, and the club page has no date or school. The profile and club page give no team, so clubTeam is null"
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "e79e55f0-cfce-4f33-bb37-1ea0e61ddd7f",
+      "fullName": "Stella Kwok",
+      "club": "sf-hawks",
+      "clubTeam": "U16 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Stella Kwok | St. Ignatius '29",
+          "statedSchool": "St. Ignatius",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Stella Kwok, 2029 #32, Midfield, Defense",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/stella_kwok",
+          "kind": "sportsrecruits",
+          "quote": "2029 • Midfield, Defense • San Francisco Youth Field Hockey Club • San Mateo, CA",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/stella-kwok/bio/?careerid=8j7vhsvu05377",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams: SF Hawks · U14 · Field Hockey · joined 2023 · San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-09-30"
+        }
+      ],
+      "basis": "The Stick Together article (2026-07-08), captioned 'U16 SF Hawks at 2026 National Club Championships', lists 'Stella Kwok | St. Ignatius '29', which meets (a)(b)(c) alone (name, SF Hawks field hockey club, school and class 2029 = grade 10). The club's SportsRecruits U16 Hawks Blue roster ('Stella Kwok, 2029 #32') and the profile stella_kwok (2029, club, San Mateo, bio 'My club team, SF Hawks') agree. Caveat: the linked profile stella_kwok3 shows school and 2029 but no club, and stella_kwok (the one that names the club) does not name the school. It is the same player (one Kwok '29 on each Hawks"
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "274fec66-4428-4eaf-b1b4-c20c5c729cc2",
+      "fullName": "Stella Strain",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2027 Paola Brouwers Forward | #44 Rachel Flynn Back | #84 Violet Hesslein Midfield | #26 Eva Layton GK | #4 Storey lewis Forward | #6 Maggie Magnano Back | #19 Stella Strain GK | #47",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Stella Strain (GK, #47) under the 'Class of 2027' heading, which agrees with grade 12, and the club is based in San Francisco, so (c) is met by class year plus NorCal club. The page has no school and no date; it carries the 2027-2031 class groups and images uploaded 2026-01 to 2026-03, so it is the live 2025-26/2026-27 roster. No second page ties her to the club: the SportsRecruits stella_strain profile and Hudl show 2027 at St. Ignatius but no club. Medium confidence."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
+      "fullName": "Storey Lewis",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/storey_lewis3",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA • Committed to Colgate University • I have played field hockey for 8 years with my club in San Francisco, California and attend Saint Ignatius College Preparatory School.",
+          "statedSchool": "Saint Ignatius College Preparatory School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/st-ignatius-college-preparatory1/storey-lewis",
+          "kind": "ncsa",
+          "quote": "2026 San Francisco Hawks (U18)",
+          "statedSchool": "St Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Storey Lewis, 2027 #6, Forward, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2027 Paola Brouwers Forward | #44 Rachel Flynn Back | #84 Violet Hesslein Midfield | #26 Eva Layton GK | #4 Storey lewis Forward | #6",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own linked SportsRecruits profile (2027, club, San Francisco, bio names Saint Ignatius) meets (a)(b)(c) alone. Her NCSA profile ('Storey Lewis '27', St Ignatius College Preparatory, San Francisco; club history '2026 San Francisco Hawks (U18)'), the club's U19 Hawks Blue roster and the club's Current Players page (Class of 2027) all agree. The NCSA 'Club' field reads 'Nexus Championship', which is an event, so the NCSA club-history lines are the evidence."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "db47b519-3041-42d1-92b7-88cd0f6094dc",
+      "fullName": "Violet Hesslein",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2027 Paola Brouwers Forward | #44 Rachel Flynn Back | #84 Violet Hesslein Midfield | #26",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Violet Hesslein (Midfield, #26) under 'Class of 2027', which agrees with grade 12, and the club is based in San Francisco, so (c) is met by class year plus NorCal club. The page has no school and no date; it carries the 2027-2031 class groups and images uploaded 2026-01 to 2026-03, so it is the live roster. The linked SportsRecruits violet_hesslein and Hudl pages show 2027 at St. Ignatius but name no club. A search snippet that mentioned her number and school came from sfyouthfieldhockey.com/player"
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "63bbce23-3e4d-4944-a855-4f4af401e4e6",
+      "fullName": "Abby Scharrenberg",
+      "club": "norcal-impact",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/abby-scharrenberg",
+          "kind": "ncsa",
+          "quote": "Abby Scharrenberg '29 Recruiting Profile",
+          "statedSchool": "Saint Francis High School (Mountain View)",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile names her, the school (Saint Francis High School, Mountain View), class '29 (grade 10) and the club ('Club: NorCal Impact', '2026 NorCal Impact (U16 )', RCC selection through the club), so it meets (a)(b)(c) alone. It is the only page: the club's directory and other pages do not list her, and the linked profiles list is empty. It is self-reported and the page has no date. The 2026 club entry and a 2026-08 Junior Olympics event place it in the 2025-26 season."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
+      "fullName": "Carolyn Cordoni",
+      "club": "norcal-impact",
+      "clubTeam": "U19",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/carolyn-cordoni.html",
+          "kind": "club-site",
+          "quote": "Name: Carolyn Cordoni Graduation Year: Class of 2027 Position(s): Forward, Midfield High School: St. Francis High School Club: NorCal Impact",
+          "statedSchool": "St. Francis High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/carolyn-cordoni",
+          "kind": "ncsa",
+          "quote": "Carolyn Cordoni '27 Recruiting Profile",
+          "statedSchool": "Saint Francis High School (Mountain View)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The club's own player profile names her, 'Class of 2027', 'St. Francis High School' and 'Club: NorCal Impact', and lists 2026 U19 events with the club. Her NCSA profile independently gives '27, Saint Francis High School (Mountain View) and NorCal Impact club history (2025 U16 and U19, RCC U19 in May 2026). Class 2027 agrees with grade 12. The club page does not give the city, but NCSA does. The linked SportsRecruits profile (2027, San Jose, Saint Francis High School) names no club."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
+      "fullName": "Evie Ferrini",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/evie-ferrini.html",
+          "kind": "club-site",
+          "quote": "Name: Genevieve (Evie) Ferrini Graduation Year: Class of 2027 Position(s): Midfield High School: St. Francis High School Club: NorCal Impact",
+          "statedSchool": "St. Francis High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Junior of the Year - Evie Ferrini, St Francis",
+          "statedSchool": "St Francis",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/player-directory.html",
+          "kind": "club-site",
+          "quote": "Class of 2027 Genevieve (Evie) Ferrini Graduation Year: 2027 Position(s): Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/genevieve-evie-ferrini",
+          "kind": "ncsa",
+          "quote": "Genevieve (Evie) Ferrini '27 Recruiting Profile Saint Francis High School (Mountain View) Mountain View, CA Field Hockey",
+          "statedSchool": "Saint Francis High School (Mountain View)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf",
+          "kind": "other",
+          "quote": "Junior of the Year: St Francis- Genevieve Ferrini",
+          "statedSchool": "St Francis",
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The club's own player profile names her (as Genevieve (Evie) Ferrini), St. Francis High School, Class of 2027 (agrees with grade 12) and Club: NorCal Impact. The club's 2026-01-29 blog lists her as a member as of Fall 2025, and the SCVAL 2025-26 all-league sheet and the NCSA profile (Saint Francis HS, Mountain View, '27) confirm it is the same Saint Francis junior-of-2025-26 player. The profile is undated, so currency rests on the dated blog and the live player directory."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "fullName": "Melanie Henderson",
+      "club": "fly-fhc",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2019-2022",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/melanie-henderson.html",
+          "kind": "club-site",
+          "quote": "2022 - current NorCal Impact FH Club 2019-2022 San Jose Fly FH Club 2015-2018 Lightning Field Hockey Club",
+          "statedSchool": "St Francis High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/melanie_henderson4",
+          "kind": "sportsrecruits",
+          "quote": "Watch Melanie's recruiting video • 2028 • Forward, Midfield • Los Altos Hills, CA • I am a Junior at Saint Francis High School in Mountain View, California.",
+          "statedSchool": "Saint Francis High School in Mountain View, California",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her player profile on the NorCal Impact site (which names St Francis High School and Class of 2028, agreeing with grade 11) lists '2019-2022 San Jose Fly FH Club' under 'Other Field Hockey', which matches the Fly alias and Los Altos area. The years end in 2022 and her current club is NorCal Impact, so this is a past affiliation only and must not be shown as her current club. It rests on one page, though the same person is confirmed by her SportsRecruits profile."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "fullName": "Melanie Henderson",
+      "club": "lightning",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2015-2018",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/melanie-henderson.html",
+          "kind": "club-site",
+          "quote": "2022 - current NorCal Impact FH Club 2019-2022 San Jose Fly FH Club 2015-2018 Lightning Field Hockey Club",
+          "statedSchool": "St Francis High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/melanie_henderson4",
+          "kind": "sportsrecruits",
+          "quote": "Watch Melanie's recruiting video • 2028 • Forward, Midfield • Los Altos Hills, CA • I am a Junior at Saint Francis High School in Mountain View, California.",
+          "statedSchool": "Saint Francis High School in Mountain View, California",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her NorCal Impact player profile (St Francis High School, Class of 2028) lists '2015-2018 Lightning Field Hockey Club', a field hockey club. The page gives no location for it, so matching it to Lightning Youth Field Hockey (Los Altos Hills, which calls itself the only parent-led club in the Bay Area, and her SportsRecruits hometown is Los Altos Hills) is an inference. It is a past affiliation from 2015-2018 on a single page, so confidence is medium, not high."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "fullName": "Melanie Henderson",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/melanie-henderson.html",
+          "kind": "club-site",
+          "quote": "Name: Melanie Henderson Graduation Year: Class of 2028 Position(s): Midfield, Forward High School: St Francis High School Club: NorCal Impact",
+          "statedSchool": "St Francis High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/player-directory.html",
+          "kind": "club-site",
+          "quote": "Melanie Henderson Graduation Year: 2028 Position(s): Midfield, Forward",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/melanie_henderson4",
+          "kind": "sportsrecruits",
+          "quote": "Watch Melanie's recruiting video • 2028 • Forward, Midfield • Los Altos Hills, CA • I am a Junior at Saint Francis High School in Mountain View, California.",
+          "statedSchool": "Saint Francis High School in Mountain View, California",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/athletes/melanie-henderson/bio/?careerid=3jq51nfbr2uee",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams: NorCal Impact · N/A · Field Hockey · joined 2026 · San Jose, CA",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-09-23"
+        }
+      ],
+      "basis": "NorCal Impact's own player profile names Melanie Henderson, St Francis High School, Class of 2028 (agrees with grade 11), Club: NorCal Impact and '2022 - current'; the profile also lists 2025 and 2025-2026 entries and she is in the club's live player directory. Her SportsRecruits profile (2028, Junior at Saint Francis HS, Mountain View) confirms the same person. The profile is undated, so asOf is the 2025-26 season shown by its latest entries."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
+      "fullName": "Quinley McCarroll",
+      "club": "fly-fhc",
+      "clubTeam": "U14",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-altos/los-altos-high-school1/quinley-mccarroll",
+          "kind": "ncsa",
+          "quote": "Quinley McCarroll '29 Recruiting Profile Los Altos High School Los Altos, CA Field Hockey … 2026 Norcal Impact (U16/U19) 2025 Norcal Impact Field Hockey (U16) 2024 San Jose Fly (U14) 2023 San Jose Fly (U14/U12) 2022 San Jose Fly (CA) (U12)",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://flyfhc.com/about-fly/",
+          "kind": "club-site",
+          "quote": "Fly FHC, formerly known as San Jose Fly, was established in 2001 by Archbishop Mitty Head Coach,",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf",
+          "kind": "other",
+          "quote": "Freshman of the Year: Los Altos- Quinley McCarroll",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "The player's own NCSA profile (read by curl today) names Quinley McCarroll, Los Altos High School, class of 2029 (matches grade 10) and Los Altos, CA, and lists San Jose Fly seasons 2022-2024; San Jose Fly is Fly FHC per the club's about page. The affiliation is past only: the profile's current club is Norcal Impact (2026 U16/U19, 2025 U16), so it must not be shown as her current club."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
+      "fullName": "Quinley McCarroll",
+      "club": "norcal-impact",
+      "clubTeam": "U16/U19",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-altos/los-altos-high-school1/quinley-mccarroll",
+          "kind": "ncsa",
+          "quote": "Quinley McCarroll '29 Recruiting Profile Los Altos High School Los Altos, CA Field Hockey",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Freshman of the Year - Quinley McCarroll, Los Altos",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf",
+          "kind": "other",
+          "quote": "Freshman of the Year: Los Altos- Quinley McCarroll",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her NCSA profile names Quinley McCarroll '29 at Los Altos High School with 'Club: Norcal Impact' and '2026 Norcal Impact (U16/U19)', with no end date, and the club's 2026-01-29 blog lists her as a member as of Fall 2025. The unlinked NFHCA SportsRecruits page that says 2028 names no school or club and is not used. NCSA '29, the SCVAL 2025-26 Freshman of the Year award and the club blog all point to class of 2029, so the roster's grade 10 holds."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "54b3e7a5-82eb-4dd9-ba08-f876c5c49410",
+      "fullName": "Riya Mehrotra",
+      "club": "fly-fhc",
+      "clubTeam": "Black - Advanced",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-altos/los-altos-high-school1/riya-mehrotra",
+          "kind": "ncsa",
+          "quote": "Riya Mehrotra '27 Recruiting Profile Los Altos High School Los Altos, CA Field Hockey … Club San Jose Fly … 2025 San Jose Fly (Black - Advanced) 2024 San Jose Fly (Black - Advanced)",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://flyfhc.com/about-fly/",
+          "kind": "club-site",
+          "quote": "Fly FHC, formerly known as San Jose Fly, was established in 2001 by Archbishop Mitty Head Coach,",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf",
+          "kind": "other",
+          "quote": "Riya Mehrotra              Los Altos          GK                   11",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Her own NCSA profile (curl, HTTP 200, full HTML) names Riya Mehrotra, Los Altos High School, class of 2027, and lists San Jose Fly (Black - Advanced) as her club with no end date, so (a)(b)(c) are met on one page; San Jose Fly is Fly FHC per the club's about page. The SCVAL 2025-26 all-league sheet lists her as a Los Altos grade 11 goalkeeper, which agrees with class of 2027 (the roster grade is null). Status is current only under the live-profile-with-no-end-date rule: the latest club season listed is 2025 and the profile's only varsity entry is 2024, so it may be stale."
+    },
+    {
+      "teamSlug": "fremont",
+      "athleteId": "5e9a850d-4212-4931-89c3-d9a7c9bb884d",
+      "fullName": "Isabella Bjork",
+      "club": "fly-fhc",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/sunnyvale/fremont-high-school-sunnyvale/isabella-bjork2",
+          "kind": "ncsa",
+          "quote": "Isabella Bjork '28 Recruiting Profile Fremont High School (Sunnyvale) Sunnyvale, CA Field Hockey … Club San Jose Fly … 2026 San Jose Fly … Fly FHC 6v6 Tournament 3/06/26 to 3/08/26",
+          "statedSchool": "Fremont High School (Sunnyvale)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://flyfhc.com/about-fly/",
+          "kind": "club-site",
+          "quote": "Fly FHC, formerly known as San Jose Fly, was established in 2001 by Archbishop Mitty Head Coach,",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile (curl) names Isabella Bjork, Fremont High School (Sunnyvale), class of 2028 (agrees with roster grade 11), Sunnyvale CA, and lists Club San Jose Fly with a 2026 season and a March 2026 Fly FHC tournament, so it is current. San Jose Fly is the former name of Fly FHC per the club's about page."
+    },
+    {
+      "teamSlug": "cupertino",
+      "athleteId": "d62e8b1b-4c90-4ce5-9eea-0575eb0fb797",
+      "fullName": "Jaelyn Jensen",
+      "club": "lightning",
+      "clubTeam": "U16/U19 Girls",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/jaelyn-jensen/bio/?careerid=2l5nj0ls7qt88",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams | Lightning | U18 | Lightning Field Hockey | Field Hockey | Year Joined | 2023 | Location | Los Altos, CA",
+          "statedSchool": "Cupertino",
+          "statedClassYear": null,
+          "sourceDate": "2025-09-17"
+        },
+        {
+          "url": "https://www.lightningfieldhockey.org/roster/show/9155774?subseason=950528",
+          "kind": "club-site",
+          "quote": "U16/U19 Girls - 2025 Fall Season regular - Roster ... Jaelyn Jensen",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025 Fall Season"
+        }
+      ],
+      "basis": "I re-read the MaxPreps career bio today: it lists Cupertino Varsity Field Hockey and the club team Lightning / Lightning Field Hockey (sport Field Hockey, Los Altos CA, record created 2025-09-17, no end date). So it names the player, a field hockey club and the school. The club's own 2025 Fall (and 2025 Spring) U16/U19 Girls roster pages list the same name, and the MaxPreps sophomore year of 2024 fits roster grade 12."
+    },
+    {
+      "teamSlug": "homestead",
+      "athleteId": "d1ed916b-9d92-4a2d-b32e-b0e5cbe8fafa",
+      "fullName": "Gabrielle Moll",
+      "club": "fly-fhc",
+      "clubTeam": "U19 (Advanced - Black)",
+      "status": "unknown",
+      "asOf": "2025-10-19",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/homestead-high-school2/gabrielle-moll",
+          "kind": "ncsa",
+          "quote": "Gabrielle Moll '27 Recruiting Profile Homestead High School Cupertino, CA Field Hockey See Full Profile College Coach? Log in to get contact info Club San Jose Fly",
+          "statedSchool": "Homestead High School",
+          "statedClassYear": 2027,
+          "sourceDate": "2025"
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/gabrielle-moll/bio/?careerid=elteingmoskcc",
+          "kind": "maxpreps-career",
+          "quote": "Teams | Homestead Varsity Field Hockey | Homestead JV Soccer | #17 | Club Teams | Advanced - Black | U19 | San Jose Fly",
+          "statedSchool": "Homestead",
+          "statedClassYear": null,
+          "sourceDate": "2025-10-19"
+        }
+      ],
+      "basis": "Two independent profiles name her, Homestead and the field hockey club San Jose Fly (=Fly FHC): NCSA ('27, Homestead, Cupertino; club seasons '2025 San Jose Fly (U16, U19)' back to 2019) and MaxPreps (club record sport Field Hockey, U19, flyfhc.com, joined 2025, dated 2025-10-19). Status is unknown, not current, and confidence medium, because her SportsRecruits profile (nfhca.sportsrecruits.com/athlete/gabrielle_moll, modified 2026-10-03, class 2027) now lists 'Cowtown Field Hockey' as her club, and the Cowtown SportsRecruits organization page lists her on its U19 team. Cowtown is a Fort Worth"
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
+      "fullName": "Bridget Schilb",
+      "club": "fly-fhc",
+      "clubTeam": "travel team",
+      "status": "past",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/bridget-schilb.html",
+          "kind": "club-site",
+          "quote": "OTHER Sports/Clubs Archbishop Mitty Women’s Soccer Los Gatos United Soccer Club ECNL-RL 2023 Fly Field Hockey Club travel team",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own player profile (hosted by NorCal Impact; re-read by curl) states Name: Bridget Schilb, Graduation Year: Class of 2027 and High School: Archbishop Mitty High School, and lists '2023 Fly Field Hockey Club travel team' under other clubs. It is a field hockey club (flyfhc.com, Los Altos, confirmed). It is a dated 2023 entry beside her current NorCal Impact membership, so status is past. Publish it only as a past affiliation."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
+      "fullName": "Bridget Schilb",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/bridget-schilb.html",
+          "kind": "club-site",
+          "quote": "Name: Bridget Schilb Graduation Year: Class of 2027 Position(s): Midfielder High School: Archbishop Mitty High School #4 Club: NorCal Impact #89",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/bridget_schilb2",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Midfield, Forward • San Jose, CA • I play for Norcal Impact as well as at Archbishop Mitty High School in San Jose, California.",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Bridget Schilb, Mitty",
+          "statedSchool": "Mitty",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        }
+      ],
+      "basis": "Both the club's own player profile and her own SportsRecruits profile (the site's existing linked profile) name Bridget Schilb, NorCal Impact and Archbishop Mitty, with class of 2027 matching roster grade 12. The club's 1/29/2026 blog lists her as a Mitty member as of Fall 2025. The profile lists 2025 Cal Cup and 2026 NXC selection with no end date, so it is current; the SR dateModified is a render timestamp shared by all profiles, so I did not use it as a date."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "7bdcdcb3-f704-47a8-a8ac-740429b27160",
+      "fullName": "Hana Mercado",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Freshman of the Year - Hana Mercado, Mitty",
+          "statedSchool": "Mitty",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        }
+      ],
+      "basis": "NorCal Impact's own blog post dated 1/29/2026 (re-read by curl) says its list recognizes club members as of Fall 2025 and names 'Hana Mercado, Mitty' as SCVAL El Camino Freshman of the Year. The repo's history-2025-26.json gives the same award as 'Hana Mercado, Midfield, Archbishop Mitty', which identifies the person. Her SportsRecruits profile (2029, rising sophomore at Archbishop Mitty) fits roster grade 10 but does not name a club, so I did not use it as club evidence. No class-year conflict; the club page names the school."
+    },
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "960cca5e-6fcb-4cae-a75b-cba717351145",
+      "fullName": "Hannah Niebuhr",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Hannah Niebuhr, Palo Alto",
+          "statedSchool": "Palo Alto",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        }
+      ],
+      "basis": "The NorCal Impact Field Hockey Club's own blog post (1/29/2026) lists Hannah Niebuhr, Palo Alto, under SCVAL El Camino First Team and says the list is of club members as of Fall 2025, so (a) name, (b) field hockey club and (c) the school are all on one first-hand page. The roster's Palo Alto and SCVAL El Camino match, and MaxPreps and the 2024 USA Field Hockey Junior NXC U-16 list place a Hannah Niebuhr of Palo Alto, CA in the same sport. I found no second source: the Impact player directory does not list her, and no recruiting profile turned up."
+    },
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "d51b181c-f926-43ae-a466-5254246e0123",
+      "fullName": "Yoyo Cai",
+      "club": "fly-fhc",
+      "clubTeam": "Green (U16)",
+      "status": "current",
+      "asOf": "2026-09-03",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/athletes/yoyo-cai/bio/?careerid=75ngogbavmei2",
+          "kind": "maxpreps-career",
+          "quote": "Class Year | Junior • 2028 | Teams | Palo Alto Varsity Field Hockey | #23 • F | Club Teams | Green | U16 | San Jose Fly",
+          "statedSchool": "Palo Alto",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-09-03"
+        },
+        {
+          "url": "https://flyfhc.com/",
+          "kind": "club-site",
+          "quote": "Copyright 2011-2026 San Jose Fly Field Hockey Club, LLC. All rights reserved.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The MaxPreps career bio for the same careerId as the roster row names the player (Yinuo (Yoyo) Cai), Palo Alto Varsity Field Hockey and Junior 2028, which matches grade 11. Its Club Teams entry is Green U16, San Jose Fly, sport Field Hockey, joined 2026, San Jose CA, with the embedded data last modified 2026-09-03 and no end date. flyfhc.com's footer names San Jose Fly Field Hockey Club, LLC, so San Jose Fly is Fly FHC. The club entry is user-entered on MaxPreps, and I found no second source."
+    },
+    {
+      "teamSlug": "lynbrook",
+      "athleteId": "2760b7f0-efef-4775-b8cb-f27fbea09b2f",
+      "fullName": "Junali Dutta",
+      "club": "norcal-impact",
+      "clubTeam": "NorCal Impact (Competitive)",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-jose/lynbrook-high-school1/junali-dutta",
+          "kind": "ncsa",
+          "quote": "Junali Dutta '28 Recruiting Profile | Lynbrook High School | San Jose, CA | Field Hockey",
+          "statedSchool": "Lynbrook High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/leaf-huynh.html",
+          "kind": "club-site",
+          "quote": "Leaf has been the owner and director of NorCal Impact since 2012.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile names her, Lynbrook High School and '28 (matches grade 11), and lists Club NorCal Impact. The NorCal Impact site confirms it is a field hockey club and that its owner and director is 'Leaf (Lifon) Huynh', matching the profile's club coach Lifon Huynh. The profile is live with 2026 events, so I mark it current under the live-profile rule. The only club season listed is 2024, and the profile and the Impact site carry no date, so asOf is null."
+    },
+    {
+      "teamSlug": "monta-vista",
+      "athleteId": "5496bf29-59e2-4284-8de2-6cc7b1260c04",
+      "fullName": "Ruhee Bhatnagar",
+      "club": "lightning",
+      "clubTeam": "U16/U19 Girls",
+      "status": "unknown",
+      "asOf": "2024-25",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/monte-vista-high-school-cupertino/ruhee-bhatnagar",
+          "kind": "ncsa",
+          "quote": "Ruhee Bhatnagar '27 Recruiting Profile | Monta Vista High School | Cupertino, CA | Field Hockey",
+          "statedSchool": "Monta Vista High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.lightningfieldhockey.org/roster/show/8889992?subseason=941165",
+          "kind": "club-site",
+          "quote": "U16/U19 Girls - 2025 Spring Season regular - Roster … Ruhee Bhatnagar",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile names her, Monta Vista High School, '27 (matches grade 12 and MaxPreps Senior 2027) and Cupertino CA, and lists Club Lightning Youth Field Hockey with U16/19 seasons and 2024 Cal Cup, Stanford 6's and UC Davis events. Lightning's own 2025 Spring U16/U19 Girls roster lists her name. Status is unknown rather than current: the profile looks stale (2024 seasons and events, JV 2023 only), the club roster is Spring 2025 (Jan-May 2025, before the August 2025 cutoff), and she is absent from both Fall 2025 girls rosters."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "293542d6-46b9-4771-ae2e-e7def72f338d",
+      "fullName": "Alex Pires",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2025-07-18",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "Depth was provided by Alex Pires, Bre Hahn, Colette Boyd, Emmie Mendez and Reese Dubenko.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/alex-pires/bio/?careerid=uuk3vpqs0sh33",
+          "kind": "maxpreps-career",
+          "quote": "Class Year Senior • 2027 Teams Christopher Varsity Field Hockey #4",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Gilroy Dispatch (2025-07-18) names Alex Pires in the Infinity field hockey U19 Cal Cup lineup. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher, set up by 'Christopher coach Dani Hemeon Perez' and 'Christopher's Alyssa Montejano'), so confidence is medium, not high. Pires is the only Pires in the article and on the Christopher roster, MaxPreps shows her at Christopher as a sophomore in 2024-25 and class of 2027, and no page shows her still with Infinity after August 2025 (status past)."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "fullName": "Alyssa Montejano",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2025-07-18",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "The two defenders in the back were Christopher’s Alyssa Montejano and Sophie Gonzalez.",
+          "statedSchool": "Christopher",
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/alyssa_montejano",
+          "kind": "sportsrecruits",
+          "quote": "Watch Alyssa's recruiting video • 2027 • Defense, Midfield • Gilroy, CA • Committed to Maryville University of Saint Louis • My name is Alyssa Montejano. I have been playing hockey since 7th grade. I have won u14 and u19 Cal Cup and many club tournaments like Berkeley and Stanford.",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Gilroy Dispatch (2025-07-18) names 'Christopher's Alyssa Montejano' in the Infinity (field hockey) U19 Cal Cup lineup, which meets (a)(b)(c) on its own. Her SportsRecruits profile agrees: class of 2027, Gilroy CA, Cal Cup titles (it does not name the club). The only dated evidence is before August 2025, so status is past."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "631164df-97ba-4f2c-bdfc-7bb2192af6af",
+      "fullName": "Colette Boyd",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "unknown",
+      "asOf": "2025-07-18",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/colette-boyd/bio/?careerid=01sae9h1btl88",
+          "kind": "maxpreps-career",
+          "quote": "Class Year Senior • 2027 Teams Christopher Varsity Field Hockey #13",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "The Cougars crew included Pires, Montejano, Boyd, Miura, Mendez, Dubenko, Hemeon and Gonzalez.",
+          "statedSchool": "Christopher (as \"Cougars\")",
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/colette_boyd",
+          "kind": "sportsrecruits",
+          "quote": "Review Colette's academic and athletic recruiting information • 2027 • Forward • Gilroy, CA",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own MaxPreps career bio names Colette Boyd, Christopher High School, class of 2027 (agrees with grade 12) and a Field Hockey club team 'Infinity' (U18, Morgan Hill CA, coach Dani Hemeon Perez, site infinitysportsclub.org/field-hockey), so (a)(b)(c) are met on one first-hand page. The 2025-07-18 Dispatch lists her with Infinity's U19 Cal Cup team. Status is unknown because the club entry was last modified 2023-09-12, with no end date and nothing dated after July 2025."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "187dd89e-dcbf-4881-aed0-d4e7560c8379",
+      "fullName": "Emmie Mendez",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2025-07-18",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "Depth was provided by Alex Pires, Bre Hahn, Colette Boyd, Emmie Mendez and Reese Dubenko.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/emmie-mendez/bio/?careerid=fsgsjgbh5v8l5",
+          "kind": "maxpreps-career",
+          "quote": "Class Year Senior • 2027 Teams Christopher Varsity Field Hockey #18",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Gilroy Dispatch (2025-07-18) names Emmie Mendez in the Infinity field hockey U19 Cal Cup lineup. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher, set up by 'Christopher coach Dani Hemeon Perez'), so confidence is medium, not high. The only other Christopher Mendez, Gabby, is a 2026-27 freshman and not a 2025 Cougar. Emmie's MaxPreps career shows Christopher HS, class of 2027, and nothing is dated after July 2025 (status past)."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "ae5cf369-a096-4234-a5ed-cd1cc00410cd",
+      "fullName": "Reese Dubenko",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2025-07-18",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "Depth was provided by Alex Pires, Bre Hahn, Colette Boyd, Emmie Mendez and Reese Dubenko.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/reese-dubenko/bio/?careerid=t2hi20q5u39ee",
+          "kind": "maxpreps-career",
+          "quote": "Class Year Senior • 2027 Teams Christopher Varsity Field Hockey #8",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Gilroy Dispatch (2025-07-18) names Reese Dubenko in the Infinity field hockey U19 Cal Cup lineup and quotes her on the winning goal. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher), so confidence is medium, not high. Her MaxPreps career shows Christopher since 2023 and class of 2027, the only Dubenko in recent years. Her SportsRecruits page is a bare '11v11 Roster Member' and adds nothing, and nothing is dated after July 2025 (status past)."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
+      "fullName": "Ryan Hemeon",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2025-07-18",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "Up front, Infinity featured Gilroy goal leader Kamryn Krejdovsky (18 goals last season), along with Allisa Schwender and Ryan Hemeon (12 goals last fall).",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "other",
+          "quote": "Kaitlyn Nguyen Christopher Midfield 12 Ryan Hemeon Christopher Forward 10 Aarna Sahu Prospect Defense 12",
+          "statedSchool": "Christopher",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-10"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/ryan_hemeon",
+          "kind": "sportsrecruits",
+          "quote": "Watch Ryan's recruiting video • 2028 • Forward, Midfield • Gilroy, CA •",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-10-03"
+        }
+      ],
+      "basis": "The Gilroy Dispatch (2025-07-18) names Ryan Hemeon in Infinity's U19 California Cup-winning lineup and groups her with the Cougars (Christopher) players. The school comes from the mascot grouping, not a literal 'Christopher High' beside her name, so confidence is medium. Class year 2028 (SportsRecruits, Gilroy CA) and grade 10 in fall 2025 (All-BVAL list, Christopher) agree with roster grade 11. The article is dated before Aug 2025 (2024-25 season) and no current roster lists her, so status is past. The SportsRecruits profile lists no club."
+    },
+    {
+      "teamSlug": "gilroy",
+      "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
+      "fullName": "Hailey Moncada",
+      "club": "htc",
+      "clubTeam": "High Performance",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/gilroy/gilroy-high-school/hailey-moncada",
+          "kind": "ncsa",
+          "quote": "Seasons of Club Experience 2 seasons 2025 HTC (High Performance ) 2024 Infinity Sports Club (advanced) Coach References High School Head Coach Adam Gemar Club Coach Dani Perez Club Director Mika Black",
+          "statedSchool": "Gilroy High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.htcfieldhockey.com/about/",
+          "kind": "club-site",
+          "quote": "Mika Black is currently serving as the California Regional Director for the organization. She joined HTC Field Hockey Club as a coach in 2016",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live NCSA field hockey profile ('Hailey Moncada '27 Recruiting Profile', Gilroy High School, Gilroy CA) shows 'Club HTC' and lists '2025 HTC (High Performance )' as the latest season with no end date. It also lists a June 2026 national club championship with 'Club- HTC Ca' and names Mika Black as club director, who is HTC California's regional director per htcfieldhockey.com. Class 2027 agrees with grade 12. HTC is a field hockey club, and the club is based outside NorCal."
+    },
+    {
+      "teamSlug": "gilroy",
+      "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
+      "fullName": "Hailey Moncada",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "past",
+      "asOf": "2024-25",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/gilroy/gilroy-high-school/hailey-moncada",
+          "kind": "ncsa",
+          "quote": "Seasons of Club Experience 2 seasons 2025 HTC (High Performance ) 2024 Infinity Sports Club (advanced) Coach References High School Head Coach Adam Gemar",
+          "statedSchool": "Gilroy High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "The midfield was led by Miura, Addison Tait and Hailey Moncada.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        }
+      ],
+      "basis": "Her own NCSA profile (Gilroy High School, class '27, Gilroy CA, agrees with grade 12) lists 'Infinity Sports Club' only for the 2024 season, and the Gilroy Dispatch (2025-07-18) puts her in Infinity's May 2025 U19 Cal Cup lineup with the Gilroy Mustangs. That is the 2024-25 club season. Her current club on the same profile is HTC, so Infinity is a past affiliation."
+    },
+    {
+      "teamSlug": "gilroy",
+      "athleteId": "8fa110eb-da5c-438b-bf37-07ba458707c6",
+      "fullName": "Lea Kim",
+      "club": "infinity",
+      "clubTeam": "U19",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/gilroy/gilroy-high-school/lea-kim3",
+          "kind": "ncsa",
+          "quote": "Seasons of Club Experience 5 seasons 2025 Infinity (Club ) 2024 Infinity Field Hockey Club (Club) 2023 Infinity Field Hockey Club (Club) 2022 Infinity (Club) 2021 Infinity (Club)",
+          "statedSchool": "Gilroy High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/lea-kim/bio/?careerid=12jln57iqrim6",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams Infinity U19 Infinity Field Hockey Field Hockey Year Joined 2022 Location Morgan Hill, CA",
+          "statedSchool": "Gilroy",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://gilroydispatch.com/gilroys-infinity-field-hockey-team-wins-california-cup/",
+          "kind": "news",
+          "quote": "Kim is a rising junior at Gilroy and her Mustang teammates on Infinity were Tait, Schwender, Lerma, Baza, Moncada and Krejdovsky.",
+          "statedSchool": "Gilroy High",
+          "statedClassYear": null,
+          "sourceDate": "2025-07-18"
+        }
+      ],
+      "basis": "Her own live NCSA field hockey profile ('Lea Kim '27 Recruiting Profile', Gilroy High School, Gilroy CA) lists Club Infinity with a 2025 season entry and no end date. Her MaxPreps bio (Gilroy, Senior 2027) lists the Infinity U19 field hockey club team. The Gilroy Dispatch (2025-07-18) calls her a rising junior at Gilroy playing in goal for Infinity. Class 2027 agrees with grade 12 across all three."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "e9fd8a7f-3218-4b0d-80d3-df58d9212540",
+      "fullName": "Alexis Marchak",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Second Team All League Alexis Marchak , Leigh",
+          "statedSchool": "Leigh",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "other",
+          "quote": "Second Team Name School Position Year Alexis Marchak Leigh Midfield 11",
+          "statedSchool": "Leigh",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-10"
+        }
+      ],
+      "basis": "NorCal Impact's own blog (2026-01-29) lists Alexis Marchak, Leigh, among the club members (as of Fall 2025) honored for 2025 high school awards. The page names her school (Leigh), and the BVAL Mt. Hamilton Second Team entry matches the roster player. A separate 2025 All-BVAL list shows her as a junior at Leigh, which agrees with grade 12 now. No other page was found to corroborate it, and the blog gives no club team or class year."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "03bb6a58-9af8-4d16-998f-e7e29f4125ea",
+      "fullName": "Clara Froemming",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "we take a brief look back to the past high school season to recognize many of our members (as of Fall 2025) on their outstanding performances at their respective high schools.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/congratulations-to-club-players-on-high-school-post-season-honors",
+          "kind": "club-site",
+          "quote": "Clara Froemming, Leigh",
+          "statedSchool": "Leigh",
+          "statedClassYear": null,
+          "sourceDate": "2025-01-13"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "news",
+          "quote": "Clara Froemming Leigh Defense 11",
+          "statedSchool": "Leigh",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-09"
+        }
+      ],
+      "basis": "NorCal Impact's own blog (1/29/2026, page title 'NorCal Impact Field Hockey Club') says the list is of its members as of Fall 2025 and names 'Clara Froemming, Leigh'; the club's 1/13/2025 post lists her again, so (a) name, (b) field hockey club and (c) school Leigh are met by a first-hand page. Stick Together's 2025 All-BVAL list shows the same name at Leigh as grade 11 in 2025-26, which agrees with roster grade 12 (class 2027) and rules out a different Clara Froemming; the Leah Froemming also in the blog is a separate older Leigh player."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
+      "fullName": "Roxana Jafarpur",
+      "club": "fly-fhc",
+      "clubTeam": "U14",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-jose/leigh-high-school/roxana-jafarpur1",
+          "kind": "ncsa",
+          "quote": "Seasons of Club Experience 3 seasons 2026 NorCal Impact (U16) 2025 NorCal Impact (U16) 2024 San Jose Fly (CA) (U14)",
+          "statedSchool": "Leigh High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sanjosefly.com/about-fly/",
+          "kind": "club-site",
+          "quote": "Fly FHC, formerly known as San Jose Fly, was established in 2001 by Archbishop Mitty Head Coach, Justina Williams",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The same Leigh '28 NCSA field hockey profile lists '2024 San Jose Fly (CA) (U14)' as her earliest club season, followed by NorCal Impact in 2025 and 2026, so Fly is a past affiliation only. The club's own About page confirms San Jose Fly is the former name of Fly FHC, a field hockey club, so the entry maps to fly-fhc."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
+      "fullName": "Roxana Jafarpur",
+      "club": "norcal-impact",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-jose/leigh-high-school/roxana-jafarpur1",
+          "kind": "ncsa",
+          "quote": "Seasons of Club Experience 3 seasons 2026 NorCal Impact (U16) 2025 NorCal Impact (U16) 2024 San Jose Fly (CA) (U14)",
+          "statedSchool": "Leigh High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-jose/leigh-high-school/roxana-jafarpur",
+          "kind": "ncsa",
+          "quote": "Club NorCal Impact",
+          "statedSchool": "Leigh High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's own NCSA field hockey profile (two pages for the same person, both read by curl with a browser user agent today; the roster-linked page and a duplicate with suffix '1') names Roxana Jafarpur, class '28 (agrees with grade 11), Leigh High School, San Jose, and lists NorCal Impact (U16) for 2025 and 2026 with 'Club NorCal Impact' and no end date. NCSA gives no page date, so asOf is the 2025-26 club seasons it lists."
+    },
+    {
+      "teamSlug": "leland",
+      "athleteId": "47883949-9d6f-4bd4-afc8-b235619df8b7",
+      "fullName": "Taytem Condit",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "we take a brief look back to the past high school season to recognize many of our members (as of Fall 2025) on their outstanding performances at their respective high schools.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "news",
+          "quote": "Taytem Condit Leland Midfield 11",
+          "statedSchool": "Leland",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-09"
+        }
+      ],
+      "basis": "NorCal Impact's own blog (1/29/2026) lists its members as of Fall 2025 and names 'Taytem Condit, Leland' under BVAL Santa Teresa First Team; the name, a field hockey club and the school are all on that first-hand page. Stick Together's 2025 All-BVAL list shows the same name at Leland as grade 11 in 2025-26, which agrees with class 2027 (roster grade is blank but the school profile gives grade 12)."
+    },
+    {
+      "teamSlug": "willow-glen",
+      "athleteId": "10f7e001-cdf1-4d56-80a3-58d3c26d05f0",
+      "fullName": "Addison Januario",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "we take a brief look back to the past high school season to recognize many of our members (as of Fall 2025) on their outstanding performances at their respective high schools.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/willow-glen-rams/field-hockey/roster/all-time/",
+          "kind": "school-site",
+          "quote": "Januario, Addison",
+          "statedSchool": "Willow Glen",
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The club's own blog (1/29/2026) names 'Addie Januario, Willow Glen' (BVAL Mt Hamilton Honorable Mention) among its members; the rule allows a nickname when the page names the school, and Addie is the usual short form of Addison. MaxPreps' Willow Glen field hockey all-time varsity roster, JV all-time roster and current freshman roster show Addison Januario as the only Januario, so no other player can be meant. Confidence is medium because the match rests on the nickname and no second page uses the form 'Addie'."
+    },
+    {
+      "teamSlug": "willow-glen",
+      "athleteId": "f4cb8b8c-9777-408e-8691-2f1380eb1d42",
+      "fullName": "Autumn Goldstein",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "we take a brief look back to the past high school season to recognize many of our members (as of Fall 2025) on their outstanding performances at their respective high schools.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        }
+      ],
+      "basis": "NorCal Impact's own blog (1/29/2026) lists its members as of Fall 2025 and names 'Autumn Goldstein, Willow Glen' under BVAL Mt Hamilton Honorable Mention, so name, field hockey club and school are met on one first-hand page. Only one Autumn Goldstein is on the Willow Glen roster (grade 12); the page gives no class year and I found no second page for her."
+    },
+    {
+      "teamSlug": "willow-glen",
+      "athleteId": "5593be14-929b-447f-b0a6-1129a72c7127",
+      "fullName": "Magnolia Prentice",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Noli Prentice, Willow Glen",
+          "statedSchool": "Willow Glen",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "news",
+          "quote": "Magnolia Prentice Willow Glen Midfield 11",
+          "statedSchool": "Willow Glen",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-09"
+        }
+      ],
+      "basis": "The club's own blog (dated 2026-01-29, members as of Fall 2025) lists 'Noli Prentice, Willow Glen' among NorCal Impact members; the nickname is allowed because the page names the school. Identity is corroborated: the blog's BVAL Mt Hamilton First Team names match the official 2025 All-BVAL Mt Hamilton First Team, where the only Willow Glen Prentice is Magnolia Prentice (grade 11 then, so class of 2027, matching roster grade 12), and the roster has one Prentice. Medium rather than high because the match rests on the nickname Noli."
+    },
+    {
+      "teamSlug": "westmont",
+      "athleteId": "2ae5b3b7-538c-47d2-a75c-432c7d365822",
+      "fullName": "Teya Halali",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-01-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://norcalimpactfh.weebly.com/making-an-impact-blog/high-fives-to-club-players-on-2025-high-school-post-season-awards",
+          "kind": "club-site",
+          "quote": "Freshman of the Year - Teya Halali, Westmont",
+          "statedSchool": "Westmont",
+          "statedClassYear": null,
+          "sourceDate": "2026-01-29"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025/",
+          "kind": "news",
+          "quote": "Freshman of the Year Teya Halali Westmont Forward",
+          "statedSchool": "Westmont",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-09"
+        }
+      ],
+      "basis": "The NorCal Impact club blog (2026-01-29) names Teya Halali with her school, Westmont, in a list it describes as club members/athletes as of Fall 2025, which meets (a)(b)(c) by itself. The same Westmont freshman (BVAL Freshman of the Year, 2025) appears on Stick Together's all-league page; she is a freshman in 2025-26, so grade 10 now. Her SportsRecruits page (class 2029, Campbell) names no club and does not conflict."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "3958e4a6-6d6b-4afc-bf13-feb5d238724b",
+      "fullName": "Chloe Arwin",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/chloe_arwin",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Forward, Midfield • San Francisco Youth Field Hockey Club • Mill Valley, 11v11 Roster Member",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Chloe Arwin | Tamalpais '28",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Chloe Arwin, 2028 Forward, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Chloe Arwin Forward | #62",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile lists San Francisco Youth Field Hockey Club with class 2028 (agrees with grade 11) and Mill Valley, and no other Chloe Arwin is on the rosters. Three more pages agree: the Stick Together U16 SF Hawks roster says Tamalpais '28, the club's SportsRecruits U19 Hawks Blue roster says 2028, and the club's current-players page lists her under Class of 2028."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
+      "fullName": "Josie Stout",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/josie_stout",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Forward, Midfield • San Francisco Youth Field Hockey Club • Mill Valley, CA • I am a Class of 2028 field hockey player at Tamalpais High School and SF Hawks Field Hockey club team.",
+          "statedSchool": "Tamalpais High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mill-valley/tamalpais-high-school/josie-stout",
+          "kind": "ncsa",
+          "quote": "2025 San Francisco Hawks (Club/Travel)",
+          "statedSchool": "Tamalpais High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Josie Stout | Tamalpais '28",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Josie Stout, 2028 Forward, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Josie Stout Forward | #37",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile names San Francisco Youth Field Hockey Club, Tamalpais High School and class 2028 (agrees with grade 11), and her linked NCSA profile lists San Francisco Hawks as her 2025 club. The Stick Together U16 SF Hawks roster (Tamalpais '28), the club's U19 Hawks Blue roster and its current-players page (Class of 2028) agree."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "cfbaf4db-28d0-400a-ad46-fb9c6018f46e",
+      "fullName": "Sadie Baker",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Sadie Baker | Tamalpais '28",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Sadie Baker Forward | #75",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Stick Together roster of the U16 SF Hawks at the 2026 National Club Championships (2026-07-08) names Sadie Baker, Tamalpais '28, and the club's current-players page lists a Sadie Baker under Class of 2028; class 2028 agrees with grade 11. The other roster Sadie Baker (Lick-Wilmerding, grade 12, class 2027) would sit under Class of 2027, and the page says Tamalpais, so the match is specific. Medium because she has no profile of her own (SportsRecruits sadie_baker is 404; the NCSA Sadie Baker is a Minnesota ice hockey player) and the school link rests on the newsletter."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "7844f156-ab2e-4d55-a45d-34a1ed6de3b5",
+      "fullName": "Sierra Duncan",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/sierra_duncan",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Goalie • San Francisco Youth Field Hockey Club • Mill Valley, CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-10-03"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships Roster: Chloe Arwin | Tamalpais '28 Sadie Baker | Tamalpais '28 Mimi Bakker | University '30 Paola Brouwers | Lycee Francais '27 Clara Brunello | St. Ignatius '28 Sierra Duncan | Tamalpais '28",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Club San Francisco Youth Field Hockey Club Roster Athletes Chloe Arwin, 2028 Forward, Midfield Paola Brouwers, 2027 #44, Forward, Midfield Clara Brunello, 2028 #56, Midfield Sierra Duncan, 2028 Goalie",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Re-read three pages with curl. The Stick Together article (2026-07-08) names her under the heading 'U16 SF Hawks at 2026 National Club Championships' as 'Sierra Duncan | Tamalpais '28', which agrees with grade 11. Her own SportsRecruits profile (JSON-LD dateModified 2026-10-03) gives 2028, Goalie, San Francisco Youth Field Hockey Club, Mill Valley, CA, matching the Tamalpais goalkeeper (G, captain). The live SportsRecruits club page lists her on U19 Hawks Blue. The Stick Together page puts her on the U16 NCC roster, so I left clubTeam null rather than choose between the two."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "f6c5e4c7-e181-43e6-b95d-5da916e83668",
+      "fullName": "Spencer White",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/spencer_white5",
+          "kind": "sportsrecruits",
+          "quote": "Watch Spencer's recruiting video • 2028 • Forward, Midfield, Defense • San Francisco Youth Field Hockey Club • Mill Valley, CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-10-03"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Olivia van de Braak | St. Ignatius '28 Spencer White | Tamalpais '28",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Olivia Van de Braak, 2028 Defense, Forward, Midfield Spencer White, 2028 Forward, Midfield, Defense",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Stick Together article (2026-07-08) lists 'Spencer White | Tamalpais '28' on the roster headed 'U16 SF Hawks at 2026 National Club Championships', which meets (a)(b)(c) through the school and agrees with grade 11. Her own SportsRecruits profile gives 2028 plus Mill Valley, CA and San Francisco Youth Field Hockey Club, and its bio mentions soccer and lacrosse and a junior-year academy that is consistent with Tamalpais. No competing Spencer White turned up. The two sources disagree on team (U16 NCC versus the U19 Hawks Blue page), so clubTeam is null."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "ff39f74c-7195-4f89-a47c-3fc021b439aa",
+      "fullName": "Tashi Perkins",
+      "club": "sf-hawks",
+      "clubTeam": "U16 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/tashi_perkins2",
+          "kind": "sportsrecruits",
+          "quote": "2029 • Defense • San Francisco Youth Field Hockey Club • Strawberry, CA • My name is Tashi and I am a 2029 defensive player for Tamalpais High School.",
+          "statedSchool": "Tamalpais High School",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-10-03"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Gianna Monge | St. Ignatius '29 Tashi Perkins | Tamalpais '29",
+          "statedSchool": "Tamalpais",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Club San Francisco Youth Field Hockey Club Roster Athletes Stella Kwok, 2029 #32, Midfield, Defense TP Tashi Perkins, 2029 #80, Defense",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits profile names Tamalpais High School, class 2029 (grade 10) and San Francisco Youth Field Hockey Club, and its bio says 'playing with the SF Hawks club'. The Stick Together article (2026-07-08) lists 'Tashi Perkins | Tamalpais '29' on the U16 SF Hawks NCC roster. The live SportsRecruits club page lists her on U16 Hawks Blue, which agrees with the U16 roster. Three first-hand pages agree on school, class year and club."
+    },
+    {
+      "teamSlug": "lick-wilmerding",
+      "athleteId": "c95652a1-f07e-4504-ab9c-b29a1f235644",
+      "fullName": "Anaya Mehta-Vasisht",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/anaya_mehta_vasisht2",
+          "kind": "sportsrecruits",
+          "quote": "2029 • Midfield, Defense • San Francisco Youth Field Hockey Club • San Mateo, CA • Hi, I’m Anaya Mehta-Vasisht from San Mateo, California. I am an incoming sophomore at Lick-Wilmerding High School in San Francisco (CO 2029).",
+          "statedSchool": "Lick-Wilmerding High School",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-10-03"
+        },
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/lick-wilmerding-high-school/anaya-mehtavasisht",
+          "kind": "ncsa",
+          "quote": "Anaya Mehta-Vasisht '29 Recruiting Profile Lick-Wilmerding High School San Francisco, CA Field Hockey See Full Profile College Coach? Log in to get contact info Club San Francisco Hawks",
+          "statedSchool": "Lick-Wilmerding High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Stella Kwok | St. Ignatius '29 Anaya Mehta-Vasisht | Lick-Wilmerding '29",
+          "statedSchool": "Lick-Wilmerding",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Margaret Magnano, 2027 #19, Defense, Midfield Anaya Mehta-Vasisht, 2029 Midfield, Defense",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/anaya-mehta-vasisht/bio/?careerid=jl938s65odfn7",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams: San Francisco Youth Field Hockey · U19 · Field Hockey · joined 2023 · San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-08-27"
+        }
+      ],
+      "basis": "Her own SportsRecruits profile and her NCSA profile both name Lick-Wilmerding High School, class of 2029 and the San Francisco Youth Field Hockey Club (NCSA lists the club as San Francisco Hawks, coach Michelle Van de Braak, who is also the director on the club's SportsRecruits page). The Stick Together article (2026-07-08) lists 'Anaya Mehta-Vasisht | Lick-Wilmerding '29' on the U16 SF Hawks NCC roster, so the affiliation is current. The NCSA club list shows only the 2023 and 2024 seasons, but the SportsRecruits profile, the club's live team page and the July 2026 article show it continuing. "
+    },
+    {
+      "teamSlug": "lick-wilmerding",
+      "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
+      "fullName": "Frankie Lemieux",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-09-10",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/frankie_lemieux",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Defense, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/",
+          "kind": "news",
+          "quote": "Two SF Hawks, Olivia Van de Braak (St. Ignatius '28) and Frankie Lemieux (Lick-Wilmerding '28), were named to the MAX Field Hockey 2026 West/Mid-West Region Players to Watch",
+          "statedSchool": "Lick-Wilmerding",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-09-10"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-season-of-growth-and-achievement/",
+          "kind": "news",
+          "quote": "Sophomore Frankie Lemieux (Lick-Wilmerding, SF Hawks) earned Player of the Year honors",
+          "statedSchool": "Lick-Wilmerding",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-10"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Francine Lemieux, 2028 Defense, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Frankie Lemieux Midfield | #3",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile (legal name Francine Lemieux, slug frankie_lemieux) gives class 2028, San Francisco Youth Field Hockey Club (the Hawks) and San Francisco, and its bio names Lick-Wilmerding HS, so (a)(b)(c) hold on one first-hand page; class 2028 agrees with grade 11. Stick Together (2025-12-10 and 2026-09-10) independently writes 'Lick-Wilmerding, SF Hawks' / 'Lick-Wilmerding '28', and the club's current-players page and U19 Hawks Blue SportsRecruits roster list her. clubTeam rests on the U19 Hawks Blue roster page."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "d42d85f0-3c5b-4903-a343-3e2d76c07b57",
+      "fullName": "Anoushka Gollerkeri",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/anoushka_gollerkeri",
+          "kind": "sportsrecruits",
+          "quote": "2028 • Midfield, Defense • San Francisco Youth Field Hockey Club • San Francisco, CA • I am a rising junior at San Francisco University High School.",
+          "statedSchool": "San Francisco University High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Anoushka Gollerkeri (University '28) competes for U16 SF Hawks at NCCs",
+          "statedSchool": "University",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Anoushka Gollerkeri, 2028 Midfield, Defense",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Anoushka Gollerkeri Midfield | #7",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-francisco/university-red-devils/athletes/anoushka-gollerkeri/bio/?careerid=br0oevavir6g0",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams: SF Hawks · U16 · Field Hockey · joined 2021 · San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-11-17"
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile names the club (San Francisco Youth Field Hockey Club), class 2028 and San Francisco University High School, so (a)(b)(c) hold on one first-hand page; 2028 agrees with grade 11. Stick Together (2026-07-08) names her 'University '28' on the U16 SF Hawks national roster, and the club site and U19 Hawks Blue roster list her. clubTeam is the current U19 Hawks Blue roster (the July 2026 U16 side was the 2025-26 national-championship team)."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "88b4f515-8a03-418d-885f-caf4b398ff0c",
+      "fullName": "Lula Polak",
+      "club": "sf-hawks",
+      "clubTeam": "U16 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/lula_polak",
+          "kind": "sportsrecruits",
+          "quote": "2029 • Midfield, Forward • San Francisco Youth Field Hockey Club • San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships Roster:",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Lula Polak, 2029 #5, Midfield, Forward",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Lula Polak Midfield | #5",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-francisco/university-red-devils/athletes/lula-polak/bio/?careerid=nokeedtm2ljo8",
+          "kind": "maxpreps-career",
+          "quote": "Club Teams: SF Hawks · U16 · Field Hockey · joined 2023 · San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-11-11"
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile gives class 2029, San Francisco Youth Field Hockey Club, San Francisco, and says she was the only freshman on the varsity team at San Francisco University High School, so (a)(b)(c) hold first-hand; 2029 agrees with grade 10. Stick Together (2026-07-08) lists her 'University '29' on the U16 SF Hawks roster; the U16 Hawks Blue roster page (#5) and the club's current-players page (#5, Class of 2029) agree."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "5f1af2ca-fd57-4ff8-b02f-5233f1803792",
+      "fullName": "Mimi Bakker",
+      "club": "sf-hawks",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/san-francisco-university-high-school/mimi-bakker",
+          "kind": "ncsa",
+          "quote": "Mimi Bakker '30 Recruiting Profile San Francisco University High School San Francisco, CA",
+          "statedSchool": "San Francisco University High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/mimi_bakker",
+          "kind": "sportsrecruits",
+          "quote": "After moving to San Francisco in 2022, I joined the San Francisco Hawks Youth Field Hockey Club and have been playing for them ever since.",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "Mimi Bakker | University '30",
+          "statedSchool": "University",
+          "statedClassYear": 2030,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Mimi Bakker Back | #3",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her NCSA profile (already linked on the site) names her, San Francisco University High School, class '30 and 'Club San Francisco Hawks' with the 2026 National Club Championship U16 SF Hawks event, so (a)(b)(c) hold first-hand; 2030 agrees with grade 9. Her SportsRecruits bio, Stick Together's 2026-07-08 U16 SF Hawks roster ('University '30') and the club's Class of 2030 list all agree. clubTeam U16 is from the NCSA event line."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "1cc5d30f-9fc2-4652-baa5-7148e2542179",
+      "fullName": "Olivia Taylor",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2027 Paola Brouwers Forward | #44 Rachel Flynn Back | #84 Violet Hesslein Midfield | #26 Eva Layton GK | #4 Storey lewis Forward | #6 Maggie Magnano Back | #19 Stella Strain GK | #47 Olivia Taylor Forward | #63",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/player-accomplishments/",
+          "kind": "club-site",
+          "quote": "Olivia Taylor MCAL Second Team",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/all-league-2025",
+          "kind": "news",
+          "quote": "Second Team Name School Year Lucca Rockett Marin Catholic 12 Olivia Taylor University 11",
+          "statedSchool": "University",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-10"
+        },
+        {
+          "url": "https://nfhca.org/2025-high-school-national-academic-squad/",
+          "kind": "other",
+          "quote": "Olivia Taylor San Francisco University High School San Francisco California",
+          "statedSchool": "San Francisco University High School",
+          "statedClassYear": null,
+          "sourceDate": "2026-02-24"
+        }
+      ],
+      "basis": "The club's own current-players page names her under Class of 2027 (agrees with grade 12) at a San Francisco club, which meets (a)(b)(c) through class year plus NorCal club location; no recruiting profile exists (nfhca.sportsrecruits.com/athlete/olivia_taylor is Page Not Found). Identity is tied to University by the club's own 'Olivia Taylor MCAL Second Team' matching Stick Together's 2025 All-MCAL Second Team 'Olivia Taylor, University, 11', and by the NFHCA academic squad listing her at San Francisco University High School. Medium because the club page itself gives no school."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "8d5fd8bd-b28c-49b9-af6d-7849379378c2",
+      "fullName": "Rachel Flynn",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2027 Paola Brouwers Forward | #44 Rachel Flynn Back | #84",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/player-accomplishments/",
+          "kind": "club-site",
+          "quote": "Rachel Flynn Scholar of Distinction",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.org/2025-high-school-national-academic-squad/",
+          "kind": "other",
+          "quote": "Rachel Flynn San Francisco University High School San Francisco California SD",
+          "statedSchool": "San Francisco University High School",
+          "statedClassYear": null,
+          "sourceDate": "2026-02-24"
+        }
+      ],
+      "basis": "The club's own current-players page lists Rachel Flynn under Class of 2027 (agrees with grade 12) at a San Francisco club, meeting (a)(b)(c) through class year plus NorCal club location; her SportsRecruits profile (rachel_flynn) shows only '2027 • Defense' with no club or school, so it adds nothing. Identity is tied to University because the club's 'Scholar of Distinction' for Rachel Flynn matches the NFHCA 2026 high school squad listing the only California Rachel Flynn, at San Francisco University High School, as SD (the club's SD/non-SD split for its other players matches that list as well)."
+    },
+    {
+      "teamSlug": "university-sf",
+      "athleteId": "dcaa2c1a-aebc-43e7-8e78-86aa3ee97895",
+      "fullName": "Vivienne Wong",
+      "club": "sf-hawks",
+      "clubTeam": "U16 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/vivienne_wong",
+          "kind": "sportsrecruits",
+          "quote": "Watch Vivienne's recruiting video • 2030 • Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA • My name is Vivienne Wong, Class of 2030, and I am going into 9th grade.",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Vivienne Wong, 2030 Forward, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile names her, the San Francisco Youth Field Hockey Club, class of 2030 and San Francisco University High School (roster: San Francisco University, grade 9 = 2030). Stick Together (Jul 8 2026, University '30 on the U16 SF Hawks roster) and the club's SR U16 Hawks Blue page agree; the club's own current-players page also links to this same profile. SF Hawks = San Francisco Youth Field Hockey Club."
+    },
+    {
+      "teamSlug": "convent-sacred-heart",
+      "athleteId": "b7ea3205-acc3-475a-bd40-da0caf522f4d",
+      "fullName": "Ava Long",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Ava Long Back | #44",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Only the San Francisco Youth Field Hockey Club's current-players page lists her, under the heading 'Class of 2029' (roster grade 10 = 2029, club based in San Francisco), with no school and no player-profile link. No conflicting same-name field hockey profile or other Ava Long in the NorCal rosters turned up, but no second page confirms the school, so medium only. A search-index summary of an older, now-404 club player-profile page said Convent, but I could not open it and did not rely on it."
+    },
+    {
+      "teamSlug": "convent-sacred-heart",
+      "athleteId": "a4085944-591b-4bbb-8896-36e48a6cabe9",
+      "fullName": "Claire Gunning",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": "2026-07-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/claire_gunning",
+          "kind": "sportsrecruits",
+          "quote": "Watch Claire's recruiting video • 2028 • Defense • San Francisco Youth Field Hockey Club • San Francisco, CA • I am a junior at Convent of the Sacred Heart in San Francisco. I'm a starting defender for both my high school varsity team and the San Francisco Hawks",
+          "statedSchool": "Convent of the Sacred Heart",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/norcal-athletes-shine-at-national-competitions/",
+          "kind": "news",
+          "quote": "U16 SF Hawks at 2026 National Club Championships",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-07-08"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Claire Gunning, 2028 Defense",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile names Convent of the Sacred Heart, class 2028 (roster grade 11) and the San Francisco Youth Field Hockey Club / San Francisco Hawks with no end date. Stick Together (Jul 8 2026) lists Convent '28 on the U16 SF Hawks national roster and the club's SR page lists her on U19 Hawks Blue, so she plays on both age-group teams; the clubTeam given is the current SR team page."
+    },
+    {
+      "teamSlug": "convent-sacred-heart",
+      "athleteId": "79b24568-7d66-4f62-b949-475dd8f1d729",
+      "fullName": "Jessica Long",
+      "club": "sf-hawks",
+      "clubTeam": "U19 Hawks Blue",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/jessica_long4",
+          "kind": "sportsrecruits",
+          "quote": "Watch Jessica's recruiting video • 2028 • Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA • My name is Jessica Long and I am a rising junior at Convent of the Sacred Heart, where I am a starting varsity forward.",
+          "statedSchool": "Convent of the Sacred Heart",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+          "kind": "sportsrecruits",
+          "quote": "Jessica Long, 2028 Forward, Midfield",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits profile (jessica_long4) names Convent of the Sacred Heart, class 2028 (roster grade 11, F/M) and the San Francisco Youth Field Hockey Club / San Francisco Hawks, with no end date; it was created Jan 2026 and says 'rising junior'. The club's SR U19 Hawks Blue page lists her at 2028, and the club's own current-players page links her card to this same profile."
+    }
+  ]
+}
