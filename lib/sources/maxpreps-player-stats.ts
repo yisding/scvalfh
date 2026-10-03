@@ -439,26 +439,37 @@ export function reconcileTotals<
  * Fetch one team's rollup. The client throws on any non-2xx, so a 400 is read from the error's
  * body: MaxPreps' "No data was found" envelope comes back as null, the same as parsing that
  * envelope, and any other 400 — or one whose body cannot be read — still throws.
+ *
+ * `onRaw` sees the body as received, BEFORE it is decoded or validated, so a response that drifted
+ * (or is not JSON at all) is still handed over — what --capture saves is exactly what failed.
+ * parsePlayerStats does the schema check, once.
  */
 export async function fetchPlayerStats(
   client: MaxPrepsClient,
   teamId: string,
-  /** Sees the decoded response before it is parsed — scripts/fetch-player-stats.ts --capture. */
-  onRaw?: (raw: unknown) => void,
+  /** Sees the raw body before anything reads it — scripts/fetch-player-stats.ts --capture. */
+  onRaw?: (body: string) => void,
 ): Promise<PlayerStatsPage | null> {
   const url = playerStatsUrl(teamId);
   let raw: unknown;
   try {
-    raw = (await client.json(url, PlayerStatsResponseSchema)).data;
+    const res = await client.text(url, 'application/json');
+    onRaw?.(res.data);
+    try {
+      raw = JSON.parse(res.data) as unknown;
+    } catch (err) {
+      throw new MaxPrepsError(`invalid JSON: ${(err as Error).message}`, { url, httpStatus: res.meta.httpStatus });
+    }
   } catch (err) {
     if (!(err instanceof MaxPrepsError) || err.httpStatus !== 400 || !err.body) throw err;
+    onRaw?.(err.body);
     try {
       raw = JSON.parse(err.body) as unknown;
     } catch {
+      // A 400 that is not JSON is not MaxPreps' "no data" envelope: the HTTP error says it best.
       throw err;
     }
   }
-  onRaw?.(raw);
   return parsePlayerStats(raw, { expectedTeamId: teamId, url });
 }
 
