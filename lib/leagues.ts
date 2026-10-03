@@ -774,9 +774,6 @@ export const TOURNAMENT_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
   (l) => l.postseason.kind === 'league-tournament',
 ).map((l) => l.id);
 
-/** The one league with 2025-26 history and rosters. UI code uses this, never a 'scval' literal (SPEC §0.4). */
-export const HISTORY_LEAGUE: LeagueId = 'scval';
-
 const SECTION_BY_ID = new Map<string, SectionConfig>(SECTIONS.map((s) => [s.id, s]));
 const LEAGUE_BY_ID = new Map<string, LeagueConfig>(LEAGUES.map((l) => [l.id, l]));
 const DIVISION_BY_ID = new Map<string, DivisionConfig>(ALL_DIVISIONS.map((d) => [d.id, d]));

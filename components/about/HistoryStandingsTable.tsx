@@ -9,11 +9,12 @@ import TeamMonogram from '../ui/TeamMonogram';
  * The 2025-26 archive standings table (DESIGN §3.9) — final records only, no GD bar, no form
  * strip: the source PDF carries no game-level data, only a final W-L(-T) line per school.
  *
- * Three columns: place, team, league record. `overallRecord` is always null in this file (SPEC
- * §1.3 — that PDF column was empty for the 2025-26 season), so there is no Overall column at
+ * Three columns: place, team, league record. `overallRecord` is null for every SCVAL row (SPEC
+ * §1.3 — that PDF column was empty for the 2025-26 season), so SCVAL has no Overall column at
  * all: a column of nothing but em dashes told the reader nothing and cost every table a fourth
- * column of width. The page's source note says why it is missing. `place` is the PDF's own
- * "SCHOOL by finish" order, not a value recomputed by this site.
+ * column of width. A league whose source publishes it (BVAL's sheet) gets a fourth column, Overall,
+ * and a row that has none still shows an em dash there. `place` is the source's own finish order,
+ * not a value recomputed by this site.
  */
 export interface HistoryStandingsTableProps {
   rows: HistoryRow[];
@@ -25,6 +26,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
   if (rows.length === 0) {
     return <p className="py-2 text-meta text-ink-3">{emptyLabel}</p>;
   }
+  const hasOverall = rows.some((r) => r.overallRecord !== null);
   return (
     // `lg:self-start`: from lg this card is a grid item in a row track it shares with the other
     // division's table (the page's subgrid), and El Camino's varsity table has one more row than
@@ -47,8 +49,10 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
           <col className="w-12" />
           <col />
           {/* 96px: 16 of right padding, 8 (12 from sm) of gutter, and room for the longest
-              record, "11-0-1", in tabular mono with space to spare. */}
-          <col className="w-24" />
+              record, "11-0-1", in tabular mono with space to spare. With an Overall column the two
+              record columns are 80px each ("13-3-5" needs about 52 of the 56 left after padding). */}
+          <col className={hasOverall ? 'w-20' : 'w-24'} />
+          {hasOverall ? <col className="w-20" /> : null}
         </colgroup>
         <thead>
           <tr>
@@ -56,9 +60,14 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
               #
             </th>
             <th scope="col">Team</th>
-            <th scope="col" className="pl-2 pr-4 text-right sm:pl-3">
+            <th scope="col" className={`pl-2 text-right sm:pl-3 ${hasOverall ? 'pr-2' : 'pr-4'}`}>
               League
             </th>
+            {hasOverall ? (
+              <th scope="col" className="pl-2 pr-4 text-right sm:pl-3">
+                Overall
+              </th>
+            ) : null}
           </tr>
         </thead>
         <tbody>
@@ -91,7 +100,14 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                     <span className="flex items-center gap-2 text-body text-ink">{row.name}</span>
                   )}
                 </th>
-                <td className="sx-num pl-2 pr-4 text-right text-cell sm:pl-3">{row.leagueRecord}</td>
+                <td className={`sx-num pl-2 text-right text-cell sm:pl-3 ${hasOverall ? 'pr-2' : 'pr-4'}`}>
+                  {row.leagueRecord}
+                </td>
+                {hasOverall ? (
+                  <td className="sx-num pl-2 pr-4 text-right text-cell sm:pl-3">
+                    {row.overallRecord ?? <span aria-label="not published">&mdash;</span>}
+                  </td>
+                ) : null}
               </tr>
             );
           })}

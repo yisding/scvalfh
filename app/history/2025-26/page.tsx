@@ -11,50 +11,262 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site-url';
 import { getTeamBySlug } from '../../../lib/data';
 import {
-  getHistoryAwards,
+  getAvailableHistoryLeagues,
   getHistoryChampions,
+  getHistoryDivisionChanges,
+  getHistoryLeagues,
   getHistorySeason,
-  getHistorySources,
-  getHistoryStandings,
+  getHistoryUnpublishedTies,
+  getUnavailableHistoryLeagues,
+  type AvailableLeagueHistory,
+  type UnavailableLeagueHistory,
 } from '../../../lib/history';
-import { HISTORY_LEAGUE, divisionsOf, getLeague } from '../../../lib/leagues';
+import { listWords } from '../../../lib/format';
+import { getDivision, getLeague } from '../../../lib/leagues';
+import type { LeagueId } from '../../../lib/types';
 
 /**
- * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — SCVAL ONLY: final standings for both
- * divisions, both levels, plus the all-league awards, built once from the two scval.com
- * end-of-season PDFs
- * (`scripts/build-history.ts`). MaxPreps cannot serve a prior season at all — the year segment of
- * its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this page is
- * the only place last season's numbers live, and it is not part of the nightly snapshot.
+ * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
+ * per league (`#scval #bval #pcal #mcal`). A league whose own end-of-season documents we could
+ * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
+ * record-only tables and the all-league awards; a league we could not read an official 2025-26
+ * source for (PCAL, MCAL) says so, with the reason, and shows nothing in its place. Everything is
+ * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
+ * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
+ * page is the only place last season's numbers live, and it is not part of the nightly snapshot.
  *
- * No other league has a prior season here, so the page is labelled with the league everywhere
- * and reads its divisions from `divisionsOf(HISTORY_LEAGUE)` (never every division on the site).
- *
- * The header says only what a reader needs before the tables (what this is, where it came from,
- * that it does not change, and that no other league has one) in a short lede; the provenance
- * detail (built once, why not MaxPreps, why there is no overall record) sits in the source note at
- * the foot. A long lede here pushed the first standings row under the phone tab bar.
+ * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
+ * never from a literal list, so a league cannot be dropped or invented here. The header says only
+ * what a reader needs before the tables in a short lede; provenance detail sits in each league's
+ * source note. A long lede here pushed the first standings row under the phone tab bar.
  */
-const HISTORY = getLeague(HISTORY_LEAGUE);
-const DIVISIONS = divisionsOf(HISTORY_LEAGUE);
-const PAGE_TITLE = `${HISTORY.shortName} 2025-26`;
+const SEASON = getHistorySeason();
+const LEAGUES = getHistoryLeagues();
+const AVAILABLE = getAvailableHistoryLeagues();
+const UNAVAILABLE = getUnavailableHistoryLeagues();
+const short = (id: LeagueId) => getLeague(id).shortName;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: `${SEASON} final standings`,
   description:
-    `Final ${HISTORY.shortName} ${DIVISIONS.map((d) => d.label).join(' and ')} girls varsity and JV field hockey standings and all-league awards from the 2025-26 season, from the official league PDFs.`,
+    `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
+    ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
+    ` ${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'} marked unavailable: no official ${SEASON} standings were reachable.`,
   alternates: { canonical: '/history/2025-26' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/history/2025-26' },
 };
 
+/** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
+const ROWS_CLASS: Record<number, string> = {
+  2: 'lg:grid-rows-[repeat(2,auto)]',
+  4: 'lg:grid-rows-[repeat(4,auto)]',
+  6: 'lg:grid-rows-[repeat(6,auto)]',
+  8: 'lg:grid-rows-[repeat(8,auto)]',
+};
+const SPAN_CLASS: Record<number, string> = {
+  2: 'lg:row-span-2',
+  4: 'lg:row-span-4',
+  6: 'lg:row-span-6',
+  8: 'lg:row-span-8',
+};
+
+function Champions({ leagueId }: { leagueId: LeagueId }) {
+  const champions = getHistoryChampions(leagueId);
+  if (champions.length === 0) return null;
+  return (
+    <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4">
+      {champions.map(({ division, row }) => {
+        const team = row.slug ? getTeamBySlug(row.slug) : undefined;
+        return (
+          // Monogram on the left spanning three short lines, so the pair is ~190px tall on a
+          // phone instead of ~300 and the first standings row stays near the first screen.
+          <div
+            key={division}
+            className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5"
+          >
+            {team ? <TeamMonogram team={team} size={40} /> : null}
+            <div className="col-start-2 min-w-0">
+              <p className="m-0 text-micro font-medium text-ink-3">
+                {getDivision(division)?.label ?? division} champion
+              </p>
+              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{row.name}</p>
+              <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: AvailableLeagueHistory }) {
+  const league = getLeague(leagueId);
+  const divisions = entry.divisions;
+  // Which of the four blocks a division has is a property of the league: SCVAL has all four,
+  // BVAL has varsity standings and varsity awards only. A league never shows an empty heading for
+  // a block none of its divisions has.
+  const hasJv = divisions.some((d) => d.standings.jv.length > 0);
+  const hasVarsityAwards = divisions.some((d) => d.awards.varsity !== null);
+  const hasJvAwards = divisions.some((d) => d.awards.jv !== null);
+  const blocks = 1 + (hasJv ? 1 : 0) + (hasVarsityAwards ? 1 : 0) + (hasJvAwards ? 1 : 0);
+  const rows = blocks * 2;
+  const changes = getHistoryDivisionChanges(leagueId);
+  const unpublishedTies = getHistoryUnpublishedTies(leagueId);
+  const p = entry.provenance;
+
+  return (
+    <section id={leagueId} aria-label={league.name} className="min-w-0 scroll-mt-24">
+      <SectionHeader
+        size="lg"
+        kicker={`${league.shortName} · ${league.name}`}
+        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+      />
+      <Champions leagueId={leagueId} />
+
+      {/* From lg the divisions sit side by side and share the same row tracks (subgrid): each
+          division's headings and blocks are its direct grid items, so the JV heading, the awards
+          headings and the First/Second team labels line up across the pair even though one
+          varsity table can have a row more than the other. Below lg the divisions simply stack. */}
+      <div
+        className={`mt-section grid gap-y-section md:mt-section-lg md:gap-y-section-lg lg:grid-cols-2 lg:gap-x-10 lg:gap-y-0 ${ROWS_CLASS[rows]}`}
+      >
+        {divisions.map((d) => {
+          const label = d.label;
+          return (
+            <section
+              key={d.division}
+              className={`min-w-0 lg:grid lg:grid-rows-subgrid ${SPAN_CLASS[rows]}`}
+              id={d.division}
+              aria-label={`${league.shortName} ${label}`}
+            >
+              {/* `nowrap` on the season: a season identifier is one token, and as a shrinkable
+                  flex child it broke at its own hyphen into "2025-" / "26" at 320px. */}
+              <SectionHeader
+                as="h3"
+                size="section"
+                kicker={`${label} · varsity final standings`}
+                meta={<span className="whitespace-nowrap">{SEASON}</span>}
+              />
+              <HistoryStandingsTable
+                rows={d.standings.varsity}
+                caption={`${league.shortName} ${label} varsity final standings, ${SEASON}`}
+                emptyLabel="No varsity standings were published for this division."
+              />
+
+              {hasJv ? (
+                <>
+                  <SectionHeader as="h3" size="section" kicker={`${label} · JV final standings`} className="mt-section" />
+                  <HistoryStandingsTable
+                    rows={d.standings.jv}
+                    caption={`${league.shortName} ${label} JV final standings, ${SEASON}`}
+                    emptyLabel="No JV standings were published for this division."
+                  />
+                </>
+              ) : null}
+
+              {hasVarsityAwards ? (
+                <>
+                  <SectionHeader
+                    as="h3"
+                    size="section"
+                    kicker={`${label} · all-league awards, varsity`}
+                    className="mt-section"
+                  />
+                  <AwardsBlock awards={d.awards.varsity} levelLabel="Varsity" />
+                </>
+              ) : null}
+
+              {hasJvAwards ? (
+                <>
+                  <SectionHeader as="h3" size="section" kicker={`${label} · all-league awards, JV`} className="mt-section" />
+                  <AwardsBlock awards={d.awards.jv} levelLabel="JV" />
+                </>
+              ) : null}
+            </section>
+          );
+        })}
+      </div>
+
+      <div className="mt-section max-w-prose space-y-3 text-meta text-ink-3 md:mt-section-lg">
+        {p.source === 'scval-pdf' ? (
+          <p className="m-0">
+            Source: scval.com &mdash;{' '}
+            <ExternalLink href={p.standingsPdf}>{SEASON} final standings (PDF)</ExternalLink> and{' '}
+            <ExternalLink href={p.allLeaguePdf}>{SEASON} all-league awards (PDF)</ExternalLink>. This page is built
+            once from those PDFs, not from the live MaxPreps snapshot the rest of the site uses &mdash;
+            MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDFs list league
+            records only; their overall-record column was empty for this season.
+          </p>
+        ) : (
+          <p className="m-0">
+            Source: bval.org &mdash;{' '}
+            {/* The provenance URL is the CSV export the build reads; readers get the sheet itself. */}
+            <ExternalLink href={p.standingsSheet.replace('/export?format=csv', '/edit')}>
+              {SEASON} final standings (Google Sheet)
+            </ExternalLink>
+            {Object.entries(p.allLeagueDocs).map(([division, url], i, all) =>
+              url ? (
+                <span key={division}>
+                  {i === 0 ? ' and the all-league documents: ' : ''}
+                  <ExternalLink href={url}>{getDivision(division)?.label ?? division}</ExternalLink>
+                  {i < all.length - 1 ? ' · ' : ''}
+                </span>
+              ) : null,
+            )}
+            . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the live MaxPreps
+            snapshot the rest of the site uses &mdash; MaxPreps only ever serves the current season. Records are
+            league and overall W-L-T exactly as the sheet prints them; it carries no points or goals, so none
+            are shown or computed. JV is not shown: the sheet lists JV records but gives a JV place for one
+            school only.
+          </p>
+        )}
+        {unpublishedTies.length > 0 ? (
+          <p className="m-0">
+            {listWords(unpublishedTies.map((r) => r.name))}&rsquo;s record{unpublishedTies.length === 1 ? ' has' : 's have'} no
+            ties field in the source ({unpublishedTies.map((r) => r.leagueRecord).join(', ')}), so{' '}
+            {unpublishedTies.length === 1 ? 'it is' : 'they are'} shown as published; we do not assume zero ties.
+          </p>
+        ) : null}
+        {changes.map((c) => (
+          <p key={c.slug} className="m-0">
+            {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {SEASON}, as the
+            source lists it. {league.shortName}&rsquo;s current alignment on this site lists {c.name} in {getDivision(c.registryDivision)?.label ?? c.registryDivision}, so {c.name} moved.
+          </p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: UnavailableLeagueHistory }) {
+  const league = getLeague(leagueId);
+  return (
+    <section id={leagueId} aria-label={league.name} className="min-w-0 scroll-mt-24">
+      <SectionHeader
+        size="lg"
+        kicker={`${league.shortName} · ${league.name}`}
+        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+      />
+      <div className="sx-card mt-4 p-4 sm:p-5">
+        <p className="m-0 text-lead text-ink">Unavailable</p>
+        <p className="m-0 mt-2 max-w-prose text-body text-ink-2">{entry.reason}</p>
+        <p className="m-0 mt-3 max-w-prose text-meta text-ink-3">
+          Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
+          <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+            the {league.shortName} standings page
+          </Link>{' '}
+          and its official site is{' '}
+          <ExternalLink href={league.officialUrl}>{league.officialUrl.replace(/^https?:\/\/(www\.)?/, '')}</ExternalLink>.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export default function HistoryPage() {
-  const season = getHistorySeason();
-  const champions = getHistoryChampions();
-  const sources = getHistorySources();
-  const tabs = DIVISIONS.map((division) => ({
-    href: `#${division.id}`,
-    label: division.label,
-  }));
+  const tabs = LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
+  const available = listWords(AVAILABLE.map((l) => short(l.id)));
+  const unavailable = listWords(UNAVAILABLE.map((l) => short(l.id)));
 
   return (
     // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
@@ -62,103 +274,33 @@ export default function HistoryPage() {
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
         eyebrow="Archive"
-        title={`${HISTORY.shortName} ${season}`}
+        title={`${SEASON} final standings`}
         description={
           <>
-            Final varsity and JV standings and all-league awards from {HISTORY.shortName}&rsquo;s
-            end-of-season PDFs. This page doesn&rsquo;t change. Prior-season results are available
-            for {HISTORY.shortName} only.
+            Final standings and all-league awards for {available}, from each league&rsquo;s own documents.{' '}
+            {unavailable} {UNAVAILABLE.length === 1 ? 'is' : 'are'} unavailable: no official {SEASON} standings
+            were reachable. This page doesn&rsquo;t change.
           </>
         }
-        aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a division" />}
+        aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a league" />}
         asideClassName="hidden md:block lg:hidden"
       />
 
-      {/* Jump bar: a long page (about 13,000px on a phone) with two divisions to reach. Sticky
-          under the top bar below md; at md the pills sit in the title row; at lg both divisions
-          are on screen side by side and neither is shown. */}
-      <DivisionTabs variant="bar" tabs={tabs} label="Jump to a division" className="mt-4" />
+      {/* Jump bar: a long page with a section per league to reach. Sticky under the top bar below
+          md; at md the pills sit in the title row; from lg they are not shown. */}
+      <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
-      {champions.length > 0 ? (
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 sm:gap-4 md:mt-10">
-          {champions.map(({ division, row }) => {
-            const team = row.slug ? getTeamBySlug(row.slug) : undefined;
-            return (
-              // Monogram on the left spanning three short lines, so the pair is ~190px tall on a
-              // phone instead of ~300 and the first standings row stays near the first screen.
-              <div
-                key={division}
-                className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5"
-              >
-                {team ? <TeamMonogram team={team} size={40} /> : null}
-                <div className="col-start-2 min-w-0">
-                  <p className="m-0 text-micro font-medium text-ink-3">
-                    {DIVISIONS.find((d) => d.id === division)?.label ?? division} champion
-                  </p>
-                  <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{row.name}</p>
-                  <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-
-      {/* From lg the two divisions sit side by side and share eight row tracks (subgrid): each
-          section's four headings and four blocks are its direct grid items, so the JV heading,
-          the awards headings and the First/Second team labels line up across the pair even
-          though El Camino's varsity table has one more row than De Anza's. Below lg the sections
-          simply stack. */}
-      <div className="mt-section grid gap-y-section md:mt-section-lg md:gap-y-section-lg lg:grid-cols-2 lg:grid-rows-[repeat(8,auto)] lg:gap-x-10 lg:gap-y-0">
-      {DIVISIONS.map(({ id: division, label }) => {
-        const varsity = getHistoryStandings(division, 'varsity');
-        const jv = getHistoryStandings(division, 'jv');
-        const varsityAwards = getHistoryAwards(division, 'varsity');
-        const jvAwards = getHistoryAwards(division, 'jv');
-        return (
-          <section
-            key={division}
-            className="min-w-0 lg:row-span-8 lg:grid lg:grid-rows-subgrid"
-            id={division}
-            aria-label={label}
-          >
-            {/* `nowrap` on the season: a season identifier is one token, and as a shrinkable
-                flex child it broke at its own hyphen into "2025-" / "26" at 320px. */}
-            <SectionHeader
-              kicker={`${label} · varsity final standings`}
-              meta={<span className="whitespace-nowrap">{season}</span>}
-            />
-            <HistoryStandingsTable
-              rows={varsity}
-              caption={`${label} varsity final standings, ${season}`}
-              emptyLabel="No varsity standings were published for this division."
-            />
-
-            <SectionHeader kicker={`${label} · JV final standings`} className="mt-section" />
-            <HistoryStandingsTable
-              rows={jv}
-              caption={`${label} JV final standings, ${season}`}
-              emptyLabel="No JV standings were published for this division."
-            />
-
-            <SectionHeader kicker={`${label} · all-league awards, varsity`} className="mt-section" />
-            <AwardsBlock awards={varsityAwards} levelLabel="Varsity" />
-
-            <SectionHeader kicker={`${label} · all-league awards, JV`} className="mt-section" />
-            <AwardsBlock awards={jvAwards} levelLabel="JV" />
-          </section>
-        );
-      })}
+      <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
+        {LEAGUES.map(({ id, entry }) =>
+          entry.status === 'available' ? (
+            <AvailableLeague key={id} leagueId={id} entry={entry} />
+          ) : (
+            <UnavailableLeague key={id} leagueId={id} entry={entry} />
+          ),
+        )}
       </div>
 
       <p className="mt-section max-w-prose text-meta text-ink-3 md:mt-section-lg">
-        Source: scval.com &mdash;{' '}
-        <ExternalLink href={sources.standingsPdf}>2025-26 final standings (PDF)</ExternalLink> and{' '}
-        <ExternalLink href={sources.allLeaguePdf}>2025-26 all-league awards (PDF)</ExternalLink>.
-        This page is built once from those PDFs, not from the live MaxPreps snapshot the rest of
-        the site uses &mdash; MaxPreps only ever serves the current season.{' '}
-        {HISTORY.shortName}&rsquo;s final PDFs list league records only; their overall-record
-        column was empty for this season.
         Full attribution and update details are on the{' '}
         <Link href="/about" className="text-accent hover:underline">
           About &amp; sources

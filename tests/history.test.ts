@@ -5,6 +5,9 @@
  *   https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf
  *   https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf
  *
+ * BVAL's fixtures are the real 2025-26 files too: the standings Google Sheet's CSV export and the
+ * HTML export of the two all-league Google Docs, all linked from bval.org (read 2026-10-03).
+ *
  * The verified values these must reproduce (SPEC §1.3) are asserted literally, because this file is
  * committed data: if a parser drifts, the numbers on /history/2025-26 drift with it.
  */
@@ -19,6 +22,14 @@ import {
   parseStandingsPdfText,
   SCVAL_HISTORY_PDFS,
 } from '../lib/sources/scval-pdf';
+import {
+  BVAL_HISTORY_SOURCES,
+  bvalDocExportUrl,
+  parseAllLeagueHtml,
+  parseCsv,
+  parseGradeYear,
+  parseStandingsCsv,
+} from '../lib/sources/bval-sheet';
 import { getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { REPO } from './helpers';
 
@@ -26,29 +37,65 @@ const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
 const standingsText = readFileSync(path.join(FIX, 'standings-2025-26.txt'), 'utf8');
 const allLeagueText = readFileSync(path.join(FIX, 'all-league-2025-26.txt'), 'utf8');
 
+const BVAL_FIX = path.join(REPO, 'tests', 'fixtures', 'bval');
+const bvalCsv = readFileSync(path.join(BVAL_FIX, 'standings-2025-26.csv'), 'utf8');
+const bvalMh = readFileSync(path.join(BVAL_FIX, 'all-league-mt-hamilton-2025-26.html'), 'utf8');
+const bvalSt = readFileSync(path.join(BVAL_FIX, 'all-league-santa-teresa-2025-26.html'), 'utf8');
+
 const blocks = parseStandingsPdfText(standingsText);
 const awards = parseAllLeaguePdfText(allLeagueText);
 
+interface FileRow {
+  place: number;
+  name: string;
+  slug: string | null;
+  leagueRecord: string;
+  w: number;
+  l: number;
+  t: number | null;
+  overallRecord: string | null;
+}
+interface FileDivision {
+  division: string;
+  label: string;
+  standings: { varsity: FileRow[]; jv: FileRow[] };
+  awards: {
+    varsity: { overall: Array<{ award: string; value: string }>; firstTeam: unknown[]; secondTeam: unknown[]; honorableMention: unknown[] } | null;
+    jv: { firstTeam: unknown[]; secondTeam: unknown[]; honorableMention: unknown[] } | null;
+  };
+}
 interface HistoryFile {
   season: string;
-  provenance: { standingsPdf: string; allLeaguePdf: string; source: string; notes: string[] };
-  divisions: Array<{
-    division: 'de-anza' | 'el-camino';
-    label: string;
-    standings: {
-      varsity: Array<{ place: number; name: string; slug: string | null; leagueRecord: string; w: number; l: number; t: number; overallRecord: null }>;
-      jv: Array<{ place: number; name: string; slug: string | null; leagueRecord: string }>;
+  sport: string;
+  leagues: {
+    scval: {
+      status: 'available';
+      provenance: { standingsPdf: string; allLeaguePdf: string; source: string; notes: string[] };
+      divisions: FileDivision[];
     };
-    awards: {
-      varsity: { overall: Array<{ award: string; value: string }>; firstTeam: unknown[]; secondTeam: unknown[]; honorableMention: unknown[] } | null;
-      jv: { firstTeam: unknown[]; secondTeam: unknown[]; honorableMention: unknown[] } | null;
+    bval: {
+      status: 'available';
+      provenance: {
+        source: string;
+        standingsSheet: string;
+        standingsIndex: string;
+        allLeagueDocs: Record<string, string | null>;
+        retrievedOn: string;
+        notes: string[];
+      };
+      divisions: FileDivision[];
     };
-  }>;
+    pcal: { status: 'unavailable'; reason: string; checkedOn: string; checked: string[] };
+    mcal: { status: 'unavailable'; reason: string; checkedOn: string; checked: string[] };
+  };
 }
 
-const history = JSON.parse(
+const file = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'),
 ) as HistoryFile;
+/** SCVAL's entry: every SCVAL assertion below is unchanged from the SCVAL-only file. */
+const history = file.leagues.scval;
+const bval = file.leagues.bval;
 
 describe('history: the standings PDF', () => {
   it('yields four blocks in the order DeAnza V, El Camino V, DeAnza JV, El Camino JV', () => {
@@ -208,7 +255,7 @@ describe('history: the all-league PDF', () => {
 
 describe('history: the committed JSON file', () => {
   it('names the season and both source PDFs', () => {
-    expect(history.season).toBe('2025-26');
+    expect(file.season).toBe('2025-26');
     expect(history.provenance.source).toBe('scval-pdf');
     expect(history.provenance.standingsPdf).toBe(SCVAL_HISTORY_PDFS.standings);
     expect(history.provenance.allLeaguePdf).toBe(SCVAL_HISTORY_PDFS.allLeague);
@@ -251,12 +298,15 @@ describe('history: the committed JSON file', () => {
   });
 
   it('is key-sorted, so a rebuild produces no spurious diff', () => {
-    const keys = Object.keys(history);
+    const keys = Object.keys(file);
     expect(keys).toEqual([...keys].sort());
+    expect(Object.keys(file.leagues)).toEqual([...Object.keys(file.leagues)].sort());
+    expect(Object.keys(history)).toEqual([...Object.keys(history)].sort());
+    expect(Object.keys(bval)).toEqual([...Object.keys(bval)].sort());
   });
 });
 
-describe('history: SCVAL-scoped (SPEC §0.2 #12, §4.2)', () => {
+describe('history: the SCVAL entry is scoped to SCVAL (SPEC §0.2 #12, §4.2)', () => {
   it('names only the 15 SCVAL registry teams and the two SCVAL divisions', () => {
     const scval = teamsInLeague('scval');
     expect(scval).toHaveLength(15);
@@ -271,15 +321,15 @@ describe('history: SCVAL-scoped (SPEC §0.2 #12, §4.2)', () => {
 
   it('refuses a slug or a division from another league', async () => {
     const { HistorySchema } = await import('../lib/history');
-    expect(HistorySchema.safeParse(history).success).toBe(true);
-    const foreign = structuredClone(history);
-    foreign.divisions[0].standings.varsity[0].slug = 'leigh';
+    expect(HistorySchema.safeParse(file).success).toBe(true);
+    const foreign = structuredClone(file);
+    foreign.leagues.scval.divisions[0].standings.varsity[0].slug = 'leigh';
     expect(HistorySchema.safeParse(foreign).success).toBe(false);
-    const badDivision = structuredClone(history);
-    (badDivision.divisions[0] as { division: string }).division = 'mt-hamilton';
+    const badDivision = structuredClone(file);
+    badDivision.leagues.scval.divisions[0].division = 'mt-hamilton';
     expect(HistorySchema.safeParse(badDivision).success).toBe(false);
-    const oneDivision = structuredClone(history);
-    oneDivision.divisions.pop();
+    const oneDivision = structuredClone(file);
+    oneDivision.leagues.scval.divisions.pop();
     expect(HistorySchema.safeParse(oneDivision).success).toBe(false);
   });
 });
@@ -296,7 +346,7 @@ describe('history: the read API', () => {
 
   it('names the champions', async () => {
     const h = await import('../lib/history');
-    expect(h.getHistoryChampions().map((c) => [c.division, c.row.slug, c.row.leagueRecord])).toEqual([
+    expect(h.getHistoryChampions('scval').map((c) => [c.division, c.row.slug, c.row.leagueRecord])).toEqual([
       ['de-anza', 'st-ignatius', '11-0-1'],
       ['el-camino', 'los-gatos', '14-0'],
     ]);
@@ -317,8 +367,261 @@ describe('history: the read API', () => {
     const h = await import('../lib/history');
     expect(h.getHistoryAwards('de-anza')?.overall).toHaveLength(7);
     expect(h.getHistoryAwards('el-camino', 'jv')?.overall).toEqual([]);
-    const sources = h.getHistorySources();
+    const sources = h.getHistoryProvenance('scval');
+    if (sources?.source !== 'scval-pdf') throw new Error('scval provenance should be scval-pdf');
     expect(sources.standingsPdf).toMatch(/scval\.com/);
     expect(sources.allLeaguePdf).toMatch(/all%20league\.pdf$/);
+  });
+});
+
+// ------------------------------------------------------------------------------------------ BVAL
+
+describe('history: the BVAL sheet', () => {
+  const bvalBlocks = parseStandingsCsv(bvalCsv);
+
+  it('is the live sheet\'s own CSV: two stacked divisions, no points or goals columns', () => {
+    expect(bvalBlocks.map((b) => b.division)).toEqual(['mt-hamilton', 'santa-teresa']);
+    expect(parseCsv(bvalCsv)[4]).toEqual(['Place', 'School', 'Overall', 'League Record', 'JV Place', 'JV Record']);
+  });
+
+  it('reproduces the verified 2025-26 varsity tables exactly (league record, overall)', () => {
+    expect(bvalBlocks[0].rows.map((r) => `${r.place} ${r.name} ${r.leagueRecord} (${r.overallRecord})`)).toEqual([
+      '1 Leigh 8-1-1 (13-2-1)',
+      '2 Gilroy 7-1-2 (13-3-5)',
+      '3 Christopher 7-2-1 (12-4-2)',
+      '4 Willow Glen 3-6-1 (6-7-1)',
+      '5 Branham 2-7-1 (4-12-2)',
+      '6 Prospect 0-10-0 (3-13-1)',
+    ]);
+    expect(bvalBlocks[1].rows.map((r) => `${r.place} ${r.name} ${r.leagueRecord} (${r.overallRecord})`)).toEqual([
+      '1 Leland 8-1-1 (9-6-1)',
+      '2 Westmont 8-2-0 (9-3-1)',
+      '3 Live Oak 7-2-1 (7-3-1)',
+      '4 Sobrato 4-6 (4-6)',
+      '5 Silver Creek 1-8-1 (1-14-1)',
+      '6 Del Mar 0-9-1 (0-9-1)',
+    ]);
+  });
+
+  it('records Sobrato\'s "4 - 6" as published, with ties null rather than an assumed 0', () => {
+    const sobrato = bvalBlocks[1].rows.find((r) => r.slug === 'sobrato');
+    expect(sobrato).toMatchObject({ leagueRecord: '4-6', w: 4, l: 6, t: null, overallRecord: '4-6' });
+    // Every other row prints three parts, so its ties are a real number.
+    expect(bvalBlocks.flatMap((b) => b.rows).filter((r) => r.t === null).map((r) => r.name)).toEqual(['Sobrato']);
+  });
+
+  it('keeps the sheet\'s divisions: Leland in Santa Teresa, Prospect in Mt. Hamilton (the registry swaps them)', () => {
+    expect(bvalBlocks[1].rows[0]).toMatchObject({ name: 'Leland', slug: 'leland' });
+    expect(getTeamBySlug('leland')?.division).toBe('mt-hamilton');
+    expect(bvalBlocks[0].rows[5]).toMatchObject({ name: 'Prospect', slug: 'prospect' });
+    expect(getTeamBySlug('prospect')?.division).toBe('santa-teresa');
+  });
+
+  it('resolves every school to a registry slug of BVAL, and every BVAL team appears once', () => {
+    const rows = bvalBlocks.flatMap((b) => b.rows);
+    expect(rows.every((r) => r.slug !== null)).toBe(true);
+    for (const r of rows) expect(getTeamBySlug(r.slug as string)?.league, r.name).toBe('bval');
+    expect(new Set(rows.map((r) => r.slug)).size).toBe(teamsInLeague('bval').length);
+    expect(rows).toHaveLength(12);
+  });
+
+  it('has contiguous places and no JV table (the sheet gives one JV place, for Leigh)', () => {
+    for (const b of bvalBlocks) expect(b.rows.map((r) => r.place)).toEqual([1, 2, 3, 4, 5, 6]);
+    const jvPlaces = parseCsv(bvalCsv).filter((r) => /^\d+$/.test(r[0]) && r[4] !== '');
+    expect(jvPlaces).toHaveLength(1);
+  });
+});
+
+describe('history: the BVAL all-league documents', () => {
+  const mh = parseAllLeagueHtml(bvalMh, 'mt-hamilton');
+  const st = parseAllLeagueHtml(bvalSt, 'santa-teresa');
+
+  it('reads the Mt. Hamilton awards and both teams', () => {
+    expect(mh.overall.map((a) => `${a.award}: ${a.value}`)).toEqual([
+      'MVP: Elle Obenour, Leigh, Midfield',
+      'Co-Senior of the Year: Kamryn Krejovsky, Gilroy, Midfield',
+      'Co-Senior of the Year: Danica Lopez, Christopher, Midfield',
+      'Junior of the Year: Alyssa Montejano, Christopher, Defender',
+      'Sophomore of the Year: Lexie Osaki, Gilroy, Midfield',
+      'Goalie of the Year: Keana Wong, Leigh, Goalkeeper',
+    ]);
+    expect(mh.firstTeam).toHaveLength(13);
+    expect(mh.secondTeam).toHaveLength(13);
+    expect(mh.honorableMention).toEqual([]);
+    expect(mh.firstTeam[0]).toEqual({ player: 'Cora Thomas', school: 'Leigh', slug: 'leigh', position: 'Midfield', year: 12 });
+  });
+
+  it('stores a blank position cell as null, not as a guess', () => {
+    const solis = mh.secondTeam.find((p) => p.player === 'Lalita Solis');
+    const rhodas = mh.secondTeam.find((p) => p.player === 'Stella Rhodas');
+    expect(solis).toMatchObject({ position: null, year: 11, slug: 'gilroy' });
+    expect(rhodas).toMatchObject({ position: null, year: 10 });
+  });
+
+  it('reads the Santa Teresa awards, converts the year words, and skips the placeholder rows', () => {
+    expect(st.overall.map((a) => `${a.award}: ${a.value}`)).toEqual([
+      'MVP: Carolyn Salverson, Leland, Forward',
+      'Co-Senior of the Year: Eden Svboda, Live Oak, Mid Center',
+      'Co-Senior of the Year: Kayla Tulowitzki, Live Oak, Mid Center',
+      'Junior of the Year: Sophie Tuan, Westmont, Mid Center',
+      'Freshman of the Year: Teya Halali, Westmont, Center Left',
+      'Goalie of the Year: Mira Kapadia, Leland, Goalie',
+    ]);
+    expect(st.firstTeam).toHaveLength(9);
+    expect(st.secondTeam).toHaveLength(8);
+    expect(st.emptyRows).toHaveLength(9);
+    expect(st.emptyRows.every((e) => ['Sobrato', 'Silver Creek', 'Del Mar'].includes(e.school))).toBe(true);
+    expect(st.firstTeam.find((p) => p.player === 'Kaia Costa')).toMatchObject({ year: 10 });
+    expect(st.firstTeam.find((p) => p.player === 'Eleanor Graham')).toMatchObject({ year: 11 });
+    expect([...st.firstTeam, ...st.secondTeam].every((p) => p.slug !== null)).toBe(true);
+  });
+
+  it('maps grade words and numbers, and nothing else', () => {
+    expect(['Freshman', 'Sophmore', 'Sophomore', 'Junior', 'Senior', '12', '9'].map(parseGradeYear)).toEqual([
+      9, 10, 10, 11, 12, 12, 9,
+    ]);
+    expect(parseGradeYear('')).toBeNull();
+    expect(parseGradeYear('13')).toBeNull();
+    expect(parseGradeYear('Super senior')).toBeNull();
+  });
+
+  it('links the export of the documents bval.org lists for Fall 2025 field hockey', () => {
+    expect(BVAL_HISTORY_SOURCES.allLeagueDocs['mt-hamilton']).toMatch(/1VWcZOzF2S_3SxvdfbphzmVSnKKiSWA7Q/);
+    expect(bvalDocExportUrl(BVAL_HISTORY_SOURCES.allLeagueDocs['santa-teresa'])).toBe(
+      'https://docs.google.com/document/d/198L-AgFIkPY1XX06I9tZjGv38g5fk_a3/export?format=html',
+    );
+  });
+});
+
+describe('history: the committed BVAL entry', () => {
+  it('is the parsers\' output for both divisions, with the awards, and no JV', () => {
+    const blocks2 = parseStandingsCsv(bvalCsv);
+    expect(bval.divisions.map((d) => d.division)).toEqual(['mt-hamilton', 'santa-teresa']);
+    expect(bval.divisions.map((d) => d.standings.varsity)).toEqual(blocks2.map((b) => b.rows));
+    expect(bval.divisions.every((d) => d.standings.jv.length === 0 && d.awards.jv === null)).toBe(true);
+    expect(bval.divisions.map((d) => d.awards.varsity?.overall.length)).toEqual([6, 6]);
+    expect(bval.divisions.map((d) => d.awards.varsity?.firstTeam.length)).toEqual([13, 9]);
+  });
+
+  it('names its provenance: the official sheet, the index page, both documents and the day it was read', () => {
+    expect(bval.provenance.source).toBe('bval-sheet');
+    expect(bval.provenance.standingsSheet).toBe(BVAL_HISTORY_SOURCES.standingsSheet);
+    expect(bval.provenance.standingsIndex).toBe('https://bval.org/standings/');
+    expect(bval.provenance.allLeagueDocs).toEqual(BVAL_HISTORY_SOURCES.allLeagueDocs);
+    expect(bval.provenance.retrievedOn).toBe('2026-10-03');
+    expect(bval.provenance.notes.join(' ')).toMatch(/Leland/);
+    expect(bval.provenance.notes.join(' ')).toMatch(/Prospect/);
+    expect(bval.provenance.notes.join(' ')).toMatch(/Sobrato/);
+  });
+
+  it('carries no points, goals or recomputed ranking', () => {
+    const rows = bval.divisions.flatMap((d) => d.standings.varsity);
+    expect(rows.every((r) => !('pts' in r) && !('gf' in r) && !('ga' in r))).toBe(true);
+  });
+});
+
+describe('history: PCAL and MCAL are explicitly unavailable', () => {
+  it('says so, with a reason and what was checked, and carries no standings or awards', () => {
+    for (const league of [file.leagues.pcal, file.leagues.mcal]) {
+      expect(league.status).toBe('unavailable');
+      expect(league.reason).toMatch(/^No official 2025-26 final standings were reachable\./);
+      expect(league.reason).toMatch(/third-party|newspapers/);
+      expect(league.checkedOn).toBe('2026-10-03');
+      expect(league.checked.length).toBeGreaterThan(0);
+      expect('divisions' in league).toBe(false);
+    }
+  });
+
+  it('does not name a champion or a winner anywhere', () => {
+    const text = JSON.stringify([file.leagues.pcal, file.leagues.mcal]);
+    expect(text).not.toMatch(/Stevenson|Tamalpais|Redwood|Carmel|Santa Catalina|Marin Catholic|\bwon\b/i);
+  });
+});
+
+describe('history: the league-aware schema', () => {
+  it('refuses a file with a league missing, or a league that is neither available nor unavailable', async () => {
+    const { HistorySchema } = await import('../lib/history');
+    const missing = structuredClone(file) as unknown as { leagues: Record<string, unknown> };
+    delete missing.leagues.mcal;
+    expect(HistorySchema.safeParse(missing).success).toBe(false);
+    const odd = structuredClone(file) as unknown as { leagues: Record<string, { status: string }> };
+    odd.leagues.pcal.status = 'pending';
+    expect(HistorySchema.safeParse(odd).success).toBe(false);
+  });
+
+  it('refuses a BVAL slug or division that belongs to SCVAL, and SCVAL ones in BVAL', async () => {
+    const { HistorySchema } = await import('../lib/history');
+    const a = structuredClone(file);
+    a.leagues.bval.divisions[0].standings.varsity[0].slug = 'los-gatos';
+    expect(HistorySchema.safeParse(a).success).toBe(false);
+    const b = structuredClone(file);
+    b.leagues.bval.divisions[0].division = 'de-anza';
+    expect(HistorySchema.safeParse(b).success).toBe(false);
+  });
+
+  it('refuses a place gap and a record that disagrees with its w/l/t', async () => {
+    const { HistorySchema } = await import('../lib/history');
+    const gap = structuredClone(file);
+    gap.leagues.bval.divisions[0].standings.varsity[2].place = 4;
+    expect(HistorySchema.safeParse(gap).success).toBe(false);
+    const drift = structuredClone(file);
+    drift.leagues.bval.divisions[1].standings.varsity[3].t = 0; // "4-6" is not "4-6-0"
+    expect(HistorySchema.safeParse(drift).success).toBe(false);
+  });
+
+  it('refuses an unavailable league without a reason, and an unknown provenance source', async () => {
+    const { HistorySchema } = await import('../lib/history');
+    const noReason = structuredClone(file);
+    noReason.leagues.pcal.reason = '';
+    expect(HistorySchema.safeParse(noReason).success).toBe(false);
+    const source = structuredClone(file) as unknown as { leagues: { bval: { provenance: { source: string } } } };
+    source.leagues.bval.provenance.source = 'maxpreps';
+    expect(HistorySchema.safeParse(source).success).toBe(false);
+  });
+});
+
+describe('history: the league-aware read API', () => {
+  it('lists every league in config order, and splits available from unavailable', async () => {
+    const h = await import('../lib/history');
+    expect(h.getHistoryLeagues().map((l) => [l.id, l.entry.status])).toEqual([
+      ['scval', 'available'],
+      ['bval', 'available'],
+      ['pcal', 'unavailable'],
+      ['mcal', 'unavailable'],
+    ]);
+    expect(h.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
+    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pcal', 'mcal']);
+    expect(h.hasHistory('bval')).toBe(true);
+    expect(h.hasHistory('pcal')).toBe(false);
+    expect(h.getHistoryProvenance('mcal')).toBeNull();
+    expect(h.getHistoryChampions('pcal')).toEqual([]);
+  });
+
+  it('serves BVAL tables and champions by division', async () => {
+    const h = await import('../lib/history');
+    expect(h.getHistoryStandings('mt-hamilton')).toHaveLength(6);
+    expect(h.getHistoryStandings('santa-teresa', 'jv')).toEqual([]);
+    expect(h.getHistoryChampions('bval').map((c) => [c.division, c.row.slug, c.row.leagueRecord])).toEqual([
+      ['mt-hamilton', 'leigh', '8-1-1'],
+      ['santa-teresa', 'leland', '8-1-1'],
+    ]);
+    expect(h.getHistoryAwards('santa-teresa')?.overall).toHaveLength(6);
+    expect(h.getHistoryAwards('mt-hamilton', 'jv')).toBeNull();
+    expect(h.getHistoryFor('leland').map((x) => [x.division, x.level, x.row.place])).toEqual([
+      ['santa-teresa', 'varsity', 1],
+    ]);
+  });
+
+  it('flags Leland and Prospect as moved and Sobrato as having unpublished ties, and nothing else', async () => {
+    const h = await import('../lib/history');
+    // Two teams swapped divisions between the 2025-26 sheet and the registry's 2026-27 alignment.
+    expect(h.getHistoryDivisionChanges('bval')).toEqual([
+      { slug: 'prospect', name: 'Prospect', historyDivision: 'mt-hamilton', registryDivision: 'santa-teresa' },
+      { slug: 'leland', name: 'Leland', historyDivision: 'santa-teresa', registryDivision: 'mt-hamilton' },
+    ]);
+    expect(h.getHistoryDivisionChanges('scval')).toEqual([]);
+    expect(h.getHistoryUnpublishedTies('bval').map((r) => r.name)).toEqual(['Sobrato']);
+    // SCVAL's "2-10" rows are stored with t: 0 by its parser (unchanged); only BVAL carries null.
+    expect(h.getHistoryUnpublishedTies('scval')).toEqual([]);
   });
 });

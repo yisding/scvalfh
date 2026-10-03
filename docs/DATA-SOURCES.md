@@ -500,6 +500,8 @@ redirects.
 | Standings index | `https://www.scval.com/standings/` |
 | 2025-26 final standings (historical baseline) | `https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf` |
 | 2025-26 all-league awards | `https://www.scval.com/standings/SCVAL%202025-26%20Field%20Hockey%20all%20league.pdf` |
+| BVAL 2025-26 final standings (history; sheet linked from `https://bval.org/standings/`) | `https://docs.google.com/spreadsheets/d/1lXPbU5WJsgr6cpo3sJZBIJBChMXjNC-_/export?format=csv` |
+| BVAL 2025-26 all-league awards (history; index `https://bval.org/all-league/`) | Google Docs `1VWcZOzF2S_3SxvdfbphzmVSnKKiSWA7Q` (Mt. Hamilton), `198L-AgFIkPY1XX06I9tZjGv38g5fk_a3` (Santa Teresa), `/export?format=html` |
 | 26-27 By-Laws (settles standings/points/tiebreaks) | `https://scval.com/fallSports/1%2026-27%20SCVAL%20Field%20Hockey%20By-Laws.pdf` — see `docs/BYLAWS-2026-27.md` |
 
 `pdftotext -layout` recipes:
@@ -519,6 +521,39 @@ redirects.
   6-4-2, Valley Christian 6-5-1, Homestead 2-9-1, Fremont 2-10, Cupertino 1-9-2 (**7 teams — no
   Wilcox**). EC — Los Gatos 14-0, Mitty 11-2-1, Palo Alto 8-5-1, Saratoga 7-5-2, Presentation
   7-6-1, Santa Clara 4-9-1, Lynbrook 1-13, Monta Vista 1-13.
+- **2025-26 history, by league** (`data/history-2025-26.json`, built by `pnpm build-history`; one
+  entry per league, `available` or `unavailable`; read 2026-10-03). Record-only everywhere: league
+  W-L-T as published, no points or goals computed.
+  - **SCVAL** — the two PDFs above: 15 teams (7 + 8 varsity rows, 6 + 6 JV rows), awards in all four
+    blocks; `overallRecord` null (empty column).
+  - **BVAL** — official sheet `https://docs.google.com/spreadsheets/d/1lXPbU5WJsgr6cpo3sJZBIJBChMXjNC-_/export?format=csv`
+    (linked from `https://bval.org/standings/`, "Field Hockey" 2025-26; re-fetched and byte-identical
+    to the research copy, `tests/fixtures/bval/standings-2025-26.csv`). 12 teams, 6 + 6 varsity rows,
+    Overall and League Record as published, no points/goals. Mt. Hamilton: Leigh 8-1-1 (13-2-1),
+    Gilroy 7-1-2 (13-3-5), Christopher 7-2-1 (12-4-2), Willow Glen 3-6-1 (6-7-1), Branham 2-7-1
+    (4-12-2), Prospect 0-10-0 (3-13-1). Santa Teresa: Leland 8-1-1 (9-6-1), Westmont 8-2-0 (9-3-1),
+    Live Oak 7-2-1 (7-3-1), Sobrato 4-6 (4-6), Silver Creek 1-8-1 (1-14-1), Del Mar 0-9-1 (0-9-1).
+    ⚠️ Divisions are the sheet's, which differ from the registry's 2026-27 alignment for two teams:
+    Leland (sheet Santa Teresa, registry mt-hamilton) and Prospect (sheet Mt. Hamilton, registry
+    santa-teresa). History keeps the sheet's division; the registry is untouched and the page says both
+    teams moved. ⚠️ Sobrato's "4 - 6" has no ties field: stored as `4-6` with `t: null`, not 0. JV is
+    not stored (a JV Record column exists, but a JV Place for Leigh only). All-league awards: the two
+    official documents on `https://bval.org/all-league/` (Fall 2025, Field Hockey: Mt. Hamilton
+    `…/document/d/1VWcZOzF2S_3SxvdfbphzmVSnKKiSWA7Q`, Santa Teresa `…/198L-AgFIkPY1XX06I9tZjGv38g5fk_a3`),
+    read through the Google Docs HTML export (the txt export drops empty cells): Mt. Hamilton 6
+    special awards + 13 first + 13 second team; Santa Teresa 6 + 9 first + 8 second (9 placeholder
+    rows naming only Sobrato, Silver Creek or Del Mar are skipped). Santa Teresa writes the year as a
+    word ("Sophmore" sic → 10); a blank position is `null`; no honorable-mention table in either.
+  - **PCAL** — `unavailable`. pcalathletics.org/field-hockey/ shows only the current 2026 schedules;
+    the History pages stop at 2024-25; no 2025-26 standings page or document was found. MaxPreps
+    snippets and third-party all-league lists exist but are not official and are not used.
+  - **MCAL** — `unavailable`. mcalsports.org/FieldHockey.htm is behind a Sucuri JavaScript challenge
+    our fetcher cannot pass, and `Playoffs/FieldHockeyPlayoff_25.pdf` returns 404. School-newspaper and
+    third-party reports exist for the 2025 tournament and all-league teams; they are not official
+    standings and are not used, and no champion is stated.
+  - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
+    extend `scripts/build-history.ts`, and the schema (`lib/history.ts`) already validates it against
+    the league's own registry slugs and divisions (PCAL and MCAL are single-division).
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
 
@@ -1189,5 +1224,7 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   BVAL, PCAL or MCAL source publishes a height or a 2026-27 number MaxPreps lacks, and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
-- Prior-season data exists for SCVAL only, and has exactly one route (`teamSeasonPickerData[]`,
-  unverified) besides the scval.com PDFs, since a MaxPreps league URL's year segment is cosmetic.
+- Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
+  history, by league"); PCAL and MCAL are marked `unavailable` in `data/history-2025-26.json`.
+  For SCVAL the only route besides the scval.com PDFs is `teamSeasonPickerData[]` (unverified),
+  since a MaxPreps league URL's year segment is cosmetic.

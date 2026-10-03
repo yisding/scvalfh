@@ -185,9 +185,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leaguePlayed,
     leagueScheduled,
   } = view;
-  // Last season's varsity row from the 2025-26 standings PDF (the history league only: any other
-  // slug has no rows), and the size of that division as it was then (the alignment can change
-  // between seasons).
+  // Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;
+  // PCAL and MCAL are unavailable, so their slugs have no rows), and the size of that division as
+  // it was then (the alignment can change between seasons: Leland is in Santa Teresa here).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
   const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
@@ -454,8 +454,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </li>
               ) : null}
             </ul>
-            {/* Last season in one line, record exactly as the 2025-26 standings PDF printed it
-                ("1-13": that division's table has no tie column). The site-wide disclaimer that
+            {/* Last season in one line, record exactly as the league's 2025-26 standings
+                printed it ("1-13": that division's table has no tie column). The site-wide disclaimer that
                 sat here is the footer's, so it is no longer repeated on every team page. */}
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">

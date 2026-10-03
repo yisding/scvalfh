@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
-import { HISTORY_LEAGUE, LEAGUES, SECTIONS, getLeague } from '../../lib/leagues';
+import { LEAGUES, SECTIONS } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
 import { SITE_SCOPE_NOTE } from './site-url';
@@ -16,7 +16,7 @@ import { SITE_SCOPE_NOTE } from './site-url';
  * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
  * alignment and rules the site follows (each linked to its official site), the scope note naming
  * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
- * to last season's archive (the history league's, the only league with a past season here), and
+ * to last season's archive (2025-26 final standings, by league), and
  * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
  * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL" and can never drift from the config.
  *
@@ -33,7 +33,7 @@ export interface AttributionProps {
   /** The instant staleness is measured against (the build instant). */
   now?: string;
   links?: { label: string; href: string }[];
-  /** "Prior-season data from scval.com" on /history. */
+  /** A credit line for the page, e.g. the prior-season sources on /history. */
   extraCredit?: string;
   className?: string;
 }
@@ -102,7 +102,7 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           {/* The phone's only way to last season: the five-tab bar has no History entry (the
               desktop nav does), so the footer carries it at every width. */}
           <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
-            {`${getLeague(HISTORY_LEAGUE).shortName} 2025-26 archive`}
+            2025-26 archive
           </Link>
           {links && links.length > 0 ? (
             <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
