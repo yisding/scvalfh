@@ -19,11 +19,14 @@
  * `season.leagues` id, `playoffs/<id>` for each league with `postseasonKind: 'league-tournament'`
  * (never read from the built sitemap, which would be circular), `game/<param>` for every game plus
  * one stub per `supersededGames` key (param = lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`),
- * `scores/<date>` for every distinct game date, `teams/<slug>` for the 43 teams. No prerendered path
- * may contain ':'. Every family with an image has OG/page parity BY NAME (`game/X.html` ⇔
- * `game/X/opengraph-image.route`, and the same for standings, schedule, playoffs, teams, scores),
- * never by count. The prerendered sitemap must list exactly the prerendered pages, except the
- * superseded stubs, which it must not list (SPEC §8.1, §12.3).
+ * `scores/<date>` for every distinct game date, `teams/<slug>` for the 43 teams. The clubs pages
+ * are derived from data/clubs.json instead (DESIGN §16, SPEC §1.1j2), read from the repo root as
+ * the snapshot is: the fixed page `clubs`, and `clubs/<slug>` for exactly its slugs, with no OG card
+ * (they take the root one). No prerendered path may contain ':'. Every family with an image has
+ * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
+ * standings, schedule, playoffs, teams, scores), never by count. The prerendered sitemap must list
+ * exactly the prerendered pages, except the superseded stubs, which it must not list (SPEC §8.1,
+ * §12.3); the clubs pages are in it, so that check covers them too.
  *
  * `--cloudflare` also checks what the Worker actually ships, because a Worker has no filesystem to
  * seed a cache from: staticAssetsAdapter() (vite.config.ts) copies each prerendered file into the
@@ -59,7 +62,7 @@ const fileSet = new Set(files);
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
-const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26'];
+const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26', 'clubs'];
 const metadata = ['icon', 'apple-icon', 'icon-192', 'icon-512', 'opengraph-image', 'standings/opengraph-image',
   'manifest.webmanifest', 'sitemap.xml', 'robots.txt'];
 const missing = [
@@ -81,6 +84,9 @@ const stubParams = Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam
 const dates = [...new Set(snapshot.games.map((g) => g.dateKey))];
 const slugs = snapshot.teams.map((t) => t.slug);
 if (slugs.length !== 43) fail(`the snapshot has ${slugs.length} teams, expected 43`);
+// One page per club of data/clubs.json, a club with no tied player included (lib/clubs.ts
+// getClubSlugs is the same set, in display order; order does not matter here).
+const clubSlugs = JSON.parse(fs.readFileSync('data/clubs.json', 'utf8')).clubs.map((c) => c.slug);
 
 const sample = (list) => list.slice(0, 5).join(', ') + (list.length > 5 ? `, … (${list.length})` : '');
 const without = (a, b) => { const bs = new Set(b); return a.filter((x) => !bs.has(x)); };
@@ -111,6 +117,7 @@ family('game', [...gameParams, ...stubParams]);
 family('scores', dates);
 family('teams', slugs);
 family('history', ['2025-26'], false);
+family('clubs', clubSlugs, false);
 console.log(`prerendered: ${routes.length} routes; ${counts.join('; ')} ` +
   `(game = ${gameParams.length} games + ${stubParams.length} superseded stubs)`);
 

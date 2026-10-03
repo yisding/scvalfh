@@ -49,17 +49,20 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | All 43 teams: a search box and the full list grouped section → league → division |
-| `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues) |
+| `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
+| `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL and MCAL shown as unavailable |
 | `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
 
-Every prerendered game, date, team and league page also has a generated `opengraph-image` route,
-and the site publishes `sitemap.xml`, `robots.txt` and a web manifest (`app/sitemap.ts`,
-`app/robots.ts`, `app/manifest.ts`). The phone tab bar has five tabs (Home, Scores, Table, Teams,
-Playoffs) and the desktop nav seven links; after hydration Scores, Table and Playoffs follow the
-league you are looking at or have chosen.
+Every prerendered game, date, team and league page also has a generated `opengraph-image` route
+(the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
+a web manifest (`app/sitemap.ts`, `app/robots.ts`, `app/manifest.ts`). The phone tab bar has five
+tabs (Home, Scores, Table, Teams, Playoffs) and the desktop nav seven links; after hydration Scores,
+Table and Playoffs follow the league you are looking at or have chosen. `/clubs` is in neither: it
+is linked from `/teams`, from the Roster section of every team page and from `/about`.
 
 ## How data flows
 
@@ -286,6 +289,83 @@ pnpm fetch-player-stats --capture <dir>                      # live, and save ea
 pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
 ```
 
+### Clubs
+
+`data/clubs.json` holds the youth field hockey clubs around the 43 schools, plus any other club a
+rostered player is tied to, and the ties themselves: which players on the tracked varsity rosters
+a public page ties to which club (`affiliations`, joined to `data/rosters.json` on team slug +
+MaxPreps athleteId). A club record has its name and the shorter name the site shows, city, region,
+website, founding year, one factual sentence, the teams and programs it lists (each with the page
+it was read from), its own public roster pages and its sources. It names no individual: no
+coaches, no directors. An affiliation has the club team when a source gives one, a `status`
+(`current`, `past` or `unknown`) with the date or season the source gives (`asOf`), a
+`confidence` (`high` or `medium`), and its sources: URL, kind, a verbatim quote of at most 300
+characters, and the school, class year and date the page states. `basis` says, for maintainers,
+what the match rests on.
+
+The rules:
+- **The linking rule is the recruiting-profile rule** (see "Rosters"): a public page must name the
+  player and a field hockey club, and either name the player's high school, or give a class year
+  that agrees with the roster grade together with a Northern California location. A name alone
+  never makes a match, and a class year that disagrees rules one out. Lacrosse, soccer and ice
+  hockey clubs do not count.
+- **Only players already on the 43 tracked varsity rosters are named** (rows the overlay marks JV
+  are out), each under the roster's own spelling. A club's own roster lists many more players; the
+  club's page links that roster instead of naming them.
+- **Quotes and bases are kept, never rendered.** A page shows each source as a link labelled by
+  its kind and host ("SportsRecruits profile", "club roster", "Gilroy Dispatch").
+  `pnpm assert:copy` fails the build if any built page shows a basis or a quote fragment
+  (`affiliationLeaks` in `scripts/copy-rules.ts`), because both can name people who are not on the
+  rosters.
+- **No social media**: no source or website on instagram.com, facebook.com, tiktok.com, x.com or
+  twitter.com, and every URL is https.
+- **`unknown` is never called current.** A club a source names without saying whether the player
+  is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
+  page and "Listed club" on the roster; a `past` one reads "Earlier".
+
+Checked at load, so a bad file fails `pnpm test` and the build (`lib/clubs-schema.ts`, then the
+join in `lib/clubs.ts`): club slugs are unique, every affiliation names a club, and
+(team, athlete, club) is unique; https only, never social media; at least one source per club and
+per affiliation; `asOf` is a date, a month, a year, a season (`2025-26`) or a range (`2015-2018`);
+the file's `season` is `data/rosters.json`'s; every affiliation joins a row of that team under the
+row's own `fullName`, and the row is not JV; every stated class year agrees with the row's grade
+(MaxPreps', else the overlay's; a row with no grade has nothing to check).
+
+Coverage on 2026-10-03, counted from the file: **13 clubs** (San Francisco 2, South Bay 7, East Bay
+2, Marin 1, and HTC, a Connecticut club whose California program trains in La Jolla; none on the
+Peninsula or the Central Coast) and **67 affiliations for 61 of the 716 varsity rows, at 20 of the 43
+schools**: SCVAL 28 players at 10 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. Five players are
+tied to more than one club. By status 52 are current, 11 past and 4 unknown; by confidence 52 high
+and 15 medium. They rest on 181 source entries on 91 distinct pages: an entry is one page backing
+one tie, so a club roster or a news story counts once for every player it names. By kind, entries
+then pages: SportsRecruits 53 on 32, club sites 49 on 16, news 33 on 6, NCSA 22 on 19, MaxPreps
+career pages 13 on 13, other 8 on 3, and one each of Hudl, an event page and a school site. Six
+clubs have tied players: SF Hawks 30 (all current), NorCal Impact 17 (all current), Fly FHC 8,
+Infinity 8, Lightning 3 and HTC 1. The other seven (Pac Heights, Performance Field Hockey, San Jose
+Khalsa, Stryker, Hayward Hawks, Lions and Golden Gate Rippers) have a page with an empty state.
+
+**It is research, not a script.** Like the roster overlay, it was gathered by hand from club
+directories, the clubs' own sites, recruiting profiles, MaxPreps career pages and local news, and
+every tie was checked twice on 2026-10-03: a checker re-opened each source, then an independent
+refuter tried to break the match. Nothing refreshes it, and re-running it is research. Recall is
+partial: see `docs/DATA-SOURCES.md` §1.1j2 for the sources, the gotchas and the count by school.
+
+**When a roster refetch breaks it.** `lib/clubs.ts` throws at import if `pnpm fetch-rosters` drops
+or respells a tied player's row, if the overlay marks that row JV, or if a season rollover moves
+`data/rosters.json` to a season `data/clubs.json` is not for; `pnpm test` and the build then fail
+with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
+drop it by hand (on a rollover, redo the research for the new season). Never prune it
+automatically.
+
+`lib/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
+most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
+`getTeamClubAffiliations(team)` and `getPlayerClubs(team, athleteId)` (current, then listed, then
+earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
+about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.mjs` expect
+`clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
+expects `/clubs/nope` to be a 404, and `a11y-axe.mjs` checks `/clubs`, the first club page and the
+first club page with no tied player.
+
 ## Local development
 
 ```bash
@@ -339,8 +419,9 @@ overwrites with its own declarations; Next stays the type authority.
 `.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test, build,
 and an assertion that every route family actually prerendered (no route should ever fall back to
 dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores/[date]` and
-`/teams/[slug]`, and the per-league `/standings/[league]`, `/schedule/[league]` and
-`/playoffs/[league]` pages, with exact counts read from the snapshot and the league config), then
+`/teams/[slug]`, the per-league `/standings/[league]`, `/schedule/[league]` and
+`/playoffs/[league]` pages, and `/clubs/[slug]`, with exact counts read from the snapshot, the
+league config and `data/clubs.json`), then
 checks the page-weight and first-load JS budgets and a copy-honesty scan of the built HTML. A second
 job starts `next start` on that build, holds it to the response contract with
 `scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core` against it
@@ -353,13 +434,13 @@ target, run beside them (not after `gates`, so a vinext regression shows even wh
 `scripts/assert-vinext-prerender.mjs` that every route rendered with `revalidate: false`, that the
 static pages, metadata routes and Route Handlers are on disk, that the page families and their OG
 images are exactly the ones the Next build's assertion expects (standings, schedule, playoffs, game,
-date and team, with OG/page parity by name) and that the prerendered sitemap lists exactly the
-prerendered pages; for the Worker it also checks that every one of them is packaged into the
-static-assets cache and every file its index lists is there, that `_headers` is there, and that
-nothing else ships: no precompressed copy, and nothing at the top level of the upload but
-`_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it out. Then each starts its server
-(`vinext start`, or the Worker in workerd through `vite preview`) and runs the same
-`scripts/smoke-server.sh` and axe passes against it. Uploading the Worker is
+date and team, with OG/page parity by name, plus the clubs pages, which have no OG card) and that
+the prerendered sitemap lists exactly the prerendered pages; for the Worker it also checks that
+every one of them is packaged into the static-assets cache and every file its index lists is there,
+that `_headers` is there, and that nothing else ships: no precompressed copy, and nothing at the
+top level of the upload but `_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it
+out. Then each starts its server (`vinext start`, or the Worker in workerd through `vite preview`)
+and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading the Worker is
 `.github/workflows/deploy-cloudflare.yml`'s job (see "Cloudflare Workers").
 
 ## Tests
@@ -578,6 +659,11 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   page has them either), what each tracks varies by coach, and some stop entering mid-season
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table
   as if it were complete.
+- **Club recall is partial.** A player is tied to a club only when a public page meets the linking
+  rule, so 61 of the 716 varsity rows have a club line, and 23 schools have none (six of them list
+  no players on MaxPreps at all). A player with no club line may still play for a club. The ties
+  were researched once, on 2026-10-03, and nothing refreshes them. See `docs/DATA-SOURCES.md`
+  §1.1j2.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -657,9 +743,9 @@ both load `.env` the way Next does. The Workers build empties `dist/` (it stages
 there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `pnpm start:vinext`.
 
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
-`next build` does — about 480 pages plus a 404 with the current snapshot (481 .html, per the
-measurement in `next.config.ts`; the exact counts are derived from `data/snapshot.json` by
-`scripts/assert-vinext-prerender.mjs`), all `revalidate: false` in
+`next build` does — about 494 pages plus a 404 with the current snapshot and clubs file (495 .html
+on 2026-10-03, 14 of them the clubs pages; the exact counts are derived from `data/snapshot.json`
+and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`), all `revalidate: false` in
 `dist/server/vinext-prerender.json`: every page (HTML and RSC payload) plus a 404 page, and every
 icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per league, game, date
 and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under

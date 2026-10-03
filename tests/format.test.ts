@@ -8,6 +8,7 @@ import {
   dateWithYear,
   formStripLabel,
   gameWhen,
+  gradeWord,
   hoursBetween,
   isoDateKey,
   localDateKey,
@@ -15,6 +16,8 @@ import {
   monthDay,
   ordinal,
   ordinalPlace,
+  partialDate,
+  partialDateKind,
   perGame,
   recordString,
   recordWords,
@@ -213,5 +216,41 @@ describe('clockTime', () => {
     expect(clockTime('2026-09-24T00:15:00')).toBe('12:15');
     // The full time is still what every accessible sentence carries.
     expect(timeOfDayPT('2026-09-24T17:30:00')).toBe('5:30 PM PT');
+  });
+});
+
+describe('partialDate: the five shapes of a hand-researched date (data/clubs.json asOf)', () => {
+  it('words a day, a month, a year, a season and a range', () => {
+    expect(partialDate('2026-07-08')).toBe('Jul 8, 2026');
+    expect(partialDate('2025-10')).toBe('Oct 2025');
+    expect(partialDate('2025')).toBe('2025');
+    expect(partialDate('2025-26')).toBe('2025-26 season');
+    expect(partialDate('2015-2018')).toBe(`2015${EN_DASH}2018`);
+    expect(['2026-07-08', '2025-10', '2025', '2025-26', '2015-2018'].map(partialDateKind)).toEqual([
+      'day',
+      'month',
+      'year',
+      'season',
+      'range',
+    ]);
+  });
+
+  it('reads YYYY-MM as a month when MM is 01-12 (isAsOf’s order), a season only by the +1 rule', () => {
+    expect(partialDateKind('2025-12')).toBe('month');
+    expect(partialDateKind('1999-00')).toBe('season');
+    expect(partialDate('2099-00')).toBe('2099-00 season');
+  });
+
+  it('throws on anything else, rather than printing a guess', () => {
+    for (const bad of ['2025-27', '2025-13', '2025/26', '2018-2015', '2026-02-31x', '2026-13-01', 'Fall 2025', '']) {
+      expect(() => partialDate(bad), bad).toThrow(/not a partial date/);
+    }
+  });
+});
+
+describe('gradeWord', () => {
+  it('words grades 9-12 and prints any other as its number', () => {
+    expect([9, 10, 11, 12].map(gradeWord)).toEqual(['Freshman', 'Sophomore', 'Junior', 'Senior']);
+    expect(gradeWord(8)).toBe('Grade 8');
   });
 });

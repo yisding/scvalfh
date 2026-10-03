@@ -94,7 +94,9 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * never is. The empty states are honest about why: MaxPreps lists no players, the coach entered no
  * stats, the last update failed with nothing to fall back on, or no update has covered the team
  * yet. The meta description names player stats and the roster only for a team whose page lists
- * them.
+ * them. The roster section links /clubs on every team page, empty rosters included (its header
+ * action, "Club teams": the clubs pages are not in the nav, DESIGN §16.4); a rostered player a
+ * public page ties to a club also gets a club line in the list itself (TeamRoster).
  *
  * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
  * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
@@ -491,6 +493,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <SectionHeader
               kicker="Roster"
               meta={rosterCount > 0 ? plural(rosterCount, 'player') : undefined}
+              action={{ href: '/clubs', label: 'Club teams' }}
             />
             <TeamRoster view={roster} />
           </section>

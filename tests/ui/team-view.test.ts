@@ -313,6 +313,17 @@ describe('/teams (app/teams/page.tsx)', () => {
     );
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
   });
+
+  it('links the club pages once, quietly, outside the list the finder filters', () => {
+    const html = renderIndex();
+    expect((html.match(/href="\/clubs"/g) ?? []).length, 'app/teams/page.tsx /clubs link').toBe(1);
+    const link = html.indexOf('href="/clubs"');
+    // After the whole list (its last group), not inside it: TeamFinder never hides it.
+    expect(link, 'app/teams/page.tsx /clubs link').toBeGreaterThan(html.lastIndexOf('data-team-group=""'));
+    expect(textOf(html), 'app/teams/page.tsx').toContain(
+      'Club field hockey: the club teams page lists youth field hockey clubs and, for each, the players here a public page ties to it.',
+    );
+  });
 });
 
 describe('the NEXT card and the identity place line (UI pass, league-aware)', () => {

@@ -3,7 +3,9 @@
  * committed data/rosters.json + data/rosters-enrichment.json.
  *
  * The section makes three promises a test can hold it to: it is varsity only, a blank is never
- * filled with a guess, and every value that did not come from MaxPreps is marked and sourced.
+ * filled with a guess, and every value that did not come from MaxPreps is marked and sourced. A
+ * fourth is the club line (DESIGN §16.4): a club a source only lists is never worded as current,
+ * and every club line links that club's page on this site, which cites the sources.
  */
 
 import { createElement } from 'react';
@@ -12,9 +14,11 @@ import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
 import { buildRosterView } from '../../components/teams/roster-view';
+import { getPlayerClubs } from '../../lib/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
+import { textOf } from './html-text';
 
 /** Rosters cover every registry team, all four leagues: 43 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));
@@ -178,6 +182,54 @@ describe('buildRosterView', () => {
   });
 });
 
+describe('buildRosterView: club lines (DESIGN §16.4)', () => {
+  const rowOf = (slug: string, name: string) => views.find((v) => v.slug === slug)!.view.rows.find((r) => r.name === name)!;
+  const pairs = (slug: string, name: string) => rowOf(slug, name).clubs.map((g) => [g.label, g.clubs.map((c) => c.name)]);
+
+  it('gives every row exactly its player’s clubs: current, then listed, then earlier', () => {
+    let tied = 0;
+    for (const { slug, view } of views) {
+      const merged = getEnrichedTeamRoster(slug)!.players.filter((p) => p.level !== 'jv');
+      for (const row of view.rows) {
+        const p = merged.find((x) => (x.athleteId ?? `${x.fullName}`) === row.key || x.fullName === row.name)!;
+        const ties = p.athleteId === null ? [] : getPlayerClubs(slug, p.athleteId);
+        const shown = row.clubs.flatMap((g) => g.clubs.map((c) => `${g.status} ${c.slug}`));
+        expect(shown.sort(), `${slug} / ${row.name}`).toEqual(ties.map((a) => `${a.status} ${a.club}`).sort());
+        expect(row.clubs.map((g) => g.status), `${slug} / ${row.name}`).toEqual(
+          (['current', 'unknown', 'past'] as const).filter((s) => ties.some((a) => a.status === s)),
+        );
+        for (const g of row.clubs) {
+          const many = g.clubs.length > 1;
+          const words = { current: ['Club', 'Clubs'], unknown: ['Listed club', 'Listed clubs'], past: ['Earlier club', 'Earlier clubs'] }[g.status];
+          expect(g.label, `${slug} / ${row.name}`).toBe(words[many ? 1 : 0]);
+          expect(g.srLabel, `${slug} / ${row.name}`).toBe(g.label.toLowerCase());
+          for (const c of g.clubs) expect(c.href).toBe(`/clubs/${c.slug}`);
+        }
+        if (row.clubs.length > 0) tied += 1;
+      }
+      expect(view.hasClubs, slug).toBe(view.rows.some((r) => r.clubs.length > 0));
+      expect(view.hasListedClub, slug).toBe(view.rows.some((r) => r.clubs.some((g) => g.status === 'unknown')));
+      // A club page is not a source of a listed value: it never joins the Sources row.
+      for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
+    }
+    expect(tied).toBe(61);
+  });
+
+  it('words the pinned rows', () => {
+    expect(pairs('saint-francis', 'Melanie Henderson')).toEqual([
+      ['Club', ['NorCal Impact']],
+      ['Earlier clubs', ['Fly FHC', 'Lightning']],
+    ]);
+    expect(pairs('los-altos', 'Riya Mehrotra')).toEqual([['Listed club', ['Fly FHC']]]);
+    expect(pairs('st-ignatius', 'Storey Lewis')).toEqual([['Club', ['SF Hawks']]]);
+    expect(pairs('gilroy', 'Hailey Moncada')).toEqual([
+      ['Club', ['HTC']],
+      ['Earlier club', ['Infinity']],
+    ]);
+    expect(rowOf('valley-christian', views.find((v) => v.slug === 'valley-christian')!.view.rows[0].name).clubs).toEqual([]);
+  });
+});
+
 describe('TeamRoster', () => {
   it('renders every row, a † only where a value came from elsewhere, and no raw nulls', () => {
     for (const { slug, view } of views) {
@@ -265,5 +317,59 @@ describe('TeamRoster', () => {
       expect(out, slug).toContain('has not been collected yet');
       expect(out, slug).not.toMatch(/>(null|undefined)</);
     }
+  });
+});
+
+describe('TeamRoster: club lines', () => {
+  const si = views.find((v) => v.slug === 'st-ignatius')!.view;
+
+  it('links the club’s page, named for the player, between the facts and the profile links', () => {
+    const html = renderToStaticMarkup(createElement(TeamRoster, { view: si }));
+    expect(html).toContain('href="/clubs/sf-hawks"');
+    expect(html).toContain('<span><span class="sr-only">Storey Lewis’s club: </span>SF Hawks</span>');
+    expect(html).toContain('<span aria-hidden="true" class="text-ink-3">Club:</span>');
+    // The club line comes before the row's profile links.
+    const row = /<li[^>]*>(?:(?!<\/li>)[\s\S])*?Storey Lewis(?:(?!<\/li>)[\s\S])*<\/li>/.exec(html)![0];
+    expect(row.indexOf('/clubs/sf-hawks')).toBeGreaterThan(-1);
+    expect(row.indexOf('/clubs/sf-hawks')).toBeLessThan(row.indexOf('target="_blank"'));
+    // Internal links: no arrow, no "opens in a new tab", never prefetched as a row.
+    expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).not.toContain('target=');
+  });
+
+  it('explains club lines once where there are any, and "listed club" only where one is shown', () => {
+    const footnote = 'Club lines link to the club’s page on this site';
+    const listed = 'A “listed club” is one a source names';
+    const count = (html: string, s: string) => html.split(s).length - 1;
+    const withClubs = renderToStaticMarkup(createElement(TeamRoster, { view: si }));
+    expect(count(withClubs, footnote)).toBe(1);
+    expect(withClubs).toContain('Recall is partial: a player with no club line may still play for a club.');
+    expect(si.hasListedClub).toBe(false);
+    expect(withClubs).not.toContain(listed);
+    const losAltos = renderToStaticMarkup(createElement(TeamRoster, { view: views.find((v) => v.slug === 'los-altos')!.view }));
+    expect(count(losAltos, listed)).toBe(1);
+    expect(losAltos).toContain('<span><span class="sr-only">Riya Mehrotra’s listed club: </span>Fly FHC</span>');
+    for (const { slug, view } of views) {
+      const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
+      expect(count(html, footnote), slug).toBe(view.hasClubs ? 1 : 0);
+      expect(count(html, listed), slug).toBe(view.hasListedClub ? 1 : 0);
+    }
+    const none = renderToStaticMarkup(
+      createElement(TeamRoster, { view: { ...si, rows: si.rows.map((r) => ({ ...r, clubs: [] })), hasClubs: false } }),
+    );
+    expect(none).not.toContain(footnote);
+    expect(none).not.toContain('/clubs/');
+  });
+
+  it('separates a row’s groups and clubs so no dot or comma starts a line', () => {
+    const sf = views.find((v) => v.slug === 'saint-francis')!.view;
+    const html = renderToStaticMarkup(createElement(TeamRoster, { view: sf }));
+    // textOf puts a space where each tag was, so compare without whitespace.
+    const text = textOf(html).replace(/\s+/g, '');
+    expect(text).toContain(
+      'Club: Melanie Henderson’s club: NorCal Impact · Earlier clubs: Melanie Henderson’s earlier clubs: Fly FHC, Melanie Henderson’s earlier clubs: Lightning'.replace(/\s+/g, ''),
+    );
+    // The comma sits after the closing tag of the club before it, so it cannot start a line.
+    expect(html).toContain('Fly FHC</span></a></span><span>, <a');
+    expect(html).toMatch(/\u00a0· <span aria-hidden="true" class="text-ink-3">Earlier clubs:<\/span>\u00a0/);
   });
 });

@@ -10,6 +10,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
+import { getClubs, getClubsFile } from '../../lib/clubs';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
@@ -46,6 +47,8 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
  * from their config citations), each league's data health, every si.com backfill, every contest
  * dropped on purpose, the published cross-checks, the update cadence, privacy and the
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
+ * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §16.1),
+ * which links /clubs: hand research, not part of the twice-daily update.
  */
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
@@ -602,6 +605,19 @@ export default function AboutPage() {
             {listWords(historyUnavailable.map((l) => getLeague(l.id).shortName))} {historyUnavailable.length === 1 ? 'is' : 'are'}{' '}
             marked unavailable: no official {historySeason} standings were reachable, and we do not
             fill the gap with standings or awards from third-party sites or newspapers.
+          </p>
+          <p id="clubs-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
+            Club field hockey: the{' '}
+            <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
+              club teams
+            </Link>{' '}
+            pages list {getClubs().length} youth clubs (those around these schools, plus any other club
+            a player here is tied to) and, for each, the players on these varsity rosters that a public
+            page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
+            MaxPreps career page, or local news such as the Gilroy Dispatch and Stick Together. It was
+            researched by hand on {dateWithYear(getClubsFile().capturedAt)}, each tie checked twice,
+            and is not part of the twice-daily update. Only players already on these rosters are
+            named, social media is never used, and recall is partial.
           </p>
         </section>
 

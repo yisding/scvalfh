@@ -1,4 +1,4 @@
-import { shortDate, toLocalTimestamp } from '../../lib/format';
+import { gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
 import {
   getEnrichedTeamRoster,
   sortedPlayers,
@@ -9,6 +9,7 @@ import {
   type RosterConflict,
 } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
+import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
@@ -23,10 +24,12 @@ import type { TeamSlug } from '../../lib/types';
  *     and explains under the list, with a link to every page those values came from;
  *   - where a source disagrees with the value shown, the disagreement is published (DESIGN §9's
  *     posture: trust comes from showing the disagreement, not from silently picking a side);
- *   - a player's own recruiting pages (NCSA and the like) are linked from that player's row.
+ *   - a player's own recruiting pages (NCSA and the like) are linked from that player's row;
+ *   - a player a public page ties to a club gets a club line linking that club's page on this site
+ *     (DESIGN §16.4), current clubs first; a club a source only lists, with no date that makes it
+ *     current, is never worded as current. The words are components/clubs/club-view.ts'
+ *     (`playerClubGroups`), so the team page and the club pages say the same thing.
  */
-
-const GRADE_WORDS = { 9: 'Freshman', 10: 'Sophomore', 11: 'Junior', 12: 'Senior' } as const;
 
 /** MaxPreps' field hockey position codes. Anything else is printed as the coach wrote it. */
 const POSITION_WORDS: Record<string, string> = {
@@ -85,6 +88,11 @@ export interface RosterRow {
   facts: RosterFact[];
   /** The player's own recruiting pages, one per platform, NCSA first. */
   profiles: RosterProfileLink[];
+  /**
+   * The clubs a public page ties the player to, grouped current, listed, earlier; [] for most rows.
+   * Internal links to /clubs/<slug>: they never join `sources`, which back up values the list shows.
+   */
+  clubs: RosterClubGroup[];
 }
 
 export interface RosterConflictLine {
@@ -121,6 +129,10 @@ export interface RosterView {
   hasDerivedGrade: boolean;
   /** The platforms the listed rows link to, as the footnote names them ("NCSA", "SportsRecruits"). */
   profilePlatforms: string[];
+  /** Some listed row has a club line: the footnote explains them. */
+  hasClubs: boolean;
+  /** Some club line is a "Listed club" (status unknown): the footnote says what that means. */
+  hasListedClub: boolean;
   coaches: Array<{ key: string; name: string; role: string | null }>;
   conflicts: RosterConflictLine[];
   /** MaxPreps' roster page first, then one link per other site a shown value came from. */
@@ -134,10 +146,6 @@ export interface RosterView {
    * say "no other source has a roster" when this is true.
    */
   otherSourcesChecked: boolean;
-}
-
-function gradeWord(grade: number): string {
-  return GRADE_WORDS[grade as keyof typeof GRADE_WORDS] ?? `Grade ${grade}`;
 }
 
 function positionWords(codes: readonly string[]): string {
@@ -156,7 +164,7 @@ function elsewhereSource(tag: MergedPlayer['provenance'][keyof MergedPlayer['pro
   return tag !== null && tag !== 'maxpreps' ? tag : null;
 }
 
-function rowFor(p: MergedPlayer, index: number): RosterRow {
+function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
   const facts: RosterFact[] = [];
   if (p.grade !== null) {
     facts.push({ text: gradeWord(p.grade), elsewhere: elsewhereSource(p.provenance.grade) !== null });
@@ -182,6 +190,7 @@ function rowFor(p: MergedPlayer, index: number): RosterRow {
     profiles: [...p.profiles]
       .sort((a, b) => PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform))
       .map((x) => ({ label: PROFILE_WORDS[x.platform].link, url: x.url })),
+    clubs: playerClubGroups(team, p.athleteId),
   };
 }
 
@@ -330,7 +339,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
 
   const varsity = team.players.filter((p) => p.level !== 'jv');
   const players = sortedPlayers({ players: varsity });
-  const rows = players.map(rowFor);
+  const rows = players.map((p, i) => rowFor(slug, p, i));
 
   const conflicts: RosterConflictLine[] = players.flatMap((p) =>
     p.conflicts.map((c, i) => ({
@@ -359,6 +368,8 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     profilePlatforms: PROFILE_ORDER.filter((k) =>
       players.some((p) => p.profiles.some((x) => x.platform === k)),
     ).map((k) => PROFILE_WORDS[k].footnote),
+    hasClubs: rows.some((r) => r.clubs.length > 0),
+    hasListedClub: rows.some((r) => r.clubs.some((g) => g.status === 'unknown')),
     coaches: team.coaches.map((c, i) => ({ key: `${c.name}-${i}`, name: c.name, role: c.role })),
     conflicts,
     sources: sourceLinks(team, players),

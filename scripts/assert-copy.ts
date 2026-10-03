@@ -17,6 +17,16 @@
  * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
  * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all four
  * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
+ * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §16.2, SPEC §1.1j2) —
+ * no affiliation's `basis` and no fragment of a source's verbatim `quote` (`affiliationLeaks` in
+ * scripts/copy-rules.ts, which reads past tags, entities and the RSC payload's JSON escapes). Both
+ * can name people who are not on the tracked rosters, so a hit is a privacy failure; the line
+ * names the page and whose record leaked. One coincidence is not a leak: a quote is verbatim public
+ * text, and a page that is NOT built from the clubs file can print the same document from a source
+ * of its own and cite it (/history/2025-26 prints the SCVAL all-league PDF, which four quotes copy
+ * a line of). On such a page a quote from a document the page itself links is not reported. On the
+ * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
+ * /about — nothing is excused, since they link the very sources the quotes come from.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL and MCAL unavailable):
  *  - never says the archive is SCVAL-only (it was, once);
  *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="mcal"`), the division
@@ -34,9 +44,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import { getClubsFile } from '../lib/clubs';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
-import { SCVAL_ONLY_CLAIM } from './copy-rules';
+import { SCVAL_ONLY_CLAIM, affiliationLeaks } from './copy-rules';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -79,6 +90,15 @@ for (const league of LEAGUES) {
   for (const d of league.divisions) bannedDivisionLabels.add(`${divisionLabel(d.id)} Division`);
 }
 
+const clubsFile = getClubsFile();
+/** The pages whose code reads lib/clubs.ts: app/clubs/**, the roster of app/teams/[slug], app/about. */
+const builtFromClubs = (file: string) =>
+  file === 'clubs.html' || file.startsWith('clubs/') || file.startsWith('teams/') || file === 'about.html';
+const clubSourceUrls = [...new Set(clubsFile.affiliations.flatMap((a) => a.sources.map((s) => s.url)))];
+/** The clubs file's source documents a page links (an href is HTML-escaped: `&` is `&amp;`). */
+const citedBy = (html: string) =>
+  new Set(clubSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
+
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');
   forbid(file, html, /Gabilan/, 'contains "Gabilan"');
@@ -94,6 +114,10 @@ for (const file of files) {
   for (const label of bannedDivisionLabels) {
     const i = html.indexOf(label);
     if (i >= 0) fail(file, `single-division league labelled as a division ("${label}") — “…${around(html, i)}…”`);
+  }
+  const printsItself = builtFromClubs(file) ? undefined : citedBy(html);
+  for (const leak of affiliationLeaks(html, clubsFile, { printsItself })) {
+    fail(file, `shows what data/clubs.json never renders: ${leak}`);
   }
 }
 
@@ -177,7 +201,10 @@ for (const id of ['de-anza', 'el-camino']) {
   if (!standings.includes(`id="${id}"`)) fail('standings.html', `no id="${id}" (old /standings#${id} links must resolve)`);
 }
 
-console.log(`assert-copy: ${files.length} HTML files scanned; ${ncsPages.length} NCS pages checked inside <main>`);
+console.log(
+  `assert-copy: ${files.length} HTML files scanned; ${ncsPages.length} NCS pages checked inside <main>; ` +
+    `the quotes and bases of ${clubsFile.affiliations.length} club affiliations looked for on every page`,
+);
 if (problems.length) {
   for (const p of problems) console.error(`FAIL ${p}`);
   process.exit(1);

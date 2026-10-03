@@ -4,16 +4,22 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it) and the league config
- * (`lib/leagues.ts`). So a family that came back short, or long, or a page that lost its
- * generateStaticParams (it would render on demand instead), fails here by name:
+ * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it), the league config
+ * (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through lib/clubs.ts). So a family that
+ * came back short, or long, or a page that lost its generateStaticParams (it would render on demand
+ * instead), fails here by name:
  *
- *  - fixed pages: index, about, standings, schedule, playoffs, teams, history/2025-26;
+ *  - fixed pages: index, about, standings, schedule, playoffs, teams, history/2025-26, clubs;
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id, `playoffs/<id>.html` for each
  *    league-tournament league;
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
  *    stub per `supersededGames` key (counted separately);
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the 43 registry slugs;
+ *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §16, SPEC §1.1j2). They come
+ *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
+ *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
+ *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There
+ *    is no clubs OG card (the pages take the root one), so no parity check either;
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats
  *    (`id="player-stats"`) section: all 43 teams, in every league (a missing one means a team page
  *    went back to showing them for SCVAL only);
@@ -37,6 +43,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
@@ -99,7 +106,7 @@ if (JSON.stringify(snapshotLeagues) !== JSON.stringify([...LEAGUE_IDS])) {
 }
 
 // ---------------------------------------------------------------- fixed pages
-const FIXED = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26'];
+const FIXED = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'history/2025-26', 'clubs'];
 for (const p of FIXED) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
 
 // ---------------------------------------------------------------- families
@@ -163,6 +170,8 @@ family('game', [...gameParams, ...stubParams], { og: true });
 family('scores', dates, { og: true });
 family('teams', slugs, { og: true });
 family('history', ['2025-26'], { og: false });
+const clubSlugs = getClubSlugs();
+family('clubs', clubSlugs, { og: false });
 
 // The history page: one section per league, division anchors for every available league.
 {
@@ -203,7 +212,8 @@ console.log(
   `prerendered (next): ${totalHtml} pages — fixed ${FIXED.length}; standings ${pagesIn('standings').length}/${LEAGUE_IDS.length}; ` +
     `schedule ${pagesIn('schedule').length}/${LEAGUE_IDS.length}; playoffs ${pagesIn('playoffs').length}/${tournament.length}; ` +
     `game ${pagesIn('game').length} (${gameParams.length} games + ${stubParams.length} superseded stubs); ` +
-    `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}`,
+    `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}; ` +
+    `clubs ${pagesIn('clubs').length}/${clubSlugs.length}`,
 );
 if (problems.length) {
   for (const p of problems) console.error(`FAIL ${p}`);

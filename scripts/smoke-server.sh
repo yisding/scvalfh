@@ -17,7 +17,8 @@
 # What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
 # schedule, playoffs; the superseded-game stubs are prerendered with a canonical to their MaxPreps
-# game and kept out of the sitemap); the old anchors resolve without JavaScript (/standings
+# game and kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §16; no
+# OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, /standings/scval, /standings/bval,
 # /playoffs #scval #bval #pcal #key-dates, a /schedule row per game day); every page the sitemap
 # lists answers 200 with its own content (a <main>, one <h1>
@@ -26,8 +27,9 @@
 # the immutable cache (a stylesheet, a script chunk and a font; a missing one is a no-store 404);
 # the manifest names the site and its icons and robots.txt allows everything; an unknown URL, or an unknown param in
 # any dynamic family (/standings/nope, /schedule/nope, /playoffs/nope, /playoffs/scval — a league,
-# but not a tournament league — /playoffs/ccs, /teams/nope, …), is a no-store 404 with the root
-# not-found page (its OG card an empty 404, /playoffs/scval/opengraph-image included),
+# but not a tournament league — /playoffs/ccs, /teams/nope, /clubs/nope, …), is a no-store 404
+# with the root not-found page (its OG card, where the family has one, an empty 404,
+# /playoffs/scval/opengraph-image included),
 # rendered with the same SITE_URL and build instant as the prerendered pages and marked noindex; pages carry an ETag
 # and answer a revalidation with 304; HEAD, POST and a trailing slash get the framework's answers;
 # poweredByHeader stays off; and vinext's internal x-vinext-app-page-cache marker never leaves the
@@ -136,34 +138,39 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 
 # The counts every family must have, from the snapshot this tree holds (the one the server was
 # built from), never from the server: games (the superseded-game stubs are prerendered but kept
-# out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, and each
-# stub as `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N).
+# out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, the clubs
+# of data/clubs.json (every club has a page, one with no tied player included), and each stub as
+# `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N).
 facts=$(node -e '
-  const s = JSON.parse(require("fs").readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));
+  const fs = require("fs");
+  const s = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));
+  const clubs = JSON.parse(fs.readFileSync("data/clubs.json", "utf8")).clubs;
   const param = (id) => id.replace(/^sblive:(\d+)$/, "sblive-$1");
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
-    s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length].join(" "));
+    s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
   for (const [from, to] of Object.entries(s.supersededGames || {})) console.log(param(from) + " " + param(to));')
-read -r n_games n_dates n_teams n_leagues n_tournaments <<< "$(sed -n 1p <<< "$facts")"
+read -r n_games n_dates n_teams n_leagues n_tournaments n_clubs <<< "$(sed -n 1p <<< "$facts")"
 stubs=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
-# generateStaticParams family with EXACTLY the snapshot's count (scripts/assert-vinext-prerender.mjs
-# also matches the sitemap against the prerendered pages one for one).
+# generateStaticParams family with EXACTLY the snapshot's count, or data/clubs.json's for /clubs/
+# (scripts/assert-vinext-prerender.mjs also matches the sitemap against the prerendered pages one
+# for one).
 expect /sitemap.xml 200 application/xml "$public"
 from_build /sitemap.xml
 locs=$(grep -oE '<loc>[^<]+</loc>' "$tmp/b" | sed -E 's#</?loc>##g' || true)
 paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
-for path in / /about /standings /schedule /playoffs /teams /history/2025-26 \
+for path in / /about /standings /schedule /playoffs /teams /history/2025-26 /clubs \
   /standings/bval /standings/mcal /schedule/scval /schedule/mcal /playoffs/mcal; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done
 families=''
-for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_leagues" "schedule:$n_leagues" "playoffs:$n_tournaments"; do
+for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_leagues" "schedule:$n_leagues" \
+  "playoffs:$n_tournaments" "clubs:$n_clubs"; do
   n=$(grep -cE "^/${family%:*}/[^/]+$" <<< "$paths" || true)
-  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot)"
+  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot or data/clubs.json)"
   families+=" $n /${family%:*}/"
 done
 while read -r stub _; do
@@ -257,7 +264,7 @@ if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect 
 # and on Workers each family is its own render path), another season's history page, and a favicon
 # the site does not have: each is the root not-found page as a no-store 404.
 for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico \
-  /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/ccs /game/sblive-0; do
+  /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/ccs /game/sblive-0 /clubs/nope; do
   expect "$path" 404 text/html "$nostore"
   grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)

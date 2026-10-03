@@ -9,12 +9,13 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
@@ -157,9 +158,10 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 
 /**
  * scripts/assert-prerender.ts over a synthetic `.next/server/app` that holds exactly what the
- * build prerenders for data/snapshot.json, plus whatever a case adds. `next start` caches the 404
- * of an unknown param's opengraph-image there (a 0-byte `.body` + a `.meta` with status 404), so
- * the assertion must still pass on a `.next` that has served the smoke script or a crawler.
+ * build prerenders for data/snapshot.json and data/clubs.json, plus whatever a case adds. `next
+ * start` caches the 404 of an unknown param's opengraph-image there (a 0-byte `.body` + a `.meta`
+ * with status 404), so the assertion must still pass on a `.next` that has served the smoke script
+ * or a crawler.
  */
 describe('assert:prerender on a .next that has served traffic', () => {
   const SNAPSHOT = path.join(REPO, 'data', 'snapshot.json');
@@ -190,7 +192,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'clubs']) {
       put(`${p}.html`);
     }
     // The history page: a section per league, and a division anchor for every available league.
@@ -218,6 +220,9 @@ describe('assert:prerender on a .next that has served traffic', () => {
         put(`${family}/${p}/opengraph-image.meta`, OK_META);
       }
     }
+    // One page per club of data/clubs.json (DESIGN §16), and no OG card: the clubs pages take the
+    // root one.
+    for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);
     return root;
   }
@@ -268,6 +273,19 @@ describe('assert:prerender on a .next that has served traffic', () => {
     const r = run(tree({ [`teams/${slug}.html`]: '<main><section id="roster"></section></main>' }));
     expect(r.output).toContain(`team page section(s) missing: ${slug} (#player-stats)`);
     expect(r.status).toBe(1);
+  });
+
+  it('fails a clubs page that is not a club of data/clubs.json, or a club with no page, naming it', () => {
+    const extra = run(tree({ 'clubs/nope.html': '' }));
+    expect(extra.output).toContain('FAIL clubs/: 1 unexpected page(s) prerendered: nope');
+    expect(extra.status).toBe(1);
+
+    const root = tree({});
+    const slug = getClubSlugs()[0];
+    rmSync(path.join(root, '.next', 'server', 'app', 'clubs', `${slug}.html`));
+    const missing = run(root);
+    expect(missing.output).toContain(`FAIL clubs/: 1 expected page(s) not prerendered: ${slug}`);
+    expect(missing.status).toBe(1);
   });
 
   it('still fails on a served card without its page, with or without a .meta', () => {

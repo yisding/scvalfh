@@ -94,6 +94,56 @@ export function dateWithYear(value: string): string {
   return `${MONTHS[p.month - 1]} ${p.day}, ${p.year}`;
 }
 
+/**
+ * The five shapes a partial date takes in the hand-researched files (data/clubs.json's `asOf`,
+ * lib/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
+ * the first + 1) or a range of years ("2015-2018"). `YYYY-MM` is a month when MM is 01-12 and a
+ * season otherwise, the order isAsOf reads it in; the two can only collide before 2012.
+ */
+export type PartialDateKind = 'day' | 'month' | 'year' | 'season' | 'range';
+
+/** Which of the five shapes `value` is. Throws on anything else ("2025-27", "2025/26"). */
+export function partialDateKind(value: string): PartialDateKind {
+  if (/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(value)) return 'day';
+  if (/^\d{4}$/.test(value)) return 'year';
+  const short = /^(\d{4})-(\d{2})$/.exec(value);
+  if (short) {
+    const [year, tail] = [Number(short[1]), Number(short[2])];
+    if (tail >= 1 && tail <= 12) return 'month';
+    if (tail === (year + 1) % 100) return 'season';
+  }
+  const range = /^(\d{4})-(\d{4})$/.exec(value);
+  if (range && Number(range[1]) <= Number(range[2])) return 'range';
+  throw new Error(`format: not a partial date: ${value}`);
+}
+
+/**
+ * A partial date in words, pure string work like `dateWithYear`: 'Jul 8, 2026', 'Oct 2025',
+ * '2025', '2025-26 season', '2015–2018' (an en dash between the years). Throws on any other shape.
+ */
+export function partialDate(value: string): string {
+  switch (partialDateKind(value)) {
+    case 'day':
+      return dateWithYear(value);
+    case 'month':
+      return `${MONTHS[Number(value.slice(5, 7)) - 1]} ${value.slice(0, 4)}`;
+    case 'year':
+      return value;
+    case 'season':
+      return `${value} season`;
+    case 'range':
+      return value.replace('-', EN_DASH);
+  }
+}
+
+/** The school year's words; anything else is printed as its number. */
+export const GRADE_WORDS = { 9: 'Freshman', 10: 'Sophomore', 11: 'Junior', 12: 'Senior' } as const;
+
+/** 'Freshman' … 'Senior' for grades 9-12, 'Grade 8' otherwise (the roster and the club pages). */
+export function gradeWord(grade: number): string {
+  return GRADE_WORDS[grade as keyof typeof GRADE_WORDS] ?? `Grade ${grade}`;
+}
+
 /** '4:00 PM' */
 export function timeOfDay(value: string): string {
   const { hour, minute } = parseLocal(value);
