@@ -27,8 +27,14 @@ export interface NextSlateProps {
   kicker?: string;
   limit?: number;
   /** The league's first league day after `date` (its league games, every contest it has in
-      `total`, and how many of those are postseason contests). */
-  nextLeague?: { date: string; games: Game[]; total: number; postseason: number } | null;
+      `total`, and how many of those are postseason and non-league contests). */
+  nextLeague?: {
+    date: string;
+    games: Game[];
+    total: number;
+    postseason: number;
+    nonLeague: number;
+  } | null;
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
   as?: 'h2' | 'h3';
@@ -71,11 +77,12 @@ export function NextSlate({
       ? nextLeague
       : null;
   // `resume.games` is that later day's playable games counted in THIS league's tables (a day after
-  // the slate day, so all of them); `total` is every contest of the league that day, the list its
-  // /scores page shows. The rest splits as the meta does: postseason contests, then non-league.
+  // the slate day, so all of them); the postseason and non-league counts come with it, each
+  // counted directly over every contest of the league that day (the list its /scores page shows),
+  // never derived by subtraction from `total`.
   const resumeLeague = resume ? resume.games.length : 0;
   const resumePost = resume ? resume.postseason : 0;
-  const resumeOther = resume ? resume.total - resumeLeague - resumePost : 0;
+  const resumeOther = resume ? resume.nonLeague : 0;
   // One level below the block's own heading (panel h2 → block h3 → sub-row h4).
   const Sub = as === 'h2' ? 'h3' : 'h4';
   return (

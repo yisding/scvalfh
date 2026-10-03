@@ -162,6 +162,8 @@ function countsInLeague(game: Game, league: LeagueId): boolean {
  */
 export interface NextLeagueDay extends HomeDay {
   postseason: number;
+  /** Non-league contests that day (neither counted in a table nor postseason), every status. */
+  nonLeague: number;
 }
 
 function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeagueDay | null {
@@ -176,6 +178,10 @@ function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeag
     games: day.games.filter((g) => countsInLeague(g, league)),
     total: all.length,
     postseason: all.filter((g) => g.countsFor === null && g.postseason !== null).length,
+    // Counted directly rather than as `total − league − postseason`: `games` holds only the
+    // PLAYABLE league games, so a league game already final that day would otherwise be
+    // mis-counted as non-league.
+    nonLeague: all.filter((g) => g.countsFor === null && g.postseason === null).length,
   };
 }
 
