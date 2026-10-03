@@ -630,7 +630,8 @@ export default function AboutPage() {
             pages list {getClubs().length} youth clubs (those around these schools, plus any other club
             a player here is tied to) and, for each, the players on these varsity rosters that a public
             page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
-            MaxPreps career page, or local news such as the Gilroy Dispatch and Stick Together. It was
+            MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s
+            club and school pages, or local news such as the Gilroy Dispatch and Stick Together. It was
             researched by hand on {dateWithYear(getClubsFile().capturedAt)}, each tie checked twice,
             and is not part of the twice-daily update. Only players already on these rosters are
             named, social media is never used, and recall is partial.

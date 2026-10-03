@@ -129,7 +129,7 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
       {view.programs.length > 0 ? (
         <section aria-labelledby="programs" className="mt-section md:mt-section-lg">
           <SectionHeader id="programs" kicker="Teams and programs" meta={`As listed ${view.checkedOn}`} />
-          <ClubPrograms programs={view.programs} />
+          <ClubPrograms programs={view.programs} shared={view.programsSource} />
         </section>
       ) : null}
 

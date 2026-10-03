@@ -2753,16 +2753,23 @@ empty state says what was and was not found (§8).
   players are matched" (`#how-matched`): who is listed, the linking rule, the two-pass check and
   its date, what "current", "earlier" and "listed by" mean, and that recall is partial. Each club row: the
   display name linking its page, the full name and city, the count of tied players (current and
-  earlier stated apart when both exist: "8 players: 2 current, 6 earlier or not known to be
+  earlier stated apart when both exist: "10 players: 2 current, 8 earlier or not known to be
   current"), and their schools.
 - **`/clubs/[slug]`.** Identity (the display name with the full name under it in the same h1, the
   city and region, the founding year, the description, the website as an external pill), then
   "Players from tracked high school rosters", then "Teams and programs" when the club lists any,
-  then "Where this comes from": the club's own roster pages and the pages the record was read
-  from, with a sentence saying that only tracked players are named here (and, where the club has a
-  public roster, that it lists many more players than this page does). Each player row: the name;
-  the school linking `/teams/<slug>#roster`, the grade and the club team when known; the status
-  (§16.3); and the source links. The list's lede says recall is partial, as the empty state does.
+  then "Where this comes from": the club's own roster pages and the other pages the record was read
+  from ("Pages about the club"; a roster page is listed once, under the rosters, not again there),
+  with a sentence saying that only tracked players are named here (and, where the club has a public
+  roster, that it lists many more players than this page does). Each player row: the name; the
+  school linking `/teams/<slug>#roster`, the grade and the club team when known; the status (§16.3);
+  and the source links. The list's lede says recall is partial, as the empty state does. In "Teams
+  and programs", the page most programs were read from (when two or more were) is linked once, under
+  the list ("Listed on the club’s site: Programs overview", or "Programs without a link of their own
+  are listed on the club’s site: …" when some rows keep one); a row links its own page only when
+  that page is another. Each link's accessible name is its own: a row's leads with the program ("U19
+  Hawks Blue: SportsRecruits team page"), the shared one with the section ("Teams and programs:
+  Program overview"), so it never reads as the same-named link under "Pages about the club".
 - **Links in, not nav.** The tab bar and the desktop nav are unchanged and light nothing on these
   pages. `/clubs` is linked from `/teams` (one quiet line), from the Roster section of every team
   page (the "Club teams" header action, §16.4), and from `/about`'s sources (`#clubs-coverage`).
@@ -2801,7 +2808,7 @@ whatever date the source gives.
 
 | `asOf` | current | past | unknown |
 |---|---|---|---|
-| a day, month or year | Current, as of Jul 8, 2026 | Earlier, Jul 18, 2025 | Listed by MaxPreps, Oct 19, 2025 |
+| a day, month or year | Current, as of Jul 8, 2026 | Earlier, Jul 18, 2025 | Listed by the Gilroy Dispatch, Jul 18, 2025 |
 | a season | Current, 2025-26 season | Earlier, 2024-25 season | Listed by NCSA, 2024-25 season |
 | a range | Current, 2025–2026 | Earlier, 2019–2022 | Listed by NCSA, 2015–2018 |
 | none | Current | Earlier | Listed by NCSA; no date given |

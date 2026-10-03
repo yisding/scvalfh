@@ -36,7 +36,7 @@ import { plural } from '../ui/plural';
  *     roster its group is "Listed club";
  *   - link labels come from the source kind and the host, never from a URL path — apart from the
  *     page-type tests (`/athlete/`, `/roster`, `/organization/`), so a label stays true when a page
- *     moves, and a name in a slug (a club director's bio page) is never printed;
+ *     moves, and a name in a slug (a player's profile, a coach's page) is never printed;
  *   - every player row links the pages it rests on, each URL once.
  */
 
@@ -84,6 +84,7 @@ const OUTLETS: Readonly<Record<string, { label: string; inSentence: string }>> =
   'scval.com': { label: 'SCVAL', inSentence: 'SCVAL' },
   'nfhca.org': { label: 'NFHCA', inSentence: 'the NFHCA' },
   'maxfh.longstreth.com': { label: 'MAX Field Hockey', inSentence: 'MAX Field Hockey' },
+  'sfhsathletics.com': { label: 'Saint Francis athletics', inSentence: 'Saint Francis athletics' },
 };
 
 /** The recruiting platforms: a profile's link text, and the platform's name in a sentence. */
@@ -121,7 +122,7 @@ function outlet(url: string): { label: string; inSentence: string } {
 /**
  * A club-site source, relative to the club whose page shows it: this club's own site, another
  * club's (Bridget Schilb's earlier Fly club rests on NorCal Impact's page for her), or a host no
- * club record names (Fly's old sanjosefly.com).
+ * club record names (say, Fly's old sanjosefly.com).
  */
 function clubSite(url: string, pageClub: Club): { owner: Club | null; roster: boolean } {
   const owner = CLUB_BY_HOST.get(hostOf(url)) ?? null;
@@ -177,7 +178,7 @@ export function sourceName(src: Pick<AffiliationSource, 'url' | 'kind'>, pageClu
  * A tie's status in words (DESIGN §16.3), on `pageClub`'s page:
  *
  *   asOf          current                      past                     unknown
- *   day/month/yr  Current, as of Jul 8, 2026   Earlier, Jul 18, 2025    Listed by MaxPreps, Oct 19, 2025
+ *   day/month/yr  Current, as of Jul 8, 2026   Earlier, Jul 18, 2025    Listed by the Gilroy Dispatch, Jul 18, 2025
  *   season        Current, 2025-26 season      Earlier, 2024-25 season  Listed by NCSA, 2024-25 season
  *   range         Current, 2025–2026           Earlier, 2019–2022       Listed by NCSA, 2015–2018
  *   none          Current                      Earlier                  Listed by NCSA; no date given
@@ -464,7 +465,17 @@ export interface ClubProgramRow {
   key: string;
   name: string;
   detail: string | null;
-  source: ClubSourceLink;
+  /** The page the program was read from; null when it is the shared one, linked once under the list. */
+  source: ClubSourceLink | null;
+}
+
+/**
+ * The page several of a club's programs were read from (Fly lists all eight on one page), linked
+ * once under the list rather than on each of their rows.
+ */
+export interface ClubProgramsSource extends ClubSourceLink {
+  /** "Listed on the club’s site", or, when some rows keep a link, which rows it covers. */
+  lead: string;
 }
 
 export interface ClubPageView {
@@ -483,9 +494,14 @@ export interface ClubPageView {
   groups: ClubPlayerGroup[];
   playerCount: number;
   programs: ClubProgramRow[];
+  /** The page most programs were read from, when two or more were; null otherwise. */
+  programsSource: ClubProgramsSource | null;
   /** The club's own roster pages: linked instead of naming players who are not tracked here. */
   rosterPages: ClubHostLink[];
-  /** The pages the club record was read from, labelled with what each gave. */
+  /**
+   * The other pages the club record was read from, by the record's short name for each ("Program
+   * overview"). A roster page is linked once, under the rosters, not again here.
+   */
   sources: ClubHostLink[];
   trackedTeams: number;
   /** "Oct 3, 2026" */
@@ -503,10 +519,43 @@ function programSourceLabel(url: string, club: Club): string {
   return host;
 }
 
+/** Where a page sits, for a sentence: "the club’s site", "SportsRecruits", otherwise the host. */
+function placeOf(url: string, club: Club): string {
+  const host = hostOf(url);
+  if (club.website && host === hostOf(club.website)) return 'the club’s site';
+  if (isSportsRecruits(host)) return 'SportsRecruits';
+  return host;
+}
+
+/**
+ * The page the most programs were read from, when at least two were (a tie goes to the page cited
+ * first). Every row it covers drops its own link, so Fly's eight rows do not each say "club site";
+ * a row read from any other page keeps one. Its link text is the club record's name for the page
+ * ("Programs overview"), else the host.
+ */
+function sharedProgramSource(club: Club): ClubProgramsSource | null {
+  const counts = new Map<string, number>();
+  for (const p of club.programs) counts.set(p.source, (counts.get(p.source) ?? 0) + 1);
+  let url: string | null = null;
+  for (const [u, n] of counts) if (n >= 2 && (url === null || n > counts.get(url)!)) url = u;
+  if (url === null) return null;
+  const where = placeOf(url, club);
+  return {
+    label: club.sources.find((s) => s.url === url)?.what ?? hostOf(url),
+    url,
+    lead:
+      counts.get(url) === club.programs.length
+        ? `Listed on ${where}`
+        : `Programs without a link of their own are listed on ${where}`,
+  };
+}
+
 /**
  * A roster page's link text, first match wins: the program it is the roster of ("U19 Hawks Blue
- * roster"); what the club's sources say it is, up to the first ": " ("Current Players page");
- * "club roster page" on the club's own host; "SportsRecruits team page"; otherwise the host.
+ * roster"); what the club's sources say it is, up to the first ": " ("Current players");
+ * "Club roster page" on the club's own host; "SportsRecruits team page"; otherwise the host. Each
+ * stands alone on its line, beside the club's own names for its pages, so each is capitalized
+ * as those are.
  */
 function rosterPageLabel(url: string, club: Club): string {
   const program = club.programs.find((p) => p.source === url);
@@ -517,7 +566,7 @@ function rosterPageLabel(url: string, club: Club): string {
     return cut > 0 ? source.what.slice(0, cut) : source.what;
   }
   const host = hostOf(url);
-  if (club.website && host === hostOf(club.website)) return 'club roster page';
+  if (club.website && host === hostOf(club.website)) return 'Club roster page';
   if (isSportsRecruits(host) && pathOf(url).includes('/organization/')) return 'SportsRecruits team page';
   return host;
 }
@@ -566,6 +615,7 @@ export function buildClubPageView(slug: string): ClubPageView | null {
   }
 
   const region = REGION_WORDS[club.region].label;
+  const shared = sharedProgramSource(club);
   return {
     slug: club.slug,
     name,
@@ -580,10 +630,13 @@ export function buildClubPageView(slug: string): ClubPageView | null {
       key: `${i}-${p.name}`,
       name: p.name,
       detail: p.detail,
-      source: { label: programSourceLabel(p.source, club), url: p.source },
+      source: p.source === shared?.url ? null : { label: programSourceLabel(p.source, club), url: p.source },
     })),
+    programsSource: shared,
     rosterPages: numbered(club.rosterPages.map((url) => ({ label: rosterPageLabel(url, club), url, host: hostOf(url) }))),
-    sources: club.sources.map((s) => ({ label: s.what, url: s.url, host: hostOf(s.url) })),
+    sources: club.sources
+      .filter((s) => !club.rosterPages.includes(s.url))
+      .map((s) => ({ label: s.what, url: s.url, host: hostOf(s.url) })),
     trackedTeams: getRosters().teams.length,
     checkedOn: dateWithYear(club.checkedOn),
   };

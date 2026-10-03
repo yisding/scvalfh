@@ -14,7 +14,10 @@ import type { ClubHostLink, ClubPageView } from './club-view';
  * can back; it does not claim the club has more players than the page lists.
  *
  * Each link is followed by its host, so a reader knows where it goes before opening it. Link text
- * is the source's own description and wraps; nothing here is `nowrap`.
+ * is the club record's short name for the page ("Program overview", "NCFHA youth club directory")
+ * and wraps; nothing here is `nowrap`. A page that is one of the club's rosters is listed once,
+ * under the rosters: listing it again under "Pages about the club" would repeat the same link and
+ * name. (That heading, not "About the club": three clubs have a page called "About the club".)
  */
 
 function HostList({ links }: { links: ClubHostLink[] }) {
@@ -47,7 +50,7 @@ export function ClubSources({ view }: { view: ClubPageView }) {
         </div>
       ) : null}
       <div className="mt-6">
-        <SectionHeader as="h3" size="label" kicker="About the club" />
+        <SectionHeader as="h3" size="label" kicker="Pages about the club" />
         <HostList links={view.sources} />
       </div>
       <p className="mt-4 mb-0 text-meta text-ink-3">

@@ -31,6 +31,7 @@ import {
   buildClubsIndexView,
   countLine,
   sourceLabel,
+  sourceName,
   statusWords,
   type ClubPageView,
 } from '../../components/clubs/club-view';
@@ -85,8 +86,10 @@ const squashWs = (t: string) => t.replace(/\s+/g, '');
 describe('status words (DESIGN §16.3)', () => {
   it('words every pinned tie as the table says', () => {
     const PINS: Array<[string, string, string]> = [
-      ['Storey Lewis', 'sf-hawks', 'Current, as of 2026'],
-      ['Caitlyn Hughes', 'sf-hawks', 'Current, as of Jul 8, 2026'],
+      ['Storey Lewis', 'sf-hawks', 'Current, as of Aug 27, 2026'],
+      ['Caitlyn Hughes', 'sf-hawks', 'Current, as of Aug 27, 2026'],
+      ['Clara Brunello', 'sf-hawks', 'Current, as of Jul 8, 2026'],
+      ['Isabella Bjork', 'fly-fhc', 'Current, as of 2026'],
       ['Gigi Colant', 'sf-hawks', 'Current, 2025-26 season'],
       ['Dylan Powell', 'sf-hawks', 'Current'],
       ['Melanie Henderson', 'fly-fhc', 'Earlier, 2019–2022'],
@@ -94,7 +97,11 @@ describe('status words (DESIGN §16.3)', () => {
       ['Alex Pires', 'infinity', 'Earlier, Jul 18, 2025'],
       ['Hailey Moncada', 'infinity', 'Earlier, 2024-25 season'],
       ['Riya Mehrotra', 'fly-fhc', 'Listed by NCSA, 2025'],
+      // Her NCSA page and one of her two MaxPreps URLs are undated; the other is dated Oct 19, 2025.
       ['Gabrielle Moll', 'fly-fhc', 'Listed by MaxPreps, Oct 19, 2025'],
+      ['Emma Traverso', 'fly-fhc', 'Listed by NCSA, 2025'],
+      // No source is dated "2025", so the first one (NCSA) lists it, not the dated Stick Together page.
+      ['Brooklyn Barnard', 'fly-fhc', 'Listed by NCSA, 2025'],
       ['Colette Boyd', 'infinity', 'Listed by the Gilroy Dispatch, Jul 18, 2025'],
       ['Ruhee Bhatnagar', 'lightning', 'Listed by NCSA, 2024-25 season'],
     ];
@@ -124,16 +131,30 @@ describe('status words (DESIGN §16.3)', () => {
 describe('source labels: the kind and the host, never the path', () => {
   it('names a page by whose site it is on', () => {
     // Bridget Schilb's earlier Fly club rests on NorCal Impact's page for her.
-    expect(sourceLabel(tie('Bridget Schilb', 'fly-fhc').sources[0], club('fly-fhc'))).toBe('NorCal Impact site');
+    const page = tie('Bridget Schilb', 'fly-fhc').sources[0];
+    expect(sourceLabel(page, club('fly-fhc'))).toBe('NorCal Impact site');
     // The same page on NorCal Impact's own club page is "club site".
-    const bridget = tie('Bridget Schilb', 'norcal-impact').sources[0];
+    const bridget = tie('Bridget Schilb', 'norcal-impact').sources.find((s) => s.url === page.url)!;
     expect(sourceLabel(bridget, club('norcal-impact'))).toBe('club site');
     // Ruhee Bhatnagar's Lightning roster (an older sub-season than the club's rosterPages).
     const ruhee = tie('Ruhee Bhatnagar', 'lightning').sources.find((s) => s.kind === 'club-site')!;
     expect(sourceLabel(ruhee, club('lightning'))).toBe('club roster');
-    // Fly's old domain is no club's website: the host, as it is.
-    const roxana = tie('Roxana Jafarpur', 'fly-fhc').sources.find((s) => s.kind === 'club-site')!;
-    expect(sourceLabel(roxana, club('fly-fhc'))).toBe('sanjosefly.com');
+    // A host no club record names is printed as it is. No tie in the file rests on such a page any
+    // more (Fly's old about page on sanjosefly.com named no player and was dropped), so the rule is
+    // held on a source built here.
+    const oldFly = { url: 'https://sanjosefly.com/about-fly/', kind: 'club-site' } as const;
+    expect(sourceLabel(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
+    expect(sourceName(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
+  });
+
+  it('names the NFHCA watchlists and MAX Field Hockey pages by their outlet', () => {
+    const hughes = tie('Caitlyn Hughes', 'sf-hawks');
+    const label = (host: string) => sourceLabel(hughes.sources.find((s) => s.url.includes(host))!, club('sf-hawks'));
+    expect(label('nfhca.org/')).toBe('NFHCA');
+    expect(label('maxfh.longstreth.com')).toBe('MAX Field Hockey');
+    // Two watchlists (2025 and 2026) on one row read apart.
+    const hazel = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Hazel Stang')!;
+    expect(hazel.sources.map((s) => s.label).filter((l) => l.startsWith('NFHCA'))).toEqual(['NFHCA', 'NFHCA (2)']);
   });
 
   it('every label on every club page is a closed-set word, another club’s site, or the bare host', () => {
@@ -153,6 +174,7 @@ describe('source labels: the kind and the host, never the path', () => {
       'SCVAL',
       'NFHCA',
       'MAX Field Hockey',
+      'Saint Francis athletics',
       ...getClubs().flatMap((c) => [`${clubDisplayName(c)} site`, `${clubDisplayName(c)} roster`]),
     ]);
     let checked = 0;
@@ -162,7 +184,7 @@ describe('source labels: the kind and the host, never the path', () => {
           const label = s.label.replace(/ \(\d+\)$/, '');
           const host = new URL(s.url).hostname.replace(/^www\./, '');
           expect(fixed.has(label) || label === host, `${slug} / ${row.name}: ${s.label} (${s.url})`).toBe(true);
-          // The NorCal Impact director's bio page is one row's source; the label never says so.
+          // A label is never read from a path, so no name in a slug (a coach's bio page) reaches one.
           expect(s.label, `${slug} / ${row.name}`).not.toMatch(/leaf|huynh/i);
           checked += 1;
         }
@@ -200,8 +222,9 @@ describe('buildClubsIndexView (/clubs)', () => {
       expect(r.schools, r.slug).toEqual([...new Set(ties.map((a) => getTeamBySlug(a.teamSlug)!.name))].sort((a, b) => a.localeCompare(b)));
     }
     const line = (slug: string) => rows.find((r) => r.slug === slug)!.countLine;
-    expect(line('sf-hawks')).toBe('30 current players');
-    expect(line('fly-fhc')).toBe('8 players: 2 current, 6 earlier or not known to be current');
+    expect(line('sf-hawks')).toBe('31 current players');
+    expect(line('norcal-impact')).toBe('19 current players');
+    expect(line('fly-fhc')).toBe('10 players: 2 current, 8 earlier or not known to be current');
     expect(line('infinity')).toBe('8 players: 1 current, 7 earlier or not known to be current');
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
     expect(line('htc')).toBe('1 current player');
@@ -219,9 +242,9 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([61, 20, 13, 6]);
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([66, 22, 13, 6]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 61 players from 20 schools are tied to 6 of these 13 clubs, the most to SF Hawks (30) and NorCal Impact (17).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 66 players from 22 schools are tied to 6 of these 13 clubs, the most to SF Hawks (31) and NorCal Impact (19).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -248,7 +271,7 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(viewOf('sf-hawks').groups.map((g) => g.heading)).toEqual(['Current']);
     // Within St. Ignatius on the SF Hawks page: by last name.
     const si = viewOf('sf-hawks').groups[0].rows.filter((r) => r.school.name.startsWith('St. Ignatius')).map((r) => r.name);
-    expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Gigi Colant', 'Scarlett Gammack', 'Violet Hesslein']);
+    expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Samantha Brunsell', 'Gigi Colant', 'Scarlett Gammack']);
   });
 
   it('names exactly the club’s tied players, each a non-JV row of that team, by the roster’s spelling', () => {
@@ -273,7 +296,7 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(riya.facts).toEqual(['Black - Advanced']); // no grade anywhere, so none is printed
     const storey = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Storey Lewis')!;
     expect(storey.facts).toEqual(['Senior', 'U19 Hawks Blue']);
-    expect(storey.sources.map((s) => s.label)).toEqual(['SportsRecruits profile', 'NCSA profile', 'SportsRecruits team page', 'club roster']);
+    expect(storey.sources.map((s) => s.label)).toEqual(['SportsRecruits profile', 'NFHCA', 'SportsRecruits team page', 'NCSA profile', 'club roster']);
     const roxana = viewOf('norcal-impact').groups[0].rows.find((r) => r.name === 'Roxana Jafarpur')!;
     expect(roxana.sources.map((s) => s.label)).toEqual(['NCSA profile', 'NCSA profile (2)']);
     const frankie = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Frankie Lemieux')!;
@@ -302,19 +325,63 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(viewOf('sf-hawks').checkedOn).toBe('Oct 3, 2026');
   });
 
-  it('labels roster pages and program sources by what they are', () => {
+  it('labels roster pages by what they are, and lists each of the club’s pages once', () => {
     const roster = (slug: string) => viewOf(slug).rosterPages.map((p) => p.label);
-    expect(roster('sf-hawks')).toEqual(['Current Players page', 'SportsRecruits organization page', 'U19 Hawks Blue roster', 'U16 Hawks Blue roster']);
-    expect(roster('lightning')).toEqual(['U16/U19 Girls roster, 2025 Fall season', 'U14/U16 Girls roster, 2025 Fall season']);
-    expect(roster('norcal-impact')).toEqual(['club roster page', 'club roster page (2)']);
-    expect(roster('htc')).toEqual(['SportsRecruits organization page', 'SportsRecruits team page', 'SportsRecruits team page (2)']);
+    expect(roster('sf-hawks')).toEqual(['Current players', 'SportsRecruits club page', 'U19 Hawks Blue roster', 'U16 Hawks Blue roster']);
+    expect(roster('lightning')).toEqual(['U16/U19 girls roster, Fall 2025', 'U14/U16 girls roster, Fall 2025']);
+    expect(roster('norcal-impact')).toEqual(['Club roster page', 'Club roster page (2)']);
+    expect(roster('htc')).toEqual(['SportsRecruits club page', 'SportsRecruits team page', 'SportsRecruits team page (2)']);
     expect(roster('pac-heights')).toEqual([]);
     expect(viewOf('sf-hawks').rosterPages[0].host).toBe('sfyouthfieldhockey.com');
-    const programs = viewOf('sf-hawks').programs.map((p) => p.source.label);
-    expect(new Set(programs)).toEqual(new Set(['club site', 'SportsRecruits team page']));
+    // "Pages about the club" is the club's sources less the roster pages listed just above it.
+    expect(viewOf('sf-hawks').sources.map((s) => s.label)).toEqual(['Club home page', 'Program overview', 'Winter 2026-27 teams', 'Club history']);
+    expect(viewOf('lightning').sources.map((s) => s.label)).toEqual(['Club home page', 'U16/U19 girls team page', 'NCFHA youth club directory']);
     for (const { slug, view } of views) {
-      expect(view.programs.map((p) => p.name), slug).toEqual(club(slug).programs.map((p) => p.name));
-      expect(view.sources.map((s) => s.label), slug).toEqual(club(slug).sources.map((s) => s.what));
+      const c = club(slug);
+      expect(view.sources.map((s) => s.label), slug).toEqual(c.sources.filter((s) => !c.rosterPages.includes(s.url)).map((s) => s.what));
+      // Nothing is lost: every source is under one heading or the other, and no URL under both.
+      const urls = [...view.rosterPages, ...view.sources].map((l) => l.url);
+      expect(new Set(urls).size, slug).toBe(urls.length);
+      for (const src of c.sources) expect(urls, `${slug} ${src.url}`).toContain(src.url);
+      const names = [...view.rosterPages, ...view.sources].map((l) => l.label);
+      expect(new Set(names).size, slug).toBe(names.length);
+    }
+  });
+
+  it('links the page most programs were read from once, under the list, and keeps a row’s own link only when it differs', () => {
+    // Fly lists all eight on one page: no row has a link of its own.
+    const fly = viewOf('fly-fhc');
+    expect(fly.programs.every((p) => p.source === null)).toBe(true);
+    expect(fly.programsSource).toEqual({ label: 'Programs overview', url: 'https://flyfhc.com/programs/', lead: 'Listed on the club’s site' });
+    // SF Hawks lists five age groups on its program overview; the other five rows keep their links.
+    const hawks = viewOf('sf-hawks');
+    expect(hawks.programsSource).toEqual({
+      label: 'Program overview',
+      url: 'https://sfyouthfieldhockey.com/program-overview/',
+      lead: 'Programs without a link of their own are listed on the club’s site',
+    });
+    expect(hawks.programs.filter((p) => p.source === null).map((p) => p.name)).toEqual(['U19', 'U16', 'U14', 'U12', 'U06, U08 and U10']);
+    expect(new Set(hawks.programs.flatMap((p) => (p.source ? [p.source.label] : [])))).toEqual(new Set(['club site', 'SportsRecruits team page']));
+    // Every program page is its own: nothing to share.
+    expect(viewOf('lightning').programsSource).toBeNull();
+    expect(viewOf('lightning').programs.every((p) => p.source?.label === 'club site')).toBe(true);
+    // The rule over every club: the shared page is the one most programs cite (two or more), and a
+    // row has a link exactly when its page is another.
+    for (const { slug, view } of views) {
+      const c = club(slug);
+      expect(view.programs.map((p) => p.name), slug).toEqual(c.programs.map((p) => p.name));
+      const counts = c.programs.map((p) => c.programs.filter((q) => q.source === p.source).length);
+      const most = Math.max(0, ...counts);
+      if (most < 2) expect(view.programsSource, slug).toBeNull();
+      else expect(c.programs.filter((p) => p.source === view.programsSource?.url), slug).toHaveLength(most);
+      view.programs.forEach((p, i) => {
+        const own = c.programs[i].source !== view.programsSource?.url;
+        expect(p.source === null ? null : p.source.url, `${slug} / ${p.name}`).toBe(own ? c.programs[i].source : null);
+      });
+      if (view.programsSource) {
+        const all = view.programs.every((p) => p.source === null);
+        expect(view.programsSource.lead.startsWith(all ? 'Listed on ' : 'Programs without a link of their own are listed on '), slug).toBe(true);
+      }
     }
   });
 });
@@ -394,6 +461,38 @@ describe('the clubs routes, rendered', () => {
     }
   });
 
+  it('links a shared program page once, under the list, under a name of its own', async () => {
+    for (const { slug, view } of views) {
+      if (view.programs.length === 0) continue;
+      const html = await renderClub(slug);
+      const programs = sectionOf(html, 'programs');
+      const items = [...programs.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+      expect(items, slug).toHaveLength(view.programs.length);
+      view.programs.forEach((p, i) => {
+        expect((items[i].match(/<a /g) ?? []).length, `${slug} / ${p.name}`).toBe(p.source ? 1 : 0);
+        if (p.source) expect(items[i], `${slug} / ${p.name}`).toContain(`<span><span class="sr-only">${esc(p.name)}: </span>${esc(p.source.label)}</span>`);
+      });
+      // Every link in the section: the rows' own, then the shared one after the list, each once.
+      const links = [...programs.matchAll(/<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => ({ url: m[1], name: textOf(m[2]).replace(/\s+/g, ' ').trim() }));
+      const shared = view.programsSource;
+      expect(links.length, slug).toBe(view.programs.filter((p) => p.source).length + (shared ? 1 : 0));
+      expect(new Set(links.map((l) => l.name)).size, slug).toBe(links.length);
+      if (shared) {
+        const after = programs.slice(programs.lastIndexOf('</ul>'));
+        expect(textOf(after).replace(/\s+/g, ' '), slug).toContain(`${shared.lead}: Teams and programs: ${shared.label} ↗ (opens in a new tab)`);
+        expect(after, slug).toContain(`<a href="${esc(shared.url)}" target="_blank" rel="noopener noreferrer"`);
+        // The same page under "Pages about the club" goes by its plain name, so the two read apart.
+        const about = [...sectionOf(html, 'sources').matchAll(/<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+          .filter((m) => m[1] === esc(shared.url))
+          .map((m) => textOf(m[2]).replace(/\s+/g, ' ').trim());
+        for (const name of about) expect(name, slug).not.toBe(links[links.length - 1].name);
+      }
+    }
+    const fly = textOf(sectionOf(await renderClub('fly-fhc'), 'programs')).replace(/\s+/g, ' ');
+    expect(fly).toContain('Listed on the club’s site: Teams and programs: Programs overview');
+    expect(fly).not.toContain('club site');
+  });
+
   it('gives a club with no tied player its empty state, and no player list', async () => {
     const html = await renderClub('pac-heights');
     const players = sectionOf(html, 'players');
@@ -437,7 +536,7 @@ describe('the clubs routes, rendered', () => {
     const descriptionOf = async (slug: string) =>
       (await generateMetadata({ params: Promise.resolve({ slug }) } as never)).description;
     expect(await descriptionOf('htc')).toContain('1 player on this site’s varsity rosters is tied to it, with a source. Unofficial and incomplete.');
-    expect(await descriptionOf('sf-hawks')).toContain('30 players on this site’s varsity rosters are tied to it, each with a source.');
+    expect(await descriptionOf('sf-hawks')).toContain('31 players on this site’s varsity rosters are tied to it, each with a source.');
     expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
     for (const slug of getClubSlugs()) expect(await descriptionOf(slug), slug).toMatch(/ Unofficial and incomplete\.$/);
   });
@@ -446,7 +545,7 @@ describe('the clubs routes, rendered', () => {
     const pages: Array<[string, string]> = [['/clubs', renderIndex()]];
     for (const slug of getClubSlugs()) pages.push([`/clubs/${slug}`, await renderClub(slug)]);
     const teams = [...new Set(file.affiliations.map((a) => a.teamSlug))];
-    expect(teams).toHaveLength(20);
+    expect(teams).toHaveLength(22);
     for (const slug of teams) pages.push([`/teams/${slug}`, await renderTeam(slug)]);
     for (const [route, html] of pages) expect(affiliationLeaks(html, file), route).toEqual([]);
   });

@@ -159,15 +159,21 @@ describe('data/clubs.json', () => {
     for (const a of raw.affiliations) if (a.asOf !== null) expect(isAsOf(a.asOf), `${a.fullName}: ${a.asOf}`).toBe(true);
   });
 
+  it('ends every basis on a whole sentence, never clipped mid-word', () => {
+    // A basis clipped to a length stops mid-word ("… use 'Lange") or mid-argument, and a maintainer
+    // re-checking the tie loses what it rests on.
+    for (const a of raw.affiliations) expect(a.basis, `${a.fullName} (${a.club})`).toMatch(/[.!?]['"’”)]?$/);
+  });
+
   describe('as researched 2026-10-03 (changes only with a new sweep)', () => {
     const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
 
-    it('holds 13 clubs and 67 affiliations: 61 of the 716 varsity rows, at 20 of the 43 schools', () => {
+    it('holds 13 clubs and 72 affiliations: 66 of the 716 varsity rows, at 22 of the 43 schools', () => {
       expect(raw.clubs).toHaveLength(13);
-      expect(raw.affiliations).toHaveLength(67);
-      expect(players.size).toBe(61);
-      expect(schools.size).toBe(20);
+      expect(raw.affiliations).toHaveLength(72);
+      expect(players.size).toBe(66);
+      expect(schools.size).toBe(22);
       const rows = teams.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
       expect(rows).toHaveLength(745);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
@@ -175,53 +181,60 @@ describe('data/clubs.json', () => {
       expect(teams).toHaveLength(43);
     });
 
-    it('counts 52 current, 11 past and 4 unknown; 52 high and 15 medium', () => {
-      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 52, past: 11, unknown: 4 });
-      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 52, medium: 15 });
+    it('counts 55 current, 11 past and 6 unknown; 57 high and 15 medium', () => {
+      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 55, past: 11, unknown: 6 });
+      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 57, medium: 15 });
       expect(raw.affiliations.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
+        'Brooklyn Barnard',
         'Colette Boyd',
+        'Emma Traverso',
         'Gabrielle Moll',
         'Riya Mehrotra',
         'Ruhee Bhatnagar',
       ]);
     });
 
-    it('rests on 181 source entries on 91 distinct pages, by kind', () => {
+    it('rests on 229 source entries on 105 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = raw.affiliations.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(181);
-      expect(new Set(sources.map((s) => s.url)).size).toBe(91);
+      expect(sources).toHaveLength(229);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(105);
+      // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
+      // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
+      // name slugs), so the ties rest on 103 pages.
+      const page = (url: string) => url.replace(/\/$/, '').replace(/\/athletes\/[^/]+\/bio\/?\?careerid=/, '/careerid=');
+      expect(new Set(sources.map((s) => page(s.url))).size).toBe(103);
       expect(countBy(sources, (s) => s.kind)).toEqual({
-        sportsrecruits: 53,
+        sportsrecruits: 57,
         'club-site': 49,
-        news: 33,
-        ncsa: 22,
-        'maxpreps-career': 13,
-        other: 8,
+        news: 34,
+        event: 26,
+        ncsa: 24,
+        other: 19,
+        'maxpreps-career': 17,
+        'school-site': 2,
         hudl: 1,
-        event: 1,
-        'school-site': 1,
       });
       const kinds = Object.keys(countBy(sources, (s) => s.kind));
-      const pagesOf = (kind: string) => new Set(sources.filter((s) => s.kind === kind).map((s) => s.url)).size;
-      expect(Object.fromEntries(kinds.map((k) => [k, pagesOf(k)]))).toEqual({
-        sportsrecruits: 32,
-        'club-site': 16,
+      const urlsOf = (kind: string) => new Set(sources.filter((s) => s.kind === kind).map((s) => s.url)).size;
+      expect(Object.fromEntries(kinds.map((k) => [k, urlsOf(k)]))).toEqual({
+        sportsrecruits: 36,
+        'club-site': 11,
         news: 6,
-        ncsa: 19,
-        'maxpreps-career': 13,
-        other: 3,
+        event: 3,
+        ncsa: 21,
+        other: 9,
+        'maxpreps-career': 17,
+        'school-site': 2,
         hudl: 1,
-        event: 1,
-        'school-site': 1,
       });
-      // The one page filed under two kinds (news for four players, other for two), hence 92 by kind.
+      // The one URL filed under two kinds (news for five players, other for two), hence 106 by kind.
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);
-      expect(new Set(raw.clubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(68);
-      expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(73);
+      expect(new Set(raw.clubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(66);
+      expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(71);
     });
 
     it('ties players to six clubs, and none to the other seven', () => {
@@ -232,9 +245,9 @@ describe('data/clubs.json', () => {
           .map(([slug, list]) => [slug, { ...{ current: 0, past: 0, unknown: 0 }, ...countBy(list, (a) => a.status) }]),
       );
       expect(byClub).toEqual({
-        'sf-hawks': { current: 30, past: 0, unknown: 0 },
-        'norcal-impact': { current: 17, past: 0, unknown: 0 },
-        'fly-fhc': { current: 2, past: 4, unknown: 2 },
+        'sf-hawks': { current: 31, past: 0, unknown: 0 },
+        'norcal-impact': { current: 19, past: 0, unknown: 0 },
+        'fly-fhc': { current: 2, past: 4, unknown: 4 },
         infinity: { current: 1, past: 6, unknown: 1 },
         lightning: { current: 1, past: 1, unknown: 1 },
         htc: { current: 1, past: 0, unknown: 0 },
@@ -270,7 +283,7 @@ describe('data/clubs.json', () => {
           ];
         }),
       );
-      expect(byLeague).toEqual({ scval: [28, 10], bval: [16, 6], pcal: [0, 0], mcal: [17, 4] });
+      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4] });
     });
   });
 });
@@ -319,7 +332,7 @@ describe('lib/clubs.ts', () => {
 
   it('serves each club\'s affiliations in file order, and [] for a club no tracked player is tied to', () => {
     const hawks = getClubAffiliations('sf-hawks');
-    expect(hawks).toHaveLength(30);
+    expect(hawks).toHaveLength(31);
     expect(hawks).toEqual(raw.affiliations.filter((a) => a.club === 'sf-hawks'));
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);
@@ -329,7 +342,7 @@ describe('lib/clubs.ts', () => {
 
   it('serves a team\'s affiliations', () => {
     const si = getTeamClubAffiliations('st-ignatius');
-    expect(si).toHaveLength(13);
+    expect(si).toHaveLength(14);
     expect(si.every((a) => a.teamSlug === 'st-ignatius')).toBe(true);
     expect(getTeamClubAffiliations('valley-christian')).toEqual([]);
   });
@@ -407,7 +420,8 @@ describe('a bad file is refused at load', () => {
     const msg = loadError(bad);
     expect(msg).toMatch(/class of/);
     expect(msg).toContain('Caitlyn Hughes');
-    expect(msg).toContain(`clubs: st-ignatius / Caitlyn Hughes (sf-hawks): news source says class of ${classOf(season, row.grade!) + 1}, the roster shows grade ${row.grade}`);
+    // Her first source is the NFHCA 2026 high school watchlist, filed as an `event`.
+    expect(msg).toContain(`clubs: st-ignatius / Caitlyn Hughes (sf-hawks): event source says class of ${classOf(season, row.grade!) + 1}, the roster shows grade ${row.grade}`);
   });
 
   it('checks a class year against the overlay grade when MaxPreps has none', () => {
