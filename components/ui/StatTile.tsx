@@ -24,7 +24,7 @@ import { EM_DASH } from '../../lib/format';
  * plain variant's value-first order does not.
  *
  * `srLabel` / `srValue` replace what a screen reader hears for a label or value that only reads
- * well to the eye: "5L" is "5 losses in a row", "0 / 52" is "0 for, 52 against".
+ * well to the eye: "L5" is "5 losses in a row", "0 / 52" is "0 for, 52 against".
  */
 export interface StatTileProps {
   label: string;

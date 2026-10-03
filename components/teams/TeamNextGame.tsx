@@ -22,6 +22,9 @@ import type { NextCard } from './team-view';
  *   asks next, and the answer used to be two taps away;
  * - where it is, when we can say so honestly (a venue, "Neutral site", or the host school's city);
  * - the last time the two met, as one link to that game ("Earlier: lost 0–7 at home, Sep 10");
+ * - when the official SCVAL schedule lists a fixture before this game that no source has
+ *   published, one plain line naming it: the fixture list below marks it Upcoming, and without the
+ *   line the page would name two different "next" games;
  * - a pill row pinned to the bottom: "Full game page" first (the opponent's name was the only way
  *   there, and nothing said it was a link), then only the external links that really exist. A
  *   dead affordance is worse than an absent one, so a game with no stream has no stream chip.
@@ -47,7 +50,7 @@ function Opponent({ card }: { card: Exclude<NextCard, { kind: 'none' }> }) {
         </span>
         {card.record ? (
           <span className="block text-meta text-ink-2">
-            <span className="sr-only">{card.opponentName}: </span>
+            <span className="sr-only">Their record: </span>
             {card.record}
           </span>
         ) : null}
@@ -146,13 +149,22 @@ export function TeamNextGame({ card, teamName }: TeamNextGameProps) {
             </Link>
           </p>
         ) : null}
+        {card.officialBefore ? (
+          <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
+            SCVAL&rsquo;s schedule also lists {card.officialBefore.dateLabel}{' '}
+            {card.officialBefore.versus} {card.officialBefore.opponentName}, but no source does, so
+            it has no start time here.
+          </p>
+        ) : null}
         <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
           <Link
             href={`/game/${game.contestId}`}
             prefetch={false}
             className="sx-pill sx-pill-accent min-h-11"
           >
-            Full game page
+            {/* The Last card's pill has the same visible words, so the opponent is added for a
+                screen reader's links list and for voice control. */}
+            Full game page<span className="sr-only">: {card.versus} {card.opponentName}</span>
           </Link>
           {card.chips.map((chip) => (
             <ExternalLink key={chip.href} href={chip.href} className="sx-pill">

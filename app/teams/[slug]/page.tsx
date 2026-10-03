@@ -358,14 +358,18 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </li>
               ) : null}
             </ul>
-            {/* Last season in one line, record exactly as the 2025-26 SCVAL PDF printed it ("1-13":
-                that division's table has no tie column). The site-wide disclaimer that sat here
+            {/* Last season in one line, record exactly as the 2025-26 SCVAL PDF printed it ("1-13";
+                the PDF drops a zero tie count on some rows). The site-wide disclaimer that sat here
                 is the footer's, so it is no longer repeated on every team page. */}
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
                 Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}
                 {DIVISION_LABELS[history.division]}, {history.row.leagueRecord} &mdash;{' '}
-                <Link href={`/history/2025-26#${history.division}`} prefetch={false}>
+                <Link
+                  href={`/history/2025-26#${history.division}`}
+                  prefetch={false}
+                  className="whitespace-nowrap"
+                >
                   full {getHistorySeason()} standings
                 </Link>
               </p>

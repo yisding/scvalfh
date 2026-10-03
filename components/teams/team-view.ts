@@ -119,6 +119,12 @@ export type NextCard =
       earlier: EarlierMeeting | null;
       /** Directions, NFHS stream, Tickets, MaxPreps box score: only links that exist. */
       chips: NextChip[];
+      /**
+       * An official SCVAL fixture dated BEFORE this game, which no source has published as a
+       * contest. The fixture list marks it Upcoming, so the card names it rather than let the
+       * page contradict itself; it does not take Next's place (a contest has a time and a page).
+       */
+      officialBefore: { dateLabel: string; versus: 'vs' | 'at'; opponentName: string } | null;
     })
   | (NextOpponent & { kind: 'official'; fixture: OfficialFixture })
   | { kind: 'none' };
@@ -317,6 +323,16 @@ export function buildNextCard(
     const mineIsHome = next.home.slug === team.slug;
     const side = mineIsHome ? next.away : next.home;
     const opponent = side.slug ? getTeamBySlug(side.slug) : undefined;
+    const early = nextOfficialFixture(officialFixtures, today);
+    let officialBefore: Extract<NextCard, { kind: 'game' }>['officialBefore'] = null;
+    if (early && !next.isDateTba && early.dateKey < next.dateKey) {
+      const { versus, opponentName } = fixtureOpponent(early, team);
+      officialBefore = {
+        dateLabel: dateLabelFor(early.dateKey, early.dateKey, today),
+        versus,
+        opponentName,
+      };
+    }
     return {
       kind: 'game',
       game: next,
@@ -328,28 +344,42 @@ export function buildNextCard(
       place: placeLine(next, team),
       earlier: earlierMeeting(team, opponent, next.dateLocal),
       chips: chipsFor(next),
+      officialBefore,
     };
   }
   const fixture = nextOfficialFixture(officialFixtures, today);
   if (fixture) {
-    const mineIsHome = fixture.homeSlug === team.slug;
-    const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-    const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
+    const { versus, opponent, opponentName } = fixtureOpponent(fixture, team);
     return {
       kind: 'official',
       fixture,
       dateLabel: dateLabelFor(fixture.dateKey, fixture.dateKey, today),
-      versus: mineIsHome ? 'vs' : 'at',
+      versus,
       opponent,
-      opponentName: opponent
-        ? opponent.shortName
-        : mineIsHome
-          ? fixture.awayName
-          : fixture.homeName,
+      opponentName,
       record: opponentRecordLine(opponent),
     };
   }
   return { kind: 'none' };
+}
+
+/** 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. */
+function fixtureOpponent(
+  fixture: OfficialFixture,
+  team: Team,
+): { versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
+  const mineIsHome = fixture.homeSlug === team.slug;
+  const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
+  const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
+  return {
+    versus: mineIsHome ? 'vs' : 'at',
+    opponent,
+    opponentName: opponent
+      ? opponent.shortName
+      : mineIsHome
+        ? fixture.awayName
+        : fixture.homeName,
+  };
 }
 
 export function buildTeamPageView(slug: string): TeamPageView | undefined {

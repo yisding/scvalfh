@@ -249,18 +249,11 @@ export function MarginStrip({
                     </span>
                   )}
                   {/* CSS-only tooltip on hover, and on focus wherever the mark is a link; it never
-                      gates a value, because the table twin below holds the same numbers. The last
-                      three marks hang their tooltip LEFT from the column's right edge instead of
-                      centring it: centred, the right-most one ran ~20px past the viewport at 768
-                      and 1024px, and even hidden it widened the page into a sideways scroll. */}
-                  <span
-                    className={
-                      i >= cells.length - 3
-                        ? 'sx-tip-body right-0 left-auto [translate:0_-6px]'
-                        : 'sx-tip-body'
-                    }
-                    role="presentation"
-                  >
+                      gates a value, because the table twin below holds the same numbers. The
+                      inward anchoring of the first and last seven marks, which keeps an edge
+                      tooltip inside the viewport, lives in globals.css (.sx-tip:nth-child /
+                      :nth-last-child). */}
+                  <span className="sx-tip-body" role="presentation">
                     {monthDay(entry.date)} &middot; {opponentPhrase(entry)}
                     {entry.margin !== null
                       ? ` · ${signedMargin(entry.margin)}`

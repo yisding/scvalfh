@@ -5,8 +5,7 @@ import TeamTile from '@/components/teams/TeamTile';
 import { buildTeamsIndex } from '@/components/teams/team-view';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site-url';
-import { getCounts, getFetchedAt } from '@/lib/data';
-import { formatStamp } from '@/lib/format';
+import { getCounts } from '@/lib/data';
 import { DIVISION_LABELS, DIVISIONS } from '@/lib/season';
 
 /**
@@ -72,8 +71,7 @@ export default function TeamsPage() {
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
         Records are league games only. A dash means no results have been reported yet. Division
         alignment comes from the official SCVAL schedules, so every member is listed even where a
-        source has no games for it; records are computed from published results as of{' '}
-        {formatStamp(getFetchedAt())}.
+        source has no games for it.
       </p>
     </div>
   );

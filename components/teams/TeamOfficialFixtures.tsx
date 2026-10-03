@@ -65,13 +65,15 @@ export function TeamOfficialFixtures({
                 </span>
                 {opponent ? <TeamMonogram team={opponent} size={24} /> : null}
                 {/* Two lines rather than an ellipsis: at 320px the name had ~90px and "vs
-                    Homestead" was cut. No `break-words`: a school name breaks between words. */}
+                    Homestead" was cut. No `break-words`: a school name breaks between words.
+                    Below 360px the two-word status stacks (`w-min` on it) so a short name like
+                    "vs Homestead" keeps one line instead of leaving "vs" alone on the first. */}
                 <span className="line-clamp-2 min-w-0 flex-1 text-body text-ink" aria-hidden="true">
                   <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'} </span>
                   {opponent ? opponent.shortName : opponentName}
                 </span>
                 <span
-                  className="text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
+                  className="text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3 max-[359px]:w-min"
                   aria-hidden="true"
                 >
                   {past ? 'No result' : 'Upcoming'}

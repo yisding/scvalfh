@@ -25,7 +25,7 @@ import { placeSub } from './team-view';
  * boilerplate, so they sit in one labelled disclosure under the tiles (brief §4.22).
  *
  * The tiles are a `<dl>` (StatTile `inList`): six label/value pairs, announced as such. The two
- * values that only read well to the eye carry a spoken form: Streak "5L" is "5 losses in a row",
+ * values that only read well to the eye carry a spoken form: Streak "L5" is "5 losses in a row",
  * Goals F / A "0 / 52" is "0 for, 52 against".
  */
 const STREAK_WORD = { W: ['win', 'wins'], L: ['loss', 'losses'], T: ['tie', 'ties'] } as const;
