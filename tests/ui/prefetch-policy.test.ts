@@ -164,7 +164,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
       ['components/playoffs/PlayoffProjection.tsx', '/teams/${row.team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
-      ['components/teams/TeamTile.tsx', '/teams/${team.slug}'],
+      ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
       ['components/teams/TeamUnbeaten.tsx', '/teams/${opponent.slug}'],
       ['components/about/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
       ['components/about/AwardsBlock.tsx', '/teams/${team.slug}'],

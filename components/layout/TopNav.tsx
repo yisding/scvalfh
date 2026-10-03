@@ -4,11 +4,13 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
 import NavLink from './NavLink';
 
 /**
- * The league-aware targets of the three nav entries that have a per-league page (SPEC §8.3),
+ * The league-aware targets of the three nav entries that have a per-league place (SPEC §8.3),
  * built once from the league config and handed to the client `NavLink` as plain, serializable
- * objects. Scores → `/schedule/<id>`; Table/Standings → `/standings/<id>`; Playoffs → the league's
- * section of the CCS page (`/playoffs#<id>`) for a CCS-ladder league, its own tournament page
- * (`/playoffs/<id>`) for a league-tournament league. Every other entry keeps its one href.
+ * objects. Scores → `/schedule/<id>`; Teams → the league's section of the teams-and-standings page
+ * (`/teams#<id>`, which took over the old Table tab's job of opening your league's tables, DESIGN
+ * §18); Playoffs → the league's section of the CCS page (`/playoffs#<id>`) for a CCS-ladder league,
+ * its own tournament page (`/playoffs/<id>`) for a league-tournament league. Every other entry
+ * keeps its one href.
  */
 export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<LeagueId, string>>>> {
   const per = (f: (id: LeagueId) => string | null) =>
@@ -20,7 +22,7 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
     );
   return {
     '/schedule': per((id) => `/schedule/${id}`),
-    '/standings': per((id) => `/standings/${id}`),
+    '/teams': per((id) => `/teams#${id}`),
     '/playoffs': per((id) =>
       TOURNAMENT_LEAGUE_IDS.includes(id) ? `/playoffs/${id}` : CCS_LEAGUE_IDS.includes(id) ? `/playoffs#${id}` : null,
     ),
@@ -28,13 +30,13 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
 }
 
 /**
- * The desktop nav: eight links, no sidebar, no bottom bar (DESIGN §1.3, §16). History keeps its
- * short visible label; an sr-only suffix says what it holds (its page is titled with the same
- * words). Leaders has no phone tab (the bar keeps its five); the footer links it at every width.
+ * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the
+ * phone bar: Teams is the teams-and-standings page (the standings live there, and Teams stays lit
+ * on every /standings page), so there is no separate Standings link. History keeps its short
+ * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
  */
 export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
   { href: '/', label: 'Home' },
-  { href: '/standings', label: 'Standings' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },
   { href: '/leaders', label: 'Leaders' },

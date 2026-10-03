@@ -2780,7 +2780,9 @@ heading links to `/leaders#players`. Eight links needed room in the 64px bar, me
 with the widest stamp ("Updated Nov 30 12:48 PM") forced in: the nav capsules' side padding is 8px
 below 1024px (it was 10px, which put the theme toggle 21px into the right gutter at 768); the stamp
 returns at 944px (59rem) instead of 896, leaving about 29px; and its weekday waits for 1280, since at
-1024 it left about 3px. `components/layout/SiteHeader.tsx` records the numbers.
+1024 it left about 3px. `components/layout/SiteHeader.tsx` records the numbers. (Superseded by
+§18: Leaders is now a phone tab, the desktop nav is back to seven links, and the header spacing is
+back to what it was.)
 
 ### 16.4 Budgets
 
@@ -2934,3 +2936,51 @@ question first, and the first club page in the sitemap is the longest (`/clubs/s
 - **No budget for `/clubs`.** The page-weight budgets (§15.10) do not cover every index page
   (`/about` and `/history/2025-26` have none), and `main` has no `/clubs` baseline to measure
   against.
+
+## 18. Teams and standings amendment (2026-10)
+
+The phone's Table tab and Teams tab showed the same 43 teams in the same grouping (section → league
+→ division, with the same anchors), one as standings and one as tiles to find a school in. They are
+now one page, `/teams`, and the freed tab goes to the leaderboards. This section wins where §1-§17
+disagree.
+
+### 18.1 The page
+
+`/teams` ("Teams and standings") keeps its search box and league chips, and under each division the
+team tiles are replaced by that division's compact standings table: place (`T7` when shared), team
+(monogram and short name, a link to the team page), GP, W-L-T, PTS, the league's labelled ladder
+line, and a `Full <division> table →` link to `/standings/<league>#<division>`. It is the
+/standings overview's own table, built by the same view (`buildOverviewDivision`), so the two
+pages cannot disagree about a place. Every registry team is a row; a team with no results is listed
+last with dashes, never 0-0-0.
+
+The search filters the tables in place: it hides the rows that do not match (`data-team-tile` on
+each team row), the ladder rows while a query is active (`data-hide-while-searching`, since a ladder
+line means nothing between filtered rows) and any division, league or section left with no visible
+row. Without JavaScript the search is not painted and the full tables are the page.
+
+`/standings` and `/standings/<league>` stay as they are: the overview keeps its old anchors for links
+in the wild, and the league pages are where every table's full view lives.
+
+### 18.2 Navigation
+
+| | Before | Now |
+|---|---|---|
+| Phone tabs | Home, Scores, Table, Teams, Playoffs | Home, Scores, Teams, Leaders, Playoffs |
+| Desktop nav | Home, Standings, Schedule, Teams, Leaders, Playoffs, History, About | Home, Schedule, Teams, Leaders, Playoffs, History, About |
+
+Teams is lit (`aria-current="true"`) on every `/standings` page as well as on team pages, and it
+follows the league the way Table did: after hydration it points at the page's league, else the
+remembered one, as `/teams#<league>`, that league's tables. Leaders' glyph is a podium (1st in the
+middle), not a bar chart, which would read as statistics. "Leaders" is about 50px at 12px/500
+against the 56px label limit. The footer's "Season leaders" link (§16.3) is gone: the phone has
+the tab now.
+
+With seven links the header goes back to its spacing before §16, measured in Chromium with the
+widest stamp ("Updated Nov 30 12:48 PM") forced in: 10px capsule padding below 1024px, the stamp
+back from 896px with about 33px to spare, and its weekday from 1024 (about 95px to spare).
+
+### 18.3 Budgets
+
+`/teams` HTML gzip stays within 3.0 x its baseline: 24.3 KB on 2026-10-03 (it was 23.2 KB with the
+tiles), against 28.4 KB.

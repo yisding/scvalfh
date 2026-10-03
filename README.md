@@ -43,13 +43,13 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | Route | What it shows |
 |---|---|
 | `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit, then one panel per league: latest scores, mini standings, next games, teams and the postseason card |
-| `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal` and the other division anchors resolve with no JavaScript |
+| `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal` and the other division anchors resolve with no JavaScript. Kept for links; the nav's Teams page carries the same tables |
 | `/standings/[league]` | One league's full standings page (4 pages: `scval`, `bval`, `pcal`, `mcal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
 | `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (4 pages) |
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
-| `/teams` | All 43 teams: a search box and the full list grouped section → league → division |
+| `/teams` | Teams and standings: all 43 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
 | `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
@@ -62,10 +62,11 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
 (the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
 a web manifest (`app/sitemap.ts`, `app/robots.ts`, `app/manifest.ts`). The phone tab bar has five
-tabs (Home, Scores, Table, Teams, Playoffs) and the desktop nav eight links (Leaders has no phone
-tab; the footer links it at every width); after hydration Scores, Table and Playoffs follow the
-league you are looking at or have chosen. `/clubs` is in neither: it is linked from `/teams`, from
-the Roster section of every team page and from `/about`.
+tabs (Home, Scores, Teams, Leaders, Playoffs) and the desktop nav seven links (Home, Schedule,
+Teams, Leaders, Playoffs, History, About): the standings live on the Teams page, and Teams stays lit
+on every `/standings` page. After hydration Scores, Teams and Playoffs follow the league you are
+looking at or have chosen (Teams to that league's tables, `/teams#<league>`). `/clubs` is in
+neither: it is linked from `/teams`, from the Roster section of every team page and from `/about`.
 
 ## How data flows
 

@@ -16,9 +16,9 @@ import { width } from './text-metrics';
 const MAX_LABEL_PX = 56;
 
 describe('bottom tab labels', () => {
-  it('has the five tabs, in order, with Playoffs (not CCS)', () => {
-    expect(TABS.map((t) => t.label)).toEqual(['Home', 'Scores', 'Table', 'Teams', 'Playoffs']);
-    expect(TABS.map((t) => t.href)).toEqual(['/', '/schedule', '/standings', '/teams', '/playoffs']);
+  it('has the five tabs, in order: Teams holds the standings, Leaders has the old Table slot, Playoffs (not CCS)', () => {
+    expect(TABS.map((t) => t.label)).toEqual(['Home', 'Scores', 'Teams', 'Leaders', 'Playoffs']);
+    expect(TABS.map((t) => t.href)).toEqual(['/', '/schedule', '/teams', '/leaders', '/playoffs']);
   });
 
   for (const { label } of TABS) {
