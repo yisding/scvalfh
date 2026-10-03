@@ -453,6 +453,17 @@
   .sx-inset.sx-disclosure { padding-block: 0.25rem; }
   .sx-inset.sx-disclosure[open] { padding-bottom: 1rem; }
 
+  /* The school color square (components/ui/TeamMonogram.tsx). One rule instead of eight utility
+     classes on every tile: the home page alone renders about a hundred of them, and the repeated
+     class string cost it ~1.1 KB gzip. Size, radius and colors stay inline per school. Callers'
+     className utilities still win (utilities layer). */
+  .sx-monogram {
+    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
+    border: 1px solid var(--sx-border);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600; line-height: 1;
+  }
+
   /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary). */
   .sx-pill {
     display: inline-flex; align-items: center; gap: 0.375rem;
