@@ -12,7 +12,11 @@
  *  - `bar` (phone): a 48px band that sticks directly under the 48px top bar, so the table head
  *    parks under both (the page sets `--sx-sticky-top: 6rem`). Hidden from 768px. `sx-chrome-top`
  *    gives it the same 1px CanvasText edge as the top bar under forced colours, where the
- *    box-shadow edge is dropped.
+ *    box-shadow edge is dropped. Under a 20-24px browser text size the pills ("Mt. Hamilton",
+ *    "Santa Teresa") outgrow a 320-390 screen, so the bar scrolls sideways on its own (no
+ *    scrollbar drawn; the cut-off pill is the cue, and tabbing to it scrolls it into view) instead
+ *    of widening the page. The 44px anchors sit inside the 48px bar, so the focus ring is not
+ *    clipped by the scroll box.
  *  - `inline` (≥768px): static, right-aligned in the page title row via PageHeader's `aside`.
  *
  * Each pill is a 36px capsule inside a 44px anchor, so the target is the full 44px (DESIGN §10.9).
@@ -35,7 +39,7 @@ export interface DivisionTabsProps {
 }
 
 const VARIANT = {
-  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] md:hidden',
+  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 overflow-x-auto bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] [scrollbar-width:none] md:hidden',
   inline: 'hidden md:flex items-center gap-2',
 } as const;
 

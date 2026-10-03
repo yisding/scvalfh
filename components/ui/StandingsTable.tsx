@@ -232,9 +232,15 @@ function rowLabel(row: StandingsRowData): string {
  *    table, so a page may print them once;
  *  - `specific`: shared-place notes, the no-results team, `standing.mismatch` flags and the
  *    caller's `footnotes` — facts about THIS division, which always stay visible.
+ *
+ * `statedElsewhere`: teams whose MaxPreps difference the caller's Notes block already states in
+ * its comparison list (StandingsNotes). Their `standing.mismatch` note is left out, so one fact is
+ * not said twice in one list in two wordings.
  */
 export function collectStandingsNotes(
-  props: Pick<StandingsTableProps, 'rows' | 'gdDomain' | 'division' | 'variant' | 'footnotes'>,
+  props: Pick<StandingsTableProps, 'rows' | 'gdDomain' | 'division' | 'variant' | 'footnotes'> & {
+    statedElsewhere?: readonly TeamSlug[];
+  },
 ): { legend: React.ReactNode[]; specific: React.ReactNode[] } {
   const legend: React.ReactNode[] = [];
   const specific: React.ReactNode[] = [];
@@ -270,12 +276,14 @@ export function collectStandingsNotes(
         )} alignment but has no results in the source table — no record is invented for them.`,
       );
     }
-    if (row.standing.mismatch) {
+    if (row.standing.mismatch && !props.statedElsewhere?.includes(row.team.slug)) {
+      // The pipeline's detail ("overall record 3-2-3 vs MaxPreps 3-3-2") has no full stop.
+      const detail = row.standing.mismatchDetail?.replace(/\.?$/, '.');
       specific.push(
         <>
           <span aria-hidden="true">&#9873;</span>
           <span className="sr-only">Flagged:</span> {row.team.name}:{' '}
-          {row.standing.mismatchDetail ?? 'our computation differs from MaxPreps.'} We show our own
+          {detail ?? 'our computation differs from MaxPreps.'} We show our own
           computation.{' '}
           {row.team.external.maxprepsTeamUrl ? (
             <ExternalLink href={row.team.external.maxprepsTeamUrl}>MaxPreps</ExternalLink>
@@ -488,10 +496,14 @@ export function StandingsTable(props: StandingsTableProps) {
                       columns starved the team cell and long school names truncated to fragments,
                       against DESIGN §10.8's "reflow at 320px with no loss of content". The plot is
                       dropped there and the signed numeral stays, which is the cell's accessible
-                      value anyway; the name is what a reader cannot do without. */}
+                      value anyway; the name is what a reader cannot do without.
+                      The threshold is 23.4375rem, not 375px: 375 at the default text size, 562
+                      under a 24px browser font, where a px query kept the 100px plot at 390 and
+                      the table ran 10px past its card ("T4" and "Mt. Hamilton" grow, the plot
+                      does not). The same unit the line-2 record and the mini table's query use. */}
                   <th
                     scope="col"
-                    className="w-[44px] pr-gutter text-right min-[375px]:w-[100px]"
+                    className="w-[44px] pr-gutter text-right min-[23.4375rem]:w-[100px]"
                   >
                     <Abbr short="GD" long="Goal difference" />
                   </th>
@@ -559,7 +571,8 @@ export function StandingsTable(props: StandingsTableProps) {
                             grows UP into line 1. Not `truncate`: at 320/24px that clips every
                             row to "9-1-0 ov…", where nowrap lets the word run into the right
                             padding instead. Where GP also leads the line (a caller that passes
-                            the `gp` column), the record gives way below 375 rather than wrap. */}
+                            the `gp` column, as every league page does), the record gives way
+                            below 23.4375rem rather than wrap or clip: see the budget there. */}
                         {has ? (
                           <span className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center gap-2 pl-[2.75rem] pr-gutter text-meta text-ink-3">
                             <span className="flex w-[116px] shrink-0 justify-end">
@@ -569,15 +582,22 @@ export function StandingsTable(props: StandingsTableProps) {
                                 label={formLabel(row)}
                               />
                             </span>
-                            {/* GP leads the overall record; below 375 the record gives way
-                                (44 + 116 + 8 + ~56 "6/12 GP" + 8 + ~95 is 327 of 304 at 320). */}
+                            {/* GP leads the overall record. Budget at 16px: 44 + 116 + 8 + ~56
+                                ("6/12 GP") + 8 + ~95 ("10-1-0 overall") + 16 right gutter = 343,
+                                past a 320 row, inside a 375 one. Everything but the 116px strip
+                                is in rem and grows with the browser text size (at 24px the same
+                                line is ~470), so the threshold is in rem too: 23.4375rem is 375px
+                                at 16px, 469 at 20px and 562 at 24px — the unit the GD container
+                                query uses. Below it the record gives way rather than run past
+                                the card edge and be clipped mid-word ("9-1-0 over"); the team
+                                page still carries it. */}
                             {showGp ? (
                               <span className="sx-num shrink-0 text-cell text-ink-3">{gpText(ctx(row))} GP</span>
                             ) : null}
                             {/* Mono for the digits only (they stack down the rows); the word is
                                 prose and stays sans. */}
                             <span
-                              className={`whitespace-nowrap text-cell text-ink-3${showGp ? ' max-[374px]:hidden' : ''}`}
+                              className={`whitespace-nowrap text-cell text-ink-3${showGp ? ' max-[23.4375rem]:hidden' : ''}`}
                             >
                               <span className="sx-num">{recordString(s.overall)}</span> overall
                             </span>
@@ -605,14 +625,14 @@ export function StandingsTable(props: StandingsTableProps) {
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
                             {streakString(s.computed.streak)}
                           </td>
-                          <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[375px]:w-[100px]">
+                          <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[100px]">
                             <GoalDiffCell
                               value={s.computed.gd}
                               domain={gdDomain}
                               track={56}
                               numberWidth={24}
                               numberClassName="text-cell"
-                              barClassName="hidden min-[375px]:block"
+                              barClassName="hidden min-[23.4375rem]:block"
                             />
                           </td>
                         </>
@@ -851,9 +871,10 @@ export function StandingsTable(props: StandingsTableProps) {
                         <RowLink href={hrefOf(row)} label={rowLabel(row)} />
                         <span className="flex items-center gap-2">
                           <TeamMonogram team={row.team} size={24} />
-                          {/* Two lines, never an ellipsis: under a large browser text size the
+                          {/* Two lines, broken at a space (no `break-words`, which split a name
+                              per letter in a narrow cell): under a large browser text size the
                               name wraps inside the row instead of losing its second word. */}
-                          <span className="min-w-0 line-clamp-2 break-words text-body text-ink">
+                          <span className="min-w-0 line-clamp-2 text-ellipsis text-body text-ink">
                             {row.team.shortName}
                           </span>
                         </span>

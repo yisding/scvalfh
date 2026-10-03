@@ -62,7 +62,14 @@ export function DivisionStandings({
     ...(view.berthRuleAfter === undefined ? {} : { berthRuleAfter: view.berthRuleAfter }),
   };
   // `footnotes` go last in the Notes block, so they are left out of the table's own list here.
-  const { specific } = collectStandingsNotes({ ...table, variant: 'phone', footnotes: [] });
+  // A team the comparison list below already names (it prints its items unless MaxPreps agrees)
+  // keeps only that sentence: the ⚑ line would repeat it in other words.
+  const { specific } = collectStandingsNotes({
+    ...table,
+    variant: 'phone',
+    footnotes: [],
+    statedElsewhere: view.comparison.agreement ? [] : view.mismatches.map((m) => m.slug),
+  });
   const points = leagueOfDivision(view.division).rules.citations.points;
 
   return (
