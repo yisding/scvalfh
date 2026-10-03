@@ -431,7 +431,8 @@
   .sx-inset > * + * { margin-top: 0.75rem; }
 
   /* A labelled disclosure for generic legends and methodology (never for division- or
-     team-specific facts). The summary is a ≥44px target with a CSS chevron. */
+     team-specific facts, with one deliberate exception: a team's Elo rating, an estimate the owner
+     chose to keep one tap away, DESIGN §20.2). The summary is a ≥44px target with a CSS chevron. */
   .sx-disclosure > summary {
     display: flex; align-items: center; gap: 0.625rem;
     min-height: 2.75rem; cursor: pointer; list-style: none;

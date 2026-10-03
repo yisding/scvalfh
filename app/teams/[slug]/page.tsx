@@ -40,8 +40,9 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * 43 static pages, one per member of each league's official alignment. There is ONE source order
  * at every width, so the DOM order matches the visual order at every breakpoint (DESIGN §10.5):
  * identity (whose second meta line states the place: "where do we stand") → Last ("what just
- * happened") → Next ("when is the next one") → the stat tiles and their disclosure, the Elo card
- * (DESIGN §20), and the standings and official-schedule links → Form / Margin → the rest. The tiles used to sit between
+ * happened") → Next ("when is the next one") → the stat tiles and their disclosure, the Elo rating
+ * (collapsed, DESIGN §20.2), and the standings and official-schedule links → Form / Margin → the
+ * rest. The tiles used to sit between
  * the identity card and Last, which pushed the Next game's date and opponent off the first phone
  * screen on every team.
  *
@@ -59,7 +60,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * order), so reading order = DOM order = row-major visual order:
  *
  *     Last           | Next
- *     Stat tiles, the Elo card and the standings / official-schedule links (both columns)
+ *     Stat tiles, the collapsed Elo rating and the standings / official-schedule links (both columns)
  *     Form           | Margin (2 rows)
  *     Splits         |   ″
  *     Postseason     | Who we haven't beaten
@@ -259,11 +260,11 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
 
         <TeamNextGame card={view.nextCard} teamName={team.name} league={view.league} />
 
-        {/* The tiles, the Elo card and the two league links are one grid item, so the links keep
-            their 16px under the tiles instead of a section gap. Both columns from 768px. */}
+        {/* The tiles, the collapsed Elo rating and the two league links are one grid item, so the
+            links keep their 16px under the tiles instead of a section gap. Both columns from 768px. */}
         <div className="min-w-0 md:col-span-2">
           <TeamStatTiles view={view} className="min-w-0" />
-          <TeamElo elo={view.elo} className="mt-3" />
+          <TeamElo elo={view.elo} />
           {/* On the canvas, so the pills take the card's surface and ring (surface-2 on hover):
               the grey pill fill all but vanished there in light mode. */}
           <p className="mt-4 mb-0 flex flex-wrap gap-2">

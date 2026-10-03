@@ -50,7 +50,7 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 43 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, Elo rating (`#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
@@ -653,8 +653,9 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
 
 ## How Elo ratings are computed
 
-Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is printed on its team page (`#elo`), and
-the ten highest are a board on `/leaders` (`#elo-rating`). It is in Elo points (1500 is the average
+Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
+rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
+team meets the record first, and the ten highest are a board on `/leaders` (`#elo-rating`). It is in Elo points (1500 is the average
 rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not computed game
 by game: classic Elo moves two ratings after each game, which over one season of about ten games a
 team leaves it mostly where it started. Instead every final between two of the 43 teams is fitted

@@ -282,7 +282,10 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const html = await renderTeam(team.slug);
       const text = textOf(html);
       const row = listed.get(team.slug);
-      expect(html, `components/teams/TeamElo.tsx ${team.slug}: card`).toContain('id="elo"');
+      // Collapsed: the summary says "Elo rating" and nothing else shows until the reader opens it.
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: closed disclosure`).toMatch(
+        /<details id="elo" class="sx-disclosure"><summary>Elo rating<\/summary>/,
+      );
       expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain('href="/leaders#elo-rating"');
       if (row) {
         expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
@@ -300,7 +303,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       expect(elo.preseason, `components/teams/team-view.ts ${team.slug} preseason`).toBe(elo.elo !== null && elo.games === 0);
       if (elo.elo !== null) {
         rated += 1;
-        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`Elo rating ${elo.elo}`);
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`Elo rating ${elo.elo} points ·`);
       }
       if (elo.provisional) {
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`provisional, from ${elo.games}`);
@@ -562,7 +565,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     });
     expect(v.elo.elo, 'components/teams/team-view.ts elo gp 0').not.toBeNull();
     const text = textOf(await zeroed.renderTeam(slug));
-    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} preseason, from 2025-26`);
+    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} points · preseason, from 2025-26`);
     expect(text, 'components/teams/TeamElo.tsx gp 0').toContain('No counted result this season yet, so this is where it starts');
   });
 
@@ -571,7 +574,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const view = zeroed.v.buildTeamPageView(slug)!.elo;
     const unrated = { ...view, elo: null, preseason: false, provisional: false, boardPlace: null };
     const text = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: unrated })));
-    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('Elo rating — not rated no counted results yet');
+    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('Elo rating Not rated · no counted results yet');
     expect(text, 'components/teams/TeamElo.tsx unrated').toContain('A rating needs at least one final');
     expect(text, 'components/teams/TeamElo.tsx unrated').not.toContain('1500 is an average team');
   });

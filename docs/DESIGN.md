@@ -3043,11 +3043,11 @@ game; the board's note says only what a 400-point gap means on the scale.
 
 | Place | What |
 |---|---|
-| Team page, under the stat tiles (`#elo`) | One wide card: "Elo rating", the figure, and a sub-line (the team's place on the board when the board lists it, "preseason, from 2025-26" before its first counted final, "provisional, from N games" below the board's minimum, otherwise "from N games"), then a sentence or two on what the number means and `How it is computed` → `/leaders#elo-rating`. A team with neither a final this season nor one last season shows the dash, read as "not rated", never 1500. The card is a `<dl>` group, as the tiles are. A team page never names a place below the board's top 10. |
+| Team page, under the stat tiles (`#elo`) | **Collapsed on purpose.** A closed disclosure under "How these numbers are counted", whose summary says only "Elo rating": a family checking its team's page meets the record first and never a low number it did not ask for. Opened: "<rating> points · <where it stands>" (the team's place on the board when the board lists it, "preseason, from 2025-26" before its first counted final, "provisional, from N games" below the board's minimum, otherwise "from N games"), a sentence or two on what the number means, and `How it is computed` → `/leaders#elo-rating`. A team with neither a final this season nor one last season reads "Not rated", never 1500. A team page never names a place below the board's top 10. `#elo` is the `<details>` itself, so a board link lands on the summary in every browser. This is the one team-specific fact in a disclosure, against the rule that keeps them for generic legends and methodology: the owner's choice, because the rating is an estimate and not a result. |
 | `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over this season's games the fit counts (half the median, rounded up); the teams that have played but are under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found and the season it started from. |
 
 ### 20.3 Budgets
 
 `/leaders` gains a tenth board of at most 15 rows and stays inside its 1.0 × standings HTML budget
-(§16). The team page gains one card of about 800 bytes of HTML before gzip. The server bundle gains
+(§16). The team page gains one closed disclosure of about 800 bytes of HTML before gzip. The server bundle gains
 `data/prior-season.json` (about 100 KB raw, one line per game), which no page sends to a browser.
