@@ -169,20 +169,25 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
           ) : null}
         </a>
       ) : (
-        <span className="inline-flex flex-wrap items-center gap-x-1">
+        <span className="inline-flex flex-wrap items-center gap-x-0.5">
           <span aria-hidden="true" className="text-meta text-ink-3">
             Full season
           </span>
-          {seasonLeagues.map((league) => (
-            <a
-              key={league.id}
-              href={`/schedule/${league.id}#${date}`}
-              className="sx-action min-h-11 rounded-full px-2 text-meta font-medium text-accent no-underline hover:bg-surface-2"
-            >
-              {league.shortName}
-              <span className="sr-only">{` full season, at ${shortDate(date)}`}</span>
-            </a>
-          ))}
+          {/* The links wrap together, never one by one: four fit beside the label at 320
+              (tight padding and gap), and if a narrower screen or a wider font can't hold
+              them, they all drop under the label rather than stranding the last league. */}
+          <span className="inline-flex items-center gap-x-0.5">
+            {seasonLeagues.map((league) => (
+              <a
+                key={league.id}
+                href={`/schedule/${league.id}#${date}`}
+                className="sx-action min-h-11 rounded-full px-1.5 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+              >
+                {league.shortName}
+                <span className="sr-only">{` full season, at ${shortDate(date)}`}</span>
+              </a>
+            ))}
+          </span>
         </span>
       )}
     </nav>
