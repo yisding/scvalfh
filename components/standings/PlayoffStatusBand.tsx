@@ -16,9 +16,10 @@ import type { StatusGroup } from './standings-view';
  * consideration", "No automatic path" — `PLAYOFF_STATUS_LABELS`, the phrases /playoffs uses) on a
  * sentence-case chip, never a code like "AQ" or "NO AQ", so nothing here is carried by color or
  * by jargon (DESIGN §6.5, channels 1 and 2). Only the automatic-qualifier chip takes the accent
- * wash, because there the accent already means "berth". Beside the chip the term names just the
- * place range ("Places 1–3", "4th place"). The Article VII §2 text itself is cited once per page,
- * in the standings disclosure.
+ * wash, because there the accent already means "berth". Beside the chip the term names the place
+ * range ("Places 1–3", "5th place"), and for the play-in also what the game decides ("4th place ·
+ * winner takes SCVAL's 7th automatic CCS spot"), the one consequence its chip cannot say. The
+ * Article VII §2 text itself is cited once per page, in the standings disclosure.
  *
  * Each team is a pill link to its page with its place beside the name, so the band reads as a
  * row of facts rather than a `·`-separated sentence.
@@ -54,13 +55,17 @@ export function PlayoffStatusBand({
       </h3>
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
-            term column is 22rem there, ample for the widest term ("Play-in game Oct 30" chip +
-            "4th place", ~190px), so every term is one line beside its pills. From lg the band
-            shares its row with the Notes inset, so the term sits above its teams instead. */}
+            term column is 14rem there, just past the widest place-range term ("At-large
+            consideration" chip + "5th place", ~213px), so those terms stay on one line and the
+            pills get ~424px at 768: three AQ pills fit on one row. The play-in term's
+            consequence clause wraps under its chip, and the dt's flex-wrap also absorbs a larger
+            browser font. A fixed track, not `auto`: each row is its own grid, and a fixed width
+            keeps the pill column aligned across rows. From lg the band shares its row with the
+            Notes inset, so the term sits above its teams instead. */}
         {groups.map((group) => (
           <div
             key={group.status}
-            className="grid gap-3 py-3 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
+            className="grid gap-3 py-3 md:grid-cols-[minmax(0,14rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's

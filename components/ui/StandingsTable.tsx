@@ -451,7 +451,13 @@ export function StandingsTable(props: StandingsTableProps) {
                             to 174px under a 24px browser font around the same 116px of chips
                             and squeezed the record onto three lines, up into line 1.
                             Budget at 320: 44 + 116 + 8 + ~95 ("10-1-0" in 13px mono, then
-                            " overall" in 13px sans, narrower than mono) = 263 of 304. */}
+                            " overall" in 13px sans, narrower than mono) = 263 of 304.
+                            The League record (in its td) and this record never wrap at their
+                            hyphens: under a large browser font (320-375 at 20/24px) a wrapped
+                            League cell pushes its tail into line 2, and a wrapped line-2 record
+                            grows UP into line 1. Not `truncate`: at 320/24px that clips every
+                            row to "9-1-0 ov…", where nowrap lets the word run into the right
+                            padding instead. */}
                         {has ? (
                           <span className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center gap-2 pl-[2.75rem] pr-gutter text-meta text-ink-3">
                             <span className="flex w-[116px] shrink-0 justify-end">
@@ -463,7 +469,7 @@ export function StandingsTable(props: StandingsTableProps) {
                             </span>
                             {/* Mono for the digits only (they stack down the rows); the word is
                                 prose and stays sans. */}
-                            <span className="text-cell text-ink-3">
+                            <span className="whitespace-nowrap text-cell text-ink-3">
                               <span className="sx-num">{recordString(s.overall)}</span> overall
                             </span>
                           </span>
@@ -474,7 +480,7 @@ export function StandingsTable(props: StandingsTableProps) {
                           <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink">
                             {s.computed.pts}
                           </td>
-                          <td className="sx-num w-[56px] pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
+                          <td className="sx-num w-[56px] whitespace-nowrap pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
                             {recordString(s.computed)}
                           </td>
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">

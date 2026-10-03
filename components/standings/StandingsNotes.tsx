@@ -23,7 +23,9 @@ import type { MismatchNote, UnreportedFixtures } from './standings-view';
  *        by-laws rank by points;
  *      - a lone place difference reads "3rd here, 4th on MaxPreps", and only claims the
  *        win-percentage reason when the win percentages involved actually differ;
- *      - a place we hold LEVEL (Article VI §7) says so: "level 7th here (coin flip …)".
+ *      - a place we hold level (Article VI §7) says so: "tied for 7th here; MaxPreps puts it
+ *        8th". The shared-place note just above, in the same list, already cites §7 and the coin
+ *        flip, so this line does not repeat it.
  *     One ⚑ per item and the sr-only "Flagged:" stay, so each ⚑ in the table has a line here.
  *  3. Official SCVAL fixtures that no source has published a contest for. We do not invent a
  *     result for them, and we do not let the absence read as a team that did not play.
@@ -217,7 +219,7 @@ function TeamSentence({ line, rows }: { line: FlagLine; rows: readonly Standings
       {p ? (
         shared ? (
           <>
-            level {ordinal(p.ours)} here (coin flip, Article VI §7)
+            tied for {ordinal(p.ours)} here
             {p.theirs === null ? '; MaxPreps gives no place' : `; MaxPreps puts it ${ordinal(p.theirs)}`}
             .
           </>

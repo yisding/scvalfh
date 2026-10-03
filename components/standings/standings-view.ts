@@ -43,7 +43,7 @@ export interface StatusGroup {
    * decode, and never a hue on its own (DESIGN §6.5).
    */
   statusText: string;
-  /** The place range the status belongs to: "Places 1–3", "4th place". */
+  /** The place range the status belongs to ("Places 1–3"), plus, for the play-in, what it decides. */
   label: string;
   teams: StatusTeam[];
 }
@@ -107,15 +107,17 @@ const STATUS_ORDER: PlayoffStatus[] = ['aq', 'play-in', 'at-large', 'out'];
 
 /**
  * The place range each status belongs to (Article VII §2). What the status MEANS is the chip
- * beside it (`StatusGroup.statusText`), so this is only the range — the old "Places 1-3 —
- * automatic CCS qualifier" said the same thing twice next to an "AQ" code.
+ * beside it (`StatusGroup.statusText`), so this is mostly just the range — the old "Places 1-3 —
+ * automatic CCS qualifier" said the same thing twice next to an "AQ" code. The one exception is
+ * the play-in: its chip says WHEN ("Play-in game Oct 30") but not what the game decides, so its
+ * term adds that the winner takes SCVAL's 7th automatic CCS spot.
  */
 export function statusLabel(status: PlayoffStatus): string {
   switch (status) {
     case 'aq':
       return 'Places 1–3';
     case 'play-in':
-      return '4th place';
+      return "4th place · winner takes SCVAL's 7th automatic CCS spot";
     case 'at-large':
       return '5th place';
     case 'out':
