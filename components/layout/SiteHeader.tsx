@@ -17,8 +17,8 @@ import TopNav from './TopNav';
  * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–895 drops the stamp so
  * the nav fits; it comes back from 896 in its short month-day form ("Updated Sep 30 12:48 PM", the
  * widest it gets, needs 876px), with the weekday from 1024; the spelled-out wordmark waits until
- * 1280. The accessible name of the home link is always
- * "SCVAL Field Hockey". Content is capped at 1200px, with the same 16 / 24 / 32px gutter as <main>.
+ * 1280. The accessible name of the home link is always "SCVAL Field Hockey". Content is capped at
+ * 1200px, with the same 16 / 24 / 32px gutter as <main>.
  */
 export interface SiteHeaderProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */

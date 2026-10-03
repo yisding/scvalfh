@@ -8,9 +8,9 @@ import { SOURCE_LINKS } from '../../lib/season';
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
  * "Data from MaxPreps and SBLive/SI" with real deep links, the snapshot timestamp in Pacific, a
- * link to /about and one to last season's archive, and the not-affiliated line. Always visible, never a tooltip. The attribution
- * posture in SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back
- * on every row, and say on every page where the numbers came from.
+ * link to /about and one to last season's archive, and the not-affiliated line. Always visible,
+ * never a tooltip. The attribution posture in SPEC §6 is the reason it is not negotiable: we store
+ * derived records, deep-link back on every row, and say on every page where the numbers came from.
  *
  * `links` carries the page-specific deep links — the team's or the game's own source page.
  */
@@ -45,9 +45,10 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           the by-laws from <ExternalLink href={SOURCE_LINKS.scval}>SCVAL</ExternalLink>; playoff
           dates and format from <ExternalLink href={SOURCE_LINKS.ccs}>CIF-CCS</ExternalLink>.
         </p>
-        {/* The deep links, "About & sources" and the archive link are standalone actions, not words in a sentence, so
-            each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in the paragraph
-            above do not: they sit inside a sentence, which is the case 2.5.8 exempts. */}
+        {/* The deep links, "About & sources" and the archive link are standalone actions, not
+            words in a sentence, so each takes its own 24px box (`sx-action`, WCAG 2.5.8). The
+            prose links in the paragraph above do not: they sit inside a sentence, which is the
+            case 2.5.8 exempts. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} />
           <Link href="/about" className="sx-action text-accent hover:underline">
@@ -68,7 +69,7 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
             </div>
           ) : null}
         </div>
-        {/* The divider spans the whole footer grid; only the sentence is capped at 65ch. */}
+        {/* The divider spans the whole footer grid; only the sentence is capped at the prose measure (32em). */}
         <div className="mt-6 border-t border-divider pt-4 md:col-span-2">
           <p className="m-0 max-w-prose text-meta text-ink-3">
             Unofficial fan site. Not affiliated with SCVAL, CIF-CCS, MaxPreps or Sports Illustrated.
