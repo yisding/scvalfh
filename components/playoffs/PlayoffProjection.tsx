@@ -33,9 +33,10 @@ import {
  *    that only the pinned row displays. An attribute and an inset shadow, so CLS stays 0.
  *  - **Phone: a full-bleed band** (`sx-bleed`). Below md the card runs edge to edge and the first
  *    and last cells take the 16px gutter themselves, which buys the ~28px the status capsule needs
- *    to sit beside the record instead of wrapping under it. Measured at 320: 13 of the 15 rows are
- *    65px (every row was 89px before); the two that still wrap carry the longest capsules, in the
- *    table whose `T7` widens the first column.
+ *    to sit beside the record instead of wrapping under it. Below sm the monogram gap (`gap-2`) and
+ *    the record-to-capsule gap (`gap-x-1.5`) tighten too, so the longest capsules still fit in the
+ *    table whose `T7` widens the first column. Measured at 320: every row is 65/66px (every row was
+ *    89px before).
  *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
  *    written status "No results reported". It is still a link to its team page.
  *  - The whole row is one block link whose hit area is exactly the row (WCAG 2.5.8), the same
@@ -233,7 +234,7 @@ export function PlayoffProjection({
                       {projectionRowLabel(row, divisionLabel)}
                     </span>
                   </Link>
-                  <span className="flex items-center gap-3">
+                  <span className="flex items-center gap-2 sm:gap-3">
                     <TeamMonogram team={row.team} size={28} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-body text-ink" aria-hidden="true">
@@ -243,11 +244,14 @@ export function PlayoffProjection({
                           visible middot between them as its own flex item (the gap alone read
                           "5-1-0 15 pts" as one number run). `gap-x-1` is a word space either side
                           of the dot; a wider gap cost the 320px row the width its status capsule
-                          needs to stay on this line. Digits are mono, the word "pts" is sans
+                          needs to stay on this line. For the same reason the record-to-capsule gap
+                          is `gap-x-1.5` and the monogram gap above is `gap-2` below sm: without
+                          both, El Camino's longest capsules ("Play-in game Oct 30", "At-large
+                          consideration") wrapped at 320. Digits are mono, the word "pts" is sans
                           (DESIGN §4.3: mono is for digits that stack). Below md the status
                           capsule follows them on the same line (it wraps under them when the row
                           is too narrow); from md it has its own column. */}
-                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                         <span
                           className="flex flex-wrap gap-x-1 text-cell text-ink-2"
                           aria-hidden="true"

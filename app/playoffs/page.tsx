@@ -330,7 +330,7 @@ export default function PlayoffsPage() {
           <BerthMeter
             claimed={auto.scval}
             total={auto.total}
-            label={`SCVAL teams get ${auto.scval} of the ${auto.total} CCS places automatically.`}
+            label={`SCVAL teams get ${auto.scval} of the ${auto.total} CCS berths automatically.`}
           />
         </div>
       </section>
