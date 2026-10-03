@@ -1,7 +1,9 @@
 /**
  * One ratio against a limit → a segmented meter (DESIGN §6.1, §7.10; brief §4.20). Not a pie of two
- * slices, and not a bar chart of invented probabilities: there is no model, so the only number here
- * is the real allocation from By-Laws Article VII §1 — SCVAL 7 of the 16-team CCS field.
+ * slices, and not a bar chart of invented probabilities: there is no model, so the only numbers here
+ * are real allocations: a league's automatic CCS berths from its own rules (lib/leagues.ts
+ * `postseason.autoBerths`, e.g. SCVAL 7, BVAL 4, PCAL 2 of the 16-team field), or a division's
+ * automatic-qualifier count.
  *
  * One segment per berth, `claimed` of them filled. The figure and "/ total" are printed, so the
  * value is never carried by the fill alone, and the capped `max-w-prose` measure keeps the meter
