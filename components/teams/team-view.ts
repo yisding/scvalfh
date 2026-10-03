@@ -620,7 +620,7 @@ export interface TeamsSectionGroup {
 
 const teamsWord = (n: number) => `${n} ${n === 1 ? 'team' : 'teams'}`;
 
-/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §17). */
+/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18). */
 export function buildTeamsByLeague(): TeamsSectionGroup[] {
   const teams = getTeams();
   return getTeamsGrouped().map(({ section, leagues }) => ({

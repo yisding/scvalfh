@@ -401,6 +401,183 @@ current player, and Hudl was found only by scanning ids around known Stevenson p
 search surfaced no Hudl field hockey profile for a current roster. A profile for anyone else could
 exist and not be linked. Like the first sweep, this one is research, not a script.
 
+**(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
+`lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
+DESIGN §17). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds 13
+youth field hockey clubs and 72 affiliations, each a tie between a player on the 43 tracked varsity
+rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+is. A club record has the club's name and display name, city, region, website, founding year, one
+factual sentence, its teams and programs (each with a short detail and the page it was read from;
+the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
+"no season after 2022 is posted", "no dates posted"), its own public roster pages and its sources,
+each source with the short name the club page prints as its link ("Program overview", "NCFHA youth
+club directory"), dated when the page is old ("Club news (latest item Dec 2021)"); it names no
+individual: no coaches, no directors. An affiliation has the club team, a `status` with the date
+or season the source gives (`asOf`), a `confidence`, and its sources (URL, kind, a verbatim quote
+of at most 300 characters, with several quotes from one page joined by " … ", and the school, class
+year and date the page states); every source names the player or is the player's own profile, and
+`basis` says what the match rests on. The quotes and bases are for maintainers and are never
+rendered: they can name people who are not on the rosters (teammates, a club's director), and
+`scripts/assert-copy.ts` fails the build on any page that shows one (`affiliationLeaks` in
+`scripts/copy-rules.ts`). Aliases (`aliases[]`, e.g. San Jose Fly for Fly FHC) are kept for
+matching and not shown, since they mix team names into club names.
+
+*Sources.* The clubs were found in the NCFHA youth club directory (`ncfha.org/youth`) and BAFHA's
+youth hockey page (`bafha.org/schedule/youth-hockey/`), plus any club a rostered player's page
+named; each record was then read from the club's own site (71 club source entries, on 66 distinct
+URLs). The ties rest on 229 source entries on 105 distinct URLs: an entry is one page backing one
+tie, so a club roster, a watchlist or a news story that names several players is one page and
+several entries. The counts are of URLs as the file spells them, and two pages are cited under two
+URLs each, so the ties rest on 103 pages: Stick Together's 2025 all-league page, with its trailing
+slash (`news` for five players, `other` for two) and without it (`news` for Olivia Taylor), and
+Gabrielle Moll's MaxPreps career page, under the name slugs `gabby-moll` and `gabrielle-moll` (one
+`careerid`). That one URL filed under two kinds is why the per-kind URL counts add up to 106.
+
+| Kind | Entries | URLs | What it is |
+|---|---|---|---|
+| `sportsrecruits` | 57 | 36 | SportsRecruits athlete pages (`nfhca.sportsrecruits.com/athlete/<slug>`: class year, hometown or school, club) and organization pages (`/organization/<club>`, which list a club's teams and their athletes by class year) |
+| `club-site` | 49 | 11 | The clubs' own pages: SF Hawks' current-players and player-accomplishments pages (24 entries on 2 pages), NorCal Impact's per-player profiles, player directory and two blog posts on its players' high school honors (23 on 7), Lightning's per-season rosters (2 on 2) |
+| `news` | 34 | 6 | Stick Together (`sticktogetherfh.com`, 26 entries on 5 URLs, 4 pages): mostly its July 2026 rosters of NorCal teams at national events, with each player's school and class year, plus its 2025 all-league lists and season newsletters; the Gilroy Dispatch (`gilroydispatch.com`, 8 entries on 1 page): Infinity's 2025 California Cup lineup |
+| `event` | 26 | 3 | The NFHCA's 2026 and 2025 high school watchlists (`nfhca.org`, 25 entries on 2 pages): coach-nominated tables of Institution, Club, First, Last, Class and Position, so one row names the player, the school, the club and the class; and MAX Field Hockey's Class of 2028 invitational list (1) |
+| `ncsa` | 24 | 21 | NCSA recruiting profiles, which list club seasons by year |
+| `other` | 19 | 9 | MAX Field Hockey (`maxfh.longstreth.com`, 11 entries on 6 pages): its club pages list a club's players with class year, position and high school, and its high school and athlete pages show the same rows from the school's and the player's side; plus pages that support the school: the SCVAL 2025-26 all-league PDF, Stick Together's 2025 all-league lists, the NFHCA academic squad |
+| `maxpreps-career` | 17 | 17 | The club-teams block (`careerClubTeamsData`) of a MaxPreps career `/bio/` page: the club teams a player or parent entered (club, team, sport, city, year joined, last modified), or the page's class year and team where another page names the club |
+| `school-site` | 2 | 2 | A MaxPreps all-time school roster, and Saint Francis's own athletics roster |
+| `hudl` | 1 | 1 | A Hudl profile |
+
+The MaxPreps club-teams block was mined for all 716 varsity rows: 13 of the 17 entries (10 players)
+quote a field hockey club from it, and the other 4 give only the page's class year and team. Every
+tie it names was also found by another source except Yoyo Cai's Fly FHC tie, which rests on her
+MaxPreps page alone. MAX Field Hockey's pages render their tables through an embedded database view,
+so they were read by calling the embedded page directly. USA Field Hockey lists were searched too.
+The club pages show each source as a link labelled by its kind and host, never by anything in its
+URL path.
+
+*The rule* is the recruiting-profile rule above, applied to clubs: a public page must name the
+player and a field hockey club, and either name the player's high school, or give a class year
+that agrees with the roster grade together with a Northern California location (the player's
+hometown, or a club or team based in Northern California). A name alone never makes a match, and a
+class year that disagrees with the roster grade rules one out (`lib/clubs.ts` refuses the file at
+load otherwise: MaxPreps' grade, else the overlay's; Riya Mehrotra and Gabrielle Moll have no grade
+anywhere, so theirs is not checked). A page may use a nickname when it names the school.
+Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts: no source or
+website may be on instagram.com, facebook.com, tiktok.com, x.com or twitter.com. Only players
+already on the tracked rosters are named, varsity rows only (no affiliation is on one of Los Gatos'
+29 JV rows); a club's own roster names many more players, and the club page links it instead.
+
+*Two passes.* Every affiliation was checked twice on 2026-10-03. A checker re-opened each source
+and applied the rule; then an independent refuter re-opened the sources and tried to break the
+match: another person of the same name, a quote not on the page, a misidentified club, a class
+year that disagrees, a stale listing. Only ties that survived both are in the file.
+
+*Status and confidence.* `current` = the source reflects the 2025-26 or 2026-27 club season (dated
+August 2025 or later, a club's current-players page, or a live recruiting profile that lists the
+club); `past` = dated earlier, an alumni list, or a club the player's own page lists for earlier
+years; `unknown` = listed with no usable date: a source names the club without saying whether the
+player is still with it (a profile not updated since an earlier season, or one a newer page
+contradicts), which the site words "Listed by <source>, <date>" with the date or season the source
+gives, never as current. `high` = one first-hand page names the player, the club and the school
+(or it is the player's own profile); `medium` = the match rests on a club roster's class-year
+heading plus the club's location, on a team nickname standing for the school, or on a single
+self-reported line. On 2026-10-03: 55 current, 11 past, 6 unknown; 57 high, 15 medium.
+
+Gotchas, found in the research (most are recorded in an affiliation's `basis` or in `notes[]`):
+- **SportsRecruits slugs** are shared across sports and people, and one player can have several:
+  Caitlyn Hughes' `caitlyn_hughes3` (the profile her roster row links) names no club, while
+  `caitlyn_hughes4` lists SF Hawks. Gigi Colant's only club statement is a line on her soccer
+  profile; the field hockey ones name no club, so hers is medium.
+- **Fly FHC was San Jose Fly** (`sanjosefly.com`, and an older San Jose Fly Field Hockey LLC
+  site, which the club record keeps): NCSA profiles and MaxPreps club entries still say "San Jose
+  Fly", mapped through the club's own about page. That page names no player, so it is not kept as
+  a source of any tie (every source names the player, `notes[2]`). It is based in Los Altos, not
+  San Jose.
+- **Fly FHC's team-roster page sits behind a SiteGround captcha.** Its lists give names only (no
+  school, no class year) and could not be re-read, so none of its names, and none of its team
+  labels, are used.
+- **NorCal Impact's per-player pages list earlier clubs by year** under "Other Field Hockey", which
+  makes those clubs `past` (Melanie Henderson: San Jose Fly 2019-2022, and a "Lightning Field
+  Hockey Club" 2015-2018 with no location, matched to Lightning by her Los Altos Hills hometown, so
+  medium). Its blog names players by nickname with their school ("Addie", "Noli"), so those two
+  Willow Glen ties are medium.
+- **SF Hawks' current-players page** lists players under class-year headings only, with no school
+  and no date. A tie whose only club evidence is a class-year listing (that page, or MAX Field
+  Hockey's roster of the club) meets the rule through class year plus a San Francisco club and is
+  medium (five players), even where a second page (the NFHCA academic squad, a MAX athlete page)
+  confirms the school; Olivia Taylor is high because MAX's club page lists her with her school. Two
+  rostered players are named Sadie Baker (Tamalpais, class of 2028; Lick-Wilmerding, class of
+  2027): the class-year heading and Stick Together's "Tamalpais '28" pick one.
+- **MAX Field Hockey can tag the wrong school record.** Its SF Hawks page lists Samantha Brunsell
+  at "St. Ignatius College Prep (IL)"; her own MAX athlete page says San Francisco, so the tie rests
+  on class year plus the club's location, not on that school tag.
+- **The watchlists are a year apart.** A 2026 row's Class (First-Year to Senior) is the 2026-27
+  grade and checks against the roster directly; the 2025 list's is a grade lower. The 2026 list
+  prints "Convent High School" for Convent of the Sacred Heart, read as that school only because
+  the 2025 list and the player's own profile give the full name.
+- **Spelling variants match only with the school or class year on the same page.** MaxPreps prints
+  Nora Lagenfeld; the NFHCA 2026 watchlist prints Langenfeld beside Saint Francis and First-Year
+  (class of 2030), and the school's own roster prints Langenfeld with the same number and position.
+  Nicknames are held to the same rule ("Maggie" Magnano is "Margaret" on her profile, "Evie"
+  Ferrini "Genevieve" on the watchlist). The site prints the roster's spelling.
+- **A school nickname stands for the school in news stories.** The Gilroy Dispatch's 2025-07-18
+  California Cup story groups Infinity's players as Cougars, which is Christopher; four ties rest
+  on that grouping and are medium, and the story's date makes them `past`.
+- **MaxPreps' club block is user-entered and dated.** Colette Boyd's Infinity entry was last
+  modified in 2023 and nothing dates her with the club after July 2025, so she is `unknown`.
+- **A newer page can name another club.** Gabrielle Moll's NCSA and MaxPreps pages list Fly FHC
+  for 2025 (the MaxPreps entry is dated 2025-10-19), but her SportsRecruits profile (modified
+  2026-10-03) lists Cowtown Field Hockey, a Fort Worth, Texas club whose SportsRecruits U19 team
+  lists her too: Fly is `unknown` and medium. The two passes disagreed on her (the second would
+  have made Fly current, as of 2025), and the more conservative call stands, as her `basis` says.
+  (Her SportsRecruits and FieldLevel pages give Los Altos, not Homestead, as noted in (j).) Emma
+  Traverso's NCSA profile lists San Jose Fly seasons through 2025, but her SportsRecruits profile,
+  created 2026-01-02, says she has recently switched to NorCal Impact: Fly is `unknown`. Brooklyn
+  Barnard's one Fly entry is "2025 San Jose Fly - Guest goalkeeper" on an undated profile, so hers
+  is `unknown` too.
+- **Lightning's rosters are per sub-season** (`/roster/show/<team>?subseason=<id>`). Ruhee
+  Bhatnagar is on the Spring 2025 U16/U19 roster and on neither Fall 2025 girls' roster, so she is
+  `unknown`. Lightning runs in Los Altos Hills (practices at Foothill College), but NCFHA lists it
+  under Fremont; the record follows the club's site. NCFHA likewise lists NorCal Impact under
+  Campbell; it trains in San Jose.
+- **HTC is a Connecticut club** (Madison, CT) whose California program trains in La Jolla and
+  Chula Vista. One Gilroy player is tied to it, so it is in the file, in the region `elsewhere`,
+  and no copy says every club is near these schools.
+- **Golden Gate Rippers began as a lacrosse club** (2017; field hockey since 2019), and its site is
+  still titled Golden Gate Lacrosse Club. Only its field hockey programs are recorded.
+- **Other sports do not count.** Several rostered players have soccer or lacrosse profiles beside
+  a field hockey one, and an NCSA profile under one rostered player's name belongs to an ice
+  hockey player in another state.
+
+*Recall is partial.* A player with no public page that meets the rule is not listed, whatever club
+they play for. The 72 ties cover 66 of the 716 varsity rows at 22 of the 43 schools; five players
+are tied to more than one club.
+
+| League | Players | By school |
+|---|---|---|
+| SCVAL | 33 at 12 of 15 | St. Ignatius 14, Saint Francis 5, Mitty 3, Los Altos 2, Palo Alto 2, Cupertino 1, Fremont 1, Homestead 1, Los Gatos 1, Lynbrook 1, Monta Vista 1, Presentation 1 |
+| BVAL | 16 at 6 of 12 | Christopher 6, Leigh 3, Willow Glen 3, Gilroy 2, Leland 1, Westmont 1 |
+| PCAL | 0 of 7 | none |
+| MCAL | 17 at 4 of 9 | Tamalpais 6, University 6, Convent of the Sacred Heart 3, Lick-Wilmerding 2 |
+
+None at 21 schools: SCVAL's Valley Christian, Santa Clara and Saratoga; BVAL's Branham, Del Mar,
+Live Oak, Prospect, Silver Creek and Sobrato; all seven PCAL schools; and MCAL's Archie Williams,
+Redwood, Berkeley, Marin Catholic and Marin Academy. Six of these (Del Mar, Silver Creek, Sobrato,
+Monterey, Santa Catalina, Marin Academy) list no players on MaxPreps, so there is no row to tie
+anyone to. By club: SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
+current, 4 past, 4 unknown), Infinity 8 (1, 6, 1), Lightning 3 (1, 1, 1) and HTC 1 (current). Seven
+clubs have no tied player: Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker, Hayward
+Hawks, Lions and Golden Gate Rippers. No club was found on the Peninsula or the Central Coast,
+though both were searched. Four clubs publish a roster page the club page links (SF Hawks, NorCal
+Impact, Lightning and HTC: 11 pages in all); the players on them who are not on the tracked rosters
+are not named anywhere on the site.
+
+*When a roster refetch breaks it.* The join is checked at load against the merged rosters. If
+`pnpm fetch-rosters` drops or respells a tied player's row, if the overlay marks it JV, or if a
+season rollover moves `data/rosters.json` to a season `data/clubs.json` is not for, `lib/clubs.ts`
+throws at import, so `pnpm test` and the build fail with
+`clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources and edit or drop
+it by hand (on a rollover, redo the research for the new season). It is never pruned
+automatically.
+
 **(k) Player stats** —
 `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
 (JSON; captured and verified 2026-10-02 on the 15 SCVAL teams, and 2026-10-03 on a sample of the
@@ -1273,6 +1450,9 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
+- Club ties (§1.1j2) were researched once, on 2026-10-03, and nothing refreshes them: recall is
+  partial (66 of 716 varsity rows, none at 21 schools), a `current` tie ages, and a roster refetch
+  that drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
   history, by league"); PCAL and MCAL are marked `unavailable` in `data/history-2025-26.json`.
   For SCVAL the only route besides the scval.com PDFs is `teamSeasonPickerData[]` (unverified),

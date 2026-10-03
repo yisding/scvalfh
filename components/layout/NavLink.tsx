@@ -42,7 +42,7 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
  * `/teams/<slug>` through `slugLeague`), else the effective (remembered) league, else none. The
  * server HTML is always the index `href`, so there is no hydration mismatch and the nav works
  * with JS off; storage is never written here. The ACTIVE state is computed from the path part of
- * the base `href` (and of the league targets), so `/standings/bval` lights Teams (DESIGN §17),
+ * the base `href` (and of the league targets), so `/standings/bval` lights Teams (DESIGN §18),
  * `/playoffs/mcal` lights Playoffs, and a `#hash` target (`/playoffs#bval`, `/teams#bval`,
  * `/schedule#<date>`) never breaks `aria-current`.
  */
@@ -69,7 +69,7 @@ export interface NavLinkProps {
  * Routes that belong to a section without living under its path. A day page and a game page are
  * both reached from /schedule and are what its Scores tab is FOR, so the reader on
  * /scores/2026-09-19 or /game/… keeps that section lit instead of a bar with nothing lit at all.
- * The standings pages belong to Teams, which absorbed the old Table tab (DESIGN §17): /standings
+ * The standings pages belong to Teams, which absorbed the old Table tab (DESIGN §18): /standings
  * and /standings/<id> keep Teams lit.
  */
 const SECTION_PREFIXES: Readonly<Record<string, readonly string[]>> = {

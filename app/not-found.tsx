@@ -34,7 +34,7 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
  * links are the real navigation rather than a single "go home": one card per top-level page
  * (the seven desktop nav destinations, the History archive among them, which covers the leagues
- * with a published 2025-26 table; the standings are on Teams, DESIGN §17), with its name over a
+ * with a published 2025-26 table; the standings are on Teams, DESIGN §18), with its name over a
  * one-line description, so nothing is a sentence squeezed into a pill.
  *
  * The copy does not claim these seven are every page on the site — there are hundreds of team,

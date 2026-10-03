@@ -18,10 +18,14 @@
  *   NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs
  *
  * What runs (every run is mandatory: `page.addInitScript` always exists, so nothing is skipped):
- *  1. Every route below × light/dark × 390/1280: the fixed pages, the per-league pages
- *     (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL and an MCAL team
- *     page, and the first /game/, /scores/ and /teams/ page of the sitemap, plus its first
- *     /game/sblive-* page when it lists one (a si.com-only game).
+ *  1. Every route below × light/dark × 390/1280: the fixed pages (/clubs among them), the
+ *     per-league pages (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL
+ *     and an MCAL team page, and the first /game/, /scores/, /teams/ and /clubs/ page of the
+ *     sitemap, plus its first /game/sblive-* page when it lists one (a si.com-only game) and its
+ *     first /clubs/ page whose club no tracked player is tied to (DESIGN §17). The sitemap lists the
+ *     clubs with the most tied players first, so the first club page is the longest player list
+ *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
+ *     sources through axe with no player rows (/clubs/pac-heights today).
  *  2. `/` once per remembered league: an init script sets localStorage['scvalfh.league'] to each
  *     league id of data/snapshot.json and to 'all' (the no-league run is `/` in 1), and once with
  *     only scvalfh.pinnedTeam = 'tamalpais'. axe skips `display:none` subtrees, so each league panel
@@ -58,6 +62,19 @@ const LEAGUES = snapshot ? snapshot.season.leagues.map((l) => l.id) : ['scval', 
 const PIN = 'tamalpais';
 const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal';
 
+/**
+ * The clubs of data/clubs.json no affiliation names: their pages show the empty state. Read like
+ * the snapshot, from this tree; none (and no extra run) when the script runs outside the repo.
+ */
+function readEmptyClubs() {
+  const file = 'data/clubs.json';
+  if (!existsSync(file)) return new Set();
+  const { clubs, affiliations } = JSON.parse(readFileSync(file, 'utf8'));
+  const tied = new Set(affiliations.map((a) => a.club));
+  return new Set(clubs.map((c) => c.slug).filter((slug) => !tied.has(slug)));
+}
+const EMPTY_CLUBS = readEmptyClubs();
+
 /** One page per route family — the families are what differ, not the 364 instances of one. */
 const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/',
@@ -74,6 +91,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/leaders',
   '/about',
   '/history/2025-26',
+  '/clubs',
 ];
 
 function load() {
@@ -145,7 +163,8 @@ async function sampleDynamicRoutes() {
   const xml = await fetch(`${BASE}/sitemap.xml`).then((r) => r.text());
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
   const first = (prefix) => locs.find((p) => p.startsWith(prefix));
-  return [first('/game/'), first('/scores/'), first('/teams/'), first('/game/sblive-')]
+  const firstEmptyClub = locs.find((p) => p.startsWith('/clubs/') && EMPTY_CLUBS.has(p.slice('/clubs/'.length)));
+  return [first('/game/'), first('/scores/'), first('/teams/'), first('/game/sblive-'), first('/clubs/'), firstEmptyClub]
     .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
 }
 

@@ -59,6 +59,11 @@
 > budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
 > 40 KB allowance (see the note on §13 above).
 >
+> **The clubs pages came later still.** `/clubs`, `/clubs/[slug]` and a club line on each team
+> page's roster were added from `data/clubs.json` (researched 2026-10-03); §17 ("Clubs amendment
+> (2026-10)") records what they answer, the privacy rules they keep and how they are laid out, and
+> §1.1 lists the two routes.
+>
 > Everything else below (routes, tokens, component signatures, rendering rules, empty states,
 > a11y, build checklist) reflects what was built.
 
@@ -132,6 +137,8 @@ equivalent moment; this is it. **[R-9]**
 | `/playoffs` | "Are we in, and who do we play?" Two modes on `snapshot.playoffs.seededAt` | static | — |
 | `/history/2025-26` | "How did last year finish?" 2025-26 final standings + all-league awards | static | — |
 | `/about` | "Where does this come from and can I trust it?" | static | — |
+| `/clubs` *(§17)* | "Which clubs do players here play for?" The youth clubs by region, each with its tied players' count and schools | static | — |
+| `/clubs/[slug]` *(§17)* | "Who here plays for this club, and how do we know?" | static, `generateStaticParams` over `data/clubs.json` (13, a club with no tied player included) | `slug` = `sf-hawks`, `fly-fhc`, … |
 
 Machine routes: `/sitemap.xml` (`app/sitemap.ts`), `/robots.txt` (`app/robots.ts`),
 `/manifest.webmanifest`, and `opengraph-image.tsx` at the root plus under
@@ -2774,7 +2781,7 @@ with the widest stamp ("Updated Nov 30 12:48 PM") forced in: the nav capsules' s
 below 1024px (it was 10px, which put the theme toggle 21px into the right gutter at 768); the stamp
 returns at 944px (59rem) instead of 896, leaving about 29px; and its weekday waits for 1280, since at
 1024 it left about 3px. `components/layout/SiteHeader.tsx` records the numbers. (Superseded by
-§17: Leaders is now a phone tab, the desktop nav is back to seven links, and the header spacing is
+§18: Leaders is now a phone tab, the desktop nav is back to seven links, and the header spacing is
 back to what it was.)
 
 ### 16.4 Budgets
@@ -2796,14 +2803,148 @@ draws only from 40px. That took `/` to 48.1 KB HTML and 28.4 KB RSC. The new lin
 33.9 KB RSC) leaves about 12% for what the season adds to the page (postseason lines and cards),
 not for a new section.
 
-## 17. Teams and standings amendment (2026-10)
+---
+
+## 17. Clubs amendment (2026-10)
+
+The site gained club field hockey: which youth clubs the players on the 43 tracked varsity rosters
+play for, or played for, according to public pages that name both. The data is `data/clubs.json`,
+research done by hand on 2026-10-03 and checked twice (`docs/DATA-SOURCES.md` §1.1j2, README
+"Clubs"); nothing refreshes it. This section records what the pages answer, the rules they keep and
+how they are laid out. Everything in §1-§15 still stands: static rendering, the rule-and-kicker
+headers, two data hues, lists that reflow, the phone-first chrome.
+
+### 17.1 Routes and what they answer
+
+| URL | Answers | Pages |
+|---|---|---|
+| `/clubs` | "Which clubs do players here play for?" | 1 |
+| `/clubs/[slug]` | "Who here plays for this club, and how do we know?" | 13 |
+
+Both are static; `/clubs/[slug]` has `generateStaticParams` over the file and
+`dynamicParams = false`, so `/clubs/nope` is the root 404. Every club gets a page, including the
+seven no tracked player is tied to: what the club is and what it runs is true either way, and the
+empty state says what was and was not found (§8).
+
+- **`/clubs`.** A lede that answers the question in one sentence (players, schools, clubs, and the
+  two clubs with the most ties), then one section per region in a fixed order (San Francisco, the
+  Peninsula, the South Bay, the East Bay, Marin, the Central Coast, then the rest), then "How
+  players are matched" (`#how-matched`): who is listed, the linking rule, the two-pass check and
+  its date, what "current", "earlier" and "listed by" mean, and that recall is partial. Each club row: the
+  display name linking its page, the full name and city, the count of tied players (current and
+  earlier stated apart when both exist: "10 players: 2 current, 8 earlier or not known to be
+  current"), and their schools.
+- **`/clubs/[slug]`.** Identity (the display name with the full name under it in the same h1, the
+  city and region, the founding year, the description, the website as an external pill), then
+  "Players from tracked high school rosters", then "Teams and programs" when the club lists any,
+  then "Where this comes from": the club's own roster pages and the other pages the record was read
+  from ("Pages about the club"; a roster page is listed once, under the rosters, not again there),
+  with a sentence saying that only tracked players are named here (and, where the club has a public
+  roster, that it lists many more players than this page does). Each player row: the name; the
+  school linking `/teams/<slug>#roster`, the grade and the club team when known; the status (§17.3);
+  and the source links. The list's lede says recall is partial, as the empty state does. In "Teams
+  and programs", the page most programs were read from (when two or more were) is linked once, under
+  the list ("Listed on the club’s site: Programs overview", or "Programs without a link of their own
+  are listed on the club’s site: …" when some rows keep one); a row links its own page only when
+  that page is another. Each link's accessible name is its own: a row's leads with the program ("U19
+  Hawks Blue: SportsRecruits team page"), the shared one with the section ("Teams and programs:
+  Program overview"), so it never reads as the same-named link under "Pages about the club".
+- **Links in, not nav.** The tab bar and the desktop nav are unchanged and light nothing on these
+  pages. `/clubs` is linked from `/teams` (one quiet line), from the Roster section of every team
+  page (the "Club teams" header action, §17.4), and from `/about`'s sources (`#clubs-coverage`).
+  A club page's eyebrow links back to `/clubs`.
+- **Metadata** follows the team pages: a club page's title is the club's full name (its og:title
+  the display name), and its description names the club, its city and how many tracked players
+  are tied to it, and ends "Unofficial and incomplete." as `/clubs`' does. No title or description
+  names a player.
+
+### 17.2 Privacy posture
+
+The players are minors, so the pages are narrower than the data:
+
+- **Only rows on the tracked varsity rosters are named**, joined on team slug + MaxPreps athleteId
+  and shown under the roster's own spelling; JV rows are out. A club's own roster names many more
+  players: the club page links it and names none of them.
+- **A source's verbatim quote, an affiliation's `basis` and its `confidence` are never rendered.**
+  They are not in the view types (`components/clubs/club-view.ts`), and `scripts/assert-copy.ts`
+  fails the build on any page whose text, entities decoded and RSC payload included, contains a
+  basis or a fragment of a quote of 40 or more letters and digits (`affiliationLeaks`, also run by
+  `tests/ui/club-view.test.ts` over the rendered routes). Both can name people who are not on the
+  rosters. The one thing excused is a coincidence: a page not built from the clubs file that prints
+  and cites the very document a quote copies (`/history/2025-26` prints the SCVAL all-league PDF,
+  which four quotes cite) is not leaking it.
+- **Metadata names no player.** A title or description travels further than the page.
+- **Link labels are never read from a URL path**, only from the source kind and the host ("NCSA
+  profile", "club roster", "Gilroy Dispatch"), apart from page-type tests (`/athlete/`, `/roster`,
+  `/organization/`). A label stays true when a page moves, and a name in a slug is never printed.
+- **Club records name no individual** (no coaches, no directors), and no source is social media.
+
+### 17.3 Status words
+
+Status is always written out, never a color or an icon, and "listed" is the third state: a club a
+source names without saying whether the player is still with it is never worded as current,
+whatever date the source gives.
+
+| `asOf` | current | past | unknown |
+|---|---|---|---|
+| a day, month or year | Current, as of Jul 8, 2026 | Earlier, Jul 18, 2025 | Listed by the Gilroy Dispatch, Jul 18, 2025 |
+| a season | Current, 2025-26 season | Earlier, 2024-25 season | Listed by NCSA, 2024-25 season |
+| a range | Current, 2025–2026 | Earlier, 2019–2022 | Listed by NCSA, 2015–2018 |
+| none | Current | Earlier | Listed by NCSA; no date given |
+
+"Listed by" names the source whose own date is the `asOf`, else the first source. On a club page
+the player list is split into "Current" and "Earlier" ("Earlier, or not known to be current" when a
+listed tie is in it), with h3 labels only when both groups exist; each row states its own status
+either way.
+
+### 17.4 The roster club line
+
+A player a public page ties to a club gets one line between the facts and the profile links:
+"Club: SF Hawks", "Club: NorCal Impact · Earlier clubs: Fly FHC, Lightning", "Listed club: Fly
+FHC". Groups run current, listed, earlier; within a group, the latest tie first. It is its own line,
+like the profiles line, so it never dangles. The links are internal, to the club's page on this
+site, with the `sx-action` box and no arrow; the visible label is `aria-hidden` and each link's
+accessible name leads with the player ("Storey Lewis’s club: SF Hawks"). A footnote appears on any
+roster with a club line: club lines link to the club's page, which cites a source for each player;
+what a "listed club" is (only when one appears); and that recall is partial. The Roster section
+header carries a "Club teams" action to `/clubs` on every team page, empty rosters included.
+
+### 17.5 Layout and accessibility
+
+Lists, not tables (§10.8): the club index and the player, program and source lists are the roster's
+grid card and reflow at 320 px and 400% zoom. Nothing long is `nowrap` (the status line, the
+schools line, HTC's city and every source title wrap); only short facts and short labels are. The
+index link and the section action are 44 px tall on a phone; every other standalone or in-row link
+carries `sx-action`. Each section is a `<section aria-labelledby>` with a `SectionHeader`, and no
+heading level is skipped. Regions follow the fixed order of §17.1 and, within a region, the clubs
+with the most tied players come first, then by name: a reader meets the clubs that answer the
+question first, and the first club page in the sitemap is the longest (`/clubs/sf-hawks`).
+`scripts/a11y-axe.mjs` checks `/clubs`, that page and the first club page with no tied player
+(`/clubs/pac-heights`) in both themes at both widths. Nothing on these pages is a client component.
+
+### 17.6 Not built, and deviations
+
+- **No nav item, and no nav lighting** on the clubs pages (the navigation is unchanged).
+- **No OG card.** The pages take the root card (`ROOT_OG_IMAGE`), so there is no page/image parity
+  to assert for them.
+- **No per-row confidence mark.** Medium-confidence ties are explained in words on `/clubs#how-matched`,
+  and every row links the pages it rests on.
+- **Aliases are not shown.** They mix team names ("U19 Hawks Blue") with club names, and one is a
+  lacrosse club's name; `docs/DATA-SOURCES.md` §1.1j2 records the ones that matter.
+- **"Teams and programs", not "Teams the club runs".** The clubs' lists include tournaments, camps,
+  clinics and private lessons, which are not teams.
+- **No budget for `/clubs`.** The page-weight budgets (§15.10) do not cover every index page
+  (`/about` and `/history/2025-26` have none), and `main` has no `/clubs` baseline to measure
+  against.
+
+## 18. Teams and standings amendment (2026-10)
 
 The phone's Table tab and Teams tab showed the same 43 teams in the same grouping (section → league
 → division, with the same anchors), one as standings and one as tiles to find a school in. They are
-now one page, `/teams`, and the freed tab goes to the leaderboards. This section wins where §1-§16
+now one page, `/teams`, and the freed tab goes to the leaderboards. This section wins where §1-§17
 disagree.
 
-### 17.1 The page
+### 18.1 The page
 
 `/teams` ("Teams and standings") keeps its search box and league chips, and under each division the
 team tiles are replaced by that division's compact standings table: place (`T7` when shared), team
@@ -2821,7 +2962,7 @@ row. Without JavaScript the search is not painted and the full tables are the pa
 `/standings` and `/standings/<league>` stay as they are: the overview keeps its old anchors for links
 in the wild, and the league pages are where every table's full view lives.
 
-### 17.2 Navigation
+### 18.2 Navigation
 
 | | Before | Now |
 |---|---|---|
@@ -2839,7 +2980,7 @@ With seven links the header goes back to its spacing before §16, measured in Ch
 widest stamp ("Updated Nov 30 12:48 PM") forced in: 10px capsule padding below 1024px, the stamp
 back from 896px with about 33px to spare, and its weekday from 1024 (about 95px to spare).
 
-### 17.3 Budgets
+### 18.3 Budgets
 
 `/teams` HTML gzip stays within 3.0 x its baseline: 24.3 KB on 2026-10-03 (it was 23.2 KB with the
 tiles), against 28.4 KB.

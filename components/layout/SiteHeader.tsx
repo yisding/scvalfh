@@ -23,11 +23,11 @@ import TopNav from './TopNav';
  * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–895 drops the stamp so
  * the nav fits; it comes back from 896 in its short month-day form, with the weekday from 1024; the
  * spelled-out wordmark waits until 1280. Measured in Chromium (2026-10-03, the seven links of
- * DESIGN §17, Leaders in Standings' place, with the widest stamp, "Updated Nov 30 12:48 PM",
+ * DESIGN §18, Leaders in Standings' place, with the widest stamp, "Updated Nov 30 12:48 PM",
  * forced in): the nav clears the toggle by ≈ 68px at 768; the stamp leaves ≈ 33px at 896 (56rem),
  * ≈ 95px at 1024 with its weekday and ≈ 153px at 1280 beside the full wordmark. The stale pill
  * ("Updated 12 days ago") is narrower than the widest stamp. (Eight links, DESIGN §16, needed
- * tighter capsules and a later stamp; §17's merge of Standings into Teams gave the room back.)
+ * tighter capsules and a later stamp; §18's merge of Standings into Teams gave the room back.)
  *
  * Re-measured for the rename with the static Geist table (tests/ui/text-metrics.ts, 12px/500,
  * scaled to 16px; no browser here, so these are text widths, not a layout run): "NorCal" 56.6px

@@ -42,7 +42,7 @@ describe('the league hrefs the bars hand to NavLink', () => {
       pcal: '/schedule/pcal',
       mcal: '/schedule/mcal',
     });
-    // Teams took over the Table tab's job (DESIGN §17): your league's tables, on /teams.
+    // Teams took over the Table tab's job (DESIGN §18): your league's tables, on /teams.
     expect(HREFS['/teams']).toEqual({
       scval: '/teams#scval',
       bval: '/teams#bval',

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '@/components/layout/site-url';
+import { getClubSlugs, getClubsFile } from '@/lib/clubs';
 import {
   getFetchedAt,
   getGameDates,
@@ -14,17 +15,21 @@ import { gameHref } from '@/lib/game-id';
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the 43 team pages,
- * one page per date with a contest, and one per game.
+ * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
+ * one per game. The clubs come in lib/clubs.ts' display order, so the first club page listed is the
+ * fullest one (scripts/a11y-axe.mjs samples it).
  *
  * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
  * route (`/game/sblive-<id>`). The `supersededGames` stub pages are NOT listed: they are not in
  * `games` (they exist only to keep an old link resolving, with rel=canonical to the MaxPreps game).
  *
  * `lastModified` is the snapshot stamp, never `Date.now()`, so a rebuild with unchanged data does
- * not churn every entry's date.
+ * not churn every entry's date. The clubs pages take data/clubs.json's own `capturedAt` instead:
+ * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(getFetchedAt());
+  const clubsStamp = new Date(getClubsFile().capturedAt);
   const url = (path: string) => `${SITE_URL}${path}`;
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -36,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/leaders'), lastModified, changeFrequency: 'daily', priority: 0.6 },
     { url: url('/history/2025-26'), lastModified, changeFrequency: 'yearly', priority: 0.3 },
     { url: url('/about'), lastModified, changeFrequency: 'monthly', priority: 0.3 },
+    { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly', priority: 0.4 },
   ];
 
   const leagueRoutes: MetadataRoute.Sitemap = getLeagueIds().flatMap((id) => [
@@ -57,6 +63,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const clubRoutes: MetadataRoute.Sitemap = getClubSlugs().map((slug) => ({
+    url: url(`/clubs/${slug}`),
+    lastModified: clubsStamp,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   const dateRoutes: MetadataRoute.Sitemap = getGameDates().map((date) => ({
     url: url(`/scores/${date}`),
     lastModified,
@@ -71,5 +84,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.4,
   }));
 
-  return [...staticRoutes, ...leagueRoutes, ...tournamentRoutes, ...teamRoutes, ...dateRoutes, ...gameRoutes];
+  return [
+    ...staticRoutes,
+    ...leagueRoutes,
+    ...tournamentRoutes,
+    ...teamRoutes,
+    ...clubRoutes,
+    ...dateRoutes,
+    ...gameRoutes,
+  ];
 }

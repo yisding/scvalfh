@@ -11,10 +11,10 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 
 /**
- * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §17; SPEC §10.5, §9.3).
+ * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §18; SPEC §10.5, §9.3).
  *
  * The phone's Teams tab, and the desktop nav's Teams link: the team list and the standings in one
- * page (DESIGN §17 merged the Table tab into it). All 43 teams, grouped section → league →
+ * page (DESIGN §18 merged the Table tab into it). All 43 teams, grouped section → league →
  * division, and each division is its COMPACT standings table (place, team, GP, W-L-T, PTS, the
  * league's ladder line), the same table the /standings overview draws, built by the same view
  * (`buildOverviewDivision`), so the two pages never disagree about a place. **Every team**: league
@@ -36,6 +36,9 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * The division wrapper carries the division id unless it equals the league id (PCAL), so
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
+ *
+ * One quiet line under the tables links /clubs (DESIGN §17.1), which is not in the nav. It sits
+ * outside `#team-list`, so the finder never hides it, and adds no heading and no group wrapper.
  */
 export const metadata: Metadata = {
   title: 'Teams and standings',
@@ -136,6 +139,13 @@ export default function TeamsPage() {
         <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
           How standings are computed
         </Link>
+      </p>
+      <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
+        Club field hockey: the{' '}
+        <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
+          club teams
+        </Link>{' '}
+        page lists youth field hockey clubs and, for each, the players here a public page ties to it.
       </p>
     </div>
   );

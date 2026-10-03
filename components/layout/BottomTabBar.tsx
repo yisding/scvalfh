@@ -6,9 +6,9 @@ import NavLink from './NavLink';
 import { navLeagueHrefs } from './TopNav';
 
 /**
- * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §17). FIVE tabs: Home, Scores, Teams, Leaders,
+ * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §18). FIVE tabs: Home, Scores, Teams, Leaders,
  * Playoffs. "Find my school" was a top-three task with no phone nav entry, so Teams has a tab; since
- * DESIGN §17 that page also holds every division's standings table, so the separate Table tab gave
+ * DESIGN §18 that page also holds every division's standings table, so the separate Table tab gave
  * its place to Leaders (/leaders). The bar is 56px tall plus the safe-area inset; each tab
  * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
  * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,

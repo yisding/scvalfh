@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { listWords } from '../../lib/format';
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
@@ -27,6 +29,17 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * facts — its own line, so a link never dangles off the end of a wrapped fact line. Alone on its
  * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
  * accessible name leads with the player's name, so a screen reader's links list tells them apart.
+ *
+ * A player a public page ties to a youth club gets a club line (DESIGN §17.4) between the facts and
+ * the profile links: "Club: SF Hawks", "Club: NorCal Impact · Earlier clubs: Fly FHC, Lightning",
+ * "Listed club: Fly FHC" for a club a source names with no date that makes it current. It answers
+ * "where does she play" next to the facts and keeps the off-site links as the row's last line. It
+ * is its own line for the same reason the profiles are, so it never dangles. Its links are
+ * internal, to the club's page on this site, which cites a source for every tie: no arrow, the
+ * `sx-action` box, and an accessible name that leads with the player ("Storey Lewis’s club: SF
+ * Hawks"), the visible label hidden from assistive technology so it is not read twice. The words
+ * are components/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
+ * says recall is partial, wherever one appears.
  *
  * A team with no list still shows the coaches and sources the enrichment file found for it, under
  * the empty state, and the empty state says only what the file records about other sources.
@@ -76,6 +89,43 @@ function Profiles({ row }: { row: RosterRow }) {
               {profile.label}
             </span>
           </ExternalLink>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function Clubs({ row }: { row: RosterRow }) {
+  return (
+    <span className="block text-meta text-ink-2">
+      {row.clubs.map((group, i) => (
+        <span key={group.status}>
+          {i > 0 ? <>&nbsp;&middot; </> : null}
+          {/* Hidden from assistive technology: each link below says it in its own name. The no-break
+              space keeps the label with its first club. */}
+          <span aria-hidden="true" className="text-ink-3">
+            {group.label}:
+          </span>
+          &nbsp;
+          {group.clubs.map((club, j) => (
+            <span key={club.slug}>
+              {j > 0 ? ', ' : null}
+              {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+              <Link
+                href={club.href}
+                prefetch={false}
+                className="sx-action whitespace-nowrap text-accent hover:underline"
+              >
+                {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
+                <span>
+                  <span className="sr-only">
+                    {row.name}&rsquo;s {group.srLabel}:{' '}
+                  </span>
+                  {club.name}
+                </span>
+              </Link>
+            </span>
+          ))}
         </span>
       ))}
     </span>
@@ -210,6 +260,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
                 ) : null}
               </span>
               {row.facts.length > 0 ? <Facts facts={row.facts} /> : null}
+              {row.clubs.length > 0 ? <Clubs row={row} /> : null}
               {row.profiles.length > 0 ? <Profiles row={row} /> : null}
             </span>
           </li>
@@ -243,6 +294,16 @@ export function TeamRoster({ view }: { view: RosterView }) {
             Profile links go to players&rsquo; own recruiting pages on{' '}
             {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
             school or class year.
+          </p>
+        ) : null}
+        {view.hasClubs ? (
+          <p className="mt-1 mb-0">
+            Club lines link to the club&rsquo;s page on this site, which cites a source for each
+            player it lists.
+            {view.hasListedClub
+              ? ' A “listed club” is one a source names without saying whether the player is still with it.'
+              : ''}{' '}
+            Recall is partial: a player with no club line may still play for a club.
           </p>
         ) : null}
         {view.jvLeftOut > 0 ? (

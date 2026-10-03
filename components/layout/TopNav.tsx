@@ -8,7 +8,7 @@ import NavLink from './NavLink';
  * built once from the league config and handed to the client `NavLink` as plain, serializable
  * objects. Scores → `/schedule/<id>`; Teams → the league's section of the teams-and-standings page
  * (`/teams#<id>`, which took over the old Table tab's job of opening your league's tables, DESIGN
- * §17); Playoffs → the league's section of the CCS page (`/playoffs#<id>`) for a CCS-ladder league,
+ * §18); Playoffs → the league's section of the CCS page (`/playoffs#<id>`) for a CCS-ladder league,
  * its own tournament page (`/playoffs/<id>`) for a league-tournament league. Every other entry
  * keeps its one href.
  */
@@ -30,7 +30,7 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
 }
 
 /**
- * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §17). It matches the
+ * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the
  * phone bar: Teams is the teams-and-standings page (the standings live there, and Teams stays lit
  * on every /standings page), so there is no separate Standings link. History keeps its short
  * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
