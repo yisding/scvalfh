@@ -11,7 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
-import { buildRosterView } from '../../components/teams/roster-view';
+import { buildRosterView, seasonPage } from '../../components/teams/roster-view';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
@@ -116,6 +116,54 @@ describe('buildRosterView', () => {
       expect(new Set(labels).size, slug).toBe(labels.length);
       for (const s of view.sources) expect(s.url, slug).toMatch(/^https?:\/\//);
     }
+  });
+
+  it('names a MaxPreps roster page of an earlier season by what it is, never as a career page', () => {
+    expect(seasonPage('https://www.maxpreps.com/ca/larkspur/redwood-giants/field-hockey/25-26/roster/')?.label).toBe('2025-26 roster');
+    expect(seasonPage('https://www.maxpreps.com/ca/san-jose/leland-chargers/field-hockey/jv/25-26/roster/')?.label).toBe(
+      '2025-26 JV roster',
+    );
+    expect(seasonPage('https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/jv/roster/')).toBeNull();
+    expect(seasonPage('https://www.maxpreps.com/ca/x/y/athletes/z/?careerid=abc')).toBeNull();
+    for (const { slug, view } of views) {
+      for (const s of view.sources) {
+        if (seasonPage(s.url)) expect(s.label, `${slug} ${s.url}`).toMatch(/^MaxPreps 20\d\d-\d\d (JV )?roster: /);
+      }
+    }
+    const redwood = views.find((v) => v.slug === 'redwood')!.view.sources.map((s) => s.label);
+    expect(redwood).toContain('MaxPreps 2025-26 roster: grades');
+    expect(redwood.some((l) => l.startsWith('MaxPreps career') && l.includes('Pipitone'))).toBe(false);
+  });
+
+  it('says what an earlier season’s roster shows and what that grade means now', () => {
+    const redwood = views.find((v) => v.slug === 'redwood')!.view.conflicts;
+    const tonderys = redwood.filter((c) => c.name === 'Eloise Tonderys');
+    expect(tonderys.map((c) => [c.shown, c.other, c.now, c.sourceLabel])).toEqual([
+      [null, 'junior', null, 'a news story'],
+      [null, 'freshman', 'sophomore', "MaxPreps' 2025-26 roster"],
+    ]);
+    const leland = views.find((v) => v.slug === 'leland')!.view.conflicts;
+    expect(leland.find((c) => c.name === 'Michaela Reichmuth' && c.now)).toMatchObject({
+      other: 'sophomore',
+      now: 'junior',
+      sourceLabel: "MaxPreps' 2025-26 JV roster",
+    });
+    // A career page shows a class year, not this grade: the line says the grade was worked out.
+    const alejandrino = views.find((v) => v.slug === 'berkeley')!.view.conflicts.find((c) => c.derived)!;
+    expect(alejandrino).toMatchObject({ name: 'Anisa Alejandrino', other: 'senior', now: null });
+    const html = renderToStaticMarkup(createElement(TeamRoster, { view: views.find((v) => v.slug === 'redwood')!.view }));
+    expect(html.replace(/<!-- -->/g, '')).toMatch(/freshman on <a [^>]*>MaxPreps’ 2025-26 roster|freshman on <a [^>]*>MaxPreps&#x27; 2025-26 roster/);
+    expect(html.replace(/<!-- -->/g, '')).toContain(', so sophomore now.');
+  });
+
+  it('calls news a news story, never a school paper (BenitoLink is local news)', () => {
+    for (const { slug, view } of views) {
+      const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
+      expect(html, slug).not.toContain('school paper');
+    }
+    const hollister = views.find((v) => v.slug === 'hollister')!.view;
+    expect(hollister.conflicts.map((c) => c.sourceLabel)).toEqual(['a news story']);
+    expect(hollister.elsewhereSources).toEqual(['a news story']);
   });
 
   it('links the page behind every value it marks †, MaxPreps career and JV pages included', () => {
@@ -226,7 +274,14 @@ describe('TeamRoster', () => {
     const base = views[0].view;
     const html = renderToStaticMarkup(
       createElement(TeamRoster, {
-        view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [], otherSourcesChecked: true },
+        view: {
+          ...base,
+          status: 'empty',
+          rows: [],
+          conflicts: [],
+          coaches: [],
+          otherRosters: { status: 'none', checkedOn: '2026-10-03', note: 'looked' },
+        },
       }),
     );
     expect(html).toContain(`MaxPreps lists no players for ${base.teamName}.`);
@@ -234,19 +289,59 @@ describe('TeamRoster', () => {
     expect(html).not.toContain('<ul class="sx-card');
   });
 
-  it('claims no other source was checked only where one was', () => {
+  it('says only what the file records about other sources: none, a partial list, or not checked', () => {
     for (const { slug, view } of views) {
-      const merged = getEnrichedTeamRoster(slug)!;
-      expect(view.otherSourcesChecked, slug).toBe(merged.sources.length > 0 || merged.enrichmentNotes.length > 0);
+      expect(view.otherRosters, slug).toEqual(getEnrichedTeamRoster(slug)!.otherRosters);
     }
+    // Every team MaxPreps lists nobody for says what other sources showed; none is left to a default.
+    const empty = views.filter((v) => v.view.status === 'empty').map((v) => [v.slug, v.view.otherRosters.status]);
+    expect(empty).toEqual([
+      ['del-mar', 'none'],
+      ['silver-creek', 'none'],
+      ['sobrato', 'none'],
+      ['monterey', 'none'],
+      ['santa-catalina', 'none'],
+      ['marin-academy', 'partial'],
+    ]);
+    for (const { slug, view } of views.filter((v) => v.view.status === 'empty')) {
+      const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
+      expect(html.includes('No other public source we checked'), slug).toBe(view.otherRosters.status === 'none');
+    }
+    // Marin Academy's school page lists 18 current players as first name + last initial: not "none".
+    const ma = views.find((v) => v.slug === 'marin-academy')!.view;
+    const maHtml = renderToStaticMarkup(createElement(TeamRoster, { view: ma })).replace(/<!-- -->/g, '');
+    expect(maHtml).toContain('lists 18 current players');
+    expect(maHtml).toContain('href="https://www.ma.org/athletics/athletic-teams/team-details/~athletics-team-id/175"');
+
     const base = views[0].view;
     const unchecked = renderToStaticMarkup(
       createElement(TeamRoster, {
-        view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [], otherSourcesChecked: false },
+        view: { ...base, status: 'empty', rows: [], conflicts: [], coaches: [], otherRosters: { status: 'not-checked' } },
       }),
     );
     expect(unchecked).toContain('We have not checked other public sources for this team.');
     expect(unchecked).not.toContain('No other public source we checked');
+  });
+
+  it('shows the coaches and their sources for a team with no list', () => {
+    for (const slug of ['del-mar', 'marin-academy', 'silver-creek', 'sobrato']) {
+      const view = views.find((v) => v.slug === slug)!.view;
+      expect(view.rows, slug).toEqual([]);
+      expect(view.coaches.length, slug).toBeGreaterThan(0);
+      const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
+      for (const c of view.coaches) expect(html, `${slug} ${c.name}`).toContain(c.name);
+      expect(html, slug).toContain('Sources');
+      for (const c of getEnrichedTeamRoster(slug)!.coaches) expect(html, `${slug} ${c.source}`).toContain(`href="${c.source}"`);
+    }
+  });
+
+  it('says a pending list will appear once a run collects it, not "after the next one"', () => {
+    const base = views[0].view;
+    const html = renderToStaticMarkup(
+      createElement(TeamRoster, { view: { ...base, status: 'pending', rows: [], conflicts: [], coaches: [], asOf: null } }),
+    );
+    expect(html).toContain('It will appear once a run collects it.');
+    expect(html).not.toContain('after the next one');
   });
 
   it('says a team no update has covered yet is not collected, and never that MaxPreps lists nobody', () => {

@@ -89,8 +89,9 @@ if (!workerOnly) {
   // Nine boards of at most 15 rows each (components/leaders/leaders-view.ts), so the page cannot
   // grow with the season the way a schedule does: ~28 KB on 2026-10-03.
   check('/leaders HTML gzip', gz(file('leaders.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
-  // Every team page, all 43: the largest was ~39 KB gzip (3.9 × baseline) with both the Roster and
-  // the Player stats section; 6.0 × leaves room for a busy week of games, not for a table per player.
+  // Every team page, all 43: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
+  // 4.2 × the 9,681 B baseline) with both the Roster and the Player stats section; 6.0 × leaves room
+  // for a busy week of games, not for a table per player.
   const teamDir = path.join(APP, 'teams');
   const teamPages = existsSync(teamDir) ? readdirSync(teamDir).filter((f) => f.endsWith('.html')).sort() : [];
   if (teamPages.length === 0) failures.push(`${teamDir} has no prerendered team pages — run \`pnpm build\` first`);

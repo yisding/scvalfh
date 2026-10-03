@@ -118,6 +118,37 @@ describe('parsePlayerStats over the captures', () => {
     expect(goalies.find((g) => g.shortName === 'N. Kalina')!.goalkeeping!.saves).toBe(9);
   });
 
+  it('warns about nothing but what is known: no unknown column or group, no new warning of any kind', () => {
+    // The only warnings the 15 captures raise: a goalie games total with no goalie holding any
+    // (reconcileTotals). A new column or group MaxPreps adds, or any other new warning, fails here.
+    const KNOWN: Record<string, string[]> = {
+      fremont: ['goalkeeping gamesPlayed: team total is 14 but no player has any; not shown rather than as zeros'],
+      homestead: ['goalkeeping gamesPlayed: team total is 10 but no player has any; not shown rather than as zeros'],
+      presentation: ['goalkeeping gamesPlayed: team total is 3 but no player has any; not shown rather than as zeros'],
+    };
+    for (const team of TEAMS) {
+      const page = parse(team.slug);
+      if (!page) continue;
+      expect(page.warnings, team.slug).toEqual(KNOWN[team.slug] ?? []);
+    }
+    expect(Object.keys(KNOWN).every((slug) => TEAMS.some((t) => t.slug === slug))).toBe(true);
+  });
+
+  it('would say so if MaxPreps added a column or a group', () => {
+    const drift = mutable('palo-alto');
+    const sub = drift.data.groups[0].subgroups[0];
+    sub.stats.columns.push({ name: 'Interceptions', overallValue: '3' });
+    for (const row of sub.stats.rows) row.columns.push({ value: '0' });
+    drift.data.groups.push({ name: 'Defense Stats', subgroups: [] });
+    const page = parsePlayerStats(drift, { expectedTeamId: rosterOf('palo-alto').maxprepsTeamId! })!;
+    expect(page.warnings).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/ignored unknown column Interceptions$/),
+        'ignored stats group "Defense Stats"',
+      ]),
+    );
+  });
+
   it('points are 2 per goal + 1 per assist on every team, so no points warning fires', () => {
     for (const team of TEAMS) {
       const page = parse(team.slug);
@@ -287,16 +318,34 @@ describe('fetchPlayerStats', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 
-  it('hands the decoded response to onRaw (what --capture saves), 400 envelope included', async () => {
+  it('hands the raw body to onRaw (what --capture saves), 400 envelope included', async () => {
     for (const [slug, status] of [['saint-francis', 200], ['cupertino', 400]] as const) {
-      const body = raw(slug);
-      const fetchImpl = vi.fn(async () => new Response(JSON.stringify(body), { status }));
+      const body = JSON.stringify(raw(slug));
+      const fetchImpl = vi.fn(async () => new Response(body, { status }));
       const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
-      const seen: unknown[] = [];
+      const seen: string[] = [];
       await fetchPlayerStats(client, teamId, (r) => seen.push(r));
-      // The saved capture parses exactly as the response did.
+      // The saved capture is the body as received, so it parses exactly as the response did.
       expect(seen, slug).toEqual([body]);
     }
+  });
+
+  it('hands over a drifted or non-JSON body BEFORE validating it, so --capture saves what failed', async () => {
+    const drifted = JSON.stringify({ status: 200, data: { teamId: 1 } });
+    for (const [body, error] of [[drifted, /schema drift/], ['<html>maintenance</html>', /invalid JSON/]] as const) {
+      const fetchImpl = vi.fn(async () => new Response(body, { status: 200 }));
+      const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+      const seen: string[] = [];
+      await expect(fetchPlayerStats(client, teamId, (r) => seen.push(r)), body).rejects.toThrow(error);
+      expect(seen, body).toEqual([body]);
+    }
+    // ...and a 400 that is not the "no data" envelope, before it fails.
+    const other = JSON.stringify({ status: 400, message: 'Invalid teamId.', data: null });
+    const fetchImpl = vi.fn(async () => new Response(other, { status: 400 }));
+    const client = new MaxPrepsClient({ fetchImpl: fetchImpl as unknown as typeof fetch, sleep: noSleep, spacingMs: 0 });
+    const seen: string[] = [];
+    await expect(fetchPlayerStats(client, teamId, (r) => seen.push(r))).rejects.toThrow(/Invalid teamId/);
+    expect(seen).toEqual([other]);
   });
 
   it('fails on any other 400, so the fetch script carries the previous rows forward', async () => {

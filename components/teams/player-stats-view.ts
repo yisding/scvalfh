@@ -22,6 +22,12 @@ import type { Game, TeamSlug } from '../../lib/types';
  *
  * A column the team does not track never appears (lib/player-stats-schema.ts: untracked is null
  * for everyone). A tracked stat a player has no entry for prints as a dash, never as 0.
+ *
+ * Goalkeeping is printed as entered, with one figure this module works out: Save %, saves over
+ * saves plus goals against. It is the only number on the section the coach did not type, so the
+ * section says so, and it is left out of any card whose entered figures cannot all be true: the
+ * coach's "opponent shots on goal" below saves plus goals against (Leland, 2026-10-03: 10 shots
+ * on goal, 36 saves, 9 against). The card says the figures disagree instead.
  */
 
 export interface StatColumn {
@@ -49,7 +55,10 @@ export interface GoalieCard {
   key: string;
   name: string;
   jersey: string | null;
-  stats: Array<{ label: string; text: string }>;
+  /** In GOALIE order; `text` null prints as a dash with "not recorded" for a screen reader. */
+  stats: Array<{ label: string; text: string | null }>;
+  /** Why no Save % is shown although saves and goals against are tracked, or null. */
+  flag: string | null;
 }
 
 export interface PlayerStatsView {
@@ -66,6 +75,8 @@ export interface PlayerStatsView {
   goalies: GoalieCard[];
   /** Points are on the scoring table: the legend explains MaxPreps' 2-per-goal rule. */
   showsPoints: boolean;
+  /** Some goalkeeper card shows a Save %, which this site works out: the footnote says how. */
+  showsSavePercent: boolean;
 }
 
 const SCORING: Array<{ key: FieldStatKey } & Omit<StatColumn, 'key'>> = [
@@ -88,7 +99,9 @@ const GOALIE: Array<{ key: GoalieStatKey; label: string }> = [
   { key: 'gamesPlayed', label: 'Games' },
   { key: 'minutes', label: 'Minutes' },
   { key: 'overtimeMinutes', label: 'OT minutes' },
-  { key: 'opponentShotsOnGoal', label: 'Shots faced' },
+  // MaxPreps' OpponentShotsOnGoal, as the coach typed it: not a count of what this keeper faced,
+  // and on some teams far below the saves entered beside it.
+  { key: 'opponentShotsOnGoal', label: 'Opp. shots on goal' },
   { key: 'saves', label: 'Saves' },
   { key: 'goalsAgainst', label: 'Goals against' },
   { key: 'shutouts', label: 'Shutouts' },
@@ -140,20 +153,67 @@ function byScoring(a: PlayerStatLine, b: PlayerStatLine): number {
   );
 }
 
+/**
+ * The entered figures cannot all be true: every shot on goal is either saved or a goal, so the
+ * opponent's shots on goal can never be fewer than saves plus goals against.
+ */
+export function goalieFiguresDisagree(g: NonNullable<PlayerStatLine['goalkeeping']>): boolean {
+  if (g.opponentShotsOnGoal === null || (g.saves === null && g.goalsAgainst === null)) return false;
+  return (g.saves ?? 0) + (g.goalsAgainst ?? 0) > g.opponentShotsOnGoal;
+}
+
 function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): GoalieCard {
   const tracked = new Set<string>(team.tracked.goalkeeping);
   const g = p.goalkeeping!;
+  const disagree = goalieFiguresDisagree(g);
   const stats: GoalieCard['stats'] = [];
+  let flag: string | null = null;
   for (const s of GOALIE) {
     if (!tracked.has(s.key)) continue;
-    stats.push({ label: s.label, text: statText(g[s.key]) ?? '—' });
-    // Save % sits right after goals against, and only where both halves are tracked.
+    stats.push({ label: s.label, text: statText(g[s.key]) });
+    // Save % sits right after goals against, only where both halves are tracked and entered, and
+    // never beside figures that contradict each other.
     if (s.key === 'goalsAgainst' && tracked.has('saves') && g.saves !== null && g.goalsAgainst !== null) {
       const pct = savePercent(g.saves, g.goalsAgainst);
-      if (pct) stats.push({ label: 'Save %', text: pct });
+      if (pct && !disagree) stats.push({ label: 'Save %', text: pct });
     }
   }
-  return { key: p.careerId ?? `${p.shortName}-${i}`, name: p.fullName, jersey: p.jersey, stats };
+  if (disagree) {
+    const accounted =
+      g.saves !== null && g.goalsAgainst !== null
+        ? `${statText(g.saves + g.goalsAgainst)} saves plus goals against`
+        : g.saves !== null
+          ? `${statText(g.saves)} saves`
+          : `${statText(g.goalsAgainst)} goals against`;
+    const hidesPercent = g.saves !== null && g.goalsAgainst !== null && savePercent(g.saves, g.goalsAgainst) !== null;
+    flag =
+      `As entered, these cannot all be right: ${statText(g.opponentShotsOnGoal)} opponent shots on goal, ` +
+      `but ${accounted}.${hidesPercent ? ' No save % is worked out.' : ''}`;
+  }
+  return { key: p.careerId ?? `${p.shortName}-${i}`, name: p.fullName, jersey: p.jersey, stats, flag };
+}
+
+/**
+ * The keeper MaxPreps' goalie group is mostly about leads: minutes in goal, then decisions
+ * (wins + losses + ties), then saves, then goals against. Games played comes last, because MaxPreps
+ * lists field players in the group with the team's full game count (University: a forward with
+ * 12 goals and 2 saves had the same 16 games as the keeper with 10 wins).
+ */
+function byTimeInGoal(a: PlayerStatLine, b: PlayerStatLine): number {
+  const g = (p: PlayerStatLine) => p.goalkeeping!;
+  const n = (v: number | null) => v ?? -1;
+  const decisions = (p: PlayerStatLine) => {
+    const x = g(p);
+    return x.wins === null && x.losses === null && x.ties === null ? -1 : (x.wins ?? 0) + (x.losses ?? 0) + (x.ties ?? 0);
+  };
+  return (
+    n(g(b).minutes) - n(g(a).minutes) ||
+    decisions(b) - decisions(a) ||
+    n(g(b).saves) - n(g(a).saves) ||
+    n(g(b).goalsAgainst) - n(g(a).goalsAgainst) ||
+    n(g(b).gamesPlayed) - n(g(a).gamesPlayed) ||
+    a.fullName.localeCompare(b.fullName)
+  );
 }
 
 /**
@@ -203,11 +263,7 @@ export function buildPlayerStatsView(
 
   const goalies = team.players
     .filter((p) => p.goalkeeping !== null)
-    .sort(
-      (a, b) =>
-        (b.goalkeeping!.gamesPlayed ?? -1) - (a.goalkeeping!.gamesPlayed ?? -1) ||
-        a.fullName.localeCompare(b.fullName),
-    )
+    .sort(byTimeInGoal)
     .map((p, i) => goalieCard(team, p, i))
     .filter((c) => c.stats.length > 0);
 
@@ -221,5 +277,6 @@ export function buildPlayerStatsView(
     more,
     goalies,
     showsPoints: scoring?.columns.some((c) => c.key === 'points') ?? false,
+    showsSavePercent: goalies.some((c) => c.stats.some((x) => x.label === 'Save %')),
   };
 }

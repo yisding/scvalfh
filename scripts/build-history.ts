@@ -5,12 +5,18 @@
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
  *          from bval.org/standings and bval.org/all-league
- *   PCAL, MCAL  'unavailable', with the reason (below): no official 2025-26 standings were reachable
+ *   PCAL, MCAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
  *
  *   pnpm exec tsx scripts/build-history.ts
- *   pnpm exec tsx scripts/build-history.ts --from tests/fixtures/scval --bval-from tests/fixtures/bval
- *   pnpm exec tsx scripts/build-history.ts --retrieved-on 2026-10-03   # with offline BVAL fixtures
+ *   pnpm exec tsx scripts/build-history.ts --from tests/fixtures/scval \
+ *     --bval-from tests/fixtures/bval --retrieved-on 2026-10-03          # fully offline, from fixtures
  *   pnpm exec tsx scripts/build-history.ts --dry-run
+ *
+ * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
+ * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.
+ *
+ * Nothing is written unless the assembled file passes lib/history.ts' own schema and the build
+ * found no problem (an unresolved school, a missing block): it exits 1 instead.
  *
  * Run once per season, by hand — NOT from the cron. These documents are published once a year and
  * the file they produce is committed, because prior-season standings exist nowhere else: MaxPreps'
@@ -23,7 +29,8 @@
  * sheet) are not a standings table and are not stored.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import {
@@ -55,11 +62,18 @@ interface Args {
   dryRun: boolean;
 }
 
+/** A real calendar day written YYYY-MM-DD ("2026-02-30" is refused). */
+function isIsoDay(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
+}
+
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = {
+  const out: Omit<Args, 'retrievedOn'> & { retrievedOn: string | null } = {
     from: null,
     bvalFrom: null,
-    retrievedOn: new Date().toISOString().slice(0, 10),
+    retrievedOn: null,
     out: path.join(process.cwd(), 'data', 'history-2025-26.json'),
     dryRun: false,
   };
@@ -78,7 +92,14 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--dry-run') out.dryRun = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
-  return out;
+  if (out.retrievedOn !== null && !isIsoDay(out.retrievedOn)) {
+    throw new Error(`--retrieved-on must be a date written YYYY-MM-DD, got "${out.retrievedOn}"`);
+  }
+  // Offline, the documents were read whenever the fixtures were saved; today would be a guess.
+  if (out.bvalFrom && out.retrievedOn === null) {
+    throw new Error('--bval-from needs --retrieved-on YYYY-MM-DD: the day those BVAL files were read');
+  }
+  return { ...out, retrievedOn: out.retrievedOn ?? new Date().toISOString().slice(0, 10) };
 }
 
 /** Keys sorted at every level, so re-running produces a byte-identical file. */
@@ -134,6 +155,21 @@ async function main(): Promise<number> {
   const problems: string[] = [];
   if (standings.length !== 4) problems.push(`standings PDF yielded ${standings.length} blocks, expected 4`);
   if (allLeague.length !== 4) problems.push(`all-league PDF yielded ${allLeague.length} blocks, expected 4`);
+  // Four blocks is not enough: each division/level must appear exactly once, or a duplicated block
+  // would hide a missing one and `pick` below would quietly write it as empty.
+  const expectedBlocks = divisionsOf('scval').flatMap(({ id }) => [`${id}/varsity`, `${id}/jv`]);
+  for (const [name, blocks] of [
+    ['standings', standings],
+    ['all-league', allLeague],
+  ] as const) {
+    const keys = blocks.map(({ division, level }) => `${division}/${level}`);
+    for (const key of new Set(keys)) {
+      if (keys.filter((k) => k === key).length > 1) problems.push(`${name} PDF has more than one ${key} block`);
+    }
+    for (const key of expectedBlocks) {
+      if (!keys.includes(key)) problems.push(`${name} PDF has no ${key} block`);
+    }
+  }
   for (const block of standings) {
     if (block.rows.length === 0) problems.push(`${block.division}/${block.level} standings block is empty`);
     for (const row of block.rows) {
@@ -251,6 +287,7 @@ async function main(): Promise<number> {
       source: 'bval-sheet',
       builtBy: 'scripts/build-history.ts',
       standingsSheet: BVAL_HISTORY_SOURCES.standingsSheet,
+      standingsSheetView: BVAL_HISTORY_SOURCES.standingsSheetView,
       standingsIndex: BVAL_HISTORY_SOURCES.standingsIndex,
       allLeagueDocs: bvalDocUrls,
       retrievedOn: args.retrievedOn,
@@ -273,7 +310,7 @@ async function main(): Promise<number> {
     divisions: bvalDivisions,
   };
 
-  // ---- PCAL and MCAL: nothing official was reachable, so nothing is shown.
+  // ---- PCAL and MCAL: no official final standings, so no table is shown.
   const pcal = {
     status: 'unavailable',
     league: getLeague('pcal').name,
@@ -285,15 +322,24 @@ async function main(): Promise<number> {
       'pcalathletics.org History pages (latest listing is 2024-25; no 2025-26 page or document)',
     ],
   };
+  // mcalsports.org loads (a first request sometimes gets a Sucuri redirect; the cron reads its
+  // Schedir.htm), but MCAL posts no standings of its own: the field hockey page's standings link is
+  // MaxPreps' current-season table. The official 2025 All-MCAL team IS on that page (#FH25). It is
+  // linked, not stored: the schema has no awards-only state. (The card's text avoids the words
+  // assert-copy forbids on an unavailable league, such as "all-league": it links awards, shows none.)
   const mcal = {
     status: 'unavailable',
     league: getLeague('mcal').name,
     reason:
-      'No official 2025-26 final standings were reachable. mcalsports.org sits behind a bot check that our fetcher cannot pass, and its 2025 field hockey playoff sheet is no longer served. We do not show standings or awards from newspapers or third-party sites.',
+      'MCAL published no 2025-26 final standings of its own. Its field hockey page links "League Standings" to MaxPreps\' current-season table, and it posts no 2025 play-off sheet. The league\'s official 2025 All-MCAL team is posted on the same page and is linked here, not reproduced: this archive shows a league\'s awards only beside its official final standings. We do not show standings from newspapers or third-party sites.',
     checkedOn: '2026-10-03',
     checked: [
-      'https://www.mcalsports.org/FieldHockey.htm (blocked by a JavaScript bot challenge)',
-      'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoff_25.pdf (404)',
+      'https://www.mcalsports.org/FieldHockey.htm (loads; its "League Standings" link is MaxPreps\' 2026-27 table, and no 2025 standings are posted)',
+      'https://www.mcalsports.org/ (no standings or results archive)',
+      'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_25.pdf (404; the name follows the 2026 sheet, FieldHockeyPlayoffs_26.pdf, and the singular FieldHockeyPlayoff_25.pdf is a 404 too)',
+    ],
+    alsoPublished: [
+      { label: '2025 All-MCAL Field Hockey Team', url: 'https://www.mcalsports.org/FieldHockey.htm#FH25' },
     ],
   };
 
@@ -317,14 +363,38 @@ async function main(): Promise<number> {
   }
   console.log('PCAL, MCAL: unavailable (see reasons in the file)');
 
+  // Validate with lib/history.ts' own schema before anything is written. That module also validates
+  // a file when it is imported; SCVAL_HISTORY points that import-time load at this candidate rather
+  // than the committed file, so a broken committed file cannot block the rebuild that replaces it.
+  const json = stableStringify(history);
+  const candidate = path.join(mkdtempSync(path.join(tmpdir(), 'build-history-')), 'history.json');
+  writeFileSync(candidate, json, 'utf8');
+  process.env.SCVAL_HISTORY = candidate;
+  try {
+    const { HistorySchema } = await import('../lib/history');
+    const parsed = HistorySchema.safeParse(JSON.parse(json));
+    if (!parsed.success) {
+      for (const i of parsed.error.issues.slice(0, 10)) {
+        problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
+      }
+    }
+  } catch (err) {
+    problems.push(`schema: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  if (problems.length) {
+    console.error(`\nFAILED: ${problems.length} problem(s), nothing written:`);
+    for (const p of problems) console.error(`  ${p}`);
+    return 1;
+  }
   if (args.dryRun) {
-    console.log('\ndry run: nothing written');
-    return problems.length ? 1 : 0;
+    console.log('\ndry run: valid, nothing written');
+    return 0;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(history), 'utf8');
+  writeFileSync(args.out, json, 'utf8');
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return problems.length ? 1 : 0;
+  return 0;
 }
 
 main()

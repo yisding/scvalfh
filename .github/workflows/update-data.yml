@@ -22,7 +22,10 @@
 # leagues (43 small JSON calls through the MaxPreps client's politeness gate); a failure is scoped
 # to the team, which keeps its previous rows (lib/fetch-scope.ts), so one league's outage never
 # blocks another's stats. Their fetch is allowed to fail: a MaxPreps hiccup on the stats endpoint
-# must never cost the day's scores. deploy-cloudflare.yml ships these commits
+# must never cost the day's scores. Nor may the stats file the fetch wrote: when the tests fail
+# and data/player-stats.json changed in this run, the Test step restores the committed one and runs
+# the tests again, so only a failure that is not the stats file's blocks the snapshot commit.
+# deploy-cloudflare.yml ships these commits
 # without a ci run of its own only because it recognises them; the commit step below says how, and
 # tests/workflows.test.ts holds the two files to it.
 #
@@ -167,8 +170,24 @@ jobs:
       # The suite validates what was just written: the snapshot's schema invariants, the never-0-0
       # rule and the standings arithmetic, and the player-stats contract and its join to the
       # rosters. A bad file must not be committed.
+      #
+      # The stats are allowed to fail (above), so a stats file the tests refuse must not cost the
+      # snapshot either: when the suite fails and data/player-stats.json changed in this run, the
+      # committed file is restored (the commit step then sees no stats change) and the suite runs
+      # again; only that second verdict decides. With the stats file unchanged, the first does.
       - name: Test
-        run: pnpm test
+        id: test
+        run: |
+          set -uo pipefail
+          if pnpm test; then exit 0; fi
+          if git diff --quiet -- data/player-stats.json; then
+            echo "::error::the tests failed and data/player-stats.json did not change in this run"
+            exit 1
+          fi
+          echo "::warning::the tests failed with this run's data/player-stats.json; restoring the committed file and testing again"
+          git checkout -- data/player-stats.json
+          echo "stats_restored=true" >> "$GITHUB_OUTPUT"
+          pnpm test
 
       # One open issue per official schedule revised upstream (a stale official-revision-check
       # row) and per league frozen in this run AND the previous one, each with the published
@@ -327,6 +346,7 @@ jobs:
             echo "- snapshot changed: \`${{ steps.commit.outputs.snapshot || 'false' }}\`"
             echo "- player stats changed: \`${{ steps.commit.outputs.stats || 'false' }}\`"
             echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
+            echo "- player stats restored after failing the tests: \`${{ steps.test.outputs.stats_restored || 'false' }}\`"
             if [ -f data/snapshot.meta.json ]; then
               echo ""
               echo '```json'

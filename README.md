@@ -27,8 +27,9 @@ their citations, postseason ladders, official sources, data-quality lists) lives
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
 tournament is its postseason. The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
 Google Sheet and all-league documents); PCAL and MCAL are marked unavailable on the page, with the
-reason (no official 2025-26 standings were reachable), and nothing third-party is shown in their
-place. Rosters and player stats cover all 43 teams.
+reason (we found no official 2025-26 final standings: PCAL's site stops at 2024-25, and MCAL posts
+none of its own), and nothing third-party is shown in their place. MCAL's card links the league's
+official 2025 all-league team without reproducing it. Rosters and player stats cover all 43 teams.
 
 People pick the league they want to see in two ways: the home page remembers one (chips and a
 "Show <league> here" button, applied before first paint), and a team finder searches all 43
@@ -119,7 +120,9 @@ season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 43 teams; see
 "Player stats" below), which is allowed to fail without stopping the run. It runs the test suite
-against what it just wrote, and commits `data/snapshot.json` + `data/snapshot.meta.json` and
+against what it just wrote; if the suite fails and `data/player-stats.json` changed in this run, it
+restores the committed stats file and runs the suite again, so a stats file the tests refuse never
+blocks the snapshot commit (the job Summary says when that happened). It then commits `data/snapshot.json` + `data/snapshot.meta.json` and
 `data/player-stats.json` **only where they changed**, in one commit. The commit is what triggers
 your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
 carry `[skip ci]`. The job fails, and commits nothing, only on a run abort; a frozen or partial
@@ -213,31 +216,40 @@ row against the page's rendered table, failing the team rather than publishing a
 a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
 keeps its previous rows with `status: "carried-forward"`. Failures are scoped to the team, and
 `--leagues scval,bval` scopes a run to leagues, as `fetch-data --leagues` does: a league outside the
-run keeps its previous rows untouched, and one league failing never stops another being read. A
-team no run has covered yet is `status: "pending"` (nothing fetched, nothing claimed): the file was
-seeded that way for BVAL, PCAL and MCAL until the first run read them, and a rosters file written
-before a team was in the registry still counts as the previous file.
+run keeps its previous rows, and one league failing never stops another being read. A team no run
+has covered yet is `status: "pending"` (nothing fetched, nothing claimed): the file was seeded that
+way for BVAL, PCAL and MCAL until the first run read them. The previous file is salvaged row by
+row: a row that no longer validates on its own (a slug gone from the registry, a changed id or
+division, a broken status) is dropped and named in the log, and that team alone has nothing to
+keep: `pending` if the run does not cover it (the league line says so and the run exits 1), `error`
+if the run covers it and the fetch fails. A previous file from another season is ignored as if
+absent (last season's rows are never kept or carried forward), and one that is not JSON stops the
+run: exit 1, nothing written. A file with fewer teams than the registry still counts; the teams it
+lacks are pending.
 
 `data/rosters-enrichment.json` is what other public sources add to that — the schools' own
 athletics-site rosters, one roster PDF, school and local papers, MaxPreps career and JV pages —
 gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (43), all four
 leagues: SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03. Every entry lists
-what was looked at, and a team whose sources hold nothing beyond MaxPreps says so; a team nobody
-has researched would say "we have not checked other public sources" rather than claim there are
-none. It only ever fills a blank; where
-a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded; every value
-carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
+what was looked at. What a team with no MaxPreps players may say about other sources is recorded
+per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
+Academy's first-name-and-initial list); a team without it says "we have not checked other public
+sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
+with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
+other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
+way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
 page, in all four leagues, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
 built by `components/teams/roster-view.ts`): varsity only, a † on every value that did not come
 from MaxPreps, the coaches, every recorded disagreement and a link to each source. A team with no
 list says why instead of showing an empty card: MaxPreps lists no players, the last update failed
-with nothing to fall back on, or no update has covered the team yet.
+with nothing to fall back on, or no update has covered the team yet; its coaches and their sources
+still show below.
 
 The same overlay links players' own recruiting pages — NCSA, SportsRecruits and Hudl
-profiles (`profiles` on each record; 98 for 82 players as of 2026-10-03: SCVAL 70 for 56, BVAL 11
-for 11, PCAL 3 for 3, MCAL 14 for 12; 17 NCSA, 52 SportsRecruits, 29 Hudl). A page is linked only when it names the player and field hockey and either names the school
+profiles (`profiles` on each record; 99 for 83 players as of 2026-10-03: SCVAL 70 for 56, BVAL 12
+for 12, PCAL 3 for 3, MCAL 14 for 12; 17 NCSA, 53 SportsRecruits, 29 Hudl). A page is linked only when it names the player and field hockey and either names the school
 or shows the class year the roster shows plus a California hometown, and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
@@ -287,15 +299,16 @@ stops the score refresh: the step may fail, and a team whose call failed keeps i
 exactly as it was, so there is nothing to commit. Like `fetch-data`, it writes nothing outside the
 Aug 1 - Nov 30 Pacific window unless given `--force`, and takes `--leagues` (a league outside the run
 keeps its previous rows; the workflow's manual `leagues` input reaches it too). Failures are scoped
-to the team: one league's outage never blocks another league's stats, and the run exits 1, still
-writing the file, only when a team it covered failed. The call volume is the MaxPreps client's own
+to the team: one league's outage never blocks another league's stats, and the previous file is
+salvaged row by row exactly as for rosters. The run exits 1, still writing the file, when a team it
+covered failed or a team outside it lost its previous row. The call volume is the MaxPreps client's own
 (≤3 concurrent, ≥500 ms between starts): 43 small calls, about 25 seconds.
 
 ```bash
 pnpm fetch-player-stats                                      # live: 43 rollups → data/player-stats.json
 pnpm fetch-player-stats --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON (SCVAL's: add --leagues scval)
-pnpm fetch-player-stats --capture <dir>                      # live, and save each response as <dir>/stats-<slug>.json
+pnpm fetch-player-stats --capture <dir>                      # live, and save each response body, as received, as <dir>/stats-<slug>.json
 pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
 ```
 
@@ -412,8 +425,10 @@ end-of-season documents (a MaxPreps league URL's year segment is cosmetic and al
 current season). Run `pnpm build-history` once, by hand, after they are published, to generate
 `data/history-<season>.json`: SCVAL from the two PDFs on `https://www.scval.com/standings/`, BVAL
 from the Google Sheet and the two all-league documents linked from `https://bval.org/standings/`
-and `https://bval.org/all-league/` (`--bval-from tests/fixtures/bval --retrieved-on <date>` rebuilds
-it offline). It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
+and `https://bval.org/all-league/` (`pnpm build-history --from tests/fixtures/scval --bval-from
+tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offline; `--retrieved-on`
+is required with `--bval-from`). The script validates the result against `lib/history.ts`' schema
+and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
 league (`available`, or `unavailable` with the reason: PCAL and MCAL for 2025-26), and is committed
 to the repo, not regenerated by the cron.
@@ -570,17 +585,20 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   | League | Players | Grade | Position | Height | Number |
   |---|---|---|---|---|---|
   | SCVAL | 341 | 170 → 303 | 99 → 108 | 26 → 49 | 167 → 167 |
-  | BVAL | 173 | 139 → 162 | 63 → 64 | 0 → 0 | 138 → 138 |
+  | BVAL | 173 | 139 → 161 | 63 → 64 | 0 → 0 | 138 → 138 |
   | PCAL | 82 | 49 → 66 | 32 → 35 | 0 → 0 | 55 → 55 |
-  | MCAL | 149 | 85 → 130 | 62 → 63 | 0 → 0 | 64 → 64 |
+  | MCAL | 149 | 85 → 128 | 62 → 63 | 0 → 0 | 64 → 64 |
 
-  The overlay filled 218 grades, 14 positions and 23 heights (all heights are SCVAL's; no BVAL, PCAL
-  or MCAL source publishes one, and the overlay filled no jersey number in any league). **Positions are the
+  The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
+  or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,
+  never used to fill a field; the overlay filled no jersey number in any league). Grades whose
+  sources disagree are left blank: 9 in BVAL, PCAL and MCAL, each with its sources under conflicts
+  except one whose single page contradicts itself. **Positions are the
   real gap**: no current-season public source lists them for most programs in any league. A
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
   change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Marin Academy
-  have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list is first
-  names and last initials). Los Altos and Homestead publish no roster anywhere, and
+  have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
+  first names, last initials and class years). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - **Player stats exist only where a coach enters them.** Rosters and stats cover all 43 teams and
   were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows matched the 2026-10-02 captures

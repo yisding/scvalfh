@@ -162,8 +162,9 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
       </details>
 
       {/* The pills sit on the canvas, where the default surface-2 fill all but vanished in light:
-          the surface plus a 1px ring makes them read as buttons, like the division pills. Only the
-          league with a published 2025-26 table has a finished season to compare with (SPEC §8.1). */}
+          the surface plus a 1px ring makes them read as buttons, like the division pills. Only a
+          league with published 2025-26 tables (SCVAL and BVAL; `hasHistory` decides) has a finished
+          season to compare with (SPEC §8.1). */}
       <div className="mt-6 flex flex-wrap gap-2">
         {summary.links.map((link) => (
           <ExternalLink

@@ -16,7 +16,10 @@
  * parsers read the captures, the scripts build exactly what the parsers read (into a temp file
  * pinned to the captures, never the committed data/, which a refresh rewrites), the scripts' offline
  * mode handles a league whose captures are partly missing (per-team failure, carried forward, SCVAL
- * untouched), and the committed files hold only facts that stay true across refreshes.
+ * untouched), and the committed files hold only facts that stay true across refreshes. The
+ * committed player stats are what the scheduled refresh just wrote and tests before committing, so
+ * any status the schema allows passes there ('error' and 'pending' are honest states); coverage is
+ * asserted on the files built from the captures.
  */
 
 import { spawnSync } from 'node:child_process';
@@ -284,6 +287,13 @@ describe('data/player-stats.json, rebuilt from the sampled captures', () => {
     }
   });
 
+  it('covers every sampled team: each read (stats, or MaxPreps says none), nobody pending or failed', () => {
+    for (const slug of STATS_SAMPLE) {
+      expect(['ok', 'none'], slug).toContain(statsRow(slug).status);
+      expect(statsRow(slug).maxprepsTeamId, slug).toBe(getTeamBySlug(slug)!.id);
+    }
+  });
+
   it('drops a stat with a team total and no player holding any, and says so (Marin Catholic shots faced)', () => {
     const mc = statsRow('marin-catholic');
     expect(mc.tracked.goalkeeping).not.toContain('opponentShotsOnGoal');
@@ -294,11 +304,15 @@ describe('data/player-stats.json, rebuilt from the sampled captures', () => {
 });
 
 describe('the committed data/player-stats.json', () => {
-  it('has every other league covered: stats, MaxPreps says none, or carried forward; nobody pending or never read', () => {
-    for (const t of TEAMS.filter((x) => x.league !== 'scval')) {
-      expect(['ok', 'none', 'carried-forward'], t.slug).toContain(statsFile.teams.find((r) => r.slug === t.slug)!.status);
-    }
+  it('holds a row for every other league\'s team, in any status the schema allows, under the registry id', () => {
+    // error (a team's first transient failure) and pending (no run covered it yet) are published
+    // states, not test failures: the refresh runs this suite before it commits the file.
     expect(PlayerStatsFileSchema.safeParse(statsFile).success).toBe(true);
+    for (const t of TEAMS.filter((x) => x.league !== 'scval')) {
+      const row = statsFile.teams.find((r) => r.slug === t.slug)!;
+      expect(['ok', 'none', 'carried-forward', 'error', 'pending'], t.slug).toContain(row.status);
+      if (row.status === 'ok' || row.status === 'none') expect(row.maxprepsTeamId, t.slug).toBe(t.id);
+    }
   });
 });
 
