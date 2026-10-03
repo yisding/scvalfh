@@ -42,7 +42,8 @@ export interface GameSideModel {
   /**
    * The name for a `<title>` and an OG card: the full name, or `shortName` when the full one is
    * too long for a link preview ("St. Ignatius College Preparatory" is 32 characters and would eat
-   * a whole title on its own). Everything in the page body uses `name`.
+   * a whole title on its own). The page body uses `name`, except the season-series sentence,
+   * which uses the SCVAL short name to match the meeting rows above it.
    */
   label: string;
   /** Present only for one of the 15 SCVAL schools; a non-SCVAL opponent is a name (DESIGN §8). */
@@ -435,7 +436,15 @@ export function buildGameModel(contestId: string): GameModel | undefined {
       : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`,
     series: {
       meetings: games.map((g) => ({ game: g, isThisGame: g.contestId === game.contestId })),
-      summary: seriesSummary(game, games, home.name, away.name),
+      // Short names, as the meeting rows above it ("at St Ignatius") and the team pills print
+      // them; a non-SCVAL side has no short name and keeps its own. Not `side.label`: that only
+      // shortens names over 24 characters, so "Saint Francis" would survive beside "St Francis".
+      summary: seriesSummary(
+        game,
+        games,
+        home.team?.shortName ?? home.name,
+        away.team?.shortName ?? away.name,
+      ),
       tiebreakNote:
         sameDivision && game.isLeague
           ? `Head-to-head record is the first tiebreak when two teams finish level on points — ${BYLAW_CITATIONS.headToHead}.`

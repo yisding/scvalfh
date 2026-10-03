@@ -60,6 +60,10 @@ export function NextSlate({
   const resume =
     nextLeague && nextLeague.games.length > 0 && games.every((g) => !g.isLeague) ? nextLeague : null;
   const resumeRows = resume ? resume.games.slice(0, RESUME_LIMIT) : [];
+  // `resume.games` is every non-final league game of a day after the slate day, so all of that
+  // day's league games; `total` is every contest its /scores page lists.
+  const resumeLeague = resume ? resume.games.length : 0;
+  const resumeOther = resume ? resume.total - resumeLeague : 0;
   return (
     <section className={className}>
       <SectionHeader
@@ -91,19 +95,18 @@ export function NextSlate({
                 <div className="flex min-h-11 flex-wrap items-center gap-x-3 px-gutter py-1">
                   <h3 className="m-0 text-micro font-semibold text-ink-3">Next league games</h3>
                   {/* In a <p> so it takes the site's in-text link underline: in ink-2 it is
-                      otherwise indistinguishable from the date it names. The count is the whole
-                      day's /scores page, not the league rows below it, so it says "all N" when
-                      that day has more contests than the rows show. */}
+                      otherwise indistinguishable from the date it names. The link goes to the
+                      whole day's /scores page, but a bare "3 games" under a "league games"
+                      heading with two rows read as a missing row, so it says what it counts,
+                      in the same parts as the card's meta: "2 league, 1 non-league". */}
                   <p className="m-0">
                     <Link
                       href={`/scores/${resume.date}`}
                       prefetch={false}
                       className="sx-action text-meta text-ink-2"
                     >
-                      {shortDate(resume.date)} &middot;{' '}
-                      {resume.total > resumeRows.length
-                        ? `all ${resume.total} games`
-                        : `${resume.total} ${resume.total === 1 ? 'game' : 'games'}`}
+                      {shortDate(resume.date)} &middot; {resumeLeague} league
+                      {resumeOther > 0 ? `, ${resumeOther} non-league` : ''}
                     </Link>
                   </p>
                 </div>

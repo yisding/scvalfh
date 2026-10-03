@@ -53,6 +53,12 @@ export interface GameViewProps {
    * kickoff. Never on a team page (the record is that page's headline) or in a bracket.
    */
   showRecords?: boolean;
+  /**
+   * GameCard only: add an "NFHS stream" link beside Box score when the game has one. Only the
+   * team page's Last card passes it: from 768px it replaces the phone's expanded row, whose
+   * panel offers the stream, and a replay is what a parent wants from a game just played.
+   */
+  showStream?: boolean;
   defaultExpanded?: boolean;
   className?: string;
 }
@@ -321,10 +327,11 @@ export function GameRow({
 }
 
 /**
- * The ≥768px card in an auto-fill grid (home, /schedule, /scores/[date]). Recap and venue are
- * always visible and there is nothing to expand. The date is not printed: every host names the
- * day in its own heading. The whole card is one stretched "Game page" link; the box-score link
- * sits above the stretch so it stays its own target.
+ * The ≥768px card in an auto-fill grid (home, /schedule, /scores/[date]), and the team page's
+ * Last card from 768px. Recap and venue are always visible and there is nothing to expand. The
+ * date is not printed: every host names the day in its own heading. The whole card is one
+ * stretched "Game page" link; the box-score (and, with `showStream`, stream) link sits above the
+ * stretch so it stays its own target.
  */
 export function GameCard({
   game,
@@ -332,11 +339,12 @@ export function GameCard({
   showRecap = true,
   showNonLeague = true,
   showRecords = false,
+  showStream = false,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
   const withRecords = recordsApply(game, display, showRecords);
-  // The two links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
+  // The links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
   // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Full names, as
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
   // printed short name, and "Valley Chr." was read out as letters. The visible "Game page" /
@@ -400,7 +408,7 @@ export function GameCard({
         <p className="m-0 text-meta text-ink-2">{game.recap}</p>
       ) : null}
       {display.note ? <p className="m-0 text-meta text-ink-3">{display.note}</p> : null}
-      <div className="mt-auto flex items-center gap-4 text-meta">
+      <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-meta">
         <Link
           href={`/game/${game.contestId}`}
           prefetch={false}
@@ -419,6 +427,14 @@ export function GameCard({
             className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
           >
             Box score<span className="sr-only">: {matchup}</span>
+          </ExternalLink>
+        ) : null}
+        {showStream && game.urls.nfhsStream ? (
+          <ExternalLink
+            href={game.urls.nfhsStream}
+            className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
+          >
+            NFHS stream<span className="sr-only">: {matchup}</span>
           </ExternalLink>
         ) : null}
       </div>

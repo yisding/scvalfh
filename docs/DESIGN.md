@@ -16,9 +16,11 @@
 > interactive code at all, so nothing this site does to its own code can get under 120 KB without
 > leaving the framework. Measured on `/` at 390×844 against `next start` (CDP
 > `encodedDataLength`, every non-RSC response): **236 KB over 13 requests** — framework and app JS
-> ~150 KB (492 KB uncompressed first-load, per `.next/diagnostics/route-bundle-stats.json`),
+> ~150 KB (498 KB uncompressed first-load, per `.next/diagnostics/route-bundle-stats.json`),
 > document 22 KB, CSS 10 KB, the two woff2 faces 53 KB. The half of §13 that IS a statement about
-> this site's own code holds with room to spare: the client modules total ~19 KB gzipped against
+> this site's own code holds with room to spare: the client modules total ~23 KB gzipped (gzip -9
+> of the app-owned chunks listed in `.next/diagnostics/route-bundle-stats.json`: ~6.7 KB shared,
+> plus 8.4 KB on `/`, 7.2 KB on `/schedule` and 0.9 KB on `/teams/[slug]`) against
 > the "≤ 40 KB beyond the framework" allowance, with no chart JS and no image anywhere on the
 > critical path. LCP, TBT and CLS all sit inside their §13 targets as written (CLS measures
 > 0.0000 on `/`).
@@ -49,7 +51,7 @@
 > `use-pinned-team.ts` and `local-store.ts`. The number mattered beyond bookkeeping — "without a
 > fifth client module" was once written down as the reason the pinned-team highlight had to be an
 > inline script rather than a component, a constraint that had already been spent. What the §13
-> budget actually rations is **bytes, not modules**, and that half holds: ~19 KB gzipped against the
+> budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
 > 40 KB allowance (see the note on §13 above).
 >
 > Everything else below (routes, tokens, component signatures, rendering rules, empty states,
