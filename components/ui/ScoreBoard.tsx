@@ -29,7 +29,9 @@ import { describeGame, statusLabelIsTime, type SideView } from './game-view';
  *
  * Names WRAP (two lines at most, balanced) instead of truncating: "St. Ignatius College
  * Preparatory" was cut to "St. Ignatius Colle…" on a phone. Between 768 and 1023px, where the
- * three-column board leaves each name the least room, the short name is printed instead.
+ * three-column board leaves each name the least room, a name longer than 20 characters (too long
+ * for that band's two-line clamp; today only "St. Ignatius College Preparatory") is swapped for
+ * its short name. Every other name prints in full at every width.
  */
 export interface ScoreBoardSideMeta {
   sub?: string | null;
@@ -56,6 +58,10 @@ function BoardSide({
 }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   const fullName = team ? team.name : side.name;
+  // Only a name too long for the 768–1023 band's two-line clamp swaps to its short form there;
+  // "Valley Christian" and "Archbishop Mitty" fit in full. A non-SCVAL side's shortName is its
+  // name, so it never swaps.
+  const swapShort = fullName.length > 20 && side.shortName !== fullName;
   const subLine = sub ?? (team ? null : 'Not an SCVAL school');
   return (
     <div
@@ -71,8 +77,9 @@ function BoardSide({
         {team ? <TeamMonogram team={team} size={56} /> : <GhostMonogram name={side.name} size={56} />}
       </span>
       <div className="min-w-0 flex-1 md:flex-initial">
-        {/* Two copies, one per band, both aria-hidden (the section's sr-only sentence names the
-            sides): the full name everywhere but 768–1023px, the short name there. Neither ever
+        {/* A long name (swapShort) gets two copies, one per band, both aria-hidden (the
+            section's sr-only sentence names the sides): the full name everywhere but 768–1023px,
+            the short name there. Any other name is one full copy at every width. Neither ever
             truncates: `break-words` keeps a long single word inside the column and `text-balance`
             evens the lines. From 768px `sx-clamp-2` caps a name at two lines; on a phone the
             sides are stacked full-width rows, so the clamp is lifted (`-webkit-line-clamp:
@@ -81,21 +88,23 @@ function BoardSide({
             back explicitly, because a `block` utility would beat sx-clamp-2's display (a
             base-layer rule) and drop the clamp. */}
         <span
-          className={`sx-clamp-2 break-words text-balance text-lead max-md:[-webkit-line-clamp:none] md:text-title md:max-lg:hidden ${nameClass(
-            side,
-          )}`}
+          className={`sx-clamp-2 break-words text-balance text-lead max-md:[-webkit-line-clamp:none] md:text-title ${
+            swapShort ? 'md:max-lg:hidden' : ''
+          } ${nameClass(side)}`}
           aria-hidden="true"
         >
           {fullName}
         </span>
-        <span
-          className={`sx-clamp-2 hidden break-words text-balance text-lead md:text-title md:max-lg:[display:-webkit-box] ${nameClass(
-            side,
-          )}`}
-          aria-hidden="true"
-        >
-          {side.shortName}
-        </span>
+        {swapShort ? (
+          <span
+            className={`sx-clamp-2 hidden break-words text-balance text-lead md:text-title md:max-lg:[display:-webkit-box] ${nameClass(
+              side,
+            )}`}
+            aria-hidden="true"
+          >
+            {side.shortName}
+          </span>
+        ) : null}
         {/* tabular-nums, not sx-num: the line is mostly words ("De Anza", "No league results
             reported"), and mono set the division name in a code face. The record's digits keep
             fixed widths without it. */}
