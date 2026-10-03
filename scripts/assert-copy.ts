@@ -190,9 +190,10 @@ if (!existsSync(historyPath)) {
     // says nothing about its players.
     const start = main.indexOf('<section id="players"');
     const end = main.indexOf('<section id="clubs"');
+    // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
     const players = (start >= 0 && end > start ? main.slice(start, end) : '')
-      .replace(/&amp;/g, '&')
-      .replace(/&#x27;|&#39;/g, "'");
+      .replace(/&#x27;|&#39;/g, "'")
+      .replace(/&amp;/g, '&');
     const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
     for (const team of snapshot.teams) {
       if (statSlugs.has(team.slug)) continue;

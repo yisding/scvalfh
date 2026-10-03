@@ -357,8 +357,9 @@ function playerBoard(
       team: teamRef(e.team, '#player-stats'),
       cells: spec.columns.map((c) => c.cell(e)),
     })),
+    // "more" only when rows above the tie are listed: a tie for 1st past the cap is the whole board.
     more: dropped
-      ? `${plural(dropped.items.length, `more ${spec.who[0]}`, `more ${spec.who[1]}`)} share ${ordinal(dropped.place)}, with ${plural(value(dropped.items[0]), spec.unit[0], spec.unit[1])} each.`
+      ? `${plural(dropped.items.length, `${rows.length ? 'more ' : ''}${spec.who[0]}`, `${rows.length ? 'more ' : ''}${spec.who[1]}`)} share ${ordinal(dropped.place)}, with ${plural(value(dropped.items[0]), spec.unit[0], spec.unit[1])} each.`
       : null,
     note: `${spec.lead} ${coverage}`,
     empty:
@@ -454,10 +455,12 @@ function clubBoard(
     rankedBy: number;
     note: string;
     empty: string;
-    more?: (count: number, place: number, sample: ClubLine) => string;
+    /** `listed`: whether any row is listed above the tie (then it is "N more teams"). */
+    more?: (count: number, place: number, sample: ClubLine, listed: boolean) => string;
   },
 ): LeaderBoard {
   const { rows, dropped } = rankBoard(sorted, same);
+  const teams = (count: number) => plural(count, rows.length ? 'more team' : 'team');
   return {
     id,
     kind: 'club',
@@ -475,18 +478,26 @@ function clubBoard(
       cells: spec.columns.map((c) => c.cell(l)),
     })),
     more: dropped
-      ? (spec.more?.(dropped.items.length, dropped.place, dropped.items[0]) ??
-        `${plural(dropped.items.length, 'more team')} share ${ordinal(dropped.place)}.`)
+      ? (spec.more?.(dropped.items.length, dropped.place, dropped.items[0], rows.length > 0) ??
+        `${teams(dropped.items.length)} share ${ordinal(dropped.place)}.`)
       : null,
     note: spec.note,
     empty: spec.empty,
   };
 }
 
-/** "Del Mar (1), Live Oak (2)": the teams that have played, but too few to qualify. */
-function belowMinimum(lines: readonly ClubLine[], gp: (l: ClubLine) => number, min: number): string[] {
+/**
+ * "Del Mar (1), Live Oak (2)": the teams that have played (`played`, the board's own count unless
+ * given), but fewer than `min` of the games this board counts.
+ */
+function belowMinimum(
+  lines: readonly ClubLine[],
+  gp: (l: ClubLine) => number,
+  min: number,
+  played: (l: ClubLine) => number = gp,
+): string[] {
   return lines
-    .filter((l) => gp(l) > 0 && gp(l) < min)
+    .filter((l) => played(l) > 0 && gp(l) < min)
     .sort((a, b) => gp(a) - gp(b) || byName(a.team.name, b.team.name))
     .map((l) => `${l.team.name} (${gp(l)})`);
 }
@@ -576,10 +587,12 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
         .sort(
           (a, b) =>
             rate(b.gf, b.goalGames) - rate(a.gf, a.goalGames) ||
-            b.gf - a.gf ||
+            b.goalGames - a.goalGames ||
             byName(a.team.name, b.team.name),
         ),
-      (a, b) => a.gf * b.goalGames === b.gf * a.goalGames,
+      // Equal rates are split by more games played, so a shared place is an equal rate over the
+      // same number of games (cross-multiplied: no float compare).
+      (a, b) => a.gf * b.goalGames === b.gf * a.goalGames && a.goalGames === b.goalGames,
       {
         columns: [
           { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
@@ -587,8 +600,10 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
           { key: 'perGame', label: 'Avg', title: 'Goals for per game', cell: (l) => ({ text: rateText(l.gf, l.goalGames) }) },
         ],
         rankedBy: 2,
-        note: 'Goals scored in every final, divided by the games played. Forfeits count in records but not in goals, so a forfeit is left out of both numbers here.',
-        empty: `No team has scored in ${plural(overallMin.min, 'game')} yet.`,
+        note: 'Goals scored in every final, divided by the games played. Equal rates are split by more games played. Forfeits count in records but not in goals, so a forfeit is left out of both numbers here.',
+        empty: lines.some((l) => l.goalGames >= overallMin.min)
+          ? `None of the teams with at least ${plural(overallMin.min, 'game')} has scored yet.`
+          : `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
     clubBoard(
@@ -603,7 +618,7 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
             b.goalGames - a.goalGames ||
             byName(a.team.name, b.team.name),
         ),
-      (a, b) => a.ga * b.goalGames === b.ga * a.goalGames,
+      (a, b) => a.ga * b.goalGames === b.ga * a.goalGames && a.goalGames === b.goalGames,
       {
         columns: [
           { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
@@ -631,25 +646,33 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
         rankedBy: 1,
         note: 'Finals in which the team did not concede, counted from every score on this site, so every team counts. The goalkeepers’ board counts only what coaches enter.',
         empty: 'No team has kept a clean sheet yet.',
-        more: (count, place, sample) =>
-          `${plural(count, 'more team')} share ${ordinal(place)}, with ${plural(sample.cleanSheets, 'clean sheet')} each.`,
+        more: (count, place, sample, listed) =>
+          `${plural(count, listed ? 'more team' : 'team')} share ${ordinal(place)}, with ${plural(sample.cleanSheets, 'clean sheet')} each.`,
       },
     ),
   ];
 
   const clubNotes: string[] = [];
+  const notYet = (below: string[]) => (below.length ? `; not there yet: ${listWords(below)}.` : '.');
   const overallBelow = belowMinimum(lines, (l) => l.overall.gp, overallMin.min);
+  // The rate boards count only games with goals, and a forfeit has none, so a forfeit can leave a
+  // club past the record minimum and short of the rate one: it is named for each it misses.
+  const rateBelow = belowMinimum(lines, (l) => l.goalGames, overallMin.min, (l) => l.overall.gp);
   const leagueBelow = belowMinimum(lines, (l) => l.league.gp, leagueMin.min);
   if (overallMin.median > 0) {
-    clubNotes.push(
-      `Records and goals per game need at least ${plural(overallMin.min, 'result')}, half the median of ${overallMin.median}` +
-        (overallBelow.length ? `; not there yet: ${listWords(overallBelow)}.` : '.'),
-    );
+    const lead = `need at least ${plural(overallMin.min, 'result')}, half the median of ${overallMin.median}`;
+    if (rateBelow.join() === overallBelow.join()) {
+      clubNotes.push(`Records and goals per game ${lead}${notYet(overallBelow)}`);
+    } else {
+      clubNotes.push(`Records ${lead}${notYet(overallBelow)}`);
+      clubNotes.push(
+        `Goals per game need at least ${plural(overallMin.min, 'game')} with goals counted (a forfeit has none)${notYet(rateBelow)}`,
+      );
+    }
   }
   if (leagueMin.median > 0) {
     clubNotes.push(
-      `The league record needs at least ${plural(leagueMin.min, 'league result')}, half the median of ${leagueMin.median}` +
-        (leagueBelow.length ? `; not there yet: ${listWords(leagueBelow)}.` : '.'),
+      `The league record needs at least ${plural(leagueMin.min, 'league result')}, half the median of ${leagueMin.median}${notYet(leagueBelow)}`,
     );
   }
 

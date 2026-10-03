@@ -2743,7 +2743,10 @@ two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/s
 - **Shared places.** Standard competition ranking (1, 2, 2, 4), printed as `T2` with "tied for 2nd"
   for a screen reader, as the standings tables do; tied rows are listed by name. A board lists the
   places up to 10th and never more than 15 rows: a tie for the last place shown that would pass 15 is
-  counted in a line ("4 more players share 10th, with 2 assists each.") instead.
+  counted in a line ("4 more players share 10th, with 2 assists each.") instead, and a tie for 1st
+  that long is the whole board ("16 goalkeepers share 1st, …"), never an empty-board message. The
+  goals-per-game boards split equal rates by more games played, so a shared place there is an
+  equal rate over the same number of games.
 - **Player boards rank only what coaches enter.** A stat a team does not track is null for its
   players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
   meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
@@ -2754,7 +2757,9 @@ two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/s
   `computed`: the league games the table counts). Clean sheets and goals per game come from the same
   finals, with forfeits left out as the standings leave them out of goals (§11.6). A record or a rate
   needs at least half the median team's number of results, rounded up (a 1-0 team does not top a
-  table of ten-game seasons); the teams below the line are named with their count. The league-record
+  table of ten-game seasons); the teams below the line are named with their count. A forfeit counts
+  toward a record but not toward a rate, so a club that the rate boards leave out for that reason
+  is named in a sentence of its own. The league-record
   board compares win percentages, not points, because leagues play different numbers of league games.
 - **The pinned team.** Every row carries `data-team-slug`, so the pinned-team script and
   `PinnedTeamMarks` draw the accent rule and the hidden "Your team" note on the pinned team's rows (on

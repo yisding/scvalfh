@@ -405,6 +405,121 @@ describe('buildLeadersView — players, over synthetic stats', () => {
   });
 });
 
+// ---------------------------------------------------------------- review findings (PR #16)
+
+describe('buildLeadersView — ties, minimums and empty boards at the edges', () => {
+  it('splits equal goal rates by games played, as the notes say, and shares only a full tie', () => {
+    // Mitty and Stevenson both score 2 and concede 1 a game, Mitty over 4 games and Stevenson 2;
+    // Tamalpais, Leigh and Del Mar each score 1 and concede 2 a game over 2 games.
+    const games = [
+      game({ home: 'mitty', away: 'tamalpais', hs: 2, as: 1, league: false, official: null, date: '2026-09-01' }),
+      game({ home: 'mitty', away: 'leigh', hs: 2, as: 1, league: false, official: null, date: '2026-09-02' }),
+      game({ home: 'mitty', away: 'del-mar', hs: 2, as: 1, league: false, official: null, date: '2026-09-03' }),
+      game({ home: 'mitty', away: 'tamalpais', hs: 2, as: 1, league: false, official: null, date: '2026-09-04' }),
+      game({ home: 'stevenson', away: 'leigh', hs: 2, as: 1, league: false, official: null, date: '2026-09-05' }),
+      game({ home: 'stevenson', away: 'del-mar', hs: 2, as: 1, league: false, official: null, date: '2026-09-06' }),
+    ];
+    const v = buildLeadersView(sources(games));
+    const rows = (id: string) =>
+      v.clubs.find((b) => b.id === id)!.rows.map((r) => [r.rank, r.tied, r.team.slug, r.cells[0].text]);
+    expect(rows('fewest-goals-allowed')).toEqual([
+      [1, false, 'mitty', '4'],
+      [2, false, 'stevenson', '2'],
+      [3, true, 'del-mar', '2'],
+      [3, true, 'leigh', '2'],
+      [3, true, 'tamalpais', '2'],
+    ]);
+    expect(rows('most-goals')).toEqual([
+      [1, false, 'mitty', '4'],
+      [2, false, 'stevenson', '2'],
+      [3, true, 'del-mar', '2'],
+      [3, true, 'leigh', '2'],
+      [3, true, 'tamalpais', '2'],
+    ]);
+    for (const id of ['most-goals', 'fewest-goals-allowed']) {
+      expect(v.clubs.find((b) => b.id === id)!.note, id).toContain('Equal rates are split by more games played.');
+    }
+  });
+
+  it('names a club that meets the record minimum but not the goals one because of a forfeit', () => {
+    // Four teams play each other twice (6 games); Del Mar plays three of them and wins a forfeit
+    // over the fourth: 4 results for its record, 3 games with goals counted.
+    const four = ['mitty', 'leigh', 'stevenson', 'tamalpais'];
+    const games = [
+      ...roundRobin(four, () => [2, 1]),
+      game({ home: 'del-mar', away: 'mitty', hs: 1, as: 3, league: false, official: null, date: '2026-10-01' }),
+      game({ home: 'del-mar', away: 'leigh', hs: 1, as: 3, league: false, official: null, date: '2026-10-02' }),
+      game({ home: 'del-mar', away: 'stevenson', hs: 1, as: 3, league: false, official: null, date: '2026-10-03' }),
+      game({ home: 'del-mar', away: 'tamalpais', hs: 1, as: 0, league: false, official: null, forfeit: true, date: '2026-10-04' }),
+    ];
+    const v = buildLeadersView(sources(games));
+    const slugs = (id: string) => v.clubs.find((b) => b.id === id)!.rows.map((r) => r.team.slug);
+    // gp: the four 7 each, Del Mar 4 → median 7, minimum 4.
+    expect(v.clubs.find((b) => b.id === 'best-record')!.meta).toBe('At least 4 games');
+    expect(slugs('best-record')).toContain('del-mar');
+    expect(slugs('most-goals')).not.toContain('del-mar');
+    expect(slugs('fewest-goals-allowed')).not.toContain('del-mar');
+    expect(v.clubNotes).toContain(
+      'Records need at least 4 results, half the median of 7.',
+    );
+    expect(v.clubNotes).toContain(
+      'Goals per game need at least 4 games with goals counted (a forfeit has none); not there yet: Del Mar (3).',
+    );
+  });
+
+  it('keeps one note for records and goals per game when no forfeit separates them', () => {
+    const games = roundRobin(['mitty', 'leigh', 'stevenson'], () => [2, 1]);
+    games.push(game({ home: 'del-mar', away: 'mitty', hs: 1, as: 3, league: false, official: null, date: '2026-10-01' }));
+    const v = buildLeadersView(sources(games));
+    expect(v.clubNotes[0]).toBe(
+      // 4 games each for the three, 1 for Del Mar: median 4, minimum 2.
+      'Records and goals per game need at least 2 results, half the median of 4; not there yet: Del Mar (1).',
+    );
+  });
+
+  it('says which part of the most-goals minimum is missing when the board is empty', () => {
+    // Nobody has scored: every team qualifies on games, none has a goal.
+    const scoreless = roundRobin(['mitty', 'leigh', 'stevenson'], () => [0, 0]);
+    const goals = (g: Game[]) => buildLeadersView(sources(g)).clubs.find((b) => b.id === 'most-goals')!;
+    expect(goals(scoreless).rows).toEqual([]);
+    expect(goals(scoreless).empty).toBe('None of the teams with at least 2 games has scored yet.');
+    expect(goals([]).empty).toBe('No team has played 1 game yet.');
+  });
+
+  it('counts a tie for 1st too long to list instead of calling the board empty', () => {
+    const keepers = Array.from({ length: BOARD_MAX_ROWS + 1 }, (_, i) => ({
+      name: `Keeper ${String(i + 1).padStart(2, '0')}`,
+      goalkeeping: { gamesPlayed: 3, shutouts: 1 },
+    }));
+    const v = buildLeadersView(
+      sources([], [teamStats('mitty', { goalkeeping: ['gamesPlayed', 'shutouts'], players: keepers })]),
+    );
+    const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
+    expect(cs.rows).toEqual([]);
+    expect(cs.more).toBe(`${BOARD_MAX_ROWS + 1} goalkeepers share 1st, with 1 clean sheet each.`);
+    const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: cs }));
+    expect(html).toContain(cs.more);
+    expect(html).not.toContain(cs.empty);
+    expect(html).not.toContain('<table');
+  });
+
+  it('still says "more" when some of the board is listed above the long tie', () => {
+    const keepers = [
+      { name: 'Ace Able', goalkeeping: { gamesPlayed: 3, shutouts: 3 } },
+      ...Array.from({ length: BOARD_MAX_ROWS }, (_, i) => ({
+        name: `Keeper ${String(i + 1).padStart(2, '0')}`,
+        goalkeeping: { gamesPlayed: 3, shutouts: 1 },
+      })),
+    ];
+    const v = buildLeadersView(
+      sources([], [teamStats('mitty', { goalkeeping: ['gamesPlayed', 'shutouts'], players: keepers })]),
+    );
+    const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
+    expect(cs.rows.map((r) => r.name)).toEqual(['Ace Able']);
+    expect(cs.more).toBe(`${BOARD_MAX_ROWS} more goalkeepers share 2nd, with 1 clean sheet each.`);
+  });
+});
+
 // ---------------------------------------------------------------- markup
 
 describe('LeaderBoardTable and the /leaders page', () => {

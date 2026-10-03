@@ -126,7 +126,9 @@ export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
     <section id={board.id} className="min-w-0 scroll-mt-24">
       <SectionHeader as="h3" kicker={board.title} meta={board.meta} />
       {board.rows.length === 0 ? (
-        <p className="sx-card m-0 p-4 text-meta text-ink-2">{board.empty}</p>
+        // No row listed: either nobody qualifies, or a tie for 1st is too long to list, in which
+        // case the count line is the board.
+        <p className="sx-card m-0 p-4 text-meta text-ink-2">{board.more ?? board.empty}</p>
       ) : (
         <div className="sx-card sx-flush sx-bleed">
           <table className="sx-table table-fixed text-meta">
@@ -189,7 +191,7 @@ export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
           </table>
         </div>
       )}
-      {board.more ? <p className="mt-2 mb-0 text-meta text-ink-2">{board.more}</p> : null}
+      {board.more && board.rows.length > 0 ? <p className="mt-2 mb-0 text-meta text-ink-2">{board.more}</p> : null}
       <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{board.note}</p>
     </section>
   );
