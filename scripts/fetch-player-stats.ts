@@ -55,6 +55,7 @@ import {
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
+  teamsInScope,
   type PreviousFile,
 } from '../lib/fetch-scope';
 import { seasonWindowBounds } from '../lib/leagues';
@@ -182,7 +183,7 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-player-stats: offline, from ${args.fixtures}`
-      : `fetch-player-stats: ${TEAMS.filter((t) => inScope(t, args.leagues)).length} MaxPreps stats rollups` +
+      : `fetch-player-stats: ${teamsInScope(args.leagues).length} MaxPreps stats rollups` +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
   // --dry-run writes nothing, --capture included.

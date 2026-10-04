@@ -45,6 +45,7 @@ import {
   recordString,
   shortDate,
   timeOfDayPT,
+  versusLabel,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
@@ -751,7 +752,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
-    versus: game.site === 'neutral' ? 'vs' : mineIsHome ? 'vs' : 'at',
+    versus: versusLabel(game, (mineIsHome ? game.home : game.away).teamId ?? ''),
     opponent: shortNameOf(theirs),
     kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
     href: gameHref(game.contestId),

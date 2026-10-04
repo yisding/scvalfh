@@ -59,9 +59,10 @@ function table(rows: readonly Standing[]): string[] {
 }
 
 function rowsOf(v: Variant, league: LeagueId, division: DivisionId): Standing[] {
-  const d = v.data.getLeagueStandings(league).find((x) => x.division === division);
-  if (!d) throw new Error(`lib/data.ts getLeagueStandings('${league}'): no ${division} table`);
-  return d.rows;
+  if (!v.data.getLeagueSummary(league)?.divisions.some((d) => d.id === division)) {
+    throw new Error(`lib/data.ts getLeagueSummary('${league}'): no ${division} table`);
+  }
+  return v.data.getStandings(division);
 }
 
 const MCAL_TABLE = [
@@ -83,13 +84,13 @@ describe('both runs: the corpus leagues through lib/data', () => {
     for (const v of variants) {
       expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(49);
       expect(
-        v.data.getAllLeagueHealth().map((h) => `${h.leagueId}:${h.state}`),
+        v.data.getLeagueIds().map((l) => `${l}:${v.data.getLeagueHealth(l).state}`),
         `lib/pipeline/steps/standings.ts: LeagueHealth states [${v.name}]`,
       ).toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
       const shape = (['scval', 'bval', 'pcal', 'mcal', 'eal'] as const).map((l) =>
-        v.data.getLeagueStandings(l).map((d) => `${d.division}:${d.heading ?? '-'}:${d.rows.length}`),
+        v.data.getLeagueSummary(l)!.divisions.map((d) => `${d.id}:${d.heading ?? '-'}:${v.data.getStandings(d.id).length}`),
       );
-      expect(shape, `lib/data.ts getLeagueStandings [${v.name}]`).toEqual([
+      expect(shape, `lib/data.ts getStandings [${v.name}]`).toEqual([
         ['de-anza:De Anza:7', 'el-camino:El Camino:8'],
         ['mt-hamilton:Mt. Hamilton:6', 'santa-teresa:Santa Teresa:6'],
         ['pcal:-:7'],
@@ -102,8 +103,8 @@ describe('both runs: the corpus leagues through lib/data', () => {
   it("the EAL, not in this corpus's run: no counted game, no missing league result", () => {
     for (const v of variants) {
       expect(v.data.getMissingOfficialResults('eal'), `lib/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`).toEqual([]);
-      const eal = v.data.getAllLeagueHealth().find((h) => h.leagueId === 'eal');
-      expect(eal?.divisions, `lib/pipeline/steps/standings.ts: EAL DivisionHealth [${v.name}]`).toEqual([
+      const eal = v.data.getLeagueHealth('eal');
+      expect(eal.divisions, `lib/pipeline/steps/standings.ts: EAL DivisionHealth [${v.name}]`).toEqual([
         {
           divisionId: 'eal',
           meta: 'skipped',

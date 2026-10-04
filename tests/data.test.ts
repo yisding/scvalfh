@@ -51,11 +51,6 @@ describe('data: identity and freshness', () => {
     // 2026-10-02T10:48Z is 3:48 AM PDT on the 2nd.
     expect(data.getToday()).toBe('2026-10-02');
   });
-
-  it('measures snapshot age against an instant you pass in', () => {
-    expect(data.getSnapshotAgeHours('2026-10-03T10:48:51.206Z')).toBeCloseTo(24, 3);
-    expect(data.getSnapshotAgeHours()).toBe(0);
-  });
 });
 
 describe('data: sections and leagues', () => {
@@ -88,8 +83,6 @@ describe('data: sections and leagues', () => {
   });
 
   it('exposes league health', () => {
-    expect(data.getAllLeagueHealth()).toHaveLength(5);
-    expect(data.getAllLeagueHealth().map((h) => h.leagueId)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(data.getLeagueHealth('scval').state).toBe('fresh');
     expect(data.getLeagueHealth('mcal').state).toBe('degraded');
     expect(data.getLeagueHealth('eal').state).toBe('degraded');
@@ -186,25 +179,13 @@ describe('data: games', () => {
     );
   });
 
-  it('derives upcoming and recent from the snapshot stamp', () => {
+  it('derives upcoming from the snapshot stamp', () => {
     const upcoming = data.getUpcoming(5);
     expect(upcoming.length).toBe(5);
     for (const g of upcoming) {
       expect(g.dateKey >= data.getToday()).toBe(true);
       expect(g.status).not.toBe('final');
     }
-    const recent = data.getRecentResults(5);
-    expect(recent.length).toBe(5);
-    for (const g of recent) {
-      expect(g.status).toBe('final');
-      expect(g.dateKey <= data.getToday()).toBe(true);
-    }
-    expect(recent[0].dateLocal >= recent[1].dateLocal).toBe(true);
-    const early = data.getRecentResults(3, '2026-09-10T15:00:00.000Z');
-    for (const g of early) expect(g.dateKey <= '2026-09-10').toBe(true);
-    expect(data.getRecentResults(5, undefined, { league: 'pcal' }).every((g) =>
-      [g.home.slug, g.away.slug].some((s) => s && data.getTeamBySlug(s)?.league === 'pcal'),
-    )).toBe(true);
   });
 
   it('names the most recent day that actually has results', () => {
@@ -217,17 +198,12 @@ describe('data: games', () => {
 });
 
 describe('data: standings and derived facts', () => {
-  it('returns a division table in finishing order, and a league’s tables', () => {
+  it('returns a division table in finishing order', () => {
     const table = data.getStandings('de-anza');
     expect(table.length).toBe(7);
     for (let i = 1; i < table.length; i += 1) {
       expect(table[i].computed.place).toBeGreaterThanOrEqual(table[i - 1].computed.place);
     }
-    expect(data.getLeagueStandings('bval').map((d) => [d.division, d.heading, d.rows.length])).toEqual([
-      ['mt-hamilton', 'Mt. Hamilton', 6],
-      ['santa-teresa', 'Santa Teresa', 6],
-    ]);
-    expect(data.getLeagueStandings('pcal')[0].heading).toBeNull();
     expect(Object.keys(data.getAllStandings())).toEqual([
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
     ]);
@@ -380,7 +356,6 @@ describe('data: postseason', () => {
       atLarge: 3,
       total: 16,
     });
-    expect(data.BRACKET_URL).toMatch(/^https:\/\/www\.maxpreps\.com\/tournament\//);
     expect(data.getPlayoffs().format.autoQualifiers.total).toBe(16);
   });
 
@@ -435,12 +410,6 @@ describe('data: the secondary-source read API', () => {
     expect(data.getOfficialFixtures({ slug: 'wilcox' })).toEqual([]);
     expect(data.getSources().length).toBeGreaterThan(20);
     expect(data.getSources({ league: 'mcal' })).toEqual([]);
-  });
-
-  it('returns no score conflict for a game that has none, and undefined for an unknown id', () => {
-    const [game] = data.getGames({ status: 'final' });
-    expect(data.getScoreConflict(game.contestId)).toBeUndefined();
-    expect(data.getScoreConflict('no-such-contest')).toBeUndefined();
   });
 
   it('keeps the MaxPreps standings cross-check separate from the si.com score one', () => {

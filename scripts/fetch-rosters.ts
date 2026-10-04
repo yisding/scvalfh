@@ -44,6 +44,7 @@ import {
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
+  teamsInScope,
   type PreviousFile,
 } from "../lib/fetch-scope";
 import { MaxPrepsClient } from "../lib/sources/maxpreps";
@@ -144,7 +145,7 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-rosters: offline, from ${args.fixtures}`
-      : `fetch-rosters: ${TEAMS.filter((t) => inScope(t, args.leagues)).length} MaxPreps roster pages` +
+      : `fetch-rosters: ${teamsInScope(args.leagues).length} MaxPreps roster pages` +
           (args.leagues ? ` (${args.leagues.join(", ")} only)` : ""),
   );
   // --dry-run writes nothing, --capture included.

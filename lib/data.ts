@@ -16,7 +16,6 @@ import bundledSnapshot from '../data/snapshot.json';
 
 import {
   dateSpan,
-  hoursBetween,
   isoDateKey,
   localDateKey,
   numberWord,
@@ -136,11 +135,6 @@ export function getToday(): string {
   return localDateKey(snapshot.fetchedAt);
 }
 
-/** Hours since the snapshot was written, relative to an instant you supply. */
-export function getSnapshotAgeHours(now: string = snapshot.fetchedAt): number {
-  return hoursBetween(snapshot.fetchedAt, now);
-}
-
 export function getCounts(): Snapshot['counts'] {
   return snapshot.counts;
 }
@@ -184,11 +178,6 @@ export function getSbliveCrossCheck(): SbliveCrossCheck | undefined {
   return snapshot.sbliveCrossCheck;
 }
 
-/** The scoreConflict on one game, for the "sources disagree" marker on a row. */
-export function getScoreConflict(contestId: ContestId): Game['provenance']['scoreConflict'] {
-  return getGameById(contestId)?.provenance.scoreConflict;
-}
-
 /** null until SCVAL publishes a 2026-27 field hockey standings PDF; undefined if never polled. */
 export function getOfficialStandingsPdfUrl(): string | null | undefined {
   return snapshot.officialStandingsPdfUrl;
@@ -203,9 +192,6 @@ export function getCcsCalendar(): readonly CcsCalendarEvent[] | undefined {
 export function areKeyDatesConfirmed(): boolean | undefined {
   return snapshot.playoffs.keyDatesConfirmed;
 }
-
-/** MaxPreps' CCS tournament page (re-exported for pages). */
-export const BRACKET_URL: string = CCS.bracketUrl;
 
 /** 'sblive:<id>' games a MaxPreps contest has since superseded → that contest (D2 rule 10). */
 export function getSupersededGames(): Readonly<Record<ContestId, ContestId>> {
@@ -284,10 +270,6 @@ export function getLeagueHealth(id: LeagueId): LeagueHealth {
   const row = snapshot.leagueHealth.find((h) => h.leagueId === id);
   if (!row) throw new Error(`lib/data.ts: no leagueHealth row for ${id}`);
   return row;
-}
-
-export function getAllLeagueHealth(): readonly LeagueHealth[] {
-  return snapshot.leagueHealth;
 }
 
 // ---------------------------------------------------------------- teams
@@ -489,15 +471,6 @@ export function getUpcoming(n = 5, asOf: string = snapshot.fetchedAt, filter: { 
     .slice(0, n);
 }
 
-/** The most recent `n` finals at or before `asOf`, newest first. */
-export function getRecentResults(n = 5, asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): Game[] {
-  const today = localDateKey(asOf);
-  return scoped(filter)
-    .filter((g) => g.status === 'final' && g.dateKey <= today)
-    .sort((a, b) => b.dateLocal.localeCompare(a.dateLocal))
-    .slice(0, n);
-}
-
 /**
  * The most recent date that actually has reported results, so the home page never shows a stale
  * day as if it were last night (DESIGN §8).
@@ -533,17 +506,6 @@ export function getOfficialFixtures(
 
 export function getStandings(division: DivisionId): Standing[] {
   return sortStandings(snapshot.standings.filter((s) => s.division === division));
-}
-
-/** A league's tables, division order; `heading` is null for a single-division league. */
-export function getLeagueStandings(
-  leagueId: LeagueId,
-): Array<{ division: DivisionId; heading: string | null; rows: Standing[] }> {
-  return getLeague(leagueId).divisions.map((d) => ({
-    division: d.id,
-    heading: divisionHeading(d.id),
-    rows: getStandings(d.id),
-  }));
 }
 
 export function getAllStandings(): Record<DivisionId, Standing[]> {
