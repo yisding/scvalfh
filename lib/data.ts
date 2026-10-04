@@ -219,7 +219,7 @@ function summaryOf(league: LeagueConfig): LeagueSummary {
     id: d.id,
     label: d.label,
     heading: divisionHeading(d.id),
-    teamCount: snapshot.teams.filter((t) => t.division === d.id).length,
+    teamCount: getTeams(d.id).length,
   }));
   return {
     id: league.id,
@@ -282,18 +282,14 @@ export function getTeamsGrouped(): Array<{
   section: SectionConfig;
   leagues: Array<{
     league: LeagueSummary;
-    divisions: Array<{ id: DivisionId; heading: string | null; teams: Team[] }>;
+    divisions: Array<{ id: DivisionId; heading: string | null; teams: readonly Team[] }>;
   }>;
 }> {
   return SECTIONS.map((section) => ({
     section,
-    leagues: LEAGUES.filter((l) => l.sectionId === section.id).map((l) => ({
-      league: summaryOf(l),
-      divisions: l.divisions.map((d) => ({
-        id: d.id,
-        heading: divisionHeading(d.id),
-        teams: snapshot.teams.filter((t) => t.division === d.id),
-      })),
+    leagues: SUMMARIES.filter((s) => s.section.id === section.id).map((league) => ({
+      league,
+      divisions: league.divisions.map((d) => ({ id: d.id, heading: d.heading, teams: getTeams(d.id) })),
     })),
   })).filter((g) => g.leagues.length > 0);
 }
@@ -349,7 +345,7 @@ export function getTeamSearchIndex(): SearchIndex {
       label: d.label,
       heading: divisionHeading(d.id),
       searchAliases: d.searchAliases,
-      teamCount: snapshot.teams.filter((t) => t.division === d.id).length,
+      teamCount: getTeams(d.id).length,
     })),
   }));
   searchIndex = buildSearchIndex(teams, leagues, DATA_QUALITY.notCovered);

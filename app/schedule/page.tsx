@@ -32,7 +32,7 @@ function indexData() {
 
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
-  const { leagues } = indexData();
+  const leagues = getLeagueSummaries();
   const names = leagues.map((l) => l.shortName);
   const list = `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
   const description = `${counts.total} girls varsity field hockey contests in ${list} for Fall 2026: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
