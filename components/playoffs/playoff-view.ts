@@ -26,6 +26,7 @@ import {
   EM_DASH,
   monthDay,
   ordinal,
+  ordinalWord,
   recordString,
   shortDate,
   timeOfDayPT,
@@ -77,12 +78,8 @@ export function numberWord(n: number): string {
   return NUMBER_WORDS[n] ?? String(n);
 }
 
-const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
-
-/** 'fourth' for 4; '11th' past ten. */
-export function ordinalWord(n: number): string {
-  return ORDINAL_WORDS[n] ?? ordinal(n);
-}
+/** 'fourth' for 4; '11th' past ten. Lives in lib/format.ts, so lib/data.ts can write it too. */
+export { ordinalWord };
 
 /** '11:00' → '11 AM PT'; '16:30' → '4:30 PM PT'. A league clock time, always labelled PT. */
 export function clockLabel(time: string): string {

@@ -19,6 +19,7 @@ import {
   isoDateKey,
   localDateKey,
   numberWord,
+  ordinalWord,
   recordString,
   shortDate,
   sideOutcome,
@@ -39,7 +40,7 @@ import {
   leagueOfDivision,
   leaguePlayEnds,
 } from './leagues';
-import type { LeagueConfig, SectionConfig } from './leagues';
+import type { LeagueConfig, PairingConfig, PostseasonConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament } from './postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
@@ -935,9 +936,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       if (crossover) {
         sentence = `The SCVAL crossover and the 4th-place play-in are ${shortDate(crossover.date)}.`;
       } else if (playIn && statuses.includes('play-in')) {
-        sentence =
-          `${playIn.seatLabels[1]} plays at the ${divisionLabelOf(playIn.seats[0].division)} champion ` +
-          `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
+        sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {
         sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
       } else {
@@ -949,8 +948,22 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   }
 }
 
-function divisionLabelOf(id: DivisionId): string {
-  return getDivision(id).label;
+/**
+ * The BVAL-style play-in, as one clause with no closing stop: 'Mt. Hamilton #4 plays at the Santa
+ * Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth', the ordinal from the
+ * league's configured `autoBerths`. The team page ends it
+ * with a period; the home page's phase lead adds the CCS seeding meeting.
+ */
+export function playInClause(
+  league: Pick<LeagueConfig, 'shortName'>,
+  ps: Extract<PostseasonConfig, { kind: 'ccs-ladder' }>,
+  playIn: PairingConfig,
+): string {
+  return (
+    `${playIn.seatLabels[1]} plays at the ${getDivision(playIn.seats[0].division).label} champion ` +
+    `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s ` +
+    `${ordinalWord(ps.autoBerths)} automatic CCS berth`
+  );
 }
 
 /** Re-exported so a page never has to import two modules to name a team id. */

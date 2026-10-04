@@ -33,6 +33,7 @@ import {
   getTeams,
   getToday,
   getUpcoming,
+  playInClause,
   type LeagueSummary,
 } from '../../lib/data';
 import {
@@ -42,6 +43,7 @@ import {
   monthDay,
   numberWord,
   ordinal,
+  ordinalWord,
   recordString,
   shortDate,
   timeOfDayPT,
@@ -276,7 +278,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     const crossover = ps.pairings[0];
     return {
       lead: 'League play is over.',
-      body: `The crossover games and the fourth-place play-in for ${short}’s seventh automatic CCS berth are ${shortDate(
+      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${shortDate(
         crossover?.date ?? keyDates.endOfLeagueSeason,
       )}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
       link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
@@ -286,14 +288,9 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'play-in' && ps.kind === 'ccs-ladder') {
     const playIn = ps.pairings.find((p) => p.isPlayIn);
     if (playIn) {
-      const host = getDivision(playIn.seats[0].division).label;
       return {
         lead: `${short} league play is over.`,
-        body: `${playIn.seatLabels[1]} plays at the ${host} champion ${shortDate(playIn.date)}${
-          playIn.time ? `, ${clock(playIn.time)}` : ''
-        }, for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth; the CCS seeding meeting is ${shortDate(
-          keyDates.seedingMeeting,
-        )}.`,
+        body: `${playInClause(league, ps, playIn)}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
         link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
       };
     }
@@ -353,12 +350,6 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   }
 
   return null;
-}
-
-const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
-
-function ordinalWord(n: number): string {
-  return ORDINAL_WORDS[n] ?? ordinal(n);
 }
 
 // ---------------------------------------------------------------- mini standings

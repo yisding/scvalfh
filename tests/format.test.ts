@@ -16,6 +16,7 @@ import {
   longDate,
   monthDay,
   numberWord,
+  ordinalWord,
   ordinal,
   ordinalPlace,
   partialDate,
@@ -271,6 +272,10 @@ describe('numberWord and dateSpan', () => {
   it('words zero to ten and prints anything else as digits', () => {
     expect([0, 1, 6, 10].map(numberWord)).toEqual(['zero', 'one', 'six', 'ten']);
     expect([11, 49, -1, 2.5].map(numberWord)).toEqual(['11', '49', '-1', '2.5']);
+  });
+
+  it('words an ordinal to tenth and prints anything past it as digits', () => {
+    expect([1, 4, 7, 10, 11, 22].map(ordinalWord)).toEqual(['first', 'fourth', 'seventh', 'tenth', '11th', '22nd']);
   });
 
   it('spans two dates with an en dash, naming the month once within a month', () => {

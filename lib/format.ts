@@ -285,6 +285,13 @@ export function ordinal(n: number): string {
   }
 }
 
+const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
+
+/** 'fourth' for 4; '11th' past ten. */
+export function ordinalWord(n: number): string {
+  return ORDINAL_WORDS[n] ?? ordinal(n);
+}
+
 /** The rank cell: '1st', or an em dash for a team with no reported results (DESIGN §8). */
 export function ordinalPlace(place: number, hasResults = true): string {
   return hasResults ? ordinal(place) : EM_DASH;

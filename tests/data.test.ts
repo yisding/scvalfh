@@ -12,6 +12,7 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { getLeague } from '../lib/leagues';
 import { buildSeason } from '../lib/season-build';
 import { countsOf } from '../lib/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot-schema';
@@ -378,6 +379,17 @@ describe('data: postseason', () => {
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
     expect(data.getTeamPostseasonLine('chico')).toBeNull();
     expect(data.getTeamPostseasonLine('nope')).toBeNull();
+  });
+
+  it('writes the play-in clause from the config, its berth ordinal from autoBerths', () => {
+    const bval = getLeague('bval');
+    if (bval.postseason.kind !== 'ccs-ladder') throw new Error('BVAL is a CCS ladder league');
+    const ps = bval.postseason;
+    const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in')!;
+    expect(data.playInClause(bval, ps, playIn)).toBe(
+      'Mt. Hamilton #4 plays at the Santa Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth',
+    );
+    expect(data.playInClause(bval, { ...ps, autoBerths: 5 }, playIn)).toMatch(/for BVAL’s fifth automatic CCS berth$/);
   });
 });
 
