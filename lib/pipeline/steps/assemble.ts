@@ -123,7 +123,7 @@ export function stepAssemble(
     leagueHealth: table.leagueHealth,
     dropped: ctx.dropped.all(),
     crossCheck: table.crossCheck,
-    ...(state.crossCheck ? { sbliveCrossCheck: state.crossCheck } : {}),
+    ...(state.sbliveCrossCheck ? { sbliveCrossCheck: state.sbliveCrossCheck } : {}),
     ...(anyOfficial ? { officialFixtures: fixtures } : {}),
     supersededGames: supersededGamesOf(games, ctx.previous),
     ...(officialStandingsPdfUrl === undefined ? {} : { officialStandingsPdfUrl }),

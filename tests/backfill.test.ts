@@ -864,7 +864,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
       ['sblive-team-games', 'sblive greenfield games', 'ok'],
     ]);
     expect(res.unmatched).toEqual([]);
-    expect(res.crossCheck?.backfilled.map((r) => [r.contestId, r.rule, r.sblive])).toEqual([
+    expect(res.sbliveCrossCheck?.backfilled.map((r) => [r.contestId, r.rule, r.sblive])).toEqual([
       ['sblive:6541425', 'absent-fixture', { home: 1, away: 0 }],
       [pending.contestId, 'score-pending', { home: 9, away: 0 }],
       ['sblive:6543072', 'absent-fixture', { home: 1, away: 3 }],
@@ -875,7 +875,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
   it('skips everything with --no-sblive', async () => {
     const { ctx, sources } = ctxWith(corpusGet, { args: { sblive: false } as RunContext['args'] });
     const res = await stepSblive(ctx, { games: [pending], unmatched: [GRE_AT_CAT] });
-    expect(res).toEqual({ games: [pending], unmatched: [GRE_AT_CAT], crossCheck: undefined });
+    expect(res).toEqual({ games: [pending], unmatched: [GRE_AT_CAT], sbliveCrossCheck: undefined });
     expect(sources).toEqual([]);
   });
 
@@ -899,7 +899,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
     expect(sources.every((r) => r.status === 'stale' && r.httpStatus === 503)).toBe(true);
     expect(sources[0].carriedFrom).toBe('2026-10-01T15:00:00.000Z');
     expect(res.games[0]).toMatchObject({ status: 'final', home: { score: 9 }, provenance: { scores: 'sblive' } });
-    expect(res.crossCheck?.compared).toBe(4);
-    expect(res.crossCheck?.backfilled.map((r) => r.contestId)).toEqual([pending.contestId]);
+    expect(res.sbliveCrossCheck?.compared).toBe(4);
+    expect(res.sbliveCrossCheck?.backfilled.map((r) => r.contestId)).toEqual([pending.contestId]);
   });
 });

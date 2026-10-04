@@ -16,7 +16,7 @@ export const noopOfficial: OfficialStep = async (_ctx, games) => ({
 export const noopSblive: SbliveStep = async (_ctx, input) => ({
   games: input.games,
   unmatched: input.unmatched,
-  crossCheck: undefined,
+  sbliveCrossCheck: undefined,
 });
 
 export const NOOP_STEPS: PipelineSteps = { official: noopOfficial, sblive: noopSblive };

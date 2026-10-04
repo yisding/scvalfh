@@ -124,7 +124,7 @@ async function runSblive(
     ctx.warn(`si.com step failed: ${(err as Error).message}`);
     // The previous report, keeping only rows still true of these games (no stale conflict rows).
     const prior = ctx.previous?.sbliveCrossCheck;
-    return { games, unmatched, crossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
+    return { games, unmatched, sbliveCrossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
   }
 }
 
@@ -156,7 +156,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
   state.games = sblive.games;
   state.unmatched = sblive.unmatched;
-  state.crossCheck = sblive.crossCheck;
+  state.sbliveCrossCheck = sblive.sbliveCrossCheck;
 
   // 09 secondary
   state.secondary = await stepSecondary(ctx, state.games);

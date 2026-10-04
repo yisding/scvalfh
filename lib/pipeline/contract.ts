@@ -154,7 +154,7 @@ export interface SbliveStepResult {
   games: Game[];
   /** Fixtures still unmatched after rule-2 fills. */
   unmatched: OfficialFixture[];
-  crossCheck: SbliveCrossCheck | undefined;
+  sbliveCrossCheck: SbliveCrossCheck | undefined;
 }
 export type SbliveStep = (ctx: RunContext, input: { games: Game[]; unmatched: OfficialFixture[] }) => Promise<SbliveStepResult>;
 

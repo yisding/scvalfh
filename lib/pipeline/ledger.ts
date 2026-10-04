@@ -380,7 +380,7 @@ export interface RunState {
   games: Game[];
   unmatched: OfficialFixture[];
   official: OfficialStepResult;
-  crossCheck: SbliveCrossCheck | undefined;
+  sbliveCrossCheck: SbliveCrossCheck | undefined;
   secondary: SecondaryStepResult;
   /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
   frozenFromPrevious: Set<LeagueId>;
@@ -404,7 +404,7 @@ export function emptyRunState(): RunState {
       revisedUpstream: new Set(),
       carriedDivisions: new Set(),
     },
-    crossCheck: undefined,
+    sbliveCrossCheck: undefined,
     secondary: { games: [], bracketPublished: false },
     frozenFromPrevious: new Set(),
     classification: new Map(),

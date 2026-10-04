@@ -146,7 +146,7 @@ function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixtur
     `  sblive: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}` +
       ` and ${result.rows.length} earlier si.com ${result.rows.length === 1 ? 'score' : 'scores'} still eligible`,
   );
-  return { games: carriedGames, unmatched: result.unmatched, crossCheck };
+  return { games: carriedGames, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
 }
 
 export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResult> => {
@@ -261,7 +261,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       `matched ${crossCheck.compared} · agree ${crossCheck.agreements} · conflicts ${crossCheck.conflicts.length} · ` +
       `backfilled ${crossCheck.backfilled.length} · si.com-only ${crossCheck.sbliveOnlyScored.length} · unmatched ${rec.unmatched}`,
   );
-  return { games: rec.games, unmatched: result.unmatched, crossCheck };
+  return { games: rec.games, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
 };
 
 /** A run without si.com data keeps the plain-disagreement markers it published before (rule 5). */
