@@ -97,10 +97,11 @@ if (!workerOnly) {
   // of the four-league tree built the same day. Unchanged; the next league will need the room.
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
-  // Six school boards of at most 15 rows and four player boards of at most 30, 15 of them behind
-  // "Show N more" (components/leaders/leaders-view.ts), so the page cannot grow with the season the
-  // way a schedule does: ~28 KB on 2026-10-03. The player boards' places to 25th (DESIGN §23) took
-  // it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line, which moved to 1.2 ×.
+  // Six school boards of 10 places and four player boards of 25, 15 of them behind "Show N more"
+  // (components/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
+  // (DESIGN §23) took it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line,
+  // which moved to 1.2 ×; listing every tied row (no cap since §23) took it to 35,499 B the same day.
+  // The places are fixed but the rows sharing them are not, so a long tie is how this page grows.
   check('/leaders HTML gzip', gz(file('leaders.html')), 1.2 * baseline.standings.htmlGzip, '1.2 × standings');
   // Every team page, all 49: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
   // 4.2 × the 9,681 B baseline) with both the Roster and the Player stats section; 6.0 × leaves room

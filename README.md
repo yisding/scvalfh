@@ -320,7 +320,8 @@ rule, shared through `gamesSinceUpdate`). The school boards on the same page com
 instead and cover all 49 teams: overall and league records are the `Standing` rows the standings
 print, clean sheets and goals per game are counted from the finals with forfeits left out, and a
 record or a rate needs at least half the median team's number of results (the teams below that
-are named). Boards rank 1, 2, 2, 4, list up to 10th place and never more than 15 rows.
+are named). Boards rank 1, 2, 2, 4 and list up to 10th place with every row tied for it; a player
+board opens to 25th the same way.
 
 Stats change after every game, so `update-data.yml` runs this twice a day in season, right after
 `fetch-data`, and commits the file with the snapshot when it changed. A failed stats fetch never

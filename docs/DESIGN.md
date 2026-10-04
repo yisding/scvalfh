@@ -2764,7 +2764,8 @@ opens to 25th.)
   counted in a line ("4 more players share 10th, with 2 assists each.") instead, and a tie for 1st
   that long is the whole board ("16 goalkeepers share 1st, …"), never an empty-board message. The
   goals-per-game boards split equal rates by more games played, so a shared place there is an
-  equal rate over the same number of games.
+  equal rate over the same number of games. (Superseded by §23: a board lists every row tied for
+  its last place, however many, and no line counts a tie instead.)
 - **Player boards rank only what coaches enter.** A stat a team does not track is null for its
   players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
   meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
@@ -3458,9 +3459,9 @@ from 13 pages to 16.
 
 ## 23. Leaders layout amendment (2026-10)
 
-The owner reordered `/leaders` and asked for longer player boards. This section wins where §16 and
-§20 disagree. Everything else stands: the boards are tables, ranked as §16.2 says, and the page ships
-no client component.
+The owner reordered `/leaders`, asked for longer player boards, and dropped the cap on ties. This
+section wins where §16 and §20 disagree. Everything else stands: the boards are tables, ranked 1, 2,
+2, 4 as §16.2 says, and the page ships no client component.
 
 - **Schools first.** `#schools` comes before `#players`, and the jump links follow ("Schools",
   "Players"). The intro names the schools first. `scripts/assert-copy.ts` fails the build when the
@@ -3470,26 +3471,26 @@ no client component.
   fewest goals allowed per game, most clean sheets, then highest Elo rating. Its anchor
   (`#elo-rating`), its top 10 and every team-page link to it are unchanged, and its minimum stays
   last in the section's notes.
-- **Player boards open to 25th.** A player board still lists the places up to 10th (at most 15
-  rows), and the places from 11th to 25th wait in a closed `<details>` under it, "Show 15 more
-  players" ("… goalkeepers" on the keeper boards; "Show 16 goalkeepers" when a tie for 1st is the
-  whole board), so the page reads as it did and opens with zero JavaScript. The expanded board follows
-  the §16.2 rule with 25 places and 30 rows: a tie for the last place that would pass 30 is counted
-  in a line under the second table ("10 more players share 24th, with 4 assists each."), or, when
-  that tie is the first group past the board's own rows and nothing is left to put behind a
-  disclosure, in the line under the board ("21 more players share 11th, …"). Tied groups
-  are kept or dropped whole, so the expanded board's first rows are exactly the board's own, and a
-  tie too long for the first table ("8 more players share 10th, …") is listed once it is opened.
-  The summary counts the rows behind it, never "the top 25", because a board can have fewer.
+- **No cap on ties.** Every board, school or player, lists every row tied for its last place,
+  however many. §16.2's 15-row cap and its count lines ("4 more players share 10th, …", "16
+  goalkeepers share 1st, …") are gone: a tie for 10th of twenty players is twenty-nine rows, and a
+  tie for 1st is the whole board. A board is empty only when nobody qualifies.
+- **Player boards open to 25th.** A player board still lists the places up to 10th, and the places
+  from 11th to 25th wait in a closed `<details>` under it, "Show 15 more players" ("… goalkeepers"
+  on the keeper boards), so the page reads as it did and opens with zero JavaScript. The expanded
+  places follow the same rule: a tie for 25th is listed whole. A tie is never split between the two
+  tables, so the expanded rows always start at a new place. The summary counts the rows behind it,
+  never "the top 25", because a board can have fewer or, with a tie, more.
 - **A second table, not hidden rows.** The extra rows are a second table, with its own head,
   caption ("…, continued") and card of the same width, inside the `<details>`. The disclosure opens
   below its summary as every other one on the site does (`disclosure-script.ts` keeps the summary
   under the finger), the columns line up with the first table, and the sticky head is there while
-  the reader scrolls through 15 more rows. The card and the tie line under it take `ps-0`, so they
-  keep the board's full width instead of the disclosure body's hang under the summary text.
+  the reader scrolls through 15 more rows. The card takes `ps-0`, so it keeps the board's full width
+  instead of the disclosure body's hang under the summary text.
   School boards are unchanged: no disclosure.
 - **Budget.** On the 2026-10-04 data the four player boards gained 51 rows behind their
   disclosures, taking `/leaders` from 29,328 to 34,664 bytes of HTML gzip, over the 1.0 x `standings`
-  line (33,128). The line moved to 1.2 x (39,754; 87% used). A full page is six school boards of at
-  most 15 rows and four player boards of at most 30, so it still cannot grow with the season the way
-  a schedule does. First-load JS is unchanged.
+  line (33,128). The line moved to 1.2 x (39,754). Listing the assists board's ten-way tie for 24th
+  in full took it to 35,499 (89%). Without the cap, a long tie is the one way the page can grow: the
+  places are fixed, but not the rows that share them, so a big early-season tie can approach the
+  line, and `assert:budgets` says so. First-load JS is unchanged.
