@@ -1,7 +1,7 @@
 /**
  * The read API for data/commits.json — which players on the tracked varsity rosters a public
- * page says have committed to play field hockey in college, and those colleges (SPEC §1.1j3,
- * DESIGN §21).
+ * page says have committed to play a sport in college (field hockey or any other), and those
+ * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
  * lib/commits-schema.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
@@ -33,6 +33,7 @@ import {
   COLLEGE_DIVISIONS,
   CommitsFileSchema,
   type College,
+  type CollegeProgram,
   type Commitment,
   type CommitsFile,
 } from './commits-schema';
@@ -43,10 +44,12 @@ import type { TeamSlug } from './types';
 export type {
   College,
   CollegeDivision,
+  CollegeProgram,
   CollegeSource,
   CommitConfidence,
   CommitSource,
   CommitSourceKind,
+  CommitSport,
   CommitStatus,
   Commitment,
   CommitsFile,
@@ -175,14 +178,17 @@ const ORDERED: readonly Commitment[] = [...file.commitments]
   )
   .map(({ c }) => c);
 
+/** A college's highest level across its programs: the index in COLLEGE_DIVISIONS (0 = Division I). */
+const topLevel = (college: College) => Math.min(...college.programs.map((p) => COLLEGE_DIVISIONS.indexOf(p.division)));
+
 /**
- * Colleges in display order: the most committed players first, then division (Division I first),
- * then display name.
+ * Colleges in display order: the most committed players first, then the highest level of any of its
+ * programs here (Division I first), then display name.
  */
 const COLLEGES_ORDERED: readonly College[] = [...file.colleges].sort(
   (a, b) =>
     BY_COLLEGE.get(b.slug)!.length - BY_COLLEGE.get(a.slug)!.length ||
-    COLLEGE_DIVISIONS.indexOf(a.division) - COLLEGE_DIVISIONS.indexOf(b.division) ||
+    topLevel(a) - topLevel(b) ||
     collegeDisplayName(a).localeCompare(collegeDisplayName(b)),
 );
 
@@ -212,6 +218,17 @@ export function getColleges(): readonly College[] {
 
 export function getCollege(slug: string): College | undefined {
   return BY_SLUG.get(slug);
+}
+
+/**
+ * The college team a commitment is to: its college's program in the commitment's sport, which
+ * carries the level and conference of that sport. Every commitment has one (the schema checked).
+ */
+export function commitProgram(c: Pick<Commitment, 'college' | 'sport'>): { college: College; program: CollegeProgram } {
+  const college = BY_SLUG.get(c.college);
+  const program = college?.programs.find((p) => p.sport === c.sport);
+  if (!college || !program) throw new Error(`lib/commits.ts: no ${c.sport} program at ${c.college}`);
+  return { college, program };
 }
 
 /** The commitments to one college, in display order; [] for an unknown slug. */

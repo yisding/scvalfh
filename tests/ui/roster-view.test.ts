@@ -423,15 +423,16 @@ describe('TeamRoster: commitment lines', () => {
   // A synthetic row on a real view: the line's markup is what is under test, and no real player is
   // named as committed anywhere data/commits.json does not say so.
   const si = views.find((v) => v.slug === 'st-ignatius')!.view;
-  const committedRow = (status: 'committed' | 'signed', college = 'Example') => ({
+  const committedRow = (status: 'committed' | 'signed', college = 'Example', sport: string | null = null) => ({
     ...si.rows[0],
     key: 'pat-example',
     name: 'Pat Example',
     commitment: {
       status,
       label: status === 'signed' ? ('Signed' as const) : ('Committed' as const),
-      srLabel: status === 'signed' ? ('college signing' as const) : ('college commitment' as const),
+      srLabel: `college ${sport === null ? '' : `${sport} `}${status === 'signed' ? 'signing' : 'commitment'}`,
       college: { slug: 'example-college', name: college, href: '/commits#st-ignatius-pat-example' },
+      sport,
     },
   });
   const withLine = (row: ReturnType<typeof committedRow>) =>
@@ -452,6 +453,14 @@ describe('TeamRoster: commitment lines', () => {
     const a = /<a[^>]*href="\/commits#st-ignatius-pat-example"[^>]*>/.exec(html)![0];
     expect(a).not.toContain('target=');
     expect(a).not.toContain('whitespace-nowrap');
+  });
+
+  it('names a sport other than field hockey after the college, and in the link’s name', () => {
+    const html = withLine(committedRow('committed', 'Example', 'soccer'));
+    expect(html).toContain(
+      '<span><span class="sr-only">Pat Example’s college soccer commitment: </span>Example<span aria-hidden="true"> (soccer)</span></span>',
+    );
+    expect(withLine(committedRow('committed'))).not.toContain('(field hockey)');
   });
 
   it('says "Signed" only for a signed commitment', () => {

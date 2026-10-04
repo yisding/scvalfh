@@ -1,14 +1,14 @@
 {
-  "builtBy": "research on 2026-10-03: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate then re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic planned one more round of follow-ups (no new commitment; two more sources for existing ones); a final audit re-opened every source; written by hand from what survived",
-  "capturedAt": "2026-10-03",
+  "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more",
+  "capturedAt": "2026-10-04",
   "season": "26-27",
   "notes": [
-    "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03, and the six Eastern Athletic League teams swept on 2026-10-04) a public page says have committed to play field hockey in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43 on 2026-10-03, and Corning, one of the six EAL teams' schools, on 2026-10-04), each under the roster's own spelling.",
-    "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in a field hockey context, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out. College interests, offers, visits, camps and watchlists are not commitments, and neither is a commitment for another sport.",
-    "Social media is never a source (lib/clubs-schema.ts BANNED_HOSTS). Many commitments are announced only there, so a commitment with no other public page is not in this file. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered.",
-    "status: 'signed' only where a source says signed; otherwise 'committed'. No source found on 2026-10-03 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date), or null. Every kept source was confirmed by a second, independent read: both verification passes for the sweeps' sources, and a hand re-read plus the final audit for the two the follow-ups added (St. Ignatius athletics' Oct 1, 2026 report and Stick Together's Feb 4, 2026 issue). A date from a page no second read could confirm (MAX Field Hockey's commitments table) is not used.",
+    "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03 and 2026-10-04, and the six Eastern Athletic League teams swept on 2026-10-04) a public page says have committed to play a sport in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Field hockey is the site's sport, but a commitment in any sport counts (since 2026-10-04): many players here also play lacrosse, soccer or basketball, and commit there. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43, and Corning, one of the six EAL teams' schools), each under the roster's own spelling.",
+    "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in the context of one sport, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out; two same-name players in one region (two class-of-2027 Phoebe Millers, in Larkspur and San Francisco) are told apart by a page that names the school. College interests, offers, visits, camps, watchlists, a plan to play somewhere ('planning to continue her career at …'), and a place on a college's club team are not commitments.",
+    "Social media is never a source (lib/clubs-schema.ts BANNED_HOSTS). Many commitments are announced only there, so a commitment with no other public page is not in this file. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered. A page that draws its list only once a script runs (SportsRecruits' /committed/<club> pages, MAX Field Hockey's search) is not cited, so every quote can be checked against the page's own HTML; STEPS California's page answers plain requests with a bot challenge but serves its table as HTML, which WebFetch reads.",
+    "status: 'signed' only where a source says signed; otherwise 'committed'. No source found by 2026-10-04 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date, or the month a story says the player committed), or null. Every kept source was confirmed by two independent reads. A date that only one read saw is not used: MAX Field Hockey's hidden table dates, and the 'Committed to … on M/D/YYYY' tooltip SportsRecruits draws on a profile with a script.",
     "confidence: high = one first-hand page names the player, the college and the school, or it is the player's own recruiting profile showing the commitment; medium = the match rests on one line of a compiled list plus class year and a Northern California club.",
-    "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 with the same sources (the NFHCA 2026 high school watchlist, the NCFHA youth directory, SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey) and no commitment was found; they add no row. The absence of a commitment is not proof that none exists.",
+    "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 for field hockey commitments (the NFHCA 2026 high school watchlist, the NCFHA youth directory, SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey) and no commitment was found; they add no row. The same day's every-sport round (see builtBy) covered the 43 teams tracked then, not these six; their sweep looked for field hockey commitments only. The absence of a commitment is not proof that none exists.",
     "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most."
   ],
   "colleges": [
@@ -16,11 +16,16 @@
       "slug": "bates",
       "name": "Bates College",
       "shortName": "Bates",
-      "division": "ncaa-d3",
-      "conference": "NESCAC",
       "city": "Lewiston",
       "state": "ME",
-      "programUrl": "https://gobatesbobcats.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "NESCAC",
+          "url": "https://gobatesbobcats.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://gobatesbobcats.com/sports/field-hockey",
@@ -38,14 +43,109 @@
       "checkedOn": "2026-10-04"
     },
     {
+      "slug": "bryn-mawr",
+      "name": "Bryn Mawr College",
+      "shortName": "Bryn Mawr",
+      "city": "Bryn Mawr",
+      "state": "PA",
+      "programs": [
+        {
+          "sport": "basketball",
+          "division": "ncaa-d3",
+          "conference": "Centennial Conference",
+          "url": "https://gobrynmawr.com/sports/womens-basketball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://gobrynmawr.com/sports/womens-basketball",
+          "what": "Bryn Mawr athletics basketball page (HTTP 200). Embedded Sidearm metadata reads school_division DIII and school_conference Centennial; the footer gives the address 101 North Merion Avenue, Bryn Mawr, PA 19010."
+        },
+        {
+          "url": "https://gobrynmawr.com/sports/womens-basketball/schedule",
+          "what": "2025-26 Basketball Schedule: conference games are starred and the record block shows a conference record (1-14)."
+        },
+        {
+          "url": "https://centennial.org/standings.aspx?path=wbball",
+          "what": "The Centennial Conference's own 2025-26 Women's Basketball Standings list Bryn Mawr, so the conference is confirmed from the conference's site."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "bucknell",
+      "name": "Bucknell University",
+      "shortName": "Bucknell",
+      "city": "Lewisburg",
+      "state": "PA",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "Patriot League",
+          "url": "https://bucknellbison.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://bucknellbison.com/sports/womens-lacrosse",
+          "what": "Bucknell athletics women's lacrosse page, titled 'Women's Lacrosse - Bucknell University Athletics'. The site refuses plain requests; read via WebFetch."
+        },
+        {
+          "url": "https://bucknellbison.com/news/2026/4/24/womens-lacrosse-hosts-patriot-league-first-round-for-first-time-in-program-history",
+          "what": "Bucknell athletics story of Apr 24, 2026, 'Women's Lacrosse Hosts Patriot League First Round for First Time in Program History', so the team plays in the Patriot League. Read via WebFetch."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/bucknell",
+          "what": "NCAA.com's Bucknell school page: 'Division I - Lewisburg, PA', conference Patriot League."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "cal",
+      "name": "University of California, Berkeley",
+      "shortName": "Cal",
+      "city": "Berkeley",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "ACC",
+          "url": "https://calbears.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://calbears.com/sports/womens-lacrosse",
+          "what": "Cal athletics women's lacrosse page, titled 'Lacrosse - California Golden Bears Athletics'. The site refuses plain requests; read via WebFetch."
+        },
+        {
+          "url": "https://calbears.com/news/2026/2/13/cal-lacrosse-beats-florida-state-for-first-ever-acc-win.aspx",
+          "what": "Cal athletics story of Feb 13, 2026, 'Cal Lacrosse Beats Florida State For First-Ever ACC Victory': the team plays in the ACC. Read via WebFetch."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/california",
+          "what": "NCAA.com's school page: 'Division I - Berkeley, CA', University of California, conference Atlantic Coast."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
       "slug": "colgate",
       "name": "Colgate University",
       "shortName": "Colgate",
-      "division": "ncaa-d1",
-      "conference": "Patriot League",
       "city": "Hamilton",
       "state": "NY",
-      "programUrl": "https://colgateathletics.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Patriot League",
+          "url": "https://colgateathletics.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://www.colgate.edu/athletics",
@@ -66,11 +166,16 @@
       "slug": "iowa",
       "name": "University of Iowa",
       "shortName": "Iowa",
-      "division": "ncaa-d1",
-      "conference": "Big Ten",
       "city": "Iowa City",
       "state": "IA",
-      "programUrl": "https://hawkeyesports.com/sports/fhockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Big Ten",
+          "url": "https://hawkeyesports.com/sports/fhockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://hawkeyesports.com/sports/fhockey",
@@ -95,11 +200,16 @@
       "slug": "ithaca",
       "name": "Ithaca College",
       "shortName": "Ithaca",
-      "division": "ncaa-d3",
-      "conference": "Liberty League",
       "city": "Ithaca",
       "state": "NY",
-      "programUrl": "https://athletics.ithaca.edu/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "Liberty League",
+          "url": "https://athletics.ithaca.edu/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://athletics.ithaca.edu/sports/field-hockey",
@@ -117,14 +227,49 @@
       "checkedOn": "2026-10-04"
     },
     {
+      "slug": "marist",
+      "name": "Marist University",
+      "shortName": "Marist",
+      "city": "Poughkeepsie",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "MAAC",
+          "url": "https://goredfoxes.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://goredfoxes.com/sports/womens-lacrosse",
+          "what": "Marist athletics women's lacrosse page, titled 'Women's Lacrosse - Marist University Athletics'. The site refuses plain requests; read via WebFetch."
+        },
+        {
+          "url": "https://goredfoxes.com/sports/womens-lacrosse/schedule",
+          "what": "2026 Women's Lacrosse Schedule: games vs Rider, Iona, Siena and Niagara and at Fairfield are tagged 'MAAC *', and the record block shows Conf 3-5. Read via WebFetch."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/marist",
+          "what": "NCAA.com's Marist school page: 'Division I - Poughkeepsie, NY', conference Metro Atlantic Athletic Conference."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
       "slug": "maryville",
       "name": "Maryville University of Saint Louis",
       "shortName": "Maryville",
-      "division": "ncaa-d2",
-      "conference": null,
       "city": "St. Louis",
       "state": "MO",
-      "programUrl": "https://maryvillesaints.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d2",
+          "conference": null,
+          "url": "https://maryvillesaints.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://maryvillesaints.com/sports/field-hockey",
@@ -142,14 +287,115 @@
       "checkedOn": "2026-10-04"
     },
     {
+      "slug": "san-diego-state",
+      "name": "San Diego State University",
+      "shortName": "San Diego State",
+      "city": "San Diego",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "Big 12",
+          "url": "https://goaztecs.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://goaztecs.com/news/2024/02/21/aztec-lacrosse-to-join-big-12-conference",
+          "what": "San Diego State athletics story 'Aztec Lacrosse to Join Big 12 Conference': the lacrosse team accepted an invitation to join the Big 12 as an affiliate member. The university's other teams are not in the Big 12."
+        },
+        {
+          "url": "https://ucdavisaggies.com/sports/womens-lacrosse/schedule",
+          "what": "UC Davis's 2027 Women's Lacrosse Schedule tags its Apr 24 game at San Diego State 'Big 12 *', so San Diego State is in Big 12 lacrosse for 2026-27. Read via WebFetch."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/san-diego-st",
+          "what": "NCAA.com's San Diego State school page: 'Division I - San Diego, CA'."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "st-lawrence",
+      "name": "St. Lawrence University",
+      "shortName": "St. Lawrence",
+      "city": "Canton",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d3",
+          "conference": "Liberty League",
+          "url": "https://saintsathletics.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://saintsathletics.com/sports/womens-soccer",
+          "what": "St. Lawrence athletics women's soccer page (HTTP 200). Embedded Sidearm metadata reads school_division DIII and school_conference Liberty League; the footer gives an address in Canton, NY."
+        },
+        {
+          "url": "https://saintsathletics.com/sports/womens-soccer/schedule",
+          "what": "2026 Women's Soccer Schedule: conference games are tagged 'LL *' and the record block shows a conference record."
+        },
+        {
+          "url": "https://libertyleagueathletics.com/sports/wsoc",
+          "what": "The Liberty League's own women's soccer page lists St. Lawrence University as a member."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "trinity-ct",
+      "name": "Trinity College",
+      "shortName": "Trinity",
+      "city": "Hartford",
+      "state": "CT",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d3",
+          "conference": "NESCAC",
+          "url": "https://bantamsports.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://bantamsports.com/sports/womens-lacrosse",
+          "what": "Trinity athletics women's lacrosse page (HTTP 200). Embedded Sidearm metadata reads school_name Trinity College, school_division DIII and school_conference NESCAC."
+        },
+        {
+          "url": "https://bantamsports.com/sports/womens-lacrosse/schedule",
+          "what": "2026 Women's Lacrosse Schedule: conference games are tagged 'NESCAC *' and home games are at Hartford, Conn."
+        },
+        {
+          "url": "https://nescac.com/sports/wlax",
+          "what": "NESCAC's own women's lacrosse page lists Trinity College (Conn.) as a member."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
       "slug": "uc-davis",
       "name": "University of California, Davis",
       "shortName": "UC Davis",
-      "division": "ncaa-d1",
-      "conference": "MPSF",
       "city": "Davis",
       "state": "CA",
-      "programUrl": "https://ucdavisaggies.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "MPSF",
+          "url": "https://ucdavisaggies.com/sports/field-hockey"
+        },
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "Big 12",
+          "url": "https://ucdavisaggies.com/sports/womens-lacrosse"
+        }
+      ],
       "sources": [
         {
           "url": "https://ucdavisaggies.com/sports/field-hockey/schedule",
@@ -166,6 +412,44 @@
         {
           "url": "https://www.ncaa.com/schools/uc-davis",
           "what": "NCAA.com's UC Davis school page: 'Division I - Davis, CA'. Its conference line (Mountain West) is the university's primary conference, not field hockey's."
+        },
+        {
+          "url": "https://ucdavisaggies.com/sports/womens-lacrosse/schedule",
+          "what": "2027 Women's Lacrosse Schedule: games at Colorado, vs Florida, at Cincinnati, at San Diego State and vs Arizona State are tagged 'Big 12 *', and the Big 12 Tournament is May 6-8 in Tempe, Ariz. Lacrosse only: UC Davis's field hockey team plays in the MPSF. Read via WebFetch."
+        },
+        {
+          "url": "https://ucdavisaggies.com/news/2024/2/21/womens-lacrosse-uc-davis-womens-lacrosse-joins-big-12-as-affiliate-member.aspx",
+          "what": "UC Davis athletics story of Feb 21, 2024: women's lacrosse joined the Big 12 as an affiliate member from the 2024-25 season. Read via WebFetch."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "vassar",
+      "name": "Vassar College",
+      "shortName": "Vassar",
+      "city": "Poughkeepsie",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d3",
+          "conference": "Liberty League",
+          "url": "https://vassarathletics.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://vassarathletics.com/sports/womens-lacrosse",
+          "what": "Vassar athletics women's lacrosse page (HTTP 200). Embedded Sidearm metadata reads school_division DIII and school_conference Liberty League; the footer gives an address in Poughkeepsie, NY."
+        },
+        {
+          "url": "https://vassarathletics.com/sports/womens-lacrosse/schedule",
+          "what": "2026 Women's Lacrosse Schedule: conference games are tagged 'Liberty League *'."
+        },
+        {
+          "url": "https://libertyleagueathletics.com/sports/wlax",
+          "what": "The Liberty League's own women's lacrosse page lists Vassar College as a member."
         }
       ],
       "checkedOn": "2026-10-04"
@@ -173,10 +457,40 @@
   ],
   "commitments": [
     {
+      "teamSlug": "berkeley",
+      "athleteId": "4f26d495-1ad5-4ed3-bc17-488e344c7a8c",
+      "fullName": "Violet Potts",
+      "college": "vassar",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/violet_potts",
+          "kind": "sportsrecruits",
+          "quote": "Watch Violet's recruiting video • 2027 • Midfield • ADVNC Lacrosse - Girls • Berkeley, CA • Committed to Vassar College",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.advnclacrosse.com/alumnicommits",
+          "kind": "club-site",
+          "quote": "Violet Potts - Berkeley - Vassar",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile: class of 2027, Berkeley, CA, ADVNC Lacrosse (a Bay Area girls' club), committed to Vassar College; ADVNC's own commitments page lists 'Violet Potts - Berkeley - Vassar' under its 2027 class. Neither page's text names a high school, so the match rests on the class year plus a Berkeley, CA hometown and a Bay Area club; SportsRecruits' club commitment pages (rendered by script, so not cited) list her with Berkeley High School, Berkeley, CA, which rules out the Berkeley High School in South Carolina. No date, no signing wording."
+    },
+    {
       "teamSlug": "christopher",
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
       "fullName": "Alyssa Montejano",
       "college": "maryville",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "high",
@@ -205,6 +519,7 @@
       "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
       "fullName": "Ryan Hemeon",
       "college": "uc-davis",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "medium",
@@ -225,6 +540,7 @@
       "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
       "fullName": "Katarina Smith",
       "college": "ithaca",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-09-18",
       "confidence": "high",
@@ -257,10 +573,114 @@
       "basis": "The Talon (Los Altos High School's student paper) story of Sep 18, 2026 names senior Katarina (Kat) Smith and her NCAA Division III commitment to Ithaca College; her own SportsRecruits profile (class of 2027, Los Altos, CA, Los Altos High School) says committed to Ithaca College. asOf is the Talon story's date; the Talon's Aug 28, 2026 season preview already called her a 'D3 committed player' but names no college, so it is not a source and its date is not used. SportsRecruits' Ithaca page repeats the profile."
     },
     {
+      "teamSlug": "marin-catholic",
+      "athleteId": "ed437679-ab40-4c7b-be61-01c14bf179e8",
+      "fullName": "Gianna Rinaldi",
+      "college": "uc-davis",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/gianna_rinaldi4",
+          "kind": "sportsrecruits",
+          "quote": "Watch Gianna's recruiting video • 2028 • Goalie • STEPS California • NOVATO, CA • Committed to University of California - Davis",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-lacrosse/california/university_of_california_davis",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Gianna Rinaldi, 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (a goalie, class of 2028, Novato, CA, STEPS California) says committed to UC Davis; the profile's text names no school, so the match rests on the class year plus a Marin County hometown, as Montejano's does. SportsRecruits' UC Davis women's lacrosse page lists her from the same profile, so it is not independent, and SportsRecruits' STEPS and ADVNC commitment pages (rendered by script, not cited) name Marin Catholic High School. STEPS California's own commitments page, last modified Sep 21, 2026, does not list her yet. Her other SportsRecruits lacrosse profile (gianna_rinaldi) shows no commitment. No date."
+    },
+    {
+      "teamSlug": "redwood",
+      "athleteId": "b184246a-b415-4b37-9b81-2e5a64662cc8",
+      "fullName": "Claire Johnson",
+      "college": "cal",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": "2026-04-23",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.marinij.com/2026/04/23/girls-lacrosse-redwood-rallies-past-san-marin-to-go-unbeaten-in-mcal/",
+          "kind": "news",
+          "quote": "Redwood’s Claire Johnson, a junior committed to play at Cal",
+          "statedSchool": "Redwood",
+          "statedClassYear": null,
+          "sourceDate": "April 23, 2026"
+        },
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/claire_johnson6",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Attack • STEPS California • Corte Madera, CA • Committed to University of California - Berkeley • Hi! My name is Claire, and I’m a starting attacker for both STEPS California and Redwood High School.",
+          "statedSchool": "Redwood High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://stepscalifornia.com/college-commitments/",
+          "kind": "club-site",
+          "quote": "Claire Johnson Cal 2027 Redwood High School",
+          "statedSchool": "Redwood High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Marin IJ's girls lacrosse story of Apr 23, 2026 names Redwood's Claire Johnson, a junior committed to play at Cal (asOf is its date); her own SportsRecruits lacrosse profile (class of 2027, Corte Madera, CA) says committed to UC Berkeley and that she plays for Redwood High School; STEPS California's commitments page lists her with Cal, 2027 and Redwood High School. A common name, but every page names Redwood. She plays field hockey too: these pages are about lacrosse, and no field hockey list has her."
+    },
+    {
+      "teamSlug": "redwood",
+      "athleteId": "393fad4d-6339-449a-91e9-b1b3f7a08a1b",
+      "fullName": "Phoebe Miller",
+      "college": "san-diego-state",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": "2026-04-23",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.marinij.com/2026/04/23/girls-lacrosse-redwood-rallies-past-san-marin-to-go-unbeaten-in-mcal/",
+          "kind": "news",
+          "quote": "goals by Phoebe Miller, a junior committed to play at San Diego State",
+          "statedSchool": "Redwood",
+          "statedClassYear": null,
+          "sourceDate": "April 23, 2026"
+        },
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/phoebe_miller3",
+          "kind": "sportsrecruits",
+          "quote": "Watch Phoebe's recruiting video • 2027 • Midfield • STEPS California • larkspur, CA • Committed to San Diego State University",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://stepscalifornia.com/college-commitments/",
+          "kind": "club-site",
+          "quote": "Phoebe Miller San Diego State 2027 Redwood High School",
+          "statedSchool": "Redwood High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Marin IJ's Apr 23, 2026 story on Redwood's win names Phoebe Miller, a junior committed to play at San Diego State (asOf is its date); her own SportsRecruits lacrosse profile (class of 2027, Larkspur, CA) and STEPS California's commitments page (Redwood High School, 2027) agree. The 'Miller, who will play at Colgate' in the same story is her sister Lucy, a senior not on the roster. Another class-of-2027 Phoebe Miller, a San Francisco soccer forward, has her own profiles; an ECNL listing of a Phoebe Miller (Marin FC) committed to Tufts for soccer is most likely her, and is not this player."
+    },
+    {
       "teamSlug": "saint-francis",
       "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
       "fullName": "Carolyn Cordoni",
       "college": "bates",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "high",
@@ -272,15 +692,45 @@
           "statedSchool": "Saint Francis High School",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/maine/bates_college",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Carolyn Cordoni, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "Single source: her own SportsRecruits field hockey profile, class of 2027, San Jose, CA, written as a junior starter at Saint Francis High School, says committed to Bates College. Undated. Her NCSA profile and club page show no commitment field; nothing contradicts it."
+      "basis": "Single source: her own SportsRecruits field hockey profile, class of 2027, San Jose, CA, written as a junior starter at Saint Francis High School, says committed to Bates College. Undated. Her NCSA profile and club page show no commitment field; nothing contradicts it. SportsRecruits' Bates page (added 2026-10-04) lists her from the same profile, so it is a second page, not an independent source; it gives no date. MAX Field Hockey lists her (2027, Saint Francis) with no college."
+    },
+    {
+      "teamSlug": "saratoga",
+      "athleteId": "1a13275a-f4aa-4129-9c1e-35f0e791793f",
+      "fullName": "Emma Williams",
+      "college": "bryn-mawr",
+      "sport": "basketball",
+      "status": "committed",
+      "asOf": "2026-02",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://saratogafalcon.org/34044/sports/junior-commits-to-division-iii-basketball-at-bryn-mawr-college/",
+          "kind": "news",
+          "quote": "junior Emma Williams opened her phone to find the call she had been waiting for: It was an official recruitment offer to play Division III basketball at Bryn Mawr College … Williams accepted the offer and committed to Bryn Mawr as a forward and shooting guard",
+          "statedSchool": "Saratoga High School",
+          "statedClassYear": null,
+          "sourceDate": "March 20, 2026"
+        }
+      ],
+      "basis": "The Saratoga Falcon (Saratoga High School's student paper; its masthead reads 'The Student News Site of Saratoga High School') reported on Mar 20, 2026 that junior Emma Williams committed to play Division III basketball at Bryn Mawr College, in late February (asOf is that month). The story mentions her fall field hockey season and names her twin sister Evelyn, also on Saratoga's roster, separately; junior in spring 2026 is the class of 2027, as the roster has it. Single source."
     },
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
       "fullName": "Maggie Magnano",
       "college": "uc-davis",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-02-04",
       "confidence": "high",
@@ -316,15 +766,32 @@
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": "Feb 4, 2026"
+        },
+        {
+          "url": "https://www.marinij.com/2026/08/24/field-hockey-marin-duo-leading-charge-for-title-hungry-si/",
+          "kind": "news",
+          "quote": "SI senior defender Maggie Magnano … said Magnano, who committed to UC Davis field hockey next year.",
+          "statedSchool": "SI",
+          "statedClassYear": null,
+          "sourceDate": "August 24, 2026"
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/california/university_of_california_davis",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Margaret Magnano, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits profile (under her given name, Margaret) gives class of 2027, the SF Hawks club and St. Ignatius varsity seasons, committed to University of California - Davis; the SF Hawks committed-players table and FH College Path's class of 2027 list agree. Stick Together's Feb 4, 2026 issue announces 'Maggie Magnano → UC Davis (D1)' for the SF Hawks defender; it names no school or class year, so it corroborates rather than carries the match, and asOf is its date. MAX Field Hockey's table also lists her, but neither pass could re-read it, so it is not cited."
+      "basis": "Her own SportsRecruits profile (under her given name, Margaret) gives class of 2027, the SF Hawks club and St. Ignatius varsity seasons, committed to University of California - Davis; the SF Hawks committed-players table and FH College Path's class of 2027 list agree. Stick Together's Feb 4, 2026 issue announces 'Maggie Magnano → UC Davis (D1)' for the SF Hawks defender; it names no school or class year, so it corroborates rather than carries the match, and asOf is its date. MAX Field Hockey's table also lists her, but neither pass could re-read it, so it is not cited. The Marin IJ's Aug 24, 2026 field hockey story (added 2026-10-04) calls her an SI senior defender who committed to UC Davis field hockey, a second first-hand page that names the school; SportsRecruits' UC Davis page repeats her profile. Neither changes asOf. Her older sister MJ Magnano (SI, class of 2024), who appears on lacrosse commitment lists, is not this player."
     },
     {
       "teamSlug": "st-ignatius",
       "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
       "fullName": "Olivia Van De Braak",
       "college": "iowa",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-10-01",
       "confidence": "high",
@@ -352,15 +819,24 @@
           "statedSchool": "St. Ignatius College Preparatory",
           "statedClassYear": null,
           "sourceDate": "2026-10-01"
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/iowa/university_of_iowa",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Olivia Van de Braak, 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits profile (spelled Van de Braak) gives class of 2028, San Francisco, CA and St. Ignatius College Prep, committed to University of Iowa; FH College Path's class of 2028 Division I list has her under Iowa with the SF club; St. Ignatius athletics' Wildcat Sports Report of Oct 1, 2026 calls her a 'University of Iowa commit' (asOf is its date). Another Iowa class of 2028 commit comes from St. Ignatius College Prep in Chicago, a different school and a different player."
+      "basis": "Her own SportsRecruits profile (spelled Van de Braak) gives class of 2028, San Francisco, CA and St. Ignatius College Prep, committed to University of Iowa; FH College Path's class of 2028 Division I list has her under Iowa with the SF club; St. Ignatius athletics' Wildcat Sports Report of Oct 1, 2026 calls her a 'University of Iowa commit' (asOf is its date). Another Iowa class of 2028 commit comes from St. Ignatius College Prep in Chicago, a different school and a different player. SportsRecruits' Iowa page (added 2026-10-04) repeats her profile; MAX Field Hockey still lists her with no college, which is stale rather than a contradiction."
     },
     {
       "teamSlug": "st-ignatius",
       "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
       "fullName": "Storey Lewis",
       "college": "colgate",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-08-06",
       "confidence": "high",
@@ -396,9 +872,141 @@
           "statedSchool": null,
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/new-york/colgate_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Storey Lewis, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits profile names St. Ignatius, class of 2027 and Colgate University; Stick Together's Aug 6, 2026 season preview calls her a St. Ignatius senior who recently committed to Colgate (asOf is that date); the SF Hawks committed-players table and FH College Path's class of 2027 list agree. MAX Field Hockey's commitments table also lists her, but neither pass could re-read it, so it is not cited."
+      "basis": "Her own SportsRecruits profile names St. Ignatius, class of 2027 and Colgate University; Stick Together's Aug 6, 2026 season preview calls her a St. Ignatius senior who recently committed to Colgate (asOf is that date); the SF Hawks committed-players table and FH College Path's class of 2027 list agree. MAX Field Hockey's commitments table also lists her, but neither pass could re-read it, so it is not cited. SportsRecruits' Colgate page (added 2026-10-04) repeats her profile."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "89a6b589-3b6e-4db7-848c-45c24a351d2b",
+      "fullName": "Sofie Stiefel",
+      "college": "marist",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/sofie_stiefel",
+          "kind": "sportsrecruits",
+          "quote": "Watch Sofie's recruiting video • 2027 • Attack • St. Ignatius College Preparatory Girls' Lacrosse • Belvedere, CA • Committed to Marist University",
+          "statedSchool": "St. Ignatius College Preparatory Girls' Lacrosse",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://stepscalifornia.com/college-commitments/",
+          "kind": "club-site",
+          "quote": "Sofie Stiefel Marist 2027 St. Ignatius College Prep",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (class of 2027, Belvedere, CA, listed under St. Ignatius's girls' lacrosse team) says committed to Marist University; STEPS California's commitments page lists her with Marist, 2027 and St. Ignatius College Prep. A younger Simone Stiefel on SI's lacrosse roster is a different player. No date."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "6e4625b6-0f4e-43f4-8f10-0a01ed9e43cf",
+      "fullName": "Catherine Cecchini",
+      "college": "bucknell",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/cate_cecchini",
+          "kind": "sportsrecruits",
+          "quote": "Committed to Bucknell University • My name is Cate Cecchini, and I am a 2027 defender on STEPS California. I attend St. Ignatius College Prep in San Francisco",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://stepscalifornia.com/college-commitments/",
+          "kind": "club-site",
+          "quote": "Cate Cecchini Bucknell 2027 St. Ignatius College Prep",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Listed as Cate, the roster's Catherine: her own SportsRecruits lacrosse profile names St. Ignatius College Prep and the class of 2027 on the same page and says committed to Bucknell University, and STEPS California's commitments page lists Cate Cecchini with Bucknell, 2027 and St. Ignatius College Prep. A rare surname; no other Cecchini is rostered. No date."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
+      "fullName": "Gigi Colant",
+      "college": "st-lawrence",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/gabriella_colant4",
+          "kind": "sportsrecruits",
+          "quote": "Committed to St. Lawrence University • My name is Gigi Colant. … Currently I am a Junior at Saint Ignatius College Prep School, Class of 2027, in San Francisco, Ca.",
+          "statedSchool": "Saint Ignatius College Prep School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-soccer/new-york/st_lawrence_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Gabriella Colant, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits soccer profile (under her given name, Gabriella) says committed to St. Lawrence University, and its bio, written as a junior, names Saint Ignatius College Prep, the class of 2027 and 'Gigi Colant'; SportsRecruits' St. Lawrence women's soccer page lists her from the same profile, so it is not independent. Her two field hockey profiles show no commitment. No date."
+    },
+    {
+      "teamSlug": "stevenson",
+      "athleteId": "7299d700-3f10-465d-a282-f2ef52c70610",
+      "fullName": "Zola Ducker",
+      "college": "trinity-ct",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/zola_ducker",
+          "kind": "sportsrecruits",
+          "quote": "Watch Zola's recruiting video • 2027 • Goalie • Verve Lacrosse • Pacific Grove, CA • Committed to Trinity College - Connecticut",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.lacrossemasters.com/girls-college-commits",
+          "kind": "event",
+          "quote": "Zola Ducker - Verve Lacrosse / Stevenson School - CA - 2027",
+          "statedSchool": "Stevenson School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-lacrosse/connecticut/trinity_college_ct",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Zola Ducker, 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (a goalie, class of 2027, Pacific Grove, CA, Verve Lacrosse) says committed to Trinity College - Connecticut; Lacrosse Masters' girls' commitment list, independent of SportsRecruits, lists her under Trinity College as 'Verve Lacrosse / Stevenson School - CA - 2027'; SportsRecruits' Trinity page repeats the profile. A unique name. No date."
     }
   ]
 }

@@ -18,6 +18,7 @@ import { describe, expect, it } from 'vitest';
 import { BANNED_HOSTS } from '../lib/clubs-schema';
 import {
   COLLEGE_DIVISIONS,
+  COMMIT_SPORTS,
   CommitsFileSchema,
   isCommitDate,
   type College,
@@ -27,6 +28,7 @@ import {
 import {
   collegeDisplayName,
   commitClassOf,
+  commitProgram,
   getCollege,
   getCollegeCommitments,
   getColleges,
@@ -63,11 +65,11 @@ const COLLEGE: College = {
   slug: 'example-college',
   name: 'Example College',
   shortName: 'Example',
-  division: 'ncaa-d1',
-  conference: 'Example Conference',
   city: 'Somewhere',
   state: 'PA',
-  programUrl: 'https://example.edu/sports/field-hockey',
+  programs: [
+    { sport: 'field-hockey', division: 'ncaa-d1', conference: 'Example Conference', url: 'https://example.edu/sports/field-hockey' },
+  ],
   sources: [{ url: 'https://example.edu/sports/field-hockey', what: 'Field hockey home page' }],
   checkedOn: '2026-10-03',
 };
@@ -78,6 +80,7 @@ function commitmentFor(r: { teamSlug: string; row: MergedPlayer }, over: Partial
     athleteId: r.row.athleteId!,
     fullName: r.row.fullName,
     college: COLLEGE.slug,
+    sport: 'field-hockey',
     status: 'committed',
     asOf: '2026-06',
     confidence: 'high',
@@ -120,7 +123,7 @@ describe('the committed data/commits.json', () => {
 
   it('cites only https pages, none of them social media', () => {
     const urls = [
-      ...raw.colleges.flatMap((c) => [c.programUrl, ...c.sources.map((s) => s.url)]),
+      ...raw.colleges.flatMap((c) => [...c.programs.map((p) => p.url), ...c.sources.map((s) => s.url)]),
       ...raw.commitments.flatMap((c) => c.sources.map((s) => s.url)),
     ].filter((u): u is string => u !== null);
     for (const url of urls) {
@@ -149,39 +152,66 @@ describe('the committed data/commits.json', () => {
     }
   });
 
-  it('holds only colleges somebody committed to, each with its field hockey level', () => {
+  it('holds only colleges and programs somebody committed to, each program with its level', () => {
     for (const college of raw.colleges) {
       expect(getCollegeCommitments(college.slug).length, college.slug).toBeGreaterThan(0);
-      expect(COLLEGE_DIVISIONS).toContain(college.division);
+      for (const p of college.programs) {
+        expect(COLLEGE_DIVISIONS).toContain(p.division);
+        expect(raw.commitments.some((c) => c.college === college.slug && c.sport === p.sport), `${college.slug} ${p.sport}`).toBe(true);
+      }
+    }
+  });
+
+  it('serves each commitment’s program: its college’s team in its sport', () => {
+    for (const c of raw.commitments) {
+      const { college, program } = commitProgram(c);
+      expect(college.slug).toBe(c.college);
+      expect(program.sport).toBe(c.sport);
     }
   });
 });
 
-describe('the 2026-10-03 research and the 2026-10-04 EAL sweep (no row), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03 and 2026-10-04 (with the 2026-10-04 EAL sweep, no row), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
-  it('holds 7 commitments from 4 schools to 6 colleges, all "committed", 6 high and 1 medium', () => {
-    expect(raw.capturedAt).toBe('2026-10-03');
-    expect(raw.commitments).toHaveLength(7);
-    expect(raw.colleges).toHaveLength(6);
-    expect(new Set(raw.commitments.map((c) => c.teamSlug))).toEqual(new Set(['christopher', 'los-altos', 'saint-francis', 'st-ignatius']));
+  it('holds 16 commitments from 9 schools to 14 colleges (15 programs), all "committed", 15 high and 1 medium', () => {
+    expect(raw.capturedAt).toBe('2026-10-04');
+    expect(raw.commitments).toHaveLength(16);
+    expect(raw.colleges).toHaveLength(14);
+    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(15);
+    expect(new Set(raw.commitments.map((c) => c.teamSlug))).toEqual(
+      new Set(['berkeley', 'christopher', 'los-altos', 'marin-catholic', 'redwood', 'saint-francis', 'saratoga', 'st-ignatius', 'stevenson']),
+    );
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
     expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Ryan Hemeon']);
   });
 
-  it('by class: 5 from 2027 and 2 from 2028; by level: 4 Division I, 1 Division II, 2 Division III', () => {
-    const classes = getCommitments().map((c) => commitClassOf(c));
-    expect(classes.filter((y) => y === 2027)).toHaveLength(5);
-    expect(classes.filter((y) => y === 2028)).toHaveLength(2);
-    const level = (d: string) => raw.commitments.filter((c) => getCollege(c.college)!.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([4, 1, 2, 0]);
+  it('by sport: 7 field hockey, 7 lacrosse, 1 soccer, 1 basketball', () => {
+    const sport = (s: string) => raw.commitments.filter((c) => c.sport === s).length;
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball')]).toEqual([7, 7, 1, 1]);
+    // One college holds two programs: UC Davis, field hockey (MPSF) and lacrosse (Big 12).
+    expect(getCollege('uc-davis')!.programs.map((p) => [p.sport, p.conference])).toEqual([
+      ['field-hockey', 'MPSF'],
+      ['lacrosse', 'Big 12'],
+    ]);
   });
 
-  it('rests on 18 source entries on 15 distinct URLs, and 4 commitments carry a date', () => {
+  it('by class: 13 from 2027 and 3 from 2028; by level: 9 Division I, 1 Division II, 6 Division III', () => {
+    const classes = getCommitments().map((c) => commitClassOf(c));
+    expect(classes.filter((y) => y === 2027)).toHaveLength(13);
+    expect(classes.filter((y) => y === 2028)).toHaveLength(3);
+    const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([9, 1, 6, 0]);
+  });
+
+  it('rests on 43 source entries on 36 distinct URLs, and 7 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(18);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(15);
+    expect(entries).toHaveLength(43);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(36);
     expect(raw.commitments.filter((c) => c.asOf !== null).map((c) => c.asOf).sort()).toEqual([
+      '2026-02',
       '2026-02-04',
+      '2026-04-23',
+      '2026-04-23',
       '2026-08-06',
       '2026-09-18',
       '2026-10-01',
@@ -190,15 +220,39 @@ describe('the 2026-10-03 research and the 2026-10-04 EAL sweep (no row), as coun
 
   it('serves them in display order: class, then school, then name; colleges by players, level, name', () => {
     expect(getCommitments().map((c) => c.fullName)).toEqual([
+      'Violet Potts',
       'Alyssa Montejano',
       'Katarina Smith',
+      'Claire Johnson',
+      'Phoebe Miller',
       'Carolyn Cordoni',
+      'Emma Williams',
+      'Catherine Cecchini',
+      'Gigi Colant',
       'Storey Lewis',
       'Maggie Magnano',
+      'Sofie Stiefel',
+      'Zola Ducker',
       'Ryan Hemeon',
+      'Gianna Rinaldi',
       'Olivia Van De Braak',
     ]);
-    expect(getColleges().map((c) => c.slug)).toEqual(['uc-davis', 'colgate', 'iowa', 'maryville', 'bates', 'ithaca']);
+    expect(getColleges().map((c) => c.slug)).toEqual([
+      'uc-davis',
+      'bucknell',
+      'cal',
+      'colgate',
+      'iowa',
+      'marist',
+      'san-diego-state',
+      'maryville',
+      'bates',
+      'bryn-mawr',
+      'ithaca',
+      'st-lawrence',
+      'trinity-ct',
+      'vassar',
+    ]);
   });
 });
 
@@ -233,7 +287,7 @@ describe('lib/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The 2026-10-03 research: the commitments were checked on Oct 3, the colleges' facts on Oct 4.
+    // The second round of research, 2026-10-04, re-checked the file and added the other sports.
     expect(getCommitsLastChecked()).toBe('2026-10-04');
   });
 
@@ -278,6 +332,44 @@ describe('the schema refuses a bad file, naming the path', () => {
     expect(schemaIssues(f)).toContain('colleges.1: no commitment names orphan-college: drop the college record');
   });
 
+  it('a commitment in a sport its college has no program for', () => {
+    const f = fileWith([commitmentFor(senior, { sport: 'lacrosse' })]);
+    const issues = schemaIssues(f);
+    expect(issues).toContain('commitments.0.sport: example-college has no lacrosse program in colleges[]');
+    expect(issues).toContain('colleges.0.programs.0: no field-hockey commitment names example-college: drop the program');
+  });
+
+  it('two programs in one sport, or a program nobody committed to', () => {
+    const lacrosse = { sport: 'lacrosse', division: 'ncaa-d3', conference: null, url: null } as const;
+    const twice = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [...COLLEGE.programs, { ...COLLEGE.programs[0] }] }]);
+    expect(schemaIssues(twice)).toContain('colleges.0.programs.1.sport: example-college has two field-hockey programs');
+    const orphan = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [...COLLEGE.programs, lacrosse] }]);
+    expect(schemaIssues(orphan)).toContain('colleges.0.programs.1: no lacrosse commitment names example-college: drop the program');
+  });
+
+  it('takes commitments in two sports at one college, each with its own level', () => {
+    const lacrosse = { sport: 'lacrosse', division: 'ncaa-d3', conference: null, url: null } as const;
+    const f = fileWith(
+      [commitmentFor(senior), commitmentFor(junior, { sport: 'lacrosse' })],
+      [{ ...COLLEGE, programs: [...COLLEGE.programs, lacrosse] }],
+    );
+    expect(schemaIssues(f)).toEqual([]);
+    expect(load(f)).not.toThrow();
+  });
+
+  it('takes a commitment in any college sport, each with a program in that sport', () => {
+    for (const sport of ['wrestling', 'fencing', 'bowling', 'triathlon', 'acrobatics-and-tumbling', 'flag-football'] as const) {
+      const college = { ...COLLEGE, programs: [{ sport, division: 'ncaa-d1', conference: null, url: null } as const] };
+      expect(schemaIssues(fileWith([commitmentFor(senior, { sport })], [college])), sport).toEqual([]);
+    }
+    expect(COMMIT_SPORTS).toHaveLength(new Set(COMMIT_SPORTS).size);
+  });
+
+  it('a college with no program', () => {
+    const f = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [] }]);
+    expect(schemaIssues(f)).toContain('colleges.0.programs: a college needs at least one program');
+  });
+
   it('a social-media source, an http source, an over-long quote and a season for a date', () => {
     const c = commitmentFor(senior);
     const bad = fileWith([
@@ -317,11 +409,15 @@ describe('the schema refuses a bad file, naming the path', () => {
     expect(issues).toContain('colleges.0.sources: a college needs at least one source');
   });
 
-  it('an unknown division or status', () => {
-    const f = fileWith([commitmentFor(senior, { status: 'verbal' as never })], [{ ...COLLEGE, division: 'club' as never }]);
+  it('an unknown division, sport or status', () => {
+    const f = fileWith(
+      [commitmentFor(senior, { status: 'verbal' as never, sport: 'quidditch' as never })],
+      [{ ...COLLEGE, programs: [{ ...COLLEGE.programs[0], division: 'club' as never }] }],
+    );
     const issues = schemaIssues(f);
     expect(issues.some((i) => i.startsWith('commitments.0.status'))).toBe(true);
-    expect(issues.some((i) => i.startsWith('colleges.0.division'))).toBe(true);
+    expect(issues.some((i) => i.startsWith('commitments.0.sport'))).toBe(true);
+    expect(issues.some((i) => i.startsWith('colleges.0.programs.0.division'))).toBe(true);
   });
 });
 

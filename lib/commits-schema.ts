@@ -1,7 +1,7 @@
 /**
  * The Zod contract for data/commits.json — which players on the tracked varsity rosters a public
- * page says have committed to play field hockey in college, and the colleges they committed to
- * (SPEC §1.1j3, DESIGN §21).
+ * page says have committed to play a sport in college (field hockey or any other), and the colleges
+ * they committed to (SPEC §1.1j3, DESIGN §21).
  *
  * The file is research, not a script's output, like data/clubs.json: it was written by hand on its
  * `capturedAt` date, every commitment checked twice (a checker re-opened each source, then an
@@ -12,11 +12,13 @@
  * parse a file without loading one — the split lib/clubs-schema.ts / lib/clubs.ts uses.
  *
  * Invariants:
- *   1. college slugs are unique
- *   2. every commitment's `college` names a college in colleges[]
+ *   1. college slugs are unique, and a college has at most one program per sport
+ *   2. every commitment's `college` names a college in colleges[], and that college has a program
+ *      in the commitment's `sport` (its division and conference are the sport's, not the college's)
  *   3. (teamSlug, athleteId) is unique: a player has at most one commitment
- *   4. every college has at least one commitment: the file holds no college nobody committed to,
- *      and no `asOf` is after `capturedAt` (it is the earliest date a source gave by then)
+ *   4. every college, and every program of it, has at least one commitment: the file holds no
+ *      college or program nobody committed to, and no `asOf` is after `capturedAt` (it is the
+ *      earliest date a source gave by then)
  *   5. every URL is https and none is on a social-media host (lib/clubs-schema.ts BANNED_HOSTS, a
  *      backstop rather than a complete list): a program page and every source. Commitments are often
  *      announced only on social media; such a post is never a source, so a commitment with no other
@@ -55,7 +57,54 @@ export type CommitStatus = (typeof COMMIT_STATUSES)[number];
 export const COMMIT_CONFIDENCES = ['high', 'medium'] as const;
 export type CommitConfidence = (typeof COMMIT_CONFIDENCES)[number];
 
-/** The level a college's field hockey team plays at. Also the order /commits counts them in. */
+/**
+ * The sport a commitment is for. Field hockey is the site's own; the rest are the other sports the
+ * players here can commit to (a two-sport athlete's college commitment is often in lacrosse or
+ * soccer). The list is every sport the NCAA, NAIA and NJCAA hold a championship or an emerging-sport
+ * program in, plus squash and sailing, which colleges sponsor as varsity sports under their own
+ * associations — so a commitment to any college team has a sport here. It is closed on purpose: each
+ * sport has its words in components/commits/commit-view.ts SPORT_WORDS, which the type checker holds
+ * to this list, so a sport colleges add later is added here and there together. Kebab-case, like every
+ * other id in the file.
+ */
+export const COMMIT_SPORTS = [
+  'field-hockey',
+  'lacrosse',
+  'soccer',
+  'basketball',
+  'volleyball',
+  'beach-volleyball',
+  'softball',
+  'track-and-field',
+  'cross-country',
+  'swimming-and-diving',
+  'water-polo',
+  'rowing',
+  'golf',
+  'tennis',
+  'ice-hockey',
+  'gymnastics',
+  'equestrian',
+  'acrobatics-and-tumbling',
+  'stunt',
+  'competitive-cheer',
+  'competitive-dance',
+  'flag-football',
+  'rugby',
+  'wrestling',
+  'fencing',
+  'bowling',
+  'triathlon',
+  'rifle',
+  'skiing',
+  'squash',
+  'sailing',
+  'baseball',
+  'football',
+] as const;
+export type CommitSport = (typeof COMMIT_SPORTS)[number];
+
+/** The level a college's team in one sport plays at. Also the order /commits counts them in. */
 export const COLLEGE_DIVISIONS = ['ncaa-d1', 'ncaa-d2', 'ncaa-d3', 'naia'] as const;
 export type CollegeDivision = (typeof COLLEGE_DIVISIONS)[number];
 
@@ -120,6 +169,22 @@ export const CollegeSourceSchema = z.object({
   what: text,
 });
 
+/**
+ * One of a college's teams that a player here committed to. The level and the conference are the
+ * team's own: they differ by sport at one college (Johns Hopkins plays field hockey and lacrosse in
+ * Division I and most other sports in Division III; UC Davis plays field hockey in the MPSF and
+ * soccer in the Big West).
+ */
+export const CollegeProgramSchema = z.object({
+  sport: z.enum(COMMIT_SPORTS),
+  /** The level this team plays at. */
+  division: z.enum(COLLEGE_DIVISIONS),
+  /** This team's conference, as the college's athletics site names it, when it has one. */
+  conference: text.nullable(),
+  /** This sport's page on the college's own athletics site. */
+  url: httpsUrl.nullable(),
+});
+
 export const CollegeSchema = z.object({
   /** Ours, kebab-case: the `#college-<slug>` anchor on /commits. */
   slug: id,
@@ -127,15 +192,12 @@ export const CollegeSchema = z.object({
   name: text,
   /** The display name when set ("Stanford", "UC Davis"); `name` otherwise. */
   shortName: text.nullable(),
-  /** The level its field hockey team plays at. */
-  division: z.enum(COLLEGE_DIVISIONS),
-  /** Its field hockey conference, as the college's athletics site names it, when it has one. */
-  conference: text.nullable(),
   city: text,
   /** A two-letter US state code ("CA"), or a country. */
   state: text,
-  /** The field hockey page on the college's own athletics site. */
-  programUrl: httpsUrl.nullable(),
+  /** The teams players here committed to, one per sport, field hockey first when it has one. */
+  programs: z.array(CollegeProgramSchema).min(1, 'a college needs at least one program'),
+  /** The pages the college's place and every program's level, conference and page were read from. */
   sources: z.array(CollegeSourceSchema).min(1, 'a college needs at least one source'),
   checkedOn: dateOnly,
 });
@@ -162,6 +224,8 @@ export const CommitmentSchema = z.object({
   /** As MaxPreps spells it; lib/commits.ts refuses any other spelling. */
   fullName: text,
   college: id,
+  /** The sport the player committed to play at `college`; that college has a program in it. */
+  sport: z.enum(COMMIT_SPORTS),
   status: z.enum(COMMIT_STATUSES),
   /** The earliest date a source gives for the commitment (isCommitDate), when one does. */
   asOf: z.string().refine(isCommitDate, 'expected YYYY-MM-DD, YYYY-MM or YYYY').nullable(),
@@ -192,15 +256,26 @@ function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
 /** Invariants 1-4: what no single record can see. */
 function checkCommitsFile(f: z.infer<typeof CommitsFileObject>, ctx: Ctx): void {
   const slugs = new Set<string>();
+  const programs = new Set<string>();
   f.colleges.forEach((c, i) => {
     if (slugs.has(c.slug)) issue(ctx, ['colleges', i, 'slug'], `duplicate college slug ${c.slug}`);
     slugs.add(c.slug);
+    c.programs.forEach((p, j) => {
+      const key = `${c.slug} ${p.sport}`;
+      if (programs.has(key)) issue(ctx, ['colleges', i, 'programs', j, 'sport'], `${c.slug} has two ${p.sport} programs`);
+      programs.add(key);
+    });
   });
   const players = new Set<string>();
   const committedTo = new Set<string>();
   f.commitments.forEach((c, i) => {
-    if (!slugs.has(c.college)) issue(ctx, ['commitments', i, 'college'], `${c.college} is not a college in colleges[]`);
+    if (!slugs.has(c.college)) {
+      issue(ctx, ['commitments', i, 'college'], `${c.college} is not a college in colleges[]`);
+    } else if (!programs.has(`${c.college} ${c.sport}`)) {
+      issue(ctx, ['commitments', i, 'sport'], `${c.college} has no ${c.sport} program in colleges[]`);
+    }
     committedTo.add(c.college);
+    committedTo.add(`${c.college} ${c.sport}`);
     // ISO prefixes compare as strings: '2026-06' against '2026-10', '2026' against '2026'.
     if (c.asOf !== null && c.asOf > f.capturedAt.slice(0, c.asOf.length)) {
       issue(ctx, ['commitments', i, 'asOf'], `${c.asOf} is after the research date ${f.capturedAt}`);
@@ -212,13 +287,22 @@ function checkCommitsFile(f: z.infer<typeof CommitsFileObject>, ctx: Ctx): void 
     players.add(key);
   });
   f.colleges.forEach((c, i) => {
-    if (!committedTo.has(c.slug)) issue(ctx, ['colleges', i], `no commitment names ${c.slug}: drop the college record`);
+    if (!committedTo.has(c.slug)) {
+      issue(ctx, ['colleges', i], `no commitment names ${c.slug}: drop the college record`);
+      return;
+    }
+    c.programs.forEach((p, j) => {
+      if (!committedTo.has(`${c.slug} ${p.sport}`)) {
+        issue(ctx, ['colleges', i, 'programs', j], `no ${p.sport} commitment names ${c.slug}: drop the program`);
+      }
+    });
   });
 }
 
 export const CommitsFileSchema = CommitsFileObject.superRefine(checkCommitsFile);
 
 export type CollegeSource = z.infer<typeof CollegeSourceSchema>;
+export type CollegeProgram = z.infer<typeof CollegeProgramSchema>;
 export type College = z.infer<typeof CollegeSchema>;
 export type CommitSource = z.infer<typeof CommitSourceSchema>;
 export type Commitment = z.infer<typeof CommitmentSchema>;

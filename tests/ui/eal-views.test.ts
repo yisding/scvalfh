@@ -273,8 +273,9 @@ describe('/about, the EAL parts', () => {
     expect(text, 'app/about/page.tsx disclaimer').toContain(
       'each league’s own standings (or, for the EAL, which publishes none, the scores its schools report for seeding under the Northern Section’s Field Hockey Guidelines) are always the source of truth',
     );
-    // The commitments sweep ran on 2026-10-03 for the four older leagues and on 2026-10-04 for the
-    // EAL, so the coverage paragraph prints no single research date (as the clubs one beside it).
+    // The commitments research ran in rounds that did not cover the same teams (2026-10-03 and
+    // 2026-10-04 for the four older leagues; a field-hockey-only sweep on 2026-10-04 for the EAL),
+    // so the coverage paragraph prints no single research date (as the clubs one beside it).
     const coverage = textOf(byId(aboutHtml, 'commits-coverage'));
     expect(coverage, 'app/about/page.tsx #commits-coverage').toContain(
       'It was researched by hand with the club pages’ matching rule, each commitment checked twice when it was added, and is not part of the twice-daily update.',

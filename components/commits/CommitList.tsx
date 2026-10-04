@@ -17,8 +17,8 @@ import type { CommitRow } from './commit-view';
  *   - the name;
  *   - the school, linking that team's roster, then the grade, kept whole with a no-break space
  *     before its dot (the AwardsBlock rule);
- *   - the college: its display name, the official name when that is a short one, and the division,
- *     each part wrapping on its own;
+ *   - the college: its display name, the official name when that is a short one, the sport, and
+ *     the division of the college's team in that sport, each part wrapping on its own;
  *   - the status on its own line;
  *   - the sources, each an off-site link whose accessible name leads with the player ("Pat
  *     Example: SportsRecruits profile").
@@ -51,6 +51,7 @@ function Row({ row }: { row: CommitRow }) {
       <span className="block text-meta text-ink-2">
         <span className="font-semibold text-ink">{row.college.name}</span>
         {row.college.fullName ? <>&nbsp;&middot; {row.college.fullName}</> : null}
+        &nbsp;&middot; <span className="whitespace-nowrap">{row.college.sport}</span>
         &nbsp;&middot; <span className="whitespace-nowrap">{row.college.division}</span>
       </span>
       <span className="block text-meta text-ink-2">{row.status}</span>

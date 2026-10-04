@@ -33,10 +33,10 @@ import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view'
  *     (DESIGN §17.4), current clubs first; a club a source only lists, with no date that makes it
  *     current, is never worded as current. The words are components/clubs/club-view.ts'
  *     (`playerClubGroups`), so the team page and the club pages say the same thing;
- *   - a player a public page says has committed to play college field hockey gets a commitment
- *     line linking that player's row on /commits (DESIGN §21.5), which cites the sources. It says
- *     "Signed" only where a source does. The words are components/commits/commit-view.ts'
- *     (`playerCommitLine`), shared with /commits.
+ *   - a player a public page says has committed to play a college sport (field hockey or another,
+ *     which the line names) gets a commitment line linking that player's row on /commits (DESIGN
+ *     §21.5), which cites the sources. It says "Signed" only where a source does. The words are
+ *     components/commits/commit-view.ts' (`playerCommitLine`), shared with /commits.
  */
 
 /** MaxPreps' field hockey position codes. Anything else is printed as the coach wrote it. */

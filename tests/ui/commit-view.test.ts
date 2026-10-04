@@ -26,19 +26,22 @@ import TeamPage from '../../app/teams/[slug]/page';
 import TeamsPage from '../../app/teams/page';
 import {
   DIVISION_WORDS,
+  SPORT_WORDS,
   buildCommitsView,
   ledeWords,
   collegeAnchor,
   commitAnchor,
   playerCommitLine,
   sourceLabel,
+  sportLabel,
   statusWords,
 } from '../../components/commits/commit-view';
 import { buildRosterView } from '../../components/teams/roster-view';
-import { COLLEGE_DIVISIONS } from '../../lib/commits-schema';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
 import {
   collegeDisplayName,
   commitClassOf,
+  commitProgram,
   getCollege,
   getColleges,
   getCommitments,
@@ -66,11 +69,12 @@ const COLLEGE: College = {
   slug: 'example-college',
   name: 'Example College',
   shortName: 'Example',
-  division: 'ncaa-d3',
-  conference: null,
   city: 'Somewhere',
   state: 'PA',
-  programUrl: 'https://athletics.example.edu/sports/field-hockey',
+  programs: [
+    { sport: 'field-hockey', division: 'ncaa-d3', conference: null, url: 'https://athletics.example.edu/sports/field-hockey' },
+    { sport: 'lacrosse', division: 'ncaa-d3', conference: null, url: 'https://athletics.example.edu/sports/womens-lacrosse' },
+  ],
   sources: [{ url: 'https://athletics.example.edu/sports/field-hockey', what: 'Field hockey home page' }],
   checkedOn: '2026-10-03',
 };
@@ -115,30 +119,44 @@ describe('source labels: the kind and the host, never the path', () => {
     expect(label('https://www.fhcollegepath.com/class-of-2028.html', 'event')).toBe('FH College Path');
     expect(label('https://lahstalon.org/a-story/', 'news')).toBe('The Talon');
     expect(label('https://siwildcats.com/news/2026/10/1/a-report.aspx', 'school-site')).toBe('St. Ignatius athletics');
+    expect(label('https://saratogafalcon.org/1/sports/a-story/', 'news')).toBe('The Saratoga Falcon');
+    expect(label('https://www.lacrossemasters.com/girls-college-commits', 'other')).toBe('Lacrosse Masters');
     expect(label('https://unknown.example.org/pat-example-commits', 'news')).toBe('unknown.example.org');
+  });
+
+  it('names another sport’s club by the club', () => {
+    expect(label('https://stepscalifornia.com/college-commitments/', 'club-site')).toBe('STEPS California site');
+    expect(label('https://www.advnclacrosse.com/alumnicommits', 'club-site')).toBe('ADVNC Lacrosse site');
+    expect(label('https://unknown-club.example.org/commits', 'club-site')).toBe('unknown-club.example.org');
   });
 });
 
-describe('the lede counts players, schools, colleges and programs per level', () => {
-  const at = (teamSlug: string, college: string, division: (typeof COLLEGE_DIVISIONS)[number]) => ({ teamSlug, college, division });
-  const tail = (picks: Parameters<typeof ledeWords>[1]) => ledeWords(43, picks).split('both the player and the college. ')[1];
+describe('the lede counts players, schools, colleges, programs per level and sports', () => {
+  type Pick = Parameters<typeof ledeWords>[1][number];
+  const at = (teamSlug: string, college: string, division: Pick['division'], sport: Pick['sport'] = 'field-hockey'): Pick => ({
+    teamSlug,
+    college,
+    sport,
+    division,
+  });
+  const tail = (picks: Pick[]) => ledeWords(43, picks).split('the college and the sport. ')[1];
 
   it('says when nothing is found', () => {
     expect(ledeWords(43, [])).toBe(
-      'Which players on this site’s 43 varsity rosters have committed to play field hockey in college, according to public pages that name both the player and the college. No public page we found shows a commitment by a player here yet.',
+      'Which players on this site’s 43 varsity rosters have committed to play a sport in college, field hockey or any other, according to public pages that name the player, the college and the sport. No public page we found shows a commitment by a player here yet.',
     );
   });
 
   it('one player', () => {
-    expect(tail([at('a', 'x', 'ncaa-d1')])).toBe('1 player from 1 school has committed to 1 college, an NCAA Division I program.');
+    expect(tail([at('a', 'x', 'ncaa-d1')])).toBe('1 player from 1 school has committed to 1 college, an NCAA Division I field hockey program.');
   });
 
   it('several players at one program, or at several of one level', () => {
     expect(tail([at('a', 'x', 'ncaa-d1'), at('a', 'x', 'ncaa-d1')])).toBe(
-      '2 players from 1 school have committed to 1 college, an NCAA Division I program.',
+      '2 players from 1 school have committed to 1 college, an NCAA Division I field hockey program.',
     );
     expect(tail([at('a', 'x', 'ncaa-d3'), at('b', 'y', 'ncaa-d3')])).toBe(
-      '2 players from 2 schools have committed to 2 colleges, all NCAA Division III programs.',
+      '2 players from 2 schools have committed to 2 colleges, all NCAA Division III field hockey programs.',
     );
   });
 
@@ -146,10 +164,48 @@ describe('the lede counts players, schools, colleges and programs per level', ()
     expect(
       tail([at('a', 'x', 'ncaa-d3'), at('a', 'x', 'ncaa-d1'), at('b', 'x', 'ncaa-d1'), at('b', 'y', 'ncaa-d1'), at('c', 'z', 'naia')]),
     ).toBe(
-      '5 players from 3 schools have committed to 3 colleges. Of them, 3 committed to NCAA Division I programs, 1 to an NCAA Division III program and 1 to an NAIA program.',
+      '5 players from 3 schools have committed to 3 colleges. Of them, 3 committed to NCAA Division I field hockey programs, 1 to an NCAA Division III field hockey program and 1 to an NAIA field hockey program.',
     );
     expect(tail([at('a', 'x', 'ncaa-d1'), at('b', 'x', 'ncaa-d1'), at('c', 'w', 'ncaa-d2')])).toBe(
-      '3 players from 3 schools have committed to 2 colleges. Of them, 2 committed to an NCAA Division I program and 1 to an NCAA Division II program.',
+      '3 players from 3 schools have committed to 2 colleges. Of them, 2 committed to an NCAA Division I field hockey program and 1 to an NCAA Division II field hockey program.',
+    );
+  });
+
+  it('one sport other than field hockey goes in the level words', () => {
+    expect(tail([at('a', 'x', 'ncaa-d3', 'lacrosse')])).toBe('1 player from 1 school has committed to 1 college, an NCAA Division III lacrosse program.');
+  });
+
+  it('several sports: levels without the sport, then a sentence by sport, the most players first', () => {
+    expect(
+      tail([
+        at('a', 'x', 'ncaa-d1'),
+        at('b', 'y', 'ncaa-d1', 'soccer'),
+        at('c', 'x', 'ncaa-d1', 'lacrosse'),
+        at('d', 'z', 'ncaa-d3', 'lacrosse'),
+      ]),
+    ).toBe(
+      '4 players from 4 schools have committed to 3 colleges. Of them, 3 committed to NCAA Division I programs and 1 to an NCAA Division III program. By sport, 2 in lacrosse, 1 in field hockey and 1 in soccer.',
+    );
+    // Two sports at one college are two programs.
+    expect(tail([at('a', 'x', 'ncaa-d1'), at('b', 'x', 'ncaa-d1', 'lacrosse')])).toBe(
+      '2 players from 2 schools have committed to 1 college, all NCAA Division I programs. By sport, 1 in field hockey and 1 in lacrosse.',
+    );
+  });
+});
+
+describe('sport words', () => {
+  it('words every sport the schema allows, and capitalizes it to start a line', () => {
+    for (const sport of COMMIT_SPORTS) {
+      expect(SPORT_WORDS[sport]).toMatch(/^[a-z][a-z ]+$/);
+      expect(sportLabel(sport)).toBe(SPORT_WORDS[sport][0].toUpperCase() + SPORT_WORDS[sport].slice(1));
+    }
+    expect(sportLabel('field-hockey')).toBe('Field hockey');
+    expect(sportLabel('swimming-and-diving')).toBe('Swimming and diving');
+  });
+
+  it('names a college’s own site by the college for any of its programs', () => {
+    expect(sourceLabel({ url: 'https://athletics.example.edu/sports/womens-lacrosse/roster', kind: 'college' }, COLLEGE)).toBe(
+      'Example athletics',
     );
   });
 });
@@ -178,11 +234,12 @@ describe('buildCommitsView (/commits)', () => {
   it('shows each player under the roster’s spelling, with the college, the status and every source once', () => {
     for (const c of getCommitments()) {
       const row = view.classes.flatMap((g) => g.rows).find((r) => r.anchor === commitAnchor(c))!;
-      const college = getCollege(c.college)!;
+      const { college, program } = commitProgram(c);
       expect(row.name).toBe(getCommittedPlayer(c).fullName);
       expect(row.school.href).toBe(`/teams/${c.teamSlug}#roster`);
       expect(row.college.name).toBe(collegeDisplayName(college));
-      expect(row.college.division).toBe(DIVISION_WORDS[college.division]);
+      expect(row.college.sport).toBe(sportLabel(c.sport));
+      expect(row.college.division).toBe(DIVISION_WORDS[program.division]);
       expect(row.status).toBe(statusWords(c));
       expect(row.status.startsWith(c.status === 'signed' ? 'Signed' : 'Committed')).toBe(true);
       expect(row.sources.map((s) => s.url)).toEqual([...new Set(c.sources.map((s) => s.url))]);
@@ -192,14 +249,19 @@ describe('buildCommitsView (/commits)', () => {
     }
   });
 
-  it('lists every college once, the most players first, with its level and its schools', () => {
+  it('lists every college once, the most players first, with each program’s sport and level, and its schools', () => {
     expect(view.colleges.map((c) => c.slug)).toEqual(getColleges().map((c) => c.slug));
     for (const row of view.colleges) {
       const college = getCollege(row.slug)!;
       expect(row.anchor).toBe(collegeAnchor(row.slug));
-      expect(row.facts[0]).toBe(DIVISION_WORDS[college.division]);
+      expect(row.place).toBe(`${college.city}, ${college.state}`);
+      expect(row.programs.map((p) => p.sport)).toEqual(college.programs.map((p) => p.sport));
+      row.programs.forEach((p, i) => {
+        expect(p.facts.slice(0, 2)).toEqual([sportLabel(p.sport), DIVISION_WORDS[college.programs[i].division]]);
+        expect(p.link?.url ?? null).toBe(college.programs[i].url);
+        if (p.link) expect(p.link.label).toBe(`${collegeDisplayName(college)} ${SPORT_WORDS[p.sport]}`);
+      });
       expect(row.schools.length).toBeGreaterThan(0);
-      expect(row.program?.url ?? null).toBe(college.programUrl);
     }
   });
 
@@ -228,6 +290,11 @@ describe('the roster’s commitment line', () => {
           expect(row.commitment).toEqual(playerCommitLine(team.slug, row.key));
           expect(row.commitment!.college.href).toBe(`/commits#${commitAnchor(c)}`);
           expect(row.commitment!.label).toBe(c.status === 'signed' ? 'Signed' : 'Committed');
+          // Field hockey goes without saying on the roster; any other sport is named.
+          expect(row.commitment!.sport).toBe(c.sport === 'field-hockey' ? null : SPORT_WORDS[c.sport]);
+          expect(row.commitment!.srLabel).toBe(
+            `college ${c.sport === 'field-hockey' ? '' : `${SPORT_WORDS[c.sport]} `}${c.status === 'signed' ? 'signing' : 'commitment'}`,
+          );
         } else {
           expect(row.commitment, `${team.slug} / ${row.name}`).toBeNull();
         }
@@ -282,6 +349,15 @@ describe('the pages that link /commits', () => {
       }
       expect(textOf(html)).toContain('Commitment lines link to the player’s entry on the college commitments page');
       expect(commitmentLeaks(html, file, { publicTerms: PUBLIC_TERMS })).toEqual([]);
+    }
+  });
+
+  it('a commitment in another sport names it on the roster line; a field hockey one does not', async () => {
+    for (const c of file.commitments) {
+      const html = await renderTeam(c.teamSlug);
+      const line = new RegExp(`href="/commits#${commitAnchor(c)}"[^>]*>(?:(?!</a>)[\\s\\S])*</a>`).exec(html)![0];
+      if (c.sport === 'field-hockey') expect(line, c.fullName).not.toMatch(/aria-hidden="true"> \(/);
+      else expect(line, c.fullName).toContain(`<span aria-hidden="true"> (${SPORT_WORDS[c.sport]})</span>`);
     }
   });
 
