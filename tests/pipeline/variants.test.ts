@@ -1,7 +1,7 @@
 /**
  * The variant overlays under tests/fixtures/corpus/variants/ (SPEC §7.3): each loads on top of the
  * all-2026-10-02 corpus and carries exactly the defect it is named for. (Their end-to-end effects
- * through the real official/si.com steps are Stage B-int cases.)
+ * through the real official/si.com steps are asserted in tests/pipeline/end-to-end.test.ts.)
  */
 
 import { readFileSync } from 'node:fs';
@@ -31,8 +31,8 @@ const transportFor = (variant: string) => new FixtureTransport(loadCorpus(ALL, [
 
 describe('variants', () => {
   it.runIf(process.env.B1_REBUILD_VARIANTS === '1')('rebuilds finals-regression/previous-snapshot.json', async () => {
-    // B-int: built with the real official (B2) and si.com (B3) steps. The committed file is frozen as a
-    // four-league v2 snapshot (written before the EAL was added): it exercises loadSnapshot's
+    // Built with the real official (steps/official.ts) and si.com (steps/sblive.ts) steps. The
+    // committed file is frozen as a four-league v2 snapshot (written before the EAL was added): it exercises loadSnapshot's
     // league-added upgrade, so it is not rebuilt for later config changes.
     const { stepOfficial } = await import('../../lib/pipeline/steps/official');
     const { stepSblive } = await import('../../lib/pipeline/steps/sblive');

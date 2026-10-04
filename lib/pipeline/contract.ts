@@ -114,7 +114,7 @@ export interface RunLog {
   warn(line: string, scope?: SourceStatus['scope']): void;
 }
 
-/** What steps may read and record. B1 implements it in lib/pipeline/ledger.ts. */
+/** What steps may read and record. The pipeline core implements it in lib/pipeline/ledger.ts (PipelineContext). */
 export interface RunContext extends RunLog {
   args: RunArgs;
   fetchedAt: string;

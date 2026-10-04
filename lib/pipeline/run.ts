@@ -10,8 +10,8 @@
  *   04 reported    unreadable table → SOURCE STALE (carried)
  *   05 schedules   failed feed → carried; ≥50% of a league's feeds → LEAGUE FREEZE (b)
  *   06 normalize   + exclusions, phantom dedupe, carry-forward
- *   07 official    B2 (stepOfficial)
- *   08 sblive      B3 (stepSblive)
+ *   07 official    the official step (steps/official.ts), injectable
+ *   08 sblive      the si.com step (steps/sblive.ts), injectable
  *   09 secondary   VNN, CCS
  *   10 classify    classifyGames with the official step's degraded divisions
  *   11 guards      finals regression (c), frozen-league substitution, systemic RUN ABORT
@@ -147,12 +147,12 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   await stepSchedules(ctx, state); // 05
   stepNormalize(ctx, state); // 06
 
-  // 07 official (B2)
+  // 07 official (the injectable official step)
   state.official = await runOfficial(ctx, steps, state.games);
   state.games = state.official.games;
   state.unmatched = state.official.unmatched;
 
-  // 08 sblive (B3)
+  // 08 sblive (the injectable si.com step)
   const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
   state.games = sblive.games;
   state.unmatched = sblive.unmatched;

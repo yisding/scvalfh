@@ -1,6 +1,6 @@
 /**
- * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through A4's pure functions in order:
- * `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
+ * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/normalize.ts's pure functions in
+ * order: `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
  * (DATA_QUALITY ghosts and excluded contests; an exclusion that no longer matches is logged once),
  * `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to the published
  * `dropped` list.

@@ -229,7 +229,7 @@ export interface RunContextInit {
   sink?: LogSink;
 }
 
-/** B1's RunContext: what steps may read and record (SPEC §7.2). */
+/** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
 export class PipelineContext implements RunContext {
   readonly args: RunArgs;
   readonly fetchedAt: string;
@@ -350,7 +350,10 @@ export interface TeamFeedInfo {
   carried: boolean;
 }
 
-/** What the B1 steps hand each other (B2/B3 see only RunContext and their step input). */
+/**
+ * What the built-in steps (lib/pipeline/steps/*) share through run.ts. The injectable official and
+ * si.com steps (PipelineSteps) never see it: they get only RunContext and their step input.
+ */
 export interface RunState {
   divisions: Map<DivisionId, DivisionRunInfo>;
   /** MaxPreps' reported rows, keyed on schoolId (cross-check only). */

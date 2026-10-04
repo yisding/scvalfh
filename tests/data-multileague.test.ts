@@ -1,10 +1,10 @@
 /**
- * SPEC §12.2 (B-int): the site read API (lib/data.ts) over the all-2026-10-02 corpus snapshot built
- * by the real pipeline — once with si.com (the cron default) and once with --no-sblive. §7.9 fixes
- * the expected PCAL tables; the D2 corpus fills (6541425, 6543072 absent-fixture; 6499423
- * score-pending) are asserted here because they need B2's unmatched fixtures and B3's backfill
- * together. Every other si.com-sourced score would be a new, uninvestigated input: the lists below
- * are exact.
+ * SPEC §12.2 (end-to-end): the site read API (lib/data.ts) over the all-2026-10-02 corpus snapshot
+ * built by the real pipeline — once with si.com (the cron default) and once with --no-sblive. §7.9
+ * fixes the expected PCAL tables; the D2 corpus fills (6541425, 6543072 absent-fixture; 6499423
+ * score-pending) are asserted here because they need the official step's unmatched fixtures and
+ * the si.com step's backfill together. Every other si.com-sourced score would be a new,
+ * uninvestigated input: the lists below are exact.
  *
  * Every assertion message names the module that produces the value, so a failure is routed to its
  * owner. The corpus's manifest names four leagues: the EAL (added later) is frozen "not fetched in this
