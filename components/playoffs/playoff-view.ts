@@ -27,11 +27,13 @@ import {
   leagueClockPT,
   listWords,
   monthDay,
+  numberWord,
   ordinal,
+  ordinalWord,
   recordString,
   shortDate,
   timeOfDayPT,
-  weekdayIndex,
+  weekdayName,
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -53,37 +55,8 @@ import type {
 
 // ---------------------------------------------------------------- small helpers
 
-const WEEKDAY_NAMES = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-] as const;
-
-/** 'Saturday' for a local date or timestamp. */
-export function weekdayName(value: string): string {
-  return WEEKDAY_NAMES[weekdayIndex(value)];
-}
-
 function dateOnly(value: string): string {
   return value.slice(0, 10);
-}
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-
-/** 'three' for 3; the digits past ten. */
-export function numberWord(n: number): string {
-  return NUMBER_WORDS[n] ?? String(n);
-}
-
-const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
-
-/** 'fourth' for 4; '11th' past ten. */
-export function ordinalWord(n: number): string {
-  return ORDINAL_WORDS[n] ?? ordinal(n);
 }
 
 // ---------------------------------------------------------------- key dates

@@ -34,7 +34,7 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, listWords, numberWord, plural, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
 import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -183,7 +183,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
         <>
           {bucketStarts.map((start) => (
             <div key={start}>
-              <p className="m-0">A tie whose group starts at {start === 1 ? '1st' : start === 2 ? '2nd' : `${start}th`}:</p>
+              <p className="m-0">A tie whose group starts at {ordinal(start)}:</p>
               <ol className="mt-2 list-decimal">
                 {chainItems(league, byBucket[start] ?? []).map((text) => (
                   <li key={text}>{text}.</li>

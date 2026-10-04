@@ -21,6 +21,7 @@ import {
   numberWord,
   ordinal,
   ordinalPlace,
+  ordinalWord,
   partialDate,
   partialDateKind,
   perGame,
@@ -37,6 +38,7 @@ import {
   timeOfDayPT,
   toLocalTimestamp,
   versusLabel,
+  weekdayName,
   winPct,
 } from '../lib/format';
 import { game } from './helpers';
@@ -274,6 +276,16 @@ describe('numberWord and dateSpan', () => {
   it('words zero to ten and prints anything else as digits', () => {
     expect([0, 1, 6, 10].map(numberWord)).toEqual(['zero', 'one', 'six', 'ten']);
     expect([11, 49, -1, 2.5].map(numberWord)).toEqual(['11', '49', '-1', '2.5']);
+  });
+
+  it('words ordinals zeroth to tenth and falls back to ordinal() past them', () => {
+    expect([0, 1, 4, 9, 10].map(ordinalWord)).toEqual(['zeroth', 'first', 'fourth', 'ninth', 'tenth']);
+    expect([11, 21, 23].map(ordinalWord)).toEqual(['11th', '21st', '23rd']);
+  });
+
+  it('names the weekday of a date key or a local timestamp', () => {
+    expect(weekdayName('2026-10-31')).toBe('Saturday');
+    expect(weekdayName('2026-09-29T16:00:00')).toBe('Tuesday');
   });
 
   it('spans two dates with an en dash, naming the month once within a month', () => {

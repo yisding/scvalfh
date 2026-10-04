@@ -60,6 +60,11 @@ export function weekdayIndex(value: string): number {
   return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 }
 
+/** 'Saturday' for a local date or timestamp. */
+export function weekdayName(value: string): string {
+  return WEEKDAYS_LONG[weekdayIndex(value)];
+}
+
 /** 'YYYY-MM-DD' — the URL key for /scores/[date] (SPEC §4, DESIGN §1.1). */
 export function isoDateKey(value: string): string {
   const { year, month, day } = parseLocal(value);
@@ -431,6 +436,15 @@ const NUMBER_WORDS = [
 /** 'zero' … 'ten' for a whole number 0-10, its digits otherwise ('six', '49'). */
 export function numberWord(n: number): string {
   return Number.isInteger(n) && n >= 0 && n <= 10 ? NUMBER_WORDS[n] : String(n);
+}
+
+const ORDINAL_WORDS = [
+  'zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
+] as const;
+
+/** 'zeroth' … 'tenth' for a whole number 0-10, `ordinal` otherwise ('fourth', '11th'). */
+export function ordinalWord(n: number): string {
+  return Number.isInteger(n) && n >= 0 && n <= 10 ? ORDINAL_WORDS[n] : ordinal(n);
 }
 
 /**

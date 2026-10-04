@@ -44,6 +44,7 @@ import {
   monthDay,
   numberWord,
   ordinal,
+  ordinalWord,
   recordString,
   shortDate,
   timeOfDayPT,
@@ -340,12 +341,6 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   }
 
   return null;
-}
-
-const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
-
-function ordinalWord(n: number): string {
-  return ORDINAL_WORDS[n] ?? ordinal(n);
 }
 
 // ---------------------------------------------------------------- mini standings
