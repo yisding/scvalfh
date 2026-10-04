@@ -13,7 +13,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES } from '../../lib/leagues';
-import { RunAbort, resourcePath, type Transport } from '../../lib/pipeline/contract';
+import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
 import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, runPipeline, writeOutputs } from '../../lib/pipeline/run';
@@ -298,11 +298,11 @@ describe('prepareRun and the outputs', () => {
     const snapshot: Snapshot = loadSnapshot(JSON.parse(text) as unknown);
     expect(snapshot.schemaVersion).toBe(2);
     expect(text).toBe(stableStringify(snapshot));
-    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as Record<string, unknown>;
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as SnapshotMeta;
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
-    expect(String(meta.commitSummary)).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
-    expect((meta.leagues as Array<{ id: string; state: string }>).map((l) => [l.id, l.state])).toEqual([
+    expect(meta.commitSummary).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
+    expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],
       ['bval', 'fresh'],
       ['pcal', 'fresh'],

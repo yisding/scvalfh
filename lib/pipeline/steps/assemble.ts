@@ -12,7 +12,7 @@ import { parseSnapshot, snapshotContentHash } from '../../snapshot-schema';
 import { stableStringify } from '../../stable-json';
 import { TEAMS } from '../../teams';
 import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '../../types';
-import { RunAbort } from '../contract';
+import { RunAbort, type SnapshotMeta } from '../contract';
 import type { PipelineContext, RunState } from '../ledger';
 import type { RequestCounts } from '../transport';
 import { byDateThenId } from './normalize';
@@ -85,7 +85,7 @@ export interface AssembleInput {
 export function stepAssemble(
   ctx: PipelineContext,
   { state, table, requests }: AssembleInput,
-): { snapshot: Snapshot; meta: Record<string, unknown> } {
+): { snapshot: Snapshot; meta: SnapshotMeta } {
   const games = [...state.games].sort(byDateThenId);
   const sources = ctx.sources.ordered();
   const official = state.official;
@@ -167,7 +167,7 @@ export function stepAssemble(
     for (const reason of h.reasons) ctx.log(`  ${h.leagueId} ${h.state}: ${reason}`);
   }
 
-  const meta: Record<string, unknown> = {
+  const meta: SnapshotMeta = {
     fetchedAt: ctx.fetchedAt,
     // The content identity with every fetchedAt stripped: the cron commits only when THIS changes.
     contentHash: snapshotContentHash(snapshot),
