@@ -765,7 +765,10 @@ export interface FormGame {
 export interface TeamForm {
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
-  /** Contests that count for no division, for FormStrip's "+ 3 non-league" caption (DESIGN §7.6). */
+  /**
+   * Contests that count for no division. FormStrip no longer prints the "+ N non-league" caption
+   * (DESIGN §7.6): the team page writes that line from its own non-league log.
+   */
   nonLeagueCount: number;
 }
 
