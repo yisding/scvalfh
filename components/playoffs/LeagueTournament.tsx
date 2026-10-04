@@ -93,7 +93,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
         <tbody>
           {seedRows.map((row, index) => (
             <Fragment key={row.team.slug}>
-              <tr className="relative" style={{ height: 56 }}>
+              <tr data-team-slug={row.team.slug} className="relative" style={{ height: 56 }}>
                 <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
@@ -101,7 +101,12 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                   {/* One stretched row link per team; `prefetch={false}` like every per-row link
                       (components/layout/NavLink.tsx has the reasoning). */}
                   <Link href={`/teams/${row.team.slug}`} prefetch={false} className="absolute inset-0">
-                    <span className="sr-only">{rowSentence(row, leagueShort)}</span>
+                    <span className="sr-only">
+                      {/* Marked like every other team list: only the pinned row's note is
+                          displayed (app/globals.css), so the accent rule never speaks alone. */}
+                      <span className="sx-pin-note">Your team. </span>
+                      {rowSentence(row, leagueShort)}
+                    </span>
                   </Link>
                   <span className="flex items-center gap-3">
                     <TeamMonogram team={row.team} size={28} />

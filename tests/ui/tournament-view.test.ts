@@ -256,6 +256,20 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(t, PAGE).toContain('This site follows the 2026 sheet.');
   });
 
+  it('marks the pinned team like every other team list: data-team-slug on the row, the hidden note in its link', () => {
+    const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)"[\s\S]*?<a [^>]*href="\/teams\/([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
+    // Every MCAL team has a row in the seeds table, seeded or not.
+    expect(new Set(rows.map((m) => m[1])), 'components/playoffs/LeagueTournament.tsx seed rows').toEqual(
+      new Set([AW, RW, TM, BK, LW, UN, MC, CS, MA]),
+    );
+    for (const [, slug, href, inner] of rows) {
+      expect(href, 'components/playoffs/LeagueTournament.tsx row link').toBe(slug);
+      expect(inner, 'components/playoffs/LeagueTournament.tsx pin note').toContain(
+        '<span class="sr-only"><span class="sx-pin-note">Your team. </span>',
+      );
+    }
+  });
+
   it('carries no CCS concept inside the page except the link to the CCS page', () => {
     for (const banned of ['automatic qualifier', 'Automatic qualifier', 'at-large', 'At-large', 'CCS Division', 'CCS picture']) {
       expect(html, `${PAGE}: ${banned}`).not.toContain(banned);

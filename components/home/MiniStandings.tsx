@@ -208,7 +208,7 @@ function MiniRowView({
   const has = row.hasResults;
   return (
     <>
-      <tr data-team-slug={row.slug} className="relative" style={{ height: 52 }}>
+      <tr data-team-slug={row.slug} className="relative" style={{ height: 'var(--spacing-row-1)' }}>
         <td className="w-[2.75rem] pl-gutter pr-2 text-ink-3">
           <PlaceCell row={row} />
         </td>
