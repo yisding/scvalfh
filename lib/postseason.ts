@@ -37,7 +37,10 @@ export interface SixthPlaceDecision {
   contenders: TeamSlug[];
   /** Host slug, or null when not determinable yet. */
   host: TeamSlug | null;
-  /** The seat the play-in decides (6, or 5 and 6 in the three-way case). */
+  /**
+   * The place the play-in decides: [lastSpot.place] when a play-in is needed or possible, else []. A
+   * three-way tie for 5th places the 5th seed by draw number, so the pair still plays only for this place.
+   */
   seats: number[];
   note: string | null;
 }
