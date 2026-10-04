@@ -108,6 +108,22 @@ export function normalizeTeamKey(input: string): string {
   return flat.endsWith('highschool') ? flat.slice(0, -'highschool'.length) : flat;
 }
 
+/**
+ * One side of a game as the cross-source join key (SPEC §5.7): its registry slug, else `name:` and
+ * the name lower-cased with everything but a-z and 0-9 removed. Every source joined to MaxPreps
+ * (si.com in lib/crosscheck.ts and lib/sources/sblive.ts, the official schedules in
+ * lib/official/match.ts, the school calendars in lib/sources/vnn-ics.ts) keys a side with this, so
+ * the two halves of a join agree exactly.
+ */
+export function sideJoinKey(side: { slug: string | null; name: string }): string {
+  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
+}
+
+/** Two side keys as one order-independent pair key, `a~b` sorted: the pair half of the cross-source join key (SPEC §5.7). */
+export function unorderedPairKey(a: string, b: string): string {
+  return [a, b].sort().join('~');
+}
+
 const BY_ID = new Map<string, Team>(TEAMS.map((t) => [t.id, t]));
 const BY_SLUG = new Map<string, Team>(TEAMS.map((t) => [t.slug, t]));
 

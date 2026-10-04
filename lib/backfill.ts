@@ -35,7 +35,7 @@ import {
   type SbliveGame,
   type SbliveSide,
 } from './sources/sblive';
-import { getTeamBySlug } from './teams';
+import { getTeamBySlug, unorderedPairKey } from './teams';
 import type {
   BackfillProvenance,
   BackfillRow,
@@ -149,17 +149,12 @@ function md(dateKey: string): string {
   return `${MONTHS[m - 1]} ${d}`;
 }
 
-/** Sorted `slugA~slugB`. */
-export function pairKeyOf(a: TeamSlug, b: TeamSlug): string {
-  return [a, b].sort().join('~');
-}
-
 function gamePair(g: Pick<Game, 'home' | 'away'>): string | null {
-  return g.home.slug && g.away.slug && g.home.slug !== g.away.slug ? pairKeyOf(g.home.slug, g.away.slug) : null;
+  return g.home.slug && g.away.slug && g.home.slug !== g.away.slug ? unorderedPairKey(g.home.slug, g.away.slug) : null;
 }
 
 function fixturePair(f: OfficialFixture): string | null {
-  return f.homeSlug && f.awaySlug && f.homeSlug !== f.awaySlug ? pairKeyOf(f.homeSlug, f.awaySlug) : null;
+  return f.homeSlug && f.awaySlug && f.homeSlug !== f.awaySlug ? unorderedPairKey(f.homeSlug, f.awaySlug) : null;
 }
 
 const isSbliveContest = (id: string) => id.startsWith('sblive:');

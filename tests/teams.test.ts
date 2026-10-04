@@ -4,7 +4,7 @@ import { ALL_DIVISIONS, LEAGUES } from '../lib/leagues';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, isRegistryTeamId,
   isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveOfficialName, resolveTeam,
-  teamsInDivision, teamsInLeague,
+  sideJoinKey, teamsInDivision, teamsInLeague, unorderedPairKey,
 } from '../lib/teams';
 
 /**
@@ -256,5 +256,14 @@ describe('teams: the registry is the five leagues', () => {
     expect(onPrimaryInk('222222')).toBe('#ffffff');
     expect(onPrimaryInk('FFC005')).toBe('#0e1116');
     for (const t of TEAMS) expect(t.colors.onPrimary).toBe(onPrimaryInk(t.colors.primary));
+  });
+});
+
+describe('teams: the cross-source join key (SPEC §5.7)', () => {
+  it('keys a side by slug, else by its flattened name, and a pair in either order', () => {
+    expect(sideJoinKey({ slug: 'los-altos', name: 'Los Altos' })).toBe('los-altos');
+    expect(sideJoinKey({ slug: null, name: 'St. Francis (Mountain View)' })).toBe('name:stfrancismountainview');
+    expect(unorderedPairKey('los-altos', 'name:bishops')).toBe('los-altos~name:bishops');
+    expect(unorderedPairKey('name:bishops', 'los-altos')).toBe('los-altos~name:bishops');
   });
 });

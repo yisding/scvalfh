@@ -21,16 +21,12 @@
  */
 
 import { sblivePairKey, type SbliveGame, type SbliveSide } from './sources/sblive';
-import { getTeamBySlug } from './teams';
+import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
 import type { BackfillRow, Game, SbliveCrossCheck, ScoreConflictRow, SbliveOnlyRow } from './types';
 
-/** The same normalization `sblivePairKey` uses, so the two halves of the join agree exactly. */
-function sideKey(side: { slug: string | null; name: string }): string {
-  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
-}
-
+/** The same key `sblivePairKey` gives (lib/teams.ts sideJoinKey), so the two halves of the join agree exactly. */
 export function gamePairKey(game: Pick<Game, 'home' | 'away'>): string {
-  return [sideKey(game.home), sideKey(game.away)].sort().join('~');
+  return unorderedPairKey(sideJoinKey(game.home), sideJoinKey(game.away));
 }
 
 export function gameJoinKey(game: Pick<Game, 'dateKey' | 'home' | 'away'>): string {
@@ -100,11 +96,11 @@ function alignToHomeAway(
   game: Game,
   sides: readonly SbliveSide[],
 ): { home: SbliveSide; away: SbliveSide } | null {
-  const homeKey = sideKey(game.home);
-  const awayKey = sideKey(game.away);
+  const homeKey = sideJoinKey(game.home);
+  const awayKey = sideJoinKey(game.away);
   if (homeKey === awayKey) return null;
-  const home = sides.find((s) => sideKey(s) === homeKey);
-  const away = sides.find((s) => sideKey(s) === awayKey);
+  const home = sides.find((s) => sideJoinKey(s) === homeKey);
+  const away = sides.find((s) => sideJoinKey(s) === awayKey);
   if (!home || !away || home === away) return null;
   return { home, away };
 }

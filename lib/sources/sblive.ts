@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 import { localDateKey } from '../format';
 import { DATA_QUALITY, LEAGUES } from '../leagues';
-import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam } from '../teams';
+import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';
 import { CHROME_USER_AGENT, HttpClient, type HttpClientOptions, htmlUnescape } from './http';
 
@@ -449,10 +449,7 @@ function orderSides(a: SbliveSide, b: SbliveSide): [SbliveSide, SbliveSide] {
 
 /** The unordered-pair half of the cross-check join key (SPEC §5.7). */
 export function sblivePairKey(sides: readonly SbliveSide[]): string {
-  return sides
-    .map((s) => s.slug ?? `name:${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`)
-    .sort()
-    .join('~');
+  return sides.map(sideJoinKey).sort().join('~');
 }
 
 export function sbliveGameKey(game: Pick<SbliveGame, 'dateKey' | 'sides'>): string {
