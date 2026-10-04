@@ -24,7 +24,13 @@ import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-v
 import { plural } from '../ui/plural';
 
 /** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
-const LEAGUE_COUNT = numberWord(LEAGUES.length);
+export const LEAGUE_COUNT = numberWord(LEAGUES.length);
+
+/**
+ * What an Elo number means, without trailing punctuation: the board's note and the team page's
+ * Elo disclosure (components/teams/TeamElo.tsx) both say it, so the two always read the same.
+ */
+export const ELO_SCALE = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal`;
 
 /**
  * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
@@ -574,7 +580,7 @@ export function buildEloBoard(
       note:
         `Every final between two of the ${plural(teams.length, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
-        `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
+        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No final between two of the ${plural(teams.length, 'team')} yet this season.`,
