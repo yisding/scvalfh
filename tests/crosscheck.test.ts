@@ -85,6 +85,17 @@ describe('crosscheck: agreement', () => {
     expect(res.games[0].home.score).toBe(4);
   });
 
+  it('agrees with si.com’s 1-1 on an EAL 1 v 1 win (MaxPreps 1-1, decider SO): scores only, no outcome', () => {
+    const g = game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' } });
+    expect(g.decider).toBe('SO');
+    const res = reconcile([g], [sbGame('2026-09-28', side('chico', 1), side('davis', 1))], { sbliveFetchedAt: AT });
+    expect(res.report.compared).toBe(1);
+    expect(res.report.agreements).toBe(1);
+    expect(res.report.conflicts).toEqual([]);
+    expect(res.report.sbliveOnlyScored).toEqual([]);
+    expect(res.games[0]).toBe(g);
+  });
+
   it('ignores an SBLive row on a different date (no match, no conflict)', () => {
     const g = game({ home: 'los-altos', away: 'cupertino', hs: 4, as: 0, date: '2026-09-23' });
     const res = reconcile([g], [sbGame('2026-09-24', side('los-altos', 9), side('cupertino', 9))], {

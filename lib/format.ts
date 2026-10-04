@@ -312,26 +312,49 @@ export function streakString(streak: { count: number; result: Outcome } | null):
 // ---------------------------------------------------------------- score rendering
 
 /**
+ * One side's W/L/T in a final, or null unless the game is final with both scores. THE single
+ * derivation every outcome on the site goes through (standings, form, chips, series summaries):
+ * a stored shootout tally decides when present; a decider 'SO' with complementary result flags
+ * {W, L} (an EAL 1 v 1 win: level on goals, no tally stored) takes that side's flag; anything
+ * else is read off the score. League-free on purpose: `decider` 'SO' is only ever written by
+ * lib/normalize.ts for two members of a shootout league, so nothing here needs the config.
+ */
+export function sideOutcome(
+  game: Pick<Game, 'status' | 'home' | 'away' | 'decider' | 'shootout'>,
+  side: 'home' | 'away',
+): Outcome | null {
+  if (game.status !== 'final' || game.home.score === null || game.away.score === null) return null;
+  const [mine, theirs] = side === 'home' ? [game.home, game.away] : [game.away, game.home];
+  if (game.shootout) {
+    const [us, them] =
+      side === 'home'
+        ? [game.shootout.home, game.shootout.away]
+        : [game.shootout.away, game.shootout.home];
+    return us > them ? 'W' : 'L';
+  }
+  if (
+    game.decider === 'SO' &&
+    (mine.result === 'W' || mine.result === 'L') &&
+    theirs.result === (mine.result === 'W' ? 'L' : 'W')
+  ) {
+    return mine.result;
+  }
+  const [us, them] = [mine.score as number, theirs.score as number];
+  return us > them ? 'W' : us < them ? 'L' : 'T';
+}
+
+/**
  * The single place the never-0-0 rule lives (DESIGN §5.2). Nothing else in the UI should read
- * `home.score` / `away.score` directly. `outcome` is relative to the HOME side.
+ * `home.score` / `away.score` directly. `outcome` is relative to the HOME side (`sideOutcome`).
  */
 export function renderScore(g: Game): ScoreView {
   if (g.status === 'postponed') return { kind: 'postponed', newDate: null };
   if (g.status === 'score-pending') return { kind: 'unreported' };
   if (g.status === 'live') return { kind: 'live' };
-  if (g.status !== 'final' || g.home.score === null || g.away.score === null) {
+  const outcome = sideOutcome(g, 'home');
+  if (outcome === null || g.home.score === null || g.away.score === null) {
     return { kind: 'scheduled', time: g.isTimeTba ? null : timeOfDay(g.dateLocal) };
   }
-  const outcome: Outcome =
-    g.shootout
-      ? g.shootout.home > g.shootout.away
-        ? 'W'
-        : 'L'
-      : g.home.score > g.away.score
-        ? 'W'
-        : g.home.score < g.away.score
-          ? 'L'
-          : 'T';
   return {
     kind: 'final',
     home: g.home.score,
@@ -342,14 +365,24 @@ export function renderScore(g: Game): ScoreView {
   };
 }
 
-/** 'Saint Francis 7, Homestead 0, final.' — the screen-reader sentence (DESIGN §10.6). */
-export function scoreSentence(g: Game): string {
+/**
+ * 'Saint Francis 7, Homestead 0, final.' — the screen-reader sentence (DESIGN §10.6). A final
+ * decided on 1 v 1s with no stored tally (decider 'SO') names the winner instead:
+ * 'Chico 1, Davis 1, final; Chico won on 1 v 1s.' `quietOvertime` drops " after overtime" (the
+ * view sets it when MaxPreps' overtime count cannot be right for the league).
+ */
+export function scoreSentence(g: Game, opts: { quietOvertime?: boolean } = {}): string {
   const view = renderScore(g);
   switch (view.kind) {
-    case 'final':
-      return `${g.home.name} ${view.home}, ${g.away.name} ${view.away}, final${
-        view.decider === 'OT' || view.decider === '2OT' ? ' after overtime' : ''
+    case 'final': {
+      const head = `${g.home.name} ${view.home}, ${g.away.name} ${view.away}, final`;
+      if (view.decider === 'SO' && view.shootout === null && view.outcome !== 'T') {
+        return `${head}; ${view.outcome === 'W' ? g.home.name : g.away.name} won on 1 v 1s.`;
+      }
+      return `${head}${
+        !opts.quietOvertime && (view.decider === 'OT' || view.decider === '2OT') ? ' after overtime' : ''
       }${view.decider === 'FORFEIT' ? ' by forfeit' : ''}.`;
+    }
     case 'unreported':
       return `${g.away.name} at ${g.home.name}: score not reported.`;
     case 'live':
@@ -367,6 +400,28 @@ export function scoreSentence(g: Game): string {
 export function versusLabel(game: Game, teamId: string): 'vs' | 'at' {
   if (game.site === 'neutral') return 'vs';
   return game.home.teamId === teamId ? 'vs' : 'at';
+}
+
+const NUMBER_WORDS = [
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+] as const;
+
+/** 'zero' … 'ten' for a whole number 0-10, its digits otherwise ('six', '49'). */
+export function numberWord(n: number): string {
+  return Number.isInteger(n) && n >= 0 && n <= 10 ? NUMBER_WORDS[n] : String(n);
+}
+
+/**
+ * An inclusive span of two date keys with an en dash: 'Oct 30–31' within a month,
+ * 'Oct 30–Nov 1' across one, 'Oct 30' when both are the same day.
+ */
+export function dateSpan(first: string, last: string): string {
+  const a = parseLocal(first);
+  const b = parseLocal(last);
+  if (a.year === b.year && a.month === b.month) {
+    return a.day === b.day ? monthDay(first) : `${monthDay(first)}${EN_DASH}${b.day}`;
+  }
+  return `${monthDay(first)}${EN_DASH}${monthDay(last)}`;
 }
 
 /** 'A', 'A and B', 'A, B and C'. */

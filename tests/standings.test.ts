@@ -7,6 +7,7 @@ import {
   computeStandings,
   divisionGames,
   leaguePairings,
+  missingOfficialResults,
   outcomesFor,
   playoffOutcomeLabel,
   playoffOutcomes,
@@ -368,5 +369,47 @@ describe('standings: Article VII projections', () => {
     expect(cupertino.computed.place).toBe(4);
     expect(outcomesFor(fremont)).toEqual(['play-in', 'at-large']);
     expect(outcomesFor(cupertino)).toEqual(['play-in', 'at-large']);
+  });
+});
+
+describe('standings: league results missing in a league with no official schedule (EAL)', () => {
+  const TODAY = '2026-10-04';
+  const pendingA = game({ home: 'corning', away: 'pleasant-valley', date: '2026-09-29', status: 'score-pending' });
+  const pendingB = game({ home: 'chico', away: 'corning', date: '2026-10-01', status: 'score-pending' });
+  const postponed = game({ home: 'lassen', away: 'bella-vista', date: '2026-09-30', status: 'postponed' });
+  const played = game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' } });
+  const future = game({ home: 'davis', away: 'pleasant-valley', date: '2026-10-28' });
+  const todays = game({ home: 'lassen', away: 'davis', date: TODAY });
+  const nonLeague = game({ home: 'chico', away: 'davis', date: '2026-09-01', league: false });
+  const crossLeague = game({ home: 'chico', away: 'tamalpais', date: '2026-09-02', status: 'score-pending' });
+  const all = [pendingA, pendingB, postponed, played, future, todays, nonLeague, crossLeague];
+
+  it('lists the counted EAL games dated before today with no result, and postponed ones apart', () => {
+    for (const g of [pendingA, pendingB, postponed, future, todays]) expect(g.countsFor).toBe('eal');
+    const rows = missingOfficialResults(all, [], 'eal', TODAY);
+    expect(rows.map((r) => [r.kind, r.dateKey, r.game?.contestId])).toEqual([
+      ['missing', '2026-09-29', pendingA.contestId],
+      ['postponed', '2026-09-30', postponed.contestId],
+      ['missing', '2026-10-01', pendingB.contestId],
+    ]);
+    expect(rows[0]).toMatchObject({
+      awayName: 'Pleasant Valley', homeName: 'Corning', awaySlug: 'pleasant-valley', homeSlug: 'corning',
+    });
+  });
+
+  it('needs no official fixture, and ignores any passed for another division', () => {
+    const stray = {
+      id: 'pcal:2026-09-20:carmel@salinas', league: 'pcal', division: 'pcal', dateKey: '2026-09-20', time: null,
+      awayName: 'Carmel', homeName: 'Salinas', awaySlug: 'carmel', homeSlug: 'salinas', source: 'pcal-pdf',
+    } as const;
+    expect(missingOfficialResults(all, [stray], 'eal', TODAY)).toEqual(missingOfficialResults(all, [], 'eal', TODAY));
+    // A future game is not missing; on its own date it is not missing yet either.
+    expect(missingOfficialResults([future, todays], [], 'eal', TODAY)).toEqual([]);
+  });
+
+  it('leaves fixture-backed divisions on their official schedule', () => {
+    // An unstamped, past, score-pending game between two PCAL teams is not a missing official result.
+    const pcal = game({ home: 'carmel', away: 'salinas', date: '2026-09-20', status: 'score-pending', official: null });
+    expect(missingOfficialResults([pcal], [], 'pcal', TODAY)).toEqual([]);
   });
 });

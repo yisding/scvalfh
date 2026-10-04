@@ -37,6 +37,8 @@ const AT = '2026-10-02T15:00:00.000Z';
 function fixture(division: DivisionId, date: string, away: string, home: string): OfficialFixture {
   const a = getTeamBySlug(away)!;
   const h = getTeamBySlug(home)!;
+  const official = getDivision(division).official;
+  if (official.mode === 'none') throw new Error(`${division} publishes no official schedule`);
   return {
     id: `${division}:${date}:${away}@${home}`,
     league: getTeamBySlug(home)!.league,
@@ -47,7 +49,7 @@ function fixture(division: DivisionId, date: string, away: string, home: string)
     homeName: h.name,
     awaySlug: away,
     homeSlug: home,
-    source: getDivision(division).official.source,
+    source: official.source,
   };
 }
 
@@ -470,6 +472,56 @@ describe('backfill rule 4: a clearly wrong MaxPreps final', () => {
       expect(res.games[0], `${g.home.slug} ${g.away.slug}`).toBe(g);
       expect(res.rows).toEqual([]);
     }
+  });
+});
+
+describe('backfill: a level si.com score in a 1 v 1 league (EAL)', () => {
+  const LEVEL_NOTE =
+    'si.com has a level score, but a varsity EAL game is decided on 1 v 1s and si.com does not say who won them, so it is not used.';
+  const pending = game({ home: 'corning', away: 'pleasant-valley', date: '2026-09-29', status: 'score-pending' });
+
+  it('rule 3 does not fill a score-pending EAL game from a level si.com score, and says why', () => {
+    const row = sb('2026-09-29', ['corning', 1], ['pleasant-valley', 1]);
+    const res = applyBackfill(input({ games: [pending], sblive: [row] }));
+    expect(res.games[0]).toBe(pending);
+    expect(res.rows).toEqual([]);
+    expect(res.skipped).toEqual([
+      expect.objectContaining({ contestId: pending.contestId, sblive: { home: 1, away: 1 }, sbliveUrl: row.url, note: LEVEL_NOTE }),
+    ]);
+  });
+
+  it('rule 3 fills it from a decisive si.com score, as for any league', () => {
+    const res = applyBackfill(input({ games: [pending], sblive: [sb('2026-09-29', ['corning', 0], ['pleasant-valley', 3])] }));
+    const g = res.games[0];
+    expect(g.status).toBe('final');
+    expect(g.home).toMatchObject({ slug: 'corning', score: 0, result: 'L' });
+    expect(g.away).toMatchObject({ slug: 'pleasant-valley', score: 3, result: 'W' });
+    expect(g.provenance.backfill?.rule).toBe('score-pending');
+    expect(res.skipped).toEqual([]);
+  });
+
+  it('a level si.com score still fills a league that ends level games as ties (PCAL)', () => {
+    const pcal = game({ home: 'carmel', away: 'salinas', date: '2026-09-29', status: 'score-pending' });
+    const g = applyBackfill(input({ games: [pcal], sblive: [sb('2026-09-29', ['carmel', 1], ['salinas', 1])] })).games[0];
+    expect(g.status).toBe('final');
+    expect([g.home.result, g.away.result]).toEqual(['T', 'T']);
+  });
+
+  it('rules 4a and 4b never override an EAL final with a level si.com score; a decisive one still does', () => {
+    const base = game({ home: 'chico', away: 'davis', date: '2026-09-28', hs: 2, as: 1 });
+    const bad = { ...base, provenance: { ...base.provenance, resultConflict: 'the side with more goals is marked L' } };
+    expect(applyBackfill(input({ games: [bad], sblive: [sb('2026-09-28', ['chico', 1], ['davis', 1])] })).games[0]).toBe(bad);
+    const decisive = applyBackfill(input({ games: [bad], sblive: [sb('2026-09-28', ['chico', 0], ['davis', 1])] })).games[0];
+    expect(decisive.provenance.backfill?.rule).toBe('contradictory-result');
+
+    // 4b needs an official stamp, which no EAL game carries; a stamped one still meets the guard.
+    const late = game({
+      home: 'lassen', away: 'bella-vista', date: '2026-09-30', hs: 3, as: 0,
+      official: { source: 'scval-pdf', pass: 'rescheduled', scheduledDate: '2026-09-21' },
+    });
+    expect(applyBackfill(input({ games: [late], sblive: [sb('2026-09-21', ['lassen', 2], ['bella-vista', 2])] })).games[0]).toBe(late);
+    const moved = applyBackfill(input({ games: [late], sblive: [sb('2026-09-21', ['lassen', 2], ['bella-vista', 1])] })).games[0];
+    expect(moved.provenance.backfill?.rule).toBe('off-schedule-date');
   });
 });
 

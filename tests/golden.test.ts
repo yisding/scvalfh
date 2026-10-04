@@ -240,6 +240,8 @@ describe('golden item 2: isolation from 100+ foreign-league games', () => {
     ['tamalpais', 'redwood'], ['berkeley', 'archie-williams'], ['university-sf', 'marin-catholic'],
     ['convent-sacred-heart', 'marin-academy'], ['lick-wilmerding', 'tamalpais'],
     ['leigh', 'tamalpais'], ['carmel', 'branham'], ['redwood', 'hollister'],
+    ['chico', 'davis'], ['pleasant-valley', 'corning'], ['lassen', 'bella-vista'],
+    ['chico', 'tamalpais'], ['davis', 'leigh'], ['bella-vista', 'carmel'],
   ];
 
   function foreignGames(): Game[] {
@@ -264,6 +266,13 @@ describe('golden item 2: isolation from 100+ foreign-league games', () => {
         }),
       );
     }
+    // EAL-only shapes: 1 v 1 wins (decider 'SO', level on goals) and Super Regional dates.
+    out.push(
+      game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' } }),
+      game({ home: 'lassen', away: 'pleasant-valley', hs: 0, as: 0, date: '2026-10-07', results: { home: 'L', away: 'W' } }),
+      game({ home: 'chico', away: 'pleasant-valley', hs: 2, as: 1, date: '2026-10-30' }),
+      game({ home: 'davis', away: 'corning', date: '2026-10-31', status: 'scheduled' }),
+    );
     return out;
   }
 
@@ -274,6 +283,8 @@ describe('golden item 2: isolation from 100+ foreign-league games', () => {
     expect(games.some((g) => g.dateKey >= '2026-11-07')).toBe(true);
     expect(games.some((g) => g.countsFor !== null)).toBe(true);
     expect(games.some((g) => g.postseason !== null)).toBe(true);
+    expect(games.filter((g) => g.decider === 'SO')).toHaveLength(2);
+    expect(games.some((g) => g.postseason?.kind === 'league-postseason')).toBe(true);
     const scvalSlugs = new Set(teamsInLeague('scval').map((t) => t.slug));
     for (const g of games) {
       expect([g.home.slug, g.away.slug].some((s) => s !== null && scvalSlugs.has(s))).toBe(false);

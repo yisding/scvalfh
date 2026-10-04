@@ -14,6 +14,9 @@
  * scoreboard exposes neither home/away nor a web path — only two names, two logo URLs and two score
  * strings. Team identity comes from lib/sources/sblive.ts `resolveSbliveSide` (id first).
  *
+ * Only scores are compared; no W/L/T is derived here (that is lib/format.ts `sideOutcome`). So an EAL 1 v 1
+ * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree.
+ *
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */
 

@@ -1,16 +1,23 @@
 /**
  * The site-facing read API (SPEC §13.3), against the committed v1 golden snapshot migrated to v2
  * and written to a temp file in SCVAL_SNAPSHOT. SCVAL has its real 2026-10-02 results; BVAL, PCAL
- * and MCAL are registry teams with no results and a degraded health row.
+ * and MCAL are registry teams with no results and a degraded health row, and the EAL (which the v1
+ * file predates) is added by loadSnapshot's league upgrade. A second snapshot, the same file plus a
+ * few synthetic EAL league games, drives the EAL cases at the end (a fresh module instance).
  */
 
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { buildSeason } from '../lib/season-build';
+import { countsOf } from '../lib/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot-schema';
+import { computeStandings } from '../lib/standings';
+import type { Game, Snapshot } from '../lib/types';
+import { game } from './game-builder';
 
 type DataModule = typeof import('../lib/data');
 let data: DataModule;
@@ -35,9 +42,9 @@ afterAll(() => {
 describe('data: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
     expect(data.getSnapshot().schemaVersion).toBe(2);
-    expect(data.getSnapshot().teams.length).toBe(43);
+    expect(data.getSnapshot().teams.length).toBe(49);
     expect(data.getFetchedAt()).toBe('2026-10-02T10:48:51.206Z');
-    expect(data.getCounts().teams).toBe(43);
+    expect(data.getCounts().teams).toBe(49);
   });
 
   it('derives today from the snapshot stamp in America/Los_Angeles', () => {
@@ -52,10 +59,10 @@ describe('data: identity and freshness', () => {
 });
 
 describe('data: sections and leagues', () => {
-  it('summarises the four leagues in config order', () => {
+  it('summarises the five leagues in config order', () => {
     const leagues = data.getLeagueSummaries();
-    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
-    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9]);
+    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6]);
     const bval = data.getLeagueSummary('bval')!;
     expect(bval.section).toEqual({ id: 'ccs', name: 'Central Coast Section', shortName: 'CCS' });
     expect(bval.singleDivision).toBe(false);
@@ -67,40 +74,51 @@ describe('data: sections and leagues', () => {
     expect(mcal.section.shortName).toBe('NCS');
     expect(mcal.singleDivision).toBe(true);
     expect(mcal.divisions[0].heading).toBeNull();
+    const eal = data.getLeagueSummary('eal')!;
+    expect(eal.section).toEqual({ id: 'ns', name: 'Northern Section', shortName: 'NS' });
+    expect(eal.singleDivision).toBe(true);
+    expect(eal.divisions.map((d) => [d.id, d.heading, d.teamCount])).toEqual([['eal', null, 6]]);
     expect(data.getLeagueSummary('nope')).toBeUndefined();
   });
 
   it('lists route params', () => {
-    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(data.getTournamentLeagueIds()).toEqual(['mcal']);
-    expect(data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs']);
+    expect(data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
   });
 
   it('exposes league health', () => {
-    expect(data.getAllLeagueHealth()).toHaveLength(4);
+    expect(data.getAllLeagueHealth()).toHaveLength(5);
+    expect(data.getAllLeagueHealth().map((h) => h.leagueId)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(data.getLeagueHealth('scval').state).toBe('fresh');
     expect(data.getLeagueHealth('mcal').state).toBe('degraded');
+    expect(data.getLeagueHealth('eal').state).toBe('degraded');
     expect(() => data.getLeagueHealth('nope')).toThrow();
   });
 });
 
 describe('data: teams', () => {
-  it('returns all 43, one division, or one league', () => {
-    expect(data.getTeams().length).toBe(43);
+  it('returns all 49, one division, or one league', () => {
+    expect(data.getTeams().length).toBe(49);
     expect(data.getTeams('de-anza').length).toBe(7);
     expect(data.getTeams({ division: 'el-camino' }).length).toBe(8);
     expect(data.getTeams({ league: 'bval' }).length).toBe(12);
     expect(data.getTeams({ league: 'pcal' }).map((t) => t.division)).toEqual(Array(7).fill('pcal'));
     expect(data.getTeams({ league: 'bval', division: 'santa-teresa' }).length).toBe(6);
+    expect(data.getTeams({ league: 'eal' }).map((t) => t.slug)).toEqual([
+      'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
+    ]);
   });
 
   it('groups section → league → division', () => {
     const grouped = data.getTeamsGrouped();
-    expect(grouped.map((g) => g.section.id)).toEqual(['ccs', 'ncs']);
+    expect(grouped.map((g) => g.section.id)).toEqual(['ccs', 'ncs', 'ns']);
     expect(grouped[0].leagues.map((l) => l.league.id)).toEqual(['scval', 'bval', 'pcal']);
     expect(grouped[1].leagues[0].divisions).toHaveLength(1);
     expect(grouped[1].leagues[0].divisions[0].heading).toBeNull();
-    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(43);
+    expect(grouped[2].leagues.map((l) => l.league.id)).toEqual(['eal']);
+    expect(grouped[2].leagues[0].divisions.map((d) => [d.id, d.heading, d.teams.length])).toEqual([['eal', null, 6]]);
+    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
   });
 
   it('looks a team up by slug or GUID, and names its league', () => {
@@ -111,12 +129,13 @@ describe('data: teams', () => {
     expect(data.getTeamBySlug('nope')).toBeUndefined();
     expect(data.getLeagueOfTeam('tamalpais')?.id).toBe('mcal');
     expect(data.getLeagueOfTeam('nope')).toBeUndefined();
-    expect(data.getTeamSlugs()).toHaveLength(43);
+    expect(data.getLeagueOfTeam('davis')?.id).toBe('eal');
+    expect(data.getTeamSlugs()).toHaveLength(49);
   });
 
   it('builds the search index in LEAGUES then registry order', () => {
     const index = data.getTeamSearchIndex();
-    expect(index.teams).toHaveLength(43);
+    expect(index.teams).toHaveLength(49);
     expect(index.teams.map((t) => t.slug)).toEqual(data.getTeams().map((t) => t.slug));
     expect(data.getTeamSearchIndex()).toBe(index);
   });
@@ -210,7 +229,7 @@ describe('data: standings and derived facts', () => {
     ]);
     expect(data.getLeagueStandings('pcal')[0].heading).toBeNull();
     expect(Object.keys(data.getAllStandings())).toEqual([
-      'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county',
+      'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
     ]);
     expect(data.getStandingFor('leigh')?.hasReportedResults).toBe(false);
   });
@@ -293,6 +312,16 @@ describe('data: season phase per league', () => {
     expect(data.getSeasonPhase('mcal', '2026-10-31T19:00:00.000Z')).toBe('complete');
   });
 
+  it('EAL: regular through its last league games, then the Super Regional window', () => {
+    // Bella Vista's non-league games give the EAL window a first game (Sep 24).
+    expect(data.getSeasonPhase('eal', '2026-09-01T19:00:00.000Z')).toBe('preseason');
+    expect(data.getSeasonPhase('eal')).toBe('regular');
+    expect(data.getSeasonPhase('eal', '2026-10-28T19:00:00.000Z')).toBe('regular');
+    expect(data.getSeasonPhase('eal', '2026-10-29T19:00:00.000Z')).toBe('tournament');
+    expect(data.getSeasonPhase('eal', '2026-10-31T19:00:00.000Z')).toBe('tournament');
+    expect(data.getSeasonPhase('eal', '2026-11-01T19:00:00.000Z')).toBe('complete');
+  });
+
   it('the site phase is the least advanced league', () => {
     expect(data.getSitePhase('2026-10-26T19:00:00.000Z')).toBe('regular');
     expect(data.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('complete');
@@ -328,6 +357,12 @@ describe('data: postseason', () => {
     expect(() => data.getLeagueTournament('scval')).toThrow(/runs no league tournament/);
   });
 
+  it('draws neither a CCS projection nor a bracket for the EAL', () => {
+    expect(() => data.getPlayoffProjection('eal')).toThrow(/no CCS ladder/);
+    expect(() => data.getLeagueTournament('eal')).toThrow(/runs no league tournament/);
+    expect(data.getLeaguePairings('eal')).toEqual([]);
+  });
+
   it('builds the MCAL tournament on an empty table', () => {
     const t = data.getLeagueTournament('mcal');
     expect(t.leagueId).toBe('mcal');
@@ -357,6 +392,7 @@ describe('data: postseason', () => {
     expect(sf.linkText).toBe('CCS playoffs →');
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
+    expect(data.getTeamPostseasonLine('chico')).toBeNull();
     expect(data.getTeamPostseasonLine('nope')).toBeNull();
   });
 });
@@ -415,5 +451,108 @@ describe('data: the secondary-source read API', () => {
     }
     expect(data.getCrossCheck({ league: 'scval' })).toEqual(data.getCrossCheck());
     expect(data.getCrossCheck({ league: 'bval' })).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------- EAL with results
+
+/**
+ * The same golden snapshot plus a few synthetic EAL league games (dated around the snapshot's
+ * 2026-10-02 stamp), with the EAL standings, window and counts recomputed and the whole file
+ * re-validated by loadSnapshot. Chico beat Davis on 1 v 1s (1-1, flagged W/L) and Pleasant Valley
+ * beat Lassen, so the two are level on 3 points at the top; Pleasant Valley at Corning (Sep 29) is
+ * past with no score, and Davis–Pleasant Valley (Oct 28) is still to come.
+ */
+describe('data: an EAL table with results', () => {
+  let eal: DataModule;
+  let pending: Game;
+
+  beforeAll(async () => {
+    const raw = JSON.parse(
+      readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
+    ) as unknown;
+    const base = loadSnapshot(raw);
+    pending = game({ home: 'corning', away: 'pleasant-valley', date: '2026-09-29', status: 'score-pending' });
+    const added = [
+      game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' } }),
+      game({ home: 'pleasant-valley', away: 'lassen', hs: 2, as: 0, date: '2026-09-21' }),
+      pending,
+      game({ home: 'davis', away: 'pleasant-valley', date: '2026-10-28' }),
+    ];
+    const games = [...base.games, ...added];
+    const ealRows = new Map(
+      computeStandings(games, { reported: new Map() })
+        .filter((r) => r.division === 'eal')
+        .map((r) => [r.teamId, r]),
+    );
+    const standings = base.standings.map((r) => ealRows.get(r.teamId) ?? r);
+    const season = buildSeason(games);
+    const next: Snapshot = {
+      ...base,
+      games,
+      standings,
+      season: {
+        ...base.season,
+        leagues: base.season.leagues.map((l) => (l.id === 'eal' ? season.leagues.find((x) => x.id === 'eal')! : l)),
+        window: season.window,
+      },
+      counts: countsOf(games, standings),
+    };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-eal-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    eal = await import('../lib/data');
+  });
+
+  it('counts the 1 v 1 win for Chico in the table and in both forms', () => {
+    const table = eal.getStandings('eal');
+    const rec = (slug: string) => {
+      const c = table.find((r) => r.slug === slug)!.computed;
+      return [c.w, c.l, c.t, c.pts, c.gf, c.ga];
+    };
+    expect(rec('chico')).toEqual([1, 0, 0, 3, 1, 1]);
+    expect(rec('davis')).toEqual([0, 1, 0, 0, 1, 1]);
+    expect(eal.getTeamForm('chico')!.leagueGames.find((g) => g.status === 'final')?.outcome).toBe('W');
+    const davis = eal.getTeamForm('davis')!.leagueGames.find((g) => g.status === 'final')!;
+    expect([davis.outcome, davis.margin]).toEqual(['L', 0]);
+    const h2h = eal.getHeadToHead('chico', 'davis')!;
+    expect([h2h.aRecord, h2h.bRecord]).toEqual([{ w: 1, l: 0, t: 0 }, { w: 0, l: 1, t: 0 }]);
+  });
+
+  it('lists the past EAL game with no score as a missing league result', () => {
+    const missing = eal.getMissingOfficialResults('eal');
+    expect(missing.map((m) => [m.kind, m.dateKey, m.game?.contestId, m.homeSlug, m.awaySlug])).toEqual([
+      ['missing', '2026-09-29', pending.contestId, 'corning', 'pleasant-valley'],
+    ]);
+    expect(missing[0].sblive).toBeNull();
+    const ctx = eal.getStandingContext('eal');
+    expect(ctx.get(eal.getTeamBySlug('corning')!.id)!.missingPast).toBe(1);
+    expect(ctx.get(eal.getTeamBySlug('chico')!.id)!.missingPast).toBe(0);
+    // Once Oct 28 has passed, the unplayed Davis–Pleasant Valley game is missing too.
+    expect(eal.getMissingOfficialResults('eal', '2026-10-29T19:00:00.000Z').map((m) => m.dateKey)).toEqual([
+      '2026-09-29', '2026-10-28',
+    ]);
+  });
+
+  it('never calls co-leaders final while an EAL league result is missing', () => {
+    const now = eal.getCoLeaders('eal')!;
+    expect(now.teams.map((t) => t.slug)).toEqual(['chico', 'pleasant-valley']);
+    expect(now.final).toBe(false);
+    // After league play the phase allows it; the missing results still hold it back.
+    expect(eal.getSeasonPhase('eal', '2026-10-29T19:00:00.000Z')).toBe('tournament');
+    const later = eal.getCoLeaders('eal', '2026-10-29T19:00:00.000Z')!;
+    expect(later.final).toBe(false);
+    expect(later.label).toBe('Level on points at the top');
+  });
+
+  it('writes the Super Regional line for a placed EAL team, and none for one without results', () => {
+    expect(eal.getTeamPostseasonLine('chico')).toEqual({
+      label: 'Super Regional place',
+      sentence: 'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+      href: '/playoffs#eal',
+      linkText: 'Postseason →',
+    });
+    expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
   });
 });

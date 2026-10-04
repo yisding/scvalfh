@@ -15,6 +15,10 @@
  * (seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b, the same recursion as lib/standings.ts),
  * so its contenders are exactly the teams the table shows sharing 6th with `resolvedBy: 'play-in'`.
  *
+ * Only a 'league-tournament' league (MCAL) reaches this module. Of the five leagues, SCVAL, BVAL and PCAL go
+ * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
+ * bracket, so none is drawn for it.
+ *
  * Imports only types, lib/leagues.ts and lib/teams.ts.
  */
 

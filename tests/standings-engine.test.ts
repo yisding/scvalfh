@@ -659,6 +659,84 @@ describe('MCAL: lib/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄
 
 // ---------------------------------------------------------------- ladders, pairings, cross-check
 
+// ---------------------------------------------------------------- EAL (points for the title, no tiebreak)
+
+describe('EAL: 1 v 1 wins, points, and no tiebreak', () => {
+  // A synthetic 16-game EAL season with the records MaxPreps showed on 2026-10-04 (PV 5-0-0, Chico 4-1-0,
+  // Davis 3-2-0, Bella Vista and Lassen 2-4-0, Corning 0-5-0). Chico–Davis is level 1-1, flagged W/L: a
+  // 1 v 1 win for Chico, as on 2026-09-28.
+  const oneVOne = game({
+    home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' },
+  });
+  const season: Game[] = [
+    ...finals([
+      ['pleasant-valley', 'chico', 2, 1], ['pleasant-valley', 'davis', 3, 0], ['pleasant-valley', 'bella-vista', 4, 0],
+      ['pleasant-valley', 'lassen', 5, 0], ['pleasant-valley', 'corning', 6, 0],
+      ['chico', 'bella-vista', 2, 0], ['chico', 'lassen', 3, 0], ['chico', 'corning', 4, 0],
+      ['davis', 'bella-vista', 1, 0], ['davis', 'lassen', 2, 0], ['davis', 'corning', 3, 0],
+      ['bella-vista', 'corning', 2, 1], ['lassen', 'corning', 1, 0],
+      ['bella-vista', 'lassen', 1, 0], ['lassen', 'bella-vista', 2, 1],
+    ]),
+    oneVOne,
+  ];
+  const rows = table(season, 'eal');
+
+  it('counts the 1 v 1 win for the flagged side, while its goals stay as recorded', () => {
+    expect(oneVOne.decider).toBe('SO');
+    expect(oneVOne.countsFor).toBe('eal');
+    const chico = row(rows, 'chico').computed;
+    const davis = row(rows, 'davis').computed;
+    expect([chico.w, chico.l, chico.t, chico.pts]).toEqual([4, 1, 0, 12]);
+    expect([davis.w, davis.l, davis.t, davis.pts]).toEqual([3, 2, 0, 9]);
+    // 1-1: one goal for and one against on each side.
+    expect([chico.gf, chico.ga]).toEqual([1 + 1 + 2 + 3 + 4, 2 + 1]);
+    expect([davis.gf, davis.ga]).toEqual([1 + 1 + 2 + 3, 3 + 1]);
+    expect(chico.last5[chico.last5.length - 1]).toBe('W');
+    expect(davis.last5[davis.last5.length - 1]).toBe('L');
+  });
+
+  it('orders on 3/1/0 points and leaves a tie level: the Guidelines break none', () => {
+    expect(rows.map((r) => [r.slug, r.computed.pts])).toEqual([
+      ['pleasant-valley', 15], ['chico', 12], ['davis', 9], ['bella-vista', 6], ['lassen', 6], ['corning', 0],
+    ]);
+    expect(places(rows, ['pleasant-valley', 'chico', 'davis', 'bella-vista', 'lassen', 'corning'])).toEqual([
+      1, 2, 3, 4, 4, 6,
+    ]);
+    const bv = row(rows, 'bella-vista');
+    expect(bv.tiebreak.resolvedBy).toBe('no-rule');
+    expect(bv.tiebreak.shared).toBe(true);
+    expect(bv.tiebreak.tiedWith).toEqual([row(rows, 'lassen').teamId]);
+    expect(bv.tiebreak.note).toContain(getLeague('eal').rules.citations.stages['no-rule']);
+  });
+
+  it('puts every placed team in the Super Regional ladder and draws no pairing', () => {
+    for (const r of rows) expect(r.playoffStatus).toBe('tournament');
+    expect(playoffStatusFor('eal', 6)).toBe('tournament');
+    expect(playoffStatusFor('eal', 7)).toBe('below-line');
+    expect(leaguePairings(computeStandings(season), season, 'eal')).toEqual([]);
+  });
+
+  it('cross-checks records only against MaxPreps, with the win-percentage cause', () => {
+    const chicoId = row(rows, 'chico').teamId;
+    const reported: ReportedRecord = {
+      conferenceWins: 4, conferenceLosses: 1, conferenceTies: 0,
+      overallWins: 4, overallLosses: 1, overallTies: 0,
+      conferencePoints: 11, conferencePointsAgainst: 3, points: 0, pointsAgainst: 0,
+      conferenceContestsPlayed: 5, overallContestsPlayed: 5,
+      conferenceStandingPlacement: 2, conferenceWinningPercentage: 0.8, winningPercentage: 0.8,
+      streak: 0, streakResult: null,
+      homeWins: 0, homeLosses: 0, homeTies: 0, awayWins: 0, awayLosses: 0, awayTies: 0,
+      neutralWins: 0, neutralLosses: 0, neutralTies: 0,
+      modifiedOn: '2026-10-04T00:00:00',
+    };
+    expect(getLeague('eal').divisions[0].reportedTrust).toBe('records-only');
+    const withReported = computeStandings([oneVOne], { reported: new Map([[chicoId, reported]]) });
+    const check = buildCrossCheck(withReported).filter((r) => r.slug === 'chico');
+    expect(check).toHaveLength(4);
+    expect(check[0].knownCause).toBe(getLeague('eal').divisions[0].knownCause);
+  });
+});
+
 describe('ladders and pairings by league', () => {
   it('maps places to each league’s statuses', () => {
     expect(playoffStatusFor('mt-hamilton', 3)).toBe('aq');

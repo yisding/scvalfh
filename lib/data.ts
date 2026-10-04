@@ -14,7 +14,16 @@ import { readFileSync } from 'node:fs';
 
 import bundledSnapshot from '../data/snapshot.json';
 
-import { hoursBetween, isoDateKey, localDateKey, recordString, shortDate } from './format';
+import {
+  dateSpan,
+  hoursBetween,
+  isoDateKey,
+  localDateKey,
+  numberWord,
+  recordString,
+  shortDate,
+  sideOutcome,
+} from './format';
 import {
   ALL_DIVISIONS,
   CCS,
@@ -209,7 +218,7 @@ export interface LeagueSummary {
   name: string;
   shortName: string;
   region: string;
-  section: { id: SectionId; name: string; shortName: 'CCS' | 'NCS' };
+  section: { id: SectionId; name: string; shortName: SectionConfig['shortName'] };
   singleDivision: boolean;
   divisions: Array<{ id: DivisionId; label: string; heading: string | null; teamCount: number }>;
   teamCount: number;
@@ -251,7 +260,7 @@ export function getSections(): readonly SectionConfig[] {
   return SECTIONS;
 }
 
-/** One summary per league, config order (scval, bval, pcal, mcal). */
+/** One summary per league, config order (scval, bval, pcal, mcal, eal). */
 export function getLeagueSummaries(): LeagueSummary[] {
   return SUMMARIES;
 }
@@ -282,7 +291,7 @@ export function getAllLeagueHealth(): readonly LeagueHealth[] {
 
 // ---------------------------------------------------------------- teams
 
-/** All 43 (registry order), one division (a bare id), or `{ league?, division? }`. */
+/** All 49 (registry order), one division (a bare id), or `{ league?, division? }`. */
 export function getTeams(filter?: DivisionId | { league?: LeagueId; division?: DivisionId }): readonly Team[] {
   if (filter === undefined) return snapshot.teams;
   const f = typeof filter === 'string' ? { division: filter } : filter;
@@ -336,7 +345,7 @@ export function getLeagueOfTeam(ref: string): LeagueSummary | undefined {
 
 let searchIndex: SearchIndex | null = null;
 
-/** The pre-serialized 43-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
+/** The pre-serialized 49-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
 export function getTeamSearchIndex(): SearchIndex {
   if (searchIndex) return searchIndex;
   const teams = LEAGUES.flatMap((l) => snapshot.teams.filter((t) => t.league === l.id)).map((t) => ({
@@ -759,10 +768,12 @@ export function getHeadToHead(aRef: string, bRef: string): HeadToHead | undefine
       aGoals += aScore;
       bGoals += bScore;
     }
-    if (aScore > bScore) {
+    // sideOutcome: an EAL 1 v 1 win (decider 'SO', level on goals) is the flagged side's win.
+    const outcome = sideOutcome(g, aIsHome ? 'home' : 'away');
+    if (outcome === 'W') {
       aRecord.w += 1;
       bRecord.l += 1;
-    } else if (aScore < bScore) {
+    } else if (outcome === 'L') {
       aRecord.l += 1;
       bRecord.w += 1;
     } else {
@@ -825,14 +836,8 @@ export function getTeamForm(ref: string): TeamForm | undefined {
       const theirs = isHome ? g.away : g.home;
       const counted =
         g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
-      const outcome: Outcome | null =
-        g.status === 'final' && mine.score !== null && theirs.score !== null
-          ? mine.score > theirs.score
-            ? 'W'
-            : mine.score < theirs.score
-              ? 'L'
-              : 'T'
-          : null;
+      // sideOutcome: an EAL 1 v 1 win (decider 'SO', level on goals) is the flagged side's win.
+      const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
       return {
         contestId: g.contestId,
         date: g.dateKey,
@@ -864,7 +869,8 @@ export function getPlayoffs(): CcsPlayoffs {
 
 /**
  * A CCS league's ladder projection (SPEC §6.1): rows per division from the computed table, every
- * status a written word. Throws for a league-tournament league (see getLeagueTournament).
+ * status a written word. Throws for any other league: a league-tournament league (see getLeagueTournament) or
+ * an unbracketed one (the EAL draws no bracket and gets no projection; DESIGN §22).
  */
 export function getPlayoffProjection(leagueId: LeagueId, asOf: string = snapshot.fetchedAt): PlayoffProjection {
   const league = getLeague(leagueId);
@@ -898,7 +904,7 @@ export function getPlayoffProjection(leagueId: LeagueId, asOf: string = snapshot
   };
 }
 
-/** SCVAL: the 4 crossover pairings; BVAL: the play-in; PCAL and MCAL: []. */
+/** SCVAL: the 4 crossover pairings; BVAL: the play-in; PCAL, MCAL and EAL: []. */
 export function getLeaguePairings(leagueId: LeagueId): LeaguePairing[] {
   return leaguePairings(snapshot.standings, snapshot.games, leagueId);
 }
@@ -921,7 +927,7 @@ export function getCcsField(): {
   };
 }
 
-/** A league-tournament league's bracket projection (MCAL). Throws for a CCS league. */
+/** A league-tournament league's bracket projection (MCAL). Throws for any other league (CCS, EAL). */
 export function getLeagueTournament(leagueId: LeagueId, asOf: string = snapshot.fetchedAt): LeagueTournamentProjection {
   const league = getLeague(leagueId);
   if (league.postseason.kind !== 'league-tournament') {
@@ -937,8 +943,6 @@ export interface TeamPostseasonLine {
   href: string;
   linkText: string;
 }
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
 /** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
 function clock(time: string): string {
@@ -960,40 +964,51 @@ export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseaso
   const label = playoffOutcomeLabel(row.division, statuses);
   const ps = league.postseason;
 
-  if (ps.kind === 'league-tournament') {
-    const round = (id: string) => ps.rounds.find((r) => r.id === id);
-    const qf = round('qf-1');
-    const playIn = round('play-in');
-    const final = round('final');
-    const qualifiers = NUMBER_WORDS[ps.qualifiers] ?? String(ps.qualifiers);
-    const byes = ps.byes.length === 2 ? `${ps.byes[0]}-${ps.byes[1]}` : ps.byes.join(', ');
-    return {
-      label,
-      sentence:
-        `Top ${qualifiers} make the ${ps.name}: quarterfinals ${qf ? shortDate(qf.date) : ''}` +
-        `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
-        `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
-      href: `/playoffs/${league.id}`,
-      linkText: `${ps.name} →`,
-    };
+  switch (ps.kind) {
+    case 'league-tournament': {
+      const round = (id: string) => ps.rounds.find((r) => r.id === id);
+      const qf = round('qf-1');
+      const playIn = round('play-in');
+      const final = round('final');
+      const qualifiers = numberWord(ps.qualifiers);
+      const byes = ps.byes.length === 2 ? `${ps.byes[0]}-${ps.byes[1]}` : ps.byes.join(', ');
+      return {
+        label,
+        sentence:
+          `Top ${qualifiers} make the ${ps.name}: quarterfinals ${qf ? shortDate(qf.date) : ''}` +
+          `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
+          `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
+        href: `/playoffs/${league.id}`,
+        linkText: `${ps.name} →`,
+      };
+    }
+    case 'unbracketed-tournament':
+      // The EAL's Super Regional: the rule and the dates, never a bracket or a seed (DESIGN §22).
+      return {
+        label,
+        sentence: `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
+        href: `/playoffs#${league.id}`,
+        linkText: 'Postseason →',
+      };
+    case 'ccs-ladder': {
+      const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
+      const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
+      let sentence: string;
+      if (crossover) {
+        sentence = `The SCVAL crossover and the 4th-place play-in are ${shortDate(crossover.date)}.`;
+      } else if (playIn && statuses.includes('play-in')) {
+        sentence =
+          `${playIn.seatLabels[1]} plays at the ${divisionLabelOf(playIn.seats[0].division)} champion ` +
+          `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
+      } else if (statuses[0] === 'no-aq-route') {
+        sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
+      } else {
+        // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
+        sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
+      }
+      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs →' };
+    }
   }
-
-  const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
-  const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
-  let sentence: string;
-  if (crossover) {
-    sentence = `The SCVAL crossover and the 4th-place play-in are ${shortDate(crossover.date)}.`;
-  } else if (playIn && statuses.includes('play-in')) {
-    sentence =
-      `${playIn.seatLabels[1]} plays at the ${divisionLabelOf(playIn.seats[0].division)} champion ` +
-      `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
-  } else if (statuses[0] === 'no-aq-route') {
-    sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
-  } else {
-    // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
-    sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
-  }
-  return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs →' };
 }
 
 function divisionLabelOf(id: DivisionId): string {
