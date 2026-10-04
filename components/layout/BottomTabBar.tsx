@@ -3,7 +3,7 @@ import { LEAGUE_IDS } from '../../lib/leagues';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
-import { navLeagueHrefs } from './TopNav';
+import { navLeagueHrefs } from './nav-targets';
 
 /**
  * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §18). FIVE tabs: Home, Scores, Teams, Leaders,

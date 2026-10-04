@@ -4,6 +4,8 @@ import TeamFinder from '../search/TeamFinder';
 import SectionHeader from '../ui/SectionHeader';
 import type { SearchIndex } from '../../lib/search';
 
+import { focusUnpin } from './MyTeamCard';
+
 /**
  * The first-visit view (SPEC §10.1): shown when no league is remembered (`data-scope="none"`), and
  * never an SCVAL default. A pin-mode finder over every team (49), then the five league cards
@@ -24,15 +26,6 @@ export interface FindYourTeamProps {
   /** The league cards (`<LeagueCard>` items). */
   children: React.ReactNode;
   className?: string;
-}
-
-export const UNPIN_ID = 'my-team-unpin';
-
-/** Focus the pinned card's Unpin button once it has rendered. */
-export function focusUnpin(): void {
-  const run = () => document.getElementById(UNPIN_ID)?.focus();
-  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
-  else run();
 }
 
 export function FindYourTeam({ index, children, className }: FindYourTeamProps) {
