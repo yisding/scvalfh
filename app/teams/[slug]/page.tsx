@@ -282,14 +282,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <Link
               href={view.standingsHref}
               prefetch={false}
-              className="sx-pill bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
+              className="sx-pill sx-pill-ring"
             >
               {view.standingsLabel} <Arrow />
             </Link>
             {view.officialScheduleUrl ? (
               <ExternalLink
                 href={view.officialScheduleUrl}
-                className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                className="sx-pill sx-pill-ring"
               >
                 Official {view.league.shortName} schedule
               </ExternalLink>
@@ -452,7 +452,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={team.external.maxprepsTeamUrl}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     MaxPreps: {team.name} field hockey
                   </ExternalLink>
@@ -462,7 +462,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={team.external.maxprepsScheduleUrl}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     MaxPreps schedule &amp; scores
                   </ExternalLink>
@@ -472,7 +472,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={sblive}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     High School on SI (si.com): {team.name}
                   </ExternalLink>

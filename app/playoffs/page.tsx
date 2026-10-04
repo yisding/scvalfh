@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
@@ -270,25 +271,13 @@ export default function PlayoffsPage() {
       })}
 
       {/* 3. Jump links (shown pre-paint only for the remembered league) and the league chips. */}
-      <p className="m-0 mt-4 flex flex-wrap gap-2">
-        {summaries.map((league) => (
-          <a
-            key={league.id}
-            href={hrefs[league.id]}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
-          >
-            {/* An unbracketed league's card sits above these links, so its arrow points up. */}
-            Jump to {league.shortName}{' '}
-            {tournamentIds.has(league.id) ? (
-              <>&rarr;</>
-            ) : UNBRACKETED_LEAGUE_IDS.includes(league.id) ? (
-              <>&uarr;</>
-            ) : (
-              <>&darr;</>
-            )}
-          </a>
-        ))}
-      </p>
+      {/* A tournament league's pill leads to its own page; an unbracketed league's card sits
+          above these links, so its arrow points up. */}
+      <LeagueJumpLinks
+        leagues={summaries}
+        hrefs={hrefs}
+        arrow={(id) => (tournamentIds.has(id) ? 'right' : UNBRACKETED_LEAGUE_IDS.includes(id) ? 'up' : 'down')}
+      />
       <LeagueSwitcher mode="anchor" label="Leagues" leagues={chips} hrefs={hrefs} className="mt-4" />
 
       {/* 4. The field: numbers only, ink only (no league hue). Each label names its unit, "berths"

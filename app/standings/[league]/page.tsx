@@ -176,7 +176,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           <ExternalLink
             key={link.href}
             href={link.href}
-            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring"
           >
             {link.label}
           </ExternalLink>
@@ -185,7 +185,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           <Link
             href={`/history/2025-26#${summary.id}`}
             prefetch={false}
-            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring"
           >
             Last season&rsquo;s final tables
           </Link>

@@ -2165,6 +2165,8 @@ qualifier) ·
 `StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `share →` link to `/scores/[date]`) ·
 `TimelineRail` (anchor links to date-group ids) · `DivisionTabs` (plain `<a href="#de-anza">`
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·
+`LeagueJumpLinks` (the "Jump to <league>" pills on `/standings`, `/schedule` and `/playoffs`,
+each shown before paint only for the remembered league by the league-scope stylesheet) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
 new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
 §5.3) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its

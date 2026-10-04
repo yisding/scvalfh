@@ -480,15 +480,22 @@
      BUTTON (Unpin, Pin this team, More filters) keeps ink. */
   a.sx-pill { color: var(--sx-accent); }
   .sx-pill.sx-pill-accent { background: var(--sx-accent-wash); color: var(--sx-accent-ink); font-weight: 600; }
+  /* The canvas pill: on the page background the plain surface-2 fill barely separates, so a pill
+     there is raised to the card plane with the hairline ring and hovers and presses down to
+     surface-2 (F-56g). Height stays the caller's: `min-h-11` only where the pill is primary. */
+  .sx-pill.sx-pill-ring { background: var(--sx-surface); box-shadow: var(--sx-ring); }
   /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
-     surface-3 chrome plane (its hover plane, already measured above), and the accent pill, which
-     keeps its wash, draws a 1px accent ring inside its edge. A pill with a utility background
-     (`bg-surface`, `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead —
-     utilities outrank this layer. */
+     surface-3 chrome plane (its hover plane, already measured above), the canvas pill to its own
+     surface-2 hover plane, and the accent pill, which keeps its wash, draws a 1px accent ring
+     inside its edge. A pill with a utility background (`bg-surface`,
+     `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead — utilities outrank
+     this layer. */
   .sx-pill:not(.sx-pill-accent):active { background: var(--sx-surface-3); }
+  .sx-pill.sx-pill-ring:active { background: var(--sx-surface-2); }
   .sx-pill.sx-pill-accent:active { box-shadow: inset 0 0 0 1px var(--sx-accent); }
   @media (hover: hover) {
     .sx-pill:hover { background: var(--sx-surface-3); }
+    .sx-pill.sx-pill-ring:hover { background: var(--sx-surface-2); }
     .sx-pill.sx-pill-accent:hover { background: var(--sx-accent-wash); text-decoration: underline; }
   }
   /* A small static fact pill: "as of Wed Sep 30", "3 final", a count beside a date. */

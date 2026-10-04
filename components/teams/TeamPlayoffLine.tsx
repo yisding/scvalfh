@@ -64,7 +64,7 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
       ) : null}
       <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
-        <Link href={line.href} prefetch={false} className="sx-pill text-accent">
+        <Link href={line.href} prefetch={false} className="sx-pill">
           {line.linkText} <Arrow />
         </Link>
         {league.postseasonKind === 'ccs-ladder' ? (

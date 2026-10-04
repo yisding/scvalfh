@@ -99,7 +99,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         <p className="mt-4 mb-0">
           <Link
             href={stub.targetHref}
-            className="sx-pill min-h-11 bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring min-h-11"
           >
             {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} <Arrow />
           </Link>
@@ -158,7 +158,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
                 key={team.slug}
                 href={`/teams/${team.slug}`}
                 prefetch={false}
-                className="sx-pill min-h-11 bg-surface px-3 shadow-[var(--sx-ring)] hover:bg-surface-2"
+                className="sx-pill sx-pill-ring min-h-11 px-3"
               >
                 {team.shortName}
                 <span aria-hidden="true"> &rsaquo;</span>
@@ -216,7 +216,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
                   className={
                     link.accent
                       ? 'sx-pill sx-pill-accent text-accent-ink!'
-                      : 'sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2'
+                      : 'sx-pill sx-pill-ring'
                   }
                 >
                   {link.label}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
 import ScheduleIndex, { buildScheduleIndex } from '../../components/schedule/ScheduleIndex';
@@ -59,17 +60,7 @@ export default function SchedulePage() {
       />
 
       {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
-      <p className="m-0 mt-4 flex flex-wrap gap-2">
-        {leagues.map((league) => (
-          <a
-            key={league.id}
-            href={`#${league.id}`}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
-          >
-            Jump to {league.shortName} &darr;
-          </a>
-        ))}
-      </p>
+      <LeagueJumpLinks leagues={leagues} />
 
       <ScheduleIndex {...index} />
     </div>
