@@ -78,6 +78,22 @@ export const SPORT_WORDS: Record<CommitSport, string> = {
   'ice-hockey': 'ice hockey',
   gymnastics: 'gymnastics',
   equestrian: 'equestrian',
+  'acrobatics-and-tumbling': 'acrobatics and tumbling',
+  stunt: 'stunt',
+  'competitive-cheer': 'competitive cheer',
+  'competitive-dance': 'competitive dance',
+  'flag-football': 'flag football',
+  rugby: 'rugby',
+  wrestling: 'wrestling',
+  fencing: 'fencing',
+  bowling: 'bowling',
+  triathlon: 'triathlon',
+  rifle: 'rifle',
+  skiing: 'skiing',
+  squash: 'squash',
+  sailing: 'sailing',
+  baseball: 'baseball',
+  football: 'football',
 };
 
 /** "Field hockey", "Lacrosse": a sport at the start of a line. */

@@ -59,8 +59,13 @@ export type CommitConfidence = (typeof COMMIT_CONFIDENCES)[number];
 
 /**
  * The sport a commitment is for. Field hockey is the site's own; the rest are the other sports the
- * players here commit to (a two-sport athlete's field hockey commitment is often a lacrosse or a
- * soccer one). Kebab-case, like every other id in the file.
+ * players here can commit to (a two-sport athlete's college commitment is often in lacrosse or
+ * soccer). The list is every sport the NCAA, NAIA and NJCAA hold a championship or an emerging-sport
+ * program in, plus squash and sailing, which colleges sponsor as varsity sports under their own
+ * associations — so a commitment to any college team has a sport here. It is closed on purpose: each
+ * sport has its words in components/commits/commit-view.ts SPORT_WORDS, which the type checker holds
+ * to this list, so a sport colleges add later is added here and there together. Kebab-case, like every
+ * other id in the file.
  */
 export const COMMIT_SPORTS = [
   'field-hockey',
@@ -80,6 +85,22 @@ export const COMMIT_SPORTS = [
   'ice-hockey',
   'gymnastics',
   'equestrian',
+  'acrobatics-and-tumbling',
+  'stunt',
+  'competitive-cheer',
+  'competitive-dance',
+  'flag-football',
+  'rugby',
+  'wrestling',
+  'fencing',
+  'bowling',
+  'triathlon',
+  'rifle',
+  'skiing',
+  'squash',
+  'sailing',
+  'baseball',
+  'football',
 ] as const;
 export type CommitSport = (typeof COMMIT_SPORTS)[number];
 

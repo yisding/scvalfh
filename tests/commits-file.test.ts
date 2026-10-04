@@ -18,6 +18,7 @@ import { describe, expect, it } from 'vitest';
 import { BANNED_HOSTS } from '../lib/clubs-schema';
 import {
   COLLEGE_DIVISIONS,
+  COMMIT_SPORTS,
   CommitsFileSchema,
   isCommitDate,
   type College,
@@ -354,6 +355,14 @@ describe('the schema refuses a bad file, naming the path', () => {
     );
     expect(schemaIssues(f)).toEqual([]);
     expect(load(f)).not.toThrow();
+  });
+
+  it('takes a commitment in any college sport, each with a program in that sport', () => {
+    for (const sport of ['wrestling', 'fencing', 'bowling', 'triathlon', 'acrobatics-and-tumbling', 'flag-football'] as const) {
+      const college = { ...COLLEGE, programs: [{ sport, division: 'ncaa-d1', conference: null, url: null } as const] };
+      expect(schemaIssues(fileWith([commitmentFor(senior, { sport })], [college])), sport).toEqual([]);
+    }
+    expect(COMMIT_SPORTS).toHaveLength(new Set(COMMIT_SPORTS).size);
   });
 
   it('a college with no program', () => {

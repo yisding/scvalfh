@@ -3188,3 +3188,7 @@ same linking rule (the page must name the sport) and the same privacy posture.
   rows per class, the sport on each row reads faster than tabs would.
 - **Not a commitment**, beside §21.1's list: a place on a college's club team (club lacrosse, club
   volleyball), which a recruiting profile can show as "committed".
+- **Every college sport has its words.** `COMMIT_SPORTS` lists every sport the NCAA, NAIA and NJCAA
+  hold a championship or an emerging-sport program in, plus squash and sailing, each with its words
+  in `SPORT_WORDS` ("acrobatics and tumbling", "flag football"); the type checker keeps the two lists
+  together, so a sport colleges add later is added to both.
