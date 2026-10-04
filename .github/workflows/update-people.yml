@@ -1,0 +1,327 @@
+# Weekly people-data refresh: re-read every team's MaxPreps roster into data/rosters.json and, when
+# a player changed, put the change on ONE standing pull request for a person to review. Never on
+# main: unlike the snapshot, a roster change can break research that joins to it.
+#
+# Why a pull request and not update-data's direct commit. data/rosters-enrichment.json,
+# data/clubs.json and data/commits.json are hand research joined to the rosters on team slug +
+# MaxPreps athleteId, and lib/rosters.ts, lib/clubs.ts and lib/commits.ts throw at import when a
+# roster change breaks that join (a tied player dropped or respelled, a field MaxPreps now fills
+# that the overlay filled), which fails `pnpm test` and the build. Some tests and the README also
+# pin counts taken from the rosters (varsity rows, players per team). So a roster change can turn
+# main red until someone re-checks the research by hand; on a branch it only turns the PR red.
+#
+# The pull request is shared with the weekly clubs-and-commitments research, a Claude Code Routine
+# that fires a few hours after this job (docs/WEEKLY-PEOPLE.md): it checks out the same branch,
+# repairs what the roster change broke, adds what it found, and pushes there. Neither ever pushes
+# to main or merges; a person reviews and merges the PR, and ci on main then gates the deploy as for
+# any other commit (deploy-cloudflare.yml).
+#
+# The branch. ${BRANCH} carries every week's commits until the PR is merged or closed: while a PR
+# from it is open, each run merges main into it and adds its own commit on top, so a week's roster
+# change never discards the research pushed to it since. Once that PR is merged or closed, the next
+# run restarts the branch from main (force-pushed: everything on it is merged, or was rejected).
+# A branch tip that no PR has ever shown is kept and built on, never overwritten.
+#
+# Schedule: Mondays 13:23 UTC (6:23 AM Pacific in PDT, 5:23 AM in PST), year-round. Rosters
+# change mostly in season; out of season a run usually finds nothing and commits nothing.
+# fetch-rosters has no season guard of its own, and needs none: a roster page MaxPreps has moved to
+# a new season fails its team (lib/sources/maxpreps-roster.ts checks the sportSeasonId), so a run
+# after the rollover finds every team failed and commits nothing until lib/season.ts moves.
+#
+# Failures. A team whose page fails keeps its previous rows (carried-forward), as in a manual run.
+# A run whose only news is failed teams opens nothing (lib/roster-diff.ts needsReview); a run in
+# which no team was read at all (MaxPreps down, or the season rolled over) commits nothing either.
+# Either way the job ends red, so the failure is seen, after pushing whatever else was worth it.
+#
+# ci. A push made with GITHUB_TOKEN starts no `pull_request` run, so after pushing, this job
+# dispatches ci.yml on the branch (workflow_dispatch is the one event GITHUB_TOKEN may start); its
+# checks show on the PR because they run on the PR's head commit. The job's own `pnpm test` is only
+# for the PR comment, which says whether the suite passes with the new rosters and, if not, which
+# research the change broke.
+#
+# Repository settings this needs: Settings → Actions → General → Workflow permissions: "Read and
+# write permissions" AND "Allow GitHub Actions to create and approve pull requests" (without the
+# second, `gh pr create` is refused and the job fails at that step, after pushing the branch).
+
+name: update-people
+
+on:
+  schedule:
+    - cron: '23 13 * * 1'
+  workflow_dispatch:
+    inputs:
+      leagues:
+        description: 'Only these leagues, comma-separated (e.g. bval,pcal); the others keep their previous rows'
+        type: string
+        default: ''
+
+permissions:
+  # Push the bot branch.
+  contents: write
+  # Open the PR, and comment on it on later runs.
+  pull-requests: write
+  # Dispatch ci.yml on the branch (see "ci" above).
+  actions: write
+
+# One run at a time; a queued run would only re-read what the in-flight one is about to push.
+concurrency:
+  group: update-people
+  cancel-in-progress: false
+
+env:
+  # The standing branch, shared with the research Routine (docs/WEEKLY-PEOPLE.md names it too;
+  # tests/workflows.test.ts holds the two to each other).
+  BRANCH: data/weekly-people
+  PR_TITLE: 'Weekly people data: rosters, clubs and commitments'
+
+jobs:
+  rosters:
+    runs-on: ubuntu-latest
+    # 49 roster pages at the MaxPreps client's pace (at most 3 at once, 500 ms apart) take about a
+    # minute; install and the test suite come on top.
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          # The whole history: merging main into the branch needs their common ancestor.
+          fetch-depth: 0
+
+      # Before installing, so the lockfile installed is the one the run's base carries.
+      - name: Start from the open pull request, or from main
+        id: base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          PR=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          TIP=$(git ls-remote --heads origin "$BRANCH" | cut -f1)
+          [ -z "$TIP" ] || git fetch origin "$BRANCH"
+          CONTINUE=false
+          if [ -n "$PR" ]; then
+            CONTINUE=true
+          elif [ -n "$TIP" ] && ! git merge-base --is-ancestor "$TIP" origin/main 2>/dev/null; then
+            # Commits main does not have. Only the head of a merged or closed PR may be dropped.
+            SHOWN=$(gh pr list --head "$BRANCH" --state all --limit 100 --json headRefOid,state \
+              --jq "map(select(.state != \"OPEN\" and .headRefOid == \"$TIP\")) | length")
+            if [ "$SHOWN" = "0" ]; then
+              echo "::warning::$BRANCH has commits no pull request has shown; building on them instead of restarting from main"
+              CONTINUE=true
+            fi
+          fi
+          if [ "$CONTINUE" = "true" ]; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+            if ! git merge --no-edit origin/main; then
+              # data/rosters.json is rebuilt from MaxPreps below, so main's copy is as good a start
+              # as the branch's; any other conflict is research, and research is merged by hand.
+              if git diff --name-only --diff-filter=U | grep -qx 'data/rosters.json'; then
+                git checkout --theirs -- data/rosters.json
+                git add data/rosters.json
+              fi
+              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+                echo "::error::merging main into $BRANCH conflicts in: $(git diff --name-only --diff-filter=U | tr '\n' ' ')— merge main into the branch by hand, then re-run"
+                git merge --abort
+                exit 1
+              fi
+              git commit --no-edit
+            fi
+          else
+            git checkout -B "$BRANCH" origin/main
+          fi
+          {
+            echo "pr=$PR"
+            echo "continue=$CONTINUE"
+            echo "remote=$TIP"
+          } >> "$GITHUB_OUTPUT"
+
+      # pnpm BEFORE setup-node, and Node 26, for the reasons update-data.yml gives.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Exit 1 means a team the run covered failed (it keeps its previous rows); that is recorded and
+      # decides the job's colour at the end, after anything worth pushing is pushed. The stamp is
+      # pinned so the step below can tell which teams this run actually read. The manual leagues
+      # input reaches the command through env, never by interpolation into the script.
+      - name: Fetch rosters
+        id: fetch
+        env:
+          LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}
+        run: |
+          set -uo pipefail
+          args=()
+          if [ -n "$LEAGUES" ]; then
+            [[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid leagues input: $LEAGUES"; exit 1; }
+            args+=(--leagues "$LEAGUES")
+          fi
+          git show HEAD:data/rosters.json > "$RUNNER_TEMP/rosters-before.json" 2>/dev/null || : > "$RUNNER_TEMP/rosters-before.json"
+          STAMP=$(node -e 'process.stdout.write(new Date().toISOString())')
+          pnpm fetch-rosters --fetched-at "$STAMP" "${args[@]}"
+          CODE=$?
+          CHANGED=false
+          REVIEW=false
+          if ! git diff --quiet -- data/rosters.json; then
+            READ=$(node -e '
+              const r = JSON.parse(require("node:fs").readFileSync("data/rosters.json", "utf8"));
+              process.stdout.write(String(r.teams.filter((t) => t.fetchedAt === process.argv[1]).length));
+            ' "$STAMP")
+            if [ "$READ" = "0" ]; then
+              echo "::error::no team's roster page was read in this run (MaxPreps down, or a new season lib/season.ts does not have yet); nothing committed"
+              git checkout -- data/rosters.json
+              CODE=1
+            else
+              CHANGED=true
+              REVIEW=$(pnpm --silent roster-diff "$RUNNER_TEMP/rosters-before.json" data/rosters.json --format review) || {
+                echo "::error::roster-diff failed"
+                exit 1
+              }
+              if [ "$REVIEW" != "true" ]; then
+                echo "only failed teams changed: nothing for a reviewer, nothing committed"
+                git checkout -- data/rosters.json
+              fi
+            fi
+          fi
+          {
+            echo "exit=$CODE"
+            echo "changed=$CHANGED"
+            echo "review=$REVIEW"
+          } >> "$GITHUB_OUTPUT"
+
+      # For the PR comment only; ci, dispatched below, is the check. Never fatal here: a roster change
+      # that breaks the research is exactly what the PR is for.
+      - name: Test against the new rosters
+        id: test
+        if: steps.fetch.outputs.review == 'true'
+        run: |
+          set -uo pipefail
+          if pnpm test > "$RUNNER_TEMP/test.log" 2>&1; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            tail -60 "$RUNNER_TEMP/test.log"
+          fi
+
+      - name: Commit the rosters
+        id: commit
+        if: steps.fetch.outputs.review == 'true'
+        run: |
+          set -euo pipefail
+          pnpm --silent roster-diff "$RUNNER_TEMP/rosters-before.json" data/rosters.json > "$RUNNER_TEMP/roster-diff.md"
+          LINE=$(pnpm --silent roster-diff "$RUNNER_TEMP/rosters-before.json" data/rosters.json --format line)
+          DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
+          # Never a message deploy-cloudflare.yml's gate recognises as update-data's: this commit
+          # reaches main only through the PR, after ci (tests/workflows.test.ts checks it).
+          git add data/rosters.json
+          git commit -m "data: weekly rosters ${DAY} · ${LINE}"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      # A continued branch is pushed whenever it moved (this run's commit, or only main merged in, which
+      # keeps the PR mergeable and its ci current); a restarted one only when it has a commit of its
+      # own, and then with --force, over a branch whose commits are all merged or rejected.
+      - name: Push the branch
+        id: push
+        env:
+          CONTINUE: ${{ steps.base.outputs.continue }}
+          REMOTE: ${{ steps.base.outputs.remote }}
+        run: |
+          set -euo pipefail
+          if [ "$CONTINUE" = "true" ]; then
+            if [ "$(git rev-parse HEAD)" = "$REMOTE" ]; then echo "pushed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+            # The research Routine may have pushed since this run started: take its commits and retry
+            # once. It never edits data/rosters.json, so the merge is clean.
+            git push origin "HEAD:refs/heads/$BRANCH" || {
+              git pull --no-rebase --no-edit origin "$BRANCH"
+              git push origin "HEAD:refs/heads/$BRANCH"
+            }
+          else
+            if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ]; then echo "pushed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+            git push --force origin "HEAD:refs/heads/$BRANCH"
+          fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # A week that only merged main in says nothing on an open PR.
+      - name: Open or comment on the pull request
+        if: steps.push.outputs.pushed == 'true' && (steps.commit.outputs.committed == 'true' || steps.base.outputs.pr == '')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.base.outputs.pr }}
+          COMMITTED: ${{ steps.commit.outputs.committed || 'false' }}
+          PASSED: ${{ steps.test.outputs.passed || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          BODY="$RUNNER_TEMP/pr-body.md"
+          {
+            if [ "$COMMITTED" = "true" ]; then
+              echo "### Rosters, $(date -u +%Y-%m-%d)"
+              echo ""
+              case "$PASSED" in
+                true)  echo "\`pnpm test\` passes with the new rosters." ;;
+                false) echo "**\`pnpm test\` fails with the new rosters**: a research record below (or a count pinned from the rosters) needs updating before this can merge. The weekly research Routine repairs these on this branch; see [the run]($RUN_URL) for the failures." ;;
+              esac
+              echo ""
+              cat "$RUNNER_TEMP/roster-diff.md"
+            else
+              echo "Merged main into this branch; no roster changed this week."
+            fi
+          } > "$BODY"
+          if [ -z "$PR" ]; then
+            {
+              echo "The weekly people-data pull request (\`.github/workflows/update-people.yml\`, \`docs/WEEKLY-PEOPLE.md\`)."
+              echo ""
+              echo "- **Rosters**: re-read from MaxPreps every Monday morning by the update-people workflow, which adds a commit and a comment here when a player changed."
+              echo "- **Clubs and commitments**: the weekly research Routine fires a few hours later, repairs any research a roster change broke, adds new club ties and college commitments it verified, and comments here with what it searched and found."
+              echo ""
+              echo "Nothing here reaches main until someone reviews and merges it; ci runs on every push to this branch."
+              echo ""
+              cat "$BODY"
+            } > "$RUNNER_TEMP/pr-new.md"
+            gh pr create --base main --head "$BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-new.md" || {
+              echo "::error::could not open the pull request; allow it under Settings → Actions → General → \"Allow GitHub Actions to create and approve pull requests\""
+              exit 1
+            }
+          else
+            gh pr comment "$PR" --body-file "$BODY"
+          fi
+
+      # The push above was made with GITHUB_TOKEN, which starts no pull_request run of ci.
+      - name: Run ci on the branch
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run ci.yml --ref "$BRANCH"
+
+      - name: Fail on a roster read that failed
+        if: steps.fetch.outputs.exit != '0'
+        run: |
+          echo "::error::fetch-rosters reported failed teams (they keep their previous rows); see the Fetch rosters step"
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-people"
+            echo ""
+            echo "- continued the open branch: \`${{ steps.base.outputs.continue || 'false' }}\`"
+            echo "- fetch-rosters exit: \`${{ steps.fetch.outputs.exit || 'not run' }}\`"
+            echo "- rosters changed for review: \`${{ steps.fetch.outputs.review || 'false' }}\`"
+            echo "- tests pass with the new rosters: \`${{ steps.test.outputs.passed || 'not run' }}\`"
+            echo "- pushed \`${BRANCH}\`: \`${{ steps.push.outputs.pushed || 'false' }}\`"
+            if [ -f "$RUNNER_TEMP/roster-diff.md" ]; then
+              echo ""
+              cat "$RUNNER_TEMP/roster-diff.md"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

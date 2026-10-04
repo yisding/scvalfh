@@ -2822,7 +2822,8 @@ not for a new section.
 The site gained club field hockey: which youth clubs the players on the 43 tracked varsity rosters
 play for, or played for, according to public pages that name both. The data is `data/clubs.json`,
 research done by hand on 2026-10-03 and checked twice (`docs/DATA-SOURCES.md` §1.1j2, README
-"Clubs"); nothing refreshes it. This section records what the pages answer, the rules they keep and
+"Clubs"); since 2026-10 a weekly research run proposes changes to it for review
+(`docs/WEEKLY-PEOPLE.md`). This section records what the pages answer, the rules they keep and
 how they are laid out. Everything in §1-§15 still stands: static rendering, the rule-and-kicker
 headers, two data hues, lists that reflow, the phone-first chrome.
 
@@ -3072,7 +3073,8 @@ The site gained college commitments: which players on the tracked varsity roster
 the EAL) a public page says have committed to play a sport in college, and where. It began with
 field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
 research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
-commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
+commitments"); since 2026-10 a weekly research run proposes changes to it for review
+(`docs/WEEKLY-PEOPLE.md`). It follows the clubs amendment (§17) wherever the two could
 differ: the same matching rule, the same privacy posture, the same row and list layout. This section
 records what is new and where it departs.
 

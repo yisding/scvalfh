@@ -1,5 +1,6 @@
 /**
- * update-data.yml and deploy-cloudflare.yml must agree on what a data commit is.
+ * update-data.yml and deploy-cloudflare.yml must agree on what a data commit is; update-people.yml
+ * (at the end) must only ever propose, on its own branch.
  *
  * deploy-cloudflare ships main's tip without a ci run of its own only when every commit above the
  * last ci-tested one is recognisably update-data's: by the bot, one parent, a message with one of
@@ -416,5 +417,231 @@ describe('assert:prerender on a .next that has served traffic', () => {
       expect(r.output).toContain('FAIL standings/: opengraph-image without its page: standings/nope/opengraph-image');
       expect(r.status).toBe(1);
     }
+  });
+});
+
+/**
+ * update-people.yml: the weekly roster refresh that proposes, never commits to main
+ * (docs/WEEKLY-PEOPLE.md). Its branch handling decides whether a week's research survives the next
+ * roster run, so the two steps that touch the branch run here for real, against a bare remote in a
+ * scratch directory, with a stub `gh` that answers the two PR lookups.
+ */
+describe('update-people.yml', () => {
+  const people = read('update-people.yml');
+  const doc = readFileSync(path.join(REPO, 'docs', 'WEEKLY-PEOPLE.md'), 'utf8');
+  const branch = /^ {2}BRANCH: (\S+)$/m.exec(people)?.[1] ?? '';
+  const title = /^ {2}PR_TITLE: '([^']+)'$/m.exec(people)?.[1] ?? '';
+
+  it('names the branch and the PR title the research runbook names', () => {
+    expect(branch).toBe('data/weekly-people');
+    expect(doc).toContain(`**\`${branch}\`**`);
+    expect(doc).toContain(`**"${title}"**`);
+  });
+
+  it('pushes only to its own branch, never to main', () => {
+    const pushes = [...people.matchAll(/git push [^\n]+/g)].map((m) => m[0]);
+    expect(pushes.length).toBeGreaterThan(0);
+    for (const p of pushes) expect(p, p).toMatch(/^git push (--force )?origin "HEAD:refs\/heads\/\$BRANCH"( \|\| \{)?$/);
+    expect(people).not.toMatch(/git push[^\n]*\bmain\b/);
+  });
+
+  it('commits only data/rosters.json, with a message the deploy gate never ships untested', () => {
+    expect([...new Set([...people.matchAll(/^\s*git add ([^\n]+)$/gm)].map((m) => m[1].trim()))]).toEqual(['data/rosters.json']);
+    const messages = [...people.matchAll(/git commit -m "([^"$]+)/g)].map((m) => m[1]);
+    expect(messages).toEqual(['data: weekly rosters ']);
+    for (const msg of messages) expect(gatePrefixes.some((p) => msg.startsWith(p)), msg).toBe(false);
+  });
+
+  it('is not a workflow the deploy follows, and the ci it dispatches can be dispatched', () => {
+    expect(deploy).toMatch(/workflows: \[ci, update-data\]/);
+    expect(read('ci.yml')).toMatch(/^ {2}workflow_dispatch:/m);
+    expect(stepBody(people, 'Run ci on the branch')).toContain('gh workflow run ci.yml --ref "$BRANCH"');
+  });
+
+  it('passes the manual leagues input through env, validated, never interpolated into a script', () => {
+    const fetch = stepBody(people, 'Fetch rosters');
+    expect(fetch).toContain("LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}");
+    expect(fetch).toContain('[[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]]');
+    for (const m of people.matchAll(/run: \|\n((?: {10}[^\n]*\n|\n)+)/g)) expect(m[1]).not.toContain('inputs.');
+  });
+
+  /** A bare remote whose main holds a rosters file and a clubs file, and a clone of it, as checkout leaves it. */
+  function remote() {
+    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-people-'));
+    const sh = (cwd: string, cmd: string) => {
+      const r = spawnSync('bash', ['-e', '-c', cmd], {
+        cwd,
+        encoding: 'utf8',
+        env: { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.com', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.com' },
+      });
+      if (r.status !== 0) throw new Error(`${cmd}: ${r.stderr}`);
+      return r.stdout.trim();
+    };
+    sh(root, 'git init -q --bare -b main origin.git && git clone -q origin.git seed 2>/dev/null');
+    const seed = path.join(root, 'seed');
+    sh(seed, 'mkdir data && echo rosters-1 > data/rosters.json && echo clubs-1 > data/clubs.json && git add . && git commit -qm init && git push -q origin main');
+    const bin = path.join(root, '.bin');
+    mkdirSync(bin);
+    writeFileSync(
+      path.join(bin, 'gh'),
+      [
+        '#!/usr/bin/env bash',
+        'case " $* " in',
+        '  *" --state open "*) printf "%s\\n" "${OPEN_PR:-}" ;;',
+        '  *" --state all "*) printf "%s\\n" "${SHOWN:-0}" ;;',
+        '  *) echo "unexpected: gh $*" >&2; exit 2 ;;',
+        'esac',
+      ].join('\n'),
+      { mode: 0o755 },
+    );
+    /** A clone, as actions/checkout with fetch-depth 0 leaves it, with update-people's env. */
+    const checkout = () => {
+      const dir = mkdtempSync(path.join(root, 'run-'));
+      sh(dir, 'git clone -q ../origin.git . 2>/dev/null');
+      return dir;
+    };
+    return { root, seed, bin, sh, checkout };
+  }
+
+  function runScript(script: string, cwd: string, bin: string, env: Record<string, string> = {}) {
+    const output = path.join(cwd, '..', `${path.basename(cwd)}.out`);
+    writeFileSync(output, '');
+    const r = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
+      cwd,
+      encoding: 'utf8',
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: output, BRANCH: branch, ...env },
+    });
+    const outputs = Object.fromEntries(
+      readFileSync(output, 'utf8')
+        .split('\n')
+        .filter(Boolean)
+        .map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1)]),
+    );
+    return { code: r.status, log: `${r.stdout}${r.stderr}`, outputs };
+  }
+
+  describe('the branch it starts from', () => {
+    const script = runBlock(stepBody(people, 'Start from the open pull request, or from main'));
+    const file = (cwd: string, name: string) => readFileSync(path.join(cwd, 'data', name), 'utf8').trim();
+
+    it('found the step', () => {
+      expect(script).toContain('git merge --no-edit origin/main');
+    });
+
+    it('starts from main when the branch does not exist', () => {
+      const r0 = remote();
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin);
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs).toMatchObject({ continue: 'false', pr: '', remote: '' });
+      expect(r0.sh(dir, 'git rev-parse HEAD')).toBe(r0.sh(dir, 'git rev-parse origin/main'));
+    });
+
+    it('builds on an open PR’s branch, merging main in, so last week’s research survives', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo clubs-research > data/clubs.json && git commit -qam research && git push -q origin ${branch}`);
+      r0.sh(r0.seed, 'git checkout -q main && echo other > other.txt && git add other.txt && git commit -qm main-moved && git push -q origin main');
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin, { OPEN_PR: '42' });
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs).toMatchObject({ continue: 'true', pr: '42' });
+      expect(file(dir, 'clubs.json')).toBe('clubs-research');
+      expect(r0.sh(dir, 'cat other.txt')).toBe('other');
+      expect(r0.sh(dir, 'git rev-parse --abbrev-ref HEAD')).toBe(branch);
+    });
+
+    it('takes main’s rosters on a rosters conflict, since the run rebuilds them', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo rosters-branch > data/rosters.json && git commit -qam weekly && git push -q origin ${branch}`);
+      r0.sh(r0.seed, 'git checkout -q main && echo rosters-main > data/rosters.json && git commit -qam by-hand && git push -q origin main');
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin, { OPEN_PR: '42' });
+      expect(r.code, r.log).toBe(0);
+      expect(file(dir, 'rosters.json')).toBe('rosters-main');
+      expect(r0.sh(dir, 'git status --porcelain')).toBe('');
+    });
+
+    it('stops on a conflict in research, leaving it for a person', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo clubs-branch > data/clubs.json && git commit -qam research && git push -q origin ${branch}`);
+      r0.sh(r0.seed, 'git checkout -q main && echo clubs-main > data/clubs.json && git commit -qam by-hand && git push -q origin main');
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin, { OPEN_PR: '42' });
+      expect(r.code).toBe(1);
+      expect(r.log).toContain('conflicts in: data/clubs.json');
+      expect(r0.sh(dir, 'git status --porcelain')).toBe('');
+    });
+
+    it('starts over from main once the PR’s branch is merged', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo rosters-2 > data/rosters.json && git commit -qam weekly && git push -q origin ${branch}`);
+      r0.sh(r0.seed, `git checkout -q main && git merge -q --no-ff -m merged ${branch} && git push -q origin main`);
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin);
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs.continue).toBe('false');
+      expect(r0.sh(dir, 'git rev-parse HEAD')).toBe(r0.sh(dir, 'git rev-parse origin/main'));
+    });
+
+    it('starts over when the tip is the head of a closed or squash-merged PR', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo rosters-2 > data/rosters.json && git commit -qam weekly && git push -q origin ${branch}`);
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin, { SHOWN: '1' });
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs.continue).toBe('false');
+    });
+
+    it('keeps commits no PR has shown, building on them', () => {
+      const r0 = remote();
+      r0.sh(r0.seed, `git checkout -qb ${branch} && echo clubs-orphan > data/clubs.json && git commit -qam research && git push -q origin ${branch}`);
+      const dir = r0.checkout();
+      const r = runScript(script, dir, r0.bin, { SHOWN: '0' });
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs.continue).toBe('true');
+      expect(r.log).toContain('has commits no pull request has shown');
+      expect(file(dir, 'clubs.json')).toBe('clubs-orphan');
+    });
+  });
+
+  describe('the push', () => {
+    const script = runBlock(stepBody(people, 'Push the branch'));
+
+    function setup(onBranch: boolean) {
+      const r0 = remote();
+      if (onBranch) r0.sh(r0.seed, `git checkout -qb ${branch} && echo clubs-research > data/clubs.json && git commit -qam research && git push -q origin ${branch} && git checkout -q main`);
+      const dir = r0.checkout();
+      r0.sh(dir, `git config user.name t && git config user.email t@example.com && git checkout -qB ${branch} origin/${onBranch ? branch : 'main'}`);
+      const tip = onBranch ? r0.sh(dir, `git rev-parse origin/${branch}`) : '';
+      return { ...r0, dir, tip };
+    }
+
+    it('pushes nothing when nothing moved', () => {
+      const fresh = setup(false);
+      expect(runScript(script, fresh.dir, fresh.bin, { CONTINUE: 'false', REMOTE: '' }).outputs.pushed).toBe('false');
+      const cont = setup(true);
+      expect(runScript(script, cont.dir, cont.bin, { CONTINUE: 'true', REMOTE: cont.tip }).outputs.pushed).toBe('false');
+    });
+
+    it('force-pushes a restarted branch over the merged one', () => {
+      const s = setup(true);
+      s.sh(s.dir, 'git reset -q --hard origin/main && echo rosters-2 > data/rosters.json && git commit -qam weekly');
+      const r = runScript(script, s.dir, s.bin, { CONTINUE: 'false', REMOTE: s.tip });
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs.pushed).toBe('true');
+      expect(s.sh(s.seed, `git fetch -q origin && git rev-parse origin/${branch}`)).toBe(s.sh(s.dir, 'git rev-parse HEAD'));
+    });
+
+    it('takes research pushed meanwhile and pushes again, never over it', () => {
+      const s = setup(true);
+      s.sh(s.dir, 'echo rosters-2 > data/rosters.json && git commit -qam weekly');
+      // The Routine pushes while this run is going.
+      s.sh(s.seed, `git checkout -q ${branch} && echo commits-research > data/commits.json && git add data/commits.json && git commit -qm more && git push -q origin ${branch}`);
+      const r = runScript(script, s.dir, s.bin, { CONTINUE: 'true', REMOTE: s.tip });
+      expect(r.code, r.log).toBe(0);
+      expect(r.outputs.pushed).toBe('true');
+      s.sh(s.seed, `git pull -q origin ${branch}`);
+      expect(s.sh(s.seed, 'cat data/commits.json data/rosters.json')).toBe('commits-research\nrosters-2');
+    });
   });
 });
