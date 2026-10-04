@@ -32,6 +32,7 @@ import {
   getColleges,
   getCommitments,
   getCommitsFile,
+  getCommitsLastChecked,
   getCommittedPlayer,
   getPlayerCommitment,
   getTeamCommitments,
@@ -226,6 +227,14 @@ describe('lib/commits.ts read API', () => {
       ({ t, p }) => p.athleteId !== null && !committed.has(`${t} ${p.athleteId}`),
     )!;
     expect(getPlayerCommitment(free.t as never, free.p.athleteId!)).toBeNull();
+  });
+
+  it('dates the page by its last check: capturedAt, or a later college checkedOn', () => {
+    const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
+    expect(getCommitsLastChecked()).toBe(latest);
+    expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
+    // The 2026-10-03 research: the commitments were checked on Oct 3, the colleges' facts on Oct 4.
+    expect(getCommitsLastChecked()).toBe('2026-10-04');
   });
 
   it('displays a college by its short name when it has one', () => {

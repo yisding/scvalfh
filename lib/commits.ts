@@ -191,6 +191,15 @@ export function getCommitsFile(): CommitsFile {
   return file;
 }
 
+/**
+ * The last day anything /commits shows was checked: the research date (`capturedAt`) or, when later,
+ * a college record's `checkedOn` (the college facts were read after the commitments). YYYY-MM-DD.
+ * The sitemap's `lastModified` for /commits, so the page never claims to predate what it shows.
+ */
+export function getCommitsLastChecked(): string {
+  return [file.capturedAt, ...file.colleges.map((c) => c.checkedOn)].sort().at(-1)!;
+}
+
 /** Every commitment, in display order (DESIGN §21.1). */
 export function getCommitments(): readonly Commitment[] {
   return ORDERED;

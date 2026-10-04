@@ -3133,8 +3133,9 @@ The tab bar and the desktop nav are unchanged. `/commits` is linked from `/teams
 line under the clubs one), from `/about`'s sources (`#commits-coverage`, after `#clubs-coverage`),
 and from the roster of any team page that has a committed player (§21.5), which is the link a
 reader is most likely to follow. A team page with no commitment gets no new link: the Roster
-header keeps its one action, "Club teams". The sitemap lists `/commits` with the file's own
-`capturedAt` as its `lastModified`, as it does the clubs pages.
+header keeps its one action, "Club teams". The sitemap lists `/commits` with the last day the file
+was checked as its `lastModified` (`capturedAt`, or a later college `checkedOn`), as it dates the
+clubs pages by their file.
 
 ### 21.5 The roster commitment line
 
