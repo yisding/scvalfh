@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import EmptyState from '../ui/EmptyState';
 import SectionHeader from '../ui/SectionHeader';
 import { shortDate } from '../../lib/format';
 
@@ -50,7 +51,11 @@ export function CrossLeagueLatest({ view, className }: CrossLeagueLatestProps) {
           </div>
         ))
       ) : (
-        <p className="m-0 text-meta text-ink-2">No results yet. Scores appear here the morning after a game is played.</p>
+        // The composition each league panel uses for the same state (LeaguePanel), pointed at the
+        // cross-league schedule index rather than one league's.
+        <EmptyState heading="No results yet." action={{ href: '/schedule', label: 'All schedules' }}>
+          Scores appear here the morning after a game is played.
+        </EmptyState>
       )}
     </section>
   );
