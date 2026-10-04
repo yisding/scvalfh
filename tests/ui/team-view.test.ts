@@ -403,6 +403,17 @@ describe('/teams (app/teams/page.tsx)', () => {
       'Club field hockey: the club teams page lists youth field hockey clubs and, for each, the players here a public page ties to it.',
     );
   });
+
+  it('links the commitments page once, quietly, outside the list the finder filters', () => {
+    const html = renderIndex();
+    expect((html.match(/href="\/commits"/g) ?? []).length, 'app/teams/page.tsx /commits link').toBe(1);
+    expect(html.indexOf('href="/commits"'), 'app/teams/page.tsx /commits link').toBeGreaterThan(
+      html.lastIndexOf('data-team-group=""'),
+    );
+    expect(textOf(html), 'app/teams/page.tsx').toContain(
+      'College field hockey: the college commitments page lists the players here a public page says have committed to play in college.',
+    );
+  });
 });
 
 describe('the NEXT card and the identity place line (UI pass, league-aware)', () => {

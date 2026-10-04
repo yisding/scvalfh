@@ -416,6 +416,62 @@ describe('TeamRoster', () => {
   });
 });
 
+describe('TeamRoster: commitment lines', () => {
+  // A synthetic row on a real view: the line's markup is what is under test, and no real player is
+  // named as committed anywhere data/commits.json does not say so.
+  const si = views.find((v) => v.slug === 'st-ignatius')!.view;
+  const committedRow = (status: 'committed' | 'signed', college = 'Example') => ({
+    ...si.rows[0],
+    key: 'pat-example',
+    name: 'Pat Example',
+    commitment: {
+      status,
+      label: status === 'signed' ? ('Signed' as const) : ('Committed' as const),
+      srLabel: status === 'signed' ? ('college signing' as const) : ('college commitment' as const),
+      college: { slug: 'example-college', name: college, href: '/commits#st-ignatius-pat-example' },
+    },
+  });
+  const withLine = (row: ReturnType<typeof committedRow>) =>
+    renderToStaticMarkup(
+      createElement(TeamRoster, { view: { ...si, rows: [row, ...si.rows.slice(1)], hasCommitments: true } }),
+    );
+
+  it('links the player’s row on /commits, named for the player, right under the facts and above the club line', () => {
+    const html = withLine(committedRow('committed'));
+    expect(html).toContain('href="/commits#st-ignatius-pat-example"');
+    expect(html).toContain('<span><span class="sr-only">Pat Example’s college commitment: </span>Example</span>');
+    expect(html).toContain('<span aria-hidden="true" class="text-ink-3">Committed:</span>');
+    const row = /<li[^>]*>(?:(?!<\/li>)[\s\S])*?Pat Example(?:(?!<\/li>)[\s\S])*<\/li>/.exec(html)![0];
+    const at = row.indexOf('/commits#');
+    if (row.includes('/clubs/')) expect(at).toBeLessThan(row.indexOf('/clubs/'));
+    if (row.includes('target="_blank"')) expect(at).toBeLessThan(row.indexOf('target="_blank"'));
+    // Internal: no arrow, no new tab; and not nowrap, since an official college name must wrap.
+    const a = /<a[^>]*href="\/commits#st-ignatius-pat-example"[^>]*>/.exec(html)![0];
+    expect(a).not.toContain('target=');
+    expect(a).not.toContain('whitespace-nowrap');
+  });
+
+  it('says "Signed" only for a signed commitment', () => {
+    const html = withLine(committedRow('signed'));
+    expect(html).toContain('<span aria-hidden="true" class="text-ink-3">Signed:</span>');
+    expect(html).toContain('<span class="sr-only">Pat Example’s college signing: </span>');
+  });
+
+  it('explains commitment lines once where there are any, linking /commits, and never elsewhere', () => {
+    const footnote = 'Commitment lines link to the player’s entry on the';
+    const count = (html: string, s: string) => html.split(s).length - 1;
+    const html = withLine(committedRow('committed'));
+    expect(count(html, footnote)).toBe(1);
+    expect(textOf(html)).toContain(
+      `Commitment lines link to the player’s entry on the college commitments page, which cites a source for each one; “Signed” appears only where a source says so. They were checked by hand on ${si.commitsCheckedOn} and are not part of the twice-daily update. Recall is partial: a player with no commitment line may still have committed.`,
+    );
+    expect(html).toContain('href="/commits"');
+    for (const { slug, view } of views) {
+      expect(count(renderToStaticMarkup(createElement(TeamRoster, { view })), footnote), slug).toBe(view.hasCommitments ? 1 : 0);
+    }
+  });
+});
+
 describe('TeamRoster: club lines', () => {
   const si = views.find((v) => v.slug === 'st-ignatius')!.view;
 

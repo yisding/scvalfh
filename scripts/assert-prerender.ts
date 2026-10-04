@@ -9,7 +9,8 @@
  * came back short, or long, or a page that lost its generateStaticParams (it would render on demand
  * instead), fails here by name:
  *
- *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs;
+ *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
+ *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id, `playoffs/<id>.html` for each
  *    league-tournament league;
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
@@ -106,7 +107,7 @@ if (JSON.stringify(snapshotLeagues) !== JSON.stringify([...LEAGUE_IDS])) {
 }
 
 // ---------------------------------------------------------------- fixed pages
-const FIXED = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs'];
+const FIXED = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'commits'];
 for (const p of FIXED) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
 
 // ---------------------------------------------------------------- families

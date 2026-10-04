@@ -1,4 +1,5 @@
-import { gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
+import { getCommitsFile } from '../../lib/commits';
+import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
 import {
   getEnrichedTeamRoster,
   getRosters,
@@ -12,6 +13,7 @@ import {
 } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
+import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view';
 
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
@@ -30,7 +32,11 @@ import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
  *   - a player a public page ties to a club gets a club line linking that club's page on this site
  *     (DESIGN §17.4), current clubs first; a club a source only lists, with no date that makes it
  *     current, is never worded as current. The words are components/clubs/club-view.ts'
- *     (`playerClubGroups`), so the team page and the club pages say the same thing.
+ *     (`playerClubGroups`), so the team page and the club pages say the same thing;
+ *   - a player a public page says has committed to play college field hockey gets a commitment
+ *     line linking that player's row on /commits (DESIGN §21.5), which cites the sources. It says
+ *     "Signed" only where a source does. The words are components/commits/commit-view.ts'
+ *     (`playerCommitLine`), shared with /commits.
  */
 
 /** MaxPreps' field hockey position codes. Anything else is printed as the coach wrote it. */
@@ -131,6 +137,12 @@ export interface RosterRow {
    * Internal links to /clubs/<slug>: they never join `sources`, which back up values the list shows.
    */
   clubs: RosterClubGroup[];
+  /**
+   * The college a public page says the player has committed to, or null (most rows). An internal
+   * link to the player's row on /commits: it never joins `sources`, which back up values the list
+   * shows.
+   */
+  commitment: RosterCommitLine | null;
 }
 
 export interface RosterConflictLine {
@@ -182,6 +194,13 @@ export interface RosterView {
   hasClubs: boolean;
   /** Some club line is a "Listed club" (status unknown): the footnote says what that means. */
   hasListedClub: boolean;
+  /** Some listed row has a commitment line: the footnote explains them. */
+  hasCommitments: boolean;
+  /**
+   * "Oct 3, 2026": when the commitments were researched. The footnote dates them, since the roster's
+   * other "as of" is MaxPreps' twice-daily read and a commitment line is not refreshed with it.
+   */
+  commitsCheckedOn: string;
   coaches: Array<{ key: string; name: string; role: string | null }>;
   conflicts: RosterConflictLine[];
   /** MaxPreps' roster page first, then one link per other site a shown value came from. */
@@ -280,6 +299,7 @@ function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
       .sort((a, b) => PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform))
       .map((x) => ({ label: PROFILE_WORDS[x.platform].link, url: x.url })),
     clubs: playerClubGroups(team, p.athleteId),
+    commitment: playerCommitLine(team, p.athleteId),
   };
 }
 
@@ -474,6 +494,8 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     ).map((k) => PROFILE_WORDS[k].footnote),
     hasClubs: rows.some((r) => r.clubs.length > 0),
     hasListedClub: rows.some((r) => r.clubs.some((g) => g.status === 'unknown')),
+    hasCommitments: rows.some((r) => r.commitment !== null),
+    commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
     coaches: team.coaches.map((c, i) => ({ key: `${c.name}-${i}`, name: c.name, role: c.role })),
     conflicts,
     sources: sourceLinks(team, players),

@@ -48,6 +48,7 @@ import {
 import { getEnrichedTeamRoster, getRosters } from '../../lib/rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import { affiliationLeaks } from '../../scripts/copy-rules';
+import { PUBLIC_TERMS } from '../../scripts/public-terms';
 import { textOf } from './html-text';
 
 const file = getClubsFile();
@@ -547,7 +548,7 @@ describe('the clubs routes, rendered', () => {
     const teams = [...new Set(file.affiliations.map((a) => a.teamSlug))];
     expect(teams).toHaveLength(22);
     for (const slug of teams) pages.push([`/teams/${slug}`, await renderTeam(slug)]);
-    for (const [route, html] of pages) expect(affiliationLeaks(html, file), route).toEqual([]);
+    for (const [route, html] of pages) expect(affiliationLeaks(html, file, { publicTerms: PUBLIC_TERMS }), route).toEqual([]);
   });
 
   it('links /clubs from /about’s sources section', () => {

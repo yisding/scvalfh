@@ -383,6 +383,12 @@ describe('lib/clubs-schema.ts helpers', () => {
     expect(isBannedHost('https://m.facebook.com/club')).toBe(true);
     expect(isBannedHost('https://www.tiktok.com/@club')).toBe(true);
     expect(isBannedHost('https://twitter.com/club')).toBe(true);
+    expect(isBannedHost('https://www.threads.net/@club/post/1')).toBe(true);
+    expect(isBannedHost('https://youtu.be/abc')).toBe(true);
+    expect(isBannedHost('https://www.youtube.com/watch?v=abc')).toBe(true);
+    expect(isBannedHost('https://t.co/abc')).toBe(true);
+    expect(isBannedHost('https://fb.me/abc')).toBe(true);
+    expect(isBannedHost('https://pt.co/')).toBe(false);
     expect(isBannedHost('https://www.maxpreps.com/ca/')).toBe(false);
     expect(isBannedHost('https://notx.com/')).toBe(false);
     expect(isBannedHost('https://x.com.example.org/')).toBe(false);

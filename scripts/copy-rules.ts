@@ -35,6 +35,29 @@ interface LeakAffiliation {
 /** A quote fragment shorter than this (in letters and digits) is too common to call a leak. */
 export const LEAK_MIN_FRAGMENT = 40;
 
+/**
+ * An excerpt of a quote (a run of LEAK_MIN_FRAGMENT or more, not the whole fragment) is a leak only
+ * when at least this many of its letters and digits are not public vocabulary (`publicTerms`): the
+ * site prints school, club and college names, cities and rostered players' names side by side all
+ * the time, and a quote that opens "St. Ignatius College Preparatory | San Francisco …" shares a
+ * 40-letter run with every page that prints that school and its city.
+ */
+export const LEAK_MIN_PRIVATE = 20;
+
+/** What the leak rules accept besides the page and the file. */
+export interface LeakOptions {
+  /**
+   * Source URLs whose document the page prints from a source of its own (see affiliationLeaks):
+   * a quote from one of these is not reported; a basis always is.
+   */
+  printsItself?: ReadonlySet<string>;
+  /**
+   * Names and places the site prints in its own right (scripts/public-terms.ts): they do not count
+   * towards LEAK_MIN_PRIVATE. Without them every letter of an excerpt counts as private.
+   */
+  publicTerms?: readonly string[];
+}
+
 const LEAK_ENTITIES: Readonly<Record<string, string>> = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ' };
 
 /**
@@ -57,10 +80,10 @@ function squash(text: string): string {
 
 /**
  * Where `text` (a built page, or a rendered component) shows what data/clubs.json keeps but never
- * renders: an affiliation's `basis`, or a fragment of a source's verbatim `quote` (split on "…") of
- * at least LEAK_MIN_FRAGMENT letters and digits. Both can name people who are not on the tracked
- * rosters — a club's director, a teammate, a coach — so a hit is a privacy failure, not a style
- * one. Returns one line per leak, naming whose record it came from; [] when clean.
+ * renders: an affiliation's `basis`, or a run of at least LEAK_MIN_FRAGMENT letters and digits from a
+ * source's verbatim `quote` (split on "…"), whole or excerpted. Both can name people who are not on
+ * the tracked rosters — a club's director, a teammate, a coach — so a hit is a privacy failure, not a
+ * style one. Returns one line per leak, naming whose record it came from; [] when clean.
  *
  * `printsItself`: source URLs whose document the page prints from a source of its own. A quote is
  * verbatim public text, so a page built from another of the site's sources can show the same words:
@@ -72,23 +95,136 @@ function squash(text: string): string {
 export function affiliationLeaks(
   text: string,
   file: { affiliations: readonly LeakAffiliation[] },
-  { printsItself }: { printsItself?: ReadonlySet<string> } = {},
+  { printsItself, publicTerms = [] }: LeakOptions = {},
 ): string[] {
-  const page = squash(text);
-  const leaks: string[] = [];
-  for (const a of file.affiliations) {
-    const who = `${a.teamSlug} / ${a.fullName} (${a.club})`;
-    if (page.includes(squash(a.basis))) leaks.push(`${who}: its basis`);
-    for (const s of a.sources) {
+  return leaks(
+    squash(text),
+    file.affiliations.map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
+    printsItself,
+    publicTerms,
+  );
+}
+
+// ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §21.2)
+
+/** The slice of data/commits.json the leak rule reads. Type-only, so this file stays pure. */
+interface LeakCommitment {
+  teamSlug: string;
+  fullName: string;
+  college: string;
+  basis: string;
+  sources: ReadonlyArray<{ url: string; quote: string }>;
+}
+
+/**
+ * `affiliationLeaks` for data/commits.json: a commitment's `basis`, or a fragment of a source's
+ * verbatim `quote`, shown on a page. Same rule, same threshold, same `printsItself` excuse: a
+ * commitment list or a news story can name teammates and coaches who are not on the rosters, so a
+ * hit is a privacy failure. One line per leak, naming whose record it came from; [] when clean.
+ */
+export function commitmentLeaks(
+  text: string,
+  file: { commitments: readonly LeakCommitment[] },
+  { printsItself, publicTerms = [] }: LeakOptions = {},
+): string[] {
+  return leaks(
+    squash(text),
+    file.commitments.map((c) => ({ who: `${c.teamSlug} / ${c.fullName} (${c.college})`, basis: c.basis, sources: c.sources })),
+    printsItself,
+    publicTerms,
+  );
+}
+
+/**
+ * The shared rule: a record's basis anywhere on the page; a whole quote fragment of at least
+ * LEAK_MIN_FRAGMENT; or an excerpt of one at least that long with LEAK_MIN_PRIVATE letters and
+ * digits that are not public vocabulary.
+ */
+function leaks(
+  page: string,
+  records: ReadonlyArray<{ who: string; basis: string; sources: ReadonlyArray<{ url: string; quote: string }> }>,
+  printsItself: ReadonlySet<string> | undefined,
+  publicTerms: readonly string[],
+): string[] {
+  const found: string[] = [];
+  for (const r of records) {
+    if (page.includes(squashed(r.basis))) found.push(`${r.who}: its basis`);
+    for (const s of r.sources) {
       if (printsItself?.has(s.url)) continue;
-      const hit = s.quote
-        .split('…')
-        .map(squash)
-        .some((fragment) => fragment.length >= LEAK_MIN_FRAGMENT && page.includes(fragment));
-      if (hit) leaks.push(`${who}: the quote from ${s.url}`);
+      const hit = s.quote.split('…').some((fragment) => sharesRun(page, squashed(fragment), publicTerms));
+      if (hit) found.push(`${r.who}: the quote from ${s.url}`);
     }
   }
-  return leaks;
+  return found;
+}
+
+/** `squash` of a record's text, kept: assert-copy checks every built page against the same records. */
+const SQUASHED = new Map<string, string>();
+function squashed(text: string): string {
+  let value = SQUASHED.get(text);
+  if (value === undefined) {
+    value = squash(text);
+    SQUASHED.set(text, value);
+  }
+  return value;
+}
+
+/**
+ * For each position of `fragment`, how many of its letters and digits up to there are NOT covered by
+ * a public term (a prefix sum, so a run's private count is two lookups). Kept per terms list and
+ * fragment: both are fixed for a whole assert-copy run.
+ */
+const PRIVATE_COUNTS = new WeakMap<readonly string[], Map<string, Int32Array>>();
+/** Public terms shorter than this, in letters and digits, are not set aside. */
+const MIN_PUBLIC_TERM = 5;
+function privateCounts(fragment: string, publicTerms: readonly string[]): Int32Array {
+  let byFragment = PRIVATE_COUNTS.get(publicTerms);
+  if (!byFragment) {
+    byFragment = new Map();
+    PRIVATE_COUNTS.set(publicTerms, byFragment);
+  }
+  let counts = byFragment.get(fragment);
+  if (counts) return counts;
+  const isPublic = new Uint8Array(fragment.length);
+  for (const term of publicTerms) {
+    const t = squashed(term);
+    // An abbreviation or a short mascot ("SI", "Rams") would mark letters inside unrelated words.
+    if (t.length < MIN_PUBLIC_TERM) continue;
+    for (let at = fragment.indexOf(t); at !== -1; at = fragment.indexOf(t, at + 1)) isPublic.fill(1, at, at + t.length);
+  }
+  counts = new Int32Array(fragment.length + 1);
+  for (let i = 0; i < fragment.length; i++) counts[i + 1] = counts[i] + (isPublic[i] ? 0 : 1);
+  byFragment.set(fragment, counts);
+  return counts;
+}
+
+/**
+ * Whether `page` shows `fragment` (squashed): the whole of it, at least LEAK_MIN_FRAGMENT long; or a
+ * run of it at least that long, from anywhere in it, with LEAK_MIN_PRIVATE letters and digits that no
+ * public term covers. Any run that long contains one of the fragment's aligned chunks of half that
+ * length (rounded up), so only those chunks are searched for, and each place one is found is extended
+ * both ways along the fragment to measure the shared run. That keeps assert-copy's scan of every page
+ * near one search per chunk.
+ */
+function sharesRun(page: string, fragment: string, publicTerms: readonly string[]): boolean {
+  if (fragment.length < LEAK_MIN_FRAGMENT) return false;
+  if (page.includes(fragment)) return true;
+  const size = Math.ceil(LEAK_MIN_FRAGMENT / 2);
+  for (let start = 0; start + size <= fragment.length; start += size) {
+    const chunk = fragment.slice(start, start + size);
+    for (let at = page.indexOf(chunk); at !== -1; at = page.indexOf(chunk, at + 1)) {
+      let before = 0;
+      while (before < start && before < at && page[at - before - 1] === fragment[start - before - 1]) before++;
+      let after = size;
+      while (start + after < fragment.length && at + after < page.length && page[at + after] === fragment[start + after]) {
+        after++;
+      }
+      if (before + after < LEAK_MIN_FRAGMENT) continue;
+      const counts = privateCounts(fragment, publicTerms);
+      if (counts[start + after] - counts[start - before] >= LEAK_MIN_PRIVATE) return true;
+    }
+  }
+  return false;
 }
 
 /**

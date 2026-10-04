@@ -18,7 +18,7 @@
  *   NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs
  *
  * What runs (every run is mandatory: `page.addInitScript` always exists, so nothing is skipped):
- *  1. Every route below × light/dark × 390/1280: the fixed pages (/clubs among them), the
+ *  1. Every route below × light/dark × 390/1280: the fixed pages (/clubs and /commits among them), the
  *     per-league pages (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL
  *     and an MCAL team page, and the first /game/, /scores/, /teams/ and /clubs/ page of the
  *     sitemap, plus its first /game/sblive-* page when it lists one (a si.com-only game) and its
@@ -92,6 +92,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/about',
   '/history/2025-26',
   '/clubs',
+  '/commits',
 ];
 
 function load() {
