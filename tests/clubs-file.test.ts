@@ -20,6 +20,7 @@ import {
   ClubsFileSchema,
   isAsOf,
   isBannedHost,
+  clubSiteKey,
   isHttpsUrl,
   type ClubsFile,
 } from '../lib/clubs-schema';
@@ -32,6 +33,7 @@ import {
   getClubSlugs,
   getClubs,
   getClubsFile,
+  getClubsLastChecked,
   getPlayerClubs,
   getTeamClubAffiliations,
   loadClubs,
@@ -169,11 +171,11 @@ describe('data/clubs.json', () => {
     const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
 
-    it('holds 13 clubs and 75 affiliations: 69 of the 811 varsity rows, at 23 of the 49 schools', () => {
-      expect(raw.clubs).toHaveLength(13);
-      expect(raw.affiliations).toHaveLength(75);
-      expect(players.size).toBe(69);
-      expect(schools.size).toBe(23);
+    it('holds 16 clubs and 80 affiliations: 71 of the 811 varsity rows, at 24 of the 49 schools', () => {
+      expect(raw.clubs).toHaveLength(16);
+      expect(raw.affiliations).toHaveLength(80);
+      expect(players.size).toBe(71);
+      expect(schools.size).toBe(24);
       const rows = teams.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
       expect(rows).toHaveLength(840);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
@@ -181,38 +183,40 @@ describe('data/clubs.json', () => {
       expect(teams).toHaveLength(49);
     });
 
-    it('counts 58 current, 11 past and 6 unknown; 60 high and 15 medium', () => {
-      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 58, past: 11, unknown: 6 });
-      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 60, medium: 15 });
+    it('counts 60 current, 12 past and 8 unknown; 65 high and 15 medium', () => {
+      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 60, past: 12, unknown: 8 });
+      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 65, medium: 15 });
       expect(raw.affiliations.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
+        'Amelia Zedonis',
         'Brooklyn Barnard',
         'Colette Boyd',
         'Emma Traverso',
         'Gabrielle Moll',
+        'Kira Kelly',
         'Riya Mehrotra',
         'Ruhee Bhatnagar',
       ]);
     });
 
-    it('rests on 232 source entries on 105 distinct URLs, by kind', () => {
+    it('rests on 237 source entries on 108 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = raw.affiliations.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(232);
-      expect(new Set(sources.map((s) => s.url)).size).toBe(105);
+      expect(sources).toHaveLength(237);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(108);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
       // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
-      // name slugs), so the ties rest on 103 pages.
+      // name slugs), so the ties rest on 106 pages (103 from the 2026-10-03 sweep).
       const page = (url: string) => url.replace(/\/$/, '').replace(/\/athletes\/[^/]+\/bio\/?\?careerid=/, '/careerid=');
-      expect(new Set(sources.map((s) => page(s.url))).size).toBe(103);
+      expect(new Set(sources.map((s) => page(s.url))).size).toBe(106);
       expect(countBy(sources, (s) => s.kind)).toEqual({
         sportsrecruits: 57,
         'club-site': 49,
         news: 34,
-        event: 29,
-        ncsa: 24,
+        event: 31,
+        ncsa: 25,
         other: 19,
-        'maxpreps-career': 17,
+        'maxpreps-career': 19,
         'school-site': 2,
         hudl: 1,
       });
@@ -223,9 +227,9 @@ describe('data/clubs.json', () => {
         'club-site': 11,
         news: 6,
         event: 3,
-        ncsa: 21,
+        ncsa: 22,
         other: 9,
-        'maxpreps-career': 17,
+        'maxpreps-career': 19,
         'school-site': 2,
         hudl: 1,
       });
@@ -233,11 +237,11 @@ describe('data/clubs.json', () => {
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);
-      expect(new Set(raw.clubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(66);
-      expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(71);
+      expect(new Set(raw.clubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(86);
+      expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(91);
     });
 
-    it('ties players to six clubs, and none to the other seven', () => {
+    it('ties players to eight clubs, and none to the other eight', () => {
       const byClub = Object.fromEntries(
         raw.clubs
           .map((c) => [c.slug, raw.affiliations.filter((a) => a.club === c.slug)] as const)
@@ -250,6 +254,8 @@ describe('data/clubs.json', () => {
         'fly-fhc': { current: 2, past: 4, unknown: 4 },
         infinity: { current: 1, past: 6, unknown: 1 },
         lightning: { current: 1, past: 1, unknown: 1 },
+        'd-city': { current: 0, past: 1, unknown: 2 },
+        'chico-hotshots': { current: 2, past: 0, unknown: 0 },
         htc: { current: 1, past: 0, unknown: 0 },
       });
       expect(raw.clubs.filter((c) => !byClub[c.slug]).map((c) => c.slug).sort()).toEqual([
@@ -258,6 +264,7 @@ describe('data/clubs.json', () => {
         'lions',
         'pac-heights',
         'performance-fh',
+        'roseville-fhc',
         'sj-khalsa',
         'stryker',
       ]);
@@ -269,8 +276,17 @@ describe('data/clubs.json', () => {
         ['Kira Kelly', 11, 'norcal-impact', 'current', '2026-08-27'],
         ['Kate Loscutoff', 12, 'norcal-impact', 'current', '2026-08-27'],
         ['Amelia Zedonis', 11, 'norcal-impact', 'current', '2026-08-27'],
+        ['Kira Kelly', 11, 'd-city', 'unknown', '2025-08-28'],
+        ['Kate Loscutoff', 12, 'd-city', 'past', '2024'],
+        ['Amelia Zedonis', 11, 'd-city', 'unknown', '2025-08-28'],
       ]);
-      for (const a of davis) {
+      for (const a of davis.filter((x) => x.club === 'd-city' && x.status === 'unknown')) {
+        expect(a.sources.map((s) => s.url)).toEqual(['https://nfhca.org/2025-high-school-watchlist/']);
+        expect(a.sources[0].quote).toMatch(/ \| Davis Senior High School \| D-City \| Sophomore \| /);
+      }
+      const losc = davis.find((x) => x.club === 'd-city' && x.fullName === 'Kate Loscutoff')!;
+      expect(losc.sources.map((s) => [s.kind, s.statedClassYear])).toEqual([['ncsa', 2027]]);
+      for (const a of davis.filter((x) => x.club === 'norcal-impact')) {
         expect(a.sources.map((s) => s.url)).toEqual(['https://nfhca.org/nfhca-2026-high-school-watchlist/']);
         expect(a.sources[0].quote.startsWith('Davis Senior High School | NorCal Impact FHC | ')).toBe(true);
       }
@@ -283,8 +299,33 @@ describe('data/clubs.json', () => {
         'south-bay': 7,
         'east-bay': 2,
         marin: 1,
+        sacramento: 2,
+        'north-state': 1,
         elsewhere: 1,
       });
+    });
+
+    it('ties eight players to more than one club', () => {
+      const n = Object.values(countBy(raw.affiliations, (a) => `${a.teamSlug} ${a.athleteId}`)).filter((k) => k > 1).length;
+      expect(n).toBe(8);
+    });
+
+    it('dates each club record: the first sweep’s on capturedAt, the three EAL-area clubs a day later', () => {
+      expect(raw.capturedAt).toBe('2026-10-03');
+      for (const c of raw.clubs) expect(c.checkedOn, c.slug).toBe(['d-city', 'roseville-fhc', 'chico-hotshots'].includes(c.slug) ? '2026-10-04' : '2026-10-03');
+      expect(getClubsLastChecked()).toBe('2026-10-04');
+    });
+
+    it('ties two Pleasant Valley players to Chico Hotshots from their own MaxPreps career pages', () => {
+      const pv = raw.affiliations.filter((a) => a.teamSlug === 'pleasant-valley');
+      expect(pv.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.asOf, a.confidence, a.clubTeam])).toEqual([
+        ['Lilah Letcher', 11, 'chico-hotshots', 'current', '2026-09-29', 'high', 'U19'],
+        ['Kate Panighetti', 12, 'chico-hotshots', 'current', '2026-05-20', 'high', 'U19'],
+      ]);
+      for (const a of pv) {
+        expect(a.sources.map((s) => [s.kind, s.statedSchool, s.sourceDate])).toEqual([['maxpreps-career', 'Pleasant Valley', a.asOf]]);
+        expect(a.sources[0].quote).toContain('"clubOrganizationName":"Chico Hotshots","clubOrganizationCity":"Chico","clubOrganizationStateCode":"CA","sport":"Field Hockey"');
+      }
     });
 
     it('finds players in four of the five leagues', () => {
@@ -297,7 +338,7 @@ describe('data/clubs.json', () => {
           ];
         }),
       );
-      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4], eal: [3, 1] });
+      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4], eal: [5, 2] });
     });
   });
 });
@@ -317,6 +358,9 @@ describe('lib/clubs.ts', () => {
       'hayward-hawks',
       'lions',
       'golden-gate-rippers',
+      'd-city',
+      'roseville-fhc',
+      'chico-hotshots',
       'htc',
     ]);
     expect(getClubs().map((c) => c.slug)).toEqual(getClubSlugs());
@@ -387,6 +431,9 @@ describe('lib/clubs.ts', () => {
   it('names the six areas notes[] says were searched', () => {
     expect(SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay', 'east-bay', 'marin', 'central-coast']);
     for (const r of SEARCHED_REGIONS) expect(CLUB_REGIONS).toContain(r);
+    expect(SEARCHED_REGIONS).not.toContain('sacramento');
+    expect(SEARCHED_REGIONS).not.toContain('north-state');
+    for (const c of getClubs()) if (!SEARCHED_REGIONS.includes(c.region)) expect(['sacramento', 'north-state', 'elsewhere'], c.slug).toContain(c.region);
   });
 });
 
@@ -407,6 +454,17 @@ describe('lib/clubs-schema.ts helpers', () => {
     expect(isBannedHost('https://notx.com/')).toBe(false);
     expect(isBannedHost('https://x.com.example.org/')).toBe(false);
     expect(isBannedHost('not a url')).toBe(false);
+  });
+
+  it('clubSiteKey reads a Google Site by two path segments and a TeamLinkt site by one', () => {
+    expect(clubSiteKey('https://sites.google.com/view/dcityhockeyclub/about-us/current-roster')).toBe('sites.google.com/view/dcityhockeyclub');
+    expect(clubSiteKey('https://sites.google.com/djusd.net/dhsfieldhockey/home')).toBe('sites.google.com/djusd.net/dhsfieldhockey');
+    expect(clubSiteKey('https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions')).toBe('leagues.teamlinkt.com/chicohotshotsfieldhockey');
+    expect(clubSiteKey('https://leagues.teamlinkt.com/leagues/NewsItem/34623/39251')).toBe('leagues.teamlinkt.com/leagues');
+    expect(clubSiteKey('https://www.flyfhc.com/programs/')).toBe('flyfhc.com');
+    expect(clubSiteKey('https://leagues.teamlinkt.com/ChicoHotshotsFieldHockey')).toBe('leagues.teamlinkt.com/chicohotshotsfieldhockey');
+    expect(clubSiteKey('https://sites.google.com/a/example.org/one/home')).toBe('sites.google.com/a/example.org/one');
+    expect(clubSiteKey('https://sites.google.com/a/example.org/two/home')).toBe('sites.google.com/a/example.org/two');
   });
 
   it('isHttpsUrl wants a parseable https URL', () => {

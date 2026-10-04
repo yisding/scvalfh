@@ -74,7 +74,7 @@ export function ClubPlayers({ view }: { view: ClubPageView }) {
   if (view.groups.length === 0) {
     return (
       <EmptyState heading={`No player on this site’s varsity rosters is tied to ${view.name}.`}>
-        No public page we found names one of them with this club; that does not mean none plays for
+        No public page we found ties one of them to this club; that does not mean none plays for
         it. Checked {view.checkedOn}.
       </EmptyState>
     );

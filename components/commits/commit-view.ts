@@ -17,6 +17,7 @@ import {
   type CommitStatus,
   type Commitment,
 } from '../../lib/commits';
+import { clubSiteKey } from '../../lib/clubs-schema';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
 import { getRosters } from '../../lib/rosters';
@@ -145,9 +146,9 @@ function pathOf(url: string): string {
   return new URL(url).pathname;
 }
 
-/** Which club's own site a host is: every club of data/clubs.json with a website, by host. */
-const CLUB_BY_HOST: ReadonlyMap<string, string> = new Map(
-  getClubs().flatMap((c) => (c.website ? [[hostOf(c.website), clubDisplayName(c)] as const] : [])),
+/** Which club's own site a URL is on: every club of data/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
+const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
+  getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), clubDisplayName(c)] as const] : [])),
 );
 
 /**
@@ -175,7 +176,7 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
         ? `${collegeDisplayName(college)} athletics`
         : host;
     case 'club-site': {
-      const club = CLUB_BY_HOST.get(host) ?? OTHER_CLUBS[host];
+      const club = CLUB_BY_SITE.get(clubSiteKey(src.url)) ?? OTHER_CLUBS[host];
       return club ? `${club} site` : host;
     }
     default:

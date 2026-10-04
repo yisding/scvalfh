@@ -1,4 +1,4 @@
-import { dateWithYear, gradeWord, partialDate, partialDateKind } from '../../lib/format';
+import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '../../lib/format';
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
@@ -14,7 +14,7 @@ import {
   type ClubAffiliation,
   type ClubRegion,
 } from '../../lib/clubs';
-import { CLUB_REGIONS } from '../../lib/clubs-schema';
+import { CLUB_REGIONS, clubSiteKey } from '../../lib/clubs-schema';
 import { getRosters } from '../../lib/rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { TeamSlug } from '../../lib/types';
@@ -53,7 +53,11 @@ export const REGION_WORDS: Record<ClubRegion, { label: string; prep: 'in' | 'on'
   'east-bay': { label: 'East Bay', prep: 'in', place: 'the East Bay' },
   marin: { label: 'Marin', prep: 'in', place: 'Marin' },
   'central-coast': { label: 'Central Coast', prep: 'on', place: 'the Central Coast' },
-  sacramento: { label: 'Sacramento', prep: 'in', place: 'Sacramento' },
+  // Not searched (SEARCHED_REGIONS): D-City (Davis) and Roseville FHC, met near the EAL teams' schools.
+  // "Sacramento" alone would read as the city.
+  sacramento: { label: 'Sacramento area', prep: 'in', place: 'the Sacramento area' },
+  // Not searched (SEARCHED_REGIONS): Chico Hotshots, met near the EAL teams' schools.
+  'north-state': { label: 'North State', prep: 'in', place: 'the North State' },
   // Never searched (SEARCHED_REGIONS), so never in a "no club based …" sentence: HTC is here.
   elsewhere: { label: 'Elsewhere', prep: 'in', place: 'other places' },
 };
@@ -106,10 +110,14 @@ function pathOf(url: string): string {
 
 const isSportsRecruits = (host: string) => host === 'sportsrecruits.com' || host.endsWith('.sportsrecruits.com');
 
-/** Which club's own site a host is: every club with a website, by host. */
-const CLUB_BY_HOST: ReadonlyMap<string, Club> = new Map(
-  getClubs().flatMap((c) => (c.website ? [[hostOf(c.website), c] as const] : [])),
+/** Which club's own site a URL is on: every club with a website, by clubSiteKey (a host, or a site on a shared host). */
+const CLUB_BY_SITE: ReadonlyMap<string, Club> = new Map(
+  getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), c] as const] : [])),
 );
+/** Whether `url` is on `club`'s own site. */
+function isOwnSite(url: string, club: Club): boolean {
+  return club.website !== null && clubSiteKey(url) === clubSiteKey(club.website);
+}
 
 function outlet(url: string): { label: string; inSentence: string } {
   const host = hostOf(url);
@@ -125,7 +133,7 @@ function outlet(url: string): { label: string; inSentence: string } {
  * club record names (say, Fly's old sanjosefly.com).
  */
 function clubSite(url: string, pageClub: Club): { owner: Club | null; roster: boolean } {
-  const owner = CLUB_BY_HOST.get(hostOf(url)) ?? null;
+  const owner = CLUB_BY_SITE.get(clubSiteKey(url)) ?? null;
   const roster = owner !== null && (owner.rosterPages.includes(url) || pathOf(url).includes('/roster'));
   return { owner: owner && owner.slug === pageClub.slug ? pageClub : owner, roster };
 }
@@ -325,6 +333,10 @@ export interface ClubsIndexView {
   regionsWithoutClubs: string[];
   /** "This list has no club based on the Peninsula or the Central Coast."; null when every area has one. */
   regionsWithoutClubsSentence: string | null;
+  /** Regions that hold a club but were not searched for clubs (not in SEARCHED_REGIONS; `elsewhere` apart), as headings. */
+  regionsNotSearched: string[];
+  /** "The Sacramento area and the North State were not searched for every club, so other clubs may be based there."; null when there is none. */
+  regionsNotSearchedSentence: string | null;
   /** The tracked rosters: rosters.json's teams, 49 today. */
   trackedTeams: number;
   /** Distinct players tied to any club. */
@@ -389,6 +401,9 @@ export function buildClubsIndexView(): ClubsIndexView {
       : [{ id, heading: REGION_WORDS[id].label, meta: plural(inRegion.length, 'club'), clubs: inRegion }];
   });
   const empty = SEARCHED_REGIONS.filter((r) => !clubs.some((c) => c.region === r));
+  const notSearched = CLUB_REGIONS.filter(
+    (r) => r !== 'elsewhere' && !SEARCHED_REGIONS.includes(r) && clubs.some((c) => c.region === r),
+  );
 
   const playerCount = new Set(file.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`)).size;
   const schoolCount = new Set(file.affiliations.map((a) => a.teamSlug)).size;
@@ -402,6 +417,8 @@ export function buildClubsIndexView(): ClubsIndexView {
     regions,
     regionsWithoutClubs: empty.map((r) => REGION_WORDS[r].label),
     regionsWithoutClubsSentence: empty.length > 0 ? `This list has no club based ${basedWords(empty)}.` : null,
+    regionsNotSearched: notSearched.map((r) => REGION_WORDS[r].label),
+    regionsNotSearchedSentence: notSearched.length > 0 ? notSearchedSentence(notSearched) : null,
     trackedTeams,
     playerCount,
     schoolCount,
@@ -410,6 +427,12 @@ export function buildClubsIndexView(): ClubsIndexView {
     capturedOn: dateWithYear(file.capturedAt),
     currentSeasons: currentSeasons(file.season),
   };
+}
+
+/** "The Sacramento area and the North State were not searched for every club, so other clubs may be based there." */
+function notSearchedSentence(regions: readonly ClubRegion[]): string {
+  const places = listWords(regions.map((r) => REGION_WORDS[r].place));
+  return `${places[0].toUpperCase()}${places.slice(1)} ${regions.length === 1 ? 'was' : 'were'} not searched for every club, so other clubs may be based there.`;
 }
 
 /** "26-27" → "2025-26 or 2026-27". */
@@ -517,7 +540,7 @@ export interface ClubPageView {
  */
 function programSourceLabel(url: string, club: Club): string {
   const host = hostOf(url);
-  if (club.website && host === hostOf(club.website)) return 'club site';
+  if (isOwnSite(url, club)) return 'club site';
   if (isSportsRecruits(host) && pathOf(url).includes('/organization/')) return 'SportsRecruits team page';
   return host;
 }
@@ -525,7 +548,7 @@ function programSourceLabel(url: string, club: Club): string {
 /** Where a page sits, for a sentence: "the club’s site", "SportsRecruits", otherwise the host. */
 function placeOf(url: string, club: Club): string {
   const host = hostOf(url);
-  if (club.website && host === hostOf(club.website)) return 'the club’s site';
+  if (isOwnSite(url, club)) return 'the club’s site';
   if (isSportsRecruits(host)) return 'SportsRecruits';
   return host;
 }
@@ -569,7 +592,7 @@ function rosterPageLabel(url: string, club: Club): string {
     return cut > 0 ? source.what.slice(0, cut) : source.what;
   }
   const host = hostOf(url);
-  if (club.website && host === hostOf(club.website)) return 'Club roster page';
+  if (isOwnSite(url, club)) return 'Club roster page';
   if (isSportsRecruits(host) && pathOf(url).includes('/organization/')) return 'SportsRecruits team page';
   return host;
 }

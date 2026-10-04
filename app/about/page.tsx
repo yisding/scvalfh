@@ -761,7 +761,7 @@ export default function AboutPage() {
             <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
               club teams
             </Link>{' '}
-            pages list {getClubs().length} youth clubs (those around these schools, plus any other club
+            pages list {getClubs().length} youth clubs (the clubs found around these schools, plus any other club
             a player here is tied to) and, for each, the players on these varsity rosters that a public
             page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
             MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s
