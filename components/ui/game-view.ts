@@ -128,6 +128,15 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   return `${league.shortName} ${word}`;
 }
 
+/**
+ * The one word for what kind of game this is, as the team page's Last and Next headers print it
+ * (SPEC §10.4): `League` for a counted game, `Postseason` for a tagged one, `Non-league` otherwise.
+ */
+export function gameKindLabel(game: Pick<Game, 'countsFor' | 'postseason'>): 'League' | 'Postseason' | 'Non-league' {
+  if (game.countsFor !== null) return 'League';
+  return game.postseason !== null ? 'Postseason' : 'Non-league';
+}
+
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
   return {
     isNonLeague: game.countsFor === null && game.postseason === null,

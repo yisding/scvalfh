@@ -14,7 +14,13 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { describeCancelled, describeGame, overtimeInDoubt, signedMargin } from '../../components/ui/game-view';
+import {
+  describeCancelled,
+  describeGame,
+  gameKindLabel,
+  overtimeInDoubt,
+  signedMargin,
+} from '../../components/ui/game-view';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
 import { findDivision, findLeague } from '../../lib/leagues';
@@ -479,5 +485,14 @@ describe('margin glyphs', () => {
     expect(signedMargin(3)).toBe('+3');
     expect(signedMargin(0)).toBe('0');
     expect(signedMargin(-7)).toBe('−7');
+  });
+});
+
+describe('game kind (SPEC §10.4, the team page’s Last and Next headers)', () => {
+  it('says League for a counted game, Postseason for a tagged one, Non-league otherwise', () => {
+    const ccs: Game['postseason'] = { kind: 'ccs', leagueId: null, via: 'ccs-window' };
+    expect(gameKindLabel({ countsFor: 'de-anza', postseason: null })).toBe('League');
+    expect(gameKindLabel({ countsFor: null, postseason: ccs })).toBe('Postseason');
+    expect(gameKindLabel({ countsFor: null, postseason: null })).toBe('Non-league');
   });
 });

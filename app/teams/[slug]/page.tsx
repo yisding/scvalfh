@@ -23,6 +23,7 @@ import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import FormStrip from '../../../components/ui/FormStrip';
+import { gameKindLabel } from '../../../components/ui/game-view';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
@@ -242,13 +243,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             kicker="Last"
             meta={
               last
-                ? `${shortDate(last.dateLocal)} · ${
-                    last.countsFor !== null
-                      ? 'League'
-                      : last.postseason !== null
-                        ? 'Postseason'
-                        : 'Non-league'
-                  }`
+                ? `${shortDate(last.dateLocal)} · ${gameKindLabel(last)}`
                 : undefined
             }
             action={{ href: '#league-log', label: 'All games' }}
