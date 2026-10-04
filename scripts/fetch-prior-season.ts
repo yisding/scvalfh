@@ -12,7 +12,7 @@
  *
  * Run once a season, at the next-season bootstrap (README): last season is over, so the file never
  * changes in between and the twice-daily cron never runs this. Cost: one team-context read (about
- * 0.5-0.7 MB, to find the season's id) and 43 schedule reads (about 150 KB each), through the
+ * 0.5-0.7 MB, to find the season's id) and 49 schedule reads (about 150 KB each), through the
  * MaxPreps client's own budget (at most 3 at a time, 500 ms between starts, retries on 429/5xx).
  *
  * The season id: MaxPreps' URL year segment is cosmetic (DATA-SOURCES §1.1h), but the ghost API's

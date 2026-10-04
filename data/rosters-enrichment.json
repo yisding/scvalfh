@@ -7,7 +7,8 @@
     "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV. Where sources disagree on a grade MaxPreps leaves blank (a school page against MaxPreps' own earlier-season or career data, or a paper against either), the grade is left blank and every disagreeing source is recorded under the player's conflicts with kept: null; nothing is guessed.",
     "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
     "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL) or 2026-10-03 (BVAL, PCAL, MCAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL and MCAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
-    "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked."
+    "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
+    "EAL (added 2026-10-04): stub entries; no sweep yet."
   ],
   "season": "26-27",
   "teams": [
@@ -8691,6 +8692,60 @@
           "url": "https://www.maxpreps.com/ca/san-rafael/marin-academy-wildcats/field-hockey/"
         }
       ]
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "bella-vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "chico",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "corning",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "davis",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "lassen",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+      ],
+      "players": [],
+      "slug": "pleasant-valley",
+      "sources": []
     }
   ]
 }

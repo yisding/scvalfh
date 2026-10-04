@@ -52,7 +52,8 @@ const parseStats = (slug: string) =>
   parsePlayerStats(statsRaw(slug), { expectedTeamId: getTeamBySlug(slug)!.id });
 const leagueOf = (slug: string) => getTeamBySlug(slug)!.league;
 
-const OTHERS = 'bval,pcal,mcal';
+// The EAL has no sampled capture: its six teams are in the run and fail like any team without one.
+const OTHERS = 'bval,pcal,mcal,eal';
 const TSX = path.join(REPO, 'node_modules', '.bin', 'tsx');
 
 /** A directory holding only the sampled captures. */

@@ -1,5 +1,5 @@
 /**
- * data/rosters.json: the committed file validates (one entry per registry team, all four leagues),
+ * data/rosters.json: the committed file validates (one entry per registry team, all five leagues),
  * the read API serves it, and the script rebuilds every league that has captures from them. A
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
@@ -68,9 +68,9 @@ describe('data/rosters.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('has one entry per registry team, all four leagues, in registry order, keyed by the registry id', () => {
+  it('has one entry per registry team, all five leagues, in registry order, keyed by the registry id', () => {
     expect(ROSTER_TEAM_COUNT).toBe(TEAMS.length);
-    expect(TEAMS).toHaveLength(43);
+    expect(TEAMS).toHaveLength(49);
     expect(raw.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
     expect(raw.teams.map((t) => t.teamId)).toEqual(TEAMS.map((t) => t.id));
     for (const t of raw.teams) {
@@ -266,7 +266,7 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
       fetchedAt: '2026-10-01T00:00:00.000Z',
     });
     // The committed file holds real rows for every team; the ones this test checks start from nothing.
-    for (const team of [...bvalTeams.slice(1), ...teamsInLeague('pcal'), ...teamsInLeague('mcal')]) {
+    for (const team of [...bvalTeams.slice(1), ...teamsInLeague('pcal'), ...teamsInLeague('mcal'), ...teamsInLeague('eal')]) {
       const i = previous.teams.findIndex((t) => t.slug === team.slug);
       previous.teams[i] = pendingRoster(team);
     }
@@ -278,6 +278,7 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     expect(code).toBe(1); // a team the run covered failed: the scheduler is told
     expect(stdout).toContain('SCVAL 15 teams · 15 ok');
     expect(stdout).toContain('PCAL   7 teams · not in this run');
+    expect(stdout).toContain('EAL    6 teams · not in this run');
     const built = read(out);
     expect(RostersSchema.safeParse(built).success).toBe(true);
     // SCVAL was read in full, in the same run.
@@ -298,7 +299,7 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     for (const team of bvalAll.filter((t) => captured(t.slug))) {
       expect(['ok', 'empty'], team.slug).toContain(built.teams.find((x) => x.slug === team.slug)!.status);
     }
-    for (const team of [...teamsInLeague('pcal'), ...teamsInLeague('mcal')]) {
+    for (const team of [...teamsInLeague('pcal'), ...teamsInLeague('mcal'), ...teamsInLeague('eal')]) {
       expect(built.teams.find((x) => x.slug === team.slug)!.status, team.slug).toBe('pending');
     }
   });
@@ -463,7 +464,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
     const previous = { ...structuredClone(raw), season: '25-26' };
     const scoped = runOver(JSON.stringify(previous), 'scval');
     expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
-    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 43 row\(s\) are ignored, as if absent/);
+    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 49 row\(s\) are ignored, as if absent/);
     expect(scoped.stdout).not.toContain('kept as they were');
     const built = read(scoped.out);
     expect(built.season).toBe(raw.season);

@@ -307,8 +307,8 @@ describe('maxpreps roster: drift is loud', () => {
 });
 
 describe('every league has a roster page URL and a claim-free placeholder', () => {
-  it('rosterUrl is the team page plus roster/, for all 43 teams', () => {
-    expect(TEAMS).toHaveLength(43);
+  it('rosterUrl is the team page plus roster/, for all 49 teams', () => {
+    expect(TEAMS).toHaveLength(49);
     for (const team of TEAMS) {
       expect(rosterUrl(team), team.slug).toBe(`${team.external.maxprepsTeamUrl!.replace(/\/+$/, '')}/roster/`);
     }
