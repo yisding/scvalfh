@@ -216,6 +216,23 @@ describe('buildRosterView', () => {
     expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits']);
     expect(platforms('saratoga')).toEqual(['Hudl']);
     expect(platforms('valley-christian')).toEqual([]);
+    // The EAL (recruiting pages swept 2026-10-04): footnote platforms in NCSA, SportsRecruits, Hudl order.
+    expect(platforms('chico')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
+    expect(platforms('davis')).toEqual(['NCSA', 'SportsRecruits']);
+    expect(platforms('lassen')).toEqual(['NCSA']);
+    expect(platforms('pleasant-valley')).toEqual(['NCSA', 'Hudl']);
+    expect(platforms('bella-vista')).toEqual([]);
+    expect(platforms('corning')).toEqual([]);
+    const eal = (slug: string) => views.find((v) => v.slug === slug)!.view.rows;
+    expect(eal('chico').filter((r) => r.profiles.length > 0).length).toBe(13);
+    expect(eal('davis').filter((r) => r.profiles.length > 0).length).toBe(4);
+    expect(eal('pleasant-valley').filter((r) => r.profiles.length > 0).length).toBe(11);
+    expect(eal('lassen').filter((r) => r.profiles.length > 0).length).toBe(1);
+    expect(eal('chico').find((r) => r.name === 'Olivia Council')!.profiles.map((x) => x.label)).toEqual([
+      'NCSA profile',
+      'SportsRecruits profile',
+      'Hudl profile',
+    ]);
     // NCSA first on a row that has both.
     const lizzie = views.find((v) => v.slug === 'los-gatos')!.view.rows.find((r) => r.name === 'Lizzie Moorehouse')!;
     expect(lizzie.profiles.map((x) => x.label)).toEqual(['NCSA profile', 'SportsRecruits profile']);
@@ -356,7 +373,7 @@ describe('TeamRoster', () => {
       ['monterey', 'none'],
       ['santa-catalina', 'none'],
       ['marin-academy', 'partial'],
-      // An EAL stub: no school or recruiting-page sweep has been done, and the card says so.
+      // An EAL team with no MaxPreps players: no school-athletics sweep has been done, and the card says so.
       ['corning', 'not-checked'],
     ]);
     for (const { slug, view } of views.filter((v) => v.view.status === 'empty')) {
