@@ -11,6 +11,7 @@ import { sixthPlaceRule } from '../lib/postseason';
 import {
   buildCrossCheck,
   computeStandings,
+  lastSpotOutcome,
   leaguePairings,
   missingOfficialResults,
   outcomesFor,
@@ -592,10 +593,22 @@ describe('MCAL: the last tournament place (§5.4b)', () => {
     expect([...db.contenders].sort()).toEqual(['convent-sacred-heart', 'marin-catholic']);
     expect(db.host).toBe('convent-sacred-heart');
   });
+
+  it('lastSpotOutcome: the play-in pair and the teams level at 6th, and null for a league without a tournament', () => {
+    const games = fourWayFiveToEight();
+    const rows = computeStandings(games);
+    const slugOf = (id: string): string => rows.find((r) => r.teamId === id)?.slug ?? id;
+    const out = lastSpotOutcome(rows, games, getLeague('mcal'));
+    if (out?.kind !== 'play-in') throw new Error(`expected a play-in, got ${JSON.stringify(out)}`);
+    expect(out.pair.map(slugOf).sort()).toEqual(['convent-sacred-heart', 'lick-wilmerding']);
+    expect(out.group.map(slugOf).sort()).toEqual(['berkeley', 'convent-sacred-heart', 'lick-wilmerding']);
+    expect(out.fifth).toBeNull();
+    expect(lastSpotOutcome(rows, games, getLeague('scval'))).toBeNull();
+  });
 });
 
 describe('MCAL: lib/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
-  // sixthPlaceRule replays the engine's seed-one-restart + last-spot recursion; this keeps the bracket's
+  // sixthPlaceRule takes its play-in pair from the engine's lastSpotOutcome; this keeps the bracket's
   // play-in pair and the table's shared 6th (resolvedBy 'play-in') in lockstep over many random seasons.
   const MCAL_SLUGS = Object.keys(getLeague('mcal').rules.drawNumbers ?? {});
   const mcal = getLeague('mcal');

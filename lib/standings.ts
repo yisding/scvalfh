@@ -450,9 +450,23 @@ function resolveGroup(
 
 // ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
 
+/**
+ * How MCAL's last tournament place was settled (SPEC §5.4b), as `lastSpotSeed` decided it: one team swept
+ * the other 2-0, or a play-in between `pair`. `group` is every team the case depends on (the pair, plus
+ * the 5th seed in the three-way 5-7 case, or the whole bucket when three or more are level at the last
+ * place); `fifth` is the 5th seed draw numbers placed in the three-way 5-7 case.
+ */
+export type LastSpotOutcome =
+  | { kind: 'sweep'; winner: TeamId; loser: TeamId }
+  | { kind: 'play-in'; pair: [TeamId, TeamId]; group: TeamId[]; fifth: TeamId | null };
+
 interface SeedCtx extends DivisionCtx {
   bucketStart: number;
   below: TeamId[][];
+  /** Written by `lastSpotSeed`, which only ever runs on the top-level (non-narrowing) path. */
+  lastSpot: LastSpotOutcome | null;
+  /** The three-way 5-7 case: the 5th seed placed by draw number, and its group, waiting for the pair. */
+  fifth: { id: TeamId; group: TeamId[] } | null;
 }
 
 const byName = (ids: readonly TeamId[]): TeamId[] =>
@@ -539,6 +553,7 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
       const drawOf = (id: TeamId): number => draws[getTeamById(id)?.slug ?? ''] ?? Number.MAX_SAFE_INTEGER;
       const first = [...group].sort((a, b) => drawOf(a) - drawOf(b))[0];
       ctx.resolvedBy.set(first, 'draw-number');
+      ctx.fifth = { id: first, group: [...group] };
       const rest = group.filter((id) => id !== first);
       return [[first], ...seedOne(rest, L, [...above, first], ctx)];
     }
@@ -563,11 +578,13 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
       const loser = winner === a ? b : a;
       ctx.resolvedBy.set(winner, 'h2h-win-pct');
       ctx.resolvedBy.set(loser, 'h2h-win-pct');
+      ctx.lastSpot = { kind: 'sweep', winner, loser };
       return [[winner], [loser]];
     }
     // A split, a tie or an unplayed meeting: a play-in decides it.
     ctx.resolvedBy.set(a, 'play-in');
     ctx.resolvedBy.set(b, 'play-in');
+    ctx.lastSpot = { kind: 'play-in', pair: [a, b], group: ctx.fifth?.group ?? [a, b], fifth: ctx.fifth?.id ?? null };
     return [byName(group)];
   }
 
@@ -581,8 +598,62 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
   const p2 = pickPlayIn(group.filter((id) => id !== p1), [...above, p1]);
   ctx.resolvedBy.set(p1, 'play-in');
   ctx.resolvedBy.set(p2, 'play-in');
+  ctx.lastSpot = { kind: 'play-in', pair: [p1, p2], group: [...group], fifth: null };
   const rest = group.filter((id) => id !== p1 && id !== p2);
   return [byName([p1, p2]), ...seedOne(rest, L + 2, [...above, p1, p2], ctx)];
+}
+
+/**
+ * How the league's last tournament place is settled over `rows` (SPEC §5.4b), or null when no tie on
+ * points reaches past it (or the league has no league tournament). It runs this engine's own
+ * seed-one-restart over the points bucket holding the last place, with the division's counted finals
+ * (`divisionGames`) and the same chain lookup, so a play-in pair is exactly the pair the table shows
+ * sharing the place with `resolvedBy: 'play-in'`. lib/postseason.ts builds the bracket's play-in on it.
+ */
+export function lastSpotOutcome(
+  rows: readonly Standing[],
+  games: readonly Game[],
+  league: LeagueConfig,
+): LastSpotOutcome | null {
+  const ps = league.postseason;
+  if (ps.kind !== 'league-tournament') return null;
+  const L = ps.lastSpot.place;
+  const divisionIds = new Set(league.divisions.map((d) => d.id));
+  // Points order (the table's order is points first); the team(s) in place L are the L-th by points.
+  const ranked = rows
+    .filter((r) => r.hasReportedResults && divisionIds.has(r.division))
+    .sort((a, b) => b.computed.pts - a.computed.pts || a.computed.place - b.computed.place);
+  const atL = ranked[L - 1];
+  if (!atL) return null;
+  const pts = atL.computed.pts;
+  const bucket = ranked.filter((r) => r.computed.pts === pts);
+  const above = ranked.filter((r) => r.computed.pts > pts);
+  const bucketStart = 1 + above.length;
+  if (bucketStart + bucket.length - 1 <= L) return null;
+
+  // The lower buckets as placed clusters (a shared place is one cluster), for a stage that reads them.
+  const below: TeamId[][] = [];
+  let last: number | null = null;
+  for (const r of ranked.filter((x) => x.computed.pts < pts)) {
+    if (r.computed.place === last) below[below.length - 1].push(r.teamId);
+    else below.push([r.teamId]);
+    last = r.computed.place;
+  }
+  const ctx: SeedCtx = {
+    division: atL.division,
+    league,
+    rules: league.rules,
+    games: divisionGames(games, atL.division),
+    computed: new Map(rows.map((r) => [r.teamId, r.computed])),
+    resolvedBy: new Map(),
+    placedBelowOf: () => below,
+    bucketStart,
+    below,
+    lastSpot: null,
+    fifth: null,
+  };
+  seedOne(bucket.map((r) => r.teamId), bucketStart, above.map((r) => r.teamId), ctx);
+  return ctx.lastSpot;
 }
 
 function nameOf(id: TeamId): string {
@@ -724,7 +795,7 @@ function computeDivision(
     if (rules.multiTeam === 'partition-restart') {
       resolved[i] = resolveGroup(group, chain, above, below, ctx);
     } else {
-      resolved[i] = seedOne(group, bucketStart, above, { ...ctx, bucketStart, below });
+      resolved[i] = seedOne(group, bucketStart, above, { ...ctx, bucketStart, below, lastSpot: null, fifth: null });
     }
   };
 
