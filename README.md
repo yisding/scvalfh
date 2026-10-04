@@ -392,23 +392,24 @@ schools**: SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none
 tied to more than one club. The EAL schools were swept on 2026-10-04 with the same rule and added three
 affiliations, all Davis players tied to NorCal Impact (so 75 affiliations for 69 players at 23 schools,
 the 13 clubs unchanged); no club record was added for the clubs the sweep met around Davis, Roseville
-and Chico (DESIGN §22.8). By status 55 are current, 11 past and 6 unknown; by confidence 57 high
-and 15 medium. They rest on 229 source entries on 105 distinct URLs: an entry is one page backing
-one tie, so a club roster, a watchlist or a news story counts once for every player it names. The
-URLs are 103 pages, because two are cited under two URLs each: Stick Together's 2025 all-league page
-with and without its trailing slash, and Gabrielle Moll's MaxPreps career page under two name slugs.
-By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49 on 11, news 34 on 6, event lists
-26 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one MAX Field Hockey invitational),
-NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and school pages), MaxPreps career
-pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs have tied players: SF Hawks 31
-(all current), NorCal Impact 19 (all current), Fly FHC 10, Infinity 8, Lightning 3 and HTC 1. The
-other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker, Hayward Hawks, Lions
-and Golden Gate Rippers) have a page with an empty state.
+and Chico (DESIGN §22.8). Of the 2026-10-03 sweep's 72, by status 55 are current, 11 past and 6
+unknown; by confidence 57 high and 15 medium. They rest on 229 source entries on 105 distinct URLs:
+an entry is one page backing one tie, so a club roster, a watchlist or a news story counts once for
+every player it names. The URLs are 103 pages, because two are cited under two URLs each: Stick
+Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps
+career page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49
+on 11, news 34 on 6, event lists 26 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one
+MAX Field Hockey invitational), NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and
+school pages), MaxPreps career pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs
+have tied players: SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10, Infinity
+8, Lightning 3 and HTC 1. The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa,
+Stryker, Hayward Hawks, Lions and Golden Gate Rippers) have a page with an empty state.
 
 **It is research, not a script.** Like the roster overlay, it was gathered by hand from club
 directories, the clubs' own sites, recruiting profiles, MaxPreps career pages, the NFHCA's high
-school watchlists, MAX Field Hockey's club pages and local news, and every tie was checked twice on
-2026-10-03: a checker re-opened each source, then an independent refuter tried to break the match.
+school watchlists, MAX Field Hockey's club pages and local news. Every tie of the 2026-10-03 sweep
+was checked twice that day: a checker re-opened each source, then an independent refuter tried to
+break the match. The three ties the 2026-10-04 EAL sweep added were each confirmed by two verifiers.
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 

@@ -92,7 +92,7 @@ describe('the corpus run', () => {
     expect(corpus.games.some((g) => byId.has(g.contestId)), 'lib/pipeline/steps/normalize.ts: dropped contests never published').toBe(false);
   });
 
-  it('every league fresh, no abort', () => {
+  it('every fetched league fresh, the EAL frozen (not fetched), no abort', () => {
     expect(states(corpus), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
   });
 });

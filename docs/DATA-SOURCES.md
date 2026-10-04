@@ -493,10 +493,11 @@ or their short links (`BANNED_HOSTS`, shared with §1.1j3). Only players
 already on the tracked rosters are named, varsity rows only (no affiliation is on one of Los Gatos'
 29 JV rows); a club's own roster names many more players, and the club page links it instead.
 
-*Two passes.* Every affiliation was checked twice on 2026-10-03. A checker re-opened each source
-and applied the rule; then an independent refuter re-opened the sources and tried to break the
-match: another person of the same name, a quote not on the page, a misidentified club, a class
-year that disagrees, a stale listing. Only ties that survived both are in the file.
+*Two passes.* Every affiliation of the 2026-10-03 sweep was checked twice on that day. A checker
+re-opened each source and applied the rule; then an independent refuter re-opened the sources and
+tried to break the match: another person of the same name, a quote not on the page, a misidentified
+club, a class year that disagrees, a stale listing. Only ties that survived both are in that sweep.
+The three ties of the 2026-10-04 EAL sweep were each confirmed by two verifiers.
 
 *Status and confidence.* `current` = the source reflects the 2025-26 or 2026-27 club season (dated
 August 2025 or later, a club's current-players page, or a live recruiting profile that lists the
