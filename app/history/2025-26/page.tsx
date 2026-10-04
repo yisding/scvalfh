@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import AwardsBlock from '../../../components/about/AwardsBlock';
-import HistoryStandingsTable from '../../../components/about/HistoryStandingsTable';
+import AwardsBlock from '../../../components/history/AwardsBlock';
+import HistoryStandingsTable from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
@@ -42,7 +42,7 @@ import type { LeagueId } from '../../../lib/types';
  * source note. A long lede here pushed the first standings row under the phone tab bar.
  */
 const SEASON = getHistorySeason();
-const LEAGUES = getHistoryLeagues();
+const HISTORY_LEAGUES = getHistoryLeagues();
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
@@ -290,7 +290,7 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
 }
 
 export default function HistoryPage() {
-  const tabs = LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
+  const tabs = HISTORY_LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
 
   return (
@@ -320,7 +320,7 @@ export default function HistoryPage() {
       <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
-        {LEAGUES.map(({ id, entry }) =>
+        {HISTORY_LEAGUES.map(({ id, entry }) =>
           entry.status === 'available' ? (
             <AvailableLeague key={id} leagueId={id} entry={entry} />
           ) : (

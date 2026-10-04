@@ -17,7 +17,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * the facts that exist — a blank is never printed as a guess or a placeholder.
  *
  * The rows sit in one card with divider rules, in a row-major grid like the all-league lists on
- * /history (components/about/AwardsBlock.tsx): one column on a phone, two from 640px, three from
+ * /history (components/history/AwardsBlock.tsx): one column on a phone, two from 640px, three from
  * 1024px, where the section spans both page columns. A grid row's cells share one height, so the
  * rules run straight across. Reading order is DOM order: left to right, then down.
  *
