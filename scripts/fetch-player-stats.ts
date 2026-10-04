@@ -54,7 +54,6 @@ import {
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
-  stableStringify,
   summarizeByLeague,
   type PreviousFile,
 } from '../lib/fetch-scope';
@@ -81,6 +80,7 @@ import {
   type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
 import { SEASON_YEAR } from '../lib/season';
+import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
 

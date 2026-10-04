@@ -17,7 +17,7 @@ import path from 'node:path';
 import type { OfficialStep, SbliveStep } from '../../../lib/pipeline/contract';
 import { SILENT_SINK } from '../../../lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '../../../lib/pipeline/run';
-import { stableStringify } from '../../../lib/snapshot-schema';
+import { stableStringify } from '../../../lib/stable-json';
 import { REPO } from '../../helpers';
 
 export const CORPUS_ALL = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02');

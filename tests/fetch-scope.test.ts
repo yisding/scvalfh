@@ -12,7 +12,6 @@ import {
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
-  stableStringify,
   summarizeByLeague,
   teamsInScope,
 } from '../lib/fetch-scope';
@@ -23,6 +22,7 @@ import {
   type Rosters,
 } from '../lib/rosters-schema';
 import { SEASON_YEAR } from '../lib/season';
+import { stableStringify } from '../lib/stable-json';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { REPO } from './helpers';
 

@@ -10,7 +10,8 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { loadSnapshot, parseSnapshot, stableStringify } from '../lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
+import { stableStringify } from '../lib/stable-json';
 import { divisionGames } from '../lib/standings';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';

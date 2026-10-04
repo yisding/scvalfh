@@ -54,6 +54,7 @@ import {
 import { HttpClient } from '../lib/sources/http';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
+import { stableStringify } from '../lib/stable-json';
 
 interface Args {
   from: string | null;
@@ -94,23 +95,6 @@ function parseArgs(argv: readonly string[]): Args {
     throw new Error('--bval-from needs --retrieved-on YYYY-MM-DD: the day those BVAL files were read');
   }
   return { ...out, retrievedOn: out.retrievedOn ?? new Date().toISOString().slice(0, 10) };
-}
-
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
 }
 
 function pick<T extends { division: string; level: string }>(

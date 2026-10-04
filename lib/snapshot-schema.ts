@@ -31,6 +31,7 @@ import {
 } from './leagues';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from './snapshot-migrate';
+import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 import type { DivisionId, Snapshot, TiebreakStage } from './types';
 
@@ -888,26 +889,6 @@ export function loadSnapshot(raw: unknown): Snapshot {
 }
 
 // ---------------------------------------------------------------- canonical form
-
-/** Keys sorted at every level so a git diff shows only what really changed. */
-export function stableStringify(value: unknown): string {
-  const seen = new WeakSet<object>();
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      if (seen.has(node as object)) throw new Error('circular structure in snapshot');
-      seen.add(node as object);
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
 
 /**
  * Any key that holds a run's wall-clock stamp rather than a fact about the season.

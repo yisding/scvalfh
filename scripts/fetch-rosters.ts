@@ -43,7 +43,6 @@ import {
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
-  stableStringify,
   summarizeByLeague,
   type PreviousFile,
 } from "../lib/fetch-scope";
@@ -59,6 +58,7 @@ import {
   type TeamRoster,
 } from "../lib/rosters-schema";
 import { SEASON_YEAR } from "../lib/season";
+import { stableStringify } from "../lib/stable-json";
 import { TEAMS } from "../lib/teams";
 import type { LeagueId } from "../lib/types";
 

@@ -25,7 +25,8 @@ import path from 'node:path';
 import { carryCrossCheck } from '../crosscheck';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
-import { loadSnapshot, stableStringify } from '../snapshot-schema';
+import { loadSnapshot } from '../snapshot-schema';
+import { stableStringify } from '../stable-json';
 import type { Game, LeagueId, OfficialFixture, Snapshot } from '../types';
 import {
   RunAbort,

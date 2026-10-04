@@ -8,7 +8,8 @@
 import { CCS, getLeague } from '../../leagues';
 import { buildSeason } from '../../season-build';
 import { countsOf } from '../../snapshot-migrate';
-import { parseSnapshot, snapshotContentHash, stableStringify } from '../../snapshot-schema';
+import { parseSnapshot, snapshotContentHash } from '../../snapshot-schema';
+import { stableStringify } from '../../stable-json';
 import { TEAMS } from '../../teams';
 import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '../../types';
 import { RunAbort } from '../contract';

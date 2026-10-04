@@ -19,9 +19,9 @@
 
 import { z } from 'zod';
 
-import { contentKey } from './fetch-scope';
 import { ALL_DIVISIONS } from './leagues';
 import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
+import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Rosters cover every registry team, all five leagues: one entry per team of TEAMS. */

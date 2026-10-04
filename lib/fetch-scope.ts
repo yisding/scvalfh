@@ -43,46 +43,6 @@ export function inScope(team: Team, leagues: readonly LeagueId[] | null): boolea
   return leagues === null || leagues.includes(team.league);
 }
 
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-export function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
-
-/**
- * `value` as JSON with keys sorted and every key in `ignore` dropped at every level. Two files with
- * the same key differ only in what `ignore` names, so a fetch script can leave the old file in
- * place and a scheduled refresh has nothing to commit. Both scripts ignore `fetchedAt` (when a row
- * was read) and `error` (a failure's free-form message, which can carry a duration or request id).
- */
-export function contentKey(value: unknown, ignore: readonly string[]): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        if (ignore.includes(key)) continue;
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return JSON.stringify(normalize(value));
-}
-
 // ---------------------------------------------------------------- the previous file
 
 /** A row of the previous file that a run does not keep, and why. */

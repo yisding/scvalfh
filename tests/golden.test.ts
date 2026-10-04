@@ -23,7 +23,8 @@ import {
   statusLegend,
 } from '../lib/standings';
 import { countsOf, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { parseSnapshot, stableStringify } from '../lib/snapshot-schema';
+import { parseSnapshot } from '../lib/snapshot-schema';
+import { stableStringify } from '../lib/stable-json';
 import type {
   Game,
   GameStatus,

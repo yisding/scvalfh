@@ -22,8 +22,8 @@
 
 import { z } from 'zod';
 
-import { contentKey } from './fetch-scope';
 import { httpUrl, slugId } from './schema-primitives';
+import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Player stats cover every registry team, all five leagues: one entry per team of TEAMS. */
