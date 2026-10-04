@@ -1,9 +1,9 @@
 /**
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
- * The page reads the snapshot ONLY through lib/data.ts and every score goes through
- * lib/format's renderScore / components/ui/game-view's describeGame — nothing here reads
- * `game.home.score` to decide what to print. The only arithmetic in this file is counting
+ * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
+ * lib/format's renderScore (the form chips' `0–7`) or components/ui/game-view's describeGame —
+ * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
  * `localDateKey(snapshot.fetchedAt)` (getToday()), never Date.now(), so the build is
  * reproducible (BUILD-BRIEF).
@@ -36,6 +36,7 @@ import {
   ordinal,
   plural,
   recordString,
+  renderScore,
   shortDate,
   sideOutcome,
   timeOfDayPT,
@@ -348,10 +349,9 @@ function outcomeFor(game: Game, teamId: string): Outcome | null {
 
 /** The chip label's score, from this team's side: '0–7'. */
 function scorePair(game: Game, teamId: string): string | undefined {
-  const mine = game.home.teamId === teamId ? game.home : game.away;
-  const theirs = game.home.teamId === teamId ? game.away : game.home;
-  if (mine.score === null || theirs.score === null) return undefined;
-  return `${mine.score}–${theirs.score}`;
+  const score = renderScore(game);
+  if (score.kind !== 'final') return undefined;
+  return game.home.teamId === teamId ? `${score.home}–${score.away}` : `${score.away}–${score.home}`;
 }
 
 function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOpponent[] {

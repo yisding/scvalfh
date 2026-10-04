@@ -3,8 +3,11 @@
  *
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
  * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
- * components/ reads `game.home.score` / `game.away.score` directly — every score comes through
- * `renderScore()` in lib/format.ts, and every glyph through `scoreGlyph()`.
+ * components/ PRINTS `game.home.score` / `game.away.score`: every printed score comes from
+ * `renderScore()` in lib/format.ts (directly, or through `describeGame()`), and every glyph from
+ * `scoreGlyph()`. The raw reads that remain are null-guarded comparisons and arithmetic that
+ * print no score: the level check in game-model's `resultConflictNoteFor` and its
+ * `isOneGoalFinal`, day-summary's headline-game margin and leaders-view's goal totals.
  *
  * Deviation from DESIGN §5.2 worth knowing: the data model has no `cancelled` status, because
  * MaxPreps contestState 1 (Deleted) rows are dropped rather than stored (SPEC §5.5.2). The

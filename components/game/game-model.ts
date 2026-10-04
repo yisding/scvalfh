@@ -3,10 +3,12 @@
  * and its `opengraph-image`, so a link preview and the page itself can never disagree.
  *
  * Every number here comes through `describeGame()` (components/ui/game-view.ts), which is the one
- * implementation of the DESIGN §5.2 table. Nothing in this module PRINTS `game.home.score` /
- * `game.away.score` (the one read, `isOneGoalFinal`, only decides whether the MCAL shootout caveat
- * is shown), so a missing score cannot become `0-0` in a page title, an OG card or a
- * `<meta name="description">` any more than it can in the body (DESIGN §5.3, §10.9e).
+ * implementation of the DESIGN §5.2 table, or straight from `renderScore()` (the season-series
+ * sentence's `ended 2-2`). Nothing in this module PRINTS `game.home.score` / `game.away.score`;
+ * the two null-guarded reads only decide which sentence is shown (`resultConflictNoteFor`'s level
+ * check, and `isOneGoalFinal`, the MCAL shootout caveat), so a missing score cannot become `0-0`
+ * in a page title, an OG card or a `<meta name="description">` any more than it can in the body
+ * (DESIGN §5.3, §10.9e).
  *
  * League-aware (SPEC §10.6): the sub-line is `<record> <division heading ?? league short>`, the
  * context is `BVAL · Santa Teresa`, `MCAL`, `MCAL semifinal` (the bracket round, when
@@ -30,7 +32,16 @@ import {
   getTeamForm,
   getTeams,
 } from '../../lib/data';
-import { dateWithYear, matchupJoiner, monthDay, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
+import {
+  dateWithYear,
+  matchupJoiner,
+  monthDay,
+  recordString,
+  renderScore,
+  shortDate,
+  sideOutcome,
+  timeOfDayPT,
+} from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
 import {
   divisionDisplay,
@@ -507,8 +518,12 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
       const g = flaggedTies[0];
       const flagged = g.home.result === 'W' ? g.home : g.away.result === 'W' ? g.away : null;
       const winner = flagged ? (sideKey(flagged) === keyHome ? homeName : awayName) : null;
+      // A flagged tie is a final with both scores (sideOutcome read 'T' off them), so the view is
+      // always 'final' here; the fallback only keeps the type honest.
+      const meeting = renderScore(g);
+      const ended = meeting.kind === 'final' ? `${meeting.home}-${meeting.away}` : 'level';
       sentences.push(
-        `Their only meeting this season ended ${g.home.score}-${g.away.score}, which this site counts as a draw; ${
+        `Their only meeting this season ended ${ended}, which this site counts as a draw; ${
           winner ? `MaxPreps lists ${winner} as the winner.` : 'MaxPreps’ result flags for it disagree.'
         }`,
       );
