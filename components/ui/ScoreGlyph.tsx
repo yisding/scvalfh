@@ -12,8 +12,8 @@ import type { SideView } from './game-view';
  * chip at all.
  *
  * Client-safe (SPEC §10.4): this module imports only TYPES from game-view, so a client component
- * (the home My-team card) can render it without reaching lib/teams. ScoreCell re-exports it for
- * server callers.
+ * (the home My-team card) can render it without reaching lib/teams. Server components import it
+ * directly.
  */
 export interface ScoreGlyphProps {
   side: SideView;

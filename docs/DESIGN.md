@@ -1936,11 +1936,7 @@ interface GameViewProps {
   showRecap?: boolean;             // default true on /schedule and /, false in dense tables
   defaultExpanded?: boolean;
 }
-interface ScoreCellProps {         // the single source of truth for "never 0-0"
-  game: Game;
-  perspective?: TeamSlug;
-  size?: 'score' | 'board';        // 20px list / 32px on /game/[id]
-}
+interface ScoreGlyphProps { side: SideView; size?: 'score' | 'board' | 'meta' }  // one side of describeGame(); the never-0-0 rule itself lives in renderScore (§5.2)
 interface ScoreBoardProps { game: Game }   // the /game/[id] hero
 ```
 
@@ -2477,6 +2473,10 @@ published cross-check log · greyscale CI gate · build-time recap cleanup · em
 `content-visibility` on date groups · "who we haven't beaten" · `BerthMeter` + ordinal word
 chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr uniqueness assert
 (all *data-dense*).
+
+*Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
+`describeGame` (components/ui/game-view.ts) over `renderScore`, and every score glyph goes through
+`ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
 
 ---
 

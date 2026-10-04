@@ -4,7 +4,7 @@ import type { Game, TeamSlug } from '../../lib/types';
 
 import { NON_MEMBER_NOTE } from './GameRow';
 import GhostMonogram from './GhostMonogram';
-import { ScoreGlyph, nameClass } from './ScoreCell';
+import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import TeamMonogram from './TeamMonogram';
 import { describeGame, statusLabelIsTime, type SideView } from './game-view';

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
 import type { TeamSlug } from '../../lib/types';
-import GameRow from '../ui/GameRow';
+import { GameRow } from '../ui/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';

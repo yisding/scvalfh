@@ -10,7 +10,7 @@ import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
 import ResultChip from './ResultChip';
-import { ScoreGlyph, nameClass } from './ScoreCell';
+import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import Tag from './Tag';
 import TeamMonogram from './TeamMonogram';

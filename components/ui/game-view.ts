@@ -1,6 +1,5 @@
 /**
- * The pure display helper behind ScoreCell, StatusLabel, GameRow, GameCard, GameLogRow and
- * ScoreBoard.
+ * The pure display helper behind StatusLabel, GameRow, GameCard, GameLogRow and ScoreBoard.
  *
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
  * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
