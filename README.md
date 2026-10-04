@@ -344,9 +344,9 @@ The rules:
   club's page links that roster instead of naming them.
 - **Quotes and bases are kept, never rendered.** A page shows each source as a link labelled by
   its kind and host ("SportsRecruits profile", "club roster", "Gilroy Dispatch").
-  `pnpm assert:copy` fails the build if any built page shows a basis or a quote fragment
-  (`affiliationLeaks` in `scripts/copy-rules.ts`), because both can name people who are not on the
-  rosters.
+  `pnpm assert:copy` fails the build if any built page shows a basis, a quote fragment, or an
+  excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/copy-rules.ts`,
+  with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/clubs-schema.ts`),
   and every URL is https.

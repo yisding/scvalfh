@@ -18,8 +18,9 @@
  * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all four
  * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
- * no affiliation's `basis` and no fragment of a source's verbatim `quote` (`affiliationLeaks` in
- * scripts/copy-rules.ts, which reads past tags, entities and the RSC payload's JSON escapes). Both
+ * no affiliation's `basis` and no fragment of a source's verbatim `quote`, whole or excerpted, beyond
+ * the public names scripts/public-terms.ts lists (`affiliationLeaks` in scripts/copy-rules.ts, which
+ * reads past tags, entities and the RSC payload's JSON escapes). Both
  * can name people who are not on the tracked rosters, so a hit is a privacy failure; the line
  * names the page and whose record leaked. One coincidence is not a leak: a quote is verbatim public
  * text, and a page that is NOT built from the clubs file can print the same document from a source
@@ -58,6 +59,7 @@ import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
 import { SCVAL_ONLY_CLAIM, affiliationLeaks, commitmentLeaks, sectionById } from './copy-rules';
+import { PUBLIC_TERMS } from './public-terms';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -134,11 +136,11 @@ for (const file of files) {
     if (i >= 0) fail(file, `single-division league labelled as a division ("${label}") — “…${around(html, i)}…”`);
   }
   const printsItself = builtFromClubs(file) ? undefined : citedBy(html);
-  for (const leak of affiliationLeaks(html, clubsFile, { printsItself })) {
+  for (const leak of affiliationLeaks(html, clubsFile, { printsItself, publicTerms: PUBLIC_TERMS })) {
     fail(file, `shows what data/clubs.json never renders: ${leak}`);
   }
   const printsCommitSource = builtFromCommits(file) ? undefined : commitCitedBy(html);
-  for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource })) {
+  for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource, publicTerms: PUBLIC_TERMS })) {
     fail(file, `shows what data/commits.json never renders: ${leak}`);
   }
 }

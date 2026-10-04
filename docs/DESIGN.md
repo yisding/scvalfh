@@ -2870,9 +2870,11 @@ The players are minors, so the pages are narrower than the data:
 - **A source's verbatim quote, an affiliation's `basis` and its `confidence` are never rendered.**
   They are not in the view types (`components/clubs/club-view.ts`), and `scripts/assert-copy.ts`
   fails the build on any page whose text, entities decoded and RSC payload included, contains a
-  basis or a fragment of a quote of 40 or more letters and digits (`affiliationLeaks`, also run by
-  `tests/ui/club-view.test.ts` over the rendered routes). Both can name people who are not on the
-  rosters. The one thing excused is a coincidence: a page not built from the clubs file that prints
+  basis, a whole fragment of a quote of 40 or more letters and digits, or an excerpt of one that long
+  in which at least 20 letters and digits are not public names (schools, clubs, colleges, cities,
+  rostered players: `scripts/public-terms.ts`), so a truncated quote is caught too while a school
+  printed beside its city is not (`affiliationLeaks`, also run by `tests/ui/club-view.test.ts` over
+  the rendered routes). Both can name people who are not on the rosters. The one thing excused is a coincidence: a page not built from the clubs file that prints
   and cites the very document a quote copies (`/history/2025-26` prints the SCVAL all-league PDF,
   which four quotes cite) is not leaking it.
 - **Metadata names no player.** A title or description travels further than the page.
@@ -3101,8 +3103,8 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   news story names many more people; none of them appears.
 - **A source's quote, a commitment's `basis` and its `confidence` are never rendered.** They are not
   in the view types (`components/commits/commit-view.ts`), and `scripts/assert-copy.ts` fails the
-  build on any page that shows a basis or a quote fragment (`commitmentLeaks` in
-  `scripts/copy-rules.ts`, the clubs rule with the same threshold and the same `printsItself`
+  build on any page that shows a basis, a quote fragment or an excerpt of one (`commitmentLeaks` in
+  `scripts/copy-rules.ts`, the clubs rule with the same thresholds, public names and `printsItself`
   excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
 - **Metadata names no player**, and **link labels are never read from a URL path** beyond the
   page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`).

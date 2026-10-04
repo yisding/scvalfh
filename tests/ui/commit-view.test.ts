@@ -49,6 +49,7 @@ import {
 import { getRosters } from '../../lib/rosters';
 import { TEAMS } from '../../lib/teams';
 import { commitmentLeaks } from '../../scripts/copy-rules';
+import { PUBLIC_TERMS } from '../../scripts/public-terms';
 import { textOf } from './html-text';
 
 const file = getCommitsFile();
@@ -261,7 +262,7 @@ describe('/commits, rendered', () => {
   });
 
   it('shows no quote and no basis', () => {
-    expect(commitmentLeaks(html, file)).toEqual([]);
+    expect(commitmentLeaks(html, file, { publicTerms: PUBLIC_TERMS })).toEqual([]);
   });
 
   it('names no player in its metadata', () => {
@@ -280,7 +281,7 @@ describe('the pages that link /commits', () => {
         expect(html).toContain(`href="/commits#${commitAnchor(c)}"`);
       }
       expect(textOf(html)).toContain('Commitment lines link to the player’s entry on the college commitments page');
-      expect(commitmentLeaks(html, file)).toEqual([]);
+      expect(commitmentLeaks(html, file, { publicTerms: PUBLIC_TERMS })).toEqual([]);
     }
   });
 
@@ -295,6 +296,6 @@ describe('the pages that link /commits', () => {
     const about = renderToStaticMarkup(createElement(AboutPage));
     expect(about).toContain('id="commits-coverage"');
     expect(about).toContain('href="/commits"');
-    expect(commitmentLeaks(about, file)).toEqual([]);
+    expect(commitmentLeaks(about, file, { publicTerms: PUBLIC_TERMS })).toEqual([]);
   });
 });
