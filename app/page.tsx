@@ -44,7 +44,7 @@ export default function HomePage() {
     <div className="pb-section-lg">
       <div data-scope="all">
         <PageHeader
-          title="NorCal field hockey"
+          title="NorCal High School Field Hockey Teams"
           srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL, MCAL and EAL"
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues

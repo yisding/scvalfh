@@ -1,4 +1,4 @@
-# NorCal Field Hockey (repo: scvalfh)
+# NorCal High School Field Hockey (repo: scvalfh)
 
 Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
 five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast

@@ -15,7 +15,9 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
  * /about) names exactly what is covered. The repo name, the Worker name, the `scvalfh.*` storage
  * keys and the `SCVAL_*` env names deliberately stay as they are.
  */
-export const SITE_NAME = 'NorCal Field Hockey';
+export const SITE_NAME = 'NorCal High School Field Hockey';
+/** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
+export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = 'NorCal FH';
 export const SITE_TAGLINE = 'Girls varsity field hockey in the Central Coast, North Coast and Northern sections';
