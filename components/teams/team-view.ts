@@ -56,6 +56,7 @@ import type {
   TeamSlug,
 } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { toLeagueChip } from '../layout/league-chips';
 import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
@@ -749,7 +750,7 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
 export function teamsLeagueChips(): { chips: LeagueChip[]; hrefs: Record<string, string> } {
   const summaries = getLeagueSummaries();
   return {
-    chips: summaries.map((l) => ({ id: l.id, shortName: l.shortName, sectionShort: l.section.shortName })),
+    chips: summaries.map(toLeagueChip),
     hrefs: Object.fromEntries(summaries.map((l) => [l.id, `#${l.id}`])),
   };
 }

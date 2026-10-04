@@ -1,4 +1,5 @@
 import type { LeagueChip } from '../../components/layout/LeagueSwitcher';
+import { toLeagueChip } from '../../components/layout/league-chips';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -224,7 +225,7 @@ export function leagueChips(): LeagueChip[] {
   return getLeagueIds()
     .map((id) => getLeagueSummary(id))
     .filter((l): l is LeagueSummary => l !== undefined)
-    .map((l) => ({ id: l.id, shortName: l.shortName, sectionShort: l.section.shortName }));
+    .map(toLeagueChip);
 }
 
 /** `{ all: base, <id>: base/<id> }` for a link-mode switcher, or `{ <id>: '#<id>' }` for anchor mode. */
