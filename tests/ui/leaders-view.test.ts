@@ -689,6 +689,18 @@ describe('buildLeadersView — player boards past 10th', () => {
     ]);
   });
 
+  it(`counts a tie past 10th too long for ${EXPANDED_MAX_ROWS} rows under the board, with nothing to expand`, () => {
+    // Ten places, then 21 players on 1 point: 31 rows for the expanded board, which lists no more.
+    const board = pointsBoard([...Array.from({ length: 10 }, (_, i) => 30 - i), ...Array<number>(21).fill(1)]);
+    expectRanked(board);
+    expect(board.rows).toHaveLength(10);
+    expect(board.extra).toBeNull();
+    expect(board.more).toBe('21 more players share 11th, with 1 point each.');
+    const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board }));
+    expect(html).toContain(board.more);
+    expect(html).not.toContain('<details');
+  });
+
   it(`counts a tie for the last expanded place that would pass ${EXPANDED_MAX_ROWS} rows`, () => {
     // 24 places, then seven players on 1 point: 31 rows.
     const board = pointsBoard([...Array.from({ length: 24 }, (_, i) => 30 - i), ...Array<number>(7).fill(1)]);

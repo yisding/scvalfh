@@ -3475,7 +3475,9 @@ no client component.
   players" ("… goalkeepers" on the keeper boards; "Show 16 goalkeepers" when a tie for 1st is the
   whole board), so the page reads as it did and opens with zero JavaScript. The expanded board follows
   the §16.2 rule with 25 places and 30 rows: a tie for the last place that would pass 30 is counted
-  in a line under the second table ("10 more players share 24th, with 4 assists each."). Tied groups
+  in a line under the second table ("10 more players share 24th, with 4 assists each."), or, when
+  that tie is the first group past the board's own rows and nothing is left to put behind a
+  disclosure, in the line under the board ("21 more players share 11th, …"). Tied groups
   are kept or dropped whole, so the expanded board's first rows are exactly the board's own, and a
   tie too long for the first table ("8 more players share 10th, …") is listed once it is opened.
   The summary counts the rows behind it, never "the top 25", because a board can have fewer.

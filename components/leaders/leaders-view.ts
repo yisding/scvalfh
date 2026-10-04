@@ -119,7 +119,10 @@ export interface LeaderBoard {
   /** The index of the column the board is ranked on. */
   rankedBy: number;
   rows: LeaderRow[];
-  /** "4 more players share 10th, with 2 assists each.": a tie too long to list. */
+  /**
+   * "4 more players share 10th, with 2 assists each.": a tie too long to list, or on a player board
+   * one past 10th too long for the expanded board, when no row of that board is left to list.
+   */
   more: string | null;
   /**
    * A player board's places after `rows`, up to EXPANDED_PLACES, behind a disclosure; null when
@@ -394,6 +397,9 @@ function playerBoard(
   const tie = (d: { items: PlayerEntry[]; place: number }, shown: number) =>
     `${count(d.items.length, shown)} share ${ordinal(d.place)}, with ${plural(value(d.items[0]), spec.unit[0], spec.unit[1])} each.`;
   const caption = `${spec.title}, players in all ${LEAGUE_COUNT} leagues, this season`;
+  // A tie the expanded board cannot list either ("21 more players share 11th") leaves it nothing
+  // to show behind a disclosure, so the board's own line counts it.
+  const cut = dropped ?? (extra.length ? null : all.dropped);
 
   // Name whichever list is shorter: the few teams that do enter the stat, or the few with stats
   // that do not.
@@ -415,7 +421,7 @@ function playerBoard(
     columns: spec.columns.map(({ key, label, title }) => ({ key, label, title })),
     rankedBy: spec.rankedBy,
     rows: listed.slice(0, rows.length),
-    more: dropped ? tie(dropped, rows.length) : null,
+    more: cut ? tie(cut, rows.length) : null,
     extra: extra.length
       ? {
           summary: `Show ${count(extra.length, rows.length)}`,
