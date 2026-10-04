@@ -18,9 +18,9 @@
  * same attribute after every navigation and whenever the pin itself changes. This script stays
  * because it is the only pass that can run before the first paint.
  *
- * An ATTRIBUTE, not a class, on purpose: `StandingsTable`'s `highlightSlug` prop marks a row with
- * the `.sx-pinned` class from the server, and the two channels have to be able to coexist without
- * one clearing the other. app/globals.css styles both identically.
+ * An ATTRIBUTE, not a class, on purpose: the script must never touch an element's own className,
+ * which carries its utilities and, on the home pinned card (components/home/MyTeamCard.tsx), a
+ * literal `.sx-pinned`. app/globals.css styles `.sx-pinned` and `[data-pinned]` identically.
  *
  * The same rule reveals a visually hidden "your team" note (`.sx-pin-note`), so the marker is never
  * carried by colour alone (DESIGN §6.5).

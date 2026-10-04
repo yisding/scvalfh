@@ -71,7 +71,6 @@ export interface StandingsTableProps {
   variant: StandingsVariant;
   /** "De Anza Division league standings through Sep 29" */
   caption: string;
-  highlightSlug?: TeamSlug | null;
   /**
    * Teams whose published MaxPreps row disagrees with ours in ANY field (`snapshot.crossCheck`).
    * `standing.mismatch` only covers a W-L-T disagreement; today every mismatch flag is false while
@@ -400,7 +399,7 @@ const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: 
 };
 
 export function StandingsTable(props: StandingsTableProps) {
-  const { variant, caption, highlightSlug, berthRuleAfter, gdDomain, className, id } = props;
+  const { variant, caption, berthRuleAfter, gdDomain, className, id } = props;
   const flagged = new Set<TeamSlug>(props.flaggedSlugs ?? []);
   const context = props.context;
   const columns = new Set<StandingsColumn>(context ? (props.columns ?? []) : []);
@@ -411,14 +410,10 @@ export function StandingsTable(props: StandingsTableProps) {
   const showNotes = variant !== 'mini' && (props.notes ?? 'inline') === 'inline';
   const notes = showNotes ? collectStandingsNotes({ ...props, rows }) : null;
 
-  const trClass = (row: StandingsRowData) => {
-    const classes = ['relative'];
-    // The pinned team's 2px accent left rule. A caller that already knows the team (the playoff
-    // bracket) passes `highlightSlug`; on the static pages the pin lives in localStorage, so
-    // `data-team-slug` below is what the end-of-body script in app/layout.tsx matches on.
-    if (highlightSlug && row.team.slug === highlightSlug) classes.push('sx-pinned');
-    return classes.join(' ');
-  };
+  // The pinned team's 2px accent left rule has one channel. The pages are static and the pin lives
+  // in localStorage, so every row carries `data-team-slug`, and the end-of-body script in
+  // app/layout.tsx (with components/ui/PinnedTeamMarks.tsx after a client navigation) sets
+  // `[data-pinned]` on the matching row.
   // The 2px automatic-qualifier cut: the one deliberately strong line in the table.
   const cut = (index: number) =>
     berthRuleAfter && index + 1 === berthRuleAfter
@@ -528,7 +523,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // A token in rem, not 68px: the row grows with the reader's browser text
                       // size, so the absolutely placed line 2 never rides up over line 1.
                       style={{ height: 'var(--spacing-row)', ...cut(index) }}
@@ -787,7 +782,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // rem, not px: the row grows with the browser text size.
                       style={{ height: 'var(--spacing-row-1)', ...cut(index) }}
                     >
@@ -876,7 +871,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // rem, not px: the row grows with the browser text size.
                       style={{ height: 'var(--spacing-row-1)' }}
                     >
@@ -950,7 +945,7 @@ export function StandingsTable(props: StandingsTableProps) {
                   <tr
                     key={row.team.id}
                     data-team-slug={row.team.slug}
-                    className={trClass(row)}
+                    className="relative"
                     // rem, not px: the row grows with the browser text size.
                     style={{ height: 'var(--spacing-row-1)' }}
                   >

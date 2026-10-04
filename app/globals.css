@@ -559,8 +559,9 @@
   @media (hover: hover) {
     .sx-table tbody tr:hover { background: var(--sx-surface-2); }
   }
-  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. Two independent
-     channels: `.sx-pinned` (server, `highlightSlug`) and `[data-pinned]` (the localStorage pin). */
+  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. `.sx-pinned` is the
+     home pinned card's static class (MyTeamCard); `[data-pinned]` is the localStorage pin, set on
+     a `[data-team-slug]` row or card by the pinned-team script and PinnedTeamMarks. */
   .sx-pinned,
   [data-team-slug][data-pinned] { box-shadow: inset 2px 0 0 var(--sx-accent); }
   /* On a card the rule widens to 3px and is COMPOSED with the ring in the same rule, so the

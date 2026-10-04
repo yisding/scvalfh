@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
-import type { TeamSlug } from '../../lib/types';
 import { GameRow } from '../ui/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
@@ -29,8 +28,6 @@ import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model
  */
 export interface PlayoffBracketProps {
   path: BracketPath;
-  /** The pinned team, highlighted with the 2px accent rule wherever it appears. */
-  highlightSlug?: TeamSlug | null;
   /**
    * The level of each round's heading. The page owns the h1 and the section heading is an h2; the
    * caller renders a path-name h3 only when there is more than one path, so with a single path the
@@ -77,22 +74,12 @@ function BracketLine({
 }
 
 /** The desktop card. Phone uses `GameRow`, so this is the only bracket-specific game markup. */
-function BracketCard({
-  entry,
-  highlightSlug,
-}: {
-  entry: BracketGame;
-  highlightSlug?: TeamSlug | null;
-}) {
+function BracketCard({ entry }: { entry: BracketGame }) {
   const { game, seeds } = entry;
   const display = describeGame(game);
-  const pinned =
-    !!highlightSlug && (game.home.slug === highlightSlug || game.away.slug === highlightSlug);
   const named = isNamedSide(game.home) || isNamedSide(game.away);
   return (
-    <div
-      className={['sx-card min-w-0 flex-1', pinned ? 'sx-pinned' : null].filter(Boolean).join(' ')}
-    >
+    <div className="sx-card min-w-0 flex-1">
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
@@ -125,7 +112,6 @@ function BracketCard({
 
 export function PlayoffBracket({
   path,
-  highlightSlug,
   headingLevel: RoundHeading = 'h4',
   className,
 }: PlayoffBracketProps) {
@@ -181,7 +167,7 @@ export function PlayoffBracket({
                   {roundIndex > 0 ? (
                     <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}
-                  <BracketCard entry={entry} highlightSlug={highlightSlug} />
+                  <BracketCard entry={entry} />
                   {roundIndex < rounds.length - 1 ? (
                     <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}

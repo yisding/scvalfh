@@ -1886,7 +1886,6 @@ interface StandingsTableProps {
   gdDomain: number;                // max |gd| for THIS division — never global
   variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
   caption: string;                 // "De Anza Division league standings through Sep 24"
-  highlightSlug?: TeamSlug;        // the pinned team → 2px accent left rule
   berthRuleAfter?: number;         // draw a 2px rule after row N (the 7th auto berth)
   footnotes?: string[];            // rendered under the table, 13px --sx-text-3
 }
@@ -2053,7 +2052,6 @@ state reads across the whole bar), 4px rounded fill end, `7 / 16` printed at the
 interface PlayoffBracketProps {
   division: 'I' | 'II';
   rounds: BracketRound[];
-  highlightSlug?: TeamSlug;
 }
 interface BracketRound { name: 'Quarterfinals' | 'Semifinals' | 'Final';
                          date: string; games: BracketGame[] }
@@ -2477,6 +2475,11 @@ chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr
 *Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
 `describeGame` (components/ui/game-view.ts) over `renderScore`, and every score glyph goes through
 `ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
+
+*Later (2026-10):* the server-side pin channel (`highlightSlug` on `StandingsTable`,
+`DivisionStandings` and `PlayoffBracket`, drawing `.sx-pinned`) was removed: no static page can
+know the pin, so no caller ever passed it. A pinned row is marked only by `[data-pinned]` on its
+`data-team-slug` (§15), and `.sx-pinned` survives as the home pinned card's static class.
 
 ---
 
