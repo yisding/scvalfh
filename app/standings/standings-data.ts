@@ -26,7 +26,7 @@ import {
   getTeams,
   type LeagueSummary,
 } from '../../lib/data';
-import { recordString, shortDate } from '../../lib/format';
+import { plural, recordString, shortDate } from '../../lib/format';
 import { getLeague, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 
@@ -152,7 +152,7 @@ function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageDa
       : `${short} league play has not started.`,
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
-        ? `. The ${nonLeagueFinals} non-league ${nonLeagueFinals === 1 ? 'game' : 'games'} played so far ${
+        ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
             nonLeagueFinals === 1 ? 'is' : 'are'
           } on the schedule`
         : ''

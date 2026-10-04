@@ -11,6 +11,7 @@ import { LEAGUES, findDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId } from '../../lib/types';
 import { describeGame } from '../ui/game-view';
+import { plural } from '../ui/plural';
 
 import { countGames, gameWord, type ScheduleCounts } from './filter-data';
 
@@ -122,7 +123,7 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
     groups.push({
       id: league.id,
       leagueId: league.id,
-      kicker: `${league.shortName} · ${mine.length} league ${gameWord(mine.length)}`,
+      kicker: `${league.shortName} · ${plural(mine.length, 'league game')}`,
       games: mine,
     });
   }
@@ -148,7 +149,7 @@ export function leaguesInvolved(games: readonly Game[]): LeagueId[] {
 /** `Thu Sep 24 · 23 games in 4 leagues` — the per-date OG card's title line (SPEC §8.4). */
 export function dayCardTitle(shortDateText: string, games: readonly Game[]): string {
   const k = leaguesInvolved(games).length;
-  return `${shortDateText} · ${games.length} ${gameWord(games.length)} in ${k} ${k === 1 ? 'league' : 'leagues'}`;
+  return `${shortDateText} · ${plural(games.length, 'game')} in ${plural(k, 'league')}`;
 }
 
 /** The day's headline result: the final with the largest margin (ties: the earliest). */

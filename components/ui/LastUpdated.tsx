@@ -5,6 +5,7 @@ import {
   formatStamp,
   hoursBetween,
   monthDay,
+  plural,
   shortDate,
   timeOfDay,
   toLocalTimestamp,
@@ -52,7 +53,7 @@ const STALE_AFTER_HOURS = 36;
 /** '1 day ago' / '4 days ago'. Only reached past 36 hours, so never "0 days". */
 function daysAgo(ageHours: number): string {
   const days = Math.round(ageHours / 24);
-  return days === 1 ? '1 day ago' : `${days} days ago`;
+  return `${plural(days, 'day')} ago`;
 }
 
 export function LastUpdated({

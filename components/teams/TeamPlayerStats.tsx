@@ -1,6 +1,7 @@
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
+import { plural } from '../ui/plural';
 import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
 import { statText } from './player-stats-view';
 
@@ -188,7 +189,7 @@ export function TeamPlayerStats({ view }: { view: PlayerStatsView }) {
         ) : null}
         {view.gamesSince > 0 ? (
           <p className="mt-1 mb-0 text-ink-2">
-            {teamName} has played {view.gamesSince} {view.gamesSince === 1 ? 'game' : 'games'} since
+            {teamName} has played {plural(view.gamesSince, 'game')} since
             then, so these totals are behind.
           </p>
         ) : null}
