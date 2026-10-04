@@ -39,6 +39,7 @@ import {
   EM_DASH,
   dateSpan,
   dateTimeAttr,
+  leagueClock,
   listWords,
   monthDay,
   numberWord,
@@ -83,13 +84,6 @@ import { POSTSEASON_LEAD } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
-function clock(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
 }
 
 function colorsOf(team: Team): HomeColors {
@@ -283,7 +277,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
       return {
         lead: `${short} league play is over.`,
         body: `${playIn.seatLabels[1]} plays at the ${host} champion ${shortDate(playIn.date)}${
-          playIn.time ? `, ${clock(playIn.time)}` : ''
+          playIn.time ? `, ${leagueClock(playIn.time)}` : ''
         }, for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth; the CCS seeding meeting is ${shortDate(
           keyDates.seedingMeeting,
         )}.`,
@@ -530,7 +524,7 @@ function ccsLadderView(
   } else if (crossover && phase === 'crossover') {
     intro = `League play is done. Crossover and the play-in are ${shortDate(crossover.date)}; the seeding meeting is ${seeding}.`;
   } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
-    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
+    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
   } else {
     intro = `Seeding meeting ${seeding}.`;
   }

@@ -169,6 +169,21 @@ export function timeOfDayPT(value: string): string {
   return `${timeOfDay(value)} PT`;
 }
 
+/**
+ * A league config clock time ('HH:MM', a play-in or a tournament game): '11:00' → '11 AM',
+ * '16:30' → '4:30 PM'. Unlike `timeOfDay`, whole hours drop their ':00'.
+ */
+export function leagueClock(hhmm: string): string {
+  const [h, m] = hhmm.split(':').map(Number);
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? `:${pad(m)}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+/** '11 AM PT' — `leagueClock` labelled PT, as /playoffs prints it. */
+export function leagueClockPT(hhmm: string): string {
+  return `${leagueClock(hhmm)} PT`;
+}
+
 /** The value for a `<time datetime>` attribute. */
 export function dateTimeAttr(game: Pick<Game, 'dateLocal' | 'dateUtc' | 'isTimeTba'>): string {
   return game.isTimeTba ? isoDateKey(game.dateLocal) : game.dateUtc;

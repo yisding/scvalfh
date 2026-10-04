@@ -12,6 +12,8 @@ import {
   gradeWord,
   hoursBetween,
   isoDateKey,
+  leagueClock,
+  leagueClockPT,
   listWords,
   localDateKey,
   longDate,
@@ -279,6 +281,16 @@ describe('numberWord and dateSpan', () => {
     expect(dateSpan('2026-10-30', '2026-11-01')).toBe('Oct 30–Nov 1');
     expect(dateSpan('2026-10-30', '2026-10-30')).toBe('Oct 30');
     expect(dateSpan('2026-10-30', '2026-10-31')).toContain(EN_DASH);
+  });
+});
+
+describe('leagueClock', () => {
+  it('reads a config HH:MM, dropping :00 from a whole hour', () => {
+    expect(leagueClock('11:00')).toBe('11 AM');
+    expect(leagueClock('16:30')).toBe('4:30 PM');
+    expect(leagueClock('12:05')).toBe('12:05 PM');
+    expect(leagueClock('00:00')).toBe('12 AM');
+    expect(leagueClockPT('11:00')).toBe('11 AM PT');
   });
 });
 

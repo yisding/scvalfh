@@ -24,6 +24,7 @@
 
 import {
   EM_DASH,
+  leagueClockPT,
   listWords,
   monthDay,
   ordinal,
@@ -83,13 +84,6 @@ const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 
 /** 'fourth' for 4; '11th' past ten. */
 export function ordinalWord(n: number): string {
   return ORDINAL_WORDS[n] ?? ordinal(n);
-}
-
-/** '11:00' → '11 AM PT'; '16:30' → '4:30 PM PT'. A league clock time, always labelled PT. */
-export function clockLabel(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'} PT`;
 }
 
 // ---------------------------------------------------------------- key dates
@@ -169,7 +163,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
         key: `league:${d.id}`,
         dateKey: dateOnly(d.date),
         date: shortDate(d.date),
-        time: d.time ? clockLabel(d.time) : null,
+        time: d.time ? leagueClockPT(d.time) : null,
         league: d.league,
         label: d.label,
         detail: d.detail,
@@ -502,7 +496,7 @@ export function buildPairingView(
     isPlayIn: pairing.isPlayIn,
     dateKey: pairing.date,
     dateLabel: shortDate(pairing.date),
-    timeLabel: pairing.time ? clockLabel(pairing.time) : null,
+    timeLabel: pairing.time ? leagueClockPT(pairing.time) : null,
     seats,
     connector: pairing.host === null ? 'vs' : 'at',
     unsettled,
@@ -701,7 +695,7 @@ export function tournamentGameView(
     round: tg.round,
     dateKey: tg.date,
     dateLabel: shortDate(tg.date),
-    timeLabel: clockLabel(tg.time),
+    timeLabel: leagueClockPT(tg.time),
     home,
     away,
     connector,

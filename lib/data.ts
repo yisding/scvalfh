@@ -18,6 +18,7 @@ import {
   dateSpan,
   hoursBetween,
   isoDateKey,
+  leagueClock,
   localDateKey,
   numberWord,
   recordString,
@@ -944,13 +945,6 @@ export interface TeamPostseasonLine {
   linkText: string;
 }
 
-/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
-function clock(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
-}
-
 /** §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit). */
 export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseasonLine | null {
   void asOf;
@@ -999,7 +993,7 @@ export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseaso
       } else if (playIn && statuses.includes('play-in')) {
         sentence =
           `${playIn.seatLabels[1]} plays at the ${divisionLabelOf(playIn.seats[0].division)} champion ` +
-          `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
+          `${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
       } else if (statuses[0] === 'no-aq-route') {
         sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
       } else {
