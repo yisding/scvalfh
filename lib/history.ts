@@ -72,10 +72,6 @@ function load(): History {
 
 const history = load();
 
-export function getHistory(): History {
-  return history;
-}
-
 export function getHistorySeason(): string {
   return history.season;
 }
@@ -83,10 +79,6 @@ export function getHistorySeason(): string {
 /** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
 export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
   return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
-}
-
-export function getHistoryLeague(leagueId: LeagueId): LeagueHistory | undefined {
-  return history.leagues[leagueId];
 }
 
 /** The leagues that have final standings, in config order. */

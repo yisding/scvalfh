@@ -118,7 +118,7 @@ describe('data: teams', () => {
     const team = data.getTeamBySlug('los-altos');
     expect(team?.name).toBe('Los Altos');
     expect(data.getTeamById(team!.id)?.slug).toBe('los-altos');
-    expect(data.resolveTeamRef(team!.id)?.slug).toBe('los-altos');
+    expect(data.getLeagueOfTeam(team!.id)?.id).toBe('scval'); // a GUID resolves as well as a slug
     expect(data.getTeamBySlug('nope')).toBeUndefined();
     expect(data.getLeagueOfTeam('tamalpais')?.id).toBe('mcal');
     expect(data.getLeagueOfTeam('nope')).toBeUndefined();
@@ -393,10 +393,11 @@ describe('data: head-to-head and form', () => {
   it('returns a team form strip over counted games only', () => {
     const form = data.getTeamForm('homestead');
     expect(form).toBeDefined();
-    expect(form!.last5.length).toBeGreaterThan(0);
-    expect(form!.leagueGames.length).toBeGreaterThan(form!.last5.length);
+    const last5 = data.getStandingFor('homestead')!.computed.last5;
+    expect(last5.length).toBeGreaterThan(0);
+    expect(form!.leagueGames.length).toBeGreaterThan(last5.length);
     for (const g of form!.leagueGames) {
-      expect(g.isLeague).toBe(true);
+      expect(data.getGameById(g.contestId)!.countsFor).not.toBeNull();
       if (g.status !== 'final') expect(g.margin).toBeNull();
     }
     expect(form!.nonLeagueCount).toBeGreaterThan(0);

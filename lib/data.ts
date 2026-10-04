@@ -59,7 +59,6 @@ import type {
   CcsPlayoffs,
   ContestId,
   CrossCheckRow,
-  Division,
   DivisionId,
   DroppedContest,
   Game,
@@ -74,7 +73,6 @@ import type {
   PlayoffProjection,
   Record3,
   SbliveCrossCheck,
-  Season,
   SeasonPhase,
   SectionId,
   Snapshot,
@@ -120,10 +118,6 @@ const snapshot = load();
 
 export function getSnapshot(): Snapshot {
   return snapshot;
-}
-
-export function getSeason(): Season {
-  return snapshot.season;
 }
 
 export function getFetchedAt(): string {
@@ -315,7 +309,7 @@ export { getTeamById, getTeamBySlug };
  * Accepts a slug or a MaxPreps GUID. Reads the registry (getTeamBySlug, getTeamById), which the
  * snapshot's teams equal by checkAgainstConfig #1.
  */
-export function resolveTeamRef(ref: string): Team | undefined {
+function resolveTeamRef(ref: string): Team | undefined {
   return getTeamBySlug(ref) ?? getTeamById(ref);
 }
 
@@ -766,26 +760,20 @@ export interface FormGame {
   /** goals for − goals against; null unless the game is a counted final. */
   margin: number | null;
   outcome: Outcome | null;
-  /** countsFor !== null */
-  isLeague: boolean;
   /** Forfeits have no goal margin and are excluded from MarginStrip (DESIGN §5.7). */
   excludedFromMargin: boolean;
 }
 
 export interface TeamForm {
-  team: Team;
-  standing: Standing | undefined;
-  last5: Outcome[];
-  streak: Standing['computed']['streak'];
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
+  /** Contests that count for no division, for FormStrip's "+ 3 non-league" caption (DESIGN §7.6). */
   nonLeagueCount: number;
 }
 
 export function getTeamForm(ref: string): TeamForm | undefined {
   const team = resolveTeamRef(ref);
   if (!team) return undefined;
-  const standing = snapshot.standings.find((s) => s.teamId === team.id);
   const all = getGames({ teamId: team.id }).sort((a, b) =>
     a.dateLocal.localeCompare(b.dateLocal),
   );
@@ -808,15 +796,10 @@ export function getTeamForm(ref: string): TeamForm | undefined {
         status: g.status,
         margin: counted ? (mine.score as number) - (theirs.score as number) : null,
         outcome,
-        isLeague: true,
         excludedFromMargin: g.isForfeit,
       };
     });
   return {
-    team,
-    standing,
-    last5: standing ? [...standing.computed.last5] : [],
-    streak: standing?.computed.streak ?? null,
     leagueGames,
     nonLeagueCount: all.filter((g) => g.countsFor === null).length,
   };
@@ -975,4 +958,4 @@ function divisionLabelOf(id: DivisionId): string {
 }
 
 /** Re-exported so a page never has to import two modules to name a team id. */
-export type { Division, DivisionId, Game, LeagueId, Standing, Team, TeamId, TeamSlug };
+export type { DivisionId, Game, LeagueId, Standing, Team, TeamId, TeamSlug };

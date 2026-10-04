@@ -6,13 +6,13 @@
  * tests/fixtures/** and tests/golden/**), parsed with the TypeScript compiler (so comments and
  * strings in comments never count):
  *  1. no import (or `export … from`, or `import('…')` type) of a §0.4-deleted name FROM ITS OLD
- *     MODULE: lib/season, lib/standings, lib/teams, lib/types; no `SOURCE_LINKS.scval*` access;
- *  2. no use of the deprecated type alias `Division` (kept in lib/types.ts for lib/ only);
+ *     MODULE: lib/season, lib/standings, lib/teams, lib/types (the `Division` alias among them; use
+ *     DivisionId); no `SOURCE_LINKS.scval*` access;
  * and under app/ and components/ only:
- *  3. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
+ *  2. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
  *     'el-camino', 'mt-hamilton', 'santa-teresa', 'marin-county'): ids come from lib/leagues.ts or
  *     lib/data.ts (lib/history.ts for which leagues have a 2025-26 archive);
- *  4. no `/game/${…}` template literal: game links go through gameHref (a `sblive:` id would 404).
+ *  3. no `/game/${…}` template literal: game links go through gameHref (a `sblive:` id would 404).
  *
  * Each failure names the file and line, so it routes to that file's owner (SPEC §13.2).
  */
@@ -42,7 +42,7 @@ const DELETED: Readonly<Record<string, readonly string[]>> = {
   ],
   'lib/standings': ['crossoverPairings', 'playoffStatus', 'PLAYOFF_STATUS_LABELS'],
   'lib/teams': ['isScvalTeamId', 'WITHDRAWN_SCHOOL_NAMES'],
-  'lib/types': ['CrossoverPairing', 'PlayoffKeyDates', 'Playoffs'],
+  'lib/types': ['CrossoverPairing', 'Division', 'PlayoffKeyDates', 'Playoffs'],
 };
 
 const ID_LITERALS = new Set([
@@ -100,11 +100,10 @@ function scanSource(file: string, text: string): Finding[] {
   const at = (node: ts.Node, what: string) =>
     findings.push({ file, line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1, what });
 
-  /** Named bindings imported/re-exported from `spec`: check against the deleted list and `Division`. */
+  /** Named bindings imported/re-exported from `spec`: check against the deleted list. */
   function checkNames(node: ts.Node, spec: string, names: readonly string[]): void {
     const mod = resolveSpecifier(file, spec);
     for (const name of names) {
-      if (name === 'Division') at(node, `uses the deprecated type \`Division\` (from '${spec}'); use DivisionId`);
       if (mod && DELETED[mod]?.includes(name)) at(node, `imports deleted name \`${name}\` from its old module '${spec}' (SPEC §0.4)`);
     }
   }
@@ -197,7 +196,7 @@ describe('legacy imports and literals (SPEC §0.4, §12.2)', () => {
   });
 
   for (const root of ROOTS) {
-    it(`${root}/: no deleted name from its old module, no \`Division\`${root === 'app' || root === 'components' ? ', no id literal, no /game/${…} template' : ''}`, () => {
+    it(`${root}/: no deleted name from its old module${root === 'app' || root === 'components' ? ', no id literal, no /game/${…} template' : ''}`, () => {
       const findings = FILES.filter((f) => f.startsWith(`${root}/`)).flatMap(scan);
       expect(findings.map((f) => `${f.file}:${f.line}: ${f.what}`)).toEqual([]);
     });

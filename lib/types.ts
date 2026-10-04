@@ -26,9 +26,6 @@ export type LeagueId = string;
  */
 export type DivisionId = string;
 
-/** @deprecated Use DivisionId. Banned outside lib/ by tests/legacy-imports.test.ts. */
-export type Division = DivisionId;
-
 /** Our URL slug, validated against the registry. The 15 SCVAL slugs are frozen. */
 export type TeamSlug = string;
 

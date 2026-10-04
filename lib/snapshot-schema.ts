@@ -853,7 +853,6 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
 
 export const SnapshotSchema: z.ZodType<Snapshot> = SnapshotObject.superRefine(checkAgainstConfig);
 
-export type SnapshotInput = z.input<typeof SnapshotObject>;
 export type SnapshotOutput = z.infer<typeof SnapshotObject>;
 
 // Compile-time proof that the schema and the hand-written types agree, in both directions.
@@ -872,10 +871,6 @@ export function parseSnapshot(raw: unknown): Snapshot {
     );
   }
   return parsed.data;
-}
-
-export function safeParseSnapshot(raw: unknown) {
-  return SnapshotSchema.safeParse(raw);
 }
 
 /**
