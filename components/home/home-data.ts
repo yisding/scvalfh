@@ -65,6 +65,7 @@ import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
 import { plural } from '../ui/plural';
 
@@ -734,7 +735,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
-    versus: game.site === 'neutral' ? 'vs' : mineIsHome ? 'vs' : 'at',
+    versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs),
     kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
@@ -744,30 +745,19 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   };
 }
 
-/** 'VALLEY CHRISTIAN' → 'Valley Christian', for a grid name with no registry row behind it. */
-function titleCase(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
-}
-
 /** The next fixture from the team's league's official schedule, for a team MaxPreps has no contest for. */
 function officialNextView(team: Team, today: string, leagueShort: string): HomeOfficialFixture | null {
-  const fixture = getOfficialFixtures({ slug: team.slug })
-    .filter((f) => f.dateKey >= today)
-    .sort((a, b) => a.dateKey.localeCompare(b.dateKey))[0];
+  const fixture = nextOfficialFixture(getOfficialFixtures({ slug: team.slug }), today);
   if (!fixture) return null;
   // A division with no official document has no fixtures; narrowing keeps the link honest anyway.
   const official = getDivision(fixture.division).official;
   if (official.mode === 'none') return null;
-  const mineIsHome = fixture.homeSlug === team.slug;
-  const otherSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-  const otherName = mineIsHome ? fixture.awayName : fixture.homeName;
+  const { versus, opponentName } = fixtureOpponent(fixture, team);
   return {
     dateLabel: shortDate(fixture.dateKey),
     dateKey: fixture.dateKey,
-    versus: mineIsHome ? 'vs' : 'at',
-    opponent: (otherSlug ? getTeamBySlug(otherSlug)?.shortName : null) ?? titleCase(otherName),
+    versus,
+    opponent: opponentName,
     leagueShort,
     scheduleUrl: official.scheduleUrl,
   };

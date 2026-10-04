@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getStandingFor } from '../../lib/data';
-import { EM_DASH, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
+import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { findLeague } from '../../lib/leagues';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
@@ -419,9 +419,7 @@ export function GameCard({
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
   // printed short name, and "Valley Chr." was read out as letters. The visible "Game page" /
   // "Box score" still starts the name, so label-in-name holds.
-  const matchup = `${display.away.name} ${game.site === 'neutral' ? 'vs' : 'at'} ${
-    display.home.name
-  }`;
+  const matchup = `${display.away.name} ${matchupJoiner(game)} ${display.home.name}`;
   // An upcoming card has no chip on either side; an invisible 28px slot there pushed both team
   // lines right of the time above them. Rows keep the slot (cross-row alignment), cards drop it.
   const chipSlot = display.away.chip !== 'none' || display.home.chip !== 'none';

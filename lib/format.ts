@@ -417,16 +417,18 @@ export function scoreSentence(g: Game, opts: { quietOvertime?: boolean } = {}): 
     case 'postponed':
       return `${g.away.name} at ${g.home.name}: postponed.`;
     case 'scheduled':
-      return `${g.away.name} ${g.site === 'neutral' ? 'vs' : 'at'} ${g.home.name}: ${
+      return `${g.away.name} ${matchupJoiner(g)} ${g.home.name}: ${
         view.time ? `${view.time} PT` : 'time to be announced'
       }.`;
   }
 }
 
-/** 'vs' for a home or neutral game, 'at' for an away game, from one team's point of view. */
-export function versusLabel(game: Game, teamId: string): 'vs' | 'at' {
-  if (game.site === 'neutral') return 'vs';
-  return game.home.teamId === teamId ? 'vs' : 'at';
+/**
+ * The word between the away and the home side of a matchup: 'vs' at a neutral site, 'at'
+ * otherwise ('Fremont at Cupertino'). One team's own 'vs' / 'at' is `describeGame(...).versus`.
+ */
+export function matchupJoiner(game: Pick<Game, 'site'>): 'vs' | 'at' {
+  return game.site === 'neutral' ? 'vs' : 'at';
 }
 
 const NUMBER_WORDS = [

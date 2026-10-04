@@ -17,6 +17,7 @@ import {
   listWords,
   localDateKey,
   longDate,
+  matchupJoiner,
   monthDay,
   numberWord,
   ordinal,
@@ -37,7 +38,6 @@ import {
   timeOfDay,
   timeOfDayPT,
   toLocalTimestamp,
-  versusLabel,
   weekdayName,
   winPct,
 } from '../lib/format';
@@ -209,10 +209,10 @@ describe('format: renderScore is the only place scores are read (DESIGN §5.2)',
     );
   });
 
-  it('says vs or at from one team point of view', () => {
+  it('joins away and home with at, or vs at a neutral site', () => {
     const g = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 0 });
-    expect(versusLabel(g, g.home.teamId!)).toBe('vs');
-    expect(versusLabel(g, g.away.teamId!)).toBe('at');
+    expect(matchupJoiner(g)).toBe('at');
+    expect(matchupJoiner({ ...g, site: 'neutral' })).toBe('vs');
   });
 });
 

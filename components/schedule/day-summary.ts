@@ -7,6 +7,7 @@
  * code path that could render `0-0` for a game that was never played.
  */
 
+import { matchupJoiner } from '../../lib/format';
 import { LEAGUES, findDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId } from '../../lib/types';
@@ -51,7 +52,7 @@ export function dayLines(games: readonly Game[]): DayLine[] {
       statusLabel: display.statusLabel,
       showScores: display.showScores,
       isNonLeague: display.isNonLeague,
-      versus: game.site === 'neutral' ? 'vs' : 'at',
+      versus: matchupJoiner(game),
     };
   });
 }
