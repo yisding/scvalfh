@@ -21,6 +21,7 @@ import {
 import { teamsInLeague } from '../../teams';
 import type { CrossCheckRow, DivisionHealth, LeagueHealth, Standing } from '../../types';
 import { previousDivisionHealth, previousLeagueHealth, type PipelineContext, type RunState } from '../ledger';
+import { divisionClassification } from './guards';
 
 export interface StandingsStepResult {
   standings: Standing[];
@@ -66,7 +67,7 @@ function leagueHealthRow(ctx: PipelineContext, state: RunState, league: LeagueCo
       meta: info?.meta ?? 'skipped',
       reportedTable: info?.reportedTable ?? 'skipped',
       reportedRows: info?.reportedRows ?? null,
-      classification: state.classification.get(d.id) ?? (league.rules.classification === 'contest-type' ? 'contest-type' : 'official-fixtures'),
+      classification: state.classification.get(d.id) ?? divisionClassification(league, d.id, state.official.degradedDivisions),
       official: officialHealth(ctx, state, league, d.id),
       countedFinals: counted.length,
       previousCountedFinals: previousDivisionHealth(ctx.previous, d.id)?.countedFinals ?? null,

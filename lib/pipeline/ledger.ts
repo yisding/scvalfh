@@ -296,10 +296,6 @@ export class PipelineContext implements RunContext {
   leaguesInRun(): readonly LeagueId[] {
     return this.inRun;
   }
-
-  isInRun(leagueId: LeagueId): boolean {
-    return this.inRun.includes(leagueId);
-  }
 }
 
 // ---------------------------------------------------------------- the previous run

@@ -20,7 +20,7 @@
 
 import { classifyGames } from '../../classify';
 import { byDateThenId } from '../../format';
-import { LEAGUES, getLeague } from '../../leagues';
+import { LEAGUES, getLeague, type LeagueConfig } from '../../leagues';
 import { divisionGames } from '../../standings';
 import { teamsInLeague } from '../../teams';
 import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';
@@ -206,19 +206,25 @@ export function checkSystemic(ctx: PipelineContext, state: RunState): void {
   }
 }
 
+/**
+ * A division's DivisionHealth.classification this run: its league's rule, with an official-fixtures
+ * division whose fixture set is missing or invalid (`degraded`) falling back to contest-type.
+ */
+export function divisionClassification(
+  league: LeagueConfig,
+  divisionId: DivisionId,
+  degraded: ReadonlySet<DivisionId>,
+): DivisionHealth['classification'] {
+  if (league.rules.classification === 'contest-type') return 'contest-type';
+  return degraded.has(divisionId) ? 'fallback-contest-type' : 'official-fixtures';
+}
+
 /** DivisionHealth.classification for every division not copied from a frozen league's previous health. */
 export function fillClassification(state: RunState): void {
   for (const league of LEAGUES) {
     for (const d of league.divisions) {
       if (state.classification.has(d.id)) continue;
-      state.classification.set(
-        d.id,
-        league.rules.classification === 'contest-type'
-          ? 'contest-type'
-          : state.official.degradedDivisions.has(d.id)
-            ? 'fallback-contest-type'
-            : 'official-fixtures',
-      );
+      state.classification.set(d.id, divisionClassification(league, d.id, state.official.degradedDivisions));
     }
   }
 }

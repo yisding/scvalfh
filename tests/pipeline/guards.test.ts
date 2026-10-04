@@ -11,7 +11,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGame } from '../../lib/classify';
-import { divisionsOf } from '../../lib/leagues';
+import { divisionsOf, getLeague } from '../../lib/leagues';
 import { RunAbort, type OfficialStep } from '../../lib/pipeline/contract';
 import { PipelineContext, SILENT_SINK, emptyRunState, type RunState, type TeamFeedInfo } from '../../lib/pipeline/ledger';
 import {
@@ -19,6 +19,7 @@ import {
   SYSTEMIC_FAILED_FEEDS_SHARE,
   SYSTEMIC_MIN_GAMES_SHARE,
   checkSystemic,
+  divisionClassification,
 } from '../../lib/pipeline/steps/guards';
 import { loadSnapshot } from '../../lib/snapshot-schema';
 import { divisionGames } from '../../lib/standings';
@@ -244,6 +245,13 @@ describe('frozen-league re-classification', () => {
     const degraded = new Set(['mt-hamilton']);
     for (const g of intraGames(snapshot, 'bval')) expect(g.countsFor, g.contestId).toBe(classifyGame(g, { degradedDivisions: degraded }));
     expect(divisionGames(snapshot.games, 'mt-hamilton').length).toBe(divisionGames(previous.games, 'mt-hamilton').length);
+  });
+
+  it('divisionClassification: the league rule, a degraded official-fixtures division falling back to contest-type', () => {
+    const degraded = new Set(['mt-hamilton', 'eal']);
+    expect(divisionClassification(getLeague('bval'), 'mt-hamilton', degraded)).toBe('fallback-contest-type');
+    expect(divisionClassification(getLeague('bval'), 'santa-teresa', degraded)).toBe('official-fixtures');
+    expect(divisionClassification(getLeague('eal'), 'eal', degraded)).toBe('contest-type');
   });
 });
 
