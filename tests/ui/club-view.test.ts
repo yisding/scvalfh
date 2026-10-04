@@ -105,6 +105,11 @@ describe('status words (DESIGN §17.3)', () => {
       ['Brooklyn Barnard', 'fly-fhc', 'Listed by NCSA, 2025'],
       ['Colette Boyd', 'infinity', 'Listed by the Gilroy Dispatch, Jul 18, 2025'],
       ['Ruhee Bhatnagar', 'lightning', 'Listed by NCSA, 2024-25 season'],
+      ['Kira Kelly', 'd-city', 'Listed by the NFHCA, Aug 28, 2025'],
+      ['Amelia Zedonis', 'd-city', 'Listed by the NFHCA, Aug 28, 2025'],
+      ['Kate Loscutoff', 'd-city', 'Earlier, 2024'],
+      ['Lilah Letcher', 'chico-hotshots', 'Current, as of Sep 29, 2026'],
+      ['Kate Panighetti', 'chico-hotshots', 'Current, as of May 20, 2026'],
     ];
     for (const [name, slug, words] of PINS) expect(statusWords(tie(name, slug), club(slug)), `${name} @ ${slug}`).toBe(words);
   });
@@ -146,6 +151,28 @@ describe('source labels: the kind and the host, never the path', () => {
     const oldFly = { url: 'https://sanjosefly.com/about-fly/', kind: 'club-site' } as const;
     expect(sourceLabel(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
     expect(sourceName(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
+  });
+
+  it('labels the EAL-area ties, and reads a shared host (Google Sites, TeamLinkt) by its site, not its host', () => {
+    const labels = (slug: string) => viewOf(slug).groups.flatMap((g) => g.rows).map((r) => [r.name, r.sources.map((s) => s.label)]);
+    expect(labels('d-city')).toEqual([
+      ['Kira Kelly', ['NFHCA']],
+      ['Kate Loscutoff', ['NCSA profile']],
+      ['Amelia Zedonis', ['NFHCA']],
+    ]);
+    expect(labels('chico-hotshots')).toEqual([
+      ['Lilah Letcher', ['MaxPreps profile']],
+      ['Kate Panighetti', ['MaxPreps profile']],
+    ]);
+    // Davis High's Google Site is on D-City's host but not on D-City's site.
+    const dcity = club('d-city');
+    expect(sourceLabel({ url: 'https://sites.google.com/djusd.net/dhsfieldhockey/home', kind: 'club-site' }, dcity)).toBe('sites.google.com');
+    expect(sourceLabel({ url: 'https://sites.google.com/view/dcityhockeyclub/home', kind: 'club-site' }, dcity)).toBe('club site');
+    // Another TeamLinkt league, or a TeamLinkt page outside the club's slug, is not Chico Hotshots' site.
+    const chico = club('chico-hotshots');
+    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions', kind: 'club-site' }, chico)).toBe('club site');
+    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/someotherleague/Divisions', kind: 'club-site' }, chico)).toBe('leagues.teamlinkt.com');
+    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/leagues/NewsItem/34623/39251', kind: 'club-site' }, chico)).toBe('leagues.teamlinkt.com');
   });
 
   it('names the NFHCA watchlists and MAX Field Hockey pages by their outlet', () => {
@@ -200,9 +227,9 @@ describe('buildClubsIndexView (/clubs)', () => {
   const rows = index.regions.flatMap((r) => r.clubs);
 
   it('groups the clubs by region, in CLUB_REGIONS order, each club once in display order', () => {
-    expect(index.regions.map((r) => r.id)).toEqual(['san-francisco', 'south-bay', 'east-bay', 'marin', 'elsewhere']);
-    expect(index.regions.map((r) => r.heading)).toEqual(['San Francisco', 'South Bay', 'East Bay', 'Marin', 'Elsewhere']);
-    expect(index.regions.map((r) => r.meta)).toEqual(['2 clubs', '7 clubs', '2 clubs', '1 club', '1 club']);
+    expect(index.regions.map((r) => r.id)).toEqual(['san-francisco', 'south-bay', 'east-bay', 'marin', 'sacramento', 'north-state', 'elsewhere']);
+    expect(index.regions.map((r) => r.heading)).toEqual(['San Francisco', 'South Bay', 'East Bay', 'Marin', 'Sacramento area', 'North State', 'Elsewhere']);
+    expect(index.regions.map((r) => r.meta)).toEqual(['2 clubs', '7 clubs', '2 clubs', '1 club', '2 clubs', '1 club', '1 club']);
     expect(rows.map((r) => r.slug)).toEqual(getClubSlugs());
     expect(rows.map((r) => r.slug)).toEqual(getClubs().map((c) => c.slug));
     for (const r of index.regions) for (const c of r.clubs) expect(club(c.slug).region, c.slug).toBe(r.id);
@@ -212,6 +239,11 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(index.regionsWithoutClubs).toEqual(['Peninsula', 'Central Coast']);
     expect(index.regionsWithoutClubsSentence).toBe('This list has no club based on the Peninsula or the Central Coast.');
     expect(REGION_WORDS.marin.label).toBe('Marin');
+    expect(index.regionsNotSearched).toEqual(['Sacramento area', 'North State']);
+    expect(index.regionsNotSearchedSentence).toBe('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
+    expect(index.regionsWithoutClubsSentence).not.toMatch(/Sacramento|North State/);
+    expect(REGION_WORDS.sacramento.label).toBe('Sacramento area');
+    expect(REGION_WORDS['north-state'].label).toBe('North State');
   });
 
   it('counts each club’s tied players, current apart from the rest, and lists their schools', () => {
@@ -230,6 +262,13 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
     expect(line('htc')).toBe('1 current player');
     expect(line('pac-heights')).toBe('No player from these rosters found');
+    expect(line('d-city')).toBe('3 players, all earlier or not known to be current');
+    expect(line('roseville-fhc')).toBe('No player from these rosters found');
+    expect(line('chico-hotshots')).toBe('2 current players');
+    expect(rows.find((r) => r.slug === 'd-city')!.subline).toBe('D-City Field Hockey Club · Davis');
+    expect(rows.find((r) => r.slug === 'd-city')!.schools).toEqual(['Davis']);
+    expect(rows.find((r) => r.slug === 'chico-hotshots')!.subline).toBe('Chico Hotshots Field Hockey Club · Chico');
+    expect(rows.find((r) => r.slug === 'chico-hotshots')!.schools).toEqual(['Pleasant Valley']);
     expect(rows.find((r) => r.slug === 'performance-fh')!.subline).toBe('Los Gatos');
     expect(rows.find((r) => r.slug === 'sf-hawks')!.subline).toBe('San Francisco Youth Field Hockey Club · San Francisco');
   });
@@ -243,9 +282,9 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([69, 23, 13, 6]);
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([71, 24, 16, 8]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 69 players from 23 schools are tied to 6 of these 13 clubs, the most to SF Hawks (31) and NorCal Impact (22).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 71 players from 24 schools are tied to 8 of these 16 clubs, the most to SF Hawks (31) and NorCal Impact (22).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -324,6 +363,20 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(viewOf('fly-fhc').facts).toEqual(['Los Altos', 'Founded 2001']);
     expect(viewOf('lightning').facts).toEqual(['Los Altos Hills']);
     expect(viewOf('sf-hawks').checkedOn).toBe('Oct 3, 2026');
+    expect(viewOf('d-city').regionLabel).toBe('Sacramento area');
+    expect(viewOf('d-city').facts).toEqual(['Davis', 'Founded 2019']);
+    expect(viewOf('d-city').checkedOn).toBe('Oct 4, 2026');
+    expect(viewOf('d-city').groups.map((g) => g.heading)).toEqual(['Earlier, or not known to be current']);
+    expect(viewOf('roseville-fhc').facts).toEqual(['Roseville', 'Founded 2024']);
+    expect(viewOf('chico-hotshots').regionLabel).toBe('North State');
+    expect(viewOf('chico-hotshots').facts).toEqual(['Chico']); // no founding year posted
+    expect(viewOf('chico-hotshots').fullName).toBe('Chico Hotshots Field Hockey Club');
+    expect(viewOf('chico-hotshots').checkedOn).toBe('Oct 4, 2026');
+    expect(viewOf('chico-hotshots').groups.map((g) => g.heading)).toEqual(['Current']);
+    expect(viewOf('chico-hotshots').groups[0].rows.map((r) => [r.name, r.facts, r.status])).toEqual([
+      ['Lilah Letcher', ['Junior', 'U19'], 'Current, as of Sep 29, 2026'],
+      ['Kate Panighetti', ['Senior', 'U19'], 'Current, as of May 20, 2026'],
+    ]);
   });
 
   it('labels roster pages by what they are, and lists each of the club’s pages once', () => {
@@ -333,6 +386,15 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(roster('norcal-impact')).toEqual(['Club roster page', 'Club roster page (2)']);
     expect(roster('htc')).toEqual(['SportsRecruits club page', 'SportsRecruits team page', 'SportsRecruits team page (2)']);
     expect(roster('pac-heights')).toEqual([]);
+    expect(roster('roseville-fhc')).toEqual(['Fall 2026 League roster', 'USA Gold Cup 2026 team rosters', 'UC Davis 7v7 Tournament roster']);
+    expect(roster('d-city')).toEqual([]);
+    expect(roster('chico-hotshots')).toEqual([]);
+    expect(viewOf('chico-hotshots').sources.map((s) => [s.label, s.host])).toEqual([
+      ['Club home page', 'leagues.teamlinkt.com'],
+      ['Spring 2026 divisions and teams', 'leagues.teamlinkt.com'],
+      ['Spring 2026 locations', 'leagues.teamlinkt.com'],
+      ['Club news (Feb 2026)', 'leagues.teamlinkt.com'],
+    ]);
     expect(viewOf('sf-hawks').rosterPages[0].host).toBe('sfyouthfieldhockey.com');
     // "Pages about the club" is the club's sources less the roster pages listed just above it.
     expect(viewOf('sf-hawks').sources.map((s) => s.label)).toEqual(['Club home page', 'Program overview', 'Winter 2026-27 teams', 'Club history']);
@@ -363,6 +425,16 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     });
     expect(hawks.programs.filter((p) => p.source === null).map((p) => p.name)).toEqual(['U19', 'U16', 'U14', 'U12', 'U06, U08 and U10']);
     expect(new Set(hawks.programs.flatMap((p) => (p.source ? [p.source.label] : [])))).toEqual(new Set(['club site', 'SportsRecruits team page']));
+    expect(viewOf('roseville-fhc').programsSource).toEqual({
+      label: 'Fall 2026 programs',
+      url: 'https://rosevillefhc.org/programs',
+      lead: 'Programs without a link of their own are listed on the club’s site',
+    });
+    expect(viewOf('chico-hotshots').programsSource).toEqual({
+      label: 'Spring 2026 divisions and teams',
+      url: 'https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions',
+      lead: 'Listed on the club’s site',
+    });
     // Every program page is its own: nothing to share.
     expect(viewOf('lightning').programsSource).toBeNull();
     expect(viewOf('lightning').programs.every((p) => p.source?.label === 'club site')).toBe(true);
@@ -411,8 +483,11 @@ describe('the clubs routes, rendered', () => {
     }
     const index = renderIndex();
     const levels = headings(index);
-    expect(levels).toEqual([1, 2, 2, 2, 2, 2, 2]);
+    expect(levels).toEqual([1, 2, 2, 2, 2, 2, 2, 2, 2]);
     expect(index).toContain('<section aria-labelledby="how-matched"');
+    const how = textOf(sectionOf(index, 'how-matched'));
+    expect(how).toContain('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
+    expect(how).not.toMatch(/no club based (in|on) the (Sacramento area|North State)/);
     for (const slug of getClubSlugs()) expect(index).toContain(`href="/clubs/${slug}"`);
   });
 
@@ -500,7 +575,12 @@ describe('the clubs routes, rendered', () => {
     expect(textOf(players)).toContain('No player on this site’s varsity rosters is tied to Pac Heights.');
     expect(textOf(players)).toContain('that does not mean none plays for it. Checked Oct 3, 2026.');
     expect(players).not.toContain('<ul');
-    expect(textOf(html)).toContain('We found no public roster page for this club.');
+    expect(textOf(html)).toContain('We found no public roster page naming this club’s players.');
+    expect(textOf(players)).toContain('No public page we found ties one of them to this club; that does not mean none plays for it. Checked Oct 3, 2026.');
+    for (const slug of ['d-city', 'chico-hotshots']) expect(textOf(await renderClub(slug)), slug).toContain('We found no public roster page naming this club’s players.');
+    const rose = textOf(sectionOf(await renderClub('roseville-fhc'), 'players'));
+    expect(rose).toContain('No player on this site’s varsity rosters is tied to Roseville FHC.');
+    expect(rose).toContain('Checked Oct 4, 2026.');
     expect(textOf(await renderClub('sf-hawks'))).toContain('The club’s own rosters list many more players than this page does.');
   });
 
@@ -539,6 +619,11 @@ describe('the clubs routes, rendered', () => {
     expect(await descriptionOf('htc')).toContain('1 player on this site’s varsity rosters is tied to it, with a source. Unofficial and incomplete.');
     expect(await descriptionOf('sf-hawks')).toContain('31 players on this site’s varsity rosters are tied to it, each with a source.');
     expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
+    expect(await descriptionOf('d-city')).toContain('3 players on this site’s varsity rosters are tied to it, each with a source.');
+    expect(await descriptionOf('roseville-fhc')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
+    expect(await descriptionOf('chico-hotshots')).toBe(
+      'Chico Hotshots Field Hockey Club, Chico. Chico club that lists U12, U14, U16, U19 and adult teams for spring 2026, the latest season it has posted. 2 players on this site’s varsity rosters are tied to it, each with a source. Unofficial and incomplete.',
+    );
     for (const slug of getClubSlugs()) expect(await descriptionOf(slug), slug).toMatch(/ Unofficial and incomplete\.$/);
   });
 
@@ -546,7 +631,7 @@ describe('the clubs routes, rendered', () => {
     const pages: Array<[string, string]> = [['/clubs', renderIndex()]];
     for (const slug of getClubSlugs()) pages.push([`/clubs/${slug}`, await renderClub(slug)]);
     const teams = [...new Set(file.affiliations.map((a) => a.teamSlug))];
-    expect(teams).toHaveLength(23);
+    expect(teams).toHaveLength(24);
     for (const slug of teams) pages.push([`/teams/${slug}`, await renderTeam(slug)]);
     for (const [route, html] of pages) expect(affiliationLeaks(html, file, { publicTerms: PUBLIC_TERMS }), route).toEqual([]);
   });
@@ -557,6 +642,7 @@ describe('the clubs routes, rendered', () => {
     expect(para).not.toBeNull();
     expect(para![1]).toContain('href="/clubs"');
     expect(textOf(para![1])).toContain(`list ${getClubs().length} youth clubs`);
+    expect(textOf(para![1])).toContain('the clubs found around these schools');
     expect(textOf(para![1])).toContain('recall is partial');
   });
 });

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '@/components/layout/site-url';
-import { getClubSlugs, getClubsFile } from '@/lib/clubs';
+import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
 import { getCommitsLastChecked } from '@/lib/commits';
 import {
   getFetchedAt,
@@ -25,14 +25,15 @@ import { gameHref } from '@/lib/game-id';
  * `games` (they exist only to keep an old link resolving, with rel=canonical to the MaxPreps game).
  *
  * `lastModified` is the snapshot stamp, never `Date.now()`, so a rebuild with unchanged data does
- * not churn every entry's date. The clubs pages take data/clubs.json's own `capturedAt` instead:
+ * not churn every entry's date. The clubs pages take the last day data/clubs.json was checked
+ * instead (`getClubsLastChecked`: its `capturedAt`, or a later club `checkedOn`), as /commits does:
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
  * /commits takes the last day data/commits.json was checked (`getCommitsLastChecked`: its
  * `capturedAt`, or a later college `checkedOn`) for the same reason (DESIGN §21.4).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(getFetchedAt());
-  const clubsStamp = new Date(getClubsFile().capturedAt);
+  const clubsStamp = new Date(getClubsLastChecked());
   const commitsStamp = new Date(getCommitsLastChecked());
   const url = (path: string) => `${SITE_URL}${path}`;
 

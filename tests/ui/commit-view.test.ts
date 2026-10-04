@@ -128,6 +128,9 @@ describe('source labels: the kind and the host, never the path', () => {
     expect(label('https://stepscalifornia.com/college-commitments/', 'club-site')).toBe('STEPS California site');
     expect(label('https://www.advnclacrosse.com/alumnicommits', 'club-site')).toBe('ADVNC Lacrosse site');
     expect(label('https://unknown-club.example.org/commits', 'club-site')).toBe('unknown-club.example.org');
+    // A shared host names the club only on that club's own site: Davis High's Google Site is not D-City's.
+    expect(label('https://sites.google.com/view/dcityhockeyclub/home', 'club-site')).toBe('D-City site');
+    expect(label('https://sites.google.com/djusd.net/dhsfieldhockey/home', 'club-site')).toBe('sites.google.com');
   });
 });
 

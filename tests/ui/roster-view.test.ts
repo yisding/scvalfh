@@ -260,7 +260,7 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    expect(tied).toBe(69);
+    expect(tied).toBe(71);
   });
 
   it('words the pinned rows', () => {
@@ -271,6 +271,11 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
     expect(pairs('los-altos', 'Riya Mehrotra')).toEqual([['Listed club', ['Fly FHC']]]);
     expect(pairs('homestead', 'Gabrielle Moll')).toEqual([['Listed club', ['Fly FHC']]]);
     expect(pairs('st-ignatius', 'Storey Lewis')).toEqual([['Club', ['SF Hawks']]]);
+    expect(pairs('davis', 'Kira Kelly')).toEqual([['Club', ['NorCal Impact']], ['Listed club', ['D-City']]]);
+    expect(pairs('davis', 'Amelia Zedonis')).toEqual([['Club', ['NorCal Impact']], ['Listed club', ['D-City']]]);
+    expect(pairs('davis', 'Kate Loscutoff')).toEqual([['Club', ['NorCal Impact']], ['Earlier club', ['D-City']]]);
+    expect(pairs('pleasant-valley', 'Lilah Letcher')).toEqual([['Club', ['Chico Hotshots']]]);
+    expect(pairs('pleasant-valley', 'Kate Panighetti')).toEqual([['Club', ['Chico Hotshots']]]);
     expect(pairs('gilroy', 'Hailey Moncada')).toEqual([
       ['Club', ['HTC']],
       ['Earlier club', ['Infinity']],

@@ -3237,7 +3237,9 @@ sourced one, dated 2026-10-04 unless it says otherwise.
 
 The prerender after `pnpm build:vinext` on 2026-10-04 (49 teams, 396 games, 57 game days) is 1059
 routes. The sitemap lists 536 URLs: 10 fixed pages, 396 `/game/`, 57 `/scores/`, 49 `/teams/`, 5
-`/standings/`, 5 `/schedule/`, 1 `/playoffs/mcal` and 13 `/clubs/`.
+`/standings/`, 5 `/schedule/`, 1 `/playoffs/mcal` and 13 `/clubs/`. The clubs follow-up (§22.9) adds
+three club pages: the sitemap then lists 539 URLs (16 `/clubs/`), and the prerender after
+`pnpm build:vinext` is 1062 routes.
 
 ### 22.3 The third section in the switcher and the five league cards
 
@@ -3389,8 +3391,9 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   overtime period and then 1 v 1s; the game page says MaxPreps may have recorded a 1 v 1 win as a goal
   and shows no overtime mark. That reading rests on one newspaper report, so the copy says only "may
   have".
-- **No club records for D-City FHC (Davis), Roseville FHC and Chico Hotshots.** The 2026-10-04 sweep
-  found these clubs near the six EAL teams' schools; adding records for them is left for a later change. Three
+- **Club records for D-City FHC (Davis), Roseville FHC and Chico Hotshots came in a follow-up
+  (§22.9).** The 2026-10-04 sweep found these clubs near the six EAL teams' schools; all three were
+  added the same day, with five more ties. Three
   Davis players were tied to the existing NorCal Impact club (NFHCA 2026 high school watchlist,
   2026-08-27). No field hockey commitment was found for any EAL player; the same day's every-sport
   round (§21.7) covered the 43 earlier teams only.
@@ -3400,11 +3403,49 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
 - **`/clubs` stopped dating its checks.** Its sentence "each was checked twice on {capturedOn}" now
   reads "each was checked twice, in two separate passes, when it was added.", because the old one
   would have dated the three Davis ties, added on 2026-10-04, to 2026-10-03. The clubs file holds one
-  `capturedAt` (2026-10-03), and the EAL sweep appears only in a note. A club page's empty state still
-  reads "Checked Oct 3, 2026": that is the club record's own `checkedOn`, and no club record was
-  added or re-checked on 2026-10-04, so it is true of the record, though the EAL rosters were swept a
-  day later. `/about` drops the date in the same way.
+  `capturedAt` (2026-10-03, the first sweep); later work appears in its notes and in each record's
+  `checkedOn`. A club page dates only its own record: Oct 3, 2026 on the 2026-10-03 records, and Oct
+  4, 2026 on D-City's, Roseville FHC's and Chico Hotshots' (§22.9). `/about` drops the date in the
+  same way.
 - **The form-strip chip for a 1 v 1 game** reads as a loss for the losing side with the score 1–1;
   the 1 v 1 wording is on the game page and the "Earlier" line.
 - **`/about`'s counts sentence prints the weekday** ("Games between two EAL teams on or after Fri
   Oct 30 are Super Regional games."), as the existing official-fixtures sentence does.
+
+### 22.9 Clubs near the EAL teams' schools (2026-10-04)
+
+Three club records were added on 2026-10-04 from the clubs the EAL sweep met: **D-City FHC** (Davis,
+founded 2019, a spring club at the UC Davis field), **Roseville FHC** (Roseville, founded 2024) and
+**Chico Hotshots** (Chico, a TeamLinkt club listing U12-U19 and adult teams for spring 2026). Each was
+read from its own site that day, and both of its verifiers confirmed its facts. `/clubs/[slug]` goes
+from 13 pages to 16.
+
+- **Regions.** `sacramento`, in `CLUB_REGIONS` since §17 and unused until now, is labelled
+  "Sacramento area" ("Sacramento" alone would read as the city). A new region, `north-state` ("North
+  State"), holds Chico Hotshots. Neither is in `SEARCHED_REGIONS`, so `/clubs` never says "no club
+  based in" either. Instead, `#how-matched` prints "The Sacramento area and the North State were not
+  searched for every club, so other clubs may be based there." That sentence is built for any region
+  that holds a club and was not searched, `elsewhere` apart.
+- **Ties.** Three Davis players already tied to NorCal Impact are tied to D-City as well. Kira Kelly
+  and Amelia Zedonis read "Listed by the NFHCA, Aug 28, 2025": the 2025 watchlist names D-City, the
+  2026 one NorCal Impact. Kate Loscutoff reads "Earlier, 2024", from her own NCSA profile. The Davis
+  roster shows "Club: NorCal Impact · Listed club: D-City" and "… · Earlier club: D-City". Two
+  Pleasant Valley players are tied to Chico Hotshots by their own MaxPreps career pages: Lilah
+  Letcher ("Current, as of Sep 29, 2026") and Kate Panighetti ("Current, as of May 20, 2026"). Each
+  of the five was confirmed by two verifiers working apart. Roseville FHC has no tied player: one
+  archived league roster name matches a Bella Vista row, with no school or class year.
+- **Two sentences every club page shares** were made exact.
+  - The empty state now says "No public page we found ties one of them to this club" instead of
+    "names one of them with this club", because a bare name on a club page is not a tie.
+  - The no-roster sentence says "We found no public roster page naming this club’s players" instead
+    of "… for this club". D-City has a roster page that holds only placeholders, and Chico Hotshots'
+    team rosters are switched off.
+- **Shared hosts.** D-City's site is a Google Site and Chico Hotshots' is on TeamLinkt. "The club's
+  own site" is now `clubSiteKey`: the host, or on a shared host the host plus the site's path
+  segments (two on `sites.google.com`, one on `leagues.teamlinkt.com`). Davis High's Google Site and
+  other TeamLinkt leagues are therefore never labelled a club's own site
+  (`components/clubs/club-view.ts`, `components/commits/commit-view.ts`).
+- **Sitemap dates.** `/clubs` and every club page carry `getClubsLastChecked()`, as `/commits` does:
+  the file's `capturedAt`, or a later record's `checkedOn` (2026-10-04).
+- **Not built.** The Sacramento Hockey Academy (a 2025 club on one Davis player's NCSA profile) was
+  not researched. Neither the Sacramento area nor the North State was swept for every club.

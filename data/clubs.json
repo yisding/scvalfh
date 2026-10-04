@@ -1,15 +1,15 @@
 {
-  "builtBy": "research on 2026-10-03: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on every rostered player's MaxPreps career page, the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked by a checker that re-opened each source and then by an independent refuter",
+  "builtBy": "research on 2026-10-03, and on 2026-10-04 for the schools of the six EAL teams and three club records near them: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on every rostered player's MaxPreps career page, the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked twice: on 2026-10-03 by a checker that re-opened each source and then by an independent refuter, on 2026-10-04 by two independent checks that each re-opened the sources",
   "capturedAt": "2026-10-03",
   "season": "26-27",
   "notes": [
     "Which club field hockey teams the players on the tracked varsity rosters (the 43 schools of the four leagues swept on 2026-10-03, and the schools of the six Eastern Athletic League teams swept on 2026-10-04) play (or played) for, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV are out of scope). A club's own roster lists many more players, who are not named here: the club's roster pages are linked instead.",
     "The linking rule is the one data/rosters-enrichment.json uses for recruiting profiles, applied to clubs: a public page must name the player and a field hockey club, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A class year that disagrees with the roster grade rules a match out; a name alone never makes one. Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts.",
     "Every affiliation of the 2026-10-03 sweep was checked twice on that day: a checker re-opened each source and applied the rule, then an independent refuter re-opened the sources and tried to break it (another person of the same name, a quote not on the page, a misidentified club, a class year that disagrees, a stale listing). Only affiliations that survived both are in that sweep. Each source keeps its URL, kind and a verbatim quote (several quotes from one page are joined with ' … '); every source names the player or is the player's own profile page, so a club's about page used only to confirm a former club name is not kept. basis says what the match rests on.",
-    "status: current = the source reflects the 2025-26 or 2026-27 club seasons (dated August 2025 or later, a club's current-players page, or a live recruiting profile that lists the club); past = dated earlier, an alumni list, or a club the player's own page lists for earlier years; unknown = listed with no usable date. asOf is the date or season the source gives. confidence: high = one first-hand page names player, club and school (or is the player's own profile); medium = the match rests on a club roster's class-year heading plus the club's location, on a team nickname standing for the school, or on a single self-reported line.",
-    "clubs[] are the youth field hockey clubs around the 43 schools of the four leagues swept on 2026-10-03 (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast) plus any club a rostered player is tied to. Each record was read from the club's own site on 2026-10-03 and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them.",
-    "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 with the same rule, using: the NFHCA 2026 high school watchlist, the NCFHA youth directory (https://www.ncfha.org/youth), SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey. It found three ties, all at Davis and all to NorCal Impact (Kira Kelly, Kate Loscutoff, Amelia Zedonis), each from the watchlist's 2026-08-27 rows and confirmed by two verifiers; no other EAL player was found tied to a club by the rule. No club record was added from the EAL sweep (clubs around these schools are not yet in clubs[]; DESIGN §22.8), and the searched areas are unchanged.",
-    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows of the 43 schools swept on 2026-10-03), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
+    "status: current = the source reflects the 2025-26 or 2026-27 club seasons (dated August 2025 or later, a club's current-players page, or a live recruiting profile that lists the club); past = dated earlier, an alumni list, or a club the player's own page lists for earlier years; unknown = listed with no usable date, or a newer page names another club for the player. asOf is the date or season the source gives. confidence: high = one first-hand page names player, club and school (or is the player's own profile); medium = the match rests on a club roster's class-year heading plus the club's location, on a team nickname standing for the school, or on a single self-reported line.",
+    "clubs[] are the youth field hockey clubs around the 43 schools of the four leagues swept on 2026-10-03 (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast), plus any club a rostered player is tied to, plus three clubs met near the six EAL teams' schools on 2026-10-04 (D-City in Davis and Roseville FHC, region sacramento; Chico Hotshots, region north-state). Each record was read from the club's own site on its checkedOn date (2026-10-03, or 2026-10-04 for those three) and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them. Only the six areas named above were searched for clubs (lib/clubs.ts SEARCHED_REGIONS); the Sacramento area and the North State were not, so other clubs may be based there. capturedAt is the day of the first sweep; a later record carries its own checkedOn.",
+    "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 with the same rule, using: the NFHCA 2025 and 2026 high school watchlists, the NCFHA youth directory (https://www.ncfha.org/youth), SportsRecruits profile slugs, NCSA, fhcollegepath.com classes 2026-2028, MAX Field Hockey, the club-teams block of the 95 EAL rows' MaxPreps career pages (Corning's roster has no rows), and the sites of the clubs it met. It found eight ties for five players. At Davis: Kira Kelly, Kate Loscutoff and Amelia Zedonis to NorCal Impact (the 2026-08-27 watchlist, current), Kira Kelly and Amelia Zedonis to D-City (the 2025-08-28 watchlist; unknown, because the newer list names NorCal Impact) and Kate Loscutoff to D-City (her own NCSA profile, 2023 and 2024; past). At Pleasant Valley: Lilah Letcher and Kate Panighetti to Chico Hotshots (the club-teams block of each one's own MaxPreps career page, entries last modified 2026-09-29 and 2026-05-20; current). Each was confirmed by two independent checks that re-opened its source. Three club records were added for the clubs the sweep met: D-City, Roseville FHC and Chico Hotshots. No EAL player is tied to Roseville FHC: one name on its Summer 2026 league archive matches a Bella Vista row, but the page gives no school or class year, and a name alone never makes a match.",
+    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows of the 43 schools swept on 2026-10-03, and the 95 EAL rows on 2026-10-04), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
   ],
   "clubs": [
     {
@@ -870,6 +870,236 @@
         }
       ],
       "checkedOn": "2026-10-03"
+    },
+    {
+      "slug": "d-city",
+      "name": "D-City Field Hockey Club",
+      "shortName": "D-City",
+      "aliases": [
+        "D-City Field Hockey",
+        "D-City FHC",
+        "D City Field Hockey Club",
+        "DCity",
+        "Dcity"
+      ],
+      "website": "https://sites.google.com/view/dcityhockeyclub/home",
+      "city": "Davis",
+      "region": "sacramento",
+      "youth": true,
+      "description": "Davis nonprofit club for girls and boys with a January-to-May spring season at the UC Davis field hockey field; spring 2026, with U14, U16 and U19 teams, is the latest season it has posted.",
+      "founded": 2019,
+      "programs": [
+        {
+          "name": "Spring club season",
+          "detail": "Spring 2026 (January-May), the latest posted: Monday and Thursday practices at the UC Davis field hockey field; dues cover 2 practices a week and 3 tournaments or play-days",
+          "source": "https://sites.google.com/view/dcityhockeyclub/home"
+        },
+        {
+          "name": "Spring 2026 tournaments (U14, U16, U19)",
+          "detail": "The latest posted: UC Berkeley 6v6 (Mar 7-8), Stanford 6v6 (Apr 4-5), UC Davis 7v7 (Apr 25-26) and the California Cup by coach invitation (May 22-25, Moorpark)",
+          "source": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames"
+        },
+        {
+          "name": "New player clinics",
+          "detail": "The most recent ended April 9, 2026; no date for the next one is posted",
+          "source": "https://sites.google.com/view/dcityhockeyclub/new-player-clinics"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/home",
+          "what": "Club home page"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/about-us",
+          "what": "Club history"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames",
+          "what": "Spring 2026 tournaments"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/new-player-clinics",
+          "what": "New player clinics"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/about-us/current-roster",
+          "what": "Current roster (no names posted)"
+        },
+        {
+          "url": "https://sites.google.com/djusd.net/dhsfieldhockey/home",
+          "what": "Davis High field hockey page"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/new-year-new-opportunities-on-the-field/",
+          "what": "NorCal January 2026 newsletter"
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "roseville-fhc",
+      "name": "Roseville Field Hockey Club",
+      "shortName": "Roseville FHC",
+      "aliases": [
+        "RFHC",
+        "Roseville Red",
+        "Roseville Blue",
+        "Roseville Black",
+        "Roseville Gold"
+      ],
+      "website": "https://rosevillefhc.org/",
+      "city": "Roseville",
+      "region": "sacramento",
+      "youth": true,
+      "description": "Roseville nonprofit club founded in July 2024, with boys' and girls' divisions from U6 to U18 and women's and men's divisions for ages 19 and up, based at the Placer Valley Soccer Complex and Maidu Soccer Arena.",
+      "founded": 2024,
+      "programs": [
+        {
+          "name": "Fall Season '26",
+          "detail": "Fall 2026, the latest posted: Aug 2 to Nov 20, 2026, on Sundays, two hours between 3 and 7 PM",
+          "source": "https://rosevillefhc.org/programs"
+        },
+        {
+          "name": "Fall Pickup Hockey '26",
+          "detail": "Fall 2026, the latest posted: U8 to U19 youth and adults; Fridays, youth 5:30 to 6:30 PM and adults 6:30 to 7:30 PM, at Maidu Soccer Arena or the Placer Valley Soccer Complex",
+          "source": "https://rosevillefhc.org/programs"
+        },
+        {
+          "name": "Fall 2026 League",
+          "detail": "Fall 2026, the latest posted: U8/U10, U12/U14/U16, youth goalkeeper, women's and men's divisions, with rules, rosters, schedule and standings; the Summer 2026 league (games in May 2026) is archived",
+          "source": "https://rosevillefhc.org/rfhc_league"
+        },
+        {
+          "name": "Boys' and girls' divisions (U6 to U18)",
+          "detail": "Ages 5-18, no experience required",
+          "source": "https://rosevillefhc.org/"
+        },
+        {
+          "name": "Women's and men's divisions (U19+)",
+          "detail": "Ages 19 and up, no experience required",
+          "source": "https://rosevillefhc.org/"
+        },
+        {
+          "name": "3rd USA Gold Cup (Tracy, CA)",
+          "detail": "Sep 5-6, 2026, the latest tournament posted: Open (Pool B), U-12, U-14 and Women's divisions, 7v7; no result posted",
+          "source": "https://rosevillefhc.org/tournaments"
+        },
+        {
+          "name": "UC Davis 7v7 Tournament",
+          "detail": "Apr 26, 2026: U10 and U12 divisions, Roseville Red and Blue teams in each",
+          "source": "https://rosevillefhc.org/ucd_2026"
+        }
+      ],
+      "rosterPages": [
+        "https://rosevillefhc.org/rfhc_league",
+        "https://rosevillefhc.org/usa_gold_cup_2026",
+        "https://rosevillefhc.org/ucd_2026"
+      ],
+      "sources": [
+        {
+          "url": "https://rosevillefhc.org/",
+          "what": "Club home page"
+        },
+        {
+          "url": "https://rosevillefhc.org/about",
+          "what": "About the club"
+        },
+        {
+          "url": "https://rosevillefhc.org/programs",
+          "what": "Fall 2026 programs"
+        },
+        {
+          "url": "https://rosevillefhc.org/schedule",
+          "what": "Fall 2026 schedule and locations"
+        },
+        {
+          "url": "https://rosevillefhc.org/rfhc_league",
+          "what": "League (Fall 2026, with the Summer 2026 archive)"
+        },
+        {
+          "url": "https://rosevillefhc.org/tournaments",
+          "what": "Tournaments"
+        },
+        {
+          "url": "https://rosevillefhc.org/usa_gold_cup_2026",
+          "what": "USA Gold Cup 2026 team rosters"
+        },
+        {
+          "url": "https://rosevillefhc.org/contact",
+          "what": "Contact and field location"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-legend-and-building-the-future/",
+          "what": "NorCal February 2026 newsletter"
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "chico-hotshots",
+      "name": "Chico Hotshots Field Hockey Club",
+      "shortName": "Chico Hotshots",
+      "aliases": [
+        "Chico Hotshots U19",
+        "Chico Hotshots U16",
+        "Chico Hotshots U14",
+        "Chico Hotshots U12"
+      ],
+      "website": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey",
+      "city": "Chico",
+      "region": "north-state",
+      "youth": true,
+      "description": "Chico club that lists U12, U14, U16, U19 and adult teams for spring 2026, the latest season it has posted.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "U12 Hotshots",
+          "detail": "Spring 2026, the latest posted and the only season listed; no age or grade range posted",
+          "source": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions"
+        },
+        {
+          "name": "U14 Hotshots",
+          "detail": "Spring 2026, the latest posted and the only season listed; no age or grade range posted",
+          "source": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions"
+        },
+        {
+          "name": "U16 Hotshots",
+          "detail": "Spring 2026, the latest posted and the only season listed; no age or grade range posted",
+          "source": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions"
+        },
+        {
+          "name": "U19 Hotshots",
+          "detail": "Spring 2026, the latest posted and the only season listed; no age or grade range posted",
+          "source": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions"
+        },
+        {
+          "name": "Adult Hotshots",
+          "detail": "Spring 2026, the latest posted and the only season listed; no age or grade range posted",
+          "source": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey",
+          "what": "Club home page"
+        },
+        {
+          "url": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions",
+          "what": "Spring 2026 divisions and teams"
+        },
+        {
+          "url": "https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Locations",
+          "what": "Spring 2026 locations"
+        },
+        {
+          "url": "https://leagues.teamlinkt.com/leagues/NewsItem/34623/39251",
+          "what": "Club news (Feb 2026)"
+        }
+      ],
+      "checkedOn": "2026-10-04"
     },
     {
       "slug": "htc",
@@ -3753,7 +3983,7 @@
           "sourceDate": "2026-08-27"
         }
       ],
-      "basis": "The 2026-08-27 NFHCA watchlist names Kira Kelly, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kira Kelly at Davis."
+      "basis": "The 2026-08-27 NFHCA watchlist names Kira Kelly, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kira Kelly at Davis. The NFHCA's 2025 watchlist (2025-08-28) named D-City as her club; this newer row is why that tie is unknown, not current."
     },
     {
       "teamSlug": "davis",
@@ -3774,7 +4004,7 @@
           "sourceDate": "2026-08-27"
         }
       ],
-      "basis": "The 2026-08-27 NFHCA watchlist names Kate Loscutoff, Davis Senior High School, club NorCal Impact FHC, Senior (= 2027, matches grade 12). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kate Loscutoff at Davis."
+      "basis": "The 2026-08-27 NFHCA watchlist names Kate Loscutoff, Davis Senior High School, club NorCal Impact FHC, Senior (= 2027, matches grade 12). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kate Loscutoff at Davis. Her own NCSA profile, undated and re-read 2026-10-04, lists other clubs for 2023-2025 (D-City, then Sacramento Hockey Academy); the watchlist is the newest page, so this tie stays current and the D-City tie is past."
     },
     {
       "teamSlug": "davis",
@@ -3795,7 +4025,112 @@
           "sourceDate": "2026-08-27"
         }
       ],
-      "basis": "The 2026-08-27 NFHCA watchlist names Amelia Zedonis, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Amelia Zedonis at Davis."
+      "basis": "The 2026-08-27 NFHCA watchlist names Amelia Zedonis, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Amelia Zedonis at Davis. The NFHCA's 2025 watchlist (2025-08-28) named D-City as her club; this newer row is why that tie is unknown, not current."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
+      "fullName": "Kira Kelly",
+      "club": "d-city",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": "2025-08-28",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.org/2025-high-school-watchlist/",
+          "kind": "event",
+          "quote": "Kira | Kelly | Davis Senior High School | D-City | Sophomore | 13 | GK",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2028,
+          "sourceDate": "2025-08-28"
+        }
+      ],
+      "basis": "The NFHCA's 2025 high school watchlist (published 2025-08-28) names Kira Kelly, Davis Senior High School, club D-City, Sophomore (= class of 2028, matches grade 11): one first-hand page names the player, the club and the school, so confidence is high. Status is unknown, not current: the NFHCA's 2026-08-27 watchlist names NorCal Impact FHC as her club (her NorCal Impact tie), a newer page naming another club, as for Gabrielle Moll. The table is paginated on screen (10 rows), but all 555 rows are in the page's HTML. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same row). The roster has one Kira Kelly at Davis."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
+      "fullName": "Kate Loscutoff",
+      "club": "d-city",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/davis/davis-senior-high-school/kate-loscutoff",
+          "kind": "ncsa",
+          "quote": "Kate Loscutoff '27 Recruiting Profile … Davis Senior High School … Seasons of Club Experience … 2025 Sacramento Hockey Academy (Sacramento Hockey Academy) 2024 D-City 2023 D-City",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile names Kate Loscutoff, '27 (matches grade 12), Davis Senior High School, and lists her club seasons as 2025 Sacramento Hockey Academy, 2024 D-City and 2023 D-City. D-City is a club her own page lists for earlier years, so status is past, as of 2024; her current club is NorCal Impact (the 2026-08-27 NFHCA watchlist). Sacramento Hockey Academy has no club record here and was not researched. The other Loscutoff on the Davis roster, Margaret, is in grade 10, so the '27 picks Kate. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entries)."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
+      "fullName": "Amelia Zedonis",
+      "club": "d-city",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": "2025-08-28",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.org/2025-high-school-watchlist/",
+          "kind": "event",
+          "quote": "Amelia | Zedonis | Davis Senior High School | D-City | Sophomore | 32 | M, D",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2028,
+          "sourceDate": "2025-08-28"
+        }
+      ],
+      "basis": "The NFHCA's 2025 high school watchlist (published 2025-08-28) names Amelia Zedonis, Davis Senior High School, club D-City, Sophomore (= class of 2028, matches grade 11): one first-hand page names the player, the club and the school, so confidence is high. Status is unknown, not current: the NFHCA's 2026-08-27 watchlist names NorCal Impact FHC as her club (her NorCal Impact tie), a newer page naming another club, as for Gabrielle Moll. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same row). The roster has one Amelia Zedonis at Davis."
+    },
+    {
+      "teamSlug": "pleasant-valley",
+      "athleteId": "1917b7a2-edb2-48ed-804a-5fd79664a1c2",
+      "fullName": "Lilah Letcher",
+      "club": "chico-hotshots",
+      "clubTeam": "U19",
+      "status": "current",
+      "asOf": "2026-09-29",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/chico/pleasant-valley-vikings/athletes/lilah-letcher/bio/?careerid=fve60bqsv4orb",
+          "kind": "maxpreps-career",
+          "quote": "\"organizationTeamName\":\"Chico Hotshots \",\"clubOrganizationName\":\"Chico Hotshots\",\"clubOrganizationCity\":\"Chico\",\"clubOrganizationStateCode\":\"CA\",\"sport\":\"Field Hockey\",\"ageGroup\":\"U19\",\"yearJoined\":2023 … \"modifiedOn\":\"2026-09-29T03:46:58\",\"season\":\"Spring\"",
+          "statedSchool": "Pleasant Valley",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-09-29"
+        }
+      ],
+      "basis": "Her own MaxPreps career page (its careerId is the roster row's; Pleasant Valley, graduatingClass 2028, which matches grade 11) lists one club team: 'Chico Hotshots', club Chico Hotshots, Chico CA, sport Field Hockey, U19, joined 2023, season Spring, entered 2026-09-28 and last modified 2026-09-29. The entry carries the same MaxPreps club id as Kate Panighetti's, whose team site is the club's TeamLinkt site (Chico Hotshots Field Hockey Club), so it is this field hockey club. One first-hand page names the player, the club and the school, so confidence is high. The entry is dated after August 2025, gives no end year, and no newer page names another club for her, so status is current, as of 2026-09-29 (as for Yoyo Cai); its yearJoined is entered by the player or a parent and is not used for the club's founding year. clubTeam is the entry's age group, U19, which the club lists as a spring 2026 team. The career home page and its bio page carry the same entry. Found by the 2026-10-04 MaxPreps sweep of all 95 EAL rows and confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entry). She is the only Letcher on any roster."
+    },
+    {
+      "teamSlug": "pleasant-valley",
+      "athleteId": "34c472fd-d485-49fb-9c47-d2736f9067d4",
+      "fullName": "Kate Panighetti",
+      "club": "chico-hotshots",
+      "clubTeam": "U19",
+      "status": "current",
+      "asOf": "2026-05-20",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/chico/pleasant-valley-vikings/athletes/kate-panighetti/bio/?careerid=5mui12ufhonk4",
+          "kind": "maxpreps-career",
+          "quote": "\"organizationTeamName\":\"Hot Shots\",\"clubOrganizationName\":\"Chico Hotshots\",\"clubOrganizationCity\":\"Chico\",\"clubOrganizationStateCode\":\"CA\",\"sport\":\"Field Hockey\",\"ageGroup\":\"U19\",\"yearJoined\":2026 … \"modifiedOn\":\"2026-05-20T17:11:41\",\"season\":\"Spring\"",
+          "statedSchool": "Pleasant Valley",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-05-20"
+        }
+      ],
+      "basis": "Her own MaxPreps career page (its careerId is the roster row's; Pleasant Valley, graduatingClass 2027, which matches grade 12) lists one club team: 'Hot Shots', club Chico Hotshots, Chico CA, sport Field Hockey, U19, joined 2026, season Spring, created 2026-05-19 and last modified 2026-05-20, with its team site set to the club's TeamLinkt site (leagues.teamlinkt.com/chicohotshotsfieldhockey). One first-hand page names the player, the club and the school, so confidence is high. Spring 2026 is in the 2025-26 club season and the entry is dated after August 2025, gives no end year, and no newer page names another club for her, so status is current, as of 2026-05-20 (as for Yoyo Cai). clubTeam is the entry's age group, U19, which the club lists as a spring 2026 team. The career home page and its bio page carry the same entry. Found by the 2026-10-04 MaxPreps sweep of all 95 EAL rows and confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entry). She is the only Panighetti on any roster."
     }
   ]
 }

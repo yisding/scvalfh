@@ -13,7 +13,7 @@ import type { ClubIndexRow } from './club-view';
  * same row-major grid as the team roster (components/teams/TeamRoster.tsx): one column on a phone,
  * two from 640px, three from 1024px.
  *
- * The name link is the main way into thirteen pages from a phone, so it is 44px tall there and
+ * The name link is the main way into every club page from a phone, so it is 44px tall there and
  * 32px from 768px (the SectionHeader action's size), at the 600 weight of a TeamTile name. It
  * carries `prefetch={false}` for the reason every per-row link does (tests/ui/prefetch-policy):
  * Next 16 would otherwise download each club page as the list scrolls into view. Nothing here

@@ -11,17 +11,19 @@ import { getRosters } from '../../lib/rosters';
  * /clubs — "Which clubs do players here play for?" (DESIGN §17.1, SPEC §1.1j2).
  *
  * The youth field hockey clubs of data/clubs.json — the clubs around the Bay Area and Central Coast
- * schools (no record yet for the clubs of the Eastern Athletic League's area, DESIGN §22.8), plus
+ * schools, three clubs met near the EAL teams' schools (D-City and Roseville FHC in the Sacramento
+ * area, Chico Hotshots in the North State: areas not searched for every club, DESIGN §22.9), plus
  * any other club a tracked player is tied to (HTC trains in La Jolla) — and, for each, how many
  * players on the tracked varsity rosters a public page ties to it, current and earlier stated
  * apart, and from which schools. The lede answers the page's question in one paragraph; there is
  * no second line of bare counts.
  *
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
- * the South Bay, the East Bay, Marin, the Central Coast, then the rest: lib/clubs-schema.ts
- * CLUB_REGIONS), then the h2 "How players are matched" (`#how-matched`, which every club page
- * links). Within a region, the clubs with the most tied players come first (DESIGN §17.5,
- * lib/clubs.ts), so a reader meets the clubs that answer the question before the ones that do not.
+ * the South Bay, the East Bay, Marin, the Central Coast, the Sacramento area, the North State, then
+ * the rest: lib/clubs-schema.ts CLUB_REGIONS), then the h2 "How players are matched"
+ * (`#how-matched`, which every club page links). Within a region, the clubs with the most tied
+ * players come first (DESIGN §17.5, lib/clubs.ts), so a reader meets the clubs that answer the
+ * question before the ones that do not.
  *
  * A list, not a table (DESIGN §10.8): components/clubs/ClubList.tsx. The page is not in the nav
  * (the spec keeps the navigation unchanged); /teams, every team page's roster and /about link it.
@@ -87,6 +89,7 @@ export default function ClubsPage() {
             Recall is partial. A player with no public page that meets the rule is not listed,
             whatever club they play for, so a school with no one here may still have plenty of club
             players.{view.regionsWithoutClubsSentence ? ` ${view.regionsWithoutClubsSentence}` : ''}
+            {view.regionsNotSearchedSentence ? ` ${view.regionsNotSearchedSentence}` : ''}
           </p>
         </div>
       </section>

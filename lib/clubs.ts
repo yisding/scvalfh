@@ -158,6 +158,14 @@ export function getClubsFile(): ClubsFile {
   return file;
 }
 
+/**
+ * The last day the file was checked: its capturedAt (the first sweep), or a later club record's
+ * checkedOn. The sitemap's date for the clubs pages (lib/commits.ts getCommitsLastChecked's pattern).
+ */
+export function getClubsLastChecked(): string {
+  return [file.capturedAt, ...file.clubs.map((c) => c.checkedOn)].sort().at(-1)!;
+}
+
 /** Every club, in display order (DESIGN §17.5). */
 export function getClubs(): readonly Club[] {
   return ORDERED;
@@ -198,7 +206,11 @@ export function getAffiliatedPlayer(a: Pick<ClubAffiliation, 'teamSlug' | 'athle
   return row;
 }
 
-/** The areas notes[] says were swept for clubs; /clubs names those that hold none. */
+/**
+ * The areas notes[4] says were swept for clubs. /clubs names those that hold none; a region that
+ * holds a club but is not here (sacramento, north-state) is said not to have been searched for
+ * every club.
+ */
 export const SEARCHED_REGIONS: readonly ClubRegion[] = [
   'san-francisco',
   'peninsula',
