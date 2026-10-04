@@ -32,19 +32,11 @@ export interface DateHeaderProps {
    * policy test, tests/ui/prefetch-policy.test.ts, holds this call site by `href={shareHref}`.)
    */
   shareHref?: string;
-  as?: 'h2' | 'h3';
   sticky?: boolean;
   className?: string;
 }
 
-export function DateHeader({
-  date,
-  count,
-  shareHref,
-  as: Heading = 'h2',
-  sticky = false,
-  className,
-}: DateHeaderProps) {
+export function DateHeader({ date, count, shareHref, sticky = false, className }: DateHeaderProps) {
   return (
     <div
       // Sticky on a phone, the header sits inside a full-bleed date group (ScheduleList), so it
@@ -65,12 +57,13 @@ export function DateHeader({
         .join(' ')}
       style={sticky ? { top: 'var(--sx-sticky-stack, 0px)' } : undefined}
     >
-      <Heading className="m-0 text-body font-semibold text-ink">
+      {/* Every date group is a section under the page's h1. */}
+      <h2 className="m-0 text-body font-semibold text-ink">
         <time dateTime={date}>
           <span aria-hidden="true">{shortDate(date)}</span>
           <span className="sr-only">{longDate(date)}</span>
         </time>
-      </Heading>
+      </h2>
       {/* `data-date-count` + `data-total`: the filter rewrites this to "6 of 12 games". */}
       <span data-date-count data-total={count} className="sx-badge shrink-0 tabular-nums">
         {count} {gameWord(count)}
