@@ -166,7 +166,7 @@ export interface NextLeagueDay extends HomeDay {
 }
 
 function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeagueDay | null {
-  const date = getUpcoming(Number.MAX_SAFE_INTEGER, undefined, { league }).find(
+  const date = getUpcoming(Number.MAX_SAFE_INTEGER, { league }).find(
     (g) => countsInLeague(g, league) && g.dateKey > after,
   )?.dateKey;
   if (!date) return null;
@@ -632,9 +632,9 @@ export interface HomeLeaguePanel {
 function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today: string): HomeLeaguePanel {
   const league = getLeague(summary.id);
   const phase = getSeasonPhase(league.id);
-  const latestDate = getLatestResultsDate(undefined, { league: league.id });
+  const latestDate = getLatestResultsDate({ league: league.id });
   const unreported = unreportedDay(league.id, today, latestDate);
-  const slateDate = getUpcoming(1, undefined, { league: league.id })[0]?.dateKey ?? null;
+  const slateDate = getUpcoming(1, { league: league.id })[0]?.dateKey ?? null;
   const single = league.divisions.length === 1;
   const firstGame = getGameDates({ league: league.id })[0] ?? null;
 

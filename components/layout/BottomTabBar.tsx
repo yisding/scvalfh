@@ -51,7 +51,7 @@ const ICON_PROPS = {
 function scoresDate(league?: LeagueId): string | null {
   const today = getToday();
   const filter = league ? { league } : {};
-  return getLatestResultsDate(undefined, filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
+  return getLatestResultsDate(filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
 }
 
 const withDate = (path: string, date: string | null) => (date ? `${path}#${date}` : path);

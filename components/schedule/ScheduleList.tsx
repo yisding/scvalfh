@@ -52,7 +52,7 @@ export interface ScheduleListProps {
 function landingDate(dates: readonly string[], league: LeagueId | null): string | null {
   const today = getToday();
   return (
-    getLatestResultsDate(undefined, league ? { league } : {}) ??
+    getLatestResultsDate(league ? { league } : {}) ??
     dates.find((d) => d >= today) ??
     null
   );

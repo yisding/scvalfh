@@ -186,10 +186,19 @@ describe('data: games', () => {
       expect(g.dateKey >= data.getToday()).toBe(true);
       expect(g.status).not.toBe('final');
     }
+    const early = data.getUpcoming(5, {}, '2026-09-10T15:00:00.000Z');
+    expect(early.length).toBe(5);
+    for (const g of early) expect(g.dateKey >= '2026-09-10').toBe(true);
+    const pcal = data.getUpcoming(5, { league: 'pcal' });
+    expect(pcal.length).toBeGreaterThan(0);
+    expect(pcal.every((g) =>
+      [g.home.slug, g.away.slug].some((s) => s && data.getTeamBySlug(s)?.league === 'pcal'),
+    )).toBe(true);
   });
 
   it('names the most recent day that actually has results', () => {
     expect(data.getLatestResultsDate()).toMatch(/^2026-(09|10)-\d{2}$/);
+    expect(data.getLatestResultsDate({}, '2026-09-10T15:00:00.000Z')! <= '2026-09-10').toBe(true);
     expect(data.getLastLeagueResultDate()).toMatch(/^2026-(09|10)-\d{2}$/);
     expect(data.getLastLeagueResultDate({ division: 'de-anza' })).toMatch(/^2026-/);
     expect(data.getLastLeagueResultDate({ league: 'scval' })).toBe(data.getLastLeagueResultDate());

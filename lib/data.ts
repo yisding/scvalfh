@@ -463,7 +463,7 @@ function scoped(filter: { league?: LeagueId }): Game[] {
 }
 
 /** The next `n` contests at or after `asOf` (default: the snapshot stamp). */
-export function getUpcoming(n = 5, asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): Game[] {
+export function getUpcoming(n = 5, filter: { league?: LeagueId } = {}, asOf: string = snapshot.fetchedAt): Game[] {
   const today = localDateKey(asOf);
   return scoped(filter)
     .filter((g) => PLAYABLE.includes(g.status) && g.dateKey >= today)
@@ -475,7 +475,7 @@ export function getUpcoming(n = 5, asOf: string = snapshot.fetchedAt, filter: { 
  * The most recent date that actually has reported results, so the home page never shows a stale
  * day as if it were last night (DESIGN §8).
  */
-export function getLatestResultsDate(asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): string | null {
+export function getLatestResultsDate(filter: { league?: LeagueId } = {}, asOf: string = snapshot.fetchedAt): string | null {
   const today = localDateKey(asOf);
   const dates = scoped(filter)
     .filter((g) => g.status === 'final' && g.dateKey <= today)
@@ -912,8 +912,7 @@ function clock(time: string): string {
 }
 
 /** §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit). */
-export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseasonLine | null {
-  void asOf;
+export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   const team = resolveTeamRef(ref);
   if (!team) return null;
   const row = snapshot.standings.find((s) => s.teamId === team.id);
