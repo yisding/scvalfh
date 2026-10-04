@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/components/layout/site-url';
+import { SITE_URL } from '@/components/layout/site';
 
 /**
  * /robots.txt. Everything is crawlable — the site is ten static route families of public scores —

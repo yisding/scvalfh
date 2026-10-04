@@ -3,7 +3,7 @@
 Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
 five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast
 Section and the Northern Section's EAL. Teams outside these five leagues appear only as opponents
-(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site-url.ts`). A static Next.js site rebuilt from one JSON
+(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
@@ -1008,7 +1008,7 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   run and snapshot refresh on `main` once an account is connected. See "vinext" and "Cloudflare
   Workers" below.
 
-`SITE_URL` defaults to `http://localhost:3000` (`components/layout/site-url.ts`) when unset, so
+`SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
 it and the three optional variables; copy it to `.env` for a local production build.

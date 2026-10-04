@@ -8,7 +8,7 @@ import {
   officialFixtureHeadline,
   placeScope,
 } from '../../../components/teams/team-view';
-import { SITE_NAME } from '../../../components/layout/site-url';
+import { SITE_NAME } from '../../../components/layout/site';
 import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
 import {
   EM_DASH,

@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import ClubList from '../../components/clubs/ClubList';
 import { buildClubsIndexView } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/rosters';
 

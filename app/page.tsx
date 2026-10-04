@@ -8,7 +8,7 @@ import MyTeamCard from '../components/home/MyTeamCard';
 import { getHomeData } from '../components/home/home-data';
 import LeagueSwitcher from '../components/layout/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
-import { OG_BASE } from '../components/layout/site-url';
+import { OG_BASE } from '../components/layout/site';
 import { shortDate } from '../lib/format';
 
 /**

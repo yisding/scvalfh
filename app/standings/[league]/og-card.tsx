@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-import { SITE_WORDMARK } from '../../../components/layout/site-url';
+import { SITE_WORDMARK } from '../../../components/layout/site';
 import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../../lib/data';
 import { formatStamp, shortDate } from '../../../lib/format';
 

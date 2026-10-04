@@ -5,7 +5,7 @@ import CollegeList from '../../components/commits/CollegeList';
 import CommitList from '../../components/commits/CommitList';
 import { buildCommitsView } from '../../components/commits/commit-view';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import EmptyState from '../../components/ui/EmptyState';
 import { plural } from '../../components/ui/plural';
 import SectionHeader from '../../components/ui/SectionHeader';

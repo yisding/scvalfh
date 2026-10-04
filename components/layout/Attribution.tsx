@@ -9,7 +9,7 @@ import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
-import { SITE_SCOPE_NOTE } from './site-url';
+import { SITE_SCOPE_NOTE } from './site';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).

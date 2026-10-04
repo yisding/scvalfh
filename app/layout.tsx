@@ -8,7 +8,7 @@ import { BUILD_INSTANT } from '@/components/layout/build-instant';
 import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
 import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
 import { buildPrefsScript } from '@/components/layout/prefs-script';
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site-url';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site';
 import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
 import { THEME_SCRIPT } from '@/components/layout/theme-script';
 import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';

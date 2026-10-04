@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/components/layout/site-url';
+import { SITE_URL } from '@/components/layout/site';
 import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
 import { getCommitsLastChecked } from '@/lib/commits';
 import {

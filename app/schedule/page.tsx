@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import ScheduleIndex, { buildScheduleIndex } from '../../components/schedule/ScheduleIndex';
 import { countGames } from '../../components/schedule/filter-data';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';

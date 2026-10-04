@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import Arrow from '../../../components/ui/Arrow';

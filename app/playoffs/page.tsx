@@ -5,7 +5,7 @@ import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { toLeagueChip } from '../../components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';

@@ -4,7 +4,7 @@ import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
-import { SITE_WORDMARK } from './site-url';
+import { SITE_WORDMARK } from './site';
 import ThemeToggle from './ThemeToggle';
 import TopNav from './TopNav';
 

@@ -10,7 +10,7 @@ import Arrow from '../../components/ui/Arrow';
 import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site';
 import { getClubs } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import {

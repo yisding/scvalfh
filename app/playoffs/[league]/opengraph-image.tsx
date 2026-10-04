@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { notFound } from 'next/navigation';
 
-import { SITE_NAME } from '../../../components/layout/site-url';
+import { SITE_NAME } from '../../../components/layout/site';
 import { getLeagueSummary, getLeagueTournament, getTeamBySlug, getTournamentLeagueIds } from '../../../lib/data';
 import { listWords, shortDate } from '../../../lib/format';
 import { getLeague } from '../../../lib/leagues';

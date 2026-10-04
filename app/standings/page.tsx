@@ -4,7 +4,7 @@ import Link from 'next/link';
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE } from '../../components/layout/site-url';
+import { OG_BASE } from '../../components/layout/site';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
 import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';

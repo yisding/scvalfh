@@ -7,7 +7,7 @@ import {
   gameKicker,
   gameStaticParams,
 } from '../../../components/game/game-model';
-import { SITE_NAME } from '../../../components/layout/site-url';
+import { SITE_NAME } from '../../../components/layout/site';
 import { dateWithYear, timeOfDayPT } from '../../../lib/format';
 
 /**

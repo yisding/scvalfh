@@ -10,7 +10,7 @@ import { gameWord } from '../../../components/schedule/filter-data';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE, SITE_NAME } from '../../../components/layout/site-url';
+import { OG_BASE, SITE_NAME } from '../../../components/layout/site';
 import {
   getGameDates,
   getGames,

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import LeagueTournament from '../../../components/playoffs/LeagueTournament';
 import { buildTournamentView, type TournamentView } from '../../../components/playoffs/playoff-view';
 import Arrow from '../../../components/ui/Arrow';

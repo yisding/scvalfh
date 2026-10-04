@@ -8,7 +8,7 @@ import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import TeamMonogram from '../../../components/ui/TeamMonogram';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { getTeamBySlug } from '../../../lib/data';
 import {
   getAvailableHistoryLeagues,

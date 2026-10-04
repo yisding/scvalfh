@@ -28,7 +28,7 @@ import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import { getTeamSlugs } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';

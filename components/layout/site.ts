@@ -1,3 +1,8 @@
+/**
+ * The site's identity and shared metadata: its origin (SITE_URL), the branding strings (SITE_NAME,
+ * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE) and the openGraph defaults
+ * every route repeats (OG_BASE, ROOT_OG_IMAGE). Nothing here renders.
+ */
 import type { Metadata } from 'next';
 
 /**

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import TeamFinder from '../../components/search/TeamFinder';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
 import { buildTeamsByLeague, teamsLeagueChips } from '../../components/teams/team-view';

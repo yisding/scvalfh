@@ -18,7 +18,7 @@ import {
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-model';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';

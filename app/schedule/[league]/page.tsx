@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import ScheduleFilters, { ScheduleFiltersFallback } from '../../../components/schedule/ScheduleFilters';
 import ScheduleList from '../../../components/schedule/ScheduleList';

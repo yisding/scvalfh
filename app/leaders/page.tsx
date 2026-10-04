@@ -4,7 +4,7 @@ import Link from 'next/link';
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
 import { LEAGUE_COUNT, buildLeadersView } from '../../components/leaders/leaders-view';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords } from '../../lib/format';
