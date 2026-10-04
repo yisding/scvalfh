@@ -278,6 +278,11 @@ describe('visibleText: what a reader of a built page sees', () => {
     expect(visibleText('<body><p>EAL <span>school</span>s</p></body>')).toBe('EAL school s');
     expect(visibleText('<body><p>EAL <strong>schools</strong> play</p></body>')).toMatch(EAL_SCHOOL_CLAIM);
   });
+
+  it('leaves no comment behind when removing one forms another', () => {
+    // One pass would turn `<!<!---->--` into `<!--` and read " hidden " as a tag.
+    expect(visibleText('<body><p>A<!<!---->-- hidden -->B</p></body>')).toBe('AB');
+  });
 });
 
 describe('attributeText: what a page shows or reads out outside its body text', () => {

@@ -116,9 +116,18 @@ function decodeEntities(text: string): string {
   });
 }
 
-/** `html` without its `<script>`, `<style>` and `<template>` elements and its comments. */
+/**
+ * `html` without its `<script>`, `<style>` and `<template>` elements and its comments. Repeated
+ * until nothing changes: one pass over `<!<!---->--` would leave a `<!--` behind (CodeQL
+ * js/incomplete-multi-character-sanitization).
+ */
 function withoutScripts(html: string): string {
-  return html.replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<!--[\s\S]*?-->/g, '');
+  let out = html;
+  for (let before = ''; before !== out; ) {
+    before = out;
+    out = out.replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<!--[\s\S]*?-->/g, '');
+  }
+  return out;
 }
 
 /**
