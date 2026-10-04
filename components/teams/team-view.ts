@@ -34,6 +34,7 @@ import {
   gameWhen,
   monthDay,
   ordinal,
+  plural,
   recordString,
   shortDate,
   sideOutcome,
@@ -575,22 +576,30 @@ export function buildNextCard(
   return { kind: 'none' };
 }
 
-/** 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. */
-function fixtureOpponent(
+/** 'VALLEY CHRISTIAN' → 'Valley Christian', for a grid name with no registry row behind it. */
+function titleCase(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
+}
+
+/**
+ * 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. The one place a
+ * fixture's opponent is named (the team page, its OG card and home's pinned card): the registry
+ * short name, or the schedule's own spelling title-cased for a school outside the registry.
+ */
+export function fixtureOpponent(
   fixture: OfficialFixture,
-  team: Team,
-): { versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
+  team: Pick<Team, 'slug'>,
+): { mineIsHome: boolean; versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
   const mineIsHome = fixture.homeSlug === team.slug;
   const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
   const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
   return {
+    mineIsHome,
     versus: mineIsHome ? 'vs' : 'at',
     opponent,
-    opponentName: opponent
-      ? opponent.shortName
-      : mineIsHome
-        ? fixture.awayName
-        : fixture.homeName,
+    opponentName: opponent ? opponent.shortName : titleCase(mineIsHome ? fixture.awayName : fixture.homeName),
   };
 }
 
@@ -711,8 +720,6 @@ export interface TeamsSectionGroup {
   leagues: TeamsLeagueGroup[];
 }
 
-const teamsWord = (n: number) => `${n} ${n === 1 ? 'team' : 'teams'}`;
-
 /** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18). */
 export function buildTeamsByLeague(): TeamsSectionGroup[] {
   const teams = getTeams();
@@ -722,7 +729,7 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
     leagues: leagues.map(({ league, divisions }) => ({
       league,
       title: `${league.shortName} — ${league.name}`,
-      meta: teamsWord(league.teamCount),
+      meta: plural(league.teamCount, 'team'),
       membershipNote: getLeague(league.id).membershipNote,
       standingsHref: `/standings/${league.id}`,
       standingsLabel: `${league.shortName} standings`,
@@ -781,11 +788,7 @@ export function gameHeadline(game: Game, team: Team): string {
  * start time and no game page, so it must never read like a scheduled game we have details for.
  */
 export function officialFixtureHeadline(fixture: OfficialFixture, team: Team): string {
-  const mineIsHome = fixture.homeSlug === team.slug;
-  const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-  const opponentName = mineIsHome ? fixture.awayName : fixture.homeName;
-  const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
-  const name = opponent ? opponent.shortName : opponentName;
+  const { versus, opponentName } = fixtureOpponent(fixture, team);
   const short = getLeague(fixture.league).shortName;
-  return `${mineIsHome ? 'vs' : 'at'} ${name} · ${shortDate(fixture.dateKey)} (${short} schedule)`;
+  return `${versus} ${opponentName} · ${shortDate(fixture.dateKey)} (${short} schedule)`;
 }

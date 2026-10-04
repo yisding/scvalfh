@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
 import type { TeamSlug } from '../../lib/types';
-import GameRow from '../ui/GameRow';
+import { GameRow } from '../ui/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -91,9 +91,7 @@ function BracketCard({
   const named = isNamedSide(game.home) || isNamedSide(game.away);
   return (
     <div
-      className={`sx-card min-w-0 flex-1${
-        pinned ? ' sx-pinned' : ''
-      }`}
+      className={['sx-card min-w-0 flex-1', pinned ? 'sx-pinned' : null].filter(Boolean).join(' ')}
     >
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
@@ -106,7 +104,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={display.showScores} />
             <BracketLine side={display.home} seed={seeds.home} showScore={display.showScores} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </Link>
@@ -116,7 +114,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={false} />
             <BracketLine side={display.home} seed={seeds.home} showScore={false} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </span>
@@ -151,7 +149,7 @@ export function PlayoffBracket({
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
-                  <GameRow game={entry.game} showRecap={false} showNonLeague={false} />
+                  <GameRow game={entry.game} showRecap={false} showChips={false} />
                 </li>
               ))}
             </ol>
@@ -171,9 +169,12 @@ export function PlayoffBracket({
               <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
             </RoundHeading>
             <ol
-              className={`m-0 flex flex-1 list-none flex-col justify-around gap-4 p-0${
-                roundIndex > 0 ? ' border-l border-divider' : ''
-              }`}
+              className={[
+                'm-0 flex flex-1 list-none flex-col justify-around gap-4 p-0',
+                roundIndex > 0 ? 'border-l border-divider' : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
               {round.games.map((entry) => (
                 <li key={entry.game.contestId} className="flex min-w-0 items-center">

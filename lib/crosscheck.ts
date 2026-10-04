@@ -20,6 +20,7 @@
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */
 
+import { dayNumber } from './format';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from './sources/sblive';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
 import type { BackfillRow, Game, SbliveCrossCheck, ScoreConflictRow, SbliveOnlyRow } from './types';
@@ -77,11 +78,6 @@ function whyNotPublished(game: Game, match: SbliveGame, today: string | undefine
   if (today !== undefined && game.dateKey >= today) return NOT_PUBLISHED.notPast;
   if (game.status !== 'score-pending') return NOT_PUBLISHED.notPending;
   return NOT_PUBLISHED.other;
-}
-
-function dayNumber(dateKey: string): number {
-  const [y, m, d] = dateKey.split('-').map(Number);
-  return Date.UTC(y, m - 1, d) / 86_400_000;
 }
 
 function displayName(side: SbliveSide): string {

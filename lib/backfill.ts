@@ -26,7 +26,7 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { toLocalTimestamp } from './format';
+import { dayDiff, monthDay, shiftDateKey, toLocalTimestamp } from './format';
 import { getLeague, leagueOfDivision, type LeagueConfig } from './leagues';
 import {
   isCaliforniaGameRow,
@@ -122,31 +122,11 @@ export interface BackfillResult {
 
 // ---------------------------------------------------------------- dates and keys
 
-function dayNumber(dateKey: string): number {
-  const [y, m, d] = dateKey.slice(0, 10).split('-').map(Number);
-  return Date.UTC(y, m - 1, d) / 86_400_000;
-}
-
-/** Whole days from `a` to `b` (YYYY-MM-DD). */
-export function dayDiff(a: string, b: string): number {
-  return dayNumber(b) - dayNumber(a);
-}
+// dayDiff and shiftDateKey live in lib/format; re-exported for lib/pipeline/steps/sblive.ts.
+export { dayDiff, shiftDateKey };
 
 function within(a: string, b: string, days: number): boolean {
   return Math.abs(dayDiff(a, b)) <= days;
-}
-
-export function shiftDateKey(dateKey: string, days: number): string {
-  const d = new Date((dayNumber(dateKey) + days) * 86_400_000);
-  return d.toISOString().slice(0, 10);
-}
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-/** 'Sep 4' */
-function md(dateKey: string): string {
-  const [, m, d] = dateKey.split('-').map(Number);
-  return `${MONTHS[m - 1]} ${d}`;
 }
 
 function gamePair(g: Pick<Game, 'home' | 'away'>): string | null {
@@ -503,7 +483,7 @@ function absentFixtureGame(
 ): Game {
   const dates = datesOf(row);
   const short = leagueOfDivision(f.division).shortName;
-  const note = `MaxPreps has no contest for this ${short} fixture (official date ${md(f.dateKey)}), so the score is si.com’s.`;
+  const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.`;
   const backfill: BackfillProvenance = { rule: 'absent-fixture', sbliveGameId: row.sbliveGameId, maxpreps: null, note };
   return {
     contestId: `sblive:${row.sbliveGameId}`,
@@ -602,10 +582,10 @@ function notCountedReason(c: Game, f: OfficialFixture): string {
   );
   if (excluded !== undefined && excluded !== null) return `MaxPreps marks it contestType ${excluded}`;
   if (league.rules.postseasonFrom && c.dateKey >= league.rules.postseasonFrom) {
-    return `MaxPreps dates it ${md(c.dateKey)}, on or after ${league.shortName}’s ${md(league.rules.postseasonFrom)} postseason cut-off`;
+    return `MaxPreps dates it ${monthDay(c.dateKey)}, on or after ${league.shortName}’s ${monthDay(league.rules.postseasonFrom)} postseason cut-off`;
   }
   if (c.status !== 'final') return 'MaxPreps has not posted a result for it';
-  return `it did not match the official ${md(f.dateKey)} fixture`;
+  return `it did not match the official ${monthDay(f.dateKey)} fixture`;
 }
 
 // ---------------------------------------------------------------- applyBackfill
@@ -723,7 +703,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
               pick.row,
               s,
               'off-schedule-date',
-              `MaxPreps dates this game ${md(g.dateKey)}, more than ${OFF_SCHEDULE_DAYS} days from its official date of ${md(official)}, and si.com has it final on ${md(pick.row.dateKey)}, so si.com’s score is published.`,
+              `MaxPreps dates this game ${monthDay(g.dateKey)}, more than ${OFF_SCHEDULE_DAYS} days from its official date of ${monthDay(official)}, and si.com has it final on ${monthDay(pick.row.dateKey)}, so si.com’s score is published.`,
             );
           }
         }

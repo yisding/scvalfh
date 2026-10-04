@@ -17,6 +17,7 @@ import bundledSnapshot from '../data/snapshot.json';
 import {
   dateSpan,
   isoDateKey,
+  leagueClock,
   localDateKey,
   numberWord,
   ordinalWord,
@@ -884,13 +885,6 @@ export interface TeamPostseasonLine {
   linkText: string;
 }
 
-/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
-function clock(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
-}
-
 /** §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit). */
 export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   const team = resolveTeamRef(ref);
@@ -961,7 +955,7 @@ export function playInClause(
 ): string {
   return (
     `${playIn.seatLabels[1]} plays at the ${getDivision(playIn.seats[0].division).label} champion ` +
-    `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s ` +
+    `${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}, for ${league.shortName}’s ` +
     `${ordinalWord(ps.autoBerths)} automatic CCS berth`
   );
 }

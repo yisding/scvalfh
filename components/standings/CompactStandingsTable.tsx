@@ -75,7 +75,7 @@ export function CompactStandingsTable({
   const lineAfter = above > 0 && above < rows.length ? above : null;
 
   return (
-    <div className={`sx-card sx-flush sx-bleed${className ? ` ${className}` : ''}`}>
+    <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>
       <table className="sx-table text-cell">
         <caption className="sr-only">{caption}</caption>
         <thead className="[&_th]:static">

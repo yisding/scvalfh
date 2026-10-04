@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { monthDay, recordString } from '../../lib/format';
+import { monthDay, plural, recordString } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import EmptyState from '../ui/EmptyState';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -29,9 +29,7 @@ function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string): string {
   const played =
     opponent.played === 0
       ? 'not played yet'
-      : `${recordString(opponent.record)} in ${opponent.played} ${
-          opponent.played === 1 ? 'game' : 'games'
-        }`;
+      : `${recordString(opponent.record)} in ${plural(opponent.played, 'game')}`;
   const ahead =
     opponent.nextDate !== null
       ? `next meeting ${monthDay(opponent.nextDate)}`

@@ -1,16 +1,17 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { EM_DASH, ordinal } from '../../lib/format';
+import { EM_DASH, listWords, ordinal } from '../../lib/format';
 import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
 import SectionHeader from '../ui/SectionHeader';
+import StatusChip from '../ui/StatusChip';
 import TeamMonogram from '../ui/TeamMonogram';
 
 import {
-  joinNames,
   projectionRowLabel,
   recordLine,
+  splitStatusLabel,
   type DivisionProjection,
   type ProjectionRow,
 } from './playoff-view';
@@ -94,28 +95,17 @@ function PlaceCell({ row }: { row: ProjectionRow }) {
 }
 
 /**
- * The written status: one tinted capsule in 12px SANS, sentence case. These are phrases ("At-large
- * consideration or no automatic path"), and mono caps are kept for the 1–2 word codes a `Tag` is
- * for (brief §1). The tones are Tag's: accent-ink on the wash only for a sole AQ. The capsule is
- * `inline-block`, so a long phrase grows into ONE taller capsule instead of breaking into a cloned
- * pill per line. Any " — " tail (the coin-flip note) is plain text under it.
+ * The written status as a StatusChip (components/ui/StatusChip.tsx): accent only for a sole AQ.
+ * Any " — " tail (the coin-flip note) is plain text under it.
  */
 function StatusBadge({ row }: { row: ProjectionRow }) {
-  const [head, ...tail] = row.label.split(' — ');
+  const { head, tail } = splitStatusLabel(row.label);
   return (
     <>
-      <span
-        className={`inline-block max-w-full rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
-          row.status === 'aq' && row.statuses.length === 1
-            ? 'bg-accent-wash text-accent-ink'
-            : 'bg-surface-3 text-ink-2'
-        }`}
-      >
+      <StatusChip tone={row.status === 'aq' && row.statuses.length === 1 ? 'accent' : 'neutral'}>
         {head}
-      </span>
-      {tail.length > 0 ? (
-        <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail.join(' — ')}</span>
-      ) : null}
+      </StatusChip>
+      {tail !== null ? <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail}</span> : null}
     </>
   );
 }
@@ -140,7 +130,7 @@ export function ProjectionKey({
   rulesHref: string;
 }) {
   return (
-    <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
+    <details className={['sx-inset sx-disclosure', className].filter(Boolean).join(' ')}>
       <summary>How to read the projection</summary>
       {/* A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so the
           children's `m-0` would win and the paragraphs would touch. */}
@@ -186,7 +176,7 @@ export function PlayoffProjection({
         ? `the ${divisionLabel} table as MaxPreps lists it`
         : `the official ${divisionLabel} alignment`;
     footnotes.push(
-      `${joinNames(noData)} ${single ? 'is' : 'are'} in ${where} ` +
+      `${listWords(noData)} ${single ? 'is' : 'are'} in ${where} ` +
         `but ${single ? 'has' : 'have'} no reported results, so ${
           single ? 'it is' : 'they are'
         } listed last with no record and no place.`,

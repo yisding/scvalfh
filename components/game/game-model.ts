@@ -30,7 +30,7 @@ import {
   getTeamForm,
   getTeams,
 } from '../../lib/data';
-import { dateWithYear, monthDay, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, matchupJoiner, monthDay, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
 import {
   divisionDisplay,
@@ -874,7 +874,7 @@ export function gameTitle(model: GameModel): string {
     const decider = display.deciderTag ? ` (${display.deciderTag})` : '';
     return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — ${date}`;
   }
-  const joiner = game.site === 'neutral' ? 'vs' : 'at';
+  const joiner = matchupJoiner(game);
   const suffix =
     display.kind === 'scheduled'
       ? game.isTimeTba
@@ -905,7 +905,7 @@ export function gameDescription(model: GameModel): string {
     const lead = article(context) === 'an' ? 'An' : 'A';
     return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt nightly from MaxPreps.`;
   }
-  const joiner = game.site === 'neutral' ? 'vs' : 'at';
+  const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
     context,
   )} ${context} in ${where}. ${

@@ -1936,11 +1936,7 @@ interface GameViewProps {
   showRecap?: boolean;             // default true on /schedule and /, false in dense tables
   defaultExpanded?: boolean;
 }
-interface ScoreCellProps {         // the single source of truth for "never 0-0"
-  game: Game;
-  perspective?: TeamSlug;
-  size?: 'score' | 'board';        // 20px list / 32px on /game/[id]
-}
+interface ScoreGlyphProps { side: SideView; size?: 'score' | 'board' | 'meta' }  // one side of describeGame(); the never-0-0 rule itself lives in renderScore (§5.2)
 interface ScoreBoardProps { game: Game }   // the /game/[id] hero
 ```
 
@@ -1982,9 +1978,7 @@ cancelled, `↻` for postponed. Wash ground, 1px ring at the mark hue, glyph in 
 interface FormStripProps {
   entries: FormEntry[];            // oldest → newest, league only, max 5
   size?: 20 | 24;                  // 20 in tables, cards and the game page; 24 on the team page
-  showDirection?: boolean;         // renders the "oldest → newest" caption once per page
   label: string;                   // "Homestead last 5 league games"
-  nonLeagueCount?: number;         // renders "+ 3 non-league"
 }
 interface FormEntry {
   outcome: Outcome; gameId: string; opponentAbbr: string;
@@ -1995,7 +1989,9 @@ interface FormEntry {
 Row of `ResultChip`s with a **2px surface gap** between them. Newest gets a 2px `--sx-text`
 underline + visually-hidden "most recent". Each chip is a link to `/game/[id]` with
 `aria-label="Loss 0-7 vs Saint Francis, Sep 24"`. One sentence `aria-label` on the strip.
-Rules for zero/partial/skipped games are in §5.5.
+Rules for zero/partial/skipped games are in §5.5. The direction caption and the `+ N non-league`
+caption are rendered by the page around the strip, not by the strip: the team page puts the
+direction in its Form heading and the count of other games on a line of its own.
 
 ### 7.7 `StatTile`
 
@@ -2005,7 +2001,6 @@ interface StatTileProps {
   value: string | number | null;   // null → "—", and the tile keeps its full height
   sub?: string;                    // "league games only", "7th of 8"
   emphasis?: 'default' | 'hero';   // 'hero' = top of the text-figure clamp, ONE per view
-  href?: string;
 }
 ```
 
@@ -2170,12 +2165,15 @@ timestamp nobody reads.
 
 ### 7.16 Small shared pieces
 
-`Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) ·
+`Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) · `StatusChip`
+(Tag's sentence-case sibling for a postseason status phrase, accent only for an automatic
+qualifier) ·
 `StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `share →` link to `/scores/[date]`) ·
 `TimelineRail` (anchor links to date-group ids) · `DivisionTabs` (plain `<a href="#de-anza">`
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
-new tab") · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
+new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
+§5.3) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
 server-side in `America/Los_Angeles` so it never hydration-mismatches).
 
 ---
@@ -2479,6 +2477,10 @@ published cross-check log · greyscale CI gate · build-time recap cleanup · em
 `content-visibility` on date groups · "who we haven't beaten" · `BerthMeter` + ordinal word
 chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr uniqueness assert
 (all *data-dense*).
+
+*Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
+`describeGame` (components/ui/game-view.ts) over `renderScore`, and every score glyph goes through
+`ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
 
 ---
 

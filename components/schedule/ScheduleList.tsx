@@ -1,5 +1,5 @@
 import { getLatestResultsDate, getToday } from '../../lib/data';
-import { parseLocal } from '../../lib/format';
+import { dayNumber } from '../../lib/format';
 import type { Game, LeagueId } from '../../lib/types';
 
 import DateHeader from './DateHeader';
@@ -34,8 +34,6 @@ import GameList from './GameList';
  */
 export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
-  /** Renders the "Day page" link (to /scores/[date]) on each date header. */
-  shareLinks?: boolean;
   /** A league-scoped list (`/schedule/<league>`): other leagues' sides carry their league's name. */
   scopeLeague?: LeagueId | null;
   className?: string;
@@ -56,12 +54,6 @@ function landingDate(dates: readonly string[], league: LeagueId | null): string 
     dates.find((d) => d >= today) ??
     null
   );
-}
-
-/** Whole days since 1970-01-01 for a 'YYYY-MM-DD' key: integer arithmetic, no clock read. */
-function dayNumber(date: string): number {
-  const { year, month, day } = parseLocal(date);
-  return Date.UTC(year, month - 1, day) / 86_400_000;
 }
 
 /**
@@ -88,13 +80,7 @@ function cardEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status === 'final' || g.recap) ? '15rem' : '11rem';
 }
 
-export function ScheduleList({
-  groups,
-  shareLinks = true,
-  scopeLeague = null,
-  className,
-  id,
-}: ScheduleListProps) {
+export function ScheduleList({ groups, scopeLeague = null, className, id }: ScheduleListProps) {
   const landing = landingDate(groups.map((group) => group.date), scopeLeague);
   const landingDay = landing ? dayNumber(landing) : null;
   return (
@@ -152,7 +138,7 @@ export function ScheduleList({
           <DateHeader
             date={group.date}
             count={group.games.length}
-            shareHref={shareLinks ? `/scores/${group.date}` : undefined}
+            shareHref={`/scores/${group.date}`}
             sticky
           />
           <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />

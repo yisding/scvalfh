@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { LEAGUE_COUNT, buildLeadersView } from '../../components/leaders/leaders-view';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords, numberWord } from '../../lib/format';
+import { listWords } from '../../lib/format';
 import { LEAGUES } from '../../lib/leagues';
 
 /**
@@ -50,7 +50,7 @@ export default function LeadersPage() {
     // (6rem); from md the pills sit in the title row and do not stick (as on /history).
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow={`All ${numberWord(LEAGUES.length)} leagues`}
+        eyebrow={`All ${LEAGUE_COUNT} leagues`}
         title="Season leaders"
         description={
           <>

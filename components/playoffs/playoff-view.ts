@@ -24,13 +24,15 @@
 
 import {
   EM_DASH,
+  leagueClockPT,
+  listWords,
   monthDay,
+  numberWord,
   ordinal,
   ordinalWord,
   recordString,
   shortDate,
   timeOfDayPT,
-  weekdayIndex,
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -52,52 +54,8 @@ import type {
 
 // ---------------------------------------------------------------- small helpers
 
-const WEEKDAY_NAMES = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-] as const;
-
-/** 'Saturday' for a local date or timestamp. */
-export function weekdayName(value: string): string {
-  return WEEKDAY_NAMES[weekdayIndex(value)];
-}
-
 function dateOnly(value: string): string {
   return value.slice(0, 10);
-}
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-
-/** 'three' for 3; the digits past ten. */
-export function numberWord(n: number): string {
-  return NUMBER_WORDS[n] ?? String(n);
-}
-
-/** 'fourth' for 4; '11th' past ten. Lives in lib/format.ts, so lib/data.ts can write it too. */
-export { ordinalWord };
-
-/** '11:00' → '11 AM PT'; '16:30' → '4:30 PM PT'. A league clock time, always labelled PT. */
-export function clockLabel(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'} PT`;
-}
-
-/** 'Cupertino and Homestead' / 'Presentation, Santa Clara and Saratoga' */
-export function joinNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
-}
-
-/** 'A or B' / 'A, B or C' — every contender for one seat. */
-export function orNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
 }
 
 // ---------------------------------------------------------------- key dates
@@ -177,7 +135,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
         key: `league:${d.id}`,
         dateKey: dateOnly(d.date),
         date: shortDate(d.date),
-        time: d.time ? clockLabel(d.time) : null,
+        time: d.time ? leagueClockPT(d.time) : null,
         league: d.league,
         label: d.label,
         detail: d.detail,
@@ -346,7 +304,7 @@ export function buildDivisionProjection(
     // Name only the level teams contesting the last automatic place, not the clear leaders above.
     const level = autoRows.filter((r) => r.shared);
     notes.push(
-      `${joinNames((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
+      `${listWords((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
         `top ${numberWord(n)} places, and ${divisionLabel} has only ${numberWord(n)} automatic berths — ` +
         `${ladder.unresolved}, so this row order is not a ruling.`,
     );
@@ -365,7 +323,7 @@ export function buildDivisionProjection(
       // play-in place; a row carrying more than one status straddles the boundary.
       const allAtPlace = playInRows.every((r) => r.statuses.length === 1);
       notes.push(
-        `${joinNames(playInRows.map((r) => r.team.name))} ${
+        `${listWords(playInRows.map((r) => r.team.name))} ${
           allAtPlace ? `are level at ${place}` : `are level across ${place}`
         }, so which of them plays in${when ? ` on${when}` : ''} is not settled — ${ladder.unresolved}.`,
       );
@@ -376,9 +334,9 @@ export function buildDivisionProjection(
     const place = ordinalWord(ladder.atLargePlace);
     notes.push(
       allAtPlace
-        ? `${joinNames(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
+        ? `${listWords(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
           `${divisionLabel} has two at-large candidates and no ${ordinalWord(ladder.atLargePlace + 1)} place today.`
-        : `${joinNames(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
+        : `${listWords(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
           `${divisionLabel} has more than one at-large candidate today.`,
     );
   }
@@ -394,6 +352,16 @@ export function buildDivisionProjection(
 export function recordLine(standing: Standing): string {
   if (!standing.hasReportedResults) return EM_DASH;
   return `${recordString(standing.computed)} · ${standing.computed.pts} pts`;
+}
+
+/**
+ * A status label's chip text and its tail: "Play-in game Oct 30 — a coin flip decides it" is the
+ * head "Play-in game Oct 30" and the tail "a coin flip decides it". The chip shows the head;
+ * /playoffs prints the tail under it, and the team page leaves it to the tiebreak note.
+ */
+export function splitStatusLabel(label: string): { head: string; tail: string | null } {
+  const [head, ...rest] = label.split(' — ');
+  return { head, tail: rest.length > 0 ? rest.join(' — ') : null };
 }
 
 /**
@@ -485,7 +453,7 @@ export function buildPairingView(
     isPlayIn: pairing.isPlayIn,
     dateKey: pairing.date,
     dateLabel: shortDate(pairing.date),
-    timeLabel: pairing.time ? clockLabel(pairing.time) : null,
+    timeLabel: pairing.time ? leagueClockPT(pairing.time) : null,
     seats,
     connector: pairing.host === null ? 'vs' : 'at',
     unsettled,
@@ -531,7 +499,7 @@ export function pairingSentence(view: PairingView): string {
   const name = (seat: SeatView) =>
     seat.contenders.length === 0
       ? `${seat.label} (to be decided)`
-      : `${orNames(seat.contenders.map((c) => c.team.name))} (${seat.label}${seat.host ? ', host' : ''})`;
+      : `${listWords(seat.contenders.map((c) => c.team.name), 'or')} (${seat.label}${seat.host ? ', host' : ''})`;
   const [a, b] = view.seats;
   const pair =
     view.connector === 'at'
@@ -655,7 +623,7 @@ export function slotView(
       const teams = contested ? seatTeams(contested.seat, teamOf) : [];
       return {
         seed: contested?.seed ?? null,
-        text: teams.length > 1 ? `${slot.label} (${orNames(teams.map((t) => t.shortName))})` : slot.label,
+        text: teams.length > 1 ? `${slot.label} (${listWords(teams.map((t) => t.shortName), 'or')})` : slot.label,
         teams,
         tbd: false,
       };
@@ -664,7 +632,7 @@ export function slotView(
   }
   const teams = seatTeams(slot.seat, teamOf);
   if (teams.length === 0) return { seed: slot.seed, text: 'TBD', teams: [], tbd: true };
-  return { seed: slot.seed, text: orNames(teams.map((t) => t.shortName)), teams, tbd: false };
+  return { seed: slot.seed, text: listWords(teams.map((t) => t.shortName), 'or'), teams, tbd: false };
 }
 
 function slotLabel(v: TournamentSlotView): string {
@@ -684,7 +652,7 @@ export function tournamentGameView(
     round: tg.round,
     dateKey: tg.date,
     dateLabel: shortDate(tg.date),
-    timeLabel: clockLabel(tg.time),
+    timeLabel: leagueClockPT(tg.time),
     home,
     away,
     connector,

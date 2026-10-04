@@ -17,7 +17,7 @@ export function ExternalLink({ href, children, className, arrow = true }: Extern
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`text-accent hover:underline${className ? ` ${className}` : ''}`}
+      className={['text-accent hover:underline', className].filter(Boolean).join(' ')}
     >
       {children}
       {arrow ? (

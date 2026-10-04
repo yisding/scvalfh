@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
+import { plural } from '../ui/plural';
 import { usePinnedTeam } from '../ui/use-pinned-team';
+import { listWords } from '../../lib/format';
 import { pinLabel } from '../../lib/pin-label';
 import {
   normalizeQuery,
@@ -55,7 +57,7 @@ export interface TeamFinderProps {
   listId?: string;
   /** filter mode: id of an element hidden while the query is non-empty (the /teams anchor switcher). */
   hideWhileSearchingId?: string;
-  /** Default 'School, city or mascot'. */
+  /** Default DEFAULT_FINDER_LABEL. */
   label?: string;
   /** pin mode default 8. */
   limit?: number;
@@ -67,13 +69,6 @@ export interface TeamFinderProps {
 export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
 const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
-
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-
-function joinAnd(parts: readonly string[]): string {
-  if (parts.length <= 1) return parts.join('');
-  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
-}
 
 /** The same "a query at all" rule as `searchTeams`: ≥ 2 characters raw and compact. */
 function isActiveQuery(query: string): boolean {
@@ -88,7 +83,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
 
 /** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
 function leagueList(index: SearchIndex): string {
-  return joinAnd([...new Set(index.teams.map((t) => t.leagueShort))]);
+  return listWords([...new Set(index.teams.map((t) => t.leagueShort))]);
 }
 
 export interface FinderView {
@@ -128,7 +123,7 @@ export function finderView(
   let message: string;
   if (parts.length > 0) {
     const one = matches.length + divisions + leagues === 1;
-    message = `${joinAnd(parts)} ${one ? 'matches' : 'match'} "${q}".`;
+    message = `${listWords(parts)} ${one ? 'matches' : 'match'} "${q}".`;
   } else if (result.notCovered.length > 0) {
     message = result.notCovered.map((n) => n.reason).join(' ');
   } else {
@@ -337,7 +332,7 @@ export function TeamFinder({
 
   return (
     <search
-      className={`sx-js-only block${className ? ` ${className}` : ''}`}
+      className={['sx-js-only block', className].filter(Boolean).join(' ')}
       data-searching={typing ? '' : undefined}
     >
       <label htmlFor={inputId} className="mb-1 block text-meta font-medium text-ink">

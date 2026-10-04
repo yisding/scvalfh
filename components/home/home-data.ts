@@ -40,6 +40,8 @@ import {
   EM_DASH,
   dateSpan,
   dateTimeAttr,
+  leagueClock,
+  listWords,
   monthDay,
   numberWord,
   ordinal,
@@ -47,7 +49,6 @@ import {
   recordString,
   shortDate,
   timeOfDayPT,
-  versusLabel,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
@@ -66,6 +67,7 @@ import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
 import { plural } from '../ui/plural';
 
@@ -86,19 +88,6 @@ import { POSTSEASON_LEAD } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
-function clock(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
-}
-
-/** 'A', 'A & B', 'A, B & C'. */
-function joinAmp(names: readonly string[]): string {
-  if (names.length <= 1) return names.join('');
-  return `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;
 }
 
 function colorsOf(team: Team): HomeColors {
@@ -528,7 +517,7 @@ function ccsLadderView(
   } else if (crossover && phase === 'crossover') {
     intro = `League play is done. Crossover and the play-in are ${shortDate(crossover.date)}; the seeding meeting is ${seeding}.`;
   } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
-    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
+    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
   } else {
     intro = `Seeding meeting ${seeding}.`;
   }
@@ -565,7 +554,7 @@ function leagueLeadersLine(league: LeagueConfig): string {
     const leaders = divisionLeaders(d.id);
     if (!leaders) return single ? null : `no results yet in ${d.label}`;
     const verb = leaders.names.length === 1 ? 'leads' : 'lead';
-    return `${joinAmp(leaders.names)} ${verb}${single ? '' : ` ${d.label}`}`;
+    return `${listWords(leaders.names, '&')} ${verb}${single ? '' : ` ${d.label}`}`;
   });
   if (clauses.every((c) => c === null || c.startsWith('no results yet'))) return 'No league results yet';
   return clauses.filter((c): c is string => c !== null).join(' · ');
@@ -743,7 +732,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
-    versus: versusLabel(game, (mineIsHome ? game.home : game.away).teamId ?? ''),
+    versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs),
     kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
@@ -753,30 +742,19 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   };
 }
 
-/** 'VALLEY CHRISTIAN' → 'Valley Christian', for a grid name with no registry row behind it. */
-function titleCase(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
-}
-
 /** The next fixture from the team's league's official schedule, for a team MaxPreps has no contest for. */
 function officialNextView(team: Team, today: string, leagueShort: string): HomeOfficialFixture | null {
-  const fixture = getOfficialFixtures({ slug: team.slug })
-    .filter((f) => f.dateKey >= today)
-    .sort((a, b) => a.dateKey.localeCompare(b.dateKey))[0];
+  const fixture = nextOfficialFixture(getOfficialFixtures({ slug: team.slug }), today);
   if (!fixture) return null;
   // A division with no official document has no fixtures; narrowing keeps the link honest anyway.
   const official = getDivision(fixture.division).official;
   if (official.mode === 'none') return null;
-  const mineIsHome = fixture.homeSlug === team.slug;
-  const otherSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-  const otherName = mineIsHome ? fixture.awayName : fixture.homeName;
+  const { versus, opponentName } = fixtureOpponent(fixture, team);
   return {
     dateLabel: shortDate(fixture.dateKey),
     dateKey: fixture.dateKey,
-    versus: mineIsHome ? 'vs' : 'at',
-    opponent: (otherSlug ? getTeamBySlug(otherSlug)?.shortName : null) ?? titleCase(otherName),
+    versus,
+    opponent: opponentName,
     leagueShort,
     scheduleUrl: official.scheduleUrl,
   };

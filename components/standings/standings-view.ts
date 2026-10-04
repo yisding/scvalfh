@@ -187,13 +187,6 @@ export interface DivisionView {
    * (`rankRuleText`, from config).
    */
   rankRule: string;
-  /**
-   * What settles a place we hold LEVEL, in words: the league's `rules.unresolvedSuffix` without its
-   * leading "— " (and any trailing citation in parentheses turned into a comma clause, so it never
-   * nests inside a caller's parentheses). The Notes' mismatch line does not print it ("tied for
-   * 7th here"): the tied group's own note, in the same list, already cites the league's last step.
-   */
-  levelReason: string;
   sourceUrl: string;
   throughDate: string | null;
   leagueFinals: number;
@@ -250,18 +243,6 @@ function missingIntroText(league: LeagueConfig, official: DivisionConfig['offici
   return official.mode === 'none'
     ? `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`
     : `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
-}
-
-/**
- * `Article VI §7 decides it with a coin flip`; MCAL's `a play-in on Fri Oct 23 decides it, MCAL
- * Tie-Breaking Criteria` (its trailing parenthetical becomes a clause, so "(…(…))" never prints).
- */
-export function levelReasonText(league: LeagueConfig): string {
-  const reason = league.rules.unresolvedSuffix
-    .replace(/^—\s*/, '')
-    .replace(/\s*\(([^()]*)\)\s*$/, ', $1')
-    .trim();
-  return reason || 'the league decides it';
 }
 
 /**
@@ -528,7 +509,6 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
         : { href: config.official.scheduleUrl, label: officialScheduleLabel(config.official.source) },
     scheduledPer: scheduledPerText(league, config.official),
     rankRule: rankRuleText(league),
-    levelReason: levelReasonText(league),
     sourceUrl: leagueStandingsUrl(input.division),
     throughDate: input.throughDate,
     leagueFinals: input.leagueFinals,

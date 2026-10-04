@@ -62,22 +62,17 @@ export const REGION_WORDS: Record<ClubRegion, { label: string; prep: 'in' | 'on'
   elsewhere: { label: 'Elsewhere', prep: 'in', place: 'other places' },
 };
 
-/** "A", "A or B", "A, B or C". `listWords` joins with "and" only. */
-function orWords(words: readonly string[]): string {
-  if (words.length <= 1) return words[0] ?? '';
-  return `${words.slice(0, -1).join(', ')} or ${words[words.length - 1]}`;
-}
-
 /**
  * "on the Peninsula or the Central Coast", "in the East Bay or on the Central Coast": the
  * preposition is repeated only where it changes.
  */
 function basedWords(regions: readonly ClubRegion[]): string {
-  return orWords(
+  return listWords(
     regions.map((r, i) => {
       const w = REGION_WORDS[r];
       return i > 0 && REGION_WORDS[regions[i - 1]].prep === w.prep ? w.place : `${w.prep} ${w.place}`;
     }),
+    'or',
   );
 }
 

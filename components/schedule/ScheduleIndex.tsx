@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { longDate, shortDate } from '../../lib/format';
+import { longDate, plural, shortDate } from '../../lib/format';
 import type { Game, LeagueId } from '../../lib/types';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
@@ -122,8 +122,8 @@ export interface ScheduleIndexProps {
 function cardLine(card: LeagueCardData): string {
   const parts = [
     card.shortName,
-    `${card.games} ${gameWord(card.games)}`,
-    `${card.results} ${card.results === 1 ? 'result' : 'results'}`,
+    plural(card.games, 'game'),
+    plural(card.results, 'result'),
   ];
   parts.push(card.next ? `next ${shortDate(card.next)}` : 'no games to come');
   return parts.join(' · ');
@@ -234,7 +234,7 @@ export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: Sche
                     {shortDate(day.date)}
                   </time>
                   <span className="text-ink-2">
-                    {` · ${day.total} ${gameWord(day.total)}`}
+                    {` · ${plural(day.total, 'game')}`}
                     {day.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}
                   </span>
                 </span>

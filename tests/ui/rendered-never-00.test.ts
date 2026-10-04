@@ -29,7 +29,6 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { buildGameModel, gameDescription, gameKicker, gameTitle } from '../../components/game/game-model';
 import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/GameRow';
-import { ScoreCell } from '../../components/ui/ScoreCell';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
 import type { Game } from '../../lib/types';
 import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
@@ -44,7 +43,6 @@ interface Rendered {
   GameCard: typeof GameCard;
   GameLine: typeof GameLine;
   GameLogRow: typeof GameLogRow;
-  ScoreCell: typeof ScoreCell;
 }
 
 const live: Rendered = {
@@ -57,7 +55,6 @@ const live: Rendered = {
   GameCard,
   GameLine,
   GameLogRow,
-  ScoreCell,
 };
 
 /** Every score glyph in the markup, with the size class it was rendered at. */
@@ -102,7 +99,6 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
       renderToStaticMarkup(createElement(r.GameCard, { game })),
       renderToStaticMarkup(createElement(r.GameLine, { game })),
       renderToStaticMarkup(createElement(r.GameLogRow, { game })),
-      renderToStaticMarkup(createElement(r.ScoreCell, { game })),
     ].join('\n');
 
   describe(`${name}: a non-final game never renders a score`, () => {
@@ -204,7 +200,6 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       const data = await import('../../lib/data');
       const model = await import('../../components/game/game-model');
       const row = await import('../../components/ui/GameRow');
-      const cell = await import('../../components/ui/ScoreCell');
       corpus = {
         games: data.getGames(),
         buildGameModel: model.buildGameModel,
@@ -215,7 +210,6 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
         GameCard: row.GameCard,
         GameLine: row.GameLine,
         GameLogRow: row.GameLogRow,
-        ScoreCell: cell.ScoreCell,
       };
     }, 600_000);
 

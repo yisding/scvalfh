@@ -5,6 +5,7 @@ import {
   formatStamp,
   hoursBetween,
   monthDay,
+  plural,
   shortDate,
   timeOfDay,
   toLocalTimestamp,
@@ -52,7 +53,7 @@ const STALE_AFTER_HOURS = 36;
 /** '1 day ago' / '4 days ago'. Only reached past 36 hours, so never "0 days". */
 function daysAgo(ageHours: number): string {
   const days = Math.round(ageHours / 24);
-  return days === 1 ? '1 day ago' : `${days} days ago`;
+  return `${plural(days, 'day')} ago`;
 }
 
 export function LastUpdated({
@@ -67,7 +68,9 @@ export function LastUpdated({
   const stale = ageHours > STALE_AFTER_HOURS;
   // An old stamp is only an alarm while some league is still playing.
   const alarm = stale && !seasonComplete;
-  const extra = className ? ` ${className}` : '';
+  // Never `tabular-nums${…}`: Tailwind's scanner does not extract a class glued to an interpolation
+  // (components/layout/PageHeader.tsx), so the caller's classes are joined on, not appended.
+  const withClass = (base: string) => [base, className].filter(Boolean).join(' ');
 
   if (variant === 'compact') {
     if (alarm) {
@@ -80,14 +83,16 @@ export function LastUpdated({
         <Link
           href="/about#updates"
           prefetch={false}
-          className={`sx-action min-h-6 whitespace-nowrap rounded-full bg-accent-wash px-2 py-0.5 text-cell font-medium text-accent-ink tabular-nums no-underline${extra}`}
+          className={withClass(
+            'sx-action min-h-6 whitespace-nowrap rounded-full bg-accent-wash px-2 py-0.5 text-cell font-medium text-accent-ink tabular-nums no-underline',
+          )}
         >
           Updated {daysAgo(ageHours)}
         </Link>
       );
     }
     return (
-      <span className={`whitespace-nowrap text-cell text-ink-3 tabular-nums${extra}`}>
+      <span className={withClass('whitespace-nowrap text-cell text-ink-3 tabular-nums')}>
         {/* The label sits OUTSIDE the <time>, so the element's text is only the instant. */}
         <span className="font-sans text-micro text-ink-3">Updated</span>{' '}
         <time dateTime={at}>
@@ -107,7 +112,7 @@ export function LastUpdated({
 
   if (stale && seasonComplete) {
     return (
-      <span className={`text-meta text-ink-2${extra}`}>
+      <span className={withClass('text-meta text-ink-2')}>
         Season complete &mdash; final update{' '}
         <time dateTime={at} className="tabular-nums">
           {dateWithYear(local)}
@@ -121,7 +126,7 @@ export function LastUpdated({
     // A sentence, so it wraps on a phone: the chip radius rather than a full pill, which turns a
     // two-line box into a lozenge.
     return (
-      <span className={`inline-block rounded-chip bg-accent-wash px-2.5 py-1 text-meta text-ink${extra}`}>
+      <span className={withClass('inline-block rounded-chip bg-accent-wash px-2.5 py-1 text-meta text-ink')}>
         Not updated since{' '}
         <time dateTime={at} className="tabular-nums">
           {shortDate(local)}
@@ -135,7 +140,7 @@ export function LastUpdated({
   }
 
   return (
-    <span className={`text-meta text-ink-2${extra}`}>
+    <span className={withClass('text-meta text-ink-2')}>
       Updated{' '}
       <time dateTime={at} className="tabular-nums">
         {formatStamp(at)}

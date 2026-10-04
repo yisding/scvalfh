@@ -4,7 +4,7 @@ import type { TeamPageView } from './team-view';
 
 /**
  * Home / away / neutral league splits (DESIGN §3.7, §12.5): three mini cards, label over value,
- * in the stat tiles' card recipe (StatTile `variant="card"`: 12px padding on a phone, 16px from
+ * in the stat tiles' card recipe (StatTile: 12px padding on a phone, 16px from
  * 768px, the label over a bold value) so the team page has one tile look.
  *
  * The value is set exactly like a StatTile value: `sx-figure`, Sans with proportional figures,

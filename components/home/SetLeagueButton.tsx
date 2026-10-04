@@ -25,7 +25,12 @@ export function SetLeagueButton({ leagueId, shortName, className }: SetLeagueBut
       type="button"
       disabled={!ready}
       onClick={() => setLeague(leagueId, { focus: 'panel' })}
-      className={`sx-js-only sx-pill min-h-11 font-semibold disabled:opacity-60${className ? ` ${className}` : ''}`}
+      className={[
+        'sx-js-only sx-pill min-h-11 font-semibold disabled:opacity-60',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       Show {shortName} here
     </button>

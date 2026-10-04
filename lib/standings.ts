@@ -26,7 +26,7 @@
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { shortDate, sideOutcome } from './format';
+import { recordString, shortDate, sideOutcome } from './format';
 import {
   LEAGUES,
   divisionLabel,
@@ -635,10 +635,6 @@ export function toReportedRecord(row: {
   return { ...row, streakResult };
 }
 
-function recordString(w: number, l: number, t: number): string {
-  return `${w}-${l}-${t}`;
-}
-
 // ---------------------------------------------------------------- main
 
 export interface ComputeOptions {
@@ -838,20 +834,20 @@ function compareToReported(
 ): { mismatch: boolean; detail?: string } {
   if (!reported) return { mismatch: false };
   const diffs: string[] = [];
-  const ours = recordString(computed.w, computed.l, computed.t);
-  const theirs = recordString(
-    reported.conferenceWins,
-    reported.conferenceLosses,
-    reported.conferenceTies,
-  );
+  const ours = recordString(computed);
+  const theirs = recordString({
+    w: reported.conferenceWins,
+    l: reported.conferenceLosses,
+    t: reported.conferenceTies,
+  });
   if (ours !== theirs) diffs.push(`league record ${ours} vs MaxPreps ${theirs}`);
 
-  const oursOverall = recordString(overall.w, overall.l, overall.t);
-  const theirsOverall = recordString(
-    reported.overallWins,
-    reported.overallLosses,
-    reported.overallTies,
-  );
+  const oursOverall = recordString(overall);
+  const theirsOverall = recordString({
+    w: reported.overallWins,
+    l: reported.overallLosses,
+    t: reported.overallTies,
+  });
   if (oursOverall !== theirsOverall) {
     diffs.push(`overall record ${oursOverall} vs MaxPreps ${theirsOverall}`);
   }
@@ -893,14 +889,14 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     };
     push(
       'league record',
-      recordString(s.computed.w, s.computed.l, s.computed.t),
-      recordString(r.conferenceWins, r.conferenceLosses, r.conferenceTies),
+      recordString(s.computed),
+      recordString({ w: r.conferenceWins, l: r.conferenceLosses, t: r.conferenceTies }),
     );
     if (trust === 'informational') continue;
     push(
       'overall record',
-      recordString(s.overall.w, s.overall.l, s.overall.t),
-      recordString(r.overallWins, r.overallLosses, r.overallTies),
+      recordString(s.overall),
+      recordString({ w: r.overallWins, l: r.overallLosses, t: r.overallTies }),
     );
     push('league goals for', String(s.computed.gf), String(r.conferencePoints));
     push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));

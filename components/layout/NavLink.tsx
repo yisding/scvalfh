@@ -206,9 +206,12 @@ function TabFace({
       <span
         aria-hidden="true"
         data-pending={pending && !active ? '' : undefined}
-        className={`sx-indicator flex h-7 w-14 max-w-full items-center justify-center rounded-full${
-          lit ? ' bg-accent-wash text-accent-ink' : ''
-        }`}
+        className={[
+          'sx-indicator flex h-7 w-14 max-w-full items-center justify-center rounded-full',
+          lit ? 'bg-accent-wash text-accent-ink' : null,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         {glyph}
       </span>

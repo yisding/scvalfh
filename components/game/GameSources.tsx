@@ -50,7 +50,7 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
     source.maxprepsUrl && !pills.has(source.maxprepsUrl) ? source.maxprepsUrl : null;
   return (
     <aside
-      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      className={['sx-inset max-w-prose text-ink', className].filter(Boolean).join(' ')}
       aria-label="Where this score comes from"
     >
       <p className="m-0">
@@ -85,7 +85,7 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
   if (!conflict) return null;
   return (
     <aside
-      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      className={['sx-inset max-w-prose text-ink', className].filter(Boolean).join(' ')}
       aria-label="Sources disagree on this score"
     >
       <p className="m-0">
@@ -121,7 +121,7 @@ export function ResultFlagConflict({ model, className }: SourceDisagreementProps
   const url = model.game.urls.maxpreps;
   return (
     <aside
-      className={`sx-inset max-w-prose text-ink${className ? ` ${className}` : ''}`}
+      className={['sx-inset max-w-prose text-ink', className].filter(Boolean).join(' ')}
       aria-label="MaxPreps’ result flags disagree with the score"
     >
       <p className="m-0">

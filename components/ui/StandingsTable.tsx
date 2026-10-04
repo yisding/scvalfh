@@ -7,6 +7,7 @@ import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/typ
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
+import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
 import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
@@ -305,12 +306,14 @@ function isFlagged(row: StandingsRowData, flagged: Set<TeamSlug>): boolean {
   return row.standing.mismatch || flagged.has(row.team.slug);
 }
 
-/** No results: a `·` on the zero rule plus an em dash, with the words for a screen reader. */
-function NoGoalDiff() {
+/**
+ * No results: a `·` on the zero rule plus an em dash, with the words for a screen reader. The home
+ * page's mini table (components/home/MiniStandings.tsx) renders the same cell.
+ */
+export function NoGoalDiff() {
   return (
     <span className="sx-num text-ink-3">
-      <span aria-hidden="true">&middot; {EM_DASH}</span>
-      <span className="sr-only">no goal differential</span>
+      <MissingValue words="no goal differential" glyph={`\u00b7 ${EM_DASH}`} />
     </span>
   );
 }
@@ -432,7 +435,11 @@ export function StandingsTable(props: StandingsTableProps) {
       {/* `sx-flush` is `overflow: clip`, NOT `hidden`: `hidden` makes the card a scroll container,
           and a sticky `<thead>` then resolves its `top` against the card instead of the viewport
           — the head floated between rows 1 and 2 at rest and scrolled away entirely. */}
-      <div className={`sx-card sx-flush${bleed ? ' sx-bleed' : ''}${variant === 'mini' ? ' @container' : ''}`}>
+      <div
+        className={['sx-card sx-flush', bleed ? 'sx-bleed' : null, variant === 'mini' ? '@container' : null]
+          .filter(Boolean)
+          .join(' ')}
+      >
         <table
           className={
             variant === 'desktop'
@@ -601,7 +608,12 @@ export function StandingsTable(props: StandingsTableProps) {
                             {/* Mono for the digits only (they stack down the rows); the word is
                                 prose and stays sans. */}
                             <span
-                              className={`whitespace-nowrap text-cell text-ink-3${showGp ? ' max-[23.4375rem]:hidden' : ''}`}
+                              className={[
+                                'whitespace-nowrap text-cell text-ink-3',
+                                showGp ? 'max-[23.4375rem]:hidden' : null,
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
                             >
                               <span className="sx-num">{recordString(s.overall)}</span> overall
                             </span>

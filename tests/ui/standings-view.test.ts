@@ -372,17 +372,13 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
     for (const t of mcal) expect(t).not.toMatch(/CCS|automatic qualifier|at-large/i);
   });
 
-  it('the rank rule and the level reason come from each league’s citations, never nested parentheses', () => {
+  it('the rank rule comes from each league’s citation', () => {
     const [deAnza] = sd.getStandingsPageData('scval').views;
     expect(deAnza.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
       'SCVAL ranks by points (Art. VI §2), and so do we.',
     );
-    expect(deAnza.levelReason).toBe('Article VI §7 decides it with a coin flip');
     const [mcal] = sd.getStandingsPageData('mcal').views;
     expect(mcal.rankRule).toBe('MCAL ranks by points (MCAL Handbook §7a), and so do we.');
-    expect(mcal.levelReason, 'components/standings/standings-view.ts MCAL levelReason').toBe(
-      'a play-in on Fri Oct 23 decides it, MCAL Tie-Breaking Criteria',
-    );
   });
 
   it('the Notes word a reciprocal place swap once, with the league’s own rule (rendered)', async () => {

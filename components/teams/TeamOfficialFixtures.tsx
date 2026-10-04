@@ -1,9 +1,9 @@
 import { monthDay } from '../../lib/format';
 import { getDivision, leagueOfDivision } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
 import type { DivisionId, OfficialFixture, TeamSlug } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
 import TeamMonogram from '../ui/TeamMonogram';
+import { fixtureOpponent } from './team-view';
 
 /**
  * Fixtures that exist in the league's official schedule and in NO data source (SPEC §1.3, §7.8).
@@ -46,10 +46,7 @@ export function TeamOfficialFixtures({
       <div className="sx-card sx-flush sx-bleed">
         <ul className="sx-list">
           {fixtures.map((fixture) => {
-            const mineIsHome = fixture.homeSlug === slug;
-            const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-            const opponentName = mineIsHome ? fixture.awayName : fixture.homeName;
-            const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
+            const { mineIsHome, versus, opponent, opponentName } = fixtureOpponent(fixture, { slug });
             const past = fixture.dateKey < today;
             return (
               <li
@@ -70,8 +67,8 @@ export function TeamOfficialFixtures({
                     Below 360px the two-word status stacks (`w-min` on it) so a short name like
                     "vs Homestead" keeps one line instead of leaving "vs" alone on the first. */}
                 <span className="line-clamp-2 min-w-0 flex-1 text-body text-ink" aria-hidden="true">
-                  <span className="text-ink-2">{mineIsHome ? 'vs' : 'at'} </span>
-                  {opponent ? opponent.shortName : opponentName}
+                  <span className="text-ink-2">{versus} </span>
+                  {opponentName}
                 </span>
                 <span
                   className="text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3 max-[359px]:w-min"

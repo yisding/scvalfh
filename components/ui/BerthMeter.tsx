@@ -18,7 +18,7 @@ export interface BerthMeterProps {
 
 export function BerthMeter({ claimed, total, label, className }: BerthMeterProps) {
   return (
-    <div className={`max-w-prose${className ? ` ${className}` : ''}`}>
+    <div className={['max-w-prose', className].filter(Boolean).join(' ')}>
       <p className="m-0 flex items-baseline gap-1.5">
         <span className="sx-figure text-figure text-ink">{claimed}</span>
         {/* Sans like the figure beside it (`tabular-nums`, not `.sx-num`): "7 / 16" is one

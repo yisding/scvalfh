@@ -22,7 +22,7 @@ import {
   getTeams,
   getToday,
 } from '../../../lib/data';
-import { monthDay } from '../../../lib/format';
+import { monthDay, plural } from '../../../lib/format';
 
 import { leagueChips, leagueHrefs } from '../../standings/standings-data';
 
@@ -57,9 +57,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   const title = `${summary.shortName} schedule and results`;
-  const description = `All ${counts.total} ${
-    counts.total === 1 ? 'contest' : 'contests'
-  } involving ${summary.shortName} teams for Fall 2026, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const description = `All ${plural(counts.total, 'contest')} involving ${summary.shortName} teams for Fall 2026, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,

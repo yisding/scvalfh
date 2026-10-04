@@ -1,10 +1,11 @@
 /**
  * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
- * '3 games'. Client-safe (no imports), so a 'use client' card can use it too.
+ * '3 games'. `plural` itself lives in lib/format (so lib/ and scripts/ share it) and is re-exported
+ * here beside the form strip's name. lib/format is client-safe, so a 'use client' card can use both.
  */
-export function plural(n: number, one: string, many: string = `${one}s`): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
+import { plural } from '../../lib/format';
+
+export { plural };
 
 /** The accessible name of a team's form strip: 'Del Mar last 1 league game' / '… last 5 league games'. */
 export function formStripName(teamName: string, count: number): string {

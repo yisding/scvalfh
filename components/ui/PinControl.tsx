@@ -47,9 +47,7 @@ export function PinControl({
   if (ready && !available) {
     return (
       <span
-        className={`inline-flex h-11 items-center text-meta text-ink-3${
-          className ? ` ${className}` : ''
-        }`}
+        className={['inline-flex h-11 items-center text-meta text-ink-3', className].filter(Boolean).join(' ')}
       >
         This browser is not storing a pinned team.
       </span>
@@ -58,7 +56,7 @@ export function PinControl({
 
   return (
     <span
-      className={`inline-flex flex-wrap items-center gap-2${className ? ` ${className}` : ''}`}
+      className={['inline-flex flex-wrap items-center gap-2', className].filter(Boolean).join(' ')}
     >
       <button
         type="button"

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { SITE_NAME } from '../../../components/layout/site-url';
 import { getLeagueSummary, getLeagueTournament, getTeamBySlug, getTournamentLeagueIds } from '../../../lib/data';
-import { shortDate } from '../../../lib/format';
+import { listWords, shortDate } from '../../../lib/format';
 import { getLeague } from '../../../lib/leagues';
 
 /**
@@ -41,7 +41,7 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
     names:
       s.seat.length === 0
         ? 'TBD'
-        : s.seat.map((x) => getTeamBySlug(x.slug)?.shortName ?? x.slug).join(' or '),
+        : listWords(s.seat.map((x) => getTeamBySlug(x.slug)?.shortName ?? x.slug), 'or'),
   }));
   const rounds = ps.rounds
     .filter((r) => !r.optional)

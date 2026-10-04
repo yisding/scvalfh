@@ -753,6 +753,30 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
   });
 });
 
+describe('fixtureOpponent (components/teams/team-view.ts)', () => {
+  it('names a registered opponent by short name and title-cases a grid name outside the registry', () => {
+    const team = data.getTeams()[0];
+    const base = {
+      id: `${team.division}:2026-10-20:x@${team.slug}`,
+      league: team.league,
+      division: team.division,
+      dateKey: '2026-10-20',
+      time: null,
+      homeName: team.name.toUpperCase(),
+      homeSlug: team.slug,
+      source: 'scval-pdf' as const,
+    };
+    const outside = view.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
+    expect(outside).toMatchObject({ mineIsHome: true, versus: 'vs', opponent: undefined, opponentName: 'Valley Christian' });
+    expect(view.officialFixtureHeadline({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team)).toMatch(
+      /^vs Valley Christian · /,
+    );
+    const rival = data.getTeams().find((t) => t.slug !== team.slug)!;
+    const away = view.fixtureOpponent({ ...base, awayName: 'X', awaySlug: rival.slug }, rival);
+    expect(away).toMatchObject({ mineIsHome: false, versus: 'at', opponentName: team.shortName });
+  });
+});
+
 describe('opponentRecordLine (components/teams/team-view.ts)', () => {
   it('prints nothing for an opponent outside the registry, whichever league is asking', () => {
     for (const league of leagues.LEAGUES) {
