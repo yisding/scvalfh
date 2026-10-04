@@ -118,7 +118,9 @@ export function DivisionStandings({
           groups={view.statusGroups}
           caveat={view.statusCaveat}
           unrankedTeams={view.unrankedTeams}
-          className="sx-card flex flex-col p-5 md:p-6"
+          // A band with no ladder line (the unbracketed EAL) has nothing to align to the Notes
+          // card's bottom edge, so it keeps its own height rather than stretching to blank space.
+          className={`sx-card flex flex-col p-5 md:p-6${view.ladderLineLabel === null ? ' lg:self-start' : ''}`}
         />
       </div>
     </section>

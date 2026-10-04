@@ -351,6 +351,59 @@ describe('UMPIRE_OFFICIAL_CLAIM / umpireOfficialClaims: the umpires’ grid is n
   ])('lets %j through: the two words are in different sentences, or only one is there', (text) => {
     expect(umpireOfficialClaims(text)).toEqual([]);
   });
+
+  it.each([
+    'The umpires’ grid is not official.',
+    "The umpires' grid isn't official",
+    'The umpires’ grid isn’t an official schedule.',
+    'The umpires’ grid is no official document.',
+    'The umpires’ grid has never been official.',
+    'The umpires’ grid is not the official schedule.',
+    'The EAL publishes no official schedule; the umpires’ grid matches MaxPreps game for game.',
+    'The umpires’ grid, though not official, matches MaxPreps.',
+  ])('lets %j through: a negation directly governs every "official"', (text) => {
+    expect(text, 'the lexical half still sees both words').toMatch(UMPIRE_OFFICIAL_CLAIM);
+    expect(umpireOfficialClaims(text)).toEqual([]);
+  });
+
+  it.each([
+    // The negation governs a word other than "official".
+    'The umpires’ grid is not only official but complete.',
+    'The umpires’ grid is not just official.',
+    'Use the official grid, not the umpires’.',
+    'The official schedule is not the umpires’ grid.',
+    // A negation in another clause, or one "official" negated and another not.
+    'The league does not post it, and the umpires’ grid is official.',
+    'The umpires’ grid is not official, but it is the official record.',
+    // A negation word that is not right before it.
+    'There is no doubt the umpires’ grid is official.',
+    // "If not" asserts it.
+    'The umpires’ grid is nothing if not official.',
+  ])('still flags %j: no negation directly governs an "official" in it', (text) => {
+    expect(umpireOfficialClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'MaxPreps is not official, but the umpires’ grid is.',
+    'The league schedule is not official; the umpires’ grid is.',
+    'The league schedule is not official — the umpires’ grid is!',
+    'MaxPreps is not official, yet the umpires’ grid is official enough',
+    'The league schedule is not official, whereas the umpires’ grid has been',
+    'The league schedule is not official, but the umpires’ grid is one.',
+    'MaxPreps is not official, and so is not the umpires’ grid, unlike the league’s',
+    // Honest, but a lexical rule cannot tell what follows the contrast: the copy says it in two sentences.
+    'The umpires’ grid is not official, though it matches MaxPreps.',
+  ])('still flags %j: what follows the negation says it again of something else', (text) => {
+    expect(umpireOfficialClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'The umpires’ grid is not official. It matches MaxPreps game for game.',
+    'The umpires’ grid is not official, and neither is MaxPreps.',
+    'The umpires’ grid is not official, nor is MaxPreps.',
+  ])('lets %j through: nothing after the negation reopens it', (text) => {
+    expect(umpireOfficialClaims(text)).toEqual([]);
+  });
 });
 
 describe('nonMemberSectionClaims: Davis and Bella Vista are not Northern Section schools', () => {
@@ -368,6 +421,85 @@ describe('nonMemberSectionClaims: Davis and Bella Vista are not Northern Section
     'Davisville is a Northern Section school',
     'Davis: Northern Section postseason',
   ])('lets %j through', (text) => {
+    expect(nonMemberSectionClaims(text)).toEqual([]);
+  });
+
+  it.each([
+    'Davis is an NS school.',
+    'Bella Vista is a CIF-NS member',
+    'Davis is a CIF NS school',
+    'Davis is a CIF Northern Section school',
+    'Davis is a Northern Section team',
+    'Davis and Bella Vista are Northern Section teams',
+    'Bella Vista is an NS-member school',
+    'Davis is a member of the Northern Section',
+    'Bella Vista is one of the members of CIF-NS',
+    'Davis is a northern section school',
+    'Davis is a Northern Section high school',
+    'Davis is a member school of the Northern Section',
+    'Bella Vista is one of the member teams of the NS',
+    'Davis is a Northern-Section school',
+    'Davis is one of the Northern Section’s schools',
+    'Davis is an NS program',
+    'Davis is a CIF–NS member',
+    'Bella Vista is a CIF‑NS team',
+    'Davis is a CIF-Northern Section school',
+  ])('flags the variant %j', (text) => {
+    expect(nonMemberSectionClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'Davis and Bella Vista are not Northern Section schools.',
+    'Davis is not an NS school',
+    'Bella Vista isn’t a CIF-NS member',
+    "Davis isn't a Northern Section team",
+    'Davis is no Northern Section member',
+    'Davis has never been a Northern Section school',
+    'Bella Vista is not one of the Northern Section schools',
+    'Davis is not a member of the Northern Section',
+    'Davis, a Sac-Joaquin school, is not a Northern Section school; Chico is a Northern Section school',
+    'Davis isn’t a CIF–NS member',
+    'Davis is not a Northern Section high school',
+    'Bella Vista is not a member school of the Northern Section',
+    'Davis is not one of the Northern Section’s schools',
+    'Davis is not an NS program',
+    'Davis is not an NS school, nor is Bella Vista.',
+  ])('lets the negation %j through', (text) => {
+    expect(nonMemberSectionClaims(text)).toEqual([]);
+  });
+
+  it.each([
+    // The negation governs something other than the claim.
+    'Davis is not only a Northern Section school',
+    'Chico, not Davis, is a Northern Section school',
+    'Davis is not in the Sac-Joaquin Section but a Northern Section school',
+    // One claim negated, another in the same clause not.
+    'Davis is not a CIF-NS member, but it is a Northern Section team',
+    // A negation word that is not right before it.
+    'There is no question Davis is a Northern Section school',
+    // "If not" asserts it.
+    'Davis is nothing if not a Northern Section school',
+  ])('still flags %j: no negation directly governs the claim', (text) => {
+    expect(nonMemberSectionClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'Bella Vista is not a Northern Section school, but Davis is.',
+    'Bella Vista is not a Northern Section school; Davis is.',
+    'Bella Vista is not an NS school, while Davis is',
+    'Bella Vista is not a CIF-NS member, though Davis has been for years',
+    'Bella Vista is not a Northern Section school, and Davis is too.',
+    'Bella Vista is not a Northern Section school, unlike Davis',
+  ])('still flags %j: what follows the negation says it again of something else', (text) => {
+    expect(nonMemberSectionClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'Davis plays the NS champion',
+    'Davis: CIF-NS Guidelines §VII.E.4',
+    'Bella Vista plays under the Northern Section’s Guidelines',
+    'Davis transcribes a ns schoolbook',
+  ])('lets %j through: the Section named, no membership claimed', (text) => {
     expect(nonMemberSectionClaims(text)).toEqual([]);
   });
 

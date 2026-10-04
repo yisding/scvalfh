@@ -38,34 +38,104 @@ function sentences(text: string): string[] {
 }
 
 /**
+ * The negation that may directly govern a claim and so excuse it: "not", "never", "no", "isn't",
+ * "aren't", "wasn't", "weren't", then at most "be"/"been", "one of (the)" and an article, and then the
+ * claim itself ("is not official", "has never been official", "isn't an NS school", "is no Northern
+ * Section member", "are not one of the Northern Section schools"). Anchored at the end of the text
+ * before the claim, so a negation in another clause, or one that governs something else ("not only
+ * official", "Chico, not Davis, is a Northern Section school", "the official grid, not the
+ * umpires'"), excuses nothing: a lexical rule cannot tell what such a sentence denies, so it fails
+ * and the copy says it the plain way. "If not" is no negation ("nothing if not official" asserts it).
+ */
+const GOVERNING_NEGATION =
+  /\b(?:(?<!\bif\s+)not|never|no|isn['’]t|aren['’]t|wasn['’]t|weren['’]t)\s+(?:(?:be|been)\s+)?(?:one of\s+(?:the\s+)?)?(?:(?:a|an|the)\s+)?$/i;
+
+/**
+ * What, after a negated claim, can say it again of something else: a contrast ("but", "yet",
+ * "while", "whereas", "though", "although", "unlike"), "and so" / "so is" / "as is", a verb left bare
+ * at the end of a clause ("…; the umpires' grid is.", "…, but Davis is", "…, and Davis has been
+ * too"), or "is one" ("…, but the umpires' grid is one"). A negation is no excuse when one of these
+ * follows it in the same sentence: "MaxPreps is not official, but the umpires' grid is" makes the
+ * claim it seems to deny. It also fails an honest "…not official, though it matches MaxPreps", which
+ * the copy then says in two sentences.
+ */
+const REOPENER =
+  /\b(?:but|yet|while|whereas|though|although|unlike|and so|so (?:is|are|was|were|does|do|did|has|have)|as (?:is|are|was|were|does|do|has|have))\b|\b(?:is|are|was|were|be|been|does|do|did|has|have|had)(?:\s+(?:too|also|so))?\s*(?=[,;:)\u2013\u2014]|[.!?]?\s*$)|\b(?:is|are|was|were|be|been|as) one\b/i;
+
+/**
+ * Whether `text` holds a match of `claim` (a global pattern) that no GOVERNING_NEGATION excuses. A
+ * negated match excuses nothing when a REOPENER follows it in `rest` (the text after `text` in the
+ * same sentence, for a rule that reads a clause of it).
+ */
+function hasUnnegated(text: string, claim: RegExp, rest = ''): boolean {
+  for (const m of text.matchAll(claim)) {
+    if (!GOVERNING_NEGATION.test(text.slice(0, m.index))) return true;
+    if (REOPENER.test(text.slice(m.index + m[0].length) + rest)) return true;
+  }
+  return false;
+}
+
+/**
  * The EAL/SRL umpires' 2026 league grid (fieldhockeyumpires.org) matches MaxPreps game for game, but
  * it is not a league or Section document, so it is never called official: a sentence that mentions
  * an umpire and says "official" fails. Test it with `umpireOfficialClaims`, which applies it sentence
- * by sentence (the pattern itself stops at a sentence end, but not at the dots of a domain).
+ * by sentence (the pattern itself stops at a sentence end, but not at the dots of a domain) and lets
+ * an "official" through only when a negation directly governs it ("The umpires' grid is not
+ * official."); this pattern alone is the lexical half.
  */
 export const UMPIRE_OFFICIAL_CLAIM =
   /umpire(?:[^.!?\n]|[.!?](?=\S))*\bofficial\b|\bofficial\b(?:[^.!?\n]|[.!?](?=\S))*umpire/i;
 
-/** The sentences of `text` that call the umpires' grid official (UMPIRE_OFFICIAL_CLAIM); [] when clean. */
+/** Every "official" (not "officially", not "unofficial"), for the negation check. */
+const OFFICIAL_WORD = /\bofficial\b/gi;
+
+/**
+ * The sentences of `text` that call the umpires' grid official (UMPIRE_OFFICIAL_CLAIM, with at least
+ * one "official" that no GOVERNING_NEGATION excuses); [] when clean.
+ */
 export function umpireOfficialClaims(text: string): string[] {
-  return sentences(text).filter((s) => UMPIRE_OFFICIAL_CLAIM.test(s)).map((s) => s.trim());
+  return sentences(text)
+    .filter((s) => UMPIRE_OFFICIAL_CLAIM.test(s) && hasUnnegated(s, OFFICIAL_WORD))
+    .map((s) => s.trim());
 }
 
 /** The two EAL teams that are Sac-Joaquin Section schools (CIF-SJS directory; NS member list). */
 const NON_MEMBER_SCHOOL = /\b(?:Davis|Bella Vista)\b/;
-const NORTHERN_SECTION_MEMBER = /Northern Section (?:school|member)s?/i;
+/**
+ * The Northern Section by any name the copy might use: "Northern Section", "Northern-Section", "NS",
+ * "CIF-NS" (any dash), "CIF Northern Section", and the possessive ("the Northern Section's schools").
+ */
+const NORTHERN_SECTION = String.raw`(?:\bCIF[-\u2010-\u2013 ])?(?:\bNorthern[-\u2010-\u2013 ]Section|\bNS)(?:['’]s)?\b`;
+/**
+ * Membership in it: "Northern Section (high) school(s)", "NS member(s)", "CIF-NS team(s)", "an NS
+ * program", or "member (school)(s) of the Northern Section".
+ */
+const NORTHERN_SECTION_MEMBER = new RegExp(
+  String.raw`${NORTHERN_SECTION}[-\u2010-\u2013 ](?:high[- ])?(?:school|member|team|program)s?\b|\bmembers?(?: (?:school|team)s?)? of (?:the )?${NORTHERN_SECTION}`,
+  'gi',
+);
 
 /**
  * Davis and Bella Vista play field hockey in the EAL, which the Northern Section's Guidelines
  * govern, but neither is a Northern Section school. The clauses of `text` (split on `.`, `;`, `:`
- * and line breaks) that name either one AND say "Northern Section school(s)" or "member(s)"; []
- * when clean. The EAL membershipNote names both kinds of school in separate clauses and passes.
+ * and line breaks) that name either one AND call something a Northern Section school, member or
+ * team (NORTHERN_SECTION_MEMBER, any of its names) that no GOVERNING_NEGATION excuses ("Davis and
+ * Bella Vista are not Northern Section schools" passes, unless a REOPENER follows in the rest of the
+ * sentence: "Bella Vista is not a Northern Section school; Davis is." fails); [] when clean. The EAL
+ * membershipNote names both kinds of school in separate clauses and passes.
  */
 export function nonMemberSectionClaims(text: string): string[] {
-  return text
-    .split(/[.;:]|\n+/)
-    .filter((clause) => NON_MEMBER_SCHOOL.test(clause) && NORTHERN_SECTION_MEMBER.test(clause))
-    .map((clause) => clause.trim());
+  const found: string[] = [];
+  for (const sentence of text.split(/[.!?]+(?=\s|$)|\n+/)) {
+    const clauses = sentence.split(/[;:]/);
+    clauses.forEach((clause, i) => {
+      const rest = clauses.slice(i + 1).join(';');
+      if (NON_MEMBER_SCHOOL.test(clause) && hasUnnegated(clause, NORTHERN_SECTION_MEMBER, rest)) {
+        found.push(clause.trim());
+      }
+    });
+  }
+  return found;
 }
 
 /**

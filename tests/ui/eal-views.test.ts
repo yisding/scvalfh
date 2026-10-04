@@ -298,6 +298,15 @@ describe('/about, the EAL parts', () => {
     );
     expect(text).not.toMatch(/official league result|EAL schedule \(/);
   });
+
+  it('counts the member rows of the MaxPreps table, never its extra non-member row', () => {
+    const card = /<article[^>]*aria-label="EAL data health"[^>]*>([\s\S]*?)<\/article>/.exec(aboutHtml)?.[1] ?? '';
+    const health = data.getLeagueHealth(LEAGUE).divisions[0];
+    const members = data.getStandings(LEAGUE).filter((s) => s.reported !== null).length;
+    expect(health.reportedTable, 'lib/pipeline/steps/reported.ts').toBe('ok');
+    expect(health.reportedRows, 'lib/pipeline/steps/reported.ts: the members the table resolved to').toBe(members);
+    expect(textOf(card), 'components/about/LeagueHealthCard.tsx').toContain(`read this run (${members} member rows).`);
+  });
 });
 
 describe('/history/2025-26#eal', () => {

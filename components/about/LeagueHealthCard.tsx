@@ -4,8 +4,9 @@ import ExternalLink from '../ui/ExternalLink';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
- * in words — its state, the MaxPreps league pages and whether their tables were read (with the
- * division's known cause when MaxPreps' table differs on purpose), the team schedule feeds
+ * in words — its state, the MaxPreps league pages and whether their tables were read (counting
+ * member rows only, with the division's known cause when MaxPreps' table differs on purpose, such
+ * as a row for a non-member), the team schedule feeds
  * (`12 of 12 current`), the official schedule (`<source> · <n> fixtures · <m> matched · upstream
  * unchanged|revised`), counted results, official results still missing, and contests dropped on
  * purpose. The pipeline's reasons are plain sentences and render verbatim.
@@ -176,7 +177,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
                 {where}
                 <ExternalLink href={d.maxprepsUrl}>MaxPreps table</ExternalLink>{' '}
                 {h ? TABLE_WORDS[h.reportedTable] : 'not reported'}
-                {h && h.reportedRows !== null ? ` (${plural(h.reportedRows, 'row', 'rows')})` : ''}.
+                {h && h.reportedRows !== null ? ` (${plural(h.reportedRows, 'member row', 'member rows')})` : ''}.
               </p>
               {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
               {d.official.mode === 'none' ? (
