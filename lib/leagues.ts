@@ -1062,6 +1062,17 @@ export function tiebreakChainFor(id: DivisionId, bucketStartPlace: number): read
   return tiebreaks.byBucketStart?.[bucketStartPlace] ?? tiebreaks.default;
 }
 
+/**
+ * A team's draw number (MCAL's spring draw: lower wins a `draw-number` stage). Takes a slug, so this
+ * module never reads the registry; lib/teams.ts fails at import unless a league's `drawNumbers` keys are
+ * exactly its slugs, so a miss here is a caller's bug and throws instead of falling back.
+ */
+export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
+  const n = rules.drawNumbers?.[slug];
+  if (n === undefined) throw new Error(`lib/leagues.ts: no draw number for ${slug}`);
+  return n;
+}
+
 /** Every status the league's ladder can give, in ladder order, deduped. */
 export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];

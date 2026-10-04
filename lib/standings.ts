@@ -30,6 +30,7 @@ import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
 import {
   LEAGUES,
   divisionLabel,
+  drawNumberOf,
   getDivision,
   getLeague,
   ladderFor,
@@ -375,14 +376,8 @@ function stageKeys(
       return null;
     }
     case 'draw-number': {
-      const draws = rules.drawNumbers;
-      if (!draws) return null;
-      for (const id of group) {
-        const slug = getTeamById(id)?.slug;
-        const n = slug === undefined ? undefined : draws[slug];
-        if (n === undefined) return null;
-        out.set(id, -n);
-      }
+      if (!rules.drawNumbers) return null;
+      for (const id of group) out.set(id, -drawNumberOf(rules, slugOfId(id)));
       return out;
     }
     default:
@@ -549,8 +544,7 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
   if (place < L) {
     if (group.length === 3 && place === L - 1) {
       // "tie breaking numbers will be used for placing #5"
-      const draws = ctx.rules.drawNumbers ?? {};
-      const drawOf = (id: TeamId): number => draws[getTeamById(id)?.slug ?? ''] ?? Number.MAX_SAFE_INTEGER;
+      const drawOf = (id: TeamId): number => drawNumberOf(ctx.rules, slugOfId(id));
       const first = [...group].sort((a, b) => drawOf(a) - drawOf(b))[0];
       ctx.resolvedBy.set(first, 'draw-number');
       ctx.fifth = { id: first, group: [...group] };
@@ -658,6 +652,10 @@ export function lastSpotOutcome(
 
 function nameOf(id: TeamId): string {
   return getTeamById(id)?.name ?? id;
+}
+
+function slugOfId(id: TeamId): TeamSlug {
+  return getTeamById(id)?.slug ?? id;
 }
 
 // ---------------------------------------------------------------- reported rows

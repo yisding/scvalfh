@@ -25,7 +25,7 @@
  */
 
 import { byDateThenId, sideOutcome } from './format';
-import type { LeagueConfig } from './leagues';
+import { drawNumberOf, type LeagueConfig } from './leagues';
 import { lastSpotOutcome } from './standings';
 import { getTeamById, getTeamBySlug } from './teams';
 import type {
@@ -136,8 +136,7 @@ export function sixthPlaceRule(rows: readonly Standing[], games: readonly Game[]
       if (finals.filter((g) => between(g, group[i], group[j])).length < 2) unplayed = true;
     }
   }
-  const draws = league.rules.drawNumbers ?? {};
-  const drawOf = (id: TeamId): number => draws[slugOf(id)] ?? 0;
+  const drawOf = (id: TeamId): number => drawNumberOf(league.rules, slugOf(id));
   const higherDraw = drawOf(a) >= drawOf(b) ? a : b;
   let host: TeamId = higherDraw;
   let note: string | null = null;
