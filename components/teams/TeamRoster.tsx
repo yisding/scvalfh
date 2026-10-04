@@ -41,13 +41,14 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * are components/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
  * says recall is partial, wherever one appears.
  *
- * A player a public page says has committed to play college field hockey gets a commitment line
+ * A player a public page says has committed to play a college sport gets a commitment line
  * (DESIGN §21.5) right under the facts, above any club line: "Committed: Stanford", or "Signed:
- * Stanford" only where a source says so. It is the same kind of line as the club line — its own
- * line, an internal link with the `sx-action` box and no arrow, the visible label hidden from
- * assistive technology and the link's accessible name leading with the player ("Pat Example’s
- * college commitment: Stanford") — and it links the player's row on /commits, which cites the
- * sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
+ * Stanford" only where a source says so, and "Committed: St. Lawrence (soccer)" for a sport other
+ * than field hockey. It is the same kind of line as the club line — its own line, an internal link
+ * with the `sx-action` box and no arrow, the visible label (and the sport in parentheses) hidden
+ * from assistive technology and the link's accessible name leading with the player ("Pat Example’s
+ * college commitment: Stanford", "Pat Example’s college soccer commitment: St. Lawrence") — and it
+ * links the player's row on /commits, which cites the sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
  * /commits and says recall is partial, wherever one appears.
  *
  * A team with no list still shows the coaches and sources the enrichment file found for it, under
@@ -161,6 +162,8 @@ function Commitment({ row }: { row: RosterRow }) {
             {row.name}&rsquo;s {line.srLabel}:{' '}
           </span>
           {line.college.name}
+          {/* Another sport is named after the college; field hockey goes without saying here. */}
+          {line.sport ? <span aria-hidden="true"> ({line.sport})</span> : null}
         </span>
       </Link>
     </span>

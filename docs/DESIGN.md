@@ -3059,7 +3059,8 @@ game; the board's note says only what a 400-point gap means on the scale.
 ## 21. College commitments amendment (2026-10)
 
 The site gained college commitments: which players on the 43 tracked varsity rosters a public page
-says have committed to play field hockey in college, and where. The data is `data/commits.json`,
+says have committed to play a sport in college, and where. It began with field hockey only and took
+in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
 research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
 commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
 differ: the same matching rule, the same privacy posture, the same row and list layout. This
@@ -3072,9 +3073,11 @@ section records what is new and where it departs.
 | `/commits` | "Who here has committed to play in college, and where?" | 1 |
 
 Static, one page, no dynamic segment. A lede that answers the question in one paragraph (how many
-players from how many schools have committed to how many colleges, and at which levels: "Of them,
-4 committed to NCAA Division I programs, 1 to an NCAA Division II program and 2 to NCAA Division III
-programs"), then one section
+players from how many schools have committed to how many colleges, at which levels and in which
+sports: "Of them, 4 committed to NCAA Division I programs, 1 to an NCAA Division II program and 2 to
+NCAA Division III programs. By sport, 5 in field hockey, 1 in lacrosse and 1 in soccer"; with one
+sport, the sport goes in the level words instead: "all NCAA Division I field hockey programs"), then
+one section
 per class year (`#class-2027`, `#class-2028`; the earliest class first, `#class-unknown` last for a
 player no source or roster gives a class year), then "Colleges" (`#colleges`), then "How
 commitments are matched" (`#how-matched`): who is listed, the linking rule, that social media is
@@ -3083,14 +3086,17 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
 
 - **A commitment row** (`#<team slug>-<MaxPreps athleteId>`, never a name): the name; the school
   linking `/teams/<slug>#roster`, then the grade; the college (its display name, the official name
-  when the display name is a short one, and the division in words); the status (§21.3); and the
+  when the display name is a short one, the sport, and the division of the college's team in that
+  sport, in words); the status (§21.3); and the
   source links, labelled by kind and host. Within a class, rows run by school, then by the roster's
   name order.
-- **A college row** (`#college-<slug>`): the display name, the official name, then the division,
-  the conference when it has one and the place ("NCAA Division I · ACC · Stanford, CA"), how many
-  players here committed there and from which schools, and the field hockey page on the college's
-  own athletics site ("Stanford field hockey", an off-site link). Colleges with the most players
-  come first, then Division I before II, III and NAIA, then by name.
+- **A college row** (`#college-<slug>`): the display name, the official name, the place
+  ("Stanford, CA"), then one line per program a player here committed to (the sport, its division
+  and its conference when it has one: "Field hockey · NCAA Division I · ACC"), how many players here
+  committed there and from which schools, and each program's page on the college's own athletics
+  site ("Stanford field hockey", "St. Lawrence soccer", off-site links). Colleges with the most
+  players come first, then by the highest level of any of their programs here (Division I before
+  II, III and NAIA), then by name.
 - **Nothing found** is a real state: the lede says no public page we found shows a commitment, one
   empty state stands where the classes would be, and the colleges section is left out.
 
@@ -3142,10 +3148,12 @@ clubs pages by their file.
 ### 21.5 The roster commitment line
 
 A committed player gets one line right under the facts, above any club line: "Committed:
-Stanford", or "Signed: Stanford". The college is a link to the player's row on `/commits`, which
-cites the sources; it is internal, so it has the `sx-action` box and no arrow, and its accessible
-name leads with the player ("Pat Example’s college commitment: Stanford"), the visible label hidden
-from assistive technology, exactly as the club line (§17.4). It comes before the club line because
+Stanford", or "Signed: Stanford", and, in a sport other than field hockey, "Committed: St. Lawrence
+(soccer)". The college is a link to the player's row on `/commits`, which cites the sources; it is
+internal, so it has the `sx-action` box and no arrow, and its accessible name leads with the player
+("Pat Example’s college commitment: Stanford", "Pat Example’s college soccer commitment: St.
+Lawrence"), the visible label and the parenthesized sport hidden from assistive technology, exactly
+as the club line (§17.4). It comes before the club line because
 it is the newer and more specific fact about the player. A footnote appears on any roster with a
 commitment line: the lines link to the player's entry on the college commitments page, which cites
 a source for each; "Signed" appears only where a source says so; recall is partial.
@@ -3161,3 +3169,26 @@ a source for each; "Signed" appears only where a source says so; recall is parti
 - **No budget for `/commits`**, for §17.6's reason: `main` has no baseline to measure it against.
 - **Gates.** `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect
   `/commits` among the fixed pages; `a11y-axe.mjs` checks it in both themes at both widths.
+
+### 21.7 Every sport (2026-10-04)
+
+A field hockey player's college commitment is often in another sport: many play lacrosse in the
+spring or soccer in the winter, and commit there. Leaving those out made the page answer a narrower
+question than its title asks, so a commitment now carries its `sport`, and any sport counts under the
+same linking rule (the page must name the sport) and the same privacy posture.
+
+- **The sport is named where it can differ.** A /commits row and a college's program lines always
+  name it; the roster line names it only when it is not field hockey ("Committed: St. Lawrence
+  (soccer)"), since a field hockey site's roster need not say "field hockey" beside every line.
+- **A level belongs to a team, not a college.** A college's division and conference moved into
+  `programs`, one per sport a player here committed to (Johns Hopkins plays field hockey and lacrosse
+  in Division I and most sports in Division III). The lede counts programs, a college's team in one
+  sport, so two players at one college in two sports are two programs.
+- **No sport filter or per-sport section.** The page stays grouped by class year: with a handful of
+  rows per class, the sport on each row reads faster than tabs would.
+- **Not a commitment**, beside §21.1's list: a place on a college's club team (club lacrosse, club
+  volleyball), which a recruiting profile can show as "committed".
+- **Every college sport has its words.** `COMMIT_SPORTS` lists every sport the NCAA, NAIA and NJCAA
+  hold a championship or an emerging-sport program in, plus squash and sailing, each with its words
+  in `SPORT_WORDS` ("acrobatics and tumbling", "flag football"); the type checker keeps the two lists
+  together, so a sport colleges add later is added to both.
