@@ -351,6 +351,8 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(tag('ccs', null).postseasonTag).toBe('CCS');
     expect(tag('ccs', null).isNonLeague).toBe(false);
     expect(tag('other', null).postseasonTag).toBeNull();
+    // A league kind always carries its league (lib/classify.ts); the chip never derives one from the kind string.
+    expect(tag('scval-crossover', null).postseasonTag).toBeNull();
   });
   it('marks a score published from si.com, and only that', () => {
     const sb = final(3, 1, {

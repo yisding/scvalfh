@@ -212,7 +212,12 @@ export interface GameVenue {
  * crossover or play-in is never same-division, and a same-division game tagged 'ccs' is excluded — lib/classify.ts.)
  */
 export interface PostseasonTag {
+  /**
+   * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
+   * literal is kept for snapshot stability (lib/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
+   */
   kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'ccs' | 'other';
+  /** Set for every kind except 'ccs' and 'other', which may be null (no shared registry league). */
   leagueId: LeagueId | null;
   via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'ccs-window';
 }

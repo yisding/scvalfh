@@ -118,8 +118,9 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   if (tag.kind === 'ccs') return 'CCS';
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
-  // The tag names its league; the kind's prefix is the fallback for a tag written without one.
-  const league = findLeague(tag.leagueId ?? tag.kind.split('-')[0] ?? '');
+  // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs' and 'other' may not.
+  if (tag.leagueId === null) return null;
+  const league = findLeague(tag.leagueId);
   if (!league) return null;
   // An unbracketed league's postseason has a name of its own ('EAL Super Regional').
   if (tag.kind === 'league-postseason' && league.postseason.kind === 'unbracketed-tournament') {
