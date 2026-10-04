@@ -85,9 +85,10 @@ export interface TeamEloView {
   /** The season the ratings start from ("2025-26"); null when every team starts at average. */
   seededFrom: string | null;
   /**
-   * Whether THIS team started from its rating in `seededFrom`. False for a team with no final
-   * last season against the four leagues' teams (a program new to the registry): it started at
-   * average, even when every other team was seeded.
+   * Whether THIS team started from its rating in `seededFrom`. False for a team with no counted
+   * final last season against the four leagues' teams (a program new to the registry, or one
+   * whose games then were all forfeits or unscored): it started at average, even when every other
+   * team was seeded.
    */
   seeded: boolean;
   /** The Elo board's minimum games. */

@@ -526,11 +526,12 @@ export function buildEloBoard(
   const teamById = new Map(teams.map((t) => [t.id, t]));
   const lines = table.ratings.map((rating) => ({ team: teamById.get(rating.teamId)!, rating }));
   const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
-  // A team new to the registry has no rating from last season and starts at average: say so
-  // only when there is one, so the note never claims a start a team did not have.
+  // A team with no counted final last season (new to the registry, or only forfeits and unscored
+  // games then) has no rating from it and starts at average: say so only when there is one, so
+  // the note never claims a start a team did not have.
   const unseeded = table.ratings.some((r) => !r.seeded);
   const seeded = table.seededFrom
-    ? `Each team started the season from its ${table.seededFrom} rating (the same fit over last season’s ${plural(table.priorGames, 'final')})${unseeded ? ', or from average if it played none' : ''}; that start counts for one game and fades as this season’s results come in. `
+    ? `Each team started the season from its ${table.seededFrom} rating (the same fit over last season’s ${plural(table.priorGames, 'final')})${unseeded ? `, or from average if it had no counted ${table.seededFrom} final` : ''}; that start counts for one game and fades as this season’s results come in. `
     : '';
   const sorted = lines
     .filter((l) => l.rating.games >= minimum.min)

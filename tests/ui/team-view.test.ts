@@ -578,7 +578,9 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     expect(seeded, 'components/teams/TeamElo.tsx seeded').toContain('It started the season from its 2025-26 rating');
     // A program new to the registry: no 2025-26 rating, though every other team has one.
     const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It played no 2025-26 final against the four leagues’ teams, so it started from an average rating.');
+    // "Counted": last season's forfeits, unscored finals and games against outside schools are not
+    // in the file, so a team can have played and still have no start.
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the four leagues’ teams, so it started from an average rating.');
     expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 

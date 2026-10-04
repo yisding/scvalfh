@@ -43,7 +43,7 @@ export function TeamElo({ elo, className }: { elo: TeamEloView; className?: stri
             elo.seeded
               ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
               : elo.seededFrom
-                ? ` It played no ${elo.seededFrom} final against the four leagues’ teams, so it started from an average rating.`
+                ? ` It had no counted ${elo.seededFrom} final against the four leagues’ teams, so it started from an average rating.`
                 : ''
           } ${scale}`;
 

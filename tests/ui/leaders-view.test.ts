@@ -347,7 +347,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
       ],
     };
     const note = buildLeadersView({ ...sources(base), prior }).schools.find((b) => b.id === 'elo-rating')!.note;
-    expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it played none;');
+    expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it had no counted 2025-26 final;');
     // The committed season seeds every rated team, so its note makes no such claim.
     expect(buildLeadersView().schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
   });
