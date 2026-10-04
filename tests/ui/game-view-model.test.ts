@@ -227,6 +227,19 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
       expect(html, `components/game/GameSources.tsx ${label}: no 1 v 1 clause`).not.toContain('1 v 1s');
     }
   });
+
+  it('renders, with the fixture-backed wording, when a league-postseason tag names a league no longer configured', async () => {
+    // The snapshot schema checks a tag's league id only for shape, so the lookup must not throw.
+    const { GameElsewhere } = await import('../../components/game/GameSources');
+    const nonLeague = L.d.getGames({ status: 'final' }).find((g) => g.countsFor === null && g.postseason === null)!;
+    const model = L.m.buildGameModel(L.ids.gameIdToParam(nonLeague.contestId))!;
+    const tagged = {
+      ...model,
+      game: { ...model.game, postseason: { kind: 'league-postseason', leagueId: 'not-a-league', via: 'league-postseason-window' } },
+    } as unknown as typeof model;
+    const html = renderToStaticMarkup(createElement(GameElsewhere, { model: tagged }));
+    expect(html).toContain(`>${FIXTURE_BACKED}</p>`);
+  });
 });
 
 describe('FormGoingIn non-member copy (components/game/FormGoingIn.tsx)', () => {

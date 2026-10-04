@@ -25,6 +25,13 @@ export interface HealthDivision {
   heading: string | null;
   /** MaxPreps league standings page. */
   maxprepsUrl: string;
+  /**
+   * The division's standings rows that carry MaxPreps' reported record: the member rows its table
+   * matched, read this run or carried. Counted from the standings rather than taken from the stored
+   * `reportedRows`, which a snapshot written before 2026-10-04 counted with MaxPreps' extra
+   * non-member row (EAL: Red Bluff).
+   */
+  memberRows: number;
   knownCause: string | null;
   official:
     | {
@@ -177,7 +184,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
                 {where}
                 <ExternalLink href={d.maxprepsUrl}>MaxPreps table</ExternalLink>{' '}
                 {h ? TABLE_WORDS[h.reportedTable] : 'not reported'}
-                {h && h.reportedRows !== null ? ` (${plural(h.reportedRows, 'member row', 'member rows')})` : ''}.
+                {h && h.reportedRows !== null ? ` (${plural(d.memberRows, 'member row', 'member rows')})` : ''}.
               </p>
               {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
               {d.official.mode === 'none' ? (

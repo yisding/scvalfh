@@ -361,6 +361,8 @@ describe('UMPIRE_OFFICIAL_CLAIM / umpireOfficialClaims: the umpires’ grid is n
     'The umpires’ grid is not the official schedule.',
     'The EAL publishes no official schedule; the umpires’ grid matches MaxPreps game for game.',
     'The umpires’ grid, though not official, matches MaxPreps.',
+    'The grid on the umpires’ site is never called official here.',
+    'The umpires’ grid is not called official anywhere on this site.',
   ])('lets %j through: a negation directly governs every "official"', (text) => {
     expect(text, 'the lexical half still sees both words').toMatch(UMPIRE_OFFICIAL_CLAIM);
     expect(umpireOfficialClaims(text)).toEqual([]);
@@ -501,6 +503,29 @@ describe('nonMemberSectionClaims: Davis and Bella Vista are not Northern Section
     'Davis transcribes a ns schoolbook',
   ])('lets %j through: the Section named, no membership claimed', (text) => {
     expect(nonMemberSectionClaims(text)).toEqual([]);
+  });
+
+  it.each([
+    'Davis defeated a Northern Section team.',
+    'Bella Vista beat a Northern Section program 2-1.',
+    'Davis played three Northern Section teams',
+    'Davis plays Chico, a Northern Section school, on Friday',
+    'A Northern Section team beat Davis',
+    'Davis hosts NS members Chico and Lassen',
+  ])('lets %j through: the membership phrase is about an opponent, not Davis or Bella Vista', (text) => {
+    expect(nonMemberSectionClaims(text)).toEqual([]);
+  });
+
+  it.each([
+    'Davis, a Northern Section school, hosts Chico',
+    'Davis, which is a Northern Section team, hosts Chico',
+    'Davis, not Chico, is an NS school',
+    'Chico, Davis and Lassen are Northern Section members',
+    'Northern Section schools such as Davis play ten games',
+    'The Northern Section teams Davis and Bella Vista meet on Friday',
+    'Davis has been a member of the Northern Section since 2019',
+  ])('flags %j: the membership phrase is said of Davis or Bella Vista', (text) => {
+    expect(nonMemberSectionClaims(text)).toHaveLength(1);
   });
 
   it('returns each offending clause', () => {

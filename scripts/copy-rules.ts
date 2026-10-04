@@ -39,16 +39,17 @@ function sentences(text: string): string[] {
 
 /**
  * The negation that may directly govern a claim and so excuse it: "not", "never", "no", "isn't",
- * "aren't", "wasn't", "weren't", then at most "be"/"been", "one of (the)" and an article, and then the
- * claim itself ("is not official", "has never been official", "isn't an NS school", "is no Northern
- * Section member", "are not one of the Northern Section schools"). Anchored at the end of the text
+ * "aren't", "wasn't", "weren't", then at most "be"/"been"/"called", "one of (the)" and an article, and
+ * then the claim itself ("is not official", "has never been official", "is never called official",
+ * "isn't an NS school", "is no Northern Section member", "are not one of the Northern Section
+ * schools"). Anchored at the end of the text
  * before the claim, so a negation in another clause, or one that governs something else ("not only
  * official", "Chico, not Davis, is a Northern Section school", "the official grid, not the
  * umpires'"), excuses nothing: a lexical rule cannot tell what such a sentence denies, so it fails
  * and the copy says it the plain way. "If not" is no negation ("nothing if not official" asserts it).
  */
 const GOVERNING_NEGATION =
-  /\b(?:(?<!\bif\s+)not|never|no|isn['’]t|aren['’]t|wasn['’]t|weren['’]t)\s+(?:(?:be|been)\s+)?(?:one of\s+(?:the\s+)?)?(?:(?:a|an|the)\s+)?$/i;
+  /\b(?:(?<!\bif\s+)not|never|no|isn['’]t|aren['’]t|wasn['’]t|weren['’]t)\s+(?:(?:be|been|called)\s+)?(?:one of\s+(?:the\s+)?)?(?:(?:a|an|the)\s+)?$/i;
 
 /**
  * What, after a negated claim, can say it again of something else: a contrast ("but", "yet",
@@ -65,12 +66,21 @@ const REOPENER =
 /**
  * Whether `text` holds a match of `claim` (a global pattern) that no GOVERNING_NEGATION excuses. A
  * negated match excuses nothing when a REOPENER follows it in `rest` (the text after `text` in the
- * same sentence, for a rule that reads a clause of it).
+ * same sentence, for a rule that reads a clause of it). With `about`, only the matches it accepts
+ * (given the text before and after each) count at all.
  */
-function hasUnnegated(text: string, claim: RegExp, rest = ''): boolean {
+function hasUnnegated(
+  text: string,
+  claim: RegExp,
+  rest = '',
+  about?: (before: string, after: string) => boolean,
+): boolean {
   for (const m of text.matchAll(claim)) {
-    if (!GOVERNING_NEGATION.test(text.slice(0, m.index))) return true;
-    if (REOPENER.test(text.slice(m.index + m[0].length) + rest)) return true;
+    const before = text.slice(0, m.index);
+    const after = text.slice(m.index + m[0].length);
+    if (about && !about(before, after)) continue;
+    if (!GOVERNING_NEGATION.test(before)) return true;
+    if (REOPENER.test(after + rest)) return true;
   }
   return false;
 }
@@ -115,14 +125,62 @@ const NORTHERN_SECTION_MEMBER = new RegExp(
   'gi',
 );
 
+/** Davis or Bella Vista, by name (case-sensitive, as names are). */
+const NON_MEMBER_NAME = /\b(?:Davis|Bella Vista)\b/;
+const NON_MEMBER = String.raw`\b(?:Davis|Bella Vista)\b`;
+/** A capitalized name, one or more words ("Chico", "Pleasant Valley"). */
+const PROPER_NAME = String.raw`[A-Z][\w’'.-]*(?:\s+[A-Z][\w’'.-]*)*`;
+/** Determiners and counts that may sit between a frame and the phrase ("beat every", "against the two"). */
+const QUANTIFIER = String.raw`(?:a|an|the|every|each|all|both|any|one|two|three|four|five|six|several|of|\d+)`;
+/**
+ * The phrase is the object of a game verb or a preposition, so it names an opponent: "Davis defeated
+ * a Northern Section team", "3-0 against NS schools", "lost to the …", "ahead of every …".
+ */
+const OPPONENT_FRAME = new RegExp(
+  String.raw`\b(?:defeat(?:s|ed|ing)?|beat(?:s|en|ing)?|play(?:s|ed|ing)?|host(?:s|ed|ing)?|fac(?:e|es|ed|ing)|meet(?:s|ing)?|met|edg(?:e|es|ed|ing)|tops|topped|shut out|blank(?:s|ed)?|outscor(?:e|es|ed|ing)|(?:tie[sd]?|tying|dr[ae]ws?) with|(?:lost|loses?|fell|falls?) to|vs\.?|versus|against|over|than|by|from|above|below|behind|ahead of|for)\s+(?:${QUANTIFIER}\s+)*$`,
+);
+/** The phrase is an appositive to the names right before it: "Chico, a Northern Section school". */
+const APPOSITIVE_TO = new RegExp(
+  String.raw`(?<!\b(?:like|as|with)\s+)(${PROPER_NAME}(?:\s*(?:,|&|\band\b|\bor\b)\s*${PROPER_NAME})*)\s*,\s*(?:${QUANTIFIER}\s+)*$`,
+);
+/** Names right after the phrase that include Davis or Bella Vista: "NS schools such as Chico and Davis". */
+const NAMED_AFTER_MEMBERSHIP = new RegExp(
+  String.raw`^\s*,?\s*(?:(?:such as|like|including|includes?|included|namely|are|were|is|was)\s+)?(?:${PROPER_NAME}\s*(?:,|&|\band\b|\bor\b)\s*)*${NON_MEMBER}`,
+);
+/** A phrase fronted before the clause's subject: "As a Northern Section team, Davis …". */
+const FRONTED = new RegExp(String.raw`^\s*(?:(?:as|like|being|long|once|now|still|also|${QUANTIFIER})\s+)*$`, 'i');
+const FRONTED_SUBJECT = new RegExp(
+  String.raw`^[^,]{0,40},\s*(?:${PROPER_NAME}\s*(?:,|&|\band\b|\bor\b)\s*)*${NON_MEMBER}`,
+);
+/**
+ * Whether a membership phrase in a clause that names Davis or Bella Vista is said of them. Strict by
+ * default: when one of them comes before the phrase it is said of them ("Davis High is a Northern
+ * Section school", "Davis competes as an NS member", "Davis (a Northern Section school) …"), unless
+ * the phrase names an opponent (OPPONENT_FRAME: "Davis defeated a Northern Section team") or is an
+ * appositive to other names (APPOSITIVE_TO: "Davis plays Chico, a Northern Section school"). When they
+ * come only after it, it is said of them when it names them (NAMED_AFTER_MEMBERSHIP) or is fronted
+ * before them (FRONTED: "As a Northern Section team, Davis …"); "A Northern Section team beat Davis"
+ * is about the opponent.
+ */
+function saidOfNonMember(before: string, after: string): boolean {
+  if (NON_MEMBER_NAME.test(before)) {
+    if (OPPONENT_FRAME.test(before)) return false;
+    const appositive = before.match(APPOSITIVE_TO);
+    return !(appositive && !NON_MEMBER_NAME.test(appositive[1]));
+  }
+  return NAMED_AFTER_MEMBERSHIP.test(after) || (FRONTED.test(before) && FRONTED_SUBJECT.test(after));
+}
+
 /**
  * Davis and Bella Vista play field hockey in the EAL, which the Northern Section's Guidelines
  * govern, but neither is a Northern Section school. The clauses of `text` (split on `.`, `;`, `:`
- * and line breaks) that name either one AND call something a Northern Section school, member or
- * team (NORTHERN_SECTION_MEMBER, any of its names) that no GOVERNING_NEGATION excuses ("Davis and
- * Bella Vista are not Northern Section schools" passes, unless a REOPENER follows in the rest of the
- * sentence: "Bella Vista is not a Northern Section school; Davis is." fails); [] when clean. The EAL
- * membershipNote names both kinds of school in separate clauses and passes.
+ * and line breaks) that call Davis or Bella Vista a Northern Section school, member, team or
+ * program (NORTHERN_SECTION_MEMBER, any of its names, said of them: saidOfNonMember) where no
+ * GOVERNING_NEGATION excuses it ("Davis and Bella Vista are not Northern Section schools" passes,
+ * unless a REOPENER follows in the rest of the sentence: "Bella Vista is not a Northern Section
+ * school; Davis is." fails); [] when clean. "Davis defeated a Northern Section team" speaks of the
+ * opponent and passes. The EAL membershipNote names both kinds of school in separate clauses and
+ * passes.
  */
 export function nonMemberSectionClaims(text: string): string[] {
   const found: string[] = [];
@@ -130,7 +188,7 @@ export function nonMemberSectionClaims(text: string): string[] {
     const clauses = sentence.split(/[;:]/);
     clauses.forEach((clause, i) => {
       const rest = clauses.slice(i + 1).join(';');
-      if (NON_MEMBER_SCHOOL.test(clause) && hasUnnegated(clause, NORTHERN_SECTION_MEMBER, rest)) {
+      if (NON_MEMBER_SCHOOL.test(clause) && hasUnnegated(clause, NORTHERN_SECTION_MEMBER, rest, saidOfNonMember)) {
         found.push(clause.trim());
       }
     });

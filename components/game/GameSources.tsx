@@ -1,4 +1,4 @@
-import { getDivision, getLeague } from '../../lib/leagues';
+import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
@@ -163,18 +163,20 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const isFinal = display.kind === 'final';
   if (teamRows.length === 0 && !isFinal) return null;
   // D24 (lib/backfill.ts): the league BOTH sides belong to, when it decides a level game on 1 v 1s.
+  // Lookups here never throw: the snapshot schema checks a tag's league id only for shape, so an id
+  // no longer configured reads as no league (and the page renders) rather than failing the build.
   const pairLeague =
-    home.team && away.team && home.team.league === away.team.league ? getLeague(home.team.league) : null;
+    home.team && away.team && home.team.league === away.team.league ? (findLeague(home.team.league) ?? null) : null;
   const shootout = pairLeague?.rules.leagueOvertime === 'shootout' ? pairLeague : null;
   // D23: a game with no schedule document behind it has league games, but no official ones. A
   // counted game reads its division; any other reads the league of its league-postseason tag (the
   // EAL Super Regional), else the league both sides belong to, when none of its divisions has one.
   const tag = model.game.postseason;
   const ownLeague =
-    tag?.kind === 'league-postseason' && tag.leagueId !== null ? getLeague(tag.leagueId) : pairLeague;
+    tag?.kind === 'league-postseason' && tag.leagueId !== null ? (findLeague(tag.leagueId) ?? pairLeague) : pairLeague;
   const unscheduled =
     model.division !== null
-      ? getDivision(model.division).official.mode === 'none'
+      ? findDivision(model.division)?.official.mode === 'none'
       : ownLeague !== null && ownLeague.divisions.every((d) => d.official.mode === 'none');
   const leagueGame = unscheduled ? 'a league game' : 'an official league game';
   // One string, so a page outside both cases renders the same markup as before.
