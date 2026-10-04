@@ -2707,7 +2707,7 @@ BVAL's co-champion label appears only after the league's regular phase.
 - No CCS concept inside an MCAL page's `<main>` (no "automatic qualifier", "at-large", "CCS
   Division", "CCS picture"); no division label on PCAL or MCAL pages.
 - "Co-champions" appears only after that league's regular phase.
-- Branding: `NorCal High School Field Hockey` (header wordmark `NorCal HS Field Hockey`, `NorCal HS`
+- Branding: `NorCal High School Field Hockey` (header wordmark `NorCal HS Field Hockey`, `NorCal HS FH`
   below 1280px; no FH badge), with a scope note naming exactly the
   four leagues. `scripts/assert-copy.ts` scans the built HTML for the rules above.
 
