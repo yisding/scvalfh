@@ -2636,9 +2636,10 @@ Focus after a write moves to the league panel heading or the My-team heading (WC
 
 One component, three modes: `scope` (home: buttons that write the league, disabled until
 hydrated, with a polite live region), `link` (`/standings/[league]`, `/schedule/[league]`: plain
-links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links). The chip
-is `text-micro` weight 600, `min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom
-wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
+links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links, plus a
+route link where a league has its own page, as /playoffs' tournament leagues do; a `#id` chip is a
+plain `<a>`, a route chip a `<Link prefetch={false}>`). The chip is `text-micro` weight 600,
+`min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
 about **273 px**, inside the 288 px content width. There are no visible section captions: the chips
 sit in two lists labelled for assistive technology ("Central Coast Section" and "North Coast
 Section") separated by a hairline. The selected chip is an accent-wash fill, accent ink, weight 600,

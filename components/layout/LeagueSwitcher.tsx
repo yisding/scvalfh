@@ -21,7 +21,9 @@ import { ALL_LEAGUES } from './prefs-script';
  * - `link` (`/standings/[league]`, `/schedule/[league]`): `<nav>` of plain links, the page's league
  *   marked `aria-current="page"`, a leading `All` chip to the index page (`hrefs.all`). Following
  *   one NEVER writes the league; it works with JS off.
- * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links. Never writes.
+ * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links to the page's own
+ *   sections, which may include route links (on /playoffs a tournament league's chip goes to
+ *   `/playoffs/<league>`). Never writes.
  *
  * Chip token: `text-micro` weight 600, `min-h-11 min-w-11 px-2`, 6px gap, `flex-wrap` (200% text
  * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
@@ -169,9 +171,10 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
         {text}
       </>
     );
-    // Anchor chips stay on the page: a plain fragment link. Link chips are routes: no prefetch,
-    // because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
-    return mode === 'anchor' ? (
+    // A `#id` chip stays on the page: a plain fragment link. Any other href is a route, in either
+    // mode (/playoffs' tournament leagues are route chips in an anchor row): a `<Link>` with no
+    // prefetch, because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
+    return href.startsWith('#') ? (
       <a href={href} className={CHIP}>
         {body}
       </a>
