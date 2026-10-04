@@ -216,7 +216,7 @@ export function PinnedCard({
                       fill the line at 320px, and the game page carries them. The 6px gaps keep
                       that line whole at 320 with the chevron. */}
                   <span className="flex min-w-0 items-baseline gap-1.5">
-                    <StatusLabel display={display} showNonLeague={display.kind !== 'unreported'} />
+                    <StatusLabel display={display} showChips={display.kind !== 'unreported'} />
                     <time dateTime={last.dateTime} className="sx-num shrink-0 text-meta text-ink-3">
                       {last.dateLabel}
                     </time>

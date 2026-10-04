@@ -49,10 +49,11 @@ export interface GameViewProps {
   /** Default true on /schedule and /; false in dense tables. */
   showRecap?: boolean;
   /**
-   * Passed through to `StatusLabel`. Set it false in a context where EVERY game is non-league —
-   * a CCS bracket, for one — because marking the majority is noise (DESIGN §5.4).
+   * The game's chips (league / NL, postseason, †), passed through to `StatusLabel`. It gates the
+   * whole chip group, not only NL. Set it false in a context that prints them elsewhere, or where
+   * every game is the same kind and marking each one is noise — a CCS bracket (DESIGN §5.4).
    */
-  showNonLeague?: boolean;
+  showChips?: boolean;
   /**
    * A league-scoped list (`/schedule/<league>`): a side from ANOTHER league carries its league's
    * short name after its name (`Saint Francis · SCVAL`), so a cross-league game reads right in
@@ -123,10 +124,10 @@ function recordsApply(game: Game, display: GameDisplay, showRecords: boolean): b
 /**
  * The game's chips in words, for a row whose visible chips sit in an aria-hidden column: " SCVAL
  * league game." / " Non-league." / " SCVAL crossover." The same gate as the chips themselves, so
- * a bracket (showNonLeague false) does not repeat them per row.
+ * a bracket (showChips false) does not repeat them per row.
  */
-function chipsSentence(display: GameDisplay, showNonLeague: boolean): string {
-  if (!showNonLeague) return '';
+function chipsSentence(display: GameDisplay, showChips: boolean): string {
+  if (!showChips) return '';
   const kind = display.isNonLeague
     ? ' Non-league.'
     : display.leagueTag
@@ -290,7 +291,7 @@ export function GameRow({
   showDate = false,
   showTime = true,
   showRecap = true,
-  showNonLeague = true,
+  showChips = true,
   scopeLeague = null,
   showRecords = false,
   defaultExpanded = false,
@@ -308,7 +309,7 @@ export function GameRow({
   const timeLine = showTime;
   // The league / NL / postseason chips (SPEC §10.4), printed here so the status word above keeps
   // its own line; the † for a si.com score stays with the status label.
-  const nonLeagueTag = showNonLeague ? <GameChips display={display} /> : null;
+  const chips = showChips ? <GameChips display={display} /> : null;
   return (
     <details
       open={defaultExpanded || undefined}
@@ -330,10 +331,10 @@ export function GameRow({
           by the screen edge (or by a /schedule date group's paint containment). */}
       <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[5rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
         {/* The chips are aria-hidden in the lead column, so the sentence says them in words — the
-            same gate as the chips, so a bracket (showNonLeague false) does not repeat them. */}
+            same gate as the chips, so a bracket (showChips false) does not repeat them. */}
         <span className="sr-only">
           {display.sentence}
-          {chipsSentence(display, showNonLeague)}
+          {chipsSentence(display, showChips)}
           {withRecords ? recordsSentence(display) : ''}
         </span>
         {/* The lead column stretches to the team block and spreads its two lines to its ends, so
@@ -359,14 +360,14 @@ export function GameRow({
             </span>
           ) : null}
           {statusIsTime && timeLine ? (
-            nonLeagueTag ? <span className="flex min-h-6 items-center">{nonLeagueTag}</span> : null
+            chips ? <span className="flex min-h-6 items-center">{chips}</span> : null
           ) : (
             // The status word and the NL tag share one wrapping line, 4px apart: FINAL (38px) +
             // NL (26px) fits 80px, so a final non-league row is two lines, not three. Tracking is
             // normal and the line 14px here only, so a long label takes two tight lines.
             <span className="flex min-h-6 flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
-              <StatusLabel display={display} showNonLeague={false} />
-              {nonLeagueTag}
+              <StatusLabel display={display} showChips={false} />
+              {chips}
             </span>
           )}
         </span>
@@ -415,7 +416,7 @@ export function GameCard({
   game,
   perspective,
   showRecap = true,
-  showNonLeague = true,
+  showChips = true,
   scopeLeague = null,
   showRecords = false,
   showStream = false,
@@ -447,7 +448,7 @@ export function GameCard({
     >
       <span id={sentenceId} className="sr-only">
         {display.sentence}
-        {chipsSentence(display, showNonLeague)}
+        {chipsSentence(display, showChips)}
         {withRecords ? recordsSentence(display) : ''}
       </span>
       <div className="flex items-center justify-between gap-2" aria-hidden="true">
@@ -461,9 +462,9 @@ export function GameCard({
         {/* A scheduled game's status label is this same time; repeating it on the right read
             "3:30 PM … 3:30 PM". Only the chips are left to say there. */}
         {statusLabelIsTime(game, display.statusLabel) ? (
-          showNonLeague ? <GameChips display={display} className="justify-end" /> : null
+          showChips ? <GameChips display={display} className="justify-end" /> : null
         ) : (
-          <StatusLabel display={display} showNonLeague={showNonLeague} className="justify-end" />
+          <StatusLabel display={display} showChips={showChips} className="justify-end" />
         )}
       </div>
       <div className="space-y-2" aria-hidden="true">
@@ -532,7 +533,7 @@ export function GameCard({
  * The time is NOT aria-hidden: it is the link's only statement of when, so the name reads
  * "5:30 PM Homestead at Los Altos SCVAL league game" (the chips' Tag labels carry the words).
  */
-export function GameLine({ game, perspective, showNonLeague = true, className }: GameViewProps) {
+export function GameLine({ game, perspective, showChips = true, className }: GameViewProps) {
   const display = describeGame(game, perspective);
   const awayTeam = game.away.slug ? getTeamBySlug(game.away.slug) : undefined;
   const homeTeam = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
@@ -556,8 +557,8 @@ export function GameLine({ game, perspective, showNonLeague = true, className }:
         {homeTeam ? homeTeam.shortName : game.home.name}
       </span>
       {display.kind === 'final' ? (
-        <StatusLabel display={display} showNonLeague={showNonLeague} className="shrink-0" />
-      ) : showNonLeague ? (
+        <StatusLabel display={display} showChips={showChips} className="shrink-0" />
+      ) : showChips ? (
         <GameChips display={display} className="shrink-0" />
       ) : null}
     </Link>
@@ -604,7 +605,7 @@ export function gameLogRowClass(game: Game, className?: string): string {
 export function GameLogRowBody({
   game,
   perspective,
-  showNonLeague = true,
+  showChips = true,
   isThisGame = false,
 }: GameLogRowProps) {
   const display = describeGame(game, perspective);
@@ -664,10 +665,10 @@ export function GameLogRowBody({
               <span className="sx-num text-cell text-ink-2">
                 {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
               </span>
-              {showNonLeague ? <GameChips display={display} /> : null}
+              {showChips ? <GameChips display={display} /> : null}
             </>
           ) : (
-            <StatusLabel display={display} showNonLeague={showNonLeague} className="max-w-full" />
+            <StatusLabel display={display} showChips={showChips} className="max-w-full" />
           )}
         </span>
       </span>

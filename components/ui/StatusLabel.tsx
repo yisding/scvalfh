@@ -22,7 +22,7 @@ export interface StatusLabelProps {
    * The game's chips (league / NL, postseason, †). Set it false in a context that prints them
    * elsewhere, or where every game is the same kind and marking each one is noise (DESIGN §5.4).
    */
-  showNonLeague?: boolean;
+  showChips?: boolean;
   className?: string;
 }
 
@@ -70,7 +70,7 @@ export function GameChips({
   );
 }
 
-export function StatusLabel({ display, showNonLeague = true, className }: StatusLabelProps) {
+export function StatusLabel({ display, showChips = true, className }: StatusLabelProps) {
   return (
     <span
       className={`inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-sans text-micro font-semibold uppercase tracking-[0.04em] ${
@@ -89,7 +89,7 @@ export function StatusLabel({ display, showNonLeague = true, className }: Status
       ) : null}
       {/* The source of the score is never optional: it travels with the score. */}
       <SourceMark display={display} />
-      {showNonLeague ? <GameChips display={display} className="normal-case tracking-normal" /> : null}
+      {showChips ? <GameChips display={display} className="normal-case tracking-normal" /> : null}
     </span>
   );
 }

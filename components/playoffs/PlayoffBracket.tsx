@@ -104,7 +104,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={display.showScores} />
             <BracketLine side={display.home} seed={seeds.home} showScore={display.showScores} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </Link>
@@ -114,7 +114,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={false} />
             <BracketLine side={display.home} seed={seeds.home} showScore={false} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </span>
@@ -149,7 +149,7 @@ export function PlayoffBracket({
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
-                  <GameRow game={entry.game} showRecap={false} showNonLeague={false} />
+                  <GameRow game={entry.game} showRecap={false} showChips={false} />
                 </li>
               ))}
             </ol>

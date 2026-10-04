@@ -134,7 +134,7 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
             </span>
           )}
           {scheduled ? null : (
-            <StatusLabel display={display} showNonLeague={false} className="shrink-0" />
+            <StatusLabel display={display} showChips={false} className="shrink-0" />
           )}
         </p>
         <Opponent card={card} />
