@@ -9,14 +9,12 @@ import { seasonWindowOf } from './normalize';
 import {
   ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
 } from './season';
-import { getTeamById, getTeamBySlug } from './teams';
+import { teamOfSide } from './teams';
 import type { Game, GameSide, LeagueId, Season, SeasonLeague, SeasonWindow } from './types';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */
 function leagueOfSide(side: GameSide): LeagueId | null {
-  const team = (side.teamId ? getTeamById(side.teamId) : undefined)
-    ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
-  return team ? team.league : null;
+  return teamOfSide(side)?.league ?? null;
 }
 
 const maxOf = (dates: readonly string[]): string | null =>

@@ -4,7 +4,7 @@ import { ALL_DIVISIONS, LEAGUES } from '../lib/leagues';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, isRegistryTeamId,
   isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveOfficialName, resolveTeam,
-  sideJoinKey, teamsInDivision, teamsInLeague, unorderedPairKey,
+  sideJoinKey, teamOfSide, teamsInDivision, teamsInLeague, unorderedPairKey,
 } from '../lib/teams';
 
 /**
@@ -265,5 +265,16 @@ describe('teams: the cross-source join key (SPEC §5.7)', () => {
     expect(sideJoinKey({ slug: null, name: 'St. Francis (Mountain View)' })).toBe('name:stfrancismountainview');
     expect(unorderedPairKey('los-altos', 'name:bishops')).toBe('los-altos~name:bishops');
     expect(unorderedPairKey('name:bishops', 'los-altos')).toBe('los-altos~name:bishops');
+  });
+});
+
+describe('teams: the registry team on one side of a game', () => {
+  it('reads the MaxPreps GUID first, then the slug, and nothing for a non-member', () => {
+    const [a, b] = TEAMS;
+    expect(teamOfSide({ teamId: a.id, slug: null })).toBe(a);
+    expect(teamOfSide({ teamId: null, slug: a.slug })).toBe(a);
+    expect(teamOfSide({ teamId: a.id, slug: b.slug })).toBe(a);
+    expect(teamOfSide({ teamId: '00000000-0000-0000-0000-000000000000', slug: b.slug })).toBe(b);
+    expect(teamOfSide({ teamId: null, slug: null })).toBeUndefined();
   });
 });

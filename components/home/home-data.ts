@@ -60,6 +60,7 @@ import {
 } from '../../lib/leagues';
 import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
+import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
@@ -110,7 +111,7 @@ function shortNameOf(side: Game['home']): string {
 function homeLeagueOf(game: Game, leagueIds: readonly LeagueId[]): LeagueId | null {
   if (game.countsFor !== null) return getDivision(game.countsFor).leagueId;
   const sides = [game.home, game.away]
-    .map((s) => (s.teamId ? getTeamById(s.teamId) : undefined) ?? (s.slug ? getTeamBySlug(s.slug) : undefined))
+    .map(teamOfSide)
     .filter((t): t is Team => t !== undefined);
   for (const id of leagueIds) if (sides.some((t) => t.league === id)) return id;
   return null;

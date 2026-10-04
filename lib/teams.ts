@@ -17,7 +17,7 @@ import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
 import { SLUG_PATTERN } from './schema-primitives';
-import type { DivisionId, LeagueId, Team, TeamId } from './types';
+import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
 const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
@@ -173,6 +173,11 @@ export function getTeamById(id: TeamId): Team | undefined {
 
 export function getTeamBySlug(slug: string): Team | undefined {
   return BY_SLUG.get(slug);
+}
+
+/** The registry team on one side of a game: by MaxPreps GUID first, then by slug. */
+export function teamOfSide(side: Pick<GameSide, 'teamId' | 'slug'>): Team | undefined {
+  return (side.teamId ? BY_ID.get(side.teamId) : undefined) ?? (side.slug ? BY_SLUG.get(side.slug) : undefined);
 }
 
 /**

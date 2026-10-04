@@ -18,7 +18,7 @@
 import { postseasonTag } from '../classify';
 import { divisionLabel, getDivision, leagueOfDivision } from '../leagues';
 import { shortDate, monthDay } from '../format';
-import { getTeamBySlug, resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
+import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '../teams';
 import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
 
 export interface MatchOptions {
@@ -240,8 +240,7 @@ function dayBefore(dateKey: string): string {
 }
 
 function teamDivision(side: GameSide): DivisionId | null {
-  const team = (side.teamId ? resolveTeam(side.teamId) : undefined) ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
-  return team?.division ?? null;
+  return teamOfSide(side)?.division ?? null;
 }
 
 function excludedContestType(game: Game, excluded: readonly number[]): number | null {

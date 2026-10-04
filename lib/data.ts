@@ -54,7 +54,7 @@ import {
   sortStandings,
 } from './standings';
 import type { MissingOfficialRow } from './standings';
-import { getTeamById, getTeamBySlug } from './teams';
+import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
 import type {
   CcsCalendarEvent,
   CcsPlayoffs,
@@ -407,13 +407,9 @@ function involvesTeam(game: Game, team: Team): boolean {
   );
 }
 
-function sideTeam(side: Game['home']): Team | undefined {
-  return (side.teamId ? getTeamById(side.teamId) : undefined) ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
-}
-
 function hasSideIn(game: Game, pred: (t: Team) => boolean): boolean {
-  const h = sideTeam(game.home);
-  const a = sideTeam(game.away);
+  const h = teamOfSide(game.home);
+  const a = teamOfSide(game.away);
   return (!!h && pred(h)) || (!!a && pred(a));
 }
 
