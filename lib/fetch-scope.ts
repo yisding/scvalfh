@@ -43,22 +43,8 @@ export function inScope(team: Team, leagues: readonly LeagueId[] | null): boolea
   return leagues === null || leagues.includes(team.league);
 }
 
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-export function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
+/** Keys sorted at every level, so re-running produces a byte-identical file: the snapshot's own. */
+export { stableStringify } from './snapshot-schema';
 
 /**
  * `value` as JSON with keys sorted and every key in `ignore` dropped at every level. Two files with

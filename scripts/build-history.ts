@@ -52,7 +52,9 @@ import {
   type BvalStandingsBlock,
 } from '../lib/sources/bval-sheet';
 import { HttpClient } from '../lib/sources/http';
+import { isCalendarDate } from '../lib/clubs-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
+import { stableStringify } from '../lib/snapshot-schema';
 
 interface Args {
   from: string | null;
@@ -60,13 +62,6 @@ interface Args {
   retrievedOn: string;
   out: string;
   dryRun: boolean;
-}
-
-/** A real calendar day written YYYY-MM-DD ("2026-02-30" is refused). */
-function isIsoDay(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const d = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -92,7 +87,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--dry-run') out.dryRun = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
-  if (out.retrievedOn !== null && !isIsoDay(out.retrievedOn)) {
+  if (out.retrievedOn !== null && !isCalendarDate(out.retrievedOn)) {
     throw new Error(`--retrieved-on must be a date written YYYY-MM-DD, got "${out.retrievedOn}"`);
   }
   // Offline, the documents were read whenever the fixtures were saved; today would be a guess.
@@ -100,23 +95,6 @@ function parseArgs(argv: readonly string[]): Args {
     throw new Error('--bval-from needs --retrieved-on YYYY-MM-DD: the day those BVAL files were read');
   }
   return { ...out, retrievedOn: out.retrievedOn ?? new Date().toISOString().slice(0, 10) };
-}
-
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
 }
 
 function pick<T extends { division: string; level: string }>(
