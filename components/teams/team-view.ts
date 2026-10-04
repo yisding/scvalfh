@@ -29,7 +29,16 @@ import {
   type StandingContext,
   type TeamPostseasonLine,
 } from '../../lib/data';
-import { gameWhen, monthDay, ordinal, recordString, shortDate, timeOfDayPT } from '../../lib/format';
+import {
+  dateSpan,
+  gameWhen,
+  monthDay,
+  ordinal,
+  recordString,
+  shortDate,
+  sideOutcome,
+  timeOfDayPT,
+} from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
 import { getPriorSeason } from '../../lib/prior-season-data';
@@ -76,7 +85,7 @@ export interface UnbeatenOpponent {
 export interface TeamEloView {
   /** Whole Elo points; null when the team has neither a final this season nor a start from last. */
   elo: number | null;
-  /** This season's finals its rating counts: every final against one of the four leagues' teams. */
+  /** This season's finals its rating counts: every final against one of the five leagues' teams. */
   games: number;
   /** Rated from last season alone: no counted final yet this season. */
   preseason: boolean;
@@ -86,7 +95,7 @@ export interface TeamEloView {
   seededFrom: string | null;
   /**
    * Whether THIS team started from its rating in `seededFrom`. False for a team with no counted
-   * final last season against the four leagues' teams (a program new to the registry, or one
+   * final last season against the five leagues' teams (a program new to the registry, or one
    * whose games then were all forfeits or unscored): it started at average, even when every other
    * team was seeded.
    */
@@ -126,7 +135,12 @@ export interface TeamLeagueCopy {
   /** 'Santa Clara Valley Athletic League' */
   name: string;
   section: SectionId;
-  postseasonKind: 'ccs-ladder' | 'league-tournament';
+  postseasonKind: 'ccs-ladder' | 'league-tournament' | 'unbracketed-tournament';
+  /**
+   * The name of the league's own postseason event ('MCAL tournament' is `${short} tournament`;
+   * 'Super Regional' for an unbracketed league); null for a CCS ladder, whose event is CCS's.
+   */
+  postseasonName: string | null;
   /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL): the noun for a game in this team's table. */
   gamesWord: 'division' | 'league';
   /** 'Article VI §1 (double round robin; …)' */
@@ -138,7 +152,10 @@ export interface TeamLeagueCopy {
    * sentence of TeamNextGame (SPEC §10.5).
    */
   seasonEndSentence: string;
-  /** `We will list a playoff game as soon as CCS publishes the bracket.` | `… as soon as MCAL posts the bracket.` */
+  /**
+   * `We will list a playoff game as soon as CCS publishes the bracket.` | `… as soon as MCAL posts the
+   * bracket.` | `We will not guess a bracket: the Super Regional’s format and site are not published yet.`
+   */
   bracketSentence: string;
 }
 
@@ -160,8 +177,8 @@ export interface TeamPageView {
   standingsHref: string;
   /** `SCVAL standings` (SectionHeader / the link draws the arrow). */
   standingsLabel: string;
-  /** The division's official schedule (config). */
-  officialScheduleUrl: string;
+  /** The division's official schedule (config); null when the league publishes none (`official.mode` 'none'). */
+  officialScheduleUrl: string | null;
   /** false ⇒ every number renders as an em dash, never 0-0-0 (DESIGN §8). */
   hasResults: boolean;
   /** GP counted / scheduled, games left and the points ceiling (lib/data.ts §5.10). */
@@ -275,30 +292,51 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
   const league = getLeague(leagueId);
   const ps = league.postseason;
   const ends = leaguePlayEnds(league.id);
-  let after = '';
-  if (ps.kind === 'ccs-ladder') {
-    const first = ps.pairings[0];
-    if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${shortDate(first.date)}`;
-    else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in is ${shortDate(first.date)}`;
-  } else {
-    const firstRound = [...ps.rounds].sort((a, b) => a.date.localeCompare(b.date))[0];
-    if (firstRound) after = ` and the ${ps.name} starts ${shortDate(firstRound.date)}`;
-  }
-  return {
+  const base = {
     id: league.id,
     shortName: league.shortName,
     name: league.name,
     section: league.sectionId,
-    postseasonKind: ps.kind,
     gamesWord: league.rules.gamesWord,
     doubleRoundRobin: league.rules.citations.doubleRoundRobin,
     leaguePlayEnds: ends,
-    seasonEndSentence: `The ${league.shortName} league season ends ${shortDate(ends)}${after}.`,
-    bracketSentence:
-      ps.kind === 'ccs-ladder'
-        ? 'We will list a playoff game as soon as CCS publishes the bracket.'
-        : `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
   };
+  const ended = `The ${league.shortName} league season ends ${shortDate(ends)}`;
+  switch (ps.kind) {
+    case 'ccs-ladder': {
+      const first = ps.pairings[0];
+      let after = '';
+      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${shortDate(first.date)}`;
+      else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in is ${shortDate(first.date)}`;
+      return {
+        ...base,
+        postseasonKind: ps.kind,
+        postseasonName: null,
+        seasonEndSentence: `${ended}${after}.`,
+        bracketSentence: 'We will list a playoff game as soon as CCS publishes the bracket.',
+      };
+    }
+    case 'league-tournament': {
+      const firstRound = [...ps.rounds].sort((a, b) => a.date.localeCompare(b.date))[0];
+      const after = firstRound ? ` and the ${ps.name} starts ${shortDate(firstRound.date)}` : '';
+      return {
+        ...base,
+        postseasonKind: ps.kind,
+        postseasonName: ps.name,
+        seasonEndSentence: `${ended}${after}.`,
+        bracketSentence: `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
+      };
+    }
+    case 'unbracketed-tournament':
+      // No bracket will be drawn: the sentences state the published dates and say the rest is not known.
+      return {
+        ...base,
+        postseasonKind: ps.kind,
+        postseasonName: ps.name,
+        seasonEndSentence: `${ended}; the ${ps.name} follows, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
+        bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
+      };
+  }
 }
 
 function byDate(a: Game, b: Game): number {
@@ -306,11 +344,7 @@ function byDate(a: Game, b: Game): number {
 }
 
 function outcomeFor(game: Game, teamId: string): Outcome | null {
-  if (game.status !== 'final') return null;
-  const mine = game.home.teamId === teamId ? game.home : game.away;
-  const theirs = game.home.teamId === teamId ? game.away : game.home;
-  if (mine.score === null || theirs.score === null) return null;
-  return mine.score > theirs.score ? 'W' : mine.score < theirs.score ? 'L' : 'T';
+  return sideOutcome(game, game.home.teamId === teamId ? 'home' : 'away');
 }
 
 /** The chip label's score, from this team's side: '0–7'. */
@@ -436,7 +470,13 @@ export function earlierMeeting(
   const theirs = mineIsHome ? display.away : display.home;
   const verb = outcome === 'W' ? 'won' : outcome === 'L' ? 'lost' : 'tied';
   const decider =
-    display.deciderTag === 'F' ? ' by forfeit' : display.deciderTag ? ` in ${display.deciderTag}` : '';
+    display.deciderTag === 'F'
+      ? ' by forfeit'
+      : display.deciderTag === 'SO'
+        ? ' on 1 v 1s'
+        : display.deciderTag
+          ? ` in ${display.deciderTag}`
+          : '';
   const where =
     game.site === 'neutral' ? 'at a neutral site' : mineIsHome ? 'at home' : 'away';
   return {
@@ -622,7 +662,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     }),
     standingsHref: `/standings/${league.id}#${team.division}`,
     standingsLabel: `${league.shortName} standings`,
-    officialScheduleUrl: division.official.scheduleUrl,
+    officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
     context,
     postseasonLine: getTeamPostseasonLine(team.slug),
@@ -652,6 +692,8 @@ export interface TeamsLeagueGroup {
   title: string;
   /** `15 teams` */
   meta: string;
+  /** Who the league's schools are, when that is not one section's (config `membershipNote`); null for most. */
+  membershipNote: string | null;
   /** `/standings/<league>` */
   standingsHref: string;
   /** `SCVAL standings` */
@@ -684,6 +726,7 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
       league,
       title: `${league.shortName} — ${league.name}`,
       meta: teamsWord(league.teamCount),
+      membershipNote: getLeague(league.id).membershipNote,
       standingsHref: `/standings/${league.id}`,
       standingsLabel: `${league.shortName} standings`,
       divisions: divisions.map((d) =>

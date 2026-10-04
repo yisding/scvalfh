@@ -1,8 +1,8 @@
 /**
- * The 43-team membership registry: SCVAL 15, BVAL 12, PCAL 7, MCAL 9 (SPEC §3).
+ * The 49-team membership registry: SCVAL 15, BVAL 12, PCAL 7, MCAL 9, EAL 6 (SPEC §3).
  *
  * THIS is the set of leagues, not the feed: every table is built from this constant and
- * left-joined against the feed. Seeds live in lib/registry/{scval,bval,pcal,mcal}.ts; TEAMS is
+ * left-joined against the feed. Seeds live in lib/registry/{scval,bval,pcal,mcal,eal}.ts; TEAMS is
  * assembled here in LEAGUES order (lib/leagues.ts).
  *
  * ids are MaxPreps GUIDs. Slugs and 2-letter abbrs are OURS and are never derived by string
@@ -11,6 +11,7 @@
 
 import { LEAGUES, findLeague, getLeague } from './leagues';
 import { BVAL_SEEDS } from './registry/bval';
+import { EAL_SEEDS } from './registry/eal';
 import { MCAL_SEEDS } from './registry/mcal';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
@@ -87,12 +88,13 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = {
   bval: BVAL_SEEDS,
   pcal: PCAL_SEEDS,
   mcal: MCAL_SEEDS,
+  eal: EAL_SEEDS,
 };
 
-/** The registry (43), in LEAGUES order; within a league, the seed file's order. */
+/** The registry (49), in LEAGUES order; within a league, the seed file's order. */
 export const TEAMS: readonly Team[] = LEAGUES.flatMap((l) => SEEDS_BY_LEAGUE[l.id] ?? []).map(toTeam);
 
-/** Teams whose games MaxPreps actually publishes — one schedule request each (all 43 today). */
+/** Teams whose games MaxPreps actually publishes — one schedule request each (all 49 today). */
 export const FETCHABLE_TEAMS: readonly Team[] = TEAMS.filter(
   (t) => t.dataCoverage !== 'none',
 );
@@ -203,7 +205,7 @@ const WITHDRAWN_KEYS: ReadonlyMap<LeagueId, ReadonlySet<string>> = new Map(
 
 /**
  * Schools a league's official grid still lists that are NOT fielding a varsity team (Wilcox in
- * SCVAL, York in PCAL). Their grid fixtures are dropped at parse time; they are not in the
+ * SCVAL, York in PCAL, Red Bluff in the EAL, which MaxPreps' table still lists). Their grid fixtures are dropped at parse time; they are not in the
  * registry, so they appear nowhere on the site. Reads every league's `withdrawnNames` when
  * `leagueId` is omitted.
  */
@@ -270,8 +272,8 @@ function assertRegistry(): void {
     }
   }
   const expectedTotal = LEAGUES.reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
-  if (TEAMS.length !== expectedTotal || TEAMS.length !== 43) {
-    fail(`expected 43 teams, got ${TEAMS.length}`);
+  if (TEAMS.length !== expectedTotal || TEAMS.length !== 49) {
+    fail(`expected 49 teams, got ${TEAMS.length}`);
   }
   if (FETCHABLE_TEAMS.length !== TEAMS.length) {
     fail(`expected ${TEAMS.length} fetchable teams, got ${FETCHABLE_TEAMS.length}`);
@@ -296,6 +298,10 @@ function assertRegistry(): void {
     for (const d of l.divisions) {
       for (const slug of d.maxprepsMissing) {
         if (BY_SLUG.get(slug)?.division !== d.id) fail(`${d.id}.maxprepsMissing: ${slug} is not a member`);
+      }
+      // A known non-member row (EAL: Red Bluff) is never a registry team.
+      for (const id of Object.keys(d.maxprepsExtraRows)) {
+        if (BY_ID.has(id)) fail(`${d.id}.maxprepsExtraRows: ${id} is a registry team (${BY_ID.get(id)!.slug})`);
       }
     }
   }

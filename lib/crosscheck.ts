@@ -14,6 +14,9 @@
  * scoreboard exposes neither home/away nor a web path — only two names, two logo URLs and two score
  * strings. Team identity comes from lib/sources/sblive.ts `resolveSbliveSide` (id first).
  *
+ * Only scores are compared; no W/L/T is derived here (that is lib/format.ts `sideOutcome`). So an EAL 1 v 1
+ * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree.
+ *
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */
 
@@ -43,6 +46,12 @@ export interface ReconcileOptions {
   sbliveFetchedAt: string;
   /** The run's local date; a game dated today or later is never backfilled. */
   today?: string;
+  /**
+   * The rows D2 (lib/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
+   * one is keyed on carries that row's note, so its own note and the si.com-only row withBackfill
+   * publishes give the same reason.
+   */
+  skipped?: readonly Pick<SbliveOnlyRow, 'contestId' | 'note'>[];
 }
 
 export interface ReconcileResult {
@@ -109,6 +118,7 @@ export function reconcile(
   sbliveGames: readonly SbliveGame[],
   opts: ReconcileOptions,
 ): ReconcileResult {
+  const skipNote = new Map((opts.skipped ?? []).map((r) => [r.contestId, r.note]));
   const bySbliveKey = new Map<string, SbliveGame>();
   for (const g of sbliveGames) {
     const key = sbliveJoinKey(g);
@@ -149,7 +159,7 @@ export function reconcile(
     // --- MaxPreps has no score and D2 did not publish si.com's (lib/backfill.ts ran first): record
     //     why, and leave the game unreported. A missing score is never shown as 0-0.
     if (ourHome === null || ourAway === null) {
-      const reason = whyNotPublished(game, match, opts.today);
+      const reason = skipNote.get(game.contestId) ?? whyNotPublished(game, match, opts.today);
       const note =
         `si.com reports ${match.sides[0].name} ${match.sides[0].score}` +
         `, ${match.sides[1].name} ${match.sides[1].score}` +

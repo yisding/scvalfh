@@ -11,14 +11,16 @@
  * game renders no numeric score anywhere, AND a genuine 0-0 final still renders two zeros. A
  * component that suppressed every zero would pass the first assertion and be wrong.
  *
- * Multi-league (SPEC §10.4, §13.6): every walk covers SCVAL, BVAL, PCAL and MCAL. The rule runs
- * twice. Over the bundled data/snapshot.json (replaced twice a day by the data cron, whose commit
- * this suite gates) it asserts per-game INVARIANTS only — loops that pass trivially when a set is
- * empty, because a day with no score-pending game (every score entered, or backfilled by D2 rule 3)
- * or no 0-0 final is a normal day and must never block publishing. The two-direction PROOF — that
- * the sets exist and the rule bites on them — runs over the offline all-2026-10-02 corpus, which
- * has score-pending games, scheduled games and 0-0 finals (lib/data is re-imported after
- * SCVAL_SNAPSHOT points at it). Every assertion message names the module that produced the value.
+ * Multi-league (SPEC §10.4, §13.6): every walk covers SCVAL, BVAL, PCAL, MCAL and EAL. The rule
+ * runs three times. Over the bundled data/snapshot.json (replaced twice a day by the data cron,
+ * whose commit this suite gates) it asserts per-game INVARIANTS only — loops that pass trivially
+ * when a set is empty, because a day with no score-pending game (every score entered, or
+ * backfilled by D2 rule 3) or no 0-0 final is a normal day and must never block publishing. The
+ * two-direction PROOF — that the sets exist and the rule bites on them — runs over the offline
+ * all-2026-10-02 corpus, which has score-pending games, scheduled games and 0-0 finals (lib/data
+ * is re-imported after SCVAL_SNAPSHOT points at it). The EAL capture (EAL_CORPUS), whose games
+ * the all corpus does not hold, gets the invariants. Every assertion message names the module
+ * that produced the value.
  */
 
 import { createElement } from 'react';
@@ -30,7 +32,7 @@ import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/Gam
 import { ScoreCell } from '../../components/ui/ScoreCell';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
 import type { Game } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
 
 interface Rendered {
   games: Game[];
@@ -187,45 +189,56 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
 
 defineRule('bundled snapshot (invariants)', () => live, false);
 
-describe('offline corpus (proof)', () => {
-  const priorEnv = process.env.SCVAL_SNAPSHOT;
-  let corpus: Rendered | undefined;
+/**
+ * The rule over one offline corpus, with lib/data re-imported after SCVAL_SNAPSHOT points at it.
+ * `proof` is set for the corpus that holds a score-pending game and a 0-0 final.
+ */
+function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
+  describe(title, () => {
+    const priorEnv = process.env.SCVAL_SNAPSHOT;
+    let corpus: Rendered | undefined;
 
-  beforeAll(async () => {
-    process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-    vi.resetModules();
-    const data = await import('../../lib/data');
-    const model = await import('../../components/game/game-model');
-    const row = await import('../../components/ui/GameRow');
-    const cell = await import('../../components/ui/ScoreCell');
-    corpus = {
-      games: data.getGames(),
-      buildGameModel: model.buildGameModel,
-      gameTitle: model.gameTitle,
-      gameDescription: model.gameDescription,
-      gameKicker: model.gameKicker,
-      GameRow: row.GameRow,
-      GameCard: row.GameCard,
-      GameLine: row.GameLine,
-      GameLogRow: row.GameLogRow,
-      ScoreCell: cell.ScoreCell,
-    };
-  }, 600_000);
+    beforeAll(async () => {
+      process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(corpusName);
+      vi.resetModules();
+      const data = await import('../../lib/data');
+      const model = await import('../../components/game/game-model');
+      const row = await import('../../components/ui/GameRow');
+      const cell = await import('../../components/ui/ScoreCell');
+      corpus = {
+        games: data.getGames(),
+        buildGameModel: model.buildGameModel,
+        gameTitle: model.gameTitle,
+        gameDescription: model.gameDescription,
+        gameKicker: model.gameKicker,
+        GameRow: row.GameRow,
+        GameCard: row.GameCard,
+        GameLine: row.GameLine,
+        GameLogRow: row.GameLogRow,
+        ScoreCell: cell.ScoreCell,
+      };
+    }, 600_000);
 
-  afterAll(() => {
-    if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-    else process.env.SCVAL_SNAPSHOT = priorEnv;
-    vi.resetModules();
+    afterAll(() => {
+      if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
+      else process.env.SCVAL_SNAPSHOT = priorEnv;
+      vi.resetModules();
+    });
+
+    defineRule(`corpus ${corpusName}`, () => corpus!, proof);
   });
+}
 
-  defineRule('corpus all-2026-10-02', () => corpus!, true);
-});
+defineCorpus('offline corpus (proof)', 'all-2026-10-02', true);
+// The EAL capture has its own score-pending games (two league games and a non-league one) and a
+// 1-1 final decided on 1 v 1s: the rule holds there too. No 0-0 final is promised, so no proof.
+defineCorpus('EAL corpus (invariants)', EAL_CORPUS, false);
 
 const games = live.games;
 const finals = games.filter((g) => g.status === 'final');
 
 describe('every league, rendered', () => {
-  it('walks games of all four leagues', () => {
+  it('walks games of all five leagues', () => {
     for (const league of getLeagueSummaries()) {
       const mine = games.filter((g) =>
         [g.home.slug, g.away.slug].some((slug) => slug !== null && getTeamBySlug(slug)?.league === league.id),

@@ -83,7 +83,7 @@ export function DivisionStandings({
       <p className="mt-3 mb-0 text-meta text-ink-3">
         PTS: {points}. GD bars are per division, scaled to {view.label}&rsquo;s biggest goal
         difference ({view.gdDomain})
-        {view.berthRuleAfter ? (
+        {view.berthRuleAfter && view.ladderLineLabel ? (
           <>
             {' '}
             &middot; the heavier line under {ordinal(view.berthRuleAfter)} marks the{' '}

@@ -10,8 +10,13 @@
  *
  * Everything it decides is a by-law, not a preference:
  *
- *  - Order and points are the league's (3 for a win, 1 for a tie in all four) — lib/standings has
- *    already ranked the rows, so this module never re-sorts them.
+ *  - Order and points are the league's (3 for a win, 1 for a tie in all five) — lib/standings has
+ *    already ranked the rows, so this module never re-sorts them. The EAL uses its points only to
+ *    decide its title and publishes no standings (`rules.orderScope: 'title'`); the site orders its
+ *    table by the same points and says so.
+ *  - A league with no schedule document (`official.mode: 'none'`, the EAL) gets no official
+ *    schedule link, and its missing results are the past games MaxPreps marks as league games with
+ *    no counted result: no sentence calls them "official".
  *  - Places can be SHARED: an uncomputable last step (a coin flip, a blind draw, a play-in) leaves
  *    teams level with `tiebreak.shared === true`. That is why the ladder line is COUNTED (how many
  *    rows sit at or above it) rather than assumed.
@@ -32,6 +37,7 @@ import {
   leagueStandingsUrl,
   sectionOf,
   statusesOf,
+  type DivisionConfig,
   type LeagueConfig,
 } from '../../lib/leagues';
 import { outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend } from '../../lib/standings';
@@ -136,14 +142,17 @@ export interface DivisionView {
   legendNotes: string[];
   /** 1-based row index to draw the 2px ladder line after (`DivisionConfig.ladderLine`). */
   berthRuleAfter?: number;
-  /** `AQ line`, `Play-in host`, `Tournament line`. */
-  ladderLineLabel: string;
+  /** `AQ line`, `Play-in host`, `Tournament line`; null when the division draws no line (EAL). */
+  ladderLineLabel: string | null;
   statusGroups: StatusGroup[];
-  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand`. */
+  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
   statusHeading: string;
   /** Why a ladder line is not settled, when a shared place straddles two rungs. */
   statusCaveat: string | null;
-  /** `/playoffs#<league>` for a CCS league, `/playoffs/<league>` for a league tournament. */
+  /**
+   * `/playoffs#<league>` for a CCS league or an unbracketed tournament (its card on /playoffs),
+   * `/playoffs/<league>` for a league tournament.
+   */
   playoffsHref: string;
   playoffsLinkText: string;
   /** Teams with no reported results — named, never ranked. */
@@ -153,7 +162,11 @@ export interface DivisionView {
   /** Rows of kind 'missing', then the postponed ones (listed after them, never counted). */
   missing: MissingRowView[];
   postponed: MissingRowView[];
-  /** `On <League>’s official schedule for a date that has passed, with no counted result yet:` */
+  /**
+   * `On <League>’s official schedule for a date that has passed, with no counted result yet:`, or, for
+   * a league with no schedule document, `Marked by MaxPreps as <SHORT> league games, dated before
+   * today, with no counted result yet:`.
+   */
   missingIntro: string;
   /** The one-line banner above the table; null when nothing is missing. */
   missingBanner: string | null;
@@ -163,12 +176,16 @@ export interface DivisionView {
   backfilledGames: number;
   /** The † footnote; null when no counted score came from si.com. */
   backfillFootnote: string | null;
-  officialSchedule: { href: string; label: string };
-  /** `Scheduled per <SHORT>` — the source line beside the official schedule link. */
+  /** The league's schedule document; null when it publishes none (`official.mode: 'none'`). */
+  officialSchedule: { href: string; label: string } | null;
+  /**
+   * `Scheduled per <SHORT>` — the source line beside the official schedule link; for a league with no
+   * document, `League games as MaxPreps marks them (<SHORT> publishes no schedule)`.
+   */
   scheduledPer: string;
   /**
-   * The Notes block's sentence after a place difference MaxPreps' win-percentage order explains:
-   * `<SHORT> ranks by points (<citations.pointsShort>), and so do we.` (from config).
+   * The Notes block's sentence after a place difference MaxPreps' win-percentage order explains
+   * (`rankRuleText`, from config).
    */
   rankRule: string;
   /**
@@ -191,9 +208,49 @@ export function officialScheduleLabel(source: OfficialSourceId): string {
   return source === 'bval-docx' ? 'Official schedule (Google Doc)' : 'Official schedule (PDF)';
 }
 
-/** `SCVAL ranks by points (Art. VI §2), and so do we.` — from the league's citations. */
+/**
+ * `SCVAL ranks by points (Art. VI §2), and so do we.` — from the league's citations. A league that
+ * uses points only for its title (`orderScope: 'title'`, the EAL) publishes no standings, so the
+ * sentence says the order is the site's.
+ */
 export function rankRuleText(league: LeagueConfig): string {
-  return `${league.shortName} ranks by points (${league.rules.citations.pointsShort}), and so do we.`;
+  const { shortName: short } = league;
+  const cite = league.rules.citations.pointsShort;
+  switch (league.rules.orderScope) {
+    case 'table':
+      return `${short} ranks by points (${cite}), and so do we.`;
+    case 'title':
+      return `${short} decides its title on points (${cite}) and publishes no standings; this site orders the whole table by the same points.`;
+  }
+}
+
+/** The legend's sentence on whose order the table is (by `rules.orderScope`). */
+export function orderLegendText(league: LeagueConfig): string {
+  const short = league.shortName;
+  switch (league.rules.orderScope) {
+    case 'table': {
+      const chain = league.rules.tiebreaks.default;
+      return chain[chain.length - 1] === 'coin-flip'
+        ? `This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to ${short}.`
+        : `This order is our computation from published results, not a league ruling: the official tiebreak belongs to ${short}.`;
+    }
+    case 'title':
+      return `This order is our computation from published results, not a league ruling: ${short} publishes no standings.`;
+  }
+}
+
+/** The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from. */
+export function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
+  return official.mode === 'none'
+    ? `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`
+    : `Scheduled per ${league.shortName}`;
+}
+
+/** The intro of the missing-results list, by whether the league has a schedule document. */
+export function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
+  return official.mode === 'none'
+    ? `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`
+    : `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
 }
 
 /**
@@ -208,11 +265,15 @@ export function levelReasonText(league: LeagueConfig): string {
   return reason || 'the league decides it';
 }
 
-/** `⚑ 1 official league result missing — listed below the table.` / `… results …` */
-export function missingBannerText(n: number): string {
+/**
+ * `⚑ 1 official league result missing — listed below the table.` / `… results …`. `official: false`
+ * (a league with no schedule document, the EAL) drops the word: `⚑ 1 league result missing — …`.
+ */
+export function missingBannerText(n: number, opts: { official?: boolean } = {}): string {
+  const kind = opts.official === false ? 'league' : 'official league';
   return n === 1
-    ? '⚑ 1 official league result missing — listed below the table.'
-    : `⚑ ${n} official league results missing — listed below the table.`;
+    ? `⚑ 1 ${kind} result missing — listed below the table.`
+    : `⚑ ${n} ${kind} results missing — listed below the table.`;
 }
 
 /** The si.com backfill footnote under a table with a † (singular / plural, verbatim). */
@@ -232,20 +293,34 @@ export function tableLabel(division: DivisionId): string {
   return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
 
-/** The postseason block's heading and link, from the league's postseason kind (no CCS for NCS). */
+/**
+ * The postseason block's heading and link, from the league's postseason kind (no CCS for NCS or NS).
+ * An unbracketed tournament (the EAL's Super Regional) has no bracket page: it links its card on
+ * /playoffs.
+ */
 export function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
-  if (league.postseason.kind === 'league-tournament') {
-    return {
-      heading: `${league.postseason.name}, as things stand`,
-      href: `/playoffs/${league.id}`,
-      linkText: 'Tournament bracket',
-    };
+  const ps = league.postseason;
+  switch (ps.kind) {
+    case 'league-tournament':
+      return { heading: `${ps.name}, as things stand`, href: `/playoffs/${league.id}`, linkText: 'Tournament bracket' };
+    case 'unbracketed-tournament':
+      return { heading: `${ps.name}, as things stand`, href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+    case 'ccs-ladder':
+      return { heading: 'CCS qualifying, as things stand', href: `/playoffs#${league.id}`, linkText: 'Playoff picture' };
   }
-  return {
-    heading: 'CCS qualifying, as things stand',
-    href: `/playoffs#${league.id}`,
-    linkText: 'Playoff picture',
-  };
+}
+
+/** The league's qualification rule, cited once in the legend (by postseason kind). */
+export function postseasonCitation(league: LeagueConfig): string {
+  const ps = league.postseason;
+  switch (ps.kind) {
+    case 'ccs-ladder':
+      return ps.citation;
+    case 'league-tournament':
+      return ps.citations.format;
+    case 'unbracketed-tournament':
+      return ps.citations.qualification;
+  }
 }
 
 function teamShort(teams: readonly Team[], slug: TeamSlug | null, fallback: string): string {
@@ -309,9 +384,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   const ranked = rows.filter((r) => r.standing.hasReportedResults);
   const unrankedTeams = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
 
-  // COUNTED, not assumed: with two teams level on the line there are more rows above it.
+  // COUNTED, not assumed: with two teams level on the line there are more rows above it. A division
+  // with no line (the EAL: every team is inside the Super Regional's top six) draws none.
   const line = config.ladderLine;
-  const aboveLine = ranked.filter((r) => r.standing.computed.place <= line.after);
+  const aboveLine = line ? ranked.filter((r) => r.standing.computed.place <= line.after) : [];
   const berthRuleAfter =
     aboveLine.length > 0 && aboveLine.length < rows.length ? aboveLine.length : undefined;
 
@@ -397,22 +473,18 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     ? `${tableWords}, league games only, through ${through}. Computed from published results; unofficial.`
     : `${tableWords}. No league game has been reported yet.`;
 
-  const citation =
-    league.postseason.kind === 'ccs-ladder' ? league.postseason.citation : league.postseason.citations.format;
+  const citation = postseasonCitation(league);
   const legendNotes: string[] = [];
-  if (berthRuleAfter) {
+  if (!line) {
+    legendNotes.push(`${citation}.`);
+  } else if (berthRuleAfter) {
     legendNotes.push(
       `The 2px rule after ${ordinal(berthRuleAfter)} place is the ${line.label} — ${citation}.`,
     );
   } else {
     legendNotes.push(`${line.label}: ${citation}.`);
   }
-  const chain = league.rules.tiebreaks.default;
-  legendNotes.push(
-    chain[chain.length - 1] === 'coin-flip'
-      ? `This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to ${league.shortName}.`
-      : `This order is our computation from published results, not a league ruling: the official tiebreak belongs to ${league.shortName}.`,
-  );
+  legendNotes.push(orderLegendText(league));
 
   const footnotes: string[] = [];
   if (input.pendingLeagueGames > 0) {
@@ -444,7 +516,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     footnotes,
     legendNotes,
     ...(berthRuleAfter ? { berthRuleAfter } : {}),
-    ladderLineLabel: line.label,
+    ladderLineLabel: line?.label ?? null,
     statusGroups,
     statusHeading: links.heading,
     statusCaveat,
@@ -455,16 +527,17 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     comparison,
     missing,
     postponed,
-    missingIntro: `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`,
-    missingBanner: missing.length > 0 ? missingBannerText(missing.length) : null,
+    missingIntro: missingIntroText(league, config.official),
+    missingBanner:
+      missing.length > 0 ? missingBannerText(missing.length, { official: config.official.mode !== 'none' }) : null,
     missingId: `missing-${input.division}`,
     backfilledGames: input.backfilledGames,
     backfillFootnote: input.backfilledGames > 0 ? backfillFootnoteText(input.backfilledGames) : null,
-    officialSchedule: {
-      href: config.official.scheduleUrl,
-      label: officialScheduleLabel(config.official.source),
-    },
-    scheduledPer: `Scheduled per ${league.shortName}`,
+    officialSchedule:
+      config.official.mode === 'none'
+        ? null
+        : { href: config.official.scheduleUrl, label: officialScheduleLabel(config.official.source) },
+    scheduledPer: scheduledPerText(league, config.official),
     rankRule: rankRuleText(league),
     levelReason: levelReasonText(league),
     sourceUrl: leagueStandingsUrl(input.division),
@@ -547,7 +620,8 @@ export function rulesFootnote(leagueId: LeagueId): string {
 
 /**
  * The uneven-GP footnote (SPEC §10.3), or null when every team has played within one game of the
- * others. MCAL adds its incomplete-schedule rule.
+ * others. MCAL adds its incomplete-schedule rule; a league whose points decide only its title (EAL)
+ * does not say its rules require the order.
  */
 export function unevenGpFootnote(
   leagueId: LeagueId,
@@ -555,7 +629,11 @@ export function unevenGpFootnote(
 ): string | null {
   if (spread.max - spread.min < 2) return null;
   const league = getLeague(leagueId);
-  const base = `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. The order is points, as ${league.shortName} rules require.`;
+  const base = `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. ${
+    league.rules.orderScope === 'title'
+      ? `The order is points, which ${league.shortName} uses to decide its title.`
+      : `The order is points, as ${league.shortName} rules require.`
+  }`;
   const incomplete = league.rules.citations.incomplete;
   return incomplete
     ? `${base} If the season ends with games unplayed, ${incomplete}; we will show that order then.`
@@ -581,7 +659,8 @@ export interface OverviewDivision {
    */
   anchorId: string | null;
   rows: StandingsRowData[];
-  ladderLine: { after: number; label: string };
+  /** The labelled rule in the compact table; null when the division draws none (EAL). */
+  ladderLine: { after: number; label: string } | null;
   /** `Full <division heading ?? SHORT> table →` */
   fullLabel: string;
   /** `/standings/<league>#<division>` */
@@ -594,12 +673,14 @@ export interface OverviewLeague {
   /** `SCVAL — Santa Clara Valley Athletic League` */
   title: string;
   shortName: string;
+  /** `LeagueConfig.membershipNote`: printed under the league's heading when its schools are not all in its section. */
+  membershipNote: string | null;
   divisions: OverviewDivision[];
 }
 
 export interface OverviewSection {
   id: string;
-  /** `Central Coast Section` / `North Coast Section` */
+  /** `Central Coast Section` / `North Coast Section` / `Northern Section` */
   name: string;
   leagues: OverviewLeague[];
 }
@@ -650,6 +731,7 @@ export function overviewOutline(
       id,
       title: `${league.shortName} — ${league.name}`,
       shortName: league.shortName,
+      membershipNote: league.membershipNote,
       divisions: league.divisions.map((d) => divisionOf(d.id)),
     });
   }

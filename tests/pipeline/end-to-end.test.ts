@@ -5,6 +5,9 @@
  * it starts from the corpus's own snapshot (corpusSnapshotPath) copied to --out.
  *
  * Assertion messages name the module that produces the value, so a failure is routed to its owner.
+ * The corpus's manifest names four leagues, so the EAL (added later) is frozen "not fetched in this
+ * run" in every case here. The finals-regression previous snapshot is a four-league file (frozen): it
+ * loads through loadSnapshot's league-added upgrade.
  */
 
 import { readFileSync, statSync } from 'node:fs';
@@ -61,7 +64,7 @@ describe('corpusSnapshotPath (tests/helpers.ts)', () => {
     const parsed = parseSnapshot(JSON.parse(readFileSync(corpusFile, 'utf8')) as unknown);
     expect(parsed.schemaVersion, 'tests/helpers.ts: snapshot version').toBe(2);
     expect(parsed.fetchedAt, 'tests/helpers.ts: the corpus stamp').toBe('2026-10-02T15:00:00.000Z');
-    expect(parsed.teams.length).toBe(43);
+    expect(parsed.teams.length).toBe(49);
     const meta = JSON.parse(readFileSync(corpusFile.replace(/\.json$/, '.meta.json'), 'utf8')) as { fetchedAt: string };
     expect(meta.fetchedAt, 'tests/helpers.ts: meta beside the snapshot').toBe(parsed.fetchedAt);
   });
@@ -89,15 +92,15 @@ describe('the corpus run', () => {
     expect(corpus.games.some((g) => byId.has(g.contestId)), 'lib/pipeline/steps/normalize.ts: dropped contests never published').toBe(false);
   });
 
-  it('every league fresh, no abort', () => {
-    expect(states(corpus), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh']);
+  it('every fetched league fresh, the EAL frozen (not fetched), no abort', () => {
+    expect(states(corpus), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
   });
 });
 
 describe('pcal-standings-empty: MaxPreps answers the PCAL table with zero rows', () => {
   it('with a previous copy: the run publishes, the table is carried, PCAL partial, the others fresh', () => {
     const { snapshot } = run({ variants: ['pcal-standings-empty'], previous: corpusFile });
-    expect(states(snapshot), 'lib/pipeline/steps/reported.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:partial', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/reported.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:partial', 'mcal:fresh', 'eal:frozen']);
     const pcal = health(snapshot, 'pcal');
     expect(pcal.divisions[0].reportedTable, 'lib/pipeline/steps/reported.ts: reportedTable').toBe('carried');
     expect(pcal.reasons, 'lib/pipeline/steps/reported.ts: reason').toEqual([
@@ -127,7 +130,7 @@ describe('pcal-standings-empty: MaxPreps answers the PCAL table with zero rows',
 describe('bval-meta-wrong-season: the Santa Teresa meta names the 2025-26 season', () => {
   it('no previous data: BVAL frozen with no league games; SCVAL, PCAL, MCAL fresh', () => {
     const { snapshot } = run({ variants: ['bval-meta-wrong-season'] });
-    expect(states(snapshot), 'lib/pipeline/steps/league-meta.ts').toEqual(['scval:fresh', 'bval:frozen', 'pcal:fresh', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/league-meta.ts').toEqual(['scval:fresh', 'bval:frozen', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
     const bval = health(snapshot, 'bval');
     expect(bval.reasons, 'lib/pipeline/steps/league-meta.ts: reason').toEqual([
       'MaxPreps moved the Santa Teresa table to another season this run, so BVAL has no results to show until it is fixed.',
@@ -154,6 +157,7 @@ describe('bval-meta-wrong-season: the Santa Teresa meta names the 2025-26 season
       'scval:fresh',
       'pcal:fresh',
       'mcal:fresh',
+      'eal:frozen',
     ]);
   });
 });
@@ -162,7 +166,7 @@ describe('leland-feed-503: MaxPreps answers Leland’s schedule with HTTP 503', 
   it('carries Leland’s games from the previous snapshot; BVAL partial; the others fresh', () => {
     const { snapshot, cli } = run({ variants: ['leland-feed-503'], previous: corpusFile });
     expect(cli.output, 'lib/pipeline/steps/schedules.ts: warning').toMatch(/WARN leland schedule failed: HTTP 503/);
-    expect(states(snapshot), 'lib/pipeline/steps/schedules.ts').toEqual(['scval:fresh', 'bval:partial', 'pcal:fresh', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/schedules.ts').toEqual(['scval:fresh', 'bval:partial', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
     const bval = health(snapshot, 'bval');
     expect(bval.teamFeeds, 'lib/pipeline/steps/schedules.ts: teamFeeds').toEqual({ total: 12, ok: 11, carried: 1, failed: 1 });
     expect(bval.reasons, 'lib/pipeline/steps/schedules.ts: reason').toEqual([
@@ -185,7 +189,7 @@ describe('finals-regression: the previous snapshot had three more Santa Teresa f
     for (const id of Object.keys(REGRESSED_FINALS)) {
       expect(cli.output, `lib/pipeline/steps/guards.ts: warning names ${id}`).toContain(`finals regression santa-teresa: ${id}`);
     }
-    expect(states(snapshot), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:frozen', 'pcal:fresh', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:frozen', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
     const bval = health(snapshot, 'bval');
     expect(bval.reasons, 'lib/pipeline/steps/guards.ts: reason').toEqual([
       '3 BVAL results that were final in the last update are missing from MaxPreps now, so BVAL is shown as of Thu Oct 1, 8:00 PM until someone checks.',
@@ -201,7 +205,7 @@ describe('finals-regression: the previous snapshot had three more Santa Teresa f
   it('--accept-regression bval publishes the fresh rows', () => {
     const { snapshot, cli } = run({ variants: ['finals-regression'], extraArgs: ['--accept-regression', 'bval'] });
     expect(cli.output, 'lib/pipeline/steps/guards.ts').toMatch(/finals regression accepted for BVAL santa-teresa/);
-    expect(states(snapshot), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/guards.ts').toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
     const st = health(snapshot, 'bval').divisions.find((d) => d.divisionId === 'santa-teresa');
     expect(st?.countedFinals, 'lib/pipeline/steps/standings.ts: countedFinals').toBe(5);
     expect(st?.previousCountedFinals, 'lib/pipeline/steps/standings.ts: previousCountedFinals').toBe(8);
@@ -254,6 +258,7 @@ describe('mcal-postseason: tournament games after Oct 22 and a league game MaxPr
       'scval:fresh',
       'bval:fresh',
       'pcal:fresh',
+      'eal:frozen',
     ]);
   });
 
@@ -277,7 +282,7 @@ describe('mcal-postseason: tournament games after Oct 22 and a league game MaxPr
 describe('bval-revised: BVAL revised the Mt. Hamilton schedule after our copy', () => {
   it('keeps the bundled fixtures, marks the check stale and BVAL partial', () => {
     const { snapshot } = run({ variants: ['bval-revised'] });
-    expect(states(snapshot), 'lib/pipeline/steps/official.ts').toEqual(['scval:fresh', 'bval:partial', 'pcal:fresh', 'mcal:fresh']);
+    expect(states(snapshot), 'lib/pipeline/steps/official.ts').toEqual(['scval:fresh', 'bval:partial', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
     const bval = health(snapshot, 'bval');
     expect(bval.reasons, 'lib/pipeline/steps/official.ts: reason').toEqual([
       'BVAL revised the Mt. Hamilton schedule after our copy (revised 9/20/26); official dates may be out of date.',

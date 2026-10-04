@@ -171,7 +171,7 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03 and 2026-10-04, as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03 and 2026-10-04 (with the 2026-10-04 EAL sweep, no row), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   it('holds 16 commitments from 9 schools to 14 colleges (15 programs), all "committed", 15 high and 1 medium', () => {
     expect(raw.capturedAt).toBe('2026-10-04');

@@ -592,3 +592,140 @@ describe('dedupePhantomPairs (SPEC §7.6 step 4)', () => {
     expect(res.games).toEqual(input);
   });
 });
+
+describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
+  // A home/away final from the captures, re-pointed at two registry teams with a given score,
+  // result flags and overtime count. Only the fields normalize reads change.
+  const template = allScheduleRows().find(
+    (r) =>
+      r.calculatedFields.contestState === 4 &&
+      r.contest.teams.length === 2 &&
+      r.contest.teams.some((t) => t.homeAwayType === 0) &&
+      r.contest.teams.some((t) => t.homeAwayType === 1) &&
+      r.contest.teams.every((t) => !t.isForfeit),
+  )!;
+  function pairRow(
+    contestId: string,
+    home: [slug: string, score: number, result: string | null],
+    away: [slug: string, score: number, result: string | null],
+    ot = 0,
+  ): ScheduleRow {
+    const row = editTeams(template, (t) => {
+      const [slug, score, result] = t.homeAwayType === 0 ? home : away;
+      const team = getTeamBySlug(slug)!;
+      return { teamId: team.id, name: team.name, score, result, contestType: 0 };
+    });
+    return {
+      ...row,
+      contest: { ...row.contest, contestId },
+      calculatedFields: { ...row.calculatedFields, overtimePeriodsPlayed: ot },
+    };
+  }
+  const one = (rows: ScheduleRow[]) => normalizeGames(rows, { fetchedAt: FETCHED_AT });
+
+  it('reads Chico 1, Davis 1 flagged W/L as a 1 v 1 win: decider SO, no tally, no conflict', () => {
+    // 2026-09-28 Chico 1, Davis Sr. 1 (9afebd05…): MaxPreps marks Chico W and Davis L, 0 overtime periods.
+    const id = '9afebd05-777b-4c8a-82d5-c41b556788bb';
+    const res = one([pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L'])]);
+    const [g] = res.games;
+    expect(g.decider).toBe('SO');
+    expect(g.shootout).toBeNull();
+    expect([g.home.score, g.away.score]).toEqual([1, 1]);
+    expect([g.home.result, g.away.result]).toEqual(['W', 'L']);
+    expect(g.provenance.resultConflict).toBeUndefined();
+    expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // Either order of the flags.
+    const [flipped] = one([pairRow(id, ['chico', 1, 'L'], ['davis', 1, 'W'])]).games;
+    expect(flipped.decider).toBe('SO');
+    expect(flipped.provenance.resultConflict).toBeUndefined();
+  });
+
+  it('still notes two EAL feeds that disagree on the score', () => {
+    const id = 'eeeeeeee-0000-4000-8000-000000000001';
+    const a = pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L']);
+    const b = pairRow(id, ['chico', 2, 'W'], ['davis', 1, 'L']);
+    const [g] = one([a, b]).games;
+    expect(g.provenance.resultConflict).toMatch(/two team feeds disagree on the score/);
+    expect(g.provenance.resultConflict).not.toMatch(/^MaxPreps marks/);
+  });
+
+  it('keeps the same score and flags between two MCAL teams a contradiction, as before', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-000000000002', ['redwood', 1, 'W'], ['tamalpais', 1, 'L'])]).games;
+    expect(g.decider).toBe('REG');
+    expect(g.provenance.resultConflict).toBe('MaxPreps marks Redwood W and Tamalpais L on a 1-1 score.');
+  });
+
+  it('does not treat an EAL team against a team of another league as a 1 v 1 win', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-000000000003', ['chico', 1, 'W'], ['tamalpais', 1, 'L'])]).games;
+    expect(g.decider).toBe('REG');
+    expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks Chico W and Tamalpais L on a 1-1 score\.$/);
+  });
+
+  it('keeps MaxPreps’ overtime count on a decided EAL game, never clamped', () => {
+    // 2026-09-02 PV @ Chico (8a4d7c70…): 1-0 Pleasant Valley with overtimePeriodsPlayed 3.
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-000000000004', ['chico', 0, 'L'], ['pleasant-valley', 1, 'W'], 3)]).games;
+    expect(g.decider).toBe('2OT');
+    expect(g.otPeriods).toBe(3);
+    expect(g.isOt).toBe(true);
+    expect(g.provenance.resultConflict).toBeUndefined();
+  });
+
+  it('keeps a level EAL final without a 1 v 1 winner a tie, and logs it', () => {
+    const id = 'eeeeeeee-0000-4000-8000-000000000005';
+    const res = one([pairRow(id, ['lassen', 2, 'T'], ['corning', 2, 'T'], 1)]);
+    const [g] = res.games;
+    expect(g.decider).toBe('OT');
+    expect([g.home.result, g.away.result]).toEqual(['T', 'T']);
+    expect(g.provenance.resultConflict).toBeUndefined();
+    expect(res.warnings).toContain(`contest ${id}: a level EAL final with no 1 v 1 winner flagged`);
+    const unflagged = one([pairRow(id, ['lassen', 0, null], ['corning', 0, null])]);
+    expect(unflagged.games[0].decider).toBe('REG');
+    expect(unflagged.warnings).toContain(`contest ${id}: a level EAL final with no 1 v 1 winner flagged`);
+  });
+
+  it('keeps a level EAL forfeit flagged W/L a contradiction, as between two MCAL teams (D7.1: not a 1 v 1 win)', () => {
+    const forfeitBy = (row: ScheduleRow, slug: string): ScheduleRow => ({
+      ...row,
+      contest: {
+        ...row.contest,
+        teams: row.contest.teams.map((t) => ({ ...t, isForfeit: t.teamId === getTeamBySlug(slug)!.id })),
+      },
+    });
+    const id = 'eeeeeeee-0000-4000-8000-000000000006';
+    const res = one([forfeitBy(pairRow(id, ['chico', 0, 'W'], ['davis', 0, 'L']), 'davis')]);
+    const [g] = res.games;
+    expect(g.decider).toBe('FORFEIT');
+    expect(g.provenance.resultConflict).toBe('MaxPreps marks Chico W and Davis L on a 0-0 score.');
+    expect(res.warnings).toContain(`contest ${id}: MaxPreps marks Chico W and Davis L on a 0-0 score.`);
+    const [mcal] = one([forfeitBy(pairRow(id, ['redwood', 0, 'W'], ['tamalpais', 0, 'L']), 'tamalpais')]).games;
+    expect(mcal.provenance.resultConflict).toBe('MaxPreps marks Redwood W and Tamalpais L on a 0-0 score.');
+  });
+
+  it('never reads a level EAL forfeit as a 1 v 1 win, nor logs it as a level final without one (D7.1)', () => {
+    // D7.1: 'SO' is for "a FINAL that is not a forfeit". The forfeit check comes first, so a level
+    // forfeit flagged W/L stays 'FORFEIT' (never "won on 1 v 1s"), with no tally and no 1 v 1 note.
+    const withForfeit = (row: ScheduleRow, side: 0 | 1): ScheduleRow => ({
+      ...row,
+      contest: {
+        ...row.contest,
+        teams: row.contest.teams.map((t) => ({ ...t, isForfeit: t.homeAwayType === side })),
+      },
+    });
+    const noWinnerNote = (id: string) => `contest ${id}: a level EAL final with no 1 v 1 winner flagged`;
+    const id = 'eeeeeeee-0000-4000-8000-000000000007';
+    for (const [side, by] of [[1, 'away'], [0, 'home']] as const) {
+      const res = one([withForfeit(pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L']), side)]);
+      const [g] = res.games;
+      expect(g.decider, `forfeit by ${by}`).toBe('FORFEIT');
+      expect(g.forfeitBy).toBe(by);
+      expect(g.shootout).toBeNull();
+      expect(res.warnings).not.toContain(noWinnerNote(id));
+    }
+    // A level forfeit flagged T/T or unflagged is no "level EAL final with no 1 v 1 winner" either.
+    for (const flag of ['T', null]) {
+      const res = one([withForfeit(pairRow(id, ['lassen', 0, flag], ['corning', 0, flag]), 1)]);
+      expect(res.games[0].decider, `flag ${flag}`).toBe('FORFEIT');
+      expect(res.warnings).not.toContain(noWinnerNote(id));
+    }
+  });
+});

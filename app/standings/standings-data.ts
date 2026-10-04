@@ -1,3 +1,4 @@
+import type { LeagueChip } from '../../components/layout/LeagueSwitcher';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -26,7 +27,7 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { recordString, shortDate } from '../../lib/format';
-import { leagueOfDivision } from '../../lib/leagues';
+import { getLeague, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 
 /**
@@ -42,6 +43,8 @@ import type { DivisionId, Game, LeagueId } from '../../lib/types';
 export interface StandingsPageData {
   asOf: string;
   league: LeagueSummary;
+  /** `LeagueConfig.membershipNote`, printed under the page header (EAL); null for most leagues. */
+  membershipNote: string | null;
   views: DivisionView[];
   leaders: LeaderLine[];
   /** The rules footnote under the last table. */
@@ -118,6 +121,7 @@ export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
   return {
     asOf: getFetchedAt(),
     league,
+    membershipNote: getLeague(leagueId).membershipNote,
     views,
     leaders: league.divisions.map((d) => leaderLine(d.id, d.heading)),
     rules: rulesFootnote(leagueId),
@@ -216,7 +220,7 @@ export function leaderClause(lines: readonly LeaderLine[]): string {
 }
 
 /** The `LeagueSwitcher` chips, config order (shared by the standings and schedule pages). */
-export function leagueChips(): Array<{ id: LeagueId; shortName: string; sectionShort: 'CCS' | 'NCS' }> {
+export function leagueChips(): LeagueChip[] {
   return getLeagueIds()
     .map((id) => getLeagueSummary(id))
     .filter((l): l is LeagueSummary => l !== undefined)

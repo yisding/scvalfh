@@ -29,7 +29,7 @@ import { placeScope } from './team-view';
  *
  * Pinning here also remembers the team's league (`PinControl`'s `leagueId`, SPEC §8.2).
  *
- * The monogram is the ONLY place a school color appears anywhere on the site: 43
+ * The monogram is the ONLY place a school color appears anywhere on the site: 49
  * uncontrolled brand hues blow past every categorical ceiling, so they are decoration with a
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
  * requested from a third party.

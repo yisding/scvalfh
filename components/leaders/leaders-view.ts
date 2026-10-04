@@ -1,6 +1,15 @@
 import { getSnapshot } from '../../lib/data';
-import { listWords, ordinal, recordString, recordWords, shortDate, signedGd, winPct } from '../../lib/format';
-import { getLeague } from '../../lib/leagues';
+import {
+  listWords,
+  numberWord,
+  ordinal,
+  recordString,
+  recordWords,
+  shortDate,
+  signedGd,
+  winPct,
+} from '../../lib/format';
+import { LEAGUES, getLeague } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import type { PriorSeason } from '../../lib/prior-season';
 import { getPriorSeason } from '../../lib/prior-season-data';
@@ -15,8 +24,11 @@ import type { ComputedRecord, Game, Standing, Team, TeamSlug } from '../../lib/t
 import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
 import { plural } from '../ui/plural';
 
+/** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
+const LEAGUE_COUNT = numberWord(LEAGUES.length);
+
 /**
- * The /leaders page (DESIGN §16): site-wide leaderboards over all four leagues, derived from the
+ * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
  * two files the rest of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert
  * it over the committed data and over synthetic games.
  *
@@ -355,7 +367,7 @@ function playerBoard(
     kind: 'player',
     title: spec.title,
     meta: `From ${plural(tracking.length, 'team')}`,
-    caption: `${spec.title}, players in all four leagues, this season`,
+    caption: `${spec.title}, players in all ${LEAGUE_COUNT} leagues, this season`,
     columns: spec.columns.map(({ key, label, title }) => ({ key, label, title })),
     rankedBy: spec.rankedBy,
     rows: rows.map(({ item: e, rank, tied }, i) => ({
@@ -477,7 +489,7 @@ function schoolBoard<L extends { team: Team }>(
     kind: 'school',
     title,
     meta,
-    caption: `${title}, schools in all four leagues, this season`,
+    caption: `${title}, schools in all ${LEAGUE_COUNT} leagues, this season`,
     columns: spec.columns.map(({ key, label, title: t }) => ({ key, label, title: t })),
     rankedBy: spec.rankedBy,
     rows: rows.map(({ item: l, rank, tied }) => ({
@@ -553,7 +565,7 @@ export function buildEloBoard(
       note:
         `Every final between two of the ${plural(teams.length, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
-        `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the four leagues are left out.`,
+        `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No final between two of the ${plural(teams.length, 'team')} yet this season.`,
@@ -764,7 +776,7 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   }
   if (elo.minimum.median > 0) {
     schoolNotes.push(
-      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the four leagues’ teams, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 

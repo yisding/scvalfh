@@ -9,6 +9,10 @@
 > standings table DOES show a PTS column.** See `README.md` ("How standings are computed") and
 > `docs/BYLAWS-2026-27.md` for the current rule.
 >
+> **Later still: now five leagues and 49 teams (§22).** The Eastern Athletic League joined as a
+> fifth league in a third section, the Northern Section; §22 at the end of this file records what
+> that changed and wins where it disagrees with §15 or anything above it.
+>
 > **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
 > example below predates the news that Wilcox is not fielding a team this season. The site now
 > had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
@@ -2726,6 +2730,8 @@ index at most 0.5 x; `/teams` at most 3.0 x; `/playoffs` at most 2.0 x; the Clou
 most baseline + 600 KB. The original §13 budgets (LCP, TBT, CLS, 40 KB of app JS beyond the
 framework) still apply.
 
+(Extended by §22: a fifth league, the EAL, in a third section, the Northern Section; 49 teams.)
+
 ## 16. Leaders amendment (2026-10)
 
 The site gains one page, `/leaders`: leaderboards across all four leagues. §1.2 kept "who's hot"
@@ -3192,3 +3198,213 @@ same linking rule (the page must name the sport) and the same privacy posture.
   hold a championship or an emerging-sport program in, plus squash and sailing, each with its words
   in `SPORT_WORDS` ("acrobatics and tumbling", "flag football"); the type checker keeps the two lists
   together, so a sport colleges add later is added to both.
+
+## 22. Eastern Athletic League amendment (2026-10)
+
+The site gained a fifth league, the **Eastern Athletic League (EAL)**, in a third section, the CIF
+Northern Section: six teams in one division (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant
+Valley), so it now covers **five leagues and 49 teams** in three sections. This section wins where
+§1-§21 disagree. Everything else stands: static rendering, no `searchParams`, leagues get no hue
+(§15.5), the copy rules of §15.8 (extended in §22.5). The rules, sources and dates behind it are in
+`docs/LEAGUE-RULES.md` (EAL section) and `docs/DATA-SOURCES.md`; every fact below is a captured or
+sourced one, dated 2026-10-04 unless it says otherwise.
+
+### 22.1 Decisions this reverses
+
+| Earlier decision | Now | Why |
+|---|---|---|
+| 43 teams, four leagues, two sections (§15; six MaxPreps league tables) | **49 teams, five leagues, three sections** (CCS, NCS and the Northern Section, `ns`); seven MaxPreps league tables. The EAL is last in `LEAGUES`, so every existing order stays put. | The EAL's six teams. Red Bluff, still a 0-0-0 row in MaxPreps' EAL table, is not fielding a varsity team in 2026 and is left out as Wilcox and York are. |
+| Every league has an official schedule that decides which games are league games | The EAL has none: `official.mode: 'none'`. Its league games are the games MaxPreps marks as league games, as for SCVAL. "League result missing" is defined without fixtures: a game MaxPreps counts for the division, dated before today, with no counted result (a postponed one reads as postponed). | The Section's Guidelines are the only EAL document and they contain no schedule or standings; the Section's field hockey page has empty panels and there is no league website. The one grid found, on the EAL/SRL umpires' site, equalled MaxPreps' 30 league games, but it is not an official document, so it is never called official, linked or bundled. |
+| A varsity league game may end in a tie (§15, the four leagues) | An EAL game ends on 1 v 1s. MaxPreps records a 1 v 1 win as a level score with a W flag for one team and an L flag for the other, so the game gets decider `SO`, no stored tally, and the flags decide the result everywhere (`sideOutcome` in `lib/format.ts` is the one W/L/T helper). Snapshot invariant 4 is now one-directional: shootout data exists only when the decider is `SO`, and an `SO` game may carry no tally. | Guidelines §VII.E.4: a varsity game gets one 10-minute sudden-victory period, then 1 v 1s until there is a winner. Chico 1, Davis 1 (2026-09-28) is the one such game so far; MaxPreps' standings count it as a Chico win. Goals stay as recorded, so it adds a goal for and a goal against to each side. |
+| Two postseason kinds: a CCS ladder and a league tournament with a bracket | Three: `'unbracketed-tournament'` states the rule and the dates, ranks nothing into a bracket and draws none. | The Super Regional's format and seeding are the coaches' to set and no bracket is published (Guidelines §IV). |
+| Every division draws a ladder line | `ladderLine` may be null. The EAL has none: all six teams sit inside the top six. | Six teams, six qualifiers. A line would sit after the last row. |
+| MaxPreps' table has the registry's teams, less any it leaves out | It may also hold rows that are known not to be members: `maxprepsExtraRows` (EAL: Red Bluff). The rule is `maxprepsTeamCount + maxprepsMissing.length − extra rows = expectedTeams` (7 + 0 − 1 = 6). | Red Bluff's row would otherwise raise an unknown-school warning on every run. |
+| `Team.section` is the school's CIF section | It is the section of the team's field hockey league, where its field hockey postseason is held. `LeagueConfig.membershipNote` says so where it matters. | Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL; the Section's own 2026-27 member list names neither. |
+| Every league's document orders the table by points | `LeagueRules.orderScope` is `'table'` (the four earlier leagues) or `'title'` (the EAL): its document uses points only to decide the champion, gives no rule for ordering the league table and publishes no standings, so this site orders the table by the same points as its own computation and says so. | Guidelines §VII.C.2 and §VII.C. A table order looks like a league ruling unless the page says whose it is. |
+| Scope note: "Teams from other sections appear only as opponents" | "Teams outside these five leagues appear only as opponents." | With Davis and Bella Vista in the registry, the old sentence would have been false. |
+
+### 22.2 Routes and counts
+
+| URL | Now |
+|---|---|
+| `/standings/[league]` | 5 pages |
+| `/schedule/[league]` | 5 pages |
+| `/teams/[slug]` | 49 pages |
+| `/playoffs/[league]` | unchanged: MCAL only. `/playoffs/eal` and its OG card are 404s, like `/playoffs/scval`. |
+| `/playoffs` | stays the CCS page and gains an EAL card with `id="eal"`, so the EAL chip and jump link resolve |
+| `/standings` | anchors `#ns` and `#eal` as well as the §15.2 list |
+| `/history/2025-26` | gains `#eal`, marked unavailable with the reason (22.7) |
+
+The prerender after `pnpm build:vinext` on 2026-10-04 (49 teams, 396 games, 57 game days) is 1059
+routes. The sitemap lists 536 URLs: 10 fixed pages, 396 `/game/`, 57 `/scores/`, 49 `/teams/`, 5
+`/standings/`, 5 `/schedule/`, 1 `/playoffs/mcal` and 13 `/clubs/`.
+
+### 22.3 The third section in the switcher and the five league cards
+
+`LeagueSwitcher` is unchanged in kind (§15.4): the chips are All and five leagues, in **three**
+lists labelled for assistive technology ("Central Coast Section", "North Coast Section", "Northern
+Section"), with no visible caption. The home "Find your team" grid is two columns from 390 px; with
+five cards the last one spans both columns (`min-[390px]:col-span-2`, applied when the count is
+odd), so the grid reads 2 + 2 + 1, never an orphan half-card.
+
+Measured on the home page with no stored league, identical on `next start` and `vinext start`
+(`scripts/a11y-axe.mjs`, 2026-10-04; wrapping is accepted):
+
+| Viewport | Switcher | Cards | Wholly above the fold |
+|---|---|---|---|
+| 320 × 664 and 320 × 844 | wraps to 2 rows, bottom at 254 px | one column, 288 px wide, at 426-702, 714-1006, 1018-1270, 1282-1554 and 1566-1838 | 0 at 664 tall, 1 at 844 tall |
+| 360 × 664 and 360 × 844 | 2 rows, bottom at 254 px | one column, 328 px wide, at 426-678, 690-910, 922-1122, 1134-1334 and 1346-1566 | 0 at 664 tall, 1 at 844 tall |
+| 390 × 664 and 390 × 844 | 1 row, bottom at 204 px | two-up, 173 px wide: cards 1-2 at 376-732, cards 3-4 at 744-1060; card 5 spans both columns (358 px wide) at 1072-1272 | 0 at 664 tall, 2 at 844 tall |
+
+When the switcher wraps, the Northern Section's list (EAL) moves to row 2 on its own. The hairline
+in front of a section is drawn by that section's list (a `::before` on its `<ul>`), not as a
+separate flex item, so it moves with the list and starts row 2. It is never left at the end of
+row 1 (`tests/ui/league-switcher.test.ts`). Row positions and heights do not change.
+
+The §15.6 fold targets, read from the same run: with a team pinned (Tamalpais) at 390 × 664 the
+My-team slot ends at 604 px against a fold of 608 px, so that target is met. With a team pinned at
+390 × 844 the Latest rows end at 925 and 1009 px, so none is above the fold, and with no pin and
+`league=bval` at 390 × 664 the first Latest row sits at 676 px, also below it. Both misses are
+reported by the script, not failed, and they were not compared with the four-league tree.
+
+### 22.4 EAL postseason surfaces
+
+The Super Regional (Oct 30–31; the top six EAL/SRL schools; format and site not published; no NorCal or
+State path) has no bracket, so every surface that would show one states the rule and the dates
+instead. The seeding text of Guidelines §III.E.1 is quoted on `/about` as written and **never
+applied**: no seeding projection, no seeded bracket and no seed word anywhere for the EAL.
+
+| Surface | What it says |
+|---|---|
+| Home `PostseasonCard` | kicker "Postseason"; "Super Regional, Oct 30–31 — the top six qualify"; the league's note; link "Postseason →" to `/playoffs#eal`. No berth meter and no CCS date. |
+| Home phase lead, tournament phase | "The Super Regional is Oct 30–31; its format and site are not published yet." (the "playoffs" lead is for CCS leagues only) |
+| `/playoffs` EAL card | "Following an EAL team?" and the league's note, the qualification citation, and a link to the Guidelines PDF |
+| Team page | kicker "Super Regional picture"; "The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet."; with no result yet, "in the Super Regional picture" |
+| `/standings/eal` band | heading "Super Regional, as things stand", link "Postseason" to `/playoffs#eal`, legend the qualification citation; no 2 px rule, since there is no line |
+| `/schedule/eal` rail chip | "Super Regional Oct 30–31" (to a screen reader "Super Regional, Oct 30 to 31") |
+| Game page, a game between two EAL teams on or after Oct 30 | "Super Regional game — it does not count in the league table."; the tag reads "EAL Super Regional" |
+| Top nav "Playoffs" for an EAL reader | `/playoffs#eal` |
+
+### 22.5 Copy rules
+
+§15.8's "no CCS concept inside an MCAL page's `<main>`" becomes: no CCS concept (no "automatic
+qualifier", "at-large", "CCS Division", "CCS picture", "holds N of 16", bare "CCS" outside the allowed
+MCAL link) inside any non-CCS league's page and the `/playoffs` EAL card. No division label appears on
+EAL pages. Five more rules (`scripts/copy-rules.ts`, run by `scripts/assert-copy.ts` over the visible
+text of every built page and over its `<title>`, description metas and `title`, `aria-label` and `alt`
+attributes (`attributeText`: what a link preview prints and assistive technology reads), and by
+`tests/ui/copy-honesty.test.ts` over every view model, which also runs a second pass over the EAL
+corpus):
+
+1. **The umpire grid is never "official".** A sentence that mentions an umpire and "official" fails.
+2. **Davis and Bella Vista are never a "Northern Section school" or "member".** A clause that names one
+   of them and says so fails.
+3. **Red Bluff is only "not fielding a varsity team in 2026".** "Cancelled", "withdrew", "dropped" and
+   "no program" near its name fail: MaxPreps shows a Red Bluff JV game in 2026, so there is a program.
+4. **Never "EAL school(s)" or "EAL member(s)".** "EAL" always means the field hockey EAL/SRL grouping,
+   not the all-sports EAL, which is a different set of schools (the Section's 2026-28 realignment lists
+   Chico, Enterprise, Foothill, Pleasant Valley, Red Bluff and Shasta; Corning is in the Westside
+   League and Lassen in the Northern Athletic League). Copy says "EAL teams".
+5. **No seed words on EAL pages** (standings, schedule, team pages and the `/playoffs` card): no
+   "1st seed", "No. 1 seed", "#1 seed", "a 3-seed", "top seed", "top-seeded", "the sixth seed", "the
+   lowest seed", "seed No. 1", "seeded third" and the like. The Super Regional takes six teams, so the
+   rule covers the ordinal words through "sixth", wider than the first pattern (ordinal digits,
+   "No. N", "top", "first", "second"). "Seeding", "seeds are set" and "the top six" pass.
+
+The **membership note** ("Chico, Corning, Lassen and Pleasant Valley are Northern Section schools;
+Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL.") is printed
+wherever the six EAL teams' schools are listed under a section or league heading: under the header of
+`/standings/eal`, in the EAL block of `/standings` and of `/teams`, and on the `/about` EAL source card.
+The home league card ("NS · 6 teams") and the search group label the league's section, a league-level
+fact, and carry no school claim and no note. Team pages print no section.
+
+### 22.6 Budgets
+
+Measured after the change (`next build` with `SCVAL_BUILD_AT` 2026-10-04T12:00:00Z), gzip bytes, from
+the four-league tree to this one (the two trees also differ in data):
+
+| Page | Before | After | Limit |
+|---|---|---|---|
+| `/` HTML | 49,255 | 52,466 | 56,214 (2.2 ×; 93%) |
+| `/` RSC | 29,100 | 31,908 | 34,747 (92%) |
+| `/standings` | 19,842 | 21,701 | — |
+| `/schedule` | 34,943 | 39,113 | — |
+| `/teams` | 25,316 | 27,546 | 29,043 (3.0 ×; 95%, the tightest) |
+| `/playoffs` | 28,349 | 29,585 | — |
+| `/leaders` | 29,187 | 29,545 | — |
+| `/standings/eal` | — | 24,840 | 41,410 |
+| `/schedule/eal` | — | 51,762 | 150,555 |
+| Largest team page (Tamalpais) | 41,576 | 41,605 | 58,086 |
+
+The EAL's team pages are 28,496 (Corning) to 37,276 bytes (Davis). First-load client JS changed by at
+most 49 bytes on any route (`/` 504,322 to 504,371, against a limit of 515,098; `/teams` 485,628 to
+485,650, against 490,367), so no league config reaches a browser bundle. The serialized home team views
+are 51,215 bytes on `data/snapshot.json` for 49 teams (budget 61,440). `data/snapshot.json` is
+979,296 bytes (limit 1,600,000), and the Cloudflare Worker is 1805.5 KB gzip against 1992.2 KB. **No
+multiplier was raised.** `tests/golden/page-weights-main.json` is untouched.
+
+The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 536 `.rsc`, 522
+`.route`); twice that is 326,022,866 bytes against `cacheMaxMemorySize` of 384 MB (402,653,184 bytes,
+2.47 ×), so the setting stays.
+
+### 22.7 Data and history
+
+- **Snapshot compatibility.** A schema-version 2 file written before a configured league existed still
+  loads: `loadSnapshot` adds the missing league (its teams, section, standings rows and a `degraded`
+  health row that says the file predates it) and re-resolves every game side. The committed
+  `data/snapshot.json` was regenerated by `pnpm fetch-data` on 2026-10-04 (`fetchedAt`
+  2026-10-04T13:04:21.846Z) and loaded through that upgrade with no `--accept-regression`.
+  `tests/fixtures/corpus/variants/finals-regression/previous-snapshot.json` is **frozen**: it stays a
+  four-league file and exercises the upgrade in the pipeline tests.
+- **The regenerated snapshot** holds 49 teams and 396 games (294 league, 228 finals, 6 pending, 3
+  backfilled). The EAL's 40 games include 30 league games and 21 finals. EAL health is `fresh` with 6 of
+  6 team feeds ok; two missing league results are reported (the two games MaxPreps holds without a score:
+  2026-09-29 Pleasant Valley at Corning and 2026-10-01 Corning at Chico).
+- **Corpora.** `tests/fixtures/corpus/all-2026-10-02` was not extended: under it the EAL is "not
+  fetched in this run", as BVAL, PCAL and MCAL are under the `scval` corpus. A new corpus,
+  `tests/fixtures/corpus/eal-2026-10-04` (19 files: the manifest, 1 bootstrap, the league meta and standings, 6
+  schedules, 7 si.com scoreboards, 2 si.com team-games pages), was captured live and replays with no
+  missing resource; it drives `tests/pipeline/eal.test.ts`, the EAL view tests and the second
+  copy-honesty pass.
+- **History 2025-26: `unavailable`** (`data/history-2025-26.json`, `leagues.eal`, checked 2026-10-04).
+  The EAL published no 2025-26 final standings of its own, the Section's field hockey page and Playoff
+  Center post none, and the site does not show standings from newspapers or third-party sites. The
+  three pages checked are listed on the card.
+- **Prior season and Elo.** `data/prior-season.json` was refetched for all 49 teams on 2026-10-04: 412
+  finals, 31 of them between two EAL teams and 13 between one EAL team and another registry team
+  (Pleasant Valley 4, Chico 3, Bella Vista 3, Davis 3; Corning and Lassen have none). Those 13 games
+  connect the EAL to the other leagues for the Elo fit (§20); a game decided on 1 v 1s is level there,
+  because the fit uses goals. §20.1's "43 teams" is the figure of the replay dated 2026-10-02, not the
+  size of the fit now.
+
+### 22.8 Not built, and deviations
+
+- **No EAL bracket and no seed projection.** The Guidelines' seeding text is quoted, never applied
+  (22.4).
+- **1 v 1 tallies are not shown.** MaxPreps' box score keeps a "SO Win" column in slot `b7` (seen on
+  one game: Chico 2, Davis 1), but the repo parses no box-score slots and the mapping is confirmed on
+  one game only. Storing it is a later option, once it is confirmed on more games.
+- **Impossible overtime counts are shown as MaxPreps has them, with a caveat.** MaxPreps records 3
+  overtime periods on the 1-0 Pleasant Valley at Chico game of 2026-09-02, but the EAL plays one
+  overtime period and then 1 v 1s; the game page says MaxPreps may have recorded a 1 v 1 win as a goal
+  and shows no overtime mark. That reading rests on one newspaper report, so the copy says only "may
+  have".
+- **No club records for D-City FHC (Davis), Roseville FHC and Chico Hotshots.** The 2026-10-04 sweep
+  found these clubs near the six EAL teams' schools; adding records for them is left for a later change. Three
+  Davis players were tied to the existing NorCal Impact club (NFHCA 2026 high school watchlist,
+  2026-08-27). No field hockey commitment was found for any EAL player; the same day's every-sport
+  round (§21.7) covered the 43 earlier teams only.
+- **No enrichment sweep for EAL rosters.** `data/rosters-enrichment.json` holds six stub entries
+  that say so. Corning has no roster or player stats at MaxPreps on 2026-10-04 (roster `empty`, stats
+  `none`).
+- **`/clubs` stopped dating its checks.** Its sentence "each was checked twice on {capturedOn}" now
+  reads "each was checked twice, in two separate passes, when it was added.", because the old one
+  would have dated the three Davis ties, added on 2026-10-04, to 2026-10-03. The clubs file holds one
+  `capturedAt` (2026-10-03), and the EAL sweep appears only in a note. A club page's empty state still
+  reads "Checked Oct 3, 2026": that is the club record's own `checkedOn`, and no club record was
+  added or re-checked on 2026-10-04, so it is true of the record, though the EAL rosters were swept a
+  day later. `/about` drops the date in the same way.
+- **The form-strip chip for a 1 v 1 game** reads as a loss for the losing side with the score 1–1;
+  the 1 v 1 wording is on the game page and the "Earlier" line.
+- **`/about`'s counts sentence prints the weekday** ("Games between two EAL teams on or after Fri
+  Oct 30 are Super Regional games."), as the existing official-fixtures sentence does.

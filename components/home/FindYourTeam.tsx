@@ -6,8 +6,10 @@ import type { SearchIndex } from '../../lib/search';
 
 /**
  * The first-visit view (SPEC §10.1): shown when no league is remembered (`data-scope="none"`), and
- * never an SCVAL default. A pin-mode finder over all 43 teams, then the four league cards
+ * never an SCVAL default. A pin-mode finder over every team (49), then the five league cards
  * (server-rendered by the page and passed in as `children`, so they stay out of the client bundle).
+ * The cards run two-up from 390px; the page gives the last card of an odd count both columns
+ * (`min-[390px]:col-span-2`), so five read 2 + 2 + 1 full-width, never an orphan half-card.
  *
  * Pinning a team from here also remembers its league (`usePinnedTeam().pin`), so this whole block
  * hides and the My-team slot appears; focus moves to the pinned card's Unpin button

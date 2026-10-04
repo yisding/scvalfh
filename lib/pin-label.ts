@@ -5,7 +5,8 @@
  *
  * WCAG 2.5.3 Label in Name (Level A): a tile shows `shortName`, so the accessible name must contain it. For
  * most teams the short name is inside the full name ('Tamalpais', 'Mitty' ⊂ 'Archbishop Mitty'); for the rest
- * ('St Francis' / 'Saint Francis', 'Valley Chr.', 'Archie Wms.', 'Lick-Wilm.', 'University SF', 'St Ignatius')
+ * ('St Francis' / 'Saint Francis', 'Valley Chr.', 'Archie Wms.', 'Lick-Wilm.', 'University SF', 'St Ignatius',
+ * 'Pleasant Val.')
  * it is not, so the visible string leads and the full name follows in parentheses.
  */
 
@@ -24,9 +25,10 @@ export function pinLabel(t: { name: string; shortName: string; divisionHeading: 
  * Chromium's `hyphens: auto` never breaks a capitalised word, so the break points are stated here. Two-word
  * names break at their space; 'Lick-Wilm.' breaks after its hyphen.
  *
- * Measured with tests/ui/text-metrics.ts over all 43 short names: Presentation 77.0, Christopher 71.6,
+ * Measured with tests/ui/text-metrics.ts over all 49 short names: Presentation 77.0, Christopher 71.6,
  * Homestead 70.1, Stevenson 64.2, Westmont 62.8, Greenfield 62.6, Tamalpais 61.3 px. Hollister (50.9),
- * University (60.5) and Cupertino (60.1) fit. Keyed by the exact short name, so a rename stops matching
+ * University (60.5) and Cupertino (60.1) fit, and so do the EAL's widest words, Pleasant (53.7) and
+ * Corning (47.8). Keyed by the exact short name, so a rename stops matching
  * instead of hyphenating the wrong word; tests/ui/pin-label.test.ts asserts the key set.
  */
 export const PICKER_BREAKS: Readonly<Record<string, string>> = {

@@ -41,7 +41,7 @@ describe('the team page, every league', () => {
     }
   });
 
-  it('every one of the 43 teams renders both sections, and the roster links the club pages', async () => {
+  it('every one of the 49 teams renders both sections, and the roster links the club pages', async () => {
     for (const team of TEAMS) {
       const html = await render(team.slug);
       expect(html, team.slug).toContain('id="player-stats"');

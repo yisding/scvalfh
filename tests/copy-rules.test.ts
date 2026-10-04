@@ -1,20 +1,32 @@
 /**
  * scripts/copy-rules.ts: the rules scripts/assert-copy.ts holds every built page to — nothing
- * claims rosters or player stats are SCVAL-only now that they cover all four leagues, and no page
- * shows what data/clubs.json or data/commits.json keeps but never renders (a record's basis, a
- * source's quote);
- * and how it cuts the history page into one section per league.
+ * claims rosters or player stats are SCVAL-only now that they cover every league, no page shows
+ * what data/clubs.json or data/commits.json keeps but never renders (a record's basis, a source's
+ * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
+ * Vista called Northern Section schools, Red Bluff's status overstated, "EAL school", a seed word);
+ * how it reads a built page's visible text and its title, description and attribute text; and how
+ * it cuts a page into one element per id.
  */
 
 import { describe, expect, it } from 'vitest';
 
+import { getLeague } from '../lib/leagues';
 import {
+  EAL_SCHOOL_CLAIM,
   LEAK_MIN_FRAGMENT,
   LEAK_MIN_PRIVATE,
+  RED_BLUFF_STATUS_CLAIM,
   SCVAL_ONLY_CLAIM,
+  SEED_CLAIM,
+  UMPIRE_OFFICIAL_CLAIM,
   affiliationLeaks,
+  attributeText,
   commitmentLeaks,
+  elementById,
+  nonMemberSectionClaims,
   sectionById,
+  umpireOfficialClaims,
+  visibleText,
 } from '../scripts/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
@@ -34,7 +46,7 @@ describe('SCVAL_ONLY_CLAIM', () => {
   });
 
   it.each([
-    'Rosters and player stats for all four leagues.',
+    'Rosters and player stats for all five leagues.',
     'The 2025-26 history is SCVAL only.',
     '<p>SCVAL only</p><p>Rosters for every team</p>',
     'Rosters from MaxPreps. SCVAL standings come from the official PDFs.',
@@ -234,5 +246,281 @@ describe('sectionById: one league\'s section of the history page', () => {
     expect(sectionById('<p>x</p><section id="a"><section id="b"></section><p>y</p>', 'a')).toBe(
       '<section id="a"><section id="b"></section><p>y</p>',
     );
+  });
+});
+
+describe('elementById: the /playoffs EAL card, a <div>', () => {
+  it('takes the element with that id up to its own close, nested elements of the same name included', () => {
+    const html =
+      '<div class="a"><div id="mcal-x"><p>x</p></div><div class="mt-4" id="eal"><p>One</p><div><p>Two</p></div></div>' +
+      '<p>after</p></div>';
+    expect(elementById(html, 'eal', 'div')).toBe('<div class="mt-4" id="eal"><p>One</p><div><p>Two</p></div></div>');
+    expect(elementById(html, 'eal', 'section')).toBe('');
+    expect(elementById(html, 'mcal', 'div')).toBe('');
+  });
+
+  it('is sectionById for the section element', () => {
+    const html = '<section id="a"><section id="b"></section></section><div id="a"></div>';
+    expect(sectionById(html, 'a')).toBe(elementById(html, 'a', 'section'));
+  });
+});
+
+describe('visibleText: what a reader of a built page sees', () => {
+  it('drops scripts, styles and tags, decodes entities, and ends each block in a line break', () => {
+    const html =
+      '<html><head><title>T</title><style>p{}</style></head><body><h2>Official sources</h2>' +
+      '<p>The grid on the <a href="/x">umpires&rsquo;</a> site&nbsp;matches.</p>' +
+      '<script>self.__next_f.push([1,"official umpire"])</script><p>Davis &amp; Bella Vista</p></body></html>';
+    expect(visibleText(html)).toBe('Official sources\nThe grid on the umpires’ site matches.\nDavis & Bella Vista');
+  });
+
+  it('keeps inline elements inside their sentence', () => {
+    expect(visibleText('<body><p>EAL <span>school</span>s</p></body>')).toBe('EAL school s');
+    expect(visibleText('<body><p>EAL <strong>schools</strong> play</p></body>')).toMatch(EAL_SCHOOL_CLAIM);
+  });
+
+  it('leaves no comment behind when removing one forms another', () => {
+    // One pass would turn `<!<!---->--` into `<!--` and read " hidden " as a tag.
+    expect(visibleText('<body><p>A<!<!---->-- hidden -->B</p></body>')).toBe('AB');
+  });
+});
+
+describe('attributeText: what a page shows or reads out outside its body text', () => {
+  const html =
+    '<html><head><title>EAL standings &middot; NorCal</title>' +
+    '<meta name="description" content="Davis is a Northern Section school">' +
+    '<meta property="og:description" content="The umpires&#x27; grid is official">' +
+    '<meta name="twitter:description" content="Red Bluff withdrew">' +
+    '<meta name="viewport" content="width=device-width, top seed">' +
+    '<script>self.__next_f.push([1,"<span title=\\"EAL schools\\">"])</script></head>' +
+    '<body><span title="Bella Vista is a Northern Section member" aria-label="The EAL schools">x</span>' +
+    '<img src="/a.png" alt="the third seed"><a href="/b" class="c">link</a></body></html>';
+
+  it('collects the title, description metas and title, aria-label and alt attributes, decoded, one per line', () => {
+    expect(attributeText(html)).toBe(
+      [
+        'EAL standings · NorCal',
+        'Davis is a Northern Section school',
+        "The umpires' grid is official",
+        'Red Bluff withdrew',
+        'Bella Vista is a Northern Section member',
+        'The EAL schools',
+        'the third seed',
+      ].join('\n'),
+    );
+  });
+
+  it('is where an attribute-only claim is caught: visibleText never sees it', () => {
+    const body =
+      '<body><span title="Davis is a Northern Section school" aria-label="The umpires grid is official">x</span>' +
+      '<img alt="top seed"></body>';
+    expect(visibleText(body)).toBe('x');
+    expect(nonMemberSectionClaims(visibleText(body))).toEqual([]);
+    expect(umpireOfficialClaims(visibleText(body))).toEqual([]);
+    const text = attributeText(body);
+    expect(nonMemberSectionClaims(text)).toEqual(['Davis is a Northern Section school']);
+    expect(umpireOfficialClaims(text)).toEqual(['The umpires grid is official']);
+    expect(text).toMatch(SEED_CLAIM);
+    expect(attributeText(html)).toMatch(RED_BLUFF_STATUS_CLAIM);
+    expect(attributeText(html)).toMatch(EAL_SCHOOL_CLAIM);
+  });
+
+  it('reads no script (the RSC payload) and no other meta', () => {
+    expect(attributeText('<head><meta name="viewport" content="EAL schools"><script>"title=\\"EAL schools\\""</script></head>')).toBe('');
+  });
+});
+
+describe('UMPIRE_OFFICIAL_CLAIM / umpireOfficialClaims: the umpires’ grid is never official', () => {
+  it.each([
+    'The official schedule is the umpires’ grid.',
+    'Umpire assignments come from the official EAL schedule.',
+    'See the EAL/SRL umpires’ site for the Official 2026 grid',
+    'The grid at fieldhockeyumpires.org is official',
+    'fieldhockeyumpires.org posts the official EAL grid',
+  ])('flags %j', (text) => {
+    expect(text).toMatch(UMPIRE_OFFICIAL_CLAIM);
+    expect(umpireOfficialClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'The EAL publishes no official schedule. Its 2026 grid is posted on the umpires’ site.',
+    'No official schedule document.\nThe league grid posted on the EAL/SRL umpires’ site matches MaxPreps.',
+    'Official sources: the Guidelines (PDF)!  Umpires post a grid',
+    'An umpire made the call.',
+    'No official schedule. fieldhockeyumpires.org posts a grid.',
+  ])('lets %j through: the two words are in different sentences, or only one is there', (text) => {
+    expect(umpireOfficialClaims(text)).toEqual([]);
+  });
+});
+
+describe('nonMemberSectionClaims: Davis and Bella Vista are not Northern Section schools', () => {
+  it.each([
+    'Davis is a Northern Section school.',
+    'Bella Vista and Chico are Northern Section members',
+    'The six Northern Section schools, Davis among them, play ten games',
+  ])('flags %j', (text) => {
+    expect(nonMemberSectionClaims(text)).toHaveLength(1);
+  });
+
+  it.each([
+    'Chico, Corning, Lassen and Pleasant Valley are Northern Section schools; Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL.',
+    'Davis plays in the EAL. Chico is a Northern Section school.',
+    'Davisville is a Northern Section school',
+    'Davis: Northern Section postseason',
+  ])('lets %j through', (text) => {
+    expect(nonMemberSectionClaims(text)).toEqual([]);
+  });
+
+  it('returns each offending clause', () => {
+    expect(nonMemberSectionClaims('Chico plays; Davis is a Northern Section member. Bella Vista is a Northern Section school')).toEqual([
+      'Davis is a Northern Section member',
+      'Bella Vista is a Northern Section school',
+    ]);
+  });
+});
+
+describe('RED_BLUFF_STATUS_CLAIM: Red Bluff is only "not fielding a varsity team in 2026"', () => {
+  it.each([
+    'Red Bluff cancelled its season.',
+    'Red Bluff’s 2026 games were canceled',
+    'Red Bluff withdrew from the EAL',
+    'Red Bluff has withdrawn',
+    'Red Bluff dropped field hockey',
+    'Red Bluff has no program',
+    'Red Bluff, which has no field hockey program',
+  ])('flags %j', (text) => {
+    expect(text).toMatch(RED_BLUFF_STATUS_CLAIM);
+  });
+
+  it.each([
+    'MaxPreps also lists Red Bluff, which is not fielding a varsity team in 2026.',
+    'Red Bluff is not fielding a varsity team in 2026. Two games were cancelled for smoke.',
+    'Red Bluff: a 0-0-0 row; the game was cancelled',
+    `Red Bluff ${'x'.repeat(90)} cancelled`,
+  ])('lets %j through', (text) => {
+    expect(text).not.toMatch(RED_BLUFF_STATUS_CLAIM);
+  });
+});
+
+describe('EAL_SCHOOL_CLAIM: never "EAL school(s)" or "EAL member(s)"', () => {
+  it.each(['the six EAL schools', 'an EAL school', 'Eastern Athletic League members', 'every EAL member'])('flags %j', (text) => {
+    expect(text).toMatch(EAL_SCHOOL_CLAIM);
+  });
+
+  it.each([
+    'the six EAL teams',
+    'the top six EAL/SRL schools compete',
+    'Davis and Bella Vista play field hockey in the EAL',
+    'EAL schooling', // not the word
+    'eal schools', // case-sensitive, as the names are
+  ])('lets %j through', (text) => {
+    expect(text).not.toMatch(EAL_SCHOOL_CLAIM);
+  });
+});
+
+describe('SEED_CLAIM: no seed word on an EAL page', () => {
+  it.each(['the 1st seed', 'No. 2 seed', 'No.3 seeded', 'the top seed', 'First seed', 'second seeded', 'the 4th Seed'])(
+    'flags %j',
+    (text) => {
+      expect(text).toMatch(SEED_CLAIM);
+    },
+  );
+
+  // The Super Regional takes six teams, so "third" to "sixth" are the likely words.
+  it.each([
+    'the third seed',
+    'Chico is the fourth seed',
+    'the fifth seed',
+    'sixth seed',
+    'the last seed',
+    'the lowest seed',
+    'the highest seed',
+    'the bottom seed',
+    'the #1 seed',
+    'a 1-seed',
+    'the 2 seed',
+    'top-seeded Chico',
+    'the top seeds',
+    'seed No. 1',
+    'seed #3',
+    'seeded 2',
+    'seeded first',
+    'seeded sixth',
+    'seeded 3rd',
+  ])('flags %j', (text) => {
+    expect(text).toMatch(SEED_CLAIM);
+  });
+
+  it.each([
+    'Seeding will be based on League record — quoted as written; this site does not apply it',
+    'the top six qualify',
+    'seeds are set by the coaches',
+    'topseed',
+    'the 2026 seeding criteria',
+    'Super Regional seeding (§III.E.1)',
+    'seeded by the coaches',
+    'seedless',
+  ])('lets %j through', (text) => {
+    expect(text).not.toMatch(SEED_CLAIM);
+  });
+});
+
+describe('the EAL’s own config strings pass all five rules', () => {
+  const eal = getLeague('eal');
+  const ps = eal.postseason;
+  const strings: Array<[string, string]> = [['membershipNote', eal.membershipNote ?? '']];
+  for (const d of eal.divisions) {
+    if (d.official.mode === 'none') strings.push([`${d.id} official.note`, d.official.note]);
+    if (d.knownCause) strings.push([`${d.id} knownCause`, d.knownCause]);
+  }
+  if (ps.kind === 'unbracketed-tournament') {
+    strings.push(['postseason note', ps.note]);
+    for (const [k, v] of Object.entries(ps.citations)) strings.push([`postseason citations.${k}`, v]);
+  }
+  // The rules' citations: stages['no-rule'] is the standings footnote on every EAL tie.
+  const { stages, ...cites } = eal.rules.citations;
+  for (const [k, v] of Object.entries(cites)) if (v !== undefined) strings.push([`rules citations.${k}`, v]);
+  for (const [k, v] of Object.entries(stages)) strings.push([`rules citations.stages.${k}`, v ?? '']);
+
+  it('collects them all', () => {
+    expect(ps.kind).toBe('unbracketed-tournament');
+    expect(strings.map(([k]) => k)).toEqual([
+      'membershipNote',
+      'eal official.note',
+      'eal knownCause',
+      'postseason note',
+      'postseason citations.qualification',
+      'postseason citations.format',
+      'postseason citations.seeding',
+      'postseason citations.eligibility',
+      'postseason citations.noFurtherPath',
+      'rules citations.points',
+      'rules citations.pointsShort',
+      'rules citations.order',
+      'rules citations.doubleRoundRobin',
+      'rules citations.overtime',
+      'rules citations.coChampions',
+      'rules citations.stages.no-rule',
+    ]);
+    expect(strings.every(([, v]) => v.length > 0)).toBe(true);
+  });
+
+  it('and each passes', () => {
+    for (const [what, text] of strings) {
+      expect(umpireOfficialClaims(text), `${what}: umpires’ grid called official`).toEqual([]);
+      expect(nonMemberSectionClaims(text), `${what}: Davis or Bella Vista called a Northern Section school`).toEqual([]);
+      expect(text, `${what}: Red Bluff's status`).not.toMatch(RED_BLUFF_STATUS_CLAIM);
+      expect(text, `${what}: "EAL school"`).not.toMatch(EAL_SCHOOL_CLAIM);
+      expect(text, `${what}: a seed word`).not.toMatch(SEED_CLAIM);
+    }
+  });
+
+  it('is a real test: the strings name what the rules look for', () => {
+    const all = strings.map(([, v]) => v).join('\n');
+    expect(all).toMatch(/umpire/i);
+    expect(all).toMatch(/Davis/);
+    expect(all).toMatch(/Northern Section schools/);
+    expect(all).toMatch(/Red Bluff/);
+    expect(all).toMatch(/Seeding/);
   });
 });

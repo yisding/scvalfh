@@ -346,11 +346,14 @@ export function sbliveIdFromWebPath(webPath: string | null | undefined): string 
 
 /**
  * `normalizeTeamKey` values that more than one California si.com team uses (University: Irvine and
- * San Francisco; Los Altos: Hacienda Heights and Los Altos; Santa Clara: Oxnard and Santa Clara).
+ * San Francisco; Los Altos: Hacienda Heights and Los Altos; Santa Clara: Oxnard and Santa Clara;
+ * Davis: 458605 Davis of Davis and 458828 Davis of Modesto). si.com's team search for the other EAL
+ * names (Bella Vista, Chico, Corning, Lassen, Pleasant Valley) found one team of that name each (Chico
+ * and Corning also list fuzzy matches under other names), checked 2026-10-04.
  * A side with one of these names resolves ONLY by a si.com id, never by name.
  */
 export const STATEWIDE_AMBIGUOUS: ReadonlySet<string> = new Set(
-  ['University', 'Los Altos', 'Santa Clara'].map(normalizeTeamKey),
+  ['University', 'Los Altos', 'Santa Clara', 'Davis'].map(normalizeTeamKey),
 );
 
 /** Everything si.com exposes about one side of a game or one standings row. */

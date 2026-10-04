@@ -22,7 +22,7 @@ import {
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
 import { listWords } from '../../../lib/format';
-import { getDivision, getLeague } from '../../../lib/leagues';
+import { getDivision, getLeague, getSection } from '../../../lib/leagues';
 import type { LeagueId } from '../../../lib/types';
 
 /**
@@ -250,6 +250,8 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
 
 function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: UnavailableLeagueHistory }) {
   const league = getLeague(leagueId);
+  // A league with no website of its own (EAL) links its section's field hockey page instead.
+  const ownSite = league.officialUrl !== getSection(league.sectionId).officialUrl;
   return (
     <section id={leagueId} aria-label={league.name} className="min-w-0 scroll-mt-24">
       <SectionHeader
@@ -279,7 +281,7 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
           <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
             the {league.shortName} standings page
           </Link>{' '}
-          and its official site is{' '}
+          and {ownSite ? 'its official site is' : `its section’s field hockey page is`}{' '}
           <ExternalLink href={league.officialUrl}>{league.officialUrl.replace(/^https?:\/\/(www\.)?/, '')}</ExternalLink>.
         </p>
       </div>

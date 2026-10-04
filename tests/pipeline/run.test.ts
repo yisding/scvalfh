@@ -2,7 +2,8 @@
  * The step sequence and its CLI plumbing (SPEC §7.4, §7.11, §7.12) with no-op official/si.com
  * steps: the season-window guard, the bootstrap abort, the request shape of a full corpus run, a
  * deterministic `sources` order however the transport interleaves, `--leagues`, a stale reported
- * table, the corpus `previous` copy, and the two output files.
+ * table, the corpus `previous` copy, and the two output files. The all-2026-10-02 corpus names four
+ * leagues in its manifest: the EAL (added later) is not in its runs and is frozen "not fetched".
  */
 
 import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
@@ -13,12 +14,16 @@ import { describe, expect, it } from 'vitest';
 
 import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES } from '../../lib/leagues';
 import { RunAbort, resourcePath, type Transport } from '../../lib/pipeline/contract';
-import { SILENT_SINK } from '../../lib/pipeline/ledger';
-import { metaPathOf, parseRunArgs, prepareRun, runPipeline, writeOutputs } from '../../lib/pipeline/run';
+import { loadCorpus } from '../../lib/pipeline/corpus';
+import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
+import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, runPipeline, writeOutputs } from '../../lib/pipeline/run';
+import { stepStandings } from '../../lib/pipeline/steps/standings';
+import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
 import { loadSnapshot, stableStringify } from '../../lib/snapshot-schema';
 import { FETCHABLE_TEAMS, TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
+import { game } from '../game-builder';
 import { REPO, corpusDir, variantDir } from '../helpers';
 import { NOOP_STEPS } from './support/noop-steps';
 import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
@@ -121,15 +126,16 @@ describe('a full corpus run', () => {
     expect(gets.some((l) => l.includes(MISSION))).toBe(false);
     const summary = lines.find((l) => l.startsWith('summary: '));
     expect(summary).toMatch(
-      /^summary: teams 43 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh$/,
+      /^summary: teams 49 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh eal:frozen$/,
     );
   });
 
   it('writes one SourceStatus row per resource in the §7.11 order', async () => {
-    const { snapshot } = await snapshotOf();
+    const { snapshot, run } = await snapshotOf();
+    const inRun = run.ctx.leaguesInRun();
     const labels = snapshot.sources.map((s) => s.label);
     const expected = ['season bootstrap'];
-    for (const league of LEAGUES) {
+    for (const league of LEAGUES.filter((l) => inRun.includes(l.id))) {
       for (const d of league.divisions) expected.push(`${d.id} league metadata`);
       for (const d of league.divisions) expected.push(`${d.id} reported standings`);
       for (const t of FETCHABLE_TEAMS.filter((x) => x.league === league.id)) expected.push(`${t.slug} schedule`);
@@ -138,8 +144,9 @@ describe('a full corpus run', () => {
     expected.push(...TEAMS.filter((t) => t.slug === 'palo-alto' || t.slug === 'los-gatos').map((t) => `${t.slug} school calendar`));
     expected.push('ccs calendar', 'ccs bracket');
     expect(labels).toEqual(expected);
-    expect(expected.length).toBe(1 + ALL_DIVISIONS.length * 2 + TEAMS.length + 4);
-    expect(snapshot.sources.filter((s) => s.kind === 'team-schedule').map((s) => s.scope?.team)).toEqual(FETCHABLE_TEAMS.map((t) => t.slug));
+    const teamsInRun = FETCHABLE_TEAMS.filter((t) => inRun.includes(t.league));
+    expect(expected.length).toBe(1 + ALL_DIVISIONS.filter((d) => inRun.includes(d.leagueId)).length * 2 + teamsInRun.length + 4);
+    expect(snapshot.sources.filter((s) => s.kind === 'team-schedule').map((s) => s.scope?.team)).toEqual(teamsInRun.map((t) => t.slug));
   });
 
   it('records the dropped contests (Del Norte ghost, excluded 5cf5e3df, the three TBA rows)', async () => {
@@ -182,8 +189,9 @@ describe('--leagues', () => {
       ['bval', 'frozen'],
       ['pcal', 'fresh'],
       ['mcal', 'fresh'],
+      ['eal', 'frozen'],
     ]);
-    expect(snapshot.sources.some((s) => s.scope?.league === 'scval' || s.scope?.league === 'bval')).toBe(false);
+    expect(snapshot.sources.some((s) => s.scope?.league === 'scval' || s.scope?.league === 'bval' || s.scope?.league === 'eal')).toBe(false);
   });
 
   it('defaults to the corpus manifest’s leagues offline', async () => {
@@ -222,6 +230,35 @@ describe('step 04: an unreadable reported table is a stale source, never an abor
   });
 });
 
+describe('step 12: a division whose league publishes no schedule (EAL)', () => {
+  it('has official null and counts its league games past their date with no result as missingLeaguePast', () => {
+    const args = parseRunArgs(['--fixtures', corpusDir('all-2026-10-02'), '--out', tmpOut(), '--dry-run'], opts);
+    const ctx = createPipelineContext({
+      args: { ...args, fetchedAt: '2026-10-02T15:00:00.000Z', leagues: ['eal'] },
+      transport: new FixtureTransport(loadCorpus(corpusDir('all-2026-10-02'))),
+      previous: null,
+      sink: SILENT_SINK,
+    });
+    const state = emptyRunState();
+    state.games = [
+      game({ home: 'Chico', away: 'Davis', date: '2026-09-28', hs: 1, as: 1, results: { home: 'W', away: 'L' } }),
+      game({ home: 'Corning', away: 'Pleasant Valley', date: '2026-09-29', status: 'score-pending' }),
+      game({ home: 'Chico', away: 'Corning', date: '2026-10-01', status: 'scheduled' }),
+      game({ home: 'Davis', away: 'Lassen', date: '2026-09-20', status: 'postponed' }),
+      game({ home: 'Lassen', away: 'Bella Vista', date: '2026-10-05', status: 'scheduled' }),
+      game({ home: 'Lassen', away: 'Chico', date: '2026-09-15', hs: 0, as: 2, league: false }),
+    ];
+    expect(state.games.map((g) => g.countsFor)).toEqual(['eal', 'eal', 'eal', 'eal', 'eal', null]);
+    const { leagueHealth } = stepStandings(ctx, state);
+    const eal = leagueHealth.find((h) => h.leagueId === 'eal')!;
+    // The two unreported games dated before today; never the postponed one, the future one or a non-league game.
+    expect(eal.divisions).toMatchObject([{ divisionId: 'eal', classification: 'contest-type', official: null, countedFinals: 1, missingLeaguePast: 2 }]);
+    for (const d of leagueHealth.filter((h) => h.leagueId !== 'eal').flatMap((h) => h.divisions)) {
+      expect('missingLeaguePast' in d, d.divisionId).toBe(false);
+    }
+  });
+});
+
 describe('prepareRun and the outputs', () => {
   it('copies a variant’s previous snapshot to --out and starts from it (read in place on a dry run)', () => {
     const out = tmpOut();
@@ -243,7 +280,9 @@ describe('prepareRun and the outputs', () => {
     const args = parseRunArgs(['--fixtures', corpusDir('scval'), '--out', path.join(REPO, 'tests', 'golden', 'snapshot-2026-10-02.v1.json'), '--dry-run'], opts);
     const prepared = prepareRun(args, SILENT_SINK);
     expect(prepared.ctx.previous?.schemaVersion).toBe(2);
-    expect(prepared.ctx.previous?.teams.length).toBe(43);
+    // The v1 file migrates to v2 and gains the leagues it predates (the EAL): every registry team.
+    expect(prepared.ctx.previous?.teams.length).toBe(TEAMS.length);
+    expect(prepared.ctx.previous?.season.leagues.map((l) => l.id)).toEqual(LEAGUES.map((l) => l.id));
   });
 
   it('writes stable JSON and the meta file beside it, with per-league rows and the commit summary', async () => {
@@ -261,12 +300,13 @@ describe('prepareRun and the outputs', () => {
     const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as Record<string, unknown>;
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
-    expect(String(meta.commitSummary)).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+$/);
+    expect(String(meta.commitSummary)).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
     expect((meta.leagues as Array<{ id: string; state: string }>).map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],
       ['bval', 'fresh'],
       ['pcal', 'fresh'],
       ['mcal', 'fresh'],
+      ['eal', 'frozen'],
     ]);
     expect(meta.requests).toEqual({ maxpreps: 56, sblive: 0, official: 0 });
     expect(typeof meta.contentHash).toBe('string');
@@ -306,6 +346,7 @@ describe('steps 07-08 never abort the run', () => {
       ['bval', 'degraded'],
       ['pcal', 'degraded'],
       ['mcal', 'degraded'],
+      ['eal', 'frozen'],
     ]);
     expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.divisions[0].classification).toBe('fallback-contest-type');
     expect(snapshot.counts.byLeague.pcal.leagueGames).toBeGreaterThan(0);

@@ -1,9 +1,11 @@
 # Data sources — NorCal girls varsity field hockey (season "26-27")
 
-Condensed from the build-time research spec and amended for the four-league site (SCVAL, BVAL and
-PCAL in the CIF Central Coast Section; MCAL in the North Coast Section). Confidence tags: **[V]**
-independently verified against a live response or document; **[U]** claimed but not independently
-re-verified; **[TODO]** open item. Values below were captured/verified 2026-09-28 to 2026-10-02.
+Condensed from the build-time research spec and amended for the five-league site (SCVAL, BVAL and
+PCAL in the CIF Central Coast Section; MCAL in the North Coast Section; EAL in the Northern
+Section). Confidence tags: **[V]** independently verified against a live response or document;
+**[U]** claimed but not independently re-verified; **[TODO]** open item. Values below were
+captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line below, are
+2026-10-04.
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
@@ -28,6 +30,12 @@ key, same GUID as `teamId` elsewhere), `schoolName`, `schoolNameAcronym`, `teamC
 splits, `overallContestsPlayed`/`conferenceContestsPlayed`, `modifiedOn`. `b1`…`b30` are opaque
 stat slots — ignored. **[V]**
 
+`modifiedOn` is **null on a zero-game row**: Red Bluff's row in the EAL table (2026-10-04) is the one
+schema violation in all seven EAL rows (`data.6.modifiedOn: null`); every other row, and every league
+meta, schedule and contest-id response, parses with the repo's schemas. The schema now reads null as
+`''` and the reported-table step skips an empty value when it picks a table's newest modification
+date, so one such row no longer rejects a whole table. **[V]**
+
 **(b) Team schedule + scores** — `GET /gatewayweb/react/schedule-calculated/v1?teamId={id}&sportSeasonId={ssid}`.
 Envelope `{status, message, cacheResult, data}`; each row `{contest, calculatedFields, hudlInfo,
 goFanUrl, nfhsStreamUrl}`. Key paths: `contest.contestId` (dedupe key), `contest.date` (naive
@@ -41,6 +49,14 @@ before the game), `.result` (`W`/`L`/`T`, null before), `.homeAwayType`, `.conte
 `.isForfeit`/`.isTeamTBA`/`.dnp`/`.isDeleted`, `.teamId`, `.teamCanonicalUrl`. Display string
 for a team's result comes from `calculatedFields.teamsCalculated[]` (`.resultString`, e.g.
 `"L 2-1"`) — `contest.teams[].resultString` is usually null. **[V]**
+
+*Box-score slots.* A schedule row's box-score fields are opaque `b1`…`b7` slots and the repo's
+`ScheduleRow` schema does not parse them. Observed for field hockey on the EAL's 2026-09-28 Chico
+1, Davis 1 game (`9afebd05-777b-4c8a-82d5-c41b556788bb`, result flags `W`/`L`, `resultString` `W 1-1`,
+`overtimePeriodsPlayed` 0): `b1` and `b2` are the two halves, `b3`…`b6` overtime periods, and `b7`
+the game page's "SO Win" column (Chico 2, Davis 1), which is a 1 v 1 tally. That mapping is
+confirmed on one game only, so it is **not encoded**: no tally is stored and the site says it does
+not show one (DESIGN §22.8). **[V] for that one game; [U] as a rule.**
 
 **(c) Contest ids grouped by date** — `GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=league&id={leagueId}&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25`.
 Cheap cron driver / same-day scoreboard. `data.contestIdsByDate[]`,
@@ -112,23 +128,28 @@ and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
 (`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
 
-**Scope: every registry team, all four leagues (43).** The roster page is the same page for a team
+**Scope: every registry team, all five leagues (49).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
 `data/rosters.json` (`lib/rosters-schema.ts`) holds exactly one entry per team, in registry order,
 each carrying its registry id and division. Everything below that says "captured 2026-10-02" was
-verified on the 15 SCVAL pages, the only ones captured then. All 43 pages were then read live on
-2026-10-03 with the same adapter, unchanged: 37 teams ok (745 players), 6 empty (Del Mar, Silver
-Creek, Sobrato, Monterey, Santa Catalina, Marin Academy: MaxPreps' own athleteCount is 0), 0
-failed, and SCVAL's rows were identical to the 2026-10-02 ones. Seven of the 28 new pages are kept
-as fixtures (`tests/fixtures/maxpreps/roster-{leigh,greenfield,del-mar,stevenson,monterey,
-university-sf,marin-catholic}.html`, tested by `tests/maxpreps-leagues.test.ts`). The adapter
-throws on any positional drift (a failed team keeps its previous rows or is
-`error`, never a guessed row). A team's `status` says what its `players[]` are: `ok` (read this
-run), `empty` (page read, MaxPreps lists nobody), `carried-forward` (this run failed; the previous
-file's rows, with their own `fetchedAt`), `error` (failed, nothing to carry) or `pending` (no run
-has covered the team: nothing fetched, nothing claimed). `pending` is the honest placeholder the
-file was seeded with for BVAL, PCAL and MCAL (and what `--leagues` leaves for a team the file has
-no row for) until a run read them; the team page says "has not been collected yet" for it.
+verified on the 15 SCVAL pages, the only ones captured then. All 43 pages of the four earlier
+leagues were then read live on 2026-10-03 with the same adapter, unchanged: 37 teams ok (745
+players), 6 empty (Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy:
+MaxPreps' own athleteCount is 0), 0 failed, and SCVAL's rows were identical to the 2026-10-02 ones.
+The six EAL pages were read on 2026-10-04 (`fetchedAt` 2026-10-04T06:07:08.874Z) with the adapter
+unchanged: 5 teams ok (95 players: Bella Vista 19, Chico 20, Davis 19, Lassen 15, Pleasant Valley
+22), 1 empty (Corning: `athleteCount` 0, `staffCount` 2), 0 failed, and 7 soft-deleted rows dropped
+(Davis 2, Lassen 4, Pleasant Valley 1). The file then held 49 teams and 840 players (538 with a
+grade, 47 captains). Seven of the 28 new pages are kept as fixtures
+(`tests/fixtures/maxpreps/roster-{leigh,greenfield,del-mar,stevenson,monterey,
+university-sf,marin-catholic}.html`, tested by `tests/maxpreps-leagues.test.ts`). The adapter throws
+on any positional drift (a failed team keeps its previous rows or is `error`, never a guessed row).
+A team's `status` says what its `players[]` are: `ok` (read this run), `empty` (page read, MaxPreps
+lists nobody), `carried-forward` (this run failed; the previous file's rows, with their own
+`fetchedAt`), `error` (failed, nothing to carry) or `pending` (no run has covered the team: nothing
+fetched, nothing claimed). `pending` is the honest placeholder the file was seeded with for BVAL,
+PCAL and MCAL (and what `--leagues` leaves for a team the file has no row for) until a run read
+them; the team page says "has not been collected yet" for it.
 
 The previous file is salvaged row by row (`readPreviousFile` in `lib/fetch-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
@@ -190,7 +211,8 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
   a team. Only Saint Francis (25) and one Palo Alto row carry a height.
   `staffCount` is non-zero on most pages but the coaches are **not** in `pageProps` (they load
   client-side on `/team/staff`; untested).
-- Budget: one 180–340 KB page per team, 43 requests (15 for SCVAL alone, `--leagues scval`), at
+- Budget: one 180–340 KB page per team, 49 requests (43 before the EAL joined; 15 for SCVAL alone,
+  `--leagues scval`), at
   the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts). Not in the
   twice-daily cron — rosters change a few times a season; run `pnpm fetch-rosters` by hand or
   weekly.
@@ -205,9 +227,13 @@ Saint Francis's 24 names are exactly the school's **2025-26** roster. Useful onl
 cross-check (17/17 for Los Altos, 13/13 for Cupertino).
 
 **Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** The overlay has one
-entry per registry team (43), joined on `slug + athleteId`; its rules below hold for every league.
+entry per registry team (49), joined on `slug + athleteId`; its rules below hold for every league.
 SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03 (the second sweep's tables
-follow the SCVAL one). What a team page with no MaxPreps players says about other sources is
+follow the SCVAL one). The six EAL entries, added 2026-10-04, are **stubs**: no coaches, players or
+sources and a note that no school or recruiting-page sweep has been done for the team yet, so
+nothing is filled for them and a team page says nothing about other sources (`otherRosters` is
+absent, "not checked"). On the 2026-10-04 MaxPreps rows alone, the EAL's 95 players have 95 grades and
+95 numbers, 56 positions and 7 heights. What a team page with no MaxPreps players says about other sources is
 recorded per team, not inferred: `otherRosters` (validated in `lib/rosters.ts`) is `none` (looked,
 no current roster anywhere: Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina), `partial`
 (a source lists current players in a form that cannot be joined, with a link: Marin Academy's
@@ -304,7 +330,7 @@ for the other leagues (MaxPreps alone → with the overlay): BVAL 173 players, g
 positions 63 → 64; PCAL 82 players, grades 49 → 66, positions 32 → 35; MCAL 149 players, grades 85 →
 128, positions 62 → 63; no height or jersey in any of them (three grades first filled on 2026-10-03
 were blanked when their sources were found to disagree: Leland's Michaela Reichmuth, Redwood's
-Audrey Dickerman and Eloise Tonderys). All four leagues together: 745 players, 443 → 658 with a
+Audrey Dickerman and Eloise Tonderys). All four leagues together (2026-10-03): 745 players, 443 → 658 with a
 grade, 256 → 270 with a position, 26 → 49 with a height, 424 with a number (unchanged). Position coverage
 is the real gap: **no current-season public source lists positions** for 8 of the 16 SCVAL programs
 and for most BVAL, PCAL and MCAL programs.
@@ -320,7 +346,7 @@ grade agreeing a year on (MaxPreps already has all 19, so nothing is filled). Th
 page name such a page by its URL ("MaxPreps 2025-26 roster"), although the overlay files it under
 the `maxpreps-career` or `maxpreps-jv` kind. This sweep is not a script: re-running it is research.
 
-**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`, all four leagues).** A second sweep on
+**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`; swept for the four leagues of 2026-10-02/03, not yet for the EAL).** A second sweep on
 2026-10-02 looked for each rostered SCVAL player's own recruiting profile, in two passes the same day.
 It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
 Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
@@ -404,9 +430,9 @@ exist and not be linked. Like the first sweep, this one is research, not a scrip
 
 **(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
-DESIGN §17). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds 13
-youth field hockey clubs and 72 affiliations, each a tie between a player on the 43 tracked varsity
-rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04, not a script: nothing fetches
+or refreshes it. It holds 13 youth field hockey clubs and 75 affiliations (72 from 2026-10-03, 3
+from 2026-10-04), each a tie between a player on the 49 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one
 factual sentence, its teams and programs (each with a short detail and the page it was read from;
 the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
@@ -467,10 +493,11 @@ or their short links (`BANNED_HOSTS`, shared with §1.1j3). Only players
 already on the tracked rosters are named, varsity rows only (no affiliation is on one of Los Gatos'
 29 JV rows); a club's own roster names many more players, and the club page links it instead.
 
-*Two passes.* Every affiliation was checked twice on 2026-10-03. A checker re-opened each source
-and applied the rule; then an independent refuter re-opened the sources and tried to break the
-match: another person of the same name, a quote not on the page, a misidentified club, a class
-year that disagrees, a stale listing. Only ties that survived both are in the file.
+*Two passes.* Every affiliation of the 2026-10-03 sweep was checked twice on that day. A checker
+re-opened each source and applied the rule; then an independent refuter re-opened the sources and
+tried to break the match: another person of the same name, a quote not on the page, a misidentified
+club, a class year that disagrees, a stale listing. Only ties that survived both are in that sweep.
+The three ties of the 2026-10-04 EAL sweep were each confirmed by two verifiers.
 
 *Status and confidence.* `current` = the source reflects the 2025-26 or 2026-27 club season (dated
 August 2025 or later, a club's current-players page, or a live recruiting profile that lists the
@@ -550,8 +577,15 @@ Gotchas, found in the research (most are recorded in an affiliation's `basis` or
   hockey player in another state.
 
 *Recall is partial.* A player with no public page that meets the rule is not listed, whatever club
-they play for. The 72 ties cover 66 of the 716 varsity rows at 22 of the 43 schools; five players
-are tied to more than one club.
+they play for. On 2026-10-03 the 72 ties covered 66 of the 716 varsity rows at 22 of the 43 schools;
+five players are tied to more than one club. The 2026-10-04 EAL sweep (the NFHCA 2026 high school
+watchlist, the NCFHA youth directory, SportsRecruits profile slugs, fhcollegepath.com classes
+2026-2028 and MAX Field Hockey) added 3 ties, all at Davis and all to NorCal Impact (Kira Kelly,
+Kate Loscutoff, Amelia Zedonis: "Davis Senior High School | NorCal Impact FHC", from the
+watchlist published 2026-08-27, each confirmed by two verifiers), so the file now holds 75
+affiliations for 69 players at 23 schools. No other EAL player was found tied to a club by the rule.
+The sweep also met D-City FHC (Davis), Roseville FHC and Chico Hotshots; **no club record was
+added** for them (DESIGN §22.8), and the searched regions are unchanged.
 
 | League | Players | By school |
 |---|---|---|
@@ -559,12 +593,13 @@ are tied to more than one club.
 | BVAL | 16 at 6 of 12 | Christopher 6, Leigh 3, Willow Glen 3, Gilroy 2, Leland 1, Westmont 1 |
 | PCAL | 0 of 7 | none |
 | MCAL | 17 at 4 of 9 | Tamalpais 6, University 6, Convent of the Sacred Heart 3, Lick-Wilmerding 2 |
+| EAL (2026-10-04) | 3 at 1 of 6 | Davis 3 |
 
 None at 21 schools: SCVAL's Valley Christian, Santa Clara and Saratoga; BVAL's Branham, Del Mar,
 Live Oak, Prospect, Silver Creek and Sobrato; all seven PCAL schools; and MCAL's Archie Williams,
 Redwood, Berkeley, Marin Catholic and Marin Academy. Six of these (Del Mar, Silver Creek, Sobrato,
 Monterey, Santa Catalina, Marin Academy) list no players on MaxPreps, so there is no row to tie
-anyone to. By club: SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
+anyone to. By club (2026-10-03; NorCal Impact is 22, all current, with the three Davis ties): SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
 current, 4 past, 4 unknown), Infinity 8 (1, 6, 1), Lightning 3 (1, 1, 1) and HTC 1 (current). Seven
 clubs have no tied player: Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker, Hayward
 Hawks, Lions and Golden Gate Rippers. No club was found on the Peninsula or the Central Coast,
@@ -583,10 +618,10 @@ automatically.
 **(j3) College commitments** — `data/commits.json` (`lib/commits-schema.ts`, read by
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
-field hockey pass), not a script: nothing fetches or refreshes it. It holds 16 commitments (7 in field
+field hockey pass; and a field hockey sweep of the six EAL teams' schools), not a script: nothing fetches or refreshes it. It holds 16 commitments (7 in field
 hockey, 7 in lacrosse, 1 in soccer, 1 in basketball) and the 14 colleges they are to, with 15
-programs (UC Davis holds two: field hockey and lacrosse), each commitment a player on the 43 tracked
-varsity rosters, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
+programs (UC Davis holds two: field hockey and lacrosse), each commitment a player on the tracked
+varsity rosters (43 teams in both rounds; 49 with the EAL), joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
 commitment has the college, the `sport` (field hockey, or any other: `COMMIT_SPORTS`), a `status`
 (`committed`, or `signed` only where a source says so), an `asOf` (the earliest date a kept source
 gives: a day, a month or a year), a `confidence`, and its sources (URL, kind, a verbatim quote of at
@@ -674,8 +709,9 @@ Stanford's schedule and its division from NCAA.com's school page.
 
 *How it was done, 2026-10-04 (every sport, and more field hockey recall).* The rule widened to any
 sport (a commitment's `sport`; a college's level and conference per program), and eleven more sweeps
-ran, each matching what it read against all 716 varsity rows (full name, then surname with school
-or class, for nicknames):
+ran, each matching what it read against all 716 varsity rows of the 43 teams then tracked (full name,
+then surname with school or class, for nicknames; the six EAL teams were swept for field hockey only,
+see *Recall is partial* below):
 - **Compiled lists, read whole.** SportsRecruits' college pages for field hockey (290 colleges, 2,879
   "Committed Athletes" entries), women's lacrosse (643) and women's soccer (1,670), and the profile of
   every class-of-2027-or-later entry (975 field hockey profiles, 16 of them in California); FH College
@@ -770,10 +806,13 @@ Gotchas, found in the research:
   lists are paywalled. Web search's session budget ran out late in the first round, so its
   verification passes and follow-ups worked from direct page reads.
 
-*Recall is partial.* 16 of the 716 varsity rows have a commitment, at 9 of the 43 schools: SCVAL 9 at
-4 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1 each), BVAL 2 at Christopher, PCAL 1 at
-Stevenson, and MCAL 4 at 3 (Redwood 2, Berkeley and Marin Catholic 1 each). Seven are in field hockey,
-seven in lacrosse, one in soccer and one in basketball. A commitment announced only on social media,
+*Recall is partial.* On 2026-10-04, 16 of the 811 varsity rows have a commitment, at 9 of the 49
+schools: SCVAL 9 at 4 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1 each), BVAL 2 at
+Christopher, PCAL 1 at Stevenson, MCAL 4 at 3 (Redwood 2, Berkeley and Marin Catholic 1 each), and EAL
+none. Seven are in field hockey, seven in lacrosse, one in soccer and one in basketball. The 2026-10-04
+sweep of the six EAL teams' schools, over the same field hockey sources as the EAL club sweep above,
+found none (the every-sport round covered the 43 other teams only); the absence of a commitment is not
+proof that none exists, and Corning has no roster rows to join to. A commitment announced only on social media,
 posted on a page the sweeps could not read, or not yet public is not listed, and colleges may not
 publicize an unsigned recruit, so a college's own site rarely shows a class of 2027 or 2028
 commitment before the November signing period. No source found said any player had signed. The
@@ -788,8 +827,9 @@ hand; on a rollover, redo the research (the seniors will have graduated).
 **(k) Player stats** —
 `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
 (JSON; captured and verified 2026-10-02 on the 15 SCVAL teams, and 2026-10-03 on a sample of the
-other three leagues; the rest of those were read live by the script). Like
-the rosters it joins to, it covers every registry team, all four leagues (43): one call per team,
+other three leagues; the rest of those were read live by the script, and the six EAL teams on
+2026-10-04). Like the rosters it joins to, it covers every registry team, all five leagues (49): one
+call per team,
 and `data/player-stats.json` (`lib/player-stats-schema.ts`) holds exactly one entry per team in
 registry order. The same adapter reads every league and throws on any drift. A team's `status` is
 `ok`, `none` (MaxPreps answers "No data was found": the coach entered nothing), `carried-forward`,
@@ -864,8 +904,12 @@ Gotchas, all **[V]**:
   goal, then decisions, saves and goals against, and games last.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
-- Budget: 43 calls of 0.2–35 KB (one per registry team), at the primary client's courtesy ceiling
-  (≤3 concurrent, ≥500 ms between starts, about 25 s), twice a day in season:
+- Coverage on 2026-10-04 with the six EAL teams (`fetchedAt` 2026-10-04T13:04:10.832Z): 33 of the
+  49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
+  Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same
+  "no stats" case as the five teams above), and 0 teams failed.
+- Budget: 49 calls of 0.2–35 KB (one per registry team; 43 when it was measured at about 25 s), at
+  the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts), twice a day in season:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
   (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
   script leaves the file untouched when only its `fetchedAt` stamps would move.
@@ -889,8 +933,15 @@ Gotchas, all **[V]**:
   9-25 of them; left out 39 deleted, 5 never final, 27 against schools outside the registry and 1
   forfeit; no contest's two feeds disagreed. The script writes nothing if one does, if any feed
   fails, or if any row is dated outside the season.
-- Cost: one `team-context/v1` read (about 0.55 MB) and 43 schedule reads (about 150 KB each),
-  through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
+- Refetched **2026-10-04 for all 49 teams** (`fetchedAt` 2026-10-04T06:07:29.936Z): 412 games dated
+  2025-08-25 to 2025-11-12, 44 more than the 368 above. Left out: 43 deleted, 7 never final, 23
+  against schools outside the registry and 1 forfeit. Of the 412, 31 are between two EAL teams and 13
+  between an EAL team and another registry team (Pleasant Valley 4, Chico 3, Bella Vista 3, Davis 3;
+  Corning and Lassen have none). Red Bluff's 2025-26 games are outside the registry and left out. The
+  EAL's 2025-11-01 tournament games carried `contestType` 5 on both rows, with the round in
+  `contest.location`.
+- Cost: one `team-context/v1` read (about 0.55 MB) and 49 schedule reads (about 150 KB each; 43 when
+  measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.
 
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
@@ -905,7 +956,7 @@ decode HTML entities, `JSON.parse`.
 | Purpose | URL form | React class | Path |
 |---|---|---|---|
 | Team schedule + results | `.../teams/{sbliveId}-{slug}/games` | `teams/Games` | `query.team.games.nodes[]`, `.standing` |
-| League standings | `.../leagues/{id}-{slug}/standings` (SCVAL 4242 and 4243, BVAL 4175, PCAL 4231 and 4232, MCAL 4212) | `organizations/Standings` | `query.organization.teamStandings[]` |
+| League standings | `.../leagues/{id}-{slug}/standings` (SCVAL 4242 and 4243, BVAL 4175, PCAL 4231 and 4232, MCAL 4212, EAL 4190) | `organizations/Standings` | `query.organization.teamStandings[]` |
 | Statewide daily scoreboard | `.../scores?date=YYYY-MM-DD` | `games/GenderSportIndex` | `query.scoreboardDate.games.nodes[]` (not `query.games.nodes[]`) |
 | League-scoped scoreboard | `.../leagues/{id}-{slug}/scores` | `organizations/Scores` | `query.organization.scoreboardDate.games.nodes[]` |
 | Single game detail | `.../games/{id}-{slug}` | `games/Show` | `query.game.{id,date,contest,gameTeams[]}` |
@@ -929,6 +980,26 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    never guessed.
 6. Some rows are junk: a Salinas–Stevenson game appears twice, once under a `/new-york/` path.
    Only rows whose `webPath` starts `/california/field-hockey/games/` are read.
+7. **The EAL bucket is harvest only.** `4190-eastern-athletic` lists 8 teams (checked 2026-10-04):
+   Pleasant Valley, Davis, Chico, Yuba City 459232, River Valley 459231, Red Bluff 490259, Corning
+   and Lassen, and **no Bella Vista**.
+   `gameTypeLabel` is wrong on several EAL games. Its team ids are the varsity ones recorded in the
+   registry (Bella Vista 459060, Chico 458564, Corning 458585, Davis 458605, Lassen 458783, Pleasant
+   Valley 458566); the JV and freshman ids differ and are never seeded (JV: Chico 458563, Pleasant
+   Valley 458565, Davis 458606, Bella Vista 459059, Lassen 490252, Corning 485808, Red Bluff 490260;
+   freshman: Corning 554338, Lassen 554132). Pleasant Valley's school id 10337 comes from the page
+   props' `school.id`, since its si.com logo is a team image.
+8. **A placeholder team carries Red Bluff's original fixtures.** si.com team 635037 "Educational
+   Outreach Academy" (Red Bluff, CA) holds 12 "League" rows against all six EAL teams, every one with
+   `statusId` 3 (si.com's "final") and no score, labelled CANC. Ids 490259, 490260 and 635037 are in
+   `DATA_QUALITY.sbliveIgnoredTeamIds` (§5.4), so no such row can reach a game or the cross-check.
+9. **"Davis" is ambiguous statewide.** si.com's team search
+   (`.../field-hockey/teams?name=davis`, 2026-10-04) lists two varsity teams named Davis: 458605
+   (`/teams/458605-davis-blue-devils`, Davis, the EAL team) and 458828 (`/teams/458828-davis-spartans`,
+   Davis, Modesto). The searches for Bella Vista, Corning, Lassen and Pleasant Valley each named one
+   team of that name, and Chico's one team named Chico (458564; the search also returns fuzzy
+   matches, Pleasant Valley, Chino, Chino Hills, Ayala and Don Lugo, which are other names). So only
+   Davis joined the name-collision list (§5.3).
 
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with
 timezone-correct timestamps and — under ten mechanical rules, for official league fixtures
@@ -1005,9 +1076,18 @@ redirects.
     official 2025 all-league list: "2025 All-MCAL Field Hockey Team" at
     `https://www.mcalsports.org/FieldHockey.htm#FH25`. The MCAL card links it (`alsoPublished`) and
     does not ingest it, because the schema has no awards-only state. No champion is stated.
+  - **EAL** — `unavailable` (checked 2026-10-04). The EAL published no 2025-26 final standings of
+    its own, and we found no EAL league website. The CIF Northern Section's field hockey page
+    (`https://www.cifns.org/sports/fh/index`: guidelines and announcements; its standings panel is
+    empty) and its Playoff Center (`https://www.cifns.org/guidelines-playoffs-Divisions-archives/playoff-center/index`:
+    the 2025-26 points and brackets list no field hockey) post none, and the umpires' site
+    (`https://fieldhockeyumpires.org/`) has schedules and assignments, no standings. MaxPreps' 2025-26
+    EAL table exists (7 teams, league `7ed47346-7496-472a-b778-74f097b4d629`, and it ordered
+    6-4 Pleasant Valley above 7-5 Bella Vista, i.e. by win percentage) but is not a league document, and the
+    site does not show standings from newspapers or third-party sites. No `alsoPublished`.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
     extend `scripts/build-history.ts`, and the schema (`lib/history.ts`) already validates it against
-    the league's own registry slugs and divisions (PCAL and MCAL are single-division).
+    the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
 
@@ -1072,7 +1152,35 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
 SCVAL is the exception: its two schedule PDFs are read **live** every run (see §1.3) and parsed
 with `pdftotext`; the carried-forward annotations keep a failed run from losing them.
 
+**The EAL has no official schedule** (`official.mode: 'none'`; its league games are classified by
+MaxPreps' league flag, as SCVAL's are; §3.1). The Section's Guidelines are its only document and
+contain no schedule; the Section's field hockey page has empty Standings and Schedule widgets and
+there is no league website. The one grid found is a Google Sheet linked only from the EAL/SRL
+umpires' site (`https://fieldhockeyumpires.org/`, "Field Hockey Umpiring Info for Eastern Athletic
+League/Sacramento River League / CIF-Northern Section Umpires"; sheet
+`1afhaLmxcjKfwKJsX3gobKmqk_KS0E0IGR483YUpKL2g`). On 2026-10-04 its 30 league games equalled
+MaxPreps' 30 (date, away team, home team, `contestType` 0). It is a **cross-check only**, never
+called official: it is not an official league or Section document, its "Revised" cell (2025-04-29)
+is stale while its change log runs 2026-04-29 to 2026-08-21, its times are JV start times, and its
+export hash changes on every export, so it is never linked from a page or bundled. Chico at Bella
+Vista on 2026-10-14 is the same date in the grid, both MaxPreps feeds and the umpire assignment
+sheet.
+
+Without fixtures, "a league result is missing" has its own definition (`missingOfficialResults`
+in `lib/standings.ts`, the single definition the pipeline and the pages share): a game MaxPreps
+counts for the division, dated before today, that is `scheduled`, `live` or `score-pending` is
+**missing**, and one that is `postponed` is listed as postponed. On 2026-10-04 there were two: the
+2026-09-29 Pleasant Valley at Corning game (`a0350ae9-…`) and the 2026-10-01 Corning at Chico game
+(`dcb840cb-…`), both ScoreNotReported at MaxPreps. The pipeline reports the count as
+`missingLeaguePast` on the division's health row. A co-champion label waits for the regular phase
+to end **and** no missing EAL result.
+
 **League rules documents** (cited by the config; full text summarized in `docs/LEAGUE-RULES.md`):
+the EAL's is the CIF Northern Section Field Hockey Guidelines 2026-28
+(`https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf`,
+an HTML viewer; the PDF bytes are at
+`https://d2o2figo6ddd0g.cloudfront.net/l/b/9w43yw991y47ue/Field_Hockey_Guidelines_26-28.pdf`, sha256
+`68e73674a1f29bb24d827e842e5ab2adc7f58364ff1a54cd4ea2789377646020`, PDF creation date 2026-06-10);
 BVAL Field Hockey By-Laws (rev. 8/13/24, a Google Doc); PCAL Sports Rules — Field Hockey (Jan 2022)
 and PCAL By-laws (rev. May 2025), both PDFs on pcalathletics.org; MCAL Field Hockey Handbook
 (rev. 10/19/24), MCAL Tie-Breaking Criteria (rev. 3/26) and the 2026 play-off sheet, PDFs on
@@ -1118,6 +1226,19 @@ championship, so MCAL has no CCS poll, no bracket page and no berths. MCAL's own
 tournament is published on its play-off sheet
 (`https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf`) and its games arrive in the
 MaxPreps team feeds like any other, dated Oct 23 or later.
+
+**The Northern Section (EAL) is not part of any of this either, and nothing is polled for it.** The
+Section's Field Hockey Guidelines 2026-28 name a "Post Season Tournament – 'Super Regional' (Varsity
+Only)" for which "the top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), and its "Northern
+Section Championship Playoff Calendar" lists "Field Hockey … Post Season Tourney TBA Oct. 30, 31,
+2026" (`https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf`); the
+Guidelines give the NSCIF Post Season Tournament as Oct 30-31, 2026 (Fri-Sat), "held at an
+alternative site" (§III.E.1), and mark NorCal and State qualification "Not Applicable" (§V, §VI). It is Section-sanctioned and league-run;
+the format is set at the preseason tournament meeting (§IV) and none is published. The seeding text
+(§III.E.1) is quoted verbatim in the config and never applied. The Section's Sport Dates sheet gives
+a last contest of 26-Oct, which conflicts with the Guidelines' Oct 29 and the last scheduled league
+game (Oct 28); the site uses the schedule. In 2025 the EAL tournament's games carried `contestType` 5
+on both rows, with the round in `contest.location`.
 
 ### 1.5 SCHEDULE TIMES — VNN / PlayOn "Mascot Media Bolt" `.ics`
 
@@ -1182,8 +1303,9 @@ elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
 |---|---|---|
 | `ccs` Central Coast Section | `d9a9ef9c-db12-4669-888b-40ac8462a575` | yes, 16 teams (SCVAL 7, BVAL 4, PCAL 2, 3 at-large) |
 | `ncs` North Coast Section | `89ae2e0f-e108-4054-9df3-329f0579f86d` | none: the NCS and CIF hold no field hockey championship; MCAL's own six-team tournament is its postseason |
+| `ns` Northern Section | `6249819d-12de-4bff-b0ab-38156006b001` | a Section-sanctioned, league-run Super Regional (top six EAL/SRL schools, Oct 30–31, site to be announced); no NorCal/State path |
 
-**The six MaxPreps league tables** (one per division; the id is what the cron requests):
+**The seven MaxPreps league tables** (one per division; the id is what the cron requests):
 
 | League | Division | MaxPreps league id | MaxPreps table | Teams on MaxPreps / ours | Games a team | League play | What MaxPreps' table is trusted for |
 |---|---|---|---|---|---|---|---|
@@ -1193,6 +1315,7 @@ elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
 | BVAL | Santa Teresa | `7c899b2d-07fa-4664-976c-a4f57d12eeec` | Blossom Valley - Santa Teresa | **5** / 6 | 10 | Sep 18 – Oct 30 | records only (Prospect is missing) |
 | PCAL | PCAL (one division) | `50ac53cd-e46f-4df9-824b-5a954c583b95` | Pacific Coast - Gabilan (MaxPreps' internal table name) | 7 / 7 | 12 | Sep 2 – Oct 29 | informational only |
 | MCAL | MCAL (one division) | `c15255d5-c2ad-49f5-9afb-cf4ba289875c` | Marin County | 9 / 9 | 16 | Aug 24 – Oct 22 | records only (MaxPreps orders by win pct) |
+| EAL | EAL (one division) | `60959b47-b0cf-4d7d-b054-d8ea140870ef` | Eastern Athletic | **7** / 6 (the extra row is Red Bluff) | 10 | Aug 24 – Oct 28 | records only (MaxPreps orders by win pct) |
 
 PCAL is one division on this site. MaxPreps' name for its table (the `Gabilan` in the row above)
 is its own internal label, kept as data only; it is never shown anywhere on the site, which says
@@ -1217,17 +1340,24 @@ of an alarm.
   Some of those are the games si.com backfills (§5.2).
 - **MCAL:** MaxPreps **orders the table by winning percentage** where MCAL orders by points, and
   after Oct 22 counts MCAL tournament games in its league records; ours never do.
+- **EAL:** MaxPreps **orders the table by winning percentage** where the EAL decides its title on
+  points and publishes no standings, so its places can differ from ours; its records and goals match ours
+  (on 2026-10-04 every team's league W-L-T equals ours). The table also lists **Red Bluff**, a
+  0-0-0 row with no games and a null `modifiedOn` (§3.2), which is the config's
+  `maxprepsExtraRows`: 7 rows + 0 missing − 1 extra = 6 teams. Two league games had no score at
+  MaxPreps on 2026-10-04 (§1.3a), and the Section's Sport Dates sheet disagrees with the Guidelines
+  on the last contest (§1.4).
 
-### 2.1 The 43 teams
+### 2.1 The 49 teams
 
 Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live responses. Colors,
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
-names, unique across all 43). The registry is `lib/registry/{scval,bval,pcal,mcal}.ts`, assembled
+names, unique across all 49). The registry is `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled
 by `lib/teams.ts`, and a test pins the 15 SCVAL slugs, abbreviations and GUIDs. The si.com ids
 are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed, the school id on
 a school-logo URL; "—" means not observed and is never guessed.
 
-Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9 = 43.
+Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49.
 
 | slug | abbr | league | division | MaxPreps team id (GUID) | name | si.com team id | si.com school id |
 |---|---|---|---|---|---|---|---|
@@ -1274,6 +1404,18 @@ Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MC
 | marin-catholic | MC | mcal | marin-county | `69e24861-fa93-42a2-acb5-be60e01ee555` | Marin Catholic | 456834 | 163 |
 | convent-sacred-heart | CS | mcal | marin-county | `d15d09d0-f8a6-463e-86d4-d998dbee7751` | Convent of the Sacred Heart | 512325 | 6922 |
 | marin-academy | MA | mcal | marin-county | `9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc` | Marin Academy | — | — |
+| bella-vista | BV | eal | eal | `204d6632-16ce-41fc-a733-dd11ec3af582` | Bella Vista | 459060 | 12991 |
+| chico | CI | eal | eal | `041ef7b7-089b-4e7d-9c9c-9ff1f833f829` | Chico | 458564 | 10335 |
+| corning | CR | eal | eal | `8f1a8024-2d40-4cab-bcba-3b9b367c6873` | Corning | 458585 | 10501 |
+| davis | DV | eal | eal | `288ca10d-8448-41e9-b26e-463df226b8c8` | Davis (MaxPreps: Davis Sr.) | 458605 | 10575 |
+| lassen | LS | eal | eal | `b4268b1c-b3df-4dd5-b52c-5355d8a48e42` | Lassen | 458783 | 11554 |
+| pleasant-valley | PV | eal | eal | `8e01c2fa-4888-483f-8d26-6a45518c1bd8` | Pleasant Valley | 458566 | 10337 |
+
+The EAL rows were read from MaxPreps' standings and team-context responses on 2026-10-04 (the team
+GUID equals the standings row's `schoolId` for all seven rows; mascot and city come from team-context,
+not standings) and are in alphabetical order. Chico and Corning share the acronym CHS and Lassen's LHS
+joins an existing one, but BVHS, DSHS and PVHS are unique, so the expected acronym collisions are
+unchanged. The EAL's six abbreviations collide with none of the other 43.
 
 ⚠️ **Do not use the Presentation HTML schedule page** — it 200s but serves Los Gatos data
 (MaxPreps routing/canonical bug). This is the single strongest argument for keying everything on
@@ -1287,12 +1429,15 @@ the school Santa Teresa High School fields no team. If it ever does, its slug mu
 |---|---|---|
 | Wilcox (SCVAL De Anza grid) | not fielding a team | in SCVAL's `withdrawnNames`; its 14 grid fixtures are dropped when the PDF is parsed; si.com id 485528 ignored |
 | York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered" |
+| Red Bluff (EAL) `4d3da788-bbe2-4ab9-b854-d95aa9786cda` | not fielding a varsity team in 2026 (§3.2) | still a 0-0-0 row in MaxPreps' EAL table (`maxprepsExtraRows`, skipped silently); in the EAL's `withdrawnNames`; si.com ids 490259, 490260 and 635037 ignored; team search answers "not covered" |
 | Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list |
+| Del Norte (San Diego) `ddf384b8-3189-4276-8703-71106d47a4d5` | a real school outside the registry; MaxPreps lists Davis against it at a neutral site on 2026-10-16 | an ordinary non-member opponent: the game is non-league, with a bare name |
 | Irvington, North Salinas, Notre Dame (Salinas), Gunn, San Jose, North Monterey County, University Prep Academy, Marina (CCS) | no 2026-27 varsity team | nothing to do |
 
 Every other school that appears as an opponent (out-of-area, other sections) is a **non-member**:
 its games are ordinary non-league games, modeled with `teamId: null` and a bare name, never given a
-Team record, and shown as "Not one of the 43 teams this site follows".
+Team record, and shown as "Not one of the 49 teams this site follows" (the number is the registry's
+size).
 
 ### 2.3 Name normalization
 
@@ -1306,14 +1451,17 @@ itself (`St Ignatius` vs `Saint Ignatius`).
 ### 3.1 Membership and classification, per league
 
 Membership comes from each league's **official schedule**, never from MaxPreps' or si.com's
-league buckets (both are wrong somewhere: §1.2, §2). A game belongs to a division's table
+league buckets (both are wrong somewhere: §1.2, §2). The EAL has no official schedule (§1.3a): its
+six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a
+varsity team in 2026, and the two Sac-Joaquin Section schools among them (Davis, Bella Vista) are
+members because they play the EAL schedule, whatever their CIF section. A game belongs to a division's table
 (`Game.countsFor`) only when both teams are members of that same division **and** the league's
 classification evidence says it is a league game. This is decided once, in the pipeline
 (`lib/classify.ts`), and stored on the game.
 
 | League | Evidence for "league game" | Excluded |
 |---|---|---|
-| SCVAL | MaxPreps `contestType === 0` (corroborated against the live PDF grid; any disagreement is logged) | CCS section games only (postseason tag `ccs`) |
+| SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
@@ -1345,19 +1493,33 @@ classification evidence says it is a league game. This is decided once, in the p
 3. The league absorbs five WCAL/private programs (St. Ignatius, Saint Francis, Valley Christian,
    Archbishop Mitty, Presentation) because CCS has too few field-hockey programs for separate
    leagues.
+4. **Red Bluff (EAL) is not fielding a varsity team in 2026.** MaxPreps' EAL table still lists it
+   (0-0-0, `standingsId` all zeros, `modifiedOn` null). Its 2026-27 varsity schedule has `data: []`
+   (team `4d3da788-bbe2-4ab9-b854-d95aa9786cda`), its roster has 0 players and `teamSize` 0, and no
+   other team schedules it. si.com shows its 12 original league fixtures as CANC under a placeholder
+   team (§1.2 caveat 8). The umpire sheet's change log of 2026-04-29 still had "vs RB". The Red Bluff
+   Daily News of 2026-08-22 reports "a couple from the field hockey program, which will not field a
+   team this fall"
+   (`https://www.redbluffdailynews.com/2026/08/22/girls-flag-football-is-coming-to-red-bluff/`).
+   A Red Bluff **JV** game at Chico on 2026-09-14 exists, so the site's wording is only "not fielding
+   a varsity team in 2026", never that the school has no program.
 
 ## 4. Data model
 
 The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `LeagueHealth`,
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
-`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory).
+`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, and
+a version-2 file written before a configured league existed gains that league on load, DESIGN §22.7).
 Load-bearing rules baked into it:
 
 - `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-member opponents — every
   fixture is renderable without inventing a Team record.
 - `Game.countsFor` is the division whose table the game belongs to (or `null`), set once by
-  `lib/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in and MCAL tournament
-  games, which never count in a league table.
+  `lib/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in, MCAL tournament and
+  EAL Super Regional (`league-postseason`) games, which never count in a league table.
+- A level EAL final that MaxPreps flags `W` for one team and `L` for the other is a 1 v 1 win:
+  `decider: 'SO'`, `shootout: null` (no tally is stored, §1.1b), and the flags decide the result in
+  every W/L/T count. Shootout data exists only when the decider is `SO`.
 - `contestState === 1` rows are **dropped before** a `Game` is constructed (they are not
   "canceled" — one observed row is a scrimmage with a real 0-4 score; storing it would leak a
   scrimmage into the standings).
@@ -1376,36 +1538,37 @@ Load-bearing rules baked into it:
   game later replaced by MaxPreps' own) are part of the snapshot and shown on `/about`.
 ## 5. Cron fetch plan
 
-**Core sweep — 56 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
-`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 6 league-metadata
-assertions + 6 league standings + 43 per-team schedule pulls (one per registry team, so Prospect is
+**Core sweep — 64 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
+`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 7 league-metadata
+assertions + 7 league standings + 49 per-team schedule pulls (one per registry team, so Prospect is
 fetched even though MaxPreps' Santa Teresa table omits it) = every game, including non-league
 fixtures, because the schedule feed is per-team, not per-league.
 
-**Player stats — 43 more MaxPreps requests, in a separate process:** the workflow then
-runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all four leagues, §1.1k) as a non-fatal step
+**Player stats — 49 more MaxPreps requests, in a separate process:** the workflow then
+runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all five leagues, §1.1k) as a non-fatal step
 (`continue-on-error`), so a stats outage never costs the day's scores, and commits
-`data/player-stats.json` with the snapshot when its content changed. It is not part of the 56 below
+`data/player-stats.json` with the snapshot when its content changed. It is not part of the 64 below
 and shares no abort scope with the pipeline.
 
 ### 5.0 Request budget per run
 
 | Host | Requests | Notes |
 |---|---|---|
-| MaxPreps API | 56 | 1 bootstrap + 6 meta + 6 standings + 43 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s) |
+| MaxPreps API | 64 | 1 bootstrap + 7 meta + 7 standings + 49 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run, every host, took about 46 s) |
 | scval.com | 3 | 2 schedule PDFs + the standings index |
 | drive.google.com, pcalathletics.org, mcalsports.org | 5 | revision checks (BVAL ×2, PCAL, MCAL) + the MCAL `Schedir.htm` changes check |
 | si.com | up to 15 + up to 8 | scoreboards for dates in the trailing 14 days that have a game; targeted team-games pages only for backfill candidates (§5.2 rule 8) |
 | VNN | 2 | the Palo Alto and Los Gatos calendars |
 | cifccs.org + MaxPreps HTML | 2 | only from `CCS.pollFrom` (Oct 25) |
 
-`--sblive-full` (all 43 si.com team pages) is a manual flag, never the cron default. The final
-log line prints the counts per host, e.g. `requests maxpreps:56 sblive:… official:…`.
+`--sblive-full` (all 49 si.com team pages) is a manual flag, never the cron default. The final
+log line prints the counts per host, e.g. `requests maxpreps:64 sblive:… official:…`. The live run of
+2026-10-04 made 64 MaxPreps, 20 si.com and 8 official-host requests, with no 403 or 429.
 
 ### 5.1 Order, aborts and freezes
 
-Steps run in this order: window guard → bootstrap → league metadata ×6 → reported tables ×6 →
-schedules ×43 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
+Steps run in this order: window guard → bootstrap → league metadata ×7 → reported tables ×7 →
+schedules ×49 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
 guards → standings → assemble. Failure has three scopes, so **one league never blocks the others**:
 
 | Scope | Effect | Triggers |
@@ -1433,7 +1596,7 @@ row.
 identifies the site and a contact address on every request.
 
 **Backfill of MaxPreps itself:** because `schedule-calculated` returns a team's entire season in
-one request, every run **re-ingests all 43 feeds in full** and upserts on `contestId` — coaches
+one request, every run **re-ingests all 49 feeds in full** and upserts on `contestId` — coaches
 enter results by hand with real lag, and MaxPreps corrections do happen, so nothing is ever treated
 as immutable.
 
@@ -1481,18 +1644,25 @@ scores, and a si.com game that is not a junk row (rule 7).**
    both teams registry teams) and si.com has the same game within ±1 day as Final: **publish
    si.com's score on that contest** (contest id kept, `provenance.scores: 'sblive'`, status
    becomes final, counted). If MaxPreps later posts a score, rules 1, 4 and 5 apply on that run.
+   **No level fill in a 1 v 1 league:** when both sides are members of a league whose varsity
+   games are decided on 1 v 1s (the EAL) and si.com's score is level, rules 3, 4a and 4b do not
+   write it, because si.com does not say who won the 1 v 1s. Rule 3 records a skipped row with the
+   note "si.com has a level score, but a varsity EAL game is decided on 1 v 1s and si.com does not say
+   who won them, so it is not used." A decisive si.com score is used as for any league.
 4. **"Clearly wrong" MaxPreps final** — only these three mechanically detectable cases, each logged
    with a note; si.com's score is published and the MaxPreps value and the reason are recorded in
    `provenance.scoreConflict`:
    - **4a contradictory result:** the two team rows' win/loss flags contradict the row's own score
-     (the side with more goals is marked L), or the two rows disagree on the score.
+     (the side with more goals is marked L), or the two rows disagree on the score. A level score
+     flagged `W` for one EAL team and `L` for the other is not a contradiction: it is a 1 v 1 win
+     (§4).
    - **4b off-schedule date:** the contest matched its official fixture only by the rescheduled
      pass more than 7 days from the official date, while si.com has the same pair as Final within
      ±1 day of the **official** date. The game keeps MaxPreps' date; the note names both.
    - **4c phantom tie:** a MaxPreps "final" 0-0 with both results T, si.com has a decided Final the
      same date for the same pair, **and the league plays no overtime in league play** (PCAL and
      MCAL only; in SCVAL and BVAL a 0-0 tie can be real after the sudden-victory period, so it falls
-     to rule 5).
+     to rule 5; the EAL decides a level game on 1 v 1s, so it is never a phantom tie there).
 5. **Plain disagreement** (both sources have a score and no rule-4 condition holds): MaxPreps
    stays; the conflict is published on the game page and `/about`, never averaged or silently
    overwritten.
@@ -1501,9 +1671,9 @@ scores, and a si.com game that is not a junk row (rule 7).**
 7. **Junk-row guards:** si.com rows whose `webPath` does not start with
    `/california/field-hockey/games/` are ignored; duplicates collapse on the si.com game id, then on
    (date, unordered pair) keeping the scored row; rows whose sides do not both resolve by id are
-   ignored; rows with a side in the ignored team ids (York, Tamalpais JV, Wilcox) or a withdrawn
-   name are dropped; statewide name collisions (University, Los Altos, Santa Clara) never resolve
-   by name.
+   ignored; rows with a side in the ignored team ids (York, Tamalpais JV, Wilcox, Red Bluff, Red Bluff
+   JV, the Educational Outreach Academy placeholder) or a withdrawn name are dropped; statewide name
+   collisions (University, Los Altos, Santa Clara, Davis) never resolve by name.
 8. **Budget:** the statewide daily scoreboard stays the cron default; si.com **team-games pages**
    are fetched only for teams with an eligible item (a past official fixture with no MaxPreps
    contest, a past score-pending contest between two registry teams, or a clearly-wrong final, per
@@ -1531,7 +1701,9 @@ scores, and a si.com game that is not a junk row (rule 7).**
 
 The never-0-0 rule still holds for every non-final game. On the 2026-10-02 corpus the rules fill
 exactly three games, all in PCAL (rule 2: Greenfield at Santa Catalina Sep 4 and Hollister at
-Greenfield Sep 30; rule 3: Carmel at Stevenson Sep 29); with `--no-sblive` the PCAL table is level
+Greenfield Sep 30; rule 3: Carmel at Stevenson Sep 29). The regenerated 2026-10-04 snapshot also
+has 3 backfilled games, all PCAL, none in the EAL; its two score-pending EAL league games stay
+unfilled and are listed as missing results (§1.3a); with `--no-sblive` the PCAL table is level
 on points differently (see `docs/LEAGUE-RULES.md`).
 
 ### 5.3 si.com identity: id first
@@ -1543,8 +1715,8 @@ in `lib/sources/sblive.ts` identifies each side in this order:
 2. the team id equals a registry team's `sbliveTeamId` → that team (`team-id`);
 3. the **school id** (from a school-logo URL) equals a registry team's `sbliveSchoolId` → that team
    (`school-id`);
-4. the normalized name is `university`, `losaltos` or `santaclara` (names shared with other
-   schools statewide) → refused (`ambiguous-name`);
+4. the normalized name is `university`, `losaltos`, `santaclara` or `davis` (names shared with other
+   schools statewide: §1.2 caveat 9) → refused (`ambiguous-name`);
 5. a name match whose recorded id contradicts an id that **is** present → refused
    (`id-contradicts-name`);
 6. a name match → the team (`name`) — usable for the cross-check display only, **never for a
@@ -1571,11 +1743,19 @@ and everything dropped is published in the snapshot's `dropped` list and on `/ab
   the better one (final with a score over score-pending over scheduled, then contestType 0, then the
   later MaxPreps modification). Non-league doubleheaders are never touched.
 - **Ignored si.com team ids** (`sbliveIgnoredTeamIds`): `456851` York (PCAL, JV only), `512156`
-  Tamalpais JV, `485528` Wilcox (SCVAL, not fielding a team).
+  Tamalpais JV, `485528` Wilcox (SCVAL, not fielding a team), `490259` Red Bluff (EAL, not fielding
+  a varsity team in 2026), `490260` Red Bluff JV, and `635037` Educational Outreach Academy (a
+  si.com placeholder carrying Red Bluff's original 2026 EAL fixtures, which si.com marks CANC, all
+  without a score; §1.2 caveat 8).
+- **Known non-member MaxPreps standings rows** (`maxprepsExtraRows`, per division, `{}` for the
+  six earlier divisions): the EAL's Red Bluff row `4d3da788-bbe2-4ab9-b854-d95aa9786cda`, a 0-0-0
+  row with no games. The reported-table step skips it without the "unknown school" warning, and the
+  division's count rule is `maxprepsTeamCount + maxprepsMissing.length − extra rows =
+  expectedTeams` (7 + 0 − 1 = 6).
 - **Ignored MaxPreps league id:** `6e1f97d4-5211-4d98-bf59-282cd754bc5c` (the 0-team PCAL sibling
   table, §2).
 - **Withdrawn names** (never members): SCVAL — Wilcox and its variants; PCAL — York and its
-  variants. Their fixtures are dropped silently when an official schedule is parsed.
+  variants; EAL — Red Bluff and its variants (Red Bluff High School, Spartans, Union High School). Their fixtures are dropped silently when an official schedule is parsed.
 
 ### 5.5 Corpus and `--capture`
 
@@ -1583,11 +1763,23 @@ Tests and offline runs read a recorded **corpus**: a directory with a `manifest.
 `fetchedAt`, leagues, and a map from each logical resource such as `maxpreps/schedule/leigh`,
 `sblive/scores/2026-09-30` or `scval/pdf-text/de-anza` to a file, or to an HTTP status number that
 is served as that error) plus the files. `tests/fixtures/corpus/all-2026-10-02/` is a full run of
-all four leagues (SCVAL's schedules and PDF texts are the 2026-09-29 captures, everything else
-2026-10-02); `tests/fixtures/maxpreps/manifest.json` is the older SCVAL-only corpus; and
-`tests/fixtures/corpus/variants/` holds overlays for failure cases (`pcal-standings-empty`,
-`bval-meta-wrong-season`, `leland-feed-503`, `mcal-postseason`, `bval-revised`,
-`finals-regression`).
+the four leagues of that date (SCVAL's schedules and PDF texts are the 2026-09-29 captures,
+everything else 2026-10-02) and was **not extended**: under it the EAL is "not fetched in this
+run" (frozen, no data), as BVAL, PCAL and MCAL are under the `scval` corpus. `tests/fixtures/corpus/eal-2026-10-04/`
+is the EAL's own corpus, captured live with `--capture` (`--leagues eal`, si.com on, CCS, VNN and
+the official sources off; `fetchedAt` 2026-10-04T07:19:05.777Z): 19 files for 9 MaxPreps and 9
+si.com requests (1 bootstrap, 1 league meta, 1 standings, 6 schedules; 7 si.com scoreboards, for
+2026-09-22, 09-24, 09-28, 09-29, 10-01, 10-02 and 10-03; and 2 si.com team-games pages), in which
+75 schedule rows become 40 contests and 40 games, 30 of them league games. A replay over it asks for
+nothing the capture lacks (no `FixtureMissing`). The pipeline asks only for scoreboard dates on which
+MaxPreps or a fixture has a game, so the corpus has no 2026-09-30 scoreboard. It drives
+`tests/pipeline/eal.test.ts`, the EAL view tests and a second copy-honesty pass, and
+`tests/helpers.ts` exports its name as `EAL_CORPUS`. `tests/fixtures/maxpreps/manifest.json` is the
+older SCVAL-only corpus; and `tests/fixtures/corpus/variants/` holds overlays for failure cases
+(`pcal-standings-empty`, `bval-meta-wrong-season`, `leland-feed-503`, `mcal-postseason`,
+`bval-revised`, `finals-regression`). The `finals-regression` overlay's `previous-snapshot.json` is
+**frozen**: it stays a four-league version-2 file, so it keeps exercising the "league added" upgrade
+a snapshot written before the EAL went through on load (DESIGN §22.7).
 
 ```bash
 pnpm fetch-data --fixtures tests/fixtures/corpus/all-2026-10-02 --out /tmp/snap.json
@@ -1613,7 +1805,11 @@ calls, watching for populated `bracketName`/`bracketGameIndex`/`tournamentName` 
 verify live on Nov 7). Re-derive the CCS CloudFront PDF URLs each time; never poll the CCS bracket
 page itself expecting data. **MCAL has no section playoff**: its tournament (play-in Fri Oct 23 if
 needed, quarterfinals Mon Oct 26, semifinals Wed Oct 28, final Fri Oct 30 at Tamalpais) is read
-from MaxPreps games dated on or after Oct 23 between MCAL teams.
+from MaxPreps games dated on or after Oct 23 between MCAL teams. **The EAL's Super Regional (Oct
+30-31) is not polled either**: no source is read for it and the site draws no bracket (§1.4). A game
+between two EAL teams on or after 2026-10-30, or typed `contestType` 4 between them, is tagged
+`league-postseason` and never counts in the league table; nothing of the kind had been observed
+by 2026-10-04.
 
 ## 6. Legal / robots posture and attribution
 
@@ -1623,9 +1819,11 @@ are root-anchored prefixes and do **not** match the paths this project uses (e.g
 `/ca/los-altos/los-altos-eagles/field-hockey/schedule/` is not under `/team/`). Field hockey is
 not in the Googlebot sport-exclusion list. No `Crawl-delay` is published anywhere; the
 ≤3-concurrency / 500ms / once-or-twice-daily budget is entirely self-imposed. scval.com,
-cifccs.org, si.com, mmboltapi, pcalathletics.org, mcalsports.org and the Google Drive download
-endpoint robots policies were not independently re-verified before this build — check before a
-first production run.
+cifccs.org, si.com, mmboltapi, pcalathletics.org, mcalsports.org, cifns.org, fieldhockeyumpires.org
+and the Google Drive download endpoint robots policies were not independently re-verified before
+this build — check before a first production run. (The Section's Guidelines are read by hand, not
+by the cron; the umpires' grid was read once, on 2026-10-04, as a cross-check, and nothing fetches
+it.)
 
 **Terms — robots is not a licence.** MaxPreps (CBS Interactive/Paramount) and SBLive/si.com both
 restrict republishing and publish no reuse licence. Posture adopted: store our own **derived**
@@ -1640,12 +1838,15 @@ pairings and times), not copies of the documents.
 standings and scores pages:
 
 > Data from **MaxPreps** (maxpreps.com) and **High School on SI** (si.com/high-school). League
-> alignment and rules from SCVAL, BVAL, PCAL and MCAL. Unofficial; not affiliated with SCVAL, BVAL,
-> PCAL, MCAL, CIF-CCS, CIF-NCS, MaxPreps or SI. Records are computed from published game results
-> and may differ from official standings. Last updated {fetchedAt}.
+> alignment and rules from SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
+> Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps
+> or SI. Records are computed from published game results and may differ from official standings.
+> Last updated {fetchedAt}.
 
-with the site's scope note beneath it: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL)
-and the North Coast Section's MCAL. Teams from other sections appear only as opponents."
+with the site's scope note beneath it: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL),
+the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues
+appear only as opponents." (The EAL is named in its own clause because it has no league document:
+its rules come from the Section's Guidelines, and the clause links the Section's field hockey page.)
 
 ## 7. Known open risks (carried into README "Known limitations")
 
@@ -1666,13 +1867,37 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   hardcode.
 - MCAL's handbook (§8b) says the top four qualify for its tournament; the 2026 play-off sheet and
   the 2025 tournament use six. The site follows the 2026 sheet and says so.
+- **EAL: MaxPreps' `modifiedOn` is null on a zero-game row** (Red Bluff's, 2026-10-04). It is
+  handled (§1.1a), but any other null field in a standings row would reject that table, and the
+  league would publish `partial` with the reason.
+- **EAL: no official source.** The league's games are whatever MaxPreps marks as league games, and the
+  only cross-check, the umpires' grid, is not official and is read by hand (§1.3a). A game MaxPreps
+  mislabels, or a score it lacks (two on 2026-10-04), has no document to correct it, so the site
+  lists such a game as a missing result rather than guessing. The Guidelines' Super Regional
+  seeding text is ambiguous (four steps or five), and the coaches set the criteria, so it is quoted
+  and never applied.
+- **EAL: MaxPreps records 1 v 1 results inconsistently.** The 2026-09-28 Chico–Davis game is a level
+  score with `W`/`L` flags (counted as a win), while the 2026-09-02 Pleasant Valley at Chico game is
+  a 1-0 score with three overtime periods, which the Guidelines' one overtime period cannot produce
+  and which may be a 1 v 1 win entered as a goal (a reading that rests on one newspaper report). The
+  site shows each as MaxPreps has it, with a note, stores no tally (§1.1b) and cannot tell whether
+  another level game that MaxPreps lacks flags for was a tie or a 1 v 1 result: it stays a tie and is
+  logged.
+- **EAL: the Elo fit is connected to the rest by 13 games.** Last season's finals link the EAL to
+  other leagues only through Pleasant Valley (4), Chico (3), Bella Vista (3) and Davis (3); Corning
+  and Lassen have none (§1.1l), so their ratings rest on their EAL games and the starting point
+  alone.
+- **EAL: no 2025-26 history.** The league published no final standings (§1.3), so
+  `/history/2025-26` marks the EAL `unavailable` with the sources checked.
 - No by-law ranks a team across leagues, and the CCS committee seeds by criteria we cannot compute,
   so the site shows no merged 1-16 order before CCS seeds.
 - JV is out of scope for v1: JV membership differs from varsity, and no JV pipeline was verified end
   to end even though the VNN `.ics` feeds carry some JV events.
-- Rosters and player stats cover all 43 teams (§1.1j, §1.1k) and were read live on 2026-10-03 (every
-  page parsed, no team failed), and the school-site and recruiting-page overlay covers all four leagues
-  (SCVAL 2026-10-02; BVAL, PCAL, MCAL 2026-10-03, recall partial in each). A team's page that does
+- Rosters and player stats cover all 49 teams (§1.1j, §1.1k): the 43 teams of the four earlier leagues
+  were read live on 2026-10-03 and the six EAL teams on 2026-10-04 (every page parsed, no team failed;
+  Corning has no roster and no stats at MaxPreps), and the school-site and recruiting-page overlay
+  covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL 2026-10-03, recall partial in
+  each), with only stub entries for the EAL. A team's page that does
   not parse fails that team (carried forward, or `error`), never writes a wrong value; a team no run
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
@@ -1680,15 +1905,17 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
-- College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04, and
-  nothing refreshes them: recall is partial (16 of 716 varsity rows, at 9 schools; social media, where
+- College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04 (the six
+  EAL teams' schools on 2026-10-04, for field hockey only, with none found), and nothing refreshes
+  them: recall is partial (16 of 811 varsity rows, at 9 schools, on 2026-10-04; social media, where
   most are announced, never counts), a signing or decommitment after that date is not shown, and a roster refetch that
   drops or respells a committed row fails the build until it is re-checked by hand.
-- Club ties (§1.1j2) were researched once, on 2026-10-03, and nothing refreshes them: recall is
-  partial (66 of 716 varsity rows, none at 21 schools), a `current` tie ages, and a roster refetch
+- Club ties (§1.1j2) were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04,
+  adding three Davis ties), and nothing refreshes them: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
+  none at 21 schools), a `current` tie ages, and a roster refetch
   that drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
-  history, by league"); PCAL and MCAL are marked `unavailable` in `data/history-2025-26.json`,
+  history, by league"); PCAL, MCAL and EAL are marked `unavailable` in `data/history-2025-26.json`,
   since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
-  all four leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
+  all five leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
   season's, and nothing on the site prints them as a record or a standings table.

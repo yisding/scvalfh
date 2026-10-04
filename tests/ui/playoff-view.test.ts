@@ -167,6 +167,42 @@ describe('buildDivisionProjection — SCVAL', () => {
     expect(p.notes[0], VIEW).toContain('official alignment');
   });
 
+  it('never calls the teams of a league with no documents an "official alignment" (EAL, D23)', async () => {
+    // The all-2026-10-02 corpus does not fetch the EAL, so its rows have no results.
+    const rows: ProjectionRow[] = data.getTeams('eal').map((team) => ({
+      team,
+      standing: data.getStandingFor(team.id)!,
+      status: 'out' as PlayoffStatus,
+      statuses: ['out'] as PlayoffStatus[],
+      label: 'Outside the top six',
+      shared: false,
+    }));
+    expect(rows.every((r) => !r.standing.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
+    const facts = { aqPlaces: 0, playInPlace: null, playInDate: null, atLargePlace: null, line: null, unresolved: '' };
+    const none = view.buildDivisionProjection('eal', 'EAL', rows, facts);
+    expect(none.notes, VIEW).toEqual([
+      'No EAL league results have been reported yet, so there is nothing to project here. The rows below are the EAL table as MaxPreps lists it.',
+    ]);
+
+    // One team with results: the per-set footnote of the rendered table.
+    const partial = rows.map((r, i) => (i === 0 ? { ...r, standing: { ...r.standing, hasReportedResults: true } } : r));
+    const { PlayoffProjection } = await import('../../components/playoffs/PlayoffProjection');
+    const text = textOf(
+      renderToStaticMarkup(
+        PlayoffProjection({
+          projection: view.buildDivisionProjection('eal', 'EAL', partial, facts),
+          heading: 'League table',
+          asOfLabel: 'so far',
+          standingsHref: '/standings/eal',
+        }),
+      ),
+    );
+    expect(text, 'components/playoffs/PlayoffProjection.tsx').toContain(
+      `${view.joinNames(rows.slice(1).map((r) => r.team.name))} are in the EAL table as MaxPreps lists it but have no reported results`,
+    );
+    expect(text, 'components/playoffs/PlayoffProjection.tsx').not.toMatch(/\bofficial\s+(EAL\s+)?alignment/i);
+  });
+
   it('reproduces the corpus table: De Anza’s shared 3rd holds three berths among four teams', () => {
     const da = build('de-anza', liveRows('de-anza'));
     expect(da.autoRows.map((r) => r.team.slug), VIEW).toEqual(['saint-francis', 'st-ignatius', 'los-altos', 'valley-christian']);
@@ -292,7 +328,7 @@ describe('row copy', () => {
 describe('/playoffs (rendered)', () => {
   it('has the league anchors, key dates and bracket anchors, each id once', () => {
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
-    for (const id of ['scval', 'bval', 'pcal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa']) {
+    for (const id of ['scval', 'bval', 'pcal', 'eal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa']) {
       expect(ids.filter((x) => x === id), `${PAGE}: #${id}`).toHaveLength(1);
     }
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
@@ -318,6 +354,26 @@ describe('/playoffs (rendered)', () => {
     expect(text, PAGE).toContain('Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.');
     expect(text, PAGE).toContain('AQ line');
     expect(text, PAGE).toContain('Play-in host');
+  });
+
+  it('carries the EAL card: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
+    const text = textOf(html);
+    expect(text, PAGE).toContain(
+      'Following an EAL team? The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+    );
+    expect(text, PAGE).toContain(
+      'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
+    );
+    expect(html, PAGE).toContain(
+      'href="https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf"',
+    );
+    // The chip and the jump link both land on the card, the one element with that id.
+    expect([...html.matchAll(/\sid="eal"/g)], `${PAGE}: #eal`).toHaveLength(1);
+    expect(html, PAGE).toContain('href="#eal"');
+    expect(html, PAGE).not.toContain('href="/playoffs/eal"');
+    // The card carries no CCS concept and no seed word.
+    const card = /<div[^>]*\sid="eal"[^>]*>([\s\S]*?)<\/div>/.exec(html)?.[1] ?? '';
+    expect(textOf(card), PAGE).not.toMatch(/\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i);
   });
 
   it('never writes "eliminated" or "Gabilan", and never renders a missing record as 0-0-0', () => {

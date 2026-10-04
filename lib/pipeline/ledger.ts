@@ -316,7 +316,8 @@ export function previousDivisionHealth(previous: Snapshot | null, division: Divi
 /**
  * The previous snapshot holds this league's data: it has a health row whose `lastFreshAt` is set
  * (the league was fresh or partial in some earlier run, and a frozen run carries those rows). A
- * v1-migrated snapshot's BVAL/PCAL/MCAL rows (lastFreshAt null) hold nothing to carry.
+ * v1-migrated snapshot's BVAL/PCAL/MCAL rows (lastFreshAt null), and the EAL row a pre-EAL v2 file
+ * gains on load (lib/snapshot-migrate.ts addConfiguredLeagues, lastFreshAt null), hold nothing to carry.
  */
 export function hasPreviousData(previous: Snapshot | null, leagueId: LeagueId): boolean {
   return previousLeagueHealth(previous, leagueId)?.lastFreshAt != null;

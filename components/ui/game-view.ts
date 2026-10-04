@@ -14,7 +14,7 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, timeOfDay } from '../../lib/format';
-import { findDivision, findLeague } from '../../lib/leagues';
+import { findDivision, findLeague, leagueOfDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -26,7 +26,7 @@ export type StatusTone = 'ink' | 'ink-2' | 'ink-3' | 'accent';
 export interface SideView {
   name: string;
   /**
-   * The registry's short name for one of the 43 teams this site follows ("Mitty", "St Ignatius"), and the source
+   * The registry's short name for one of the teams this site follows ("Mitty", "St Ignatius"), and the source
    * name unchanged for everyone else. A dense row — a game list, a bracket — renders this, because
    * the row gives the name roughly 120px once the score and the status label have taken their
    * share and "Archbishop Mitty High School" truncates to "Archbish…". The full name stays on the
@@ -51,7 +51,7 @@ export interface GameDisplay {
   statusTone: StatusTone;
   /** The body sentence under a row that needs one, e.g. the unreported promise. */
   note: string | null;
-  /** Mono superscript tags after the score: 'OT', '2 OT', 'F'. */
+  /** Mono superscript tags after the score: 'OT', '2 OT', 'SO', 'F'. */
   deciderTag: string | null;
   /** '(4–3 SO)' — never produced by this league (By-Laws Article IV) but modelled. */
   shootoutText: string | null;
@@ -63,7 +63,10 @@ export interface GameDisplay {
   isNonLeague: boolean;
   /** The league chip (`SCVAL`, `BVAL`, …) of a counted game: the league of `countsFor`. null otherwise. */
   leagueTag: string | null;
-  /** `SCVAL crossover` · `BVAL play-in` · `MCAL tournament` · `CCS` when `postseason` is set. */
+  /**
+   * `SCVAL crossover` · `BVAL play-in` · `MCAL tournament` · `EAL Super Regional` · `CCS` when
+   * `postseason` is set.
+   */
   postseasonTag: string | null;
   /** 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. */
   sourceMark: 'si.com' | null;
@@ -92,6 +95,8 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
   'scval-crossover': 'crossover',
   'bval-play-in': 'play-in',
   'mcal-tournament': 'tournament',
+  // The fallback word; an unbracketed league's tag names its event instead (postseasonTagOf).
+  'league-postseason': 'postseason',
   ccs: null,
   other: null,
 };
@@ -103,7 +108,10 @@ export function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
   return division ? (findLeague(division.leagueId)?.shortName ?? null) : null;
 }
 
-/** `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `CCS`; null for no or an unnamed postseason. */
+/**
+ * `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `EAL Super Regional`, `CCS`; null for no
+ * or an unnamed postseason.
+ */
 export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   const tag = game.postseason;
   if (!tag) return null;
@@ -112,7 +120,12 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   if (!word) return null;
   // The tag names its league; the kind's prefix is the fallback for a tag written without one.
   const league = findLeague(tag.leagueId ?? tag.kind.split('-')[0] ?? '');
-  return league ? `${league.shortName} ${word}` : null;
+  if (!league) return null;
+  // An unbracketed league's postseason has a name of its own ('EAL Super Regional').
+  if (tag.kind === 'league-postseason' && league.postseason.kind === 'unbracketed-tournament') {
+    return `${league.shortName} ${league.postseason.name}`;
+  }
+  return `${league.shortName} ${word}`;
 }
 
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
@@ -125,8 +138,23 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
 }
 const LIVE_NOTE = 'A scheduled window, not a running score — we do not collect live scores.';
 
+/**
+ * true when MaxPreps' overtime count cannot be right for the game's league: a counted game in a
+ * league that plays one overtime period and then 1 v 1s (`leagueOvertime` 'shootout', the EAL)
+ * with more than one overtime period recorded. MaxPreps may have stored a 1 v 1 win as a goal, so
+ * the view shows the score as MaxPreps has it with no overtime tag and no "after overtime".
+ */
+export function overtimeInDoubt(game: Game): boolean {
+  if (game.countsFor === null || game.otPeriods <= 1) return false;
+  const division = findDivision(game.countsFor);
+  return division !== undefined && leagueOfDivision(division.id).rules.leagueOvertime === 'shootout';
+}
+
 function deciderTagFor(game: Game): string | null {
   if (game.isForfeit || game.decider === 'FORFEIT') return 'F';
+  // A 1 v 1 win with no stored tally; a game with a tally prints it as `shootoutText` instead.
+  if (game.decider === 'SO') return game.shootout ? null : 'SO';
+  if (overtimeInDoubt(game)) return null;
   if (game.decider === '2OT') return '2 OT';
   if (game.decider === 'OT') return 'OT';
   return null;
@@ -171,7 +199,7 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     strikeTime: false,
     liveDot: false,
     versus,
-    sentence: scoreSentence(game),
+    sentence: scoreSentence(game, { quietOvertime: overtimeInDoubt(game) }),
   };
 
   switch (view.kind) {

@@ -5,13 +5,19 @@
  *
  * Defaults: `league` (isLeague) true; contestTypes {0,0} for a league game, {1,1} otherwise; a
  * game between two members of one 'official-fixtures' division gets an official stamp for that
- * division on its own date (pass `official: null` for an unmatched contest).
+ * division on its own date (pass `official: null` for an unmatched contest). A 'contest-type'
+ * division (SCVAL, EAL) gets no stamp unless one is passed; the EAL publishes no schedule, so a
+ * stamp for it must name its own `source`.
+ *
+ * Result flags follow the score unless `results` overrides them, and the decider is set the way
+ * lib/normalize.ts sets it: a level final flagged {W, L} between two members of a shootout league
+ * (EAL) is 'SO' (no tally); otherwise forfeit, then the overtime count.
  */
 
 import { classifyGame, postseasonTag } from '../lib/classify';
-import { getDivision, leagueOfDivision } from '../lib/leagues';
+import { getDivision, getLeague, leagueOfDivision } from '../lib/leagues';
 import { resolveTeam } from '../lib/teams';
-import type { DivisionId, Game, GameStatus, OfficialStamp, PostseasonTag } from '../lib/types';
+import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '../lib/types';
 
 let seq = 0;
 
@@ -34,6 +40,8 @@ export interface GameSpec {
   postseason?: PostseasonTag | null;
   forfeit?: boolean;
   ot?: number;
+  /** MaxPreps' result flags on a final (default: implied by the score), e.g. an EAL 1 v 1 win's W/L on 1-1. */
+  results?: { home: Outcome | null; away: Outcome | null };
   /** Override the generated GUID. */
   contestId?: string;
 }
@@ -71,16 +79,38 @@ export function game(spec: GameSpec): Game {
       (spec.official !== undefined ||
         leagueOfDivision(stampDivision).rules.classification === 'official-fixtures');
     if (auto && stampDivision !== null) {
+      const config = getDivision(stampDivision).official;
+      const source = spec.official?.source ?? (config.mode === 'none' ? null : config.source);
+      if (source === null) throw new Error(`${stampDivision} publishes no official schedule: pass official.source`);
       official = {
         scheduledDate: date,
         division: stampDivision,
-        source: getDivision(stampDivision).official.source,
+        source,
         fixtureId: `${stampDivision}:${date}:${away.slug}@${home.slug}`,
         pass: 'same-date',
         ...spec.official,
       };
     }
   }
+
+  const homeResult: Outcome | null = final ? (spec.results?.home ?? (hs! > as! ? 'W' : hs! < as! ? 'L' : 'T')) : null;
+  const awayResult: Outcome | null = final ? (spec.results?.away ?? (as! > hs! ? 'W' : as! < hs! ? 'L' : 'T')) : null;
+  const shootoutLeague = home.league === away.league && getLeague(home.league).rules.leagueOvertime === 'shootout';
+  const oneVOne =
+    shootoutLeague &&
+    hs === as &&
+    ((homeResult === 'W' && awayResult === 'L') || (homeResult === 'L' && awayResult === 'W'));
+  const decider: Decider | null = !final
+    ? null
+    : spec.forfeit
+      ? 'FORFEIT'
+      : oneVOne
+        ? 'SO'
+        : ot >= 2
+          ? '2OT'
+          : ot === 1
+            ? 'OT'
+            : 'REG';
 
   const base: Game = {
     contestId: spec.contestId ?? nextContestId(),
@@ -94,14 +124,14 @@ export function game(spec: GameSpec): Game {
       slug: home.slug,
       name: home.name,
       score: hs,
-      result: final ? (hs! > as! ? 'W' : hs! < as! ? 'L' : 'T') : null,
+      result: homeResult,
     },
     away: {
       teamId: away.id,
       slug: away.slug,
       name: away.name,
       score: as,
-      result: final ? (as! > hs! ? 'W' : as! < hs! ? 'L' : 'T') : null,
+      result: awayResult,
     },
     site: 'home',
     status,
@@ -114,7 +144,7 @@ export function game(spec: GameSpec): Game {
     isOt: ot > 0,
     isForfeit: spec.forfeit ?? false,
     forfeitBy: spec.forfeit ? 'away' : null,
-    decider: final ? (spec.forfeit ? 'FORFEIT' : ot >= 2 ? '2OT' : ot === 1 ? 'OT' : 'REG') : null,
+    decider,
     shootout: null,
     venue: { text: null },
     ...(official ? { official } : {}),

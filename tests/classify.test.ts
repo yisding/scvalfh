@@ -173,6 +173,75 @@ describe('classify: SCVAL (contest-type evidence)', () => {
   });
 });
 
+describe('classify: EAL (contest-type evidence, no official schedule)', () => {
+  it('counts a game MaxPreps marks a league game between two EAL teams, with no official stamp', () => {
+    const g = game({ home: 'chico', away: 'davis', hs: 2, as: 1, date: '2026-09-21' });
+    expect(g.official).toBeUndefined();
+    expect(g.postseason).toBeNull();
+    expect(g.countsFor).toBe('eal');
+    // The last scheduled league day still counts.
+    expect(game({ home: 'davis', away: 'pleasant-valley', hs: 0, as: 1, date: '2026-10-28' }).countsFor).toBe('eal');
+  });
+
+  it('counts a 1 v 1 win like any other league game', () => {
+    const g = game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28', results: { home: 'W', away: 'L' } });
+    expect(g.decider).toBe('SO');
+    expect(g.countsFor).toBe('eal');
+  });
+
+  it('never counts a game MaxPreps does not mark as a league game', () => {
+    const g = game({ home: 'chico', away: 'davis', hs: 2, as: 1, league: false });
+    expect(g.leagueDivision).toBe('eal');
+    expect(g.countsFor).toBeNull();
+  });
+
+  it('never counts a contestType 2, 4 or 5 row (tournament, postseason, 2025’s EAL tournament code)', () => {
+    for (const ct of [2, 4, 5]) {
+      const one = game({ home: 'lassen', away: 'corning', hs: 3, as: 0, date: '2026-09-15', contestTypes: { home: 0, away: ct } });
+      expect(one.isLeague, `contestType ${ct}`).toBe(true);
+      expect(one.countsFor, `contestType ${ct}`).toBeNull();
+    }
+  });
+
+  it('tags a contestType 4 game between two EAL teams as the league’s postseason', () => {
+    const g = game({ home: 'chico', away: 'pleasant-valley', hs: 1, as: 0, date: '2026-10-20', contestTypes: { home: 4, away: 4 } });
+    expect(g.postseason).toEqual({ kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' });
+    expect(g.countsFor).toBeNull();
+  });
+
+  it('tags a game between two EAL teams on or after Oct 30 as the Super Regional, not a league game', () => {
+    for (const date of ['2026-10-30', '2026-10-31']) {
+      const g = game({ home: 'chico', away: 'pleasant-valley', hs: 2, as: 1, date });
+      expect(g.postseason).toEqual({ kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' });
+      expect(g.countsFor).toBeNull();
+    }
+    const before = game({ home: 'chico', away: 'pleasant-valley', hs: 2, as: 1, date: '2026-10-29' });
+    expect(before.postseason).toBeNull();
+    expect(before.countsFor).toBe('eal');
+  });
+
+  it('tags an EAL team’s contestType 4 game against a CCS team as other, never CCS or the EAL postseason', () => {
+    const g = game({ home: 'chico', away: 'cupertino', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    expect(g.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
+    expect(g.countsFor).toBeNull();
+    const mcal = game({ home: 'davis', away: 'tamalpais', hs: 1, as: 0, date: '2026-10-31' });
+    expect(mcal.postseason).toBeNull();
+    expect(mcal.countsFor).toBeNull();
+  });
+
+  it('never gives SCVAL the league-postseason tag', () => {
+    const late = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, date: '2026-10-31' });
+    expect(late.postseason).toBeNull();
+    expect(late.countsFor).toBe('de-anza');
+    const ct4 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, contestTypes: { home: 4, away: 0 } });
+    expect(ct4.postseason).toEqual({ kind: 'ccs', leagueId: 'scval', via: 'contest-type-4' });
+    expect(ct4.countsFor).toBeNull();
+    // SCVAL excludes no contest type: a contestType 2 row MaxPreps also flags 0 still counts.
+    const ct2 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, contestTypes: { home: 0, away: 2 } });
+    expect(ct2.countsFor).toBe('de-anza');
+  });
+});
+
 describe('classify: helpers', () => {
   it('lists the leagues of the registry sides', () => {
     expect(leaguesOf(game({ home: 'leigh', away: 'cupertino' }))).toEqual(['bval', 'scval']);

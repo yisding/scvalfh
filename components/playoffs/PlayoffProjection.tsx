@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import { EM_DASH, ordinal } from '../../lib/format';
+import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -179,8 +180,13 @@ export function PlayoffProjection({
   const noData = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
   if (noData.length > 0 && noData.length < rows.length) {
     const single = noData.length === 1;
+    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment.
+    const where =
+      getDivision(projection.division).official.mode === 'none'
+        ? `the ${divisionLabel} table as MaxPreps lists it`
+        : `the official ${divisionLabel} alignment`;
     footnotes.push(
-      `${joinNames(noData)} ${single ? 'is' : 'are'} in the official ${divisionLabel} alignment ` +
+      `${joinNames(noData)} ${single ? 'is' : 'are'} in ${where} ` +
         `but ${single ? 'has' : 'have'} no reported results, so ${
           single ? 'it is' : 'they are'
         } listed last with no record and no place.`,

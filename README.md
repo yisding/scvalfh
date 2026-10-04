@@ -1,14 +1,14 @@
 # NorCal Field Hockey (repo: scvalfh)
 
-Scores, standings, schedules and playoff pictures for the 43 girls varsity field hockey teams of
-four leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, and MCAL in the North Coast
-Section. Teams from other sections appear only as opponents (this is the site's scope note,
-`SITE_SCOPE_NOTE` in `components/layout/site-url.ts`). A static Next.js site rebuilt from one JSON
+Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
+five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast
+Section and the Northern Section's EAL. Teams outside these five leagues appear only as opponents
+(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site-url.ts`). A static Next.js site rebuilt from one JSON
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
-Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, CIF-CCS, CIF-NCS, MaxPreps or Sports
-Illustrated. See "Attribution and legal posture" below.
+Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps or
+Sports Illustrated. See "Attribution and legal posture" below.
 
 ## Leagues and teams
 
@@ -18,21 +18,31 @@ Illustrated. See "Attribution and legal posture" below.
 | BVAL — Blossom Valley Athletic League | CCS | Mt. Hamilton (6), Santa Teresa (6) | 12 |
 | PCAL — Pacific Coast Athletic League | CCS | one division (7) | 7 |
 | MCAL — Marin County Athletic League | NCS | one division (9) | 9 |
+| EAL — Eastern Athletic League | NS | one division (6) | 6 |
 
-43 teams in all. PCAL and MCAL are single-division leagues, so the site shows no division picker
+49 teams in all. PCAL, MCAL and EAL are single-division leagues, so the site shows no division picker
 and no division label for them. Every league fact (ids, MaxPreps ids, rules, tiebreak chains with
 their citations, postseason ladders, official sources, data-quality lists) lives in
-`lib/leagues.ts`; the teams live in `lib/registry/{scval,bval,pcal,mcal}.ts`, assembled by
+`lib/leagues.ts`; the teams live in `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled by
 `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
-tournament is its postseason. The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
-Google Sheet and all-league documents); PCAL and MCAL are marked unavailable on the page, with the
-reason (we found no official 2025-26 final standings: PCAL's site stops at 2024-25, and MCAL posts
-none of its own), and nothing third-party is shown in their place. MCAL's card links the league's
-official 2025 all-league team without reproducing it. Rosters and player stats cover all 43 teams.
+tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
+30-31, the top six qualify, format and site not published), which the site describes and never
+draws a bracket for. The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
+Google Sheet and all-league documents); PCAL, MCAL and EAL are marked unavailable on the page, with the
+reason (we found no official 2025-26 final standings: PCAL's site stops at 2024-25, MCAL posts
+none of its own and the EAL posts none), and nothing third-party is shown in their place. MCAL's card links the league's
+official 2025 all-league team without reproducing it. Rosters and player stats cover all 49 teams.
+
+The EAL has no schedule or standings document of its own: its rules come from the CIF Northern
+Section's Field Hockey Guidelines 2026-28, its league games are the games MaxPreps marks as league
+games (as SCVAL's are), and Red Bluff, still a 0-0-0 row in MaxPreps' table, is not fielding a
+varsity team in 2026 and is left out. Davis and Bella Vista are Sac-Joaquin Section schools that
+play field hockey in the EAL, so the site prints that note wherever it lists the EAL's schools under a
+league heading.
 
 People pick the league they want to see in two ways: the home page remembers one (chips and a
-"Show <league> here" button, applied before first paint), and a team finder searches all 43
+"Show <league> here" button, applied before first paint), and a team finder searches all 49
 schools by name, city or mascot and pins one.
 
 ## Live routes
@@ -43,22 +53,22 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | Route | What it shows |
 |---|---|
 | `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit, then one panel per league: latest scores, mini standings, next games, teams and the postseason card |
-| `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal` and the other division anchors resolve with no JavaScript. Kept for links; the nav's Teams page carries the same tables |
-| `/standings/[league]` | One league's full standings page (4 pages: `scval`, `bval`, `pcal`, `mcal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
+| `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal` and the other division anchors resolve with no JavaScript. Kept for links; the nav's Teams page carries the same tables |
+| `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
 | `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
-| `/schedule/[league]` | One league's whole season, filterable client-side (4 pages) |
+| `/schedule/[league]` | One league's whole season, filterable client-side (5 pages) |
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
-| `/teams` | Teams and standings: all 43 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
-| `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
+| `/teams` | Teams and standings: all 49 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
-| `/commits` | "Who here has committed to play in college, and where?" The players on the 43 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
-| `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
-| `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
-| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the highest Elo rating (top 10, `#elo-rating`), the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
-| `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL and MCAL shown as unavailable |
-| `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
+| `/commits` | "Who here has committed to play in college, and where?" The players on the 49 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
+| `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one; a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket) |
+| `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal` is a 404) |
+| `/leaders` | Season leaders across all five leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the highest Elo rating (top 10, `#elo-rating`), the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
+| `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL, MCAL and EAL shown as unavailable |
+| `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal #rules-eal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
 (the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
@@ -82,8 +92,8 @@ cifccs.org / VNN .ics ──┘
 ```
 
 1. **`scripts/fetch-data.ts`** is the cron entry point, a thin CLI over `lib/pipeline/` (see
-   `docs/DATA-SOURCES.md` for every endpoint, JSON path and gotcha). It runs a **56-request
-   MaxPreps sweep**: 1 bootstrap, 6 league metadata checks, 6 standings tables and 43 team
+   `docs/DATA-SOURCES.md` for every endpoint, JSON path and gotcha). It runs a **64-request
+   MaxPreps sweep**: 1 bootstrap, 7 league metadata checks, 7 standings tables and 49 team
    schedules, at most 3 at a time and at least 500 ms apart. Failures are scoped, so one league
    never blocks the others:
    - **Run abort** (exit 1, nothing written, the previous snapshot stays): the season ids changed,
@@ -100,7 +110,11 @@ cifccs.org / VNN .ics ──┘
 
    Official schedules come from three places: SCVAL's two PDFs are parsed live; BVAL, PCAL and
    MCAL fixtures are bundled under `data/official/` (validated at load) and each run only checks
-   upstream by hash, never applying a change on its own. Secondary sources (si.com, the two VNN
+   upstream by hash, never applying a change on its own. The EAL has no official schedule at all:
+   its league games are the games MaxPreps marks as league games, and "a league result is missing"
+   means a game MaxPreps counts for the league, dated before today, with no counted result (the
+   umpires' grid for the EAL, which equalled MaxPreps' 30 league games on 2026-10-04, is a
+   cross-check only and is never called official). Secondary sources (si.com, the two VNN
    `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant.
 2. It writes **`data/snapshot.json`** (the full normalized `Team[]`/`Game[]`/`Standing[]`/
    per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
@@ -125,7 +139,7 @@ is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 i
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
-writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 43 teams; see
+writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 49 teams; see
 "Player stats" below), which is allowed to fail without stopping the run. It runs the test suite
 against what it just wrote; if the suite fails and `data/player-stats.json` changed in this run, it
 restores the committed stats file and runs the suite again, so a stats file the tests refuse never
@@ -193,9 +207,15 @@ revision hashes, with a `manifest.json` naming each file. `pnpm fetch-data --fix
 tests/fixtures/corpus/all-2026-10-02 --out /tmp/x.json` rebuilds a whole snapshot from it with no
 network, and `tests/fixtures/corpus/variants/` holds overlays for the failure cases (a league on
 the wrong season, an empty table, a 503 feed, a revised official schedule, a finals regression,
-MCAL postseason games). Tests that assert league-specific values build their snapshot from the
-corpus (`corpusSnapshotPath('all-2026-10-02')` in `tests/helpers.ts`); tests over the bundled
+MCAL postseason games). It was not extended for the EAL: under it the EAL is "not fetched in this
+run". `tests/fixtures/corpus/eal-2026-10-04/` is a second corpus, captured live on 2026-10-04 with
+`--leagues eal` (19 files, 9 MaxPreps and 9 si.com requests), that drives the EAL's pipeline and view
+tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/helpers.ts`). Tests that assert
+league-specific values build their snapshot from a corpus
+(`corpusSnapshotPath('all-2026-10-02')` in `tests/helpers.ts`); tests over the bundled
 `data/snapshot.json` assert invariants only, because that file changes every run.
+`tests/fixtures/corpus/variants/finals-regression/previous-snapshot.json` is frozen as a four-league
+file, so the pipeline tests keep proving that a snapshot written before a league existed loads.
 
 To make a new corpus, run `pnpm fetch-data --capture tests/fixtures/corpus/<name>` once on a
 workstation; it is a normal live run that also writes each response and the manifest. Capturing
@@ -203,7 +223,8 @@ is the only reason to run a live fetch by hand.
 
 ### Official fixtures
 
-BVAL, PCAL and MCAL publish their schedules as documents, so their league fixtures are bundled in
+The EAL publishes none, so it has no bundled file. BVAL, PCAL and MCAL publish their schedules as
+documents, so their league fixtures are bundled in
 `data/official/{bval,pcal,mcal}-2026.json`, written by `pnpm build-official-fixtures` from the
 transcriptions under `tests/fixtures/official/source/` and never hand-edited (`pnpm
 build-official-fixtures --check` exits 1 if a file differs). The cron compares each document's hash
@@ -215,7 +236,7 @@ bundled fixtures are still used until someone re-transcribes them (the runbook i
 
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
-from the 43 MaxPreps roster pages (every registry team, all four leagues; one entry per team) and
+from the 49 MaxPreps roster pages (every registry team, all five leagues; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
 season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
@@ -236,8 +257,9 @@ lacks are pending.
 
 `data/rosters-enrichment.json` is what other public sources add to that — the schools' own
 athletics-site rosters, one roster PDF, school and local papers, MaxPreps career and JV pages —
-gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (43), all four
-leagues: SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03. Every entry lists
+gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (49): SCVAL was
+swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries are stubs, with no
+coaches, players or sources, until someone sweeps them. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -247,7 +269,7 @@ other on a grade MaxPreps leaves blank, the grade stays blank and each source is
 way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
-page, in all four leagues, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
+page, in all five leagues, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
 built by `components/teams/roster-view.ts`): varsity only, a † on every value that did not come
 from MaxPreps, the coaches, every recorded disagreement and a link to each source. A team with no
 list says why instead of showing an empty card: MaxPreps lists no players, the last update failed
@@ -263,7 +285,7 @@ player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also
 the per-school sources and the overlay's rules.
 
 ```bash
-pnpm fetch-rosters                                      # live: 43 roster pages → data/rosters.json
+pnpm fetch-rosters                                      # live: 49 roster pages → data/rosters.json
 pnpm fetch-rosters --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the captured pages (SCVAL's: add --leagues scval)
 pnpm fetch-rosters --capture <dir>                      # live, and save each page read as <dir>/roster-<slug>.html
@@ -272,7 +294,7 @@ pnpm fetch-rosters --dry-run                            # parse and report, writ
 
 ### Player stats
 
-All four leagues, like the rosters it joins to: `fetch-player-stats` iterates the 43-team registry,
+All five leagues, like the rosters it joins to: `fetch-player-stats` iterates the 49-team registry,
 and every team page has a Player stats section.
 
 `data/player-stats.json` holds each team's season player stats as the coach entered them on
@@ -282,19 +304,20 @@ JSON behind each team's MaxPreps `/stats/` page and joined to `data/rosters.json
 in each row's player link. A stat is kept only where the team tracks it (its team total is above
 zero and at least one player holds some of it), so a 0 is a real zero and an untracked stat is null; per-game and percentage columns are
 dropped. On 2026-10-03, 28 of the 43 teams had published stats (312 players, 41 goalkeepers: SCVAL 10 of
-15 teams, BVAL 8 of 12, PCAL 3 of 7, MCAL 7 of 9); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
+15 teams, BVAL 8 of 12, PCAL 3 of 7, MCAL 7 of 9); on 2026-10-04, with the six EAL teams, 33 of the 49
+(404 players, 63 goalkeepers; five EAL teams, Corning none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
 run has covered yet is `status: "pending"`. `lib/player-stats.ts` is the read API; each team page
 renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
 The same file feeds the player boards on `/leaders` (`components/leaders/leaders-view.ts`): most
-points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts") across all four leagues.
+points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts") across all five leagues.
 A player can only appear where the coach tracks that stat, so each board says how many teams it
 covers and names the ones it leaves out, a 0 never makes a board, and the page names every team
 with no stats and every team whose totals are behind its finals (the team page's "games since"
 rule, shared through `gamesSinceUpdate`). The school boards on the same page come from the snapshot
-instead and cover all 43 teams: overall and league records are the `Standing` rows the standings
+instead and cover all 49 teams: overall and league records are the `Standing` rows the standings
 print, clean sheets and goals per game are counted from the finals with forfeits left out, and a
 record or a rate needs at least half the median team's number of results (the teams below that
 are named). Boards rank 1, 2, 2, 4, list up to 10th place and never more than 15 rows.
@@ -309,10 +332,10 @@ keeps its previous rows; the workflow's manual `leagues` input reaches it too). 
 to the team: one league's outage never blocks another league's stats, and the previous file is
 salvaged row by row exactly as for rosters. The run exits 1, still writing the file, when a team it
 covered failed or a team outside it lost its previous row. The call volume is the MaxPreps client's own
-(≤3 concurrent, ≥500 ms between starts): 43 small calls, about 25 seconds.
+(≤3 concurrent, ≥500 ms between starts): 49 small calls (about 25 seconds when it was 43).
 
 ```bash
-pnpm fetch-player-stats                                      # live: 43 rollups → data/player-stats.json
+pnpm fetch-player-stats                                      # live: 49 rollups → data/player-stats.json
 pnpm fetch-player-stats --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON (SCVAL's: add --leagues scval)
 pnpm fetch-player-stats --capture <dir>                      # live, and save each response body, as received, as <dir>/stats-<slug>.json
@@ -321,7 +344,7 @@ pnpm fetch-player-stats --dry-run                            # parse and report,
 
 ### Clubs
 
-`data/clubs.json` holds the youth field hockey clubs around the 43 schools, plus any other club a
+`data/clubs.json` holds the youth field hockey clubs around the 43 schools swept on 2026-10-03, plus any other club a
 rostered player is tied to, and the ties themselves: which players on the tracked varsity rosters
 a public page ties to which club (`affiliations`, joined to `data/rosters.json` on team slug +
 MaxPreps athleteId). A club record has its name and the shorter name the site shows, city, region,
@@ -339,7 +362,7 @@ The rules:
   that agrees with the roster grade together with a Northern California location. A name alone
   never makes a match, and a class year that disagrees rules one out. Lacrosse, soccer and ice
   hockey clubs do not count.
-- **Only players already on the 43 tracked varsity rosters are named** (rows the overlay marks JV
+- **Only players already on the 49 tracked varsity rosters are named** (rows the overlay marks JV
   are out), each under the roster's own spelling. A club's own roster lists many more players; the
   club's page links that roster instead of naming them.
 - **Quotes and bases are kept, never rendered.** A page shows each source as a link labelled by
@@ -366,23 +389,28 @@ Coverage on 2026-10-03, counted from the file: **13 clubs** (San Francisco 2, So
 2, Marin 1, and HTC, a Connecticut club whose California program trains in La Jolla; none on the
 Peninsula or the Central Coast) and **72 affiliations for 66 of the 716 varsity rows, at 22 of the 43
 schools**: SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. Five players are
-tied to more than one club. By status 55 are current, 11 past and 6 unknown; by confidence 57 high
-and 15 medium. They rest on 229 source entries on 105 distinct URLs: an entry is one page backing
-one tie, so a club roster, a watchlist or a news story counts once for every player it names. The
-URLs are 103 pages, because two are cited under two URLs each: Stick Together's 2025 all-league page
-with and without its trailing slash, and Gabrielle Moll's MaxPreps career page under two name slugs.
-By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49 on 11, news 34 on 6, event lists
-26 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one MAX Field Hockey invitational),
-NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and school pages), MaxPreps career
-pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs have tied players: SF Hawks 31
-(all current), NorCal Impact 19 (all current), Fly FHC 10, Infinity 8, Lightning 3 and HTC 1. The
-other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker, Hayward Hawks, Lions
-and Golden Gate Rippers) have a page with an empty state.
+tied to more than one club. The schools of the six EAL teams were swept on 2026-10-04 with the same rule and added three
+affiliations, all Davis players tied to NorCal Impact (so 75 affiliations for 69 players at 23 schools,
+the 13 clubs unchanged); no club record was added for the clubs the sweep met around Davis, Roseville
+and Chico (DESIGN §22.8). Of the 2026-10-03 sweep's 72, by status 55 are current, 11 past and 6
+unknown; by confidence 57 high and 15 medium. They rest on 229 source entries (232 with the EAL ties) on 105 distinct URLs:
+an entry is one page backing one tie, so a club roster, a watchlist or a news story counts once for
+every player it names. The URLs are 103 pages, because two are cited under two URLs each: Stick
+Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps
+career page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49
+on 11, news 34 on 6, event lists 26 on 3 (29 with the EAL ties on the same 3 URLs; the NFHCA's 2025 and 2026 high school watchlists, and one
+MAX Field Hockey invitational), NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and
+school pages), MaxPreps career pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs
+have tied players in that sweep: SF Hawks 31 (all current), NorCal Impact 19 (all current; 22 with the
+three 2026-10-04 Davis ties), Fly FHC 10, Infinity
+8, Lightning 3 and HTC 1. The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa,
+Stryker, Hayward Hawks, Lions and Golden Gate Rippers) have a page with an empty state.
 
 **It is research, not a script.** Like the roster overlay, it was gathered by hand from club
 directories, the clubs' own sites, recruiting profiles, MaxPreps career pages, the NFHCA's high
-school watchlists, MAX Field Hockey's club pages and local news, and every tie was checked twice on
-2026-10-03: a checker re-opened each source, then an independent refuter tried to break the match.
+school watchlists, MAX Field Hockey's club pages and local news. Every tie of the 2026-10-03 sweep
+was checked twice that day: a checker re-opened each source, then an independent refuter tried to
+break the match. The three ties the 2026-10-04 EAL sweep added were each confirmed by two verifiers.
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
@@ -404,7 +432,7 @@ first club page with no tied player.
 
 ### College commitments
 
-`data/commits.json` holds which players on the 43 tracked varsity rosters a public page says have
+`data/commits.json` holds which players on the 49 tracked varsity rosters a public page says have
 committed to play a sport in college (field hockey, or any other), and those colleges. A commitment
 (`commitments`, joined to `data/rosters.json` on team slug + MaxPreps athleteId, one per player) has
 the college, the `sport`, a `status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
@@ -435,10 +463,11 @@ program has a commitment, a college has one program per sport, one commitment pe
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-04, counted from the file: **16 commitments, 16 players at 9 of the 43 schools,
+Coverage on 2026-10-04, counted from the file (the six EAL teams' schools were swept the same day for
+field hockey commitments, and none was found): **16 commitments, 16 players at 9 of the 49 schools,
 to 14 colleges (15 programs).** By sport, 7 in field hockey, 7 in lacrosse, 1 in soccer (St. Lawrence)
 and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
-each), BVAL 2 (Christopher), PCAL 1 (Stevenson), MCAL 4 (Redwood 2, Berkeley, Marin Catholic). By class
+each), BVAL 2 (Christopher), PCAL 1 (Stevenson), MCAL 4 (Redwood 2, Berkeley, Marin Catholic), EAL none. By class
 13 from 2027 and 3 from 2028; by level 9 to NCAA Division I programs, 1 to Division II and 6 to
 Division III. The field hockey seven: UC Davis 2, Colgate, Iowa (Division I), Maryville (II), Bates
 and Ithaca (III); the lacrosse seven: Cal, San Diego State, Marist, Bucknell and UC Davis (I),
@@ -467,7 +496,7 @@ each kept only after a hand re-read and a final audit that re-opened every sourc
 A second round on 2026-10-04 widened the rule to any sport and swept again for field hockey: every
 "Committed Athletes" entry on SportsRecruits' field hockey, lacrosse and soccer college pages (with
 the California profiles behind them), a SportsRecruits profile probe and a search of its athlete
-index for all 716 rows, the field hockey, lacrosse and soccer commitment lists and databases, every
+index for all 716 rows on the 43 teams then tracked, the field hockey, lacrosse and soccer commitment lists and databases, every
 2025-26 story on 18 student papers and 8 local papers, and the club-tied players one by one. It found nine commitments in other sports
 and no new field hockey one that meets the rule; a checker and an independent refuter re-opened each
 (both kept the nine, and the refuter dropped a field hockey "planning to continue" that is a plan,
@@ -584,7 +613,7 @@ rounds). Fixtures captured from real (offline) MaxPreps/SCVAL responses live und
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the six league ids (and every other league fact) in `lib/leagues.ts`; both are
+`lib/season.ts`, and the seven league ids (and every other league fact) in `lib/leagues.ts`; both are
 re-asserted on every `fetch-data` run. When the season rolls over:
 
 ```bash
@@ -594,7 +623,7 @@ pnpm exec tsx scripts/discover-season.ts --help                   # usage; makes
 ```
 
 `scripts/discover-season.ts` reads the new `sportSeasonId`/`allSeasonId`/`genderSport`/
-`teamLevel` from MaxPreps' state hub page, resolves each of the six league ids through
+`teamLevel` from MaxPreps' state hub page, resolves each of the seven league ids through
 `team-context/v1` on one representative team per division, asserts they agree with
 `leagues/{id}/v1`, and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
@@ -612,7 +641,7 @@ tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offli
 is required with `--bval-from`). The script validates the result against `lib/history.ts`' schema
 and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
-league (`available`, or `unavailable` with the reason: PCAL and MCAL for 2025-26), and is committed
+league (`available`, or `unavailable` with the reason: PCAL, MCAL and EAL for 2025-26), and is committed
 to the repo, not regenerated by the cron.
 
 Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
@@ -622,7 +651,7 @@ standings they are on MaxPreps: the schedule read takes a season id, and each te
 (a test fails until the file is the season before `lib/season.ts`'):
 
 ```bash
-pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 43 schedules
+pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 49 schedules
 pnpm fetch-prior-season --year 24-25     # another season
 pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
 ```
@@ -633,8 +662,10 @@ proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 
 ## How standings are computed
 
-All four leagues award 3 points for a win, 1 for a tie and 0 for a loss, order by points, and can
-end a league game in a tie. They differ in the tiebreak chain, in how a tie among three or more
+All five leagues award 3 points for a win, 1 for a tie and 0 for a loss and order their tables by
+points (the EAL uses points to decide its title and publishes no standings, so this site extends them
+to the table and says so). Four of them can end a league game in a tie; the EAL decides a level varsity
+game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
@@ -704,6 +735,26 @@ championship, so this is not a section playoff and no MCAL page describes CCS be
 incomplete schedule MCAL's General Rules rank by winning percentage instead of points; the
 standings page notes that.
 
+### EAL
+
+Per the **CIF Northern Section Field Hockey Guidelines 2026-28**: one division of six teams (Bella
+Vista, Chico, Corning, Davis, Lassen, Pleasant Valley; §I), a double round robin of ten league games
+each (§III.A.1), Aug 24 - Oct 28. 3 points for a win, 1 for a tie and 0 for a loss, "to determine
+the League Championship" (§VII.C.2); the Guidelines give no rule for ordering the league table (the
+§III.E.1 Super Regional seeding criteria are not applied here), so this site orders the whole table by
+the same points and says that it is our computation, not a league ruling. A tie for first
+means co-champions ("In the case of a tie, duplicate awards will be given", §VII.C), labelled "EAL
+co-champions" only after the regular phase and with no EAL result missing; any other tie is shown
+level, because the Guidelines break none. A varsity game that is level gets a 10-minute
+sudden-victory period and then 1 v 1s until there is a winner (§VII.E.4): MaxPreps records a 1 v 1
+win as a level score with a win flag for one team and a loss flag for the other (Chico 1, Davis 1 on
+2026-09-28), and the site counts the flags and marks the game "SO". It does not show the 1 v 1
+tally, and it shows MaxPreps' three-overtime record of the 2026-09-02 Pleasant Valley at Chico game as
+MaxPreps has it, with a note that the EAL plays one overtime period. The postseason is the Super
+Regional, Oct 30-31 (top six EAL/SRL schools, format and site not published, no NorCal or State path;
+§III.E.1, §IV-§VI). The Guidelines' seeding text is quoted on `/about` and never applied. See
+`docs/LEAGUE-RULES.md` for the clauses and `docs/DESIGN.md` §22 for what the site does with them.
+
 ### Computed, not copied
 
 Standings are always **computed from individual game rows**, not read off MaxPreps' own
@@ -711,7 +762,8 @@ Standings are always **computed from individual game rows**, not read off MaxPre
 inconsistencies (see `docs/DATA-SOURCES.md` §7). MaxPreps' reported row is kept on every
 `Standing` for cross-check and shown as a flagged mismatch (⚑) when it disagrees with the
 computed one; see `/about`. A division whose MaxPreps table is known to differ (Santa Teresa
-leaves out Prospect; PCAL's is missing games; MaxPreps orders MCAL by winning percentage) shows
+leaves out Prospect; PCAL's is missing games; MaxPreps orders MCAL and the EAL by winning percentage
+and lists Red Bluff in the EAL) shows
 the known cause beside the comparison instead of an alarm.
 
 ### Official schedules decide which games count
@@ -719,8 +771,11 @@ the known cause beside the comparison instead of an alarm.
 For BVAL, PCAL and MCAL a MaxPreps game counts toward the league table only when it matches a
 fixture on the league's official schedule (same date and home/away, or the same pair moved within
 two weeks), and never when MaxPreps marks it a tournament or neutral game or it is postseason play.
-SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. Official
-league games with no counted result yet are listed under the table as "missing", never counted.
+SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. The EAL has
+no official schedule, so MaxPreps' league flag alone decides (a tournament or Super Regional game
+never counts). Official league games with no counted result yet are listed under the table as
+"missing", never counted; for the EAL, which has no official games to list, that means a game
+MaxPreps marks as a league game, dated before today, with no counted result.
 
 ### si.com backfill (owner decision D2)
 
@@ -736,7 +791,8 @@ that includes one) and listed on `/about#backfills` with both values and the rul
    flags contradict its own score; its date is more than a week from the official one while si.com
    has the game final on the official date; or it shows a 0-0 tie in a league with no overtime
    while si.com has a decided final the same day. si.com's score is published and MaxPreps'
-   value is recorded.
+   value is recorded. A level si.com score between two EAL teams is never used for any of these,
+   because si.com does not say who won the 1 v 1s.
 
 If both sources have a score and neither of those holds, MaxPreps stays and the disagreement is
 published. si.com is never used for which division a team is in, for records or for standings
@@ -752,7 +808,7 @@ rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a famil
 team meets the record first, and the ten highest are a board on `/leaders` (`#elo-rating`). It is in Elo points (1500 is the average
 rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not computed game
 by game: classic Elo moves two ratings after each game, which over one season of about ten games a
-team leaves it mostly where it started. Instead every final between two of the 43 teams is fitted
+team leaves it mostly where it started. Instead every final between two of the 49 teams is fitted
 at once, at every build, starting from last season's:
 
 - **The fit.** The strengths for which `home − away + home edge ≈ goal margin` holds best over the
@@ -762,11 +818,12 @@ at once, at every build, starting from last season's:
   and a team's rating can move on a day it did not play, when an opponent's later results show it
   was stronger or weaker than it looked.
 - **The start.** Each team starts the season from its rating over last season's finals
-  (`data/prior-season.json`: every 2025-26 final between two of the 43 teams, 368 of them, from
+  (`data/prior-season.json`: every 2025-26 final between two of the 49 teams, 412 of them, from
   MaxPreps), carried over in full. That start counts for one game: it decides the first weeks and
   fades as the season's own results come in. A team with no result yet this season is shown at its
   start, as "preseason".
-- **How well it predicts.** Replaying a season day by day, each day predicted from only the games
+- **How well it predicts.** (Measured over the 43 teams of the four leagues covered on 2026-10-02,
+  before the EAL joined.) Replaying a season day by day, each day predicted from only the games
   before it: seeded from 2025-26, 2026 through Oct 2 picked the winner of 89% of the games that had
   one (79% unseeded) and missed the capped margin by 1.76 goals (2.37); 2025-26 seeded from 2024-25
   picked 88% (84%) and missed by 1.61 (1.97). Carrying 85-115% of last season over, at a weight of
@@ -776,15 +833,21 @@ at once, at every build, starting from last season's:
   value that best fits Elo's own expected-score curve over those 564 replayed predictions:
   favorites by 100-200 points scored 69% (Elo expects 70%), by 200-300 80% (81%), by 400-600 97%
   (95%).
-- **What counts.** Every final between two of the 43 teams, league or not, postseason included,
+- **What counts.** Every final between two of the 49 teams, league or not, postseason included,
   with its published score (a si.com backfill too). Forfeits, finals without a score and games
-  against schools outside the four leagues are left out, last season's included.
+  against schools outside the five leagues are left out, last season's included. The fit uses goals,
+  so an EAL game decided on 1 v 1s counts as level there.
 - **The board.** A team needs half the median team's counted games this season to be on the
   `/leaders` board, as the record boards do; below that its team page shows the rating as
   provisional. A team page names its place only when the board lists it (the top 10).
-- **Known soft spot.** MCAL links to the other three leagues through few games (nine in 2025-26,
-  five so far in 2026), so how MCAL teams compare with the CCS leagues rests on those results and
-  can move several dozen points with one more cross-league game.
+- **Known soft spot.** MCAL links to the three CCS leagues through few games (nine in 2025-26,
+  five so far in 2026, as counted before the EAL joined), so how MCAL teams compare with the CCS
+  leagues rests on those results and can move several dozen points with one more cross-league game.
+  The EAL has the same problem: last season it linked to the other leagues through 13 games (8 of
+  them against MCAL teams; Pleasant Valley 4, Chico 3, Bella Vista 3, Davis 3, none for Corning or
+  Lassen), and this season, as of 2026-10-04, through 5 finals (Davis 2, Bella Vista, Chico and
+  Pleasant Valley 1 each), so how EAL teams compare with the other leagues, and how Corning and
+  Lassen compare with anyone outside the EAL, rests on very few results.
 
 ## Known limitations
 
@@ -792,19 +855,26 @@ at once, at every build, starting from last season's:
   De Anza grid still lists it, but it is not in the team registry, its 14 grid fixtures are
   dropped when the PDF is parsed, and De Anza is shown as 7 teams. York plays JV field hockey only
   (PCAL's grid slot `CAT/YOR` is Santa Catalina), so it has no varsity results. Both are in the
-  `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so.
+  `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so. Red Bluff is not
+  fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
+  game of its own exists, so the site says only "not fielding a varsity team in 2026").
 - **MaxPreps is wrong or incomplete for some leagues.** MaxPreps' Santa Teresa table leaves out
   Prospect and counts four of its league games as non-league; its PCAL data is missing some
-  official league games and dates others differently; it orders MCAL by winning percentage and,
-  after Oct 22, counts MCAL tournament games in league records. The site computes those tables
-  from the league's official schedule and says what differs, per league, on `/about#health`.
+  official league games and dates others differently; it orders MCAL and the EAL by winning percentage and,
+  after Oct 22, counts MCAL tournament games in league records; two EAL league games had no score on
+  MaxPreps on 2026-10-04, and the site lists them as missing results rather than guess. MaxPreps also
+  records 1 v 1 results inconsistently in the EAL: a level score with win and loss flags (counted as a
+  win), and a 1-0 score with three overtime periods that the EAL's one overtime period cannot
+  produce and that may be a 1 v 1 win entered as a goal (shown as MaxPreps has it, with a note). The site computes those tables
+  from the league's official schedule (the EAL has none: from MaxPreps' league flag) and says what
+  differs, per league, on `/about#health`.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run
   (not just a trailing window) specifically so corrections and backfills are never missed.
 - **SBLive's league buckets are wrong for SCVAL.** Its "De Anza" and "El Camino" pages
   misfile several SCVAL schools between divisions and omit Santa Clara entirely, and statewide
-  name collisions (University, Los Altos, Santa Clara) are common. si.com is a cross-check and,
+  name collisions (University, Los Altos, Santa Clara, Davis) are common. si.com is a cross-check and,
   under the narrow backfill rules above, a source of scores MaxPreps lacks or has plainly wrong;
   division membership, league records and standings order are **never** taken from it, and a team is
   matched only by si.com's own ids.
@@ -828,6 +898,9 @@ at once, at every build, starting from last season's:
   | PCAL | 82 | 49 → 66 | 32 → 35 | 0 → 0 | 55 → 55 |
   | MCAL | 149 | 85 → 128 | 62 → 63 | 0 → 0 | 64 → 64 |
 
+  On 2026-10-04 the EAL's 95 players (MaxPreps alone; there is no overlay for them yet) have 95
+  grades, 56 positions, 7 heights and 95 numbers.
+
   The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
   or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,
   never used to fill a field; the overlay filled no jersey number in any league). Grades whose
@@ -835,28 +908,32 @@ at once, at every build, starting from last season's:
   except one whose single page contradicts itself. **Positions are the
   real gap**: no current-season public source lists them for most programs in any league. A
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
-  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Marin Academy
-  have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
+  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy
+  and Corning have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
   first names, last initials and class years). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
-- **Player stats exist only where a coach enters them.** Rosters and stats cover all 43 teams and
-  were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows matched the 2026-10-02 captures
-  exactly; 6 BVAL/PCAL/MCAL teams have an empty roster on MaxPreps and 10 of the 28 have no stats),
-  and the school-site and recruiting-page overlay covers all four leagues (SCVAL swept 2026-10-02, the others 2026-10-03; recall is partial in
-  each, and a team's page names what was and was not found). As of 2026-10-02, 10 of the 15 SCVAL teams publish stats on MaxPreps
+- **Player stats exist only where a coach enters them.** Rosters and stats cover all 49 teams; the
+  43 teams of the four earlier leagues were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows
+  matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams have an empty roster on MaxPreps and
+  10 of the 28 have no stats) and the six EAL teams on 2026-10-04 (Corning has no roster and no stats
+  on MaxPreps), and the school-site and recruiting-page overlay covers the four earlier leagues
+  (SCVAL swept 2026-10-02, the others 2026-10-03; recall is partial in each, and a team's page names
+  what was and was not found); the EAL's six overlay entries are stubs, so an EAL team's page says
+  it has not checked other public sources. As of 2026-10-02, 10 of the 15 SCVAL teams publish stats on MaxPreps
   (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none, and no school site or si.com
   page has them either), what each tracks varies by coach, and some stop entering mid-season
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table
   as if it were complete.
 - **Club recall is partial.** A player is tied to a club only when a public page meets the linking
-  rule, so 66 of the 716 varsity rows have a club line, and 21 schools have none (six of them list
-  no players on MaxPreps at all). A player with no club line may still play for a club. The ties
-  were researched once, on 2026-10-03, and nothing refreshes them. See `docs/DATA-SOURCES.md`
-  §1.1j2.
+  rule, so on 2026-10-04 69 of the 811 varsity rows have a club line, and 26 schools have none (seven
+  of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
+  were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added three Davis ties),
+  and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media never counts, so 16 of the 716
-  varsity rows have a commitment line (in any sport) and 34 schools have none; a player with no line
-  may still have committed. It was researched on 2026-10-03 and 2026-10-04: a later signing,
+  only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
+  the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
+  line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
+  schools on 2026-10-04, for field hockey commitments only, with none found): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
@@ -938,8 +1015,8 @@ both load `.env` the way Next does. The Workers build empties `dist/` (it stages
 there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `pnpm start:vinext`.
 
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
-`next build` does — about 496 pages plus a 404 with the current snapshot, clubs and commitments
-files (497 .html on 2026-10-03, 14 of them the clubs pages and one `/commits`; the exact counts are
+`next build` does — about 536 pages plus a 404 with the current snapshot, clubs and commitments
+files (537 .html on 2026-10-04, 14 of them the clubs pages and one `/commits`; the exact counts are
 derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`),
 all `revalidate: false` in `dist/server/vinext-prerender.json`: every page (HTML and RSC payload)
 plus a 404 page, and every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root,
@@ -1145,4 +1222,6 @@ compatibility date follows, so bump the two together and re-run the Workers buil
   tiebreaks and CCS qualification.
 - `docs/DESIGN.md` — the implementation-ready design record: routes, tokens, component
   signatures, rendering rules, empty states, accessibility requirements. §15 is the multi-league
-  amendment (what changed from the single-league design, and why).
+  amendment (what changed from the single-league design, and why). §22 is the EAL amendment (the
+  fifth league and third section: what it reverses, its postseason surfaces, the copy rules and the
+  measured budgets).

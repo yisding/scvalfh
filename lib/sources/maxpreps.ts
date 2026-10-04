@@ -78,7 +78,9 @@ export const StandingsRowSchema = z.looseObject({
   neutralWins: z.number(),
   neutralLosses: z.number(),
   neutralTies: z.number(),
-  modifiedOn: z.string(),
+  // null on a row that has never played: Red Bluff's 0-0-0 EAL row (2026-10-04). Read as '' so the
+  // inferred type, ReportedRecord and the snapshot schema stay `string`.
+  modifiedOn: z.string().nullable().transform((v) => v ?? ''),
   sportSeasonId: z.string().nullable().optional(),
 });
 export type StandingsRow = z.infer<typeof StandingsRowSchema>;

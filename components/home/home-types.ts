@@ -11,6 +11,7 @@
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
+import type { SectionConfig } from '../../lib/leagues';
 import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
 import type { GameDisplay, SideView } from '../ui/game-view';
@@ -22,7 +23,7 @@ import type { GameDisplay, SideView } from '../ui/game-view';
 export type HomeColors = Pick<TeamColors, 'primary' | 'onPrimary'>;
 
 /**
- * The identity fields the pinned card renders. They come from the 43-team search index the card
+ * The identity fields the pinned card renders. They come from the 49-team search index the card
  * already receives for its finder (`TeamSearchEntry`), joined on `HomeTeamView.slug`, so the page
  * does not ship every team's name, short name and colors twice.
  */
@@ -129,7 +130,7 @@ export interface HomeTeamView {
   /**
    * Only for a place shared across two rungs, whose full label carries a tiebreak citation: the
    * card line as the rungs' badges ('Today: Play-in or No AQ route (tied)'). Absent otherwise (the
-   * card derives its line with `postseasonCardLine`), so 43 views do not ship the line twice.
+   * card derives its line with `postseasonCardLine`), so 49 views do not ship the line twice.
    */
   postseasonShort?: string;
   /** `/standings/<league>#<division>` */
@@ -165,7 +166,7 @@ export interface LeagueCardView {
   id: LeagueId;
   shortName: string;
   name: string;
-  sectionShort: 'CCS' | 'NCS';
+  sectionShort: SectionConfig['shortName'];
   region: string;
   /** '12 teams' */
   teamsLine: string;

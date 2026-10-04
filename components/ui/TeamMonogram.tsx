@@ -12,7 +12,7 @@ import type { Team, TeamColors } from '../../lib/types';
 export interface TeamMonogramProps {
   /**
    * The fill and its ink are required; the second school color is drawn only from 40px, so a
-   * caller that renders only small tiles may leave it out (the home page's 43 pinned-card views and
+   * caller that renders only small tiles may leave it out (the home page's 49 pinned-card views and
    * its team tiles ship without it). The provenance field is never read.
    */
   team: Pick<Team, 'abbr' | 'name'> & {

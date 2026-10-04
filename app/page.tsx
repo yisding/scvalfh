@@ -31,7 +31,7 @@ import { shortDate } from '../lib/format';
  */
 export const metadata: Metadata = {
   description:
-    'Scores, standings and playoff pictures for the 43 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section). Unofficial, updated nightly.',
+    'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated nightly.',
   alternates: { canonical: '/' },
   openGraph: { ...OG_BASE, url: '/' },
 };
@@ -45,7 +45,7 @@ export default function HomePage() {
       <div data-scope="all">
         <PageHeader
           title="NorCal field hockey"
-          srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL and MCAL"
+          srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL, MCAL and EAL"
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
                are named by the switcher chips right below. From 640px it fits and comes back; the
@@ -69,8 +69,14 @@ export default function HomePage() {
       </div>
 
       <FindYourTeam index={data.searchIndex} className="mt-8 md:mt-10">
-        {data.leagueCards.map((card) => (
-          <LeagueCard key={card.id} card={card} />
+        {data.leagueCards.map((card, i, cards) => (
+          <LeagueCard
+            key={card.id}
+            card={card}
+            // The last card of an odd count spans both columns of the two-up grid, so five cards
+            // read 2 + 2 + 1 full-width rather than ending on an orphan half-card.
+            className={cards.length % 2 === 1 && i === cards.length - 1 ? 'min-[390px]:col-span-2' : undefined}
+          />
         ))}
       </FindYourTeam>
 

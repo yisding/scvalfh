@@ -19,8 +19,9 @@
  *
  * What runs (every run is mandatory: `page.addInitScript` always exists, so nothing is skipped):
  *  1. Every route below × light/dark × 390/1280: the fixed pages (/clubs and /commits among them), the
- *     per-league pages (/standings/bval, /standings/mcal, /schedule/pcal, /playoffs/mcal), a BVAL
- *     and an MCAL team page, and the first /game/, /scores/, /teams/ and /clubs/ page of the
+ *     per-league pages (/standings/bval, /standings/mcal, /standings/eal, /schedule/pcal,
+ *     /schedule/eal, /playoffs/mcal), a BVAL, an MCAL and an EAL team page, and the first /game/,
+ *     /scores/, /teams/ and /clubs/ page of the
  *     sitemap, plus its first /game/sblive-* page when it lists one (a si.com-only game) and its
  *     first /clubs/ page whose club no tracked player is tied to (DESIGN §17). The sitemap lists the
  *     clubs with the most tied players first, so the first club page is the longest player list
@@ -36,6 +37,11 @@
  *     document.activeElement must be inside [data-scope="bval"] (WCAG 2.4.3; SPEC §8.2).
  *  5. The SPEC §10.1 fold targets at 390×664 and 390×844 (pinned card; Latest rows), measured and
  *     PRINTED (`fold:` lines): DESIGN §15 states the targets; a miss is reported, not failed.
+ *  6. The first-visit `/` (no stored league) at 320, 360 and 390 px wide: the league switcher (All
+ *     plus one chip per league, in one list per section) and the "Find your team" league cards
+ *     (two-up from 390 px, the last of an odd count spanning both columns), measured and PRINTED
+ *     (`layout:` lines) for DESIGN §22.3: how many rows the chips wrap to, where each card sits and
+ *     ends, and what is above the fold at 664 and 844 px tall. Reported, never failed.
  *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
@@ -50,14 +56,14 @@ const BASE = process.env.SCVAL_BASE_URL ?? 'http://127.0.0.1:3117';
 
 /**
  * League ids in config order, from the snapshot this tree holds (the server was built from it);
- * the four ids are the fallback when the script runs outside the repo.
+ * the five ids are the fallback when the script runs outside the repo.
  */
 function readSnapshot() {
   const file = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
 }
 const snapshot = readSnapshot();
-const LEAGUES = snapshot ? snapshot.season.leagues.map((l) => l.id) : ['scval', 'bval', 'pcal', 'mcal'];
+const LEAGUES = snapshot ? snapshot.season.leagues.map((l) => l.id) : ['scval', 'bval', 'pcal', 'mcal', 'eal'];
 /** The pinned team of the pin run (an MCAL team) and the league the prefs script derives from it. */
 const PIN = 'tamalpais';
 const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal';
@@ -75,17 +81,20 @@ function readEmptyClubs() {
 }
 const EMPTY_CLUBS = readEmptyClubs();
 
-/** One page per route family — the families are what differ, not the 364 instances of one. */
+/** One page per route family — the families are what differ, not the hundreds of instances of one. */
 const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/',
   '/standings',
   '/standings/bval',
   '/standings/mcal',
+  '/standings/eal',
   '/schedule',
   '/schedule/pcal',
+  '/schedule/eal',
   '/teams',
   '/teams/leigh',
   '/teams/tamalpais',
+  '/teams/davis',
   '/playoffs',
   '/playoffs/mcal',
   '/leaders',
@@ -381,6 +390,52 @@ for (const run of foldRuns) {
     `fold: ${run.label} at 390×${run.height}: fold ${m.fold}px; My-team slot bottom ${m.cardBottom ?? '—'}px; ` +
       `Latest row bottoms [${m.rowBottoms.join(', ')}] → ${m.rowsAbove} above; target "${run.goal}": ${run.target(m) ? 'met' : 'MISSED'}`,
   );
+}
+
+// ---------------------------------------------------------------- 6: the switcher and league cards, measured and printed
+/**
+ * The first-visit `/` (no stored league, no pin) at one width and height. Positions are page
+ * coordinates (scroll 0), so they do not depend on the height; the fold does.
+ */
+async function measureLayout(width, height) {
+  const ctx = await newContext({ width, height });
+  const page = await open(ctx, '/');
+  let out = null;
+  if (page) {
+    await page.waitForFunction(() => document.querySelector('[role="group"][aria-label="Your league"] button:not([disabled])') != null, null, { timeout: 5000 })
+      .catch(() => undefined);
+    out = await page.evaluate(() => {
+      const bar = document.querySelector('nav.sx-chrome-bottom');
+      const fold = bar && getComputedStyle(bar).display !== 'none' ? bar.getBoundingClientRect().top : window.innerHeight;
+      const group = document.querySelector('[role="group"][aria-label="Your league"]');
+      const chips = group ? [...group.querySelectorAll('button[data-league-option]')].map((b) => b.getBoundingClientRect()) : [];
+      const groupRect = group?.getBoundingClientRect() ?? null;
+      const cards = [...document.querySelectorAll('section[data-scope="none"] ul.grid > li')].map((li) => li.getBoundingClientRect());
+      return {
+        fold: Math.round(fold),
+        chips: chips.length,
+        chipRows: new Set(chips.map((r) => Math.round(r.top))).size,
+        switcherBottom: groupRect ? Math.round(groupRect.bottom) : null,
+        cards: cards.map((r) => ({ top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) })),
+        cardsAbove: cards.filter((r) => r.bottom <= fold).length,
+      };
+    });
+    await page.close();
+  }
+  await ctx.close();
+  return out;
+}
+for (const width of [320, 360, 390]) {
+  for (const height of [664, 844]) {
+    const m = await measureLayout(width, height);
+    if (!m) continue;
+    const rows = [...new Set(m.cards.map((c) => c.top))].length;
+    console.log(
+      `layout: / (first visit) at ${width}×${height}: fold ${m.fold}px; switcher ${m.chips} chips in ${m.chipRows} row(s), ` +
+        `bottom ${m.switcherBottom ?? '—'}px; ${m.cards.length} league cards in ${rows} row(s) ` +
+        `[${m.cards.map((c) => `${c.top}–${c.bottom} w${c.width}`).join(', ')}] → ${m.cardsAbove} wholly above the fold`,
+    );
+  }
 }
 
 await browser.close();

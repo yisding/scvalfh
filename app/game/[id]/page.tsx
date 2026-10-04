@@ -125,6 +125,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
     resultLinks.length > 0 ||
     Boolean(model.source) ||
     model.postseasonNotes.length > 0 ||
+    Boolean(model.scoreNote) ||
     Boolean(model.conflict) ||
     Boolean(model.resultConflictNote);
 
@@ -225,9 +226,9 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
             </p>
           ) : null}
           <GameSourceLine model={model} className="mt-4" />
-          {model.postseasonNotes.length > 0 ? (
+          {model.postseasonNotes.length > 0 || model.scoreNote ? (
             <div className="mt-4 max-w-prose text-meta text-ink-2">
-              {model.postseasonNotes.map((note) => (
+              {[...model.postseasonNotes, ...(model.scoreNote ? [model.scoreNote] : [])].map((note) => (
                 <p key={note} className="m-0">
                   {note}
                 </p>

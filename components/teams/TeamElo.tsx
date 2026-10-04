@@ -1,9 +1,13 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import { numberWord, ordinal } from '../../lib/format';
+import { LEAGUES } from '../../lib/leagues';
 import { ELO_BASE, ELO_PER_GOAL } from '../../lib/ratings';
 import { plural } from '../ui/plural';
 import type { TeamEloView } from './team-view';
+
+/** 'five': how many leagues the rating's games come from. */
+const LEAGUE_COUNT = numberWord(LEAGUES.length);
 
 /**
  * The team's Elo rating (DESIGN §20.2), kept low on purpose: a closed disclosure under the stat
@@ -36,14 +40,14 @@ export function TeamElo({ elo, className }: { elo: TeamEloView; className?: stri
   const scale = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal. `;
   const about =
     elo.elo === null
-      ? 'A rating needs at least one final against another of the four leagues’ teams. '
+      ? `A rating needs at least one final against another of the ${LEAGUE_COUNT} leagues’ teams. `
       : elo.preseason
         ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, fitted to last season’s finals. ${scale}`
-        : `Fitted to every final between two of the four leagues’ teams this season, so each opponent’s strength counts as well as each goal margin.${
+        : `Fitted to every final between two of the ${LEAGUE_COUNT} leagues’ teams this season, so each opponent’s strength counts as well as each goal margin.${
             elo.seeded
               ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
               : elo.seededFrom
-                ? ` It had no counted ${elo.seededFrom} final against the four leagues’ teams, so it started from an average rating.`
+                ? ` It had no counted ${elo.seededFrom} final against the ${LEAGUE_COUNT} leagues’ teams, so it started from an average rating.`
                 : ''
           } ${scale}`;
 

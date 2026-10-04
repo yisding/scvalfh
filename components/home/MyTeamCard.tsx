@@ -60,7 +60,7 @@ import {
  * clamped to them) + 12 = 144px → 9rem (SPEC's ≈ 8rem estimate assumed one 20px line; the
  * sentence is ≈ 430px at 14px, wider than a phone card); while a query is typed the finder
  * carries `data-searching` and the box drops its fixed height (min-height stays 9rem), so up to
- * eight results and "Search all 43 on Teams →" show unclipped — a user-initiated
+ * eight results and "Search all 49 on Teams →" show unclipped — a user-initiated
  * shift, excluded from CLS. (Arithmetic from the fixed row heights; re-measure with Playwright in
  * scripts/a11y-axe.mjs, SPEC §10.1 "Fold".)
  */
@@ -77,10 +77,10 @@ const BOX = [
 ].join(' ');
 
 export interface MyTeamCardProps {
-  /** All 43, pre-serialized by the server. */
+  /** Every team (49), pre-serialized by the server. */
   views: HomeTeamView[];
   /**
-   * The 43-team search index for the compact prompt's finder. It is also where the pinned card
+   * The 49-team search index for the compact prompt's finder. It is also where the pinned card
    * reads the team's name, short name and colors, joined on `HomeTeamView.slug`.
    */
   index: SearchIndex;
@@ -383,7 +383,7 @@ export function MyTeamCard({ views, index }: MyTeamCardProps) {
   const slugs = views.map((v) => v.slug);
   const { pinned, ready, stalePin, unpin } = usePinnedTeam(slugs);
   const view = ready && pinned ? (views.find((v) => v.slug === pinned) ?? null) : null;
-  // Both lists are built from the same 43 registry teams, so a view always has its entry.
+  // Both lists are built from the same 49 registry teams, so a view always has its entry.
   const team = view ? (index.teams.find((t) => t.slug === view.slug) ?? null) : null;
 
   const handleUnpin = () => {

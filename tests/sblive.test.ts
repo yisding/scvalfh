@@ -105,6 +105,7 @@ describe('sblive: the frozen exports (SPEC §7.3) and the live HTTP options', ()
   it('takes the league standings slugs from config (harvest only)', () => {
     expect(SBLIVE_LEAGUE_SLUGS).toEqual(LEAGUES.flatMap((l) => l.sblive.leagueSlugs));
     expect(SBLIVE_LEAGUE_SLUGS).toContain('4242-santa-clara-valley-de-anza');
+    expect(SBLIVE_LEAGUE_SLUGS).toContain('4190-eastern-athletic');
   });
 });
 

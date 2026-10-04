@@ -21,7 +21,7 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import type { DataQualityConfig } from './leagues';
+import { getLeague, type DataQualityConfig } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,
@@ -187,18 +187,31 @@ function scoreLine(row: ScheduleRow): string {
   return row.contest.teams.map((t) => `${t.name ?? 'TBA'} ${t.score ?? '–'}`).join(', ');
 }
 
+/** A level score whose result flags are complementary W and L (either order): a 1 v 1 win's shape. */
+function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
+  return (
+    home.score !== null &&
+    home.score === away.score &&
+    ((home.result === 'W' && away.result === 'L') || (home.result === 'L' && away.result === 'W'))
+  );
+}
+
 /**
  * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
  * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
- * disagree on the score. One plain sentence, or undefined.
+ * disagree on the score. One plain sentence, or undefined. In a shootout league (EAL) a level score
+ * flagged W/L on a final that is not a forfeit is how MaxPreps records a 1 v 1 win, so that one shape
+ * is not a contradiction there (the caller passes `shootoutLeague` false for a forfeit); the
+ * feed-disagreement note still applies.
  */
 function resultConflictOf(
   home: GameSide,
   away: GameSide,
   copies: readonly ScheduleRow[],
+  opts: { shootoutLeague: boolean },
 ): string | undefined {
   const notes: string[] = [];
-  if (home.score !== null && away.score !== null) {
+  if (home.score !== null && away.score !== null && !(opts.shootoutLeague && isLevelWithWinner(home, away))) {
     const wrong = [
       { side: home, own: home.score, other: away.score },
       { side: away, own: away.score, other: home.score },
@@ -381,18 +394,28 @@ function toGame(
   const home = sideOf(first, first.name, keepScores ? homeScore : null);
   const away = sideOf(second, second.name, keepScores ? awayScore : null);
 
-  // --- D2 rule 4a evidence, on finals only.
-  const resultConflict = status === 'final' ? resultConflictOf(home, away, copies) : undefined;
-  if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
-
   // --- 7 + leagueDivision: set only when BOTH sides are registry members of the same division.
+  // Resolved before the result check: whether a level W/L final is a 1 v 1 win depends on the league.
   const homeTeam = resolveTeam(first.teamId);
   const awayTeam = resolveTeam(second.teamId);
   const leagueDivision: DivisionId | null =
     homeTeam && awayTeam && homeTeam.division === awayTeam.division ? homeTeam.division : null;
+  // Both sides members of one league that decides a level game on 1 v 1s (the EAL).
+  const sharedLeague =
+    homeTeam && awayTeam && homeTeam.league === awayTeam.league ? getLeague(homeTeam.league) : null;
+  const shootoutLeague = sharedLeague?.rules.leagueOvertime === 'shootout';
+
+  const isForfeit = c.teams.some((t) => t.isForfeit);
+
+  // --- D2 rule 4a evidence, on finals only. A forfeit is never a 1 v 1 win (D7.1), so its level
+  // score flagged W/L stays a contradiction even in a shootout league.
+  const resultConflict =
+    status === 'final'
+      ? resultConflictOf(home, away, copies, { shootoutLeague: shootoutLeague && !isForfeit })
+      : undefined;
+  if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
 
   const otPeriods = cf.overtimePeriodsPlayed ?? 0;
-  const isForfeit = c.teams.some((t) => t.isForfeit);
   const forfeitBy: Game['forfeitBy'] = !isForfeit
     ? null
     : first.isForfeit
@@ -403,9 +426,20 @@ function toGame(
 
   let decider: Decider | null = null;
   if (status === 'final') {
-    // By-Laws Article IV: one 7-minute sudden-victory period, then the game ends in a tie.
-    // There is no shootout in league play, so 'SO' can never be produced here.
-    decider = isForfeit ? 'FORFEIT' : otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
+    // SCVAL By-Laws Article IV: one 7-minute sudden-victory period, then the game ends in a tie.
+    // No SCVAL, BVAL, PCAL or MCAL league game has a shootout (`rules.leagueOvertime` is
+    // 'sudden-victory' or 'none'), so none of them produces 'SO'. The EAL decides a level varsity
+    // game on 1 v 1s (NS Guidelines §VII.E.4): a level final MaxPreps flags W/L between two EAL
+    // teams is a 1 v 1 win, 'SO' with no tally stored. Otherwise the decider is MaxPreps' overtime
+    // count as recorded (never clamped: 3 periods stays '2OT'; the view adds a caveat).
+    if (isForfeit) decider = 'FORFEIT';
+    else if (shootoutLeague && isLevelWithWinner(home, away)) decider = 'SO';
+    else decider = otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
+    if (!isForfeit && shootoutLeague && home.score === away.score && decider !== 'SO') {
+      warnings.push(
+        `contest ${c.contestId}: a level ${sharedLeague?.shortName} final with no 1 v 1 winner flagged`,
+      );
+    }
   }
 
   const game: Game = {

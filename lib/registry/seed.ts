@@ -1,9 +1,10 @@
 /**
  * One registry seed: the hand-maintained source of a Team (lib/teams.ts `toTeam`).
  *
- * Seeds are transcribed from the verified registry seeds (tests/fixtures/seeds/*.json, checked
- * field by field by tests/registry-seeds.test.ts). Slugs and 2-letter abbrs are OURS and are never
- * derived by string munging; ids are MaxPreps GUIDs.
+ * Seeds are transcribed from the verified registry seeds (tests/fixtures/seeds/*.json:
+ * registry-seed.json, registry-seed-ncs.json, registry-seed-ns.json; checked field by field by
+ * tests/registry-seeds.test.ts). Slugs and 2-letter abbrs are OURS and are never derived by string
+ * munging; ids are MaxPreps GUIDs.
  */
 
 import type { DivisionId, LeagueId, SectionId, Team, TeamId, TeamSlug } from '../types';
@@ -33,7 +34,10 @@ export interface Seed {
    * `teamStandings[].team.webPath`, or `opponent.team.webPath` on a team or game page).
    */
   sbliveSlug?: string;
-  /** numeric si.com SCHOOL id from a logo URL `/uploads/production/school/{id}/`. Never guessed. */
+  /**
+   * numeric si.com SCHOOL id from a logo URL `/uploads/production/school/{id}/`, or the page props'
+   * school.id where the logo is a team image (Pleasant Valley). Never guessed.
+   */
   sbliveSchoolId?: string;
   vnnSiteId?: string;
 }

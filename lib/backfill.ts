@@ -18,12 +18,16 @@
  *   8. budget: planBackfill picks the few team pages that cover what the scoreboard did not (cap 8).
  *  10. supersede and carry-forward.
  *
+ * A level si.com score between two members of a league that decides a level varsity game on 1 v 1s (the EAL,
+ * `rules.leagueOvertime === 'shootout'`) is never written by rules 3, 4a or 4b: si.com does not say who won
+ * the 1 v 1s. Rule 3 records it as skipped; a decisive si.com score is used as for any league.
+ *
  * Every rule requires BOTH sides resolved via 'team-id' or 'school-id' (never 'name'), a si.com status
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
 import { toLocalTimestamp } from './format';
-import { getLeague, leagueOfDivision } from './leagues';
+import { getLeague, leagueOfDivision, type LeagueConfig } from './leagues';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
@@ -36,6 +40,7 @@ import type {
   BackfillProvenance,
   BackfillRow,
   ContestId,
+  Decider,
   Game,
   GameSide,
   OfficialFixture,
@@ -307,6 +312,22 @@ function sameLeagueOf(g: Pick<Game, 'home' | 'away'>): string | null {
   return h && a && h.league === a.league ? h.league : null;
 }
 
+/**
+ * The league `g`'s two sides both belong to when it decides a level varsity game on 1 v 1s
+ * (`rules.leagueOvertime === 'shootout'`, the EAL), else null.
+ */
+function shootoutLeagueOf(g: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
+  const league = sameLeagueOf(g);
+  if (league === null) return null;
+  const config = getLeague(league);
+  return config.rules.leagueOvertime === 'shootout' ? config : null;
+}
+
+/** A level si.com score in a 1 v 1 league says nothing about who won, so no rule writes it. */
+function isUnusableLevelScore(g: Pick<Game, 'home' | 'away'>, s: { home: number; away: number }): boolean {
+  return s.home === s.away && shootoutLeagueOf(g) !== null;
+}
+
 /** 4b: matched its fixture only in pass 3, more than 7 days from the official date. */
 function offScheduleDate(g: Game): string | null {
   if (!g.official || g.official.pass !== 'rescheduled') return null;
@@ -525,6 +546,11 @@ function absentFixtureGame(
   };
 }
 
+/** The decider of a final decided in play, from MaxPreps' overtime count (lib/normalize.ts). */
+function overtimeDecider(otPeriods: number): Decider {
+  return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
+}
+
 /** Rules 3 and 4: si.com's score written onto the MaxPreps contest (contestId kept). */
 function overrideGame(
   g: Game,
@@ -544,6 +570,11 @@ function overrideGame(
     status: 'final',
     ...(rule === 'score-pending' ? { otPeriods: 0, isOt: false, isForfeit: false, forfeitBy: null, decider: 'REG' as const } : {}),
     ...(rule !== 'score-pending' && g.decider === null ? { decider: 'REG' as const } : {}),
+    // 'SO' with no tally is MaxPreps' level score flagged W/L (a 1 v 1 win). si.com's decisive score
+    // says the game was decided in play, so the decider is MaxPreps' overtime count, as normalize sets it.
+    ...(rule !== 'score-pending' && g.decider === 'SO' && score.home !== score.away
+      ? { decider: overtimeDecider(g.otPeriods), shootout: null }
+      : {}),
     urls: { ...g.urls, sblive: row.url ?? g.urls.sblive },
     provenance: {
       ...provenance,
@@ -645,6 +676,13 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         }
         const s = scoreFor(pick.row, g.home.slug, g.away.slug);
         if (!s || !pick.row.url) return g;
+        const shootout = shootoutLeagueOf(g);
+        if (shootout && s.home === s.away) {
+          skipped.push(
+            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootout.shortName} game is decided on 1 v 1s and si.com does not say who won them, so it is not used.`),
+          );
+          return g;
+        }
         const otherFinal = input.games.find(
           (o) => o !== g && o.contestId !== g.contestId && o.status === 'final' && bothScored(o) && gamePair(o) === pairKey && within(o.dateKey, g.dateKey, SBLIVE_DATE_TOLERANCE_DAYS),
         );
@@ -669,7 +707,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         if (pick.kind === 'conflict') warnings.push(`si.com has ${pick.rows.length} different scores for ${label} near ${g.dateKey}; rule 4a not applied`);
         if (pick.kind === 'one') {
           const s = scoreFor(pick.row, g.home.slug, g.away.slug);
-          if (s && pick.row.url && differs(s)) {
+          if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s)) {
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
             return overrideGame(g, pick.row, s, 'contradictory-result', 'MaxPreps’ score contradicts its own result flags, so si.com’s score is published.');
@@ -682,7 +720,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         if (pick.kind === 'conflict') warnings.push(`si.com has ${pick.rows.length} different scores for ${label} near ${official}; rule 4b not applied`);
         if (pick.kind === 'one') {
           const s = scoreFor(pick.row, g.home.slug, g.away.slug);
-          if (s && pick.row.url && differs(s)) {
+          if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s)) {
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
             return overrideGame(

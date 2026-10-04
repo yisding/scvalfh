@@ -26,7 +26,8 @@ const minOf = (dates: readonly string[]): string | null =>
 
 /**
  * One league's window: over games with at least one registry side in the league AND
- * `postseason === null` (crossover, play-in, MCAL tournament and CCS games never extend it).
+ * `postseason === null` (crossover, play-in, MCAL tournament, EAL Super Regional and CCS games never
+ * extend it).
  * `lastLeagueGame` = max dateLocal where `countsFor` is one of the league's divisions, any status.
  */
 export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): SeasonWindow {

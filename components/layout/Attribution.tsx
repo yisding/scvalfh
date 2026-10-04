@@ -5,7 +5,8 @@ import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
-import { LEAGUES, SECTIONS } from '../../lib/leagues';
+import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
+import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
 import { SITE_SCOPE_NOTE } from './site-url';
@@ -18,7 +19,10 @@ import { SITE_SCOPE_NOTE } from './site-url';
  * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
  * to last season's archive (2025-26 final standings, by league), and
  * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
- * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL" and can never drift from the config.
+ * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern
+ * Section" and can never drift from the config. A league with no document of its own (every
+ * division `official.mode === 'none'`: the EAL) takes its rules from its section's guidelines, so
+ * it is named in the second clause, linked to its `officialUrl`, not credited with alignment.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
@@ -36,6 +40,11 @@ export interface AttributionProps {
   /** A credit line for the page, e.g. the prior-season sources on /history. */
   extraCredit?: string;
   className?: string;
+}
+
+/** Leagues that publish no schedule or standings document of their own (the EAL). */
+function hasNoDocument(league: LeagueConfig): boolean {
+  return league.divisions.every((d) => d.official.mode === 'none');
 }
 
 /** 'A, B, C and D' */
@@ -80,12 +89,20 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
             </ExternalLink>
             . League alignment and rules from{' '}
             {joined(
-              LEAGUES.map((l) => (
+              LEAGUES.filter((l) => !hasNoDocument(l)).map((l) => (
                 <ExternalLink key={l.id} href={l.officialUrl} arrow={false}>
                   {l.shortName}
                 </ExternalLink>
               )),
             )}
+            {LEAGUES.filter(hasNoDocument).map((l) => (
+              <Fragment key={l.id}>
+                ; {l.shortName} rules from the{' '}
+                <ExternalLink href={l.officialUrl} arrow={false}>
+                  CIF {getSection(l.sectionId).name}
+                </ExternalLink>
+              </Fragment>
+            ))}
             .
           </p>
           <p className="mt-2 mb-0">{SITE_SCOPE_NOTE}</p>

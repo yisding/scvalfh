@@ -28,12 +28,13 @@ const nextConfig: NextConfig = {
    * /game page, …) while seeding, and their first request renders on demand instead of serving the
    * build, which scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`.
    *
-   * Measured after `pnpm build:vinext` on 2026-10-02 (43 teams, 364 games, 57 game days; SPEC
-   * §12.3): dist/server/prerendered-routes holds 127,990,691 bytes — 481 .html (72,165,532), 480 .rsc
-   * (37,982,253) and 482 .route bodies (17,842,906; the OG images, icons, manifest, sitemap and
-   * robots, which vinext seeds into the same cache). The rule is at least 2 × that total
-   * (255,981,382 bytes); 384 MB (3.1 ×) also covers the rest of the season, whose game, date and
-   * recap pages are still to come. Actual use is bounded by the content size, not by this ceiling.
+   * Measured after `pnpm build:vinext` on 2026-10-04 (49 teams in five leagues, 396 games, 57 game
+   * days; SPEC §12.3): dist/server/prerendered-routes holds 163,011,433 bytes — 537 .html
+   * (93,899,335), 536 .rsc (49,602,676) and 522 .route bodies (19,509,422; the OG images, icons,
+   * manifest, sitemap and robots, which vinext seeds into the same cache). The rule is at least 2 ×
+   * that total (326,022,866 bytes); 384 MB (2.5 ×) still meets it and covers the rest of the season,
+   * whose game, date and recap pages are still to come. (On 2026-10-02, with 43 teams and 364 games,
+   * it was 127,990,691 bytes.) Actual use is bounded by the content size, not by this ceiling.
    */
   cacheMaxMemorySize: 384 * 1024 * 1024,
 

@@ -14,7 +14,7 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §18; SPEC §10.5, §9.3).
  *
  * The phone's Teams tab, and the desktop nav's Teams link: the team list and the standings in one
- * page (DESIGN §18 merged the Table tab into it). All 43 teams, grouped section → league →
+ * page (DESIGN §18 merged the Table tab into it). All 49 teams, grouped section → league →
  * division, and each division is its COMPACT standings table (place, team, GP, W-L-T, PTS, the
  * league's ladder line), the same table the /standings overview draws, built by the same view
  * (`buildOverviewDivision`), so the two pages never disagree about a place. **Every team**: league
@@ -30,9 +30,11 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * `#<league>` anchors work either way.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2
- * (`Central Coast Section` / `North Coast Section`, `id="ccs"`/`"ncs"`) → each league an h3
- * (`id=<league>`, action `<SHORT> standings`, the full league page) → each division a plain h4
- * (omitted for a single-division league) over its table and its `Full <division> table →` link.
+ * (`Central Coast Section` / `North Coast Section` / `Northern Section`, `id="ccs"`/`"ncs"`/`"ns"`)
+ * → each league an h3 (`id=<league>`, action `<SHORT> standings`, the full league page; a league
+ * whose schools are not all in its section, the EAL, has its membership note under the h3) → each
+ * division a plain h4 (omitted for a single-division league) over its table and its
+ * `Full <division> table →` link.
  * The division wrapper carries the division id unless it equals the league id (PCAL), so
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
@@ -44,7 +46,7 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
 export const metadata: Metadata = {
   title: 'Teams and standings',
   description:
-    'All 43 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section), each in its division’s standings table. Find your school.',
+    'All 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. Find your school.',
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/teams' },
 };
@@ -58,7 +60,7 @@ export default function TeamsPage() {
     <div className="pb-section-lg" data-teams-page="">
       <PageHeader
         title="Teams and standings"
-        description={`All ${counts.teams} girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule.`}
+        description={`All ${counts.teams} girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.`}
       />
 
       {/* The finder is client-rendered on the server too, so its 48px field is in the first paint
@@ -98,6 +100,10 @@ export default function TeamsPage() {
                   meta={group.meta}
                   action={{ href: group.standingsHref, label: group.standingsLabel }}
                 />
+                {/* Only where a league's schools are not all in the section it sits under (EAL). */}
+                {group.membershipNote ? (
+                  <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{group.membershipNote}</p>
+                ) : null}
                 {group.divisions.map((division) => (
                   <div
                     key={division.division}

@@ -17,15 +17,16 @@
  *   AQ; the play-in loser and both 5th-place teams go to CCS for at-large consideration.
  *
  * Every other league is the same body with its own config: points, the tiebreak chain (keyed by
- * where the tied points bucket starts), the multi-team procedure (`partition-restart` for SCVAL and
- * PCAL, `seed-one-restart` for BVAL and MCAL), MCAL's last tournament place, citations and ladder.
+ * where the tied points bucket starts), the multi-team procedure (`partition-restart` for SCVAL,
+ * PCAL and EAL, `seed-one-restart` for BVAL and MCAL), MCAL's last tournament place, citations and
+ * ladder. The EAL breaks no tie at all (`['no-rule']`): a tie for first is co-champions.
  *
  * MaxPreps' own row is kept verbatim on every Standing for the published cross-check: its De Anza
  * arithmetic is internally suspect (Homestead and Cupertino both report 0 league goals for),
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { shortDate } from './format';
+import { shortDate, sideOutcome } from './format';
 import {
   LEAGUES,
   divisionLabel,
@@ -97,7 +98,11 @@ function bump(rec: Record3, outcome: Outcome): void {
   else rec.t += 1;
 }
 
-/** A completed game as seen from one team. Returns null when the team is not in it. */
+/**
+ * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
+ * `sideOutcome`'s (lib/format.ts), so an EAL 1 v 1 win (decider 'SO', level on goals) counts as the
+ * flagged side's win while its goals stay as recorded.
+ */
 function perspective(
   game: Game,
   teamId: TeamId,
@@ -108,8 +113,8 @@ function perspective(
   const mine = isHome ? game.home : game.away;
   const theirs = isHome ? game.away : game.home;
   if (mine.score === null || theirs.score === null) return null;
-  const outcome: Outcome =
-    mine.score > theirs.score ? 'W' : mine.score < theirs.score ? 'L' : 'T';
+  const outcome = sideOutcome(game, isHome ? 'home' : 'away');
+  if (outcome === null) return null;
   return {
     for: mine.score,
     against: theirs.score,
@@ -157,7 +162,7 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
     t,
     // CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6).
     winPct: gp > 0 ? (w + t / 2) / gp : 0,
-    // The league's points (3-1-0 in all four leagues; SCVAL Article VI §2).
+    // The league's points (3-1-0 in all five leagues; SCVAL Article VI §2).
     pts: points.win * w + points.tie * t + points.loss * l,
     gf: tally.gf,
     ga: tally.ga,
@@ -171,11 +176,14 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
   };
 }
 
+/** Oldest first; a contest id breaks a tie so the order never depends on how the pipeline built the array. */
+function byDateLocal(a: Game, b: Game): number {
+  return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
+}
+
 /** countsFor === division && status === 'final', sorted by dateLocal (SCVAL Article VI §1). */
 export function divisionGames(games: readonly Game[], division: DivisionId): Game[] {
-  return games
-    .filter((g) => g.countsFor === division && g.status === 'final')
-    .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
+  return games.filter((g) => g.countsFor === division && g.status === 'final').sort(byDateLocal);
 }
 
 // ---------------------------------------------------------------- tiebreakers
@@ -649,7 +657,9 @@ export function computeStandings(
   opts: ComputeOptions = {},
 ): Standing[] {
   const out: Standing[] = [];
-  const allFinals = games.filter((g) => g.status === 'final');
+  // Sorted like divisionGames: the overall record's last5 and streak read the order (si.com-only games
+  // lib/backfill.ts builds are appended to the array, not placed by date).
+  const allFinals = games.filter((g) => g.status === 'final').sort(byDateLocal);
   for (const league of LEAGUES) {
     for (const div of league.divisions) {
       out.push(...computeDivision(league, div.id, games, allFinals, opts));
@@ -928,11 +938,19 @@ const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
 ]);
 
 /**
- * THE single definition of "official result missing" (used by the pipeline's DivisionHealth.official.missingPast
- * AND by lib/data getMissingOfficialResults/getStandingContext). Pure. Rows: unmatched fixtures of `division`
- * dated before `today` (kind 'missing', game null), plus matched contests (official.division === division,
- * official.scheduledDate < today) with status 'scheduled' | 'live' | 'score-pending' (kind 'missing') or
- * 'postponed' (kind 'postponed', never counted as missing). Sorted by dateKey, then fixture id.
+ * THE single definition of 'league result missing', used by the pipeline's DivisionHealth
+ * (`official.missingPast`; `missingLeaguePast` for a division with no official schedule) AND by
+ * lib/data getMissingOfficialResults/getStandingContext. Pure. Sorted by dateKey, then fixture id
+ * (the contest id where there is no fixture).
+ *
+ * A fixture-backed division: unmatched fixtures of `division` dated before `today` (kind 'missing',
+ * game null), plus matched contests (official.division === division, official.scheduledDate < today)
+ * with status 'scheduled' | 'live' | 'score-pending' (kind 'missing') or 'postponed' (kind
+ * 'postponed', never counted as missing).
+ *
+ * A division whose league publishes no schedule (`official.mode === 'none'`: the EAL): there
+ * are no fixtures, so the rows are its classified games (countsFor === division) dated before
+ * `today`, with the same status rule and the contest id in place of a fixture id.
  */
 export function missingOfficialResults(
   games: readonly Game[],
@@ -941,6 +959,24 @@ export function missingOfficialResults(
   today: string,
 ): MissingOfficialRow[] {
   const rows: Array<MissingOfficialRow & { fixtureId: string }> = [];
+  if (getDivision(division).official.mode === 'none') {
+    for (const g of games) {
+      if (g.countsFor !== division || !(g.dateKey < today)) continue;
+      const kind = missingKindOf(g);
+      if (kind === null) continue;
+      rows.push({
+        kind,
+        dateKey: g.dateKey,
+        awayName: g.away.name,
+        homeName: g.home.name,
+        awaySlug: g.away.slug,
+        homeSlug: g.home.slug,
+        game: g,
+        fixtureId: g.contestId,
+      });
+    }
+    return sortMissing(rows);
+  }
   for (const f of unmatched) {
     if (f.division !== division || !(f.dateKey < today)) continue;
     rows.push({
@@ -957,10 +993,8 @@ export function missingOfficialResults(
   for (const g of games) {
     const o = g.official;
     if (!o || o.division !== division || !(o.scheduledDate < today)) continue;
-    let kind: MissingOfficialRow['kind'];
-    if (g.status === 'postponed') kind = 'postponed';
-    else if (NOT_YET_REPORTED.has(g.status)) kind = 'missing';
-    else continue;
+    const kind = missingKindOf(g);
+    if (kind === null) continue;
     rows.push({
       kind,
       dateKey: o.scheduledDate,
@@ -972,6 +1006,17 @@ export function missingOfficialResults(
       fixtureId: o.fixtureId,
     });
   }
+  return sortMissing(rows);
+}
+
+/** 'postponed' for a postponed game, 'missing' for one not yet reported, null once it has a result. */
+function missingKindOf(g: Game): MissingOfficialRow['kind'] | null {
+  if (g.status === 'postponed') return 'postponed';
+  if (NOT_YET_REPORTED.has(g.status)) return 'missing';
+  return null;
+}
+
+function sortMissing(rows: Array<MissingOfficialRow & { fixtureId: string }>): MissingOfficialRow[] {
   rows.sort((a, b) =>
     a.dateKey === b.dateKey ? a.fixtureId.localeCompare(b.fixtureId) : a.dateKey.localeCompare(b.dateKey),
   );

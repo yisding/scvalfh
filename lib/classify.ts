@@ -5,6 +5,8 @@
  * Membership of the same division (`Game.leagueDivision`) is always necessary, never sufficient:
  *  - SCVAL keeps today's contest-type evidence (`isLeague`) and excludes only CCS section games,
  *    so its tables stay byte-identical to the goldens;
+ *  - the EAL publishes no schedule, so it is classified by contest type too, and also excludes
+ *    its own postseason (the Super Regional) and its `excludeContestTypes` rows (2, 4, 5);
  *  - BVAL, PCAL and MCAL count a game only when it matched a fixture of that division in the
  *    league's official schedule, and never a postseason game or a contestType 2/4 row.
  */
@@ -57,14 +59,16 @@ function sharedLeague(game: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
  *  1. CONFIG PAIRING: game.dateKey === pairing.date, one side in each pairing division (any places), both sides
  *     in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }.
  *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
- *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament'; else
- *     'ccs' when at least one registry side is in a CCS league and no registry side is in a league of another
- *     section (NCS holds no field hockey championship); else 'other' (an MCAL team against a non-registry or CCS
- *     opponent, or no registry side at all).
+ *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament';
+ *     'league-postseason' when it is 'unbracketed-tournament' (the EAL's Super Regional); else 'ccs' when at least
+ *     one registry side is in a CCS league and no registry side is in a league of another section (a CCS game is
+ *     between CCS teams); else 'other' (an MCAL or EAL team against a non-registry team or a team of another
+ *     section or league, or no registry side at all).
  *  2b. both sides members of one CCS league (postseason.kind 'ccs-ladder') and game.dateKey >=
  *     CCS.keyDates.quarterfinals → { kind: 'ccs', leagueId: that league, via: 'ccs-window' }.
  *  3. both sides members of one league L with rules.postseasonFrom, game.dateKey >= postseasonFrom, and
- *     contestId NOT in L.rules.leagueGameOverrides → { kind: 'mcal-tournament', leagueId: L, via: 'league-postseason-window' }.
+ *     contestId NOT in L.rules.leagueGameOverrides → { kind, leagueId: L, via: 'league-postseason-window' }, where
+ *     kind is 'mcal-tournament' for a 'league-tournament' league and 'league-postseason' otherwise (the EAL).
  *  4. null.
  */
 export function postseasonTag(game: Game): PostseasonTag | null {
@@ -89,6 +93,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   if (types.home === 4 || types.away === 4) {
     let kind: PostseasonTag['kind'];
     if (league?.postseason.kind === 'league-tournament') kind = 'mcal-tournament';
+    else if (league?.postseason.kind === 'unbracketed-tournament') kind = 'league-postseason';
     else {
       const sections = [home, away]
         .filter((t): t is Team => t !== undefined)
@@ -103,14 +108,15 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     return { kind: 'ccs', leagueId: league.id, via: 'ccs-window' };
   }
 
-  // 3. a league's own postseason window (MCAL from Oct 23)
+  // 3. a league's own postseason window (MCAL from Oct 23, EAL from Oct 30)
   if (
     league &&
     league.rules.postseasonFrom !== null &&
     game.dateKey >= league.rules.postseasonFrom &&
     !league.rules.leagueGameOverrides.includes(game.contestId)
   ) {
-    return { kind: 'mcal-tournament', leagueId: league.id, via: 'league-postseason-window' };
+    const kind = league.postseason.kind === 'league-tournament' ? 'mcal-tournament' : 'league-postseason';
+    return { kind, leagueId: league.id, via: 'league-postseason-window' };
   }
 
   return null;
@@ -119,7 +125,9 @@ export function postseasonTag(game: Game): PostseasonTag | null {
 /**
  * The division whose table this game belongs to, for ANY status. null unless leagueDivision !== null. Then by the
  * division's league rule:
- *  - 'contest-type' (SCVAL): game.isLeague && game.postseason?.kind !== 'ccs' ? leagueDivision : null.
+ *  - 'contest-type' (SCVAL, EAL): null unless game.isLeague; null for a 'ccs' or 'league-postseason' tag; null if
+ *        contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes (SCVAL's [] makes that a no-op, and
+ *        SCVAL never gets a 'league-postseason' tag, so SCVAL is unchanged); else leagueDivision.
  *  - 'official-fixtures' (BVAL, PCAL, MCAL):
  *        null if game.postseason !== null
  *        null if contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes
@@ -133,12 +141,17 @@ export function classifyGame(game: Game, opts: ClassifyOptions = {}): DivisionId
   if (!league) return null;
   const { rules } = league;
 
+  const types = game.contestTypes ?? { home: null, away: null };
   if (rules.classification === 'contest-type') {
-    return game.isLeague && game.postseason?.kind !== 'ccs' ? division : null;
+    if (!game.isLeague) return null;
+    if (game.postseason?.kind === 'ccs') return null; // SCVAL's rule (golden)
+    if (game.postseason?.kind === 'league-postseason') return null; // never produced for SCVAL
+    // SCVAL [] → no-op
+    for (const t of [types.home, types.away]) if (t !== null && rules.excludeContestTypes.includes(t)) return null;
+    return division;
   }
 
   if (game.postseason !== null && game.postseason !== undefined) return null;
-  const types = game.contestTypes ?? { home: null, away: null };
   for (const t of [types.home, types.away]) {
     if (t !== null && rules.excludeContestTypes.includes(t)) return null;
   }

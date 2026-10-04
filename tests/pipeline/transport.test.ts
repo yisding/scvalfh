@@ -31,6 +31,7 @@ import {
   resourceUrl,
   sha256Hex,
 } from '../../lib/pipeline/transport';
+import { officialDocumentOf } from '../../lib/official/schema';
 import { tdCellBodies } from '../../lib/official/validate';
 import { BOOTSTRAP_URL } from '../../lib/season';
 import { HttpError, type HttpResponse } from '../../lib/sources/http';
@@ -63,7 +64,7 @@ function everyKey(): ResourceKey[] {
   for (const d of ALL_DIVISIONS) {
     keys.push({ kind: 'maxpreps-league-meta', division: d.id }, { kind: 'maxpreps-standings', division: d.id });
     if (d.official.mode === 'live-pdf') keys.push({ kind: 'scval-pdf-text', division: d.id });
-    if (d.official.revisionCheckUrl) keys.push({ kind: 'official-revision', division: d.id });
+    if (d.official.mode === 'bundled' && d.official.revisionCheckUrl) keys.push({ kind: 'official-revision', division: d.id });
   }
   for (const t of TEAMS) keys.push({ kind: 'maxpreps-schedule', team: t.slug });
   for (const l of LEAGUES) if (l.officialChanges) keys.push({ kind: 'official-changes', league: l.id });
@@ -138,7 +139,7 @@ describe('FixtureTransport', () => {
   it('serves hash resources as one bare lowercase hex string', async () => {
     for (const d of ['mt-hamilton', 'santa-teresa', 'pcal', 'marin-county']) {
       const res = await t.get({ kind: 'official-revision', division: d });
-      expect(res.body, d).toBe(getDivision(d).official.bundledSha256);
+      expect(res.body, d).toBe(officialDocumentOf(d).bundledSha256);
     }
     expect((await t.get({ kind: 'official-changes', league: 'mcal' })).body).toBe(getLeague('mcal').officialChanges?.sha256);
   });
@@ -155,6 +156,22 @@ describe('the live resource map', () => {
     expect(resourceUrl({ kind: 'maxpreps-bootstrap' })).toBe(BOOTSTRAP_URL);
     expect(resourceUrl({ kind: 'maxpreps-league-meta', division: 'pcal' })).toContain(getDivision('pcal').maxprepsLeagueId);
     expect(resourceUrl({ kind: 'sblive-team-games', team: 'carmel' })).toBe(getTeamBySlug('carmel')?.external.sbliveGamesUrl);
+  });
+
+  it('the live MaxPreps sweep is 64 resources: 1 bootstrap + 7 metas + 7 tables + 49 schedules', () => {
+    const maxpreps = everyKey().filter((k) => k.kind.startsWith('maxpreps-'));
+    const count = (kind: ResourceKey['kind']) => maxpreps.filter((k) => k.kind === kind).length;
+    expect([count('maxpreps-bootstrap'), count('maxpreps-league-meta'), count('maxpreps-standings'), count('maxpreps-schedule')]).toEqual([
+      1, 7, 7, 49,
+    ]);
+    expect(maxpreps.length).toBe(64);
+    expect(maxpreps.length).toBe(1 + ALL_DIVISIONS.length * 2 + TEAMS.length);
+  });
+
+  it('has no official URL for a division whose league publishes no schedule (EAL)', () => {
+    expect(getDivision('eal').official.mode).toBe('none');
+    expect(() => resourceUrl({ kind: 'official-revision', division: 'eal' })).toThrow(/eal has no revision-check URL/);
+    expect(() => resourceUrl({ kind: 'scval-pdf-text', division: 'eal' })).toThrow(/eal publishes no official schedule/);
   });
 
   it('extracts the MCAL officialChanges cell whose sha256 is the configured one', () => {
@@ -219,11 +236,11 @@ describe('LiveTransport (injected clients, no network)', () => {
       },
     };
     const doc = new TextEncoder().encode('the BVAL schedule document');
-    const mh = getDivision('mt-hamilton').official.revisionCheckUrl as string;
+    const mh = officialDocumentOf('mt-hamilton').revisionCheckUrl as string;
     const schedir = readFileSync(path.join(REPO, 'tests', 'fixtures', 'official', 'mcal-Schedir.htm'), 'utf8');
     const http = fakeHttp(log, {
       [mh]: doc,
-      [getDivision('de-anza').official.scheduleUrl]: new TextEncoder().encode('%PDF'),
+      [officialDocumentOf('de-anza').scheduleUrl]: new TextEncoder().encode('%PDF'),
       [getLeague('mcal').officialChanges?.url as string]: schedir,
       [resourceUrl({ kind: 'ccs-ical' })]: 'BEGIN:VCALENDAR',
     });

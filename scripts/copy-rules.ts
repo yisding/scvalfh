@@ -13,13 +13,179 @@ const SUBJECT = String.raw`(?:rosters?|player stats?)`;
 
 /**
  * Rendered text (tags excluded between the two halves) claiming rosters or player stats are
- * SCVAL-only, either order, or a bare "rosters (SCVAL)" label. Rosters and player stats cover all
- * four leagues, so any such claim on a page is stale copy.
+ * SCVAL-only, either order, or a bare "rosters (SCVAL)" label. Rosters and player stats cover every
+ * league, so any such claim on a page is stale copy.
  */
 export const SCVAL_ONLY_CLAIM = new RegExp(
   String.raw`\b${SUBJECT}\b[^<>]{0,120}\b${SCVAL_LIMIT}\b|\b${SCVAL_LIMIT}\b[^<>]{0,120}\b${SUBJECT}\b|\b${SUBJECT}\s*\(\s*SCVAL(?: only| teams)?\s*\)`,
   'i',
 );
+
+// ---------------------------------------------------------------- the EAL (DESIGN §22.5)
+//
+// Five claims no page and no view model may make about the Eastern Athletic League. Each is a
+// sourced fact the copy must not contradict, not a style rule; the EAL's own config strings
+// (membershipNote, the official note, knownCause, the postseason note and citations) pass all five.
+
+/**
+ * Sentences, as the EAL rules read them: split after `.`, `!` or `?` followed by a space or the end
+ * of the text, and at line breaks (visibleText ends every block element with one, so a heading never
+ * runs into the paragraph under it). A dot inside a domain or a section number
+ * ("fieldhockeyumpires.org", "§III.E.1") is followed by a letter or digit, so it ends nothing.
+ */
+function sentences(text: string): string[] {
+  return text.split(/[.!?]+(?=\s|$)|\n+/).filter((s) => s.trim());
+}
+
+/**
+ * The EAL/SRL umpires' 2026 league grid (fieldhockeyumpires.org) matches MaxPreps game for game, but
+ * it is not a league or Section document, so it is never called official: a sentence that mentions
+ * an umpire and says "official" fails. Test it with `umpireOfficialClaims`, which applies it sentence
+ * by sentence (the pattern itself stops at a sentence end, but not at the dots of a domain).
+ */
+export const UMPIRE_OFFICIAL_CLAIM =
+  /umpire(?:[^.!?\n]|[.!?](?=\S))*\bofficial\b|\bofficial\b(?:[^.!?\n]|[.!?](?=\S))*umpire/i;
+
+/** The sentences of `text` that call the umpires' grid official (UMPIRE_OFFICIAL_CLAIM); [] when clean. */
+export function umpireOfficialClaims(text: string): string[] {
+  return sentences(text).filter((s) => UMPIRE_OFFICIAL_CLAIM.test(s)).map((s) => s.trim());
+}
+
+/** The two EAL teams that are Sac-Joaquin Section schools (CIF-SJS directory; NS member list). */
+const NON_MEMBER_SCHOOL = /\b(?:Davis|Bella Vista)\b/;
+const NORTHERN_SECTION_MEMBER = /Northern Section (?:school|member)s?/i;
+
+/**
+ * Davis and Bella Vista play field hockey in the EAL, which the Northern Section's Guidelines
+ * govern, but neither is a Northern Section school. The clauses of `text` (split on `.`, `;`, `:`
+ * and line breaks) that name either one AND say "Northern Section school(s)" or "member(s)"; []
+ * when clean. The EAL membershipNote names both kinds of school in separate clauses and passes.
+ */
+export function nonMemberSectionClaims(text: string): string[] {
+  return text
+    .split(/[.;:]|\n+/)
+    .filter((clause) => NON_MEMBER_SCHOOL.test(clause) && NORTHERN_SECTION_MEMBER.test(clause))
+    .map((clause) => clause.trim());
+}
+
+/**
+ * Red Bluff is not fielding a varsity team in 2026, and that is all a page may say: it still has a
+ * JV game, and no source says its season was cancelled, that it withdrew or dropped field hockey,
+ * or that it has no program.
+ */
+export const RED_BLUFF_STATUS_CLAIM = /Red Bluff[^.;:]{0,80}\b(cancel\w*|withdr\w*|dropped|no (field hockey )?program)\b/i;
+
+/**
+ * "EAL" here always means the field hockey grouping (four Northern Section schools and two
+ * Sac-Joaquin ones), not the all-sports Eastern Athletic League, whose schools differ. So never
+ * "EAL school(s)" or "EAL member(s)": the copy says "EAL teams". Case-sensitive, as the names are.
+ */
+export const EAL_SCHOOL_CLAIM = /\b(EAL|Eastern Athletic League) (school|member)s?\b/;
+
+/**
+ * A seed word: "1st seed", "No. 2 seed", "#1 seed", "a 3-seed", "top-seeded", "the sixth seed",
+ * "the lowest seed", "seed No. 1", "seeded fifth". The Super Regional's seeding criteria are quoted,
+ * never applied, and no bracket is published, so no EAL page may print one (its standings and
+ * schedule pages, its team pages and the /playoffs EAL card). Wider than DESIGN §22.5's first
+ * pattern, which caught only "1st", "No. N", "top", "first" and "second": the Super Regional takes
+ * six teams, so "third" to "sixth" are the likely words. "Seeding", "seeds are set" and "the top six"
+ * are not seed words.
+ */
+export const SEED_CLAIM =
+  /(?:\b(?:\d+(?:st|nd|rd|th)|No\. ?\d+|\d+|top|first|second|third|fourth|fifth|sixth|last|lowest|highest|bottom)|#\d+)[- ]seed(?:ed|s)?\b|\bseed(?:ed)? (?:No\. ?|#)?\d+\b|\bseeded (?:first|second|third|fourth|fifth|sixth|last|\d+(?:st|nd|rd|th))\b/i;
+
+/**
+ * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
+ * so these are the escapes plus the typographic names a hand-written string might carry.
+ */
+const VISIBLE_ENTITIES: Readonly<Record<string, string>> = {
+  amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ',
+  rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', ndash: '–', mdash: '—', middot: '·', hellip: '…',
+  rarr: '→', larr: '←', uarr: '↑', darr: '↓',
+};
+
+/** Block elements: visibleText ends each with a line break, so their texts never run together. */
+const BLOCK_END = /^\/?(?:p|div|h[1-6]|li|ul|ol|dt|dd|dl|tr|td|th|table|section|article|header|footer|nav|main|aside|figcaption|figure|summary|details|caption|br|hr)\b/i;
+
+/** `text` with its character references decoded (VISIBLE_ENTITIES and numeric ones). */
+function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+    if (e[0] !== '#') return VISIBLE_ENTITIES[e.toLowerCase()] ?? m;
+    const code = e[1] === 'x' || e[1] === 'X' ? Number.parseInt(e.slice(2), 16) : Number(e.slice(1));
+    return code <= 0x10ffff ? String.fromCodePoint(code) : m;
+  });
+}
+
+/**
+ * `html` without its `<script>`, `<style>` and `<template>` elements and its comments. Repeated
+ * until nothing changes: one pass over `<!<!---->--` would leave a `<!--` behind (CodeQL
+ * js/incomplete-multi-character-sanitization).
+ */
+function withoutScripts(html: string): string {
+  let out = html;
+  for (let before = ''; before !== out; ) {
+    before = out;
+    out = out.replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<!--[\s\S]*?-->/g, '');
+  }
+  return out;
+}
+
+/**
+ * The text a reader of a built page sees: the `<body>` without its `<script>`, `<style>` and
+ * `<template>` elements (the inline RSC payload is in scripts) and without its tags, entities
+ * decoded, block elements ending in a line break and other tags in a space. What the EAL rules
+ * read on every built page, with `attributeText`.
+ */
+export function visibleText(html: string): string {
+  const body = /<body[\s>][\s\S]*<\/body>/i.exec(html)?.[0] ?? html;
+  return decodeEntities(
+    withoutScripts(body).replace(/<([^>]*)>/g, (_m, inner: string) => (BLOCK_END.test(inner) ? '\n' : ' ')),
+  )
+    .replace(/[ \t\r\f\v\u00a0]+/g, ' ')
+    .replace(/ *\n[\s]*/g, '\n')
+    .trim();
+}
+
+/** The `<meta>` names whose `content` a reader is shown: the description and its link-preview copies. */
+const SHOWN_META = /^(?:description|og:title|og:description|twitter:title|twitter:description)$/i;
+
+/** One attribute of a tag: its name and its quoted (or bare) value. */
+const ATTRIBUTE = /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+
+/** The attributes of a start tag's inside (what follows the tag name), names lowercased. */
+function attributesOf(inner: string): Map<string, string> {
+  const attrs = new Map<string, string>();
+  for (const m of inner.matchAll(ATTRIBUTE)) attrs.set(m[1].toLowerCase(), m[2] ?? m[3] ?? m[4] ?? '');
+  return attrs;
+}
+
+/**
+ * The text a page shows or reads out that is not in its body text (visibleText): the `<title>`,
+ * the `content` of its description metas (`description`, `og:` and `twitter:` titles and
+ * descriptions, what a link preview prints) and every `title`, `aria-label` and `alt` attribute
+ * (tooltips, what assistive technology reads). One per line, entities decoded, scripts (the RSC
+ * payload) excluded. What the EAL rules read on every built page, besides visibleText.
+ */
+export function attributeText(html: string): string {
+  const out: string[] = [];
+  const source = withoutScripts(html);
+  for (const m of source.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)) out.push(m[1]);
+  for (const m of source.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*)>/gi)) {
+    const attrs = attributesOf(m[2]);
+    if (m[1].toLowerCase() === 'meta') {
+      const name = attrs.get('name') ?? attrs.get('property') ?? '';
+      if (SHOWN_META.test(name)) out.push(attrs.get('content') ?? '');
+    }
+    for (const a of ['title', 'aria-label', 'alt']) {
+      const v = attrs.get(a);
+      if (v) out.push(v);
+    }
+  }
+  return out
+    .map((t) => decodeEntities(t).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+}
 
 // ---------------------------------------------------------------- clubs (SPEC §1.1j2, DESIGN §17.2)
 
@@ -234,13 +400,21 @@ function sharesRun(page: string, fragment: string, publicTerms: readonly string[
  * sibling section is not. '' when no section carries that id.
  */
 export function sectionById(html: string, id: string): string {
+  return elementById(html, id, 'section');
+}
+
+/**
+ * `sectionById` for any element name: the `<tag …>…</tag>` element whose start tag carries
+ * `id="<id>"`, nested elements of the same name included. The /playoffs EAL card is a `<div>`.
+ */
+export function elementById(html: string, id: string, tag: string): string {
   const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const start = new RegExp(String.raw`<section\b[^>]*\sid=(?:"${escaped}"|'${escaped}')[^>]*>`, 'i').exec(html);
+  const start = new RegExp(String.raw`<${tag}\b[^>]*\sid=(?:"${escaped}"|'${escaped}')[^>]*>`, 'i').exec(html);
   if (!start) return '';
-  const tag = /<(\/?)section\b[^>]*>/gi;
-  tag.lastIndex = start.index + start[0].length;
+  const tags = new RegExp(String.raw`<(\/?)${tag}\b[^>]*>`, 'gi');
+  tags.lastIndex = start.index + start[0].length;
   let depth = 1;
-  for (let m = tag.exec(html); m; m = tag.exec(html)) {
+  for (let m = tags.exec(html); m; m = tags.exec(html)) {
     depth += m[1] ? -1 : 1;
     if (depth === 0) return html.slice(start.index, m.index + m[0].length);
   }

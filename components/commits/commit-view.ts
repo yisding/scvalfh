@@ -343,7 +343,7 @@ export interface CommitsView {
   classes: CommitClassGroup[];
   /** lib/commits.ts getColleges() order: the most players first. */
   colleges: CollegeRow[];
-  /** The tracked rosters: 43. */
+  /** The tracked rosters: rosters.json's teams, 49 today. */
   trackedTeams: number;
   playerCount: number;
   schoolCount: number;

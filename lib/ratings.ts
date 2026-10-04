@@ -1,6 +1,6 @@
 /**
  * Team ratings on the Elo scale (DESIGN §20): one number per team that says how strong its results
- * have been, opponents and margins included, comparable across all four leagues.
+ * have been, opponents and margins included, comparable across all five leagues.
  *
  * Not game-by-game Elo. Classic Elo nudges two ratings after each game, so one season of about ten
  * games a team leaves it mostly where it started. Instead every counted final is fitted at once:
@@ -11,7 +11,8 @@
  * holds best over the whole season, by least squares with each margin capped at MARGIN_CAP (so a
  * score run up past five goals earns nothing more). The home edge applies only where a game has a
  * host (`site: 'home'`), never at a neutral site. One linear solve, in a fixed order, so a given
- * snapshot always builds the same numbers.
+ * snapshot always builds the same numbers. Elo fits goals, so an EAL 1 v 1 game (level on goals,
+ * decided on 1 v 1s: decider 'SO') is level there, though the standings count it as a win.
  *
  * Seeded from last season. Each team starts from the strength the same fit gives it over last
  * season's finals (data/prior-season.json, lib/prior-season.ts), carried over in full (CARRYOVER),
@@ -22,9 +23,9 @@
  * A strength in goals becomes Elo points as ELO_BASE + ELO_PER_GOAL × (strength − the mean
  * strength of the rated teams): 1500 is the average rated team.
  *
- * How the numbers were chosen. Two seasons were replayed day by day, each day predicted from only
- * the games before it: 2025-26 (368 finals, seeded from 2024-25) and 2026 through Oct 2 (196
- * finals, seeded from 2025-26). Seeding cut the root-mean-square miss on the capped margin from
+ * How the numbers were chosen. Two seasons were replayed day by day over the 43 teams of the four
+ * leagues covered on 2026-10-02, each day predicted from only the games before it: 2025-26 (368
+ * finals, seeded from 2024-25) and 2026 through Oct 2 (196 finals, seeded from 2025-26). Seeding cut the root-mean-square miss on the capped margin from
  * 1.97 to 1.61 goals and from 2.37 to 1.76, and raised the share of winners picked from 84% to 88%
  * and from 79% to 89%. Carrying 85-115% of last season over at a weight of 0.5-3 games all scored
  * within a few thousandths (Brier); full carryover at one game was best or level in both seasons,
@@ -35,7 +36,7 @@
  *
  * Counted: every final between two registry teams, league or not, postseason included, with its
  * published score (a si.com backfill too). Left out: forfeits (no goals, as in the standings),
- * finals without a score, and games against schools outside the four leagues: a one-game opponent
+ * finals without a score, and games against schools outside the five leagues: a one-game opponent
  * nothing else connects to says nothing about the strength of the team it played.
  *
  * Pure: `computeRatings` reads only its arguments; `getRatings` is it over the bundled snapshot

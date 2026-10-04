@@ -1,5 +1,5 @@
 /**
- * The read API for data/commits.json — which players on the 43 tracked varsity rosters a public
+ * The read API for data/commits.json — which players on the tracked varsity rosters a public
  * page says have committed to play a sport in college (field hockey or any other), and those
  * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
  *

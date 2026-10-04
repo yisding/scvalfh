@@ -1,18 +1,19 @@
 /**
- * Team search (SPEC §9.1-§9.2): a pure, zero-network matcher over a pre-serialized 43-team index.
+ * Team search (SPEC §9.1-§9.2): a pure, zero-network matcher over a pre-serialized 49-team index.
  *
  * Client-safe: ZERO runtime imports (types only). Result order is the index order (`LEAGUES` order, then
  * registry order, as `getTeamSearchIndex()` builds it) within a score. A league or division label NEVER
  * matches a team: those are separate group entries ("Divisions and leagues").
  */
 
+import type { SectionConfig } from './leagues';
 import type { TeamColors } from './types';
 
 export interface TeamSearchEntry {
   kind: 'team';
   slug: string; name: string; shortName: string; abbr: string;
   city: string; mascot: string;
-  leagueId: string; leagueShort: string; sectionShort: 'CCS' | 'NCS';
+  leagueId: string; leagueShort: string; sectionShort: SectionConfig['shortName'];
   /** null for single-division leagues. */
   divisionLabel: string | null;
   colors: Pick<TeamColors, 'primary' | 'onPrimary'>;
@@ -76,7 +77,7 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 
 export function buildSearchIndex(
   teams: readonly SearchInputTeam[],
-  leagues: ReadonlyArray<{ id: string; shortName: string; name: string; sectionShort: 'CCS' | 'NCS';
+  leagues: ReadonlyArray<{ id: string; shortName: string; name: string; sectionShort: SectionConfig['shortName'];
     divisions: ReadonlyArray<{ id: string; label: string; heading: string | null; searchAliases: readonly string[]; teamCount: number }> }>,
   notCovered: ReadonlyArray<{ name: string; keys: readonly string[]; reason: string }>,
 ): SearchIndex {

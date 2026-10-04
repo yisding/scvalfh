@@ -5,7 +5,8 @@
  *   data/official/pcal-2026.json   42 fixtures
  *   data/official/mcal-2026.json   72 fixtures (post-change dates, originalDate kept for the 2 approved changes)
  *
- * from the research transcriptions Stage 0 copied to tests/fixtures/official/source/. Deterministic:
+ * from the research transcriptions Stage 0 copied to tests/fixtures/official/source/. There is no EAL
+ * bundle: the EAL publishes no schedule document (its division's official mode is 'none'). Deterministic:
  * the same inputs always give the same bytes, and every division is checked with
  * assertDoubleRoundRobin before anything is written. Never hand-edit the outputs.
  *

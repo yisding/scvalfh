@@ -99,12 +99,12 @@ describe('computeRatings', () => {
     expect(computeRatings(TEAMS, [...base, ...noise])).toEqual(computeRatings(TEAMS, base));
   });
 
-  it('leaves out games against schools outside the four leagues', () => {
+  it('leaves out games against schools outside the five leagues', () => {
     const inside = neutral({ home: 'homestead', away: 'saratoga', hs: 2, as: 1 });
     const g = neutral({ home: 'homestead', away: 'fremont', hs: 0, as: 9 });
     const outside: Game = {
       ...g,
-      away: { ...g.away, teamId: null, slug: null, name: 'Chico' },
+      away: { ...g.away, teamId: null, slug: null, name: 'Gunn' },
     };
     const t = computeRatings(TEAMS, [inside, outside]);
     expect(t).toEqual(computeRatings(TEAMS, [inside]));

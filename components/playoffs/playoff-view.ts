@@ -278,13 +278,18 @@ export function ladderFactsFor(division: DivisionId): LadderFacts {
     playInPlace === null
       ? undefined
       : pairings.find((p) => p.isPlayIn && p.seats.some((s) => s.division === division && s.place === playInPlace));
-  const lineRung = rungs.find((r) => r.places[0] <= d.ladderLine.after && d.ladderLine.after <= r.places[1]);
+  // Every CCS and tournament division draws a line; only an unbracketed league's may be null (EAL),
+  // and it never reaches /playoffs' ladders.
+  const ladderLine = d.ladderLine;
+  const lineRung = ladderLine
+    ? rungs.find((r) => r.places[0] <= ladderLine.after && ladderLine.after <= r.places[1])
+    : undefined;
   return {
     aqPlaces: aq ? aq.places[1] - aq.places[0] + 1 : 0,
     playInPlace,
     playInDate: pairing ? monthDay(pairing.date) : null,
     atLargePlace: atLarge ? atLarge.places[0] : null,
-    line: lineRung ? { status: lineRung.status, label: d.ladderLine.label } : null,
+    line: lineRung && ladderLine ? { status: lineRung.status, label: ladderLine.label } : null,
     unresolved: league.rules.unresolvedSuffix.replace(/^—\s*/, ''),
   };
 }
@@ -352,9 +357,14 @@ export function buildDivisionProjection(
   if (!anyResults) {
     // Preseason, or a division the source has not reported at all: there is nothing to project and
     // the play-in notes below would be false rather than merely empty.
+    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment.
+    const roster =
+      getDivision(division).official.mode === 'none'
+        ? `the ${divisionLabel} table as MaxPreps lists it`
+        : 'the official alignment';
     notes.push(
       `No ${divisionLabel} league results have been reported yet, so there is nothing to project ` +
-        'here. The rows below are the official alignment.',
+        `here. The rows below are ${roster}.`,
     );
     return { ...base, lineAfter: 0, lineLabel: null, notes };
   }
@@ -639,8 +649,11 @@ export interface TournamentInput {
   teamOf: (slug: TeamSlug) => Team | undefined;
   /** The league's last tournament place (MCAL 6). */
   lastPlace: number;
-  /** `ladderLine` of the league's (single) division. */
-  ladderLine: { after: number; label: string };
+  /**
+   * `ladderLine` of the league's (single) division. A league tournament always has one (assertLeagues);
+   * the type is config's, where null means "no line" (only an unbracketed league, which has no bracket).
+   */
+  ladderLine: { after: number; label: string } | null;
 }
 
 const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
@@ -728,7 +741,9 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
 
   let lineAfter = 0;
   for (const [index, row] of seedRows.entries()) {
-    if (row.standing.hasReportedResults && row.standing.computed.place <= ladderLine.after) lineAfter = index + 1;
+    if (ladderLine && row.standing.hasReportedResults && row.standing.computed.place <= ladderLine.after) {
+      lineAfter = index + 1;
+    }
   }
 
   const name = (slug: TeamSlug) => teamOf(slug)?.name ?? slug;
@@ -776,7 +791,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     seedsMeta: p.status === 'projected' ? 'If the season ended today' : null,
     seedRows,
     lineAfter,
-    lineLabel: lineAfter > 0 ? ladderLine.label : null,
+    lineLabel: lineAfter > 0 && ladderLine ? ladderLine.label : null,
     playInSentence,
     playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds) : null,
     rounds,

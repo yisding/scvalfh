@@ -16,7 +16,7 @@
  * right home panel is the one painted first: CLS 0, no reordering, and with JS off or storage
  * blocked nothing is stamped and the first-visit view (with every link working) is what renders.
  *
- * This module has NO runtime import on purpose: the league ids and the 43-entry `{slug: league}`
+ * This module has NO runtime import on purpose: the league ids and the 49-entry `{slug: league}`
  * map are arguments, so it is safe to import from a client module (components/ui/use-league.ts
  * reads `LEAGUE_KEY` and `PREFS_RESTAMP`) and from the root layout alike.
  *
@@ -56,7 +56,7 @@ export function buildPrefsScript({ leagueIds, slugLeague }: PrefsScriptInput): s
     if (!ID.test(id)) throw new Error(`prefs-script: bad league id ${JSON.stringify(id)}`);
   }
   // The map is shipped grouped by league, slugs space-joined, which is about half the bytes of a
-  // flat {slug: league} object (43 entries) and keeps the whole script well under 2 KB.
+  // flat {slug: league} object (49 entries) and keeps the whole script well under 2 KB.
   const grouped: Record<string, string[]> = {};
   for (const [slug, league] of Object.entries(slugLeague)) {
     if (!ID.test(slug) || !leagueIds.includes(league)) {

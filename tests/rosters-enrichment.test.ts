@@ -34,6 +34,11 @@ import { REPO } from './helpers';
  * league later moves none of them.
  */
 const SCVAL_SLUGS: ReadonlySet<string> = new Set(teamsInLeague('scval').map((t) => t.slug));
+/** BVAL, PCAL and MCAL: researched 2026-10-03. The EAL entries are stubs (no sweep), so they fill nothing. */
+const SWEPT_OTHER_SLUGS: ReadonlySet<string> = new Set(
+  (['bval', 'pcal', 'mcal'] as const).flatMap((l) => teamsInLeague(l)).map((t) => t.slug),
+);
+const EAL_SLUGS: ReadonlySet<string> = new Set(teamsInLeague('eal').map((t) => t.slug));
 
 /** Teams whose derived grades also come from a source other than MaxPreps' career page. */
 const DERIVED_FROM_OTHER: Record<string, readonly string[]> = {
@@ -103,8 +108,8 @@ describe('data/rosters-enrichment.json', () => {
     expect(RosterEnrichmentSchema.safeParse(short).success).toBe(false);
   });
 
-  it('accepts any registry team, in any league, and covers all 43 plus the same season as the MaxPreps file', () => {
-    expect(TEAMS).toHaveLength(43);
+  it('accepts any registry team, in any league, and covers all 49 plus the same season as the MaxPreps file', () => {
+    expect(TEAMS).toHaveLength(49);
     expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
     // A BVAL, PCAL or MCAL team takes a record exactly as an SCVAL one does.
     for (const slug of ['leigh', 'del-mar', 'redwood']) {
@@ -202,7 +207,11 @@ describe('data/rosters-enrichment.json', () => {
       'santa-catalina': 'none',
       'marin-academy': 'partial',
     });
-    for (const t of base.teams.filter((x) => x.status === 'empty')) expect(recorded[t.slug], t.slug).toBeDefined();
+    // The EAL stubs have had no sweep: Corning (empty) records nothing, and its view says not-checked.
+    for (const t of base.teams.filter((x) => x.status === 'empty' && !EAL_SLUGS.has(x.slug))) {
+      expect(recorded[t.slug], t.slug).toBeDefined();
+    }
+    expect(getEnrichedTeamRoster('corning')!.otherRosters).toEqual({ status: 'not-checked' });
     // A team the file says nothing about has not been checked, and its view says so.
     expect(getEnrichedTeamRoster('cupertino')!.otherRosters).toEqual({ status: 'not-checked' });
     // A partial list must say what it lists and link it.
@@ -360,7 +369,7 @@ describe('recruiting profiles', () => {
   });
 
   it('what was found for BVAL, PCAL and MCAL, as captured on 2026-10-03', () => {
-    const others = raw.teams.filter((t) => !SCVAL_SLUGS.has(t.slug));
+    const others = raw.teams.filter((t) => SWEPT_OTHER_SLUGS.has(t.slug));
     expect(others.length).toBe(28);
     // Every team of the three leagues was looked at: each lists a source or a note.
     for (const t of others) expect(t.sources.length + t.notes.length, t.slug).toBeGreaterThan(0);
@@ -386,6 +395,15 @@ describe('recruiting profiles', () => {
       expect.objectContaining({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/teya_halali', classOf: 2029 }),
     ]);
     expect(base.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!.grade).toBe(10);
+  });
+
+  it('holds six EAL stubs that say no sweep was done and fill nothing', () => {
+    const eal = raw.teams.filter((t) => EAL_SLUGS.has(t.slug));
+    expect(eal.map((t) => t.slug)).toEqual(teamsInLeague('eal').map((t) => t.slug));
+    for (const t of eal) {
+      expect([t.coaches, t.players, t.sources], t.slug).toEqual([[], [], []]);
+      expect(t.notes, t.slug).toEqual(['No school or recruiting-page sweep has been done for this team yet; nothing is filled.']);
+    }
   });
 
   it('reaches the merged view', () => {

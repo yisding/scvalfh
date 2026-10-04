@@ -1,15 +1,16 @@
 # League rules — how each league's table is computed
 
-The four leagues this site covers agree on the points (3 for a win, 1 for a tie, 0 for a loss),
-the ordering key (points) and that league games can end in a tie. They differ in the tiebreak
-chain, in how a tie among three or more teams is worked through, in how a division champion is
+The five leagues this site covers agree on the points (3 for a win, 1 for a tie, 0 for a loss) and
+the ordering key (points; the EAL uses points to decide its title and publishes no standings, so this
+site extends them to the table). Four of them can end a league game in a tie; the EAL decides a level
+varsity game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
 It never guesses an order.
 
-Sources are the league's own documents as of 2026-10-02: see "Official sources" in each section and
+Sources are the league's own documents as of 2026-10-02 (for the EAL, the CIF Northern Section's Field Hockey Guidelines, as of 2026-10-04): see "Official sources" in each section and
 `docs/DATA-SOURCES.md` for URLs, hashes and how the schedules are kept current. SCVAL's by-laws
 are also quoted in `docs/BYLAWS-2026-27.md`.
 
@@ -20,7 +21,7 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    separate the teams (all keys equal) is skipped; a stage that is *not applicable* (for example,
    head-to-head when two teams never met) is skipped too.
 3. **Multi-team procedure.** The leagues differ here, and the difference changes results:
-   - `partition-restart` (SCVAL, PCAL): a stage splits the bucket into a better and a worse group;
+   - `partition-restart` (SCVAL, PCAL, EAL): a stage splits the bucket into a better and a worse group;
      each group restarts the chain from its first stage, using only its own members.
    - `seed-one-restart` (BVAL, MCAL): a stage picks the *one* best team for the current place; the
      chain then restarts among the rest for the next place.
@@ -28,8 +29,8 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    `no-rule`) ends the walk: the remaining teams share a place, listed by name, with the league's
    citation as the footnote.
 5. Only games that count toward the division table are used: two teams of the same division, a
-   league game by the league's own evidence (SCVAL: MaxPreps' league flag; BVAL, PCAL and MCAL: it
-   is on the official schedule), never a tournament, neutral or postseason game.
+   league game by the league's own evidence (SCVAL and EAL: MaxPreps' league flag; BVAL, PCAL and
+   MCAL: it is on the official schedule), never a tournament, neutral or postseason game.
 6. A team with no results is named and listed last, never ranked by merit and never shown as 0-0-0.
 7. A tie at the top is shown as "Level on points at the top" until the league's regular phase is
    over; only then does the league's co-champion label appear.
@@ -265,19 +266,92 @@ one spurious unscored contest are dropped on purpose (`/about#dropped`). MCAL's 
 and the Tie-Breaking Criteria revision (3/26) are the league's; a new revision would change the
 config by hand.
 
+## EAL — Eastern Athletic League (NS)
+
+**Division.** One division of 6 teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley), a
+double round robin of 10 league games each (Guidelines §III.A.1); league play Aug 24 – Oct 28. "All
+participating schools are considered to be in the same division" (§I), so the site shows no division
+picker and no division label; the table is "League table". Red Bluff is still a 0-0-0 row in MaxPreps'
+table but is not fielding a varsity team in 2026, so it is not covered. The league is the Northern
+Section's, but two of its teams are not Northern Section schools: Chico, Corning, Lassen and Pleasant
+Valley are, and Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the
+EAL. Pages that list the teams under the league print that note.
+
+**Points and order.** 3 points for a win, 1 for a tie, 0 for a loss, "to determine the League
+Championship" (CIF Northern Section Field Hockey Guidelines 2026-28, §VII.C.2). The Guidelines give no
+rule for ordering the league table (the §III.E.1 Super Regional seeding criteria are quoted below and
+not applied here), and the EAL publishes no standings, so the order of this site's table is our
+computation: the same points, applied to every place. The standings page says so.
+
+**Ties in a game.** A varsity game that is level after regulation gets one 10-minute sudden-victory
+period, then 1 v 1s until there is a winner (§VII.E.4), so a league game never ends level. MaxPreps
+records a 1 v 1 win as a level score with a win flag for one team and a loss flag for the other (Chico
+1, Davis 1, 2026-09-28: Chico W, Davis L, and MaxPreps' standings count it as a Chico win). The site
+counts the flags: that game is a win for Chico, a loss for Davis, and its goals stay 1-1. It shows an
+"SO" mark ("decided on 1 v 1s" to a screen reader). The 1 v 1 tally is not shown. A level final
+without those flags stays a tie. MaxPreps' record of the 2026-09-02 Pleasant Valley at Chico game
+(1-0, three overtime periods) cannot be a real overtime count under §VII.E.4 and may be a 1 v 1 win
+entered as a goal, so the game page shows the score as MaxPreps has it, with a note, and no overtime
+mark.
+
+**Chain** (multi-team procedure: `partition-restart`; no stage separates a bucket, so it is never used):
+
+| Stage | Rule | Citation |
+|---|---|---|
+| 1 | no rule: the Guidelines break no tie in the league table (not computable; the teams share a place) | §VII.C; §III.E.1 |
+
+Teams level on points share a place and the footnote cites the two clauses. The Super Regional
+seeding criteria (§III.E.1) belong to the coaches and are not a table tiebreak.
+
+**Co-champions.** "In the case of a tie, duplicate awards will be given" (§VII.C), so equal points at
+the top means co-champions; the Guidelines add that a team must play all its league games unless the
+vote waives it (§VII.C.1). The label is "EAL co-champions". It appears only after the regular phase is over and no
+EAL league result is missing.
+
+**Postseason** (the Super Regional, a Section-sanctioned, league-run tournament; the site draws no
+bracket). "The top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), Oct 30-31, 2026 (Fri-Sat), at
+"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA". With six teams, every team is inside
+the top six, which is our application of the rule, not a Guidelines statement. The Guidelines' seeding
+text is quoted verbatim and **not applied here**: "Seeding will be based on League record, Head-to-Head
+Goal differential (Capped at six (6) per game, Goal against, Coin flip." Its punctuation does not say
+whether that is four steps or five, and the coaches "set the criteria" (§II). The format is set at the
+preseason tournament meeting (§IV) and none is published. A school with any score unreported by noon the
+day after the last contest of the season is not eligible (§VII.J); results are reported to MaxPreps under
+a separate rule (§XI.D), so this site never says MaxPreps feeds the seeding. NorCal and State
+qualification are "Not Applicable" (§V, §VI).
+
+**Official sources.** The Section's Field Hockey Guidelines 2026-28, a PDF with a creation date of
+2026-06-10 (sha256 `68e73674a1f29bb24d827e842e5ab2adc7f58364ff1a54cd4ea2789377646020`), linked from
+the Section's field hockey page (cifns.org/sports/fh/index), whose standings and schedule panels are
+empty. There is no league website and no official EAL schedule or standings: league games are the games
+MaxPreps marks as league games (as for SCVAL). On 2026-10-04 all 30 of them equalled, by date, away
+team, home team and league flag, the 2026 grid on the EAL/SRL umpires' site (fieldhockeyumpires.org).
+That grid is a cross-check only: it is not an official league or Section document, it is not linked
+or bundled, and its times are JV start times. A league result is "missing" when MaxPreps marks a league
+game dated before today and has no counted result for it.
+
+**Known data gaps.** MaxPreps **orders its EAL table by winning percentage** (in 2025-26 it placed
+6-4 Pleasant Valley above 7-5 Bella Vista), not points, so its places can differ from ours; its table
+is trusted for records and goals only. It also lists Red Bluff (0-0-0, no games), which the site leaves
+out. On 2026-10-04 two league games had no counted score at MaxPreps (2026-09-29 Pleasant Valley at
+Corning and 2026-10-01 Corning at Chico), and they are listed on `/standings/eal`. The Section's Sport
+Dates sheet gives a last contest of Oct 26 while the Guidelines say Oct 29; the last scheduled league
+game is Oct 28 (Davis at home against Pleasant Valley), and the site uses the schedule. Prior-season
+standings are not available (`/history/2025-26`): the EAL published none.
+
 ---
 
 ## At a glance
 
-| | SCVAL | BVAL | PCAL | MCAL |
-|---|---|---|---|---|
-| Section | CCS | CCS | CCS | NCS |
-| Teams / divisions | 15 / 2 | 12 / 2 | 7 / 1 | 9 / 1 |
-| League games a team | 12 or 14 | 10 | 12 | 16 |
-| Points (W / T / L) | 3 / 1 / 0 | 3 / 1 / 0 | 3 / 1 / 0 | 3 / 1 / 0 |
-| First tiebreak | head-to-head | head-to-head (3+: 3-1-0 mini-league) | head-to-head (only for places 1-2) | head-to-head winning percentage |
-| Multi-team ties | partition, restart | one place at a time | partition, restart | one place at a time |
-| League evidence | MaxPreps league flag + PDF grid | official schedule | official schedule | official schedule |
-| Last resort | coin flip | coin flip | CCS points, coin flip or blind draw | draw number; 6th place by play-in |
-| Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 |
-| MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only |
+| | SCVAL | BVAL | PCAL | MCAL | EAL |
+|---|---|---|---|---|---|
+| Section | CCS | CCS | CCS | NCS | NS |
+| Teams / divisions | 15 / 2 | 12 / 2 | 7 / 1 | 9 / 1 | 6 / 1 |
+| League games a team | 12 or 14 | 10 | 12 | 16 | 10 |
+| Points (W / T / L) | 3 / 1 / 0 | 3 / 1 / 0 | 3 / 1 / 0 | 3 / 1 / 0 | 3 / 1 / 0 (title only) |
+| First tiebreak | head-to-head | head-to-head (3+: 3-1-0 mini-league) | head-to-head (only for places 1-2) | head-to-head winning percentage | none (no rule) |
+| Multi-team ties | partition, restart | one place at a time | partition, restart | one place at a time | — |
+| League evidence | MaxPreps league flag + PDF grid | official schedule | official schedule | official schedule | MaxPreps league flag |
+| Last resort | coin flip | coin flip | CCS points, coin flip or blind draw | draw number; 6th place by play-in | teams share a place |
+| Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31, no bracket published |
+| MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only | records and goals only |

@@ -265,8 +265,9 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(html, PAGE).not.toMatch(/eliminat/i);
   });
 
-  it('404s an unknown or CCS league before any accessor that throws (page and OG image)', async () => {
-    for (const league of ['scval', 'nope', 'ccs']) {
+  it('404s an unknown, CCS or unbracketed (EAL) league before any accessor that throws (page and OG image)', async () => {
+    // eal: the Super Regional publishes no bracket, so it has a card on /playoffs, never a page here.
+    for (const league of ['scval', 'nope', 'ccs', 'eal']) {
       await expect(page.default({ params: Promise.resolve({ league }) } as never), `${PAGE}: ${league}`).rejects.toMatchObject({
         digest: expect.stringContaining('404'),
       });

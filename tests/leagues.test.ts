@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, LEAGUE_IDS,
-  RESERVED_SEGMENTS, SECTIONS, TOURNAMENT_LEAGUE_IDS, assertLeagues, divisionDisplay,
+  RESERVED_SEGMENTS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, assertLeagues, divisionDisplay,
   divisionHeading, divisionLabel, divisionsOf, findDivision, findLeague, getDivision, getLeague,
   getSection, isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision,
   leaguePlayEnds, leagueStandingsUrl, seasonWindowBounds, sectionOf, statusesOf, tiebreakChainFor,
@@ -29,9 +29,10 @@ function chainsOf(l: LeagueConfig): Array<[number | null, readonly TiebreakStage
 
 /** Every string a league could render (Gabilan check). */
 function renderedStrings(l: LeagueConfig): string[] {
-  const out: string[] = [l.name, l.shortName, l.region, ...l.links.map((x) => x.label)];
+  const out: string[] = [l.name, l.shortName, l.region, ...l.links.map((x) => x.label), l.membershipNote ?? ''];
   for (const d of l.divisions) {
-    out.push(d.label, ...d.searchAliases, d.knownCause ?? '', d.home.lineLabel ?? '', d.ladderLine.label);
+    out.push(d.label, ...d.searchAliases, d.knownCause ?? '', d.home.lineLabel ?? '', d.ladderLine?.label ?? '');
+    if (d.official.mode === 'none') out.push(d.official.note);
   }
   const r = l.rules;
   out.push(
@@ -40,12 +41,18 @@ function renderedStrings(l: LeagueConfig): string[] {
     r.coChampionsLabel, r.unresolvedSuffix,
   );
   for (const rung of l.postseason.ladder) out.push(rung.label, rung.phrase, rung.badge, rung.legend);
-  if (l.postseason.kind === 'ccs-ladder') {
-    out.push(l.postseason.citation);
-    for (const p of l.postseason.pairings) out.push(p.label, ...p.seatLabels);
-  } else {
-    const t = l.postseason;
-    out.push(t.name, t.titleNote, t.finalSite.label, ...Object.values(t.citations), ...t.rounds.map((x) => x.pairing));
+  const ps = l.postseason;
+  switch (ps.kind) {
+    case 'ccs-ladder':
+      out.push(ps.citation);
+      for (const p of ps.pairings) out.push(p.label, ...p.seatLabels);
+      break;
+    case 'league-tournament':
+      out.push(ps.name, ps.titleNote, ps.finalSite.label, ...Object.values(ps.citations), ...ps.rounds.map((x) => x.pairing));
+      break;
+    case 'unbracketed-tournament':
+      out.push(ps.name, ps.note, ...Object.values(ps.citations));
+      break;
   }
   out.push(...l.keyDates.map((k) => k.label));
   return out;
@@ -63,14 +70,16 @@ function expectViolation(mutate: () => () => void, message: RegExp): void {
 }
 
 describe('leagues: ids and helpers (SPEC §2.3)', () => {
-  it('configures the four leagues in order, and MCAL is the only tournament league', () => {
-    expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+  it('configures the five leagues in order: MCAL is the only bracketed tournament league, EAL the only unbracketed one', () => {
+    expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(CCS_LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal']);
     expect(TOURNAMENT_LEAGUE_IDS).toEqual(['mcal']);
+    expect(UNBRACKETED_LEAGUE_IDS).toEqual(['eal']);
     expect(ALL_DIVISIONS.map((d) => d.id)).toEqual([
-      'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county',
+      'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
     ]);
-    expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs']);
+    expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(SECTIONS.map((s) => s.shortName)).toEqual(['CCS', 'NCS', 'NS']);
   });
 
   it('labels divisions, and single-division leagues have no division heading', () => {
@@ -83,6 +92,10 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(divisionDisplay('mt-hamilton')).toBe('BVAL · Mt. Hamilton');
     expect(divisionDisplay('marin-county')).toBe('MCAL');
     expect(divisionDisplay('de-anza')).toBe('SCVAL · De Anza');
+    expect(divisionHeading('eal')).toBeNull();
+    expect(divisionLabel('eal')).toBe('EAL');
+    expect(divisionDisplay('eal')).toBe('EAL');
+    expect(isSingleDivision('eal')).toBe(true);
     expect(isSingleDivision('pcal')).toBe(true);
     expect(isSingleDivision('scval')).toBe(false);
   });
@@ -99,6 +112,12 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(getSection('ncs').holdsFieldHockeyChampionship).toBe(false);
     expect(sectionOf('mcal').id).toBe('ncs');
     expect(sectionOf('pcal').id).toBe('ccs');
+    expect(sectionOf('eal').id).toBe('ns');
+    expect(getSection('ns')).toMatchObject({
+      name: 'Northern Section', shortName: 'NS', holdsFieldHockeyChampionship: true,
+      officialUrl: 'https://www.cifns.org/sports/fh/index', noChampionshipNote: null,
+    });
+    expect(getDivision('eal').leagueId).toBe('eal');
     expect(() => getLeague('nope')).toThrow(/lib\/leagues\.ts/);
     expect(() => getDivision('nope')).toThrow(/lib\/leagues\.ts/);
     expect(() => getSection('xyz' as 'ccs')).toThrow(/lib\/leagues\.ts/);
@@ -114,6 +133,9 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leagueStandingsUrl('pcal')).toBe(
       'https://www.maxpreps.com/ca/field-hockey/26-27/league/pacific-coast--gabilan/?leagueid=50ac53cd-e46f-4df9-824b-5a954c583b95',
     );
+    expect(leagueStandingsUrl('eal')).toBe(
+      'https://www.maxpreps.com/ca/field-hockey/26-27/league/eastern-athletic/?leagueid=60959b47-b0cf-4d7d-b054-d8ea140870ef',
+    );
   });
 
   it('reads ladders, chains, statuses and dates', () => {
@@ -127,6 +149,10 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(statusesOf('scval')).toEqual(['aq', 'play-in', 'at-large', 'out']);
     expect(statusesOf('bval')).toEqual(['aq', 'play-in', 'no-aq-route']);
     expect(statusesOf('mcal')).toEqual(['bye', 'tournament', 'below-line']);
+    expect(statusesOf('eal')).toEqual(['tournament', 'below-line']);
+    expect(ladderRung('eal', 6).label).toBe('Super Regional place');
+    expect(ladderRung('eal', 7).status).toBe('below-line');
+    expect(tiebreakChainFor('eal', 1)).toEqual(['no-rule']);
     expect(tiebreakChainFor('pcal', 1)).toEqual(['head-to-head', 'record-vs-lower-placed', 'ccs-points']);
     expect(tiebreakChainFor('pcal', 2)).toEqual([
       'head-to-head', 'record-vs-higher-placed', 'record-vs-lower-placed', 'ccs-points',
@@ -139,19 +165,28 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayEnds('scval')).toBe('2026-10-28');
     expect(leaguePlayEnds('bval')).toBe('2026-10-30');
     expect(leaguePlayEnds('mcal')).toBe('2026-10-22');
+    expect(leaguePlayEnds('eal')).toBe('2026-10-28');
+    // The Northern Section's window (Aug 1 – Nov 7) sits inside the union.
     expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-30' });
   });
 
-  it('sets the overtime rule and the MCAL schedule-changes page', () => {
+  it('sets the overtime rule, the order scope and the MCAL schedule-changes page', () => {
     expect(LEAGUES.map((l) => [l.id, l.rules.leagueOvertime])).toEqual([
-      ['scval', 'sudden-victory'], ['bval', 'sudden-victory'], ['pcal', 'none'], ['mcal', 'none'],
+      ['scval', 'sudden-victory'], ['bval', 'sudden-victory'], ['pcal', 'none'], ['mcal', 'none'], ['eal', 'shootout'],
+    ]);
+    // Every league's own document orders its table by points, except the EAL's, which decides only the title.
+    expect(LEAGUES.map((l) => [l.id, l.rules.orderScope])).toEqual([
+      ['scval', 'table'], ['bval', 'table'], ['pcal', 'table'], ['mcal', 'table'], ['eal', 'title'],
+    ]);
+    expect(LEAGUES.map((l) => [l.id, l.membershipNote === null])).toEqual([
+      ['scval', true], ['bval', true], ['pcal', true], ['mcal', true], ['eal', false],
     ]);
     expect(getLeague('mcal').officialChanges).toEqual({
       url: 'https://www.mcalsports.org/Schedir.htm',
       cellMarker: 'Girls Field Hockey:',
       sha256: 'b1e5c523b251021522a77ed459d5d7035fe0c9100cb2b727f1ea63c467566b76',
     });
-    for (const id of ['scval', 'bval', 'pcal']) expect(getLeague(id).officialChanges).toBeNull();
+    for (const id of ['scval', 'bval', 'pcal', 'eal']) expect(getLeague(id).officialChanges).toBeNull();
     expect(CCS.bracketUrl).toBe(CCS_BRACKET_URL);
   });
 });
@@ -217,6 +252,53 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
   });
 });
 
+describe('leagues: the EAL (Northern Section)', () => {
+  const eal = getLeague('eal');
+  const division = getDivision('eal');
+
+  it('classifies by MaxPreps’ league flag behind official mode none, and lists Red Bluff as an extra row', () => {
+    expect(eal.rules.classification).toBe('contest-type');
+    expect(eal.rules.excludeContestTypes).toEqual([2, 4, 5]);
+    expect(eal.rules.postseasonFrom).toBe('2026-10-30');
+    expect(division.official.mode).toBe('none');
+    expect(division.official.mode === 'none' && division.official.note).toMatch(/^The EAL publishes no schedule or standings document of its own\./);
+    expect([division.expectedTeams, division.gamesPerTeam, division.maxprepsTeamCount]).toEqual([6, 10, 7]);
+    expect(division.leaguePlay).toEqual({ first: '2026-08-24', last: '2026-10-28' });
+    expect(division.maxprepsExtraRows).toEqual({
+      '4d3da788-bbe2-4ab9-b854-d95aa9786cda': 'Red Bluff: a 0-0-0 row with no games; not fielding a varsity team in 2026',
+    });
+    expect(division.reportedTrust).toBe('records-only');
+    expect(division.ladderLine).toBeNull();
+    expect(eal.withdrawnNames).toContain('Red Bluff');
+  });
+
+  it('is an unbracketed Super Regional for the top six, Oct 30-31', () => {
+    if (eal.postseason.kind !== 'unbracketed-tournament') throw new Error('eal is an unbracketed tournament league');
+    expect(eal.postseason).toMatchObject({
+      name: 'Super Regional', qualifiers: 6, dates: { first: '2026-10-30', last: '2026-10-31' },
+      sourceUrl: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf',
+    });
+    expect(Object.keys(eal.postseason.citations).sort()).toEqual(['eligibility', 'format', 'noFurtherPath', 'qualification', 'seeding']);
+    // §VII.J ties the deadline to "the Last contest of the season", one Section date, not each school's own last game.
+    expect(eal.postseason.citations.eligibility).toMatch(/by noon the day after the last contest of the season is not eligible/);
+    expect(eal.postseason.citations.eligibility).not.toMatch(/its last contest/);
+    expect(eal.keyDates.map((k) => [k.id, k.date])).toEqual([['league-play-ends', '2026-10-28'], ['super-regional', '2026-10-30']]);
+  });
+
+  it('records Red Bluff as not covered and its si.com ids as ignored', () => {
+    expect(DATA_QUALITY.notCovered.find((n) => n.name === 'Red Bluff')?.reason).toBe('Red Bluff is not fielding a varsity team in 2026.');
+    for (const id of ['490259', '490260', '635037']) expect(DATA_QUALITY.sbliveIgnoredTeamIds[id], id).toBeTruthy();
+  });
+
+  it('never says a Red Bluff team was cancelled or withdrew', () => {
+    const strings = [
+      ...renderedStrings(eal), ...Object.values(DATA_QUALITY.sbliveIgnoredTeamIds),
+      ...DATA_QUALITY.notCovered.map((n) => n.reason), ...Object.values(division.maxprepsExtraRows),
+    ];
+    for (const s of strings) expect(s, s).not.toMatch(/Red Bluff[^.;:]{0,80}\b(cancel\w*|withdr\w*|dropped|no (field hockey )?program)\b/i);
+  });
+});
+
 describe('leagues: never configured, never rendered', () => {
   it('never configures Pacific Coast - Mission', () => {
     const mission = '6e1f97d4-5211-4d98-bf59-282cd754bc5c';
@@ -271,6 +353,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
   it('2. every ladder covers 1..99 exactly once per division, with statuses of its kind', () => {
     const ccsStatuses: PlayoffStatus[] = ['aq', 'play-in', 'at-large', 'out', 'no-aq-route'];
     const tournamentStatuses: PlayoffStatus[] = ['bye', 'tournament', 'below-line'];
+    const unbracketedStatuses: PlayoffStatus[] = ['tournament', 'below-line'];
     for (const l of LEAGUES) {
       for (const d of l.divisions) {
         for (let p = 1; p <= 99; p++) {
@@ -280,7 +363,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
           expect(n, `${d.id} place ${p}`).toBe(1);
         }
       }
-      const allowed = l.postseason.kind === 'ccs-ladder' ? ccsStatuses : tournamentStatuses;
+      const allowed = { 'ccs-ladder': ccsStatuses, 'league-tournament': tournamentStatuses, 'unbracketed-tournament': unbracketedStatuses }[l.postseason.kind];
       for (const r of l.postseason.ladder) expect(allowed).toContain(r.status);
     }
     expectViolation(() => {
@@ -288,6 +371,41 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
       rung.places = [4, 99];
       return () => { rung.places = [3, 99]; };
     }, /covers place 3 0 times/);
+    expectViolation(() => {
+      const rung = getLeague('eal').postseason.ladder[1] as { status: PlayoffStatus };
+      rung.status = 'bye';
+      return () => { rung.status = 'below-line'; };
+    }, /ladder status bye not allowed for unbracketed-tournament/);
+  });
+
+  it('2b. an unbracketed tournament: places 1..qualifiers are tournament, no rung straddles, dates after league play', () => {
+    expectViolation(() => {
+      const [a, b] = getLeague('eal').postseason.ladder as unknown as Array<{ places: readonly [number, number] }>;
+      a.places = [1, 7];
+      b.places = [8, 99];
+      return () => { a.places = [1, 6]; b.places = [7, 99]; };
+    }, /places 1-6 \(and only they\) are 'tournament'/);
+    expectViolation(() => {
+      const [a, b] = getLeague('eal').postseason.ladder as unknown as Array<{ places: readonly [number, number] }>;
+      a.places = [1, 5];
+      b.places = [6, 99];
+      return () => { a.places = [1, 6]; b.places = [7, 99]; };
+    }, /straddles the 6 qualifiers/);
+    expectViolation(() => {
+      const dates = (getLeague('eal').postseason as { dates: { first: string } }).dates;
+      dates.first = '2026-10-28';
+      return () => { dates.first = '2026-10-30'; };
+    }, /dates\.first is not after leaguePlay\.last/);
+    expectViolation(() => {
+      const rules = getLeague('eal').rules as { postseasonFrom: string | null };
+      rules.postseasonFrom = null;
+      return () => { rules.postseasonFrom = '2026-10-30'; };
+    }, /postseasonFrom on or before dates\.first/);
+    expectViolation(() => {
+      const ps = getLeague('eal').postseason as { sourceUrl: string };
+      ps.sourceUrl = 'http://www.cifns.org/';
+      return () => { ps.sourceUrl = 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf'; };
+    }, /sourceUrl must start with https/);
   });
 
   it('3. the CCS field: keys, per-league berths, 7 + 4 + 2 + 3 === 16', () => {
@@ -417,6 +535,66 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     }, /bundled/);
   });
 
+  it("10b. official mode 'none' only on a contest-type league, with a note", () => {
+    for (const d of ALL_DIVISIONS) {
+      if (d.official.mode !== 'none') continue;
+      expect(leagueOfDivision(d.id).rules.classification, d.id).toBe('contest-type');
+      expect(d.official.note.length, d.id).toBeGreaterThan(0);
+    }
+    expectViolation(() => {
+      const d = getDivision('pcal') as { official: unknown };
+      const before = d.official;
+      d.official = { mode: 'none', note: 'PCAL publishes nothing.' };
+      return () => { d.official = before; };
+    }, /official mode 'none' on an official-fixtures league/);
+    expectViolation(() => {
+      const o = getDivision('eal').official as { note: string };
+      const before = o.note;
+      o.note = ' ';
+      return () => { o.note = before; };
+    }, /needs a note/);
+  });
+
+  it('13. MaxPreps rows: maxprepsTeamCount + maxprepsMissing − maxprepsExtraRows === expectedTeams', () => {
+    for (const d of ALL_DIVISIONS) {
+      expect(d.maxprepsTeamCount + d.maxprepsMissing.length - Object.keys(d.maxprepsExtraRows).length, d.id).toBe(d.expectedTeams);
+    }
+    expectViolation(() => {
+      const d = getDivision('eal') as { maxprepsTeamCount: number };
+      d.maxprepsTeamCount = 6;
+      return () => { d.maxprepsTeamCount = 7; };
+    }, /maxprepsTeamCount \+ maxprepsMissing − maxprepsExtraRows/);
+    expectViolation(() => {
+      const d = getDivision('eal') as { maxprepsExtraRows: Record<string, string> };
+      const before = d.maxprepsExtraRows;
+      d.maxprepsExtraRows = { 'red-bluff': 'not a GUID' };
+      return () => { d.maxprepsExtraRows = before; };
+    }, /is not a GUID/);
+  });
+
+  it('14. rule shapes: no excluded league flag, 1 v 1s only by contest type, a non-empty membership note', () => {
+    expectViolation(() => {
+      const r = getLeague('eal').rules as { excludeContestTypes: readonly number[] };
+      r.excludeContestTypes = [0, 2];
+      return () => { r.excludeContestTypes = [2, 4, 5]; };
+    }, /excludeContestTypes may not contain 0/);
+    expectViolation(() => {
+      const r = getLeague('mcal').rules as { leagueOvertime: string };
+      r.leagueOvertime = 'shootout';
+      return () => { r.leagueOvertime = 'none'; };
+    }, /leagueOvertime 'shootout' needs classification 'contest-type'/);
+    expectViolation(() => {
+      const l = getLeague('bval') as { membershipNote: string | null };
+      l.membershipNote = '';
+      return () => { l.membershipNote = null; };
+    }, /membershipNote is empty/);
+    expectViolation(() => {
+      const s = getSection('ns') as { shortName: string };
+      s.shortName = 'NCS';
+      return () => { s.shortName = 'NS'; };
+    }, /duplicate section shortName: NCS/);
+  });
+
   it('11. place-relative stages appear only in byBucketStart chains for 1 and 2', () => {
     for (const l of LEAGUES) {
       for (const [start, chain] of chainsOf(l)) {
@@ -437,9 +615,21 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     for (const d of ALL_DIVISIONS) {
       expect(d.home.miniRows).toBeLessThanOrEqual(d.expectedTeams);
       if (d.home.lineAfter !== null) expect(d.home.lineAfter).toBeLessThan(d.home.miniRows);
-      expect(d.ladderLine.after).toBeLessThan(d.expectedTeams);
+      if (d.ladderLine !== null) expect(d.ladderLine.after).toBeLessThan(d.expectedTeams);
+      else {
+        const ps = leagueOfDivision(d.id).postseason;
+        expect(ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams, d.id).toBe(true);
+      }
     }
-    expect(LEAGUES.map((l) => l.postseason.kind)).toEqual(['ccs-ladder', 'ccs-ladder', 'ccs-ladder', 'league-tournament']);
+    expect(LEAGUES.map((l) => l.postseason.kind)).toEqual([
+      'ccs-ladder', 'ccs-ladder', 'ccs-ladder', 'league-tournament', 'unbracketed-tournament',
+    ]);
+    expectViolation(() => {
+      const d = getDivision('pcal') as { ladderLine: { after: number; label: string } | null };
+      const before = d.ladderLine;
+      d.ladderLine = null;
+      return () => { d.ladderLine = before; };
+    }, /ladderLine may be null only for an unbracketed tournament/);
     expectViolation(() => {
       const h = getDivision('santa-teresa').home as { miniRows: number };
       h.miniRows = 7;

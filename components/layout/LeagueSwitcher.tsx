@@ -1,17 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { setLeague, useEffectiveLeague } from '../ui/use-league';
+import type { SectionConfig } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 /**
  * The league chips (SPEC §8.3). One component, three modes:
  *
  * - `scope` (home): `<div role="group">` of `<button aria-pressed>` chips — `All SCVAL BVAL PCAL
- *   MCAL` — and the ONLY chips that write the remembered league (`setLeague`). The selected chip is
- *   drawn by the scope stylesheet from `html[data-league]` before hydration
+ *   MCAL EAL` — and the ONLY chips that write the remembered league (`setLeague`). The selected
+ *   chip is drawn by the scope stylesheet from `html[data-league]` before hydration
  *   (`[data-league-option]`, components/layout/league-scope-css.ts) and is announced through
  *   `aria-pressed` after. Hidden without JS (`sx-js-only`), and `disabled` until hydrated: a tap
  *   before hydration would do nothing. A polite live region says what a tap did.
@@ -21,15 +22,16 @@ import type { LeagueId } from '../../lib/types';
  * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links. Never writes.
  *
  * Chip token: `text-micro` weight 600, `min-h-11 min-w-11 px-2`, 6px gap, `flex-wrap` (200% text
- * zoom wraps rather than clipping). No visible section captions: the league chips sit in two
- * lists labelled `Central Coast Section` / `North Coast Section`, split by a hairline; the `All`
- * chip precedes both. The current chip is the accent wash, accent ink, a 1.5px ink ring AND an
- * aria-hidden ✓ (`.sx-chip-check`) — never colour alone. No league hue anywhere.
+ * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
+ * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section`, split
+ * by hairlines; the `All` chip precedes them all. The current chip is the accent wash, accent ink,
+ * a 1.5px ink ring AND an aria-hidden ✓ (`.sx-chip-check`) — never colour alone. No league hue
+ * anywhere.
  */
 export interface LeagueChip {
   id: LeagueId;
   shortName: string;
-  sectionShort: 'CCS' | 'NCS';
+  sectionShort: SectionConfig['shortName'];
 }
 
 export interface LeagueSwitcherProps {
@@ -47,9 +49,14 @@ export interface LeagueSwitcherProps {
   className?: string;
 }
 
-const SECTION_NAMES: Readonly<Record<LeagueChip['sectionShort'], string>> = {
+/**
+ * Spelled out rather than read from SECTIONS: this is a client component, and the league config
+ * stays out of client bundles. The `Record` type makes a new section a compile error here.
+ */
+const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
   CCS: 'Central Coast Section',
   NCS: 'North Coast Section',
+  NS: 'Northern Section',
 };
 
 /** The `All` chip's option value (matches the stored `'all'`). */
@@ -76,9 +83,16 @@ function Check() {
   );
 }
 
-function Separator() {
-  return <span aria-hidden="true" className="h-6 w-px shrink-0 self-center bg-hairline" />;
-}
+/** A section list's classes. */
+const SECTION_LIST = 'm-0 flex list-none flex-wrap items-center gap-1.5 p-0';
+
+/**
+ * The hairline that splits one section from the next, drawn by the list it introduces (a `::before`,
+ * so it is never in the accessibility tree). A separate flex item in the outer row could be left at
+ * the end of a line when the next section wraps (All + five chips at 320-360px, or 200% text zoom);
+ * as the list's own first box it always travels with that list and leads its line.
+ */
+const SECTION_DIVIDER = 'before:h-6 before:w-px before:shrink-0 before:self-center before:bg-hairline';
 
 /** The two (or more) section lists, split by hairlines. `chip` renders one league's control. */
 function SectionLists({
@@ -89,16 +103,17 @@ function SectionLists({
   chip: (league: LeagueChip) => React.ReactNode;
 }) {
   return bySection(leagues).map((group, i) => (
-    <Fragment key={group.section}>
-      {i > 0 ? <Separator /> : null}
-      <ul aria-label={SECTION_NAMES[group.section]} className="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
-        {group.leagues.map((league) => (
-          <li key={league.id} className="flex">
-            {chip(league)}
-          </li>
-        ))}
-      </ul>
-    </Fragment>
+    <ul
+      key={group.section}
+      aria-label={SECTION_NAMES[group.section]}
+      className={i > 0 ? `${SECTION_LIST} ${SECTION_DIVIDER}` : SECTION_LIST}
+    >
+      {group.leagues.map((league) => (
+        <li key={league.id} className="flex">
+          {chip(league)}
+        </li>
+      ))}
+    </ul>
   ));
 }
 

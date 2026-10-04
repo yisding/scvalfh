@@ -80,6 +80,9 @@ if (!workerOnly) {
   // the search index on slug instead of each carrying the team's name and colors (−1.1 KB HTML,
   // −1.0 KB RSC), which left 48.1 / 28.4 KB. 2.2 × (54.9 / 33.9 KB) leaves about 12 % for what the
   // season adds (postseason lines and cards), not room for a new section.
+  // Unchanged for the EAL (DESIGN §22.6): on 2026-10-04 (build instant 12:00 UTC) the five-league
+  // home page, its fifth panel and card and 49 pinned-card views, measured 52,466 / 31,908 B
+  // (93 % / 92 % of the line); the four-league tree before it, built the same day, 49,255 / 29,100 B.
   check('/ HTML gzip', gz(file('index.html')), 2.2 * baseline.index.htmlGzip, '2.2 × index');
   check('/ RSC gzip', gz(file('index.rsc')), 2.2 * baseline.index.rscGzip, '2.2 × index');
   check('/standings HTML gzip', gz(file('standings.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
@@ -90,14 +93,17 @@ if (!workerOnly) {
     check(`/schedule/${id} HTML gzip`, gz(file(`schedule/${id}.html`)), 1.25 * baseline.schedule.htmlGzip, '1.25 × schedule');
   }
   check('/schedule HTML gzip', gz(file('schedule.html')), 0.5 * baseline.schedule.htmlGzip, '0.5 × schedule');
+  // 49 teams on 2026-10-04: 27,546 B (2.85 ×, 95 % of the line), from 25,316 B for the 43 teams
+  // of the four-league tree built the same day. Unchanged; the next league will need the room.
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
   // Ten boards of at most 15 rows each (components/leaders/leaders-view.ts), so the page cannot
   // grow with the season the way a schedule does: ~28 KB on 2026-10-03.
   check('/leaders HTML gzip', gz(file('leaders.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
-  // Every team page, all 43: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
+  // Every team page, all 49: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
   // 4.2 × the 9,681 B baseline) with both the Roster and the Player stats section; 6.0 × leaves room
-  // for a busy week of games, not for a table per player.
+  // for a busy week of games, not for a table per player. On 2026-10-04 Tamalpais was still the
+  // largest (41,605 B, 4.3 ×) and the largest EAL page was Davis (37,276 B).
   const teamDir = path.join(APP, 'teams');
   const teamPages = existsSync(teamDir) ? readdirSync(teamDir).filter((f) => f.endsWith('.html')).sort() : [];
   if (teamPages.length === 0) failures.push(`${teamDir} has no prerendered team pages — run \`pnpm build\` first`);
@@ -111,6 +117,8 @@ if (!workerOnly) {
   if (!existsSync(STATS)) {
     failures.push(`${STATS} missing — run \`pnpm build\` first`);
   } else {
+    // The EAL moved these by at most 49 B on 2026-10-04 (no config reached a client bundle); the
+    // tightest is still /teams, 485,650 of 490,367 B.
     const stats = JSON.parse(readFileSync(STATS, 'utf8')) as Array<{ route: string; firstLoadUncompressedJsBytes: number }>;
     const js: Array<[route: string, base: BaselineName]> = [
       ['/', 'index'],

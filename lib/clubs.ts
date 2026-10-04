@@ -1,5 +1,5 @@
 /**
- * The read API for data/clubs.json — the youth field hockey clubs, and which players on the 43
+ * The read API for data/clubs.json — the youth field hockey clubs, and which players on the
  * tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see

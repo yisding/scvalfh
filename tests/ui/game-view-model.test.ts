@@ -211,12 +211,12 @@ describe('si.com source line and the conflict block (components/game/GameSources
 });
 
 describe('FormGoingIn non-member copy (components/game/FormGoingIn.tsx)', () => {
-  it('names the 43 teams this site follows', async () => {
+  it('names the 49 teams this site follows', async () => {
     const g = L.d.getGames().find((x) => (x.home.slug === null) !== (x.away.slug === null))!;
     const { FormGoingIn } = await import('../../components/game/FormGoingIn');
     const html = renderToStaticMarkup(createElement(FormGoingIn, { model: L.m.buildGameModel(g.contestId)! }));
     expect(textOf(html), 'components/game/FormGoingIn.tsx').toContain(
-      'Not one of the 43 teams this site follows — no record is kept here.',
+      'Not one of the 49 teams this site follows — no record is kept here.',
     );
   });
 });

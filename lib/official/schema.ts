@@ -18,7 +18,7 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
-import { getLeague, leagueOfDivision } from '../leagues';
+import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '../leagues';
 import { resolveOfficialName } from '../teams';
 import type { DivisionId, LeagueId, OfficialFixture, OfficialSourceId, TeamSlug } from '../types';
 
@@ -85,9 +85,27 @@ export function officialFixtureId(
   return `${division}:${dateKey}:${away.slug ?? away.name}@${home.slug ?? home.name}`;
 }
 
+/** A division's own schedule document: the 'live-pdf' and 'bundled' arm of `DivisionConfig.official`. */
+export type OfficialDocumentConfig = Extract<DivisionConfig['official'], { mode: 'live-pdf' | 'bundled' }>;
+
+/** A division whose league publishes a schedule document (every division but a mode-'none' one: EAL). */
+export type DocumentDivision = DivisionConfig & { official: OfficialDocumentConfig };
+
+/** True when the division has a schedule document; false for official mode 'none' (no fixtures exist). */
+export function hasOfficialDocument(d: DivisionConfig): d is DocumentDivision {
+  return d.official.mode !== 'none';
+}
+
+/** A division's schedule document; throws for a division whose league publishes none (mode 'none'). */
+export function officialDocumentOf(division: DivisionId): OfficialDocumentConfig {
+  const d = getDivision(division);
+  if (!hasOfficialDocument(d)) throw new Error(`lib/official/schema.ts: ${division} publishes no official schedule`);
+  return d.official;
+}
+
 /** The bundled divisions of a league, config order. */
-export function bundledDivisions(leagueId: LeagueId) {
-  return getLeague(leagueId).divisions.filter((d) => d.official.mode === 'bundled');
+export function bundledDivisions(leagueId: LeagueId): DocumentDivision[] {
+  return getLeague(leagueId).divisions.filter((d): d is DocumentDivision => d.official.mode === 'bundled');
 }
 
 /** The one bundle file a league's bundled divisions share (repo-relative), or null when it has none. */

@@ -1,5 +1,5 @@
 /**
- * `lib/pin-label.ts` over the real 43-team registry (SPEC §10.1).
+ * `lib/pin-label.ts` over the real 49-team registry (SPEC §10.1).
  *
  * WCAG 2.5.3 Label in Name: a tile's VISIBLE label is `shortName`, so the accessible name has to contain it.
  * The picker's break points are asserted against tests/ui/text-metrics.ts (static Geist 12 px / 500 widths),
@@ -37,23 +37,25 @@ describe('pinLabel', () => {
     expect(byslug('carmel')).toBe('Pin Carmel, PCAL');
     expect(byslug('mitty')).toBe('Pin Archbishop Mitty, El Camino · SCVAL');
     expect(byslug('saint-francis')).toBe('Pin St Francis (Saint Francis), De Anza · SCVAL');
+    expect(byslug('davis')).toBe('Pin Davis, EAL');
+    expect(byslug('pleasant-valley')).toBe('Pin Pleasant Val. (Pleasant Valley), EAL');
   });
 
-  it('has the label format for all 43 teams', () => {
-    expect(IDENTITIES.length).toBe(43);
+  it('has the label format for all 49 teams', () => {
+    expect(IDENTITIES.length).toBe(49);
     for (const t of IDENTITIES) {
       const label = pinLabel(t);
       const tail = `, ${t.divisionHeading === null ? '' : `${t.divisionHeading} · `}${t.leagueShort}`;
       expect(label.startsWith('Pin '), t.slug).toBe(true);
       expect(label.endsWith(tail), t.slug).toBe(true);
       expect(label, t.slug).toContain(t.name);
-      // Single-division leagues (PCAL, MCAL) carry no division label.
-      if (t.leagueShort === 'PCAL' || t.leagueShort === 'MCAL') expect(label, t.slug).not.toContain(' · ');
+      // Single-division leagues (PCAL, MCAL, EAL) carry no division label.
+      if (['PCAL', 'MCAL', 'EAL'].includes(t.leagueShort)) expect(label, t.slug).not.toContain(' · ');
       expect(label, t.slug).not.toContain('Division');
     }
   });
 
-  it('contains the visible tile label (WCAG 2.5.3) for all 43 teams', () => {
+  it('contains the visible tile label (WCAG 2.5.3) for all 49 teams', () => {
     for (const t of IDENTITIES) {
       expect(pinLabel(t).toLowerCase(), t.slug).toContain(t.shortName.toLowerCase());
     }
@@ -64,6 +66,7 @@ describe('pinLabel', () => {
     expect(bracketed.map((t) => t.slug).sort()).toEqual([
       'archie-williams',
       'lick-wilmerding',
+      'pleasant-valley',
       'saint-francis',
       'st-ignatius',
       'university-sf',

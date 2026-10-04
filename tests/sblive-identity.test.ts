@@ -1,9 +1,9 @@
 /**
  * Id-first si.com side resolution (SPEC §7.9, owner decision D2 rule 7).
  *
- * The three statewide namesakes — University (Irvine 458756 / San Francisco 456869), Los Altos
- * (Hacienda Heights 458731 / Los Altos 458850) and Santa Clara (Oxnard 456804 / Santa Clara 496839) —
- * must NEVER resolve by name; a registry team resolves by its si.com team id or school id. Ported from
+ * The four statewide namesakes — University (Irvine 458756 / San Francisco 456869), Los Altos
+ * (Hacienda Heights 458731 / Los Altos 458850), Santa Clara (Oxnard 456804 / Santa Clara 496839) and
+ * Davis (Modesto 458828 / Davis 458605) — must NEVER resolve by name; a registry team resolves by its si.com team id or school id. Ported from
  * the research draft (tests/fixtures/sblive/identity/sblive-identity.test.draft.ts.txt, prototype in
  * proto-resolver.ts.txt) and run against the captured si.com pages in tests/fixtures/sblive/identity/.
  */
@@ -92,8 +92,8 @@ const scoreboard = (teams: Array<{ name: string; image: string | null }>) =>
   });
 
 describe('sblive identity: the resolver, step by step', () => {
-  it('lists exactly the three statewide namesakes', () => {
-    expect([...STATEWIDE_AMBIGUOUS].sort()).toEqual(['losaltos', 'santaclara', 'university']);
+  it('lists exactly the four statewide namesakes', () => {
+    expect([...STATEWIDE_AMBIGUOUS].sort()).toEqual(['davis', 'losaltos', 'santaclara', 'university']);
     expect(STATEWIDE_AMBIGUOUS.has(normalizeTeamKey('Los Altos High School'))).toBe(true);
   });
 
@@ -105,7 +105,7 @@ describe('sblive identity: the resolver, step by step', () => {
     expect(sbliveIdsFrom({ name: 'x' })).toEqual({ teamId: null, schoolId: null });
   });
 
-  // The prototype's 14 regression cases (name, si.com team id, si.com school id → slug).
+  // The prototype's 14 regression cases (name, si.com team id, si.com school id → slug), plus Davis.
   const cases: Array<[string, string | null, string | null, string | null]> = [
     ['University', '458756', null, null],
     ['University', '999999', null, null],
@@ -121,6 +121,10 @@ describe('sblive identity: the resolver, step by step', () => {
     ['Santa Clara', '496839', null, 'santa-clara'],
     ['Tamalpais', null, null, 'tamalpais'],
     ['Convent & Stuart Hall', null, '6922', 'convent-sacred-heart'],
+    ['Davis', '458828', null, null],
+    ['Davis', null, null, null],
+    ['Davis', '458605', null, 'davis'],
+    ['Davis', null, '10575', 'davis'],
   ];
   it.each(cases)('%s (team %s, school %s) → %s', (name, teamId, schoolId, want) => {
     const r = resolveSbliveSide({ name, rawId: teamId, image: schoolId ? IMG_SCHOOL(schoolId) : null });
@@ -228,7 +232,7 @@ describe('sblive identity: the captured si.com pages', () => {
     const namesakes = refs.filter((r) => ['University', 'Los Altos', 'Santa Clara'].includes(r.name));
     expect(namesakes.map((r) => r.sbliveTeamId).sort()).toEqual(['456804', '458731', '458756']);
     expect(namesakes.every((r) => r.slug === null)).toBe(true);
-    // No row on these three Southern California pages is one of our 43 teams.
+    // No row on these three Southern California pages is one of our 49 teams.
     expect(refs.filter((r) => r.slug !== null)).toEqual([]);
   });
 
@@ -269,6 +273,9 @@ describe('sblive identity: the captured si.com pages', () => {
     expect(named('Los Altos').length).toBeGreaterThan(0);
     for (const s of named('Los Altos')) expect(s).toMatchObject({ slug: 'los-altos', via: 'team-id', sbliveTeamId: '458850' });
     for (const s of named('Tamalpais')) expect(s).toMatchObject({ slug: 'tamalpais', via: 'school-id' });
+    // Davis (an EAL team; Modesto has a Davis too) resolves through its school logo id only.
+    expect(named('Davis').length).toBeGreaterThan(0);
+    for (const s of named('Davis')) expect(s).toMatchObject({ slug: 'davis', via: 'school-id', sbliveSchoolId: '10575' });
     // Nothing ever resolves by name on a scoreboard to one of the namesakes.
     expect(sides.filter((s) => s.via === 'name' && STATEWIDE_AMBIGUOUS.has(normalizeTeamKey(s.name)))).toEqual([]);
   });

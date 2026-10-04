@@ -38,7 +38,9 @@ export default function StandingsOpengraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: 64,
+          // Five league rows (EAL added): less vertical padding keeps the footer clear of the last
+          // row, with room for a row that wraps.
+          padding: '48px 64px',
           background: '#0b0d10',
           color: INK,
           fontFamily: 'sans-serif',
@@ -54,11 +56,11 @@ export default function StandingsOpengraphImage() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {leaders.map(({ league, lines }) => (
             <div
               key={league.id}
-              style={{ display: 'flex', alignItems: 'baseline', gap: 24, borderTop: `1px solid ${RULE}`, paddingTop: 12 }}
+              style={{ display: 'flex', alignItems: 'baseline', gap: 24, borderTop: `1px solid ${RULE}`, paddingTop: 10 }}
             >
               <div style={{ display: 'flex', width: 120, fontSize: 30, fontWeight: 600 }}>{league.shortName}</div>
               <div style={{ display: 'flex', flex: 1, fontSize: 26, color: DIM }}>{leaderClause(lines)}</div>

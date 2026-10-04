@@ -4,8 +4,8 @@
  * runPipeline → write outputs. A run abort (RunAbort) exits 1 and writes nothing, so the previous
  * snapshot stays.
  *
- *   pnpm fetch-data                          live: the 56-request MaxPreps sweep (1 bootstrap + 6 league
- *                                            metas + 6 standings + 43 schedules, ≤3 concurrent, ≥500 ms
+ *   pnpm fetch-data                          live: the 64-request MaxPreps sweep (1 bootstrap + 7 league
+ *                                            metas + 7 standings + 49 schedules, ≤3 concurrent, ≥500 ms
  *                                            apart) plus the official, si.com, VNN and CCS sources
  *   pnpm fetch-data --fixtures <dir>         offline: a manifest-driven corpus (lib/pipeline/corpus.ts)
  *   pnpm fetch-data --variant <dir>          … with a variant overlay (repeatable)

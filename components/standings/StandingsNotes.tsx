@@ -14,7 +14,9 @@ import type { ComparisonView, MismatchNote, MissingRowView } from './standings-v
  *  1. The table's own notes: shared places, the team with no results, any `standing.mismatch`.
  *  2. Missing official results (`id="missing-<division>"`): official fixtures dated before today
  *     with no counted result, each with si.com's score when si.com has one that the site's
- *     backfill rule did not publish (and why); postponed fixtures after them, never counted.
+ *     backfill rule did not publish (and why); postponed fixtures after them, never counted. A
+ *     league with no schedule document (EAL) lists the past games MaxPreps marks as league games
+ *     instead, and its intro never says "official".
  *  3. The comparison with MaxPreps' own published table: agreement is printed only when the
  *     division's trust is not informational, MaxPreps leaves no one out and no row differs —
  *     otherwise the known cause and each team MaxPreps leaves out, then the differing figures.
@@ -35,7 +37,8 @@ import type { ComparisonView, MismatchNote, MissingRowView } from './standings-v
  *  4. Division-specific footnotes (league games played with no score; no league results yet).
  *  5. `Scheduled per <SHORT>` and one row of links: the cross-check log, MaxPreps' table, the
  *     official schedule (labelled by its source: PDF or Google Doc). They are standalone actions
- *     (`sx-action`, a 24px floor), with no `·` text nodes between them.
+ *     (`sx-action`, a 24px floor), with no `·` text nodes between them. A league that publishes no
+ *     schedule (EAL) gets its own source line and no official-schedule link.
  *
  * It shares an `lg` row with the postseason card, so it takes the card's padding, radius and
  * `text-lead` h3 and the two read as one row; the inset surface stays, because this is commentary.
@@ -63,10 +66,11 @@ export interface StandingsNotesProps {
   footnotes?: string[];
   /** The MaxPreps league table for this division. */
   sourceUrl?: string;
-  officialSchedule: { href: string; label: string };
-  /** `Scheduled per <SHORT>` */
+  /** The league's schedule document; null when it publishes none (EAL): no link is drawn. */
+  officialSchedule: { href: string; label: string } | null;
+  /** `Scheduled per <SHORT>`, or `League games as MaxPreps marks them (<SHORT> publishes no schedule)`. */
   scheduledPer: string;
-  /** `<SHORT> ranks by points (<citation>), and so do we.` (standings-view `rankRule`). */
+  /** `<SHORT> ranks by points (<citation>), and so do we.` or the EAL's title-only wording (standings-view `rankRule`). */
   rankRule: string;
   /**
    * What settles a level place (standings-view `levelReason`). Accepted but not printed: the
@@ -404,12 +408,14 @@ export function StandingsNotes({
           ) : null}
           {/* The division name is in the accessible name only: the block already sits under its
               heading, but a links list read out of context would show two identical names. */}
-          <ExternalLink href={officialSchedule.href} className="sx-action gap-1 font-medium">
-            <span>
-              {officialSchedule.label}
-              <span className="sr-only"> for {divisionLabel}</span>
-            </span>
-          </ExternalLink>
+          {officialSchedule ? (
+            <ExternalLink href={officialSchedule.href} className="sx-action gap-1 font-medium">
+              <span>
+                {officialSchedule.label}
+                <span className="sr-only"> for {divisionLabel}</span>
+              </span>
+            </ExternalLink>
+          ) : null}
         </div>
       </div>
     </div>

@@ -6,7 +6,9 @@ import type { GameDisplay, StatusTone } from './game-view';
  * CANCELLED · the time · TIME TBA (DESIGN §5.2, §6.5 channel 2), plus the game's chips
  * (SPEC §10.4): the league chip (`SCVAL`, `BVAL`, …) of a counted game or `NL` for a non-league
  * game (both from `countsFor`), the postseason chip (`SCVAL crossover`, `BVAL play-in`,
- * `MCAL tournament`, `CCS`), and the `†` marker of a score published from si.com.
+ * `MCAL tournament`, `EAL Super Regional`, `CCS`), and the `†` marker of a score published from
+ * si.com. The decider tag ('OT', '2 OT', 'SO', 'F') carries its meaning in words for a screen
+ * reader: 'by forfeit', 'decided on 1 v 1s' (an EAL 1 v 1 win), else 'after overtime'.
  *
  * Channel 2 is never abbreviated to a dot, and LIVE always carries the word as well as the
  * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
@@ -30,6 +32,9 @@ const TONE: Record<StatusTone, string> = {
   'ink-3': 'text-ink-3',
   accent: 'text-accent-ink',
 };
+
+/** The accessible words of a decider tag other than 'OT' / '2 OT' (both 'after overtime'). */
+const DECIDER_LABEL: Readonly<Record<string, string>> = { F: 'by forfeit', SO: 'decided on 1 v 1s' };
 
 /** The † beside a score published from si.com: a title for a pointer, words for a screen reader. */
 export function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
@@ -75,9 +80,7 @@ export function StatusLabel({ display, showNonLeague = true, className }: Status
       {display.liveDot ? <span className="sx-live-dot" aria-hidden="true" /> : null}
       <span className={display.strikeTime ? 'line-through' : undefined}>{display.statusLabel}</span>
       {display.deciderTag ? (
-        <Tag label={display.deciderTag === 'F' ? 'by forfeit' : 'after overtime'}>
-          {display.deciderTag}
-        </Tag>
+        <Tag label={DECIDER_LABEL[display.deciderTag] ?? 'after overtime'}>{display.deciderTag}</Tag>
       ) : null}
       {display.shootoutText ? (
         <span className="sx-num normal-case tracking-normal text-ink-3">

@@ -30,7 +30,7 @@ import {
   getTeamForm,
   getTeams,
 } from '../../lib/data';
-import { dateWithYear, monthDay, recordString, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, monthDay, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
 import {
   divisionDisplay,
@@ -38,6 +38,7 @@ import {
   findDivision,
   findLeague,
   getLeague,
+  getSection,
   leagueOfDivision,
   type LeagueConfig,
 } from '../../lib/leagues';
@@ -55,7 +56,7 @@ import type {
   TournamentGame,
 } from '../../lib/types';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/game-view';
 
 // ---------------------------------------------------------------- types
 
@@ -69,7 +70,7 @@ export interface GameSideModel {
    * which uses the team's short name to match the meeting rows above it.
    */
   label: string;
-  /** Present only for one of the 43 teams this site follows; anyone else is a name (DESIGN §8). */
+  /** Present only for one of the teams this site follows; anyone else is a name (DESIGN §8). */
   team: Team | undefined;
   standing: Standing | undefined;
   /**
@@ -190,6 +191,13 @@ export interface GameModel {
   countsAs: CountsAs;
   /** The postseason notes: `MCAL tournament game — it does not count in the league table.` + the shootout caveat. */
   postseasonNotes: string[];
+  /**
+   * How this site reads a score the feed cannot state plainly, or null: a level final decided on
+   * 1 v 1s (decider 'SO', the EAL) says who MaxPreps marks the winner and that the tally is not
+   * shown; a game whose overtime count the league's rules rule out (`overtimeInDoubt`) says the
+   * score is shown as MaxPreps has it.
+   */
+  scoreNote: string | null;
   /** How many teams this site follows (the non-member copy names it). */
   memberCount: number;
   /** "Thu Sep 24" — the back link to /scores/[date]. */
@@ -431,6 +439,8 @@ function hasResultConflict(g: Game): boolean {
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
   const note = (game.provenance.resultConflict as string).trim().replace(/[.\s]+$/, '');
+  // A 1 v 1 win is level on goals and a win here: `scoreNote` says so, so no tie sentence.
+  if (game.decider === 'SO') return `${note}.`;
   const level = game.home.score !== null && game.home.score === game.away.score;
   return level
     ? `${note}. The score is level, so this site counts it as a tie.`
@@ -455,13 +465,13 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
     }
     if (display.kind !== 'final') continue;
     played += 1;
-    // The legs are home-and-away, so align every row on THIS game's home side.
-    const thisGameHomeIsRowHome = sideKey(g.home) === keyHome;
-    const rowHome = display.home.weight;
-    if (rowHome === 'level') {
+    // The legs are home-and-away, so align every row on THIS game's home side. `sideOutcome`
+    // is the one W/L/T rule, so a 1 v 1 win is a win here, not a tie.
+    const outcome = sideOutcome(g, sideKey(g.home) === keyHome ? 'home' : 'away');
+    if (outcome === 'T') {
       ties += 1;
       if (hasResultConflict(g)) flaggedTies.push(g);
-    } else if ((rowHome === 'winner') === thisGameHomeIsRowHome) {
+    } else if (outcome === 'W') {
       homeWins += 1;
     } else {
       awayWins += 1;
@@ -635,6 +645,16 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
       notes,
     };
   }
+  if (tag.kind === 'league-postseason' && league && league.postseason.kind === 'unbracketed-tournament') {
+    // The EAL Super Regional: a counted-nowhere game with no bracket slot to name.
+    const sentence = `${league.postseason.name} game — it does not count in the league table.`;
+    const label = `${league.shortName} ${league.postseason.name}`;
+    return {
+      contextLabel: label,
+      countsAs: { label, detail: sentence, classificationNote: null },
+      notes: [sentence],
+    };
+  }
   if ((tag.kind === 'scval-crossover' || tag.kind === 'bval-play-in') && league) {
     const label = `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
     const sentence = `${league.shortName} postseason game — it does not count in the league table.`;
@@ -658,6 +678,39 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     countsAs: { label: 'Postseason game', detail: sentence, classificationNote: null },
     notes: [sentence],
   };
+}
+
+/**
+ * `scoreNote` (D7): what this site does with a score the feed cannot state plainly. The rule it
+ * cites is the one a 1 v 1 league's Guidelines give (only the EAL's has `leagueOvertime`
+ * 'shootout' today): a 10-minute sudden-victory period, then 1 v 1s. Goals come from the view's
+ * glyphs, never from the score fields.
+ */
+function scoreNoteFor(
+  game: Game,
+  display: GameDisplay,
+  league: LeagueConfig | null,
+  away: GameSideModel,
+  home: GameSideModel,
+): string | null {
+  if (!league || league.rules.leagueOvertime !== 'shootout') return null;
+  const rule = `${getSection(league.sectionId).name} Field Hockey Guidelines §VII.E.4`;
+  const notes: string[] = [];
+  if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null) {
+    const outcome = sideOutcome(game, 'home');
+    if (outcome === 'W' || outcome === 'L') {
+      const winner = outcome === 'W' ? home.name : away.name;
+      notes.push(
+        `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${league.shortName}\u2019s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as ${winner}\u2019s win and does not show the 1 v 1 tally.`,
+      );
+    }
+  }
+  if (overtimeInDoubt(game)) {
+    notes.push(
+      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${league.shortName} plays one 10-minute overtime period and then 1 v 1s (${rule}), so MaxPreps may have recorded a 1 v 1 win as a goal. The score is shown as MaxPreps has it.`,
+    );
+  }
+  return notes.length > 0 ? notes.join(' ') : null;
 }
 
 const H2H_STAGES: readonly TiebreakStage[] = ['head-to-head', 'h2h-win-pct'];
@@ -750,6 +803,7 @@ export function buildGameModel(param: string): GameModel | undefined {
     contextLabel: post?.contextLabel ?? (division ? divisionDisplay(division) : 'Non-league'),
     countsAs: post?.countsAs ?? countsAsFor(game),
     postseasonNotes: post?.notes ?? [],
+    scoreNote: scoreNoteFor(game, display, league, away, home),
     memberCount: getTeams().length,
     dayLabel: shortDate(game.dateLocal),
     whenLabel: game.isTimeTba

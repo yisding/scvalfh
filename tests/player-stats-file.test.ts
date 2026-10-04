@@ -46,9 +46,9 @@ describe('data/player-stats.json', () => {
     expect(getTeamPlayerStats('not-a-school' as never)).toBeUndefined();
   });
 
-  it('has one entry per registry team, all four leagues, in registry order', () => {
+  it('has one entry per registry team, all five leagues, in registry order', () => {
     expect(PLAYER_STATS_TEAM_COUNT).toBe(TEAMS.length);
-    expect(TEAMS).toHaveLength(43);
+    expect(TEAMS).toHaveLength(49);
     expect(raw.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
     expect(raw.teams.map((t) => t.teamId)).toEqual(TEAMS.map((t) => t.id));
   });
@@ -253,7 +253,7 @@ describe('scripts/fetch-player-stats.ts --fixtures', () => {
       expect(['ok', 'none'], team.slug).toContain(built.teams.find((t) => t.slug === team.slug)!.status);
     }
     // Everything but SCVAL is outside this run and, with no previous file, pending.
-    expect(built.teams).toHaveLength(43);
+    expect(built.teams).toHaveLength(49);
     for (const t of built.teams.filter((x) => !teamsInLeague('scval').some((s) => s.slug === x.slug))) {
       expect(t.status, t.slug).toBe('pending');
     }
@@ -459,7 +459,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     writeFileSync(out, JSON.stringify(previous), 'utf8');
     const scoped = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
     expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
-    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 43 row\(s\) are ignored, as if absent/);
+    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 49 row\(s\) are ignored, as if absent/);
     expect(scoped.stdout).not.toContain('kept as they were');
     const built = read(out);
     expect(built.season).toBe(raw.season);

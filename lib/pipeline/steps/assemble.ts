@@ -50,7 +50,7 @@ function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {
   return [...fixtures].sort((a, b) => (a.dateKey === b.dateKey ? a.id.localeCompare(b.id) : a.dateKey.localeCompare(b.dateKey)));
 }
 
-/** `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4` */
+/** `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4 · EAL +1` */
 export function commitSummaryOf(
   health: readonly LeagueHealth[],
   causes: (leagueId: string) => readonly string[],
@@ -193,7 +193,7 @@ export function stepAssemble(
       state: h.state,
       countedFinals: h.divisions.reduce((n, d) => n + d.countedFinals, 0),
       finalsDelta: finalsDeltaOf(h),
-      missingPast: h.divisions.reduce((n, d) => n + (d.official?.missingPast ?? 0), 0),
+      missingPast: h.divisions.reduce((n, d) => n + (d.official?.missingPast ?? d.missingLeaguePast ?? 0), 0),
       backfilled: h.divisions.reduce((n, d) => n + d.backfilled, 0),
       reasons: h.reasons,
     })),

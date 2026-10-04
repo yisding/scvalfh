@@ -325,14 +325,17 @@ export interface ClubsIndexView {
   regionsWithoutClubs: string[];
   /** "This list has no club based on the Peninsula or the Central Coast."; null when every area has one. */
   regionsWithoutClubsSentence: string | null;
-  /** The tracked rosters: 43. */
+  /** The tracked rosters: rosters.json's teams, 49 today. */
   trackedTeams: number;
   /** Distinct players tied to any club. */
   playerCount: number;
   schoolCount: number;
   clubCount: number;
   clubsWithPlayers: number;
-  /** "Oct 3, 2026": when the research was done. */
+  /**
+   * "Oct 3, 2026": the file's capturedAt, the day of the first sweep. A later sweep added ties
+   * without moving it (data/clubs.json notes[5]), so the page does not date the checks by it.
+   */
   capturedOn: string;
   /**
    * The club seasons a "current" tie comes from: the file's roster season and the one before it,

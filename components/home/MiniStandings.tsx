@@ -12,16 +12,17 @@ import type { MiniDivisionView, MiniRow } from './home-data';
  *
  * How many rows, and where the labelled line falls, come from the division's own `home` config
  * (`getDivision(d).home`: SCVAL 4 rows and no line; Mt. Hamilton 4, `AQ line` after 3; Santa Teresa
- * 3, `Play-in host` after 1; PCAL 7, `AQ line` after 2; MCAL 7, `Tournament line` after 6) — never
+ * 3, `Play-in host` after 1; PCAL 7, `AQ line` after 2; MCAL 7, `Tournament line` after 6; EAL 6
+ * and no line, `lineAfter` null: its Super Regional takes the top six of six) — never
  * from a map keyed by division id here. The line is a labelled separator ROW, so the rule is never
  * the only cue (WCAG 1.3.1).
  *
  * Columns: place, team, GP (mono 11px: the leagues' teams have played different numbers of games,
- * and points favour the ones that have played more), W-L-T, PTS (the ordering key in all four
+ * and points favour the ones that have played more), W-L-T, PTS (the ordering key in all five
  * leagues), GD. A team with no counted result sorts last, renders an em dash for its place and
  * its numbers — never `0-0-0`, never ranked by merit — and is still a link.
  *
- * A single-division league (PCAL, MCAL) shows NO division label: its kicker is `League table`.
+ * A single-division league (PCAL, MCAL, EAL) shows NO division label: its kicker is `League table`.
  *
  * The GD plot keys off the card's width (`@container`): below a 23.4375rem card (375px at the
  * default text size, wider under a larger one) only the signed numeral shows, and the sentences

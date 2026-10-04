@@ -9,13 +9,24 @@
  *    is removed first and then no "gabilan" in any case may remain;
  *  - no /eliminat/i;
  *  - no division label on a single-division league ("PCAL Division", "MCAL Division",
- *    "Marin County Division").
+ *    "Marin County Division", "EAL Division").
  * Inside the `<main>` element only (the site-wide footer, Attribution, is outside it and exempt) of
- * every page of a North Coast Section league (MCAL: `standings/mcal`, `schedule/mcal`,
- * `playoffs/mcal`, its nine team pages): no "automatic qualifier", "at-large", "CCS Division",
+ * every page of a league outside the Central Coast Section (MCAL: `standings/mcal`,
+ * `schedule/mcal`, `playoffs/mcal`, its nine team pages; EAL: `standings/eal`, `schedule/eal`, its
+ * six team pages), and inside the EAL's card on `/playoffs` (`id="eal"`, the page's only non-CCS
+ * part outside a pointer link): no "automatic qualifier", "at-large", "CCS Division",
  * "CCS picture", no BerthMeter label ("holds <n> of 16"), and "CCS" only in the
  * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
- * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all four
+ * The visible text of every page (`visibleText`: no scripts, so not the RSC payload; the footer
+ * included), and its `<title>`, description metas and `title`, `aria-label` and `alt` attributes
+ * (`attributeText`: what a link preview prints and assistive technology reads), make none of the
+ * EAL claims of scripts/copy-rules.ts (DESIGN §22.5): no sentence calls the umpires' grid
+ * official, no clause calls Davis or Bella Vista a Northern Section school, Red Bluff is never
+ * cancelled, withdrawn, dropped or without a program, and nothing says "EAL school(s)" or "EAL
+ * member(s)". The EAL's pages (`standings/eal`, `schedule/eal`, its team pages and the `/playoffs`
+ * card) print no seed word ("top seed", "No. 2 seed", "the sixth seed", "#1 seed", "seeded
+ * third"), in their text or their attributes: its seeding is quoted, never applied.
+ * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all five
  * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
  * no affiliation's `basis` and no fragment of a source's verbatim `quote`, whole or excerpted, beyond
@@ -31,9 +42,9 @@
  * The same rule covers data/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
  * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
  * /teams/<slug> (the commitment line) and /about.
- * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL and MCAL unavailable):
+ * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
  *  - never says the archive is SCVAL-only (it was, once);
- *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="mcal"`), the division
+ *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="eal"`), the division
  *    anchors of every available league, and a "Unavailable" card, with the reason, in the section of
  *    every league the data marks unavailable;
  *  - an unavailable league's section has no table and names no champion, winner or award, so
@@ -42,9 +53,9 @@
  * `leaders.html` (the site-wide leaderboards):
  *  - has `id="players"`, `id="schools"` and the anchor of every board the view model builds;
  *  - names every team that has entered no player stats, so no player board reads as if it covered
- *    all 43 teams.
- * And: `playoffs/mcal.html` contains "North Coast Section"; `standings.html` keeps the old anchors
- * `id="de-anza"` and `id="el-camino"`.
+ *    all 49 teams.
+ * And: each `playoffs/<league>.html` names its league's section (`playoffs/mcal.html`: "North Coast
+ * Section"); `standings.html` keeps the old anchors `id="de-anza"` and `id="el-camino"`.
  *
  * League, division and team ids come from lib/leagues.ts and the snapshot, never from the build.
  */
@@ -57,8 +68,29 @@ import { getClubsFile } from '../lib/clubs';
 import { getCommitsFile } from '../lib/commits';
 import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
-import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
-import { SCVAL_ONLY_CLAIM, affiliationLeaks, commitmentLeaks, sectionById } from './copy-rules';
+import {
+  LEAGUES,
+  TOURNAMENT_LEAGUE_IDS,
+  UNBRACKETED_LEAGUE_IDS,
+  divisionLabel,
+  getSection,
+  isSingleDivision,
+} from '../lib/leagues';
+import type { LeagueId } from '../lib/types';
+import {
+  EAL_SCHOOL_CLAIM,
+  RED_BLUFF_STATUS_CLAIM,
+  SCVAL_ONLY_CLAIM,
+  SEED_CLAIM,
+  affiliationLeaks,
+  attributeText,
+  commitmentLeaks,
+  elementById,
+  nonMemberSectionClaims,
+  sectionById,
+  umpireOfficialClaims,
+  visibleText,
+} from './copy-rules';
 import { PUBLIC_TERMS } from './public-terms';
 
 const APP = '.next/server/app';
@@ -143,39 +175,77 @@ for (const file of files) {
   for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource, publicTerms: PUBLIC_TERMS })) {
     fail(file, `shows what data/commits.json never renders: ${leak}`);
   }
+  // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
+  // title, description metas and title/aria-label/alt attributes.
+  for (const [text, where] of [[visibleText(html), ''], [attributeText(html), ' (in a title, description or attribute)']]) {
+    for (const s of umpireOfficialClaims(text)) fail(file, `calls the umpires' grid official${where} — “${s}”`);
+    for (const c of nonMemberSectionClaims(text)) fail(file, `calls Davis or Bella Vista a Northern Section school${where} — “${c}”`);
+    forbid(file, text, RED_BLUFF_STATUS_CLAIM, `says more about Red Bluff than "not fielding a varsity team in 2026"${where}`);
+    forbid(file, text, EAL_SCHOOL_CLAIM, `says "EAL school(s)" or "EAL member(s)"${where} (the field hockey EAL is not the all-sports league; say "EAL teams")`);
+  }
 }
 
-// ---------------------------------------------------------------- NCS (MCAL) pages, <main> only
+// ---------------------------------------------------------------- non-CCS (MCAL, EAL) pages, <main> only
 const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as {
   teams: Array<{ slug: string; league: string; name: string }>;
 };
-const ncsLeagues = LEAGUES.filter((l) => l.sectionId === 'ncs');
-const ncsPages: string[] = [];
-for (const league of ncsLeagues) {
-  ncsPages.push(`standings/${league.id}.html`, `schedule/${league.id}.html`);
-  if (TOURNAMENT_LEAGUE_IDS.includes(league.id)) ncsPages.push(`playoffs/${league.id}.html`);
-  for (const t of snapshot.teams.filter((x) => x.league === league.id)) ncsPages.push(`teams/${t.slug}.html`);
-}
+const nonCcsLeagues = LEAGUES.filter((l) => l.sectionId !== 'ccs');
+/** Each league's own pages: its standings and schedule, its tournament page if it has one, its team pages. */
+const leaguePages = (id: LeagueId): string[] => [
+  `standings/${id}.html`,
+  `schedule/${id}.html`,
+  ...(TOURNAMENT_LEAGUE_IDS.includes(id) ? [`playoffs/${id}.html`] : []),
+  ...snapshot.teams.filter((x) => x.league === id).map((t) => `teams/${t.slug}.html`),
+];
+const nonCcsPages = nonCcsLeagues.flatMap((l) => leaguePages(l.id));
 const ALLOWED_CCS = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
-for (const file of ncsPages) {
+/** The CCS concepts no part of a non-CCS league's pages may carry. */
+function forbidCcs(file: string, part: string, where: string): void {
+  forbid(file, part, /automatic qualifier/i, `${where} says "automatic qualifier"`);
+  forbid(file, part, /at-large/i, `${where} says "at-large"`);
+  forbid(file, part, /CCS Division/i, `${where} says "CCS Division"`);
+  forbid(file, part, /CCS picture/i, `${where} says "CCS picture"`);
+  forbid(file, part, /holds \d+ of 16/i, `${where} carries a CCS berth meter`);
+  forbid(file, part.split(ALLOWED_CCS).join(''), /\bCCS\b/, `${where} names CCS outside the "CCS playoffs (SCVAL, BVAL, PCAL) →" link`);
+}
+for (const file of nonCcsPages) {
   const p = path.join(APP, file);
   if (!existsSync(p)) {
     fail(file, 'not prerendered');
     continue;
   }
-  const main = mainOf(file, readFileSync(p, 'utf8'));
-  forbid(file, main, /automatic qualifier/i, '<main> of an NCS page says "automatic qualifier"');
-  forbid(file, main, /at-large/i, '<main> of an NCS page says "at-large"');
-  forbid(file, main, /CCS Division/i, '<main> of an NCS page says "CCS Division"');
-  forbid(file, main, /CCS picture/i, '<main> of an NCS page says "CCS picture"');
-  forbid(file, main, /holds \d+ of 16/i, '<main> of an NCS page carries a CCS berth meter');
-  forbid(file, main.split(ALLOWED_CCS).join(''), /\bCCS\b/, '<main> of an NCS page names CCS outside the "CCS playoffs (SCVAL, BVAL, PCAL) →" link');
+  forbidCcs(file, mainOf(file, readFileSync(p, 'utf8')), '<main> of a non-CCS page');
 }
-for (const league of ncsLeagues) {
+for (const league of nonCcsLeagues) {
   if (!TOURNAMENT_LEAGUE_IDS.includes(league.id)) continue;
   const file = `playoffs/${league.id}.html`;
   const p = path.join(APP, file);
-  if (existsSync(p) && !readFileSync(p, 'utf8').includes('North Coast Section')) fail(file, 'does not say "North Coast Section"');
+  const section = getSection(league.sectionId).name;
+  if (existsSync(p) && !readFileSync(p, 'utf8').includes(section)) fail(file, `does not say "${section}"`);
+}
+
+// ---------------------------------------------------------------- the EAL: its /playoffs card, and no seed words
+// /playoffs stays the CCS page; an unbracketed league (EAL) gets a card there with its league id,
+// which the league chip and jump link target. The card is that league's copy, so it gets the
+// non-CCS bans; it, the league's own pages and its team pages get the seed-word ban (its seeding
+// criteria are quoted, never applied).
+const playoffsMain = existsSync(path.join(APP, 'playoffs.html'))
+  ? mainOf('playoffs.html', readFileSync(path.join(APP, 'playoffs.html'), 'utf8'))
+  : '';
+/** What a reader sees or is read out: the body text and the title, description and attribute text. */
+const readableText = (html: string): string => `${visibleText(html)}\n${attributeText(html)}`;
+let unbracketedPages = 0;
+for (const id of UNBRACKETED_LEAGUE_IDS) {
+  const card = elementById(playoffsMain, id, 'div');
+  if (!card) fail('playoffs.html', `no <div id="${id}"> card (the /playoffs#${id} chip and jump link resolve to it)`);
+  forbidCcs('playoffs.html', card, `the #${id} card`);
+  forbid('playoffs.html', readableText(card), SEED_CLAIM, `the #${id} card prints a seed word`);
+  for (const file of leaguePages(id)) {
+    const p = path.join(APP, file);
+    if (!existsSync(p)) continue; // reported above, with the other non-CCS pages
+    forbid(file, readableText(readFileSync(p, 'utf8')), SEED_CLAIM, `a page of an unbracketed league (${id}) prints a seed word`);
+    unbracketedPages += 1;
+  }
 }
 
 // ---------------------------------------------------------------- /history/2025-26
@@ -251,7 +321,9 @@ for (const id of ['de-anza', 'el-camino']) {
 }
 
 console.log(
-  `assert-copy: ${files.length} HTML files scanned; ${ncsPages.length} NCS pages checked inside <main>; ` +
+  `assert-copy: ${files.length} HTML files scanned (the EAL claims over the visible and attribute text of each); ` +
+    `${nonCcsPages.length} non-CCS pages checked inside <main>; ${UNBRACKETED_LEAGUE_IDS.length} /playoffs card(s) ` +
+    `and ${unbracketedPages} pages of unbracketed leagues checked for seed words; ` +
     `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
     `college commitments looked for on every page`,
 );

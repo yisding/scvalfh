@@ -74,6 +74,25 @@ describe('PriorSeasonSchema', () => {
     expect(issues(base)).toEqual([]);
   });
 
+  it('accepts a final between two EAL teams and one between an EAL and an MCAL team', () => {
+    const [chico, davis, pv, redwood] = ['chico', 'davis', 'pleasant-valley', 'redwood'].map((s) => getTeamBySlug(s)!);
+    const game = (contestId: string, home: typeof chico, away: typeof chico) => ({
+      contestId,
+      date: '2025-10-15',
+      homeId: home.id,
+      homeSlug: home.slug,
+      awayId: away.id,
+      awaySlug: away.slug,
+      homeScore: 1,
+      awayScore: 0,
+      site: 'home' as const,
+    });
+    expect(chico.league).toBe('eal');
+    expect(redwood.league).toBe('mcal');
+    expect(issues({ ...base, games: [game('eal-eal', chico, davis)] })).toEqual([]);
+    expect(issues({ ...base, games: [game('eal-mcal', pv, redwood)] })).toEqual([]);
+  });
+
   it('rejects a contest listed twice, a team playing itself, a wrong slug and a date out of season', () => {
     const g = base.games[0];
     expect(issues({ ...base, games: [g, g] })).toContain('contest c1 is listed twice');
@@ -163,7 +182,7 @@ describe('priorGamesFromFeeds', () => {
         [
           row('d', [{ slug: 'fremont', score: 1, at: 0 }, { slug: 'saratoga', score: 0, at: 1 }], { state: 1 }),
           row('p', [{ slug: 'fremont', score: null, at: 0 }, { slug: 'saratoga', score: null, at: 1 }], { state: 2 }),
-          row('o', [{ slug: 'fremont', score: 5, at: 0 }, { outsider: 'Chico', score: 0, at: 1 }]),
+          row('o', [{ slug: 'fremont', score: 5, at: 0 }, { outsider: 'Gunn', score: 0, at: 1 }]),
           row('f', [{ slug: 'fremont', score: 1, at: 0, forfeit: true }, { slug: 'saratoga', score: 0, at: 1 }]),
           row('u', [{ slug: 'fremont', score: null, at: 0 }, { slug: 'saratoga', score: 2, at: 1 }]),
         ],

@@ -1,4 +1,7 @@
-/** v1 → v2 in memory (SPEC §4.3): the committed SCVAL-only snapshot keeps loading. */
+/**
+ * v1 → v2 in memory (SPEC §4.3): the committed SCVAL-only snapshot keeps loading. And the "league
+ * added" upgrade (v2 → v2): a file written before the EAL existed keeps loading too.
+ */
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -6,10 +9,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
-import { isSnapshotV1, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { parseSnapshot, stableStringify } from '../lib/snapshot-schema';
+import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from '../lib/snapshot-migrate';
+import { loadSnapshot, parseSnapshot, stableStringify } from '../lib/snapshot-schema';
 import { divisionGames } from '../lib/standings';
-import { TEAMS } from '../lib/teams';
+import { TEAMS, teamsInLeague } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';
 
 const GOLDEN = path.join(import.meta.dirname, 'golden');
@@ -42,11 +45,11 @@ describe('isSnapshotV1', () => {
 });
 
 describe('migrateV1ToV2 on the committed v1 golden', () => {
-  it('parses as v2 with the 43-team registry, in registry order', () => {
+  it('parses as v2 with the 49-team registry, in registry order', () => {
     expect(migrated.schemaVersion).toBe(2);
     expect(migrated.teams.map((t) => t.id)).toEqual(TEAMS.map((t) => t.id));
-    expect(migrated.teams).toHaveLength(43);
-    expect(migrated.standings).toHaveLength(43);
+    expect(migrated.teams).toHaveLength(49);
+    expect(migrated.standings).toHaveLength(49);
     expect(migrated.fetchedAt).toBe(v1.fetchedAt);
   });
 
@@ -121,9 +124,10 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
   });
 
   it('builds the season from config with per-league windows', () => {
-    expect(migrated.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs']);
+    expect(migrated.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
     expect(migrated.season.leagues.map((l) => [l.id, l.postseasonKind])).toEqual([
       ['scval', 'ccs-ladder'], ['bval', 'ccs-ladder'], ['pcal', 'ccs-ladder'], ['mcal', 'league-tournament'],
+      ['eal', 'unbracketed-tournament'],
     ]);
     const scval = migrated.season.leagues[0].window;
     expect(scval.lastGame).toBe('2026-10-28T18:00:00');
@@ -169,11 +173,106 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
     expect(migrated.dropped).toEqual([]);
     expect(migrated.supersededGames).toEqual({});
     expect(migrated.sbliveCrossCheck?.backfilled).toEqual([]);
-    expect(migrated.counts.teams).toBe(43);
+    expect(migrated.counts.teams).toBe(49);
     expect(migrated.counts.games).toBe(migrated.games.length);
     expect(migrated.counts.leagueGames).toBe(migrated.games.filter((g) => g.countsFor !== null).length);
-    expect(Object.keys(migrated.counts.byLeague)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(Object.keys(migrated.counts.byLeague)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(migrated.counts.byLeague.scval.games).toBe(migrated.games.length);
     expect(migrated.counts.byLeague.bval.leagueGames).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------- the "league added" upgrade (D15)
+
+const EAL_SLUGS = new Set(teamsInLeague('eal').map((t) => t.slug));
+
+/** The migrated golden as a four-league v2 file would have it: every EAL entry stripped. */
+function withoutEal(full: Snapshot): Snapshot {
+  const s = structuredClone(full);
+  const unslug = (g: Game): Game => ({
+    ...g,
+    home: g.home.slug && EAL_SLUGS.has(g.home.slug) ? { ...g.home, slug: null } : g.home,
+    away: g.away.slug && EAL_SLUGS.has(g.away.slug) ? { ...g.away, slug: null } : g.away,
+  });
+  const byLeague = { ...s.counts.byLeague };
+  delete byLeague.eal;
+  return {
+    ...s,
+    season: {
+      ...s.season,
+      sections: s.season.sections.filter((x) => x.id !== 'ns'),
+      leagues: s.season.leagues.filter((l) => l.id !== 'eal'),
+    },
+    teams: s.teams.filter((t) => t.league !== 'eal'),
+    games: s.games.map(unslug),
+    standings: s.standings.filter((r) => r.division !== 'eal'),
+    playoffs: { ...s.playoffs, games: s.playoffs.games.map(unslug) },
+    leagueHealth: s.leagueHealth.filter((h) => h.leagueId !== 'eal'),
+    crossCheck: s.crossCheck.filter((r) => !EAL_SLUGS.has(r.slug)),
+    counts: { ...s.counts, teams: s.teams.length - EAL_SLUGS.size, byLeague },
+  };
+}
+
+describe('the "league added" upgrade (a v2 file written before the EAL existed)', () => {
+  const full = migrateV1ToV2(readV1()) as Snapshot;
+  const stripped = withoutEal(full);
+
+  it('recognises a v2 file whose leagues are a proper, in-order subsequence of the config', () => {
+    expect(stripped.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    // The golden has two Bella Vista games: the stripped file holds them as name-only opponents.
+    expect(stripped.games.filter((g) => g.home.name === 'Bella Vista' || g.away.name === 'Bella Vista')).toHaveLength(2);
+    expect(lacksConfiguredLeagues(stripped)).toBe(true);
+    expect(lacksConfiguredLeagues(full)).toBe(false);
+    expect(lacksConfiguredLeagues(readV1())).toBe(false);
+    expect(lacksConfiguredLeagues(null)).toBe(false);
+    const reordered = { ...stripped, season: { ...stripped.season, leagues: [...stripped.season.leagues].reverse() } };
+    expect(lacksConfiguredLeagues(reordered)).toBe(false);
+    const unknown = { ...stripped, season: { ...stripped.season, leagues: [{ id: 'nope' }] } };
+    expect(lacksConfiguredLeagues(unknown)).toBe(false);
+    expect(() => addConfiguredLeagues(full)).toThrow(/lacks a configured league/);
+  });
+
+  it('loads it as if it had been written with the EAL: a round trip to the same snapshot', () => {
+    expect(() => parseSnapshot(stripped)).toThrow(/snapshot failed validation/);
+    expect(stableStringify(loadSnapshot(stripped))).toBe(stableStringify(loadSnapshot(full)));
+  });
+
+  it('leaves the existing leagues untouched and does not mutate its input', () => {
+    const before = JSON.stringify(stripped);
+    const upgraded = addConfiguredLeagues(stripped) as Snapshot;
+    expect(JSON.stringify(stripped)).toBe(before);
+    expect(stableStringify(upgraded.standings.filter((r) => r.division !== 'eal'))).toBe(stableStringify(stripped.standings));
+    expect(stableStringify(upgraded.leagueHealth.slice(0, 4))).toBe(stableStringify(stripped.leagueHealth));
+    expect(upgraded.standings.slice(-6).map((r) => r.slug)).toEqual([...EAL_SLUGS]);
+    const bv = upgraded.games.filter((g) => g.away.name === 'Bella Vista');
+    expect(bv.map((g) => [g.away.slug, g.leagueDivision, g.countsFor])).toEqual([
+      ['bella-vista', null, null], ['bella-vista', null, null],
+    ]);
+  });
+
+  it('loads the frozen four-league finals-regression snapshot with a degraded EAL row', () => {
+    const file = path.join(import.meta.dirname, 'fixtures', 'corpus', 'variants', 'finals-regression', 'previous-snapshot.json');
+    const raw = JSON.parse(readFileSync(file, 'utf8')) as Snapshot;
+    expect(raw.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(lacksConfiguredLeagues(raw)).toBe(true);
+    const loaded = loadSnapshot(raw);
+    expect(loaded.teams).toHaveLength(49);
+    expect(loaded.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(loaded.leagueHealth.map((h) => h.leagueId)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(stableStringify(loaded.leagueHealth.slice(0, 4))).toBe(stableStringify(raw.leagueHealth));
+    expect(loaded.leagueHealth[4]).toEqual({
+      leagueId: 'eal',
+      state: 'degraded',
+      lastFreshAt: null,
+      reasons: ['No EAL data in this snapshot yet: it was written before EAL was added.'],
+      divisions: [{
+        divisionId: 'eal', meta: 'skipped', reportedTable: 'skipped', reportedRows: null,
+        classification: 'contest-type', official: null, countedFinals: 0, previousCountedFinals: null, backfilled: 0,
+      }],
+      teamFeeds: { total: 6, ok: 0, carried: 0, failed: 0 },
+    });
+    for (const r of loaded.standings.filter((x) => x.division === 'eal')) {
+      expect([r.computed.gp, r.reported, r.hasReportedResults], r.slug).toEqual([0, null, false]);
+    }
   });
 });

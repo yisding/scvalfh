@@ -16,8 +16,9 @@ import { placeSub } from './team-view';
  * (Cupertino, Homestead and Monta Vista in league play) therefore read `0 / 23` and `0.0` scored
  * per game in full-strength ink: nothing is hidden because it is unflattering.
  *
- * PTS sits under the league record because it is the official ordering key in all four leagues —
- * 3 for a win, 1 for a tie — which is also why PLACE is the one hero figure here. GP and MAX are
+ * PTS sits under the league record because it orders the table in every league (3 for a win, 1
+ * for a tie; the EAL uses points to decide its title and publishes no standings, so this site orders it
+ * the same way) — which is also why PLACE is the one hero figure here. GP and MAX are
  * counts, not scores: `0/12` GP is a true count for a team with nothing reported, while MAX is a
  * ceiling, never a projection.
  *

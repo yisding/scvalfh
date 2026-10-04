@@ -13,6 +13,11 @@ import { shortDate } from '@/lib/format';
  * pts` — the leader(s) of each division with their points. A single-division league has no
  * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
  * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
+ *
+ * Five rows have to fit between the title and the footer at 1200×630: 56px top and bottom padding
+ * and 10px row padding keep the footer on the card with up to three of the five rows wrapping to
+ * a second line (BVAL's two divisions with co-leaders already do). Rendered and checked at five
+ * rows, on the live snapshot and with three rows wrapped.
  */
 export const alt = `${SITE_NAME} — 2026 standings, scores and playoffs`;
 export const size = { width: 1200, height: 630 };
@@ -39,7 +44,7 @@ export default function OpengraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: 72,
+          padding: '56px 72px',
           background: '#0b0d10',
           color: '#f2f5f8',
           fontFamily: 'sans-serif',
@@ -57,8 +62,8 @@ export default function OpengraphImage() {
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
-                paddingTop: 14,
-                paddingBottom: 14,
+                paddingTop: 10,
+                paddingBottom: 10,
                 borderBottom: '1px solid #3d444d',
               }}
             >

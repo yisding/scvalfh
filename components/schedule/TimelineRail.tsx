@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { longDate, monthDay, parseLocal } from '../../lib/format';
+import { dateSpan, longDate, monthDay, parseLocal } from '../../lib/format';
 import { CCS, getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
@@ -10,7 +10,8 @@ import type { RailKind } from './rail-targets';
  * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · Sep · ● Today · Oct · Oct 28 ↓ · CCS Nov 7–14`,
  * as a row of 36px capsules inside a 44px hit row. The last chip is the league's own postseason:
  * the CCS dates (`/playoffs#<league>`) for a CCS league, the MCAL tournament
- * (`/playoffs/<league>`) for a league tournament — never a CCS chip on an NCS league's page.
+ * (`/playoffs/<league>`) for a league tournament, the Super Regional (`/playoffs#<league>`) for the
+ * EAL — never a CCS chip on an NCS or NS league's page.
  *
  * Plain `<a href="#2026-09-24">` anchors into the date groups below — real, shareable, JS-free
  * URLs, and `/scores/[date]` exists for every one of them. No scroll-spy and no client component:
@@ -121,24 +122,44 @@ function span(first: string, last: string): string {
   return a.month === b.month ? `${monthDay(first)}–${b.day}` : `${monthDay(first)}–${monthDay(last)}`;
 }
 
-/** The rail's last chip: the league's postseason, from config. */
+/** `Oct 30 to 31` (one month), `Oct 30 to Nov 1` across months: a span read out in words. */
+function spanWords(first: string, last: string): string {
+  const a = parseLocal(first);
+  const b = parseLocal(last);
+  return a.month === b.month ? `${monthDay(first)} to ${b.day}` : `${monthDay(first)} to ${monthDay(last)}`;
+}
+
+/**
+ * The rail's last chip: the league's postseason, from config. An unbracketed tournament (the EAL's
+ * Super Regional) has no bracket page, so its chip goes to the league's card on /playoffs.
+ */
 export function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } {
   const league = getLeague(leagueId);
-  if (league.postseason.kind === 'league-tournament') {
-    const rounds = league.postseason.rounds.filter((r) => !r.optional).map((r) => r.date).sort();
-    const first = rounds[0];
-    const last = rounds[rounds.length - 1];
-    return {
-      label: `${league.postseason.name} ${span(first, last)}`,
-      href: `/playoffs/${league.id}`,
-      sr: `${league.postseason.name}, ${longDate(first)} to ${longDate(last)}`,
-    };
+  const ps = league.postseason;
+  switch (ps.kind) {
+    case 'league-tournament': {
+      const rounds = ps.rounds.filter((r) => !r.optional).map((r) => r.date).sort();
+      const first = rounds[0];
+      const last = rounds[rounds.length - 1];
+      return {
+        label: `${ps.name} ${span(first, last)}`,
+        href: `/playoffs/${league.id}`,
+        sr: `${ps.name}, ${longDate(first)} to ${longDate(last)}`,
+      };
+    }
+    case 'unbracketed-tournament':
+      return {
+        label: `${ps.name} ${dateSpan(ps.dates.first, ps.dates.last)}`,
+        href: `/playoffs#${league.id}`,
+        sr: `${ps.name}, ${spanWords(ps.dates.first, ps.dates.last)}`,
+      };
+    case 'ccs-ladder':
+      return {
+        label: `CCS ${span(CCS.keyDates.quarterfinals, CCS.keyDates.finals)}`,
+        href: `/playoffs#${league.id}`,
+        sr: `CCS playoffs, ${longDate(CCS.keyDates.quarterfinals)} to ${longDate(CCS.keyDates.finals)}`,
+      };
   }
-  return {
-    label: `CCS ${span(CCS.keyDates.quarterfinals, CCS.keyDates.finals)}`,
-    href: `/playoffs#${league.id}`,
-    sr: `CCS playoffs, ${longDate(CCS.keyDates.quarterfinals)} to ${longDate(CCS.keyDates.finals)}`,
-  };
 }
 
 export function TimelineRail({ dates, today, leagueId, className }: TimelineRailProps) {

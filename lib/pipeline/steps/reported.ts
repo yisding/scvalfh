@@ -1,8 +1,10 @@
 /**
  * Step 04 (SPEC §7.4): MaxPreps' own standings table per division → `reported` rows, used for the
  * published cross-check only (never for order). Rows resolve by GUID, then name. A member missing
- * from the table warns unless config lists it in `maxprepsMissing`; a row count different from
- * `maxprepsTeamCount` warns.
+ * from the table warns unless config lists it in `maxprepsMissing`; a row config lists in
+ * `maxprepsExtraRows` (a known non-member, EAL: Red Bluff's 0-0-0 row) is skipped without a warning;
+ * a row count different from `maxprepsTeamCount` (which counts those rows) warns. A row MaxPreps
+ * leaves undated (`modifiedOn` null, parsed as '') never sets the table's upstream date.
  *
  * 0 rows / HTTP error / schema drift / network → SOURCE STALE, never an abort: the previous
  * snapshot's reported rows for that division are carried (`reportedTable: 'carried'`, the row
@@ -78,6 +80,7 @@ async function readTable(ctx: PipelineContext, state: RunState, leagueId: League
   const seen = new Set<string>();
   let modifiedOn: string | undefined;
   for (const row of rows) {
+    if (Object.hasOwn(division.maxprepsExtraRows, row.schoolId)) continue;
     const team = resolveTeam(row.schoolId) ?? resolveTeam(row.schoolName);
     if (!team || !memberIds.has(team.id)) {
       ctx.warn(`${division.id} standings: unknown school ${row.schoolName} (${row.schoolId})`, scope);
@@ -85,7 +88,7 @@ async function readTable(ctx: PipelineContext, state: RunState, leagueId: League
     }
     state.reported.set(team.id, toReportedRecord(row));
     seen.add(team.id);
-    if (!modifiedOn || row.modifiedOn > modifiedOn) modifiedOn = row.modifiedOn;
+    if (row.modifiedOn && (!modifiedOn || row.modifiedOn > modifiedOn)) modifiedOn = row.modifiedOn;
   }
   for (const team of members) {
     if (!seen.has(team.id) && !division.maxprepsMissing.includes(team.slug)) {

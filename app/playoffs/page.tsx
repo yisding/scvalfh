@@ -36,17 +36,20 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { monthDay, shortDate } from '../../lib/format';
-import { getLeague } from '../../lib/leagues';
+import { UNBRACKETED_LEAGUE_IDS, getLeague } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
 
 /**
  * /playoffs — the CCS page (SPEC §6.3, §10.7): "Are we in, and who do we play?" for the three
  * Central Coast Section leagues. The North Coast Section holds no field hockey championship, so an
- * MCAL reader is pointed to /playoffs/mcal at the top and nothing below is about MCAL.
+ * MCAL reader is pointed to /playoffs/mcal at the top and nothing below is about MCAL. The EAL's
+ * postseason, the Northern Section's Super Regional, publishes no bracket, so it has no page of its
+ * own: its card here (`id="<league id>"`, the target of the EAL chip and jump link) states the rule,
+ * the dates and the Guidelines, and nothing below is about the EAL either.
  *
  * The eight blocks, in order: header (+ the not-seeded state, one sentence in the description),
- * the NCS pointer card, jump links and
+ * the NCS pointer card and the EAL card, jump links and
  * the league chips, "The field" (one BerthMeter row per CCS league + the at-large line), "Key dates"
  * (CCS dates plus each league's own crossover / play-in, labelled), the `#scval #bval #pcal`
  * sections (per-division ladder projection, the league's pairings, its qualification sentence), the
@@ -182,6 +185,7 @@ export default function PlayoffsPage() {
   const ccsLeagues = summaries.filter((s) => ccsIds.has(s.id));
   const tournamentIds = new Set<LeagueId>(getTournamentLeagueIds());
   const tournamentLeagues = summaries.filter((s) => tournamentIds.has(s.id));
+  const unbracketedLeagues = summaries.filter((s) => UNBRACKETED_LEAGUE_IDS.includes(s.id));
   const ccsSection = ccsLeagues[0]?.section;
 
   const paths = buildBrackets(playoffs);
@@ -247,6 +251,24 @@ export default function PlayoffsPage() {
         );
       })}
 
+      {/* 2b. One card per unbracketed league (EAL): the rule, its dates and its source, never a
+          bracket or a seed. Its id is the EAL chip's and jump link's target. */}
+      {unbracketedLeagues.map((league) => {
+        const ps = getLeague(league.id).postseason;
+        if (ps.kind !== 'unbracketed-tournament') return null;
+        return (
+          <div key={league.id} id={league.id} className="mt-4 sx-inset max-w-3xl text-body text-ink-2">
+            <p className="m-0">
+              {`Following ${article(league.shortName)} ${league.shortName} team? ${ps.note}`}
+            </p>
+            <p className="mb-0 text-meta">
+              {`${ps.citations.qualification}.`}{' '}
+              <ExternalLink href={ps.sourceUrl}>{`${league.section.name} Field Hockey Guidelines (PDF)`}</ExternalLink>
+            </p>
+          </div>
+        );
+      })}
+
       {/* 3. Jump links (shown pre-paint only for the remembered league) and the league chips. */}
       <p className="m-0 mt-4 flex flex-wrap gap-2">
         {summaries.map((league) => (
@@ -255,7 +277,15 @@ export default function PlayoffsPage() {
             href={hrefs[league.id]}
             className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
           >
-            Jump to {league.shortName} {tournamentIds.has(league.id) ? <>&rarr;</> : <>&darr;</>}
+            {/* An unbracketed league's card sits above these links, so its arrow points up. */}
+            Jump to {league.shortName}{' '}
+            {tournamentIds.has(league.id) ? (
+              <>&rarr;</>
+            ) : UNBRACKETED_LEAGUE_IDS.includes(league.id) ? (
+              <>&uarr;</>
+            ) : (
+              <>&darr;</>
+            )}
           </a>
         ))}
       </p>

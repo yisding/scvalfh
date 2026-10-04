@@ -19,6 +19,7 @@ import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
+import { loadSnapshot } from '../lib/snapshot-schema';
 import { REPO } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
@@ -285,11 +286,8 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
  */
 describe('assert:prerender on a .next that has served traffic', () => {
   const SNAPSHOT = path.join(REPO, 'data', 'snapshot.json');
-  const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as {
-    games: Array<{ contestId: string; dateKey: string }>;
-    supersededGames?: Record<string, string>;
-    teams: Array<{ slug: string }>;
-  };
+  // Loaded as the build (and the script) loads it: a file written before a league was added is upgraded.
+  const snapshot = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
   const OK_META = JSON.stringify({ status: 200, headers: { 'content-type': 'image/png' } });
   const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
 
@@ -325,7 +323,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       playoffs: [...TOURNAMENT_LEAGUE_IDS],
       game: [
         ...snapshot.games.map((g) => gameIdToParam(g.contestId)),
-        ...Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam),
+        ...Object.keys(snapshot.supersededGames).map(gameIdToParam),
       ],
       scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
       teams: snapshot.teams.map((t) => t.slug),

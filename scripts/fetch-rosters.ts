@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every registry team's MaxPreps roster page into data/rosters.json (SPEC §1.1j): all four
- * leagues, 43 teams.
+ * Fetch every registry team's MaxPreps roster page into data/rosters.json (SPEC §1.1j): all five
+ * leagues, 49 teams.
  *
- *   pnpm fetch-rosters                     live: one roster page per registry team (43)
+ *   pnpm fetch-rosters                     live: one roster page per registry team (49)
  *   pnpm fetch-rosters --leagues scval,bval  only these leagues; the others keep their previous rows
  *   pnpm fetch-rosters --fixtures <dir>    offline: read roster-<slug>.html captures
  *   pnpm fetch-rosters --capture <dir>     live, and save each page read as <dir>/roster-<slug>.html
@@ -116,7 +116,7 @@ function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
 }
 
 const NOTES = [
-  "One entry per registry team, all four leagues (SCVAL, BVAL, PCAL, MCAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+  "One entry per registry team, all five leagues (SCVAL, BVAL, PCAL, MCAL, EAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
   "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
   "Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.",
   "Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.",

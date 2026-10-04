@@ -14,7 +14,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { describeCancelled, describeGame, signedMargin } from '../../components/ui/game-view';
+import { describeCancelled, describeGame, overtimeInDoubt, signedMargin } from '../../components/ui/game-view';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
 import { findDivision, findLeague } from '../../lib/leagues';
@@ -136,6 +136,92 @@ describe('§5.2 row 4 — final on a shootout', () => {
   });
   it('prints the shootout score separately', () => {
     expect(d.shootoutText).toBe(`(4${EN_DASH}3 SO)`);
+  });
+});
+
+describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () => {
+  // NS Guidelines §VII.E.4: a level varsity EAL game goes to 1 v 1s. MaxPreps stores the level goal
+  // score with the W/L flags (2026-09-28 Chico 1, Davis 1: Chico W), and the site stores no tally.
+  const eal = (homeResult: 'W' | 'L') =>
+    final(1, 1, {
+      countsFor: 'eal',
+      leagueDivision: 'eal',
+      decider: 'SO',
+      home: { teamId: 'chico-id', slug: 'chico', name: 'Chico', score: 1, result: homeResult },
+      away: { teamId: 'davis-id', slug: 'davis', name: 'Davis', score: 1, result: homeResult === 'W' ? 'L' : 'W' },
+    });
+
+  it('renders W for the flagged side, keeps the level goals and tags SO', () => {
+    const d = describeGame(eal('W'));
+    expect([d.home.glyph, d.away.glyph]).toEqual(['1', '1']);
+    expect([d.home.chip, d.away.chip], 'components/ui/game-view.ts chips').toEqual(['W', 'L']);
+    expect([d.home.weight, d.away.weight]).toEqual(['winner', 'loser']);
+    expect(d.deciderTag, 'components/ui/game-view.ts deciderTagFor').toBe('SO');
+    expect(d.shootoutText).toBeNull();
+    expect(d.sentence).toBe('Chico 1, Davis 1, final; Chico won on 1 v 1s.');
+    expect(describeGame(eal('W'), 'davis').perspectiveOutcome).toBe('L');
+    expect(describeGame(eal('L'), 'davis').perspectiveOutcome).toBe('W');
+    expect(describeGame(eal('L')).sentence).toBe('Chico 1, Davis 1, final; Davis won on 1 v 1s.');
+  });
+
+  it('says what SO means to a screen reader (StatusLabel)', async () => {
+    const { StatusLabel } = await import('../../components/ui/StatusLabel');
+    const html = renderToStaticMarkup(createElement(StatusLabel, { display: describeGame(eal('W')) }));
+    expect(html, 'components/ui/StatusLabel.tsx SO label').toContain('<span class="sr-only">decided on 1 v 1s</span>');
+    const ot = renderToStaticMarkup(
+      createElement(StatusLabel, { display: describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })) }),
+    );
+    expect(ot, 'components/ui/StatusLabel.tsx OT label').toContain('<span class="sr-only">after overtime</span>');
+    const forfeit = renderToStaticMarkup(
+      createElement(StatusLabel, {
+        display: describeGame(final(1, 0, { decider: 'FORFEIT', isForfeit: true, forfeitBy: 'away' })),
+      }),
+    );
+    expect(forfeit, 'components/ui/StatusLabel.tsx forfeit label').toContain('<span class="sr-only">by forfeit</span>');
+  });
+
+  it('names the EAL postseason by its event', () => {
+    const d = describeGame(
+      final(2, 1, { countsFor: null, postseason: { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' } }),
+    );
+    expect(d.postseasonTag, 'components/ui/game-view.ts postseasonTagOf').toBe('EAL Super Regional');
+    expect(d.isNonLeague).toBe(false);
+  });
+});
+
+describe('§5.2 row 4c — an overtime count the league’s rules cannot produce (overtimeInDoubt)', () => {
+  // NS Guidelines §VII.E.4 allows one overtime period, then 1 v 1s; MaxPreps recorded three on the
+  // 2026-09-02 Pleasant Valley at Chico game (1-0). The score is shown as MaxPreps has it, with no
+  // overtime tag and no "after overtime".
+  const threeOt = (countsFor: Game['countsFor']) =>
+    final(0, 1, {
+      countsFor,
+      leagueDivision: countsFor,
+      decider: '2OT',
+      isOt: true,
+      otPeriods: 3,
+      home: { teamId: 'chico-id', slug: 'chico', name: 'Chico', score: 0, result: 'L' },
+      away: { teamId: 'pv-id', slug: 'pleasant-valley', name: 'Pleasant Valley', score: 1, result: 'W' },
+    });
+
+  it('drops the tag and the overtime words in a shootout league', () => {
+    const g = threeOt('eal');
+    expect(overtimeInDoubt(g), 'components/ui/game-view.ts overtimeInDoubt').toBe(true);
+    const d = describeGame(g);
+    expect(d.deciderTag).toBeNull();
+    expect(d.sentence).toBe('Chico 0, Pleasant Valley 1, final.');
+    expect(d.away.chip).toBe('W');
+  });
+
+  it('changes nothing for one EAL overtime period, an uncounted game or another league', () => {
+    const one = { ...threeOt('eal'), decider: 'OT' as const, otPeriods: 1 };
+    expect(overtimeInDoubt(one)).toBe(false);
+    expect(describeGame(one).deciderTag).toBe('OT');
+    expect(overtimeInDoubt(threeOt(null))).toBe(false);
+    expect(describeGame(threeOt(null)).deciderTag).toBe('2 OT');
+    expect(overtimeInDoubt(threeOt('de-anza'))).toBe(false);
+    expect(describeGame(threeOt('de-anza')).deciderTag).toBe('2 OT');
+    expect(describeGame(threeOt('de-anza')).sentence).toContain('after overtime');
   });
 });
 
@@ -329,7 +415,7 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
 
 describe('every league’s games in the bundled snapshot (invariants)', () => {
   const games = getGames();
-  it('has games in all four leagues', () => {
+  it('has games in every league', () => {
     for (const league of getLeagueSummaries()) {
       expect(
         games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length,

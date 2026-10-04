@@ -14,9 +14,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES, getDivision } from '../lib/leagues';
+import { LEAGUES } from '../lib/leagues';
+import { officialDocumentOf } from '../lib/official/schema';
 import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
-import { getTeamBySlug } from '../lib/teams';
+import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
 import { REPO } from './helpers';
 
@@ -35,12 +36,12 @@ if (present) {
 }
 
 describeIfPresent('the committed snapshot', () => {
-  it('loads through loadSnapshot as schema version 2 with the 43-team registry', () => {
+  it('loads through loadSnapshot as schema version 2 with the whole registry', () => {
     expect(snapshot.schemaVersion).toBe(2);
     expect(snapshot.fetchedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(snapshot.season.year).toBe('26-27');
-    expect(snapshot.teams).toHaveLength(43);
-    expect(snapshot.standings).toHaveLength(43);
+    expect(snapshot.teams).toHaveLength(TEAMS.length);
+    expect(snapshot.standings).toHaveLength(TEAMS.length);
     expect(snapshot.leagueHealth.map((h) => h.leagueId)).toEqual(LEAGUES.map((l) => l.id));
   });
 
@@ -161,7 +162,7 @@ describeIfPresent('the committed snapshot: si.com score cross-check (owner decis
 describeIfPresent('the committed snapshot: official fixtures', () => {
   it('names real teams of the fixture’s division and real dates', () => {
     for (const f of snapshot.officialFixtures ?? []) {
-      expect(f.source).toBe(getDivision(f.division).official.source);
+      expect(f.source).toBe(officialDocumentOf(f.division).source);
       expect(f.dateKey).toMatch(/^2026-(08|09|10)-\d{2}$/);
       for (const slug of [f.awaySlug, f.homeSlug]) {
         if (slug !== null) expect(getTeamBySlug(slug)?.division, slug).toBe(f.division);
@@ -173,7 +174,7 @@ describeIfPresent('the committed snapshot: official fixtures', () => {
   it('attaches game.official only with a well-formed official stamp', () => {
     for (const g of snapshot.games) {
       if (!g.official) continue;
-      expect(g.official.source).toBe(getDivision(g.official.division).official.source);
+      expect(g.official.source).toBe(officialDocumentOf(g.official.division).source);
       expect(g.official.scheduledDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
   });

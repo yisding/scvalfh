@@ -10,7 +10,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
-import { getClubs, getClubsFile } from '../../lib/clubs';
+import { getClubs } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import {
   areKeyDatesConfirmed,
@@ -34,9 +34,9 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, listWords, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, formatStamp, listWords, numberWord, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
-import { CCS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
+import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 import { statusLegend } from '../../lib/standings';
@@ -44,13 +44,19 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each
- * league's standings are computed (SCVAL's by-laws quoted verbatim; BVAL, PCAL and MCAL generated
- * from their config citations), each league's data health, every si.com backfill, every contest
+ * league's standings are computed (SCVAL's by-laws quoted verbatim; BVAL, PCAL, MCAL and EAL
+ * generated from their config citations), each league's data health, every si.com backfill, every contest
  * dropped on purpose, the published cross-checks, the update cadence, privacy and the
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
  * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §17.1),
  * which links /clubs: hand research, not part of the twice-daily update. The college commitments
  * get one after it (`#commits-coverage`, DESIGN §21.4), linking /commits, for the same reason.
+ *
+ * A league that publishes no schedule document (`official.mode: 'none'`, the EAL) is never said to
+ * have one: its source card names the document its rules come from and prints `official.note` (where
+ * its league games come from instead) and its `membershipNote`, its health card says it has no
+ * official schedule document, and its postseason (an unbracketed tournament: the Super Regional) is
+ * the written rule and dates, with no bracket.
  */
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
@@ -144,9 +150,23 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
   const bucketStarts = Object.keys(byBucket)
     .map(Number)
     .sort((a, b) => a - b);
+  // The multi-team paragraph describes how a separating step is applied; a chain with none (the EAL's
+  // lone 'no-rule') has nothing to apply, so the paragraph would describe a procedure the rules lack.
+  const anyStepSeparates = bucketStarts.length > 0 || rules.tiebreaks.default.some((s) => s !== 'no-rule');
+  const unit = rules.gamesWord === 'division' ? 'division' : 'league';
+  // Only a league without a schedule document reaches the contest-type branch (EAL; SCVAL, the other
+  // contest-type league, is quoted by QuotedRules instead).
+  const postseasonNoun =
+    postseason.kind === 'unbracketed-tournament' ? `${postseason.name} games` : 'tournament games';
   const counts =
     rules.classification === 'contest-type'
-      ? 'A game counts when MaxPreps marks it a league game and both teams belong to the same division.'
+      ? `A game counts when MaxPreps marks it a league game and both teams belong to the same ${unit}${
+          rules.excludeContestTypes.length ? '; MaxPreps’ tournament and postseason games never count' : ''
+        }.${
+          rules.postseasonFrom
+            ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are ${postseasonNoun}.`
+            : ''
+        }`
       : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${rules.gamesWord === 'division' ? 'division' : 'league'}; tournament and postseason games never count.${
           rules.postseasonFrom ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are tournament games.` : ''
         }`;
@@ -184,7 +204,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
           ))}
         </ol>
       )}
-      <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p>
+      {anyStepSeparates ? <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p> : null}
       <p className="text-meta text-ink-3">
         A step this site cannot compute (a coin flip, a draw, a play-in) leaves the teams level at the
         same place, with a footnote citing the rule. Our display order is not a league ruling.
@@ -192,7 +212,25 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
       {rules.citations.incomplete ? <p>If the season ends with games unplayed: {rules.citations.incomplete}.</p> : null}
 
       <h4 className={H4}>Postseason</h4>
-      {postseason.kind === 'ccs-ladder' ? (
+      <GeneratedPostseason league={league} />
+      <p className="text-meta text-ink-2">
+        {league.links.map((l, i) => (
+          <span key={l.href}>
+            {i > 0 ? ' · ' : ''}
+            <ExternalLink href={l.href}>{l.label}</ExternalLink>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
+/** A generated league's postseason, by kind: the CCS ladder, a league tournament, or an unbracketed tournament. */
+function GeneratedPostseason({ league }: { league: LeagueConfig }) {
+  const { postseason } = league;
+  switch (postseason.kind) {
+    case 'ccs-ladder':
+      return (
         <>
           <p>{postseason.citation}.</p>
           <ul className="list-disc">
@@ -209,7 +247,9 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
             )}
           </ul>
         </>
-      ) : (
+      );
+    case 'league-tournament':
+      return (
         <>
           <ul className="list-disc">
             <li>{postseason.citations.format}.</li>
@@ -225,17 +265,23 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
             </Link>
           </p>
         </>
-      )}
-      <p className="text-meta text-ink-2">
-        {league.links.map((l, i) => (
-          <span key={l.href}>
-            {i > 0 ? ' · ' : ''}
-            <ExternalLink href={l.href}>{l.label}</ExternalLink>
-          </span>
-        ))}
-      </p>
-    </div>
-  );
+      );
+    case 'unbracketed-tournament':
+      // The written rule and dates only: no bracket and no seeding is computed (the seeding text is
+      // quoted, never applied).
+      return (
+        <>
+          <ul className="list-disc">
+            <li>{postseason.citations.qualification}.</li>
+            <li>{postseason.citations.format}.</li>
+            <li>{postseason.citations.seeding}.</li>
+            <li>{postseason.citations.eligibility}.</li>
+            <li>{postseason.citations.noFurtherPath}.</li>
+          </ul>
+          <p>{postseason.note}</p>
+        </>
+      );
+  }
 }
 
 /**
@@ -370,6 +416,15 @@ export default function AboutPage() {
   const field = getCcsField();
   const tournamentIds = new Set(getTournamentLeagueIds());
   const ncs = sections.find((s) => !s.holdsFieldHockeyChampionship);
+  // Leagues whose postseason is an unbracketed tournament (EAL's Super Regional), and the sections
+  // that hold them: each gets a source card and a Postseason paragraph of its own.
+  const unbracketed = leagues.filter((l) => UNBRACKETED_LEAGUE_IDS.includes(l.id));
+  const unbracketedSections = sections.filter((s) => unbracketed.some((l) => l.section.id === s.id));
+  // Leagues that use their points only to decide a title and publish no standings (EAL).
+  const titleOnly = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'title');
+  const tableOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'table');
+  // Leagues whose level varsity games end on 1 v 1s (EAL).
+  const shootoutLeagues = leagues.filter((l) => getLeague(l.id).rules.leagueOvertime === 'shootout');
 
   const perLeague = leagues.map((summary) => {
     const config = getLeague(summary.id);
@@ -395,11 +450,22 @@ export default function AboutPage() {
       heading: summary.divisions.find((x) => x.id === d.id)?.heading ?? null,
       maxprepsUrl: leagueStandingsUrl(d.id),
       knownCause: d.knownCause,
-      official: { source: d.official.source, url: d.official.scheduleUrl, mode: d.official.mode, revisedOn: d.official.revisedOn },
+      official:
+        d.official.mode === 'none'
+          ? { mode: 'none', note: d.official.note }
+          : { source: d.official.source, url: d.official.scheduleUrl, mode: d.official.mode, revisedOn: d.official.revisedOn },
     }));
+    // A league none of whose divisions publishes a schedule (EAL): its card names where its rules
+    // come from and what stands in for a schedule, never "its own documents".
+    const noDocument = config.divisions.every((d) => d.official.mode === 'none');
+    const officialNotes = [
+      ...new Set(config.divisions.flatMap((d) => (d.official.mode === 'none' ? [d.official.note] : []))),
+    ];
     return {
       summary,
       config,
+      noDocument,
+      officialNotes,
       dropped: leagueDropped,
       plainGroups: crossCheckGroups(plainRows, plainFlagged),
       causeGroups: causes.map((cause) => ({
@@ -416,6 +482,13 @@ export default function AboutPage() {
         .map((s) => ({ label: s.label, status: s.status === 'error' ? 'failed' : 'stale', error: s.error })),
     };
   });
+  // Leagues that publish no schedule or standings of their own (EAL): the generic "each league's own
+  // files" sentence names their section's Guidelines for them instead. The "own standings" sentence
+  // names the scores their schools report for seeding, which the Guidelines say are used for it
+  // (§VII.J): the Guidelines are rules, not a record of results.
+  const noDocumentLeagues = perLeague.filter((p) => p.noDocument).map((p) => p.summary);
+  const noDocumentWho = listWords(noDocumentLeagues.map((l) => `the ${l.shortName}`));
+  const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
 
   const TOC = toc(leagues);
   const leagueWords = listWords(leagues.map((l) => l.shortName));
@@ -490,7 +563,7 @@ export default function AboutPage() {
                   pages. We read it, never write to it, and never hotlink its mascot images &mdash;
                   each school is shown as a color monogram instead, built from the two colors the feed
                   reports. Each team page&rsquo;s roster and season player stats come from MaxPreps
-                  too, for all {counts.teams} teams in all four leagues: whatever the coach entered,
+                  too, for all {counts.teams} teams in all {numberWord(leagues.length)} leagues: whatever the coach entered,
                   with anything nobody published left blank. Other public sources, such as a school&rsquo;s
                   own athletics site, only fill a blank MaxPreps leaves: the team page marks every roster
                   value that came from one, and its Sources row links each page behind those values and
@@ -525,7 +598,7 @@ export default function AboutPage() {
                 </span>
               </dd>
             </div>
-            {perLeague.map(({ summary, config }) => (
+            {perLeague.map(({ summary, config, noDocument, officialNotes }) => (
               <div key={summary.id} className="sx-card flex flex-col p-5">
                 <dt>
                   <span className="block text-lead text-ink">{summary.shortName}</span>
@@ -534,37 +607,52 @@ export default function AboutPage() {
                   </span>
                 </dt>
                 <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
-                  <span className="block">
-                    League membership, the rules quoted under{' '}
-                    <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
-                      {summary.shortName} rules
-                    </a>{' '}
-                    and every scheduled league game come from {summary.shortName}&rsquo;s own documents,
-                    not from MaxPreps.
-                    {isQuotedLeague(config) ? (
-                      officialStandingsPdfUrl === null ? (
-                        <> {summary.shortName} has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
-                      ) : officialStandingsPdfUrl ? (
-                        <>
-                          {' '}
-                          {summary.shortName} has posted a 2026-27 standings PDF:{' '}
-                          <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
-                        </>
-                      ) : null
-                    ) : null}
-                  </span>
+                  {noDocument ? (
+                    <span className="block">
+                      The rules quoted under{' '}
+                      <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
+                        {summary.shortName} rules
+                      </a>{' '}
+                      come from the CIF {summary.section.name}&rsquo;s Field Hockey Guidelines 2026-28.{' '}
+                      {officialNotes.join(' ')}
+                      {config.membershipNote ? ` ${config.membershipNote}` : ''}
+                    </span>
+                  ) : (
+                    <span className="block">
+                      League membership, the rules quoted under{' '}
+                      <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
+                        {summary.shortName} rules
+                      </a>{' '}
+                      and every scheduled league game come from {summary.shortName}&rsquo;s own documents,
+                      not from MaxPreps.
+                      {isQuotedLeague(config) ? (
+                        officialStandingsPdfUrl === null ? (
+                          <> {summary.shortName} has not yet posted an official 2026-27 standings PDF; we check for one every run.</>
+                        ) : officialStandingsPdfUrl ? (
+                          <>
+                            {' '}
+                            {summary.shortName} has posted a 2026-27 standings PDF:{' '}
+                            <ExternalLink href={officialStandingsPdfUrl}>view it</ExternalLink>.
+                          </>
+                        ) : null
+                      ) : null}
+                    </span>
+                  )}
                   <span className="mt-auto flex flex-wrap gap-2 pt-3">
                     {config.links.map((l) => (
                       <ExternalLink key={l.href} href={l.href} className="sx-pill">
                         {l.label}
                       </ExternalLink>
                     ))}
-                    {config.divisions.map((d) => (
-                      <ExternalLink key={d.id} href={d.official.scheduleUrl} className="sx-pill">
-                        {officialSourceLabel(summary.shortName, d.official.source)}
-                        {summary.singleDivision ? '' : ` · ${d.label}`}
-                      </ExternalLink>
-                    ))}
+                    {/* Only a published schedule gets a pill: a 'none' division (EAL) has none. */}
+                    {config.divisions.map((d) =>
+                      d.official.mode === 'none' ? null : (
+                        <ExternalLink key={d.id} href={d.official.scheduleUrl} className="sx-pill">
+                          {officialSourceLabel(summary.shortName, d.official.source)}
+                          {summary.singleDivision ? '' : ` · ${d.label}`}
+                        </ExternalLink>
+                      ),
+                    )}
                   </span>
                 </dd>
               </div>
@@ -591,6 +679,47 @@ export default function AboutPage() {
                 </span>
               </dd>
             </div>
+            {/* One card per section whose league runs an unbracketed tournament (the Northern
+                Section: its Guidelines are the EAL's rules and set the Super Regional). */}
+            {unbracketedSections.map((section) => {
+              const sectionLeagues = unbracketed.filter((l) => l.section.id === section.id);
+              const sources = [
+                ...new Set(
+                  sectionLeagues.flatMap((l) => {
+                    const ps = getLeague(l.id).postseason;
+                    return ps.kind === 'unbracketed-tournament' ? [ps.sourceUrl] : [];
+                  }),
+                ),
+              ];
+              return (
+                <div key={section.id} className="sx-card flex flex-col p-5 md:col-span-2">
+                  <dt>
+                    <span className="block text-lead text-ink">CIF {section.name}</span>
+                    <span className="mt-0.5 block text-meta text-ink-3">Rules &amp; postseason dates</span>
+                  </dt>
+                  <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                    <span className="block">
+                      The {section.name}&rsquo;s Field Hockey Guidelines set the rules and the postseason for{' '}
+                      {listWords(sectionLeagues.map((l) => l.shortName))}. See{' '}
+                      <a href="#playoffs" className="text-accent hover:underline">
+                        Postseason
+                      </a>{' '}
+                      below.
+                    </span>
+                    <span className="mt-auto flex flex-wrap gap-2 pt-3">
+                      <ExternalLink href={section.officialUrl} className="sx-pill">
+                        {section.shortName} field hockey
+                      </ExternalLink>
+                      {sources.map((href) => (
+                        <ExternalLink key={href} href={href} className="sx-pill">
+                          Field Hockey Guidelines (PDF)
+                        </ExternalLink>
+                      ))}
+                    </span>
+                  </dd>
+                </div>
+              );
+            })}
           </dl>
           <p className="mt-stack max-w-prose text-meta text-ink-2">
             When MaxPreps has never published a result for a game that a league&rsquo;s official
@@ -635,8 +764,8 @@ export default function AboutPage() {
             page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
             MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s
             club and school pages, or local news such as the Gilroy Dispatch and Stick Together. It was
-            researched by hand on {dateWithYear(getClubsFile().capturedAt)}, each tie checked twice,
-            and is not part of the twice-daily update. Only players already on these rosters are
+            researched by hand, each tie checked twice when it was added, and is not part of the
+            twice-daily update. Only players already on these rosters are
             named, social media is never used, and recall is partial.
           </p>
           <p id="commits-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
@@ -648,9 +777,8 @@ export default function AboutPage() {
             play a sport in college, field hockey or any other
             {commitCount > 0 ? ` (${commitCount} found)` : ''}, from
             players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
-            news. It was last researched by hand on {dateWithYear(getCommitsFile().capturedAt)} with
-            the club pages&rsquo; matching rule, each commitment checked twice, and is not part of the
-            twice-daily update. Social media is never used, so a commitment announced only there is
+            news. It was researched by hand with the club pages&rsquo; matching rule, each commitment
+            checked twice when it was added, and is not part of the twice-daily update. Social media is never used, so a commitment announced only there is
             not listed, and recall is partial.
           </p>
         </section>
@@ -666,9 +794,20 @@ export default function AboutPage() {
               <a href="#cross-check" className="text-accent hover:underline">
                 the cross-check log
               </a>
-              ). A team with no reported results is never shown as a fabricated 0-0-0 record. All four
-              leagues award 3 points for a win and 1 for a tie and order their tables by points; they
-              differ in which games count and how ties are broken.
+              ). A team with no reported results is never shown as a fabricated 0-0-0 record. All{' '}
+              {numberWord(leagues.length)} leagues award 3 points for a win and 1 for a tie
+              {titleOnly.length === 0 ? (
+                ' and order their tables by points'
+              ) : (
+                <>
+                  ; {listWords(tableOrdered.map((l) => l.shortName))} order their tables by points, and{' '}
+                  {listWords(titleOnly.map((l) => l.shortName))} {titleOnly.length === 1 ? 'uses' : 'use'} them
+                  only to decide {titleOnly.length === 1 ? 'its title and publishes' : 'their titles and publish'}{' '}
+                  no standings, so this site orders {titleOnly.length === 1 ? 'that table' : 'those tables'} by
+                  the same points
+                </>
+              )}
+              ; they differ in which games count and how ties are broken.
             </p>
           </div>
           {perLeague.map(({ summary, config }) => (
@@ -714,6 +853,13 @@ export default function AboutPage() {
             </p>
             <ul className="list-disc">
               <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
+              {shootoutLeagues.length > 0 ? (
+                <li>
+                  A level {listWords(shootoutLeagues.map((l) => l.shortName))} league game that MaxPreps
+                  marks as won was decided on 1 v 1s: it shows the level score with an SO tag and counts as
+                  the winner&rsquo;s win. The 1 v 1 tally is not shown.
+                </li>
+              ) : null}
               <li>
                 A forfeit counts in win-loss-tie but not in goals for/against/differential &mdash; marked
                 with a dagger everywhere a total would otherwise be misleading.
@@ -797,6 +943,13 @@ export default function AboutPage() {
               </li>
             </ul>
             <p>
+              {shootoutLeagues.length > 0 ? (
+                <>
+                  A level si.com score between two {listWords(shootoutLeagues.map((l) => l.shortName))}{' '}
+                  teams is never used: a varsity game there is decided on 1 v 1s, and si.com does not say
+                  who won them.{' '}
+                </>
+              ) : null}
               Any other disagreement keeps MaxPreps&rsquo; score and is listed in the cross-check log.
               A backfilled score counts in the standings like any other final. si.com never decides
               league membership, league records or the standings order.
@@ -914,6 +1067,16 @@ export default function AboutPage() {
                   </p>
                 );
               })}
+            {unbracketed.map((l) => {
+              const ps = getLeague(l.id).postseason;
+              if (ps.kind !== 'unbracketed-tournament') return null;
+              return (
+                <p key={l.id}>
+                  {l.section.name}: {ps.note}{' '}
+                  <ExternalLink href={ps.sourceUrl}>{l.section.name} Field Hockey Guidelines (PDF)</ExternalLink>
+                </p>
+              );
+            })}
             <h3>CCS key dates</h3>
             {/* The dates sit inside sentences, so they stay in the prose's sans with tabular
                 figures (`tabular-nums`), not mono `sx-num`: mono is for digits that stack in a
@@ -986,7 +1149,8 @@ export default function AboutPage() {
               This is an independent hobby project with no staffed inbox, so the fastest way to check
               anything you think looks wrong is to compare it against the primary source directly
               &mdash; every team, standings table and game on this site links back to its MaxPreps page,
-              and the league documents above link straight to each league&rsquo;s own files. If a number
+              and the league documents above link straight to each league&rsquo;s own files
+              {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}. If a number
               here disagrees with one of those sources, that is exactly what{' '}
               <a href="#cross-check" className="text-accent hover:underline">
                 the cross-check log
@@ -1008,8 +1172,11 @@ export default function AboutPage() {
               Illustrated. All team names, colors and marks belong to their respective schools. Records
               here are computed from published game results and, while we cross-check them and publish
               every disagreement we find, they may differ from an official ruling &mdash; each
-              league&rsquo;s own standings are always the source of truth for anything that matters
-              competitively, such as playoff seeding.
+              league&rsquo;s own standings
+              {noDocumentLeagues.length > 0 &&
+                ` (or, for ${noDocumentWho}, which ${noDocumentLeagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${noDocumentLeagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${noDocumentGuidelines})`}{' '}
+              are always the
+              source of truth for anything that matters competitively, such as playoff seeding.
             </p>
           </div>
         </section>

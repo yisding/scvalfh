@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +2 finals · BVAL +0 · PCAL +0 · MCAL +0",
-  "contentHash": "0ff123da22ed8fac1b7e3777f1e97792367ca5a9456946893411e94ad5c547e1",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +16",
+  "contentHash": "b426983d6b1b2b28ab8592288c63ec26e1e754228208cb12797a6e409e43f46e",
   "counts": {
     "byLeague": {
       "bval": {
@@ -9,6 +9,13 @@
         "games": 116,
         "leagueGames": 60,
         "teams": 12
+      },
+      "eal": {
+        "backfilled": 0,
+        "finals": 21,
+        "games": 40,
+        "leagueGames": 30,
+        "teams": 6
       },
       "mcal": {
         "backfilled": 0,
@@ -32,26 +39,26 @@
         "teams": 15
       }
     },
-    "finals": 212,
-    "games": 365,
-    "leagueGames": 264,
+    "finals": 228,
+    "games": 396,
+    "leagueGames": 294,
     "mismatches": 8,
-    "pending": 4,
-    "teams": 43
+    "pending": 6,
+    "teams": 49
   },
   "crossCheck": {
-    "agreements": 69,
+    "agreements": 76,
     "backfilled": 3,
-    "compared": 134,
+    "compared": 140,
     "conflicts": 2,
-    "sbliveOnlyScored": 6
+    "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-04T10:49:11.786Z",
+  "fetchedAt": "2026-10-04T13:04:21.846Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 47,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -83,12 +90,21 @@
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 16,
+      "finalsDelta": 16,
+      "id": "eal",
+      "missingPast": 2,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 8,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 56,
+    "maxpreps": 64,
     "official": 8,
     "sblive": 20
   },
@@ -434,6 +450,46 @@
       "status": "ok"
     },
     {
+      "label": "eal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "eal reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "bella-vista schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "chico schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "corning schedule",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "davis schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "lassen schedule",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "pleasant-valley schedule",
+      "rowCount": 11,
+      "status": "ok"
+    },
+    {
       "label": "sblive scoreboard 2026-09-21",
       "rowCount": 7,
       "status": "ok"
@@ -509,8 +565,18 @@
       "status": "ok"
     },
     {
+      "label": "sblive corning games",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
       "label": "sblive cupertino games",
       "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive davis games",
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -521,16 +587,6 @@
     {
       "label": "sblive gilroy games",
       "rowCount": 17,
-      "status": "ok"
-    },
-    {
-      "label": "sblive greenfield games",
-      "rowCount": 13,
-      "status": "ok"
-    },
-    {
-      "label": "sblive live-oak games",
-      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -555,7 +611,7 @@
     }
   ],
   "today": "2026-10-04",
-  "warnings": 39,
+  "warnings": 40,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
     "lastGame": "2026-10-30T17:30:00",

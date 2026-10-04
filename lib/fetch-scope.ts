@@ -2,7 +2,7 @@
  * What scripts/fetch-rosters.ts and scripts/fetch-player-stats.ts share: which registry teams a
  * run covers, and how a run reports its teams league by league.
  *
- * Both scripts walk the whole 43-team registry. `--leagues scval,bval` narrows a run to those
+ * Both scripts walk the whole 49-team registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
  * keeps whatever the previous file held for it (or 'pending' when it held nothing valid). Failures are
  * scoped the same way — each team is its own unit, so one team, or one whole league, failing never
@@ -33,7 +33,7 @@ export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] 
   return [...new Set(ids)] as LeagueId[];
 }
 
-/** The registry teams a run covers, in registry order: all 43, or those of `leagues`. */
+/** The registry teams a run covers, in registry order: all 49, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {
   return leagues === null ? TEAMS : TEAMS.filter((t) => leagues.includes(t.league));
 }

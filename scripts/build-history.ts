@@ -5,7 +5,7 @@
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
  *          from bval.org/standings and bval.org/all-league
- *   PCAL, MCAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
+ *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
  *
  *   pnpm exec tsx scripts/build-history.ts
  *   pnpm exec tsx scripts/build-history.ts --from tests/fixtures/scval \
@@ -310,7 +310,7 @@ async function main(): Promise<number> {
     divisions: bvalDivisions,
   };
 
-  // ---- PCAL and MCAL: no official final standings, so no table is shown.
+  // ---- PCAL, MCAL and EAL: no official final standings, so no table is shown.
   const pcal = {
     status: 'unavailable',
     league: getLeague('pcal').name,
@@ -343,10 +343,25 @@ async function main(): Promise<number> {
     ],
   };
 
+  // The EAL has no league website, and the CIF Northern Section's field hockey page and Playoff Center post no
+  // field hockey standings or results (checked 2026-10-04).
+  const eal = {
+    status: 'unavailable',
+    league: getLeague('eal').name,
+    reason:
+      'The EAL published no 2025-26 final standings of its own. We found no EAL league website, and the CIF Northern Section’s field hockey page and Playoff Center post no field hockey standings or results. We do not show standings from newspapers or third-party sites.',
+    checkedOn: '2026-10-04',
+    checked: [
+      'https://www.cifns.org/sports/fh/index (the Section’s field hockey page: guidelines and announcements; its standings panel is empty)',
+      'https://www.cifns.org/guidelines-playoffs-Divisions-archives/playoff-center/index (2025-26 points and brackets list no field hockey)',
+      'https://fieldhockeyumpires.org/ (the EAL/SRL umpires’ site: schedules and assignments, no standings)',
+    ],
+  };
+
   const history = {
     season: '2025-26',
     sport: 'Girls Field Hockey',
-    leagues: { scval, bval, pcal, mcal },
+    leagues: { scval, bval, pcal, mcal, eal },
   };
   const divisions = [...scvalDivisions, ...bvalDivisions];
   for (const p of problems.slice(scvalProblems)) console.warn(`WARN ${p}`);
@@ -361,7 +376,7 @@ async function main(): Promise<number> {
     );
     console.log(`  ${d.standings.varsity.map((r) => `${r.name} ${r.leagueRecord}`).join(' · ')}`);
   }
-  console.log('PCAL, MCAL: unavailable (see reasons in the file)');
+  console.log('PCAL, MCAL, EAL: unavailable (see reasons in the file)');
 
   // Validate with lib/history.ts' own schema before anything is written. That module also validates
   // a file when it is imported; SCVAL_HISTORY points that import-time load at this candidate rather

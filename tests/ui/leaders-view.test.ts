@@ -46,6 +46,7 @@ import { computeStandings } from '../../lib/standings';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { game } from '../helpers';
+import { textOf } from './html-text';
 
 const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = ['elo-rating', 'best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets'];
@@ -165,7 +166,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
     }
   });
 
-  it('names every team with no player stats, so no player board reads as all 43', () => {
+  it('names every team with no player stats, so no player board reads as all 49', () => {
     const none = getTeams().filter((t) => !stats.some((s) => s.slug === t.slug && s.players.length > 0));
     for (const team of none) expect(view.playerNotes[0], team.slug).toContain(team.name);
   });
@@ -319,7 +320,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
     expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
     expect(view.schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
-      'The Elo board needs at least 3 games against the four leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
+      'The Elo board needs at least 3 games against the five leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
     // No prior season in these sources: every team starts at average, and the note says nothing of one.
@@ -618,7 +619,7 @@ describe('LeaderBoardTable and the /leaders page', () => {
     );
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: view.players[0] }));
     expect(html).toContain('<section id="most-points"');
-    expect(html).toContain('<caption class="sr-only">Most points, players in all four leagues, this season</caption>');
+    expect(html).toContain('<caption class="sr-only">Most points, players in all five leagues, this season</caption>');
     expect(html).toContain('<span aria-hidden="true">T1</span><span class="sr-only">tied for 1st</span>');
     expect(html).toContain('data-team-slug="leigh"');
     expect(html).toContain('<span class="sx-pin-note">Your team’s player. </span>');
@@ -634,5 +635,14 @@ describe('LeaderBoardTable and the /leaders page', () => {
     for (const id of [...PLAYER_IDS, ...SCHOOL_IDS]) expect(html, id).toContain(`<section id="${id}"`);
     expect(html).toContain('<h1');
     expect(html).not.toMatch(/eliminat/i);
+  });
+
+  it('counts the leagues from config: five, with the EAL named', () => {
+    const text = textOf(renderToStaticMarkup(LeadersPage()));
+    expect(text, 'app/leaders/page.tsx eyebrow').toContain('All five leagues');
+    expect(text, 'app/leaders/page.tsx').toContain('across SCVAL, BVAL, PCAL, MCAL and EAL');
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five leagues, this season/);
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five leagues, this season/);
+    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/four leagues/);
   });
 });
