@@ -194,7 +194,7 @@ has the same list):
 | `--capture <dir>` | live run that also records every response into a new corpus at `<dir>` |
 | `--leagues scval,bval` | fetch only these leagues; the others are carried from the previous snapshot, frozen |
 | `--accept-regression bval` | skip the finals-regression guard for these leagues, this run only |
-| `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere; validate and report without writing; pin the run's stamp |
+| `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere; validate and report without writing (captures included); pin the run's stamp |
 | `--force` | bypass the Aug 1 - Nov 30 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn` | skip individual secondary sources |

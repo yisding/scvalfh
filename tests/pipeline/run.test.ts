@@ -277,6 +277,17 @@ describe('prepareRun and the outputs', () => {
     expect(dry.previousFile).toBe(shipped);
   });
 
+  it('a dry run records no --capture corpus; a real run does', () => {
+    const live = (): Transport => ({ mode: 'live', get: async () => ({ url: '', httpStatus: 200, body: '' }) });
+    const capture = path.join(tmpOut(), '..', 'capture');
+    const dry = prepareRun(parseRunArgs(['--capture', capture, '--out', tmpOut(), '--dry-run'], opts), SILENT_SINK, live);
+    expect(dry.ctx.transport.mode).toBe('live');
+    expect(existsSync(capture)).toBe(false);
+    const wet = prepareRun(parseRunArgs(['--capture', capture, '--out', tmpOut()], opts), SILENT_SINK, live);
+    expect(wet.ctx.transport.mode).toBe('recording');
+    expect(existsSync(capture)).toBe(true);
+  });
+
   it('reads a v1 previous snapshot through loadSnapshot (migrated)', () => {
     const args = parseRunArgs(['--fixtures', corpusDir('scval'), '--out', path.join(REPO, 'tests', 'golden', 'snapshot-2026-10-02.v1.json'), '--dry-run'], opts);
     const prepared = prepareRun(args, SILENT_SINK);

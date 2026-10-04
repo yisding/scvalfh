@@ -187,7 +187,7 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --variant <dir>              apply a variant overlay on top of --fixtures (repeatable)
   --capture <dir>              live: also record every response into a new corpus at <dir>
   --out <path>                 snapshot path (default data/snapshot.json; the meta file goes beside it)
-  --dry-run                    validate and report, write nothing
+  --dry-run                    validate and report, write nothing (captures included)
   --fetched-at <iso>           pin the run's stamp (default: now; the corpus's stamp with --fixtures)
   --force                      run even outside the season window
   --leagues <a,b>              fetch only these leagues; the others are carried forward, frozen
@@ -283,7 +283,8 @@ export interface PreparedRun {
 /**
  * Resolves the transport, the previous snapshot and the defaults that depend on the corpus, and
  * builds the context. A corpus's (or variant's) `previous` snapshot is copied to `--out` first so
- * the run starts from it (on a dry run it is read in place and nothing is written).
+ * the run starts from it (on a dry run it is read in place and nothing is written). A dry run
+ * records no --capture corpus either, as fetch-rosters and fetch-player-stats do.
  */
 export function prepareRun(raw: RunArgs, sink: LogSink = CONSOLE_SINK, live?: () => Transport): PreparedRun {
   const args: RunArgs = { ...raw, variants: [...raw.variants], acceptRegression: [...raw.acceptRegression] };
@@ -297,7 +298,7 @@ export function prepareRun(raw: RunArgs, sink: LogSink = CONSOLE_SINK, live?: ()
   } else {
     const inner = live ? live() : new LiveTransport({ onLog: (line) => sink.log(line) });
     transport =
-      args.capture !== null
+      args.capture !== null && !args.dryRun
         ? new RecordingTransport(inner, args.capture, {
             id: `capture-${localDateKey(args.fetchedAt)}`,
             fetchedAt: args.fetchedAt,
