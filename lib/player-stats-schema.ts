@@ -23,6 +23,7 @@
 import { z } from 'zod';
 
 import { contentKey } from './fetch-scope';
+import { httpUrl, slugId } from './schema-primitives';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Player stats cover every registry team, all five leagues: one entry per team of TEAMS. */
@@ -62,15 +63,7 @@ export type GoalieStatKey = (typeof GOALIE_STAT_KEYS)[number];
 export type FieldStats = Record<FieldStatKey, number | null>;
 export type GoalieStats = Record<GoalieStatKey, number | null>;
 
-const teamSlug = z
-  .string()
-  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
-  .refine((slug) => STATS_SLUGS.has(slug), 'not a registry team slug');
-
-/** Same scheme check as lib/rosters-schema.ts: these end up in an href. */
-const httpUrl = z
-  .string()
-  .refine((v) => /^https?:\/\/\S+$/i.test(v), 'expected an http(s) URL');
+const teamSlug = slugId.refine((slug) => STATS_SLUGS.has(slug), 'not a registry team slug');
 
 const stat = z.number().min(0).nullable();
 const fieldKey = z.enum(FIELD_STAT_KEYS);

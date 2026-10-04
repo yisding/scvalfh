@@ -53,6 +53,7 @@ import {
 } from '../lib/sources/bval-sheet';
 import { HttpClient } from '../lib/sources/http';
 import { divisionsOf, getLeague } from '../lib/leagues';
+import { isCalendarDate } from '../lib/schema-primitives';
 
 interface Args {
   from: string | null;
@@ -60,13 +61,6 @@ interface Args {
   retrievedOn: string;
   out: string;
   dryRun: boolean;
-}
-
-/** A real calendar day written YYYY-MM-DD ("2026-02-30" is refused). */
-function isIsoDay(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const d = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -92,7 +86,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--dry-run') out.dryRun = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
-  if (out.retrievedOn !== null && !isIsoDay(out.retrievedOn)) {
+  if (out.retrievedOn !== null && !isCalendarDate(out.retrievedOn)) {
     throw new Error(`--retrieved-on must be a date written YYYY-MM-DD, got "${out.retrievedOn}"`);
   }
   // Offline, the documents were read whenever the fixtures were saved; today would be a guess.

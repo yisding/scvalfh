@@ -38,6 +38,7 @@ import {
   type CommitsFile,
 } from './commits-schema';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { failValidation } from './schema-primitives';
 import { getTeamBySlug } from './teams';
 import type { TeamSlug } from './types';
 
@@ -67,12 +68,7 @@ export function loadCommits(
   season: string = getRosters().season,
 ): CommitsFile {
   const parsed = CommitsFileSchema.safeParse(raw);
-  if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-    throw new Error(`commits failed validation:\n${lines.join('\n')}`);
-  }
+  if (!parsed.success) failValidation('commits', parsed.error.issues);
   const file = parsed.data;
   if (file.season !== season) {
     throw new Error(`commits.json is for season ${file.season}, rosters for ${season}`);

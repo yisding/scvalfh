@@ -12,6 +12,7 @@ import type {
   TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
 // lib/season.ts is a dependency-free constants leaf: the only runtime import besides types.
+import { DATE_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 
 // ---------- shape (SPEC §2.1) ----------
@@ -1080,7 +1081,6 @@ const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(
 const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-higher-placed', 'record-vs-lower-placed',
 ]);
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** The ladder statuses a postseason kind may use. */
@@ -1272,7 +1272,7 @@ export function assertLeagues(): void {
     const section = SECTION_BY_ID.get(l.sectionId);
     const inWindow = (date: string, what: string): void => {
       const day = date.slice(0, 10);
-      if (!DATE_RE.test(day)) fail(`${what}: "${date}" is not a date`);
+      if (!DATE_PATTERN.test(day)) fail(`${what}: "${date}" is not a date`);
       if (section && (day < section.seasonWindow.start || day > section.seasonWindow.end)) {
         fail(`${what}: ${day} is outside the ${section.id} season window`);
       }

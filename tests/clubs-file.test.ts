@@ -21,7 +21,6 @@ import {
   isAsOf,
   isBannedHost,
   clubSiteKey,
-  isHttpsUrl,
   type ClubsFile,
 } from '../lib/clubs-schema';
 import {
@@ -40,6 +39,7 @@ import {
 } from '../lib/clubs';
 import { LEAGUES } from '../lib/leagues';
 import { classOf, getAllEnrichedRosters, getRosters } from '../lib/rosters';
+import { isHttpsUrl } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 

@@ -16,6 +16,7 @@ import { MCAL_SEEDS } from './registry/mcal';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
+import { SLUG_PATTERN } from './schema-primitives';
 import type { DivisionId, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
@@ -228,7 +229,6 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
 
 // ---------- build-time asserts ----------
 
-const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const EXPECTED_ACRONYM_COLLISIONS = ['BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'PHS', 'SCHS', 'SHS'];
 
 function assertRegistry(): void {
@@ -247,7 +247,7 @@ function assertRegistry(): void {
     if (dupes.length) fail(`duplicate ${label}: ${[...new Set(dupes)].join(', ')}`);
   }
   for (const t of TEAMS) {
-    if (!SLUG_RE.test(t.slug)) fail(`bad slug "${t.slug}"`);
+    if (!SLUG_PATTERN.test(t.slug)) fail(`bad slug "${t.slug}"`);
     if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
     if (t.shortName.length > 14) fail(`${t.slug}: shortName longer than 14 characters`);
   }

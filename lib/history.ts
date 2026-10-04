@@ -17,11 +17,9 @@ import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import bundledHistory from '../data/history-2025-26.json';
 import { LEAGUE_IDS, divisionsOf, getLeague } from './leagues';
+import { dateKey, failValidation, slugId } from './schema-primitives';
 import { getTeamBySlug, teamsInLeague } from './teams';
 import type { DivisionId, LeagueId, TeamSlug } from './types';
-
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
 /**
  * The archive is league-aware: every league of lib/leagues.ts has an entry, and each entry is
@@ -33,8 +31,8 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 function leagueSchema(leagueId: LeagueId) {
   const slugs: ReadonlySet<string> = new Set(teamsInLeague(leagueId).map((t) => t.slug));
   const divisions: ReadonlySet<string> = new Set(divisionsOf(leagueId).map((d) => d.id));
-  const teamSlug = id.refine((slug) => slugs.has(slug), `not a registry slug of league ${leagueId}`);
-  const division = id.refine((d) => divisions.has(d), `not a division of league ${leagueId}`);
+  const teamSlug = slugId.refine((slug) => slugs.has(slug), `not a registry slug of league ${leagueId}`);
+  const division = slugId.refine((d) => divisions.has(d), `not a division of league ${leagueId}`);
 
   const row = z
     .object({
@@ -107,7 +105,7 @@ function leagueSchema(leagueId: LeagueId) {
           /** division -> the official all-league document, or null when there is none. */
           allLeagueDocs: z.record(division, z.string().url().nullable()),
           /** The day the sheet and documents were read. */
-          retrievedOn: isoDate,
+          retrievedOn: dateKey,
           extraction: z.string(),
           notes: z.array(z.string()),
         }),
@@ -144,7 +142,7 @@ function leagueSchema(leagueId: LeagueId) {
     /** Why there is nothing to show, in words a reader can be given. */
     reason: z.string().min(20),
     /** The day we last looked. */
-    checkedOn: isoDate,
+    checkedOn: dateKey,
     /** What we looked at, so the claim is checkable. */
     checked: z.array(z.string().min(1)).min(1),
     /**
@@ -211,12 +209,7 @@ function load(): History {
     raw = JSON.parse(text) as unknown;
   }
   const parsed = HistorySchema.safeParse(raw);
-  if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-    throw new Error(`history failed validation:\n${lines.join('\n')}`);
-  }
+  if (!parsed.success) failValidation('history', parsed.error.issues);
   return parsed.data as History;
 }
 

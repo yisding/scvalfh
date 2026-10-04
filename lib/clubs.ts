@@ -39,6 +39,7 @@ import {
   type ClubsFile,
 } from './clubs-schema';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { failValidation } from './schema-primitives';
 import type { TeamSlug } from './types';
 
 export type {
@@ -66,12 +67,7 @@ export function loadClubs(
   season: string = getRosters().season,
 ): ClubsFile {
   const parsed = ClubsFileSchema.safeParse(raw);
-  if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-    throw new Error(`clubs failed validation:\n${lines.join('\n')}`);
-  }
+  if (!parsed.success) failValidation('clubs', parsed.error.issues);
   const file = parsed.data;
   if (file.season !== season) {
     throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);

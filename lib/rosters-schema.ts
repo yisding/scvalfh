@@ -21,6 +21,7 @@ import { z } from 'zod';
 
 import { contentKey } from './fetch-scope';
 import { ALL_DIVISIONS } from './leagues';
+import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Rosters cover every registry team, all five leagues: one entry per team of TEAMS. */
@@ -29,22 +30,15 @@ const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d
 /** How many teams a rosters file holds: TEAMS.length (49). */
 export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
 
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
 
-const teamSlug = id.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
-
-const division = id.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
+const division = slugId.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
 
 /** A team entry must carry its own registry id and division, not another team's. */
 export function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
   const team = getTeamBySlug(t.slug);
   return team !== undefined && team.id === t.teamId && team.division === t.division;
 }
-
-/** Same scheme check as lib/snapshot-schema.ts: these end up in an href. */
-const httpUrl = z
-  .string()
-  .refine((v) => /^https?:\/\/\S+$/i.test(v), 'expected an http(s) URL');
 
 export const GRADE_CLASSES = ['Fr.', 'So.', 'Jr.', 'Sr.'] as const;
 
@@ -229,7 +223,6 @@ const enrichmentKind = z.enum(ENRICHMENT_KINDS);
  * low    a profile field not tied to the season at all
  */
 const confidence = z.enum(['high', 'medium', 'low']);
-const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
 
 const sourced = {
   kind: enrichmentKind,
@@ -306,7 +299,7 @@ function hostOf(url: string): string | null {
 export const PlayerProfileSchema = z
   .object({
     platform: z.enum(PROFILE_PLATFORMS),
-    url: httpUrl.refine((v) => v.startsWith('https://'), 'expected an https URL'),
+    url: httpsUrl,
     /** The graduation year the profile states, when it states one. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     note: z.string().min(1).nullable(),
@@ -371,7 +364,7 @@ export const EnrichmentSourceSchema = z.object({
   kind: enrichmentKind,
   url: httpUrl,
   title: z.string().min(1),
-  capturedAt: dateOnly,
+  capturedAt: dateKey,
   confidence,
 });
 
@@ -391,7 +384,7 @@ export const EnrichedTeamSchema = z
 export const RosterEnrichmentSchema = z
   .object({
     season: z.string().min(1),
-    capturedAt: dateOnly,
+    capturedAt: dateKey,
     builtBy: z.string().min(1),
     notes: z.array(z.string().min(1)),
     /** One entry per registry team; a team nothing has been added for has empty lists. */

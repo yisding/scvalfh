@@ -19,12 +19,12 @@ import path from 'node:path';
 import { z } from 'zod';
 
 import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '../leagues';
+import { dateKey } from '../schema-primitives';
 import { resolveOfficialName } from '../teams';
 import type { DivisionId, LeagueId, OfficialFixture, OfficialSourceId, TeamSlug } from '../types';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 
-const DATE_KEY = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
 const HHMM = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'expected HH:MM (24h)');
 
 export const BundleDocumentSchema = z.strictObject({
@@ -40,9 +40,9 @@ export const BundleFixtureSchema = z.strictObject({
   id: z.string().min(1),
   division: z.string().min(1),
   /** The official date (after any approved change). */
-  date: DATE_KEY,
+  date: dateKey,
   /** The originally published date when an approved change moved it (MCAL); else null. */
-  originalDate: DATE_KEY.nullable(),
+  originalDate: dateKey.nullable(),
   /** League-published varsity start. */
   time: HHMM.nullable(),
   /** Source token, resolved through the league scope only. */
@@ -55,7 +55,7 @@ export const BundleFixtureSchema = z.strictObject({
 
 export const BundleEventSchema = z.strictObject({
   kind: z.literal('play-in'),
-  date: DATE_KEY,
+  date: dateKey,
   time: HHMM.nullable(),
   verbatim: z.string().min(1),
 });
@@ -64,7 +64,7 @@ export const OfficialBundleSchema = z.strictObject({
   schema: z.literal(OFFICIAL_BUNDLE_SCHEMA),
   league: z.string().min(1),
   source: z.enum(['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf']),
-  transcribedOn: DATE_KEY,
+  transcribedOn: dateKey,
   documents: z.array(BundleDocumentSchema).min(1),
   fixtures: z.array(BundleFixtureSchema).min(1),
   events: z.array(BundleEventSchema),

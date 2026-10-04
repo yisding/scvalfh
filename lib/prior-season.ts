@@ -18,6 +18,7 @@
 
 import { z } from 'zod';
 
+import { dateKey } from './schema-primitives';
 import type { ScheduleRow } from './sources/maxpreps';
 import { TEAMS } from './teams';
 import type { Team, TeamId, TeamSlug } from './types';
@@ -49,8 +50,6 @@ export interface PriorExcluded {
   unscored: number;
 }
 
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
-
 export const PriorSeasonSchema = z
   .object({
     /** "2025-26" */
@@ -70,7 +69,7 @@ export const PriorSeasonSchema = z
     games: z.array(
       z.object({
         contestId: z.string().min(1),
-        date: isoDate,
+        date: dateKey,
         homeId: z.string().min(1),
         homeSlug: z.string().min(1),
         awayId: z.string().min(1),

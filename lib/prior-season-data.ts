@@ -8,8 +8,15 @@
 
 import bundled from '../data/prior-season.json';
 import { PriorSeasonSchema, type PriorSeason } from './prior-season';
+import { failValidation } from './schema-primitives';
 
-const priorSeason: PriorSeason = PriorSeasonSchema.parse(bundled);
+function load(): PriorSeason {
+  const parsed = PriorSeasonSchema.safeParse(bundled);
+  if (!parsed.success) failValidation('prior-season', parsed.error.issues);
+  return parsed.data;
+}
+
+const priorSeason = load();
 
 /** Last season's results, as data/prior-season.json holds them. */
 export function getPriorSeason(): PriorSeason {

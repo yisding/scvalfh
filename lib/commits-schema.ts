@@ -36,7 +36,8 @@
 
 import { z } from 'zod';
 
-import { isBannedHost, isCalendarDate, isHttpsUrl } from './clubs-schema';
+import { isBannedHost } from './clubs-schema';
+import { isCalendarDate, isHttpsUrl, slugId } from './schema-primitives';
 import { TEAMS } from './teams';
 
 /**
@@ -146,10 +147,8 @@ export function isCommitDate(v: string): boolean {
 
 // ---------------------------------------------------------------- building blocks
 
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'expected a lower-case id');
-
 const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-const teamSlug = id.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
+const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
 
 const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
 
@@ -187,7 +186,7 @@ export const CollegeProgramSchema = z.object({
 
 export const CollegeSchema = z.object({
   /** Ours, kebab-case: the `#college-<slug>` anchor on /commits. */
-  slug: id,
+  slug: slugId,
   /** The official name: "Stanford University". */
   name: text,
   /** The display name when set ("Stanford", "UC Davis"); `name` otherwise. */
@@ -223,7 +222,7 @@ export const CommitmentSchema = z.object({
   athleteId: text,
   /** As MaxPreps spells it; lib/commits.ts refuses any other spelling. */
   fullName: text,
-  college: id,
+  college: slugId,
   /** The sport the player committed to play at `college`; that college has a program in it. */
   sport: z.enum(COMMIT_SPORTS),
   status: z.enum(COMMIT_STATUSES),
