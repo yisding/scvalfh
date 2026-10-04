@@ -686,7 +686,13 @@ or class, for nicknames):
   NorCal lacrosse clubs' commitment pages; MileSplit's California signings.
 - **Player by player.** A SportsRecruits profile-address probe for all 716 rows (4,578 addresses,
   every sport), FieldLevel and NCSA probes, and a deep search of the 66 players tied to a club
-  (§1.1j2): their linked profiles, the probes, two web searches each.
+  (§1.1j2): their linked profiles, the probes, two web searches each. Then SportsRecruits' own
+  athlete search (the Meilisearch index its pages query, read with the public search key they embed,
+  with the owner's approval), queried for every row by full name and by surname, all sports: 19,314
+  records with the row's surname and class year in California or with no state, of which the 3,428
+  with the same first initial or a California home were opened. 104 show a commitment: the fifteen
+  in the file that rest on a SportsRecruits profile (every one of them), and the rest same-surname
+  athletes elsewhere, mostly Southern California, or with another first name. No new commitment.
 - **News.** Every story since 2025 on 18 student papers and the high school sports sections of the
   Marin IJ, Mercury News, Monterey Herald, Gilroy Dispatch, Morgan Hill Times, BenitoLink, the Free
   Lance and the Los Gatan (most through their sites' WordPress APIs), and the athletics news of the

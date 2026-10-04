@@ -466,9 +466,9 @@ sources for existing ones (St. Ignatius athletics' Oct 1 report and a Feb 4 Stic
 each kept only after a hand re-read and a final audit that re-opened every source in the file.
 A second round on 2026-10-04 widened the rule to any sport and swept again for field hockey: every
 "Committed Athletes" entry on SportsRecruits' field hockey, lacrosse and soccer college pages (with
-the California profiles behind them), a SportsRecruits profile probe for all 716 rows, the field
-hockey, lacrosse and soccer commitment lists and databases, every 2025-26 story on 18 student papers
-and 8 local papers, and the club-tied players one by one. It found nine commitments in other sports
+the California profiles behind them), a SportsRecruits profile probe and a search of its athlete
+index for all 716 rows, the field hockey, lacrosse and soccer commitment lists and databases, every
+2025-26 story on 18 student papers and 8 local papers, and the club-tied players one by one. It found nine commitments in other sports
 and no new field hockey one that meets the rule; a checker and an independent refuter re-opened each
 (both kept the nine, and the refuter dropped a field hockey "planning to continue" that is a plan,
 not a commitment), and a final audit found every quote in the file on its page. Recall is partial:
