@@ -4,16 +4,31 @@ import { CCS } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import type { TeamPageView } from './team-view';
 
+/** 'MCAL tournament' | 'Super Regional' | 'playoff': the event a result-less team has no place in. */
+function postseasonPhrase(league: TeamPageView['league']): string {
+  switch (league.postseasonKind) {
+    case 'league-tournament':
+      return `${league.shortName} tournament`;
+    case 'unbracketed-tournament':
+      return league.postseasonName ?? 'playoff';
+    case 'ccs-ladder':
+      return 'playoff';
+  }
+}
+
 /**
  * Where this team stands in its league's postseason picture (SPEC §10.5): the CCS ladder for SCVAL,
- * BVAL and PCAL, the MCAL tournament for MCAL. The copy is `getTeamPostseasonLine(slug)` from
+ * BVAL and PCAL, the MCAL tournament for MCAL, the Super Regional for the EAL. The copy is `getTeamPostseasonLine(slug)` from
  * lib/data.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
  *
  * - a CCS league: the ladder label, then the league's sentence (the SCVAL crossover date, BVAL's
  *   Oct 31 play-in, or "No automatic-berth route; …"), and `CCS playoffs →`;
  * - MCAL: the ladder label and the tournament format, `MCAL tournament →`. No CCS sentence, no
  *   berth meter and no CCS bracket link: the North Coast Section holds no field hockey
- *   championship, so a CCS concept on an MCAL page would be false (SPEC §10.9).
+ *   championship, so a CCS concept on an MCAL page would be false (SPEC §10.9);
+ * - the EAL: the status chip (a Super Regional place or outside the top six) and the Super
+ *   Regional's dates and what is not published, from lib/data.ts. No CCS sentence, no CCS link and
+ *   no bracket, because none is published.
  *
  * A team with no results is never placed by merit: the accessor returns null and the block reads
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
@@ -27,7 +42,7 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
         <p className="m-0 text-body text-ink">No results reported yet.</p>
         <p className="mt-2 mb-0 text-ink-2">
           {view.team.name} has no counted {league.shortName} result, so it has no computed place
-          in the {league.postseasonKind === 'league-tournament' ? `${league.shortName} tournament` : 'playoff'} picture.
+          in the {postseasonPhrase(league)} picture.
         </p>
       </div>
     );

@@ -17,7 +17,7 @@ import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view'
 
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
- * view in lib/rosters.ts, for every team of all four leagues. Pure, so tests/ui/roster-view.test.ts
+ * view in lib/rosters.ts, for every team of all five leagues. Pure, so tests/ui/roster-view.test.ts
  * can assert it over the real files.
  *
  * What the page promises, and this module enforces:

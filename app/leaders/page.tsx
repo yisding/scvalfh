@@ -7,11 +7,11 @@ import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords } from '../../lib/format';
+import { listWords, numberWord } from '../../lib/format';
 import { LEAGUES } from '../../lib/leagues';
 
 /**
- * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all four leagues: the
+ * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all five leagues: the
  * players with the most points, assists, saves and clean sheets, and the schools with the highest
  * Elo rating (lib/ratings.ts, DESIGN §20), the best records, the most goals per game, the fewest
  * allowed and the most clean sheets.
@@ -49,7 +49,7 @@ export default function LeadersPage() {
     // (6rem); from md the pills sit in the title row and do not stick (as on /history).
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow="All four leagues"
+        eyebrow={`All ${numberWord(LEAGUES.length)} leagues`}
         title="Season leaders"
         description={
           <>

@@ -35,8 +35,10 @@ export function TeamOfficialFixtures({
   division,
   today,
 }: TeamOfficialFixturesProps) {
-  if (fixtures.length === 0) return null;
-  const scheduleUrl = getDivision(division).official.scheduleUrl;
+  // A division whose league publishes no schedule (`official.mode` 'none') has no fixtures to list.
+  const official = getDivision(division).official;
+  if (fixtures.length === 0 || official.mode === 'none') return null;
+  const scheduleUrl = official.scheduleUrl;
   const short = leagueOfDivision(division).shortName;
 
   return (

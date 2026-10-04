@@ -10,7 +10,7 @@ import type { Game, TeamSlug } from '../../lib/types';
 
 /**
  * The team page's player stats section (SPEC §1.1k), derived from data/player-stats.json, for every
- * team of all four leagues. Pure, so tests/ui/player-stats-view.test.ts can assert it over the real
+ * team of all five leagues. Pure, so tests/ui/player-stats-view.test.ts can assert it over the real
  * file.
  *
  * Three blocks, each shown only when the team has something for it:

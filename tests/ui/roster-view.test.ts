@@ -20,12 +20,12 @@ import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
 import { textOf } from './html-text';
 
-/** Rosters cover every registry team, all four leagues: 43 views. */
+/** Rosters cover every registry team, all five leagues: 49 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));
 
 describe('buildRosterView', () => {
   it('builds a view for every team of every league, and null only for a slug that is no team', () => {
-    expect(views).toHaveLength(43);
+    expect(views).toHaveLength(49);
     for (const { slug, view } of views) expect(view, slug).toBeTruthy();
     for (const id of LEAGUE_IDS) {
       for (const t of teamsInLeague(id)) expect(buildRosterView(t.slug), `${id} / ${t.slug}`).not.toBeNull();
@@ -260,7 +260,7 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    expect(tied).toBe(66);
+    expect(tied).toBe(69);
   });
 
   it('words the pinned rows', () => {
@@ -346,7 +346,8 @@ describe('TeamRoster', () => {
     for (const { slug, view } of views) {
       expect(view.otherRosters, slug).toEqual(getEnrichedTeamRoster(slug)!.otherRosters);
     }
-    // Every team MaxPreps lists nobody for says what other sources showed; none is left to a default.
+    // Every team MaxPreps lists nobody for says what other sources showed, or that none were checked;
+    // none is left to a default.
     const empty = views.filter((v) => v.view.status === 'empty').map((v) => [v.slug, v.view.otherRosters.status]);
     expect(empty).toEqual([
       ['del-mar', 'none'],
@@ -355,6 +356,8 @@ describe('TeamRoster', () => {
       ['monterey', 'none'],
       ['santa-catalina', 'none'],
       ['marin-academy', 'partial'],
+      // An EAL stub: no school or recruiting-page sweep has been done, and the card says so.
+      ['corning', 'not-checked'],
     ]);
     for (const { slug, view } of views.filter((v) => v.view.status === 'empty')) {
       const html = renderToStaticMarkup(createElement(TeamRoster, { view }));

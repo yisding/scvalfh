@@ -60,7 +60,7 @@ describe('recordAsOf', () => {
       expect(side.sub, team.slug).toBe(`${fmt.recordString(standing.computed)} ${scope}`);
       checked += 1;
     }
-    // The corpus has league results for most of the 43 teams; a vacuous pass is a failure.
+    // The corpus has league results for most of the 49 teams; a vacuous pass is a failure.
     expect(checked).toBeGreaterThan(d.getTeams().length / 2);
   });
 

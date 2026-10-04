@@ -17,7 +17,7 @@ import type { GameModel, GameSideModel } from './game-model';
  * and cancelled games skipped rather than shown as placeholder squares, and the words "no results"
  * instead of an empty row of boxes.
  *
- * An opponent outside the 43 teams this site follows has no record here at all (DESIGN §8), so its
+ * An opponent outside the teams this site follows has no record here at all (DESIGN §8), so its
  * row says so in words (SPEC §10.6), beside the same GhostMonogram tile its game rows use.
  *
  * A member side's name is a link to its team page — the natural next step from "how were they

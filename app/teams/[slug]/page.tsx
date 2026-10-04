@@ -37,7 +37,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
  *
- * 43 static pages, one per member of each league's official alignment. There is ONE source order
+ * 49 static pages, one per member of each league's official alignment. There is ONE source order
  * at every width, so the DOM order matches the visual order at every breakpoint (DESIGN §10.5):
  * identity (whose second meta line states the place: "where do we stand") → Last ("what just
  * happened") → Next ("when is the next one") → the stat tiles and their disclosure, the Elo rating
@@ -91,7 +91,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * The player stats and the roster come after every game section: they answer "who is on this
  * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
  * rows each they would push those below the fold. Stats lead, since they change after every game.
- * Both sections appear on every team page, in all four leagues: `buildPlayerStatsView` /
+ * Both sections appear on every team page, in all five leagues: `buildPlayerStatsView` /
  * `buildRosterView` return null only for a slug the data files do not hold, which a registry team
  * never is. The empty states are honest about why: MaxPreps lists no players, the coach entered no
  * stats, the last update failed with nothing to fall back on, or no update has covered the team
@@ -104,15 +104,16 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * Roster header keeps its one.
  *
  * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
- * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta
- * description ends `… goal margins and CCS picture.` or `… goal margins and MCAL tournament
- * picture.` An MCAL page carries no CCS concept inside `<main>` (SPEC §10.9). The standings link
- * goes to `/standings/<league>#<division>`, and the official-schedule link to the division's own
- * official schedule (config). The postseason section's anchor is `#postseason` on every page, so
- * no MCAL URL carries a CCS concept either.
+ * kicker is `CCS picture` for a CCS league, `MCAL tournament picture` for MCAL and `Super Regional
+ * picture` for the EAL, and the meta description ends `… goal margins and CCS picture.`, `… and MCAL
+ * tournament picture.` or `… and Super Regional picture.` An MCAL page carries no CCS concept
+ * inside `<main>` (SPEC §10.9). The standings link goes to `/standings/<league>#<division>`, and
+ * the official-schedule link to the division's own official schedule (config), which a league that
+ * publishes none (the EAL) does not get. The postseason section's anchor is `#postseason` on
+ * every page, so no MCAL URL carries a CCS concept either.
  */
 
-/** All 43 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 49 prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -158,11 +159,17 @@ function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null):
   return parts.map((p) => `${p}, `).join('');
 }
 
-/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` (MCAL), by `postseason.kind`. */
+/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL), by `postseason.kind`. */
 function postseasonKicker(view: TeamPageView): string {
-  return view.league.postseasonKind === 'league-tournament'
-    ? `${view.league.shortName} tournament picture`
-    : 'CCS picture';
+  const { postseasonKind, postseasonName, shortName } = view.league;
+  switch (postseasonKind) {
+    case 'ccs-ladder':
+      return 'CCS picture';
+    case 'league-tournament':
+      return `${shortName} tournament picture`;
+    case 'unbracketed-tournament':
+      return `${postseasonName} picture`;
+  }
 }
 
 /**
@@ -278,12 +285,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             >
               {view.standingsLabel} &rarr;
             </Link>
-            <ExternalLink
-              href={view.officialScheduleUrl}
-              className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
-            >
-              Official {view.league.shortName} schedule
-            </ExternalLink>
+            {view.officialScheduleUrl ? (
+              <ExternalLink
+                href={view.officialScheduleUrl}
+                className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+              >
+                Official {view.league.shortName} schedule
+              </ExternalLink>
+            ) : null}
           </p>
         </div>
 
@@ -382,10 +391,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             games={leagueLog}
             perspective={team.slug}
             emptyHeading={`No league games are published for ${team.name}.`}
-            emptyBody={`The official ${view.league.shortName} schedule has ${plural(
-              leagueScheduled,
-              `${view.league.gamesWord} game`,
-            )} for them; none of those fixtures has a contest in any data source.`}
+            emptyBody={
+              view.officialScheduleUrl
+                ? `The official ${view.league.shortName} schedule has ${plural(
+                    leagueScheduled,
+                    `${view.league.gamesWord} game`,
+                  )} for them; none of those fixtures has a contest in any data source.`
+                : // No official schedule to compare with: the league games are the ones MaxPreps marks.
+                  `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
+            }
           />
         </section>
 

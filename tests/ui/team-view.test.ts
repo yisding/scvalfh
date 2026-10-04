@@ -104,8 +104,9 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v.standingsHref, `components/teams/team-view.ts standingsHref ${team.slug}`).toBe(
           `/standings/${division.leagueId}#${division.id}`,
         );
+        // A league that publishes no schedule (`official.mode` 'none') has no link to give.
         expect(v.officialScheduleUrl, `components/teams/team-view.ts schedule url ${team.slug}`).toBe(
-          division.official.scheduleUrl,
+          division.official.mode === 'none' ? null : division.official.scheduleUrl,
         );
         expect(v.leagueScheduled, `components/teams/team-view.ts scheduled ${team.slug}`).toBe(division.gamesPerTeam);
         // The league log is exactly the games that count for this team's table.
@@ -116,7 +117,7 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v.nonLeagueLog.every((g) => g.countsFor === null), `components/teams/team-view.ts nonLeagueLog ${team.slug}`).toBe(true);
       }
     }
-    expect(seen, 'components/teams/team-view.ts: every registry team').toBe(43);
+    expect(seen, 'components/teams/team-view.ts: every registry team').toBe(49);
   });
 
   it('single-division leagues read "of N in <league short>"', () => {
@@ -167,10 +168,31 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
     expect(mcal.bracketSentence).toBe('We will list a playoff game as soon as MCAL posts the bracket.');
     expect(view.leagueCopy('pcal').bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
   });
+
+  it('an unbracketed league (the Super Regional) states its dates and promises no bracket', () => {
+    const unbracketed = leagues.LEAGUES.filter((l) => l.postseason.kind === 'unbracketed-tournament');
+    expect(unbracketed.length, 'lib/leagues.ts: one league has an unbracketed postseason').toBe(1);
+    for (const league of unbracketed) {
+      if (league.postseason.kind !== 'unbracketed-tournament') continue;
+      const copy = view.leagueCopy(league.id);
+      expect(copy.postseasonKind, 'components/teams/team-view.ts kind').toBe('unbracketed-tournament');
+      expect(copy.postseasonName, 'components/teams/team-view.ts postseasonName').toBe('Super Regional');
+      expect(copy.seasonEndSentence, 'components/teams/team-view.ts seasonEndSentence').toBe(
+        'The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.',
+      );
+      expect(copy.bracketSentence, 'components/teams/team-view.ts bracketSentence').toBe(
+        'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
+      );
+    }
+    for (const id of ['scval', 'bval', 'pcal']) {
+      expect(view.leagueCopy(id as never).postseasonName, `components/teams/team-view.ts ${id}`).toBeNull();
+    }
+    expect(view.leagueCopy('mcal').postseasonName, 'components/teams/team-view.ts mcal').toBe('MCAL tournament');
+  });
 });
 
 describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-view)', () => {
-  it('CCS ladder leagues link the CCS page; MCAL links its tournament, with no CCS sentence', () => {
+  it('CCS ladder leagues link the CCS page; MCAL links its tournament; the EAL states its Super Regional; no CCS sentence outside CCS', () => {
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
       const line = v.postseasonLine;
@@ -180,6 +202,13 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
       if (v.league.postseasonKind === 'ccs-ladder') {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('CCS playoffs →');
+      } else if (v.league.postseasonKind === 'unbracketed-tournament') {
+        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
+        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason →');
+        expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
+          'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+        );
+        expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
       } else {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe('/playoffs/mcal');
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('MCAL tournament →');
@@ -206,6 +235,27 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
   });
 });
 
+describe('TeamPlayoffLine without a result (the EAL in the all-2026-10-02 corpus)', () => {
+  it('names the Super Regional picture, not a playoff or a CCS one', async () => {
+    const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
+    const lassen = view.buildTeamPageView('lassen')!;
+    expect(lassen.hasResults, 'the all corpus holds no EAL league result').toBe(false);
+    const text = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, { view: lassen })));
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').toContain(
+      'Lassen has no counted EAL result, so it has no computed place in the Super Regional picture.',
+    );
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('CCS');
+    const mcal = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, {
+      view: { ...view.buildTeamPageView('tamalpais')!, postseasonLine: null },
+    })));
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('in the MCAL tournament picture.');
+    const scval = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, {
+      view: { ...view.buildTeamPageView('st-ignatius')!, postseasonLine: null },
+    })));
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('in the playoff picture.');
+  });
+});
+
 describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
   it('CCS vs MCAL copy: kicker and meta description', async () => {
     const scval = textOf(await renderTeam('st-ignatius'));
@@ -215,6 +265,9 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
     );
     expect(await describeTeam('tamalpais'), 'app/teams/[slug]/page.tsx MCAL description').toMatch(
       /goal margins and MCAL tournament picture\.$/,
+    );
+    expect(await describeTeam('davis'), 'app/teams/[slug]/page.tsx EAL description').toMatch(
+      /goal margins and Super Regional picture\.$/,
     );
   });
 
@@ -326,54 +379,55 @@ describe('/teams (app/teams/page.tsx)', () => {
     const html = renderIndex();
     const all = ids(html);
     expect(new Set(all).size, 'app/teams/page.tsx: unique ids').toBe(all.length);
-    for (const id of ['ccs', 'ncs', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'team-list', 'team-league-switcher']) {
+    for (const id of ['ccs', 'ncs', 'ns', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal', 'team-list', 'team-league-switcher']) {
       expect(all, `app/teams/page.tsx #${id}`).toContain(id);
     }
     expect(html, 'app/teams/page.tsx CCS h2').toMatch(/<h2[^>]*>Central Coast Section<\/h2>/);
     expect(html, 'app/teams/page.tsx NCS h2').toMatch(/<h2[^>]*>North Coast Section<\/h2>/);
+    expect(html, 'app/teams/page.tsx NS h2').toMatch(/<h2[^>]*>Northern Section<\/h2>/);
     expect(html, 'app/teams/page.tsx section labelling').toContain('<section aria-labelledby="ccs"');
-    expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(4);
+    expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(5);
     const h4s = [...html.matchAll(/<h4 class="m-0 mb-3 text-lead text-ink">([^<]+)<\/h4>/g)].map((m) => m[1]);
     expect(h4s, 'app/teams/page.tsx division h4s').toEqual(['De Anza', 'El Camino', 'Mt. Hamilton', 'Santa Teresa']);
     // Section → league order.
-    const order = ['id="ccs"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="ncs"', 'id="mcal"', 'id="marin-county"'].map((s) => html.indexOf(s));
+    const order = ['id="ccs"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="ncs"', 'id="mcal"', 'id="marin-county"', 'id="ns"', 'id="eal"'].map((s) => html.indexOf(s));
     expect([...order].sort((a, b) => a - b), 'app/teams/page.tsx order').toEqual(order);
   });
 
-  it('the finder hooks: 43 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
+  it('the finder hooks: 49 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
     const html = renderIndex();
     // Every team is a row of its division's standings table (DESIGN §18), and the row is the
     // finder's hook: no <li> tiles any more.
     const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
-    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(43);
+    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(49);
     for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
     expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
     expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
     // The pinned row says so in words, not with the accent rule alone: every row's link carries the
     // hidden note the pinned-team CSS reveals (the old tiles did too).
     const links = [...html.matchAll(/<tr data-team-slug="[^"]+"[\s\S]*?<a [^>]*href="\/teams\/[^"]+"[^>]*>([\s\S]*?)<\/a>/g)];
-    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(43);
+    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(49);
     for (const [, inner] of links) {
       expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
         '<span class="sr-only"><span class="sx-pin-note">Your team. </span></span>',
       );
     }
-    // Six tables, one per division, each in a group wrapper the finder can hide.
-    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(6);
-    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(2 + 4 + 6);
+    // Seven tables, one per division, each in a group wrapper the finder can hide.
+    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(7);
+    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(3 + 5 + 7);
     // A division with a ladder line drawn marks it, so a search never leaves it between rows.
     const lines = [...html.matchAll(/<tr data-hide-while-searching="">\s*<td colSpan="5"[^>]*>([^<]+)</g)].map((m) => m[1]);
     expect(lines.length, 'components/standings/CompactStandingsTable.tsx ladder rows').toBeGreaterThan(0);
     for (const label of lines) expect(label, 'ladder row label').toMatch(/line|host/i);
     // Each division links its full league table.
-    for (const href of ['/standings/scval#de-anza', '/standings/bval#santa-teresa', '/standings/pcal#pcal', '/standings/mcal#marin-county']) {
+    for (const href of ['/standings/scval#de-anza', '/standings/bval#santa-teresa', '/standings/pcal#pcal', '/standings/mcal#marin-county', '/standings/eal#eal']) {
       expect(html, `app/teams/page.tsx ${href}`).toContain(`href="${href}"`);
     }
     expect(html, 'app/teams/page.tsx finder').toContain('<search');
     expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
     const text = textOf(html);
     expect(text, 'app/teams/page.tsx description').toContain(
-      'All 43 girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section) and MCAL (North Coast Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule.',
+      'All 49 girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.',
     );
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
   });
@@ -591,7 +645,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
     // "Counted": last season's forfeits, unscored finals and games against outside schools are not
     // in the file, so a team can have played and still have no start.
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the four leagues’ teams, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the five leagues’ teams, so it started from an average rating.');
     expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 
@@ -623,7 +677,7 @@ function dayBefore(dateKey: string): string {
   return d.toISOString().slice(0, 10);
 }
 
-// Invariants over the corpus snapshot, checked for every registry team in all four leagues rather
+// Invariants over the corpus snapshot, checked for every registry team in all five leagues rather
 // than pinned per team, so a corpus refresh that moves a game keeps them meaningful.
 // `buildNextCard` takes `today` as a parameter, so the Today label is tested without the clock.
 describe('buildNextCard (components/teams/team-view.ts)', () => {
@@ -663,6 +717,9 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       const v = view.buildTeamPageView(team.slug)!;
       const next = v.next;
       if (!next || next.isDateTba) continue;
+      // A league with no official schedule (`official.mode` 'none') has no fixtures to name.
+      const official = leagues.getDivision(team.division).official;
+      if (official.mode === 'none') continue;
       checked += 1;
       // A fixture of the team's own league, at home against a school outside the registry, so the
       // card must fall back to the schedule's own spelling of the opponent.
@@ -676,7 +733,7 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
         homeName: team.name,
         awaySlug: null,
         homeSlug: team.slug,
-        source: leagues.getDivision(team.division).official.source,
+        source: official.source,
       });
       const today = dayBefore(dayBefore(next.dateKey));
       const before = view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey))], today, v.league);
