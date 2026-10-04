@@ -16,8 +16,7 @@ import { formatStamp, shortDate } from '../../../lib/format';
  * Division labels come only from `divisionHeading()` (via the league summary): PCAL and MCAL get
  * none.
  */
-export const CARD_SIZE = { width: 1200, height: 630 };
-export const CARD_ALT = 'League standings card: each division’s leaders with points and W-L-T';
+const CARD_SIZE = { width: 1200, height: 630 };
 
 const INK = '#f2f5f8';
 const MUTED = '#919ba5';

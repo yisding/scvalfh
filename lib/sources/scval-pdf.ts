@@ -49,7 +49,6 @@ export function scvalScheduleUrl(division: DivisionId): string {
   return officialDocumentOf(division).scheduleUrl;
 }
 
-export const SCVAL_FALL_INDEX = 'https://scval.com/fallSports/Fall_index.html';
 export const SCVAL_STANDINGS_INDEX = 'https://www.scval.com/standings/';
 
 /** The season the grids belong to. Sep–Oct dates are 2026 (SPEC §1.3). */

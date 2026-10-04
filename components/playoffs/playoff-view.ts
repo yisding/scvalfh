@@ -193,31 +193,6 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
     .map(({ row }) => row);
 }
 
-export interface RoundTile {
-  key: KeyDateKey;
-  /** 'Nov 7' — short enough to hold the figure size at 107px of column. */
-  value: string;
-  /** 'Quarters' — the wireframe's tile label. */
-  label: string;
-  /** 'Saturday' */
-  sub: string;
-}
-
-/** The three round tiles of the DESIGN §3.8 wireframe: QUARTERS / SEMIS / FINAL. */
-export function roundTiles(k: CcsKeyDates): RoundTile[] {
-  const tile = (key: KeyDateKey, iso: string, label: string): RoundTile => ({
-    key,
-    value: shortDate(iso).slice(4),
-    label,
-    sub: weekdayName(iso),
-  });
-  return [
-    tile('quarterfinals', k.quarterfinals, 'Quarters'),
-    tile('semifinals', k.semifinals, 'Semis'),
-    tile('finals', k.finals, 'Final'),
-  ];
-}
-
 // ---------------------------------------------------------------- projection
 
 export interface ProjectionRow {

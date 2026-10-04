@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
-import { MAXPREPS_WEB, SPORT_SEASON_ID } from '../season';
+import { SPORT_SEASON_ID } from '../season';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '../rosters-schema';
 import type { Team } from '../types';
 
@@ -176,11 +176,6 @@ export function careerIdFromUrl(url: string | null): string | null {
   if (!url) return null;
   const m = /[?&]careerid=([^&#]+)/i.exec(url);
   return m ? m[1] : null;
-}
-
-/** The absolute career URL for a relative table href, for callers that only have the table. */
-export function absoluteMaxprepsUrl(href: string): string {
-  return /^https?:\/\//i.test(href) ? href : `${MAXPREPS_WEB}${href.startsWith('/') ? '' : '/'}${href}`;
 }
 
 const str = (v: unknown): string | null =>

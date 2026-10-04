@@ -33,7 +33,6 @@ import {
   getDivision,
   getLeague,
   ladderFor,
-  leagueOfDivision,
   leagueStandingsUrl,
   sectionOf,
   statusesOf,
@@ -281,16 +280,6 @@ export function backfillFootnoteText(n: number): string {
   return n === 1
     ? '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).'
     : `† Includes ${n} results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).`;
-}
-
-/** The kicker of a division section: its heading, or `League table` for a one-table league. */
-export function divisionKicker(division: DivisionId): string {
-  return divisionHeading(division) ?? 'League table';
-}
-
-/** The heading, or the league's short name, for sentences ("… for every team in MCAL"). */
-export function tableLabel(division: DivisionId): string {
-  return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
 
 /**

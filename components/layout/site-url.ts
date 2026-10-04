@@ -20,7 +20,6 @@ export const SITE_NAME = 'NorCal High School Field Hockey';
 export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = 'NorCal FH';
-export const SITE_TAGLINE = 'Girls varsity field hockey in the Central Coast, North Coast and Northern sections';
 export const SITE_DESCRIPTION =
   'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.';
 export const SITE_SCOPE_NOTE =

@@ -8,8 +8,6 @@
  * rather than publishing a half-migrated season if they ever change (SPEC §1.1h, §5.2).
  */
 
-import type { SeasonWindow } from './types';
-
 export const MAXPREPS_API = 'https://production.api.maxpreps.com';
 export const MAXPREPS_WEB = 'https://www.maxpreps.com';
 
@@ -41,12 +39,6 @@ export const SOURCE_LINKS = {
   ccs: 'https://cifccs.org/sports/fh/index',
   ccsCalendar: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
 } as const;
-
-export const EMPTY_WINDOW: SeasonWindow = {
-  firstGame: null,
-  lastLeagueGame: null,
-  lastGame: null,
-};
 
 /** The IANA zone every date on the site is formatted in. */
 export const TIME_ZONE = 'America/Los_Angeles';

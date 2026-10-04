@@ -337,11 +337,6 @@ export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
   );
 }
 
-/** 'Tue 5:30 PM' style label for a scheduled row, or 'TIME TBA'. */
-export function scheduledTime(game: Game): string {
-  return game.isTimeTba ? 'TIME TBA' : timeOfDay(game.dateLocal);
-}
-
 /** '+3' / '−7' / '0' for a per-game margin. */
 export function signedMargin(margin: number): string {
   if (margin === 0) return '0';
