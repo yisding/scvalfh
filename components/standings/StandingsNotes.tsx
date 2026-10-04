@@ -72,12 +72,6 @@ export interface StandingsNotesProps {
   scheduledPer: string;
   /** `<SHORT> ranks by points (<citation>), and so do we.` or the EAL's title-only wording (standings-view `rankRule`). */
   rankRule: string;
-  /**
-   * What settles a level place (standings-view `levelReason`). Accepted but not printed: the
-   * mismatch line says only "tied for 7th here", because the tied group's own note in this list
-   * already names the league's last step (see the docblock, item 3).
-   */
-  levelReason?: string;
   className?: string;
 }
 

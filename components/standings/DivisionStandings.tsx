@@ -108,7 +108,6 @@ export function DivisionStandings({
           officialSchedule={view.officialSchedule}
           scheduledPer={view.scheduledPer}
           rankRule={view.rankRule}
-          levelReason={view.levelReason}
         />
         <PlayoffStatusBand
           divisionLabel={view.label}
