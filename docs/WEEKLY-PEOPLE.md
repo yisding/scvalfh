@@ -55,11 +55,29 @@ before every run; they are the contract and they win over anything here.
   not read.
 - Only players on the tracked varsity rosters are named, under the roster's spelling.
 
+### GitHub from a Claude Code cloud session
+
+A session fired by the Routine has git and the `gh` CLI, but no GitHub MCP tools. GitHub's GraphQL
+API is blocked there, so `gh pr list`, `gh pr create` and `gh pr comment` fail (and `gh auth status`
+reports a failed login even though the token works). Use the REST API through `gh api`:
+
+```bash
+R=repos/yisding/scvalfh
+# The open PR from the branch, if any (prints its number, or nothing)
+gh api "$R/pulls?head=yisding:data/weekly-people&base=main&state=open" --jq '.[0].number // empty'
+# Every PR the branch ever had: number, state, merged, head commit
+gh api "$R/pulls?head=yisding:data/weekly-people&state=all" --jq '.[] | [.number, .state, .merged_at, .head.sha] | @tsv'
+# Open the PR
+gh api "$R/pulls" -f base=main -f head=data/weekly-people -f title='Weekly people data: rosters, clubs and commitments' -F body=@/tmp/pr-body.md --jq .html_url
+# Comment on it
+gh api "$R/issues/<number>/comments" -F body=@/tmp/report.md --jq .html_url
+```
+
 ### 0. Get on the branch
 
-1. If the repository is not in the session, attach `yisding/scvalfh` and clone it.
+1. If the repository is not in the session, clone it: `git clone https://github.com/yisding/scvalfh`.
 2. `git fetch origin main data/weekly-people` (the second may not exist yet).
-3. Look for an open PR from `data/weekly-people` into `main`.
+3. Look for an open PR from `data/weekly-people` into `main` (the first `gh api` call above).
    - **Open PR:** `git checkout -B data/weekly-people origin/data/weekly-people`, then
      `git merge origin/main`. If the merge conflicts in `data/rosters.json`, abort it, comment on
      the PR that main's rosters changed under the branch and next Monday's roster run will
@@ -196,8 +214,8 @@ a failure this branch cannot fix, which the report then names.
   rejected because the roster workflow pushed meanwhile, fetch, merge, re-run the tests and push
   again.
 - If no PR is open, open one from `data/weekly-people` into `main` with the title above and a body
-  that explains it is the weekly people-data PR. If one is open, comment on it. If the session has
-  no tool that can open a PR or comment on one, push anyway and put the report in the session's
+  that explains it is the weekly people-data PR. If one is open, comment on it. Use the `gh api`
+  calls above for both. If neither works in the session, push anyway and put the report in the session's
   final message: the next Monday's roster run opens the PR for branch commits no PR has shown.
 - **The report**, as the PR comment:
   - Repaired
