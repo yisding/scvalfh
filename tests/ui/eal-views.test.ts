@@ -4,7 +4,7 @@
  * rules, its health card, the Postseason paragraph) and `/history/2025-26#eal`.
  *
  * The EAL publishes no schedule document (`official.mode: 'none'`), decides its title on points and
- * ranks no table (`orderScope: 'title'`), and its postseason is the Super Regional, an unbracketed
+ * publishes no standings (`orderScope: 'title'`), and its postseason is the Super Regional, an unbracketed
  * tournament: no ladder line, no bracket, no seeding. These tests run on the EAL corpus (where the
  * EAL has data, including two league games past their date with no score), loaded by pointing
  * SCVAL_SNAPSHOT at it BEFORE lib/data is imported. Every expected number is read from the snapshot
@@ -104,15 +104,26 @@ describe('/standings/eal', () => {
     expect(text, 'components/standings/StandingsNotes.tsx').not.toMatch(/Official schedule|Scheduled per EAL/);
   });
 
-  it('words the rank rule and the order legend for a league that ranks no table (D26)', () => {
+  it('words the rank rule and the order legend for a league that publishes no standings (D26)', () => {
     const [v] = sd.getStandingsPageData(LEAGUE).views;
     expect(v.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
-      'EAL decides its title on points (NS Guidelines §VII.C.2) and ranks no table; this site orders the whole table by the same points.',
+      'EAL decides its title on points (NS Guidelines §VII.C.2) and publishes no standings; this site orders the whole table by the same points.',
     );
     expect(v.legendNotes, 'components/standings/standings-view.ts legend').toContain(
-      'This order is our computation from published results, not a league ruling: EAL publishes no table, only a champion decided on points.',
+      'This order is our computation from published results, not a league ruling: EAL publishes no standings.',
     );
     expect(textOf(standingsHtml)).not.toContain('the official tiebreak belongs to EAL');
+    // The Guidelines DO write an order (§III.E.1 seeding on league record) and assume league places
+    // (§IV, §VII.F); what they lack is a rule for the league table and any published standings.
+    const claims = /ranks no table|set no other order|only a champion|publishes no table/;
+    expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx eal').not.toMatch(claims);
+    expect(textOf(aboutHtml), 'app/about/page.tsx').not.toMatch(claims);
+    const order = leagues.getLeague(LEAGUE).rules.citations.order;
+    expect(order, 'lib/leagues.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
+    expect(textOf(aboutHtml), 'app/about/page.tsx rules').toContain(`${order}.`);
+    const alone = data.getStandings(LEAGUE).filter((r) => r.hasReportedResults && !r.tiebreak.shared);
+    expect(alone.length, 'the EAL corpus has teams placed on points alone').toBeGreaterThan(0);
+    for (const s of alone) expect(s.tiebreak.note, 'lib/standings.ts EAL tiebreak note').toContain(order);
     expect(view.rankRuleText(leagues.getLeague('mcal')), 'table-scope leagues unchanged').toBe(
       'MCAL ranks by points (MCAL Handbook §7a), and so do we.',
     );
@@ -242,6 +253,22 @@ describe('/about, the EAL parts', () => {
       `Northern Section: ${ps.note} Northern Section Field Hockey Guidelines (PDF)`,
     );
     expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all five leagues/);
+  });
+
+  it('names the reported scores, not the Guidelines, as the EAL’s record for seeding, and dates no sweep wrongly', () => {
+    const text = textOf(aboutHtml);
+    // The Guidelines are rules, not a record of results: §VII.J says the scores schools report are
+    // what seeding uses.
+    expect(text, 'app/about/page.tsx disclaimer').toContain(
+      'each league’s own standings (or, for the EAL, which publishes none, the scores its schools report for seeding under the Northern Section’s Field Hockey Guidelines) are always the source of truth',
+    );
+    // The commitments sweep ran on 2026-10-03 for the four older leagues and on 2026-10-04 for the
+    // EAL, so the coverage paragraph prints no single research date (as the clubs one beside it).
+    const coverage = textOf(byId(aboutHtml, 'commits-coverage'));
+    expect(coverage, 'app/about/page.tsx #commits-coverage').toContain(
+      'It was researched by hand with the club pages’ matching rule, each commitment checked twice when it was added, and is not part of the twice-daily update.',
+    );
+    expect(coverage).not.toMatch(/researched by hand on/);
   });
 
   it('shows "No official schedule document." and the D23 Missing row on the EAL health card', () => {

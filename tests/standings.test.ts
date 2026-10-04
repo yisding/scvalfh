@@ -114,6 +114,22 @@ describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie
       sf.computed.neutralRecord.t;
     expect(splits).toBe(sf.computed.gp);
   });
+
+  it('reads last 5 and streak in date order, whatever order the games arrive in', () => {
+    // Santa Catalina's season as of 2026-10-02: a si.com-only 9/4 win (appended by lib/backfill.ts,
+    // after every MaxPreps contest), then five losses.
+    const losses = ['2026-09-10', '2026-09-14', '2026-09-23', '2026-09-24', '2026-09-30'].map((date) =>
+      game({ home: 'santa-catalina', away: 'carmel', hs: 0, as: 3, date }),
+    );
+    const win = game({ home: 'santa-catalina', away: 'greenfield', hs: 1, as: 0, date: '2026-09-04' });
+    for (const games of [[win, ...losses], [...losses, win]]) {
+      const sc = row(computeStandings(games), 'santa-catalina');
+      expect(sc.overall.last5).toEqual(['L', 'L', 'L', 'L', 'L']);
+      expect(sc.overall.streak).toEqual({ count: 5, result: 'L' });
+      expect(sc.computed.last5).toEqual(sc.overall.last5);
+      expect(sc.computed.streak).toEqual(sc.overall.streak);
+    }
+  });
 });
 
 describe('standings: Wilcox is not fielding a team', () => {

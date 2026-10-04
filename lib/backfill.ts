@@ -40,6 +40,7 @@ import type {
   BackfillProvenance,
   BackfillRow,
   ContestId,
+  Decider,
   Game,
   GameSide,
   OfficialFixture,
@@ -545,6 +546,11 @@ function absentFixtureGame(
   };
 }
 
+/** The decider of a final decided in play, from MaxPreps' overtime count (lib/normalize.ts). */
+function overtimeDecider(otPeriods: number): Decider {
+  return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
+}
+
 /** Rules 3 and 4: si.com's score written onto the MaxPreps contest (contestId kept). */
 function overrideGame(
   g: Game,
@@ -564,6 +570,11 @@ function overrideGame(
     status: 'final',
     ...(rule === 'score-pending' ? { otPeriods: 0, isOt: false, isForfeit: false, forfeitBy: null, decider: 'REG' as const } : {}),
     ...(rule !== 'score-pending' && g.decider === null ? { decider: 'REG' as const } : {}),
+    // 'SO' with no tally is MaxPreps' level score flagged W/L (a 1 v 1 win). si.com's decisive score
+    // says the game was decided in play, so the decider is MaxPreps' overtime count, as normalize sets it.
+    ...(rule !== 'score-pending' && g.decider === 'SO' && score.home !== score.away
+      ? { decider: overtimeDecider(g.otPeriods), shootout: null }
+      : {}),
     urls: { ...g.urls, sblive: row.url ?? g.urls.sblive },
     provenance: {
       ...provenance,

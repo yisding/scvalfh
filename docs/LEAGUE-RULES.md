@@ -1,8 +1,8 @@
 # League rules — how each league's table is computed
 
 The five leagues this site covers agree on the points (3 for a win, 1 for a tie, 0 for a loss) and
-the ordering key (points; the EAL uses points to decide its title and ranks no table, so this site
-extends them to the table). Four of them can end a league game in a tie; the EAL decides a level
+the ordering key (points; the EAL uses points to decide its title and publishes no standings, so this
+site extends them to the table). Four of them can end a league game in a tie; the EAL decides a level
 varsity game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
@@ -278,9 +278,10 @@ Valley are, and Davis and Bella Vista are Sac-Joaquin Section schools that play 
 EAL. Pages that list the teams under the league print that note.
 
 **Points and order.** 3 points for a win, 1 for a tie, 0 for a loss, "to determine the League
-Championship" (CIF Northern Section Field Hockey Guidelines 2026-28, §VII.C.2). The Guidelines set no
-other order, and the EAL publishes no table, so the order of this site's table is our computation: the
-same points, applied to every place. The standings page says so.
+Championship" (CIF Northern Section Field Hockey Guidelines 2026-28, §VII.C.2). The Guidelines give no
+rule for ordering the league table (the §III.E.1 Super Regional seeding criteria are quoted below and
+not applied here), and the EAL publishes no standings, so the order of this site's table is our
+computation: the same points, applied to every place. The standings page says so.
 
 **Ties in a game.** A varsity game that is level after regulation gets one 10-minute sudden-victory
 period, then 1 v 1s until there is a winner (§VII.E.4), so a league game never ends level. MaxPreps
@@ -308,16 +309,16 @@ vote waives it (§VII.C.1). The label is "EAL co-champions". It appears only aft
 EAL league result is missing.
 
 **Postseason** (the Super Regional, a Section-sanctioned, league-run tournament; the site draws no
-bracket). "The top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), Oct 30-31, 2026 (Fri-Sat),
-site "TBA"; the Section's playoff calendar lists the same dates. With six teams, every team is inside
+bracket). "The top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), Oct 30-31, 2026 (Fri-Sat), at
+"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA". With six teams, every team is inside
 the top six, which is our application of the rule, not a Guidelines statement. The Guidelines' seeding
 text is quoted verbatim and **not applied here**: "Seeding will be based on League record, Head-to-Head
 Goal differential (Capped at six (6) per game, Goal against, Coin flip." Its punctuation does not say
 whether that is four steps or five, and the coaches "set the criteria" (§II). The format is set at the
 preseason tournament meeting (§IV) and none is published. A school with any score unreported by noon the
-day after its last contest is not eligible (§VII.J); results are reported to MaxPreps under a separate
-rule (§XI.D), so this site never says MaxPreps feeds the seeding. NorCal and State qualification are
-"Not Applicable" (§V, §VI).
+day after the last contest of the season is not eligible (§VII.J); results are reported to MaxPreps under
+a separate rule (§XI.D), so this site never says MaxPreps feeds the seeding. NorCal and State
+qualification are "Not Applicable" (§V, §VI).
 
 **Official sources.** The Section's Field Hockey Guidelines 2026-28, a PDF with a creation date of
 2026-06-10 (sha256 `68e73674a1f29bb24d827e842e5ab2adc7f58364ff1a54cd4ea2789377646020`), linked from

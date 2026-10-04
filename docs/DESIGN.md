@@ -3189,7 +3189,7 @@ sourced one, dated 2026-10-04 unless it says otherwise.
 | Every division draws a ladder line | `ladderLine` may be null. The EAL has none: all six teams sit inside the top six. | Six teams, six qualifiers. A line would sit after the last row. |
 | MaxPreps' table has the registry's teams, less any it leaves out | It may also hold rows that are known not to be members: `maxprepsExtraRows` (EAL: Red Bluff). The rule is `maxprepsTeamCount + maxprepsMissing.length − extra rows = expectedTeams` (7 + 0 − 1 = 6). | Red Bluff's row would otherwise raise an unknown-school warning on every run. |
 | `Team.section` is the school's CIF section | It is the section of the team's field hockey league, where its field hockey postseason is held. `LeagueConfig.membershipNote` says so where it matters. | Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL; the Section's own 2026-27 member list names neither. |
-| Every league's document orders the table by points | `LeagueRules.orderScope` is `'table'` (the four earlier leagues) or `'title'` (the EAL): its document uses points only to decide the champion and orders no table, so this site orders the table by the same points as its own computation and says so. | Guidelines §VII.C.2 and §VII.C. A table order looks like a league ruling unless the page says whose it is. |
+| Every league's document orders the table by points | `LeagueRules.orderScope` is `'table'` (the four earlier leagues) or `'title'` (the EAL): its document uses points only to decide the champion, gives no rule for ordering the league table and publishes no standings, so this site orders the table by the same points as its own computation and says so. | Guidelines §VII.C.2 and §VII.C. A table order looks like a league ruling unless the page says whose it is. |
 | Scope note: "Teams from other sections appear only as opponents" | "Teams outside these five leagues appear only as opponents." | With Davis and Bella Vista in the registry, the old sentence would have been false. |
 
 ### 22.2 Routes and counts
@@ -3225,6 +3225,11 @@ Measured on the home page with no stored league, identical on `next start` and `
 | 360 × 664 and 360 × 844 | 2 rows, bottom at 254 px | one column, 328 px wide, at 426-678, 690-910, 922-1122, 1134-1334 and 1346-1566 | 0 at 664 tall, 1 at 844 tall |
 | 390 × 664 and 390 × 844 | 1 row, bottom at 204 px | two-up, 173 px wide: cards 1-2 at 376-732, cards 3-4 at 744-1060; card 5 spans both columns (358 px wide) at 1072-1272 | 0 at 664 tall, 2 at 844 tall |
 
+When the switcher wraps, the Northern Section's list (EAL) moves to row 2 on its own. The hairline
+in front of a section is drawn by that section's list (a `::before` on its `<ul>`), not as a
+separate flex item, so it moves with the list and starts row 2. It is never left at the end of
+row 1 (`tests/ui/league-switcher.test.ts`). Row positions and heights do not change.
+
 The §15.6 fold targets, read from the same run: with a team pinned (Tamalpais) at 390 × 664 the
 My-team slot ends at 604 px against a fold of 608 px, so that target is met. With a team pinned at
 390 × 844 the Latest rows end at 925 and 1009 px, so none is above the fold, and with no pin and
@@ -3255,8 +3260,10 @@ applied**: no seeding projection, no seeded bracket and no seed word anywhere fo
 qualifier", "at-large", "CCS Division", "CCS picture", "holds N of 16", bare "CCS" outside the allowed
 MCAL link) inside any non-CCS league's page and the `/playoffs` EAL card. No division label appears on
 EAL pages. Five more rules (`scripts/copy-rules.ts`, run by `scripts/assert-copy.ts` over the visible
-text of every built page and by `tests/ui/copy-honesty.test.ts` over every view model, which also runs
-a second pass over the EAL corpus):
+text of every built page and over its `<title>`, description metas and `title`, `aria-label` and `alt`
+attributes (`attributeText`: what a link preview prints and assistive technology reads), and by
+`tests/ui/copy-honesty.test.ts` over every view model, which also runs a second pass over the EAL
+corpus):
 
 1. **The umpire grid is never "official".** A sentence that mentions an umpire and "official" fails.
 2. **Davis and Bella Vista are never a "Northern Section school" or "member".** A clause that names one
@@ -3268,7 +3275,10 @@ a second pass over the EAL corpus):
    Chico, Enterprise, Foothill, Pleasant Valley, Red Bluff and Shasta; Corning is in the Westside
    League and Lassen in the Northern Athletic League). Copy says "EAL teams".
 5. **No seed words on EAL pages** (standings, schedule, team pages and the `/playoffs` card): no
-   "1st seed", "No. 1 seed", "top seed" and the like.
+   "1st seed", "No. 1 seed", "#1 seed", "a 3-seed", "top seed", "top-seeded", "the sixth seed", "the
+   lowest seed", "seed No. 1", "seeded third" and the like. The Super Regional takes six teams, so the
+   rule covers the ordinal words through "sixth", wider than the first pattern (ordinal digits,
+   "No. N", "top", "first", "second"). "Seeding", "seeds are set" and "the top six" pass.
 
 The **membership note** ("Chico, Corning, Lassen and Pleasant Valley are Northern Section schools;
 Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL.") is printed

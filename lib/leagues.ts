@@ -796,7 +796,7 @@ const EAL: LeagueConfig = {
         '4d3da788-bbe2-4ab9-b854-d95aa9786cda': 'Red Bluff: a 0-0-0 row with no games; not fielding a varsity team in 2026',
       },
       reportedTrust: 'records-only',
-      knownCause: 'MaxPreps orders the EAL table by winning percentage; the EAL decides its title on points (Northern Section Field Hockey Guidelines §VII.C.2) and ranks no table, so MaxPreps’ places can differ from ours. MaxPreps also lists Red Bluff, which is not fielding a varsity team in 2026.',
+      knownCause: 'MaxPreps orders the EAL table by winning percentage; the EAL decides its title on points (Northern Section Field Hockey Guidelines §VII.C.2) and publishes no standings, so MaxPreps’ places can differ from ours. MaxPreps also lists Red Bluff, which is not fielding a varsity team in 2026.',
       home: { miniRows: 6, lineAfter: null, lineLabel: null },
       // Every team is inside the Super Regional's top six, so there is no line to draw.
       ladderLine: null,
@@ -808,13 +808,14 @@ const EAL: LeagueConfig = {
     classification: 'contest-type', excludeContestTypes: [2, 4, 5],
     postseasonFrom: '2026-10-30', leagueGameOverrides: [],
     matcher: 'two-phase',
-    // The Guidelines set no order beyond points for the title; a tie for first means co-champions (§VII.C).
+    // The Guidelines use points only for the title and break no tie in the league table; a tie for
+    // first means co-champions (§VII.C).
     tiebreaks: { default: ['no-rule'] },
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',
     citations: {
       points: `${NS_FH} §VII.C.2 (to decide the league championship: 3 points for a win, 1 for a tie, 0 for a loss)`,
       pointsShort: 'NS Guidelines §VII.C.2',
-      order: `${NS_FH} §VII.C.2 (points decide the league championship; the Guidelines set no other order, so this site orders the whole table by the same points)`,
+      order: `${NS_FH} §VII.C.2 (points decide the league championship; the Guidelines give no rule for ordering the league table — the §III.E.1 Super Regional seeding criteria are not applied here — so this site orders the whole table by the same points)`,
       doubleRoundRobin: `${NS_FH} §III.A.1 (double round robin; in 2026 six teams play ten league games each)`,
       overtime: `${NS_FH} §VII.E.4 (varsity: a 10-minute sudden-victory period, then 1 v 1s until there is a winner, so a league game never ends level)`,
       coChampions: `${NS_FH} §VII.C (“In the case of a tie, duplicate awards will be given”)`,
@@ -838,7 +839,7 @@ const EAL: LeagueConfig = {
       qualification: `${NS_FH} §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only)`,
       format: `${NS_FH} §IV (“The format will be determined at the preseason tournament meeting”; none is published)`,
       seeding: `${NS_FH} §III.E.1 (“Seeding will be based on League record, Head-to-Head Goal differential (Capped at six (6) per game, Goal against, Coin flip.”) — quoted as written; this site does not apply it`,
-      eligibility: `${NS_FH} §VII.J (a school without all its scores reported by noon the day after its last contest is not eligible for the playoffs)`,
+      eligibility: `${NS_FH} §VII.J (a school without all its scores reported by noon the day after the last contest of the season is not eligible for the playoffs)`,
       noFurtherPath: `${NS_FH} §V and §VI (NorCal and State qualification: “Not Applicable”)`,
     },
     note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',

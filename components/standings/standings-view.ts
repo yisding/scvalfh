@@ -12,8 +12,8 @@
  *
  *  - Order and points are the league's (3 for a win, 1 for a tie in all five) — lib/standings has
  *    already ranked the rows, so this module never re-sorts them. The EAL uses its points only to
- *    decide its title and ranks no table (`rules.orderScope: 'title'`); the site orders its table by
- *    the same points and says so.
+ *    decide its title and publishes no standings (`rules.orderScope: 'title'`); the site orders its
+ *    table by the same points and says so.
  *  - A league with no schedule document (`official.mode: 'none'`, the EAL) gets no official
  *    schedule link, and its missing results are the past games MaxPreps marks as league games with
  *    no counted result: no sentence calls them "official".
@@ -210,8 +210,8 @@ export function officialScheduleLabel(source: OfficialSourceId): string {
 
 /**
  * `SCVAL ranks by points (Art. VI §2), and so do we.` — from the league's citations. A league that
- * uses points only for its title (`orderScope: 'title'`, the EAL) ranks no table, so the sentence
- * says the order is the site's.
+ * uses points only for its title (`orderScope: 'title'`, the EAL) publishes no standings, so the
+ * sentence says the order is the site's.
  */
 export function rankRuleText(league: LeagueConfig): string {
   const { shortName: short } = league;
@@ -220,7 +220,7 @@ export function rankRuleText(league: LeagueConfig): string {
     case 'table':
       return `${short} ranks by points (${cite}), and so do we.`;
     case 'title':
-      return `${short} decides its title on points (${cite}) and ranks no table; this site orders the whole table by the same points.`;
+      return `${short} decides its title on points (${cite}) and publishes no standings; this site orders the whole table by the same points.`;
   }
 }
 
@@ -235,7 +235,7 @@ export function orderLegendText(league: LeagueConfig): string {
         : `This order is our computation from published results, not a league ruling: the official tiebreak belongs to ${short}.`;
     }
     case 'title':
-      return `This order is our computation from published results, not a league ruling: ${short} publishes no table, only a champion decided on points.`;
+      return `This order is our computation from published results, not a league ruling: ${short} publishes no standings.`;
   }
 }
 

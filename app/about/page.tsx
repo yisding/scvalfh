@@ -417,7 +417,7 @@ export default function AboutPage() {
   // that hold them: each gets a source card and a Postseason paragraph of its own.
   const unbracketed = leagues.filter((l) => UNBRACKETED_LEAGUE_IDS.includes(l.id));
   const unbracketedSections = sections.filter((s) => unbracketed.some((l) => l.section.id === s.id));
-  // Leagues that use their points only to decide a title and rank no table (EAL).
+  // Leagues that use their points only to decide a title and publish no standings (EAL).
   const titleOnly = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'title');
   const tableOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'table');
   // Leagues whose level varsity games end on 1 v 1s (EAL).
@@ -480,7 +480,9 @@ export default function AboutPage() {
     };
   });
   // Leagues that publish no schedule or standings of their own (EAL): the generic "each league's own
-  // files" and "own standings" sentences name their section's Guidelines for them instead.
+  // files" sentence names their section's Guidelines for them instead. The "own standings" sentence
+  // names the scores their schools report for seeding, which the Guidelines say are used for it
+  // (§VII.J): the Guidelines are rules, not a record of results.
   const noDocumentLeagues = perLeague.filter((p) => p.noDocument).map((p) => p.summary);
   const noDocumentWho = listWords(noDocumentLeagues.map((l) => `the ${l.shortName}`));
   const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
@@ -771,9 +773,8 @@ export default function AboutPage() {
             page lists the players on these varsity rosters that a public page says have committed to
             play field hockey in college{commitCount > 0 ? ` (${commitCount} found)` : ''}, from
             players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
-            news. It was researched by hand on {dateWithYear(getCommitsFile().capturedAt)} with the
-            club pages&rsquo; matching rule, each commitment checked twice, and is not part of the
-            twice-daily update. Social media is never used, so a commitment announced only there is
+            news. It was researched by hand with the club pages&rsquo; matching rule, each commitment
+            checked twice when it was added, and is not part of the twice-daily update. Social media is never used, so a commitment announced only there is
             not listed, and recall is partial.
           </p>
         </section>
@@ -797,9 +798,9 @@ export default function AboutPage() {
                 <>
                   ; {listWords(tableOrdered.map((l) => l.shortName))} order their tables by points, and{' '}
                   {listWords(titleOnly.map((l) => l.shortName))} {titleOnly.length === 1 ? 'uses' : 'use'} them
-                  only to decide {titleOnly.length === 1 ? 'its title and ranks' : 'their titles and rank'} no
-                  table, so this site orders {titleOnly.length === 1 ? 'that table' : 'those tables'} by the
-                  same points
+                  only to decide {titleOnly.length === 1 ? 'its title and publishes' : 'their titles and publish'}{' '}
+                  no standings, so this site orders {titleOnly.length === 1 ? 'that table' : 'those tables'} by
+                  the same points
                 </>
               )}
               ; they differ in which games count and how ties are broken.
@@ -1169,7 +1170,7 @@ export default function AboutPage() {
               every disagreement we find, they may differ from an official ruling &mdash; each
               league&rsquo;s own standings
               {noDocumentLeagues.length > 0 &&
-                ` (or, for ${noDocumentWho}, which ${noDocumentLeagues.length === 1 ? 'publishes' : 'publish'} none, ${noDocumentGuidelines})`}{' '}
+                ` (or, for ${noDocumentWho}, which ${noDocumentLeagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${noDocumentLeagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${noDocumentGuidelines})`}{' '}
               are always the
               source of truth for anything that matters competitively, such as playoff seeding.
             </p>

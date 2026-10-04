@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import type { StandingContext } from '../../lib/data';
 import { EM_DASH, ordinal, recordString, recordWords, streakString, winPct } from '../../lib/format';
-import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
+import { divisionHeading, getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
@@ -270,10 +270,14 @@ export function collectStandingsNotes(
   for (const note of sharedGroups.values()) specific.push(note);
   for (const row of rows) {
     if (!row.standing.hasReportedResults) {
+      // A league with no documents of its own (`official.mode: 'none'`, the EAL) publishes no
+      // alignment: its teams are the ones MaxPreps lists in its table, so nothing says "official".
+      const where =
+        getDivision(row.team.division).official.mode === 'none'
+          ? `the ${tableName(row.team.division)} table as MaxPreps lists it`
+          : `the official ${tableName(row.team.division)} alignment`;
       specific.push(
-        `${row.team.name} is in the official ${tableName(
-          row.team.division,
-        )} alignment but has no results in the source table — no record is invented for them.`,
+        `${row.team.name} is in ${where} but has no results in the source table — no record is invented for them.`,
       );
     }
     if (row.standing.mismatch && !props.statedElsewhere?.includes(row.team.slug)) {

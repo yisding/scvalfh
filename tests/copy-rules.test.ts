@@ -4,7 +4,8 @@
  * what data/clubs.json or data/commits.json keeps but never renders (a record's basis, a source's
  * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
  * Vista called Northern Section schools, Red Bluff's status overstated, "EAL school", a seed word);
- * how it reads a built page's visible text; and how it cuts a page into one element per id.
+ * how it reads a built page's visible text and its title, description and attribute text; and how
+ * it cuts a page into one element per id.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -19,6 +20,7 @@ import {
   SEED_CLAIM,
   UMPIRE_OFFICIAL_CLAIM,
   affiliationLeaks,
+  attributeText,
   commitmentLeaks,
   elementById,
   nonMemberSectionClaims,
@@ -278,6 +280,51 @@ describe('visibleText: what a reader of a built page sees', () => {
   });
 });
 
+describe('attributeText: what a page shows or reads out outside its body text', () => {
+  const html =
+    '<html><head><title>EAL standings &middot; NorCal</title>' +
+    '<meta name="description" content="Davis is a Northern Section school">' +
+    '<meta property="og:description" content="The umpires&#x27; grid is official">' +
+    '<meta name="twitter:description" content="Red Bluff withdrew">' +
+    '<meta name="viewport" content="width=device-width, top seed">' +
+    '<script>self.__next_f.push([1,"<span title=\\"EAL schools\\">"])</script></head>' +
+    '<body><span title="Bella Vista is a Northern Section member" aria-label="The EAL schools">x</span>' +
+    '<img src="/a.png" alt="the third seed"><a href="/b" class="c">link</a></body></html>';
+
+  it('collects the title, description metas and title, aria-label and alt attributes, decoded, one per line', () => {
+    expect(attributeText(html)).toBe(
+      [
+        'EAL standings · NorCal',
+        'Davis is a Northern Section school',
+        "The umpires' grid is official",
+        'Red Bluff withdrew',
+        'Bella Vista is a Northern Section member',
+        'The EAL schools',
+        'the third seed',
+      ].join('\n'),
+    );
+  });
+
+  it('is where an attribute-only claim is caught: visibleText never sees it', () => {
+    const body =
+      '<body><span title="Davis is a Northern Section school" aria-label="The umpires grid is official">x</span>' +
+      '<img alt="top seed"></body>';
+    expect(visibleText(body)).toBe('x');
+    expect(nonMemberSectionClaims(visibleText(body))).toEqual([]);
+    expect(umpireOfficialClaims(visibleText(body))).toEqual([]);
+    const text = attributeText(body);
+    expect(nonMemberSectionClaims(text)).toEqual(['Davis is a Northern Section school']);
+    expect(umpireOfficialClaims(text)).toEqual(['The umpires grid is official']);
+    expect(text).toMatch(SEED_CLAIM);
+    expect(attributeText(html)).toMatch(RED_BLUFF_STATUS_CLAIM);
+    expect(attributeText(html)).toMatch(EAL_SCHOOL_CLAIM);
+  });
+
+  it('reads no script (the RSC payload) and no other meta', () => {
+    expect(attributeText('<head><meta name="viewport" content="EAL schools"><script>"title=\\"EAL schools\\""</script></head>')).toBe('');
+  });
+});
+
 describe('UMPIRE_OFFICIAL_CLAIM / umpireOfficialClaims: the umpires’ grid is never official', () => {
   it.each([
     'The official schedule is the umpires’ grid.',
@@ -374,11 +421,40 @@ describe('SEED_CLAIM: no seed word on an EAL page', () => {
     },
   );
 
+  // The Super Regional takes six teams, so "third" to "sixth" are the likely words.
+  it.each([
+    'the third seed',
+    'Chico is the fourth seed',
+    'the fifth seed',
+    'sixth seed',
+    'the last seed',
+    'the lowest seed',
+    'the highest seed',
+    'the bottom seed',
+    'the #1 seed',
+    'a 1-seed',
+    'the 2 seed',
+    'top-seeded Chico',
+    'the top seeds',
+    'seed No. 1',
+    'seed #3',
+    'seeded 2',
+    'seeded first',
+    'seeded sixth',
+    'seeded 3rd',
+  ])('flags %j', (text) => {
+    expect(text).toMatch(SEED_CLAIM);
+  });
+
   it.each([
     'Seeding will be based on League record — quoted as written; this site does not apply it',
     'the top six qualify',
     'seeds are set by the coaches',
     'topseed',
+    'the 2026 seeding criteria',
+    'Super Regional seeding (§III.E.1)',
+    'seeded by the coaches',
+    'seedless',
   ])('lets %j through', (text) => {
     expect(text).not.toMatch(SEED_CLAIM);
   });

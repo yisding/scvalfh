@@ -200,8 +200,9 @@ function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
  * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
  * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
  * disagree on the score. One plain sentence, or undefined. In a shootout league (EAL) a level score
- * flagged W/L is how MaxPreps records a 1 v 1 win, so that one shape is not a contradiction there;
- * the feed-disagreement note still applies.
+ * flagged W/L on a final that is not a forfeit is how MaxPreps records a 1 v 1 win, so that one shape
+ * is not a contradiction there (the caller passes `shootoutLeague` false for a forfeit); the
+ * feed-disagreement note still applies.
  */
 function resultConflictOf(
   home: GameSide,
@@ -404,13 +405,17 @@ function toGame(
     homeTeam && awayTeam && homeTeam.league === awayTeam.league ? getLeague(homeTeam.league) : null;
   const shootoutLeague = sharedLeague?.rules.leagueOvertime === 'shootout';
 
-  // --- D2 rule 4a evidence, on finals only.
+  const isForfeit = c.teams.some((t) => t.isForfeit);
+
+  // --- D2 rule 4a evidence, on finals only. A forfeit is never a 1 v 1 win (D7.1), so its level
+  // score flagged W/L stays a contradiction even in a shootout league.
   const resultConflict =
-    status === 'final' ? resultConflictOf(home, away, copies, { shootoutLeague }) : undefined;
+    status === 'final'
+      ? resultConflictOf(home, away, copies, { shootoutLeague: shootoutLeague && !isForfeit })
+      : undefined;
   if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
 
   const otPeriods = cf.overtimePeriodsPlayed ?? 0;
-  const isForfeit = c.teams.some((t) => t.isForfeit);
   const forfeitBy: Game['forfeitBy'] = !isForfeit
     ? null
     : first.isForfeit

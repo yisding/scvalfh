@@ -1146,8 +1146,8 @@ Section's Field Hockey Guidelines 2026-28 name a "Post Season Tournament – 'Su
 Only)" for which "the top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), and its "Northern
 Section Championship Playoff Calendar" lists "Field Hockey … Post Season Tourney TBA Oct. 30, 31,
 2026" (`https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf`); the
-Guidelines give the NSCIF Post Season Tournament as Oct 30-31, 2026 (Fri-Sat), site "TBA", and mark
-NorCal and State qualification "Not Applicable" (§V, §VI). It is Section-sanctioned and league-run;
+Guidelines give the NSCIF Post Season Tournament as Oct 30-31, 2026 (Fri-Sat), "held at an
+alternative site" (§III.E.1), and mark NorCal and State qualification "Not Applicable" (§V, §VI). It is Section-sanctioned and league-run;
 the format is set at the preseason tournament meeting (§IV) and none is published. The seeding text
 (§III.E.1) is quoted verbatim in the config and never applied. The Section's Sport Dates sheet gives
 a last contest of 26-Oct, which conflicts with the Guidelines' Oct 29 and the last scheduled league
@@ -1255,7 +1255,7 @@ of an alarm.
 - **MCAL:** MaxPreps **orders the table by winning percentage** where MCAL orders by points, and
   after Oct 22 counts MCAL tournament games in its league records; ours never do.
 - **EAL:** MaxPreps **orders the table by winning percentage** where the EAL decides its title on
-  points and ranks no table, so its places can differ from ours; its records and goals match ours
+  points and publishes no standings, so its places can differ from ours; its records and goals match ours
   (on 2026-10-04 every team's league W-L-T equals ours). The table also lists **Red Bluff**, a
   0-0-0 row with no games and a null `modifiedOn` (§3.2), which is the config's
   `maxprepsExtraRows`: 7 rows + 0 missing − 1 extra = 6 teams. Two league games had no score at

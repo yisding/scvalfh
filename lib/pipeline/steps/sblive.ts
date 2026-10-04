@@ -253,7 +253,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   // The statewide scoreboard is STATEWIDE: rows with no registry side can never join.
   const deduped = dedupeSbliveGames(cleaned.rows);
   const relevant = deduped.filter((g) => g.sides.some((s) => s.slug !== null));
-  const rec = reconcile(result.games, relevant, { sbliveFetchedAt: ctx.fetchedAt, today: ctx.today });
+  const rec = reconcile(result.games, relevant, { sbliveFetchedAt: ctx.fetchedAt, today: ctx.today, skipped: result.skipped });
   const crossCheck = withBackfill(rec.report, result);
   for (const c of crossCheck.conflicts) ctx.warn(`score conflict ${c.dateKey} ${c.label}: ${c.note}`);
   ctx.log(

@@ -167,6 +167,42 @@ describe('buildDivisionProjection — SCVAL', () => {
     expect(p.notes[0], VIEW).toContain('official alignment');
   });
 
+  it('never calls the teams of a league with no documents an "official alignment" (EAL, D23)', async () => {
+    // The all-2026-10-02 corpus does not fetch the EAL, so its rows have no results.
+    const rows: ProjectionRow[] = data.getTeams('eal').map((team) => ({
+      team,
+      standing: data.getStandingFor(team.id)!,
+      status: 'out' as PlayoffStatus,
+      statuses: ['out'] as PlayoffStatus[],
+      label: 'Outside the top six',
+      shared: false,
+    }));
+    expect(rows.every((r) => !r.standing.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
+    const facts = { aqPlaces: 0, playInPlace: null, playInDate: null, atLargePlace: null, line: null, unresolved: '' };
+    const none = view.buildDivisionProjection('eal', 'EAL', rows, facts);
+    expect(none.notes, VIEW).toEqual([
+      'No EAL league results have been reported yet, so there is nothing to project here. The rows below are the EAL table as MaxPreps lists it.',
+    ]);
+
+    // One team with results: the per-set footnote of the rendered table.
+    const partial = rows.map((r, i) => (i === 0 ? { ...r, standing: { ...r.standing, hasReportedResults: true } } : r));
+    const { PlayoffProjection } = await import('../../components/playoffs/PlayoffProjection');
+    const text = textOf(
+      renderToStaticMarkup(
+        PlayoffProjection({
+          projection: view.buildDivisionProjection('eal', 'EAL', partial, facts),
+          heading: 'League table',
+          asOfLabel: 'so far',
+          standingsHref: '/standings/eal',
+        }),
+      ),
+    );
+    expect(text, 'components/playoffs/PlayoffProjection.tsx').toContain(
+      `${view.joinNames(rows.slice(1).map((r) => r.team.name))} are in the EAL table as MaxPreps lists it but have no reported results`,
+    );
+    expect(text, 'components/playoffs/PlayoffProjection.tsx').not.toMatch(/\bofficial\s+(EAL\s+)?alignment/i);
+  });
+
   it('reproduces the corpus table: De Anza’s shared 3rd holds three berths among four teams', () => {
     const da = build('de-anza', liveRows('de-anza'));
     expect(da.autoRows.map((r) => r.team.slug), VIEW).toEqual(['saint-francis', 'st-ignatius', 'los-altos', 'valley-christian']);

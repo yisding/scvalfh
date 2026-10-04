@@ -83,11 +83,16 @@ export const RED_BLUFF_STATUS_CLAIM = /Red Bluff[^.;:]{0,80}\b(cancel\w*|withdr\
 export const EAL_SCHOOL_CLAIM = /\b(EAL|Eastern Athletic League) (school|member)s?\b/;
 
 /**
- * A seed word: "1st seed", "No. 2 seed", "top seed", "second seeded". The Super Regional's seeding
- * criteria are quoted, never applied, and no bracket is published, so no EAL page may print one
- * (its standings and schedule pages, its team pages and the /playoffs EAL card).
+ * A seed word: "1st seed", "No. 2 seed", "#1 seed", "a 3-seed", "top-seeded", "the sixth seed",
+ * "the lowest seed", "seed No. 1", "seeded fifth". The Super Regional's seeding criteria are quoted,
+ * never applied, and no bracket is published, so no EAL page may print one (its standings and
+ * schedule pages, its team pages and the /playoffs EAL card). Wider than DESIGN §22.5's first
+ * pattern, which caught only "1st", "No. N", "top", "first" and "second": the Super Regional takes
+ * six teams, so "third" to "sixth" are the likely words. "Seeding", "seeds are set" and "the top six"
+ * are not seed words.
  */
-export const SEED_CLAIM = /\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i;
+export const SEED_CLAIM =
+  /(?:\b(?:\d+(?:st|nd|rd|th)|No\. ?\d+|\d+|top|first|second|third|fourth|fifth|sixth|last|lowest|highest|bottom)|#\d+)[- ]seed(?:ed|s)?\b|\bseed(?:ed)? (?:No\. ?|#)?\d+\b|\bseeded (?:first|second|third|fourth|fifth|sixth|last|\d+(?:st|nd|rd|th))\b/i;
 
 /**
  * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
@@ -102,26 +107,75 @@ const VISIBLE_ENTITIES: Readonly<Record<string, string>> = {
 /** Block elements: visibleText ends each with a line break, so their texts never run together. */
 const BLOCK_END = /^\/?(?:p|div|h[1-6]|li|ul|ol|dt|dd|dl|tr|td|th|table|section|article|header|footer|nav|main|aside|figcaption|figure|summary|details|caption|br|hr)\b/i;
 
+/** `text` with its character references decoded (VISIBLE_ENTITIES and numeric ones). */
+function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+    if (e[0] !== '#') return VISIBLE_ENTITIES[e.toLowerCase()] ?? m;
+    const code = e[1] === 'x' || e[1] === 'X' ? Number.parseInt(e.slice(2), 16) : Number(e.slice(1));
+    return code <= 0x10ffff ? String.fromCodePoint(code) : m;
+  });
+}
+
+/** `html` without its `<script>`, `<style>` and `<template>` elements and its comments. */
+function withoutScripts(html: string): string {
+  return html.replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<!--[\s\S]*?-->/g, '');
+}
+
 /**
  * The text a reader of a built page sees: the `<body>` without its `<script>`, `<style>` and
  * `<template>` elements (the inline RSC payload is in scripts) and without its tags, entities
  * decoded, block elements ending in a line break and other tags in a space. What the EAL rules
- * read on every built page.
+ * read on every built page, with `attributeText`.
  */
 export function visibleText(html: string): string {
   const body = /<body[\s>][\s\S]*<\/body>/i.exec(html)?.[0] ?? html;
-  return body
-    .replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/<([^>]*)>/g, (_m, inner: string) => (BLOCK_END.test(inner) ? '\n' : ' '))
-    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
-      if (e[0] !== '#') return VISIBLE_ENTITIES[e.toLowerCase()] ?? m;
-      const code = e[1] === 'x' || e[1] === 'X' ? Number.parseInt(e.slice(2), 16) : Number(e.slice(1));
-      return code <= 0x10ffff ? String.fromCodePoint(code) : m;
-    })
+  return decodeEntities(
+    withoutScripts(body).replace(/<([^>]*)>/g, (_m, inner: string) => (BLOCK_END.test(inner) ? '\n' : ' ')),
+  )
     .replace(/[ \t\r\f\v\u00a0]+/g, ' ')
     .replace(/ *\n[\s]*/g, '\n')
     .trim();
+}
+
+/** The `<meta>` names whose `content` a reader is shown: the description and its link-preview copies. */
+const SHOWN_META = /^(?:description|og:title|og:description|twitter:title|twitter:description)$/i;
+
+/** One attribute of a tag: its name and its quoted (or bare) value. */
+const ATTRIBUTE = /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+
+/** The attributes of a start tag's inside (what follows the tag name), names lowercased. */
+function attributesOf(inner: string): Map<string, string> {
+  const attrs = new Map<string, string>();
+  for (const m of inner.matchAll(ATTRIBUTE)) attrs.set(m[1].toLowerCase(), m[2] ?? m[3] ?? m[4] ?? '');
+  return attrs;
+}
+
+/**
+ * The text a page shows or reads out that is not in its body text (visibleText): the `<title>`,
+ * the `content` of its description metas (`description`, `og:` and `twitter:` titles and
+ * descriptions, what a link preview prints) and every `title`, `aria-label` and `alt` attribute
+ * (tooltips, what assistive technology reads). One per line, entities decoded, scripts (the RSC
+ * payload) excluded. What the EAL rules read on every built page, besides visibleText.
+ */
+export function attributeText(html: string): string {
+  const out: string[] = [];
+  const source = withoutScripts(html);
+  for (const m of source.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)) out.push(m[1]);
+  for (const m of source.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*)>/gi)) {
+    const attrs = attributesOf(m[2]);
+    if (m[1].toLowerCase() === 'meta') {
+      const name = attrs.get('name') ?? attrs.get('property') ?? '';
+      if (SHOWN_META.test(name)) out.push(attrs.get('content') ?? '');
+    }
+    for (const a of ['title', 'aria-label', 'alt']) {
+      const v = attrs.get(a);
+      if (v) out.push(v);
+    }
+  }
+  return out
+    .map((t) => decodeEntities(t).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
 }
 
 // ---------------------------------------------------------------- clubs (SPEC §1.1j2, DESIGN §17.2)

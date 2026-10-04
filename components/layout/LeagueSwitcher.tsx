@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { setLeague, useEffectiveLeague } from '../ui/use-league';
 import type { SectionConfig } from '../../lib/leagues';
@@ -83,9 +83,16 @@ function Check() {
   );
 }
 
-function Separator() {
-  return <span aria-hidden="true" className="h-6 w-px shrink-0 self-center bg-hairline" />;
-}
+/** A section list's classes. */
+const SECTION_LIST = 'm-0 flex list-none flex-wrap items-center gap-1.5 p-0';
+
+/**
+ * The hairline that splits one section from the next, drawn by the list it introduces (a `::before`,
+ * so it is never in the accessibility tree). A separate flex item in the outer row could be left at
+ * the end of a line when the next section wraps (All + five chips at 320-360px, or 200% text zoom);
+ * as the list's own first box it always travels with that list and leads its line.
+ */
+const SECTION_DIVIDER = 'before:h-6 before:w-px before:shrink-0 before:self-center before:bg-hairline';
 
 /** The two (or more) section lists, split by hairlines. `chip` renders one league's control. */
 function SectionLists({
@@ -96,16 +103,17 @@ function SectionLists({
   chip: (league: LeagueChip) => React.ReactNode;
 }) {
   return bySection(leagues).map((group, i) => (
-    <Fragment key={group.section}>
-      {i > 0 ? <Separator /> : null}
-      <ul aria-label={SECTION_NAMES[group.section]} className="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
-        {group.leagues.map((league) => (
-          <li key={league.id} className="flex">
-            {chip(league)}
-          </li>
-        ))}
-      </ul>
-    </Fragment>
+    <ul
+      key={group.section}
+      aria-label={SECTION_NAMES[group.section]}
+      className={i > 0 ? `${SECTION_LIST} ${SECTION_DIVIDER}` : SECTION_LIST}
+    >
+      {group.leagues.map((league) => (
+        <li key={league.id} className="flex">
+          {chip(league)}
+        </li>
+      ))}
+    </ul>
   ));
 }
 

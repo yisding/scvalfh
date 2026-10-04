@@ -393,15 +393,16 @@ tied to more than one club. The EAL schools were swept on 2026-10-04 with the sa
 affiliations, all Davis players tied to NorCal Impact (so 75 affiliations for 69 players at 23 schools,
 the 13 clubs unchanged); no club record was added for the clubs the sweep met around Davis, Roseville
 and Chico (DESIGN §22.8). Of the 2026-10-03 sweep's 72, by status 55 are current, 11 past and 6
-unknown; by confidence 57 high and 15 medium. They rest on 229 source entries on 105 distinct URLs:
+unknown; by confidence 57 high and 15 medium. They rest on 229 source entries (232 with the EAL ties) on 105 distinct URLs:
 an entry is one page backing one tie, so a club roster, a watchlist or a news story counts once for
 every player it names. The URLs are 103 pages, because two are cited under two URLs each: Stick
 Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps
 career page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49
-on 11, news 34 on 6, event lists 26 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one
+on 11, news 34 on 6, event lists 26 on 3 (29 with the EAL ties on the same 3 URLs; the NFHCA's 2025 and 2026 high school watchlists, and one
 MAX Field Hockey invitational), NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and
 school pages), MaxPreps career pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs
-have tied players: SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10, Infinity
+have tied players in that sweep: SF Hawks 31 (all current), NorCal Impact 19 (all current; 22 with the
+three 2026-10-04 Davis ties), Fly FHC 10, Infinity
 8, Lightning 3 and HTC 1. The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa,
 Stryker, Hayward Hawks, Lions and Golden Gate Rippers) have a page with an empty state.
 
@@ -591,7 +592,7 @@ rounds). Fixtures captured from real (offline) MaxPreps/SCVAL responses live und
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the six league ids (and every other league fact) in `lib/leagues.ts`; both are
+`lib/season.ts`, and the seven league ids (and every other league fact) in `lib/leagues.ts`; both are
 re-asserted on every `fetch-data` run. When the season rolls over:
 
 ```bash
@@ -601,7 +602,7 @@ pnpm exec tsx scripts/discover-season.ts --help                   # usage; makes
 ```
 
 `scripts/discover-season.ts` reads the new `sportSeasonId`/`allSeasonId`/`genderSport`/
-`teamLevel` from MaxPreps' state hub page, resolves each of the six league ids through
+`teamLevel` from MaxPreps' state hub page, resolves each of the seven league ids through
 `team-context/v1` on one representative team per division, asserts they agree with
 `leagues/{id}/v1`, and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
@@ -641,8 +642,8 @@ proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 ## How standings are computed
 
 All five leagues award 3 points for a win, 1 for a tie and 0 for a loss and order their tables by
-points (the EAL uses points to decide its title and ranks no table, so this site extends them to the
-table and says so). Four of them can end a league game in a tie; the EAL decides a level varsity
+points (the EAL uses points to decide its title and publishes no standings, so this site extends them
+to the table and says so). Four of them can end a league game in a tie; the EAL decides a level varsity
 game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
@@ -718,8 +719,9 @@ standings page notes that.
 Per the **CIF Northern Section Field Hockey Guidelines 2026-28**: one division of six teams (Bella
 Vista, Chico, Corning, Davis, Lassen, Pleasant Valley; §I), a double round robin of ten league games
 each (§III.A.1), Aug 24 - Oct 28. 3 points for a win, 1 for a tie and 0 for a loss, "to determine
-the League Championship" (§VII.C.2); the Guidelines set no other order, so this site orders the whole
-table by the same points and says that it is our computation, not a league ruling. A tie for first
+the League Championship" (§VII.C.2); the Guidelines give no rule for ordering the league table (the
+§III.E.1 Super Regional seeding criteria are not applied here), so this site orders the whole table by
+the same points and says that it is our computation, not a league ruling. A tie for first
 means co-champions ("In the case of a tie, duplicate awards will be given", §VII.C), labelled "EAL
 co-champions" only after the regular phase and with no EAL result missing; any other tie is shown
 level, because the Guidelines break none. A varsity game that is level gets a 10-minute

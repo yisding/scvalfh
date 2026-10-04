@@ -682,4 +682,50 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     expect(unflagged.games[0].decider).toBe('REG');
     expect(unflagged.warnings).toContain(`contest ${id}: a level EAL final with no 1 v 1 winner flagged`);
   });
+
+  it('keeps a level EAL forfeit flagged W/L a contradiction, as between two MCAL teams (D7.1: not a 1 v 1 win)', () => {
+    const forfeitBy = (row: ScheduleRow, slug: string): ScheduleRow => ({
+      ...row,
+      contest: {
+        ...row.contest,
+        teams: row.contest.teams.map((t) => ({ ...t, isForfeit: t.teamId === getTeamBySlug(slug)!.id })),
+      },
+    });
+    const id = 'eeeeeeee-0000-4000-8000-000000000006';
+    const res = one([forfeitBy(pairRow(id, ['chico', 0, 'W'], ['davis', 0, 'L']), 'davis')]);
+    const [g] = res.games;
+    expect(g.decider).toBe('FORFEIT');
+    expect(g.provenance.resultConflict).toBe('MaxPreps marks Chico W and Davis L on a 0-0 score.');
+    expect(res.warnings).toContain(`contest ${id}: MaxPreps marks Chico W and Davis L on a 0-0 score.`);
+    const [mcal] = one([forfeitBy(pairRow(id, ['redwood', 0, 'W'], ['tamalpais', 0, 'L']), 'tamalpais')]).games;
+    expect(mcal.provenance.resultConflict).toBe('MaxPreps marks Redwood W and Tamalpais L on a 0-0 score.');
+  });
+
+  it('never reads a level EAL forfeit as a 1 v 1 win, nor logs it as a level final without one (D7.1)', () => {
+    // D7.1: 'SO' is for "a FINAL that is not a forfeit". The forfeit check comes first, so a level
+    // forfeit flagged W/L stays 'FORFEIT' (never "won on 1 v 1s"), with no tally and no 1 v 1 note.
+    const withForfeit = (row: ScheduleRow, side: 0 | 1): ScheduleRow => ({
+      ...row,
+      contest: {
+        ...row.contest,
+        teams: row.contest.teams.map((t) => ({ ...t, isForfeit: t.homeAwayType === side })),
+      },
+    });
+    const noWinnerNote = (id: string) => `contest ${id}: a level EAL final with no 1 v 1 winner flagged`;
+    const id = 'eeeeeeee-0000-4000-8000-000000000007';
+    for (const [side, by] of [[1, 'away'], [0, 'home']] as const) {
+      const res = one([withForfeit(pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L']), side)]);
+      const [g] = res.games;
+      expect(g.decider, `forfeit by ${by}`).toBe('FORFEIT');
+      expect(g.forfeitBy).toBe(by);
+      expect(g.shootout).toBeNull();
+      expect(res.warnings).not.toContain(noWinnerNote(id));
+    }
+    // A level forfeit flagged T/T or unflagged is no "level EAL final with no 1 v 1 winner" either.
+    for (const flag of ['T', null]) {
+      const res = one([withForfeit(pairRow(id, ['lassen', 0, flag], ['corning', 0, flag]), 1)]);
+      expect(res.games[0].decider, `flag ${flag}`).toBe('FORFEIT');
+      expect(res.warnings).not.toContain(noWinnerNote(id));
+    }
+  });
 });

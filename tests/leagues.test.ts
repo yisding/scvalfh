@@ -279,6 +279,9 @@ describe('leagues: the EAL (Northern Section)', () => {
       sourceUrl: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf',
     });
     expect(Object.keys(eal.postseason.citations).sort()).toEqual(['eligibility', 'format', 'noFurtherPath', 'qualification', 'seeding']);
+    // §VII.J ties the deadline to "the Last contest of the season", one Section date, not each school's own last game.
+    expect(eal.postseason.citations.eligibility).toMatch(/by noon the day after the last contest of the season is not eligible/);
+    expect(eal.postseason.citations.eligibility).not.toMatch(/its last contest/);
     expect(eal.keyDates.map((k) => [k.id, k.date])).toEqual([['league-play-ends', '2026-10-28'], ['super-regional', '2026-10-30']]);
   });
 

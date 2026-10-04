@@ -142,6 +142,35 @@ describe('single-division leagues have no division label', () => {
     expect(pcal, 'app/standings/[league]/page.tsx pcal: id').toContain('id="pcal"');
   });
 
+  it('never calls a team of a league with no documents "official" when it has no results (EAL, D23)', async () => {
+    // The all-2026-10-02 corpus does not fetch the EAL, so all six EAL rows have no results.
+    const rows = data.getStandings('eal');
+    expect(rows.length, 'lib/data.ts getStandings(eal)').toBe(6);
+    expect(rows.every((s) => !s.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
+    const eal = textOf(await renderLeague('eal'));
+    for (const team of data.getTeams('eal')) {
+      expect(eal, 'components/ui/StandingsTable.tsx collectStandingsNotes').toContain(
+        `${team.name} is in the EAL table as MaxPreps lists it but has no results in the source table — no record is invented for them.`,
+      );
+    }
+    expect(eal, 'app/standings/[league]/page.tsx eal').not.toMatch(/\bofficial EAL|\bofficial\s+\S+\s+alignment/i);
+    expect(textOf(renderOverview()), 'app/standings/page.tsx').not.toMatch(/\bofficial EAL/i);
+
+    // A league with a schedule document keeps its wording.
+    const { collectStandingsNotes } = await import('../../components/ui/StandingsTable');
+    const [first] = data.getStandings('pcal');
+    const team = data.getTeamById(first.teamId)!;
+    const { specific } = collectStandingsNotes({
+      division: 'pcal',
+      rows: [{ team, standing: { ...first, hasReportedResults: false } }],
+      gdDomain: 1,
+      variant: 'desktop',
+    });
+    expect(specific, 'components/ui/StandingsTable.tsx collectStandingsNotes (pcal)').toContain(
+      `${team.name} is in the official PCAL alignment but has no results in the source table — no record is invented for them.`,
+    );
+  });
+
   it('multi-division leagues keep their anchors and tabs', async () => {
     const scval = await renderLeague('scval');
     expect(scval).toContain('id="de-anza"');

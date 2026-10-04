@@ -46,6 +46,12 @@ export interface ReconcileOptions {
   sbliveFetchedAt: string;
   /** The run's local date; a game dated today or later is never backfilled. */
   today?: string;
+  /**
+   * The rows D2 (lib/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
+   * one is keyed on carries that row's note, so its own note and the si.com-only row withBackfill
+   * publishes give the same reason.
+   */
+  skipped?: readonly Pick<SbliveOnlyRow, 'contestId' | 'note'>[];
 }
 
 export interface ReconcileResult {
@@ -112,6 +118,7 @@ export function reconcile(
   sbliveGames: readonly SbliveGame[],
   opts: ReconcileOptions,
 ): ReconcileResult {
+  const skipNote = new Map((opts.skipped ?? []).map((r) => [r.contestId, r.note]));
   const bySbliveKey = new Map<string, SbliveGame>();
   for (const g of sbliveGames) {
     const key = sbliveJoinKey(g);
@@ -152,7 +159,7 @@ export function reconcile(
     // --- MaxPreps has no score and D2 did not publish si.com's (lib/backfill.ts ran first): record
     //     why, and leave the game unreported. A missing score is never shown as 0-0.
     if (ourHome === null || ourAway === null) {
-      const reason = whyNotPublished(game, match, opts.today);
+      const reason = skipNote.get(game.contestId) ?? whyNotPublished(game, match, opts.today);
       const note =
         `si.com reports ${match.sides[0].name} ${match.sides[0].score}` +
         `, ${match.sides[1].name} ${match.sides[1].score}` +

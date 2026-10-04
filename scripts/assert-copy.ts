@@ -18,12 +18,14 @@
  * "CCS picture", no BerthMeter label ("holds <n> of 16"), and "CCS" only in the
  * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
  * The visible text of every page (`visibleText`: no scripts, so not the RSC payload; the footer
- * included) makes none of the EAL claims of scripts/copy-rules.ts (DESIGN §22.5): no sentence calls
- * the umpires' grid official, no clause calls Davis or Bella Vista a Northern Section school, Red
- * Bluff is never cancelled, withdrawn, dropped or without a program, and nothing says "EAL
- * school(s)" or "EAL member(s)". The EAL's pages (`standings/eal`, `schedule/eal`, its team pages
- * and the `/playoffs` card) print no seed word ("top seed", "No. 2 seed"): its seeding is quoted,
- * never applied.
+ * included), and its `<title>`, description metas and `title`, `aria-label` and `alt` attributes
+ * (`attributeText`: what a link preview prints and assistive technology reads), make none of the
+ * EAL claims of scripts/copy-rules.ts (DESIGN §22.5): no sentence calls the umpires' grid
+ * official, no clause calls Davis or Bella Vista a Northern Section school, Red Bluff is never
+ * cancelled, withdrawn, dropped or without a program, and nothing says "EAL school(s)" or "EAL
+ * member(s)". The EAL's pages (`standings/eal`, `schedule/eal`, its team pages and the `/playoffs`
+ * card) print no seed word ("top seed", "No. 2 seed", "the sixth seed", "#1 seed", "seeded
+ * third"), in their text or their attributes: its seeding is quoted, never applied.
  * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all five
  * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
@@ -81,6 +83,7 @@ import {
   SCVAL_ONLY_CLAIM,
   SEED_CLAIM,
   affiliationLeaks,
+  attributeText,
   commitmentLeaks,
   elementById,
   nonMemberSectionClaims,
@@ -172,12 +175,14 @@ for (const file of files) {
   for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource, publicTerms: PUBLIC_TERMS })) {
     fail(file, `shows what data/commits.json never renders: ${leak}`);
   }
-  // The EAL claims (DESIGN §22.5), over what a reader sees.
-  const text = visibleText(html);
-  for (const s of umpireOfficialClaims(text)) fail(file, `calls the umpires' grid official — “${s}”`);
-  for (const c of nonMemberSectionClaims(text)) fail(file, `calls Davis or Bella Vista a Northern Section school — “${c}”`);
-  forbid(file, text, RED_BLUFF_STATUS_CLAIM, 'says more about Red Bluff than "not fielding a varsity team in 2026"');
-  forbid(file, text, EAL_SCHOOL_CLAIM, 'says "EAL school(s)" or "EAL member(s)" (the field hockey EAL is not the all-sports league; say "EAL teams")');
+  // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
+  // title, description metas and title/aria-label/alt attributes.
+  for (const [text, where] of [[visibleText(html), ''], [attributeText(html), ' (in a title, description or attribute)']]) {
+    for (const s of umpireOfficialClaims(text)) fail(file, `calls the umpires' grid official${where} — “${s}”`);
+    for (const c of nonMemberSectionClaims(text)) fail(file, `calls Davis or Bella Vista a Northern Section school${where} — “${c}”`);
+    forbid(file, text, RED_BLUFF_STATUS_CLAIM, `says more about Red Bluff than "not fielding a varsity team in 2026"${where}`);
+    forbid(file, text, EAL_SCHOOL_CLAIM, `says "EAL school(s)" or "EAL member(s)"${where} (the field hockey EAL is not the all-sports league; say "EAL teams")`);
+  }
 }
 
 // ---------------------------------------------------------------- non-CCS (MCAL, EAL) pages, <main> only
@@ -227,16 +232,18 @@ for (const league of nonCcsLeagues) {
 const playoffsMain = existsSync(path.join(APP, 'playoffs.html'))
   ? mainOf('playoffs.html', readFileSync(path.join(APP, 'playoffs.html'), 'utf8'))
   : '';
+/** What a reader sees or is read out: the body text and the title, description and attribute text. */
+const readableText = (html: string): string => `${visibleText(html)}\n${attributeText(html)}`;
 let unbracketedPages = 0;
 for (const id of UNBRACKETED_LEAGUE_IDS) {
   const card = elementById(playoffsMain, id, 'div');
   if (!card) fail('playoffs.html', `no <div id="${id}"> card (the /playoffs#${id} chip and jump link resolve to it)`);
   forbidCcs('playoffs.html', card, `the #${id} card`);
-  forbid('playoffs.html', visibleText(card), SEED_CLAIM, `the #${id} card prints a seed word`);
+  forbid('playoffs.html', readableText(card), SEED_CLAIM, `the #${id} card prints a seed word`);
   for (const file of leaguePages(id)) {
     const p = path.join(APP, file);
     if (!existsSync(p)) continue; // reported above, with the other non-CCS pages
-    forbid(file, visibleText(readFileSync(p, 'utf8')), SEED_CLAIM, `a page of an unbracketed league (${id}) prints a seed word`);
+    forbid(file, readableText(readFileSync(p, 'utf8')), SEED_CLAIM, `a page of an unbracketed league (${id}) prints a seed word`);
     unbracketedPages += 1;
   }
 }
@@ -314,7 +321,7 @@ for (const id of ['de-anza', 'el-camino']) {
 }
 
 console.log(
-  `assert-copy: ${files.length} HTML files scanned (the EAL claims over the visible text of each); ` +
+  `assert-copy: ${files.length} HTML files scanned (the EAL claims over the visible and attribute text of each); ` +
     `${nonCcsPages.length} non-CCS pages checked inside <main>; ${UNBRACKETED_LEAGUE_IDS.length} /playoffs card(s) ` +
     `and ${unbracketedPages} pages of unbracketed leagues checked for seed words; ` +
     `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +

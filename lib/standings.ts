@@ -176,11 +176,14 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
   };
 }
 
+/** Oldest first; a contest id breaks a tie so the order never depends on how the pipeline built the array. */
+function byDateLocal(a: Game, b: Game): number {
+  return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
+}
+
 /** countsFor === division && status === 'final', sorted by dateLocal (SCVAL Article VI §1). */
 export function divisionGames(games: readonly Game[], division: DivisionId): Game[] {
-  return games
-    .filter((g) => g.countsFor === division && g.status === 'final')
-    .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
+  return games.filter((g) => g.countsFor === division && g.status === 'final').sort(byDateLocal);
 }
 
 // ---------------------------------------------------------------- tiebreakers
@@ -654,7 +657,9 @@ export function computeStandings(
   opts: ComputeOptions = {},
 ): Standing[] {
   const out: Standing[] = [];
-  const allFinals = games.filter((g) => g.status === 'final');
+  // Sorted like divisionGames: the overall record's last5 and streak read the order (si.com-only games
+  // lib/backfill.ts builds are appended to the array, not placed by date).
+  const allFinals = games.filter((g) => g.status === 'final').sort(byDateLocal);
   for (const league of LEAGUES) {
     for (const div of league.divisions) {
       out.push(...computeDivision(league, div.id, games, allFinals, opts));

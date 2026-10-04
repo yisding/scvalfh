@@ -357,9 +357,14 @@ export function buildDivisionProjection(
   if (!anyResults) {
     // Preseason, or a division the source has not reported at all: there is nothing to project and
     // the play-in notes below would be false rather than merely empty.
+    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment.
+    const roster =
+      getDivision(division).official.mode === 'none'
+        ? `the ${divisionLabel} table as MaxPreps lists it`
+        : 'the official alignment';
     notes.push(
       `No ${divisionLabel} league results have been reported yet, so there is nothing to project ` +
-        'here. The rows below are the official alignment.',
+        `here. The rows below are ${roster}.`,
     );
     return { ...base, lineAfter: 0, lineLabel: null, notes };
   }

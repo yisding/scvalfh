@@ -170,7 +170,8 @@ describe('the EAL corpus run', () => {
 
 describe('the EAL games', () => {
   it('counts the 1 v 1 win as a 1 v 1 win, not a conflict (9afebd05)', () => {
-    if (!corpusHas('9afebd05')) return;
+    // A played final does not leave a re-capture: a missing contest is a failure, never a silent pass.
+    expect(corpusHas('9afebd05'), 'tests/fixtures/corpus/eal-*: the 9/28 Chico-Davis 1 v 1 game').toBe(true);
     const g = gameOf('9afebd05');
     expect(g, 'lib/normalize.ts: game present').toBeDefined();
     expect(g!.decider, 'lib/normalize.ts: decider').toBe('SO');
@@ -185,7 +186,7 @@ describe('the EAL games', () => {
   });
 
   it('keeps MaxPreps three overtime periods on the 9/2 game as it has them (8a4d7c70)', () => {
-    if (!corpusHas('8a4d7c70')) return;
+    expect(corpusHas('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
     const g = gameOf('8a4d7c70');
     expect(g, 'lib/normalize.ts: game present').toBeDefined();
     expect(g!.otPeriods, 'lib/normalize.ts: otPeriods').toBe(3);

@@ -45,6 +45,7 @@ import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,
   SEED_CLAIM,
+  attributeText,
   elementById,
   nonMemberSectionClaims,
   umpireOfficialClaims,
@@ -199,7 +200,10 @@ async function collectEal(): Promise<EalCorpus> {
     const params = { params: Promise.resolve({ league: id }) } as never;
     const scheduleHtml = renderToStaticMarkup((await schedulePage(params)) as ReactElement);
     s.push({ producer: SP, label: `/schedule/${id} (EAL corpus)`, league: id, value: visibleText(scheduleHtml) });
-    s.push({ producer: PP, label: `/playoffs #${id} card (EAL corpus)`, league: id, value: visibleText(elementById(playoffsHtml, id, 'div')) });
+    s.push({ producer: SP, label: `/schedule/${id} attributes (EAL corpus)`, league: id, value: attributeText(scheduleHtml) });
+    const card = elementById(playoffsHtml, id, 'div');
+    s.push({ producer: PP, label: `/playoffs #${id} card (EAL corpus)`, league: id, value: visibleText(card) });
+    s.push({ producer: PP, label: `/playoffs #${id} card attributes (EAL corpus)`, league: id, value: attributeText(card) });
   }
   for (const t of d.getTeams().filter((x) => ids.has(x.league))) {
     s.push({ producer: TV, label: `team page ${t.slug} (EAL corpus)`, league: t.league, value: tv.buildTeamPageView(t.slug) });
@@ -207,6 +211,7 @@ async function collectEal(): Promise<EalCorpus> {
     const params = { params: Promise.resolve({ slug: t.slug }) } as never;
     const html = renderToStaticMarkup((await teamPage(params)) as ReactElement);
     s.push({ producer: TP, label: `/teams/${t.slug} (EAL corpus)`, league: t.league, value: visibleText(html) });
+    s.push({ producer: TP, label: `/teams/${t.slug} attributes (EAL corpus)`, league: t.league, value: attributeText(html) });
   }
   for (const { id: param } of gm.gameStaticParams()) {
     const model = gm.buildGameModel(param);

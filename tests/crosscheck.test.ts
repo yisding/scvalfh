@@ -12,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { applyBackfill } from '../lib/backfill';
 import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '../lib/crosscheck';
 import type { SbliveGame, SbliveSide } from '../lib/sources/sblive';
 import { resolveTeam } from '../lib/teams';
@@ -293,6 +294,30 @@ describe('crosscheck: withBackfill', () => {
       ['sblive:7', 'Resolved by name only.'],
       ['c-2', 'si.com has two different scores for this game.'],
     ]);
+  });
+});
+
+describe('crosscheck: a game D2 explained gives the same reason on the game and in the list', () => {
+  it('a level si.com score on a score-pending EAL game (D24): the game note ends with the list row’s note', () => {
+    const g = game({ home: 'corning', away: 'pleasant-valley', date: '2026-09-29', status: 'score-pending' });
+    const rows = [sbGame('2026-09-29', side('corning', 1), side('pleasant-valley', 1), { sbliveGameId: '6600010' })];
+    const bf = applyBackfill({ games: [g], unmatched: [], sblive: rows, today: '2026-10-04', previous: null, sbliveFailed: false, fetchedAt: AT });
+    expect(bf.games[0]).toBe(g);
+    expect(bf.skipped).toHaveLength(1);
+    const d24 = bf.skipped[0].note;
+    expect(d24).toMatch(/decided on 1 v 1s/);
+
+    const rec = reconcile(bf.games, rows, { sbliveFetchedAt: AT, today: '2026-10-04', skipped: bf.skipped });
+    const merged = withBackfill(rec.report, bf);
+    expect(merged.sbliveOnlyScored.map((r) => [r.contestId, r.note])).toEqual([[g.contestId, d24]]);
+    const note = rec.games[0].provenance.scoreConflict?.note;
+    expect(note?.endsWith(`stays unreported. ${d24}`)).toBe(true);
+    expect(note).not.toContain(NOT_PUBLISHED.other);
+    expect(rec.games[0].home.score).toBeNull();
+
+    // Without D2's rows reconcile falls back to its own reasons, as before.
+    const bare = reconcile(bf.games, rows, { sbliveFetchedAt: AT, today: '2026-10-04' });
+    expect(bare.report.sbliveOnlyScored.map((r) => r.note)).toEqual([NOT_PUBLISHED.other]);
   });
 });
 

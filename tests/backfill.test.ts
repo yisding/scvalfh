@@ -23,10 +23,12 @@ import {
   supersededGamesOf,
   type BackfillInput,
 } from '../lib/backfill';
+import { scoreSentence } from '../lib/format';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';
@@ -522,6 +524,38 @@ describe('backfill: a level si.com score in a 1 v 1 league (EAL)', () => {
     expect(applyBackfill(input({ games: [late], sblive: [sb('2026-09-21', ['lassen', 2], ['bella-vista', 2])] })).games[0]).toBe(late);
     const moved = applyBackfill(input({ games: [late], sblive: [sb('2026-09-21', ['lassen', 2], ['bella-vista', 1])] })).games[0];
     expect(moved.provenance.backfill?.rule).toBe('off-schedule-date');
+  });
+
+  it('a decisive si.com score over a 1 v 1 win (SO) drops the SO decider, and the snapshot stays valid', () => {
+    // One team feed has Chico 1 W, Davis 1 L (a 1 v 1 win); the other Chico 2, Davis 1. Normalize keeps
+    // the level copy as 'SO' and the feed-disagreement note, which is rule 4a evidence.
+    const so = game({ home: 'chico', away: 'davis', date: '2026-09-28', hs: 1, as: 1, results: { home: 'W', away: 'L' } });
+    expect(so.decider).toBe('SO');
+    const split = {
+      ...so,
+      provenance: {
+        ...so.provenance,
+        resultConflict: "MaxPreps' two team feeds disagree on the score (Chico 1, Davis 1 in one; Chico 2, Davis 1 in the other).",
+      },
+    };
+    const g = applyBackfill(input({ games: [split], sblive: [sb('2026-09-28', ['chico', 2], ['davis', 1])] })).games[0];
+    expect(g.provenance.backfill?.rule).toBe('contradictory-result');
+    expect(g).toMatchObject({ decider: 'REG', shootout: null });
+    expect(g.home).toMatchObject({ score: 2, result: 'W' });
+    expect(g.away).toMatchObject({ score: 1, result: 'L' });
+    expect(scoreSentence(g)).not.toMatch(/1 v 1/);
+    const s = loadSnapshot(JSON.parse(readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8')));
+    expect(() => parseSnapshot({ ...s, games: [...s.games, g], counts: { ...s.counts, games: s.games.length + 1 } })).not.toThrow();
+
+    // Rule 4b (stamped, as above): the decider follows MaxPreps' overtime count.
+    const lateSo = game({
+      home: 'lassen', away: 'bella-vista', date: '2026-09-30', hs: 2, as: 2, ot: 1, results: { home: 'L', away: 'W' },
+      official: { source: 'scval-pdf', pass: 'rescheduled', scheduledDate: '2026-09-21' },
+    });
+    expect(lateSo.decider).toBe('SO');
+    const moved = applyBackfill(input({ games: [lateSo], sblive: [sb('2026-09-21', ['lassen', 2], ['bella-vista', 3])] })).games[0];
+    expect(moved.provenance.backfill?.rule).toBe('off-schedule-date');
+    expect(moved).toMatchObject({ decider: 'OT', shootout: null });
   });
 });
 
