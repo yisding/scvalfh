@@ -360,6 +360,10 @@ describe('steps 07-08 never abort the run', () => {
       ['mcal', 'degraded'],
       ['eal', 'frozen'],
     ]);
+    expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.reasons).toEqual([
+      "The official PCAL schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.",
+    ]);
+    expect(run.result?.meta.commitSummary).toMatch(/PCAL degraded \(official schedule not applied\)/);
     expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.divisions[0].classification).toBe('fallback-contest-type');
     expect(snapshot.counts.byLeague.pcal.leagueGames).toBeGreaterThan(0);
   });

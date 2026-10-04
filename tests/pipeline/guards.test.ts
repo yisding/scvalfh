@@ -20,6 +20,7 @@ import {
   SYSTEMIC_MIN_GAMES_SHARE,
   checkSystemic,
   divisionClassification,
+  finalsMissingReason,
 } from '../../lib/pipeline/steps/guards';
 import { loadSnapshot } from '../../lib/snapshot-schema';
 import { divisionGames } from '../../lib/standings';
@@ -191,6 +192,15 @@ describe('trigger c: finals regression', () => {
     const { snapshot, run } = await snapshotOf({ variants: ['finals-regression'], previous: regressed, steps: { official, sblive: noopSblive } });
     expect(health(snapshot, 'bval')?.state).toBe('frozen');
     expect(run.result?.meta.commitSummary).toMatch(/BVAL frozen \(finals regression\)/);
+  });
+
+  it('a drop below the freeze line names the vanished contests in its partial reason', () => {
+    expect(finalsMissingReason('bval', 1, ['abc'])).toBe(
+      '1 BVAL result that was final in the last update is missing from MaxPreps now (abc); the table is computed without it.',
+    );
+    expect(finalsMissingReason('pcal', 2, [])).toBe(
+      '2 PCAL results that were final in the last update are missing from MaxPreps now; the table is computed without them.',
+    );
   });
 
   it('--accept-regression bval publishes the fresh rows', async () => {

@@ -22,7 +22,7 @@ import {
   asOfStamp,
   carriedFromOf,
   hasPreviousData,
-  previousLeagueHealth,
+  lastFreshStamp,
   type PipelineContext,
   type RunState,
 } from '../ledger';
@@ -109,7 +109,7 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
   }
 }
 
-function teamFailedReason(ctx: PipelineContext, team: Team, carriedFrom: string | undefined): string {
+function teamFailedReason(team: Team, carriedFrom: string | undefined): string {
   return carriedFrom
     ? `MaxPreps did not answer for ${team.name}'s schedule this run; its games are carried from ${asOfStamp(carriedFrom)}.`
     : `MaxPreps did not answer for ${team.name}'s schedule this run, so its games may be incomplete.`;
@@ -124,9 +124,9 @@ export function feedsFailedReason(
 ): string {
   const short = getLeague(leagueId).shortName;
   const head = `MaxPreps did not answer for ${failed} of ${attempted} ${short} team schedules this run`;
-  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
-  return hasPreviousData(previous, leagueId) && lastFresh
-    ? `${head}, so ${short} is shown as of ${asOfStamp(lastFresh)}.`
+  const stamp = lastFreshStamp(previous, leagueId);
+  return stamp
+    ? `${head}, so ${short} is shown as of ${stamp}.`
     : `${head}; ${short} is shown from the schedules that did answer.`;
 }
 
@@ -153,7 +153,7 @@ export async function stepSchedules(ctx: PipelineContext, state: RunState): Prom
     const feed = state.feeds.get(team.slug);
     if (feed) feed.status = out.status;
     if (out.status === 'failed') {
-      ctx.leagues.degrade(team.league, 'partial', teamFailedReason(ctx, team, out.source.carriedFrom), 'team feed carried');
+      ctx.leagues.degrade(team.league, 'partial', teamFailedReason(team, out.source.carriedFrom), 'team feed carried');
     }
   }
 

@@ -94,6 +94,11 @@ export function validationReason(league: LeagueConfig): string {
   return `The official ${league.shortName} schedule file failed validation; league games are identified by MaxPreps' league flag this run.`;
 }
 
+/** The run.ts fallback's reason when the official step itself failed (threw) this run. */
+export function notAppliedReason(league: LeagueConfig): string {
+  return `The official ${league.shortName} schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.`;
+}
+
 /** `BVAL revised the Mt. Hamilton schedule after our copy (revised 9/20/26); official dates may be out of date.` */
 export function revisionReason(division: DocumentDivision, league: LeagueConfig): string {
   const heading = divisionHeading(division.id);

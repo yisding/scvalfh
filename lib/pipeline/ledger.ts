@@ -333,6 +333,15 @@ export function hasPreviousData(previous: Snapshot | null, leagueId: LeagueId): 
   return previousLeagueHealth(previous, leagueId)?.lastFreshAt != null;
 }
 
+/**
+ * The "shown as of" stamp of a league's previous data (asOfStamp of its lastFreshAt), or null when the
+ * previous snapshot holds nothing to carry for it (hasPreviousData).
+ */
+export function lastFreshStamp(previous: Snapshot | null, leagueId: LeagueId): string | null {
+  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
+  return lastFresh === null ? null : asOfStamp(lastFresh);
+}
+
 /** When a carried source's data was last fresh: the previous row's own stamp, else the previous run's. */
 export function carriedFromOf(previous: Snapshot | null, pick: (row: SourceStatus) => boolean): string | undefined {
   if (!previous) return undefined;

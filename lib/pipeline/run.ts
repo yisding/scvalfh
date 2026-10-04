@@ -46,6 +46,7 @@ import { stepClassify } from './steps/classify';
 import { markLeaguesNotInRun, stepGuards } from './steps/guards';
 import { stepLeagueMeta } from './steps/league-meta';
 import { stepNormalize } from './steps/normalize';
+import { notAppliedReason } from './steps/official';
 import { stepReported } from './steps/reported';
 import { stepSchedules } from './steps/schedules';
 import { stepSecondary } from './steps/secondary';
@@ -101,12 +102,7 @@ async function runOfficial(ctx: PipelineContext, steps: PipelineSteps, games: Ga
     for (const league of LEAGUES) {
       if (league.rules.classification !== 'official-fixtures' || !ctx.leaguesInRun().includes(league.id)) continue;
       for (const d of league.divisions) degraded.add(d.id);
-      ctx.leagues.degrade(
-        league.id,
-        'degraded',
-        `The official ${league.shortName} schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.`,
-        'official schedule not applied',
-      );
+      ctx.leagues.degrade(league.id, 'degraded', notAppliedReason(league), 'official schedule not applied');
     }
     return { games, unmatched: [], degradedDivisions: degraded, revisedUpstream: new Set(), carriedDivisions: new Set() };
   }

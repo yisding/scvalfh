@@ -13,13 +13,7 @@ import { SEASON_YEAR, SPORT_SEASON_ID } from '../../season';
 import { LeagueMetaSchema } from '../../sources/maxpreps';
 import type { DivisionId, LeagueId } from '../../types';
 import { FixtureMissing, TransportError } from '../contract';
-import {
-  asOfStamp,
-  hasPreviousData,
-  previousLeagueHealth,
-  type PipelineContext,
-  type RunState,
-} from '../ledger';
+import { lastFreshStamp, type PipelineContext, type RunState } from '../ledger';
 import { resourceUrl } from '../transport';
 
 const MetaEnvelope = z.looseObject({ data: LeagueMetaSchema });
@@ -32,9 +26,9 @@ export function metaMismatchReason(
 ): string {
   const league = leagueOfDivision(division);
   const head = `MaxPreps moved the ${divisionLabel(division)} table to another ${what} this run`;
-  const lastFresh = previousLeagueHealth(previous, league.id)?.lastFreshAt ?? null;
-  return hasPreviousData(previous, league.id) && lastFresh
-    ? `${head}, so ${league.shortName} is shown as of ${asOfStamp(lastFresh)}.`
+  const stamp = lastFreshStamp(previous, league.id);
+  return stamp
+    ? `${head}, so ${league.shortName} is shown as of ${stamp}.`
     : `${head}, so ${league.shortName} has no results to show until it is fixed.`;
 }
 

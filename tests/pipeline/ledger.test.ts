@@ -15,6 +15,7 @@ import {
   SourceLedger,
   asOfStamp,
   hasPreviousData,
+  lastFreshStamp,
 } from '../../lib/pipeline/ledger';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot, SourceStatus } from '../../lib/types';
@@ -169,5 +170,8 @@ describe('PipelineContext', () => {
     expect(hasPreviousData(previous, 'bval')).toBe(false);
     expect(hasPreviousData(previous, 'pcal')).toBe(false);
     expect(hasPreviousData(null, 'scval')).toBe(false);
+    expect(lastFreshStamp(previous, 'scval')).toBe('Thu Oct 1, 7:00 AM');
+    expect(lastFreshStamp(previous, 'bval')).toBeNull();
+    expect(lastFreshStamp(null, 'scval')).toBeNull();
   });
 });
