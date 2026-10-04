@@ -62,7 +62,8 @@
 > **The clubs pages came later still.** `/clubs`, `/clubs/[slug]` and a club line on each team
 > page's roster were added from `data/clubs.json` (researched 2026-10-03); §17 ("Clubs amendment
 > (2026-10)") records what they answer, the privacy rules they keep and how they are laid out, and
-> §1.1 lists the two routes.
+> §1.1 lists the two routes. `/commits` and a commitment line on team rosters followed, from
+> `data/commits.json`; §19 records them, and §1.1 lists the route.
 >
 > Everything else below (routes, tokens, component signatures, rendering rules, empty states,
 > a11y, build checklist) reflects what was built.
@@ -139,6 +140,7 @@ equivalent moment; this is it. **[R-9]**
 | `/about` | "Where does this come from and can I trust it?" | static | — |
 | `/clubs` *(§17)* | "Which clubs do players here play for?" The youth clubs by region, each with its tied players' count and schools | static | — |
 | `/clubs/[slug]` *(§17)* | "Who here plays for this club, and how do we know?" | static, `generateStaticParams` over `data/clubs.json` (13, a club with no tied player included) | `slug` = `sf-hawks`, `fly-fhc`, … |
+| `/commits` *(§19)* | "Who here has committed to play in college, and where?" Players by class year, then the colleges | static | — |
 
 Machine routes: `/sitemap.xml` (`app/sitemap.ts`), `/robots.txt` (`app/robots.ts`),
 `/manifest.webmanifest`, and `opengraph-image.tsx` at the root plus under
@@ -2984,3 +2986,108 @@ back from 896px with about 33px to spare, and its weekday from 1024 (about 95px 
 
 `/teams` HTML gzip stays within 3.0 x its baseline: 24.3 KB on 2026-10-03 (it was 23.2 KB with the
 tiles), against 28.4 KB.
+
+## 19. College commitments amendment (2026-10)
+
+The site gained college commitments: which players on the 43 tracked varsity rosters a public page
+says have committed to play field hockey in college, and where. The data is `data/commits.json`,
+research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
+commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
+differ: the same matching rule, the same privacy posture, the same row and list layout. This
+section records what is new and where it departs.
+
+### 19.1 The page and what it answers
+
+| URL | Answers | Pages |
+|---|---|---|
+| `/commits` | "Who here has committed to play in college, and where?" | 1 |
+
+Static, one page, no dynamic segment. A lede that answers the question in one paragraph (how many
+players from how many schools have committed to how many colleges, and at which levels: "Of them,
+4 committed to NCAA Division I programs, 1 to an NCAA Division II program and 2 to NCAA Division III
+programs"), then one section
+per class year (`#class-2027`, `#class-2028`; the earliest class first, `#class-unknown` last for a
+player no source or roster gives a class year), then "Colleges" (`#colleges`), then "How
+commitments are matched" (`#how-matched`): who is listed, the linking rule, that social media is
+never used (so a commitment announced only there is not listed), the two-pass check and its date,
+what "Committed", "Signed" and the "as of" date mean, and that recall is partial.
+
+- **A commitment row** (`#<team slug>-<MaxPreps athleteId>`, never a name): the name; the school
+  linking `/teams/<slug>#roster`, then the grade; the college (its display name, the official name
+  when the display name is a short one, and the division in words); the status (§19.3); and the
+  source links, labelled by kind and host. Within a class, rows run by school, then by the roster's
+  name order.
+- **A college row** (`#college-<slug>`): the display name, the official name, then the division,
+  the conference when it has one and the place ("NCAA Division I · ACC · Stanford, CA"), how many
+  players here committed there and from which schools, and the field hockey page on the college's
+  own athletics site ("Stanford field hockey", an off-site link). Colleges with the most players
+  come first, then Division I before II, III and NAIA, then by name.
+- **Nothing found** is a real state: the lede says no public page we found shows a commitment, one
+  empty state stands where the classes would be, and the colleges section is left out.
+
+### 19.2 Privacy posture
+
+§17.2 applies unchanged, with `data/commits.json` for `data/clubs.json`:
+
+- **Only rows on the tracked varsity rosters are named**, joined on team slug + MaxPreps athleteId
+  and shown under the roster's own spelling; JV rows and graduates are out. A commitment list or a
+  news story names many more people; none of them appears.
+- **A source's quote, a commitment's `basis` and its `confidence` are never rendered.** They are not
+  in the view types (`components/commits/commit-view.ts`), and `scripts/assert-copy.ts` fails the
+  build on any page that shows a basis or a quote fragment (`commitmentLeaks` in
+  `scripts/copy-rules.ts`, the clubs rule with the same threshold and the same `printsItself`
+  excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
+- **Metadata names no player**, and **link labels are never read from a URL path** beyond the
+  page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`).
+- **No social media**, as source or link. This costs recall more than it did for clubs: many
+  commitments are announced only on Instagram. The how-matched section says so.
+
+### 19.3 Status words
+
+Written out, never a color or an icon. "Signed" only where a source says the player signed; every
+other commitment is "Committed", which the page explains as: a page says the player has committed,
+and no page used says the player has signed. The date is the
+earliest a source gives for the commitment, which can be a page's own date rather than the day the
+player decided, so it is always "as of":
+
+| `asOf` | committed | signed |
+|---|---|---|
+| a day | Committed, as of Jun 15, 2026 | Signed, as of Nov 12, 2026 |
+| a month | Committed, as of Jun 2026 | Signed, as of Nov 2026 |
+| a year | Committed, as of 2026 | Signed, as of 2026 |
+| none | Committed | Signed |
+
+A commitment happens on a date, so `asOf` takes no season and no range (the schema refuses them,
+unlike a club tie's).
+
+### 19.4 Links in, not nav
+
+The tab bar and the desktop nav are unchanged. `/commits` is linked from `/teams` (a second quiet
+line under the clubs one), from `/about`'s sources (`#commits-coverage`, after `#clubs-coverage`),
+and from the roster of any team page that has a committed player (§19.5), which is the link a
+reader is most likely to follow. A team page with no commitment gets no new link: the Roster
+header keeps its one action, "Club teams". The sitemap lists `/commits` with the file's own
+`capturedAt` as its `lastModified`, as it does the clubs pages.
+
+### 19.5 The roster commitment line
+
+A committed player gets one line right under the facts, above any club line: "Committed:
+Stanford", or "Signed: Stanford". The college is a link to the player's row on `/commits`, which
+cites the sources; it is internal, so it has the `sx-action` box and no arrow, and its accessible
+name leads with the player ("Pat Example’s college commitment: Stanford"), the visible label hidden
+from assistive technology, exactly as the club line (§17.4). It comes before the club line because
+it is the newer and more specific fact about the player. A footnote appears on any roster with a
+commitment line: the lines link to the player's entry on the college commitments page, which cites
+a source for each; "Signed" appears only where a source says so; recall is partial.
+
+### 19.6 Not built, and deviations
+
+- **No page per college.** A college page would hold one or two rows; the college list on
+  `/commits` carries what such a page would (level, conference, place, schools, program link).
+- **No nav item and no OG card**, as for the clubs (§17.6): the page takes the root card.
+- **No per-row confidence mark**, as for the clubs.
+- **No graduates.** Players who finished high school before the roster season are not on the
+  rosters, so they cannot be joined, and naming them would break §19.2.
+- **No budget for `/commits`**, for §17.6's reason: `main` has no baseline to measure it against.
+- **Gates.** `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect
+  `/commits` among the fixed pages; `a11y-axe.mjs` checks it in both themes at both widths.

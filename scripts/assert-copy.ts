@@ -27,6 +27,9 @@
  * a line of). On such a page a quote from a document the page itself links is not reported. On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
+ * The same rule covers data/commits.json (DESIGN §19.2, `commitmentLeaks`): no commitment's `basis`
+ * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
+ * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL and MCAL unavailable):
  *  - never says the archive is SCVAL-only (it was, once);
  *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="mcal"`), the division
@@ -50,10 +53,11 @@ import path from 'node:path';
 
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/clubs';
+import { getCommitsFile } from '../lib/commits';
 import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import { LEAGUES, TOURNAMENT_LEAGUE_IDS, divisionLabel, isSingleDivision } from '../lib/leagues';
-import { SCVAL_ONLY_CLAIM, affiliationLeaks, sectionById } from './copy-rules';
+import { SCVAL_ONLY_CLAIM, affiliationLeaks, commitmentLeaks, sectionById } from './copy-rules';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
@@ -105,6 +109,14 @@ const clubSourceUrls = [...new Set(clubsFile.affiliations.flatMap((a) => a.sourc
 const citedBy = (html: string) =>
   new Set(clubSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
 
+const commitsFile = getCommitsFile();
+/** The pages whose code reads lib/commits.ts: app/commits, the roster of app/teams/[slug], app/about. */
+const builtFromCommits = (file: string) => file === 'commits.html' || file.startsWith('teams/') || file === 'about.html';
+const commitSourceUrls = [...new Set(commitsFile.commitments.flatMap((c) => c.sources.map((s) => s.url)))];
+/** The commits file's source documents a page links, as `citedBy` finds the clubs file's. */
+const commitCitedBy = (html: string) =>
+  new Set(commitSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
+
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');
   forbid(file, html, /Gabilan/, 'contains "Gabilan"');
@@ -124,6 +136,10 @@ for (const file of files) {
   const printsItself = builtFromClubs(file) ? undefined : citedBy(html);
   for (const leak of affiliationLeaks(html, clubsFile, { printsItself })) {
     fail(file, `shows what data/clubs.json never renders: ${leak}`);
+  }
+  const printsCommitSource = builtFromCommits(file) ? undefined : commitCitedBy(html);
+  for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource })) {
+    fail(file, `shows what data/commits.json never renders: ${leak}`);
   }
 }
 
@@ -234,7 +250,8 @@ for (const id of ['de-anza', 'el-camino']) {
 
 console.log(
   `assert-copy: ${files.length} HTML files scanned; ${ncsPages.length} NCS pages checked inside <main>; ` +
-    `the quotes and bases of ${clubsFile.affiliations.length} club affiliations looked for on every page`,
+    `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
+    `college commitments looked for on every page`,
 );
 if (problems.length) {
   for (const p of problems) console.error(`FAIL ${p}`);

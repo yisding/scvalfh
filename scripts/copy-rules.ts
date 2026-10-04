@@ -74,21 +74,61 @@ export function affiliationLeaks(
   file: { affiliations: readonly LeakAffiliation[] },
   { printsItself }: { printsItself?: ReadonlySet<string> } = {},
 ): string[] {
-  const page = squash(text);
-  const leaks: string[] = [];
-  for (const a of file.affiliations) {
-    const who = `${a.teamSlug} / ${a.fullName} (${a.club})`;
-    if (page.includes(squash(a.basis))) leaks.push(`${who}: its basis`);
-    for (const s of a.sources) {
+  return leaks(
+    squash(text),
+    file.affiliations.map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
+    printsItself,
+  );
+}
+
+// ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §19.2)
+
+/** The slice of data/commits.json the leak rule reads. Type-only, so this file stays pure. */
+interface LeakCommitment {
+  teamSlug: string;
+  fullName: string;
+  college: string;
+  basis: string;
+  sources: ReadonlyArray<{ url: string; quote: string }>;
+}
+
+/**
+ * `affiliationLeaks` for data/commits.json: a commitment's `basis`, or a fragment of a source's
+ * verbatim `quote`, shown on a page. Same rule, same threshold, same `printsItself` excuse: a
+ * commitment list or a news story can name teammates and coaches who are not on the rosters, so a
+ * hit is a privacy failure. One line per leak, naming whose record it came from; [] when clean.
+ */
+export function commitmentLeaks(
+  text: string,
+  file: { commitments: readonly LeakCommitment[] },
+  { printsItself }: { printsItself?: ReadonlySet<string> } = {},
+): string[] {
+  return leaks(
+    squash(text),
+    file.commitments.map((c) => ({ who: `${c.teamSlug} / ${c.fullName} (${c.college})`, basis: c.basis, sources: c.sources })),
+    printsItself,
+  );
+}
+
+/** The shared rule: a record's basis anywhere on the page, or a long enough fragment of a quote. */
+function leaks(
+  page: string,
+  records: ReadonlyArray<{ who: string; basis: string; sources: ReadonlyArray<{ url: string; quote: string }> }>,
+  printsItself: ReadonlySet<string> | undefined,
+): string[] {
+  const found: string[] = [];
+  for (const r of records) {
+    if (page.includes(squash(r.basis))) found.push(`${r.who}: its basis`);
+    for (const s of r.sources) {
       if (printsItself?.has(s.url)) continue;
       const hit = s.quote
         .split('…')
         .map(squash)
         .some((fragment) => fragment.length >= LEAK_MIN_FRAGMENT && page.includes(fragment));
-      if (hit) leaks.push(`${who}: the quote from ${s.url}`);
+      if (hit) found.push(`${r.who}: the quote from ${s.url}`);
     }
   }
-  return leaks;
+  return found;
 }
 
 /**

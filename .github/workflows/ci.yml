@@ -117,7 +117,8 @@ jobs:
       # SPEC §10.9 over the built HTML: no "Gabilan" (except the lowercase MaxPreps URL slug), no
       # "eliminated", no division label on a single-division league, no CCS concept inside <main>
       # of an MCAL page, the old /standings#de-anza / #el-camino anchors still there, and nowhere
-      # a club affiliation's basis or source quote, which data/clubs.json keeps but never renders.
+      # a club affiliation's or college commitment's basis or source quote, which data/clubs.json
+      # and data/commits.json keep but never render.
       - name: Assert copy honesty in the built pages
         run: pnpm assert:copy
 

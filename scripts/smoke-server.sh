@@ -162,7 +162,7 @@ from_build /sitemap.xml
 locs=$(grep -oE '<loc>[^<]+</loc>' "$tmp/b" | sed -E 's#</?loc>##g' || true)
 paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
-for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs \
+for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs /commits \
   /standings/bval /standings/mcal /schedule/scval /schedule/mcal /playoffs/mcal; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done

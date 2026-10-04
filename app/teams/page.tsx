@@ -37,8 +37,9 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
  *
- * One quiet line under the tables links /clubs (DESIGN §17.1), which is not in the nav. It sits
- * outside `#team-list`, so the finder never hides it, and adds no heading and no group wrapper.
+ * Two quiet lines under the tables link /clubs (DESIGN §17.1) and /commits (DESIGN §19.4), neither
+ * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
+ * and no group wrapper.
  */
 export const metadata: Metadata = {
   title: 'Teams and standings',
@@ -146,6 +147,13 @@ export default function TeamsPage() {
           club teams
         </Link>{' '}
         page lists youth field hockey clubs and, for each, the players here a public page ties to it.
+      </p>
+      <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
+        College field hockey: the{' '}
+        <Link href="/commits" prefetch={false} className="text-accent hover:underline">
+          college commitments
+        </Link>{' '}
+        page lists the players here a public page says have committed to play in college.
       </p>
     </div>
   );

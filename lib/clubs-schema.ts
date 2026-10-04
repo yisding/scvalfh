@@ -87,9 +87,27 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
 /**
  * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
  * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
- * and `maxpreps.com` pass.
+ * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
+ * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commits.json (lib/commits-schema.ts),
+ * whose commitments are most often announced on one of them.
  */
-export const BANNED_HOSTS = ['instagram.com', 'facebook.com', 'tiktok.com', 'x.com', 'twitter.com'] as const;
+export const BANNED_HOSTS = [
+  'instagram.com',
+  'instagr.am',
+  'facebook.com',
+  'fb.com',
+  'fb.me',
+  'tiktok.com',
+  'x.com',
+  'twitter.com',
+  't.co',
+  'threads.net',
+  'threads.com',
+  'youtube.com',
+  'youtu.be',
+  'snapchat.com',
+  'linkedin.com',
+] as const;
 
 export function isBannedHost(url: string): boolean {
   let host: string;
@@ -110,8 +128,8 @@ export function isHttpsUrl(url: string): boolean {
   }
 }
 
-/** A real calendar day, YYYY-MM-DD (no 2026-02-30). */
-function isCalendarDate(v: string): boolean {
+/** A real calendar day, YYYY-MM-DD (no 2026-02-30). Shared with lib/commits-schema.ts. */
+export function isCalendarDate(v: string): boolean {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
   if (!m) return false;
   const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];

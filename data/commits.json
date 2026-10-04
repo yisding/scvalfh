@@ -1,0 +1,403 @@
+{
+  "builtBy": "research on 2026-10-03: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate then re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic planned one more round of follow-ups (no new commitment; two more sources for existing ones); a final audit re-opened every source; written by hand from what survived",
+  "capturedAt": "2026-10-03",
+  "season": "26-27",
+  "notes": [
+    "Which players on the 43 tracked varsity rosters a public page says have committed to play field hockey in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at the six schools with no MaxPreps rows are out of scope), each under the roster's own spelling.",
+    "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in a field hockey context, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out. College interests, offers, visits, camps and watchlists are not commitments, and neither is a commitment for another sport.",
+    "Social media is never a source (lib/clubs-schema.ts BANNED_HOSTS). Many commitments are announced only there, so a commitment with no other public page is not in this file. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered.",
+    "status: 'signed' only where a source says signed; otherwise 'committed'. No source found on 2026-10-03 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date), or null. Every kept source was confirmed by a second, independent read: both verification passes for the sweeps' sources, and a hand re-read plus the final audit for the two the follow-ups added (St. Ignatius athletics' Oct 1, 2026 report and Stick Together's Feb 4, 2026 issue). A date from a page no second read could confirm (MAX Field Hockey's commitments table) is not used.",
+    "confidence: high = one first-hand page names the player, the college and the school, or it is the player's own recruiting profile showing the commitment; medium = the match rests on one line of a compiled list plus class year and a Northern California club.",
+    "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most."
+  ],
+  "colleges": [
+    {
+      "slug": "bates",
+      "name": "Bates College",
+      "shortName": "Bates",
+      "division": "ncaa-d3",
+      "conference": "NESCAC",
+      "city": "Lewiston",
+      "state": "ME",
+      "programUrl": "https://gobatesbobcats.com/sports/field-hockey",
+      "sources": [
+        {
+          "url": "https://gobatesbobcats.com/sports/field-hockey",
+          "what": "Bates athletics field hockey page (HTTP 200). Embedded Sidearm metadata reads school_division DIII and school_conference NESCAC; the page footer gives the address 2 Andrews Road, Lewiston, ME 04240."
+        },
+        {
+          "url": "https://gobatesbobcats.com/sports/field-hockey/schedule",
+          "what": "2026 Field Hockey Schedule. Games are tagged NESCAC, the season record block shows a conference record (2-3), and road and home locations read Lewiston, Maine."
+        },
+        {
+          "url": "https://nescac.com/sports/fhockey",
+          "what": "NESCAC's field hockey page, titled 'Field Hockey - New England Small College Athletic Conference'. Its member list includes Bates, so the conference is confirmed from the conference's own site."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "colgate",
+      "name": "Colgate University",
+      "shortName": "Colgate",
+      "division": "ncaa-d1",
+      "conference": "Patriot League",
+      "city": "Hamilton",
+      "state": "NY",
+      "programUrl": "https://colgateathletics.com/sports/field-hockey",
+      "sources": [
+        {
+          "url": "https://www.colgate.edu/athletics",
+          "what": "Colgate's 'Division I Athletics' page lists Field hockey under 'Division I Teams' and links to https://colgateathletics.com/sports/field-hockey. The footer address is 13 Oak Drive, Hamilton, NY."
+        },
+        {
+          "url": "https://goleopards.com/sports/field-hockey/schedule",
+          "what": "Lafayette's official 2026 field hockey schedule marks the Sep 18 game at Colgate (Hamilton, NY) as a Patriot League conference game. Read via WebFetch, which summarizes the page."
+        },
+        {
+          "url": "https://goholycross.com/sports/field-hockey/schedule",
+          "what": "Holy Cross's official 2026 field hockey schedule marks the Oct 31 game against Colgate as a Patriot League conference game. Read via WebFetch, which summarizes the page."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "iowa",
+      "name": "University of Iowa",
+      "shortName": "Iowa",
+      "division": "ncaa-d1",
+      "conference": "Big Ten",
+      "city": "Iowa City",
+      "state": "IA",
+      "programUrl": "https://hawkeyesports.com/sports/fhockey",
+      "sources": [
+        {
+          "url": "https://hawkeyesports.com/sports/fhockey",
+          "what": "Official Iowa Hawkeyes Athletics field hockey home page (titled 'Home Page - Field Hockey - Iowa Hawkeyes Athletics - Official Athletics Website'). Shows 'The University of Iowa', 'Iowa City', links to '2026 Big Ten Standings', and Big Ten weekly honors news dated Sept 28, 2026; Oct 2, 2026 recap of a 2-1 win over Michigan."
+        },
+        {
+          "url": "https://hawkeyesports.com/sports/fhockey/schedule",
+          "what": "Official 2026-27 field hockey schedule: home games in Iowa City, Iowa, Big Ten conference matches (e.g., at Maryland Oct 30) and the Big Ten Tournament Nov 5-8 in Columbus, Ohio; confirms Iowa plays a 2026 Big Ten schedule."
+        },
+        {
+          "url": "https://bigten.org/standings.aspx?path=fhockey",
+          "what": "Big Ten Conference '2026 Field Hockey Standings' page listing Iowa (2-1 conference, 10-1 overall) alongside Northwestern and Michigan, confirming Iowa's 2026 field hockey conference is the Big Ten."
+        },
+        {
+          "url": "https://bigten.org/sports/fhockey/",
+          "what": "Big Ten Conference field hockey page (Sidearm), confirming the conference sponsors field hockey."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "ithaca",
+      "name": "Ithaca College",
+      "shortName": "Ithaca",
+      "division": "ncaa-d3",
+      "conference": "Liberty League",
+      "city": "Ithaca",
+      "state": "NY",
+      "programUrl": "https://athletics.ithaca.edu/sports/field-hockey",
+      "sources": [
+        {
+          "url": "https://athletics.ithaca.edu/sports/field-hockey",
+          "what": "Ithaca athletics field hockey page (HTTP 200). Embedded Sidearm metadata reads school_division DIII and school_conference Liberty League."
+        },
+        {
+          "url": "https://athletics.ithaca.edu/sports/field-hockey/schedule",
+          "what": "2026 Field Hockey Schedule. Conference games are tagged Liberty League (including the Liberty League Championships rounds), and the season record block shows a conference record (2-0)."
+        },
+        {
+          "url": "https://libertyleagueathletics.com/standings.aspx?path=fhock",
+          "what": "The Liberty League's 2026 Field Hockey Standings, which list Ithaca first, 2-0 in conference play."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "maryville",
+      "name": "Maryville University of Saint Louis",
+      "shortName": "Maryville",
+      "division": "ncaa-d2",
+      "conference": null,
+      "city": "St. Louis",
+      "state": "MO",
+      "programUrl": "https://maryvillesaints.com/sports/field-hockey",
+      "sources": [
+        {
+          "url": "https://maryvillesaints.com/sports/field-hockey",
+          "what": "Maryville athletics page 'Women's Field Hockey' (HTTP 200). Embedded Sidearm metadata reads school_division DII and school_conference GLVC; the site navigation links 'NCAA Division II' and 'Great Lakes Valley Conf.'."
+        },
+        {
+          "url": "https://maryvillesaints.com/sports/field-hockey/schedule",
+          "what": "2026 Women's Field Hockey Schedule. The season record block shows Conf 0-0 and no game is tagged as a conference game. Home games are in St. Louis, Mo."
+        },
+        {
+          "url": "https://maryvillesaints.com/sports/field-hockey/schedule/2025",
+          "what": "2025 schedule also shows Conf 0-0, so the lack of conference play is not a one-year quirk."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "uc-davis",
+      "name": "University of California, Davis",
+      "shortName": "UC Davis",
+      "division": "ncaa-d1",
+      "conference": "MPSF",
+      "city": "Davis",
+      "state": "CA",
+      "programUrl": "https://ucdavisaggies.com/sports/field-hockey",
+      "sources": [
+        {
+          "url": "https://ucdavisaggies.com/sports/field-hockey/schedule",
+          "what": "2026 Field Hockey Schedule. The season record block shows Conf 0-0, and the postseason entries are 'MPSF Championship' on Nov 6 and 7 in Newark, Del., linked to https://mpsports.org/sports/fh. Read via WebFetch, which summarizes the page."
+        },
+        {
+          "url": "https://ucdavisaggies.com/sports/field-hockey",
+          "what": "UC Davis field hockey landing page (UC Davis Aggies). The footer carries the MPSF logo linking to https://mpsports.org/. Read via WebFetch."
+        },
+        {
+          "url": "https://gostanford.com/sports/field-hockey/schedule",
+          "what": "Stanford's 2026 field hockey schedule lists its Oct 16 game at UC Davis in Davis, Calif. (the Sep 22 game vs UC Davis was at Stanford)."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/uc-davis",
+          "what": "NCAA.com's UC Davis school page: 'Division I - Davis, CA'. Its conference line (Mountain West) is the university's primary conference, not field hockey's."
+        }
+      ],
+      "checkedOn": "2026-10-04"
+    }
+  ],
+  "commitments": [
+    {
+      "teamSlug": "christopher",
+      "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "fullName": "Alyssa Montejano",
+      "college": "maryville",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/alyssa_montejano",
+          "kind": "sportsrecruits",
+          "quote": "Alyssa Montejano's Field Hockey Recruiting Profile … 2027 • Defense, Midfield • Gilroy, CA • Committed to Maryville University of Saint Louis",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/missouri/maryville_university_of_saint_louis",
+          "kind": "sportsrecruits",
+          "quote": "Maryville University of Saint Louis (Missouri) Women's Field Hockey Recruiting & Scholarship Information … Committed Athletes … Alyssa Montejano, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own field hockey profile (the one data/rosters-enrichment.json links for this row) says class of 2027, Gilroy, CA, committed to Maryville University of Saint Louis. It names no school, so the match rests on the class year plus a Gilroy hometown; SportsRecruits' Maryville page lists her under Committed Athletes from the same profile data, so it is not independent. No date, no signing wording. Both passes found no same-name player and no other college."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
+      "fullName": "Ryan Hemeon",
+      "college": "uc-davis",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.fhcollegepath.com/class-of-2028.html",
+          "kind": "event",
+          "quote": "FH College Path Who Committed Class of 2028 … University of California - Davis (UC Davis) (3 commits) … Ryan Hemeon CA Fwd-Mid Infinity Sports Club",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "One line on FH College Path's class of 2028 Division I list: name, CA, forward-midfield, Infinity Sports Club, under UC Davis. No school is named, so the match rests on the class year plus Infinity, a Gilroy club this row is already tied to in data/clubs.json; her own SportsRecruits profile shows no commitment (absence, not contradiction). Medium: a single compiled line. The only other Hemeon on those lists is a Maryland class of 2026 player."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
+      "fullName": "Katarina Smith",
+      "college": "ithaca",
+      "status": "committed",
+      "asOf": "2026-09-18",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/",
+          "kind": "news",
+          "quote": "Senior Kat Smith poses wearing Ithaca College merch after committing for Division III field hockey. … senior Katarina Smith … pursuing a commitment to playing NCAA Division III field hockey at Ithaca College.",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": null,
+          "sourceDate": "September 18, 2026"
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/katarina_smith",
+          "kind": "sportsrecruits",
+          "quote": "Watch Katarina's recruiting video • 2027 • Defense, Midfield • Los Altos, CA • Committed to Ithaca College … 2023 JV Most Inspirational Player at Los Altos High School.",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/new-york/ithaca_college",
+          "kind": "sportsrecruits",
+          "quote": "Ithaca College (New York) Women's Field Hockey Recruiting & Scholarship Information … Committed Athletes … Katarina Smith, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Talon (Los Altos High School's student paper) story of Sep 18, 2026 names senior Katarina (Kat) Smith and her NCAA Division III commitment to Ithaca College; her own SportsRecruits profile (class of 2027, Los Altos, CA, Los Altos High School) says committed to Ithaca College. asOf is the Talon story's date; the Talon's Aug 28, 2026 season preview already called her a 'D3 committed player' but names no college, so it is not a source and its date is not used. SportsRecruits' Ithaca page repeats the profile."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
+      "fullName": "Carolyn Cordoni",
+      "college": "bates",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/carolyn_cordoni",
+          "kind": "sportsrecruits",
+          "quote": "Watch Carolyn's recruiting video • 2027 • Forward, Midfield • San Jose, CA • Committed to Bates College … I am a junior starter on the Varsity Field Hockey team at Saint Francis High School.",
+          "statedSchool": "Saint Francis High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Single source: her own SportsRecruits field hockey profile, class of 2027, San Jose, CA, written as a junior starter at Saint Francis High School, says committed to Bates College. Undated. Her NCSA profile and club page show no commitment field; nothing contradicts it."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "fullName": "Maggie Magnano",
+      "college": "uc-davis",
+      "status": "committed",
+      "asOf": "2026-02-04",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/margaret_magnano",
+          "kind": "sportsrecruits",
+          "quote": "Watch Margaret's recruiting video • 2027 • Defense, Midfield • San Francisco Youth Field Hockey Club • San Rafael, CA • Committed to University of California - Davis … 2025, 2024, 2023 Varsity Starter, St. Ignatius Prep",
+          "statedSchool": "St. Ignatius Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/alumni-and-committed-players/",
+          "kind": "club-site",
+          "quote": "Alumni and committed players Player Name Grad Year College … Maggie Magnano 2027 UC Davis",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "MAGGIE MAGNANO CA DEF SAN FRANCISCO YFHC UC DAVIS",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-legend-and-building-the-future/",
+          "kind": "news",
+          "quote": "College Commitments … Maggie Magnano → UC Davis (D1) Congratulations to the SF Hawks defender on her commitment to UC Davis!",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "Feb 4, 2026"
+        }
+      ],
+      "basis": "Her own SportsRecruits profile (under her given name, Margaret) gives class of 2027, the SF Hawks club and St. Ignatius varsity seasons, committed to University of California - Davis; the SF Hawks committed-players table and FH College Path's class of 2027 list agree. Stick Together's Feb 4, 2026 issue announces 'Maggie Magnano → UC Davis (D1)' for the SF Hawks defender; it names no school or class year, so it corroborates rather than carries the match, and asOf is its date. MAX Field Hockey's table also lists her, but neither pass could re-read it, so it is not cited."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
+      "fullName": "Olivia Van De Braak",
+      "college": "iowa",
+      "status": "committed",
+      "asOf": "2026-10-01",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/olivia_van_de_braak1",
+          "kind": "sportsrecruits",
+          "quote": "Watch Olivia's recruiting video • 2028 • Defense, Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA • Committed to University of Iowa • I'm an athletic, coachable midfielder/defender … I play for St. Ignatius College Prep and San Francisco Hawks",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-2028.html",
+          "kind": "event",
+          "quote": "University of Iowa (3 commits) … Olivia Van de Braak CA Def-Mid San Francisco YFHC",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://siwildcats.com/news/2026/10/1/field-hockey-varsity-wildcat-sports-report-october-1st.aspx",
+          "kind": "school-site",
+          "quote": "University of Iowa commit Olivia Van de Braak led the way with a hat trick.",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": null,
+          "sourceDate": "2026-10-01"
+        }
+      ],
+      "basis": "Her own SportsRecruits profile (spelled Van de Braak) gives class of 2028, San Francisco, CA and St. Ignatius College Prep, committed to University of Iowa; FH College Path's class of 2028 Division I list has her under Iowa with the SF club; St. Ignatius athletics' Wildcat Sports Report of Oct 1, 2026 calls her a 'University of Iowa commit' (asOf is its date). Another Iowa class of 2028 commit comes from St. Ignatius College Prep in Chicago, a different school and a different player."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
+      "fullName": "Storey Lewis",
+      "college": "colgate",
+      "status": "committed",
+      "asOf": "2026-08-06",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/storey_lewis3",
+          "kind": "sportsrecruits",
+          "quote": "2027 • Forward, Midfield • San Francisco Youth Field Hockey Club • San Francisco, CA • Committed to Colgate University • I have played field hockey for 8 years with my club in San Francisco, California and attend Saint Ignatius College Preparatory School.",
+          "statedSchool": "Saint Ignatius College Preparatory School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-summer-of-wins-as-fall-season-begins/",
+          "kind": "news",
+          "quote": "SCVAL De Anza: St. Ignatius enters as the clear favorite, returning Offensive Player of the Year Olivia Van de Braak and senior Storey Lewis, who recently committed to DI Colgate University.",
+          "statedSchool": "St. Ignatius",
+          "statedClassYear": null,
+          "sourceDate": "2026-08-06"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/alumni-and-committed-players/",
+          "kind": "club-site",
+          "quote": "Alumni and committed players Player Name Grad Year College … Storey Lewis 2027 Colgate University",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "STOREY LEWIS CA FWD-MID SAN FRANCISCO HAWKS COLGATE UNIVERSITY",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits profile names St. Ignatius, class of 2027 and Colgate University; Stick Together's Aug 6, 2026 season preview calls her a St. Ignatius senior who recently committed to Colgate (asOf is that date); the SF Hawks committed-players table and FH College Path's class of 2027 list agree. MAX Field Hockey's commitments table also lists her, but neither pass could re-read it, so it is not cited."
+    }
+  ]
+}

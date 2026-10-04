@@ -96,7 +96,10 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * yet. The meta description names player stats and the roster only for a team whose page lists
  * them. The roster section links /clubs on every team page, empty rosters included (its header
  * action, "Club teams": the clubs pages are not in the nav, DESIGN §17.4); a rostered player a
- * public page ties to a club also gets a club line in the list itself (TeamRoster).
+ * public page ties to a club also gets a club line in the list itself (TeamRoster). A rostered
+ * player a public page says has committed to a college gets a commitment line linking their row on
+ * /commits, with a footnote (TeamRoster, DESIGN §19.5); /commits adds no header action, so the
+ * Roster header keeps its one.
  *
  * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
  * kicker is `CCS picture` for a CCS league and `MCAL tournament picture` for MCAL, and the meta

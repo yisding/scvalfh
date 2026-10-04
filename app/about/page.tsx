@@ -11,6 +11,7 @@ import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
 import { getClubs, getClubsFile } from '../../lib/clubs';
+import { getCommitsFile } from '../../lib/commits';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
@@ -48,7 +49,8 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
  * dropped on purpose, the published cross-checks, the update cadence, privacy and the
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
  * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §17.1),
- * which links /clubs: hand research, not part of the twice-daily update.
+ * which links /clubs: hand research, not part of the twice-daily update. The college commitments
+ * get one after it (`#commits-coverage`, DESIGN §19.4), linking /commits, for the same reason.
  */
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
@@ -351,6 +353,7 @@ export default function AboutPage() {
   const leagues = getLeagueSummaries();
   const sections = getSections();
   const allTeams = getTeams();
+  const commitCount = getCommitsFile().commitments.length;
 
   // Standings flattened over every division (no literal division keys).
   const allStandings = Object.values(getAllStandings()).flat();
@@ -635,6 +638,19 @@ export default function AboutPage() {
             researched by hand on {dateWithYear(getClubsFile().capturedAt)}, each tie checked twice,
             and is not part of the twice-daily update. Only players already on these rosters are
             named, social media is never used, and recall is partial.
+          </p>
+          <p id="commits-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
+            College field hockey: the{' '}
+            <Link href="/commits" prefetch={false} className="text-accent hover:underline">
+              college commitments
+            </Link>{' '}
+            page lists the players on these varsity rosters that a public page says have committed to
+            play field hockey in college{commitCount > 0 ? ` (${commitCount} found)` : ''}, from
+            players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
+            news. It was researched by hand on {dateWithYear(getCommitsFile().capturedAt)} with the
+            club pages&rsquo; matching rule, each commitment checked twice, and is not part of the
+            twice-daily update. Social media is never used, so a commitment announced only there is
+            not listed, and recall is partial.
           </p>
         </section>
 

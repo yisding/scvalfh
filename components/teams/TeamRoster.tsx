@@ -41,6 +41,15 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * are components/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
  * says recall is partial, wherever one appears.
  *
+ * A player a public page says has committed to play college field hockey gets a commitment line
+ * (DESIGN §19.5) right under the facts, above any club line: "Committed: Stanford", or "Signed:
+ * Stanford" only where a source says so. It is the same kind of line as the club line — its own
+ * line, an internal link with the `sx-action` box and no arrow, the visible label hidden from
+ * assistive technology and the link's accessible name leading with the player ("Pat Example’s
+ * college commitment: Stanford") — and it links the player's row on /commits, which cites the
+ * sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
+ * /commits and says recall is partial, wherever one appears.
+ *
  * A team with no list still shows the coaches and sources the enrichment file found for it, under
  * the empty state, and the empty state says only what the file records about other sources.
  */
@@ -128,6 +137,32 @@ function Clubs({ row }: { row: RosterRow }) {
           ))}
         </span>
       ))}
+    </span>
+  );
+}
+
+function Commitment({ row }: { row: RosterRow }) {
+  const line = row.commitment!;
+  return (
+    <span className="block text-meta text-ink-2">
+      {/* Hidden from assistive technology: the link says it in its own name. The no-break space
+          keeps the label with the college. */}
+      <span aria-hidden="true" className="text-ink-3">
+        {line.label}:
+      </span>
+      &nbsp;
+      {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+      {/* Not nowrap, unlike a club name: a college without a short name shows its official one
+          ("University of North Carolina at Chapel Hill"), which must wrap at 320px. */}
+      <Link href={line.college.href} prefetch={false} className="sx-action text-accent hover:underline">
+        {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
+        <span>
+          <span className="sr-only">
+            {row.name}&rsquo;s {line.srLabel}:{' '}
+          </span>
+          {line.college.name}
+        </span>
+      </Link>
     </span>
   );
 }
@@ -260,6 +295,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
                 ) : null}
               </span>
               {row.facts.length > 0 ? <Facts facts={row.facts} /> : null}
+              {row.commitment ? <Commitment row={row} /> : null}
               {row.clubs.length > 0 ? <Clubs row={row} /> : null}
               {row.profiles.length > 0 ? <Profiles row={row} /> : null}
             </span>
@@ -294,6 +330,18 @@ export function TeamRoster({ view }: { view: RosterView }) {
             Profile links go to players&rsquo; own recruiting pages on{' '}
             {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
             school or class year.
+          </p>
+        ) : null}
+        {view.hasCommitments ? (
+          <p className="mt-1 mb-0">
+            Commitment lines link to the player&rsquo;s entry on the{' '}
+            <Link href="/commits" prefetch={false} className="text-accent hover:underline">
+              college commitments
+            </Link>{' '}
+            page, which cites a source for each one; &ldquo;Signed&rdquo; appears only where a source
+            says so. They were checked by hand on {view.commitsCheckedOn} and are not part of the
+            twice-daily update. Recall is partial: a player with no commitment line may still have
+            committed.
           </p>
         ) : null}
         {view.hasClubs ? (

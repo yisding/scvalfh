@@ -53,6 +53,7 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
+| `/commits` | "Who here has committed to play in college, and where?" The players on the 43 varsity rosters a public page says have committed to (or signed with) a college field hockey program, by class year (`#class-2027`), each with the college, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
 | `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
@@ -67,6 +68,8 @@ Teams, Leaders, Playoffs, History, About): the standings live on the Teams page,
 on every `/standings` page. After hydration Scores, Teams and Playoffs follow the league you are
 looking at or have chosen (Teams to that league's tables, `/teams#<league>`). `/clubs` is in
 neither: it is linked from `/teams`, from the Roster section of every team page and from `/about`.
+Nor is `/commits`: it is linked from `/teams`, from `/about` and from the roster of every team page
+with a committed player.
 
 ## How data flows
 
@@ -344,8 +347,9 @@ The rules:
   `pnpm assert:copy` fails the build if any built page shows a basis or a quote fragment
   (`affiliationLeaks` in `scripts/copy-rules.ts`), because both can name people who are not on the
   rosters.
-- **No social media**: no source or website on instagram.com, facebook.com, tiktok.com, x.com or
-  twitter.com, and every URL is https.
+- **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
+  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/clubs-schema.ts`),
+  and every URL is https.
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
   page and "Listed club" on the roster; a `past` one reads "Earlier".
@@ -397,6 +401,76 @@ about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-pre
 `clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
 expects `/clubs/nope` to be a 404, and `a11y-axe.mjs` checks `/clubs`, the first club page and the
 first club page with no tied player.
+
+### College commitments
+
+`data/commits.json` holds which players on the 43 tracked varsity rosters a public page says have
+committed to play field hockey in college, and those colleges. A commitment (`commitments`, joined
+to `data/rosters.json` on team slug + MaxPreps athleteId, one per player) has the college, a
+`status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
+source gives for it: a day, a month or a year, never after `capturedAt`), a `confidence` (`high` or
+`medium`) and its sources: URL, kind, a verbatim quote of at most 300 characters, and the school,
+class year and date the page states. `basis` says, for maintainers, what the match rests on. A
+college record (`colleges`) has its name and display name, the NCAA division (or NAIA) its field
+hockey team plays in, its field hockey conference, city and state, its field hockey page, and the
+pages each fact was read from; the file holds only colleges somebody committed to.
+
+The rules are the clubs' (see "Clubs"): the same linking rule (the page names the player and the
+college in a field hockey context, and either the high school, or a class year that agrees with the
+roster grade plus a Northern California location), the same privacy posture (only tracked varsity
+rows, by the roster's spelling; quotes and bases kept, never rendered, and `pnpm assert:copy` fails
+on a leak through `commitmentLeaks` in `scripts/copy-rules.ts`), and no social media, which costs
+more here: many commitments are announced only on Instagram, and those are not listed. College
+interests, offers, visits, camps and watchlists are not commitments, and neither is one for another
+sport.
+
+Checked at load (`lib/commits-schema.ts`, then the join in `lib/commits.ts`): college slugs are
+unique, every commitment names a college and every college has a commitment, one commitment per
+player; https only, never social media; a source for every college and commitment; the file's
+`season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
+`fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
+sources agree with each other on a class a high school roster of the season can hold.
+
+Coverage on 2026-10-03, counted from the file: **7 commitments, 7 players at 4 of the 43 schools,
+to 6 colleges.** SCVAL 5 (St. Ignatius 3, Los Altos 1, Saint Francis 1), BVAL 2 (Christopher), PCAL
+and MCAL none. By class 5 from 2027 and 2 from 2028; by level 4 to NCAA Division I programs (UC
+Davis 2, Colgate, Iowa), 1 to Division II (Maryville) and 2 to Division III (Bates, Ithaca). All are
+`committed`: no source said any player had signed. 6 are high confidence and 1 medium (a single line
+on a compiled class list, matched by class year and a Gilroy club). Four carry a date (Feb 4, Aug 6,
+Sep 18 and Oct 1, 2026). They rest on 18 source entries on 15 URLs: SportsRecruits 8 (six of the
+players' own profiles and two of SportsRecruits' college pages), FH College Path's class lists 4
+entries on 2 URLs, news 3 (two Stick Together issues and The Talon, Los Altos High School's student
+paper), the SF Hawks committed-players table 2 entries on 1 URL, and St. Ignatius's athletics site 1.
+
+**It is research, not a script.** Fourteen sweeps ran on 2026-10-03: four by source family
+(commitment lists and recruiting aggregators; NorCal clubs and field hockey media; school and local
+news for SCVAL and BVAL, then for MCAL and PCAL) and ten player by player, which looked up 609
+players on the 37 teams with roster rows: every junior, senior and ungraded row, and any younger
+player with a linked recruiting profile. They converged on the same seven
+candidates, each found by two to five of them. Every candidate was then re-opened by a checker and,
+independently, by a refuter trying to break it; all seven survived, and only sources both passes
+confirmed were kept. A completeness critic read every sweep's coverage and planned five follow-ups
+(unread club commitment lists, unopened NCSA and Hudl profiles, school sites that had failed, the
+watchlisted seniors, and one spreadsheet lead), which found no new commitment and two more dated
+sources for existing ones (St. Ignatius athletics' Oct 1 report and a Feb 4 Stick Together issue),
+each kept only after a hand re-read and a final audit that re-opened every source in the file.
+Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3 for the sources, what was rejected and why, and the gaps.
+
+**When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
+`pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
+season rollover moves `data/rosters.json` to another season; `pnpm test` and the build then fail
+with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
+or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
+
+`lib/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
+name), `getColleges()` (most players first), `getCollege(slug)`, `getCollegeCommitments(slug)`,
+`getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
+`components/commits/commit-view.ts` builds the page and the roster line and chooses every word they
+say. `/commits` is one static page (DESIGN §19): one section per class year, then the colleges, then
+how commitments are matched; every team page with a committed player shows a commitment line under
+that player's facts ("Committed: Colgate"), linking the player's row there. The gates know the
+page: `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect it among the
+fixed pages, and `a11y-axe.mjs` checks it.
 
 ## Local development
 
@@ -701,6 +775,12 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
   no players on MaxPreps at all). A player with no club line may still play for a club. The ties
   were researched once, on 2026-10-03, and nothing refreshes them. See `docs/DATA-SOURCES.md`
   §1.1j2.
+- **Commitment recall is partial, and the list does not update itself.** A commitment is listed
+  only when a public page meets the linking rule, and social media never counts, so 7 of the 716
+  varsity rows have a commitment line and 39 schools have none; a player with no line may still have
+  committed. It was researched once, on 2026-10-03: a later signing, decommitment or new commitment
+  (the class of 2027's signing period is in November) is not shown until someone redoes it by hand.
+  See `docs/DATA-SOURCES.md` §1.1j3.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -780,16 +860,16 @@ both load `.env` the way Next does. The Workers build empties `dist/` (it stages
 there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `pnpm start:vinext`.
 
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
-`next build` does — about 494 pages plus a 404 with the current snapshot and clubs file (495 .html
-on 2026-10-03, 14 of them the clubs pages; the exact counts are derived from `data/snapshot.json`
-and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`), all `revalidate: false` in
-`dist/server/vinext-prerender.json`: every page (HTML and RSC payload) plus a 404 page, and every
-icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root, `/standings`, one per league, game, date
-and team), `manifest.webmanifest`, `sitemap.xml` and `robots.txt`, under
-`dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at startup ("Seeded N
-pre-rendered routes into memory cache") and serves each one as built. None of them renders per
-request; a 404, which no prerendered route covers, is what the server renders on request (see
-above).
+`next build` does — about 496 pages plus a 404 with the current snapshot, clubs and commitments
+files (497 .html on 2026-10-03, 14 of them the clubs pages and one `/commits`; the exact counts are
+derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`),
+all `revalidate: false` in `dist/server/vinext-prerender.json`: every page (HTML and RSC payload)
+plus a 404 page, and every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root,
+`/standings`, one per league, game, date and team), `manifest.webmanifest`, `sitemap.xml` and
+`robots.txt`, under `dist/server/prerendered-routes/`. `vinext start` seeds its cache from them at
+startup ("Seeded N pre-rendered routes into memory cache") and serves each one as built. None of
+them renders per request; a 404, which no prerendered route covers, is what the server renders on
+request (see above).
 
 The response-header contract is the same on all three servers — `next start`, `vinext start` and
 the Worker: every page, metadata route and OG image carries the `next.config.ts` `headers()` rule,
