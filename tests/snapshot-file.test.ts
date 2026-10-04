@@ -16,6 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
 import { officialDocumentOf } from '../lib/official/schema';
+import { SNAPSHOT_MAX_BYTES, SOURCES_MAX } from '../lib/pipeline/steps/assemble';
 import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
@@ -46,7 +47,11 @@ describeIfPresent('the committed snapshot', () => {
   });
 
   it('stays within the 1.6 MB budget', () => {
-    expect(statSync(SNAPSHOT_PATH).size).toBeLessThanOrEqual(1_600_000);
+    expect(statSync(SNAPSHOT_PATH).size).toBeLessThanOrEqual(SNAPSHOT_MAX_BYTES);
+  });
+
+  it('stays within the sources budget', () => {
+    expect(snapshot.sources.length).toBeLessThanOrEqual(SOURCES_MAX);
   });
 
   it('never renders a scoreline for a game that is not final', () => {
