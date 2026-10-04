@@ -375,11 +375,6 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
     if (bundled.length > 0) await runBundledLeague(ctx, league, bundled, state);
   }
 
-  // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.
-  if (state.officialStandingsPdfUrl === undefined && ctx.previous?.officialStandingsPdfUrl !== undefined) {
-    state.officialStandingsPdfUrl = ctx.previous.officialStandingsPdfUrl;
-  }
-
   const result: OfficialStepResult = {
     games: state.games,
     unmatched: state.unmatched,

@@ -145,7 +145,10 @@ export interface OfficialStepResult {
   revisedUpstream: Set<DivisionId>;
   /** Divisions whose official annotations were carried from the previous snapshot this run (DivisionHealth.official.carried). */
   carriedDivisions: Set<DivisionId>;
-  /** SCVAL standings-PDF poll (unchanged behaviour). */
+  /**
+   * The SCVAL standings-PDF poll: the PDF's URL, null when the index lists none, undefined when this
+   * run did not poll (assemble carries the previous value).
+   */
   officialStandingsPdfUrl?: string | null;
 }
 export type OfficialStep = (ctx: RunContext, games: Game[]) => Promise<OfficialStepResult>;

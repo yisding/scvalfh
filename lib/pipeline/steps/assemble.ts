@@ -92,6 +92,7 @@ export function stepAssemble(
   const games = [...state.games].sort(byDateThenId);
   const sources = ctx.sources.ordered();
   const official = state.official;
+  // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.
   const officialStandingsPdfUrl =
     official.officialStandingsPdfUrl !== undefined ? official.officialStandingsPdfUrl : ctx.previous?.officialStandingsPdfUrl;
   const fixtures = sortFixtures(state.unmatched);
