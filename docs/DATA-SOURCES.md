@@ -359,9 +359,10 @@ On 2026-10-04 the same rules found 33 for 29 EAL players: Chico 16 for 13 (12 Hu
 2 NCSA), Pleasant Valley 11 for 11 (10 Hudl, 1 NCSA), Davis 5 for 4 (3 SportsRecruits, 2 NCSA) and
 Lassen 1 for 1 (NCSA); Bella Vista and Corning none (Corning has no players on MaxPreps). That is
 5 SportsRecruits, 6 NCSA and 22 Hudl. **All five leagues: 132 profiles for 112 players, 58
-SportsRecruits, 51 Hudl and 23 NCSA.** Each linked EAL page was re-read by a verifier, and the
-Chico and Pleasant Valley pages by a second; the NCSA pages (WebFetch, not curl) were opened rather
-than matched on a search result.
+SportsRecruits, 51 Hudl and 23 NCSA.** Each linked EAL page was re-read on 2026-10-04 by two
+independent verifiers, one checking it against the rule and one trying to refute it, and kept only
+when both kept it; the NCSA pages (WebFetch or curl) were opened rather than matched on a search
+result.
 
 | Team | Found | How it was tied to the player |
 |---|---|---|
