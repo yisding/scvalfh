@@ -3064,13 +3064,13 @@ game; the board's note says only what a 400-point gap means on the scale.
 
 ## 21. College commitments amendment (2026-10)
 
-The site gained college commitments: which players on the 43 tracked varsity rosters a public page
-says have committed to play a sport in college, and where. It began with field hockey only and took
-in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
+The site gained college commitments: which players on the tracked varsity rosters (43 then, 49 with
+the EAL) a public page says have committed to play a sport in college, and where. It began with
+field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
 research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
 commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
-differ: the same matching rule, the same privacy posture, the same row and list layout. This
-section records what is new and where it departs.
+differ: the same matching rule, the same privacy posture, the same row and list layout. This section
+records what is new and where it departs.
 
 ### 21.1 The page and what it answers
 
@@ -3392,8 +3392,11 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
 - **No club records for D-City FHC (Davis), Roseville FHC and Chico Hotshots.** The 2026-10-04 sweep
   found these clubs near the six EAL teams' schools; adding records for them is left for a later change. Three
   Davis players were tied to the existing NorCal Impact club (NFHCA 2026 high school watchlist,
-  2026-08-27). No field hockey commitment was found for any EAL player; the same day's every-sport
-  round (§21.7) covered the 43 earlier teams only.
+  2026-08-27). No college commitment was found for any EAL player: a field hockey sweep, then the
+  same day's every-sport round (§21.7), first run over the 43 earlier teams and then over the EAL's
+  95 varsity rows, found none (`docs/DATA-SOURCES.md` §1.1j3; the same day's recruiting-profiles
+  research ran SportsRecruits' profile probe for those rows in every sport and NCSA and FieldLevel
+  probes for field hockey, but SportsRecruits' athlete search was not run for them).
 - **No enrichment sweep for EAL rosters.** `data/rosters-enrichment.json` holds six stub entries
   that say so. Corning has no roster or player stats at MaxPreps on 2026-10-04 (roster `empty`, stats
   `none`).
