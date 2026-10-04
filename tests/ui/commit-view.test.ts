@@ -119,7 +119,15 @@ describe('source labels: the kind and the host, never the path', () => {
     expect(label('https://www.fhcollegepath.com/class-of-2028.html', 'event')).toBe('FH College Path');
     expect(label('https://lahstalon.org/a-story/', 'news')).toBe('The Talon');
     expect(label('https://siwildcats.com/news/2026/10/1/a-report.aspx', 'school-site')).toBe('St. Ignatius athletics');
+    expect(label('https://saratogafalcon.org/1/sports/a-story/', 'news')).toBe('The Saratoga Falcon');
+    expect(label('https://www.lacrossemasters.com/girls-college-commits', 'other')).toBe('Lacrosse Masters');
     expect(label('https://unknown.example.org/pat-example-commits', 'news')).toBe('unknown.example.org');
+  });
+
+  it('names another sport’s club by the club', () => {
+    expect(label('https://stepscalifornia.com/college-commitments/', 'club-site')).toBe('STEPS California site');
+    expect(label('https://www.advnclacrosse.com/alumnicommits', 'club-site')).toBe('ADVNC Lacrosse site');
+    expect(label('https://unknown-club.example.org/commits', 'club-site')).toBe('unknown-club.example.org');
   });
 });
 

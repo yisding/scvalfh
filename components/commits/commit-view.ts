@@ -100,6 +100,17 @@ const OUTLETS: Readonly<Record<string, string>> = {
   'paloaltoonline.com': 'Palo Alto Online',
   'losaltosonline.com': 'Los Altos Town Crier',
   'mercurynews.com': 'Mercury News',
+  'saratogafalcon.org': 'The Saratoga Falcon',
+  'lacrossemasters.com': 'Lacrosse Masters',
+};
+
+/**
+ * Clubs in other sports whose own sites a commitment cites (a lacrosse club's commitments page).
+ * They are not field hockey clubs, so data/clubs.json does not hold them.
+ */
+const OTHER_CLUBS: Readonly<Record<string, string>> = {
+  'stepscalifornia.com': 'STEPS California',
+  'advnclacrosse.com': 'ADVNC Lacrosse',
 };
 
 /** The recruiting platforms' profile links. */
@@ -148,7 +159,7 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
         ? `${collegeDisplayName(college)} athletics`
         : host;
     case 'club-site': {
-      const club = CLUB_BY_HOST.get(host);
+      const club = CLUB_BY_HOST.get(host) ?? OTHER_CLUBS[host];
       return club ? `${club} site` : host;
     }
     default:
