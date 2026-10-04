@@ -1,11 +1,12 @@
 /**
- * The Zod contract for data/clubs.json — the youth field hockey clubs around the 43 schools, and
- * which players on the tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
+ * The Zod contract for data/clubs.json — the youth field hockey clubs around the 43 schools swept on
+ * 2026-10-03, plus any club a tracked player is tied to, and which players on the tracked varsity
+ * rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, not a script's output: it was written by hand on its `capturedAt` date,
  * every affiliation checked twice (a checker re-opened each source, then an independent refuter
- * tried to break it), and nothing rebuilds it. Its facts are fixed; this contract only says what
- * shape they must have.
+ * tried to break it), and a later sweep added ties checked by two verifiers (notes[5]); nothing
+ * rebuilds it. Its facts are fixed; this contract only says what shape they must have.
  *
  * Separate from lib/clubs.ts (the read API, which imports the file) so tests and scripts can parse
  * a file without loading one — the same split as lib/rosters-schema.ts / lib/rosters.ts.

@@ -165,25 +165,25 @@ describe('data/clubs.json', () => {
     for (const a of raw.affiliations) expect(a.basis, `${a.fullName} (${a.club})`).toMatch(/[.!?]['"’”)]?$/);
   });
 
-  describe('as researched 2026-10-03 (changes only with a new sweep)', () => {
+  describe('as researched 2026-10-03 and 2026-10-04 (changes only with a new sweep)', () => {
     const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
 
-    it('holds 13 clubs and 72 affiliations: 66 of the 716 varsity rows, at 22 of the 43 schools', () => {
+    it('holds 13 clubs and 75 affiliations: 69 of the 811 varsity rows, at 23 of the 49 schools', () => {
       expect(raw.clubs).toHaveLength(13);
-      expect(raw.affiliations).toHaveLength(72);
-      expect(players.size).toBe(66);
-      expect(schools.size).toBe(22);
+      expect(raw.affiliations).toHaveLength(75);
+      expect(players.size).toBe(69);
+      expect(schools.size).toBe(23);
       const rows = teams.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
-      expect(rows).toHaveLength(745);
+      expect(rows).toHaveLength(840);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
-      expect(teams).toHaveLength(43);
+      expect(teams).toHaveLength(49);
     });
 
-    it('counts 55 current, 11 past and 6 unknown; 57 high and 15 medium', () => {
-      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 55, past: 11, unknown: 6 });
-      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 57, medium: 15 });
+    it('counts 58 current, 11 past and 6 unknown; 60 high and 15 medium', () => {
+      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 58, past: 11, unknown: 6 });
+      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 60, medium: 15 });
       expect(raw.affiliations.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
         'Brooklyn Barnard',
         'Colette Boyd',
@@ -194,11 +194,11 @@ describe('data/clubs.json', () => {
       ]);
     });
 
-    it('rests on 229 source entries on 105 distinct URLs, by kind', () => {
+    it('rests on 232 source entries on 105 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = raw.affiliations.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(229);
+      expect(sources).toHaveLength(232);
       expect(new Set(sources.map((s) => s.url)).size).toBe(105);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
       // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
@@ -209,7 +209,7 @@ describe('data/clubs.json', () => {
         sportsrecruits: 57,
         'club-site': 49,
         news: 34,
-        event: 26,
+        event: 29,
         ncsa: 24,
         other: 19,
         'maxpreps-career': 17,
@@ -246,7 +246,7 @@ describe('data/clubs.json', () => {
       );
       expect(byClub).toEqual({
         'sf-hawks': { current: 31, past: 0, unknown: 0 },
-        'norcal-impact': { current: 19, past: 0, unknown: 0 },
+        'norcal-impact': { current: 22, past: 0, unknown: 0 },
         'fly-fhc': { current: 2, past: 4, unknown: 4 },
         infinity: { current: 1, past: 6, unknown: 1 },
         lightning: { current: 1, past: 1, unknown: 1 },
@@ -263,6 +263,20 @@ describe('data/clubs.json', () => {
       ]);
     });
 
+    it('ties three Davis players to NorCal Impact from the 2026-08-27 NFHCA watchlist (Kate Loscutoff, not Margaret)', () => {
+      const davis = raw.affiliations.filter((a) => a.teamSlug === 'davis');
+      expect(davis.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.asOf])).toEqual([
+        ['Kira Kelly', 11, 'norcal-impact', 'current', '2026-08-27'],
+        ['Kate Loscutoff', 12, 'norcal-impact', 'current', '2026-08-27'],
+        ['Amelia Zedonis', 11, 'norcal-impact', 'current', '2026-08-27'],
+      ]);
+      for (const a of davis) {
+        expect(a.sources.map((s) => s.url)).toEqual(['https://nfhca.org/nfhca-2026-high-school-watchlist/']);
+        expect(a.sources[0].quote.startsWith('Davis Senior High School | NorCal Impact FHC | ')).toBe(true);
+      }
+      expect(teams.find((t) => t.slug === 'davis')!.players.some((p) => p.fullName === 'Margaret Loscutoff')).toBe(true);
+    });
+
     it('places the clubs by region, with none on the Peninsula, the Central Coast or in Sacramento', () => {
       expect(countBy(raw.clubs, (c) => c.region)).toEqual({
         'san-francisco': 2,
@@ -273,7 +287,7 @@ describe('data/clubs.json', () => {
       });
     });
 
-    it('finds players in three of the four leagues', () => {
+    it('finds players in four of the five leagues', () => {
       const byLeague = Object.fromEntries(
         LEAGUES.map((l) => {
           const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id);
@@ -283,7 +297,7 @@ describe('data/clubs.json', () => {
           ];
         }),
       );
-      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4] });
+      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4], eal: [3, 1] });
     });
   });
 });

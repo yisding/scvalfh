@@ -224,7 +224,7 @@ describe('buildClubsIndexView (/clubs)', () => {
     }
     const line = (slug: string) => rows.find((r) => r.slug === slug)!.countLine;
     expect(line('sf-hawks')).toBe('31 current players');
-    expect(line('norcal-impact')).toBe('19 current players');
+    expect(line('norcal-impact')).toBe('22 current players');
     expect(line('fly-fhc')).toBe('10 players: 2 current, 8 earlier or not known to be current');
     expect(line('infinity')).toBe('8 players: 1 current, 7 earlier or not known to be current');
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
@@ -243,9 +243,9 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([66, 22, 13, 6]);
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([69, 23, 13, 6]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 66 players from 22 schools are tied to 6 of these 13 clubs, the most to SF Hawks (31) and NorCal Impact (19).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 69 players from 23 schools are tied to 6 of these 13 clubs, the most to SF Hawks (31) and NorCal Impact (22).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -546,7 +546,7 @@ describe('the clubs routes, rendered', () => {
     const pages: Array<[string, string]> = [['/clubs', renderIndex()]];
     for (const slug of getClubSlugs()) pages.push([`/clubs/${slug}`, await renderClub(slug)]);
     const teams = [...new Set(file.affiliations.map((a) => a.teamSlug))];
-    expect(teams).toHaveLength(22);
+    expect(teams).toHaveLength(23);
     for (const slug of teams) pages.push([`/teams/${slug}`, await renderTeam(slug)]);
     for (const [route, html] of pages) expect(affiliationLeaks(html, file, { publicTerms: PUBLIC_TERMS }), route).toEqual([]);
   });

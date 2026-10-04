@@ -10,11 +10,12 @@ import { getRosters } from '../../lib/rosters';
 /**
  * /clubs — "Which clubs do players here play for?" (DESIGN §17.1, SPEC §1.1j2).
  *
- * The youth field hockey clubs of data/clubs.json — the clubs around these schools, plus any other
- * club a tracked player is tied to (HTC trains in La Jolla) — and, for each, how many players on
- * the tracked varsity rosters a public page ties to it, current and earlier stated apart, and from
- * which schools. The lede answers the page's question in one paragraph; there is no second line of
- * bare counts.
+ * The youth field hockey clubs of data/clubs.json — the clubs around the Bay Area and Central Coast
+ * schools (no record yet for the clubs of the Eastern Athletic League's area, DESIGN §22.8), plus
+ * any other club a tracked player is tied to (HTC trains in La Jolla) — and, for each, how many
+ * players on the tracked varsity rosters a public page ties to it, current and earlier stated
+ * apart, and from which schools. The lede answers the page's question in one paragraph; there is
+ * no second line of bare counts.
  *
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
  * the South Bay, the East Bay, Marin, the Central Coast, then the rest: lib/clubs-schema.ts
@@ -70,8 +71,7 @@ export default function ClubsPage() {
             Most ties rest on one page that names the player, the club and the school. Some rest on a
             club roster&rsquo;s class-year heading plus the club&rsquo;s location, or on a school
             nickname in a news story. Every tie links the pages it rests on, and each was checked
-            twice on {view.capturedOn}: once by re-opening every source, then by a separate pass that
-            tried to break it.
+            twice, in two separate passes, when it was added.
           </p>
           <p className="mt-2 mb-0">
             &ldquo;Current&rdquo; means a source from the {view.currentSeasons} club season: a page

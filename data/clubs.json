@@ -3,12 +3,13 @@
   "capturedAt": "2026-10-03",
   "season": "26-27",
   "notes": [
-    "Which club field hockey teams the players on the 43 tracked varsity rosters play (or played) for, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV are out of scope). A club's own roster lists many more players, who are not named here: the club's roster pages are linked instead.",
+    "Which club field hockey teams the players on the tracked varsity rosters (the 43 schools of the four leagues swept on 2026-10-03, and the schools of the six Eastern Athletic League teams swept on 2026-10-04) play (or played) for, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV are out of scope). A club's own roster lists many more players, who are not named here: the club's roster pages are linked instead.",
     "The linking rule is the one data/rosters-enrichment.json uses for recruiting profiles, applied to clubs: a public page must name the player and a field hockey club, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A class year that disagrees with the roster grade rules a match out; a name alone never makes one. Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts.",
-    "Every affiliation was checked twice on 2026-10-03: a checker re-opened each source and applied the rule, then an independent refuter re-opened the sources and tried to break it (another person of the same name, a quote not on the page, a misidentified club, a class year that disagrees, a stale listing). Only affiliations that survived both are here. Each source keeps its URL, kind and a verbatim quote (several quotes from one page are joined with ' … '); every source names the player or is the player's own profile page, so a club's about page used only to confirm a former club name is not kept. basis says what the match rests on.",
+    "Every affiliation of the 2026-10-03 sweep was checked twice on that day: a checker re-opened each source and applied the rule, then an independent refuter re-opened the sources and tried to break it (another person of the same name, a quote not on the page, a misidentified club, a class year that disagrees, a stale listing). Only affiliations that survived both are in that sweep. Each source keeps its URL, kind and a verbatim quote (several quotes from one page are joined with ' … '); every source names the player or is the player's own profile page, so a club's about page used only to confirm a former club name is not kept. basis says what the match rests on.",
     "status: current = the source reflects the 2025-26 or 2026-27 club seasons (dated August 2025 or later, a club's current-players page, or a live recruiting profile that lists the club); past = dated earlier, an alumni list, or a club the player's own page lists for earlier years; unknown = listed with no usable date. asOf is the date or season the source gives. confidence: high = one first-hand page names player, club and school (or is the player's own profile); medium = the match rests on a club roster's class-year heading plus the club's location, on a team nickname standing for the school, or on a single self-reported line.",
-    "clubs[] are the youth field hockey clubs around the 43 schools (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast) plus any club a rostered player is tied to. Each record was read from the club's own site on 2026-10-03 and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them.",
-    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
+    "clubs[] are the youth field hockey clubs around the 43 schools of the four leagues swept on 2026-10-03 (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast) plus any club a rostered player is tied to. Each record was read from the club's own site on 2026-10-03 and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them.",
+    "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 with the same rule, using: the NFHCA 2026 high school watchlist, the NCFHA youth directory (https://www.ncfha.org/youth), SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey. It found three ties, all at Davis and all to NorCal Impact (Kira Kelly, Kate Loscutoff, Amelia Zedonis), each from the watchlist's 2026-08-27 rows and confirmed by two verifiers; no other EAL player was found tied to a club by the rule. No club record was added from the EAL sweep (clubs around these schools are not yet in clubs[]; DESIGN §22.8), and the searched areas are unchanged.",
+    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows of the 43 schools swept on 2026-10-03), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
   ],
   "clubs": [
     {
@@ -3732,6 +3733,69 @@
         }
       ],
       "basis": "Her own live SportsRecruits profile (jessica_long4) names Convent of the Sacred Heart, class 2028 (roster grade 11, F/M) and the San Francisco Youth Field Hockey Club / San Francisco Hawks, with no end date; it was created Jan 2026 and says 'rising junior'. The club's SR U19 Hawks Blue page lists her at 2028, and the club's own current-players page links her card to this same profile."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
+      "fullName": "Kira Kelly",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-08-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.org/nfhca-2026-high-school-watchlist/",
+          "kind": "event",
+          "quote": "Davis Senior High School | NorCal Impact FHC | Kira | Kelly | Junior | Goalkeeper",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-08-27"
+        }
+      ],
+      "basis": "The 2026-08-27 NFHCA watchlist names Kira Kelly, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kira Kelly at Davis."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
+      "fullName": "Kate Loscutoff",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-08-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.org/nfhca-2026-high-school-watchlist/",
+          "kind": "event",
+          "quote": "Davis Senior High School | NorCal Impact FHC | Kate | Loscutoff | Senior | Forward, Midfielder",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-08-27"
+        }
+      ],
+      "basis": "The 2026-08-27 NFHCA watchlist names Kate Loscutoff, Davis Senior High School, club NorCal Impact FHC, Senior (= 2027, matches grade 12). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kate Loscutoff at Davis."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
+      "fullName": "Amelia Zedonis",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": "2026-08-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.org/nfhca-2026-high-school-watchlist/",
+          "kind": "event",
+          "quote": "Davis Senior High School | NorCal Impact FHC | Amelia | Zedonis | Junior | Midfielder, Defender",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-08-27"
+        }
+      ],
+      "basis": "The 2026-08-27 NFHCA watchlist names Amelia Zedonis, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Amelia Zedonis at Davis."
     }
   ]
 }

@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/commits.json — which players on the 43 tracked varsity rosters a public
+ * The Zod contract for data/commits.json — which players on the tracked varsity rosters a public
  * page says have committed to play field hockey in college, and the colleges they committed to
  * (SPEC §1.1j3, DESIGN §21).
  *
