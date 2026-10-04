@@ -10,8 +10,8 @@ import {
 } from '../../lib/format';
 import { LEAGUES, getLeague } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
-import type { PriorSeason } from '../../lib/prior-season';
-import { getPriorSeason } from '../../lib/prior-season-data';
+import { getPriorSeason } from '../../lib/prior-season';
+import type { PriorSeason } from '../../lib/prior-season-schema';
 import { ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, computeRatings, type TeamRating } from '../../lib/ratings';
 import type {
   FieldStatKey,

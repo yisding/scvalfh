@@ -7,8 +7,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { getSnapshot } from '../lib/data';
-import type { PriorGame, PriorSeason } from '../lib/prior-season';
-import { getPriorSeason } from '../lib/prior-season-data';
+import { getPriorSeason } from '../lib/prior-season';
+import type { PriorGame, PriorSeason } from '../lib/prior-season-schema';
 import {
   ELO_BASE,
   ELO_PER_GOAL,

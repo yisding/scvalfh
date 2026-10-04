@@ -573,7 +573,7 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
 develop and build without ever calling a live upstream API. Every build bundles
 `data/snapshot.json`, `data/history-2025-26.json` and `data/prior-season.json` into its server code
-(`lib/data.ts`, `lib/history.ts` and `lib/prior-season-data.ts` import them), so no server reads
+(`lib/data.ts`, `lib/history.ts` and `lib/prior-season.ts` import them), so no server reads
 `data/` at run time. The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
 Worker, two patches (see "The vinext patch") and its own outputs, `dist/`, `.vinext/` and

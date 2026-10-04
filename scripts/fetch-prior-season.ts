@@ -39,7 +39,7 @@ import {
   seasonLabel,
   seasonWindow,
   type PriorSeason,
-} from '../lib/prior-season';
+} from '../lib/prior-season-schema';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
 import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';

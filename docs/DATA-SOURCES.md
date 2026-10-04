@@ -1071,7 +1071,7 @@ Gotchas, all **[V]**:
   script leaves the file untouched when only its `fetchedAt` stamps would move.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
-(`lib/prior-season.ts`, loaded by `lib/prior-season-data.ts`), built once a season by
+(`lib/prior-season-schema.ts`, loaded by `lib/prior-season.ts`), built once a season by
 `pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
 - The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
   sport-season the school has played (625 for Leigh), each with `sportSeasonId`, `sport`, `gender`,

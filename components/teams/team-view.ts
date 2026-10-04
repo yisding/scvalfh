@@ -41,7 +41,7 @@ import {
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
-import { getPriorSeason } from '../../lib/prior-season-data';
+import { getPriorSeason } from '../../lib/prior-season';
 import { outcomesFor } from '../../lib/standings';
 import type {
   DivisionId,
