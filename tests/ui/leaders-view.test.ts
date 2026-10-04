@@ -3,9 +3,10 @@
  *
  * The page's promises: a player's number is the one on their team page and a school's record the one
  * in its standings row; a board ranks with shared places (1, 2, 2, 4) and never lists more than its
- * cap; a 0 or an untracked stat never puts a player on a board; every team a board cannot cover is
- * named; a school needs a minimum number of results to lead a record or a rate; clean sheets leave
- * forfeits out, as goals do.
+ * cap, and a player board's places to 25th wait behind "Show N more"; a 0 or an untracked stat never
+ * puts a player on a board; every team a board cannot cover is named; a school needs a minimum
+ * number of results to lead a record or a rate; clean sheets leave forfeits out, as goals do; the
+ * schools come first and the Elo board is the last of them.
  *
  * Two data sets, as tests/ui/player-stats-view.test.ts has: the rules are asserted over the
  * COMMITTED data (they must hold for whatever the scheduled refresh writes), and exact outcomes over
@@ -21,6 +22,8 @@ import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
 import {
   BOARD_MAX_ROWS,
   BOARD_PLACES,
+  EXPANDED_MAX_ROWS,
+  EXPANDED_PLACES,
   buildLeadersView,
   qualifyingMinimum,
   rankBoard,
@@ -49,20 +52,27 @@ import { game } from '../helpers';
 import { textOf } from './html-text';
 
 const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
-const SCHOOL_IDS = ['elo-rating', 'best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets'];
+const SCHOOL_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets', 'elo-rating'];
 
 /** The board's ranked cell, as printed. */
 const ranked = (board: LeaderBoard, i: number) => board.rows[i].cells[board.rankedBy].text;
 
-/** The ranking invariants every board keeps, whatever its data. */
+/** The ranking invariants every board keeps, whatever its data: the expanded rows rank on from the board's own. */
 function expectRanked(board: LeaderBoard): void {
   expect(board.rows.length, board.id).toBeLessThanOrEqual(BOARD_MAX_ROWS);
-  board.rows.forEach((row, i) => {
-    expect(row.rank, `${board.id} row ${i}`).toBeLessThanOrEqual(BOARD_PLACES);
-    const prev = board.rows[i - 1];
-    const next = board.rows[i + 1];
+  for (const row of board.rows) expect(row.rank, `${board.id} ${row.key}`).toBeLessThanOrEqual(BOARD_PLACES);
+  if (board.kind === 'school') expect(board.extra, board.id).toBeNull();
+  if (board.extra) expect(board.extra.rows.length, board.id).toBeGreaterThan(0);
+  const rows = [...board.rows, ...(board.extra?.rows ?? [])];
+  const value = (i: number) => rows[i].cells[board.rankedBy].text;
+  expect(rows.length, board.id).toBeLessThanOrEqual(EXPANDED_MAX_ROWS);
+  expect(new Set(rows.map((r) => r.key)).size, `${board.id}: unique row keys`).toBe(rows.length);
+  rows.forEach((row, i) => {
+    expect(row.rank, `${board.id} row ${i}`).toBeLessThanOrEqual(EXPANDED_PLACES);
+    const prev = rows[i - 1];
+    const next = rows[i + 1];
     if (prev && prev.rank === row.rank) {
-      expect(ranked(board, i), `${board.id}: a shared place shares its value`).toBe(ranked(board, i - 1));
+      expect(value(i), `${board.id}: a shared place shares its value`).toBe(value(i - 1));
     } else {
       // Standard competition ranking: a new place starts at its 1-based position.
       expect(row.rank, `${board.id} row ${i}`).toBe(i + 1);
@@ -78,7 +88,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
   const stats = getPlayerStats().teams;
 
-  it('builds the four player boards and the six school boards, with unique anchors', () => {
+  it('builds the four player boards and the six school boards, the Elo board last, with unique anchors', () => {
     expect(view.players.map((b) => b.id)).toEqual(PLAYER_IDS);
     expect(view.schools.map((b) => b.id)).toEqual(SCHOOL_IDS);
     expect(view.teamCount).toBe(getTeams().length);
@@ -89,7 +99,9 @@ describe('buildLeadersView — rules, over the committed data', () => {
     for (const board of [...view.players, ...view.schools]) {
       expectRanked(board);
       expect(board.columns[board.rankedBy], board.id).toBeDefined();
-      for (const row of board.rows) expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
+      for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
+        expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
+      }
     }
   });
 
@@ -106,14 +118,14 @@ describe('buildLeadersView — rules, over the committed data', () => {
         (t) => t.players.length > 0 && (t.tracked[block] as string[]).includes(key),
       );
       expect(board.meta, board.id).toBe(`From ${tracking.length} ${tracking.length === 1 ? 'team' : 'teams'}`);
-      board.rows.forEach((row, i) => {
+      [...board.rows, ...(board.extra?.rows ?? [])].forEach((row) => {
         const team = stats.find((t) => t.slug === row.team.slug)!;
         expect((team.tracked[block] as string[]).includes(key), `${board.id}: ${row.team.slug} tracks ${key}`).toBe(true);
         const player = team.players.find((p) => p.fullName === row.name)!;
         expect(player, `${board.id}: ${row.name}`).toBeDefined();
         const value = (player[block] as Record<string, number | null> | null)?.[key] ?? null;
         expect(value, `${board.id}: ${row.name}`).toBeGreaterThan(0);
-        expect(ranked(board, i), `${board.id}: ${row.name}`).toBe(statText(value));
+        expect(row.cells[board.rankedBy].text, `${board.id}: ${row.name}`).toBe(statText(value));
         expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
       });
     }
@@ -201,6 +213,22 @@ describe('rankBoard and qualifyingMinimum', () => {
     const { rows, dropped } = rankBoard(values, same);
     expect(rows.map((r) => r.item)).toEqual([9, 8, 7, 6, 5, 4, 3, 2]);
     expect(dropped).toEqual({ items: Array<number>(8).fill(1), place: 9 });
+  });
+
+  it(`goes on to ${EXPANDED_PLACES} places and ${EXPANDED_MAX_ROWS} rows when asked, from the same first rows`, () => {
+    const values = Array.from({ length: 40 }, (_, i) => 40 - i);
+    const top = rankBoard(values, same);
+    const all = rankBoard(values, same, EXPANDED_PLACES, EXPANDED_MAX_ROWS);
+    expect(top.rows.map((r) => r.item)).toEqual(values.slice(0, BOARD_PLACES));
+    expect(all.rows.map((r) => r.item)).toEqual(values.slice(0, EXPANDED_PLACES));
+    expect(all.rows.at(-1)!.rank).toBe(EXPANDED_PLACES);
+    // A tie for 10th too long for the board fits the expanded one, after the same nine rows.
+    const tie = [...values.slice(0, 9), ...Array<number>(8).fill(5), 4, 3];
+    expect(rankBoard(tie, same).dropped).toEqual({ items: Array<number>(8).fill(5), place: 10 });
+    const expanded = rankBoard(tie, same, EXPANDED_PLACES, EXPANDED_MAX_ROWS);
+    expect(expanded.rows.map((r) => r.item)).toEqual(tie);
+    expect(expanded.rows.slice(9).map((r) => r.rank)).toEqual([...Array<number>(8).fill(10), 18, 19]);
+    expect(expanded.dropped).toBeNull();
   });
 
   it('is half the median of the teams that have played, rounded up, and at least 1', () => {
@@ -577,10 +605,15 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
     expect(cs.rows).toEqual([]);
     expect(cs.more).toBe(`${BOARD_MAX_ROWS + 1} goalkeepers share 1st, with 1 clean sheet each.`);
+    // The expanded board has room for them: they are listed behind the disclosure.
+    expect(cs.extra!.summary).toBe(`Show ${BOARD_MAX_ROWS + 1} goalkeepers`);
+    expect(cs.extra!.rows.map((r) => [r.rank, r.tied])).toEqual(Array(BOARD_MAX_ROWS + 1).fill([1, true]));
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: cs }));
     expect(html).toContain(cs.more);
     expect(html).not.toContain(cs.empty);
-    expect(html).not.toContain('<table');
+    // No table up front: the only one is inside the closed disclosure.
+    expect(html.match(/<table/g)).toHaveLength(1);
+    expect(html.indexOf('<table')).toBeGreaterThan(html.indexOf('<details'));
   });
 
   it('still says "more" when some of the board is listed above the long tie', () => {
@@ -597,6 +630,89 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
     expect(cs.rows.map((r) => r.name)).toEqual(['Ace Able']);
     expect(cs.more).toBe(`${BOARD_MAX_ROWS} more goalkeepers share 2nd, with 1 clean sheet each.`);
+    expect(cs.extra!.summary).toBe(`Show ${BOARD_MAX_ROWS} more goalkeepers`);
+    expect(cs.extra!.rows.map((r) => r.rank)).toEqual(Array(BOARD_MAX_ROWS).fill(2));
+    expect(cs.extra!.more).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------- the expanded player boards
+
+describe('buildLeadersView — player boards past 10th', () => {
+  /** One team of `points.length` players, "Player 01" … in order, with these points. */
+  const pointsBoard = (points: number[]) =>
+    buildLeadersView(
+      sources(
+        [],
+        [
+          teamStats('mitty', {
+            field: ['points'],
+            players: points.map((p, i) => ({ name: `Player ${String(i + 1).padStart(2, '0')}`, field: { points: p } })),
+          }),
+        ],
+      ),
+    ).players.find((b) => b.id === 'most-points')!;
+
+  it(`lists the top ${BOARD_PLACES} and keeps the places to ${EXPANDED_PLACES} behind "Show N more"`, () => {
+    const board = pointsBoard(Array.from({ length: 30 }, (_, i) => 30 - i));
+    expectRanked(board);
+    expect(board.rows.map((r) => r.rank)).toEqual(Array.from({ length: BOARD_PLACES }, (_, i) => i + 1));
+    expect(board.more).toBeNull();
+    expect(board.extra).toMatchObject({
+      summary: 'Show 15 more players',
+      caption: 'Most points, players in all five leagues, this season, continued',
+      more: null,
+    });
+    expect(board.extra!.rows.map((r) => [r.rank, r.name, r.cells[board.rankedBy].text])).toEqual(
+      Array.from({ length: 15 }, (_, i) => [i + 11, `Player ${i + 11}`, String(20 - i)]),
+    );
+  });
+
+  it('has nothing to expand when the board lists every player', () => {
+    expect(pointsBoard([5, 4, 3]).extra).toBeNull();
+    expect(pointsBoard(Array.from({ length: BOARD_PLACES }, (_, i) => 20 - i)).extra).toBeNull();
+    // One more player is one more row, not "the top 25".
+    expect(pointsBoard(Array.from({ length: BOARD_PLACES + 1 }, (_, i) => 20 - i)).extra!.summary).toBe('Show 1 more player');
+  });
+
+  it('lists a tie for 10th too long for the board once it is expanded', () => {
+    // Nine places, then eight players on 10 points: 17 rows would pass 15, but not 30.
+    const board = pointsBoard([30, 29, 28, 27, 26, 25, 24, 23, 22, ...Array<number>(8).fill(10), 9, 8]);
+    expectRanked(board);
+    expect(board.rows).toHaveLength(9);
+    expect(board.more).toBe('8 more players share 10th, with 10 points each.');
+    expect(board.extra!.summary).toBe('Show 10 more players');
+    expect(board.extra!.rows.map((r) => [r.rank, r.tied])).toEqual([
+      ...Array(8).fill([10, true]),
+      [18, false],
+      [19, false],
+    ]);
+  });
+
+  it(`counts a tie for the last expanded place that would pass ${EXPANDED_MAX_ROWS} rows`, () => {
+    // 24 places, then seven players on 1 point: 31 rows.
+    const board = pointsBoard([...Array.from({ length: 24 }, (_, i) => 30 - i), ...Array<number>(7).fill(1)]);
+    expectRanked(board);
+    expect(board.extra!.rows.map((r) => r.rank)).toEqual(Array.from({ length: 14 }, (_, i) => i + 11));
+    expect(board.extra!.more).toBe('7 more players share 25th, with 1 point each.');
+  });
+
+  it('renders the extra rows in a closed disclosure under the board, as a second table', () => {
+    const board = pointsBoard(Array.from({ length: 30 }, (_, i) => 30 - i));
+    const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board }));
+    expect(html).toContain('<details class="sx-disclosure mt-1"><summary>Show 15 more players</summary>');
+    expect(html).not.toContain('<details open');
+    expect(html.match(/<table/g)).toHaveLength(2);
+    expect(html.match(/data-team-slug="mitty"/g)).toHaveLength(25);
+    const [top, rest] = html.split('<details');
+    expect(top).toContain('Player 10');
+    expect(top).not.toContain('Player 11');
+    expect(rest).toContain('<caption class="sr-only">Most points, players in all five leagues, this season, continued</caption>');
+    expect(rest).toContain('Player 11');
+    expect(rest).toContain('Player 25');
+    expect(rest).not.toContain('Player 26');
+    // The board's note still closes the board, under the disclosure.
+    expect(rest).toContain(board.note);
   });
 });
 
@@ -628,11 +744,16 @@ describe('LeaderBoardTable and the /leaders page', () => {
     expect(html).toContain('href="/teams/leigh#player-stats"');
   });
 
-  it('renders both sections and every board anchor', () => {
+  it('renders both sections, the schools first, and every board anchor in order', () => {
     const html = renderToStaticMarkup(LeadersPage());
     expect(html).toMatch(/<section id="players"/);
     expect(html).toMatch(/<section id="schools"/);
-    for (const id of [...PLAYER_IDS, ...SCHOOL_IDS]) expect(html, id).toContain(`<section id="${id}"`);
+    const at = (id: string) => html.indexOf(`<section id="${id}"`);
+    const order = ['schools', ...SCHOOL_IDS, 'players', ...PLAYER_IDS];
+    for (const id of order) expect(at(id), id).toBeGreaterThanOrEqual(0);
+    expect(order.map(at)).toEqual(order.map(at).sort((a, b) => a - b));
+    // The jump links follow the sections.
+    expect(html.indexOf('href="#schools"')).toBeLessThan(html.indexOf('href="#players"'));
     expect(html).toContain('<h1');
     expect(html).not.toMatch(/eliminat/i);
   });
