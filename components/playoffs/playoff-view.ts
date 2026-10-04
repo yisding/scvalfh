@@ -24,6 +24,7 @@
 
 import {
   EM_DASH,
+  listWords,
   monthDay,
   ordinal,
   recordString,
@@ -89,18 +90,6 @@ export function clockLabel(time: string): string {
   const [h, m] = time.split(':').map(Number);
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'} PT`;
-}
-
-/** 'Cupertino and Homestead' / 'Presentation, Santa Clara and Saratoga' */
-export function joinNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
-}
-
-/** 'A or B' / 'A, B or C' — every contender for one seat. */
-export function orNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
 }
 
 // ---------------------------------------------------------------- key dates
@@ -374,7 +363,7 @@ export function buildDivisionProjection(
     // Name only the level teams contesting the last automatic place, not the clear leaders above.
     const level = autoRows.filter((r) => r.shared);
     notes.push(
-      `${joinNames((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
+      `${listWords((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
         `top ${numberWord(n)} places, and ${divisionLabel} has only ${numberWord(n)} automatic berths — ` +
         `${ladder.unresolved}, so this row order is not a ruling.`,
     );
@@ -393,7 +382,7 @@ export function buildDivisionProjection(
       // play-in place; a row carrying more than one status straddles the boundary.
       const allAtPlace = playInRows.every((r) => r.statuses.length === 1);
       notes.push(
-        `${joinNames(playInRows.map((r) => r.team.name))} ${
+        `${listWords(playInRows.map((r) => r.team.name))} ${
           allAtPlace ? `are level at ${place}` : `are level across ${place}`
         }, so which of them plays in${when ? ` on${when}` : ''} is not settled — ${ladder.unresolved}.`,
       );
@@ -404,9 +393,9 @@ export function buildDivisionProjection(
     const place = ordinalWord(ladder.atLargePlace);
     notes.push(
       allAtPlace
-        ? `${joinNames(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
+        ? `${listWords(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
           `${divisionLabel} has two at-large candidates and no ${ordinalWord(ladder.atLargePlace + 1)} place today.`
-        : `${joinNames(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
+        : `${listWords(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
           `${divisionLabel} has more than one at-large candidate today.`,
     );
   }
@@ -559,7 +548,7 @@ export function pairingSentence(view: PairingView): string {
   const name = (seat: SeatView) =>
     seat.contenders.length === 0
       ? `${seat.label} (to be decided)`
-      : `${orNames(seat.contenders.map((c) => c.team.name))} (${seat.label}${seat.host ? ', host' : ''})`;
+      : `${listWords(seat.contenders.map((c) => c.team.name), 'or')} (${seat.label}${seat.host ? ', host' : ''})`;
   const [a, b] = view.seats;
   const pair =
     view.connector === 'at'
@@ -683,7 +672,7 @@ export function slotView(
       const teams = contested ? seatTeams(contested.seat, teamOf) : [];
       return {
         seed: contested?.seed ?? null,
-        text: teams.length > 1 ? `${slot.label} (${orNames(teams.map((t) => t.shortName))})` : slot.label,
+        text: teams.length > 1 ? `${slot.label} (${listWords(teams.map((t) => t.shortName), 'or')})` : slot.label,
         teams,
         tbd: false,
       };
@@ -692,7 +681,7 @@ export function slotView(
   }
   const teams = seatTeams(slot.seat, teamOf);
   if (teams.length === 0) return { seed: slot.seed, text: 'TBD', teams: [], tbd: true };
-  return { seed: slot.seed, text: orNames(teams.map((t) => t.shortName)), teams, tbd: false };
+  return { seed: slot.seed, text: listWords(teams.map((t) => t.shortName), 'or'), teams, tbd: false };
 }
 
 function slotLabel(v: TournamentSlotView): string {

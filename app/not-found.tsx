@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 /** 'SCVAL, BVAL, PCAL, MCAL and EAL', from the config (never a literal list). */
-const LEAGUE_LIST = LEAGUES.map((l) => l.shortName).reduce(
-  (acc, name, i, all) => (i === 0 ? name : `${acc}${i === all.length - 1 ? ' and ' : ', '}${name}`),
-  '',
-);
+const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },

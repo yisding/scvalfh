@@ -431,8 +431,11 @@ export function dateSpan(first: string, last: string): string {
   return `${monthDay(first)}${EN_DASH}${monthDay(last)}`;
 }
 
-/** 'A', 'A and B', 'A, B and C'. */
-export function listWords(words: readonly string[]): string {
+/**
+ * 'A', 'A and B', 'A, B and C'; with `conj` 'or' every contender for one seat ('A, B or C'), and
+ * with '&' the compact leader line ('A, B & C'). An empty list is ''.
+ */
+export function listWords(words: readonly string[], conj: 'and' | 'or' | '&' = 'and'): string {
   if (words.length <= 1) return words[0] ?? '';
-  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+  return `${words.slice(0, -1).join(', ')} ${conj} ${words[words.length - 1]}`;
 }

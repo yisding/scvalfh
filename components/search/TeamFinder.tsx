@@ -5,6 +5,7 @@ import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
 import { plural } from '../ui/plural';
 import { usePinnedTeam } from '../ui/use-pinned-team';
+import { listWords } from '../../lib/format';
 import { pinLabel } from '../../lib/pin-label';
 import {
   normalizeQuery,
@@ -69,11 +70,6 @@ export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
 export const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
-function joinAnd(parts: readonly string[]): string {
-  if (parts.length <= 1) return parts.join('');
-  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
-}
-
 /** The same "a query at all" rule as `searchTeams`: ≥ 2 characters raw and compact. */
 export function isActiveQuery(query: string): boolean {
   const raw = query.trim();
@@ -87,7 +83,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
 
 /** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
 function leagueList(index: SearchIndex): string {
-  return joinAnd([...new Set(index.teams.map((t) => t.leagueShort))]);
+  return listWords([...new Set(index.teams.map((t) => t.leagueShort))]);
 }
 
 export interface FinderView {
@@ -127,7 +123,7 @@ export function finderView(
   let message: string;
   if (parts.length > 0) {
     const one = matches.length + divisions + leagues === 1;
-    message = `${joinAnd(parts)} ${one ? 'matches' : 'match'} "${q}".`;
+    message = `${listWords(parts)} ${one ? 'matches' : 'match'} "${q}".`;
   } else if (result.notCovered.length > 0) {
     message = result.notCovered.map((n) => n.reason).join(' ');
   } else {

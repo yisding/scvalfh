@@ -12,7 +12,6 @@ import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../component
 import {
   buildDivisionProjection,
   buildPairingView,
-  joinNames,
   ladderFactsFor,
   pairingNotesFor,
   type LeagueKeyDate,
@@ -35,7 +34,7 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { monthDay, shortDate } from '../../lib/format';
+import { listWords, monthDay, shortDate } from '../../lib/format';
 import { UNBRACKETED_LEAGUE_IDS, getLeague } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
@@ -393,13 +392,13 @@ export default function PlayoffsPage() {
             <div className="mt-4 flex flex-col gap-2 text-meta text-ink-2">
               {pending.length > 0 ? (
                 <p className="m-0">
-                  {joinNames(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
+                  {listWords(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
                   {pending.length === 1 ? 'has' : 'have'} no games in the snapshot yet. Pairings appear here as
                   CCS posts them.
                 </p>
               ) : null}
               <p className="m-0">
-                The CCS field is two eight-team divisions, {joinNames(ccsDivisionLabels(playoffs))}. The snapshot
+                The CCS field is two eight-team divisions, {listWords(ccsDivisionLabels(playoffs))}. The snapshot
                 does not label which division a game belongs to, so the games above are grouped by round and, where
                 the bracket splits into independent paths, by path.{' '}
                 <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
@@ -408,7 +407,7 @@ export default function PlayoffsPage() {
           </>
         ) : (
           <p className="m-0 max-w-prose text-body text-ink-2">
-            CCS seeds {joinNames(ccsDivisionLabels(playoffs))} at the {shortDate(keyDates.seedingMeeting)} meeting;
+            CCS seeds {listWords(ccsDivisionLabels(playoffs))} at the {shortDate(keyDates.seedingMeeting)} meeting;
             the bracket appears here that evening.{' '}
             <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink> &mdash; not yet posted.
           </p>

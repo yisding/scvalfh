@@ -39,6 +39,7 @@ import {
   EM_DASH,
   dateSpan,
   dateTimeAttr,
+  listWords,
   monthDay,
   numberWord,
   ordinal,
@@ -89,12 +90,6 @@ function clock(time: string): string {
   const [h, m] = time.split(':').map(Number);
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
-}
-
-/** 'A', 'A & B', 'A, B & C'. */
-function joinAmp(names: readonly string[]): string {
-  if (names.length <= 1) return names.join('');
-  return `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;
 }
 
 function colorsOf(team: Team): HomeColors {
@@ -572,7 +567,7 @@ function leagueLeadersLine(league: LeagueConfig): string {
     const leaders = divisionLeaders(d.id);
     if (!leaders) return single ? null : `no results yet in ${d.label}`;
     const verb = leaders.names.length === 1 ? 'leads' : 'lead';
-    return `${joinAmp(leaders.names)} ${verb}${single ? '' : ` ${d.label}`}`;
+    return `${listWords(leaders.names, '&')} ${verb}${single ? '' : ` ${d.label}`}`;
   });
   if (clauses.every((c) => c === null || c.startsWith('no results yet'))) return 'No league results yet';
   return clauses.filter((c): c is string => c !== null).join(' · ');

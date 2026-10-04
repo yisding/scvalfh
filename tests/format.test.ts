@@ -12,6 +12,7 @@ import {
   gradeWord,
   hoursBetween,
   isoDateKey,
+  listWords,
   localDateKey,
   longDate,
   monthDay,
@@ -325,5 +326,26 @@ describe('gradeWord', () => {
   it('words grades 9-12 and prints any other as its number', () => {
     expect([9, 10, 11, 12].map(gradeWord)).toEqual(['Freshman', 'Sophomore', 'Junior', 'Senior']);
     expect(gradeWord(8)).toBe('Grade 8');
+  });
+});
+
+describe('listWords', () => {
+  it('joins names the way a sentence does, with "and" by default', () => {
+    expect(listWords([])).toBe('');
+    expect(listWords(['Cupertino'])).toBe('Cupertino');
+    expect(listWords(['Cupertino', 'Homestead'])).toBe('Cupertino and Homestead');
+    expect(listWords(['A', 'B', 'C'])).toBe('A, B and C');
+  });
+
+  it('joins every contender for one seat with "or"', () => {
+    expect(listWords(['Cupertino'], 'or')).toBe('Cupertino');
+    expect(listWords(['A', 'B'], 'or')).toBe('A or B');
+    expect(listWords(['A', 'B', 'C'], 'or')).toBe('A, B or C');
+  });
+
+  it('joins a compact leader line with "&"', () => {
+    expect(listWords([], '&')).toBe('');
+    expect(listWords(['A', 'B'], '&')).toBe('A & B');
+    expect(listWords(['A', 'B', 'C'], '&')).toBe('A, B & C');
   });
 });

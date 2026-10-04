@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { EM_DASH, ordinal } from '../../lib/format';
+import { EM_DASH, listWords, ordinal } from '../../lib/format';
 import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 
 import {
-  joinNames,
   projectionRowLabel,
   recordLine,
   type DivisionProjection,
@@ -186,7 +185,7 @@ export function PlayoffProjection({
         ? `the ${divisionLabel} table as MaxPreps lists it`
         : `the official ${divisionLabel} alignment`;
     footnotes.push(
-      `${joinNames(noData)} ${single ? 'is' : 'are'} in ${where} ` +
+      `${listWords(noData)} ${single ? 'is' : 'are'} in ${where} ` +
         `but ${single ? 'has' : 'have'} no reported results, so ${
           single ? 'it is' : 'they are'
         } listed last with no record and no place.`,

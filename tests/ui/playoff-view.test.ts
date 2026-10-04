@@ -17,6 +17,7 @@ import type { ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { ProjectionRow } from '../../components/playoffs/playoff-view';
+import { listWords } from '../../lib/format';
 import type { PlayoffStatus } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
 import { textOf } from './html-text';
@@ -198,7 +199,7 @@ describe('buildDivisionProjection — SCVAL', () => {
       ),
     );
     expect(text, 'components/playoffs/PlayoffProjection.tsx').toContain(
-      `${view.joinNames(rows.slice(1).map((r) => r.team.name))} are in the EAL table as MaxPreps lists it but have no reported results`,
+      `${listWords(rows.slice(1).map((r) => r.team.name))} are in the EAL table as MaxPreps lists it but have no reported results`,
     );
     expect(text, 'components/playoffs/PlayoffProjection.tsx').not.toMatch(/\bofficial\s+(EAL\s+)?alignment/i);
   });
@@ -315,13 +316,6 @@ describe('row copy', () => {
     const unreported = { ...fremont!, hasReportedResults: false };
     expect(view.recordLine(unreported), VIEW).toBe('—');
     expect(view.recordLine(unreported), VIEW).not.toContain('0-0-0');
-  });
-
-  it('joins names the way a sentence does', () => {
-    expect(view.joinNames([])).toBe('');
-    expect(view.joinNames(['Cupertino'])).toBe('Cupertino');
-    expect(view.joinNames(['Cupertino', 'Homestead'])).toBe('Cupertino and Homestead');
-    expect(view.joinNames(['A', 'B', 'C'])).toBe('A, B and C');
   });
 });
 
