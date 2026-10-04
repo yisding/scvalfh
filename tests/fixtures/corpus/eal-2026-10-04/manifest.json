@@ -1,0 +1,48 @@
+{
+  "id": "capture-2026-10-04",
+  "fetchedAt": "2026-10-04T07:19:05.777Z",
+  "leagues": [
+    "eal"
+  ],
+  "note": "EAL only, captured live 2026-10-04; Red Bluff's standings row has modifiedOn null; other leagues are not in this corpus.",
+  "files": {
+    "maxpreps/bootstrap": "maxpreps/bootstrap.html",
+    "maxpreps/league-meta/eal": "maxpreps/league-meta/eal.json",
+    "maxpreps/schedule/bella-vista": "maxpreps/schedule/bella-vista.json",
+    "maxpreps/schedule/chico": "maxpreps/schedule/chico.json",
+    "maxpreps/schedule/corning": "maxpreps/schedule/corning.json",
+    "maxpreps/schedule/davis": "maxpreps/schedule/davis.json",
+    "maxpreps/schedule/lassen": "maxpreps/schedule/lassen.json",
+    "maxpreps/schedule/pleasant-valley": "maxpreps/schedule/pleasant-valley.json",
+    "maxpreps/standings/eal": "maxpreps/standings/eal.json",
+    "sblive/scores/2026-09-22": "sblive/scores/2026-09-22.html",
+    "sblive/scores/2026-09-24": "sblive/scores/2026-09-24.html",
+    "sblive/scores/2026-09-28": "sblive/scores/2026-09-28.html",
+    "sblive/scores/2026-09-29": "sblive/scores/2026-09-29.html",
+    "sblive/scores/2026-10-01": "sblive/scores/2026-10-01.html",
+    "sblive/scores/2026-10-02": "sblive/scores/2026-10-02.html",
+    "sblive/scores/2026-10-03": "sblive/scores/2026-10-03.html",
+    "sblive/team-games/corning": "sblive/team-games/corning.html",
+    "sblive/team-games/davis": "sblive/team-games/davis.html"
+  },
+  "capturedAt": {
+    "maxpreps/bootstrap": "2026-10-04T07:19:05.777Z",
+    "maxpreps/league-meta/eal": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/bella-vista": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/chico": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/corning": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/davis": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/lassen": "2026-10-04T07:19:05.777Z",
+    "maxpreps/schedule/pleasant-valley": "2026-10-04T07:19:05.777Z",
+    "maxpreps/standings/eal": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-09-22": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-09-24": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-09-28": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-09-29": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-10-01": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-10-02": "2026-10-04T07:19:05.777Z",
+    "sblive/scores/2026-10-03": "2026-10-04T07:19:05.777Z",
+    "sblive/team-games/corning": "2026-10-04T07:19:05.777Z",
+    "sblive/team-games/davis": "2026-10-04T07:19:05.777Z"
+  }
+}
