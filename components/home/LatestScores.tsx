@@ -42,13 +42,13 @@ export interface LatestScoresProps {
   kicker?: string;
   /** The §8 sentence for a day that was played and reported nothing. */
   note?: string;
-  /** Rows to show (default 3). */
-  limit?: number;
-  as?: 'h2' | 'h3';
   /** The panel's league: a side from another league carries its short name (`Saint Francis · SCVAL`). */
   scopeLeague?: LeagueId | null;
   className?: string;
 }
+
+/** Rows shown: the block says what just happened, and the action goes to the whole day. */
+const ROWS = 3;
 
 export function LatestScores({
   date,
@@ -56,16 +56,14 @@ export function LatestScores({
   total,
   kicker = 'Latest scores',
   note,
-  limit = 3,
-  as = 'h3',
   scopeLeague = null,
   className,
 }: LatestScoresProps) {
-  const shown = games.slice(0, limit);
+  const shown = games.slice(0, ROWS);
   return (
     <section className={className}>
       <SectionHeader
-        as={as}
+        as="h3"
         kicker={kicker}
         meta={shortDate(date)}
         action={{ href: `/scores/${date}`, label: `All ${total} on ${shortDate(date)}` }}
