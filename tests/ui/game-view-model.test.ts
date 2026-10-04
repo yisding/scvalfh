@@ -210,6 +210,38 @@ describe('si.com source line and the conflict block (components/game/GameSources
   });
 });
 
+describe('the cross-check paragraph under Elsewhere (components/game/GameSources.tsx GameElsewhere)', () => {
+  /** The paragraph as every fixture-backed league and every non-league final has always printed it. */
+  const FIXTURE_BACKED =
+    'Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for an official league game, or its row is clearly wrong, we publish si.com’s score and mark it; when both have a score and disagree, we publish MaxPreps’ and show the disagreement rather than choosing quietly.';
+
+  it('is unchanged, as the whole paragraph, on a counted final of each fixture-backed league and on a non-league final', async () => {
+    const nonLeague = L.d.getGames({ status: 'final' }).find((g) => g.countsFor === null && g.postseason === null)!;
+    const games: Array<[string, Game]> = [
+      ...['scval', 'bval', 'pcal', 'mcal'].map((league): [string, Game] => [league, counted(league)]),
+      ['non-league', nonLeague],
+    ];
+    for (const [label, game] of games) {
+      const html = await L.renderPage(L.ids.gameIdToParam(game.contestId));
+      expect(html, `components/game/GameSources.tsx ${label} paragraph`).toContain(`>${FIXTURE_BACKED}</p>`);
+      expect(html, `components/game/GameSources.tsx ${label}: no 1 v 1 clause`).not.toContain('1 v 1s');
+    }
+  });
+
+  it('renders, with the fixture-backed wording, when a league-postseason tag names a league no longer configured', async () => {
+    // The snapshot schema checks a tag's league id only for shape, so the lookup must not throw.
+    const { GameElsewhere } = await import('../../components/game/GameSources');
+    const nonLeague = L.d.getGames({ status: 'final' }).find((g) => g.countsFor === null && g.postseason === null)!;
+    const model = L.m.buildGameModel(L.ids.gameIdToParam(nonLeague.contestId))!;
+    const tagged = {
+      ...model,
+      game: { ...model.game, postseason: { kind: 'league-postseason', leagueId: 'not-a-league', via: 'league-postseason-window' } },
+    } as unknown as typeof model;
+    const html = renderToStaticMarkup(createElement(GameElsewhere, { model: tagged }));
+    expect(html).toContain(`>${FIXTURE_BACKED}</p>`);
+  });
+});
+
 describe('FormGoingIn non-member copy (components/game/FormGoingIn.tsx)', () => {
   it('names the 49 teams this site follows', async () => {
     const g = L.d.getGames().find((x) => (x.home.slug === null) !== (x.away.slug === null))!;

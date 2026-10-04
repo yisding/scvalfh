@@ -1,7 +1,8 @@
 /**
  * The team, game and /teams pages on the EAL corpus (spec D5, D7, D9): a Davis page with its Super
  * Regional picture and no CCS concept or seed word, the 9/28 Chico-Davis game decided on 1 v 1s,
- * the 9/2 Pleasant Valley game whose three overtime periods the EAL's rules rule out, a Super
+ * the 9/2 Pleasant Valley game whose three overtime periods the EAL's rules rule out, the game page's
+ * cross-check paragraph (no "official" schedule, D23; the 1 v 1 exception, D24), a Super
  * Regional game, and the membership note under the EAL heading on /teams.
  *
  * The EAL has no official schedule (`official.mode: 'none'`), so a team page links none; its
@@ -45,6 +46,7 @@ const priorEnv = process.env.SCVAL_SNAPSHOT;
 let eal: Loaded;
 let withTag: Loaded;
 let tagged: Game;
+let taggedFinal: Game;
 
 /** CCS concepts and seed words no EAL view may carry (spec D21, D10). */
 const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i;
@@ -102,11 +104,18 @@ beforeAll(async () => {
   target.countsFor = null;
   target.leagueDivision = null;
   target.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
+  // And one counted final between two members, so a Super Regional game page has a score to cross-check.
+  const final = snap.games.find((g) => g.status === 'final' && g.countsFor !== null);
+  if (!final) throw new Error('the EAL corpus has no counted final to tag');
+  final.countsFor = null;
+  final.leagueDivision = null;
+  final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
   const file = path.join(dir, 'snapshot.json');
   writeFileSync(file, JSON.stringify(snap));
   withTag = await load(file);
   tagged = withTag.d.getGameById(target.contestId)!;
+  taggedFinal = withTag.d.getGameById(final.contestId)!;
 }, 600_000);
 
 afterAll(() => {
@@ -263,6 +272,62 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
       '2026-10-06',
     );
     expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–1 at home, Sep 2');
+  });
+});
+
+describe('the cross-check paragraph under Elsewhere (components/game/GameSources.tsx, spec D23, D24)', () => {
+  /** The paragraph's last sentence, under the Elsewhere kicker (its section is labelled by it). */
+  function elsewhereText(html: string): string {
+    const at = html.indexOf('aria-labelledby="game-sources-kicker"');
+    expect(at, 'components/game/GameSources.tsx: the Elsewhere section renders').toBeGreaterThan(-1);
+    return textOf(html.slice(at, html.indexOf('</section>', at)));
+  }
+
+  it('on a counted EAL final: "a league game", never "official", plus the 1 v 1 exception', async () => {
+    const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
+    expect(game.countsFor, 'lib/classify.ts: the game counts').not.toBeNull();
+    expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/leagues.ts official.mode').toBe('none');
+    const league = eal.l.leagueOfDivision(game.countsFor!);
+    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    const text = elsewhereText(await eal.renderGame(game.contestId));
+    expect(text, 'components/game/GameSources.tsx').toContain(
+      'When MaxPreps has no result for a league game, or its row is clearly wrong, we publish si.com’s score and mark it;',
+    );
+    expect(text, 'components/game/GameSources.tsx: no official schedule (D23)').not.toMatch(/\bofficial\b/i);
+    expect(text, 'components/game/GameSources.tsx: the D24 exception').toContain(
+      `A level si.com score between two ${league.shortName} teams is never used: a varsity game there is decided on 1 v 1s, and si.com does not say who won them.`,
+    );
+  });
+
+  it('on a final between an EAL team and a non-member: the fixture-backed wording, no 1 v 1 clause', async () => {
+    const ealSlugs = new Set(eal.d.getTeams().filter((t) => t.league === 'eal').map((t) => t.slug));
+    const game = eal.d
+      .getGames({ status: 'final' })
+      .find(
+        (g) =>
+          g.countsFor === null &&
+          g.postseason === null &&
+          [g.home.slug, g.away.slug].some((s) => s !== null && ealSlugs.has(s)) &&
+          ![g.home.slug, g.away.slug].every((s) => s !== null && ealSlugs.has(s)),
+      );
+    expect(game, 'the EAL corpus has a non-league final of an EAL team').toBeDefined();
+    const text = elsewhereText(await eal.renderGame(game!.contestId));
+    expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for an official league game,');
+    expect(text, 'components/game/GameSources.tsx: D24 needs two members').not.toContain('1 v 1s');
+  });
+
+  it('on a Super Regional final between two members: "a league game", never "official", plus the 1 v 1 exception', async () => {
+    expect(taggedFinal.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
+    expect(taggedFinal.countsFor, 'the hand-tagged corpus copy').toBeNull();
+    const league = withTag.l.getLeague(taggedFinal.postseason!.leagueId!);
+    expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/leagues.ts official.mode').toBe(true);
+    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    const text = elsewhereText(await withTag.renderGame(taggedFinal.contestId));
+    expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for a league game,');
+    expect(text, 'components/game/GameSources.tsx: no official schedule (D23)').not.toMatch(/\bofficial\b/i);
+    expect(text, 'components/game/GameSources.tsx: the D24 exception').toContain(
+      `A level si.com score between two ${league.shortName} teams is never used`,
+    );
   });
 });
 

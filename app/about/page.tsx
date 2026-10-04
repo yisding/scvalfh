@@ -401,8 +401,9 @@ export default function AboutPage() {
   const allTeams = getTeams();
   const commitCount = getCommitsFile().commitments.length;
 
-  // Standings flattened over every division (no literal division keys).
-  const allStandings = Object.values(getAllStandings()).flat();
+  // Standings by division, and flattened over every division (no literal division keys).
+  const standingsByDivision = getAllStandings();
+  const allStandings = Object.values(standingsByDivision).flat();
 
   const sbliveCross = getSbliveCrossCheck();
   const backfilled = sbliveCross?.backfilled ?? [];
@@ -449,6 +450,7 @@ export default function AboutPage() {
       id: d.id,
       heading: summary.divisions.find((x) => x.id === d.id)?.heading ?? null,
       maxprepsUrl: leagueStandingsUrl(d.id),
+      memberRows: (standingsByDivision[d.id] ?? []).filter((s) => s.reported !== null).length,
       knownCause: d.knownCause,
       official:
         d.official.mode === 'none'

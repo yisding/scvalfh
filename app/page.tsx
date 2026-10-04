@@ -73,6 +73,7 @@ export default function HomePage() {
           <LeagueCard
             key={card.id}
             card={card}
+            wide={cards.length % 2 === 1 && i === cards.length - 1}
             // The last card of an odd count spans both columns of the two-up grid, so five cards
             // read 2 + 2 + 1 full-width rather than ending on an orphan half-card.
             className={cards.length % 2 === 1 && i === cards.length - 1 ? 'min-[390px]:col-span-2' : undefined}

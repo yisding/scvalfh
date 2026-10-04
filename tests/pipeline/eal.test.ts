@@ -126,14 +126,20 @@ describe('the EAL corpus run', () => {
     expect(d.missingLeaguePast, 'lib/standings.ts missingOfficialResults').toBe(missingFromCorpus().length);
   });
 
-  it('read the 7-row reported table and logged no unknown school', () => {
+  it('read the reported table (members plus the known extra row) and logged no unknown school', () => {
     const standings = JSON.parse(readFileSync(fileOf(`maxpreps/standings/${DIVISION}`), 'utf8')) as {
-      data: unknown[];
+      data: Array<{ schoolId: string }>;
     };
+    const division = LEAGUES.find((l) => l.id === LEAGUE)!.divisions[0];
+    const memberRows = standings.data.filter((r) => !Object.hasOwn(division.maxprepsExtraRows, r.schoolId));
     const health = snapshot.leagueHealth.find((h) => h.leagueId === LEAGUE)!.divisions[0];
     expect(health.reportedTable, 'lib/pipeline/steps/reported.ts').toBe('ok');
-    expect(health.reportedRows, 'lib/pipeline/steps/reported.ts').toBe(standings.data.length);
-    expect(standings.data.length, 'the corpus standings file').toBe(7);
+    // Member rows only, as a carried table counts them; the source row keeps the table as read.
+    expect(health.reportedRows, 'lib/pipeline/steps/reported.ts').toBe(memberRows.length);
+    expect(memberRows.length, 'lib/pipeline/steps/reported.ts: the table less its extra rows').toBe(
+      standings.data.length - Object.keys(division.maxprepsExtraRows).length,
+    );
+    expect(standings.data.length, 'the corpus standings file').toBe(division.maxprepsTeamCount);
     const source = snapshot.sources.find((s) => s.kind === 'reported-standings');
     expect(source?.status, 'lib/pipeline/steps/reported.ts: source row').toBe('ok');
     expect(source?.rowCount, 'lib/pipeline/steps/reported.ts: source row').toBe(standings.data.length);

@@ -34,7 +34,8 @@ import type { StatusGroup } from './standings-view';
  *
  * The caller passes `flex flex-col` with the card classes: from `lg` the band stretches to the
  * Notes inset beside it, and the link row's `mt-auto` keeps it on the bottom edge, level with
- * the Notes' own link row.
+ * the Notes' own link row. A band with no ladder line (the EAL) is passed `lg:self-start`
+ * instead, so it keeps its content height and the link row sits under its chips.
  * Teams with no reported results are NAMED but never given a projected place.
  */
 export interface PlayoffStatusBandProps {
