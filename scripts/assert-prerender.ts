@@ -10,7 +10,7 @@
  * instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
- *    commits (DESIGN §19: one page from data/commits.json, with the root OG card);
+ *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id, `playoffs/<id>.html` for each
  *    league-tournament league;
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one

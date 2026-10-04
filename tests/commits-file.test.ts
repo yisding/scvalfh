@@ -1,6 +1,6 @@
 /**
- * data/commits.json (SPEC §1.1j3, DESIGN §19): the committed file validates and holds every
- * load-time invariant; lib/commits.ts serves it in display order (DESIGN §19.1); and a bad file —
+ * data/commits.json (SPEC §1.1j3, DESIGN §21): the committed file validates and holds every
+ * load-time invariant; lib/commits.ts serves it in display order (DESIGN §21.1); and a bad file —
  * built in memory, never written to disk — is refused at load with a message that names what is
  * wrong (the path, or the team, player and college).
  *

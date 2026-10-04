@@ -27,7 +27,7 @@ import { gameHref } from '@/lib/game-id';
  * `lastModified` is the snapshot stamp, never `Date.now()`, so a rebuild with unchanged data does
  * not churn every entry's date. The clubs pages take data/clubs.json's own `capturedAt` instead:
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
- * /commits takes data/commits.json's `capturedAt` for the same reason (DESIGN §19.4).
+ * /commits takes data/commits.json's `capturedAt` for the same reason (DESIGN §21.4).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(getFetchedAt());

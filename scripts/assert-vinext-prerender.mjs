@@ -22,7 +22,7 @@
  * `scores/<date>` for every distinct game date, `teams/<slug>` for the 43 teams. The clubs pages
  * are derived from data/clubs.json instead (DESIGN §17, SPEC §1.1j2), read from the repo root as
  * the snapshot is: the fixed page `clubs`, and `clubs/<slug>` for exactly its slugs, with no OG card
- * (they take the root one); `commits` (DESIGN §19) is a fixed page, one page with the root card.
+ * (they take the root one); `commits` (DESIGN §21) is a fixed page, one page with the root card.
  * No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
  * standings, schedule, playoffs, teams, scores), never by count. The prerendered sitemap must list

@@ -466,7 +466,7 @@ or drop it by hand. On a rollover the seniors graduate: redo the research for th
 name), `getColleges()` (most players first), `getCollege(slug)`, `getCollegeCommitments(slug)`,
 `getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
 `components/commits/commit-view.ts` builds the page and the roster line and chooses every word they
-say. `/commits` is one static page (DESIGN §19): one section per class year, then the colleges, then
+say. `/commits` is one static page (DESIGN §21): one section per class year, then the colleges, then
 how commitments are matched; every team page with a committed player shows a commitment line under
 that player's facts ("Committed: Colgate"), linking the player's row there. The gates know the
 page: `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect it among the

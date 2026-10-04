@@ -1,7 +1,7 @@
 /**
  * The read API for data/commits.json — which players on the 43 tracked varsity rosters a public
  * page says have committed to play field hockey in college, and those colleges (SPEC §1.1j3,
- * DESIGN §19).
+ * DESIGN §21).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
  * lib/commits-schema.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
@@ -160,7 +160,7 @@ const schoolName = (slug: string) => getTeamBySlug(slug)?.name ?? slug;
 const sortName = (p: MergedPlayer) => p.lastName ?? p.fullName;
 
 /**
- * Display order (DESIGN §19.1): the earliest class first (class year unknown last), then school,
+ * Display order (DESIGN §21.1): the earliest class first (class year unknown last), then school,
  * then the roster's own name order (lib/rosters.ts sortedPlayers' byName). /commits, and the order
  * a college's players are named in.
  */
@@ -191,7 +191,7 @@ export function getCommitsFile(): CommitsFile {
   return file;
 }
 
-/** Every commitment, in display order (DESIGN §19.1). */
+/** Every commitment, in display order (DESIGN §21.1). */
 export function getCommitments(): readonly Commitment[] {
   return ORDERED;
 }

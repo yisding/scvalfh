@@ -81,7 +81,7 @@ export function affiliationLeaks(
   );
 }
 
-// ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §19.2)
+// ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §21.2)
 
 /** The slice of data/commits.json the leak rule reads. Type-only, so this file stays pure. */
 interface LeakCommitment {

@@ -581,7 +581,7 @@ automatically.
 
 **(j3) College commitments** — `data/commits.json` (`lib/commits-schema.ts`, read by
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
-roster, DESIGN §19). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds
+roster, DESIGN §21). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds
 7 commitments and the 6 colleges they are to, each commitment a player on the 43 tracked varsity
 rosters, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
 commitment has the college, a `status` (`committed`, or `signed` only where a source says so), an

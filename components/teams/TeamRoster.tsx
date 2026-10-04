@@ -42,7 +42,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * says recall is partial, wherever one appears.
  *
  * A player a public page says has committed to play college field hockey gets a commitment line
- * (DESIGN §19.5) right under the facts, above any club line: "Committed: Stanford", or "Signed:
+ * (DESIGN §21.5) right under the facts, above any club line: "Committed: Stanford", or "Signed:
  * Stanford" only where a source says so. It is the same kind of line as the club line — its own
  * line, an internal link with the `sx-action` box and no arrow, the visible label hidden from
  * assistive technology and the link's accessible name leading with the player ("Pat Example’s

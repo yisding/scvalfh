@@ -3,7 +3,7 @@ import ExternalLink from '../ui/ExternalLink';
 import type { CollegeRow } from './commit-view';
 
 /**
- * The colleges on /commits (DESIGN §19.1): each with its division, conference and place, how many
+ * The colleges on /commits (DESIGN §21.1): each with its division, conference and place, how many
  * players here committed to it and from which schools, and its field hockey page.
  *
  * A list, not a table (DESIGN §10.8), in the same card and grid as the commitment rows. The row's id

@@ -50,7 +50,7 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
  * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §17.1),
  * which links /clubs: hand research, not part of the twice-daily update. The college commitments
- * get one after it (`#commits-coverage`, DESIGN §19.4), linking /commits, for the same reason.
+ * get one after it (`#commits-coverage`, DESIGN §21.4), linking /commits, for the same reason.
  */
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';

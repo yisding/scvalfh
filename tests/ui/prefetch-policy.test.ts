@@ -182,7 +182,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/teams/TeamRoster.tsx', 'href={club.href}'],
       ['components/clubs/ClubList.tsx', 'href={club.href}'],
       ['components/clubs/ClubPlayers.tsx', 'href={row.school.href}'],
-      // /commits (DESIGN §19): a commitment line per roster row, and a school link per commitment row.
+      // /commits (DESIGN §21): a commitment line per roster row, and a school link per commitment row.
       ['components/teams/TeamRoster.tsx', 'href={line.college.href}'],
       ['components/commits/CommitList.tsx', 'href={row.school.href}'],
     ];

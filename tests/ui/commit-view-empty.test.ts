@@ -1,5 +1,5 @@
 /**
- * /commits with no commitment in the file (DESIGN §19.1: "Nothing found is a real state"). The
+ * /commits with no commitment in the file (DESIGN §21.1: "Nothing found is a real state"). The
  * committed data/commits.json has commitments, so this file swaps in an empty one before
  * lib/commits.ts loads it: the same file with `colleges` and `commitments` emptied, which still
  * passes the schema and the join. It lives apart from tests/ui/commit-view.test.ts so that file

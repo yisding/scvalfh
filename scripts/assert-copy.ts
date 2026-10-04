@@ -27,7 +27,7 @@
  * a line of). On such a page a quote from a document the page itself links is not reported. On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
- * The same rule covers data/commits.json (DESIGN §19.2, `commitmentLeaks`): no commitment's `basis`
+ * The same rule covers data/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
  * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
  * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL and MCAL unavailable):

@@ -4,10 +4,10 @@ import ExternalLink from '../ui/ExternalLink';
 import type { CommitRow } from './commit-view';
 
 /**
- * One class's commitments on /commits (DESIGN §19.1): each a player on the tracked varsity rosters,
+ * One class's commitments on /commits (DESIGN §21.1): each a player on the tracked varsity rosters,
  * the college, the status in words, and the public pages it rests on.
  *
- * Privacy (DESIGN §19.2, the clubs pages' posture): a row is a roster row of this site, by its own
+ * Privacy (DESIGN §21.2, the clubs pages' posture): a row is a roster row of this site, by its own
  * spelling, and shows what the team page already shows (name, school, grade) plus the college, the
  * status and the links. The quotes, the basis and the confidence the data file keeps are not in the
  * view at all (components/commits/commit-view.ts), so nothing here can print them.

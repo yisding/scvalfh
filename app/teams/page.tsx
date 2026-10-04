@@ -37,7 +37,7 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
  *
- * Two quiet lines under the tables link /clubs (DESIGN §17.1) and /commits (DESIGN §19.4), neither
+ * Two quiet lines under the tables link /clubs (DESIGN §17.1) and /commits (DESIGN §21.4), neither
  * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */

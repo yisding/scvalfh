@@ -34,7 +34,7 @@ import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view'
  *     current, is never worded as current. The words are components/clubs/club-view.ts'
  *     (`playerClubGroups`), so the team page and the club pages say the same thing;
  *   - a player a public page says has committed to play college field hockey gets a commitment
- *     line linking that player's row on /commits (DESIGN §19.5), which cites the sources. It says
+ *     line linking that player's row on /commits (DESIGN §21.5), which cites the sources. It says
  *     "Signed" only where a source does. The words are components/commits/commit-view.ts'
  *     (`playerCommitLine`), shared with /commits.
  */

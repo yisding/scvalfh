@@ -12,7 +12,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/rosters';
 
 /**
- * /commits — "Who here has committed to play in college, and where?" (DESIGN §19.1, SPEC §1.1j3).
+ * /commits — "Who here has committed to play in college, and where?" (DESIGN §21.1, SPEC §1.1j3).
  *
  * The commitments of data/commits.json: players on the tracked varsity rosters that a public page
  * says have committed to (or signed with) a college field hockey program. The lede answers the
@@ -25,7 +25,7 @@ import { getRosters } from '../../lib/rosters';
  * in the file, one empty state stands where the classes would be and the colleges section is
  * left out.
  *
- * Lists, not tables (DESIGN §10.8). The page is not in the nav (DESIGN §19.4): /teams, every team
+ * Lists, not tables (DESIGN §10.8). The page is not in the nav (DESIGN §21.4): /teams, every team
  * page's roster footnote where a player has a commitment, and /about link it. It takes the root OG
  * card: there is no commitments card. Neither the title nor the description names a player.
  */

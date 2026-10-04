@@ -1,6 +1,6 @@
 /**
  * `components/commits/commit-view.ts` and /commits over the committed data/commits.json,
- * data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j3, DESIGN §19), plus the team
+ * data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j3, DESIGN §21), plus the team
  * roster's commitment line.
  *
  * The page makes promises a test can hold it to:
@@ -74,7 +74,7 @@ const COLLEGE: College = {
   checkedOn: '2026-10-03',
 };
 
-describe('status words (DESIGN §19.3)', () => {
+describe('status words (DESIGN §21.3)', () => {
   it.each([
     ['committed', null, 'Committed'],
     ['committed', '2026-06-15', 'Committed, as of Jun 15, 2026'],

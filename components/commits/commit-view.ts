@@ -24,7 +24,7 @@ import { plural } from '../ui/plural';
 
 /**
  * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
- * DESIGN §19), derived from lib/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
+ * DESIGN §21), derived from lib/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
  * over the real files; every word the page or a roster line prints about a commitment is chosen
  * here, in one module.
  *
@@ -123,7 +123,7 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
 }
 
 /**
- * A commitment's status in words (DESIGN §19.3):
+ * A commitment's status in words (DESIGN §21.3):
  *
  *   asOf          committed                    signed
  *   day           Committed, as of Jun 15, 2026  Signed, as of Nov 12, 2026
