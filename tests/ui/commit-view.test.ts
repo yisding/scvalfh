@@ -352,6 +352,15 @@ describe('the pages that link /commits', () => {
     }
   });
 
+  it('a commitment in another sport names it on the roster line; a field hockey one does not', async () => {
+    for (const c of file.commitments) {
+      const html = await renderTeam(c.teamSlug);
+      const line = new RegExp(`href="/commits#${commitAnchor(c)}"[^>]*>(?:(?!</a>)[\\s\\S])*</a>`).exec(html)![0];
+      if (c.sport === 'field-hockey') expect(line, c.fullName).not.toMatch(/aria-hidden="true"> \(/);
+      else expect(line, c.fullName).toContain(`<span aria-hidden="true"> (${SPORT_WORDS[c.sport]})</span>`);
+    }
+  });
+
   it('a team page with no commitment has no footnote about them', async () => {
     const committed = new Set(file.commitments.map((c) => c.teamSlug));
     const slug = TEAMS.find((t) => !committed.has(t.slug))!.slug;

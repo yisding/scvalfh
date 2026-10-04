@@ -582,9 +582,11 @@ automatically.
 
 **(j3) College commitments** — `data/commits.json` (`lib/commits-schema.ts`, read by
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
-roster, DESIGN §21). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds
-7 commitments and the 6 colleges they are to, each commitment a player on the 43 tracked varsity
-rosters, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
+roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
+field hockey pass), not a script: nothing fetches or refreshes it. It holds 16 commitments (7 in field
+hockey, 7 in lacrosse, 1 in soccer, 1 in basketball) and the 14 colleges they are to, with 15
+programs (UC Davis holds two: field hockey and lacrosse), each commitment a player on the 43 tracked
+varsity rosters, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
 commitment has the college, the `sport` (field hockey, or any other: `COMMIT_SPORTS`), a `status`
 (`committed`, or `signed` only where a source says so), an `asOf` (the earliest date a kept source
 gives: a day, a month or a year), a `confidence`, and its sources (URL, kind, a verbatim quote of at
@@ -596,28 +598,41 @@ each fact came from. Quotes and bases are for maintainers and never
 rendered (`commitmentLeaks` in `scripts/copy-rules.ts`, run by `scripts/assert-copy.ts`): a
 commitment list or a news story names teammates and other recruits who are not on the rosters.
 
-| School | Player (class) | College | Level | Rests on |
-|---|---|---|---|---|
-| St. Ignatius | Storey Lewis (2027) | Colgate | NCAA Division I | Her own SportsRecruits profile (names St. Ignatius); Stick Together's Aug 6, 2026 season preview ("recently committed to DI Colgate"; `asOf`); the SF Hawks committed-players table; FH College Path's class of 2027 list |
-| St. Ignatius | Maggie Magnano (2027) | UC Davis | NCAA Division I | Her own SportsRecruits profile, under her given name Margaret (names St. Ignatius); the SF Hawks table; FH College Path's class of 2027 list; Stick Together's Feb 4, 2026 issue ("Maggie Magnano → UC Davis (D1)", for the SF Hawks defender; no school or class year, so it corroborates; `asOf`) |
-| St. Ignatius | Olivia Van De Braak (2028) | Iowa | NCAA Division I | Her own SportsRecruits profile (spelled Van de Braak; names St. Ignatius); FH College Path's class of 2028 list; St. Ignatius athletics' Oct 1, 2026 sports report ("University of Iowa commit Olivia Van de Braak"; `asOf`) |
-| Los Altos | Katarina Smith (2027) | Ithaca | NCAA Division III | The Talon's Sep 18, 2026 story (`asOf`); her own SportsRecruits profile (names Los Altos High School); SportsRecruits' Ithaca college page |
-| Saint Francis | Carolyn Cordoni (2027) | Bates | NCAA Division III | Her own SportsRecruits profile, which names Saint Francis. One source, undated |
-| Christopher | Alyssa Montejano (2027) | Maryville | NCAA Division II | Her own SportsRecruits profile (class of 2027, Gilroy, CA; no school named, so the class year plus a Gilroy hometown); SportsRecruits' Maryville college page, built from the same profile. Undated |
-| Christopher | Ryan Hemeon (2028) | UC Davis | NCAA Division I | One line on FH College Path's class of 2028 list: name, CA, position, Infinity Sports Club. Medium: no school is named, so the class year plus a Gilroy club this row is already tied to (§1.1j2). Her own SportsRecruits profile shows no commitment, which is absence, not contradiction. Undated |
+| School | Player (class) | Sport | College | Level | Rests on |
+|---|---|---|---|---|---|
+| St. Ignatius | Storey Lewis (2027) | Field hockey | Colgate | NCAA Division I | Her own SportsRecruits profile (names St. Ignatius); Stick Together's Aug 6, 2026 season preview ("recently committed to DI Colgate"; `asOf`); the SF Hawks committed-players table; FH College Path's class of 2027 list; SportsRecruits' Colgate page |
+| St. Ignatius | Maggie Magnano (2027) | Field hockey | UC Davis | NCAA Division I | Her own SportsRecruits profile, under her given name Margaret (names St. Ignatius); the SF Hawks table; FH College Path's class of 2027 list; Stick Together's Feb 4, 2026 issue ("Maggie Magnano → UC Davis (D1)", for the SF Hawks defender; no school or class year, so it corroborates; `asOf`); the Marin IJ's Aug 24, 2026 story ("SI senior defender … committed to UC Davis field hockey"); SportsRecruits' UC Davis page |
+| St. Ignatius | Olivia Van De Braak (2028) | Field hockey | Iowa | NCAA Division I | Her own SportsRecruits profile (spelled Van de Braak; names St. Ignatius); FH College Path's class of 2028 list; St. Ignatius athletics' Oct 1, 2026 sports report ("University of Iowa commit Olivia Van de Braak"; `asOf`); SportsRecruits' Iowa page |
+| Los Altos | Katarina Smith (2027) | Field hockey | Ithaca | NCAA Division III | The Talon's Sep 18, 2026 story (`asOf`); her own SportsRecruits profile (names Los Altos High School); SportsRecruits' Ithaca college page |
+| Saint Francis | Carolyn Cordoni (2027) | Field hockey | Bates | NCAA Division III | Her own SportsRecruits profile, which names Saint Francis; SportsRecruits' Bates page, built from the same profile. Undated |
+| Christopher | Alyssa Montejano (2027) | Field hockey | Maryville | NCAA Division II | Her own SportsRecruits profile (class of 2027, Gilroy, CA; no school named, so the class year plus a Gilroy hometown); SportsRecruits' Maryville college page, built from the same profile. Undated |
+| Christopher | Ryan Hemeon (2028) | Field hockey | UC Davis | NCAA Division I | One line on FH College Path's class of 2028 list: name, CA, position, Infinity Sports Club. Medium: no school is named, so the class year plus a Gilroy club this row is already tied to (§1.1j2). Her own SportsRecruits profile shows no commitment, which is absence, not contradiction. Undated |
+| Redwood | Claire Johnson (2027) | Lacrosse | Cal | NCAA Division I | The Marin IJ's Apr 23, 2026 girls lacrosse story ("Redwood’s Claire Johnson, a junior committed to play at Cal"; `asOf`); her own SportsRecruits lacrosse profile (names Redwood High School); STEPS California's commitments page |
+| Redwood | Phoebe Miller (2027) | Lacrosse | San Diego State | NCAA Division I | The same Marin IJ story ("a junior committed to play at San Diego State"; `asOf`); her own SportsRecruits lacrosse profile (class of 2027, Larkspur, CA); STEPS California's commitments page (Redwood High School) |
+| St. Ignatius | Sofie Stiefel (2027) | Lacrosse | Marist | NCAA Division I | Her own SportsRecruits lacrosse profile (listed under St. Ignatius's girls' lacrosse); STEPS California's commitments page. Undated |
+| St. Ignatius | Catherine Cecchini (2027) | Lacrosse | Bucknell | NCAA Division I | Her own SportsRecruits lacrosse profile, as Cate (its bio names St. Ignatius College Prep and the class of 2027); STEPS California's page (Cate Cecchini, St. Ignatius College Prep). Undated |
+| Marin Catholic | Gianna Rinaldi (2028) | Lacrosse | UC Davis | NCAA Division I | Her own SportsRecruits lacrosse profile (class of 2028, Novato, CA; no school in its text, so the class year plus a Marin hometown); SportsRecruits' UC Davis lacrosse page, built from it. Undated |
+| Stevenson | Zola Ducker (2027) | Lacrosse | Trinity (Conn.) | NCAA Division III | Her own SportsRecruits lacrosse profile (class of 2027, Pacific Grove, CA, Verve Lacrosse); Lacrosse Masters' girls' commitment list ("Verve Lacrosse / Stevenson School - CA - 2027"); SportsRecruits' Trinity page. Undated |
+| Berkeley | Violet Potts (2027) | Lacrosse | Vassar | NCAA Division III | Her own SportsRecruits lacrosse profile (class of 2027, Berkeley, CA, ADVNC Lacrosse); ADVNC Lacrosse's own commitments page (its 2027 class: "Violet Potts - Berkeley - Vassar"). Undated |
+| St. Ignatius | Gigi Colant (2027) | Soccer | St. Lawrence | NCAA Division III | Her own SportsRecruits soccer profile, under her given name Gabriella (its bio names Saint Ignatius College Prep, the class of 2027 and "Gigi Colant"); SportsRecruits' St. Lawrence soccer page. Undated |
+| Saratoga | Emma Williams (2027) | Basketball | Bryn Mawr | NCAA Division III | The Saratoga Falcon's Mar 20, 2026 story, "Junior commits to Division III basketball at Bryn Mawr College" (the paper is Saratoga High School's; she committed in late February, so `asOf` is 2026-02). One source |
 
-*Sources, by kind (18 entries on 15 URLs).* `sportsrecruits` 8 on 8: six of the players' own
-profiles (`nfhca.sportsrecruits.com/athlete/<slug>`, where the meta description reads "… • <city>,
-CA • Committed to <College>") and two of SportsRecruits' college pages
-(`sportsrecruits.com/athletic-scholarships/womens-field-hockey/<state>/<college>`, which list
-"Committed Athletes" from the same profiles, so they corroborate but are not independent). `event`
-4 on 2: FH College Path's "Who committed" class lists for 2027 (`/class-of-20271.html`) and 2028
-(`/class-of-2028.html`), Division I only, giving name, state, position and club but never a school,
-so they can only meet the rule through a class year plus a Northern California club. `news` 3 on 3:
-two Stick Together issues (Feb 4 and Aug 6, 2026) and The Talon (Los Altos High School's student
-paper). `club-site` 2 on 1: the SF
-Hawks' `/alumni-and-committed-players/` table (name, graduation year, college; undated, and stale:
-it lacks the Iowa commitment). `school-site` 1: St. Ignatius's athletics site.
+*Sources, by kind (43 entries on 36 URLs).* `sportsrecruits` 23 on 23: fourteen of the players' own
+profiles, one per sport subdomain (`nfhca.` for field hockey, `iwlca.` for lacrosse, `my.` for
+soccer: `/athlete/<slug>`, where the meta description reads "… • <city>, CA • Committed to
+<College>"), and nine of SportsRecruits' college pages
+(`sportsrecruits.com/athletic-scholarships/womens-<sport>/<state>/<college>`, which list "Committed
+Athletes" from the same profiles, so they corroborate but are not independent). `news` 7 on 6: two
+Stick Together issues (Feb 4 and Aug 6, 2026), The Talon (Los Altos High School's student paper),
+two Marin IJ stories (one naming both Redwood lacrosse commits) and The Saratoga Falcon. `club-site`
+7 on 3: the SF Hawks' `/alumni-and-committed-players/` table (name, graduation year, college;
+undated, and stale: it lacks the Iowa commitment), STEPS California's commitments page (a Marin
+girls' lacrosse club: player, college, graduation year, high school; four entries) and ADVNC
+Lacrosse's commitments page (by class: name, school or town, college). `event` 5 on 3: FH College
+Path's "Who committed" class lists for 2027 (`/class-of-20271.html`) and 2028 (`/class-of-2028.html`),
+Division I only, giving name, state, position and club but never a school, so they can only meet
+the rule through a class year plus a Northern California club, and Lacrosse Masters' girls' college
+commitment list (name, club, school, state, class). `school-site` 1: St. Ignatius's athletics site.
 
 *The rule* is the clubs' rule (§1.1j2) applied to colleges: a public page must name the player and
 the college in the context of one sport (field hockey, or any other since 2026-10-04: many players
@@ -633,7 +648,7 @@ anyway), offers, visits, camps, watchlists, all-league lists, and a place on a c
 social media, as source or link: `BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook,
 TikTok, X, Threads, YouTube, Snapchat, LinkedIn and their short links.
 
-*How it was done.* Fourteen sweeps, run in parallel: four by source family (commitment lists and
+*How it was done, 2026-10-03 (field hockey).* Fourteen sweeps, run in parallel: four by source family (commitment lists and
 recruiting aggregators; NorCal clubs and field hockey media; school and local news for SCVAL and
 BVAL; for MCAL and PCAL) and ten player by player over the packets of the 37 teams with roster rows,
 which looked up 609 players (every junior, senior and ungraded row, and any younger player with a
@@ -657,12 +672,67 @@ pages: Colgate's division from colgate.edu and its Patriot League membership fro
 Holy Cross's schedules; UC Davis's MPSF from its own schedule, read through WebFetch, its place from
 Stanford's schedule and its division from NCAA.com's school page.
 
+*How it was done, 2026-10-04 (every sport, and more field hockey recall).* The rule widened to any
+sport (a commitment's `sport`; a college's level and conference per program), and eleven more sweeps
+ran, each matching what it read against all 716 varsity rows (full name, then surname with school
+or class, for nicknames):
+- **Compiled lists, read whole.** SportsRecruits' college pages for field hockey (290 colleges, 2,879
+  "Committed Athletes" entries), women's lacrosse (643) and women's soccer (1,670), and the profile of
+  every class-of-2027-or-later entry (975 field hockey profiles, 16 of them in California); FH College
+  Path's six class lists; Stick Together's whole archive (30 posts, from its sitemap); MAX Field
+  Hockey's commitments table (987 rows) and its California club and school pages; HTC's alumnae list;
+  Play College Field Hockey's sheet; TopDrawerSoccer's California lists for 2027 and 2028, SoccerWire's
+  and the ECNL/Girls Academy's commitment data; Lacrosse Masters, STEPS California, ADVNC and other
+  NorCal lacrosse clubs' commitment pages; MileSplit's California signings.
+- **Player by player.** A SportsRecruits profile-address probe for all 716 rows (4,578 addresses,
+  every sport), FieldLevel and NCSA probes, and a deep search of the 66 players tied to a club
+  (§1.1j2): their linked profiles, the probes, two web searches each.
+- **News.** Every story since 2025 on 18 student papers and the high school sports sections of the
+  Marin IJ, Mercury News, Monterey Herald, Gilroy Dispatch, Morgan Hill Times, BenitoLink, the Free
+  Lance and the Los Gatan (most through their sites' WordPress APIs), and the athletics news of the
+  schools that publish it.
+They found nine new commitments (seven in lacrosse, one in soccer, one in basketball), no new field
+hockey commitment that meets the rule, and new pages for four existing ones (a second first-hand
+news story for Magnano, and SportsRecruits' college pages for Cordoni, Lewis and Van De Braak). Every
+candidate was re-opened by a checker and, independently, by a refuter told to break it; both kept
+the nine, and the refuter dropped one field hockey candidate the checker would have kept (a Hollister
+senior "planning to continue her field hockey career" at a college: a plan, not a commitment, and
+nothing else says she committed), which is recorded as a near miss. Each new college's level and
+conference for the sport were read from its athletics site (Sidearm metadata, a schedule's conference
+tags, a news headline), the conference's own site or NCAA.com, by the checker and again by hand. A
+final audit re-opened every source the file cites and found every quote on the page as served,
+STEPS California's page through WebFetch (it answers plain requests with a bot challenge).
+
 Gotchas, found in the research:
 - **MAX Field Hockey's commitments table** (`maxfh.longstreth.com/college-commitments/`, a Caspio
   DataPage; `maxfieldhockey.com` redirects there) answers a plain request with a Cloudflare 403 and
-  needs a browser User-Agent and an Accept header; its date column is hidden by the page's own CSS
-  and is probably the date the entry was reported. It lists Storey Lewis and Maggie Magnano, but
-  neither pass could re-read it, so it is not cited and its dates are not used.
+  needs a browser User-Agent and an Accept header; its rows load only after its search form runs (a
+  script), and its date column is hidden by the page's own CSS. On 2026-10-04 a rendered read listed
+  Lewis and Magnano (with St. Ignatius) and Cordoni with no college, and Van De Braak with none
+  either, which is stale; since no quote can be checked against the page as served, it is not cited,
+  and its hidden dates are not used.
+- **SportsRecruits splits by sport, and draws some of its pages with a script.** A profile lives on
+  one sport's subdomain (`nfhca.` field hockey, `iwlca.` lacrosse, `my.` soccer and others), and
+  `sportsrecruits.com/athlete/<slug>` redirects there, so a probe must follow redirects. A college
+  page shows only its first ten committed athletes, and its "See More Commits" call returns another
+  sport's (lacrosse) entries. A club's `/committed/<club>` page and a profile's "Committed to … on
+  M/D/YYYY" tooltip are drawn by a script: one rendered read saw the dates, no second read confirmed
+  them, so neither the pages nor the dates are used.
+- **One player, two sports.** Many players have a lacrosse or soccer profile beside a field hockey
+  one, and the commitment is on the other sport's (Gigi Colant's soccer profile is under her given
+  name, Gabriella; Claire Johnson plays field hockey and lacrosse, and her Cal commitment is for
+  lacrosse). The sport is read from the page, never assumed.
+- **Two players, one name, one region.** An ECNL list shows a class-of-2027 Phoebe Miller of Marin
+  FC committed to Tufts for soccer, which on its face meets the rule (class year plus a Marin club);
+  but Redwood's Phoebe Miller is the San Diego State lacrosse commit, and a second class-of-2027
+  Phoebe Miller, a San Francisco soccer forward, has her own profiles. Only a page that names the
+  school settles such a pair.
+- **Siblings.** Three players here have older sisters with commitments of their own on the same
+  pages (Phoebe Miller's in the same Marin IJ story, "will play at Colgate"; Maggie Magnano's and
+  Carolyn Cordoni's on older commitment lists), and Saratoga's Emma and Evelyn Williams are twins:
+  each commitment is checked against the first name on the page.
+- **Conferences differ by sport.** UC Davis plays field hockey in the MPSF and lacrosse in the Big 12,
+  as an affiliate, as San Diego State does; Cal's lacrosse team is in the ACC.
 - **A Chicago namesake school.** St. Ignatius College Prep (IL) has its own field hockey recruits on
   the same national lists, some to the same colleges (Iowa among them); an entry is San Francisco's
   only when a page says California or names the player.
@@ -675,9 +745,9 @@ Gotchas, found in the research:
 - **Watchlists are not commitments.** The 2026 high school watchlists (NFHCA's, and the Field
   Hockey Analyst's as Stick Together reported it on Sep 10, 2026) name several seniors here with no
   college; they were recorded as near misses, not commitments.
-- **Other sports.** A Saratoga player's Division III commitment (Saratoga Falcon, Mar 20, 2026) is
-  for basketball, and a Stevenson recap's commitment is for golf; several players have lacrosse
-  profiles on `iwlca.sportsrecruits.com` that show "Committed to …" for lacrosse. None counts.
+- **Other sports count since 2026-10-04.** The first round set them aside (a Saratoga player's
+  basketball commitment, lacrosse profiles showing "Committed to …"); they are now in the file. A
+  Stevenson recap's golf commitment is a student who is not on the field hockey roster.
 - **A spreadsheet is not a page that names the school.** Play College Field Hockey's commitments
   sheet (a published Google Sheet) gives only a name and a college. One of its names matches a
   rostered player, but no page found ties that entry to her school or to a Northern California
@@ -686,13 +756,18 @@ Gotchas, found in the research:
   Dispatch's commitment stories end with the class of 2025 and 2026; Stick Together's feed holds only
   its 15 newest posts (its `?s=` search is ignored); NCFHA and BAFHA post no commitments.
 - **Blocked or failing hosts.** NCSA (`ncsasports.org`) refuses plain requests but answers WebFetch;
-  `siwildcats.com/news` returns 500 while individual stories load; Colgate's and UC Davis's athletics
-  sites, the MPSF and the Patriot League sites, and Fly FHC's site sit behind bot challenges. Web
-  search's session budget ran out late in the run, so the verification passes and follow-ups worked
-  from direct page reads.
+  `siwildcats.com/news` returns 500 while individual stories load; Colgate's, UC Davis's, Cal's,
+  Marist's and Bucknell's athletics sites, the MPSF, ACC, MAAC, Patriot League and Big 12 sites, Fly
+  FHC's site and STEPS California's sit behind bot challenges (WebFetch reads most of them).
+  LaxNumbers, Inside Lacrosse, SwimSwam, VolleyballMag and TennisRecruiting answer with a Cloudflare
+  403, so those databases were not read; Inside Lacrosse's and the Field Hockey Analyst's commitment
+  lists are paywalled. Web search's session budget ran out late in the first round, so its
+  verification passes and follow-ups worked from direct page reads.
 
-*Recall is partial.* 7 of the 716 varsity rows have a commitment, at 4 of the 43 schools (SCVAL 5 at
-3 schools, BVAL 2 at Christopher, PCAL and MCAL none). A commitment announced only on social media,
+*Recall is partial.* 16 of the 716 varsity rows have a commitment, at 9 of the 43 schools: SCVAL 9 at
+4 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1 each), BVAL 2 at Christopher, PCAL 1 at
+Stevenson, and MCAL 4 at 3 (Redwood 2, Berkeley and Marin Catholic 1 each). Seven are in field hockey,
+seven in lacrosse, one in soccer and one in basketball. A commitment announced only on social media,
 posted on a page the sweeps could not read, or not yet public is not listed, and colleges may not
 publicize an unsigned recruit, so a college's own site rarely shows a class of 2027 or 2028
 commitment before the November signing period. No source found said any player had signed. The
@@ -1599,9 +1674,9 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
-- College commitments (§1.1j3) were researched once, on 2026-10-03, and nothing refreshes them:
-  recall is partial (7 of 716 varsity rows, at 4 schools; social media, where most are announced,
-  never counts), a signing or decommitment after that date is not shown, and a roster refetch that
+- College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04, and
+  nothing refreshes them: recall is partial (16 of 716 varsity rows, at 9 schools; social media, where
+  most are announced, never counts), a signing or decommitment after that date is not shown, and a roster refetch that
   drops or respells a committed row fails the build until it is re-checked by hand.
 - Club ties (§1.1j2) were researched once, on 2026-10-03, and nothing refreshes them: recall is
   partial (66 of 716 varsity rows, none at 21 schools), a `current` tie ages, and a roster refetch

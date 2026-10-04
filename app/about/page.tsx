@@ -648,8 +648,8 @@ export default function AboutPage() {
             play a sport in college, field hockey or any other
             {commitCount > 0 ? ` (${commitCount} found)` : ''}, from
             players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
-            news. It was researched by hand on {dateWithYear(getCommitsFile().capturedAt)} with the
-            club pages&rsquo; matching rule, each commitment checked twice, and is not part of the
+            news. It was last researched by hand on {dateWithYear(getCommitsFile().capturedAt)} with
+            the club pages&rsquo; matching rule, each commitment checked twice, and is not part of the
             twice-daily update. Social media is never used, so a commitment announced only there is
             not listed, and recall is partial.
           </p>
