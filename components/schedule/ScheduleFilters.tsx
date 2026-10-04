@@ -16,8 +16,8 @@ import {
 import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from './rail-targets';
 
 /**
- * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13); see
- * components/ui/PinControl.tsx for the app's full client-module list.
+ * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13);
+ * tests/ui/client-boundary.test.ts enumerates every client module.
  *
  * The complete, unfiltered, server-rendered list is ALREADY in the HTML. This component does not
  * own the list, does not receive it as props and never re-renders it: it toggles the `hidden`

@@ -51,15 +51,12 @@
 > deviation reads as a decision rather than an omission.
 >
 > One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"
-> (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The built app has **nine files
-> carrying `'use client'`** — `git grep -l "^'use client'" app components` is the check. Three more
-> are components: `NavLink` (the nav needs `usePathname` for `aria-current`), `PinnedTeamMarks` (the
-> pinned-team highlight after a client-side navigation, which the inline `<head>` script cannot do
-> because `DOMContentLoaded` fires once per document) and `app/error.tsx` (Next requires an error
-> boundary to be a Client Component). Two are the shared store behind the other three:
-> `use-pinned-team.ts` and `local-store.ts`. The number mattered beyond bookkeeping — "without a
-> fifth client module" was once written down as the reason the pinned-team highlight had to be an
-> inline script rather than a component, a constraint that had already been spent. What the §13
+> (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The count has grown with the
+> multi-league work, so no number is kept here: `git grep -l "^'use client'" app components` and
+> tests/ui/client-boundary.test.ts, which finds every client module itself, are the live
+> inventory. The number mattered beyond bookkeeping — "without a fifth client module" was once
+> written down as the reason the pinned-team highlight had to be an inline script rather than a
+> component, a constraint that had already been spent. What the §13
 > budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
 > 40 KB allowance (see the note on §13 above).
 >
