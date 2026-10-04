@@ -79,7 +79,6 @@ export function TeamIdentity({
         slug={team.slug}
         leagueId={team.league}
         label={view.pinLabel}
-        name={team.name}
         knownSlugs={knownSlugs}
         className="w-full md:ml-auto md:w-auto"
       />

@@ -25,8 +25,8 @@ export interface GoalDiffBarProps {
   value: number | null;
   /** max |gd| for THIS division — never global. */
   domain: number;
-  /** Phone and mini 56px (28 per arm), desktop 64px; 72 and 96 are kept for compatibility. */
-  track?: 56 | 64 | 72 | 96;
+  /** Phone and mini 56px (28 per arm), desktop 64px. */
+  track?: 56 | 64;
   thickness?: 8 | 10;
   className?: string;
 }
@@ -34,7 +34,7 @@ export interface GoalDiffBarProps {
 export function GoalDiffBar({
   value,
   domain,
-  track = 72,
+  track = 64,
   thickness = 8,
   className,
 }: GoalDiffBarProps) {
@@ -118,7 +118,7 @@ export function GoalDiffBar({
 export function GoalDiffCell({
   value,
   domain,
-  track = 72,
+  track = 64,
   thickness = 8,
   numberWidth = 32,
   barClassName,

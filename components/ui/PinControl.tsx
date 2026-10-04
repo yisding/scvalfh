@@ -9,8 +9,7 @@ import { usePinnedTeam } from './use-pinned-team';
  * `label` is the team's pin label, built by the caller with `pinLabel()` from lib/pin-label.ts
  * (`Pin Leigh, Mt. Hamilton · BVAL`, `Pin Tamalpais, MCAL`), so this module never reaches the
  * registry or the league config (the client boundary, SPEC §0.4). It names the team in the
- * accessible name of both variants: the compact star reads exactly `label` (or `Unpin …` when
- * pinned); the full button keeps its visible words first ("Pin this team" / "Pinned", WCAG 2.5.3)
+ * button's accessible name: the visible words come first ("Pin this team" / "Pinned", WCAG 2.5.3),
  * followed by the team in an sr-only suffix.
  *
  * The button reserves its footprint server-side, so swapping in the stored state after hydration
@@ -24,11 +23,8 @@ export interface PinControlProps {
   leagueId: string;
   /** `pinLabel(…)` from lib/pin-label.ts: 'Pin Leigh, Mt. Hamilton · BVAL'. */
   label: string;
-  /** Today's prop, now unused: `label` carries the team's name. Optional, so passing it is harmless. */
-  name?: string;
   /** Every slug in the snapshot, so a stale pin can be detected and cleared. */
   knownSlugs?: readonly string[];
-  variant?: 'button' | 'compact';
   className?: string;
 }
 
@@ -42,7 +38,6 @@ export function PinControl({
   leagueId,
   label,
   knownSlugs,
-  variant = 'button',
   className,
 }: PinControlProps) {
   const { pinned, ready, available, stalePin, toggle } = usePinnedTeam(knownSlugs);
@@ -81,9 +76,7 @@ export function PinControl({
         // `md:min-w-36` (144px, wider than either label): from 768px the button is `w-auto` at the
         // card's right edge, so "Pin this team" → "Pinned" shrank it and moved its LEFT edge under
         // the pointer. On a phone it is full width already.
-        className={`sx-pill sx-tap min-h-11 justify-center font-semibold aria-[pressed=false]:active:bg-surface-3 aria-pressed:bg-accent-wash aria-pressed:text-accent-ink${
-          variant === 'button' ? ' w-full md:w-auto md:min-w-36' : ''
-        }`}
+        className="sx-pill sx-tap min-h-11 justify-center font-semibold aria-[pressed=false]:active:bg-surface-3 aria-pressed:bg-accent-wash aria-pressed:text-accent-ink w-full md:w-auto md:min-w-36"
       >
         {/* 16px star: filled when pinned, an outline when not. aria-pressed carries the state;
             the shape is the visual twin of it, never the only channel (the label changes too). */}
@@ -100,14 +93,8 @@ export function PinControl({
         >
           <path d="M8 1.6l1.95 4.02 4.43.6-3.23 3.08.8 4.4L8 11.6l-3.95 2.1.8-4.4L1.62 6.22l4.43-.6z" />
         </svg>
-        {variant === 'compact' ? (
-          <span className="sr-only">{isPinned ? `Unpin ${team}` : `Pin ${team}`}</span>
-        ) : (
-          <span>{isPinned ? 'Pinned' : 'Pin this team'}</span>
-        )}
-        {variant === 'button' ? (
-          <span className="sr-only"> &mdash; {team}, saved in this browser only</span>
-        ) : null}
+        <span>{isPinned ? 'Pinned' : 'Pin this team'}</span>
+        <span className="sr-only"> &mdash; {team}, saved in this browser only</span>
       </button>
       {stalePin ? (
         <span className="text-meta text-ink-3">

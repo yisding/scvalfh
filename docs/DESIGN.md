@@ -1981,7 +1981,7 @@ cancelled, `↻` for postponed. Wash ground, 1px ring at the mark hue, glyph in 
 ```ts
 interface FormStripProps {
   entries: FormEntry[];            // oldest → newest, league only, max 5
-  size?: 16 | 20;
+  size?: 20 | 24;                  // 20 in tables, cards and the game page; 24 on the team page
   showDirection?: boolean;         // renders the "oldest → newest" caption once per page
   label: string;                   // "Homestead last 5 league games"
   nonLeagueCount?: number;         // renders "+ 3 non-league"
@@ -2020,7 +2020,7 @@ tile reserves its footprint so the row never reflows.
 interface GoalDiffBarProps {
   value: number | null;            // null → a `·` on the zero rule, "—" in the numeral slot
   domain: number;                  // max |gd| for THIS division
-  track?: 72 | 96;                 // phone 72px (36 per arm), desktop 96px (48 per arm)
+  track?: 56 | 64;                 // phone and mini 56px (28 per arm), desktop 64px (the default)
   thickness?: 8 | 10;
 }
 ```
@@ -2090,7 +2090,10 @@ capped by *"Berths are assigned by the CCS committee. Nothing here is official u
 
 ```ts
 interface MyTeamCardProps { teams: TeamSnapshot[] }   // all 16, pre-serialized by the server
-interface PinControlProps { slug: TeamSlug; name: string; variant?: 'button' | 'menu' }
+interface PinControlProps {
+  slug: TeamSlug; leagueId: LeagueId; label: string;   // label: pinLabel(), 'Pin Leigh, Mt. Hamilton · BVAL'
+  knownSlugs?: readonly TeamSlug[];                    // a pin outside the snapshot is cleared
+}
 type TeamSnapshot = {
   team: Team; last: Game | null; next: Game | null; form: FormEntry[]; rank: number | null;
 };

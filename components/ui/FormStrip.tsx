@@ -39,8 +39,8 @@ export interface FormEntry {
 export interface FormStripProps {
   /** Oldest → newest, league only, at most 5. */
   entries: FormEntry[];
-  /** 20 everywhere a strip is visible; 16 (10px letters) is kept for compatibility only. */
-  size?: 16 | 20 | 24;
+  /** 20 in tables, cards and the game page; 24 on the team page. */
+  size?: 20 | 24;
   /** Renders the "oldest → newest" caption; do it once per page. */
   showDirection?: boolean;
   /** "Homestead last 5 league games" — the subject of the strip's one sentence. */
