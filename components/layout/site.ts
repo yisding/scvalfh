@@ -35,10 +35,10 @@ export const SITE_SCOPE_NOTE =
  *
  * Next REPLACES the whole `openGraph` object at the nearest segment that declares one — it does
  * not merge its keys (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/
- * generate-metadata.md:1348: "All `openGraph` fields from `app/layout.js` are **replaced** …"). A
- * page that declared nothing but `url` therefore shipped with no og:type, no og:site_name and no
- * og:locale at all, which is eight of the ten route families. Spread this first and override what
- * differs (/game/[id] is `type: 'article'`).
+ * generate-metadata.md, "Overwriting fields" (#overwriting-fields): "All `openGraph` fields from
+ * `app/layout.js` are **replaced** …"). A page that declared nothing but `url` therefore shipped
+ * with no og:type, no og:site_name and no og:locale at all, which is eight of the ten route
+ * families. Spread this first and override what differs (/game/[id] is `type: 'article'`).
  */
 export const OG_BASE = {
   type: 'website',

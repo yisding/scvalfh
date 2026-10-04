@@ -11,7 +11,7 @@
  * It was read with @shuding/opentype.js 1.4.0-beta.0 (`charToGlyph(ch).advanceWidth` and
  * `getKerningValue(left, right)`, GPOS pair kerning), scaled to 12 px (× 12 / 1000) and then calibrated
  * × 1.112 so that the KERNED width reproduces what the browser renders at 12 px / 500 Geist, as
- * components/home/pin-label.ts recorded it: Homestead 70 px (here 70.1), Presentation 77 px (here 76.98),
+ * lib/pin-label.ts recorded it: Homestead 70 px (here 70.1), Presentation 77 px (here 76.98),
  * and SPEC §10.1's Hollister 50.9 px (here 50.93). The calibration only holds WITH kerning (the kerning-free
  * sums are 71.3 / 79.9 / 52.3 px), so `width()` adds pair kerning; `advanceSum()` is the kerning-free sum.
  *
