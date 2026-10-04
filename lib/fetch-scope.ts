@@ -1,6 +1,8 @@
 /**
  * What scripts/fetch-rosters.ts and scripts/fetch-player-stats.ts share: which registry teams a
- * run covers, and how a run reports its teams league by league.
+ * run covers, and how a run reports its teams league by league. The flag parsers for `--leagues`
+ * and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts parseRunArgs), so the
+ * three CLIs read those flags by one rule.
  *
  * Both scripts walk the whole 49-team registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
@@ -31,6 +33,14 @@ export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] 
     if (!isLeagueId(id)) throw new Error(`${flag}: unknown league ${id} (known: ${LEAGUE_IDS.join(', ')})`);
   }
   return [...new Set(ids)] as LeagueId[];
+}
+
+/** `--fetched-at <iso>`: an ISO timestamp ('2026-10-04T00:00:00.000Z'), returned as given; anything else throws. */
+export function parseFetchedAtFlag(value: string, flag = '--fetched-at'): string {
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(value) || Number.isNaN(Date.parse(value))) {
+    throw new Error(`${flag}: not an ISO timestamp: ${value}`);
+  }
+  return value;
 }
 
 /** The registry teams a run covers, in registry order: all 49, or those of `leagues`. */

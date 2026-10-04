@@ -40,6 +40,7 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
+  parseFetchedAtFlag,
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
@@ -85,7 +86,7 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v) throw new Error(`${arg} needs a value`);
+      if (!v || v.startsWith("--")) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
@@ -94,7 +95,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === "--leagues") out.leagues = parseLeaguesFlag(next(), arg);
     else if (arg === "--out") out.out = path.resolve(next());
     else if (arg === "--dry-run") out.dryRun = true;
-    else if (arg === "--fetched-at") out.fetchedAt = next();
+    else if (arg === "--fetched-at") out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else throw new Error(`unknown flag: ${arg}`);
   }
   if (out.fixtures && out.capture) throw new Error("--capture records live pages; it cannot be combined with --fixtures");

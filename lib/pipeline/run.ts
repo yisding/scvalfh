@@ -23,11 +23,12 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import path from 'node:path';
 
 import { carryCrossCheck } from '../crosscheck';
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../fetch-scope';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
 import { loadSnapshot } from '../snapshot-schema';
 import { stableStringify } from '../stable-json';
-import type { Game, LeagueId, OfficialFixture, Snapshot } from '../types';
+import type { Game, OfficialFixture, Snapshot } from '../types';
 import {
   RunAbort,
   type OfficialStepResult,
@@ -197,15 +198,6 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --no-ccs                     skip the CCS calendar and bracket poll
   --no-vnn                     skip the VNN school calendars`;
 
-function leagueList(value: string, flag: string): LeagueId[] {
-  const ids = value.split(',').map((s) => s.trim()).filter(Boolean);
-  if (ids.length === 0) throw new Error(`${flag} needs at least one league id`);
-  for (const id of ids) {
-    if (!isLeagueId(id)) throw new Error(`${flag}: unknown league ${id} (known: ${LEAGUE_IDS.join(', ')})`);
-  }
-  return ids;
-}
-
 export interface ParseOptions {
   cwd: string;
   /** The default `fetchedAt` for a live run (the CLI passes the wall clock; tests pin it). */
@@ -248,15 +240,10 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
       case '--capture': args.capture = path.resolve(opts.cwd, next()); break;
       case '--out': args.out = path.resolve(opts.cwd, next()); break;
       case '--dry-run': args.dryRun = true; break;
-      case '--fetched-at': {
-        const v = next();
-        if (!/^\d{4}-\d{2}-\d{2}T/.test(v) || Number.isNaN(Date.parse(v))) throw new Error(`--fetched-at: not an ISO timestamp: ${v}`);
-        args.fetchedAt = v;
-        break;
-      }
+      case '--fetched-at': args.fetchedAt = parseFetchedAtFlag(next(), arg); break;
       case '--force': args.force = true; break;
-      case '--leagues': args.leagues = leagueList(next(), arg); break;
-      case '--accept-regression': args.acceptRegression.push(...leagueList(next(), arg)); break;
+      case '--leagues': args.leagues = parseLeaguesFlag(next(), arg); break;
+      case '--accept-regression': args.acceptRegression.push(...parseLeaguesFlag(next(), arg)); break;
       case '--no-sblive': args.sblive = false; break;
       case '--sblive-full': args.sbliveFull = true; break;
       case '--no-official':

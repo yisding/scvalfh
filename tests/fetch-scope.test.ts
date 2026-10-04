@@ -1,5 +1,6 @@
 /** lib/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
 
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -9,6 +10,7 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
+  parseFetchedAtFlag,
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
@@ -36,6 +38,36 @@ describe('parseLeaguesFlag', () => {
     expect(() => parseLeaguesFlag('scval,nope')).toThrow(/--leagues: unknown league nope/);
     expect(() => parseLeaguesFlag(' , ', '--x')).toThrow(/--x needs at least one league id/);
   });
+});
+
+describe('parseFetchedAtFlag', () => {
+  it('returns an ISO timestamp as given', () => {
+    expect(parseFetchedAtFlag('2026-10-04T00:00:00.000Z')).toBe('2026-10-04T00:00:00.000Z');
+    expect(parseFetchedAtFlag('2026-10-04T07:02:00-07:00')).toBe('2026-10-04T07:02:00-07:00');
+  });
+
+  it('refuses a date alone, a word and an impossible stamp, naming the flag', () => {
+    expect(() => parseFetchedAtFlag('2026-10-04')).toThrow(/--fetched-at: not an ISO timestamp: 2026-10-04/);
+    expect(() => parseFetchedAtFlag('yesterday')).toThrow(/--fetched-at: not an ISO timestamp: yesterday/);
+    expect(() => parseFetchedAtFlag('2026-13-45T00:00:00Z', '--x')).toThrow(/--x: not an ISO timestamp/);
+  });
+});
+
+describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
+  const run = (script: string, ...args: string[]) =>
+    spawnSync(path.join(REPO, 'node_modules', '.bin', 'tsx'), [path.join(REPO, 'scripts', script), ...args], { cwd: REPO, encoding: 'utf8' });
+
+  for (const script of ['fetch-rosters.ts', 'fetch-player-stats.ts']) {
+    it(`${script}: a bad --fetched-at and a flag where a value belongs both fail before anything runs`, () => {
+      // --fixtures keeps a regression offline: a script that accepted the stamp would read no network.
+      const bad = run(script, '--fixtures', path.join(REPO, 'tests', 'fixtures', 'no-such-dir'), '--fetched-at', 'yesterday', '--dry-run');
+      expect(bad.status).not.toBe(0);
+      expect(bad.stderr).toMatch(/--fetched-at: not an ISO timestamp: yesterday/);
+      const flag = run(script, '--out', '--dry-run');
+      expect(flag.status).not.toBe(0);
+      expect(flag.stderr).toMatch(/--out needs a value/);
+    });
+  }
 });
 
 describe('scope', () => {
