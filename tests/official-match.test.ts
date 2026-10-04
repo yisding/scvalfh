@@ -354,6 +354,16 @@ describe('MCAL officialChanges', () => {
     expect(sha256Hex('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
     expect(officialChangesHash('<td>nothing here</td>', changes.cellMarker)).toBeNull();
   });
+
+  it('matches the marker against the cell text, not its raw HTML', () => {
+    // A tag inside the marker, or an entity in it, still finds the cell: the decoded text is read.
+    expect(officialChangesCellText('<td>x</td><td><b>Girls</b> Field Hockey: Oct 12 moved</td>', 'Girls Field Hockey:'))
+      .toBe('Girls Field Hockey: Oct 12 moved');
+    expect(officialChangesCellText('<td>Boys &amp; Girls Field Hockey:&nbsp;none</td>', 'Boys & Girls Field Hockey:'))
+      .toBe('Boys & Girls Field Hockey: none');
+    expect(officialChangesHash('<td><i>Girls</i>&nbsp;Field Hockey: none</td>', 'Girls Field Hockey:'))
+      .toBe(sha256Hex('Girls Field Hockey: none'));
+  });
 });
 
 // ---------------------------------------------------------------- stepOfficial

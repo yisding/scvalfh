@@ -96,14 +96,17 @@ export function sha256Hex(input: string | Uint8Array): string {
 }
 
 /**
- * The `officialChanges` cell (SPEC §2.1): the text of the first `<td>` containing `cellMarker`, with
- * tags turned into spaces, `&nbsp;`/`&amp;` decoded, whitespace collapsed and trimmed. null when no
- * cell holds the marker. LiveTransport hashes this for the `official-changes` resource.
+ * The `officialChanges` cell (SPEC §2.1): the text of the first `<td>` whose text contains
+ * `cellMarker`, with tags turned into spaces, `&nbsp;`/`&amp;` decoded, whitespace collapsed and
+ * trimmed. The marker is matched against that decoded text, not the raw cell HTML, so a marker split
+ * by a tag or spelled with `&amp;` still matches. null when no cell holds the marker.
+ * LiveTransport (lib/pipeline/transport.ts) hashes this for the `official-changes` resource.
  */
 export function officialChangesCellText(html: string, cellMarker: string): string | null {
+  // Linear scans: the page is upstream HTML of any shape.
   for (const body of tdCellBodies(html)) {
-    if (!body.includes(cellMarker)) continue;
-    return cellText(body);
+    const text = cellText(body);
+    if (text.includes(cellMarker)) return text;
   }
   return null;
 }

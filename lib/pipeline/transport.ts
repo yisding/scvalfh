@@ -19,12 +19,11 @@
  *   ccs-ical, ccs-bracket CCS_ICAL_URL, CCS.bracketUrl → HttpClient.text
  */
 
-import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { CCS, getDivision, getLeague } from '../leagues';
-import { cellText, tdCellBodies } from '../official/validate';
+import { officialChangesCellText, sha256Hex } from '../official/validate';
 import { BOOTSTRAP_URL } from '../season';
 import { CCS_ICAL_URL } from '../sources/ccs';
 import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
@@ -137,24 +136,6 @@ export function resourceUrlOrNull(key: ResourceKey): string | null {
   } catch {
     return null;
   }
-}
-
-/** Lowercase hex sha256. */
-export function sha256Hex(data: string | Uint8Array): string {
-  return createHash('sha256').update(data).digest('hex');
-}
-
-/**
- * SPEC §2.1 `officialChanges`: the text of the first `<td>` containing `marker` (tags → spaces,
- * `&nbsp;`/`&amp;` decoded, whitespace collapsed, trimmed), or null when no cell holds it.
- */
-export function officialChangesCellText(html: string, marker: string): string | null {
-  // Linear scans (lib/official/validate.ts): the page is upstream HTML of any shape.
-  for (const body of tdCellBodies(html)) {
-    const text = cellText(body);
-    if (text.includes(marker)) return text;
-  }
-  return null;
 }
 
 /** Bodies that are hashes by contract (§7.2): served and recorded as one bare hex line. */
