@@ -171,7 +171,7 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03 and 2026-10-04 (with the 2026-10-04 EAL sweep, no row), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03 and 2026-10-04 (with the 2026-10-04 EAL sweeps, field hockey and every sport, no row), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   it('holds 16 commitments from 9 schools to 14 colleges (15 programs), all "committed", 15 high and 1 medium', () => {
     expect(raw.capturedAt).toBe('2026-10-04');
@@ -183,6 +183,14 @@ describe('the research of 2026-10-03 and 2026-10-04 (with the 2026-10-04 EAL swe
     );
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
     expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Ryan Hemeon']);
+  });
+
+  it('joins nothing to the six EAL teams: both 2026-10-04 sweeps of their 95 rows found no commitment', () => {
+    const eal = getRosters().teams.filter((t) => t.division === 'eal');
+    expect(eal.map((t) => t.slug).sort()).toEqual(['bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley']);
+    expect(eal.reduce((n, t) => n + t.players.length, 0)).toBe(95);
+    const ealSlugs = new Set<string>(eal.map((t) => t.slug));
+    expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
   it('by sport: 7 field hockey, 7 lacrosse, 1 soccer, 1 basketball', () => {

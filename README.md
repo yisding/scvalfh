@@ -464,9 +464,9 @@ program has a commitment, a college has one program per sport, one commitment pe
 sources agree with each other on a class a high school roster of the season can hold.
 
 Coverage on 2026-10-04, counted from the file (the six EAL teams' schools were swept the same day for
-field hockey commitments, and none was found): **16 commitments, 16 players at 9 of the 49 schools,
-to 14 colleges (15 programs).** By sport, 7 in field hockey, 7 in lacrosse, 1 in soccer (St. Lawrence)
-and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
+field hockey commitments and then in the every-sport round, and none was found): **16 commitments,
+16 players at 9 of the 49 schools, to 14 colleges (15 programs).** By sport, 7 in field hockey, 7
+in lacrosse, 1 in soccer (St. Lawrence) and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
 each), BVAL 2 (Christopher), PCAL 1 (Stevenson), MCAL 4 (Redwood 2, Berkeley, Marin Catholic), EAL none. By class
 13 from 2027 and 3 from 2028; by level 9 to NCAA Division I programs, 1 to Division II and 6 to
 Division III. The field hockey seven: UC Davis 2, Colgate, Iowa (Division I), Maryville (II), Bates
@@ -500,8 +500,17 @@ index for all 716 rows on the 43 teams then tracked, the field hockey, lacrosse 
 2025-26 story on 18 student papers and 8 local papers, and the club-tied players one by one. It found nine commitments in other sports
 and no new field hockey one that meets the rule; a checker and an independent refuter re-opened each
 (both kept the nine, and the refuter dropped a field hockey "planning to continue" that is a plan,
-not a commitment), and a final audit found every quote in the file on its page. Recall is partial:
-see `docs/DATA-SOURCES.md` §1.1j3 for the sources, what was rejected and why, and the gaps.
+not a commitment), and a final audit found every quote in the file on its page. Later that day the
+round was taken to the six EAL teams' schools, whose 95 rows had been swept for field hockey only:
+the same field hockey, lacrosse and soccer college pages and lists, ClubLax, TopDrawerSoccer and
+SoccerWire, NorCal club lists in five sports, a search of each of the 95 names since January 2025
+on five local papers' sites (the first 20 results on four of them) with full crawls of two papers'
+high school sections, two student papers, and two web searches for each junior and senior; the same
+day's recruiting-profiles research ran a SportsRecruits profile probe for all 95 in every sport and
+NCSA and FieldLevel probes for field hockey. It found no commitment in any sport; SportsRecruits'
+athlete search was not run for these rows and their freshmen and sophomores got no web searches, so
+EAL recall is lower than the other leagues'. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3
+for the sources, what was rejected and why, and the gaps.
 
 **When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
@@ -933,7 +942,8 @@ at once, at every build, starting from last season's:
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
   the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
-  schools on 2026-10-04, for field hockey commitments only, with none found): a later signing,
+  schools on 2026-10-04, for field hockey and then every sport, with none found, though without
+  SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
