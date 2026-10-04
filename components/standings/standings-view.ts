@@ -27,7 +27,7 @@
  */
 
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
-import { monthDay, ordinal, shortDate } from '../../lib/format';
+import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
 import {
   divisionHeading,
   getDivision,
@@ -197,7 +197,7 @@ export interface DivisionView {
 
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
-  return source === 'bval-docx' ? 'Official schedule (Google Doc)' : 'Official schedule (PDF)';
+  return `Official schedule (${officialSourceFormat(source)})`;
 }
 
 /**

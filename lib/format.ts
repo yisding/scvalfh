@@ -10,7 +10,7 @@
  */
 
 import { TIME_ZONE } from './season';
-import type { Game, Outcome, Record3, ScoreView } from './types';
+import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const WEEKDAYS_LONG = [
@@ -334,6 +334,23 @@ export function ordinal(n: number): string {
 /** The rank cell: '1st', or an em dash for a team with no reported results (DESIGN §8). */
 export function ordinalPlace(place: number, hasResults = true): string {
   return hasResults ? ordinal(place) : EM_DASH;
+}
+
+/**
+ * What kind of document a league's official schedule is, as a link label names it: the BVAL
+ * sheet is a Google Doc, the rest are PDFs. A `Record` over every `OfficialSourceId`, so a new
+ * source fails typecheck until someone classifies it. The /standings link
+ * (`officialScheduleLabel`) and the /about health card (`officialSourceLabel`) both read it.
+ */
+const OFFICIAL_SOURCE_FORMAT: Readonly<Record<OfficialSourceId, 'PDF' | 'Google Doc'>> = {
+  'scval-pdf': 'PDF',
+  'bval-docx': 'Google Doc',
+  'pcal-pdf': 'PDF',
+  'mcal-pdf': 'PDF',
+};
+
+export function officialSourceFormat(source: OfficialSourceId): 'PDF' | 'Google Doc' {
+  return OFFICIAL_SOURCE_FORMAT[source];
 }
 
 /** A real 0 is '0'; a null is an en dash (DESIGN §5.3). NEVER coerce. */
