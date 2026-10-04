@@ -34,7 +34,7 @@ const FILLER = /^(high|school|hs|the|of)$/i;
  * the registry's own abbreviations, which are ours and never derived by munging. A capital and a
  * lowercase letter reads as the start of the name printed next to it, which is all it is.
  */
-export function ghostInitials(name: string): string {
+function ghostInitials(name: string): string {
   const words = name
     .replace(/[^\p{L}\p{N}\s-]/gu, '')
     .split(/[\s-]+/)

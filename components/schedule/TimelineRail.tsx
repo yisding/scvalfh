@@ -133,7 +133,7 @@ function spanWords(first: string, last: string): string {
  * The rail's last chip: the league's postseason, from config. An unbracketed tournament (the EAL's
  * Super Regional) has no bracket page, so its chip goes to the league's card on /playoffs.
  */
-export function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } {
+function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } {
   const league = getLeague(leagueId);
   const ps = league.postseason;
   switch (ps.kind) {

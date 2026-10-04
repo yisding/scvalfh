@@ -102,7 +102,7 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
 };
 
 /** The league chip of a counted game (`countsFor` → its league's short name). */
-export function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
+function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
   if (game.countsFor === null) return null;
   const division = findDivision(game.countsFor);
   return division ? (findLeague(division.leagueId)?.shortName ?? null) : null;

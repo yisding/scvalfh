@@ -90,7 +90,7 @@ export type ActiveState = 'page' | 'true' | null;
 
 const pathOf = (href: string) => href.split('#')[0];
 
-export function activeState(
+function activeState(
   pathname: string,
   href: string,
   leagueHrefs?: Readonly<Partial<Record<string, string>>>,

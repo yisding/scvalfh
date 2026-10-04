@@ -69,7 +69,7 @@ function divisionGames(division: DivisionId, status: Game['status']): number {
   return getGames({ division, leagueOnly: true, status }).filter((g) => g.countsFor === division).length;
 }
 
-export function buildDivisionStandingsView(division: DivisionId): DivisionView {
+function buildDivisionStandingsView(division: DivisionId): DivisionView {
   return buildDivisionView({
     division,
     standings: getStandings(division),
@@ -86,7 +86,7 @@ export function buildDivisionStandingsView(division: DivisionId): DivisionView {
 }
 
 /** The leaders of one table: every team at place 1 with results. */
-export function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
+function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
   const teams = getTeams();
   const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
   return {

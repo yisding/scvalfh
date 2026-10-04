@@ -65,7 +65,7 @@ export interface TeamFinderProps {
 }
 
 export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
-export const PIN_LIMIT = 8;
+const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -76,7 +76,7 @@ function joinAnd(parts: readonly string[]): string {
 }
 
 /** The same "a query at all" rule as `searchTeams`: ≥ 2 characters raw and compact. */
-export function isActiveQuery(query: string): boolean {
+function isActiveQuery(query: string): boolean {
   const raw = query.trim();
   return raw.length >= 2 && normalizeQuery(raw).compact.length >= 2;
 }
@@ -152,7 +152,7 @@ export function finderView(
  * (`Pin St Francis (Saint Francis), <detail>`) → ['Pin ', 'St Francis', ' (Saint Francis), '].
  * The detail line is the visible second line.
  */
-export function pinResultParts(entry: TeamSearchEntry): { before: string; visible: string; after: string; detail: string } {
+function pinResultParts(entry: TeamSearchEntry): { before: string; visible: string; after: string; detail: string } {
   const detail = pinResultDetail(entry);
   const label = pinLabel({
     name: entry.name,
@@ -212,7 +212,7 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
 }
 
 /** The line above the results when pinning cannot work in this browser. */
-export const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
+const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
 
 function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[]; kickerId: string }) {
   if (groups.length === 0) return null;

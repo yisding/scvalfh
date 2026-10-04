@@ -224,7 +224,7 @@ export function rankRuleText(league: LeagueConfig): string {
 }
 
 /** The legend's sentence on whose order the table is (by `rules.orderScope`). */
-export function orderLegendText(league: LeagueConfig): string {
+function orderLegendText(league: LeagueConfig): string {
   const short = league.shortName;
   switch (league.rules.orderScope) {
     case 'table': {
@@ -239,14 +239,14 @@ export function orderLegendText(league: LeagueConfig): string {
 }
 
 /** The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from. */
-export function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
+function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
   return official.mode === 'none'
     ? `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`
     : `Scheduled per ${league.shortName}`;
 }
 
 /** The intro of the missing-results list, by whether the league has a schedule document. */
-export function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
+function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
   return official.mode === 'none'
     ? `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`
     : `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
@@ -287,7 +287,7 @@ export function backfillFootnoteText(n: number): string {
  * An unbracketed tournament (the EAL's Super Regional) has no bracket page: it links its card on
  * /playoffs.
  */
-export function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
+function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
@@ -300,7 +300,7 @@ export function postseasonLinks(league: LeagueConfig): { heading: string; href: 
 }
 
 /** The league's qualification rule, cited once in the legend (by postseason kind). */
-export function postseasonCitation(league: LeagueConfig): string {
+function postseasonCitation(league: LeagueConfig): string {
   const ps = league.postseason;
   switch (ps.kind) {
     case 'ccs-ladder':

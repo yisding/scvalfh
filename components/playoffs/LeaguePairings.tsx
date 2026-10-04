@@ -25,7 +25,7 @@ function toSide(seat: SeatView): PlayInSide {
 }
 
 /** The pairing's purpose from its config label: the words after ' — ', sentence case. */
-export function purposeOf(label: string): string | null {
+function purposeOf(label: string): string | null {
   const at = label.indexOf(' — ');
   if (at < 0) return null;
   const tail = label.slice(at + 3).trim();

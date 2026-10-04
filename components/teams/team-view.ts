@@ -106,7 +106,7 @@ export interface TeamEloView {
 }
 
 /** The Elo card for one team, read off the board /leaders prints (getEloBoard), so the two cannot disagree. */
-export function teamElo(slug: TeamSlug): TeamEloView {
+function teamElo(slug: TeamSlug): TeamEloView {
   const board = getEloBoard();
   const rating = board.ratingBySlug.get(slug);
   const row = board.board.rows.find((r) => r.team.slug === slug);

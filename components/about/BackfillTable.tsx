@@ -17,7 +17,7 @@ export interface BackfillTableProps {
   rows: readonly BackfillRow[];
 }
 
-export const BACKFILL_RULE_WORDS: Readonly<Record<BackfillRow['rule'], string>> = {
+const BACKFILL_RULE_WORDS: Readonly<Record<BackfillRow['rule'], string>> = {
   'absent-fixture': 'MaxPreps has no contest for this official league game',
   'score-pending': 'MaxPreps lists the game without a score',
   'contradictory-result': 'MaxPreps’ win/loss flags contradict its own score',

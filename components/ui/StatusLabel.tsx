@@ -37,7 +37,7 @@ const TONE: Record<StatusTone, string> = {
 const DECIDER_LABEL: Readonly<Record<string, string>> = { F: 'by forfeit', SO: 'decided on 1 v 1s' };
 
 /** The † beside a score published from si.com: a title for a pointer, words for a screen reader. */
-export function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
+function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
   if (display.sourceMark !== 'si.com') return null;
   return (
     <span className="font-sans text-micro font-semibold text-ink-3" title="Score via si.com">

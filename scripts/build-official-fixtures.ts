@@ -45,8 +45,8 @@ import { resolveOfficialName } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
 
 const REPO = path.resolve(import.meta.dirname, '..');
-export const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
-export const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'official');
+const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
+const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'official');
 
 /** The day the three sources were transcribed and re-checked (the research captures). */
 export const TRANSCRIBED_ON = '2026-10-02';
@@ -206,7 +206,7 @@ export function buildBvalFromText(texts: readonly string[]): OfficialBundle {
 }
 
 /** PCAL: codes through LEAGUES.pcal.officialCodes; varsity 16:00; names from the source's `codes`. */
-export function buildPcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
+function buildPcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
   const src = readJson<PcalSource>(path.join(sourceDir, SOURCE_FILES.pcal));
   const [division] = bundledDivisions('pcal');
   const name = (code: string) => {
@@ -241,7 +241,7 @@ function adjustedVarsityTime(note: string | undefined): string | null {
  * MCAL: the post-change `date`, `originalDate` only when it differs, `time` = the source's time
  * except where an approved-adjustment note states the varsity start (B@LW 9/29, LW@MC 10/15 → 16:30).
  */
-export function buildMcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
+function buildMcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
   const src = readJson<McalSource>(path.join(sourceDir, SOURCE_FILES.mcal));
   const [division] = bundledDivisions('mcal');
   const fixtures = src.fixtures.map((f) =>

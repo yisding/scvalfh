@@ -205,7 +205,7 @@ export interface DivisionLeaders {
 }
 
 /** The team(s) in 1st place with at least one counted result, or null before any league result. */
-export function divisionLeaders(division: DivisionId): DivisionLeaders | null {
+function divisionLeaders(division: DivisionId): DivisionLeaders | null {
   const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
   if (top.length === 0) return null;
   return {

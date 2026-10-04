@@ -95,7 +95,7 @@ export function daySummary(games: readonly Game[], longDateText: string): DaySum
 // ---------------------------------------------------------------- league groups (/scores/[date])
 
 /** The league a game belongs to on a day page: its counted division's league, else its postseason league. */
-export function gameLeague(game: Pick<Game, 'countsFor' | 'postseason'>): LeagueId | null {
+function gameLeague(game: Pick<Game, 'countsFor' | 'postseason'>): LeagueId | null {
   if (game.countsFor !== null) return findDivision(game.countsFor)?.leagueId ?? null;
   return game.postseason?.leagueId ?? null;
 }

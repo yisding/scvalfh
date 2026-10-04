@@ -40,7 +40,7 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
  * on every /standings page), so there is no separate Standings link. History keeps its short
  * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
  */
-export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
+const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
   { href: '/', label: 'Home' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },

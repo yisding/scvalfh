@@ -38,7 +38,7 @@ interface RawTeam { score: number | null; result: string | null; homeAwayType: n
 interface RawRow { contest: { contestId: string; hasResult?: boolean; teams: RawTeam[] }; calculatedFields: { contestState: number } }
 
 /** A temporary overlay turning the REGRESSED_FINALS contests into finals. Returns its directory. */
-export function writeRegressionOverlay(): string {
+function writeRegressionOverlay(): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-overlay-'));
   const files: Record<string, string> = {};
   for (const slug of FEEDS) {
@@ -65,7 +65,7 @@ export function writeRegressionOverlay(): string {
 }
 
 /** Runs the pipeline over corpus + overlay and returns the previous snapshot's stable JSON. */
-export async function buildFinalsRegressionPrevious(official: OfficialStep, sblive: SbliveStep): Promise<string> {
+async function buildFinalsRegressionPrevious(official: OfficialStep, sblive: SbliveStep): Promise<string> {
   const overlay = writeRegressionOverlay();
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-')), 'snapshot.json');
   const args = parseRunArgs(

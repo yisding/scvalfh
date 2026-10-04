@@ -340,7 +340,7 @@ export function PinnedCard({
 }
 
 /** No pin, a league is effective: the finder and one line (SPEC §10.1). */
-export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
+function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
   return (
     <div className="flex flex-col bg-surface px-3 py-3 min-[22.5rem]:px-4 md:px-5">
       <TeamFinder index={index} mode="pin" label="School, city or mascot" onPin={onPin} />
@@ -352,7 +352,7 @@ export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () 
 }
 
 /** `html[data-pin-stale]`: DESIGN §8's message. */
-export function StalePin({ onUnpin }: { onUnpin: () => void }) {
+function StalePin({ onUnpin }: { onUnpin: () => void }) {
   return (
     <div className="flex min-h-[9rem] flex-col justify-center gap-3 bg-surface px-4 py-3 md:px-5">
       <p className="m-0 text-body text-ink">That team is no longer in the data.</p>
