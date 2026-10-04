@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +16",
-  "contentHash": "b426983d6b1b2b28ab8592288c63ec26e1e754228208cb12797a6e409e43f46e",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0",
+  "contentHash": "226ed88e5bcc8242ddf9c9edb0f3169ded9449e8c85acb8d0e6a7334b808494a",
   "counts": {
     "byLeague": {
       "bval": {
@@ -53,7 +53,7 @@
     "conflicts": 2,
     "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-04T13:04:21.846Z",
+  "fetchedAt": "2026-10-04T17:58:38.677Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -94,7 +94,7 @@
     {
       "backfilled": 0,
       "countedFinals": 16,
-      "finalsDelta": 16,
+      "finalsDelta": 0,
       "id": "eal",
       "missingPast": 2,
       "reasons": [],
