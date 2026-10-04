@@ -50,13 +50,13 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 43 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the 43 varsity rosters a public page says have committed to (or signed with) a college field hockey program, by class year (`#class-2027`), each with the college, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
-| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
+| `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the highest Elo rating (top 10, `#elo-rating`), the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL and MCAL shown as unavailable |
 | `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
 
@@ -502,8 +502,9 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
 develop and build without ever calling a live upstream API. Every build bundles
-`data/snapshot.json` and `data/history-2025-26.json` into its server code (`lib/data.ts` and
-`lib/history.ts` import them), so no server reads `data/` at run time. The vinext scripts read the
+`data/snapshot.json`, `data/history-2025-26.json` and `data/prior-season.json` into its server code
+(`lib/data.ts`, `lib/history.ts` and `lib/prior-season-data.ts` import them), so no server reads
+`data/` at run time. The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
 Worker, two patches (see "The vinext patch") and its own outputs, `dist/`, `.vinext/` and
 `.cloudflare/`, all gitignored and skipped by `eslint.config.mjs`. `--mode cloudflare` is what
@@ -593,6 +594,22 @@ and writes nothing if it fails or any school does not resolve. It is a record-on
 recomputed points, since neither source has game-level data to recompute from), has one entry per
 league (`available`, or `unavailable` with the reason: PCAL and MCAL for 2025-26), and is committed
 to the repo, not regenerated by the cron.
+
+Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
+standings they are on MaxPreps: the schedule read takes a season id, and each team's
+`team-context/v1` lists every season it has played. Once the new season is in `lib/season.ts`, run
+`pnpm fetch-prior-season` once to replace `data/prior-season.json` with the season just finished
+(a test fails until the file is the season before `lib/season.ts`'):
+
+```bash
+pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 43 schedules
+pnpm fetch-prior-season --year 24-25     # another season
+pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
+```
+
+It writes every final between two registry teams, nothing else, and writes nothing at all if a
+feed fails, a row is dated outside the season, or two teams' feeds disagree on a game. Behind a
+proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 
 ## How standings are computed
 
@@ -707,6 +724,47 @@ order, and a game counts only when both teams are matched by si.com's own team i
 alone. A MaxPreps game that later appears for a filled fixture takes over, and the old si.com game
 page becomes a link to it. `--no-sblive` turns the whole thing off. The exact rules are in
 `docs/DATA-SOURCES.md`.
+
+## How Elo ratings are computed
+
+Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
+rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
+team meets the record first, and the ten highest are a board on `/leaders` (`#elo-rating`). It is in Elo points (1500 is the average
+rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not computed game
+by game: classic Elo moves two ratings after each game, which over one season of about ten games a
+team leaves it mostly where it started. Instead every final between two of the 43 teams is fitted
+at once, at every build, starting from last season's:
+
+- **The fit.** The strengths for which `home − away + home edge ≈ goal margin` holds best over the
+  whole season, by least squares, with each margin capped at 5 goals (a score run up past five
+  earns nothing more). The home edge applies only where a game has a host. Because the season is
+  fitted as a whole, a win over a strong team counts for more than the same win over a weak one,
+  and a team's rating can move on a day it did not play, when an opponent's later results show it
+  was stronger or weaker than it looked.
+- **The start.** Each team starts the season from its rating over last season's finals
+  (`data/prior-season.json`: every 2025-26 final between two of the 43 teams, 368 of them, from
+  MaxPreps), carried over in full. That start counts for one game: it decides the first weeks and
+  fades as the season's own results come in. A team with no result yet this season is shown at its
+  start, as "preseason".
+- **How well it predicts.** Replaying a season day by day, each day predicted from only the games
+  before it: seeded from 2025-26, 2026 through Oct 2 picked the winner of 89% of the games that had
+  one (79% unseeded) and missed the capped margin by 1.76 goals (2.37); 2025-26 seeded from 2024-25
+  picked 88% (84%) and missed by 1.61 (1.97). Carrying 85-115% of last season over, at a weight of
+  half a game to three, scored about the same; a team's strength over one full season and the next
+  correlates at 0.89.
+- **The scale.** Elo = 1500 + 175 × (strength in goals − the average). 175 points a goal is the
+  value that best fits Elo's own expected-score curve over those 564 replayed predictions:
+  favorites by 100-200 points scored 69% (Elo expects 70%), by 200-300 80% (81%), by 400-600 97%
+  (95%).
+- **What counts.** Every final between two of the 43 teams, league or not, postseason included,
+  with its published score (a si.com backfill too). Forfeits, finals without a score and games
+  against schools outside the four leagues are left out, last season's included.
+- **The board.** A team needs half the median team's counted games this season to be on the
+  `/leaders` board, as the record boards do; below that its team page shows the rating as
+  provisional. A team page names its place only when the board lists it (the top 10).
+- **Known soft spot.** MCAL links to the other three leagues through few games (nine in 2025-26,
+  five so far in 2026), so how MCAL teams compare with the CCS leagues rests on those results and
+  can move several dozen points with one more cross-league game.
 
 ## Known limitations
 

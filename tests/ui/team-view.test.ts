@@ -17,6 +17,7 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { ordinal } from '../../lib/format';
 import type { Snapshot } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
 // textOf: the `<main>`-equivalent text of a page (the page component renders no layout).
@@ -271,6 +272,46 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
     expect(checked).toBeGreaterThan(30);
   });
 
+  it('every page: the Elo card is the /leaders board’s rating and place, and names no place below its top 10', async () => {
+    const { buildLeadersView } = await import('../../components/leaders/leaders-view');
+    const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
+    const listed = new Map(board.rows.map((r) => [r.team.slug, r]));
+    let rated = 0;
+    for (const team of data.getTeams()) {
+      const { elo } = view.buildTeamPageView(team.slug)!;
+      const html = await renderTeam(team.slug);
+      const text = textOf(html);
+      const row = listed.get(team.slug);
+      // Collapsed: the summary says "Elo rating" and nothing else shows until the reader opens it.
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: closed disclosure`).toMatch(
+        /<details id="elo" class="sx-disclosure"><summary>Elo rating<\/summary>/,
+      );
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain('href="/leaders#elo-rating"');
+      if (row) {
+        expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
+        expect(String(elo.elo), `components/teams/team-view.ts ${team.slug}`).toBe(row.cells[board.rankedBy].text);
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(
+          `${row.tied ? 'tied for ' : ''}${ordinal(row.rank)} on the Elo board`,
+        );
+      } else {
+        expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toBeNull();
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toContain('on the Elo board');
+      }
+      expect(elo.provisional, `components/teams/team-view.ts ${team.slug} provisional`).toBe(
+        elo.elo !== null && elo.games > 0 && elo.games < elo.minGames,
+      );
+      expect(elo.preseason, `components/teams/team-view.ts ${team.slug} preseason`).toBe(elo.elo !== null && elo.games === 0);
+      if (elo.elo !== null) {
+        rated += 1;
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`Elo rating ${elo.elo} points ·`);
+      }
+      if (elo.provisional) {
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`provisional, from ${elo.games}`);
+      }
+    }
+    expect(rated, 'components/teams/team-view.ts: the corpus rates most teams').toBeGreaterThan(30);
+  });
+
   it('a si.com-only game links by its param, never the raw contest id', async () => {
     const game = data.getGames().find((g) => g.contestId.startsWith('sblive:'));
     expect(game, 'lib/data.ts: the corpus has a si.com backfill').toBeDefined();
@@ -522,6 +563,46 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     expect(text, 'components/teams/TeamPlayoffLine.tsx gp 0').toContain('No results reported yet.');
     expect(text, 'app/teams/[slug]/page.tsx gp 0').not.toMatch(/0-0-0/);
     expect(text, 'app/teams/[slug]/page.tsx gp 0: no CCS on MCAL').not.toContain('CCS');
+  });
+
+  it('the Elo card rates the team from last season alone, as preseason, and keeps it off the board', async () => {
+    const v = zeroed.v.buildTeamPageView(slug)!;
+    expect(v.elo, 'components/teams/team-view.ts elo gp 0').toMatchObject({
+      games: 0,
+      preseason: true,
+      provisional: false,
+      boardPlace: null,
+      seededFrom: '2025-26',
+    });
+    expect(v.elo.elo, 'components/teams/team-view.ts elo gp 0').not.toBeNull();
+    expect(v.elo.seeded, 'components/teams/team-view.ts elo gp 0: its own start').toBe(true);
+    const text = textOf(await zeroed.renderTeam(slug));
+    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} points · preseason, from 2025-26`);
+    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain('No counted result this season yet, so this is where it starts');
+  });
+
+  it('the Elo card says where THIS team started: its own rating from last season, or average', async () => {
+    const { TeamElo } = await import('../../components/teams/TeamElo');
+    const view = zeroed.v.buildTeamPageView(slug)!.elo;
+    const played = { ...view, elo: 1600, games: 8, preseason: false, provisional: false, boardPlace: null };
+    const seeded = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: true } })));
+    expect(seeded, 'components/teams/TeamElo.tsx seeded').toContain('It started the season from its 2025-26 rating');
+    // A program new to the registry: no 2025-26 rating, though every other team has one.
+    const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
+    // "Counted": last season's forfeits, unscored finals and games against outside schools are not
+    // in the file, so a team can have played and still have no start.
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the four leagues’ teams, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
+  });
+
+  it('the Elo card says a team with no rating at all is not rated, never a 1500 it has not earned', async () => {
+    const { TeamElo } = await import('../../components/teams/TeamElo');
+    const view = zeroed.v.buildTeamPageView(slug)!.elo;
+    const unrated = { ...view, elo: null, preseason: false, provisional: false, boardPlace: null };
+    const text = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: unrated })));
+    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('Elo rating Not rated · no counted results yet');
+    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('A rating needs at least one final');
+    expect(text, 'components/teams/TeamElo.tsx unrated').not.toContain('1500 is an average team');
   });
 
   it('the identity card prints no place line at all (never an em dash in a sentence)', async () => {

@@ -12,6 +12,7 @@
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",
     "fetch-player-stats": "tsx scripts/fetch-player-stats.ts",
+    "fetch-prior-season": "tsx scripts/fetch-prior-season.ts",
     "discover-season": "tsx scripts/discover-season.ts",
     "build-history": "tsx scripts/build-history.ts",
     "build-official-fixtures": "tsx scripts/build-official-fixtures.ts",

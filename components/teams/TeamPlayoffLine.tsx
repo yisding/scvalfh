@@ -16,9 +16,8 @@ import type { TeamPageView } from './team-view';
  *   championship, so a CCS concept on an MCAL page would be false (SPEC §10.9).
  *
  * A team with no results is never placed by merit: the accessor returns null and the block reads
- * `No results reported yet.` Every status is a WRITTEN WORD and there are no percentages
- * anywhere — there is no model, and inventing one would be the least honest thing on the site
- * (DESIGN §7.11). Nothing here is official.
+ * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
+ * official.
  */
 export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
   const { postseasonLine: line, standing, league } = view;
