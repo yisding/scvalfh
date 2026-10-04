@@ -11,18 +11,18 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
 
 /**
  * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
- * for Monterey, Salinas and Greenfield, and "CCS" is false for MCAL. The scope note (footer and
+ * for Monterey, Salinas and Greenfield, and "CCS" is false for MCAL and EAL. The scope note (footer and
  * /about) names exactly what is covered. The repo name, the Worker name, the `scvalfh.*` storage
  * keys and the `SCVAL_*` env names deliberately stay as they are.
  */
 export const SITE_NAME = 'NorCal Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = 'NorCal FH';
-export const SITE_TAGLINE = 'Girls varsity field hockey in the Central Coast and North Coast sections';
+export const SITE_TAGLINE = 'Girls varsity field hockey in the Central Coast, North Coast and Northern sections';
 export const SITE_DESCRIPTION =
-  'Scores, standings, schedules and playoff pictures for 43 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS) and MCAL (NCS). Rebuilt twice daily from MaxPreps; unofficial.';
+  'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.';
 export const SITE_SCOPE_NOTE =
-  'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL) and the North Coast Section’s MCAL. Teams from other sections appear only as opponents.';
+  'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues appear only as opponents.';
 
 /**
  * The `openGraph` fields every page has to repeat.

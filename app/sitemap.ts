@@ -15,7 +15,7 @@ import { gameHref } from '@/lib/game-id';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
- * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the 43 team pages,
+ * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the 49 team pages,
  * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
  * one per game. The clubs come in lib/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).

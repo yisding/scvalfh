@@ -4,14 +4,15 @@ import Link from 'next/link';
 import { Fragment, useState } from 'react';
 
 import { setLeague, useEffectiveLeague } from '../ui/use-league';
+import type { SectionConfig } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 /**
  * The league chips (SPEC §8.3). One component, three modes:
  *
  * - `scope` (home): `<div role="group">` of `<button aria-pressed>` chips — `All SCVAL BVAL PCAL
- *   MCAL` — and the ONLY chips that write the remembered league (`setLeague`). The selected chip is
- *   drawn by the scope stylesheet from `html[data-league]` before hydration
+ *   MCAL EAL` — and the ONLY chips that write the remembered league (`setLeague`). The selected
+ *   chip is drawn by the scope stylesheet from `html[data-league]` before hydration
  *   (`[data-league-option]`, components/layout/league-scope-css.ts) and is announced through
  *   `aria-pressed` after. Hidden without JS (`sx-js-only`), and `disabled` until hydrated: a tap
  *   before hydration would do nothing. A polite live region says what a tap did.
@@ -21,15 +22,16 @@ import type { LeagueId } from '../../lib/types';
  * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links. Never writes.
  *
  * Chip token: `text-micro` weight 600, `min-h-11 min-w-11 px-2`, 6px gap, `flex-wrap` (200% text
- * zoom wraps rather than clipping). No visible section captions: the league chips sit in two
- * lists labelled `Central Coast Section` / `North Coast Section`, split by a hairline; the `All`
- * chip precedes both. The current chip is the accent wash, accent ink, a 1.5px ink ring AND an
- * aria-hidden ✓ (`.sx-chip-check`) — never colour alone. No league hue anywhere.
+ * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
+ * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section`, split
+ * by hairlines; the `All` chip precedes them all. The current chip is the accent wash, accent ink,
+ * a 1.5px ink ring AND an aria-hidden ✓ (`.sx-chip-check`) — never colour alone. No league hue
+ * anywhere.
  */
 export interface LeagueChip {
   id: LeagueId;
   shortName: string;
-  sectionShort: 'CCS' | 'NCS';
+  sectionShort: SectionConfig['shortName'];
 }
 
 export interface LeagueSwitcherProps {
@@ -47,9 +49,14 @@ export interface LeagueSwitcherProps {
   className?: string;
 }
 
-const SECTION_NAMES: Readonly<Record<LeagueChip['sectionShort'], string>> = {
+/**
+ * Spelled out rather than read from SECTIONS: this is a client component, and the league config
+ * stays out of client bundles. The `Record` type makes a new section a compile error here.
+ */
+const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
   CCS: 'Central Coast Section',
   NCS: 'North Coast Section',
+  NS: 'Northern Section',
 };
 
 /** The `All` chip's option value (matches the stored `'all'`). */

@@ -22,7 +22,7 @@ import PostseasonCard from './PostseasonCard';
  * question the page answers, and below the tables it was far down a phone.
  *
  * The heading `#league-<id>` is where focus lands after "Show <SHORT> here" (SPEC §8.2). Every id
- * inside includes the league id or comes from `useId()`, because all four panels share one page.
+ * inside includes the league id or comes from `useId()`, because all five panels share one page.
  */
 export interface LeaguePanelProps {
   panel: HomeLeaguePanel;

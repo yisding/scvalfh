@@ -13,7 +13,9 @@ import type { StandingsRowData } from '../ui/StandingsTable';
  * After the league's ladder line (`DivisionConfig.ladderLine`: SCVAL 3 `AQ line`, Mt. Hamilton 3
  * `AQ line`, Santa Teresa 1 `Play-in host`, PCAL 2 `AQ line`, MCAL 6 `Tournament line`) a
  * LABELLED separator row: the heavier rule is never the only cue (WCAG 1.3.1). With shared places
- * the line is drawn after every row at or above it, and not at all before any result.
+ * the line is drawn after every row at or above it, and not at all before any result. A null
+ * `ladderLine` draws no rule and no label: the EAL, whose Super Regional takes the top six of its
+ * six teams, has no line to draw.
  *
  * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
  * A team with no results gets an em-dash place and em dashes for W-L-T and PTS — never 0-0-0.
@@ -28,7 +30,8 @@ import type { StandingsRowData } from '../ui/StandingsTable';
  */
 export interface CompactStandingsTableProps {
   rows: readonly StandingsRowData[];
-  ladderLine: { after: number; label: string };
+  /** null = no line at all (the EAL). */
+  ladderLine: { after: number; label: string } | null;
   caption: string;
   /** Carry the TeamFinder filter hooks (see above). */
   filterable?: boolean;
@@ -64,9 +67,11 @@ export function CompactStandingsTable({
   filterable = false,
   className,
 }: CompactStandingsTableProps) {
-  const above = rows.filter(
-    (r) => r.standing.hasReportedResults && r.standing.computed.place <= ladderLine.after,
-  ).length;
+  const above = ladderLine
+    ? rows.filter(
+        (r) => r.standing.hasReportedResults && r.standing.computed.place <= ladderLine.after,
+      ).length
+    : 0;
   const lineAfter = above > 0 && above < rows.length ? above : null;
 
   return (
@@ -131,7 +136,7 @@ export function CompactStandingsTable({
               lineAfter !== null && index + 1 === lineAfter ? (
                 <tr key={`${row.team.id}-line`} data-hide-while-searching={filterable ? '' : undefined}>
                   <td colSpan={5} className="border-t-2 border-rule px-gutter text-micro text-ink-3">
-                    {ladderLine.label}
+                    {ladderLine?.label}
                   </td>
                 </tr>
               ) : null,

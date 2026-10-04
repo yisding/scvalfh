@@ -16,7 +16,7 @@ import {
 
 /**
  * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/search.ts) over the pre-serialized
- * 43-team index the page passes in. Two modes:
+ * 49-team index the page passes in. Two modes:
  *
  * - `filter` (/teams): the page's own server-rendered, grouped list IS the result list. This
  *   toggles `hidden` on its `[data-team-tile="<slug>"]` items (the standings tables' team rows, so
@@ -26,7 +26,7 @@ import {
  *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
  *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
- *   `Search all 43 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
+ *   `Search all 49 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
  *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
@@ -86,7 +86,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
   return entry.divisionLabel ? `${entry.divisionLabel} · ${entry.leagueShort}` : entry.leagueShort;
 }
 
-/** The league short names in index order: 'SCVAL, BVAL, PCAL and MCAL'. */
+/** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
 function leagueList(index: SearchIndex): string {
   return joinAnd([...new Set(index.teams.map((t) => t.leagueShort))]);
 }
@@ -96,7 +96,7 @@ export interface FinderView {
   matches: TeamSearchEntry[];
   /** The teams this finder lists itself (pin mode: the first `limit`; filter mode: none). */
   shown: TeamSearchEntry[];
-  /** pin mode: more teams match than are shown → the "Search all 43 on Teams →" link. */
+  /** pin mode: more teams match than are shown → the "Search all 49 on Teams →" link. */
   more: boolean;
   groups: GroupSearchEntry[];
   notCovered: NotCoveredEntry[];

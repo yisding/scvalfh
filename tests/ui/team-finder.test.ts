@@ -1,7 +1,7 @@
 /**
  * The team finder (components/search/TeamFinder.tsx, SPEC §9.3): its initial markup in both modes
  * (react-dom/server), its wiring to lib/search.ts, the pin-mode buttons' accessible names for all
- * 43 teams, and unique `useId` ids when a page renders two finders.
+ * 49 teams, and unique `useId` ids when a page renders two finders.
  */
 import { Fragment, createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -83,8 +83,8 @@ describe('TeamFinder initial markup', () => {
 });
 
 describe('TeamFinder wiring to lib/search.ts', () => {
-  it('has the 43-team index', () => {
-    expect(index.teams).toHaveLength(43);
+  it('has the 49-team index', () => {
+    expect(index.teams).toHaveLength(49);
   });
 
   it('filter mode matches every team searchTeams matches, in its order, and lists none itself', () => {
@@ -127,11 +127,15 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 
   it('says what search covers when nothing matches, and the not-covered reason when that matches', () => {
     expect(finderView(index, 'xyz', 'pin').message).toBe(
-      'No team matches "xyz". Search covers the 43 teams in SCVAL, BVAL, PCAL and MCAL.',
+      'No team matches "xyz". Search covers the 49 teams in SCVAL, BVAL, PCAL, MCAL and EAL.',
     );
     const york = finderView(index, 'york', 'filter');
     expect(york.notCovered).toHaveLength(1);
     expect(york.message).toBe(york.notCovered[0].reason);
+    // Red Bluff, still a row in MaxPreps' EAL table, is not a team here: the finder says why.
+    const redBluff = finderView(index, 'Red Bluff', 'pin');
+    expect(redBluff.matches).toEqual([]);
+    expect(redBluff.message).toBe('Red Bluff is not fielding a varsity team in 2026.');
   });
 
   it('a 1-character query is not a search', () => {
@@ -149,7 +153,7 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 });
 
 describe('pin-mode result buttons', () => {
-  it('every one of the 43: no aria-label, the name is the pin label, the visible text is inside it in order', () => {
+  it('every one of the 49: no aria-label, the name is the pin label, the visible text is inside it in order', () => {
     for (const entry of index.teams) {
       const html = renderToStaticMarkup(createElement(PinResult, { entry, onPick: () => {} }));
       expect(html.startsWith('<button type="button"'), entry.slug).toBe(true);

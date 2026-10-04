@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Page not found',
 };
 
-/** 'SCVAL, BVAL, PCAL and MCAL', from the config (never a literal list). */
+/** 'SCVAL, BVAL, PCAL, MCAL and EAL', from the config (never a literal list). */
 const LEAGUE_LIST = LEAGUES.map((l) => l.shortName).reduce(
   (acc, name, i, all) => (i === 0 ? name : `${acc}${i === all.length - 1 ? ' and ' : ', '}${name}`),
   '',

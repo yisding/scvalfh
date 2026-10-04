@@ -35,12 +35,13 @@ function render(href: string, pathname: string): string {
 }
 
 describe('the league hrefs the bars hand to NavLink', () => {
-  it('Scores, Teams and Playoffs per league; MCAL’s Playoffs is its tournament page', () => {
+  it('Scores, Teams and Playoffs per league; MCAL’s Playoffs is its tournament page, EAL’s its card on /playoffs', () => {
     expect(HREFS['/schedule']).toEqual({
       scval: '/schedule/scval',
       bval: '/schedule/bval',
       pcal: '/schedule/pcal',
       mcal: '/schedule/mcal',
+      eal: '/schedule/eal',
     });
     // Teams took over the Table tab's job (DESIGN §18): your league's tables, on /teams.
     expect(HREFS['/teams']).toEqual({
@@ -48,12 +49,15 @@ describe('the league hrefs the bars hand to NavLink', () => {
       bval: '/teams#bval',
       pcal: '/teams#pcal',
       mcal: '/teams#mcal',
+      eal: '/teams#eal',
     });
     expect(HREFS['/playoffs']).toEqual({
       scval: '/playoffs#scval',
       bval: '/playoffs#bval',
       pcal: '/playoffs#pcal',
       mcal: '/playoffs/mcal',
+      // No bracket and no /playoffs/eal page: the EAL's pointer card on the CCS page.
+      eal: '/playoffs#eal',
     });
     expect(HREFS['/standings']).toBeUndefined();
     expect(HREFS['/leaders']).toBeUndefined();

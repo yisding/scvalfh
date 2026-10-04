@@ -48,7 +48,7 @@ beforeAll(async () => {
 
 describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {
-    expect(data.panels.map((p) => p.id), `${HD}: panels`).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(data.panels.map((p) => p.id), `${HD}: panels`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     for (const p of data.panels) {
       const html = renderPanel(p.id);
       expect(html, `components/home/LeaguePanel.tsx: ${p.id} scope`).toContain(`data-scope="${p.id}"`);
@@ -72,6 +72,29 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
       expect(mcal.postseason.link.href).toBe('/playoffs/mcal');
     }
     expect(renderPanel('mcal'), 'components/home/PostseasonCard.tsx: MCAL has no meter').not.toContain('sx-meter');
+  });
+
+  it('the EAL panel: the Super Regional line and note, no meter, no bracket and no CCS concept', () => {
+    const eal = data.panels.find((p) => p.id === 'eal')!;
+    const config = leagues.getLeague('eal');
+    expect(eal.postseason.kind, `${HD}: EAL postseason`).toBe('unbracketed-tournament');
+    if (eal.postseason.kind === 'unbracketed-tournament' && config.postseason.kind === 'unbracketed-tournament') {
+      expect(eal.postseason.line, `${HD}: EAL postseason line`).toBe('Super Regional, Oct 30–31 — the top six qualify');
+      expect(eal.postseason.note, `${HD}: EAL postseason note`).toBe(config.postseason.note);
+      expect(eal.postseason.link, `${HD}: EAL postseason link`).toEqual({ href: '/playoffs#eal', label: 'Postseason' });
+    }
+    expect(eal.afterSchedule, `${HD}: EAL afterSchedule`).toEqual({ href: '/playoffs#eal', label: 'Super Regional' });
+    const html = renderPanel('eal');
+    const text = textOf(html);
+    expect(text, 'components/home/PostseasonCard.tsx: EAL kicker').toContain('Postseason');
+    expect(text, 'components/home/PostseasonCard.tsx: EAL line').toContain('Super Regional, Oct 30–31 — the top six qualify');
+    expect(text, 'components/home/PostseasonCard.tsx: EAL link').toContain('Postseason →');
+    expect(html, 'components/home/PostseasonCard.tsx: EAL link href').toContain('href="/playoffs#eal"');
+    expect(html, 'components/home/PostseasonCard.tsx: EAL has no meter').not.toContain('sx-meter');
+    expect(html, 'components/home/PostseasonCard.tsx: EAL has no bracket page').not.toContain('href="/playoffs/eal"');
+    expect(text, `${HD}: EAL panel`).not.toMatch(/\bCCS\b/);
+    expect(text, `${HD}: EAL panel`).not.toMatch(/automatic qualifier/i);
+    expect(text, `${HD}: EAL panel`).not.toMatch(/at-large/i);
   });
 
   it('the CCS leagues show their berth sentence and CCS dates', () => {
@@ -116,6 +139,7 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
       'santa-teresa': { rows: 3, line: 'Play-in host' },
       pcal: { rows: 7, line: 'AQ line' },
       'marin-county': { rows: 7, line: 'Tournament line' },
+      eal: { rows: 6, line: null },
     };
     for (const panel of data.panels) {
       for (const division of panel.divisions) {
@@ -134,6 +158,11 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
         expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBe(miniShownCount(division.rows, want.rows));
         expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
         if (want.line) expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} line`).toContain(want.line);
+        // No line configured (the EAL: `lineAfter` null): no labelled separator row at all.
+        if (!want.line) expect(division.home.lineLabel, `${HD}: ${division.id} no line label`).toBeNull();
+        if (division.home.lineAfter === null) {
+          expect(html, `components/home/MiniStandings.tsx: ${division.id} no line`).not.toContain('border-t-2');
+        }
         expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
         expect(division.href, `${HD}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
       }
@@ -169,7 +198,7 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     const bval = data.panels.find((p) => p.id === 'bval')!;
     const scval = data.panels.find((p) => p.id === 'scval')!;
     const line = (panel: typeof bval, id: string) => panel.others.find((o) => o.id === id)?.text;
-    expect(bval.others.map((o) => o.id), `${HD}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal']);
+    expect(bval.others.map((o) => o.id), `${HD}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
     expect(line(bval, 'scval'), `${HD}: strip SCVAL`).toBe('St Francis leads De Anza · Mitty leads El Camino');
     expect(line(scval, 'bval'), `${HD}: strip BVAL`).toBe(
       'Christopher leads Mt. Hamilton · Prospect & Westmont lead Santa Teresa',
@@ -204,13 +233,22 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     expect(lead('mcal', 'complete', '2026-11-20')?.link).toBeNull();
     expect(lead('scval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#scval');
     expect(lead('bval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#bval');
+    // The EAL: no bracket, so the tournament phase says what is (and is not) published, and the
+    // CCS-ladder 'playoffs' copy never reaches it.
+    expect(lead('eal', 'tournament', '2026-10-30'), `${HD}: EAL tournament`).toEqual({
+      lead: 'The Super Regional is Oct 30–31; its format and site are not published yet.',
+      body: '',
+      link: { href: '/playoffs#eal', label: 'Postseason' },
+    });
+    expect(lead('eal', 'playoffs', '2026-11-03'), `${HD}: EAL never gets the CCS copy`).toBeNull();
+    expect(lead('eal', 'complete', '2026-11-20')?.link, `${HD}: no last-season link: EAL history is unavailable`).toBeNull();
   });
 });
 
 describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
   it('has a card per league with its facts and both ways on', async () => {
     const { LeagueCard } = await import('../../components/home/LeagueCard');
-    expect(data.leagueCards.map((c) => c.id), `${HD}: cards`).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(data.leagueCards.map((c) => c.id), `${HD}: cards`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const bval = data.leagueCards.find((c) => c.id === 'bval')!;
     expect(bval, `${HD}: BVAL card`).toMatchObject({
       shortName: 'BVAL',
@@ -221,6 +259,13 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
     });
     expect(data.leagueCards.find((c) => c.id === 'pcal')?.divisions, `${HD}: PCAL card`).toEqual([]);
     expect(data.leagueCards.find((c) => c.id === 'mcal')?.sectionShort, `${HD}: MCAL card`).toBe('NCS');
+    expect(data.leagueCards.find((c) => c.id === 'eal'), `${HD}: EAL card`).toMatchObject({
+      shortName: 'EAL',
+      name: 'Eastern Athletic League',
+      sectionShort: 'NS',
+      teamsLine: '6 teams',
+      divisions: [],
+    });
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
       expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${card.shortName} here`);
@@ -230,11 +275,20 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
       );
     }
   });
+
+  it('the last card of an odd count spans both columns (five cards: 2 + 2 + 1)', () => {
+    const cards = [...pageHtml.matchAll(/<li class="sx-card flex[^"]*"/g)].map((m) => m[0]);
+    expect(cards, 'app/page.tsx: one card per league').toHaveLength(data.leagueCards.length);
+    expect(data.leagueCards.length % 2, `${HD}: an odd count`).toBe(1);
+    cards.forEach((card, i) => {
+      expect(card.includes('min-[390px]:col-span-2'), `app/page.tsx: card ${i + 1} spans`).toBe(i === cards.length - 1);
+    });
+  });
 });
 
 describe('the rendered home page (app/page.tsx)', () => {
   it('has one data-scope section per league, a first-visit block and the always-on chrome', () => {
-    for (const id of ['scval', 'bval', 'pcal', 'mcal']) {
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) {
       expect(pageHtml.split(`<section data-scope="${id}"`).length - 1, `app/page.tsx: ${id} panel`).toBe(1);
     }
     expect(pageHtml, 'components/home/FindYourTeam.tsx: first-visit block').toMatch(
@@ -244,7 +298,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     expect(pageHtml, 'app/page.tsx: My-team slot').toMatch(/<section data-scope="all" class="sx-myteam-slot[^"]*" aria-labelledby="my-team-heading"/);
     expect(pageHtml, 'app/page.tsx: h1').toContain('NorCal field hockey');
     expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
-      /Results through \w{3} \w{3} \d{1,2} · 43 teams · SCVAL · BVAL · PCAL · MCAL/,
+      /Results through \w{3} \w{3} \d{1,2} · 49 teams · SCVAL · BVAL · PCAL · MCAL · EAL/,
     );
   });
 
@@ -252,7 +306,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     const ids = [...pageHtml.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
     expect(dupes, 'app/page.tsx: duplicate ids').toEqual([]);
-    for (const id of ['my-team-heading', 'find-your-team', 'league-scval', 'league-bval', 'league-pcal', 'league-mcal']) {
+    for (const id of ['my-team-heading', 'find-your-team', 'league-scval', 'league-bval', 'league-pcal', 'league-mcal', 'league-eal']) {
       expect(ids, `app/page.tsx: #${id}`).toContain(id);
     }
   });
@@ -272,16 +326,16 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
 
   it('joins every view to exactly one search-index entry, and ships no identity of its own', () => {
     const slugs = data.teamViews.map((v) => v.slug);
-    expect(new Set(slugs).size, `${HD}: one view per team`).toBe(43);
+    expect(new Set(slugs).size, `${HD}: one view per team`).toBe(49);
     expect([...slugs].sort(), `${HD}: views ↔ search index`).toEqual(data.searchIndex.teams.map((t) => t.slug).sort());
     for (const v of data.teamViews) {
       expect(Object.hasOwn(v, 'team'), `${HD}: ${v.slug} carries no second copy of the identity`).toBe(false);
     }
   });
 
-  it('has a view for all 43 teams with the meta, played and postseason lines', async () => {
+  it('has a view for all 49 teams with the meta, played and postseason lines', async () => {
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
-    expect(data.teamViews, `${HD}: team views`).toHaveLength(43);
+    expect(data.teamViews, `${HD}: team views`).toHaveLength(49);
     const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
     expect(leigh.meta, `${HD}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
     expect(leigh.played, `${HD}: played`).toBe('3 of 10 played');

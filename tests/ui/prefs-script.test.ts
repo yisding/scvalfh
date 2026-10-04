@@ -48,8 +48,8 @@ const bvalSlug = TEAMS.find((t) => t.league === 'bval')!.slug;
 const mcalSlug = TEAMS.find((t) => t.league === 'mcal')!.slug;
 
 describe('buildPrefsScript', () => {
-  it('stays within 2 KB including the 43-entry slug map', () => {
-    expect(TEAMS.length).toBe(43);
+  it('stays within 2 KB including the 49-entry slug map', () => {
+    expect(TEAMS.length).toBe(49);
     expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(2048);
   });
 

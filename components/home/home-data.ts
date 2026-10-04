@@ -8,7 +8,7 @@
  *
  * The page carries EVERY league's panel in its static HTML; which one shows is decided before first
  * paint by `<html data-league>` and the scope stylesheet (SPEC §8.2). So every view below is built
- * for all four leagues, and all 43 pinned-card views are serialized for the client (the pin, and
+ * for all five leagues, and all 49 pinned-card views are serialized for the client (the pin, and
  * therefore the league, is known only in the browser). Budget: serialized `teamViews` ≤ 60 KB
  * (tests/ui/home-weight.test.ts) — each view is a handful of strings, never a `Game`.
  */
@@ -37,8 +37,10 @@ import {
 } from '../../lib/data';
 import {
   EM_DASH,
+  dateSpan,
   dateTimeAttr,
   monthDay,
+  numberWord,
   ordinal,
   recordString,
   shortDate,
@@ -54,6 +56,7 @@ import {
   sectionOf,
   type DivisionConfig,
   type LeagueConfig,
+  type PostseasonConfig,
 } from '../../lib/leagues';
 import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
@@ -79,12 +82,6 @@ import { POSTSEASON_LEAD } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-
-function numberWord(n: number): string {
-  return NUMBER_WORDS[n] ?? String(n);
 }
 
 /** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
@@ -314,7 +311,18 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     };
   }
 
-  if (phase === 'playoffs') {
+  if (phase === 'tournament' && ps.kind === 'unbracketed-tournament') {
+    // No bracket and no page of its own: the dates and what is not published yet, linking to the
+    // league's pointer card on /playoffs.
+    return {
+      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
+      body: '',
+      link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
+    };
+  }
+
+  // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
+  if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
     if (today < keyDates.quarterfinals) {
       return {
         lead: `${short} league play is over.`,
@@ -437,30 +445,65 @@ export type PostseasonView =
       /** The section's no-championship note (NCS). */
       note: string | null;
       link: { href: string; label: string };
+    }
+  | {
+      kind: 'unbracketed-tournament';
+      leagueId: LeagueId;
+      /** 'Super Regional, Oct 30–31 — the top six qualify' */
+      line: string;
+      /** The config's postseason note: format, seeding and site not published, no further path. */
+      note: string;
+      link: { href: string; label: string };
     };
 
 function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: string | null): PostseasonView {
   const ps = league.postseason;
-  const short = league.shortName;
-  if (ps.kind === 'league-tournament') {
-    const round = (id: string) => ps.rounds.find((r) => r.id === id);
-    const qf = round('qf-1');
-    const sf = round('sf-1');
-    const final = round('final');
-    const playIn = round('play-in');
-    const parts = [ps.name];
-    if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
-    if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
-    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
-    return {
-      kind: 'league-tournament',
-      leagueId: league.id,
-      line: parts.join(' · '),
-      note: sectionNote,
-      link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
-    };
+  switch (ps.kind) {
+    case 'league-tournament':
+      return leagueTournamentView(league, ps, sectionNote);
+    case 'unbracketed-tournament':
+      // No bracket, no rounds and no CCS dates: the event, its dates and the written qualifier count.
+      return {
+        kind: 'unbracketed-tournament',
+        leagueId: league.id,
+        line: `${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)} — the top ${numberWord(ps.qualifiers)} qualify`,
+        note: ps.note,
+        link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
+      };
+    case 'ccs-ladder':
+      return ccsLadderView(league, ps, phase);
   }
+}
 
+function leagueTournamentView(
+  league: LeagueConfig,
+  ps: Extract<PostseasonConfig, { kind: 'league-tournament' }>,
+  sectionNote: string | null,
+): PostseasonView {
+  const round = (id: string) => ps.rounds.find((r) => r.id === id);
+  const qf = round('qf-1');
+  const sf = round('sf-1');
+  const final = round('final');
+  const playIn = round('play-in');
+  const parts = [ps.name];
+  if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
+  if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
+  if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+  return {
+    kind: 'league-tournament',
+    leagueId: league.id,
+    line: parts.join(' · '),
+    note: sectionNote,
+    link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
+  };
+}
+
+function ccsLadderView(
+  league: LeagueConfig,
+  ps: Extract<PostseasonConfig, { kind: 'ccs-ladder' }>,
+  phase: SeasonPhase,
+): PostseasonView {
+  const short = league.shortName;
   const total = CCS.autoQualifiers.total;
   const aqRung = ps.ladder.find((r) => r.status === 'aq');
   const aqTop = aqRung ? aqRung.places[1] : 0;
@@ -631,11 +674,21 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
         href: `/standings/${s.id}`,
         text: leagueLeadersLine(getLeague(s.id)),
       })),
-    afterSchedule:
-      league.postseason.kind === 'league-tournament'
-        ? { href: `/playoffs/${league.id}`, label: league.postseason.name }
-        : { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
+    afterSchedule: afterScheduleOf(league),
   };
+}
+
+/** Where an empty "Next" block points: the league's own postseason page or card. */
+function afterScheduleOf(league: LeagueConfig): HomeLeaguePanel['afterSchedule'] {
+  const ps = league.postseason;
+  switch (ps.kind) {
+    case 'league-tournament':
+      return { href: `/playoffs/${league.id}`, label: ps.name };
+    case 'unbracketed-tournament':
+      return { href: `/playoffs#${league.id}`, label: ps.name };
+    case 'ccs-ladder':
+      return { href: `/playoffs#${league.id}`, label: 'CCS playoffs' };
+  }
 }
 
 // ---------------------------------------------------------------- my-team views
@@ -720,6 +773,9 @@ function officialNextView(team: Team, today: string, leagueShort: string): HomeO
     .filter((f) => f.dateKey >= today)
     .sort((a, b) => a.dateKey.localeCompare(b.dateKey))[0];
   if (!fixture) return null;
+  // A division with no official document has no fixtures; narrowing keeps the link honest anyway.
+  const official = getDivision(fixture.division).official;
+  if (official.mode === 'none') return null;
   const mineIsHome = fixture.homeSlug === team.slug;
   const otherSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
   const otherName = mineIsHome ? fixture.awayName : fixture.homeName;
@@ -729,15 +785,15 @@ function officialNextView(team: Team, today: string, leagueShort: string): HomeO
     versus: mineIsHome ? 'vs' : 'at',
     opponent: (otherSlug ? getTeamBySlug(otherSlug)?.shortName : null) ?? titleCase(otherName),
     leagueShort,
-    scheduleUrl: getDivision(fixture.division).official.scheduleUrl,
+    scheduleUrl: official.scheduleUrl,
   };
 }
 
 const LATER_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['preseason', 'regular']);
 
 /**
- * All 43 teams, pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the server
- * cannot know which one is wanted; shipping all 43 compact views is the cost of the feature.
+ * Every team (49), pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the
+ * server cannot know which one is wanted; shipping every compact view is the cost of the feature.
  */
 export function buildTeamViews(): HomeTeamView[] {
   const today = getToday();
@@ -838,7 +894,7 @@ export interface HomeStatus {
 export interface HomeData {
   today: string;
   status: HomeStatus;
-  /** All 43, for the My-team slot. */
+  /** Every team (49), for the My-team slot. */
   teamViews: HomeTeamView[];
   searchIndex: SearchIndex;
   leagueChips: LeagueChip[];

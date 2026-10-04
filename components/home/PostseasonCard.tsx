@@ -17,6 +17,10 @@ import type { PostseasonView } from './home-data';
  * - A league tournament (MCAL, North Coast Section): NO meter and no CCS date or word at all — the
  *   NCS holds no field hockey championship. One line of rounds and dates, the section's note and
  *   `Bracket →` to /playoffs/<league>.
+ * - An unbracketed tournament (EAL, Northern Section): no meter, no bracket and no CCS date or
+ *   word. The event and its dates with the written qualifier count (`Super Regional, Oct 30–31 —
+ *   the top six qualify`), the config's note (format, seeding and site not published, no NorCal or
+ *   State path) and `Postseason →` to the league's card on /playoffs.
  */
 export interface PostseasonCardProps {
   view: PostseasonView;
@@ -26,7 +30,7 @@ export interface PostseasonCardProps {
 const LINK = 'text-accent hover:underline';
 
 export function PostseasonCard({ view, className }: PostseasonCardProps) {
-  if (view.kind === 'league-tournament') {
+  if (view.kind === 'league-tournament' || view.kind === 'unbracketed-tournament') {
     return (
       <section className={className}>
         <SectionHeader as="h3" kicker="Postseason" />
