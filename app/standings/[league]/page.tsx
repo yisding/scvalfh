@@ -19,7 +19,8 @@ import { getStandingsPageData, leagueChips, leaderClause, leagueHrefs } from '..
  *
  * Every division of the league lives on ONE page with a `#<division>` anchor each
  * (`/standings/scval#de-anza`, `/standings/bval#santa-teresa`); a single-division league has its
- * one table under `id=<division>` and no division picker or label. The page's job is comparison,
+ * one table under `id=<division>` and no division picker or label. A league whose schools are not all
+ * in its section (the EAL) prints its membership note under the header. The page's job is comparison,
  * and anchors work with JavaScript off and are shareable (DESIGN §1.2).
  *
  * Multi-division leagues keep today's sticky division bar under the 48px top bar, so the page sets
@@ -97,6 +98,10 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
         aside={multi ? <DivisionTabs variant="inline" tabs={tabs} /> : undefined}
         asideClassName={multi ? 'hidden md:block' : undefined}
       />
+      {/* Only where the league's schools are not all in its section (EAL: two Sac-Joaquin schools). */}
+      {data.membershipNote ? (
+        <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{data.membershipNote}</p>
+      ) : null}
 
       <LeagueSwitcher
         mode="link"

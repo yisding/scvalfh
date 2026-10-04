@@ -1,0 +1,276 @@
+/**
+ * The league pages on the EAL corpus (spec D5, D8, D9, D21, D23, D26): `/standings/eal`, the
+ * `/standings` EAL block, `/schedule/eal`, the EAL parts of `/about` (its source card, its generated
+ * rules, its health card, the Postseason paragraph) and `/history/2025-26#eal`.
+ *
+ * The EAL publishes no schedule document (`official.mode: 'none'`), decides its title on points and
+ * ranks no table (`orderScope: 'title'`), and its postseason is the Super Regional, an unbracketed
+ * tournament: no ladder line, no bracket, no seeding. These tests run on the EAL corpus (where the
+ * EAL has data, including two league games past their date with no score), loaded by pointing
+ * SCVAL_SNAPSHOT at it BEFORE lib/data is imported. Every expected number is read from the snapshot
+ * or from config; every assertion message names the module that produced the value.
+ */
+
+import { createElement, type ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+
+import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+import { textOf } from './html-text';
+
+type Data = typeof import('../../lib/data');
+type Leagues = typeof import('../../lib/leagues');
+type StandingsData = typeof import('../../app/standings/standings-data');
+type View = typeof import('../../components/standings/standings-view');
+
+const LEAGUE = 'eal';
+const priorEnv = process.env.SCVAL_SNAPSHOT;
+let data: Data;
+let leagues: Leagues;
+let sd: StandingsData;
+let view: View;
+let standingsHtml: string;
+let overviewHtml: string;
+let scheduleHtml: string;
+let aboutHtml: string;
+let historyHtml: string;
+
+/** CCS concepts and seed words no EAL view may carry (spec D21, D10). */
+const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i;
+
+/** The inner HTML of the first element carrying `id`, up to its matching close tag. */
+function byId(html: string, id: string): string {
+  const open = new RegExp(`<(\\w+)[^>]*\\sid="${id}"[^>]*>`).exec(html);
+  if (!open) return '';
+  const tag = open[1];
+  let depth = 1;
+  const re = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'g');
+  re.lastIndex = open.index + open[0].length;
+  for (let m = re.exec(html); m; m = re.exec(html)) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return html.slice(open.index + open[0].length, m.index);
+  }
+  return '';
+}
+
+/** The `<section aria-labelledby="<id>">` block (a heading carries the id, the section names it). */
+function sectionLabelledBy(html: string, id: string): string {
+  const at = html.search(new RegExp(`<section[^>]*\\saria-labelledby="${id}"`));
+  return at < 0 ? '' : byId(`${html.slice(0, at)}<section id="__probe__"${html.slice(at + '<section'.length)}`, '__probe__');
+}
+
+beforeAll(async () => {
+  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(EAL_CORPUS);
+  vi.resetModules();
+  data = await import('../../lib/data');
+  leagues = await import('../../lib/leagues');
+  sd = await import('../../app/standings/standings-data');
+  view = await import('../../components/standings/standings-view');
+  const leagueStandings = (await import('../../app/standings/[league]/page')).default;
+  const overview = (await import('../../app/standings/page')).default;
+  const leagueSchedule = (await import('../../app/schedule/[league]/page')).default;
+  const about = (await import('../../app/about/page')).default;
+  const history = (await import('../../app/history/2025-26/page')).default;
+  const params = { params: Promise.resolve({ league: LEAGUE }) } as never;
+  standingsHtml = renderToStaticMarkup((await leagueStandings(params)) as ReactElement);
+  overviewHtml = renderToStaticMarkup(createElement(overview));
+  scheduleHtml = renderToStaticMarkup((await leagueSchedule(params)) as ReactElement);
+  aboutHtml = renderToStaticMarkup(createElement(about));
+  historyHtml = renderToStaticMarkup(createElement(history));
+}, 600_000);
+
+afterAll(() => {
+  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
+  else process.env.SCVAL_SNAPSHOT = priorEnv;
+  vi.resetModules();
+});
+
+describe('/standings/eal', () => {
+  it('prints the membership note under the header, from config', () => {
+    const note = leagues.getLeague(LEAGUE).membershipNote!;
+    expect(note).toBeTruthy();
+    expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx membershipNote').toContain(note);
+    expect(sd.getStandingsPageData(LEAGUE).membershipNote).toBe(note);
+  });
+
+  it('links no official schedule and says where its league games come from', () => {
+    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    expect(v.officialSchedule, 'components/standings/standings-view.ts officialSchedule').toBeNull();
+    expect(v.scheduledPer).toBe('League games as MaxPreps marks them (EAL publishes no schedule)');
+    const text = textOf(standingsHtml);
+    expect(text, 'components/standings/StandingsNotes.tsx source line').toContain(
+      'League games as MaxPreps marks them (EAL publishes no schedule).',
+    );
+    expect(text, 'components/standings/StandingsNotes.tsx').not.toMatch(/Official schedule|Scheduled per EAL/);
+  });
+
+  it('words the rank rule and the order legend for a league that ranks no table (D26)', () => {
+    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    expect(v.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
+      'EAL decides its title on points (NS Guidelines §VII.C.2) and ranks no table; this site orders the whole table by the same points.',
+    );
+    expect(v.legendNotes, 'components/standings/standings-view.ts legend').toContain(
+      'This order is our computation from published results, not a league ruling: EAL publishes no table, only a champion decided on points.',
+    );
+    expect(textOf(standingsHtml)).not.toContain('the official tiebreak belongs to EAL');
+    expect(view.rankRuleText(leagues.getLeague('mcal')), 'table-scope leagues unchanged').toBe(
+      'MCAL ranks by points (MCAL Handbook §7a), and so do we.',
+    );
+  });
+
+  it('heads the band "Super Regional, as things stand", links the /playoffs card, and draws no 2px rule', () => {
+    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    expect(v.statusHeading, 'components/standings/standings-view.ts statusHeading').toBe('Super Regional, as things stand');
+    expect(v.playoffsHref).toBe(`/playoffs#${LEAGUE}`);
+    expect(v.playoffsLinkText).toBe('Postseason');
+    expect(v.berthRuleAfter, 'no ladder line: every team is in the top six').toBeUndefined();
+    expect(v.ladderLineLabel).toBeNull();
+    const ps = leagues.getLeague(LEAGUE).postseason;
+    if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
+    expect(v.legendNotes[0], 'components/standings/standings-view.ts legend').toBe(`${ps.citations.qualification}.`);
+    const text = textOf(standingsHtml);
+    expect(text, 'components/standings/PlayoffStatusBand.tsx').toContain('Super Regional, as things stand');
+    expect(standingsHtml).toContain(`href="/playoffs#${LEAGUE}"`);
+    expect(text, 'app/standings/[league]/page.tsx legend').not.toMatch(/2px rule|heavier line/);
+  });
+
+  it('lists every league game past its date with no counted result, in words that never say "official" (D23)', () => {
+    const today = data.getToday();
+    const expected = data
+      .getGames({ division: LEAGUE })
+      .filter(
+        (g) =>
+          g.countsFor === LEAGUE &&
+          g.dateKey < today &&
+          (g.status === 'scheduled' || g.status === 'live' || g.status === 'score-pending'),
+      )
+      .map((g) => g.contestId)
+      .sort();
+    const rows = data.getMissingOfficialResults(LEAGUE).filter((r) => r.kind === 'missing');
+    expect(rows.map((r) => r.game?.contestId).sort(), 'lib/data.ts getMissingOfficialResults(eal)').toEqual(expected);
+    expect(expected.length, 'the EAL corpus has league games past their date with no score').toBeGreaterThan(0);
+
+    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    expect(v.missing).toHaveLength(expected.length);
+    expect(v.missingBanner, 'components/standings/standings-view.ts missingBanner').toBe(
+      expected.length === 1
+        ? '⚑ 1 league result missing — listed below the table.'
+        : `⚑ ${expected.length} league results missing — listed below the table.`,
+    );
+    expect(v.missingIntro).toBe(
+      'Marked by MaxPreps as EAL league games, dated before today, with no counted result yet:',
+    );
+    const text = textOf(standingsHtml);
+    expect(text).toContain(v.missingBanner!.replace(/^⚑\s*/, ''));
+    expect(text).toContain(v.missingIntro);
+    for (const row of v.missing) expect(text).toContain(row.matchup);
+    const notes = textOf(byId(standingsHtml, `missing-${LEAGUE}`));
+    expect(notes, 'components/standings/StandingsNotes.tsx missing list').not.toBe('');
+    expect(`${v.missingBanner} ${notes}`.toLowerCase()).not.toContain('official');
+  });
+
+  it('keeps the wording for a league with a schedule document', () => {
+    expect(view.missingBannerText(1)).toBe('⚑ 1 official league result missing — listed below the table.');
+    expect(view.missingBannerText(2, { official: false })).toBe('⚑ 2 league results missing — listed below the table.');
+  });
+
+  it('carries no CCS concept and no seed word', () => {
+    expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx eal').not.toMatch(BANNED);
+  });
+});
+
+describe('/standings, the EAL block', () => {
+  it('sits under the Northern Section with its membership note', () => {
+    const outline = [...overviewHtml.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h\1>/g)].map(
+      (m) => `h${m[1]} ${textOf(m[2]).trim()}`,
+    );
+    expect(outline.slice(-2), 'app/standings/page.tsx outline').toEqual(['h2 Northern Section', 'h3 EAL — Eastern Athletic League']);
+    const block = textOf(sectionLabelledBy(overviewHtml, 'ns'));
+    expect(block, 'app/standings/page.tsx EAL block').toContain(leagues.getLeague(LEAGUE).membershipNote!);
+    // No ladder line in the compact table (ladderLine null).
+    expect(block).not.toMatch(/\bline\b/i);
+    // Only the EAL carries a membership note.
+    for (const id of ['ccs', 'ncs']) {
+      const other = textOf(sectionLabelledBy(overviewHtml, id));
+      expect(other).not.toBe('');
+      expect(other).not.toContain('Sac-Joaquin');
+    }
+  });
+});
+
+describe('/schedule/eal', () => {
+  it('ends the rail with the Super Regional chip, never a CCS one', () => {
+    expect(scheduleHtml, 'components/schedule/TimelineRail.tsx').toContain(`href="/playoffs#${LEAGUE}"`);
+    const text = textOf(scheduleHtml);
+    expect(text).toContain('Super Regional Oct 30–31');
+    expect(scheduleHtml).toContain('Super Regional, Oct 30 to 31');
+    expect(text, 'app/schedule/[league]/page.tsx eal').not.toMatch(BANNED);
+  });
+});
+
+describe('/about, the EAL parts', () => {
+  const rules = () => byId(aboutHtml, `rules-${LEAGUE}`);
+
+  it('lists the five postseason citations, the note and the counts sentence in the generated rules', () => {
+    const ps = leagues.getLeague(LEAGUE).postseason;
+    if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
+    const text = textOf(rules());
+    for (const key of ['qualification', 'format', 'seeding', 'eligibility', 'noFurtherPath'] as const) {
+      expect(text, `app/about/page.tsx postseason ${key}`).toContain(`${ps.citations[key]}.`);
+    }
+    expect(text, 'app/about/page.tsx postseason note').toContain(ps.note);
+    expect(text, 'app/about/page.tsx counts').toContain(
+      'A game counts when MaxPreps marks it a league game and both teams belong to the same league; MaxPreps’ tournament and postseason games never count. Games between two EAL teams on or after Fri Oct 30 are Super Regional games.',
+    );
+    expect(text).not.toMatch(BANNED);
+  });
+
+  it('gives the EAL a source card with the Guidelines, its official note and its membership note, and no schedule link', () => {
+    const text = textOf(aboutHtml);
+    const division = leagues.getDivision(LEAGUE);
+    if (division.official.mode !== 'none') throw new Error('EAL official mode');
+    expect(text, 'app/about/page.tsx source card').toContain(
+      `The rules quoted under EAL rules come from the CIF Northern Section’s Field Hockey Guidelines 2026-28. ${division.official.note} ${leagues.getLeague(LEAGUE).membershipNote}`,
+    );
+    expect(text).not.toMatch(/EAL schedule \((PDF|Google Doc)\)/);
+    expect(text, 'app/about/page.tsx CIF Northern Section card').toContain(
+      'CIF Northern Section Rules & postseason dates',
+    );
+    const ps = leagues.getLeague(LEAGUE).postseason;
+    if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
+    expect(textOf(byId(aboutHtml, 'playoffs')), 'app/about/page.tsx Postseason').toContain(
+      `Northern Section: ${ps.note} Northern Section Field Hockey Guidelines (PDF)`,
+    );
+    expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all five leagues/);
+  });
+
+  it('shows "No official schedule document." and the D23 Missing row on the EAL health card', () => {
+    const card = /<article[^>]*aria-label="EAL data health"[^>]*>([\s\S]*?)<\/article>/.exec(aboutHtml)?.[1] ?? '';
+    const text = textOf(card);
+    const division = leagues.getDivision(LEAGUE);
+    if (division.official.mode !== 'none') throw new Error('EAL official mode');
+    expect(text, 'components/about/LeagueHealthCard.tsx').toContain(`No official schedule document. ${division.official.note}`);
+    const missing = data
+      .getLeagueHealth(LEAGUE)
+      .divisions.reduce((n, d) => n + (d.official?.missingPast ?? d.missingLeaguePast ?? 0), 0);
+    expect(missing, 'the EAL corpus health row counts the past league games with no score').toBeGreaterThan(0);
+    expect(text, 'components/about/LeagueHealthCard.tsx Missing').toContain(
+      `${missing} ${missing === 1 ? 'league result' : 'league results'} past their date with no counted result`,
+    );
+    expect(text).not.toMatch(/official league result|EAL schedule \(/);
+  });
+});
+
+describe('/history/2025-26#eal', () => {
+  it('renders the EAL as unavailable, with its reason and no claim of a league site', async () => {
+    const { getHistorySeason } = await import('../../lib/history');
+    expect(getHistorySeason()).toBe('2025-26');
+    const section = byId(historyHtml, LEAGUE);
+    const text = textOf(section);
+    expect(text, 'app/history/2025-26/page.tsx #eal').toContain('Unavailable');
+    expect(text).toContain('The EAL published no 2025-26 final standings of its own.');
+    expect(text).toContain('its section’s field hockey page is cifns.org/sports/fh/index');
+    expect(text).not.toContain('its official site is');
+    expect(text).not.toMatch(BANNED);
+  });
+});

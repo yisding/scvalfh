@@ -15,13 +15,15 @@ import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from
  * a COMPACT full table (place, team, GP, W-L-T, PTS), grouped section → league → division.
  *
  * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
- * `#el-camino` are real elements here, as are `#ccs`/`#ncs` (sections), every league id and every
+ * `#el-camino` are real elements here, as are `#ccs`/`#ncs`/`#ns` (sections), every league id and every
  * division id. A single-division league whose division id equals its league id (PCAL) has ONE
  * element carrying the id; every id on the page is unique.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each
  * league an h3 → each division a plain h4 (omitted for a single-division league). Each table
- * links its league's full page, `/standings/<league>#<division>`.
+ * links its league's full page, `/standings/<league>#<division>`. A league whose schools are not all
+ * in its section (the EAL) carries its membership note under its h3. A division with no ladder line
+ * (the EAL) draws no rule in its compact table.
  *
  * No sticky table head, no GD bars, no form strips, no disclosures: this page is the light index.
  * Static: no search params, nothing derived from `Date.now()`.
@@ -77,6 +79,10 @@ export default function StandingsPage() {
           {section.leagues.map((league) => (
             <section key={league.id} aria-labelledby={league.id} className="mt-8">
               <SectionHeader as="h3" id={league.id} kicker={league.title} />
+              {/* Only where a league's schools are not all in the section it sits under (EAL). */}
+              {league.membershipNote ? (
+                <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{league.membershipNote}</p>
+              ) : null}
               {league.divisions.map((division) => (
                 <div key={division.division} id={division.anchorId ?? undefined} className="mt-6">
                   {division.heading ? (

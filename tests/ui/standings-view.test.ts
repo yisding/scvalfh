@@ -111,7 +111,7 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
 
 describe('single-division leagues have no division label', () => {
   it('kicker, caption and heading (view model)', () => {
-    for (const league of ['pcal', 'mcal']) {
+    for (const league of ['pcal', 'mcal', 'eal']) {
       const [v] = sd.getStandingsPageData(league).views;
       expect(v.heading, `components/standings/standings-view.ts ${league} heading`).toBeNull();
       expect(v.kicker, `components/standings/standings-view.ts ${league} kicker`).toBe('League table');
@@ -275,7 +275,7 @@ describe('the /standings overview', () => {
     const all = ids(html);
     const dupes = all.filter((id, i) => all.indexOf(id) !== i);
     expect(dupes, 'app/standings/page.tsx: duplicate ids').toEqual([]);
-    for (const id of ['ccs', 'ncs', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county']) {
+    for (const id of ['ccs', 'ncs', 'ns', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal']) {
       expect(all, `app/standings/page.tsx: #${id}`).toContain(id);
     }
   });
@@ -295,6 +295,8 @@ describe('the /standings overview', () => {
       'h3 PCAL — Pacific Coast Athletic League',
       'h2 North Coast Section',
       'h3 MCAL — Marin County Athletic League',
+      'h2 Northern Section',
+      'h3 EAL — Eastern Athletic League',
     ]);
     expect(html).toMatch(/<h4 class="m-0 mb-3 text-lead text-ink">/);
   });

@@ -101,13 +101,20 @@ describe('league scoping (/schedule/<league>)', () => {
     expect(scval, 'components/schedule/TimelineRail.tsx scval chip').toContain('href="/playoffs#scval"');
     // No article before the initialism ('a MCAL team' is wrong; 'an SCVAL team' reads oddly too).
     expect(textOf(mcal), 'app/schedule/[league]/page.tsx header').toContain('every contest involving MCAL teams');
-    expect(textOf(mcal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL)\b/);
+    expect(textOf(mcal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL|EAL)\b/);
+    // The EAL's Super Regional publishes no bracket: the chip goes to its card on /playoffs.
+    const eal = await renderLeague('eal');
+    expect(eal, 'components/schedule/TimelineRail.tsx eal chip').toContain('href="/playoffs#eal"');
+    expect(textOf(eal), 'components/schedule/TimelineRail.tsx eal chip').toContain('Super Regional Oct 30–31');
+    expect(eal, 'components/schedule/TimelineRail.tsx eal chip sr').toContain('Super Regional, Oct 30 to 31');
+    expect(textOf(eal)).not.toMatch(/CCS Nov|\bCCS\b/);
+    expect(textOf(eal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL|EAL)\b/);
   });
 });
 
 describe('ScheduleFilters props', () => {
   it('single-division leagues get no divisions and no division labels', () => {
-    for (const id of ['pcal', 'mcal']) {
+    for (const id of ['pcal', 'mcal', 'eal']) {
       const summary = data.getLeagueSummary(id)!;
       const props = server.scheduleFilterProps(summary, data.getTeams({ league: id }));
       expect(props.divisions, `components/schedule/filter-data-server.ts ${id}`).toEqual([]);

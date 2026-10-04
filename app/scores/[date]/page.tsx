@@ -173,9 +173,9 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
           <span aria-hidden="true" className="text-meta text-ink-3">
             Full season
           </span>
-          {/* The links wrap together, never one by one: four fit beside the label at 320
-              (tight padding and gap), and if a narrower screen or a wider font can't hold
-              them, they all drop under the label rather than stranding the last league. */}
+          {/* The links wrap together, never one by one (tight padding and gap): if the screen
+              or the font can't hold them all beside the label, they all drop under it rather
+              than stranding the last league. */}
           <span className="inline-flex items-center gap-x-0.5">
             {seasonLeagues.map((league) => (
               <a

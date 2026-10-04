@@ -7,7 +7,8 @@ import type { StatusGroup } from './standings-view';
 /**
  * The league ladder's markers AND their legend, in one block under each division's table
  * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
- * the CCS picture; for MCAL it is the MCAL tournament line, with no CCS concept at all.
+ * the CCS picture; for MCAL it is the MCAL tournament line, and for the EAL its Super Regional
+ * (linking the EAL card on /playoffs, since no bracket is published), with no CCS concept at all.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
@@ -38,9 +39,9 @@ import type { StatusGroup } from './standings-view';
  */
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
-  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand`. */
+  /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
   heading?: string;
-  /** `/playoffs#<league>` or `/playoffs/<league>`. */
+  /** `/playoffs#<league>` (a CCS league, or an unbracketed tournament's card) or `/playoffs/<league>`. */
   href?: string;
   linkText?: string;
   groups: StatusGroup[];

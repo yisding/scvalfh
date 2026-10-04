@@ -292,7 +292,7 @@ describe('row copy', () => {
 describe('/playoffs (rendered)', () => {
   it('has the league anchors, key dates and bracket anchors, each id once', () => {
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
-    for (const id of ['scval', 'bval', 'pcal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa']) {
+    for (const id of ['scval', 'bval', 'pcal', 'eal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa']) {
       expect(ids.filter((x) => x === id), `${PAGE}: #${id}`).toHaveLength(1);
     }
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
@@ -318,6 +318,26 @@ describe('/playoffs (rendered)', () => {
     expect(text, PAGE).toContain('Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.');
     expect(text, PAGE).toContain('AQ line');
     expect(text, PAGE).toContain('Play-in host');
+  });
+
+  it('carries the EAL card: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
+    const text = textOf(html);
+    expect(text, PAGE).toContain(
+      'Following an EAL team? The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+    );
+    expect(text, PAGE).toContain(
+      'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
+    );
+    expect(html, PAGE).toContain(
+      'href="https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf"',
+    );
+    // The chip and the jump link both land on the card, the one element with that id.
+    expect([...html.matchAll(/\sid="eal"/g)], `${PAGE}: #eal`).toHaveLength(1);
+    expect(html, PAGE).toContain('href="#eal"');
+    expect(html, PAGE).not.toContain('href="/playoffs/eal"');
+    // The card carries no CCS concept and no seed word.
+    const card = /<div[^>]*\sid="eal"[^>]*>([\s\S]*?)<\/div>/.exec(html)?.[1] ?? '';
+    expect(textOf(card), PAGE).not.toMatch(/\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i);
   });
 
   it('never writes "eliminated" or "Gabilan", and never renders a missing record as 0-0-0', () => {

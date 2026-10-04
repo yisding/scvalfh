@@ -15,7 +15,8 @@ import { officialScheduleLabel } from '../standings/standings-view';
  * if it has one — did not meet the site's backfill rule), and we do not invent a result for it.
  * Each row names its division through `divisionHeading()` (nothing for PCAL and MCAL), and the
  * league's official schedule(s) are linked from config, labelled by source (PDF / Google Doc),
- * because these rows are the league's claim, not ours.
+ * because these rows are the league's claim, not ours. A league that publishes no schedule (EAL,
+ * `official.mode: 'none'`) has no fixtures, so it renders nothing.
  *
  * Each row's status is "No result" once its day has passed and "Upcoming" before — never "not
  * reported", which on a future day page claimed a game that had not been played yet was missing a
@@ -46,11 +47,15 @@ function name(slug: string | null, fallback: string): string {
   return team ? team.name : fallback;
 }
 
-/** The league's official schedule documents, deduped by URL, labelled by division where there are several. */
+/**
+ * The league's official schedule documents, deduped by URL, labelled by division where there are
+ * several. A division with no document (`official.mode: 'none'`, the EAL) has none to link.
+ */
 function scheduleLinks(leagueId: LeagueId): Array<{ href: string; label: string }> {
   const league = getLeague(leagueId);
   const seen = new Map<string, { href: string; label: string }>();
   for (const d of league.divisions) {
+    if (d.official.mode === 'none') continue;
     const href = d.official.scheduleUrl;
     if (seen.has(href)) continue;
     const kind = officialScheduleLabel(d.official.source);
@@ -124,9 +129,11 @@ export function OfficialFixtures({
   showDate = true,
   className,
 }: OfficialFixturesProps) {
-  if (fixtures.length === 0) return null;
-  const short = getLeague(leagueId).shortName;
   const links = scheduleLinks(leagueId);
+  // A league with no schedule document (EAL) has no fixtures (the snapshot check rejects any), so
+  // there is nothing to say here.
+  if (fixtures.length === 0 || links.length === 0) return null;
+  const short = getLeague(leagueId).shortName;
   // Where the league publishes these rows: ends both the note and, after a lead, its follow-up.
   const schedules = (
     <>

@@ -10,6 +10,11 @@ import ExternalLink from '../ui/ExternalLink';
  * unchanged|revised`), counted results, official results still missing, and contests dropped on
  * purpose. The pipeline's reasons are plain sentences and render verbatim.
  *
+ * A division whose league publishes no schedule document (`official.mode: 'none'`, the EAL) says so
+ * (`No official schedule document.`) and prints the config's note on where its league games come
+ * from; its Missing row counts the past games MaxPreps marks as league games with no counted result
+ * (`missingLeaguePast`), in words that never say "official".
+ *
  * A server component with plain props: the page reads `getLeagueHealth()`, `getSources({ league })`
  * and `getDropped()` and hands the numbers down. No hue: the state is a word.
  */
@@ -20,13 +25,20 @@ export interface HealthDivision {
   /** MaxPreps league standings page. */
   maxprepsUrl: string;
   knownCause: string | null;
-  official: {
-    source: OfficialSourceId;
-    url: string;
-    /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
-    mode: 'live-pdf' | 'bundled';
-    revisedOn: string | null;
-  };
+  official:
+    | {
+        source: OfficialSourceId;
+        url: string;
+        /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
+        mode: 'live-pdf' | 'bundled';
+        revisedOn: string | null;
+      }
+    | {
+        /** The league publishes no schedule (EAL). */
+        mode: 'none';
+        /** `DivisionConfig.official.note`: where its league games come from instead. */
+        note: string;
+      };
 }
 
 export interface LeagueHealthCardProps {
@@ -59,16 +71,55 @@ function plural(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }
 
-/** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. */
+/** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. Only for a league that publishes one (not mode 'none'). */
 export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {
   return `${shortName} schedule (${source.endsWith('-docx') ? 'Google Doc' : 'PDF'})`;
+}
+
+type DocumentOfficial = Exclude<HealthDivision['official'], { mode: 'none' }>;
+
+/** The schedule document's line: its link, then what the last run read from it. */
+function OfficialLine({
+  shortName,
+  official: doc,
+  health: official,
+}: {
+  shortName: string;
+  official: DocumentOfficial;
+  health: NonNullable<LeagueHealth['divisions'][number]['official']> | null;
+}) {
+  return (
+    <p className="m-0 mt-1">
+      <ExternalLink href={doc.url}>{officialSourceLabel(shortName, doc.source)}</ExternalLink>
+      {official ? (
+        <>
+          {' '}
+          &middot; {plural(official.total, 'fixture', 'fixtures')} &middot; {official.matched} matched
+          &middot;{' '}
+          {doc.mode === 'live-pdf'
+            ? 'read live each run'
+            : official.revisedUpstream
+              ? `upstream revised${doc.revisedOn ? ` since our copy (${doc.revisedOn})` : ''}`
+              : 'upstream unchanged'}
+          {official.carried ? ' · carried from an earlier run' : ''}
+        </>
+      ) : (
+        ' · not read this run'
+      )}
+    </p>
+  );
 }
 
 export function LeagueHealthCard({ shortName, name, health, divisions, dropped, problems, className }: LeagueHealthCardProps) {
   const feeds = health.teamFeeds;
   const counted = health.divisions.reduce((n, d) => n + d.countedFinals, 0);
   const backfilled = health.divisions.reduce((n, d) => n + d.backfilled, 0);
-  const missing = health.divisions.reduce((n, d) => n + (d.official?.missingPast ?? 0), 0);
+  const missing = health.divisions.reduce((n, d) => n + (d.official?.missingPast ?? d.missingLeaguePast ?? 0), 0);
+  // Every division without a schedule document (EAL): nothing it lists is "official".
+  const noDocument = divisions.length > 0 && divisions.every((d) => d.official.mode === 'none');
+  const [one, many] = noDocument
+    ? ['league result', 'league results']
+    : ['official league result', 'official league results'];
   return (
     <article className={`sx-card flex flex-col p-5${className ? ` ${className}` : ''}`} aria-label={`${shortName} data health`}>
       <header>
@@ -100,8 +151,8 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
         <dt className="text-ink-3">Missing</dt>
         <dd className="m-0 text-ink-2">
           {missing === 0
-            ? 'No official league result is missing'
-            : `${plural(missing, 'official league result', 'official league results')} past their date with no counted result`}
+            ? `No ${one} is missing`
+            : `${plural(missing, one, many)} past their date with no counted result`}
         </dd>
 
         <dt className="text-ink-3">Dropped</dt>
@@ -128,24 +179,11 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
                 {h && h.reportedRows !== null ? ` (${plural(h.reportedRows, 'row', 'rows')})` : ''}.
               </p>
               {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
-              <p className="m-0 mt-1">
-                <ExternalLink href={d.official.url}>{officialSourceLabel(shortName, d.official.source)}</ExternalLink>
-                {official ? (
-                  <>
-                    {' '}
-                    &middot; {plural(official.total, 'fixture', 'fixtures')} &middot; {official.matched} matched
-                    &middot;{' '}
-                    {d.official.mode === 'live-pdf'
-                      ? 'read live each run'
-                      : official.revisedUpstream
-                        ? `upstream revised${d.official.revisedOn ? ` since our copy (${d.official.revisedOn})` : ''}`
-                        : 'upstream unchanged'}
-                    {official.carried ? ' · carried from an earlier run' : ''}
-                  </>
-                ) : (
-                  ' · not read this run'
-                )}
-              </p>
+              {d.official.mode === 'none' ? (
+                <p className="m-0 mt-1">No official schedule document. {d.official.note}</p>
+              ) : (
+                <OfficialLine shortName={shortName} official={d.official} health={official} />
+              )}
             </li>
           );
         })}
