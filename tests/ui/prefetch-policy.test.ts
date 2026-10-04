@@ -146,7 +146,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       }
     }
     // The `.map()` shape only catches a link written INLINE in the list. A per-row link that lives
-    // in its own component — `RowLink`, `GameLogRow`, `SectionHeader`, `StatTile`, `DateHeader` —
+    // in its own component — `RowLink`, `GameLogRow`, `SectionHeader`, `DateHeader` —
     // is a row link all the same, and the `WANT` table below is what holds those. The floor is a
     // scanner guard, not a target.
     expect(checked).toBeGreaterThanOrEqual(11);
@@ -172,7 +172,6 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/game/SeasonSeries.tsx', GAME_LINK],
       ['components/schedule/DateHeader.tsx', 'href={shareHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
-      ['components/ui/StatTile.tsx', 'href={href}'],
       // The team finder's "Divisions and leagues" results and the link-mode league chips are
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],

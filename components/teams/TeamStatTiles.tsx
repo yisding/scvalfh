@@ -28,7 +28,7 @@ import { placeSub } from './team-view';
  * it. The counting rules are generic boilerplate, so they sit in one labelled disclosure under the
  * tiles (brief §4.22).
  *
- * The tiles are a `<dl>` (StatTile `inList`): eight label/value pairs, announced as such. The two
+ * The tiles are a `<dl>` of StatTile groups: eight label/value pairs, announced as such. The two
  * values that only read well to the eye carry a spoken form: Streak "L5" is "5 losses in a row",
  * Goals F / A "0 / 52" is "0 for, 52 against".
  */
@@ -55,20 +55,14 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
           srValue={league && sharedPlace ? `tied for ${ordinal(league.place)}` : undefined}
           sub={placeSub(view)}
           emphasis="hero"
-          variant="card"
-          inList
         />
         <StatTile
           label="League"
-          variant="card"
-          inList
           value={league ? recordString(league) : null}
           sub={league ? `${league.pts} pts · ${league.gp} played` : 'league games only'}
         />
         <StatTile
           label="GP"
-          variant="card"
-          inList
           value={context ? `${context.counted}/${context.scheduled}` : null}
           sub={
             left === null
@@ -80,22 +74,16 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
         />
         <StatTile
           label="Max"
-          variant="card"
-          inList
           value={context ? context.maxPts : null}
           sub="points still reachable"
         />
         <StatTile
           label="Overall"
-          variant="card"
-          inList
           value={overall ? recordString(overall) : null}
           sub={overall ? `${plural(overall.gp, 'game')}, all opponents` : 'all opponents'}
         />
         <StatTile
           label="Streak"
-          variant="card"
-          inList
           value={league ? streakString(league.streak) : null}
           srValue={streakSpoken}
           sub="league games"
@@ -103,16 +91,12 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
         <StatTile
           label="Goals F / A"
           srLabel="Goals for and against"
-          variant="card"
-          inList
           value={league ? `${league.gf} / ${league.ga}` : null}
           srValue={league ? `${league.gf} for, ${league.ga} against` : undefined}
           sub={league ? `${perGame(league.gf, league.gp)} scored per game` : 'league games only'}
         />
         <StatTile
           label="Goal diff"
-          variant="card"
-          inList
           value={league ? signedGd(league.gd) : null}
           sub={league ? `${perGame(league.ga, league.gp)} conceded per game` : 'league games only'}
         />

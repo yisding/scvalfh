@@ -2001,7 +2001,6 @@ interface StatTileProps {
   value: string | number | null;   // null → "—", and the tile keeps its full height
   sub?: string;                    // "league games only", "7th of 8"
   emphasis?: 'default' | 'hero';   // 'hero' = top of the text-figure clamp, ONE per view
-  href?: string;
 }
 ```
 
