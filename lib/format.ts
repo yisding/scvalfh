@@ -236,6 +236,14 @@ export function hoursBetween(aIso: string, bIso: string): number {
 
 // ---------------------------------------------------------------- records & numbers
 
+/**
+ * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
+ * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/ui/plural.ts re-exports it.
+ */
+export function plural(n: number, one: string, many: string = `${one}s`): string {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
 /** 'W-L-T', e.g. '4-1-0'. */
 export function recordString(r: Record3 | { w: number; l: number; t: number }): string {
   return `${r.w}-${r.l}-${r.t}`;
@@ -246,8 +254,7 @@ export function recordString(r: Record3 | { w: number; l: number; t: number }): 
  * is "four minus one minus zero" in some voices and a date in others; the words are unambiguous.
  */
 export function recordWords(r: Record3 | { w: number; l: number; t: number }): string {
-  const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-  return `${count(r.w, 'win', 'wins')}, ${count(r.l, 'loss', 'losses')}, ${count(r.t, 'tie', 'ties')}`;
+  return `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}, ${plural(r.t, 'tie')}`;
 }
 
 /** '+30' / '−24' / '0' — always signed, U+2212 for negatives (DESIGN §5.6). */
@@ -301,7 +308,7 @@ export const OUTCOME_WORDS: Record<Outcome, string> = { W: 'win', L: 'loss', T: 
 export function formStripLabel(last5: readonly Outcome[]): string {
   if (last5.length === 0) return 'No league results yet.';
   const words = last5.map((o) => OUTCOME_WORDS[o]).join(', ');
-  return `Last ${last5.length} league game${last5.length === 1 ? '' : 's'}, oldest first: ${words}.`;
+  return `Last ${plural(last5.length, 'league game')}, oldest first: ${words}.`;
 }
 
 /** 'W5' / 'L3' / 'T1' (the US sports-page order: result, then length), or an em dash. */

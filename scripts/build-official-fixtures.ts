@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { plural } from '../lib/format';
 import { getDivision, getLeague } from '../lib/leagues';
 import { parseBvalScheduleText } from '../lib/official/bval-text';
 import {
@@ -282,10 +283,6 @@ export function outputFileOf(leagueId: BundledLeague, outDir = DEFAULT_OUT_DIR):
 }
 
 // ---------------------------------------------------------------- CLI
-
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
 
 function main(argv: readonly string[]): number {
   let sourceDir = DEFAULT_SOURCE_DIR;

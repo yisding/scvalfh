@@ -34,7 +34,7 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, listWords, numberWord, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, formatStamp, listWords, numberWord, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
 import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -101,10 +101,6 @@ function statusCounts(sources: readonly SourceStatus[]): Record<SourceStatus['st
   const out: Record<SourceStatus['status'], number> = { ok: 0, stale: 0, error: 0, skipped: 0 };
   for (const s of sources) out[s.status] += 1;
   return out;
-}
-
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
 }
 
 const DROP_REASON_WORDS: Readonly<Record<DroppedContest['reason'], string>> = {

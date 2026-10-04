@@ -34,6 +34,7 @@ import {
   gameWhen,
   monthDay,
   ordinal,
+  plural,
   recordString,
   shortDate,
   sideOutcome,
@@ -714,8 +715,6 @@ export interface TeamsSectionGroup {
   leagues: TeamsLeagueGroup[];
 }
 
-const teamsWord = (n: number) => `${n} ${n === 1 ? 'team' : 'teams'}`;
-
 /** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18). */
 export function buildTeamsByLeague(): TeamsSectionGroup[] {
   const teams = getTeams();
@@ -725,7 +724,7 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
     leagues: leagues.map(({ league, divisions }) => ({
       league,
       title: `${league.shortName} — ${league.name}`,
-      meta: teamsWord(league.teamCount),
+      meta: plural(league.teamCount, 'team'),
       membershipNote: getLeague(league.id).membershipNote,
       standingsHref: `/standings/${league.id}`,
       standingsLabel: `${league.shortName} standings`,

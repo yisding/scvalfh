@@ -1,6 +1,7 @@
 import { formatStamp } from '../../lib/format';
 import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import { plural } from '../ui/plural';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
@@ -74,10 +75,6 @@ const TABLE_WORDS = {
   missing: 'could not be read',
   skipped: 'not requested',
 } as const;
-
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
 
 /** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. Only for a league that publishes one (not mode 'none'). */
 export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {

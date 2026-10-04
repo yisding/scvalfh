@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
+import { plural } from '../ui/plural';
 import { usePinnedTeam } from '../ui/use-pinned-team';
 import { pinLabel } from '../../lib/pin-label';
 import {
@@ -67,8 +68,6 @@ export interface TeamFinderProps {
 export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
 export const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
-
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 function joinAnd(parts: readonly string[]): string {
   if (parts.length <= 1) return parts.join('');
