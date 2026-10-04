@@ -2647,7 +2647,7 @@ two data hues remain win and loss only.
 
 ### 15.6 Home page: league panels and the fold
 
-The home page's composition, in DOM order: the page header (visible h1 "NorCal field hockey", with
+The home page's composition, in DOM order: the page header (visible h1 "NorCal High School Field Hockey Teams", with
 the four league names in its sr-only title), the My-team slot (hidden until there is a pin, a league
 or a stale pin), the scope `LeagueSwitcher`, the first-visit "Find your team" block, then one
 `<section data-scope="<league>">` per league (phase lead, latest scores, mini standings, next games,
@@ -2707,7 +2707,8 @@ BVAL's co-champion label appears only after the league's regular phase.
 - No CCS concept inside an MCAL page's `<main>` (no "automatic qualifier", "at-large", "CCS
   Division", "CCS picture"); no division label on PCAL or MCAL pages.
 - "Co-champions" appears only after that league's regular phase.
-- Branding: `NorCal Field Hockey` (phone wordmark `NorCal`), with a scope note naming exactly the
+- Branding: `NorCal High School Field Hockey` (header wordmark `NorCal HS Field Hockey`, `NorCal HS`
+  below 1280px; no FH badge), with a scope note naming exactly the
   four leagues. `scripts/assert-copy.ts` scans the built HTML for the rules above.
 
 ### 15.9 si.com and the source line

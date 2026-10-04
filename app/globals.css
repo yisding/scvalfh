@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   NorCal Field Hockey — design tokens (DESIGN §4.1 / §4.2)
+   NorCal High School Field Hockey — design tokens (DESIGN §4.1 / §4.2)
 
    Every hex below is measured output from the contrast validator, not an
    assertion. tests/ui/contrast.test.ts parses THIS FILE and re-measures every

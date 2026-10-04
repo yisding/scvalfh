@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME } from '../../../components/layout/site-url';
+import { SITE_WORDMARK } from '../../../components/layout/site-url';
 import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../../lib/data';
 import { formatStamp, shortDate } from '../../../lib/format';
 
@@ -62,7 +62,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', fontSize: 24, letterSpacing: 4, textTransform: 'uppercase', color: MUTED }}>
-            {SITE_NAME} &middot; {league.name}
+            {SITE_WORDMARK} &middot; {league.name}
           </div>
           <div style={{ display: 'flex', marginTop: 8, height: 2, background: RULE }} />
           <div style={{ display: 'flex', marginTop: 20, fontSize: 52, fontWeight: 600 }}>

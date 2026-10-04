@@ -296,7 +296,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     );
     expect(textOf(pageHtml)).toContain('Find your team');
     expect(pageHtml, 'app/page.tsx: My-team slot').toMatch(/<section data-scope="all" class="sx-myteam-slot[^"]*" aria-labelledby="my-team-heading"/);
-    expect(pageHtml, 'app/page.tsx: h1').toContain('NorCal field hockey');
+    expect(pageHtml, 'app/page.tsx: h1').toContain('NorCal High School Field Hockey Teams');
     expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
       /Results through \w{3} \w{3} \d{1,2} · 49 teams · SCVAL · BVAL · PCAL · MCAL · EAL/,
     );
