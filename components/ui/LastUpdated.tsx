@@ -132,7 +132,7 @@ export function LastUpdated({
           {shortDate(local)}
         </time>
         , so newer scores may be missing.{' '}
-        <Link href="/about#updates" className="text-accent-ink underline">
+        <Link href="/about#updates" prefetch={false} className="text-accent-ink underline">
           Why?
         </Link>
       </span>

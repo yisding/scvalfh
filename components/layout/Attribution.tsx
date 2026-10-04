@@ -105,10 +105,13 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
         {/* "About & sources" and the archive link are standalone actions, not words in a
             sentence, so each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in
             the paragraph above do not: they sit inside a sentence, which is the case 2.5.8
-            exempts. */}
+            exempts. Both links carry `prefetch={false}` like the nav
+            (components/layout/NavLink.tsx): the footer is layout chrome on every page and is in
+            the first viewport on short pages, so Next 16's `auto` would download /about in full
+            from every route. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
-          <Link href="/about" className="sx-action text-accent hover:underline">
+          <Link href="/about" prefetch={false} className="sx-action text-accent hover:underline">
             About &amp; sources
           </Link>
           {/* The phone's only way to last season: the five-tab bar has no History entry (the
