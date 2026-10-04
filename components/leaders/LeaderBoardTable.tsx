@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { ordinal } from '../../lib/format';
+import MissingValue from '../ui/MissingValue';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
@@ -42,6 +43,7 @@ const LAST_WIDTH: Readonly<Record<string, string>> = {
   savePct: 'w-[4.5rem]',
   perGame: 'w-16',
 };
+
 /**
  * The gutter before a column: 8px, except before Pct, which follows the record. Both are
  * dash-separated mono numbers, and at 8px "10-0-0 1.000" read as one string.
@@ -50,17 +52,8 @@ const GUTTER: Readonly<Record<string, string>> = {
   pct: 'pl-3 sm:pl-5',
 };
 
-function Dash() {
-  return (
-    <>
-      <span aria-hidden="true">&mdash;</span>
-      <span className="sr-only">not recorded</span>
-    </>
-  );
-}
-
 function Cell({ cell }: { cell: LeaderCell }) {
-  if (cell.text === null) return <Dash />;
+  if (cell.text === null) return <MissingValue words="not recorded" />;
   if (!cell.sr) return <>{cell.text}</>;
   return (
     <>

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
 import { GoalDiffCell } from '../ui/GoalDiffBar';
+import MissingValue from '../ui/MissingValue';
 import SectionHeader from '../ui/SectionHeader';
+import { NoGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, ordinal } from '../../lib/format';
 
@@ -63,8 +65,7 @@ function PlaceCell({ row }: { row: MiniRow }) {
   if (!row.hasResults) {
     return (
       <span className="sx-num">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
+        <MissingValue words="not ranked" />
       </span>
     );
   }
@@ -246,10 +247,7 @@ function MiniRowView({
               barClassName="hidden @min-[23.4375rem]:block"
             />
           ) : (
-            <span className="sx-num text-ink-3">
-              <span aria-hidden="true">&middot; {EM_DASH}</span>
-              <span className="sr-only">no goal differential</span>
-            </span>
+            <NoGoalDiff />
           )}
         </td>
       </tr>

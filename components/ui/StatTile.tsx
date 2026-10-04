@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { EM_DASH } from '../../lib/format';
+import MissingValue from './MissingValue';
 
 /**
  * A headline number (DESIGN §7.7, modernization brief §4.17). No sparkline anywhere on this site
@@ -69,7 +69,7 @@ export function StatTile({
         : 'text-[1.75rem] leading-none tracking-[-0.02em]';
   const valueText =
     value === null ? (
-      <span aria-label="not reported">{EM_DASH}</span>
+      <MissingValue words="not reported" />
     ) : srValue ? (
       <>
         <span aria-hidden="true">{value}</span>

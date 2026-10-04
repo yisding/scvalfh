@@ -7,6 +7,7 @@ import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/typ
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
+import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
 import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
@@ -305,12 +306,14 @@ function isFlagged(row: StandingsRowData, flagged: Set<TeamSlug>): boolean {
   return row.standing.mismatch || flagged.has(row.team.slug);
 }
 
-/** No results: a `·` on the zero rule plus an em dash, with the words for a screen reader. */
-function NoGoalDiff() {
+/**
+ * No results: a `·` on the zero rule plus an em dash, with the words for a screen reader. The home
+ * page's mini table (components/home/MiniStandings.tsx) renders the same cell.
+ */
+export function NoGoalDiff() {
   return (
     <span className="sx-num text-ink-3">
-      <span aria-hidden="true">&middot; {EM_DASH}</span>
-      <span className="sr-only">no goal differential</span>
+      <MissingValue words="no goal differential" glyph={`\u00b7 ${EM_DASH}`} />
     </span>
   );
 }

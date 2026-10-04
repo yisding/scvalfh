@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getTeamBySlug } from '../../lib/data';
 import { ordinal } from '../../lib/format';
 import type { HistoryRow } from '../../lib/history';
+import MissingValue from '../ui/MissingValue';
 import TeamMonogram from '../ui/TeamMonogram';
 
 /**
@@ -27,8 +28,7 @@ import TeamMonogram from '../ui/TeamMonogram';
 function NotPublished() {
   return (
     <span className="sx-num">
-      <span aria-hidden="true">&mdash;</span>
-      <span className="sr-only">not published</span>
+      <MissingValue words="not published" />
     </span>
   );
 }

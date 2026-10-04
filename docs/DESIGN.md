@@ -2172,7 +2172,8 @@ timestamp nobody reads.
 `TimelineRail` (anchor links to date-group ids) · `DivisionTabs` (plain `<a href="#de-anza">`
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
-new tab") · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
+new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
+§5.3) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
 server-side in `America/Los_Angeles` so it never hydration-mismatches).
 
 ---

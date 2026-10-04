@@ -1,5 +1,6 @@
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
+import MissingValue from '../ui/MissingValue';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../ui/plural';
 import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
@@ -16,15 +17,6 @@ import { statText } from './player-stats-view';
  * Column heads are abbreviations a reader may not know (GWG, SOG), so each head carries its full
  * name for a screen reader and the legend under the tables spells every one out.
  */
-
-function Dash() {
-  return (
-    <>
-      <span aria-hidden="true">&mdash;</span>
-      <span className="sr-only">not recorded</span>
-    </>
-  );
-}
 
 function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
   return (
@@ -71,7 +63,7 @@ function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
                     i === row.values.length - 1 ? 'pr-4' : ''
                   }`}
                 >
-                  {statText(v) ?? <Dash />}
+                  {statText(v) ?? <MissingValue words="not recorded" />}
                 </td>
               ))}
             </tr>
@@ -98,7 +90,7 @@ function Goalie({ card }: { card: GoalieCard }) {
         {card.stats.map((s) => (
           <div key={s.label} className="min-w-0">
             <dt className="text-micro text-ink-3">{s.label}</dt>
-            <dd className="sx-num m-0 text-lead font-semibold text-ink">{s.text ?? <Dash />}</dd>
+            <dd className="sx-num m-0 text-lead font-semibold text-ink">{s.text ?? <MissingValue words="not recorded" />}</dd>
           </div>
         ))}
       </dl>
