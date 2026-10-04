@@ -1,6 +1,6 @@
 import { shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, TeamSlug } from '../../lib/types';
+import type { Game } from '../../lib/types';
 
 import { NON_MEMBER_NOTE } from './GameRow';
 import GhostMonogram from './GhostMonogram';
@@ -47,7 +47,6 @@ export interface ScoreBoardSideMeta {
 
 export interface ScoreBoardProps {
   game: Game;
-  perspective?: TeamSlug | null;
   home?: ScoreBoardSideMeta;
   away?: ScoreBoardSideMeta;
   className?: string;
@@ -137,8 +136,8 @@ function BoardSide({
   );
 }
 
-export function ScoreBoard({ game, perspective, home, away, className }: ScoreBoardProps) {
-  const display = describeGame(game, perspective);
+export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
+  const display = describeGame(game);
   return (
     <section
       // Joined, not glued: Tailwind's scanner skips a candidate that runs straight into `${`, so
