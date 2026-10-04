@@ -165,6 +165,31 @@ For this to work on a deployed copy of this repo:
 3. Connect your host (see "Deploy notes") to redeploy automatically on push to `main` — most
    static hosts do this without any extra configuration once the repo is linked.
 
+### The weekly people PR
+
+Rosters, club ties and college commitments are not on the twice-daily cron. They change weekly at
+most, and the research files join to the rosters, so a roster change can break them (see "When a
+roster refetch breaks it" under "Clubs" and "College commitments"). Instead, two weekly jobs share
+one standing pull request, from the branch `data/weekly-people` into `main`, and **neither ever
+pushes to `main`**: a person reviews and merges it. `docs/WEEKLY-PEOPLE.md` has the details.
+
+- **Rosters**, Mondays 6:23 AM Pacific (5:23 AM in winter), year-round:
+  `.github/workflows/update-people.yml` runs `pnpm fetch-rosters`. When a player was added, removed
+  or changed, it commits `data/rosters.json` to the branch, opens the PR or comments on it with
+  `pnpm roster-diff`'s summary, and dispatches `ci.yml` on the branch (a `GITHUB_TOKEN` push starts
+  no `pull_request` run). The summary lists every change and every research record pointing at a
+  changed row. While the PR is open, each run merges `main` into the branch and builds on it, so
+  the research pushed there survives. A run in which only failures changed commits nothing; MaxPreps'
+  habit of reordering a team's rows counts as no change. Failed teams turn the run red.
+- **Clubs and commitments**, Mondays 8:49 AM Pacific, year-round: a Claude Code Routine on the
+  owner's claude.ai account follows the runbook in `docs/WEEKLY-PEOPLE.md`. It repairs what the
+  week's roster change broke, looks for new club ties and commitments, has two subagents verify
+  each one independently, pushes what survives to the same branch, and reports what it searched
+  and found as a PR comment.
+
+The workflow needs one more repository setting than the cron: **Settings → Actions → General →
+"Allow GitHub Actions to create and approve pull requests"**.
+
 ### Self-hosting the cron
 
 If you're not using GitHub Actions, run the same two commands from any scheduler that can reach
@@ -237,8 +262,9 @@ bundled fixtures are still used until someone re-transcribes them (the runbook i
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
 from the 49 MaxPreps roster pages (every registry team, all five leagues; one entry per team) and
-committed, like the history file, rather than refreshed by the cron (rosters change a few times a
-season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
+committed, like the history file, rather than refreshed by the twice-daily cron (rosters change a
+few times a season). A weekly workflow re-reads them and proposes any change on a pull request (see
+"The weekly people PR" above); `pnpm fetch-rosters` still runs by hand any time. The page encodes each athlete as a 37-element positional array, so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
 a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
@@ -423,15 +449,19 @@ school watchlists, MAX Field Hockey's club pages and local news. Every tie of th
 was checked twice that day: a checker re-opened each source, then an independent refuter tried to
 break the match. The eight ties the 2026-10-04 EAL sweep added were each confirmed by two
 independent checks that re-opened their sources.
-Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
-§1.1j2 for the sources, the gotchas and the count by school.
+Keeping it current is research too: the weekly research run (see "The weekly people PR" above)
+re-runs part of it every Monday and proposes what it verified on the weekly pull request; nothing
+reaches `main` without review. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j2 for the sources,
+the gotchas and the count by school.
 
 **When a roster refetch breaks it.** `lib/clubs.ts` throws at import if `pnpm fetch-rosters` drops
 or respells a tied player's row, if the overlay marks that row JV, or if a season rollover moves
 `data/rosters.json` to a season `data/clubs.json` is not for; `pnpm test` and the build then fail
 with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
 drop it by hand (on a rollover, redo the research for the new season). Never prune it
-automatically.
+automatically. The weekly roster refresh lands on the weekly pull request, not on `main` (see "The
+weekly people PR"), so such a break turns that PR red, its roster summary names the tie, and the
+weekly research run re-checks and repairs it there.
 
 `lib/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
@@ -528,7 +558,9 @@ for the sources, what was rejected and why, and the gaps.
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
 season rollover moves `data/rosters.json` to another season; `pnpm test` and the build then fail
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
-or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
+or drop it by hand. On a rollover the seniors graduate: redo the research for the new season. As for
+clubs, the weekly roster refresh only ever breaks the weekly pull request, where the weekly research
+run repairs it.
 
 `lib/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
 name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
@@ -950,15 +982,17 @@ at once, at every build, starting from last season's:
   of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
   were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added eight ties for five players at Davis and
   Pleasant Valley, and three club records),
-  and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
-- **Commitment recall is partial, and the list does not update itself.** A commitment is listed
+  and since then a weekly research run proposes changes for review (`docs/WEEKLY-PEOPLE.md`). See
+  `docs/DATA-SOURCES.md` §1.1j2.
+- **Commitment recall is partial, and the list updates only through review.** A commitment is listed
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
   the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
-  decommitment or new commitment (the class of 2027's signing period is in November) is not shown
-  until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
+  decommitment or new commitment (the class of 2027's signing period is in November) is shown once
+  the weekly research run finds it and someone merges the weekly pull request (`docs/WEEKLY-PEOPLE.md`).
+  See `docs/DATA-SOURCES.md` §1.1j3.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -1239,6 +1273,8 @@ compatibility date follows, so bump the two together and re-run the Workers buil
 
 - `docs/DATA-SOURCES.md` — every upstream endpoint, JSON path, enum and known gotcha, condensed
   from the build-time research spec.
+- `docs/WEEKLY-PEOPLE.md` — the weekly people-data pull request: the roster workflow, and the
+  runbook the weekly clubs-and-commitments research follows.
 - `docs/LEAGUE-RULES.md` — per league: points, order, tiebreak chain with citations, how
   multi-team ties are resolved, co-champions, the postseason, official sources and known data gaps.
 - `docs/BYLAWS-2026-27.md` — the verified SCVAL by-laws excerpt that governs standings, points,

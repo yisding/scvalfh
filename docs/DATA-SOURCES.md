@@ -214,8 +214,11 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
 - Budget: one 180–340 KB page per team, 49 requests (43 before the EAL joined; 15 for SCVAL alone,
   `--leagues scval`), at
   the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts). Not in the
-  twice-daily cron — rosters change a few times a season; run `pnpm fetch-rosters` by hand or
-  weekly.
+  twice-daily cron — rosters change a few times a season. `.github/workflows/update-people.yml`
+  runs `pnpm fetch-rosters` every Monday and proposes any change on a pull request
+  (`docs/WEEKLY-PEOPLE.md`); it also runs by hand. MaxPreps can serve a team's rows in a different
+  order from one read to the next, which rewrites the file with no player changed; the weekly
+  diff (`pnpm roster-diff`) matches rows by athleteId, so such a run commits nothing.
 
 **si.com rosters (`.../teams/{id}-{slug}/players`, react class `teamPlayers/Index`)** were captured
 alongside and **rejected as a source**: `query.team.teamPlayers.nodes[]` carries names only (no
@@ -2063,15 +2066,17 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   How much a coach enters varies by program in every league.
 - College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04 (the six
   EAL teams' schools on 2026-10-04, for field hockey and then every sport, with none found, though
-  without SportsRecruits' athlete search or web searches for freshmen and sophomores), and nothing
-  refreshes them: recall is partial (16 of 811 varsity rows, at 9 schools, on 2026-10-04; social
-  media, where most are announced, never counts), a signing or decommitment after that date is not
-  shown, and a roster refetch that drops or respells a committed row fails the build until it is
-  re-checked by hand.
+  without SportsRecruits' athlete search or web searches for freshmen and sophomores), and since then
+  a weekly research run (`docs/WEEKLY-PEOPLE.md`) proposes changes on a pull request for review:
+  recall is partial (16 of 811 varsity rows, at 9 schools, on 2026-10-04; social
+  media, where most are announced, never counts), a signing or decommitment is not
+  shown until the weekly pull request that records it is merged, and a roster refetch that drops or respells a committed row fails the weekly pull request's tests
+  until it is re-checked (by the weekly research run, or by hand).
 - Club ties (§1.1j2) were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04,
-  adding eight ties for five players at Davis and Pleasant Valley, and three club records), and nothing refreshes them: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
+  adding eight ties for five players at Davis and Pleasant Valley, and three club records), and since then a weekly research run (`docs/WEEKLY-PEOPLE.md`) proposes changes for review: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
   none at 21 schools), a `current` tie ages, and a roster refetch
-  that drops or respells a tied row fails the build until the tie is re-checked by hand.
+  that drops or respells a tied row fails the weekly pull request's tests until the tie is re-checked
+  (by the weekly research run, or by hand).
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
   history, by league"); PCAL, MCAL and EAL are marked `unavailable` in `data/history-2025-26.json`,
   since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
