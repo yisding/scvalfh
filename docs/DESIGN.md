@@ -1177,12 +1177,6 @@ guardrail. **Divisions get no hue either** (§6.4).
     outline-offset: 2px;
     border-radius: var(--sx-r-tag);
   }
-  /* A sticky table header clips an outer ring — use an inset one there. */
-  :where(thead th, .sx-sticky-head):focus-visible { outline-offset: -2px; }
-  /* On a colored fill, a surface-colored inner ring keeps the outline readable. */
-  :where(.sx-on-fill):focus-visible { box-shadow: 0 0 0 1px var(--sx-surface) inset; }
-
-  [data-sticky="scrolled"] { box-shadow: var(--sx-shadow-raised); }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -1248,7 +1242,9 @@ display face anywhere.
   `--sx-zero`, **solid, never dashed**. Non-league games get a 2px left border in
   `--sx-border-strong` **plus** the `NL` tag — a shape-and-word cue, not a hue.
 - **Shadows:** two, neither decorative. `--sx-shadow-sticky` (a 1px hairline) on the sticky
-  bar at rest, `--sx-shadow-raised` once `data-sticky="scrolled"`. Dark mode sets
+  bar, scrolled or not, and `--sx-shadow-raised` under cards. The bar never swaps to the raised
+  shadow: `data-sticky="scrolled"`, like the `.sx-on-fill` and `.sx-sticky-head` focus hooks,
+  was not adopted, and globals.css carries none of them. Dark mode sets
   `--sx-shadow-raised: none` and leans on the border. **Neither token is self-referential**
   — each is a literal value in `:root`, aliased once into `@theme inline`. **[R-17]**
 - **Motion:** 120ms tap feedback (`background-color` → `--sx-surface-2`), 200ms for the theme

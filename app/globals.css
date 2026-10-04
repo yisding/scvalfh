@@ -556,17 +556,9 @@
   .sx-table-wide thead th { height: 2.5rem; padding-block: 0; }
   .sx-table tbody tr { border-bottom: 1px solid var(--sx-divider); }
   .sx-table tbody tr:last-child { border-bottom: 0; }
-  /* The whole two-line row is one block-level <a>: its hit area is exactly the row. */
-  .sx-rowlink {
-    display: block;
-    height: 100%;
-    color: inherit;
-    text-decoration: none;
-  }
   @media (hover: hover) {
     .sx-table tbody tr:hover { background: var(--sx-surface-2); }
   }
-  .sx-table tbody tr:has(.sx-rowlink:active) { background: var(--sx-surface-2); }
   /* 2px accent left rule = the pinned team; 2px strong rule = non-league. Two independent
      channels: `.sx-pinned` (server, `highlightSlug`) and `[data-pinned]` (the localStorage pin). */
   .sx-pinned,
@@ -738,12 +730,6 @@
      is drawn on the capsule rather than as a rectangle around it. */
   .sx-navtop:focus-visible { outline: none; }
   .sx-navtop:focus-visible > .sx-indicator { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
-  /* A sticky table header clips an outer ring — use an inset one there. */
-  :where(thead th, .sx-sticky-head):focus-visible { outline-offset: -2px; }
-  /* On a colored fill, a surface-colored inner ring keeps the outline readable. */
-  :where(.sx-on-fill):focus-visible { box-shadow: 0 0 0 1px var(--sx-surface) inset; }
-
-  [data-sticky="scrolled"] { box-shadow: var(--sx-shadow-raised); }
 
   /* LIVE is a word and an accent dot. The pulse is the third, optional cue.
      Declared inside @layer base so the reduced-motion block below actually
