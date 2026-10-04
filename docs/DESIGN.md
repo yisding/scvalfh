@@ -3205,8 +3205,8 @@ sourced one, dated 2026-10-04 unless it says otherwise.
 | `/history/2025-26` | gains `#eal`, marked unavailable with the reason (22.7) |
 
 The prerender after `pnpm build:vinext` on 2026-10-04 (49 teams, 396 games, 57 game days) is 1059
-routes. The sitemap lists 536 URLs: 396 `/game/`, 57 `/scores/`, 49 `/teams/`, 5 `/standings/`, 5
-`/schedule/`, 1 `/playoffs/` and 13 `/clubs/`.
+routes. The sitemap lists 536 URLs: 10 fixed pages, 396 `/game/`, 57 `/scores/`, 49 `/teams/`, 5
+`/standings/`, 5 `/schedule/`, 1 `/playoffs/mcal` and 13 `/clubs/`.
 
 ### 22.3 The third section in the switcher and the five league cards
 
@@ -3282,7 +3282,7 @@ corpus):
 
 The **membership note** ("Chico, Corning, Lassen and Pleasant Valley are Northern Section schools;
 Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL.") is printed
-wherever EAL schools are listed under a section or league heading: under the header of
+wherever the six EAL teams' schools are listed under a section or league heading: under the header of
 `/standings/eal`, in the EAL block of `/standings` and of `/teams`, and on the `/about` EAL source card.
 The home league card ("NS · 6 teams") and the search group label the league's section, a league-level
 fact, and carry no school claim and no note. Team pages print no section.
@@ -3331,7 +3331,7 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   2026-09-29 Pleasant Valley at Corning and 2026-10-01 Corning at Chico).
 - **Corpora.** `tests/fixtures/corpus/all-2026-10-02` was not extended: under it the EAL is "not
   fetched in this run", as BVAL, PCAL and MCAL are under the `scval` corpus. A new corpus,
-  `tests/fixtures/corpus/eal-2026-10-04` (19 files: 1 bootstrap, the league meta and standings, 6
+  `tests/fixtures/corpus/eal-2026-10-04` (19 files: the manifest, 1 bootstrap, the league meta and standings, 6
   schedules, 7 si.com scoreboards, 2 si.com team-games pages), was captured live and replays with no
   missing resource; it drives `tests/pipeline/eal.test.ts`, the EAL view tests and the second
   copy-honesty pass.
@@ -3359,7 +3359,7 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   and shows no overtime mark. That reading rests on one newspaper report, so the copy says only "may
   have".
 - **No club records for D-City FHC (Davis), Roseville FHC and Chico Hotshots.** The 2026-10-04 sweep
-  found these clubs near the EAL schools; adding records for them is left for a later change. Three
+  found these clubs near the six EAL teams' schools; adding records for them is left for a later change. Three
   Davis players were tied to the existing NorCal Impact club (NFHCA 2026 high school watchlist,
   2026-08-27). No commitment was found for any EAL player.
 - **No enrichment sweep for EAL rosters.** `data/rosters-enrichment.json` holds six stub entries

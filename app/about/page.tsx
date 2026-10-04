@@ -150,6 +150,9 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
   const bucketStarts = Object.keys(byBucket)
     .map(Number)
     .sort((a, b) => a - b);
+  // The multi-team paragraph describes how a separating step is applied; a chain with none (the EAL's
+  // lone 'no-rule') has nothing to apply, so the paragraph would describe a procedure the rules lack.
+  const anyStepSeparates = bucketStarts.length > 0 || rules.tiebreaks.default.some((s) => s !== 'no-rule');
   const unit = rules.gamesWord === 'division' ? 'division' : 'league';
   // Only a league without a schedule document reaches the contest-type branch (EAL; SCVAL, the other
   // contest-type league, is quoted by QuotedRules instead).
@@ -201,7 +204,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
           ))}
         </ol>
       )}
-      <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p>
+      {anyStepSeparates ? <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p> : null}
       <p className="text-meta text-ink-3">
         A step this site cannot compute (a coin flip, a draw, a play-in) leaves the teams level at the
         same place, with a footnote citing the rule. Our display order is not a league ruling.

@@ -10,7 +10,7 @@ prints them on the site. Where the documents say something this site cannot comp
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
 It never guesses an order.
 
-Sources are the league's own documents as of 2026-10-02 (the EAL's, as of 2026-10-04): see "Official sources" in each section and
+Sources are the league's own documents as of 2026-10-02 (for the EAL, the CIF Northern Section's Field Hockey Guidelines, as of 2026-10-04): see "Official sources" in each section and
 `docs/DATA-SOURCES.md` for URLs, hashes and how the schedules are kept current. SCVAL's by-laws
 are also quoted in `docs/BYLAWS-2026-27.md`.
 

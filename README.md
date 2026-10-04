@@ -389,7 +389,7 @@ Coverage on 2026-10-03, counted from the file: **13 clubs** (San Francisco 2, So
 2, Marin 1, and HTC, a Connecticut club whose California program trains in La Jolla; none on the
 Peninsula or the Central Coast) and **72 affiliations for 66 of the 716 varsity rows, at 22 of the 43
 schools**: SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. Five players are
-tied to more than one club. The EAL schools were swept on 2026-10-04 with the same rule and added three
+tied to more than one club. The schools of the six EAL teams were swept on 2026-10-04 with the same rule and added three
 affiliations, all Davis players tied to NorCal Impact (so 75 affiliations for 69 players at 23 schools,
 the 13 clubs unchanged); no club record was added for the clubs the sweep met around Davis, Roseville
 and Chico (DESIGN §22.8). Of the 2026-10-03 sweep's 72, by status 55 are current, 11 past and 6
@@ -906,12 +906,12 @@ at once, at every build, starting from last season's:
 - **Club recall is partial.** A player is tied to a club only when a public page meets the linking
   rule, so on 2026-10-04 69 of the 811 varsity rows have a club line, and 26 schools have none (seven
   of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
-  were researched once, on 2026-10-03 (the EAL schools on 2026-10-04, which added three Davis ties),
+  were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added three Davis ties),
   and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 7 of
   the 811 varsity rows have a commitment line and 45 schools have none; a player with no line may still have
-  committed. It was researched once, on 2026-10-03 (the EAL schools on 2026-10-04, with none found):
+  committed. It was researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, with none found):
   a later signing, decommitment or new commitment
   (the class of 2027's signing period is in November) is not shown until someone redoes it by hand.
   See `docs/DATA-SOURCES.md` §1.1j3.

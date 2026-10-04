@@ -32,7 +32,7 @@
 # The push deliberately does NOT carry [skip ci]: the commit is what triggers the hosting
 # provider's rebuild, which is the entire point of the job.
 #
-# Four leagues (SPEC §7.5, §7.14): a league that cannot be refreshed is FROZEN or DEGRADED inside
+# Five leagues (SPEC §7.5, §7.14): a league that cannot be refreshed is FROZEN or DEGRADED inside
 # the snapshot (its reasons are published on the site) and the run still exits 0 and commits. The
 # job fails, and commits nothing, only on a run abort (fetch-data exits 1: season ids changed, the
 # assembled snapshot failed validation, or a systemic outage), which keeps the previous snapshot.
@@ -78,7 +78,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # The fetch step alone may take 20 minutes (56 MaxPreps requests at ≥500 ms apart plus the
+    # The fetch step alone may take 20 minutes (64 MaxPreps requests at ≥500 ms apart plus the
     # official, si.com, VNN and CCS sources, with retries); install and test come on top.
     timeout-minutes: 40
 

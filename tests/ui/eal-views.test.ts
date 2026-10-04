@@ -236,6 +236,17 @@ describe('/about, the EAL parts', () => {
     expect(text).not.toMatch(BANNED);
   });
 
+  it('prints no multi-team tie procedure for the EAL, whose chain has no step that separates teams', () => {
+    expect(leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/leagues.ts EAL chain').toEqual(['no-rule']);
+    expect(textOf(rules()), 'app/about/page.tsx EAL rules').not.toContain('three or more teams are level');
+    // Every other league with generated rules (SCVAL's by-laws are quoted) has a separating step and keeps the paragraph.
+    for (const other of leagues.LEAGUES.filter((l) => l.id !== LEAGUE && l.rules.matcher !== 'legacy')) {
+      expect(textOf(byId(aboutHtml, `rules-${other.id}`)), `app/about/page.tsx ${other.id} rules`).toContain(
+        'three or more teams are level',
+      );
+    }
+  });
+
   it('gives the EAL a source card with the Guidelines, its official note and its membership note, and no schedule link', () => {
     const text = textOf(aboutHtml);
     const division = leagues.getDivision(LEAGUE);

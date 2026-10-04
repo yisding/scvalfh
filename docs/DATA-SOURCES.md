@@ -1330,6 +1330,7 @@ GUID equals the standings row's `schoolId` for all seven rows; mascot and city c
 not standings) and are in alphabetical order. Chico and Corning share the acronym CHS and Lassen's LHS
 joins an existing one, but BVHS, DSHS and PVHS are unique, so the expected acronym collisions are
 unchanged. The EAL's six abbreviations collide with none of the other 43.
+
 ⚠️ **Do not use the Presentation HTML schedule page** — it 200s but serves Los Gatos data
 (MaxPreps routing/canonical bug). This is the single strongest argument for keying everything on
 the `teamId` GUID and the ghost API, never on slug URLs. (Santa Teresa is also a *division* id;
@@ -1818,13 +1819,13 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
   Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
   How much a coach enters varies by program in every league.
-- College commitments (§1.1j3) were researched once, on 2026-10-03 (the EAL schools on 2026-10-04,
-  with none found), and nothing refreshes them: recall is partial (7 of 716 varsity rows, at 4
+- College commitments (§1.1j3) were researched once, on 2026-10-03 (the six EAL teams' schools on
+  2026-10-04, with none found), and nothing refreshes them: recall is partial (7 of 716 varsity rows, at 4
   schools, on 2026-10-03; social media, where most are announced,
   never counts), a signing or decommitment after that date is not shown, and a roster refetch that
   drops or respells a committed row fails the build until it is re-checked by hand.
-- Club ties (§1.1j2) were researched once, on 2026-10-03 (the EAL schools on 2026-10-04, adding three
-  Davis ties), and nothing refreshes them: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
+- Club ties (§1.1j2) were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04,
+  adding three Davis ties), and nothing refreshes them: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
   none at 21 schools), a `current` tie ages, and a roster refetch
   that drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26

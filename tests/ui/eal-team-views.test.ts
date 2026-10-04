@@ -7,8 +7,10 @@
  * The EAL has no official schedule (`official.mode: 'none'`), so a team page links none; its
  * postseason is the Super Regional, an unbracketed tournament, so no page draws a bracket. These
  * tests run on the EAL corpus (SCVAL_SNAPSHOT pointed at it BEFORE lib/data is imported, with the
- * modules re-imported after `vi.resetModules()`). Every expected value is read from the snapshot or
- * from config; every assertion message names the module that produced the value.
+ * modules re-imported after `vi.resetModules()`). Expected values are read from the snapshot or from
+ * config where the test can derive them; the rest (Chico 4-1-0 and Davis 3-2-0, the 1-0 season series,
+ * the three overtime periods and the 'Earlier:' lines) are those of the frozen eal-2026-10-04 corpus.
+ * Every assertion message names the module that produced the value.
  */
 
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';

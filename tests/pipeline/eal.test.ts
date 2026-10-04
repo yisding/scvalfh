@@ -246,8 +246,9 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
     expect(listed, 'lib/standings.ts missingOfficialResults').toEqual(expected);
   });
 
-  it('is not final while a league result is missing', () => {
-    const co = data.getCoLeaders(DIVISION);
-    expect(co === null || co.final === false, 'lib/data.ts getCoLeaders').toBe(true);
+  it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {
+    // The gating rule (co-leaders are never final while an EAL league result is missing) is tested on a
+    // level-top table in tests/data.test.ts ("never calls co-leaders final while an EAL league result is missing").
+    expect(data.getCoLeaders(DIVISION), 'lib/data.ts getCoLeaders').toBeNull();
   });
 });
