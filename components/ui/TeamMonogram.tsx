@@ -55,9 +55,7 @@ export function TeamMonogram({
   const { primary, secondary, onPrimary } = team.colors;
   return (
     <span
-      className={`sx-monogram${
-        className ? ` ${className}` : ''
-      }`}
+      className={['sx-monogram', className].filter(Boolean).join(' ')}
       style={{
         width: size,
         height: size,

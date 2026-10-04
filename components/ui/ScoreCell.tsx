@@ -34,7 +34,7 @@ export function ScoreCell({ game, perspective, size = 'score', className }: Scor
     ? [display.home, display.away]
     : [display.away, display.home];
   return (
-    <span className={`inline-flex items-baseline gap-1${className ? ` ${className}` : ''}`}>
+    <span className={['inline-flex items-baseline gap-1', className].filter(Boolean).join(' ')}>
       <ScoreGlyph side={first} size={size} />
       <span className="sx-num text-ink-3" aria-hidden="true">
         {EN_DASH}

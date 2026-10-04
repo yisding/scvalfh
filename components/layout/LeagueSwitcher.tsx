@@ -148,7 +148,7 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
     <div
       role="group"
       aria-label={label}
-      className={`sx-js-only flex flex-wrap items-center gap-1.5${className ? ` ${className}` : ''}`}
+      className={['sx-js-only flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}
     >
       {includeAll ? button(ALL, 'All') : null}
       <SectionLists leagues={leagues} chip={(l) => button(l.id, l.shortName)} />
@@ -184,7 +184,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   };
 
   return (
-    <nav aria-label={label} className={`flex flex-wrap items-center gap-1.5${className ? ` ${className}` : ''}`}>
+    <nav aria-label={label} className={['flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}>
       {includeAll && mode === 'link' ? chip(ALL, 'All') : null}
       <SectionLists leagues={leagues} chip={(l) => chip(l.id, l.shortName)} />
     </nav>

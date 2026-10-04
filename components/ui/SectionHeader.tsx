@@ -54,9 +54,13 @@ export function SectionHeader({
   const headingClass = HEADING[size ?? (Heading === 'h3' ? 'h3' : 'section')];
   return (
     <div
-      className={`sx-kicker${size === 'label' ? ' sx-kicker-label' : ''}${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        'sx-kicker',
+        size === 'label' ? 'sx-kicker-label' : null,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       id={id}
     >
       {/* The heading and its meta wrap TOGETHER, inside their own box, and the action sits beside

@@ -126,7 +126,10 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
     ? ['league result', 'league results']
     : ['official league result', 'official league results'];
   return (
-    <article className={`sx-card flex flex-col p-5${className ? ` ${className}` : ''}`} aria-label={`${shortName} data health`}>
+    <article
+      className={['sx-card flex flex-col p-5', className].filter(Boolean).join(' ')}
+      aria-label={`${shortName} data health`}
+    >
       <header>
         <h3 className="m-0 text-lead text-ink">{shortName}</h3>
         <p className="m-0 mt-0.5 text-meta text-ink-3">{name}</p>

@@ -20,7 +20,7 @@ export function MissingResultsBanner({ text, targetId, className }: MissingResul
   if (!text) return null;
   const words = text.replace(/^⚑\s*/, '');
   return (
-    <p className={`m-0 text-meta text-ink-2${className ? ` ${className}` : ''}`}>
+    <p className={['m-0 text-meta text-ink-2', className].filter(Boolean).join(' ')}>
       <a href={`#${targetId}`} className="sx-action font-medium text-ink no-underline hover:underline">
         <span aria-hidden="true">&#9873;</span> {words}
       </a>

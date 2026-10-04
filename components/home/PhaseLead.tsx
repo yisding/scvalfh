@@ -22,7 +22,7 @@ export interface PhaseLeadProps {
 export function PhaseLead({ lead, className }: PhaseLeadProps) {
   if (!lead) return null;
   return (
-    <p className={`sx-inset m-0 max-w-prose text-meta${className ? ` ${className}` : ''}`}>
+    <p className={['sx-inset m-0 max-w-prose text-meta', className].filter(Boolean).join(' ')}>
       <span className="font-semibold text-ink">{lead.lead}</span>
       {lead.body ? ` ${lead.body}` : null}
       {lead.link ? (

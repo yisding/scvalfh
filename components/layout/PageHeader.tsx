@@ -12,7 +12,7 @@
  *
  * Class strings are built with `[…].filter(Boolean).join(' ')`, never `md:pt-10${…}`: Tailwind's
  * scanner does not extract a candidate that runs straight into a template interpolation, so the
- * glued class is silently never generated.
+ * glued class is silently never generated. tests/ui/class-join.test.ts holds the rule site-wide.
  */
 export interface PageHeaderProps {
   title: React.ReactNode;

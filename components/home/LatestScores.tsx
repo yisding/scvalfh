@@ -122,7 +122,11 @@ export function ResultRow({ game, scopeLeague = null }: { game: Game; scopeLeagu
     >
       <span className="sr-only">{display.sentence}</span>
       <span className="flex min-w-0 flex-col gap-1 self-start" aria-hidden="true">
-        <span className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}>
+        <span
+          className={['sx-num text-cell text-ink-2', display.strikeTime ? 'line-through' : null]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
         </span>
         <StatusLabel display={display} className="[&>span:first-child]:leading-[0.875rem]" />

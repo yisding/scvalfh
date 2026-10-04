@@ -47,7 +47,7 @@ export function GoalDiffBar({
   const cap = thickness / 2;
   return (
     <span
-      className={`inline-flex items-center${className ? ` ${className}` : ''}`}
+      className={['inline-flex items-center', className].filter(Boolean).join(' ')}
       style={{ width: arm * 2 + 1, height: thickness + 8 }}
       aria-hidden="true"
     >

@@ -52,9 +52,7 @@ export function PinControl({
   if (ready && !available) {
     return (
       <span
-        className={`inline-flex h-11 items-center text-meta text-ink-3${
-          className ? ` ${className}` : ''
-        }`}
+        className={['inline-flex h-11 items-center text-meta text-ink-3', className].filter(Boolean).join(' ')}
       >
         This browser is not storing a pinned team.
       </span>
@@ -63,7 +61,7 @@ export function PinControl({
 
   return (
     <span
-      className={`inline-flex flex-wrap items-center gap-2${className ? ` ${className}` : ''}`}
+      className={['inline-flex flex-wrap items-center gap-2', className].filter(Boolean).join(' ')}
     >
       <button
         type="button"
@@ -81,9 +79,12 @@ export function PinControl({
         // `md:min-w-36` (144px, wider than either label): from 768px the button is `w-auto` at the
         // card's right edge, so "Pin this team" → "Pinned" shrank it and moved its LEFT edge under
         // the pointer. On a phone it is full width already.
-        className={`sx-pill sx-tap min-h-11 justify-center font-semibold aria-[pressed=false]:active:bg-surface-3 aria-pressed:bg-accent-wash aria-pressed:text-accent-ink${
-          variant === 'button' ? ' w-full md:w-auto md:min-w-36' : ''
-        }`}
+        className={[
+          'sx-pill sx-tap min-h-11 justify-center font-semibold aria-[pressed=false]:active:bg-surface-3 aria-pressed:bg-accent-wash aria-pressed:text-accent-ink',
+          variant === 'button' ? 'w-full md:w-auto md:min-w-36' : null,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         {/* 16px star: filled when pinned, an outline when not. aria-pressed carries the state;
             the shape is the visual twin of it, never the only channel (the label changes too). */}

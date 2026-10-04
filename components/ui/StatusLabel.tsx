@@ -62,7 +62,7 @@ export function GameChips({
   const { leagueTag, postseasonTag, isNonLeague } = display;
   if (!leagueTag && !postseasonTag && !isNonLeague) return null;
   return (
-    <span className={`inline-flex flex-wrap items-center gap-1${className ? ` ${className}` : ''}`}>
+    <span className={['inline-flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
       {leagueTag ? <Tag label={`${leagueTag} league game`}>{leagueTag}</Tag> : null}
       {isNonLeague ? <Tag label="non-league">NL</Tag> : null}
       {postseasonTag ? <Tag label={postseasonTag}>{postseasonTag}</Tag> : null}

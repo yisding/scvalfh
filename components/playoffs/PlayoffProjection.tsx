@@ -139,7 +139,7 @@ export function ProjectionKey({
   rulesHref: string;
 }) {
   return (
-    <details className={`sx-inset sx-disclosure${className ? ` ${className}` : ''}`}>
+    <details className={['sx-inset sx-disclosure', className].filter(Boolean).join(' ')}>
       <summary>How to read the projection</summary>
       {/* A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so the
           children's `m-0` would win and the paragraphs would touch. */}

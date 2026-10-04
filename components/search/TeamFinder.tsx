@@ -332,7 +332,7 @@ export function TeamFinder({
 
   return (
     <search
-      className={`sx-js-only block${className ? ` ${className}` : ''}`}
+      className={['sx-js-only block', className].filter(Boolean).join(' ')}
       data-searching={typing ? '' : undefined}
     >
       <label htmlFor={inputId} className="mb-1 block text-meta font-medium text-ink">

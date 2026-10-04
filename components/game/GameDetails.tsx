@@ -75,7 +75,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
 
   return (
     <section
-      className={`sx-card p-5${className ? ` ${className}` : ''}`}
+      className={['sx-card p-5', className].filter(Boolean).join(' ')}
       aria-labelledby="game-details-kicker"
     >
       <SectionHeader kicker="Details" as="h2" size="label" id="game-details-kicker" />

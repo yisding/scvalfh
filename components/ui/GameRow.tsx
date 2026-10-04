@@ -312,9 +312,13 @@ export function GameRow({
   return (
     <details
       open={defaultExpanded || undefined}
-      className={`${display.isNonLeague ? 'sx-nonleague ' : ''}bg-surface${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        display.isNonLeague ? 'sx-nonleague' : null,
+        'bg-surface',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {/* Three columns — lead (date · time · status), the two team lines, the chevron — so the
           status word never pushes a team line onto a third row. The lead column is 80px at every
@@ -344,7 +348,12 @@ export function GameRow({
           ) : null}
           {timeLine ? (
             <span
-              className={`sx-num text-cell leading-6 text-ink-2${display.strikeTime ? ' line-through' : ''}`}
+              className={[
+                'sx-num text-cell leading-6 text-ink-2',
+                display.strikeTime ? 'line-through' : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
               {when}
             </span>
@@ -442,7 +451,11 @@ export function GameCard({
         {withRecords ? recordsSentence(display) : ''}
       </span>
       <div className="flex items-center justify-between gap-2" aria-hidden="true">
-        <span className={`sx-num text-cell text-ink-2${display.strikeTime ? ' line-through' : ''}`}>
+        <span
+          className={['sx-num text-cell text-ink-2', display.strikeTime ? 'line-through' : null]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {game.isTimeTba ? 'Time TBA' : timeOfDay(game.dateLocal)}
         </span>
         {/* A scheduled game's status label is this same time; repeating it on the right read
@@ -527,9 +540,12 @@ export function GameLine({ game, perspective, showNonLeague = true, className }:
     <Link
       href={gameHref(game.contestId)}
       prefetch={false}
-      className={`sx-tap relative grid min-h-row-1 grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-x-3 px-gutter py-2 text-body no-underline${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        'sx-tap relative grid min-h-row-1 grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-x-3 px-gutter py-2 text-body no-underline',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className="sx-num text-cell text-ink-2">
         {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
@@ -571,9 +587,13 @@ export function gameLogRowClass(game: Game, className?: string): string {
   // The non-league rule is `display.isNonLeague` (SPEC §10.4): neither counted for a league table
   // nor postseason. A postseason game is neither league nor NL, so it takes no rule.
   const nonLeague = game.countsFor === null && game.postseason === null;
-  return `relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta${
-    nonLeague ? ' sx-nonleague' : ''
-  }${className ? ` ${className}` : ''}`;
+  return [
+    'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta',
+    nonLeague ? 'sx-nonleague' : null,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 /**

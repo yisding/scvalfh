@@ -50,8 +50,8 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
   const [first, ...rest] = side.contenders;
   // The right-hand side mirrors at md (`flex-row-reverse`, right-aligned text); on a phone the two
   // sides STACK, each a full-width row reading left to right, so the names stay in a column.
-  const mirror = align === 'end' ? ' md:flex-row-reverse md:text-right' : '';
-  const row = `flex min-w-0 items-center gap-2${mirror}`;
+  const mirror = align === 'end' ? 'md:flex-row-reverse md:text-right' : null;
+  const row = ['flex min-w-0 items-center gap-2', mirror].filter(Boolean).join(' ');
   const host = side.host ? ' (host)' : '';
   // The sub line is sans: the seat ("Santa Teresa #1") is a label, and only the record's digits
   // are mono (DESIGN §4.3). The seat is one unbreakable unit, so a wrap can never strand "#1" (or
@@ -123,7 +123,7 @@ export function PlayInCard({
 }: PlayInCardProps) {
   return (
     <div
-      className={`sx-card p-4${className ? ` ${className}` : ''}`}
+      className={['sx-card p-4', className].filter(Boolean).join(' ')}
       style={
         emphasis
           ? { boxShadow: 'inset 3px 0 0 var(--sx-text), var(--sx-ring), var(--sx-shadow-raised)' }

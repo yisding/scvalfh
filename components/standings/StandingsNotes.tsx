@@ -329,7 +329,7 @@ export function StandingsNotes({
   const items = toItems(byTeam(mismatches));
   return (
     <div
-      className={`sx-inset flex flex-col rounded-card-lg p-5 md:p-6${className ? ` ${className}` : ''}`}
+      className={['sx-inset flex flex-col rounded-card-lg p-5 md:p-6', className].filter(Boolean).join(' ')}
     >
       <h3 className="m-0 text-lead text-ink">
         Notes<span className="sr-only">: {divisionLabel}</span>

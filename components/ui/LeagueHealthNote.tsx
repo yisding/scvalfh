@@ -22,7 +22,7 @@ export function LeagueHealthNote({ leagueId, className }: LeagueHealthNoteProps)
   const asOf = health.state === 'frozen' && health.lastFreshAt ? health.lastFreshAt : null;
   if (health.reasons.length === 0 && asOf === null) return null;
   return (
-    <div role="note" className={`sx-inset text-ink-2${className ? ` ${className}` : ''}`}>
+    <div role="note" className={['sx-inset text-ink-2', className].filter(Boolean).join(' ')}>
       {health.reasons.map((reason) => (
         <p key={reason} className="m-0">
           {reason}

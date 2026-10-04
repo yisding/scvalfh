@@ -432,7 +432,11 @@ export function StandingsTable(props: StandingsTableProps) {
       {/* `sx-flush` is `overflow: clip`, NOT `hidden`: `hidden` makes the card a scroll container,
           and a sticky `<thead>` then resolves its `top` against the card instead of the viewport
           — the head floated between rows 1 and 2 at rest and scrolled away entirely. */}
-      <div className={`sx-card sx-flush${bleed ? ' sx-bleed' : ''}${variant === 'mini' ? ' @container' : ''}`}>
+      <div
+        className={['sx-card sx-flush', bleed ? 'sx-bleed' : null, variant === 'mini' ? '@container' : null]
+          .filter(Boolean)
+          .join(' ')}
+      >
         <table
           className={
             variant === 'desktop'
@@ -601,7 +605,12 @@ export function StandingsTable(props: StandingsTableProps) {
                             {/* Mono for the digits only (they stack down the rows); the word is
                                 prose and stays sans. */}
                             <span
-                              className={`whitespace-nowrap text-cell text-ink-3${showGp ? ' max-[23.4375rem]:hidden' : ''}`}
+                              className={[
+                                'whitespace-nowrap text-cell text-ink-3',
+                                showGp ? 'max-[23.4375rem]:hidden' : null,
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
                             >
                               <span className="sx-num">{recordString(s.overall)}</span> overall
                             </span>

@@ -78,7 +78,7 @@ export function FormStrip({
 }: FormStripProps) {
   if (entries.length === 0) {
     return (
-      <span className={`text-meta text-ink-3${className ? ` ${className}` : ''}`}>no results</span>
+      <span className={['text-meta text-ink-3', className].filter(Boolean).join(' ')}>no results</span>
     );
   }
   const linked = entries.some((e) => e.contestId);
@@ -90,7 +90,7 @@ export function FormStrip({
     .join(', ')}.`;
 
   return (
-    <span className={`inline-flex flex-wrap items-center gap-2${className ? ` ${className}` : ''}`}>
+    <span className={['inline-flex flex-wrap items-center gap-2', className].filter(Boolean).join(' ')}>
       <span className="sr-only">{sentence} Most recent last.</span>
       <span className="inline-flex items-center" aria-hidden={linked ? undefined : 'true'}>
         {entries.map((entry, i) => {
