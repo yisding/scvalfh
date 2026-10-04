@@ -1,59 +1,59 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0",
-  "contentHash": "f0cf82c475df99e7b6ecc886da186d6d2ac0a4c1f00e5fc2b091ca50a4e9be3b",
+  "commitSummary": "SCVAL +2 finals · BVAL +0 · PCAL +0 · MCAL +0",
+  "contentHash": "0ff123da22ed8fac1b7e3777f1e97792367ca5a9456946893411e94ad5c547e1",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 65,
+        "finals": 66,
         "games": 116,
         "leagueGames": 60,
         "teams": 12
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 57,
-        "games": 86,
+        "finals": 60,
+        "games": 87,
         "leagueGames": 72,
         "teams": 9
       },
       "pcal": {
-        "backfilled": 2,
-        "finals": 38,
-        "games": 56,
+        "backfilled": 3,
+        "finals": 40,
+        "games": 57,
         "leagueGames": 36,
         "teams": 7
       },
       "scval": {
-        "backfilled": 0,
-        "finals": 93,
+        "backfilled": 1,
+        "finals": 97,
         "games": 158,
         "leagueGames": 96,
         "teams": 15
       }
     },
-    "finals": 205,
-    "games": 364,
+    "finals": 212,
+    "games": 365,
     "leagueGames": 264,
-    "mismatches": 6,
-    "pending": 6,
+    "mismatches": 8,
+    "pending": 4,
     "teams": 43
   },
   "crossCheck": {
-    "agreements": 70,
-    "backfilled": 2,
-    "compared": 137,
+    "agreements": 69,
+    "backfilled": 3,
+    "compared": 134,
     "conflicts": 2,
-    "sbliveOnlyScored": 5
+    "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-10-03T17:45:29.338Z",
+  "fetchedAt": "2026-10-04T10:49:11.786Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 45,
-      "finalsDelta": 0,
+      "countedFinals": 47,
+      "finalsDelta": 2,
       "id": "scval",
-      "missingPast": 4,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -90,7 +90,7 @@
   "requests": {
     "maxpreps": 56,
     "official": 8,
-    "sblive": 21
+    "sblive": 20
   },
   "sources": [
     {
@@ -350,7 +350,7 @@
     },
     {
       "label": "stevenson schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -380,7 +380,7 @@
     },
     {
       "label": "redwood schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -434,11 +434,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-09-19",
-      "rowCount": 3,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-09-21",
       "rowCount": 7,
       "status": "ok"
@@ -480,7 +475,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-30",
-      "rowCount": 17,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -490,7 +485,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-02",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -505,7 +500,7 @@
     },
     {
       "label": "sblive carmel games",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -559,7 +554,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-03",
+  "today": "2026-10-04",
   "warnings": 39,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
