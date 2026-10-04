@@ -33,7 +33,7 @@ import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from './snapshot-migrate';
 import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
-import type { DivisionId, Snapshot, TiebreakStage } from './types';
+import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage } from './types';
 
 // ---------------------------------------------------------------- primitives
 
@@ -47,7 +47,7 @@ const contestId = z
   .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
 const sectionId = z.enum(['ccs', 'ncs', 'ns']);
-const officialSourceId = z.enum(['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf']);
+const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
 const sourceId = z.enum([
   'maxpreps-api',
   'maxpreps-html',

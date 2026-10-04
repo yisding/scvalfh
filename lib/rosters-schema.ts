@@ -44,25 +44,31 @@ export const GRADE_CLASSES = ['Fr.', 'So.', 'Jr.', 'Sr.'] as const;
 
 export const RosterPlayerSchema = z
   .object({
-    /** MaxPreps per-season athlete GUID. */
+    /** MaxPreps per-season athlete GUID: a returning player gets a new one each year. */
     athleteId: z.string().min(1).nullable(),
     /** MaxPreps per-season roster-membership GUID. */
     rosterId: z.string().min(1).nullable(),
-    /** MaxPreps' stable person id. */
+    /** MaxPreps' stable person id, the same across seasons. */
     careerProfileId: z.string().min(1).nullable(),
-    /** The `?careerid=` short key in the career URL. */
+    /** The `?careerid=` short key in the career URL: the public identifier in links. */
     careerId: z.string().min(1).nullable(),
     firstName: z.string().min(1).nullable(),
     lastName: z.string().min(1).nullable(),
+    /** As the table prints it. Never empty. */
     fullName: z.string().min(1),
-    /** A string on purpose: "00" and "21/88" occur. */
+    /** A string on purpose: "00" and "21/88" occur. null when blank. */
     jersey: z.string().min(1).nullable(),
+    /** 9–12, or null when the coach left it blank. */
     grade: z.number().int().min(9).max(12).nullable(),
+    /** "Sr." / "Jr." / "So." / "Fr.", or null: always in step with `grade`. */
     gradeClass: z.enum(GRADE_CLASSES).nullable(),
+    /** position1..3 in order, blanks dropped (F / M / D / G observed). */
     positions: z.array(z.string().min(1)),
+    /** `positions` joined with ", ": exactly the table's Position cell; null when blank. */
     position: z.string().min(1).nullable(),
-    /** `5'7"`, as MaxPreps prints it. */
+    /** `5'7"`, as MaxPreps prints it; null when heightFeet is blank. */
     height: z.string().regex(/^\d'\d{1,2}"$/, 'expected feet\'inches"').nullable(),
+    /** Total inches, or null. */
     heightInches: z.number().int().min(1).nullable(),
     isCaptain: z.boolean(),
     careerUrl: httpUrl.nullable(),

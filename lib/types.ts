@@ -35,7 +35,10 @@ export type TeamSlug = string;
 /** The CCS PLAYOFF division (never a league division). Always "CCS Division 1/2" in copy. */
 export type CcsDivisionName = 'Division 1' | 'Division 2';
 
-export type OfficialSourceId = 'scval-pdf' | 'bval-docx' | 'pcal-pdf' | 'mcal-pdf';
+/** The league documents an official schedule is read from; the snapshot and bundle schemas take z.enum of this list. */
+export const OFFICIAL_SOURCE_IDS = ['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf'] as const;
+
+export type OfficialSourceId = (typeof OFFICIAL_SOURCE_IDS)[number];
 
 export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId

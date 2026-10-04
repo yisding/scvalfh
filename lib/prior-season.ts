@@ -21,34 +21,7 @@ import { z } from 'zod';
 import { dateKey } from './schema-primitives';
 import type { ScheduleRow } from './sources/maxpreps';
 import { TEAMS } from './teams';
-import type { Team, TeamId, TeamSlug } from './types';
-
-export interface PriorGame {
-  contestId: string;
-  /** YYYY-MM-DD, local. */
-  date: string;
-  homeId: TeamId;
-  homeSlug: TeamSlug;
-  awayId: TeamId;
-  awaySlug: TeamSlug;
-  homeScore: number;
-  awayScore: number;
-  /** 'neutral' when MaxPreps marks either side neutral (homeAwayType 2). */
-  site: 'home' | 'neutral';
-}
-
-/** What the normalization left out, by reason (the file keeps the counts). */
-export interface PriorExcluded {
-  /** Rows MaxPreps marks deleted (contestState 1 or isDeleted). */
-  deleted: number;
-  /** Rows that were never final (scheduled, score not reported). */
-  notFinal: number;
-  /** Finals against a school that is not one of the registry's teams. */
-  outsideRegistry: number;
-  forfeit: number;
-  /** Finals with a missing score. */
-  unscored: number;
-}
+import type { Team, TeamSlug } from './types';
 
 export const PriorSeasonSchema = z
   .object({
@@ -59,23 +32,31 @@ export const PriorSeasonSchema = z
     sportSeasonId: z.string().min(1),
     source: z.literal('maxpreps-api'),
     fetchedAt: z.string().min(1),
+    /** What the normalization left out, by reason (the file keeps the counts). */
     excluded: z.object({
+      /** Rows MaxPreps marks deleted (contestState 1 or isDeleted). */
       deleted: z.number().int().min(0),
+      /** Rows that were never final (scheduled, score not reported). */
       notFinal: z.number().int().min(0),
+      /** Finals against a school that is not one of the registry's teams. */
       outsideRegistry: z.number().int().min(0),
       forfeit: z.number().int().min(0),
+      /** Finals with a missing score. */
       unscored: z.number().int().min(0),
     }),
     games: z.array(
       z.object({
         contestId: z.string().min(1),
+        /** YYYY-MM-DD, local. */
         date: dateKey,
+        /** Registry ids and slugs (TeamId, TeamSlug). */
         homeId: z.string().min(1),
         homeSlug: z.string().min(1),
         awayId: z.string().min(1),
         awaySlug: z.string().min(1),
         homeScore: z.number().int().min(0),
         awayScore: z.number().int().min(0),
+        /** 'neutral' when MaxPreps marks either side neutral (homeAwayType 2). */
         site: z.enum(['home', 'neutral']),
       }),
     ),
@@ -104,6 +85,10 @@ export const PriorSeasonSchema = z
   });
 
 export type PriorSeason = z.infer<typeof PriorSeasonSchema>;
+/** One final between two registry teams last season. */
+export type PriorGame = PriorSeason['games'][number];
+/** What the normalization left out, by reason. */
+export type PriorExcluded = PriorSeason['excluded'];
 
 /** "25-26" (MaxPreps) → "2025-26". */
 export function seasonLabel(maxprepsYear: string): string {

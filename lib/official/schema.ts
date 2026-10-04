@@ -21,7 +21,14 @@ import { z } from 'zod';
 import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '../leagues';
 import { dateKey } from '../schema-primitives';
 import { resolveOfficialName } from '../teams';
-import type { DivisionId, LeagueId, OfficialFixture, OfficialSourceId, TeamSlug } from '../types';
+import {
+  OFFICIAL_SOURCE_IDS,
+  type DivisionId,
+  type LeagueId,
+  type OfficialFixture,
+  type OfficialSourceId,
+  type TeamSlug,
+} from '../types';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 
@@ -63,7 +70,7 @@ export const BundleEventSchema = z.strictObject({
 export const OfficialBundleSchema = z.strictObject({
   schema: z.literal(OFFICIAL_BUNDLE_SCHEMA),
   league: z.string().min(1),
-  source: z.enum(['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf']),
+  source: z.enum(OFFICIAL_SOURCE_IDS),
   transcribedOn: dateKey,
   documents: z.array(BundleDocumentSchema).min(1),
   fixtures: z.array(BundleFixtureSchema).min(1),

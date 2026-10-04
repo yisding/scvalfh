@@ -184,7 +184,7 @@ export type HistoryDivision = AvailableLeagueHistory['divisions'][number];
 export type HistoryRow = HistoryDivision['standings']['varsity'][number];
 export type HistoryAwards = NonNullable<HistoryDivision['awards']['varsity']>;
 export type HistoryPlayer = HistoryAwards['firstTeam'][number];
-export type History = { season: string; sport: string; leagues: Record<string, LeagueHistory> };
+export type History = z.infer<typeof HistorySchema>;
 export type HistoryLevel = 'varsity' | 'jv';
 
 /**
@@ -210,7 +210,7 @@ function load(): History {
   }
   const parsed = HistorySchema.safeParse(raw);
   if (!parsed.success) failValidation('history', parsed.error.issues);
-  return parsed.data as History;
+  return parsed.data;
 }
 
 const history = load();
