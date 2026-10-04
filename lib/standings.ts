@@ -92,11 +92,14 @@ const emptyTally = (): Tally => ({
   results: [],
 });
 
-function bump(rec: Record3, outcome: Outcome): void {
+function bump(rec: { w: number; l: number; t: number }, outcome: Outcome): void {
   if (outcome === 'W') rec.w += 1;
   else if (outcome === 'L') rec.l += 1;
   else rec.t += 1;
 }
+
+/** CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6). */
+const winPct = (r: { w: number; t: number; gp: number }): number => (r.gp > 0 ? (r.w + r.t / 2) / r.gp : 0);
 
 /**
  * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
@@ -127,9 +130,7 @@ function accumulate(tally: Tally, game: Game, teamId: TeamId): void {
   const view = perspective(game, teamId);
   if (!view) return;
   tally.gp += 1;
-  if (view.outcome === 'W') tally.w += 1;
-  else if (view.outcome === 'L') tally.l += 1;
-  else tally.t += 1;
+  bump(tally, view.outcome);
   // Forfeits count in W-L-T but NOT in goals (DESIGN §11.6).
   if (!game.isForfeit) {
     tally.gf += view.for;
@@ -160,8 +161,7 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
     w,
     l,
     t,
-    // CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6).
-    winPct: gp > 0 ? (w + t / 2) / gp : 0,
+    winPct: winPct(tally),
     // The league's points (3-1-0 in all five leagues; SCVAL Article VI §2).
     pts: points.win * w + points.tie * t + points.loss * l,
     gf: tally.gf,
@@ -212,9 +212,7 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
       const row = out.get(id);
       if (!view || !row) continue;
       row.gp += 1;
-      if (view.outcome === 'W') row.w += 1;
-      else if (view.outcome === 'L') row.l += 1;
-      else row.t += 1;
+      bump(row, view.outcome);
       if (!game.isForfeit) {
         row.gf += view.for;
         row.ga += view.against;
@@ -313,18 +311,14 @@ function stageKeys(
           // "Better head-to-head record". With an equal number of head-to-head games the by-laws'
           // own currency (points) ranks them; with an unequal number (mid-season, or an unplayed
           // fixture) points would reward the team that simply played more, so use win percentage.
-          key = allEqualGp
-            ? rules.points.win * row.w + rules.points.tie * row.t
-            : row.gp > 0
-              ? (row.w + row.t / 2) / row.gp
-              : 0;
+          key = allEqualGp ? rules.points.win * row.w + rules.points.tie * row.t : winPct(row);
         } else if (stage === 'h2h-goals-against') {
           // "Least goals given up between head to head teams tied" — fewer is better.
           key = -row.ga;
         } else if (stage === 'h2h-goal-diff') {
           key = row.gf - row.ga;
         } else {
-          key = (row.w + row.t / 2) / row.gp;
+          key = winPct(row);
         }
         out.set(id, key);
       }
@@ -339,9 +333,7 @@ function stageKeys(
     case 'record-above-tie': {
       if (above.length === 0) return null;
       for (const id of group) {
-        let w = 0;
-        let t = 0;
-        let gp = 0;
+        const rec = { ...emptyRecord3(), gp: 0 };
         for (const g of ctx.games) {
           const ids = [g.home.teamId, g.away.teamId];
           if (!ids.includes(id)) continue;
@@ -349,12 +341,11 @@ function stageKeys(
           if (!other || !above.includes(other)) continue;
           const view = perspective(g, id);
           if (!view) continue;
-          gp += 1;
-          if (view.outcome === 'W') w += 1;
-          else if (view.outcome === 'T') t += 1;
+          rec.gp += 1;
+          bump(rec, view.outcome);
         }
-        if (gp === 0) return null;
-        out.set(id, (w + t / 2) / gp);
+        if (rec.gp === 0) return null;
+        out.set(id, winPct(rec));
       }
       return out;
     }
