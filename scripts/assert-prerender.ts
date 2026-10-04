@@ -4,7 +4,9 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it), the league config
+ * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it, read through the same
+ * `loadSnapshot` the build uses, so a file written before a league was added is checked as the
+ * build rendered it, upgraded), the league config
  * (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through lib/clubs.ts). So a family that
  * came back short, or long, or a page that lost its generateStaticParams (it would render on demand
  * instead), fails here by name:
@@ -12,19 +14,21 @@
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
  *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id, `playoffs/<id>.html` for each
- *    league-tournament league;
+ *    league-tournament league (an unbracketed league such as the EAL has none: its card is `id="eal"`
+ *    on /playoffs);
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
  *    stub per `supersededGames` key (counted separately);
- *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the 43 registry slugs;
+ *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the 49 registry slugs (the snapshot's
+ *    team slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
  *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
  *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There
  *    is no clubs OG card (the pages take the root one), so no parity check either;
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats
- *    (`id="player-stats"`) section: all 43 teams, in every league (a missing one means a team page
+ *    (`id="player-stats"`) section: all 49 teams, in all five leagues (a missing one means a team page
  *    went back to showing them for SCVAL only);
- *  - `history/2025-26.html` has a section per league of lib/leagues.ts (`id="scval"` … `id="mcal"`)
+ *  - `history/2025-26.html` has a section per league of lib/leagues.ts (`id="scval"` … `id="eal"`)
  *    and an anchor for each division of every league the history data marks available;
  *  - no prerendered path contains ':' (a raw `sblive:` id leaking into a URL);
  *  - OG/page parity BY NAME per family with an image: `game/X.html` ⇔ `game/X/opengraph-image`,
@@ -48,16 +52,11 @@ import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
+import { loadSnapshot } from '../lib/snapshot-schema';
+import { TEAMS } from '../lib/teams';
 
 const APP = '.next/server/app';
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
-
-interface SnapshotLike {
-  games: Array<{ contestId: string; dateKey: string }>;
-  supersededGames?: Record<string, string>;
-  teams: Array<{ slug: string }>;
-  season: { leagues: Array<{ id: string; postseasonKind?: string }> };
-}
 
 const problems: string[] = [];
 const fail = (msg: string) => problems.push(msg);
@@ -66,7 +65,7 @@ if (!existsSync(APP)) {
   console.error(`assert-prerender: ${APP} does not exist; run \`pnpm build\` first`);
   process.exit(1);
 }
-const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as SnapshotLike;
+const snapshot = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
 
 /** Every file under .next/server/app, as forward-slash paths relative to it. */
 const allFiles = (readdirSync(APP, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
@@ -152,12 +151,22 @@ function family(name: string, expected: readonly string[], opts: { og: boolean }
 }
 
 const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-const stubParams = Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam);
+const stubParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
 const overlap = stubParams.filter((p) => gameParams.includes(p));
 if (overlap.length) fail(`superseded stubs that are also live games: ${sample(overlap)}`);
 const dates = [...new Set(snapshot.games.map((g) => g.dateKey))].sort();
 const slugs = snapshot.teams.map((t) => t.slug);
-if (slugs.length !== 43) fail(`snapshot has ${slugs.length} teams, expected 43`);
+{
+  const registry = TEAMS.map((t) => t.slug);
+  const missing = diff(registry, slugs);
+  const extra = diff(slugs, registry);
+  if (missing.length || extra.length || slugs.join('|') !== registry.join('|')) {
+    fail(
+      `snapshot teams ≠ the ${registry.length}-team registry (missing: ${sample(missing) || 'none'}; ` +
+        `extra: ${sample(extra) || 'none'}${missing.length || extra.length ? '' : '; order differs'})`,
+    );
+  }
+}
 const tournament = [...TOURNAMENT_LEAGUE_IDS];
 const snapshotTournament = snapshot.season.leagues.filter((l) => l.postseasonKind === 'league-tournament').map((l) => l.id);
 if (JSON.stringify(snapshotTournament) !== JSON.stringify(tournament)) {
@@ -190,7 +199,7 @@ family('clubs', clubSlugs, { og: false });
   }
 }
 
-// Roster and Player stats on every team page, all four leagues (the empty states count: a team
+// Roster and Player stats on every team page, all five leagues (the empty states count: a team
 // nothing has been collected for still says so, rather than dropping the section).
 const noSections: string[] = [];
 for (const slug of slugs) {

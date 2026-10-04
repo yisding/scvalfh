@@ -50,6 +50,7 @@ const ID_LITERALS = new Set([
   'bval',
   'pcal',
   'mcal',
+  'eal',
   'de-anza',
   'el-camino',
   'mt-hamilton',

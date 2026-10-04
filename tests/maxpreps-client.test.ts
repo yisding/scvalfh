@@ -69,6 +69,21 @@ describe('maxpreps: schemas are permissive about unknown fields, strict about ou
     expect(allScheduleRows().length).toBe(293);
   });
 
+  it('parses the EAL table, where Red Bluff’s 0-0-0 row has modifiedOn null (2026-10-04)', () => {
+    const raw = JSON.parse(
+      readFileSync(path.join(REPO, 'tests', 'fixtures', 'maxpreps', 'standings-eal-2026-10-04.json'), 'utf8'),
+    ) as { data: Array<{ schoolId: string; modifiedOn: string | null }> };
+    expect(raw.data.filter((r) => r.modifiedOn === null).map((r) => r.schoolId)).toEqual(['4d3da788-bbe2-4ab9-b854-d95aa9786cda']);
+    const parsed = StandingsResponseSchema.parse(raw);
+    expect(parsed.data).toHaveLength(7);
+    const redBluff = parsed.data.find((r) => r.schoolId === '4d3da788-bbe2-4ab9-b854-d95aa9786cda')!;
+    expect(redBluff.modifiedOn).toBe('');
+    // Every other row keeps its timestamp as MaxPreps sent it.
+    for (const r of parsed.data) {
+      if (r !== redBluff) expect(r.modifiedOn, r.schoolId).toBe(raw.data.find((x) => x.schoolId === r.schoolId)!.modifiedOn);
+    }
+  });
+
   it('keeps unknown fields instead of choking on them', () => {
     const parsed = StandingsResponseSchema.parse(standingsFixture('da'));
     expect((parsed.data[0] as Record<string, unknown>).b1).toBeDefined();

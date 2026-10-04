@@ -3,7 +3,7 @@
  *
  * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
  * league's own end-of-season documents (SCVAL's two PDFs, BVAL's Google Sheet and all-league
- * documents; for PCAL and MCAL we found no official final standings, so they are marked
+ * documents; for PCAL, MCAL and EAL we found no official final standings, so they are marked
  * 'unavailable' with the reason, never filled from a third party). MaxPreps cannot serve a prior season at all — the year segment of
  * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
  * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
@@ -230,7 +230,7 @@ export function getHistorySeason(): string {
   return history.season;
 }
 
-/** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL). */
+/** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
 export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
   return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
 }

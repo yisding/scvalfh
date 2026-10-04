@@ -1,16 +1,20 @@
 /**
- * v1 → v2 snapshot migration, in memory (SPEC §4.3). Pure: no I/O, no clock.
+ * Snapshot upgrades, in memory. Pure: no I/O, no clock.
  *
- * A v1 file (the SCVAL-only site, no `schemaVersion`) keeps loading until the first v2 run
- * replaces it. Every SCVAL value is recomputed by the same engine the v2 pipeline uses, so the
- * migrated SCVAL standings rows are byte-identical to the v1 rows (golden-gated); the three new
+ * v1 → v2 (SPEC §4.3). A v1 file (the SCVAL-only site, no `schemaVersion`) keeps loading until the
+ * first v2 run replaces it. Every SCVAL value is recomputed by the same engine the v2 pipeline uses,
+ * so the migrated SCVAL standings rows are byte-identical to the v1 rows (golden-gated); the other
  * leagues are present as registry teams with no results and a `degraded` health row that says why.
  *
- * Returns v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "League added" (v2 → v2). A v2 file written before a configured league existed (the four-league
+ * snapshot before the EAL) gains that league's sections, season entry, teams, empty standings rows and
+ * a `degraded` health row; every existing league's rows stay byte-identical.
+ *
+ * Both return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
 import { classifyGames } from './classify';
-import { CCS, LEAGUES, findDivision } from './leagues';
+import { CCS, LEAGUES, LEAGUE_IDS, findDivision } from './leagues';
 import { buildSeason } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
 import { TEAMS, getTeamById, getTeamBySlug, teamsInLeague } from './teams';
@@ -39,7 +43,7 @@ export function isSnapshotV1(raw: unknown): boolean {
   return isObject(season) && isObject(season.leagues);
 }
 
-/** A side re-resolved by teamId through the 43-team registry (a now-registry opponent gains its slug and name). */
+/** A side re-resolved by teamId through the 49-team registry (a now-registry opponent gains its slug and name). */
 function upgradeSide(side: GameSide): GameSide {
   const team: Team | undefined = side.teamId ? getTeamById(side.teamId) : undefined;
   if (!team) return { ...side };
@@ -57,12 +61,13 @@ function upgradeGame(raw: Json): Game {
     homeTeam && awayTeam && homeTeam.division === awayTeam.division ? homeTeam.division : null;
 
   const { official: v1Official, ...rest } = v1;
-  let official: OfficialStamp | undefined;
+  let stamp: OfficialStamp | undefined;
   if (v1Official && leagueDivision !== null) {
     // v1 stamps exist only on SCVAL same-division games.
     const division = leagueDivision;
-    const source = findDivision(division)?.official.source ?? 'scval-pdf';
-    official = {
+    const official = findDivision(division)?.official;
+    const source = !official || official.mode === 'none' ? 'scval-pdf' : official.source;
+    stamp = {
       scheduledDate: v1Official.scheduledDate,
       division,
       source,
@@ -79,7 +84,7 @@ function upgradeGame(raw: Json): Game {
     contestTypes: { home: null, away: null },
     postseason: null,
     countsFor: null,
-    ...(official ? { official } : {}),
+    ...(stamp ? { official: stamp } : {}),
   };
 }
 
@@ -238,6 +243,113 @@ export function migrateV1ToV2(raw: unknown): unknown {
     ...(v1.officialStandingsPdfUrl !== undefined
       ? { officialStandingsPdfUrl: v1.officialStandingsPdfUrl as string | null }
       : {}),
+    counts: countsOf(games, standings),
+  };
+  return out;
+}
+
+// ---------------------------------------------------------------- "league added" (v2 → v2)
+
+/**
+ * A v2 object whose `season.leagues` ids are a proper, in-order subsequence of LEAGUE_IDS: a file
+ * written before one or more configured leagues existed.
+ */
+export function lacksConfiguredLeagues(raw: unknown): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2) return false;
+  const season = raw.season;
+  if (!isObject(season) || !Array.isArray(season.leagues)) return false;
+  const ids = season.leagues.map((l) => (isObject(l) ? l.id : undefined));
+  if (ids.length >= LEAGUE_IDS.length) return false;
+  let at = 0;
+  for (const id of ids) {
+    if (typeof id !== 'string') return false;
+    const next = LEAGUE_IDS.indexOf(id, at);
+    if (next < 0) return false;
+    at = next + 1;
+  }
+  return true;
+}
+
+/** `present` (a subset of `all`, in `all`'s order) with the missing entries of `all` inserted where config puts them. */
+function mergeInConfigOrder<T extends { id: string }>(present: readonly T[], all: readonly T[]): T[] {
+  const have = new Map(present.map((x) => [x.id, x]));
+  return all.map((x) => have.get(x.id) ?? x);
+}
+
+/**
+ * Adds the configured leagues a v2 file predates (D15). In order: (1) every game side in `games` and
+ * `playoffs.games` re-resolved by teamId (a now-registry opponent gains its slug and name; teamId,
+ * leagueDivision, countsFor and postseason are untouched, since a pre-league file holds no game
+ * between two members of a new league); (2) `teams` = the registry; (3) the missing season sections
+ * and leagues from `buildSeason`; (4) the missing divisions' standings rows (no results) and their
+ * cross-check rows; (5) one `degraded` health row per missing league; (6) `counts` recomputed.
+ * Throws on input that `lacksConfiguredLeagues` rejects.
+ */
+export function addConfiguredLeagues(raw: unknown): unknown {
+  if (!lacksConfiguredLeagues(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot that lacks a configured league');
+  const v2 = raw as unknown as Snapshot;
+  const presentIds = new Set(v2.season.leagues.map((l) => l.id));
+  const missing = LEAGUES.filter((l) => !presentIds.has(l.id));
+  const missingDivisions = new Set<string>(missing.flatMap((l) => l.divisions.map((d) => d.id)));
+
+  // 1. game sides
+  const upgradeSides = (g: Game): Game => ({ ...g, home: upgradeSide(g.home), away: upgradeSide(g.away) });
+  const games = v2.games.map(upgradeSides);
+  const playoffs: Snapshot['playoffs'] = { ...v2.playoffs, games: v2.playoffs.games.map(upgradeSides) };
+
+  // 3. season: sections and leagues from config, existing entries kept as written
+  const built = buildSeason(games);
+  const season: Snapshot['season'] = {
+    ...v2.season,
+    sections: mergeInConfigOrder(v2.season.sections, built.sections),
+    leagues: mergeInConfigOrder(v2.season.leagues, built.leagues),
+  };
+
+  // 4. standings rows (and their cross-check rows) for the missing divisions, in config order
+  const added = computeStandings(games, { reported: new Map() }).filter((r) => missingDivisions.has(r.division));
+  const standings: Standing[] = [];
+  for (const league of LEAGUES) {
+    const divisions = new Set<string>(league.divisions.map((d) => d.id));
+    const source = presentIds.has(league.id) ? v2.standings : added;
+    standings.push(...source.filter((r) => divisions.has(r.division)));
+  }
+  const crossCheck = [...v2.crossCheck, ...buildCrossCheck(added)];
+
+  // 5. one degraded health row per missing league, in config order
+  const leagueHealth: LeagueHealth[] = LEAGUES.flatMap((league): LeagueHealth[] => {
+    if (presentIds.has(league.id)) return v2.leagueHealth.filter((h) => h.leagueId === league.id);
+    const short = league.shortName;
+    return [{
+      leagueId: league.id,
+      state: 'degraded',
+      lastFreshAt: null,
+      reasons: [`No ${short} data in this snapshot yet: it was written before ${short} was added.`],
+      divisions: league.divisions.map((d) => ({
+        divisionId: d.id,
+        meta: 'skipped',
+        reportedTable: 'skipped',
+        reportedRows: null,
+        classification: league.rules.classification,
+        official: null,
+        countedFinals: 0,
+        previousCountedFinals: null,
+        backfilled: 0,
+      })),
+      teamFeeds: { total: teamsInLeague(league.id).length, ok: 0, carried: 0, failed: 0 },
+    }];
+  });
+
+  const out: Snapshot = {
+    ...v2,
+    season,
+    // 2. the registry
+    teams: TEAMS.map((t) => ({ ...t })),
+    games,
+    standings,
+    playoffs,
+    leagueHealth,
+    crossCheck,
+    // 6. counts
     counts: countsOf(games, standings),
   };
   return out;

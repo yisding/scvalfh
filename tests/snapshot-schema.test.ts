@@ -5,7 +5,11 @@ import { describe, expect, it } from 'vitest';
 
 import {
   GameSchema,
+  LeagueHealthSchema,
+  PostseasonTagSchema,
+  SeasonSchema,
   SnapshotSchema,
+  TeamSchema,
   loadSnapshot,
   parseSnapshot,
   snapshotContentHash,
@@ -39,6 +43,12 @@ function issuesOf(raw: unknown): string {
   return JSON.stringify(result.error?.issues);
 }
 
+/** The 2026-09-28 Chico 1, Davis 1 EAL final that MaxPreps flags W/L: a 1 v 1 win, decider 'SO', no tally. */
+function oneVOneGame(over: Partial<Game> = {}): Game {
+  const g = game({ home: 'chico', away: 'davis', hs: 1, as: 1, date: '2026-09-28' });
+  return { ...g, home: { ...g.home, result: 'W' }, away: { ...g.away, result: 'L' }, decider: 'SO', ...over };
+}
+
 /** A si.com-only game as D2 rule 2 publishes it. */
 function sbliveGame(over: Partial<Game> = {}): Game {
   const g = game({ home: 'carmel', away: 'salinas', hs: 2, as: 1, date: '2026-09-23' });
@@ -59,7 +69,7 @@ function sbliveGame(over: Partial<Game> = {}): Game {
 describe('snapshot schema: accepts a real snapshot', () => {
   it('validates the migrated committed snapshot', () => {
     expect(() => parseSnapshot(baseSnapshot())).not.toThrow();
-    expect(MIGRATED.teams).toHaveLength(43);
+    expect(MIGRATED.teams).toHaveLength(49);
   });
 
   it('loadSnapshot upgrades v1 and passes v2 through', () => {
@@ -128,7 +138,18 @@ describe('snapshot schema: game invariants (DESIGN §5.1)', () => {
     const g = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 1 });
     const result = GameSchema.safeParse({ ...g, shootout: { home: 4, away: 3 } });
     expect(result.success).toBe(false);
-    expect(JSON.stringify(result.error?.issues)).toMatch(/shootout\/decider mismatch/);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/shootout data without decider SO/);
+    // A tally with an OT decider is the same violation.
+    const ot = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 1, ot: 1 });
+    expect(ot.decider).toBe('OT');
+    const withTally = GameSchema.safeParse({ ...ot, shootout: { home: 4, away: 3 } });
+    expect(withTally.success).toBe(false);
+    expect(JSON.stringify(withTally.error?.issues)).toMatch(/shootout data without decider SO/);
+  });
+
+  it('accepts an SO decider without a tally (an EAL 1 v 1 win; the tally is not stored)', () => {
+    expect(GameSchema.safeParse(oneVOneGame()).success).toBe(true);
+    expect(GameSchema.safeParse(oneVOneGame({ shootout: { home: 2, away: 1 } })).success).toBe(true);
   });
 
   it('accepts a genuine 0-0 final', () => {
@@ -154,8 +175,8 @@ describe('snapshot schema: game invariants (DESIGN §5.1)', () => {
 describe('snapshot schema: checkAgainstConfig', () => {
   it('1. names the missing team when teams do not equal the registry', () => {
     const s = baseSnapshot();
-    const broken = { ...s, teams: s.teams.slice(0, 42), counts: { ...s.counts, teams: 42 } };
-    expect(issuesOf(broken)).toMatch(/teams do not equal the registry \(missing: marin-academy, extra: none\)/);
+    const broken = { ...s, teams: s.teams.slice(0, 48), counts: { ...s.counts, teams: 48 } };
+    expect(issuesOf(broken)).toMatch(/teams do not equal the registry \(missing: pleasant-valley, extra: none\)/);
   });
 
   it('1. rejects the registry in another order', () => {
@@ -286,10 +307,58 @@ describe('snapshot schema: checkAgainstConfig', () => {
     expect(issuesOf(s)).toMatch(/a backfilled game must carry sblive scores/);
   });
 
+  it('4. an SO decider only between two members of a 1 v 1 league, level and flagged W/L when it has no tally', () => {
+    const ok = baseSnapshot();
+    const so = oneVOneGame();
+    expect(so.countsFor).toBe('eal');
+    expect(so.official).toBeUndefined();
+    ok.games.push(so);
+    ok.counts.games += 1;
+    expect(() => parseSnapshot(ok)).not.toThrow();
+
+    const cases: Array<[Game, RegExp]> = [];
+    // The same level, W/L-flagged final between two SCVAL teams.
+    const scval = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 1, date: '2026-09-28' });
+    cases.push([
+      { ...scval, home: { ...scval.home, result: 'W' }, away: { ...scval.away, result: 'L' }, decider: 'SO' },
+      /decider SO but the sides are not two members of a 1 v 1 league/,
+    ]);
+    // An EAL team against a team of another league.
+    const cross = game({ home: 'chico', away: 'tamalpais', hs: 1, as: 1, league: false });
+    cases.push([
+      { ...cross, home: { ...cross.home, result: 'W' }, away: { ...cross.away, result: 'L' }, decider: 'SO' },
+      /decider SO but the sides are not two members of a 1 v 1 league/,
+    ]);
+    // No tally and a score that is not level.
+    cases.push([oneVOneGame({ away: { ...so.away, score: 0 } }), /decider SO without a tally needs a level score flagged W\/L/]);
+    // No tally and no W/L flags.
+    cases.push([oneVOneGame({ home: { ...so.home, result: 'T' }, away: { ...so.away, result: 'T' } }), /needs a level score flagged W\/L/]);
+    for (const [g, message] of cases) {
+      const s = baseSnapshot();
+      s.games.push(g);
+      s.counts.games += 1;
+      expect(issuesOf(s)).toMatch(message);
+    }
+  });
+
+  it("4. a division with official mode 'none' carries no official stamp", () => {
+    const s = baseSnapshot();
+    const g = game({ home: 'chico', away: 'davis', hs: 2, as: 0, date: '2026-09-02', official: null });
+    s.games.push({
+      ...g,
+      official: { scheduledDate: '2026-09-02', division: 'eal', source: 'scval-pdf', fixtureId: 'eal:2026-09-02:davis@chico', pass: 'same-date' },
+    });
+    s.counts.games += 1;
+    expect(issuesOf(s)).toMatch(/eal publishes no official schedule; a game cannot carry an official stamp for it/);
+  });
+
   it('5. official fixtures belong to a configured division of their league', () => {
     const s = baseSnapshot();
     s.officialFixtures = [{ ...s.officialFixtures![0], league: 'bval' }];
     expect(issuesOf(s)).toMatch(/bval is not the league of de-anza/);
+    const t = baseSnapshot();
+    t.officialFixtures = [{ ...t.officialFixtures![0], league: 'eal', division: 'eal', awaySlug: 'davis', homeSlug: 'chico' }];
+    expect(issuesOf(t)).toMatch(/eal publishes no official schedule; there is no official fixture for it/);
   });
 
   it('6. season leagues and divisions equal config', () => {
@@ -333,6 +402,28 @@ describe('snapshot schema: checkAgainstConfig', () => {
     u.counts.games += 1;
     u.supersededGames = { 'sblive:6541425': u.games[0].contestId };
     expect(issuesOf(u)).toMatch(/a superseded game is still in games/);
+  });
+
+  it('accepts the third section, the unbracketed postseason kind and the league-postseason tag', () => {
+    const s = baseSnapshot();
+    expect(s.season.sections.map((x) => x.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(s.season.leagues.find((l) => l.id === 'eal')?.postseasonKind).toBe('unbracketed-tournament');
+    expect(SeasonSchema.safeParse(s.season).success).toBe(true);
+    expect(TeamSchema.safeParse(s.teams.find((t) => t.slug === 'davis')).success).toBe(true);
+    expect(TeamSchema.safeParse({ ...s.teams[0], section: 'sjs' }).success).toBe(false);
+    expect(PostseasonTagSchema.safeParse({ kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' }).success).toBe(true);
+    expect(PostseasonTagSchema.safeParse({ kind: 'super-regional', leagueId: 'eal', via: 'contest-type-4' }).success).toBe(false);
+  });
+
+  it('accepts missingLeaguePast on a division health row, and leaves it optional', () => {
+    const s = baseSnapshot();
+    const eal = s.leagueHealth.find((h) => h.leagueId === 'eal')!;
+    expect('missingLeaguePast' in eal.divisions[0]).toBe(false);
+    expect(LeagueHealthSchema.safeParse(eal).success).toBe(true);
+    eal.divisions[0] = { ...eal.divisions[0], missingLeaguePast: 2 };
+    expect(() => parseSnapshot(s)).not.toThrow();
+    eal.divisions[0] = { ...eal.divisions[0], missingLeaguePast: -1 };
+    expect(LeagueHealthSchema.safeParse(eal).success).toBe(false);
   });
 
   it('rejects stale counts', () => {

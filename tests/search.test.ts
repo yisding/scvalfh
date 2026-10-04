@@ -38,7 +38,7 @@ describe('normalizeQuery', () => {
 });
 
 describe('buildSearchIndex', () => {
-  it('holds the 43 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
+  it('holds the 49 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
     expect(INDEX.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
     const labels = new Set(
       LEAGUES.flatMap((l) => [l.shortName, l.name, ...l.divisions.flatMap((d) => [d.label, ...d.searchAliases])])
@@ -47,7 +47,7 @@ describe('buildSearchIndex', () => {
     for (const t of INDEX.teams) {
       for (const k of t.keys.whole) expect(labels.has(k), `${t.slug}: ${k}`).toBe(false);
       for (const tok of [...t.keys.nameTokens, ...t.keys.cityTokens, ...t.keys.mascotTokens]) {
-        expect(['scval', 'bval', 'pcal', 'mcal', 'gabilan'], `${t.slug}: ${tok}`).not.toContain(tok);
+        expect(['scval', 'bval', 'pcal', 'mcal', 'eal', 'gabilan'], `${t.slug}: ${tok}`).not.toContain(tok);
       }
     }
     expect(INDEX.teams.find((t) => t.slug === 'leigh')!.divisionLabel).toBe('Mt. Hamilton');
@@ -58,7 +58,7 @@ describe('buildSearchIndex', () => {
     expect(INDEX.groups.map((g) => `${g.kind}:${g.id}`)).toEqual([
       'league:scval', 'division:de-anza', 'division:el-camino',
       'league:bval', 'division:mt-hamilton', 'division:santa-teresa',
-      'league:pcal', 'league:mcal',
+      'league:pcal', 'league:mcal', 'league:eal',
     ]);
     const st = INDEX.groups.find((g) => g.id === 'santa-teresa')!;
     expect(st).toMatchObject({ label: 'Santa Teresa', detail: 'BVAL division · 6 teams', href: '/standings/bval#santa-teresa' });
@@ -66,6 +66,11 @@ describe('buildSearchIndex', () => {
     expect(mcal).toMatchObject({
       label: 'MCAL', detail: 'Marin County Athletic League · NCS · 9 teams', href: '/standings/mcal',
     });
+    const eal = INDEX.groups.find((g) => g.kind === 'league' && g.id === 'eal')!;
+    expect(eal).toMatchObject({
+      label: 'EAL', detail: 'Eastern Athletic League · NS · 6 teams', href: '/standings/eal',
+    });
+    expect(INDEX.teams.find((t) => t.slug === 'davis')!.divisionLabel).toBeNull();
     expect(JSON.stringify(INDEX).toLowerCase()).not.toContain('gabilan');
   });
 });
@@ -111,6 +116,27 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(searchTeams(INDEX, 'wilcox').notCovered.map((n) => n.reason)).toEqual(['Wilcox is not fielding a varsity team in 2026.']);
     expect(searchTeams(INDEX, 'yor').notCovered).toEqual([]);
     expect(searchTeams(INDEX, 'York School').notCovered).toHaveLength(1);
+  });
+
+  it('"Red Bluff" → not covered (not fielding a varsity team), exact keys only', () => {
+    const r = searchTeams(INDEX, 'Red Bluff');
+    expect(r.teams).toEqual([]);
+    expect(r.notCovered.map((n) => n.reason)).toEqual(['Red Bluff is not fielding a varsity team in 2026.']);
+    expect(searchTeams(INDEX, 'Red Bluff Spartans').notCovered).toHaveLength(1);
+    expect(searchTeams(INDEX, 'Red Bl').notCovered).toEqual([]);
+  });
+
+  it('"Eastern Athletic" / "EAL" → the EAL league group, no team; "chico" → Chico, then Pleasant Valley (Chico)', () => {
+    for (const q of ['EAL', 'Eastern Athletic', 'eastern athletic league']) {
+      expect(groupIds(q), q).toEqual(['league:eal']);
+      expect(slugs(q), q).toEqual([]);
+    }
+    expect(slugs('chico')).toEqual(['chico', 'pleasant-valley']);
+    expect(slugs('Davis Sr.')[0]).toBe('davis');
+    // The EAL's two-letter abbrs win on the abbr rule, like 'MC' and 'SF'.
+    for (const [q, slug] of [['PV', 'pleasant-valley'], ['CI', 'chico'], ['CR', 'corning'], ['DV', 'davis'], ['LS', 'lassen'], ['BV', 'bella-vista']]) {
+      expect(searchTeams(INDEX, q).teams[0], q).toMatchObject({ score: 90, why: 'abbr', entry: { slug } });
+    }
   });
 
   it('"Wildcats" → 4 teams', () => {
@@ -174,7 +200,7 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(slugs('monterey')).toEqual(['monterey', 'santa-catalina']);
   });
 
-  it('every one of the 43 names returns that team first', () => {
+  it('every one of the 49 names returns that team first', () => {
     for (const t of TEAMS) expect(slugs(t.name)[0], t.name).toBe(t.slug);
   });
 

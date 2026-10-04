@@ -19,13 +19,13 @@ import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
-  shortName: 'CCS' | 'NCS';
+  shortName: 'CCS' | 'NCS' | 'NS';
   maxprepsSectionId: string;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
   /** Inclusive local dates the cron expects data in (the fetch season-window guard is their union). */
   seasonWindow: { start: string; end: string };
-  /** Shown wherever an NCS reader would otherwise look for a section bracket. null for CCS. */
+  /** An NCS-style reader note, shown wherever a reader would otherwise look for a section bracket; null where the section holds the postseason. */
   noChampionshipNote: string | null;
 }
 
@@ -47,43 +47,70 @@ export interface DivisionConfig {
   gamesPerTeam: number;
   /** First and last official league date. */
   leaguePlay: { first: string; last: string };
-  official: {
-    source: OfficialSourceId;
-    /** The human link ("Official schedule"). */
-    scheduleUrl: string;
-    /** 'live-pdf' = SCVAL PDFs parsed each run; 'bundled' = data/official/<file>, sha256 revision-checked. */
-    mode: 'live-pdf' | 'bundled';
-    bundledFile: string | null;
-    /** Fetched and hashed each run (bundled mode only). */
-    revisionCheckUrl: string | null;
-    /** sha256 of the upstream document our bundle was transcribed from. */
-    bundledSha256: string | null;
-    /** The document's own revision marker, for copy ("revised 9/20/26"). */
-    revisedOn: string | null;
-  };
+  /**
+   * The league's own schedule document. 'live-pdf' = SCVAL PDFs parsed each run; 'bundled' =
+   * data/official/<file>, sha256 revision-checked; 'none' = the league publishes no schedule (EAL), so its
+   * games are classified from MaxPreps' league flag and every reader narrows on `mode`.
+   */
+  official:
+    | {
+        mode: 'live-pdf' | 'bundled';
+        source: OfficialSourceId;
+        /** The human link ("Official schedule"). */
+        scheduleUrl: string;
+        bundledFile: string | null;
+        /** Fetched and hashed each run (bundled mode only). */
+        revisionCheckUrl: string | null;
+        /** sha256 of the upstream document our bundle was transcribed from. */
+        bundledSha256: string | null;
+        /** The document's own revision marker, for copy ("revised 9/20/26"). */
+        revisedOn: string | null;
+      }
+    | {
+        mode: 'none';
+        /** One plain paragraph saying where league games come from instead. */
+        note: string;
+      };
   /** Rows MaxPreps' own table should hold. */
   maxprepsTeamCount: number;
   /** Registry members MaxPreps' table omits (no alarm in the cross-check). */
   maxprepsMissing: readonly TeamSlug[];
+  /**
+   * MaxPreps standings rows that are known non-members, keyed by MaxPreps schoolId → why (EAL: Red Bluff's
+   * 0-0-0 row). Skipped silently by the reported-table step. maxprepsTeamCount + maxprepsMissing − these
+   * === expectedTeams.
+   */
+  maxprepsExtraRows: Readonly<Record<TeamId, string>>;
   /** 'full' = compare records, goals, place, pct (today's SCVAL); 'records-only' = W-L-T and goals; 'informational' = W-L-T only, labelled. */
   reportedTrust: 'full' | 'records-only' | 'informational';
   /** Shown above the MaxPreps comparison for this table; null = none. */
   knownCause: string | null;
   /** Home-page mini table (C1 reads it; never hard-coded by division id in components). */
   home: { miniRows: number; lineAfter: number | null; lineLabel: string | null };
-  /** The labelled rule in the compact /standings table and on /playoffs: drawn after place `after`. */
-  ladderLine: { after: number; label: string };
+  /**
+   * The labelled rule in the compact /standings table and on /playoffs: drawn after place `after`. null only
+   * for an unbracketed-tournament league whose qualifiers >= expectedTeams (EAL: every team is in the top six).
+   */
+  ladderLine: { after: number; label: string } | null;
 }
 
 export interface LeagueRules {
   points: { win: number; tie: number; loss: number };
   orderBy: 'points';
-  /** The word in notes: 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL). */
+  /**
+   * 'table' = the league's document orders the table by points (SCVAL, BVAL, PCAL, MCAL); 'title' = it uses
+   * points only to decide the champion and this site extends the same points to the table (EAL).
+   */
+  orderScope: 'table' | 'title';
+  /** The word in notes: 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL). */
   gamesWord: 'division' | 'league';
   classification: 'contest-type' | 'official-fixtures';
-  /** contestTypes that never count (either row). SCVAL: [] (byte-identity). Others: [2, 4]. */
+  /**
+   * contestTypes that never count (either row); applies to both classifications. SCVAL: [] (byte-identity).
+   * BVAL, PCAL, MCAL: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
+   */
   excludeContestTypes: readonly number[];
-  /** Games between two members on/after this local date are postseason (MCAL '2026-10-23'). */
+  /** Games between two members on/after this local date are postseason (MCAL '2026-10-23', EAL '2026-10-30'). */
   postseasonFrom: string | null;
   /** Human escape hatch: contests that are league games despite postseasonFrom. */
   leagueGameOverrides: readonly ContestId[];
@@ -105,9 +132,10 @@ export interface LeagueRules {
   /**
    * How a tied league game ends. 'sudden-victory' (SCVAL Art. IV, BVAL §1a): a 7-minute golden-goal period may
    * decide it. 'none' (PCAL [U] §1.6.4 for double round robin, MCAL: no regular-season overtime): ties stand.
-   * D2 rule 4c (phantom tie) applies only when 'none'.
+   * 'shootout' (EAL, NS Guidelines §VII.E.4): a 10-minute sudden-victory period, then 1 v 1s to a winner; a
+   * varsity league game never ends level. D2 rule 4c (phantom tie) applies only when 'none'.
    */
-  leagueOvertime: 'none' | 'sudden-victory';
+  leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
   /** Every string the engine prints. SCVAL's are today's BYLAW_CITATIONS, verbatim. */
   citations: {
     points: string;
@@ -186,6 +214,19 @@ export type PostseasonConfig =
       citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string };
       titleNote: string;
       sourceUrl: string;
+    }
+  | {
+      kind: 'unbracketed-tournament';
+      name: string;                       // 'Super Regional'
+      /** Places 1..qualifiers qualify by the written rule (not a projection of who will play). */
+      qualifiers: number;                 // 6
+      ladder: readonly LadderRung[];
+      /** The event's published dates, inclusive. */
+      dates: { first: string; last: string };
+      citations: { qualification: string; format: string; seeding: string; eligibility: string; noFurtherPath: string };
+      /** One paragraph, rendered wherever a reader would look for a bracket. */
+      note: string;
+      sourceUrl: string;
     };
 
 /** Ordered phase steps. 'data' = SCVAL's legacy formula; 'league-play' = max(last division leaguePlay.last, last league game of the league). */
@@ -207,6 +248,12 @@ export interface LeagueConfig {
   officialNames: Readonly<Record<string, TeamSlug>>;
   /** Grid names that are not varsity teams; their fixtures are dropped silently, logged once. */
   withdrawnNames: readonly string[];
+  /**
+   * Where the league's schools are not all members of its section, one sentence saying so, rendered under the
+   * league's heading wherever its schools are listed (EAL: Davis and Bella Vista are Sac-Joaquin schools).
+   * null = every school belongs to the league's section.
+   */
+  membershipNote: string | null;
   divisions: readonly DivisionConfig[];
   rules: LeagueRules;
   postseason: PostseasonConfig;
@@ -256,6 +303,18 @@ export const SECTIONS = [
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
   },
+  {
+    id: 'ns', name: 'Northern Section', shortName: 'NS',
+    maxprepsSectionId: '6249819d-12de-4bff-b0ab-38156006b001',
+    // The "NSCIF Post Season Tournament" (the EAL's Super Regional, Oct 30-31) is on the Section's "Championship
+    // Playoff Calendar": https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf
+    holdsFieldHockeyChampionship: true,
+    officialUrl: 'https://www.cifns.org/sports/fh/index',
+    // The start matches the CCS/NCS windows. The end is OUR choice, not a Section date: one week after the Super
+    // Regional's last day (Oct 31), so a late result still lands.
+    seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
+    noChampionshipNote: null,
+  },
 ] as const satisfies readonly SectionConfig[];
 
 const SCVAL: LeagueConfig = {
@@ -271,6 +330,7 @@ const SCVAL: LeagueConfig = {
   officialCodes: {},
   officialNames: {},
   withdrawnNames: ['Wilcox', 'WILCOX', 'Wilcox Chargers', 'Wilcox High School', 'Adrian Wilcox', 'Adrian Wilcox High School'],
+  membershipNote: null,
   divisions: [
     {
       id: 'de-anza', leagueId: 'scval', label: 'De Anza', searchAliases: [],
@@ -282,7 +342,7 @@ const SCVAL: LeagueConfig = {
         source: 'scval-pdf', mode: 'live-pdf', bundledFile: null, revisionCheckUrl: null, bundledSha256: null, revisedOn: null,
         scheduleUrl: 'https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf',
       },
-      maxprepsTeamCount: 7, maxprepsMissing: [], reportedTrust: 'full', knownCause: null,
+      maxprepsTeamCount: 7, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'full', knownCause: null,
       home: { miniRows: 4, lineAfter: null, lineLabel: null },
       ladderLine: { after: 3, label: 'AQ line' },
     },
@@ -296,13 +356,13 @@ const SCVAL: LeagueConfig = {
         source: 'scval-pdf', mode: 'live-pdf', bundledFile: null, revisionCheckUrl: null, bundledSha256: null, revisedOn: null,
         scheduleUrl: 'https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf',
       },
-      maxprepsTeamCount: 8, maxprepsMissing: [], reportedTrust: 'full', knownCause: null,
+      maxprepsTeamCount: 8, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'full', knownCause: null,
       home: { miniRows: 4, lineAfter: null, lineLabel: null },
       ladderLine: { after: 3, label: 'AQ line' },
     },
   ],
   rules: {
-    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', gamesWord: 'division',
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'division',
     classification: 'contest-type', excludeContestTypes: [], postseasonFrom: null, leagueGameOverrides: [],
     matcher: 'legacy',
     tiebreaks: { default: ['head-to-head', 'division-wins', 'h2h-goals-against', 'h2h-goal-diff', 'coin-flip'] },
@@ -378,6 +438,7 @@ const BVAL: LeagueConfig = {
   officialCodes: { WG: 'willow-glen' },
   officialNames: {},
   withdrawnNames: [],
+  membershipNote: null,
   divisions: [
     {
       id: 'mt-hamilton', leagueId: 'bval', label: 'Mt. Hamilton', searchAliases: ['Mount Hamilton', 'Mt Hamilton'],
@@ -392,7 +453,7 @@ const BVAL: LeagueConfig = {
         bundledSha256: '2b0eb69347cdb0e6aa57da94213db50bd5eadeccfeed96370b5c8106ef2cb172',
         revisedOn: '9/20/26',
       },
-      maxprepsTeamCount: 6, maxprepsMissing: [], reportedTrust: 'full', knownCause: null,
+      maxprepsTeamCount: 6, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'full', knownCause: null,
       home: { miniRows: 4, lineAfter: 3, lineLabel: 'AQ line' },
       ladderLine: { after: 3, label: 'AQ line' },
     },
@@ -409,14 +470,14 @@ const BVAL: LeagueConfig = {
         bundledSha256: '5730fb6089f31d94abd2ebe7a3073114f3867eef731391c8dd113557b79d7303',
         revisedOn: '9/22/26',
       },
-      maxprepsTeamCount: 5, maxprepsMissing: ['prospect'], reportedTrust: 'records-only',
+      maxprepsTeamCount: 5, maxprepsMissing: ['prospect'], maxprepsExtraRows: {}, reportedTrust: 'records-only',
       knownCause: 'MaxPreps’ Santa Teresa table leaves out Prospect and counts four of Prospect’s official league games as non-league, so its records here differ from ours. This table is computed from BVAL’s official schedule.',
       home: { miniRows: 3, lineAfter: 1, lineLabel: 'Play-in host' },
       ladderLine: { after: 1, label: 'Play-in host' },
     },
   ],
   rules: {
-    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', gamesWord: 'division',
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'division',
     classification: 'official-fixtures', excludeContestTypes: [2, 4], postseasonFrom: null, leagueGameOverrides: [],
     matcher: 'two-phase',
     tiebreaks: { default: ['head-to-head', 'division-wins', 'h2h-goal-diff', 'division-goals-against', 'coin-flip'] },
@@ -497,6 +558,7 @@ const PCAL: LeagueConfig = {
   },
   officialNames: {},
   withdrawnNames: ['York', 'YORK', 'YOR', 'York Falcons', 'York School'],
+  membershipNote: null,
   divisions: [
     {
       // One division. Its MaxPreps name is DATA ONLY and never rendered.
@@ -513,14 +575,14 @@ const PCAL: LeagueConfig = {
         bundledSha256: '6b99480a4a1b44b0eea2c352e81e93e14ca97e44cbcced0c131f188546b3d224',
         revisedOn: null,
       },
-      maxprepsTeamCount: 7, maxprepsMissing: [], reportedTrust: 'informational',
+      maxprepsTeamCount: 7, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
       knownCause: 'MaxPreps is missing some of PCAL’s official league games and dates others differently, so its PCAL records differ from ours. This table is computed from PCAL’s official schedule.',
       home: { miniRows: 7, lineAfter: 2, lineLabel: 'AQ line' },
       ladderLine: { after: 2, label: 'AQ line' },
     },
   ],
   rules: {
-    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', gamesWord: 'league',
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'league',
     classification: 'official-fixtures', excludeContestTypes: [2, 4], postseasonFrom: null, leagueGameOverrides: [],
     matcher: 'two-phase',
     tiebreaks: {
@@ -596,6 +658,7 @@ const MCAL: LeagueConfig = {
   },
   officialNames: { University: 'university-sf', UNIVERSITY: 'university-sf', 'Convent & Stuart Hall': 'convent-sacred-heart' },
   withdrawnNames: [],
+  membershipNote: null,
   divisions: [
     {
       id: 'marin-county', leagueId: 'mcal', label: 'MCAL', searchAliases: ['Marin County', 'Marin County Athletic League'],
@@ -610,14 +673,14 @@ const MCAL: LeagueConfig = {
         bundledSha256: 'aee4894e665be7aebbe37dcb9c14db37dcc5c177dfe7adca2586459eb4370319',
         revisedOn: null,
       },
-      maxprepsTeamCount: 9, maxprepsMissing: [], reportedTrust: 'records-only',
+      maxprepsTeamCount: 9, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'records-only',
       knownCause: 'MaxPreps orders the MCAL table by winning percentage; MCAL orders it by points, so MaxPreps’ places differ from ours. After Oct 22, MaxPreps also counts MCAL tournament games in its league records; ours never do.',
       home: { miniRows: 7, lineAfter: 6, lineLabel: 'Tournament line' },
       ladderLine: { after: 6, label: 'Tournament line' },
     },
   ],
   rules: {
-    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', gamesWord: 'league',
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'league',
     classification: 'official-fixtures', excludeContestTypes: [2, 4],
     postseasonFrom: '2026-10-23', leagueGameOverrides: [],
     matcher: 'two-phase',
@@ -697,7 +760,102 @@ const MCAL: LeagueConfig = {
   },
 };
 
-export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL];
+const NS_FH = 'CIF Northern Section Field Hockey Guidelines 2026-28';
+
+const EAL: LeagueConfig = {
+  id: 'eal', sectionId: 'ns',
+  name: 'Eastern Athletic League', shortName: 'EAL',
+  region: 'Chico, Corning, Susanville, Davis and Fair Oaks',
+  officialUrl: 'https://www.cifns.org/sports/fh/index',
+  links: [
+    { label: 'CIF Northern Section field hockey', href: 'https://www.cifns.org/sports/fh/index' },
+    { label: 'Northern Section Field Hockey Guidelines 2026-28 (PDF)', href: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf' },
+  ],
+  sblive: { leagueSlugs: ['4190-eastern-athletic'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  // Red Bluff is still a 0-0-0 row in MaxPreps' table but is not fielding a varsity team in 2026 (Wilcox/York precedent).
+  withdrawnNames: ['Red Bluff', 'RED BLUFF', 'Red Bluff High School', 'Red Bluff Spartans', 'Red Bluff Union High School'],
+  membershipNote: 'Chico, Corning, Lassen and Pleasant Valley are Northern Section schools; Davis and Bella Vista are Sac-Joaquin Section schools that play field hockey in the EAL.',
+  divisions: [
+    {
+      // One division (Guidelines §I: "All participating schools are considered to be in the same division").
+      id: 'eal', leagueId: 'eal', label: 'EAL', searchAliases: ['Eastern Athletic', 'Eastern Athletic League'],
+      maxprepsLeagueId: '60959b47-b0cf-4d7d-b054-d8ea140870ef',
+      maxprepsName: 'Eastern Athletic', maxprepsSlug: 'eastern-athletic',
+      expectedTeams: 6, gamesPerTeam: 10,
+      leaguePlay: { first: '2026-08-24', last: '2026-10-28' },
+      // No league or Section schedule exists. The umpires' grid is NOT official and is never linked or bundled.
+      official: {
+        mode: 'none',
+        note: 'The EAL publishes no schedule or standings document of its own. Its league games are the games MaxPreps marks as league games; on 2026-10-04 all 30 of them matched, by date and home side, the 2026 league grid posted on the EAL/SRL umpires’ site (fieldhockeyumpires.org).',
+      },
+      // MaxPreps lists 7 rows: the six members plus Red Bluff (7 + 0 − 1 = 6).
+      maxprepsTeamCount: 7, maxprepsMissing: [],
+      maxprepsExtraRows: {
+        '4d3da788-bbe2-4ab9-b854-d95aa9786cda': 'Red Bluff: a 0-0-0 row with no games; not fielding a varsity team in 2026',
+      },
+      reportedTrust: 'records-only',
+      knownCause: 'MaxPreps orders the EAL table by winning percentage; the EAL decides its title on points (Northern Section Field Hockey Guidelines §VII.C.2) and ranks no table, so MaxPreps’ places can differ from ours. MaxPreps also lists Red Bluff, which is not fielding a varsity team in 2026.',
+      home: { miniRows: 6, lineAfter: null, lineLabel: null },
+      // Every team is inside the Super Regional's top six, so there is no line to draw.
+      ladderLine: null,
+    },
+  ],
+  rules: {
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'title', gamesWord: 'league',
+    // No official document: MaxPreps' league flag, as for SCVAL. 5 = the 2025 EAL tournament's contestType.
+    classification: 'contest-type', excludeContestTypes: [2, 4, 5],
+    postseasonFrom: '2026-10-30', leagueGameOverrides: [],
+    matcher: 'two-phase',
+    // The Guidelines set no order beyond points for the title; a tie for first means co-champions (§VII.C).
+    tiebreaks: { default: ['no-rule'] },
+    multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',
+    citations: {
+      points: `${NS_FH} §VII.C.2 (to decide the league championship: 3 points for a win, 1 for a tie, 0 for a loss)`,
+      pointsShort: 'NS Guidelines §VII.C.2',
+      order: `${NS_FH} §VII.C.2 (points decide the league championship; the Guidelines set no other order, so this site orders the whole table by the same points)`,
+      doubleRoundRobin: `${NS_FH} §III.A.1 (double round robin; in 2026 six teams play ten league games each)`,
+      overtime: `${NS_FH} §VII.E.4 (varsity: a 10-minute sudden-victory period, then 1 v 1s until there is a winner, so a league game never ends level)`,
+      coChampions: `${NS_FH} §VII.C (“In the case of a tie, duplicate awards will be given”)`,
+      stages: {
+        'no-rule': 'The Northern Section’s Field Hockey Guidelines break no tie in the league table: a tie for first means co-champions (§VII.C), and the Super Regional seeding criteria (§III.E.1) are the coaches’ to apply, so this tie is left as it is',
+      },
+    },
+    coChampionsLabel: 'EAL co-champions',
+    unresolvedSuffix: '',
+  },
+  postseason: {
+    kind: 'unbracketed-tournament', name: 'Super Regional', qualifiers: 6,
+    dates: { first: '2026-10-30', last: '2026-10-31' },
+    ladder: [
+      { divisions: '*', places: [1, 6], status: 'tournament', label: 'Super Regional place',
+        phrase: 'a Super Regional place', badge: 'Top 6', legend: 'Places 1-6 — the Super Regional, Oct 30-31 (the top six qualify)' },
+      { divisions: '*', places: [7, 99], status: 'below-line', label: 'Outside the top six',
+        phrase: 'outside the top six', badge: 'Below line', legend: '7th or lower — outside the Super Regional’s top six' },
+    ],
+    citations: {
+      qualification: `${NS_FH} §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only)`,
+      format: `${NS_FH} §IV (“The format will be determined at the preseason tournament meeting”; none is published)`,
+      seeding: `${NS_FH} §III.E.1 (“Seeding will be based on League record, Head-to-Head Goal differential (Capped at six (6) per game, Goal against, Coin flip.”) — quoted as written; this site does not apply it`,
+      eligibility: `${NS_FH} §VII.J (a school without all its scores reported by noon the day after its last contest is not eligible for the playoffs)`,
+      noFurtherPath: `${NS_FH} §V and §VI (NorCal and State qualification: “Not Applicable”)`,
+    },
+    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+    sourceUrl: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf',
+  },
+  phases: [
+    { phase: 'regular', through: 'league-play' },
+    { phase: 'tournament', through: '2026-10-31' },
+  ],
+  keyDates: [
+    { id: 'league-play-ends', date: '2026-10-28', label: 'Last EAL league games' },
+    { id: 'super-regional', date: '2026-10-30', label: 'Super Regional, Oct 30–31 (site to be announced)' },
+  ],
+  officialChanges: null,
+};
+
+export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL];
 
 /** The CCS section block (section data, not league data). */
 export const CCS = {
@@ -744,6 +902,9 @@ export const DATA_QUALITY: DataQualityConfig = {
     '456851': 'York (PCAL): JV only',
     '512156': 'Tamalpais JV',
     '485528': 'Wilcox (SCVAL): not fielding a team',
+    '490259': 'Red Bluff (EAL): not fielding a varsity team in 2026',
+    '490260': 'Red Bluff JV: not a varsity team',
+    '635037': 'Educational Outreach Academy (Red Bluff): a si.com placeholder carrying Red Bluff’s original 2026 EAL fixtures, which si.com marks CANC, all without a score',
   },
   ignoredMaxprepsLeagueIds: {
     '6e1f97d4-5211-4d98-bf59-282cd754bc5c': 'Pacific Coast - Mission: 0 teams, standings HTTP 400',
@@ -751,6 +912,7 @@ export const DATA_QUALITY: DataQualityConfig = {
   notCovered: [
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
     { name: 'Wilcox', keys: ['Wilcox', 'Adrian Wilcox'], reason: 'Wilcox is not fielding a varsity team in 2026.' },
+    { name: 'Red Bluff', keys: ['Red Bluff', 'Red Bluff High School', 'Red Bluff Spartans'], reason: 'Red Bluff is not fielding a varsity team in 2026.' },
   ],
 };
 
@@ -772,6 +934,11 @@ export const CCS_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
 /** Leagues that run their own tournament (['mcal']). */
 export const TOURNAMENT_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
   (l) => l.postseason.kind === 'league-tournament',
+).map((l) => l.id);
+
+/** Leagues whose postseason is a tournament with no published bracket (['eal']). */
+export const UNBRACKETED_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
+  (l) => l.postseason.kind === 'unbracketed-tournament',
 ).map((l) => l.id);
 
 const SECTION_BY_ID = new Map<string, SectionConfig>(SECTIONS.map((s) => [s.id, s]));
@@ -827,7 +994,7 @@ export function isSingleDivision(leagueId: LeagueId): boolean {
   return getLeague(leagueId).divisions.length === 1;
 }
 
-/** 'De Anza' | 'Mt. Hamilton' | 'PCAL' | 'MCAL' */
+/** 'De Anza' | 'Mt. Hamilton' | 'PCAL' | 'MCAL' | 'EAL' */
 export function divisionLabel(id: DivisionId): string {
   return getDivision(id).label;
 }
@@ -908,10 +1075,21 @@ const CCS_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
 const TOURNAMENT_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
   'bye', 'tournament', 'below-line',
 ]);
+const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'below-line']);
 const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-higher-placed', 'record-vs-lower-placed',
 ]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+/** The ladder statuses a postseason kind may use. */
+function allowedStatuses(kind: PostseasonConfig['kind']): ReadonlySet<PlayoffStatus> {
+  switch (kind) {
+    case 'ccs-ladder': return CCS_LADDER_STATUSES;
+    case 'league-tournament': return TOURNAMENT_LADDER_STATUSES;
+    case 'unbracketed-tournament': return UNBRACKETED_STATUSES;
+  }
+}
 
 /** Every chain of a league with where it comes from: `null` = default, a number = byBucketStart key. */
 function chainsOf(league: LeagueConfig): Array<{ start: number | null; chain: readonly TiebreakStage[] }> {
@@ -943,6 +1121,8 @@ export function assertLeagues(): void {
     const d = dupes(ids);
     if (d.length) fail(`duplicate ${label} id: ${d.join(', ')}`);
   }
+  const shortDupes = dupes(SECTIONS.map((s) => s.shortName as string));
+  if (shortDupes.length) fail(`duplicate section shortName: ${shortDupes.join(', ')}`);
   for (const l of LEAGUES) {
     if (!sectionIds.includes(l.sectionId)) fail(`${l.id}: unknown section ${l.sectionId}`);
     if ((RESERVED_SEGMENTS as readonly string[]).includes(l.id)) fail(`${l.id}: league id is a reserved route segment`);
@@ -953,6 +1133,7 @@ export function assertLeagues(): void {
     if (divisionIds.includes(l.id) && !(l.divisions.length === 1 && l.divisions[0].id === l.id)) {
       fail(`${l.id}: a league id may equal only its own single division's id`);
     }
+    if (l.membershipNote !== null && !l.membershipNote.trim()) fail(`${l.id}: membershipNote is empty (use null)`);
   }
 
   for (const l of LEAGUES) {
@@ -960,7 +1141,7 @@ export function assertLeagues(): void {
     const ownDivisions = l.divisions.map((d) => d.id);
 
     // 2. ladders cover 1..99 exactly once per division; statuses fit the postseason kind
-    const allowed = ps.kind === 'ccs-ladder' ? CCS_LADDER_STATUSES : TOURNAMENT_LADDER_STATUSES;
+    const allowed = allowedStatuses(ps.kind);
     for (const rung of ps.ladder) {
       if (!allowed.has(rung.status)) fail(`${l.id}: ladder status ${rung.status} not allowed for ${ps.kind}`);
       if (rung.divisions !== '*') {
@@ -976,6 +1157,33 @@ export function assertLeagues(): void {
         if (!rung[key]) fail(`${l.id}: ladder rung ${rung.status} has an empty ${key}`);
       }
     }
+    // 2b. an unbracketed tournament: places 1..qualifiers are 'tournament', the rest 'below-line', no rung straddles
+    if (ps.kind === 'unbracketed-tournament') {
+      if (!(Number.isInteger(ps.qualifiers) && ps.qualifiers >= 1)) fail(`${l.id}: qualifiers ${ps.qualifiers} is not a positive integer`);
+      for (const rung of ps.ladder) {
+        const inside = rung.places[1] <= ps.qualifiers;
+        if (inside !== (rung.status === 'tournament')) {
+          fail(`${l.id}: ladder rung [${rung.places[0]}, ${rung.places[1]}] is ${rung.status}, but places 1-${ps.qualifiers} (and only they) are 'tournament'`);
+        }
+        if (rung.status === 'below-line' && !(rung.places[0] > ps.qualifiers)) {
+          fail(`${l.id}: ladder rung [${rung.places[0]}, ${rung.places[1]}] straddles the ${ps.qualifiers} qualifiers`);
+        }
+      }
+      if (!ps.name.trim()) fail(`${l.id}: an unbracketed tournament needs a name`);
+      if (!ps.note.trim()) fail(`${l.id}: an unbracketed tournament needs a note`);
+      for (const [key, text] of Object.entries(ps.citations)) {
+        if (!text.trim()) fail(`${l.id}: empty postseason citation ${key}`);
+      }
+      if (!ps.sourceUrl.startsWith('https://')) fail(`${l.id}: postseason sourceUrl must start with https://`);
+      if (ps.dates.first > ps.dates.last) fail(`${l.id}: postseason dates.first after dates.last`);
+      for (const d of l.divisions) {
+        if (!(ps.dates.first > d.leaguePlay.last)) fail(`${d.id}: postseason dates.first is not after leaguePlay.last`);
+      }
+      if (l.rules.postseasonFrom === null || !(l.rules.postseasonFrom <= ps.dates.first)) {
+        fail(`${l.id}: an unbracketed tournament needs postseasonFrom on or before dates.first`);
+      }
+    }
+
     for (const div of ownDivisions) {
       const covered = new Array<number>(100).fill(0);
       for (const rung of ps.ladder) {
@@ -1031,6 +1239,11 @@ export function assertLeagues(): void {
       if (!rules.citations.stages['play-in']) fail(`${l.id}: a league tournament needs a 'play-in' citation`);
       if (!rules.unresolvedSuffix) fail(`${l.id}: a league tournament needs an unresolvedSuffix`);
     }
+    if (rules.excludeContestTypes.includes(0)) fail(`${l.id}: excludeContestTypes may not contain 0 (the league flag)`);
+    // 'shootout' is built only for contest-type classification (no official fixtures to match level games against).
+    if (rules.leagueOvertime === 'shootout' && rules.classification !== 'contest-type') {
+      fail(`${l.id}: leagueOvertime 'shootout' needs classification 'contest-type'`);
+    }
 
     // 5. draw numbers
     const usesDraw = usedStages.has('draw-number');
@@ -1071,9 +1284,16 @@ export function assertLeagues(): void {
       }
       inWindow(d.leaguePlay.first, `${d.id} leaguePlay.first`);
       inWindow(d.leaguePlay.last, `${d.id} leaguePlay.last`);
-      // 10. bundled official sources
+      // 10. official sources: bundled ones name their file, URL and hash; 'none' only on a contest-type league
+      // (so an official-fixtures league never has a 'none' division)
       if (d.official.mode === 'bundled' && !(d.official.bundledFile && d.official.revisionCheckUrl && d.official.bundledSha256)) {
         fail(`${d.id}: a bundled official source needs bundledFile, revisionCheckUrl and bundledSha256`);
+      }
+      if (d.official.mode === 'none') {
+        if (rules.classification !== 'contest-type') {
+          fail(`${d.id}: official mode 'none' on an ${rules.classification} league (no fixtures to classify by)`);
+        }
+        if (!d.official.note.trim()) fail(`${d.id}: official mode 'none' needs a note`);
       }
       // 12. home mini table and ladder line
       if (d.home.miniRows > d.expectedTeams) fail(`${d.id}: home.miniRows > expectedTeams`);
@@ -1083,9 +1303,21 @@ export function assertLeagues(): void {
       if ((d.home.lineAfter === null) !== (d.home.lineLabel === null)) {
         fail(`${d.id}: home.lineAfter and home.lineLabel must both be set or both be null`);
       }
-      if (!(d.ladderLine.after < d.expectedTeams)) fail(`${d.id}: ladderLine.after must be < expectedTeams`);
-      if (d.maxprepsTeamCount + d.maxprepsMissing.length !== d.expectedTeams) {
-        fail(`${d.id}: maxprepsTeamCount + maxprepsMissing must equal expectedTeams`);
+      if (d.ladderLine === null) {
+        if (!(ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams)) {
+          fail(`${d.id}: ladderLine may be null only for an unbracketed tournament whose qualifiers >= expectedTeams`);
+        }
+      } else if (!(d.ladderLine.after < d.expectedTeams)) {
+        fail(`${d.id}: ladderLine.after must be < expectedTeams`);
+      }
+      // MaxPreps' table: its rows, plus the members it omits, less its known non-member rows, are the registry.
+      for (const [id, reason] of Object.entries(d.maxprepsExtraRows)) {
+        if (!GUID_RE.test(id)) fail(`${d.id}: maxprepsExtraRows key ${id} is not a GUID`);
+        if (!reason.trim()) fail(`${d.id}: maxprepsExtraRows ${id} has no reason`);
+      }
+      const extra = Object.keys(d.maxprepsExtraRows).length;
+      if (d.maxprepsTeamCount + d.maxprepsMissing.length - extra !== d.expectedTeams) {
+        fail(`${d.id}: maxprepsTeamCount + maxprepsMissing − maxprepsExtraRows must equal expectedTeams`);
       }
     }
     if (rules.postseasonFrom !== null) inWindow(rules.postseasonFrom, `${l.id} postseasonFrom`);
@@ -1093,10 +1325,17 @@ export function assertLeagues(): void {
     for (const step of l.phases) {
       if (step.through !== 'data' && step.through !== 'league-play') inWindow(step.through, `${l.id} phase ${step.phase}`);
     }
-    if (ps.kind === 'ccs-ladder') {
-      for (const p of ps.pairings) inWindow(p.date, `${p.id} date`);
-    } else {
-      for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
+    switch (ps.kind) {
+      case 'ccs-ladder':
+        for (const p of ps.pairings) inWindow(p.date, `${p.id} date`);
+        break;
+      case 'league-tournament':
+        for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
+        break;
+      case 'unbracketed-tournament':
+        inWindow(ps.dates.first, `${l.id} postseason dates.first`);
+        inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        break;
     }
   }
 

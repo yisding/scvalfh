@@ -96,6 +96,7 @@ interface HistoryFile {
       checked: string[];
       alsoPublished?: Array<{ label: string; url: string }>;
     };
+    eal: { status: 'unavailable'; league: string; reason: string; checkedOn: string; checked: string[]; alsoPublished?: unknown };
   };
 }
 
@@ -571,12 +572,35 @@ describe('history: PCAL and MCAL are explicitly unavailable', () => {
   });
 });
 
+describe('history: the EAL is explicitly unavailable', () => {
+  const eal = file.leagues.eal;
+
+  it('says so, with a reason, the day it was checked and what was checked, and carries no standings or awards', () => {
+    expect(eal.status).toBe('unavailable');
+    expect(eal.league).toBe('Eastern Athletic League');
+    expect(eal.reason.length).toBeGreaterThanOrEqual(20);
+    expect(eal.reason).toMatch(/^The EAL published no 2025-26 final standings of its own\./);
+    expect(eal.reason).toMatch(/third-party/);
+    expect(eal.checkedOn).toBe('2026-10-04');
+    expect(eal.checked).toHaveLength(3);
+    expect('divisions' in eal).toBe(false);
+    expect(eal.alsoPublished).toBeUndefined();
+  });
+
+  it('names no champion, winner or award', () => {
+    expect(JSON.stringify(eal)).not.toMatch(/champion|winner|all-league|MVP|first team/i);
+  });
+});
+
 describe('history: the league-aware schema', () => {
   it('refuses a file with a league missing, or a league that is neither available nor unavailable', async () => {
     const { HistorySchema } = await import('../lib/history');
     const missing = structuredClone(file) as unknown as { leagues: Record<string, unknown> };
     delete missing.leagues.mcal;
     expect(HistorySchema.safeParse(missing).success).toBe(false);
+    const noEal = structuredClone(file) as unknown as { leagues: Record<string, unknown> };
+    delete noEal.leagues.eal;
+    expect(HistorySchema.safeParse(noEal).success).toBe(false);
     const odd = structuredClone(file) as unknown as { leagues: Record<string, { status: string }> };
     odd.leagues.pcal.status = 'pending';
     expect(HistorySchema.safeParse(odd).success).toBe(false);
@@ -621,9 +645,13 @@ describe('history: the league-aware read API', () => {
       ['bval', 'available'],
       ['pcal', 'unavailable'],
       ['mcal', 'unavailable'],
+      ['eal', 'unavailable'],
     ]);
+    expect(h.getHistoryLeagues()).toHaveLength(5);
     expect(h.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
-    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pcal', 'mcal']);
+    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pcal', 'mcal', 'eal']);
+    expect(h.hasHistory('eal')).toBe(false);
+    expect(h.getHistoryChampions('eal')).toEqual([]);
     expect(h.hasHistory('bval')).toBe(true);
     expect(h.hasHistory('pcal')).toBe(false);
     expect(h.getHistoryProvenance('mcal')).toBeNull();

@@ -15,14 +15,14 @@ export type TeamId = string;
  */
 export type ContestId = string;
 
-export type SectionId = 'ccs' | 'ncs';
+export type SectionId = 'ccs' | 'ncs' | 'ns';
 
-/** 'scval' | 'bval' | 'pcal' | 'mcal' as DATA. Validated against LEAGUES at load and at parse. */
+/** 'scval' | 'bval' | 'pcal' | 'mcal' | 'eal' as DATA. Validated against LEAGUES at load and at parse. */
 export type LeagueId = string;
 
 /**
  * One MaxPreps league table. Globally unique: 'de-anza' | 'el-camino' | 'mt-hamilton' |
- * 'santa-teresa' | 'pcal' | 'marin-county'. A single-division league may reuse its league id ('pcal').
+ * 'santa-teresa' | 'pcal' | 'marin-county' | 'eal'. A single-division league may reuse its league id ('pcal', 'eal').
  */
 export type DivisionId = string;
 
@@ -64,7 +64,7 @@ export interface SeasonSection {
 
 export interface SeasonDivision {
   id: DivisionId;
-  /** Our UI label ('De Anza', 'Mt. Hamilton', 'PCAL', 'MCAL'). MaxPreps' own name is NOT stored. */
+  /** Our UI label ('De Anza', 'Mt. Hamilton', 'PCAL', 'MCAL', 'EAL'). MaxPreps' own name is NOT stored. */
   label: string;
   maxprepsLeagueId: string;
 }
@@ -76,7 +76,7 @@ export interface SeasonLeague {
   shortName: string;                  // 'BVAL'
   divisions: SeasonDivision[];
   /** NEW. Copied from config (LEAGUES[].postseason.kind) and validated against it (checkAgainstConfig #6). Lets scripts read the tournament leagues from the snapshot. */
-  postseasonKind: 'ccs-ladder' | 'league-tournament';
+  postseasonKind: 'ccs-ladder' | 'league-tournament' | 'unbracketed-tournament';
   /**
    * Over games with at least one registry side in this league AND `postseason === null` (crossover, play-in,
    * MCAL tournament and CCS games never extend it). Drives this league's phase.
@@ -92,9 +92,9 @@ export interface Season {
   allSeasonId: string;
   genderSport: 'girls,fieldhockey';
   teamLevel: 'Varsity' | 'JV';
-  /** Config order: ccs, ncs. */
+  /** Config order: ccs, ncs, ns. */
   sections: SeasonSection[];
-  /** Config order: scval, bval, pcal, mcal. */
+  /** Config order: scval, bval, pcal, mcal, eal. */
   leagues: SeasonLeague[];
   /** Global window over every kept contest — today's semantics. */
   window: SeasonWindow;
@@ -132,7 +132,7 @@ export interface Team {
   name: string;
   /** ≤ 14 characters. */
   shortName: string;
-  /** 2 letters, unique across all 43 teams. */
+  /** 2 letters, unique across all 49 teams. */
   abbr: string;
   /** MaxPreps `schoolNameAcronym`. Display only: NOT unique; indexed for resolution only when unique. */
   acronym: string;
@@ -140,7 +140,11 @@ export interface Team {
   city: string;
   /** Globally unambiguous spellings only. League-grid codes live in LeagueConfig.officialCodes. */
   aliases: string[];
-  /** NEW */
+  /**
+   * The section of the team's field hockey league (where its field hockey postseason is held), not
+   * necessarily the school's CIF membership: Davis and Bella Vista are Sac-Joaquin Section schools in
+   * the Northern Section's EAL.
+   */
   section: SectionId;
   /** NEW — replaces `isScvalMember: true`. */
   league: LeagueId;
@@ -171,9 +175,9 @@ export type GameStatus =
 export type Outcome = 'W' | 'L' | 'T';
 
 /**
- * 'SO' can never occur in this league — By-Laws Article IV ends a game as a tie after one
- * 7-minute sudden-victory period — but it stays in the union so shootout-aware render code
- * type-checks. `Game.shootout` is therefore always null.
+ * 'SO' = a level final that MaxPreps flags W/L between two members of a league whose
+ * `rules.leagueOvertime` is 'shootout' (EAL: 1 v 1s); `Game.shootout` may then be null (the tally is
+ * not stored). SCVAL/BVAL/PCAL/MCAL never produce it.
  */
 export type Decider = 'REG' | 'OT' | '2OT' | 'SO' | 'FORFEIT';
 
@@ -205,7 +209,7 @@ export interface GameVenue {
  * crossover or play-in is never same-division, and a same-division game tagged 'ccs' is excluded — lib/classify.ts.)
  */
 export interface PostseasonTag {
-  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'ccs' | 'other';
+  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'ccs' | 'other';
   leagueId: LeagueId | null;
   via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'ccs-window';
 }
@@ -254,14 +258,17 @@ export interface Game {
    * this game belongs to. Standings count it once status === 'final'. Chips, filters and counts read it.
    */
   countsFor: DivisionId | null;
-  /** NEW. Crossover, play-in, MCAL tournament and CCS games. */
+  /** NEW. Crossover, play-in, MCAL tournament, EAL Super Regional and CCS games. */
   postseason: PostseasonTag | null;
   otPeriods: number;
   isOt: boolean;
   isForfeit: boolean;
   forfeitBy: 'home' | 'away' | null;
   decider: Decider | null;
-  /** MCAL tournament shootouts are stored by MaxPreps as goals; this stays null (see caveat copy). */
+  /**
+   * A tally, when one is stored (none today). An EAL 1 v 1 win has decider 'SO' and shootout null;
+   * MCAL tournament shootouts are stored by MaxPreps as goals (see caveat copy).
+   */
   shootout: { home: number; away: number } | null;
   venue: GameVenue;
   timeConfirmed?: boolean;
@@ -321,7 +328,7 @@ export type PlayoffStatus =
   | 'out'          // SCVAL 6th+: "No automatic path" (today's wording)
   | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic-berth route" — never "eliminated"
   | 'bye'          // MCAL seeds 1-2
-  | 'tournament'   // MCAL seeds 3-6
+  | 'tournament'   // MCAL seeds 3-6; EAL places 1-6 (Super Regional)
   | 'below-line';  // MCAL 7th+
 
 export interface ComputedRecord {
@@ -596,6 +603,11 @@ export interface DivisionHealth {
   countedFinals: number;
   previousCountedFinals: number | null;
   backfilled: number;
+  /**
+   * Only on a division whose official.mode is 'none' (EAL): league games MaxPreps flags, dated before
+   * today, with no counted result. Fixture-backed divisions carry this count in `official.missingPast`.
+   */
+  missingLeaguePast?: number;
 }
 
 export interface LeagueHealth {
@@ -687,7 +699,7 @@ export type SeasonPhase =
   | 'regular'
   | 'crossover'     // SCVAL only
   | 'play-in'       // BVAL only (Oct 31)
-  | 'tournament'    // MCAL only (Oct 23-30)
+  | 'tournament'    // MCAL (Oct 23-30), EAL (Oct 29-31)
   | 'playoffs'      // CCS bracket window (CCS leagues only)
   | 'complete';
 
@@ -699,7 +711,7 @@ export interface Snapshot {
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
   season: Season;
-  /** EXACTLY the registry (43), in registry order, left-joined against the feeds. */
+  /** EXACTLY the registry (49), in registry order, left-joined against the feeds. */
   teams: Team[];
   /** Deduped on contestId. */
   games: Game[];

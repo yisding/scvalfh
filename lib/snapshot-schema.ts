@@ -5,13 +5,14 @@
  *   1. a final game carries two numbers
  *   2. a non-final game carries no numbers  → "a missing score is never 0-0"
  *   3. a decider exists exactly when the game is final
- *   4. shootout data exists exactly when decider === 'SO'
+ *   4. shootout data exists only when decider === 'SO' (an SO decider may carry no tally: an EAL 1 v 1 win)
  * Ids (league, division, slug) are validated strings here and checked against the config and the
  * registry in one snapshot-level `superRefine(checkAgainstConfig)`, whose every failure is a named
  * issue with a path.
  *
  * `loadSnapshot` is the one entry point for reading a file from disk: a v1 file (no
- * `schemaVersion`) is upgraded in memory by lib/snapshot-migrate.ts first.
+ * `schemaVersion`) is upgraded in memory by lib/snapshot-migrate.ts first, and so is a v2 file
+ * written before a configured league existed (the "league added" upgrade).
  */
 
 import { createHash } from 'node:crypto';
@@ -28,7 +29,7 @@ import {
   findLeague,
   statusesOf,
 } from './leagues';
-import { isSnapshotV1, migrateV1ToV2 } from './snapshot-migrate';
+import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from './snapshot-migrate';
 import { TEAMS, getTeamBySlug } from './teams';
 import type { DivisionId, Snapshot, TiebreakStage } from './types';
 
@@ -43,7 +44,7 @@ const contestId = z
   .string()
   .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
-const sectionId = z.enum(['ccs', 'ncs']);
+const sectionId = z.enum(['ccs', 'ncs', 'ns']);
 const officialSourceId = z.enum(['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf']);
 const sourceId = z.enum([
   'maxpreps-api',
@@ -154,7 +155,7 @@ const gameSide = z.object({
 });
 
 export const PostseasonTagSchema = z.object({
-  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'ccs', 'other']),
+  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'ccs', 'other']),
   leagueId: id.nullable(),
   via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'ccs-window']),
 });
@@ -251,8 +252,8 @@ export const GameSchema = z
   )
   // 3. A decider exists only on a final.
   .refine((g) => (g.decider !== null) === (g.status === 'final'), 'decider/status mismatch')
-  // 4. Shootout data only with decider === 'SO'.
-  .refine((g) => (g.shootout !== null) === (g.decider === 'SO'), 'shootout/decider mismatch')
+  // 4. Shootout data only with decider === 'SO' (an EAL 1 v 1 win is 'SO' with no stored tally).
+  .refine((g) => g.shootout === null || g.decider === 'SO', 'shootout data without decider SO')
   .refine((g) => g.isOt === g.otPeriods > 0, 'isOt/otPeriods mismatch')
   .refine((g) => g.dateKey === g.dateLocal.slice(0, 10), 'dateKey does not match dateLocal');
 
@@ -355,7 +356,7 @@ export const SeasonSchema = z.object({
       divisions: z.array(
         z.object({ id, label: z.string().min(1), maxprepsLeagueId: z.string().min(1) }),
       ),
-      postseasonKind: z.enum(['ccs-ladder', 'league-tournament']),
+      postseasonKind: z.enum(['ccs-ladder', 'league-tournament', 'unbracketed-tournament']),
       window: seasonWindow,
     }),
   ),
@@ -470,6 +471,7 @@ const divisionHealth = z.object({
   countedFinals: z.number().int().min(0),
   previousCountedFinals: z.number().int().min(0).nullable(),
   backfilled: z.number().int().min(0),
+  missingLeaguePast: z.number().int().min(0).optional(),
 });
 
 export const LeagueHealthSchema = z.object({
@@ -722,8 +724,25 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (g.official) {
       const d = findDivision(g.official.division);
       if (!d) issue(ctx, ['games', i, 'official', 'division'], `unknown division ${g.official.division}`);
-      else if (g.official.source !== d.official.source) {
+      else if (d.official.mode === 'none') {
+        issue(ctx, ['games', i, 'official', 'division'], `${d.id} publishes no official schedule; a game cannot carry an official stamp for it`);
+      } else if (g.official.source !== d.official.source) {
         issue(ctx, ['games', i, 'official', 'source'], `official source ${g.official.source} is not ${d.official.source}`);
+      }
+    }
+    // 'SO' only where a league decides level games on 1 v 1s; without a tally, a level score flagged W/L.
+    if (g.decider === 'SO') {
+      const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
+      const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
+      const league = home && away && home.league === away.league ? findLeague(home.league) : undefined;
+      if (league?.rules.leagueOvertime !== 'shootout') {
+        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two members of a 1 v 1 league (${g.contestId})`);
+      }
+      if (g.shootout === null) {
+        const flags = [g.home.result, g.away.result].sort().join('');
+        if (g.home.score !== g.away.score || flags !== 'LW') {
+          issue(ctx, ['games', i, 'decider'], `decider SO without a tally needs a level score flagged W/L (${g.contestId})`);
+        }
       }
     }
     if (SBLIVE_ID_RE.test(g.contestId)) {
@@ -769,7 +788,11 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
         issue(ctx, ['officialFixtures', i, key], `${slug} is not a member of ${f.division}`);
       }
     }
-    if (f.source !== d.official.source) issue(ctx, ['officialFixtures', i, 'source'], `source ${f.source} is not ${d.official.source}`);
+    if (d.official.mode === 'none') {
+      issue(ctx, ['officialFixtures', i, 'division'], `${d.id} publishes no official schedule; there is no official fixture for it`);
+    } else if (f.source !== d.official.source) {
+      issue(ctx, ['officialFixtures', i, 'source'], `source ${f.source} is not ${d.official.source}`);
+    }
   });
 
   // 6. season = config (order included).
@@ -869,9 +892,13 @@ export function safeParseSnapshot(raw: unknown) {
   return SnapshotSchema.safeParse(raw);
 }
 
-/** v1 (no schemaVersion) → migrateV1ToV2 → parseSnapshot; v2 → parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious. */
+/**
+ * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
+ * addConfiguredLeagues; then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
+ */
 export function loadSnapshot(raw: unknown): Snapshot {
-  return parseSnapshot(isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw);
+  const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
+  return parseSnapshot(lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2);
 }
 
 // ---------------------------------------------------------------- canonical form

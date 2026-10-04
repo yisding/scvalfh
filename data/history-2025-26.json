@@ -545,6 +545,17 @@
       },
       "status": "available"
     },
+    "eal": {
+      "checked": [
+        "https://www.cifns.org/sports/fh/index (the Section’s field hockey page: guidelines and announcements; its standings panel is empty)",
+        "https://www.cifns.org/guidelines-playoffs-Divisions-archives/playoff-center/index (2025-26 points and brackets list no field hockey)",
+        "https://fieldhockeyumpires.org/ (the EAL/SRL umpires’ site: schedules and assignments, no standings)"
+      ],
+      "checkedOn": "2026-10-04",
+      "league": "Eastern Athletic League",
+      "reason": "The EAL published no 2025-26 final standings of its own. We found no EAL league website, and the CIF Northern Section’s field hockey page and Playoff Center post no field hockey standings or results. We do not show standings from newspapers or third-party sites.",
+      "status": "unavailable"
+    },
     "mcal": {
       "alsoPublished": [
         {

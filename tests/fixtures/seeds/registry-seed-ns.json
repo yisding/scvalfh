@@ -1,0 +1,476 @@
+{
+  "generatedOn": "2026-10-04",
+  "scope": "NS (CIF Northern Section) Eastern Athletic League girls varsity field hockey 26-27",
+  "sections": [
+    {
+      "id": "ns",
+      "label": "Northern Section",
+      "officialName": "CIF Northern Section",
+      "shortName": "NS",
+      "maxprepsSectionId": "6249819d-12de-4bff-b0ab-38156006b001",
+      "maxprepsName": "Northern Section",
+      "maxprepsHubUrl": "https://www.maxpreps.com/ca/northern-section/field-hockey/",
+      "contestIdsUrl": "https://production.api.maxpreps.com/gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=section&id=6249819d-12de-4bff-b0ab-38156006b001&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25",
+      "officialSite": "https://www.cifns.org/",
+      "fieldHockeyPage": "https://www.cifns.org/sports/fh/index",
+      "fieldHockeyGuidelinesPdf": "https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf",
+      "guidelinesSha256": "68e73674a1f29bb24d827e842e5ab2adc7f58364ff1a54cd4ea2789377646020",
+      "holdsFieldHockeyChampionship": true,
+      "championshipEvidence": [
+        "https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf (the Section’s \"Northern Section Championship Playoff Calendar\": \"Field Hockey … Post Season Tourney TBA Oct. 30, 31, 2026\")",
+        "CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the \"Super Regional\", varsity only: the top six EAL/SRL schools compete); §V and §VI (NorCal and State qualification: \"Not Applicable\")"
+      ]
+    }
+  ],
+  "leagues": [
+    {
+      "id": "eal",
+      "section": "ns",
+      "label": "Eastern Athletic League",
+      "shortLabel": "EAL",
+      "divisions": [
+        {
+          "id": "eal",
+          "label": "EAL",
+          "maxprepsLeagueId": "60959b47-b0cf-4d7d-b054-d8ea140870ef",
+          "maxprepsName": "Eastern Athletic",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/eastern-athletic/?leagueid=60959b47-b0cf-4d7d-b054-d8ea140870ef",
+          "teamCount": 6,
+          "maxprepsRows": 7,
+          "verifiedBy": [
+            "leagues/60959b47-…/v1 -> sectionId 6249819d-… \"Northern Section\", sportSeasonId e302eb3e-…, year 26-27",
+            "leagues/60959b47-…/standings/v1 -> 7 rows (6 playing + Red Bluff 0-0-0 with modifiedOn null)",
+            "Northern Section hub __NEXT_DATA__ league card lists exactly this one league (Eastern Athletic)",
+            "context=section contest ids (42) == context=league contest ids (42) == union of non-deleted rows of the 6 playing teams' schedules (42)",
+            "the 6 playing teams hold all 30 league fixtures of a complete double round robin (15 pairs x 2); each has exactly 10 live league rows",
+            "team-context for all 7: leagueId 60959b47-…, sectionName \"Northern Section\""
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "7ed47346-7496-472a-b778-74f097b4d629",
+              "sportSeasonId": "8ae4cbab-caa1-4889-87a8-547fdaca9516",
+              "note": "same 7 teams; Red Bluff 0-9; Lassen 4-8"
+            }
+          }
+        }
+      ],
+      "siSbliveLeague": {
+        "slug": "4190-eastern-athletic",
+        "url": "https://www.si.com/high-school/stats/california/field-hockey/leagues/4190-eastern-athletic/standings",
+        "note": "si.com bucket lists 8 teams: Pleasant Valley, Davis, Chico, Yuba City, River Valley, Red Bluff, Corning, Lassen. NO Bella Vista; Yuba City (459232) and River Valley (459231) are stale (0 games, 0-0, absent from MaxPreps EAL both seasons). Harvest web paths only, never membership (same caveat as the other leagues)."
+      }
+    }
+  ],
+  "teams": [
+    {
+      "id": "204d6632-16ce-41fc-a733-dd11ec3af582",
+      "slug": "bella-vista",
+      "name": "Bella Vista",
+      "shortName": "Bella Vista",
+      "abbr": "BV",
+      "acronym": "BVHS",
+      "mascot": "Broncos",
+      "city": "Fair Oaks",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/fair-oaks/bella-vista-broncos/field-hockey/",
+      "aliases": [
+        "Bella Vista",
+        "BELLA VISTA",
+        "Bella Vista High School",
+        "Bella Vista Broncos",
+        "Bella Vista (Fair Oaks)"
+      ],
+      "sbliveTeamId": "459060",
+      "sbliveSlug": "459060-bella-vista-broncos",
+      "sbliveSchoolId": "12991",
+      "notes": {
+        "homeSection": "sjs",
+        "homeSectionEvidence": "official SJS directory widget https://www.cifsjshome.org/widget/school/directory (Bella Vista id 999, \"section\":\"SAC-Joaquin Section\"); MaxPreps school sectionReference is the Sac-Joaquin section id d663c9bc-2efc-42a4-b1f5-f51200644ccc. (cifsjs.org/schools/* is a statewide directory, not membership evidence.)",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 13,
+        "liveLeagueRows": 10,
+        "deletedRows": 0,
+        "notes": "Sac-Joaquin Section school (San Juan USD) playing EAL field hockey. SBLive lists it in NO league bucket (si.com league 4190-eastern-athletic omits it) and labels its PV/Chico/Davis fixtures inconsistently (PV game \"Non League\"; also lists an \"Educational Outreach Academy\" opponent). Non-league 2026: Fremont (Sunnyvale) 9/24 played, Cupertino 10/21, Convent 10/24.",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity)"
+      }
+    },
+    {
+      "id": "041ef7b7-089b-4e7d-9c9c-9ff1f833f829",
+      "slug": "chico",
+      "name": "Chico",
+      "shortName": "Chico",
+      "abbr": "CI",
+      "acronym": "CHS",
+      "mascot": "Panthers",
+      "city": "Chico",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chico/chico-panthers/field-hockey/",
+      "aliases": [
+        "Chico",
+        "CHICO",
+        "Chico High",
+        "Chico High School",
+        "Chico Panthers"
+      ],
+      "sbliveTeamId": "458564",
+      "sbliveSlug": "458564-chico-panthers",
+      "sbliveSchoolId": "10335",
+      "notes": {
+        "homeSection": "ns",
+        "homeSectionEvidence": "cifnshome.org Northern Section school directory lists \"Chico\"",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 14,
+        "liveLeagueRows": 10,
+        "deletedRows": 3,
+        "notes": "acronym CHS is shared with Corning and with three CCS teams (already in EXPECTED_ACRONYM_COLLISIONS; display only). 3 deleted rows (two 2026-09-26 non-conference St. Ignatius / Los Altos, one 2026-10-10 Redwood). 2026-09-28 Chico v Davis finished 1-1 but MaxPreps records W (Chico) / L (Davis), calculatedTeamContestResult 2/3, resultString \"W 1-1\" / \"L 1-1\" (b7/b8 fields look like a shootout); the Guidelines decide a level varsity game with 1 v 1s (§VII.E.4), so this is a 1 v 1 win (decider SO, tally not stored).",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity)"
+      }
+    },
+    {
+      "id": "8f1a8024-2d40-4cab-bcba-3b9b367c6873",
+      "slug": "corning",
+      "name": "Corning",
+      "shortName": "Corning",
+      "abbr": "CR",
+      "acronym": "CHS",
+      "mascot": "Cardinals",
+      "city": "Corning",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/corning/corning-cardinals/field-hockey/",
+      "aliases": [
+        "Corning",
+        "CORNING",
+        "Corning High School",
+        "Corning Cardinals"
+      ],
+      "sbliveTeamId": "458585",
+      "sbliveSlug": "458585-corning-cardinals",
+      "sbliveSchoolId": "10501",
+      "notes": {
+        "homeSection": "ns",
+        "homeSectionEvidence": "cifnshome.org Northern Section school directory lists \"Corning\"",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 10,
+        "liveLeagueRows": 10,
+        "deletedRows": 0,
+        "notes": "0-5 at 2026-10-04 (outscored 0-16). Two league games (vs PV 2026-09-29 and vs Chico 2026-10-01) are contestState 5 (score not reported) with no score yet; they are not in MaxPreps standings so far (Corning shows 0-5-0 = the five state-4 games).",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity)"
+      }
+    },
+    {
+      "id": "288ca10d-8448-41e9-b26e-463df226b8c8",
+      "slug": "davis",
+      "name": "Davis",
+      "shortName": "Davis",
+      "abbr": "DV",
+      "acronym": "DSHS",
+      "mascot": "Blue Devils",
+      "city": "Davis",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/davis/davis-sr-blue-devils/field-hockey/",
+      "aliases": [
+        "Davis",
+        "DAVIS",
+        "Davis Sr.",
+        "Davis Sr",
+        "Davis Senior",
+        "Davis Senior High School",
+        "Davis High",
+        "Davis High School",
+        "Davis Blue Devils",
+        "Davis Sr. Blue Devils",
+        "Davis Sr. (Davis)"
+      ],
+      "sbliveTeamId": "458605",
+      "sbliveSlug": "458605-davis-blue-devils",
+      "sbliveSchoolId": "10575",
+      "notes": {
+        "homeSection": "sjs",
+        "homeSectionEvidence": "official SJS directory widget https://www.cifsjshome.org/widget/school/directory (Davis Sr id 1024, \"section\":\"SAC-Joaquin Section\"); MaxPreps school sectionReference is the Sac-Joaquin section id d663c9bc-2efc-42a4-b1f5-f51200644ccc; Davis Enterprise 2026-04-19: Davis plays \"girls field hockey … in different leagues and sections\". (cifsjs.org/schools/* is a statewide directory, not membership evidence.)",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 19,
+        "liveLeagueRows": 10,
+        "deletedRows": 2,
+        "notes": "School is Sac-Joaquin Section; plays field hockey in the Northern Section’s EAL. MaxPreps team name is \"Davis Sr.\"; old URL /ca/davis/davis-blue-devils/field-hockey/ canonicalizes to davis-sr-blue-devils (same schoolId). Non-league rows include Redwood (2026-09-24 played, a duplicate deleted row), Tamalpais (2026-10-02), Convent (2026-10-10), Stevenson 2026-10-03 (state 5) and two TBA rows 2026-10-03, and a Del Norte San Diego row 2026-10-16 plus a deleted Del Norte Crescent City ghost (same ghost as the NCS fixture).",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity)"
+      }
+    },
+    {
+      "id": "b4268b1c-b3df-4dd5-b52c-5355d8a48e42",
+      "slug": "lassen",
+      "name": "Lassen",
+      "shortName": "Lassen",
+      "abbr": "LS",
+      "acronym": "LHS",
+      "mascot": "Grizzlies",
+      "city": "Susanville",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "754ACC",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/susanville/lassen-grizzlies/field-hockey/",
+      "aliases": [
+        "Lassen",
+        "LASSEN",
+        "Lassen High School",
+        "Lassen Grizzlies",
+        "Lassen (Susanville)"
+      ],
+      "sbliveTeamId": "458783",
+      "sbliveSlug": "458783-lassen-grizzlies",
+      "sbliveSchoolId": "11554",
+      "notes": {
+        "homeSection": "ns",
+        "homeSectionEvidence": "cifnshome.org Northern Section school directory lists \"Lassen\"",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 10,
+        "liveLeagueRows": 10,
+        "deletedRows": 0,
+        "notes": "acronym LHS collides with existing LHS teams (display only). 2025-26 field hockey: 4-8 overall.",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity)"
+      }
+    },
+    {
+      "id": "8e01c2fa-4888-483f-8d26-6a45518c1bd8",
+      "slug": "pleasant-valley",
+      "name": "Pleasant Valley",
+      "shortName": "Pleasant Val.",
+      "abbr": "PV",
+      "acronym": "PVHS",
+      "mascot": "Vikings",
+      "city": "Chico",
+      "section": "ns",
+      "league": "eal",
+      "division": "eal",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chico/pleasant-valley-vikings/field-hockey/",
+      "aliases": [
+        "Pleasant Valley",
+        "PLEASANT VALLEY",
+        "Pleasant Valley High School",
+        "Pleasant Valley Vikings",
+        "Pleasant Valley (Chico)"
+      ],
+      "sbliveTeamId": "458566",
+      "sbliveSlug": "458566-pleasant-valley-vikings",
+      "sbliveSchoolId": "10337",
+      "notes": {
+        "homeSection": "ns",
+        "homeSectionEvidence": "cifnshome.org Northern Section school directory lists \"Pleasant Valley\"; Chico Unified",
+        "varsityStatus": "varsity-playing",
+        "scheduleRows": 11,
+        "liveLeagueRows": 10,
+        "deletedRows": 0,
+        "notes": "MaxPreps 26-27 6-0 overall at 2026-10-04. SBLive team 458566 carries two placeholder \"League\" games vs Red Bluff (2026-09-08 never resulted, 2026-10-12) that MaxPreps does not have; and SBLive labels the 2026-09-14 PV-Bella Vista game \"Non League\" while MaxPreps contestType=0 (league). SBLive logo is a TEAM image (/team/458566-v3/), so the scoreboard resolves PV by team id, not school id.",
+        "identityProvenance": "mascot and city from MaxPreps team-context (schoolMascot, schoolCity), not standings; colors from the standings row (schoolColor1, schoolColor2); si.com team id, slug and school id from the team’s /games page props (level Varsity); sbliveSchoolId 10337 is the page props’ school.id, because the si.com logo is a TEAM image (/team/458566-v3/)"
+      }
+    }
+  ],
+  "excludedTeams": [
+    {
+      "id": "4d3da788-bbe2-4ab9-b854-d95aa9786cda",
+      "name": "Red Bluff",
+      "reason": "Not fielding a varsity team in 2026 (a JV game exists: Red Bluff JV @ Chico, 2026-09-14). MaxPreps lists it as the 7th EAL row at 0-0-0 with modifiedOn null and standingsId all zeros, its 26-27 varsity schedule is empty (data: []) with roster 0 and teamSize 0, and no other team schedules it (the six others play a complete 30-game double round robin among themselves). Red Bluff Daily News 2026-08-22 (https://www.redbluffdailynews.com/2026/08/22/girls-flag-football-is-coming-to-red-bluff/): \"a couple from the field hockey program, which will not field a team this fall\". Same treatment as Wilcox (SCVAL) and York (PCAL): not in the registry; its names are LEAGUES eal.withdrawnNames and its standings row is eal.maxprepsExtraRows.",
+      "candidateSeed": {
+        "id": "4d3da788-bbe2-4ab9-b854-d95aa9786cda",
+        "slug": "red-bluff",
+        "name": "Red Bluff",
+        "shortName": "Red Bluff",
+        "abbr": "RB",
+        "acronym": "RBHS",
+        "mascot": "Spartans",
+        "city": "Red Bluff",
+        "section": "ns",
+        "league": "eal",
+        "division": "eal",
+        "dataCoverage": "full",
+        "colors": [
+          "00824B",
+          "C8880A"
+        ],
+        "colorSource": "maxpreps-standings",
+        "maxprepsPath": "/ca/red-bluff/red-bluff-spartans/field-hockey/",
+        "aliases": [
+          "Red Bluff",
+          "RED BLUFF",
+          "Red Bluff High School",
+          "Red Bluff Spartans"
+        ],
+        "sbliveTeamId": "490259",
+        "sbliveSlug": "490259-red-bluff-spartans",
+        "sbliveSchoolId": "12728"
+      },
+      "withdrawnNames": [
+        "Red Bluff",
+        "RED BLUFF",
+        "Red Bluff High School",
+        "Red Bluff Spartans",
+        "Red Bluff Union High School"
+      ],
+      "sbliveCaveat": "si.com team 490259 (Varsity) still shows placeholder \"League\" games vs Pleasant Valley (2026-09-08 5:30pm, game 6513038, never resulted; 2026-10-12 5:30pm @ Chico, game 6513168) that do not exist on MaxPreps, and the si.com placeholder team 635037 (\"Educational Outreach Academy\", Red Bluff) carries its 12 original 2026 EAL fixtures, marked CANC without a score. 490259, 490260 (Red Bluff JV) and 635037 are in DATA_QUALITY.sbliveIgnoredTeamIds.",
+      "homeSection": "ns"
+    },
+    {
+      "id": null,
+      "name": "Yuba City (si.com team 459232) and River Valley (si.com team 459231)",
+      "reason": "Only on the si.com EAL bucket (stale): 0 games, 0-0, no MaxPreps EAL row in 25-26 or 26-27; MaxPreps section and league contest ids contain no game for them."
+    }
+  ],
+  "abbrsChosen": [
+    "BV=bella-vista",
+    "CI=chico",
+    "CR=corning",
+    "DV=davis",
+    "LS=lassen",
+    "PV=pleasant-valley",
+    "RB=red-bluff (excluded)"
+  ],
+  "abbrReconciliation": {
+    "rule": "lib/teams.ts assertRegistry requires abbr /^[A-Z]{2}$/ (exactly two capital letters) and unique across all registries; the orchestrator brief said 2-3 letters, the code says 2.",
+    "existingAbbrs": [
+      "BR",
+      "CH",
+      "GI",
+      "LE",
+      "LD",
+      "WG",
+      "DM",
+      "LO",
+      "PS",
+      "SK",
+      "SO",
+      "WM",
+      "AW",
+      "RW",
+      "TM",
+      "BK",
+      "LW",
+      "UN",
+      "MC",
+      "CS",
+      "MA",
+      "CA",
+      "GR",
+      "HO",
+      "MO",
+      "SA",
+      "CT",
+      "ST",
+      "SI",
+      "SF",
+      "LA",
+      "VC",
+      "FR",
+      "CU",
+      "HM",
+      "MI",
+      "LG",
+      "PA",
+      "PR",
+      "SC",
+      "SG",
+      "LY",
+      "MV"
+    ],
+    "collisionsWithProposed": [],
+    "avoidedExisting": [
+      "CH (Christopher) for Chico/Corning -> CI/CR",
+      "CA (Carmel) -> not used",
+      "LA (Los Altos) and LE/LD/LG/LW/LY -> Lassen takes LS",
+      "DM (Del Mar) -> Davis takes DV",
+      "PS (Prospect) -> Pleasant Valley takes PV",
+      "BR (Branham) -> Bella Vista takes BV"
+    ],
+    "foreseeableConflicts": "none known; RB reserved if Red Bluff is ever added"
+  },
+  "sbliveIdentity": {
+    "verifiedOn": "2026-10-04",
+    "evidenceDir": "research/teams/sblive/",
+    "source": "each team /games page props (query.team.id, webPath, school.id, level Varsity) fetched with the repo Chrome UA",
+    "ids": {
+      "pleasant-valley": {
+        "teamId": "458566",
+        "schoolId": "10337"
+      },
+      "chico": {
+        "teamId": "458564",
+        "schoolId": "10335"
+      },
+      "davis": {
+        "teamId": "458605",
+        "schoolId": "10575"
+      },
+      "bella-vista": {
+        "teamId": "459060",
+        "schoolId": "12991"
+      },
+      "lassen": {
+        "teamId": "458783",
+        "schoolId": "11554"
+      },
+      "corning": {
+        "teamId": "458585",
+        "schoolId": "10501"
+      },
+      "red-bluff": {
+        "teamId": "490259",
+        "schoolId": "12728"
+      }
+    },
+    "jvTeamsNeverUse": {
+      "458565": "Pleasant Valley JV",
+      "458563": "Chico JV",
+      "458606": "Davis JV",
+      "459059": "Bella Vista JV",
+      "490252": "Lassen JV",
+      "485808": "Corning JV",
+      "554338": "Corning FR",
+      "554132": "Lassen FR",
+      "490260": "Red Bluff JV",
+      "485850": "River Valley JV"
+    },
+    "ambiguousNamesNote": "Not enumerated statewide: the si.com CA scoreboard sample (2026-09-23/30, 10-02) shows one \"Davis\" and one \"Corning\" side, none of Chico/Pleasant Valley/Bella Vista/Lassen/Red Bluff; recommend sbliveSchoolId on all seeds so scoreboard sides resolve by school id, not name."
+  }
+}

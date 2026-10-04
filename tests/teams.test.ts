@@ -29,14 +29,18 @@ const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name:
   ['monta-vista', 'MV', '405614ad-a015-4270-b527-18e899c90824', 'Monta Vista', 'el-camino'],
 ];
 
-describe('teams: the registry is the four leagues', () => {
-  it('holds 43 teams, with per-division counts from the config', () => {
-    expect(TEAMS).toHaveLength(43);
+describe('teams: the registry is the five leagues', () => {
+  it('holds 49 teams, with per-division counts from the config', () => {
+    expect(TEAMS).toHaveLength(49);
     expect(FETCHABLE_TEAMS).toHaveLength(TEAMS.length);
     for (const d of ALL_DIVISIONS) expect(teamsInDivision(d.id), d.id).toHaveLength(d.expectedTeams);
-    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(43);
+    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(49);
     expect(LEAGUES.map((l) => [l.id, teamsInLeague(l.id).length])).toEqual([
-      ['scval', 15], ['bval', 12], ['pcal', 7], ['mcal', 9],
+      ['scval', 15], ['bval', 12], ['pcal', 7], ['mcal', 9], ['eal', 6],
+    ]);
+    // The EAL closes the registry, in alphabetical seed order.
+    expect(TEAMS.slice(-6).map((t) => t.slug)).toEqual([
+      'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
   });
 
@@ -60,7 +64,7 @@ describe('teams: the registry is the four leagues', () => {
     }
   });
 
-  it('has unique ids, slugs and abbrs across all 43, and well-formed slugs', () => {
+  it('has unique ids, slugs and abbrs across all 49, and well-formed slugs', () => {
     for (const key of ['id', 'slug', 'abbr'] as const) {
       const values = TEAMS.map((t) => t[key]);
       expect(new Set(values).size, key).toBe(TEAMS.length);
@@ -101,6 +105,24 @@ describe('teams: the registry is the four leagues', () => {
     expect(isRegistryTeamId(null)).toBe(false);
   });
 
+  it('resolves the EAL teams, including MaxPreps’ "Davis Sr." spelling', () => {
+    expect(resolveTeam('Chico')?.slug).toBe('chico');
+    expect(resolveTeam('Davis Sr.')?.slug).toBe('davis');
+    expect(resolveTeam('Davis Senior High School')?.slug).toBe('davis');
+    expect(resolveTeam('Pleasant Valley')?.slug).toBe('pleasant-valley');
+    expect(resolveTeam('Bella Vista (Fair Oaks)')?.slug).toBe('bella-vista');
+    expect(resolveTeam('Lassen Grizzlies')?.slug).toBe('lassen');
+    expect(resolveTeam('Corning Cardinals')?.slug).toBe('corning');
+    expect(resolveTeam('288ca10d-8448-41e9-b26e-463df226b8c8')?.slug).toBe('davis');
+    // PVHS, DSHS and BVHS are unique acronyms; CHS (Chico, Corning) and LHS (Lassen) are shared.
+    expect(resolveTeam('PVHS')?.slug).toBe('pleasant-valley');
+    expect(resolveTeam('DSHS')?.slug).toBe('davis');
+    expect(resolveTeam('BVHS')?.slug).toBe('bella-vista');
+    for (const t of teamsInLeague('eal')) {
+      expect([t.section, t.division], t.slug).toEqual(['ns', 'eal']);
+    }
+  });
+
   it('resolves official-grid tokens only inside their own league', () => {
     expect(resolveOfficialName('pcal', 'CAT/YOR')?.slug).toBe('santa-catalina');
     expect(resolveOfficialName('pcal', 'SCAT')?.slug).toBe('santa-catalina');
@@ -128,6 +150,12 @@ describe('teams: the registry is the four leagues', () => {
       expect(isWithdrawnSchool(name), name).toBe(true);
     }
     expect(resolveTeam('York')).toBeUndefined();
+    // Red Bluff: a 0-0-0 row in MaxPreps' EAL table, not fielding a varsity team in 2026.
+    expect(resolveTeam('Red Bluff')).toBeUndefined();
+    expect(isWithdrawnSchool('Red Bluff')).toBe(true);
+    expect(isWithdrawnSchool('Red Bluff Union High School', 'eal')).toBe(true);
+    expect(isWithdrawnSchool('Red Bluff', 'mcal')).toBe(false);
+    expect(isRegistryTeamId('4d3da788-bbe2-4ab9-b854-d95aa9786cda')).toBe(false);
     expect(isWithdrawnSchool('Fremont')).toBe(false);
     expect(isWithdrawnSchool(null)).toBe(false);
   });
@@ -172,8 +200,8 @@ describe('teams: the registry is the four leagues', () => {
     expect(resolveTeam('  los   altos  ')?.slug).toBe('los-altos');
   });
 
-  it('does not resolve schools outside the four leagues', () => {
-    for (const name of ['Chico', 'La Jolla', 'Del Norte', 'Gunn', 'Irvington']) {
+  it('does not resolve schools outside the five leagues', () => {
+    for (const name of ['Yuba City', 'La Jolla', 'Del Norte', 'Gunn', 'Irvington']) {
       expect(resolveTeam(name), name).toBeUndefined();
     }
     expect(resolveTeam(null)).toBeUndefined();
@@ -208,6 +236,15 @@ describe('teams: the registry is the four leagues', () => {
     expect(resolveTeam('palo-alto')!.external.vnnIcsUrl).toContain('2635290');
     expect(resolveTeam('los-gatos')!.external.vnnIcsUrl).toContain('2634860');
     expect(TEAMS.filter((t) => t.external.vnnIcsUrl)).toHaveLength(2);
+    // The six EAL teams carry si.com team ids, slugs and school ids (never their JV/FR ids).
+    expect(teamsInLeague('eal').map((t) => [t.slug, t.external.sbliveTeamId, t.external.sbliveSchoolId])).toEqual([
+      ['bella-vista', '459060', '12991'],
+      ['chico', '458564', '10335'],
+      ['corning', '458585', '10501'],
+      ['davis', '458605', '10575'],
+      ['lassen', '458783', '11554'],
+      ['pleasant-valley', '458566', '10337'],
+    ]);
   });
 
   it('never hotlinks a mascot image (DESIGN §12.4)', () => {
