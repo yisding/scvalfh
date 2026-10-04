@@ -39,7 +39,7 @@ export function FindYourTeam({ index, children, className }: FindYourTeamProps) 
   return (
     <section data-scope="none" aria-labelledby="find-your-team" className={className}>
       <SectionHeader id="find-your-team" kicker="Find your team" />
-      <TeamFinder index={index} mode="pin" label="School, city or mascot" onPin={focusUnpin} />
+      <TeamFinder index={index} mode="pin" onPin={focusUnpin} />
       <ul className="m-0 mt-6 grid list-none grid-cols-1 gap-3 p-0 min-[390px]:grid-cols-2 md:gap-4">
         {children}
       </ul>

@@ -57,7 +57,7 @@ export interface TeamFinderProps {
   listId?: string;
   /** filter mode: id of an element hidden while the query is non-empty (the /teams anchor switcher). */
   hideWhileSearchingId?: string;
-  /** Default 'School, city or mascot'. */
+  /** Default DEFAULT_FINDER_LABEL. */
   label?: string;
   /** pin mode default 8. */
   limit?: number;

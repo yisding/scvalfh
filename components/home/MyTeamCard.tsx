@@ -343,7 +343,7 @@ export function PinnedCard({
 export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
   return (
     <div className="flex flex-col bg-surface px-3 py-3 min-[22.5rem]:px-4 md:px-5">
-      <TeamFinder index={index} mode="pin" label="School, city or mascot" onPin={onPin} />
+      <TeamFinder index={index} mode="pin" onPin={onPin} />
       <p className="sx-clamp-2 mt-2 mb-0 h-10 text-meta text-ink-2">
         Pin your team: search, or pick it from your league’s team list below.
       </p>
