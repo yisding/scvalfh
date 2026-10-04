@@ -27,6 +27,7 @@ import {
 import {
   collegeDisplayName,
   commitClassOf,
+  commitProgram,
   getCollege,
   getCollegeCommitments,
   getColleges,
@@ -63,11 +64,11 @@ const COLLEGE: College = {
   slug: 'example-college',
   name: 'Example College',
   shortName: 'Example',
-  division: 'ncaa-d1',
-  conference: 'Example Conference',
   city: 'Somewhere',
   state: 'PA',
-  programUrl: 'https://example.edu/sports/field-hockey',
+  programs: [
+    { sport: 'field-hockey', division: 'ncaa-d1', conference: 'Example Conference', url: 'https://example.edu/sports/field-hockey' },
+  ],
   sources: [{ url: 'https://example.edu/sports/field-hockey', what: 'Field hockey home page' }],
   checkedOn: '2026-10-03',
 };
@@ -78,6 +79,7 @@ function commitmentFor(r: { teamSlug: string; row: MergedPlayer }, over: Partial
     athleteId: r.row.athleteId!,
     fullName: r.row.fullName,
     college: COLLEGE.slug,
+    sport: 'field-hockey',
     status: 'committed',
     asOf: '2026-06',
     confidence: 'high',
@@ -120,7 +122,7 @@ describe('the committed data/commits.json', () => {
 
   it('cites only https pages, none of them social media', () => {
     const urls = [
-      ...raw.colleges.flatMap((c) => [c.programUrl, ...c.sources.map((s) => s.url)]),
+      ...raw.colleges.flatMap((c) => [...c.programs.map((p) => p.url), ...c.sources.map((s) => s.url)]),
       ...raw.commitments.flatMap((c) => c.sources.map((s) => s.url)),
     ].filter((u): u is string => u !== null);
     for (const url of urls) {
@@ -149,10 +151,21 @@ describe('the committed data/commits.json', () => {
     }
   });
 
-  it('holds only colleges somebody committed to, each with its field hockey level', () => {
+  it('holds only colleges and programs somebody committed to, each program with its level', () => {
     for (const college of raw.colleges) {
       expect(getCollegeCommitments(college.slug).length, college.slug).toBeGreaterThan(0);
-      expect(COLLEGE_DIVISIONS).toContain(college.division);
+      for (const p of college.programs) {
+        expect(COLLEGE_DIVISIONS).toContain(p.division);
+        expect(raw.commitments.some((c) => c.college === college.slug && c.sport === p.sport), `${college.slug} ${p.sport}`).toBe(true);
+      }
+    }
+  });
+
+  it('serves each commitment’s program: its college’s team in its sport', () => {
+    for (const c of raw.commitments) {
+      const { college, program } = commitProgram(c);
+      expect(college.slug).toBe(c.college);
+      expect(program.sport).toBe(c.sport);
     }
   });
 });
@@ -172,7 +185,7 @@ describe('the 2026-10-03 research, as counted in README "College commitments" an
     const classes = getCommitments().map((c) => commitClassOf(c));
     expect(classes.filter((y) => y === 2027)).toHaveLength(5);
     expect(classes.filter((y) => y === 2028)).toHaveLength(2);
-    const level = (d: string) => raw.commitments.filter((c) => getCollege(c.college)!.division === d).length;
+    const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([4, 1, 2, 0]);
   });
 
@@ -278,6 +291,36 @@ describe('the schema refuses a bad file, naming the path', () => {
     expect(schemaIssues(f)).toContain('colleges.1: no commitment names orphan-college: drop the college record');
   });
 
+  it('a commitment in a sport its college has no program for', () => {
+    const f = fileWith([commitmentFor(senior, { sport: 'lacrosse' })]);
+    const issues = schemaIssues(f);
+    expect(issues).toContain('commitments.0.sport: example-college has no lacrosse program in colleges[]');
+    expect(issues).toContain('colleges.0.programs.0: no field-hockey commitment names example-college: drop the program');
+  });
+
+  it('two programs in one sport, or a program nobody committed to', () => {
+    const lacrosse = { sport: 'lacrosse', division: 'ncaa-d3', conference: null, url: null } as const;
+    const twice = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [...COLLEGE.programs, { ...COLLEGE.programs[0] }] }]);
+    expect(schemaIssues(twice)).toContain('colleges.0.programs.1.sport: example-college has two field-hockey programs');
+    const orphan = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [...COLLEGE.programs, lacrosse] }]);
+    expect(schemaIssues(orphan)).toContain('colleges.0.programs.1: no lacrosse commitment names example-college: drop the program');
+  });
+
+  it('takes commitments in two sports at one college, each with its own level', () => {
+    const lacrosse = { sport: 'lacrosse', division: 'ncaa-d3', conference: null, url: null } as const;
+    const f = fileWith(
+      [commitmentFor(senior), commitmentFor(junior, { sport: 'lacrosse' })],
+      [{ ...COLLEGE, programs: [...COLLEGE.programs, lacrosse] }],
+    );
+    expect(schemaIssues(f)).toEqual([]);
+    expect(load(f)).not.toThrow();
+  });
+
+  it('a college with no program', () => {
+    const f = fileWith([commitmentFor(senior)], [{ ...COLLEGE, programs: [] }]);
+    expect(schemaIssues(f)).toContain('colleges.0.programs: a college needs at least one program');
+  });
+
   it('a social-media source, an http source, an over-long quote and a season for a date', () => {
     const c = commitmentFor(senior);
     const bad = fileWith([
@@ -317,11 +360,15 @@ describe('the schema refuses a bad file, naming the path', () => {
     expect(issues).toContain('colleges.0.sources: a college needs at least one source');
   });
 
-  it('an unknown division or status', () => {
-    const f = fileWith([commitmentFor(senior, { status: 'verbal' as never })], [{ ...COLLEGE, division: 'club' as never }]);
+  it('an unknown division, sport or status', () => {
+    const f = fileWith(
+      [commitmentFor(senior, { status: 'verbal' as never, sport: 'quidditch' as never })],
+      [{ ...COLLEGE, programs: [{ ...COLLEGE.programs[0], division: 'club' as never }] }],
+    );
     const issues = schemaIssues(f);
     expect(issues.some((i) => i.startsWith('commitments.0.status'))).toBe(true);
-    expect(issues.some((i) => i.startsWith('colleges.0.division'))).toBe(true);
+    expect(issues.some((i) => i.startsWith('commitments.0.sport'))).toBe(true);
+    expect(issues.some((i) => i.startsWith('colleges.0.programs.0.division'))).toBe(true);
   });
 });
 

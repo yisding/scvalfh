@@ -411,7 +411,7 @@ describe('/teams (app/teams/page.tsx)', () => {
       html.lastIndexOf('data-team-group=""'),
     );
     expect(textOf(html), 'app/teams/page.tsx').toContain(
-      'College field hockey: the college commitments page lists the players here a public page says have committed to play in college.',
+      'College commitments: the college commitments page lists the players here a public page says have committed to play in college, in field hockey or another sport.',
     );
   });
 });

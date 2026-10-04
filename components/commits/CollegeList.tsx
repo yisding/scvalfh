@@ -3,15 +3,16 @@ import ExternalLink from '../ui/ExternalLink';
 import type { CollegeRow } from './commit-view';
 
 /**
- * The colleges on /commits (DESIGN §21.1): each with its division, conference and place, how many
- * players here committed to it and from which schools, and its field hockey page.
+ * The colleges on /commits (DESIGN §21.1): each with its place, then one line per team a player here
+ * committed to (the sport, its division and conference: they differ by sport at one college), how
+ * many players here committed to it and from which schools, and each team's page.
  *
  * A list, not a table (DESIGN §10.8), in the same card and grid as the commitment rows. The row's id
- * is collegeAnchor(), so `/commits#college-<slug>` lands on it. The program link is the college's
- * own site, so it is an off-site link with the arrow, standing alone on its line with the
- * `sx-action` box; its label names the college ("Stanford field hockey"), so links in a screen
- * reader's list tell themselves apart. Nothing long is `nowrap`: official names and the schools
- * line reflow at 320px.
+ * is collegeAnchor(), so `/commits#college-<slug>` lands on it. A program link is the college's own
+ * site, so it is an off-site link with the arrow, standing alone on its line with the `sx-action`
+ * box; its label names the college and the sport ("Stanford field hockey", "St. Lawrence soccer"),
+ * so links in a screen reader's list tell themselves apart. Nothing long is `nowrap`: official names
+ * and the schools line reflow at 320px.
  */
 export function CollegeList({ colleges }: { colleges: CollegeRow[] }) {
   return (
@@ -24,17 +25,24 @@ export function CollegeList({ colleges }: { colleges: CollegeRow[] }) {
         >
           <span className="block text-body font-semibold text-ink">{college.name}</span>
           {college.fullName ? <span className="block text-meta text-ink-2">{college.fullName}</span> : null}
-          <span className="block text-meta text-ink-2">{college.facts.join(' · ')}</span>
+          <span className="block text-meta text-ink-2">{college.place}</span>
+          {college.programs.map((program) => (
+            <span key={program.sport} className="block text-meta text-ink-2">
+              {program.facts.join(' · ')}
+            </span>
+          ))}
           <span className="block text-meta text-ink-2">
             {college.countLine}: {listWords(college.schools)}
           </span>
-          {college.program ? (
-            <span className="block text-meta">
-              <ExternalLink href={college.program.url} className="sx-action gap-1">
-                {college.program.label}
-              </ExternalLink>
-            </span>
-          ) : null}
+          {college.programs.map((program) =>
+            program.link ? (
+              <span key={program.sport} className="block text-meta">
+                <ExternalLink href={program.link.url} className="sx-action gap-1">
+                  {program.link.label}
+                </ExternalLink>
+              </span>
+            ) : null,
+          )}
         </li>
       ))}
     </ul>

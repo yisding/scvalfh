@@ -149,11 +149,12 @@ export default function TeamsPage() {
         page lists youth field hockey clubs and, for each, the players here a public page ties to it.
       </p>
       <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
-        College field hockey: the{' '}
+        College commitments: the{' '}
         <Link href="/commits" prefetch={false} className="text-accent hover:underline">
           college commitments
         </Link>{' '}
-        page lists the players here a public page says have committed to play in college.
+        page lists the players here a public page says have committed to play in college, in field
+        hockey or another sport.
       </p>
     </div>
   );

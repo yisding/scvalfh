@@ -15,8 +15,8 @@ import { getRosters } from '../../lib/rosters';
  * /commits — "Who here has committed to play in college, and where?" (DESIGN §21.1, SPEC §1.1j3).
  *
  * The commitments of data/commits.json: players on the tracked varsity rosters that a public page
- * says have committed to (or signed with) a college field hockey program. The lede answers the
- * page's question in one paragraph; there is no second line of bare counts.
+ * says have committed to (or signed with) a college team, in field hockey or any other sport. The
+ * lede answers the page's question in one paragraph; there is no second line of bare counts.
  *
  * Heading outline: the h1, then one h2 per class year (`#class-2027`, the earliest class first),
  * then the h2 "Colleges" (`#colleges`, one row per college, `#college-<slug>`), then the h2 "How
@@ -31,7 +31,7 @@ import { getRosters } from '../../lib/rosters';
  */
 export const metadata: Metadata = {
   title: 'College commitments',
-  description: `The college field hockey programs that players on the ${getRosters().teams.length} varsity rosters here have committed to, with a public source for every one. Unofficial and incomplete.`,
+  description: `The colleges that players on the ${getRosters().teams.length} varsity rosters here have committed to play for, in field hockey and other sports, with a public source for every one. Unofficial and incomplete.`,
   alternates: { canonical: '/commits' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/commits' },
 };
@@ -81,12 +81,14 @@ export default function CommitsPage() {
           </p>
           <p className="mt-2 mb-0">
             A commitment is listed only when a public page says the player has committed to, or
-            signed with, a college to play field hockey, and the page also either names the
-            player&rsquo;s high school, or gives a class year that matches the player&rsquo;s grade
-            along with a Northern California location. A name alone never counts, and a class year that
+            signed with, a college to play a sport on one of its teams, and the page also either
+            names the player&rsquo;s high school, or gives a class year that matches the
+            player&rsquo;s grade along with a Northern California location. Field hockey is this
+            site&rsquo;s sport, but many players here also play another, and a commitment in any
+            sport counts: each row names the sport. A name alone never counts, and a class year that
             disagrees with the roster rules a match out. A college a player is only interested in,
-            has an offer from or has visited is not a commitment, and neither is one for another
-            sport.
+            has an offer from or has visited is not a commitment, and neither is a place on a
+            college&rsquo;s club team.
           </p>
           <p className="mt-2 mb-0">
             Commitments are often announced only on social media. Social-media posts are never used
@@ -105,7 +107,7 @@ export default function CommitsPage() {
           </p>
           <p className="mt-2 mb-0">
             Recall is partial. A player with no public page that meets the rule is not listed, so a
-            school with no one here may still have players headed to college field hockey. The{' '}
+            school with no one here may still have players headed to a college team. The{' '}
             <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
               club teams
             </Link>{' '}

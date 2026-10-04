@@ -15,11 +15,16 @@
       "slug": "bates",
       "name": "Bates College",
       "shortName": "Bates",
-      "division": "ncaa-d3",
-      "conference": "NESCAC",
       "city": "Lewiston",
       "state": "ME",
-      "programUrl": "https://gobatesbobcats.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "NESCAC",
+          "url": "https://gobatesbobcats.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://gobatesbobcats.com/sports/field-hockey",
@@ -40,11 +45,16 @@
       "slug": "colgate",
       "name": "Colgate University",
       "shortName": "Colgate",
-      "division": "ncaa-d1",
-      "conference": "Patriot League",
       "city": "Hamilton",
       "state": "NY",
-      "programUrl": "https://colgateathletics.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Patriot League",
+          "url": "https://colgateathletics.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://www.colgate.edu/athletics",
@@ -65,11 +75,16 @@
       "slug": "iowa",
       "name": "University of Iowa",
       "shortName": "Iowa",
-      "division": "ncaa-d1",
-      "conference": "Big Ten",
       "city": "Iowa City",
       "state": "IA",
-      "programUrl": "https://hawkeyesports.com/sports/fhockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Big Ten",
+          "url": "https://hawkeyesports.com/sports/fhockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://hawkeyesports.com/sports/fhockey",
@@ -94,11 +109,16 @@
       "slug": "ithaca",
       "name": "Ithaca College",
       "shortName": "Ithaca",
-      "division": "ncaa-d3",
-      "conference": "Liberty League",
       "city": "Ithaca",
       "state": "NY",
-      "programUrl": "https://athletics.ithaca.edu/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "Liberty League",
+          "url": "https://athletics.ithaca.edu/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://athletics.ithaca.edu/sports/field-hockey",
@@ -119,11 +139,16 @@
       "slug": "maryville",
       "name": "Maryville University of Saint Louis",
       "shortName": "Maryville",
-      "division": "ncaa-d2",
-      "conference": null,
       "city": "St. Louis",
       "state": "MO",
-      "programUrl": "https://maryvillesaints.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d2",
+          "conference": null,
+          "url": "https://maryvillesaints.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://maryvillesaints.com/sports/field-hockey",
@@ -144,11 +169,16 @@
       "slug": "uc-davis",
       "name": "University of California, Davis",
       "shortName": "UC Davis",
-      "division": "ncaa-d1",
-      "conference": "MPSF",
       "city": "Davis",
       "state": "CA",
-      "programUrl": "https://ucdavisaggies.com/sports/field-hockey",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "MPSF",
+          "url": "https://ucdavisaggies.com/sports/field-hockey"
+        }
+      ],
       "sources": [
         {
           "url": "https://ucdavisaggies.com/sports/field-hockey/schedule",
@@ -176,6 +206,7 @@
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
       "fullName": "Alyssa Montejano",
       "college": "maryville",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "high",
@@ -204,6 +235,7 @@
       "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
       "fullName": "Ryan Hemeon",
       "college": "uc-davis",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "medium",
@@ -224,6 +256,7 @@
       "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
       "fullName": "Katarina Smith",
       "college": "ithaca",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-09-18",
       "confidence": "high",
@@ -260,6 +293,7 @@
       "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
       "fullName": "Carolyn Cordoni",
       "college": "bates",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": null,
       "confidence": "high",
@@ -280,6 +314,7 @@
       "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
       "fullName": "Maggie Magnano",
       "college": "uc-davis",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-02-04",
       "confidence": "high",
@@ -324,6 +359,7 @@
       "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
       "fullName": "Olivia Van De Braak",
       "college": "iowa",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-10-01",
       "confidence": "high",
@@ -360,6 +396,7 @@
       "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
       "fullName": "Storey Lewis",
       "college": "colgate",
+      "sport": "field-hockey",
       "status": "committed",
       "asOf": "2026-08-06",
       "confidence": "high",

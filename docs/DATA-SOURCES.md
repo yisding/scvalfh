@@ -585,12 +585,14 @@ automatically.
 roster, DESIGN §21). Research on 2026-10-03, not a script: nothing fetches or refreshes it. It holds
 7 commitments and the 6 colleges they are to, each commitment a player on the 43 tracked varsity
 rosters, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the clubs are. A
-commitment has the college, a `status` (`committed`, or `signed` only where a source says so), an
-`asOf` (the earliest date a kept source gives: a day, a month or a year), a `confidence`, and its
-sources (URL, kind, a verbatim quote of at most 300 characters, the school, class year and date the
-page states); `basis` says what the match rests on. A college record has its official name and
-display name, the division and conference of its field hockey team, city and state, its field
-hockey page, and the pages each fact came from. Quotes and bases are for maintainers and never
+commitment has the college, the `sport` (field hockey, or any other: `COMMIT_SPORTS`), a `status`
+(`committed`, or `signed` only where a source says so), an `asOf` (the earliest date a kept source
+gives: a day, a month or a year), a `confidence`, and its sources (URL, kind, a verbatim quote of at
+most 300 characters, the school, class year and date the page states); `basis` says what the match
+rests on. A college record has its official name and display name, city and state, one `programs`
+entry per sport a player here committed to it in (that team's division and conference, which can
+differ from the college's other teams, and its page on the college's athletics site), and the pages
+each fact came from. Quotes and bases are for maintainers and never
 rendered (`commitmentLeaks` in `scripts/copy-rules.ts`, run by `scripts/assert-copy.ts`): a
 commitment list or a news story names teammates and other recruits who are not on the rosters.
 
@@ -618,14 +620,16 @@ Hawks' `/alumni-and-committed-players/` table (name, graduation year, college; u
 it lacks the Iowa commitment). `school-site` 1: St. Ignatius's athletics site.
 
 *The rule* is the clubs' rule (§1.1j2) applied to colleges: a public page must name the player and
-the college in a field hockey context, and either name the player's high school, or give a class
+the college in the context of one sport (field hockey, or any other since 2026-10-04: many players
+here also play lacrosse, soccer or basketball), and either name the player's high school, or give a class
 year that agrees with the roster grade together with a Northern California location (the player's
 hometown, or a club or team based in Northern California; "CA" alone is not enough). A class year
 that disagrees with the roster grade rules a match out, and `lib/commits.ts` refuses the file at load
 otherwise (for a row with no grade, the stated class years must agree with each other and be a class
 a high school roster of the season can hold). Not a commitment: MaxPreps' "College Interests"
 (`careerCollegeInterestsData` on a career `/bio/` page, which was empty for every in-scope player
-anyway), offers, visits, camps, watchlists, all-league lists, and a commitment for another sport. No
+anyway), offers, visits, camps, watchlists, all-league lists, and a place on a college's club team
+(club lacrosse, for one). No
 social media, as source or link: `BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook,
 TikTok, X, Threads, YouTube, Snapchat, LinkedIn and their short links.
 

@@ -53,7 +53,7 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (43 pages, all four leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 43 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
-| `/commits` | "Who here has committed to play in college, and where?" The players on the 43 varsity rosters a public page says have committed to (or signed with) a college field hockey program, by class year (`#class-2027`), each with the college, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
+| `/commits` | "Who here has committed to play in college, and where?" The players on the 43 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has one) |
 | `/leaders` | Season leaders across all four leagues (`#players`, `#schools`, and one anchor per board): the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats, and the schools with the highest Elo rating (top 10, `#elo-rating`), the best overall and league records, the most goals and fewest allowed per game, and the most clean sheets, from every final in the snapshot |
@@ -405,28 +405,32 @@ first club page with no tied player.
 ### College commitments
 
 `data/commits.json` holds which players on the 43 tracked varsity rosters a public page says have
-committed to play field hockey in college, and those colleges. A commitment (`commitments`, joined
-to `data/rosters.json` on team slug + MaxPreps athleteId, one per player) has the college, a
-`status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
+committed to play a sport in college (field hockey, or any other), and those colleges. A commitment
+(`commitments`, joined to `data/rosters.json` on team slug + MaxPreps athleteId, one per player) has
+the college, the `sport`, a `status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
 source gives for it: a day, a month or a year, never after `capturedAt`), a `confidence` (`high` or
 `medium`) and its sources: URL, kind, a verbatim quote of at most 300 characters, and the school,
 class year and date the page states. `basis` says, for maintainers, what the match rests on. A
-college record (`colleges`) has its name and display name, the NCAA division (or NAIA) its field
-hockey team plays in, its field hockey conference, city and state, its field hockey page, and the
-pages each fact was read from; the file holds only colleges somebody committed to.
+college record (`colleges`) has its name and display name, city and state, one `programs` entry per
+sport a player here committed to it in (the NCAA division, or NAIA, that team plays in, its
+conference and its page on the college's athletics site: a college's teams can sit in different
+divisions and conferences), and the pages each fact was read from; the file holds only colleges and
+programs somebody committed to.
 
 The rules are the clubs' (see "Clubs"): the same linking rule (the page names the player and the
-college in a field hockey context, and either the high school, or a class year that agrees with the
+college in the context of one sport, and either the high school, or a class year that agrees with the
 roster grade plus a Northern California location), the same privacy posture (only tracked varsity
 rows, by the roster's spelling; quotes and bases kept, never rendered, and `pnpm assert:copy` fails
 on a leak through `commitmentLeaks` in `scripts/copy-rules.ts`), and no social media, which costs
 more here: many commitments are announced only on Instagram, and those are not listed. College
-interests, offers, visits, camps and watchlists are not commitments, and neither is one for another
-sport.
+interests, offers, visits, camps and watchlists are not commitments, and neither is a place on a
+college's club team. A commitment in another sport counts (since 2026-10-04): the site is about
+field hockey, but its players commit to lacrosse, soccer and other college teams too, and every
+page names the sport.
 
 Checked at load (`lib/commits-schema.ts`, then the join in `lib/commits.ts`): college slugs are
-unique, every commitment names a college and every college has a commitment, one commitment per
-player; https only, never social media; a source for every college and commitment; the file's
+unique, every commitment names a college that has a program in its sport, every college and every
+program has a commitment, a college has one program per sport, one commitment per player; https only, never social media; a source for every college and commitment; the file's
 `season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
@@ -463,12 +467,14 @@ with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's
 or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
 
 `lib/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
-name), `getColleges()` (most players first), `getCollege(slug)`, `getCollegeCommitments(slug)`,
+name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
+college's team in its sport, with that team's level), `getCollegeCommitments(slug)`,
 `getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
 `components/commits/commit-view.ts` builds the page and the roster line and chooses every word they
 say. `/commits` is one static page (DESIGN §21): one section per class year, then the colleges, then
 how commitments are matched; every team page with a committed player shows a commitment line under
-that player's facts ("Committed: Colgate"), linking the player's row there. The gates know the
+that player's facts ("Committed: Colgate", or "Committed: St. Lawrence (soccer)" in another sport),
+linking the player's row there. The gates know the
 page: `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect it among the
 fixed pages, and `a11y-axe.mjs` checks it.
 
