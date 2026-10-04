@@ -139,6 +139,10 @@ function fixturePair(f: OfficialFixture): string | null {
 
 const isSbliveContest = (id: string) => id.startsWith('sblive:');
 
+/** Rows oldest first by date key, then by contest id. */
+const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
+  a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
+
 // ---------------------------------------------------------------- si.com rows
 
 /** A side resolved by si.com team or school id — the only identity D2 accepts. */
@@ -822,7 +826,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   const rows = games
     .map(backfillRowOf)
     .filter((r): r is BackfillRow => r !== null)
-    .sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId));
+    .sort(byDateKey);
 
   // A row D2 published never also appears as "not published".
   const published = new Set(rows.map((r) => r.contestId));
@@ -842,7 +846,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
 function dedupeSkipped(rows: readonly SbliveOnlyRow[]): SbliveOnlyRow[] {
   const byId = new Map<string, SbliveOnlyRow>();
   for (const r of rows) if (!byId.has(r.contestId)) byId.set(r.contestId, r);
-  return [...byId.values()].sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId));
+  return [...byId.values()].sort(byDateKey);
 }
 
 // ---------------------------------------------------------------- rule 10

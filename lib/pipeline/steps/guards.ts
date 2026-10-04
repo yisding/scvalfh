@@ -19,6 +19,7 @@
  */
 
 import { classifyGames } from '../../classify';
+import { byDateThenId } from '../../format';
 import { LEAGUES, getLeague } from '../../leagues';
 import { divisionGames } from '../../standings';
 import { teamsInLeague } from '../../teams';
@@ -32,7 +33,6 @@ import {
   type PipelineContext,
   type RunState,
 } from '../ledger';
-import { byDateThenId } from './normalize';
 
 /** §7.5 (c): a division whose counted finals dropped by this many freezes its league. */
 export const FINALS_REGRESSION_FREEZE = 3;

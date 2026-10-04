@@ -71,6 +71,10 @@ export const NOT_PUBLISHED = {
 
 const idResolved = (s: SbliveSide) => s.slug !== null && (s.via === 'team-id' || s.via === 'school-id');
 
+/** Report rows oldest first by date key, then by contest id. */
+const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
+  a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
+
 function whyNotPublished(game: Game, match: SbliveGame, today: string | undefined): string {
   if (!game.home.slug || !game.away.slug) return NOT_PUBLISHED.notOurTeam;
   if (!match.sides.every(idResolved)) return NOT_PUBLISHED.nameOnly;
@@ -245,8 +249,6 @@ export function reconcile(
   }
   const unmatched = unmatchedKeys.length;
 
-  const byDate = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }) =>
-    a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
   return {
     games: out,
     unmatched,
@@ -254,8 +256,8 @@ export function reconcile(
       sbliveFetchedAt: opts.sbliveFetchedAt,
       compared,
       agreements,
-      conflicts: conflicts.sort(byDate),
-      sbliveOnlyScored: sbliveOnlyScored.sort(byDate),
+      conflicts: conflicts.sort(byDateKey),
+      sbliveOnlyScored: sbliveOnlyScored.sort(byDateKey),
       backfilled: [],
     },
   };
@@ -270,8 +272,6 @@ export function withBackfill(
   report: SbliveCrossCheck,
   backfill: { rows: readonly BackfillRow[]; skipped: readonly SbliveOnlyRow[] },
 ): SbliveCrossCheck {
-  const byDate = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }) =>
-    a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
   const published = new Set(backfill.rows.map((r) => r.contestId));
   // A si.com game D2 published or explained is never listed a second time under its own sblive: id.
   const handledUrls = new Set<string>([
@@ -287,8 +287,8 @@ export function withBackfill(
   return {
     ...report,
     conflicts: report.conflicts.filter((r) => !published.has(r.contestId)),
-    sbliveOnlyScored: [...only.values()].filter((r) => !published.has(r.contestId)).sort(byDate),
-    backfilled: [...backfill.rows].sort(byDate),
+    sbliveOnlyScored: [...only.values()].filter((r) => !published.has(r.contestId)).sort(byDateKey),
+    backfilled: [...backfill.rows].sort(byDateKey),
   };
 }
 
@@ -316,8 +316,6 @@ export function carryCrossCheck(
   const byId = new Map(games.map((g) => [g.contestId, g]));
   const published = new Set(backfilled.map((r) => r.contestId));
   const publishedUrls = new Set(backfilled.map((r) => r.sbliveUrl));
-  const byDate = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }) =>
-    a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
   const conflicts = prior.conflicts.filter((r) => {
     const g = byId.get(r.contestId);
     return (
@@ -340,8 +338,8 @@ export function carryCrossCheck(
     sbliveFetchedAt: prior.sbliveFetchedAt,
     compared: prior.compared,
     agreements: prior.agreements,
-    conflicts: [...conflicts].sort(byDate),
-    sbliveOnlyScored: [...sbliveOnlyScored].sort(byDate),
-    backfilled: [...backfilled].sort(byDate),
+    conflicts: [...conflicts].sort(byDateKey),
+    sbliveOnlyScored: [...sbliveOnlyScored].sort(byDateKey),
+    backfilled: [...backfilled].sort(byDateKey),
   };
 }

@@ -19,9 +19,10 @@
  * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
  * bracket, so none is drawn for it.
  *
- * Imports only types, lib/leagues.ts and lib/teams.ts.
+ * Imports only types, lib/format.ts (`byDateThenId`), lib/leagues.ts and lib/teams.ts.
  */
 
+import { byDateThenId } from './format';
 import { findDivision, findLeague, type LeagueConfig } from './leagues';
 import { getTeamById, getTeamBySlug } from './teams';
 import type {
@@ -309,8 +310,7 @@ export function sixthPlaceRule(rows: readonly Standing[], games: readonly Game[]
   let note: string | null = null;
   if (outcome.fifth !== null) {
     // Three-way tie for 5th: the winner of the pair's earlier meeting hosts, else the higher draw number.
-    const earlier = [...ctx.counted.filter((g) => between(g, a, b))]
-      .sort((x, y) => (x.dateLocal < y.dateLocal ? -1 : x.dateLocal > y.dateLocal ? 1 : 0))[0];
+    const earlier = [...ctx.counted.filter((g) => between(g, a, b))].sort(byDateThenId)[0];
     const result = earlier && earlier.status === 'final' ? outcomeFor(earlier, a) : null;
     if (result === 'W') host = a;
     else if (result === 'L') host = b;
@@ -417,7 +417,7 @@ export function matchTournamentGames(games: readonly Game[], bracket: readonly T
   const used = new Set<string>();
   const candidates = games
     .filter((g) => g.postseason?.kind === 'mcal-tournament')
-    .sort((a, b) => (a.dateLocal < b.dateLocal ? -1 : a.dateLocal > b.dateLocal ? 1 : 0));
+    .sort(byDateThenId);
   return bracket.map((tg) => {
     const a = slugOfSlot(tg.home);
     const b = slugOfSlot(tg.away);

@@ -16,14 +16,11 @@
  *    keeping this run's row (a contest MaxPreps re-keyed since the last run).
  */
 
+import { byDateThenId } from '../../format';
 import { DATA_QUALITY } from '../../leagues';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../normalize';
 import type { Game } from '../../types';
 import type { PipelineContext, RunState } from '../ledger';
-
-export function byDateThenId(a: Game, b: Game): number {
-  return a.dateLocal === b.dateLocal ? a.contestId.localeCompare(b.contestId) : a.dateLocal.localeCompare(b.dateLocal);
-}
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
 function unclassified(g: Game): Game {

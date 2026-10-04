@@ -220,6 +220,17 @@ export function gameWhen(game: Pick<Game, 'dateLocal' | 'isTimeTba' | 'isDateTba
   return `${shortDate(game.dateLocal)}, ${timeOfDayPT(game.dateLocal)}`;
 }
 
+/**
+ * The canonical game order: oldest first by `dateLocal`; a contest id breaks a tie so the order never
+ * depends on how the pipeline built the array.
+ */
+export function byDateThenId(
+  a: { dateLocal: string; contestId: string },
+  b: { dateLocal: string; contestId: string },
+): number {
+  return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
+}
+
 // ---------------------------------------------------------------- instants
 
 /** An ISO UTC instant, expressed in America/Los_Angeles. This is the only Intl use here. */

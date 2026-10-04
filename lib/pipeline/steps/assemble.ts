@@ -5,6 +5,7 @@
  * line.
  */
 
+import { byDateThenId } from '../../format';
 import { CCS, getLeague } from '../../leagues';
 import { buildSeason } from '../../season-build';
 import { countsOf } from '../../snapshot-migrate';
@@ -15,7 +16,6 @@ import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '.
 import { RunAbort, type SnapshotMeta } from '../contract';
 import type { PipelineContext, RunState } from '../ledger';
 import type { RequestCounts } from '../transport';
-import { byDateThenId } from './normalize';
 import type { StandingsStepResult } from './standings';
 
 /** SPEC §7.11 budgets. */
