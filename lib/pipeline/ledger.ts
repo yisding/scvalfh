@@ -379,9 +379,11 @@ export interface RunState {
   tbaDropped: DroppedContest[];
   games: Game[];
   unmatched: OfficialFixture[];
-  official: OfficialStepResult;
+  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
+  official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
   sbliveCrossCheck: SbliveCrossCheck | undefined;
-  secondary: SecondaryStepResult;
+  /** The secondary step's CCS state; its games moved into `games`. */
+  secondary: Omit<SecondaryStepResult, 'games'>;
   /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
   frozenFromPrevious: Set<LeagueId>;
   /** DivisionHealth.classification per division (a frozen league's is copied from the previous health). */
@@ -398,14 +400,12 @@ export function emptyRunState(): RunState {
     games: [],
     unmatched: [],
     official: {
-      games: [],
-      unmatched: [],
       degradedDivisions: new Set(),
       revisedUpstream: new Set(),
       carriedDivisions: new Set(),
     },
     sbliveCrossCheck: undefined,
-    secondary: { games: [], bracketPublished: false },
+    secondary: { bracketPublished: false },
     frozenFromPrevious: new Set(),
     classification: new Map(),
   };

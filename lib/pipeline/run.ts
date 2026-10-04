@@ -148,9 +148,10 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   stepNormalize(ctx, state); // 06
 
   // 07 official (the injectable official step)
-  state.official = await runOfficial(ctx, steps, state.games);
-  state.games = state.official.games;
-  state.unmatched = state.official.unmatched;
+  const { games: officialGames, unmatched, ...officialFlags } = await runOfficial(ctx, steps, state.games);
+  state.games = officialGames;
+  state.unmatched = unmatched;
+  state.official = officialFlags;
 
   // 08 sblive (the injectable si.com step)
   const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
@@ -159,8 +160,9 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   state.sbliveCrossCheck = sblive.sbliveCrossCheck;
 
   // 09 secondary
-  state.secondary = await stepSecondary(ctx, state.games);
-  state.games = state.secondary.games;
+  const { games: secondaryGames, ...ccs } = await stepSecondary(ctx, state.games);
+  state.games = secondaryGames;
+  state.secondary = ccs;
 
   // 10 classify
   state.games = stepClassify(ctx, state.games, state.official.degradedDivisions);
