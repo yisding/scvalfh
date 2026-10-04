@@ -9,15 +9,7 @@
  *     another entity (`&amp;quot;` is the text `&quot;`, never `"`).
  */
 
-/** Named entities React and the pages emit; any other name is left as written. */
-const NAMED: ReadonlyMap<string, string> = new Map([
-  ['amp', '&'],
-  ['quot', '"'],
-  ['apos', "'"],
-  ['lt', '<'],
-  ['gt', '>'],
-  ['nbsp', ' '],
-]);
+import { BASIC_NAMED, decodeEntities as decodeWith } from '../../lib/html-entities';
 
 /**
  * `html` with every tag replaced by `replacement`. A tag is a `<`, at least one character, and the
@@ -43,14 +35,12 @@ export function stripTags(html: string, replacement = ' '): string {
   return out;
 }
 
-/** One-pass decode of the named entities above and of decimal / hex character references. */
+/**
+ * One-pass decode (lib/html-entities.ts) of the named entities React and the pages emit (BASIC_NAMED;
+ * any other name is left as written) and of decimal / hex character references.
+ */
 export function decodeEntities(s: string): string {
-  return s.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (m: string, e: string) => {
-    if (e[0] !== '#') return NAMED.get(e) ?? m;
-    const hex = e[1] === 'x' || e[1] === 'X';
-    const code = Number.parseInt(e.slice(hex ? 2 : 1), hex ? 16 : 10);
-    return code <= 0x10ffff ? String.fromCodePoint(code) : m;
-  });
+  return decodeWith(s, BASIC_NAMED);
 }
 
 /** The text of `html`: tags → spaces, entities decoded, whitespace runs collapsed to one space. */

@@ -3,6 +3,8 @@
  * test can import them without running the script's scan of the built site.
  */
 
+import { decodeEntities as decodeWith } from '../lib/html-entities';
+
 /**
  * A phrase that says something is limited to SCVAL: "SCVAL-only", "SCVAL only", "only SCVAL",
  * "only for the SCVAL", "SCVAL teams only".
@@ -226,22 +228,18 @@ export const SEED_CLAIM =
  * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
  * so these are the escapes plus the typographic names a hand-written string might carry.
  */
-const VISIBLE_ENTITIES: Readonly<Record<string, string>> = {
+const VISIBLE_ENTITIES: ReadonlyMap<string, string> = new Map(Object.entries({
   amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ',
   rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', ndash: '–', mdash: '—', middot: '·', hellip: '…',
   rarr: '→', larr: '←', uarr: '↑', darr: '↓',
-};
+}));
 
 /** Block elements: visibleText ends each with a line break, so their texts never run together. */
 const BLOCK_END = /^\/?(?:p|div|h[1-6]|li|ul|ol|dt|dd|dl|tr|td|th|table|section|article|header|footer|nav|main|aside|figcaption|figure|summary|details|caption|br|hr)\b/i;
 
-/** `text` with its character references decoded (VISIBLE_ENTITIES and numeric ones). */
+/** `text` with its character references decoded in one pass (VISIBLE_ENTITIES, any case, and numeric ones). */
 function decodeEntities(text: string): string {
-  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
-    if (e[0] !== '#') return VISIBLE_ENTITIES[e.toLowerCase()] ?? m;
-    const code = e[1] === 'x' || e[1] === 'X' ? Number.parseInt(e.slice(2), 16) : Number(e.slice(1));
-    return code <= 0x10ffff ? String.fromCodePoint(code) : m;
-  });
+  return decodeWith(text, VISIBLE_ENTITIES, { foldCase: true });
 }
 
 /**

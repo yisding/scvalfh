@@ -16,6 +16,7 @@
  *   - Santa Teresa writes the year as a word ("Senior", "Sophmore" sic); Mt. Hamilton as a number.
  */
 
+import { BASIC_NAMED, decodeEntities } from '../html-entities';
 import { divisionsOf } from '../leagues';
 import { resolveOfficialName, teamsInLeague } from '../teams';
 import type { DivisionId, TeamSlug } from '../types';
@@ -186,16 +187,11 @@ export function parseGradeYear(cell: string): number | null {
   return YEAR_WORDS[t.toLowerCase()] ?? null;
 }
 
-function decodeEntities(s: string): string {
-  return s
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&rsquo;|&lsquo;/g, "'")
-    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)));
-}
+/**
+ * The basic escapes, with the typographic single quotes folded to `'` so a name matches the
+ * registry's spelling (`&nbsp;`'s U+00A0 is collapsed with the other whitespace below).
+ */
+const SHEET_NAMED: ReadonlyMap<string, string> = new Map([...BASIC_NAMED, ['rsquo', "'"], ['lsquo', "'"]]);
 
 /** Every `<tr>` of the document as its cell texts (tags removed, whitespace collapsed). */
 export function htmlTableRows(html: string): string[][] {
@@ -203,7 +199,7 @@ export function htmlTableRows(html: string): string[][] {
   const rows: string[][] = [];
   for (const tr of body.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
     const cells = [...tr[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((c) =>
-      decodeEntities(c[1].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim(),
+      decodeEntities(c[1].replace(/<[^>]+>/g, ' '), SHEET_NAMED).replace(/\s+/g, ' ').trim(),
     );
     rows.push(cells);
   }

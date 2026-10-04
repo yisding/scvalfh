@@ -27,6 +27,7 @@ import {
 import {
   BVAL_HISTORY_SOURCES,
   bvalDocExportUrl,
+  htmlTableRows,
   parseAllLeagueHtml,
   parseCsv,
   parseGradeYear,
@@ -484,6 +485,12 @@ describe('history: the BVAL all-league documents', () => {
     expect(st.firstTeam.find((p) => p.player === 'Kaia Costa')).toMatchObject({ year: 10 });
     expect(st.firstTeam.find((p) => p.player === 'Eleanor Graham')).toMatchObject({ year: 11 });
     expect([...st.firstTeam, ...st.secondTeam].every((p) => p.slug !== null)).toBe(true);
+  });
+
+  it("decodes each cell's entities in one pass, folding the typographic quotes", () => {
+    const html = '<body><table><tr><td>O&rsquo;Neil&nbsp;&amp; Co</td><td>&amp;lt;b&amp;gt; &#39;x&#x27;</td></tr></table>';
+    // `&amp;lt;` is the text `&lt;`, never `<`.
+    expect(htmlTableRows(html)).toEqual([["O'Neil & Co", "&lt;b&gt; 'x'"]]);
   });
 
   it('maps grade words and numbers, and nothing else', () => {
