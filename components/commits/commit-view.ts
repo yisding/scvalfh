@@ -21,9 +21,9 @@ import { clubSiteKey } from '../../lib/clubs-schema';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
 import { getRosters } from '../../lib/rosters';
-import { getTeamBySlug } from '../../lib/teams';
 import type { TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
 
 /**
  * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
@@ -103,24 +103,6 @@ export function sportLabel(sport: CommitSport): string {
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
-/** A news or other site a source sits on: its link text. Any other host is printed as itself. */
-const OUTLETS: Readonly<Record<string, string>> = {
-  'sticktogetherfh.com': 'Stick Together',
-  'fhcollegepath.com': 'FH College Path',
-  'lahstalon.org': 'The Talon',
-  'siwildcats.com': 'St. Ignatius athletics',
-  'maxfh.longstreth.com': 'MAX Field Hockey',
-  'maxfieldhockey.com': 'MAX Field Hockey',
-  'nfhca.org': 'NFHCA',
-  'gilroydispatch.com': 'Gilroy Dispatch',
-  'marinij.com': 'Marin Independent Journal',
-  'paloaltoonline.com': 'Palo Alto Online',
-  'losaltosonline.com': 'Los Altos Town Crier',
-  'mercurynews.com': 'Mercury News',
-  'saratogafalcon.org': 'The Saratoga Falcon',
-  'lacrossemasters.com': 'Lacrosse Masters',
-};
-
 /**
  * Clubs in other sports whose own sites a commitment cites (a lacrosse club's commitments page).
  * They are not field hockey clubs, so data/clubs.json does not hold them.
@@ -136,15 +118,6 @@ const PLATFORM_LABELS = {
   hudl: 'Hudl profile',
   fieldlevel: 'FieldLevel profile',
 } as const;
-
-/** The host without `www.`: "nfhca.sportsrecruits.com". Every URL here is https (the schema). */
-function hostOf(url: string): string {
-  return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
-}
-
-function pathOf(url: string): string {
-  return new URL(url).pathname;
-}
 
 /** Which club's own site a URL is on: every club of data/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
 const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
@@ -180,7 +153,7 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
       return club ? `${club} site` : host;
     }
     default:
-      return OUTLETS[host] ?? host;
+      return OUTLETS[host]?.label ?? host;
   }
 }
 
@@ -199,21 +172,6 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
 export function statusWords(c: Pick<Commitment, 'status' | 'asOf'>): string {
   const word = c.status === 'signed' ? 'Signed' : 'Committed';
   return c.asOf === null ? word : `${word}, as of ${partialDate(c.asOf)}`;
-}
-
-/** " (2)", " (3)" on a label that repeats within one list, so no two links read the same. */
-function numbered<T extends { label: string }>(links: T[]): T[] {
-  const seen = new Map<string, number>();
-  return links.map((link) => {
-    const n = (seen.get(link.label) ?? 0) + 1;
-    seen.set(link.label, n);
-    return n === 1 ? link : { ...link, label: `${link.label} (${n})` };
-  });
-}
-
-/** The school a team slug is, by its registry name ("St. Ignatius College Preparatory"). */
-function schoolName(slug: string): string {
-  return getTeamBySlug(slug)?.name ?? slug;
 }
 
 /** "Stanford, CA" */
