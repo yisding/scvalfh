@@ -251,9 +251,13 @@ jobs:
           fi
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-      # A week that only merged main in says nothing on an open PR.
+      # A week that only merged main in says nothing on an open PR. A branch with commits but no open
+      # PR gets one even when this run pushed nothing: the research run pushed them and could not open
+      # it (docs/WEEKLY-PEOPLE.md).
       - name: Open or comment on the pull request
-        if: steps.push.outputs.pushed == 'true' && (steps.commit.outputs.committed == 'true' || steps.base.outputs.pr == '')
+        if: >-
+          (steps.push.outputs.pushed == 'true' && (steps.commit.outputs.committed == 'true' || steps.base.outputs.pr == ''))
+          || (steps.base.outputs.continue == 'true' && steps.base.outputs.pr == '')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.base.outputs.pr }}
@@ -274,7 +278,7 @@ jobs:
               echo ""
               cat "$RUNNER_TEMP/roster-diff.md"
             else
-              echo "Merged main into this branch; no roster changed this week."
+              echo "No roster changed this week."
             fi
           } > "$BODY"
           if [ -z "$PR" ]; then

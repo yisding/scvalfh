@@ -458,6 +458,12 @@ describe('update-people.yml', () => {
     expect(stepBody(people, 'Run ci on the branch')).toContain('gh workflow run ci.yml --ref "$BRANCH"');
   });
 
+  it('opens a PR for branch commits no PR has shown, even in a week it pushed nothing', () => {
+    const step = stepBody(people, 'Open or comment on the pull request');
+    expect(step).toContain("|| (steps.base.outputs.continue == 'true' && steps.base.outputs.pr == '')");
+    expect(doc).toContain('the next Monday\'s roster run opens the PR for branch commits no PR has shown');
+  });
+
   it('passes the manual leagues input through env, validated, never interpolated into a script', () => {
     const fetch = stepBody(people, 'Fetch rosters');
     expect(fetch).toContain("LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}");

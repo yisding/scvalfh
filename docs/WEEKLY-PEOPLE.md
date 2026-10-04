@@ -196,7 +196,9 @@ a failure this branch cannot fix, which the report then names.
   rejected because the roster workflow pushed meanwhile, fetch, merge, re-run the tests and push
   again.
 - If no PR is open, open one from `data/weekly-people` into `main` with the title above and a body
-  that explains it is the weekly people-data PR. If one is open, comment on it.
+  that explains it is the weekly people-data PR. If one is open, comment on it. If the session has
+  no tool that can open a PR or comment on one, push anyway and put the report in the session's
+  final message: the next Monday's roster run opens the PR for branch commits no PR has shown.
 - **The report**, as the PR comment:
   - Repaired
   - Added
