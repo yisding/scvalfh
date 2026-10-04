@@ -2984,3 +2984,70 @@ back from 896px with about 33px to spare, and its weekday from 1024 (about 95px 
 
 `/teams` HTML gzip stays within 3.0 x its baseline: 24.3 KB on 2026-10-03 (it was 23.2 KB with the
 tiles), against 28.4 KB.
+
+## 19. Probabilities amendment (2026-10)
+
+The site was designed to show no probabilities anywhere, because it had no model to compute them
+from (§3.8, §6.1, §6.2, §7.11). The owner retired that rule on 2026-10-03, ahead of team ratings
+fitted to the season's results. This section wins where §1-§18 disagree. Everything else stands:
+a status is still a written word, never a color alone (§7.11, WCAG 1.3.1), nothing on the site is
+official, and the copy rules of §15.8 apply to any new number.
+
+### 19.1 Decisions this reverses
+
+| Earlier decision | Now |
+|---|---|
+| §6.2 "Playoff-berth probability bars. *Nothing.* We have no probability model." | No longer ruled out, and not built. A berth probability needs a model of the games still to play; until one exists, the `BerthMeter` and the projection's written statuses are the playoff picture. |
+| §6.1 the playoff projection is a table of status words because "we have no probability model" | Still a table of status words, because a team's place under its league's by-laws is a categorical outcome. The "no model" reason is withdrawn. |
+| §7.11 "There are **no percentages anywhere**, because there is no model" | Withdrawn. The projection card keeps its written statuses and its "Nothing here is official" cap. |
+| §3.8's wireframe line "No probabilities — we have no model." | It describes `/playoffs` as it is: see 19.2. |
+
+### 19.2 What a probability must be
+
+A probability may appear where a model the site documents computes it from the snapshot's results.
+It is never invented or entered by hand, it reads as an estimate, and its page links to how it is
+computed, as the standings link to their rules. It never replaces or reorders a by-law status: a
+place in a table, a berth and a seed come from the league's rules alone.
+
+`/playoffs` still says "There are no probabilities on this page, because there is no model behind
+it", which stays true while no model feeds that page. A change that puts a probability there
+rewrites that sentence in the same commit.
+
+## 20. Elo ratings amendment (2026-10)
+
+Every team gets an Elo rating: on its own page, and the ten highest on `/leaders`. This section
+wins where §1-§19 disagree. Everything else stands: static rendering, "today" from the snapshot,
+no new hue (§6.4, §15.5) and no new chart (decision 8: the rating is a card and a table). It is the
+first number on the site that comes from a model, so it keeps §19.2: computed from the snapshot's
+results by a documented model (`lib/ratings.ts`; README "How Elo ratings are computed"), read as
+an estimate, linked to its method, and never a status: it orders no table, berth or seed.
+
+### 20.1 The rating
+
+Elo points (1500 is the average rated team; 400 points is about 10-to-1), fitted to the whole
+season at once rather than game by game, because one season of about ten games a team leaves
+classic Elo near where it started. The fit is least squares on goal margin capped at 5, with a home
+edge where a game has a host, and each team starts from its rating over last season's finals
+(`data/prior-season.json`, read once a season by `pnpm fetch-prior-season`), carried over in full
+and counting for one game. 175 points is a goal: the value that best fits Elo's expected-score
+curve over two replayed seasons. It counts every final between two of the 43 teams and nothing
+else: no forfeit, no game against a school outside the four leagues, this season or last. A given
+snapshot always builds the same numbers (one linear solve in a fixed order).
+
+Replayed day by day, each day predicted from only the games before it, the start from last season
+raised the winners picked from 79% to 89% in 2026 (through Oct 2) and from 84% to 88% in 2025-26;
+the README's "How Elo ratings are computed" has the rest. No page prints a win probability for a
+game; the board's note says only what a 400-point gap means on the scale.
+
+### 20.2 Where it shows
+
+| Place | What |
+|---|---|
+| Team page, under the stat tiles (`#elo`) | **Collapsed on purpose.** A closed disclosure under "How these numbers are counted", whose summary says only "Elo rating": a family checking its team's page meets the record first and never a low number it did not ask for. Opened: "<rating> points · <where it stands>" (the team's place on the board when the board lists it, "preseason, from 2025-26" before its first counted final, "provisional, from N games" below the board's minimum, otherwise "from N games"), a sentence or two on what the number means, and `How it is computed` → `/leaders#elo-rating`. A team with neither a final this season nor one last season reads "Not rated", never 1500. A team page never names a place below the board's top 10. `#elo` is the `<details>` itself, so a board link lands on the summary in every browser. This is the one team-specific fact in a disclosure, against the rule that keeps them for generic legends and methodology: the owner's choice, because the rating is an estimate and not a result. |
+| `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over this season's games the fit counts (half the median, rounded up); the teams that have played but are under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found and the season it started from. |
+
+### 20.3 Budgets
+
+`/leaders` gains a tenth board of at most 15 rows and stays inside its 1.0 × standings HTML budget
+(§16). The team page gains one closed disclosure of about 800 bytes of HTML before gzip. The server bundle gains
+`data/prior-season.json` (about 100 KB raw, one line per game), which no page sends to a browser.

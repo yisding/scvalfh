@@ -12,8 +12,9 @@ import { LEAGUES } from '../../lib/leagues';
 
 /**
  * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all four leagues: the
- * players with the most points, assists, saves and clean sheets, and the schools with the best
- * records, the most goals per game, the fewest allowed and the most clean sheets.
+ * players with the most points, assists, saves and clean sheets, and the schools with the highest
+ * Elo rating (lib/ratings.ts, DESIGN §20), the best records, the most goals per game, the fewest
+ * allowed and the most clean sheets.
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
@@ -30,7 +31,7 @@ const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
 
 export const metadata: Metadata = {
   title: 'Season leaders',
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: most points, assists, saves and clean sheets, and the schools with the best records.`,
+  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: most points, assists, saves and clean sheets, and the schools with the highest Elo ratings and best records.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/leaders' },
 };
@@ -53,7 +54,8 @@ export default function LeadersPage() {
         description={
           <>
             The top players and schools across {SHORT_NAMES}. Player numbers are what each coach
-            enters on MaxPreps; school records are computed from every final on this site.
+            enters on MaxPreps; school records and Elo ratings are computed from every final on
+            this site.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={TABS} label="Jump to a leaderboard" />}

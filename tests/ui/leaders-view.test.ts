@@ -31,6 +31,8 @@ import { statText } from '../../components/teams/player-stats-view';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { recordString } from '../../lib/format';
 import { getPlayerStats } from '../../lib/player-stats';
+import { getPriorSeason } from '../../lib/prior-season-data';
+import { getRatings } from '../../lib/ratings';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -46,7 +48,7 @@ import type { Game } from '../../lib/types';
 import { game } from '../helpers';
 
 const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
-const SCHOOL_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets'];
+const SCHOOL_IDS = ['elo-rating', 'best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets'];
 
 /** The board's ranked cell, as printed. */
 const ranked = (board: LeaderBoard, i: number) => board.rows[i].cells[board.rankedBy].text;
@@ -75,7 +77,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
   const stats = getPlayerStats().teams;
 
-  it('builds the four player boards and the five school boards, with unique anchors', () => {
+  it('builds the four player boards and the six school boards, with unique anchors', () => {
     expect(view.players.map((b) => b.id)).toEqual(PLAYER_IDS);
     expect(view.schools.map((b) => b.id)).toEqual(SCHOOL_IDS);
     expect(view.teamCount).toBe(getTeams().length);
@@ -117,7 +119,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
   });
 
   it("prints each school's record as its standings row has it, and only for a school past the minimum", () => {
-    const [record, league] = view.schools;
+    const record = view.schools.find((b) => b.id === 'best-record')!;
+    const league = view.schools.find((b) => b.id === 'best-league-record')!;
     const minOf = (board: LeaderBoard) => Number(/At least (\d+)/.exec(board.meta)![1]);
     for (const row of record.rows) {
       const s = getStandingFor(row.team.slug)!;
@@ -140,6 +143,25 @@ describe('buildLeadersView — rules, over the committed data', () => {
         return !g.isForfeit && theirs.score === 0;
       }).length;
       expect(row.cells[board.rankedBy].text, row.team.slug).toBe(String(shutouts));
+    }
+  });
+
+  it('prints each school’s Elo rating as lib/ratings.ts has it, only past the minimum, linking to its card', () => {
+    const board = view.schools.find((b) => b.id === 'elo-rating')!;
+    const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+    const bySlug = new Map(getRatings().ratings.map((r) => [r.slug, r]));
+    expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Elo']);
+    for (const row of board.rows) {
+      const r = bySlug.get(row.team.slug)!;
+      expect(row.cells.map((c) => c.text), row.team.slug).toEqual([String(r.games), String(r.elo)]);
+      expect(r.games, row.team.slug).toBeGreaterThanOrEqual(min);
+      expect(row.team.href, row.team.slug).toBe(`/teams/${row.team.slug}#elo`);
+    }
+    // Every rated team under the minimum is named in the notes, with its games.
+    const below = getRatings().ratings.filter((r) => r.games > 0 && r.games < min);
+    const note = view.schoolNotes.find((n) => n.startsWith('The Elo board needs'));
+    if (below.length > 0) {
+      for (const r of below) expect(note, r.slug).toContain(`${getTeamBySlug(r.slug)!.name} (${r.games})`);
     }
   });
 
@@ -287,6 +309,63 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(record.rows[0]).toMatchObject({ rank: 1, tied: false, name: 'Archbishop Mitty' });
     expect(record.rows[0].cells.map((c) => c.text)).toEqual(['6-1-0', '.857', '+12']);
     expect(record.rows[0].cells[0].sr).toBe('6 wins, 1 loss, 0 ties');
+  });
+
+  it('ranks the Elo board by results, without the forfeit or the one-game school', () => {
+    const elo = board('elo-rating');
+    // Counted games: the round robin's six each, Leigh's seventh against Del Mar; the forfeit is
+    // not a result. Median 6, minimum 3, so Del Mar (1) waits, and is named.
+    expect(elo.meta).toBe('At least 3 games');
+    expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
+    expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
+    expect(view.schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
+      'The Elo board needs at least 3 games against the four leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
+    );
+    expect(elo.note).toContain('1500 is an average team');
+    // No prior season in these sources: every team starts at average, and the note says nothing of one.
+    expect(elo.note).not.toContain('started the season');
+  });
+
+  it('says a team with no game last season started from average, only when one did', () => {
+    const fremont = getTeamBySlug('fremont')!;
+    const saratoga = getTeamBySlug('saratoga')!;
+    const prior = {
+      ...getPriorSeason(),
+      // Last season knew two of the four synthetic teams only.
+      games: [
+        {
+          contestId: 'p1',
+          date: '2025-09-10',
+          homeId: fremont.id,
+          homeSlug: 'fremont',
+          awayId: saratoga.id,
+          awaySlug: 'saratoga',
+          homeScore: 2,
+          awayScore: 0,
+          site: 'home' as const,
+        },
+      ],
+    };
+    const note = buildLeadersView({ ...sources(base), prior }).schools.find((b) => b.id === 'elo-rating')!.note;
+    expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it had no counted 2025-26 final;');
+    // The committed season seeds every rated team, so its note makes no such claim.
+    expect(buildLeadersView().schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
+  });
+
+  it('starts the committed board from last season, and says so', () => {
+    const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
+    expect(board.note).toContain(`started the season from its ${getPriorSeason().season} rating`);
+  });
+
+  it('shares an Elo place between equal ratings', () => {
+    const v = buildLeadersView(sources(roundRobin(four, () => [2, 2])));
+    const elo = v.schools.find((b) => b.id === 'elo-rating')!;
+    expect(elo.rows.map((r) => [r.rank, r.tied, r.cells[1].text])).toEqual([
+      [1, true, '1500'],
+      [1, true, '1500'],
+      [1, true, '1500'],
+      [1, true, '1500'],
+    ]);
   });
 
   it('counts clean sheets and goals per game without the forfeit', () => {

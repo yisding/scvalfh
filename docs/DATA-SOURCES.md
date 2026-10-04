@@ -93,7 +93,8 @@ known team per division. Assert `leagues/{id}/v1.sportSeasonId` and `.year` matc
 enumeration: `https://www.maxpreps.com/ca/field-hockey/schools/` →
 `__NEXT_DATA__.props.pageProps.groupings[]` (all-time list, not current-season). ⚠️ The year
 segment of a MaxPreps league URL is cosmetic — `/25-26/league/...` still serves the current
-26-27 table. Historical seasons come only from scval.com PDFs or `teamContext.teamSeasonPickerData[]`.
+26-27 table. A past season's *standings* come only from the leagues' own documents (scval.com
+PDFs, BVAL's sheet); its *games* do come from the ghost API, by season id (see (l)).
 
 **(i) HTML fallbacks** (only if the ghost API is withdrawn): league standings pages
 (`props.pageProps.layoutProps.tableData[]`), team schedule pages (positional-array contest/team
@@ -662,6 +663,29 @@ Gotchas, all **[V]**:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
   (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
   script leaves the file untouched when only its `fetchedAt` stamps would move.
+
+**(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
+(`lib/prior-season.ts`, loaded by `lib/prior-season-data.ts`), built once a season by
+`pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
+- The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
+  sport-season the school has played (625 for Leigh), each with `sportSeasonId`, `sport`, `gender`,
+  `level`, `season` and `year`. Girls · Field Hockey · Varsity · `25-26` is
+  `8ae4cbab-caa1-4889-87a8-547fdaca9516` (seventeen field hockey seasons are listed, back to 10-11).
+  The key `teamSeasonPickerData` that earlier notes pointed at does not exist in this response.
+  `data.lastYearStandingsData` also holds the team's 25-26 record, goals for and against, and
+  league place (Leigh: 15-6-2, 57-19, 1st in Mount Hamilton), not used.
+- The games: `schedule-calculated/v1` (b) with that `sportSeasonId` returns the team's whole
+  2025-26 season, scores included, in the same shape as the current season's: 837 rows over the 43
+  feeds (Leigh 25, including its CCS playoff game). Unlike a league URL's year segment, the API's
+  season id is honoured: every row is dated Aug 25-Nov 12, 2025.
+- Kept: one game per contest id, finals (contestState 4) between two registry teams, host from
+  `homeAwayType` (2 on either side is neutral), forfeits left out. 2025-26: 368 games, every team
+  9-25 of them; left out 39 deleted, 5 never final, 27 against schools outside the registry and 1
+  forfeit; no contest's two feeds disagreed. The script writes nothing if one does, if any feed
+  fails, or if any row is dated outside the season.
+- Cost: one `team-context/v1` read (about 0.55 MB) and 43 schedule reads (about 150 KB each),
+  through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
+  games) was read the same way to test the starting point and is not kept.
 
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
@@ -1454,6 +1478,7 @@ and the North Coast Section's MCAL. Teams from other sections appear only as opp
   partial (66 of 716 varsity rows, none at 21 schools), a `current` tie ages, and a roster refetch
   that drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
-  history, by league"); PCAL and MCAL are marked `unavailable` in `data/history-2025-26.json`.
-  For SCVAL the only route besides the scval.com PDFs is `teamSeasonPickerData[]` (unverified),
-  since a MaxPreps league URL's year segment is cosmetic.
+  history, by league"); PCAL and MCAL are marked `unavailable` in `data/history-2025-26.json`,
+  since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
+  all four leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
+  season's, and nothing on the site prints them as a record or a standings table.

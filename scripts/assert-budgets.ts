@@ -92,7 +92,7 @@ if (!workerOnly) {
   check('/schedule HTML gzip', gz(file('schedule.html')), 0.5 * baseline.schedule.htmlGzip, '0.5 × schedule');
   check('/teams HTML gzip', gz(file('teams.html')), 3.0 * baseline.teams.htmlGzip, '3.0 × teams');
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.0 * baseline.playoffs.htmlGzip, '2.0 × playoffs');
-  // Nine boards of at most 15 rows each (components/leaders/leaders-view.ts), so the page cannot
+  // Ten boards of at most 15 rows each (components/leaders/leaders-view.ts), so the page cannot
   // grow with the season the way a schedule does: ~28 KB on 2026-10-03.
   check('/leaders HTML gzip', gz(file('leaders.html')), 1.0 * baseline.standings.htmlGzip, '1.0 × standings');
   // Every team page, all 43: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about

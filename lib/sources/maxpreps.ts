@@ -634,8 +634,9 @@ export class MaxPrepsClient {
     return { data: res.data.data, meta: res.meta };
   }
 
-  async getSchedule(teamId: string): Promise<Fetched<ScheduleRow[]>> {
-    const url = this.scheduleUrl(teamId);
+  /** `sportSeasonId` defaults to the current season; scripts/fetch-prior-season.ts passes last season's. */
+  async getSchedule(teamId: string, sportSeasonId = SPORT_SEASON_ID): Promise<Fetched<ScheduleRow[]>> {
+    const url = this.scheduleUrl(teamId, sportSeasonId);
     const res = await this.json(url, ScheduleResponseSchema);
     // Guard the Presentation/Los Gatos class of routing bug: a team's feed must contain that
     // team (SPEC §7.2). An empty feed is legitimate (a school that has published nothing).
