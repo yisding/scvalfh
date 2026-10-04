@@ -11,7 +11,8 @@ import type {
   ContestId, DivisionId, LeagueId, OfficialSourceId, PlayoffStatus, SeasonPhase, SectionId,
   TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
-// lib/season.ts is a dependency-free constants leaf: the only runtime import besides types.
+// The runtime imports are two leaves: lib/season.ts (dependency-free constants) and
+// lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 
