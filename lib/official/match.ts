@@ -17,7 +17,7 @@
 
 import { postseasonTag } from '../classify';
 import { divisionLabel, getDivision, leagueOfDivision } from '../leagues';
-import { shortDate, monthDay } from '../format';
+import { dayDiff, monthDay, shiftDateKey, shortDate } from '../format';
 import { getTeamBySlug, resolveTeam } from '../teams';
 import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
 
@@ -67,7 +67,7 @@ function sideKeyOf(side: { slug: TeamSlug | null; name: string }): string {
 }
 
 function days(a: string, b: string): number {
-  return Math.abs(Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86_400_000;
+  return Math.abs(dayDiff(a, b));
 }
 
 function stampOf(fixture: OfficialFixture, pass: Pass): OfficialStamp {
@@ -244,7 +244,7 @@ function articleFor(acronym: string): 'A' | 'An' {
 
 /** The day before a YYYY-MM-DD date. */
 function dayBefore(dateKey: string): string {
-  return new Date(Date.parse(`${dateKey}T00:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
+  return shiftDateKey(dateKey, -1);
 }
 
 function teamDivision(side: GameSide): DivisionId | null {

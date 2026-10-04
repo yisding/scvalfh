@@ -65,6 +65,25 @@ export function weekdayName(value: string): string {
   return WEEKDAYS_LONG[weekdayIndex(value)];
 }
 
+/**
+ * Whole days since 1970-01-01 for a date key (a time suffix is ignored): integer arithmetic through
+ * Date.UTC, so no local zone can shift it.
+ */
+export function dayNumber(dateKey: string): number {
+  const { year, month, day } = parseLocal(dateKey);
+  return Date.UTC(year, month - 1, day) / 86_400_000;
+}
+
+/** Whole days from `a` to `b` (YYYY-MM-DD): negative when `b` is earlier. */
+export function dayDiff(a: string, b: string): number {
+  return dayNumber(b) - dayNumber(a);
+}
+
+/** The date key `days` days after `dateKey` (before it when negative). */
+export function shiftDateKey(dateKey: string, days: number): string {
+  return new Date((dayNumber(dateKey) + days) * 86_400_000).toISOString().slice(0, 10);
+}
+
 /** 'YYYY-MM-DD' — the URL key for /scores/[date] (SPEC §4, DESIGN §1.1). */
 export function isoDateKey(value: string): string {
   const { year, month, day } = parseLocal(value);

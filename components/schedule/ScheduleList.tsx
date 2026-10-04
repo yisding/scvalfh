@@ -1,5 +1,5 @@
 import { getLatestResultsDate, getToday } from '../../lib/data';
-import { parseLocal } from '../../lib/format';
+import { dayNumber } from '../../lib/format';
 import type { Game, LeagueId } from '../../lib/types';
 
 import DateHeader from './DateHeader';
@@ -56,12 +56,6 @@ function landingDate(dates: readonly string[], league: LeagueId | null): string 
     dates.find((d) => d >= today) ??
     null
   );
-}
-
-/** Whole days since 1970-01-01 for a 'YYYY-MM-DD' key: integer arithmetic, no clock read. */
-function dayNumber(date: string): number {
-  const { year, month, day } = parseLocal(date);
-  return Date.UTC(year, month - 1, day) / 86_400_000;
 }
 
 /**

@@ -7,6 +7,8 @@ import {
   clockTime,
   dateSpan,
   dateWithYear,
+  dayDiff,
+  dayNumber,
   formStripLabel,
   gameWhen,
   gradeWord,
@@ -31,6 +33,7 @@ import {
   renderScore,
   scoreGlyph,
   scoreSentence,
+  shiftDateKey,
   shortDate,
   sideOutcome,
   signedGd,
@@ -371,5 +374,20 @@ describe('listWords', () => {
     expect(listWords([], '&')).toBe('');
     expect(listWords(['A', 'B'], '&')).toBe('A & B');
     expect(listWords(['A', 'B', 'C'], '&')).toBe('A, B & C');
+  });
+});
+
+describe('day arithmetic on date keys', () => {
+  it('counts whole days, ignoring a time suffix', () => {
+    expect(dayNumber('1970-01-02')).toBe(1);
+    expect(dayNumber('2026-09-29T16:00:00')).toBe(dayNumber('2026-09-29'));
+    expect(dayDiff('2026-09-30', '2026-10-01')).toBe(1);
+    expect(dayDiff('2026-10-01', '2026-09-17')).toBe(-14);
+  });
+
+  it('shifts a key across month and year ends', () => {
+    expect(shiftDateKey('2026-10-02', -14)).toBe('2026-09-18');
+    expect(shiftDateKey('2026-10-31', 1)).toBe('2026-11-01');
+    expect(shiftDateKey('2027-01-01', -1)).toBe('2026-12-31');
   });
 });
