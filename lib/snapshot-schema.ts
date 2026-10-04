@@ -809,15 +809,14 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   });
 
   // 7. the CCS field.
-  const aq = s.playoffs.format.autoQualifiers as Record<string, number>;
+  const aq = s.playoffs.format.autoQualifiers;
   const keys = Object.keys(aq).sort().join('|');
   const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
   if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
-  const cfgAq = CCS.autoQualifiers as Readonly<Record<string, number>>;
   let sum = aq.atLarge ?? 0;
   for (const leagueId of CCS_LEAGUE_IDS) {
-    if (aq[leagueId] !== cfgAq[leagueId]) {
-      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${cfgAq[leagueId]}`);
+    if (aq[leagueId] !== CCS.autoQualifiers[leagueId]) {
+      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
     }
     sum += aq[leagueId] ?? 0;
   }

@@ -915,12 +915,11 @@ export function getCcsField(): {
   atLarge: number;
   total: number;
 } {
-  const aq = CCS.autoQualifiers as Readonly<Record<string, number>>;
   return {
     byLeague: CCS_LEAGUE_IDS.map((id) => ({
       leagueId: id,
       shortName: getLeague(id).shortName,
-      auto: aq[id],
+      auto: CCS.autoQualifiers[id],
     })),
     atLarge: CCS.autoQualifiers.atLarge,
     total: CCS.autoQualifiers.total,

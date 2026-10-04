@@ -412,7 +412,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     expect(Object.keys(CCS.autoQualifiers).sort()).toEqual([...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort());
     for (const l of LEAGUES) {
       if (l.postseason.kind === 'ccs-ladder') {
-        expect(l.postseason.autoBerths).toBe((CCS.autoQualifiers as Record<string, number>)[l.id]);
+        expect(l.postseason.autoBerths).toBe(CCS.autoQualifiers[l.id]);
       }
     }
     expect(7 + 4 + 2 + 3).toBe(CCS.autoQualifiers.total);

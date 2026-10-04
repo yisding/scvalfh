@@ -8,8 +8,8 @@
  */
 
 import type {
-  ContestId, DivisionId, LeagueId, OfficialSourceId, PlayoffStatus, SeasonPhase, SectionId,
-  TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
+  PlayoffStatus, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
 // The runtime imports are two leaves: lib/season.ts (dependency-free constants) and
 // lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
@@ -281,6 +281,22 @@ export interface DataQualityConfig {
   ignoredMaxprepsLeagueIds: Readonly<Record<string, string>>;
   /** Search "not covered" entries (exact-key matches only). */
   notCovered: readonly { name: string; keys: readonly string[]; reason: string }[];
+}
+
+/**
+ * The CCS section block (SPEC §2.1). The snapshot's `playoffs.keyDates` / `playoffs.format` copies
+ * (lib/types.ts CcsPlayoffs) reuse these types, so config and snapshot cannot drift.
+ */
+export interface CcsConfig {
+  autoQualifiers: CcsAutoQualifiers;
+  ccsDivisions: readonly { name: CcsDivisionName; seeds: readonly [number, number] }[];
+  keyDates: CcsKeyDates;
+  highSeedHostsThrough: 'semifinals';
+  bracketUrl: string;
+  tournament: { id: string; division1BracketId: string; division2BracketId: string };
+  pollFrom: string;
+  citations: { allocation: string; change: string };
+  sources: { bylaws: string; index: string; ical: string };
 }
 
 // ---------- values (SPEC §2.2, verbatim) ----------
@@ -861,7 +877,7 @@ const EAL: LeagueConfig = {
 export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL];
 
 /** The CCS section block (section data, not league data). */
-export const CCS = {
+export const CCS: CcsConfig = {
   autoQualifiers: { scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 },
   ccsDivisions: [
     { name: 'Division 1', seeds: [1, 8] },
@@ -891,7 +907,7 @@ export const CCS = {
     index: 'https://cifccs.org/sports/fh/index',
     ical: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
   },
-} as const;
+};
 
 export const DATA_QUALITY: DataQualityConfig = {
   ghostTeamIds: {
@@ -1347,11 +1363,12 @@ export function assertLeagues(): void {
   if (aqKeys.join() !== expectedKeys.join()) {
     fail(`CCS.autoQualifiers keys ${aqKeys.join(', ')} != ${expectedKeys.join(', ')}`);
   }
-  const aq = CCS.autoQualifiers as Readonly<Record<string, number>>;
-  let sum: number = CCS.autoQualifiers.atLarge;
+  let sum = CCS.autoQualifiers.atLarge;
   for (const l of LEAGUES) {
     if (l.postseason.kind !== 'ccs-ladder') continue;
-    if (l.postseason.autoBerths !== aq[l.id]) fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${aq[l.id]}`);
+    if (l.postseason.autoBerths !== CCS.autoQualifiers[l.id]) {
+      fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${CCS.autoQualifiers[l.id]}`);
+    }
     if (l.sectionId !== 'ccs') fail(`${l.id}: a CCS ladder league outside the CCS`);
     sum += l.postseason.autoBerths;
   }
