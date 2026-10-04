@@ -136,7 +136,7 @@ function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<type
   const tag = league.shortName.toLowerCase();
   for (const w of result.warnings) ctx.warn(`${tag} fixture: ${w}`, scope);
   for (const d of result.leagueDisagreements) ctx.warn(`${tag} league flag: ${d}`, scope);
-  for (const r of result.reasons) ctx.degrade(league.id, 'partial', r);
+  for (const r of result.reasons) ctx.degrade(league.id, 'partial', r, 'official fixture not counted');
   ctx.log(
     `  ${tag}: ${result.matched}/${total} official fixtures matched a contest; ` +
       `${result.unmatched.length} unmatched`,
@@ -275,7 +275,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
       state.degradedDivisions.add(d.id);
       carryDivision(ctx, state, league.id, d.id);
     }
-    ctx.degrade(league.id, 'degraded', validationReason(league));
+    ctx.degrade(league.id, 'degraded', validationReason(league), 'official file invalid');
   }
 
   // 2. Revision checks (never change which fixtures are used).
@@ -306,7 +306,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
       ctx.source({ ...base, status: 'stale', httpStatus: res.ok.httpStatus, error: reason });
       state.revisedUpstream.add(d.id);
       ctx.warn(`${d.id}: upstream sha256 ${hash} ≠ bundled ${d.official.bundledSha256}`, base.scope);
-      ctx.degrade(league.id, 'partial', reason);
+      ctx.degrade(league.id, 'partial', reason, 'upstream revised');
     }
   }
 
@@ -334,7 +334,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
         const reason = changesReason(league);
         ctx.source({ ...base, status: 'stale', httpStatus: res.ok.httpStatus, error: reason });
         for (const d of divisions) state.revisedUpstream.add(d.id);
-        ctx.degrade(league.id, 'partial', reason);
+        ctx.degrade(league.id, 'partial', reason, 'schedule changes posted');
       }
     }
   }

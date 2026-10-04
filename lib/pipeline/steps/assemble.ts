@@ -51,17 +51,20 @@ function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {
   return [...fixtures].sort((a, b) => (a.dateKey === b.dateKey ? a.id.localeCompare(b.id) : a.dateKey.localeCompare(b.dateKey)));
 }
 
-/** `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4 · EAL +1` */
+/**
+ * `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4 · EAL +1`. A frozen or
+ * degraded league names `causeOf` its state: the cause that set it (LeagueLedger.stateCause).
+ */
 export function commitSummaryOf(
   health: readonly LeagueHealth[],
-  causes: (leagueId: string) => readonly string[],
+  causeOf: (leagueId: string) => string | undefined,
 ): string {
   let unitWritten = false;
   return health
     .map((h) => {
       const short = getLeague(h.leagueId).shortName;
       if (h.state === 'frozen' || h.state === 'degraded') {
-        const cause = causes(h.leagueId)[0];
+        const cause = causeOf(h.leagueId);
         return `${short} ${h.state}${cause ? ` (${cause})` : ''}`;
       }
       const delta = finalsDeltaOf(h);
@@ -141,7 +144,7 @@ export function stepAssemble(
   if (sources.length > SOURCES_MAX) ctx.warn(`budget: ${sources.length} source rows, over the ${SOURCES_MAX}-row budget`);
 
   const health = snapshot.leagueHealth;
-  const commitSummary = commitSummaryOf(health, (id) => ctx.leagues.causes(id));
+  const commitSummary = commitSummaryOf(health, (id) => ctx.leagues.stateCause(id));
   const counts = snapshot.counts;
   const backfilled = snapshot.games.filter((g) => g.provenance.scores === 'sblive').length;
   const ok = sources.filter((s) => s.status === 'ok').length;

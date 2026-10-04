@@ -110,6 +110,21 @@ describe('LeagueLedger', () => {
     expect(l.state('pcal')).toBe('degraded');
     expect(() => l.degrade('nope', 'partial', 'z')).toThrow(/unknown league/);
   });
+
+  it('names the cause that set the state, not the first one recorded', () => {
+    const l = new LeagueLedger();
+    l.degrade('bval', 'partial', 'one', 'team feed carried');
+    expect(l.stateCause('bval')).toBe('team feed carried');
+    l.degrade('bval', 'frozen', 'two', 'finals regression');
+    l.degrade('bval', 'degraded', 'three', 'official file invalid');
+    expect(l.stateCause('bval')).toBe('finals regression');
+    expect(l.causes('bval')).toEqual(['team feed carried', 'finals regression', 'official file invalid']);
+    // A worse state with no cause of its own falls back to the first cause recorded.
+    l.degrade('pcal', 'partial', 'x', 'reported table carried');
+    l.degrade('pcal', 'degraded', 'y');
+    expect(l.stateCause('pcal')).toBe('reported table carried');
+    expect(l.stateCause('mcal')).toBeUndefined();
+  });
 });
 
 describe('DroppedLedger', () => {
@@ -137,8 +152,9 @@ describe('PipelineContext', () => {
     ctx.warn('something', { league: 'mcal', team: 'tamalpais' });
     ctx.log('plain');
     expect(ctx.logLines).toEqual(['WARN something [mcal/tamalpais]', 'plain']);
-    ctx.degrade('mcal', 'partial', 'why');
+    ctx.degrade('mcal', 'partial', 'why', 'because');
     expect(ctx.leagues.state('mcal')).toBe('partial');
+    expect(ctx.leagues.stateCause('mcal')).toBe('because');
   });
 
   it('formats the as-of stamp and knows when a league has previous data', () => {

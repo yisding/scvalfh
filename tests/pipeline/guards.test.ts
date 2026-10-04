@@ -182,6 +182,16 @@ describe('trigger c: finals regression', () => {
     expect(run.result?.meta.commitSummary).toMatch(/BVAL frozen \(finals regression\)/);
   });
 
+  it('the commit summary names the cause that froze the league, not an earlier partial one', async () => {
+    const official: OfficialStep = async (ctx, games) => {
+      ctx.degrade('bval', 'partial', 'A BVAL team feed was carried.', 'team feed carried');
+      return naiveBvalOfficial(ctx, games);
+    };
+    const { snapshot, run } = await snapshotOf({ variants: ['finals-regression'], previous: regressed, steps: { official, sblive: noopSblive } });
+    expect(health(snapshot, 'bval')?.state).toBe('frozen');
+    expect(run.result?.meta.commitSummary).toMatch(/BVAL frozen \(finals regression\)/);
+  });
+
   it('--accept-regression bval publishes the fresh rows', async () => {
     const { snapshot } = await snapshotOf({ variants: ['finals-regression'], previous: regressed, steps: NAIVE, extraArgs: ['--accept-regression', 'bval'] });
     expect(health(snapshot, 'bval')?.state).toBe('fresh');

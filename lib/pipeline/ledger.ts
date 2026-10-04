@@ -142,6 +142,8 @@ export interface LeagueEntry {
   reasons: string[];
   /** Short causes for the commit summary ("meta season mismatch"), in order. */
   causes: string[];
+  /** The cause given with the degrade that last raised `state`: what the commit summary prints. */
+  stateCause?: string;
 }
 
 export class LeagueLedger {
@@ -157,10 +159,16 @@ export class LeagueLedger {
     return e;
   }
 
-  /** Only ever towards worse; the reason is recorded whatever the state does (deduped). */
+  /**
+   * Only ever towards worse; the reason and cause are recorded whatever the state does (deduped), and
+   * a cause that comes with a strictly worse state becomes the state's own cause.
+   */
   degrade(id: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void {
     const e = this.entry(id);
-    if (STATE_RANK[state] > STATE_RANK[e.state]) e.state = state;
+    if (STATE_RANK[state] > STATE_RANK[e.state]) {
+      e.state = state;
+      if (cause) e.stateCause = cause;
+    }
     if (reason && !e.reasons.includes(reason)) e.reasons.push(reason);
     if (cause && !e.causes.includes(cause)) e.causes.push(cause);
   }
@@ -175,6 +183,12 @@ export class LeagueLedger {
 
   causes(id: LeagueId): readonly string[] {
     return this.entry(id).causes;
+  }
+
+  /** The cause that set the league's current state, else its first recorded cause. */
+  stateCause(id: LeagueId): string | undefined {
+    const e = this.entry(id);
+    return e.stateCause ?? e.causes[0];
   }
 
   ids(): LeagueId[] {
@@ -271,8 +285,8 @@ export class PipelineContext implements RunContext {
     this.sources.add(row);
   }
 
-  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string): void {
-    this.leagues.degrade(leagueId, state, reason);
+  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void {
+    this.leagues.degrade(leagueId, state, reason, cause);
   }
 
   drop(row: DroppedContest): void {

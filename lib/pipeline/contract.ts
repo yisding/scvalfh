@@ -125,8 +125,11 @@ export interface RunContext extends RunLog {
   transport: Transport;
   /** Append a SourceStatus row; the ledger orders rows deterministically at assembly (§7.11). */
   source(row: SourceStatus): void;
-  /** Move a league's state only towards worse (fresh → partial → degraded | frozen) and record a reason sentence. */
-  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string): void;
+  /**
+   * Move a league's state only towards worse (fresh → partial → degraded | frozen) and record a
+   * reason sentence, plus a short `cause` for the commit summary ("official file invalid").
+   */
+  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void;
   drop(row: DroppedContest): void;
   /** Leagues this run fetches (args.leagues resolved). */
   leaguesInRun(): readonly LeagueId[];
