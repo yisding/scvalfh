@@ -1977,10 +1977,8 @@ cancelled, `↻` for postponed. Wash ground, 1px ring at the mark hue, glyph in 
 ```ts
 interface FormStripProps {
   entries: FormEntry[];            // oldest → newest, league only, max 5
-  size?: 16 | 20;
-  showDirection?: boolean;         // renders the "oldest → newest" caption once per page
+  size?: 20 | 24;
   label: string;                   // "Homestead last 5 league games"
-  nonLeagueCount?: number;         // renders "+ 3 non-league"
 }
 interface FormEntry {
   outcome: Outcome; gameId: string; opponentAbbr: string;
@@ -1991,7 +1989,9 @@ interface FormEntry {
 Row of `ResultChip`s with a **2px surface gap** between them. Newest gets a 2px `--sx-text`
 underline + visually-hidden "most recent". Each chip is a link to `/game/[id]` with
 `aria-label="Loss 0-7 vs Saint Francis, Sep 24"`. One sentence `aria-label` on the strip.
-Rules for zero/partial/skipped games are in §5.5.
+Rules for zero/partial/skipped games are in §5.5. The direction caption and the `+ N non-league`
+caption are rendered by the page around the strip, not by the strip: the team page puts the
+direction in its Form heading and the count of other games on a line of its own.
 
 ### 7.7 `StatTile`
 

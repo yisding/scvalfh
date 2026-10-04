@@ -10,10 +10,14 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  * Last FIVE league results everywhere — phone, desktop, home mini-table, team page. No context
  * shows a different window (DESIGN §5.5, R-7).
  *
- * Oldest → newest, left to right, with the direction stated in words once per page. Unreported
- * and cancelled games are SKIPPED upstream, not shown as dots: a placeholder square would read as
- * a result. Fewer than five games renders only what exists; zero games renders the words
- * "no results" rather than an empty row of boxes.
+ * Oldest → newest, left to right. Unreported and cancelled games are SKIPPED upstream, not shown
+ * as dots: a placeholder square would read as a result. Fewer than five games renders only what
+ * exists; zero games renders the words "no results" rather than an empty row of boxes.
+ *
+ * The direction in words and the excluded-games caption (DESIGN §5.5) are the host's, not the
+ * strip's: the team page states "League, oldest to newest" in its Form heading's meta and prints
+ * "+ N other games, not counted here" as a line of its own (app/teams/[slug]/page.tsx), and the
+ * game page's FormGoingIn heading says "League games · oldest → newest".
  *
  * Screen readers get ONE sentence for the whole strip (DESIGN §10.6), never five letters. When
  * the caller supplies contestIds the chips are also links, each with its own label, so both
@@ -39,14 +43,10 @@ export interface FormEntry {
 export interface FormStripProps {
   /** Oldest → newest, league only, at most 5. */
   entries: FormEntry[];
-  /** 20 everywhere a strip is visible; 16 (10px letters) is kept for compatibility only. */
-  size?: 16 | 20 | 24;
-  /** Renders the "oldest → newest" caption; do it once per page. */
-  showDirection?: boolean;
+  /** 20 in the standings rows and the game page; 24 on the team page. */
+  size?: 20 | 24;
   /** "Homestead last 5 league games" — the subject of the strip's one sentence. */
   label: string;
-  /** Renders "+ 3 non-league" as a caption (DESIGN §5.5). */
-  nonLeagueCount?: number;
   className?: string;
 }
 
@@ -68,14 +68,7 @@ function chipLabel(entry: FormEntry): string {
   return parts.join(' ');
 }
 
-export function FormStrip({
-  entries,
-  size = 20,
-  showDirection = false,
-  label,
-  nonLeagueCount,
-  className,
-}: FormStripProps) {
+export function FormStrip({ entries, size = 20, label, className }: FormStripProps) {
   if (entries.length === 0) {
     return (
       <span className={['text-meta text-ink-3', className].filter(Boolean).join(' ')}>no results</span>
@@ -142,12 +135,6 @@ export function FormStrip({
           );
         })}
       </span>
-      {showDirection ? (
-        <span className="text-micro font-medium text-ink-3">Oldest &rarr; newest</span>
-      ) : null}
-      {nonLeagueCount ? (
-        <span className="text-meta text-ink-3">+ {nonLeagueCount} non-league</span>
-      ) : null}
     </span>
   );
 }
