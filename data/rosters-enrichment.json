@@ -1,14 +1,14 @@
 {
-  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs",
-  "capturedAt": "2026-10-03",
+  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs",
+  "capturedAt": "2026-10-04",
   "notes": [
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays. The same rules apply to all five leagues (SCVAL, BVAL, PCAL, MCAL, EAL); a team with no public source beyond MaxPreps has empty lists.",
     "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career, maxpreps-team; maxpreps-career also covers MaxPreps' earlier-season roster pages, such as /field-hockey/25-26/roster/, which give a dated class year the same way, and maxpreps-jv is a JV roster page of either season) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season. For BVAL, PCAL and MCAL, a position that MaxPreps lists only for a PRIOR season (2025-26 roster, same career id) is not filled: positions change between seasons.",
     "Names on a school roster that are not on MaxPreps are not added. JV rosters that school sites publish are out of scope, except that Los Gatos' MaxPreps list is the whole program and the school site says which rows are varsity and which JV. Where sources disagree on a grade MaxPreps leaves blank (a school page against MaxPreps' own earlier-season or career data, or a paper against either), the grade is left blank and every disagreeing source is recorded under the player's conflicts with kept: null; nothing is guessed.",
     "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
-    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL) or 2026-10-03 (BVAL, PCAL, MCAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL and MCAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
+    "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL), 2026-10-03 (BVAL, PCAL, MCAL) or 2026-10-04 (EAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL, MCAL and EAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
     "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
-    "EAL (added 2026-10-04): stub entries; no sweep yet."
+    "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field."
   ],
   "season": "26-27",
   "teams": [
@@ -8696,7 +8696,9 @@
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: none linked for any of the 19 players. SportsRecruits was looked up directly for every player (name variants and numbered slugs); NCSA, FieldLevel and Hudl were looked up too, with no page that names Bella Vista field hockey or shows a roster class year with a California hometown.",
+        "Not linked: Rosy Johnson's near match (SportsRecruits rose_johnson2: Rose, class of 2030 against grade 11 = 2028, no school or hometown); lacrosse pages, a different sport, for Rylee Tabor, Mckenna Matson and Morgan Cimino (SportsRecruits) and for Audrey Janeway, Morgan Cimino and Rylee Tabor (Hudl, Bella Vista lacrosse teams). Hudl's Bella Vista varsity field hockey team has only a 2025 season and an empty roster.",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
       "players": [],
       "slug": "bella-vista",
@@ -8705,16 +8707,311 @@
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: 16 linked for 13 players (12 Hudl, 2 SportsRecruits, 2 NCSA). Hudl's Chico High School Girls Varsity Field Hockey team (Hudl team 694691) roster was read in full and every public profile on it matched against the roster; the school's SportsRecruits team page (nfhca.sportsrecruits.com/organization/chicohighschool_fieldhockey) links two athletes, both linked here (Evie Nielsen's page is under the misspelled slug evelyn_nielson).",
+        "Not linked: Zolie Judge (Hudl 28010179 names Chico field hockey but says class of 2027, roster grade 11 = 2028; lib/rosters.ts would refuse it, and the MaxPreps grade may be the one that is wrong); Sienna Davids (Hudl 27809311 says class of 2026, roster grade 12 = 2027); older duplicate Hudl pages for Emerson Harris, Marie Sicke, Siena Mullins (no class year) and Reyna Chan (2024-25), since one profile is linked per platform; Olivia Council's track and field page (a different sport) and a golf page for a different Olivia Council; an NCSA emerson-harris page for a different Emerson Harris (Harvard-Westlake soccer, class of 2017). Marley Figueroa, Quinn Karolyi and Hailey Wilkey-Harper are on the Hudl team roster but their Hudl profiles are private (not found); Quinn Karolyi's NCSA page is linked. Ari Roldman, Fayza Saeidah and Camilla Mojica are on no Hudl roster and no page for them was found.",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "8bbcba5c-6fe0-4ef1-b1be-c56e17b6c352",
+          "conflicts": [],
+          "fullName": "Anisa Basham",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28108873"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6f5c6e6f-d64a-4d7f-a589-56f7c2fde742",
+          "conflicts": [],
+          "fullName": "Paisley Bechtold",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27815591"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8c49d6b2-1098-4b7a-ba6b-fde43de668b5",
+          "conflicts": [],
+          "fullName": "Gwen Deir",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31469328"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c95dcf7e-8daf-4e12-9806-0800bb16faf0",
+          "conflicts": [],
+          "fullName": "Quinn Karolyi",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile naming Chico High School, Chico, CA; class of 2028 agrees with the roster (Jr.), Midfielder/Forward, 5'4\". Read directly with WebFetch on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/chico/chico-high-school3/quinn-karolyi"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "25e21b95-c6a1-4261-9f5e-78a4bed0a58e",
+          "conflicts": [],
+          "fullName": "Olivia Council",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA field hockey recruiting profile naming Chico High School, Chico, CA; class of 2027 agrees with the roster (Sr.), Midfielder/Forward, 5'3\", #7 on the 2025 varsity team (the roster number is 7). Read directly with WebFetch on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/chico/chico-high-school3/olivia-council"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com) naming Chico High School - Field Hockey, Chico, CA; class of 2027 agrees with the roster (Sr.). The school's SportsRecruits team page lists it. Her olivia_council4 page is track and field and olivia_council2 is a different person's golf page; neither is linked.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/olivia_council3"
+            },
+            {
+              "classOf": 2027,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2027 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27809057"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "65dcaabe-994c-41e7-af22-23b1abc99b32",
+          "conflicts": [],
+          "fullName": "Reyna Chan",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2027 agrees with the roster. An older profile, 27809046 (the 2024-25 team), also states 2027 and is not linked (one profile per platform).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31681988"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "364fb28d-ccb8-4473-9dd2-4c800e7def74",
+          "conflicts": [],
+          "fullName": "Siena Mullins",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2027 agrees with the roster. An older duplicate, 24080147, states no class year and is not linked.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27810184"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "75057c21-27f0-4aa5-acac-4c42e725c993",
+          "conflicts": [],
+          "fullName": "Emerson Harris",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2027 agrees with the roster. The Hudl name is lower case (emerson harris). An older duplicate, 24080163, states no class year and is not linked.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28288117"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8a192cb8-4936-44ed-8b6a-a26fdf94725c",
+          "conflicts": [],
+          "fullName": "Penny Fender",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2027 agrees with the roster. The Hudl name is Penelope, the roster Penny; jersey 99 agrees with the roster's 12/99.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27809085"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d043ae7e-0f59-4bc1-838c-55b5f833c78b",
+          "conflicts": [],
+          "fullName": "Fiona Schrieber",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster. Hudl spells the surname Schreiber, the roster Schrieber; jersey 13 agrees on both.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27819874"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
+          "conflicts": [],
+          "fullName": "Evie Nielsen",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com), listed under Evelyn Nielsen (the slug misspells it nielson); the bio says \"everyone calls me Evie\" and names Chico High and the Chico Hotshots. Names Chico High School - Field Hockey, Chico, CA; class of 2028 agrees with the roster (Jr.). Found through the school's SportsRecruits team page.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/evelyn_nielson"
+            },
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31689774"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d7c888ba-3833-4cf4-be25-e1640e937885",
+          "conflicts": [],
+          "fullName": "Marie Sicke",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster. An older duplicate, 24080158, states no class year and is not linked (one profile per platform).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27810804"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8c55b4dd-dbf2-425c-9198-5ceb2f6b921d",
+          "conflicts": [],
+          "fullName": "Kendra Allen",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Chico High School's varsity field hockey team on Hudl (Girls Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27809693"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "chico",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: none linked, because MaxPreps lists no players for Corning, so there is no one to match a page to. Hudl has a Corning High School field hockey varsity team (seasons 2024-26) with empty rosters; NCSA search surfaced no Corning field hockey school page.",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
       "players": [],
       "slug": "corning",
@@ -8723,27 +9020,378 @@
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: 5 linked for 4 players (3 SportsRecruits, 2 NCSA). SportsRecruits was looked up directly for all 19 players. Kate Loscutoff's SportsRecruits page names no school and is linked on class of 2027 plus Davis, CA (her NCSA page, with the same bio, names Davis Senior High School). Maisy Martin's NCSA page is not on NCSA's Davis Senior school page and was found only by the direct address.",
+        "Not linked: Davis alumna Alana Clifford (SportsRecruits, class of 2026), who is not on the roster. Hudl's Davis High School varsity field hockey team has a 2024 season only, with an empty roster, and no name search found a Hudl field hockey profile for any of the 19 players. The guessable FieldLevel profile addresses for all 19 players returned not found.",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "9f299134-dfdc-4d38-9c8e-2ca464f186ae",
+          "conflicts": [],
+          "fullName": "Maisy Martin",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile naming Davis Senior High School, Davis, CA; class of 2028 agrees with the roster (Jr.), Midfielder/Forward. Found only by the direct address: the school's NCSA page does not list her. Read directly on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/davis/davis-senior-high-school/maisy-martin"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
+          "conflicts": [],
+          "fullName": "Amelia Zedonis",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com): class of 2028 agrees with the roster (Jr.), Midfield/Defense, Davis, CA; the bio names Davis High School and a captaincy, as the roster shows.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/amelia_zedonis"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
+          "conflicts": [],
+          "fullName": "Kira Kelly",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com): class of 2028 agrees with the roster (Jr.), Goalie, Davis, CA; the bio names Davis High School.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/kira_kelly"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
+          "conflicts": [],
+          "fullName": "Kate Loscutoff",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA field hockey recruiting profile naming Davis Senior High School, Davis, CA; class of 2027 agrees with the roster (Sr.), Forward/Midfielder, #33 (the roster number). It gives 5'7\" where the roster has 5'9\". Read directly on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/davis/davis-senior-high-school/kate-loscutoff"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com): the page names no school; linked on class of 2027 (agrees with the roster, Sr.), Forward and a Davis, CA hometown. The same bio is on her NCSA page, which names Davis Senior High School.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/kate_loscutoff"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "davis",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: 1 linked for 1 player (Brylee Leslie, NCSA; the page was read directly). SportsRecruits was looked up directly for all 15 players. Lassen High School has no field hockey team on Hudl.",
+        "Not linked: Emily Barker's SportsRecruits page (emily_barker2: class of 2027 against grade 11 = 2028, no school or hometown); SportsRecruits emily_barker is a golf page; on NCSA, emily-barker is a golf page and emily-barker1 a field hockey page for a different Emily Barker (Patrick Henry High School, Ashland, VA, class of 2018).",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "b2b03bc7-442f-49e9-a81b-e958f6edcc87",
+          "conflicts": [],
+          "fullName": "Brylee Leslie",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile naming Lassen High School, Susanville, CA; class of 2028 agrees with the roster (Jr.), Midfielder/Forward, 5'3\". The bio was written last season and still says sophomore. Read directly on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/susanville/lassen-high-school/brylee-leslie"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "lassen",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No school or recruiting-page sweep has been done for this team yet; nothing is filled."
+        "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: 11 linked for 11 players (10 Hudl, 1 NCSA). Hudl's Pleasant Valley High School Girls' Varsity Field Hockey team (Hudl team 244269) roster was read in full and every public profile on it matched against the roster; SportsRecruits was looked up directly for all 22 players and found none.",
+        "Not linked: ten players are on the Hudl 2026 team roster but their profiles are private and return not found (as Hudl names them: Abby LeDuc, Auden McConney, Lexi Quin, Emerson Brothers, Charlie Ansorge, Lilah Letcher, Kathryn Lipski, Grace Davis, Audrina Jamison, Ashley Gustafson); Camryn Anderson's identical second Hudl profile (31685896). Ruby Wantt and Hadlee Jellison are on no Hudl roster. Same-name pages for other people on NCSA and SportsRecruits (other sports, other states) were rejected.",
+        "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "ee802ed0-6353-4a9d-accb-78f6f9a45a76",
+          "conflicts": [],
+          "fullName": "Liberty Wilson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2028 agrees with the roster. The Hudl name is Libby Wilson.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31640779"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "34c472fd-d485-49fb-9c47-d2736f9067d4",
+          "conflicts": [],
+          "fullName": "Kate Panighetti",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2027 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31684992"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "579b298a-ed44-424e-888e-67b252c75c70",
+          "conflicts": [],
+          "fullName": "Ava Knight",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31744503"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a06353b0-4d0a-4dc9-8ea1-88ebee6da88b",
+          "conflicts": [],
+          "fullName": "Camryn Anderson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2027 agrees with the roster. An identical second profile, 31685896, is not linked (one profile per platform).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31685041"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7b08a0ae-9ba3-4104-9e8a-1da502723746",
+          "conflicts": [],
+          "fullName": "Aleah Bosch",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2027 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31555930"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7c127309-97d9-4ea4-b444-4190997b3c77",
+          "conflicts": [],
+          "fullName": "London Fraley",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31566623"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "0e00d40b-d335-4adf-81e3-60295e9fb041",
+          "conflicts": [],
+          "fullName": "Tannyn Sherrod",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2028 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31604125"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ac121d02-c034-498c-9a30-ae1981ed9188",
+          "conflicts": [],
+          "fullName": "Bree Pedersen",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2027 agrees with the roster.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31555554"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a52a3c22-1cfa-468c-a269-c4e1c3088002",
+          "conflicts": [],
+          "fullName": "Emma Horsley",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2028 agrees with the roster. The Hudl name is Emmy Horsley.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31593307"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e3d02235-38b4-4bda-9214-05658f0b6adf",
+          "conflicts": [],
+          "fullName": "Addyson Gallagher",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pleasant Valley High School's varsity field hockey team on Hudl (Girls' Varsity Field Hockey); class of 2027 agrees with the roster. The Hudl name is Addy Gallagher.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31680525"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "53dd0d38-7465-493c-8a35-129af5e61e59",
+          "conflicts": [],
+          "fullName": "Ruby Wantt",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile naming Pleasant Valley High School, Chico, CA; class of 2028 agrees with the roster (Jr.), Defender/Midfielder, 5'2\". The page's '(Sophomore)' label beside 2028 is out of date. Read directly with WebFetch on 2026-10-04.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/chico/pleasant-valley-high-school6/ruby-wantt"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "pleasant-valley",
       "sources": []
     }

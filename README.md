@@ -258,8 +258,9 @@ lacks are pending.
 `data/rosters-enrichment.json` is what other public sources add to that — the schools' own
 athletics-site rosters, one roster PDF, school and local papers, MaxPreps career and JV pages —
 gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (49): SCVAL was
-swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries are stubs, with no
-coaches, players or sources, until someone sweeps them. Every entry lists
+swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
+recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
+sites. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -277,8 +278,9 @@ with nothing to fall back on, or no update has covered the team yet; its coaches
 still show below.
 
 The same overlay links players' own recruiting pages — NCSA, SportsRecruits and Hudl
-profiles (`profiles` on each record; 99 for 83 players as of 2026-10-03: SCVAL 70 for 56, BVAL 12
-for 12, PCAL 3 for 3, MCAL 14 for 12; 17 NCSA, 53 SportsRecruits, 29 Hudl). A page is linked only when it names the player and field hockey and either names the school
+profiles (`profiles` on each record; 132 for 112 players as of 2026-10-04: SCVAL 70 for 56, BVAL 12
+for 12, PCAL 3 for 3, MCAL 14 for 12, EAL 33 for 29 (Chico 16 for 13, Pleasant Valley 11 for 11, Davis
+5 for 4, Lassen 1 for 1; none for Bella Vista or Corning); 23 NCSA, 58 SportsRecruits, 51 Hudl). A page is linked only when it names the player and field hockey and either names the school
 or shows the class year the roster shows plus a California hometown, and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
@@ -936,8 +938,8 @@ at once, at every build, starting from last season's:
   10 of the 28 have no stats) and the six EAL teams on 2026-10-04 (Corning has no roster and no stats
   on MaxPreps), and the school-site and recruiting-page overlay covers the four earlier leagues
   (SCVAL swept 2026-10-02, the others 2026-10-03; recall is partial in each, and a team's page names
-  what was and was not found); the EAL's six overlay entries are stubs, so an EAL team's page says
-  it has not checked other public sources. As of 2026-10-02, 10 of the 15 SCVAL teams publish stats on MaxPreps
+  what was and was not found); the EAL's six overlay entries hold only recruiting profiles (swept
+  2026-10-04), so an EAL team's page says it has not checked other public sources. As of 2026-10-02, 10 of the 15 SCVAL teams publish stats on MaxPreps
   (Cupertino, Los Altos, Los Gatos, Lynbrook and Saratoga publish none, and no school site or si.com
   page has them either), what each tracks varies by coach, and some stop entering mid-season
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table

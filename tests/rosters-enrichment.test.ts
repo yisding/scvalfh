@@ -34,7 +34,7 @@ import { REPO } from './helpers';
  * league later moves none of them.
  */
 const SCVAL_SLUGS: ReadonlySet<string> = new Set(teamsInLeague('scval').map((t) => t.slug));
-/** BVAL, PCAL and MCAL: researched 2026-10-03. The EAL entries are stubs (no sweep), so they fill nothing. */
+/** BVAL, PCAL and MCAL: researched 2026-10-03. The EAL entries hold recruiting profiles only (2026-10-04), no school-site sweep. */
 const SWEPT_OTHER_SLUGS: ReadonlySet<string> = new Set(
   (['bval', 'pcal', 'mcal'] as const).flatMap((l) => teamsInLeague(l)).map((t) => t.slug),
 );
@@ -119,8 +119,8 @@ describe('data/rosters-enrichment.json', () => {
       expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
     }
     expect(raw.season).toBe(base.season);
-    // The overlay is stamped 2026-10-03 (SCVAL was researched 2026-10-02, the other leagues
-    // 2026-10-03); the roster file may be re-read later (see the athleteId join below), never earlier.
+    // The overlay is stamped 2026-10-04 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
+    // 2026-10-03, the EAL's recruiting pages 2026-10-04); the roster file may be re-read later (see the athleteId join below), never earlier.
     expect(raw.capturedAt <= base.fetchedAt.slice(0, 10)).toBe(true);
   });
 
@@ -207,7 +207,7 @@ describe('data/rosters-enrichment.json', () => {
       'santa-catalina': 'none',
       'marin-academy': 'partial',
     });
-    // The EAL stubs have had no sweep: Corning (empty) records nothing, and its view says not-checked.
+    // The EAL has had no school-athletics sweep: Corning (empty) records no otherRosters, and its view says not-checked.
     for (const t of base.teams.filter((x) => x.status === 'empty' && !EAL_SLUGS.has(x.slug))) {
       expect(recorded[t.slug], t.slug).toBeDefined();
     }
@@ -397,13 +397,55 @@ describe('recruiting profiles', () => {
     expect(base.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!.grade).toBe(10);
   });
 
-  it('holds six EAL stubs that say no sweep was done and fill nothing', () => {
+  it('what was found for the EAL, as captured on 2026-10-04: recruiting pages only, no school-site sweep', () => {
     const eal = raw.teams.filter((t) => EAL_SLUGS.has(t.slug));
     expect(eal.map((t) => t.slug)).toEqual(teamsInLeague('eal').map((t) => t.slug));
+    expect(raw.capturedAt).toBe('2026-10-04');
+    // No coaches or sources, and no MaxPreps field filled: the school-athletics sweep has not been done.
     for (const t of eal) {
-      expect([t.coaches, t.players, t.sources], t.slug).toEqual([[], [], []]);
-      expect(t.notes, t.slug).toEqual(['No school or recruiting-page sweep has been done for this team yet; nothing is filled.']);
+      expect([t.coaches, t.sources], t.slug).toEqual([[], []]);
+      for (const p of t.players) {
+        expect([p.grade, p.positions, p.jersey, p.height, p.level, p.conflicts], `${t.slug} / ${p.fullName}`).toEqual([null, null, null, null, null, []]);
+        expect(p.profiles.length, `${t.slug} / ${p.fullName}`).toBeGreaterThan(0);
+      }
+      // Each team's notes say the recruiting pages were swept 2026-10-04 and the school-athletics sweep was not.
+      expect(t.notes[0], t.slug).toMatch(/^Recruiting pages swept 2026-10-04 by the rule in docs\/DATA-SOURCES\.md: /);
+      expect(t.notes.at(-1), t.slug).toBe(
+        'The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled.',
+      );
     }
+    const byTeam = Object.fromEntries(
+      eal.map((t) => {
+        const profiles = t.players.flatMap((p) => p.profiles);
+        const n = (k: string) => profiles.filter((x) => x.platform === k).length;
+        return [t.slug, { players: t.players.length, profiles: profiles.length, ncsa: n('ncsa'), sportsrecruits: n('sportsrecruits'), hudl: n('hudl') }];
+      }),
+    );
+    expect(byTeam).toEqual({
+      'bella-vista': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0 },
+      chico: { players: 13, profiles: 16, ncsa: 2, sportsrecruits: 2, hudl: 12 },
+      corning: { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0 },
+      davis: { players: 4, profiles: 5, ncsa: 2, sportsrecruits: 3, hudl: 0 },
+      lassen: { players: 1, profiles: 1, ncsa: 1, sportsrecruits: 0, hudl: 0 },
+      'pleasant-valley': { players: 11, profiles: 11, ncsa: 1, sportsrecruits: 0, hudl: 10 },
+    });
+    const profiles = eal.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    expect(profiles.length).toBe(33);
+    expect(eal.flatMap((t) => t.players).length).toBe(29);
+    // The other four leagues' counts are untouched: 99 profiles for 83 players.
+    const earlier = raw.teams.filter((t) => !EAL_SLUGS.has(t.slug)).flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
+    expect(earlier.flatMap((p) => p.profiles).length).toBe(99);
+    expect(earlier.length).toBe(83);
+    // NCSA first on a row that has more than one platform.
+    const kate = eal.find((t) => t.slug === 'davis')!.players.find((p) => p.fullName === 'Kate Loscutoff')!;
+    expect(kate.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits']);
+    const olivia = eal.find((t) => t.slug === 'chico')!.players.find((p) => p.fullName === 'Olivia Council')!;
+    expect(olivia.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits', 'hudl']);
+    // Evie Nielsen's SportsRecruits page is under the misspelled slug the school's team page links.
+    const evie = eal.find((t) => t.slug === 'chico')!.players.find((p) => p.fullName === 'Evie Nielsen')!;
+    expect(evie.profiles.find((p) => p.platform === 'sportsrecruits')!.url).toBe('https://nfhca.sportsrecruits.com/athlete/evelyn_nielson');
+    // The page that says class of 2027 for a grade-11 player (Zolie Judge) is not linked.
+    expect(profiles.map((p) => p.url)).not.toContain('https://www.hudl.com/profile/28010179');
   });
 
   it('reaches the merged view', () => {

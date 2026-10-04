@@ -3401,8 +3401,11 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   95 varsity rows, found none (`docs/DATA-SOURCES.md` §1.1j3; the same day's recruiting-profiles
   research ran SportsRecruits' profile probe for those rows in every sport and NCSA and FieldLevel
   probes for field hockey, but SportsRecruits' athlete search was not run for them).
-- **No enrichment sweep for EAL rosters.** `data/rosters-enrichment.json` holds six stub entries
-  that say so. Corning has no roster or player stats at MaxPreps on 2026-10-04 (roster `empty`, stats
+- **No school-athletics enrichment sweep for EAL rosters.** `data/rosters-enrichment.json`'s six EAL
+  entries hold players' own recruiting pages only (swept 2026-10-04: 33 profiles for 29 players, none
+  for Bella Vista or Corning) and say the school-athletics roster sweep (grade, height, number,
+  position, coaches) has not been done. Corning has no roster or player stats at MaxPreps on
+  2026-10-04 (roster `empty`, stats
   `none`).
 - **`/clubs` stopped dating its checks.** Its sentence "each was checked twice on {capturedOn}" now
   reads "each was checked twice, in two separate passes, when it was added.", because the old one

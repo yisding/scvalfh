@@ -229,10 +229,10 @@ cross-check (17/17 for Los Altos, 13/13 for Cupertino).
 **Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** The overlay has one
 entry per registry team (49), joined on `slug + athleteId`; its rules below hold for every league.
 SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03 (the second sweep's tables
-follow the SCVAL one). The six EAL entries, added 2026-10-04, are **stubs**: no coaches, players or
-sources and a note that no school or recruiting-page sweep has been done for the team yet, so
-nothing is filled for them and a team page says nothing about other sources (`otherRosters` is
-absent, "not checked"). On the 2026-10-04 MaxPreps rows alone, the EAL's 95 players have 95 grades and
+follow the SCVAL one). The six EAL entries, added 2026-10-04, hold **recruiting profiles only** (the
+"Players' own recruiting pages" sweep below, run the same day): no coaches or sources, and each
+team's note says the school-athletics roster sweep has still not been done. They fill no MaxPreps
+field, and a team page says nothing about other sources (`otherRosters` is absent, "not checked"). On the 2026-10-04 MaxPreps rows alone, the EAL's 95 players have 95 grades and
 95 numbers, 56 positions and 7 heights. What a team page with no MaxPreps players says about other sources is
 recorded per team, not inferred: `otherRosters` (validated in `lib/rosters.ts`) is `none` (looked,
 no current roster anywhere: Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina), `partial`
@@ -346,7 +346,7 @@ grade agreeing a year on (MaxPreps already has all 19, so nothing is filled). Th
 page name such a page by its URL ("MaxPreps 2025-26 roster"), although the overlay files it under
 the `maxpreps-career` or `maxpreps-jv` kind. This sweep is not a script: re-running it is research.
 
-**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`; swept for the four leagues of 2026-10-02/03, not yet for the EAL).** A second sweep on
+**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`; swept for SCVAL on 2026-10-02, BVAL, PCAL and MCAL on 2026-10-03 and the EAL on 2026-10-04).** A second sweep on
 2026-10-02 looked for each rostered SCVAL player's own recruiting profile, in two passes the same day.
 It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
 Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
@@ -355,6 +355,14 @@ Christopher 4, Gilroy 2, Leigh 3, Willow Glen 2, Westmont 1), PCAL 3 for 3 (1 NC
 Stevenson 2), MCAL 14 for 12 (8 SportsRecruits, 6 NCSA: Tamalpais 4, University 5, Archie Williams 2,
 Lick-Wilmerding 2, Convent 1). **All four leagues: 99 profiles for 83 players, 53 SportsRecruits,
 29 Hudl and 17 NCSA.**
+On 2026-10-04 the same rules found 33 for 29 EAL players: Chico 16 for 13 (12 Hudl, 2 SportsRecruits,
+2 NCSA), Pleasant Valley 11 for 11 (10 Hudl, 1 NCSA), Davis 5 for 4 (3 SportsRecruits, 2 NCSA) and
+Lassen 1 for 1 (NCSA); Bella Vista and Corning none (Corning has no players on MaxPreps). That is
+5 SportsRecruits, 6 NCSA and 22 Hudl. **All five leagues: 132 profiles for 112 players, 58
+SportsRecruits, 51 Hudl and 23 NCSA.** Each linked EAL page was re-read on 2026-10-04 by two
+independent verifiers, one checking it against the rule and one trying to refute it, and kept only
+when both kept it; the NCSA pages (WebFetch or curl) were opened rather than matched on a search
+result.
 
 | Team | Found | How it was tied to the player |
 |---|---|---|
@@ -367,6 +375,11 @@ Lick-Wilmerding 2, Convent 1). **All four leagues: 99 profiles for 83 players, 5
 | Los Altos | 1 NCSA, 1 SportsRecruits | |
 | Homestead, Palo Alto, Lynbrook, Fremont | 1 NCSA; 1 NCSA; 1 SportsRecruits; 1 SportsRecruits | The Lynbrook and Fremont pages name no school: matched on class year plus hometown (Cupertino, Sunnyvale). |
 | Cupertino, Valley Christian, Presentation, Monta Vista | none found | |
+| EAL: Chico | 12 Hudl, 2 SportsRecruits, 2 NCSA (13 players) | The 12 Hudl profiles are on Chico High School Girls Varsity Field Hockey (Hudl team 694691), whose roster was read in full; jerseys agree where the page gives one. The school's SportsRecruits team page (`organization/chicohighschool_fieldhockey`) links two athletes, Olivia Council and Evie Nielsen (under the slug `evelyn_nielson`). The two NCSA pages name Chico High School. |
+| EAL: Pleasant Valley | 10 Hudl, 1 NCSA | The Hudl profiles are on Pleasant Valley High School Girls' Varsity Field Hockey (Hudl team 244269), the 2026 import, all class of 2027 or 2028 and Chico, CA; three show a nickname (Addy, Emmy, Libby). Ruby Wantt's NCSA page names the school. |
+| EAL: Davis | 3 SportsRecruits, 2 NCSA | Amelia Zedonis' and Kira Kelly's bios name Davis High School; Kate Loscutoff's page names no school and is linked on class of 2027 plus Davis, CA (her NCSA page names Davis Senior High School). Maisy Martin's NCSA page is not on NCSA's Davis school page. |
+| EAL: Lassen | 1 NCSA | Brylee Leslie's page names Lassen High School, Susanville, CA. |
+| EAL: Bella Vista, Corning | none found | Bella Vista's only near matches are another class year (Rosy Johnson) and lacrosse pages. |
 
 The rule: a page is linked only when it names the player (or the school's spelling, `sourceName`)
 and field hockey, and either names this school or shows the class year the roster shows plus a
@@ -399,6 +412,38 @@ Gotchas, all **[V]**:
   **FieldLevel** profiles are mostly behind a login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
   roster has no class year to check, so only the NCSA profile (under Homestead) is linked.
 
+EAL differences, all **[V]** on 2026-10-04: the six teams hold 95 players on `data/rosters.json` (Bella
+Vista 19, Chico 20, Corning 0, Davis 19, Lassen 15, Pleasant Valley 22).
+- **SportsRecruits** was probed for every player on `my.sportsrecruits.com/athlete/<first_last>` (suffixes
+  1-7 and name variants, about 1,200 slugs). Chico's school organization page
+  (`organization/chicohighschool_fieldhockey`) is the only one that exists for these schools; it
+  links Evie Nielsen under a misspelled slug (`evelyn_nielson`) that a name probe misses.
+- **NCSA** answered WebFetch, not curl (a Cloudflare 403), and WebFetch rate-limited at about 60
+  requests, so lookups were paced. Every hit was checked on the page for sport, school and class
+  year: slugs resolve by name whatever school is in the path, and same-name pages are common
+  (wrong-sport or wrong-person pages for Liberty Wilson, Ava Knight, Emma Horsley, Bree Pedersen,
+  Addyson Gallagher, Emerson Harris, Kira Kelly and Emily Barker were rejected).
+- **Hudl** was read through its public GraphQL endpoint (`hudl.com/api/public/graphql/query`, found in the
+  fan.hudl.com bundle): school, team and season rosters list every team member, so profile ids did
+  not have to be guessed. A profile can be **private** (`hasPublicProfile` false; `/profile/<id>`
+  returns "Page Not Found"): 13 current Chico and Pleasant Valley players are on the team rosters
+  and cannot be linked. A team import also leaves older duplicates (no class year, or an earlier
+  season) beside the current profile; one per platform is linked, the one with a class year and the
+  2026 team. Bella Vista and Davis have a Hudl field hockey team with an empty roster, Corning's
+  rosters are empty, Lassen has no field hockey team there, and three Bella Vista players' Hudl pages
+  (Audrey Janeway, Morgan Cimino, Rylee Tabor; four profiles, as Audrey Janeway has two) carry
+  lacrosse only.
+- **A class year that disagrees with the roster grade is not linked, even on a page that names the
+  school:** Zolie Judge (Chico; Hudl says 2027, the roster grade 11 = 2028, so the MaxPreps grade may
+  be wrong) and Sienna Davids (Chico; Hudl says 2026, roster grade 12 = 2027). Other not-linked pages: Rosy
+  Johnson (Bella Vista; SportsRecruits says Rose, class of 2030, no school) and Emily Barker (Lassen;
+  2027, no school); lacrosse pages for four Bella Vista players; Olivia Council's track and field page.
+- **FieldLevel**: 97 guessable addresses (`fieldlevel.com/app/profile/<first.last>/fieldhockeywomen`)
+  were all "Page Not Found", and its listing pages are client-rendered, so none is linked.
+- Recall is partial: a SportsRecruits page under an unrelated slug with no school page, an NCSA page its
+  school page does not list (Maisy Martin's is not on Davis Senior's) and a FieldLevel profile with a
+  numeric id could exist and not be linked; NCSA slugs with a suffix of 2 or higher were not tried.
+
 BVAL, PCAL and MCAL differences, all **[V]** on 2026-10-03: NCSA pages answered WebFetch there
 (not curl), so those profiles were read rather than matched on a search result, but NCSA slugs
 resolve by name whatever school is in the path, so sport, school and class year were checked on
@@ -427,6 +472,10 @@ returned "Page Not Found" under name variants (hosts cannot be searched), NCSA s
 current player, and Hudl was found only by scanning ids around known Stevenson profiles. MCAL: web
 search surfaced no Hudl field hockey profile for a current roster. A profile for anyone else could
 exist and not be linked. Like the first sweep, this one is research, not a script.
+The EAL sweep (2026-10-04) had the broadest recall of the three: every one of the 95 players was
+looked up directly on SportsRecruits, Hudl was read from the teams' own rosters, and NCSA was
+looked up directly for every player on five teams (Corning has none) after the school pages;
+a profile outside those routes could exist and not be linked.
 
 **(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
@@ -2004,7 +2053,7 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   were read live on 2026-10-03 and the six EAL teams on 2026-10-04 (every page parsed, no team failed;
   Corning has no roster and no stats at MaxPreps), and the school-site and recruiting-page overlay
   covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL 2026-10-03, recall partial in
-  each), with only stub entries for the EAL. A team's page that does
+  each), with only recruiting profiles for the EAL (2026-10-04). A team's page that does
   not parse fails that team (carried forward, or `error`), never writes a wrong value; a team no run
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
