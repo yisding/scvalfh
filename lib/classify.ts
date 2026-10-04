@@ -3,7 +3,7 @@
  * the v1 migration) and persisted as `Game.countsFor` (SPEC §5.1). Pure: no I/O, no clock.
  *
  * Membership of the same division (`Game.leagueDivision`) is always necessary, never sufficient:
- *  - SCVAL keeps today's contest-type evidence (`isLeague`) and excludes only CCS section games,
+ *  - SCVAL keeps its original contest-type evidence (`isLeague`) and excludes only CCS section games,
  *    so its tables stay byte-identical to the goldens;
  *  - the EAL publishes no schedule, so it is classified by contest type too, and also excludes
  *    its own postseason (the Super Regional) and its `excludeContestTypes` rows (2, 4, 5);

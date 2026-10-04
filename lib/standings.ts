@@ -285,7 +285,7 @@ const HALT = 'halt' as const;
 /**
  * Stage keys, higher is better; `null` = the stage is skipped for this group; `HALT` = the chain stops
  * here, unresolved (SPEC §5.5). `head-to-head`, `division-wins`, `h2h-goals-against` and
- * `h2h-goal-diff` are today's SCVAL code.
+ * `h2h-goal-diff` are SCVAL's original stages (golden-gated).
  */
 function stageKeys(
   stage: TiebreakStage,
@@ -417,10 +417,10 @@ function splitChain(chain: readonly TiebreakStage[]): {
   return { stages: [...chain], terminal: null };
 }
 
-// ---------------------------------------------------------------- partition-restart (SCVAL, PCAL)
+// ---------------------------------------------------------------- partition-restart (SCVAL, PCAL, EAL)
 
 /**
- * Today's `resolveGroup`, parameterized (SPEC §5.3): `chain` is the chain of the ORIGINAL points
+ * The original SCVAL `resolveGroup`, parameterized (SPEC §5.3): `chain` is the chain of the ORIGINAL points
  * bucket; a stage key of `null` skips the stage; the terminal uncomputable stage replaces the
  * literal 'coin-flip'.
  */
@@ -647,7 +647,7 @@ const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-lower-placed',
 ]);
 
-/** Loops LEAGUES → divisions → teamsInDivision; per division: today's body, with rules from config. */
+/** Loops LEAGUES → divisions → teamsInDivision; per division: the SCVAL procedure, with rules from config. */
 export function computeStandings(
   games: readonly Game[],
   opts: ComputeOptions = {},
@@ -743,7 +743,7 @@ function computeDivision(
   };
 
   // Two passes (SPEC §5.4a): buckets whose chain reads other places go last, so the places they
-  // read are settled. For SCVAL every bucket is pass 1 and the order is today's.
+  // read are settled. For SCVAL every bucket is pass 1, and its order is unchanged from the goldens.
   const pass2 = (i: number): boolean =>
     buckets[i].group.length > 1 && buckets[i].chain.some((s) => PLACE_VS_STAGES.has(s));
   buckets.forEach((_, i) => {
@@ -801,7 +801,7 @@ function computeDivision(
   return rows;
 }
 
-/** Notes (SPEC §5.6), rendered verbatim. SCVAL's are today's exact strings. */
+/** Notes (SPEC §5.6), rendered verbatim. SCVAL's strings are pinned by the goldens. */
 function tiebreakNote(
   team: Team,
   record: ComputedRecord,
@@ -865,7 +865,7 @@ function compareToReported(
 
 /**
  * Field-by-field cross-check rows for /about#cross-check (DESIGN §9), by the division's
- * `reportedTrust` (SPEC §5.8): 'full' = today's six fields; 'records-only' = records and league
+ * `reportedTrust` (SPEC §5.8): 'full' = all six fields; 'records-only' = records and league
  * goals; 'informational' = league record only. Rows of a division with a known cause carry it.
  */
 export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[] {
