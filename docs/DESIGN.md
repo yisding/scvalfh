@@ -2162,7 +2162,9 @@ timestamp nobody reads.
 
 ### 7.16 Small shared pieces
 
-`Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) ·
+`Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) · `StatusChip`
+(Tag's sentence-case sibling for a postseason status phrase, accent only for an automatic
+qualifier) ·
 `StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `share →` link to `/scores/[date]`) ·
 `TimelineRail` (anchor links to date-group ids) · `DivisionTabs` (plain `<a href="#de-anza">`
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·

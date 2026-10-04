@@ -5,11 +5,13 @@ import { EM_DASH, listWords, ordinal } from '../../lib/format';
 import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
 import SectionHeader from '../ui/SectionHeader';
+import StatusChip from '../ui/StatusChip';
 import TeamMonogram from '../ui/TeamMonogram';
 
 import {
   projectionRowLabel,
   recordLine,
+  splitStatusLabel,
   type DivisionProjection,
   type ProjectionRow,
 } from './playoff-view';
@@ -93,28 +95,17 @@ function PlaceCell({ row }: { row: ProjectionRow }) {
 }
 
 /**
- * The written status: one tinted capsule in 12px SANS, sentence case. These are phrases ("At-large
- * consideration or no automatic path"), and mono caps are kept for the 1–2 word codes a `Tag` is
- * for (brief §1). The tones are Tag's: accent-ink on the wash only for a sole AQ. The capsule is
- * `inline-block`, so a long phrase grows into ONE taller capsule instead of breaking into a cloned
- * pill per line. Any " — " tail (the coin-flip note) is plain text under it.
+ * The written status as a StatusChip (components/ui/StatusChip.tsx): accent only for a sole AQ.
+ * Any " — " tail (the coin-flip note) is plain text under it.
  */
 function StatusBadge({ row }: { row: ProjectionRow }) {
-  const [head, ...tail] = row.label.split(' — ');
+  const { head, tail } = splitStatusLabel(row.label);
   return (
     <>
-      <span
-        className={`inline-block max-w-full rounded-tag px-2 py-0.5 text-micro font-semibold leading-5 ${
-          row.status === 'aq' && row.statuses.length === 1
-            ? 'bg-accent-wash text-accent-ink'
-            : 'bg-surface-3 text-ink-2'
-        }`}
-      >
+      <StatusChip tone={row.status === 'aq' && row.statuses.length === 1 ? 'accent' : 'neutral'}>
         {head}
-      </span>
-      {tail.length > 0 ? (
-        <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail.join(' — ')}</span>
-      ) : null}
+      </StatusChip>
+      {tail !== null ? <span className="block basis-full text-micro text-ink-2 md:mt-1">{tail}</span> : null}
     </>
   );
 }

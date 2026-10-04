@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
 import { CCS } from '../../lib/leagues';
+import { splitStatusLabel } from '../playoffs/playoff-view';
 import ExternalLink from '../ui/ExternalLink';
+import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
 
 /** 'MCAL tournament' | 'Super Regional' | 'playoff': the event a result-less team has no place in. */
@@ -49,19 +51,11 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
   }
   // The chip is the label's head; a level place's " — <rule> decides it" tail is the tiebreak
   // note's job below, not the chip's.
-  const [chip] = line.label.split(' — ');
+  const { head } = splitStatusLabel(line.label);
   return (
     <div className="sx-card p-5 text-meta">
       <p className="m-0 mb-3">
-        <span
-          className={
-            view.postseasonAccent
-              ? 'inline-block rounded-tag bg-accent-wash px-2 py-1 text-micro font-semibold text-accent-ink'
-              : 'inline-block rounded-tag bg-surface-3 px-2 py-1 text-micro font-semibold text-ink-2'
-          }
-        >
-          {chip}
-        </span>
+        <StatusChip tone={view.postseasonAccent ? 'accent' : 'neutral'}>{head}</StatusChip>
       </p>
       <p className="m-0 text-body text-ink">{line.sentence}</p>
       {standing?.tiebreak.shared && standing.tiebreak.note ? (

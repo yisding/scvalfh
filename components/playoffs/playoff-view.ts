@@ -381,6 +381,16 @@ export function recordLine(standing: Standing): string {
 }
 
 /**
+ * A status label's chip text and its tail: "Play-in game Oct 30 — a coin flip decides it" is the
+ * head "Play-in game Oct 30" and the tail "a coin flip decides it". The chip shows the head;
+ * /playoffs prints the tail under it, and the team page leaves it to the tiebreak note.
+ */
+export function splitStatusLabel(label: string): { head: string; tail: string | null } {
+  const [head, ...rest] = label.split(' — ');
+  return { head, tail: rest.length > 0 ? rest.join(' — ') : null };
+}
+
+/**
  * The row link's accessible sentence: name, place, record, points. It deliberately omits the
  * written status, which is real text in its own cell — repeating it would announce it twice.
  */

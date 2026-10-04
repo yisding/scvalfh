@@ -289,6 +289,17 @@ describe('buildPairingView — the BVAL play-in card', () => {
   });
 });
 
+describe('splitStatusLabel', () => {
+  it('splits a status label into the chip head and the " — " tail', () => {
+    expect(view.splitStatusLabel('Automatic qualifier'), VIEW).toEqual({ head: 'Automatic qualifier', tail: null });
+    expect(view.splitStatusLabel('Play-in game Oct 30 — a coin flip decides it'), VIEW).toEqual({
+      head: 'Play-in game Oct 30',
+      tail: 'a coin flip decides it',
+    });
+    expect(view.splitStatusLabel('A — b — c'), VIEW).toEqual({ head: 'A', tail: 'b — c' });
+  });
+});
+
 describe('keyDateRows', () => {
   it('lists the CCS dates and each league’s own date, labelled with its league, in date order', () => {
     const rows = view.keyDateRows(data.getPlayoffs().keyDates, [

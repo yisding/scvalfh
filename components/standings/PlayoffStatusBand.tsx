@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { ordinal } from '../../lib/format';
+import StatusChip from '../ui/StatusChip';
 
 import type { StatusGroup } from './standings-view';
 
@@ -88,15 +89,8 @@ export function PlayoffStatusBand({
             className="grid gap-3 py-3 md:grid-cols-[minmax(0,16rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's
-                  tones, accent-ink on the wash only for the automatic qualifiers. */}
-              <span
-                className={`inline-block rounded-tag px-2 py-0.5 leading-5 text-micro font-semibold ${
-                  group.status === 'aq' ? 'bg-accent-wash text-accent-ink' : 'bg-surface-3 text-ink-2'
-                }`}
-              >
-                {group.statusText}
-              </span>
+              {/* The sentence-case chip /playoffs uses: accent only for the automatic qualifiers. */}
+              <StatusChip tone={group.status === 'aq' ? 'accent' : 'neutral'}>{group.statusText}</StatusChip>
               <span className="text-meta text-ink-2">{group.label}</span>
             </dt>
             <dd className="m-0 flex flex-wrap content-start gap-2">
