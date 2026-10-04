@@ -19,6 +19,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { HistorySchema } from '../lib/history-schema';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,
@@ -330,8 +331,7 @@ describe('history: the SCVAL entry is scoped to SCVAL (SPEC §0.2 #12, §4.2)', 
     expect(varsity.length).toBe(scval.length);
   });
 
-  it('refuses a slug or a division from another league', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a slug or a division from another league', () => {
     expect(HistorySchema.safeParse(file).success).toBe(true);
     const foreign = structuredClone(file);
     foreign.leagues.scval.divisions[0].standings.varsity[0].slug = 'leigh';
@@ -562,11 +562,10 @@ describe('history: PCAL and MCAL are explicitly unavailable', () => {
     expect(mcal.checked.join(' ')).toContain('Playoffs/FieldHockeyPlayoffs_25.pdf (404');
   });
 
-  it('links MCAL\'s official 2025 all-league team without storing any of it', async () => {
+  it('links MCAL\'s official 2025 all-league team without storing any of it', () => {
     expect(file.leagues.mcal.alsoPublished).toEqual([
       { label: '2025 All-MCAL Field Hockey Team', url: 'https://www.mcalsports.org/FieldHockey.htm#FH25' },
     ]);
-    const { HistorySchema } = await import('../lib/history');
     // A link is all it may be: an awards block on an unavailable league is not part of the schema.
     const withAwards = structuredClone(file) as unknown as { leagues: { mcal: Record<string, unknown> } };
     withAwards.leagues.mcal.alsoPublished = [{ label: 'x', url: 'not a url' }];
@@ -600,8 +599,7 @@ describe('history: the EAL is explicitly unavailable', () => {
 });
 
 describe('history: the league-aware schema', () => {
-  it('refuses a file with a league missing, or a league that is neither available nor unavailable', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a file with a league missing, or a league that is neither available nor unavailable', () => {
     const missing = structuredClone(file) as unknown as { leagues: Record<string, unknown> };
     delete missing.leagues.mcal;
     expect(HistorySchema.safeParse(missing).success).toBe(false);
@@ -613,8 +611,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(odd).success).toBe(false);
   });
 
-  it('refuses a BVAL slug or division that belongs to SCVAL, and SCVAL ones in BVAL', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a BVAL slug or division that belongs to SCVAL, and SCVAL ones in BVAL', () => {
     const a = structuredClone(file);
     a.leagues.bval.divisions[0].standings.varsity[0].slug = 'los-gatos';
     expect(HistorySchema.safeParse(a).success).toBe(false);
@@ -623,8 +620,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(b).success).toBe(false);
   });
 
-  it('refuses a place gap and a record that disagrees with its w/l/t', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a place gap and a record that disagrees with its w/l/t', () => {
     const gap = structuredClone(file);
     gap.leagues.bval.divisions[0].standings.varsity[2].place = 4;
     expect(HistorySchema.safeParse(gap).success).toBe(false);
@@ -633,8 +629,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(drift).success).toBe(false);
   });
 
-  it('refuses an unavailable league without a reason, and an unknown provenance source', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses an unavailable league without a reason, and an unknown provenance source', () => {
     const noReason = structuredClone(file);
     noReason.leagues.pcal.reason = '';
     expect(HistorySchema.safeParse(noReason).success).toBe(false);

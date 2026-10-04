@@ -15,7 +15,7 @@
  * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
  * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.
  *
- * Nothing is written unless the assembled file passes lib/history.ts' own schema and the build
+ * Nothing is written unless the assembled file passes lib/history-schema.ts' schema and the build
  * found no problem (an unresolved school, a missing block): it exits 1 instead.
  *
  * Run once per season, by hand — NOT from the cron. These documents are published once a year and
@@ -29,8 +29,7 @@
  * sheet) are not a standings table and are not stored.
  */
 
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -52,6 +51,7 @@ import {
   type BvalStandingsBlock,
 } from '../lib/sources/bval-sheet';
 import { HttpClient } from '../lib/sources/http';
+import { HistorySchema } from '../lib/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
 import { stableStringify } from '../lib/stable-json';
@@ -356,23 +356,15 @@ async function main(): Promise<number> {
   }
   console.log('PCAL, MCAL, EAL: unavailable (see reasons in the file)');
 
-  // Validate with lib/history.ts' own schema before anything is written. That module also validates
-  // a file when it is imported; SCVAL_HISTORY points that import-time load at this candidate rather
-  // than the committed file, so a broken committed file cannot block the rebuild that replaces it.
+  // Validate against the contract before anything is written. lib/history-schema.ts does not load
+  // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild
+  // that replaces it.
   const json = stableStringify(history);
-  const candidate = path.join(mkdtempSync(path.join(tmpdir(), 'build-history-')), 'history.json');
-  writeFileSync(candidate, json, 'utf8');
-  process.env.SCVAL_HISTORY = candidate;
-  try {
-    const { HistorySchema } = await import('../lib/history');
-    const parsed = HistorySchema.safeParse(JSON.parse(json));
-    if (!parsed.success) {
-      for (const i of parsed.error.issues.slice(0, 10)) {
-        problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
-      }
+  const parsed = HistorySchema.safeParse(JSON.parse(json));
+  if (!parsed.success) {
+    for (const i of parsed.error.issues.slice(0, 10)) {
+      problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
     }
-  } catch (err) {
-    problems.push(`schema: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   if (problems.length) {

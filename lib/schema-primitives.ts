@@ -5,7 +5,7 @@
  *
  * One declaration each, so a dataset's validation messages and strictness never depend on which
  * file declared it: lib/snapshot-schema.ts, lib/rosters-schema.ts, lib/player-stats-schema.ts,
- * lib/clubs-schema.ts, lib/commits-schema.ts, lib/history.ts, lib/prior-season-schema.ts and
+ * lib/clubs-schema.ts, lib/commits-schema.ts, lib/history-schema.ts, lib/prior-season-schema.ts and
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
  * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
  * URLs). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
