@@ -79,7 +79,11 @@ async function read(
   }
 }
 
-/** When this url was last fresh in the previous snapshot. */
+/**
+ * When this url was last fresh in the previous snapshot. Unlike carriedFromOf it matches by url (a
+ * scoreboard row has no scope) and has no run-stamp fallback: a page the last run did not read
+ * (a new scoreboard date) was never fresh, so it gets no carriedFrom at all.
+ */
 function lastFresh(ctx: RunContext, url: string): string | undefined {
   const prior = ctx.previous?.sources.find((r) => r.url === url && (r.status === 'ok' || r.status === 'stale'));
   if (!prior) return undefined;

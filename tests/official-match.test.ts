@@ -526,6 +526,7 @@ describe('stepOfficial over the corpus', () => {
       fetchedAt: '2026-10-01T15:00:00.000Z',
       games: first.games,
       officialFixtures: first.unmatched,
+      sources: [],
     } as unknown as Snapshot;
     const rec = makeCtx({ transport: corpusTransport({ 'scval/pdf-text/de-anza': 503 }), previous });
     const res = await stepOfficial(rec.ctx, games);
@@ -539,6 +540,27 @@ describe('stepOfficial over the corpus', () => {
     expect(stamp(res.games, 'de-anza')).toEqual(stamp(first.games, 'de-anza'));
     expect(stamp(res.games, 'el-camino')).toEqual(stamp(first.games, 'el-camino'));
     expect(res.unmatched.filter((f) => f.division === 'de-anza')).toEqual(first.unmatched.filter((f) => f.division === 'de-anza'));
+  });
+
+  it('a grid that failed in the previous run too keeps the stamp of when it was last read', async () => {
+    const first = await stepOfficial(makeCtx().ctx, games);
+    const previous = {
+      fetchedAt: '2026-10-01T15:00:00.000Z',
+      games: first.games,
+      officialFixtures: first.unmatched,
+      sources: [
+        {
+          id: 'scval-pdf', kind: 'official-schedule', scope: { league: 'scval', division: 'de-anza' },
+          label: 'De Anza official schedule (PDF)', url: 'https://example.invalid/de-anza.pdf',
+          fetchedAt: '2026-10-01T15:00:00.000Z', status: 'stale', carriedFrom: '2026-09-30T15:00:00.000Z',
+        },
+      ],
+    } as unknown as Snapshot;
+    const rec = makeCtx({ transport: corpusTransport({ 'scval/pdf-text/de-anza': 503 }), previous });
+    await stepOfficial(rec.ctx, games);
+    expect(rec.sources.find((r) => r.scope?.division === 'de-anza')).toMatchObject({
+      status: 'stale', carriedFrom: '2026-09-30T15:00:00.000Z',
+    });
   });
 
   it('touches only the leagues in the run', async () => {

@@ -44,6 +44,7 @@ import {
   type ResourceKey,
   type RunContext,
 } from '../contract';
+import { carriedFromOf } from '../ledger';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
@@ -198,15 +199,17 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
     logMatch(ctx, league, result, fixtures.length);
   }
 
-  // Per division: a grid that was not read gets its previous annotations back.
+  // Per division: a grid that was not read gets its previous annotations back, stamped with when
+  // that grid was last read (carriedFromOf follows a row that was itself carried).
   for (const d of divisions) {
     if (read.has(d.id)) continue;
     const carried = carryDivision(ctx, state, league.id, d.id);
     const row = rows.get(d.id);
-    if (carried && row && row.status === 'error' && ctx.previous) {
-      rows.set(d.id, { ...row, status: 'stale', carriedFrom: ctx.previous.fetchedAt });
-    } else if (carried && row && ctx.previous) {
-      rows.set(d.id, { ...row, carriedFrom: ctx.previous.fetchedAt });
+    const carriedFrom = carriedFromOf(ctx.previous, (r) => r.kind === 'official-schedule' && r.scope?.division === d.id);
+    if (carried && row && row.status === 'error' && carriedFrom) {
+      rows.set(d.id, { ...row, status: 'stale', carriedFrom });
+    } else if (carried && row && carriedFrom) {
+      rows.set(d.id, { ...row, carriedFrom });
     }
   }
   for (const d of divisions) {
