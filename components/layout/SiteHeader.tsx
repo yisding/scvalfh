@@ -34,7 +34,8 @@ import TopNav from './TopNav';
  * days ago") is narrower than the widest stamp. (Eight links, DESIGN §16, needed tighter capsules
  * and a later stamp; §18's merge of Standings into Teams gave the room back.)
  *
- * The accessible name of the home link is always SITE_WORDMARK ("NorCal HS Field Hockey").
+ * The home link's accessible name always starts with its visible label: "NorCal HS FH Field Hockey"
+ * below 1280px, SITE_WORDMARK ("NorCal HS Field Hockey") from 1280px.
  * Content is capped at 1200px, with the same 16 / 24 / 32px gutter as <main>.
  */
 export interface SiteHeaderProps {
@@ -62,10 +63,12 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
       <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
         {/* The wordmark is the home link. `h-full` makes it the height of the bar, so the whole
             left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
-            1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp) and an
-            aria-hidden "FH" stands in for it, so the accessible name never changes and is never
-            read as "F H"; the tail's leading space keeps the computed name from
-            reading "NorCal HSField Hockey". The 6px of padding, cancelled by the negative margin, is
+            1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp) and
+            "FH" stands in for it. "FH" stays in the accessible name: the visible label has to be
+            part of the name (WCAG 2.5.3) so "click NorCal HS FH" works for voice control, and the
+            sr-only tail still spells it out, so the name is "NorCal HS FH Field Hockey" below 1280px
+            and "NorCal HS Field Hockey" from 1280px. The leading spaces keep the computed name from
+            reading "NorCal HSFH" or "NorCal HSField Hockey". The 6px of padding, cancelled by the negative margin, is
             room for the focus ring INSIDE the link: drawn outside, it ran into the screen edge. */}
         <Link
           href="/"
@@ -73,7 +76,8 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
           className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-1 rounded-chip px-1.5 xl:gap-2 text-ink no-underline focus-visible:-outline-offset-2"
         >
           <span className="text-body font-bold tracking-[-0.01em]">{WORDMARK_SHORT}</span>
-          <span aria-hidden="true" className="text-body font-medium tracking-[-0.01em] text-ink-2 xl:hidden">
+          <span className="text-body font-medium tracking-[-0.01em] text-ink-2 xl:hidden">
+            {' '}
             {WORDMARK_TAIL_ABBR}
           </span>
           <span className="sr-only xl:not-sr-only xl:text-body xl:font-medium xl:tracking-[-0.01em] xl:text-ink-2">
