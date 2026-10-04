@@ -8,6 +8,8 @@
  *   QF       Mon Oct 26  qf-1: 5 at 4; qf-2: 6 at 3 (the higher seed's field)
  *   SF       Wed Oct 28  re-seeded: the LARGER remaining seed number at #1 (sf-1), the smaller at #2 (sf-2)
  *   final    Fri Oct 30  at Tamalpais, a fixed site whoever the finalists are
+ * The quarterfinal (5 at 4, 6 at 3) and semifinal (3-6) seat numbers follow the 2026 sheet and are written
+ * here, not derived from config; the qualifier count and the last place come from `LeagueConfig.postseason`.
  * The sheet's "(lowest seed (3-6) left in the tournament) at (1st)" means lowest-RANKED: in 2025 #5 University
  * upset #4 Lick-Wilmerding and the semifinals were #5 University at #1 Redwood, #3 Marin Catholic at #2 Tamalpais.
  *
@@ -23,7 +25,7 @@
  */
 
 import { byDateThenId, sideOutcome } from './format';
-import { findDivision, findLeague, type LeagueConfig } from './leagues';
+import type { LeagueConfig } from './leagues';
 import { lastSpotOutcome } from './standings';
 import { getTeamById, getTeamBySlug } from './teams';
 import type {
@@ -55,8 +57,6 @@ export const SHOOTOUT_NOTE =
 export const EARLIER_MEETING_NOTE =
   'The higher draw number hosts because their earlier meeting did not produce a winner (MCAL Tie-Breaking Criteria: "or # if needed").';
 
-const DEFAULT_QUALIFIERS = 6;
-
 function tournamentOf(league: LeagueConfig): TournamentConfig {
   if (league.postseason.kind !== 'league-tournament') {
     throw new Error(`lib/postseason.ts: ${league.id} has no league tournament (postseason.kind '${league.postseason.kind}')`);
@@ -80,13 +80,15 @@ function makeGame(
 const clusterSize = (r: Standing): number => r.tiebreak.tiedWith.length + 1;
 const seatOf = (rows: readonly Standing[]): CrossoverSeat => rows.map((r) => ({ teamId: r.teamId, slug: r.slug }));
 
-/** Seeds 1..6 from the computed table (points, then the MCAL chain): the "cluster covers the slot" rule. */
-export function seedsFromStandings(rows: readonly Standing[]): Array<{ seed: number; seat: CrossoverSeat }> {
+/**
+ * Seeds 1..qualifiers (MCAL: 6) from the computed table (points, then the MCAL chain): the "cluster covers
+ * the slot" rule. Throws, like every builder here, for a league without a league tournament.
+ */
+export function seedsFromStandings(
+  rows: readonly Standing[], league: LeagueConfig,
+): Array<{ seed: number; seat: CrossoverSeat }> {
   const ranked = rows.filter((r) => r.hasReportedResults);
-  // The rows' league states its qualifier count (MCAL: 6).
-  const division = rows[0] ? findDivision(rows[0].division) : undefined;
-  const ps = division ? findLeague(division.leagueId)?.postseason : undefined;
-  const qualifiers = ps?.kind === 'league-tournament' ? ps.qualifiers : DEFAULT_QUALIFIERS;
+  const { qualifiers } = tournamentOf(league);
   const out: Array<{ seed: number; seat: CrossoverSeat }> = [];
   for (let seed = 1; seed <= qualifiers; seed++) {
     const covering = ranked.filter((r) => r.computed.place <= seed && seed < r.computed.place + clusterSize(r));
@@ -299,7 +301,7 @@ export function buildLeagueTournament(
   const own = rows.filter((r) => divisionIds.has(r.division));
   const decision = sixthPlaceRule(own, games, league);
 
-  const seeds = seedsFromStandings(own).slice(0, ps.qualifiers);
+  const seeds = seedsFromStandings(own, league);
   if (decision.playInNeeded !== 'no') {
     const idx = seeds.findIndex((s) => s.seed === L);
     if (idx >= 0) seeds[idx] = { seed: L, seat: decision.contenders.map((slug) => refOf(slug, seeds)) };
