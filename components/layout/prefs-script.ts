@@ -16,9 +16,10 @@
  * right home panel is the one painted first: CLS 0, no reordering, and with JS off or storage
  * blocked nothing is stamped and the first-visit view (with every link working) is what renders.
  *
- * This module has NO runtime import on purpose: the league ids and the 49-entry `{slug: league}`
- * map are arguments, so it is safe to import from a client module (components/ui/use-league.ts
- * reads `LEAGUE_KEY` and `PREFS_RESTAMP`) and from the root layout alike.
+ * This module imports only the import-free pinned-team-script leaf, on purpose: the league ids and
+ * the 49-entry `{slug: league}` map are arguments, so it is safe to import from a client module
+ * (components/ui/use-league.ts reads `LEAGUE_KEY` and `PREFS_RESTAMP`) and from the root layout
+ * alike.
  *
  * The stamp function is also kept on `window[PREFS_RESTAMP]`, so a `storage` event from another tab
  * can re-run EXACTLY this validation (ids, slug map, stale pin) instead of a second copy of it.
@@ -26,14 +27,13 @@
  * with `dangerouslySetInnerHTML`; `<html>` already carries `suppressHydrationWarning`.
  */
 
+import { PINNED_TEAM_KEY } from './pinned-team-script';
+
 /** The storage key of the remembered league: a league id, or `'all'` ("show every league"). */
 export const LEAGUE_KEY = 'scvalfh.league';
 
 /** `'all'` = the reader chose "every league" explicitly; it removes `data-league`. */
 export const ALL_LEAGUES = 'all';
-
-/** Same key as components/layout/pinned-team-script.ts (kept literal: no runtime import here). */
-const PIN_KEY = 'scvalfh.pinnedTeam';
 
 /** The global the script leaves behind so a cross-tab `storage` event can re-stamp. */
 export const PREFS_RESTAMP = '__sxPrefs';
@@ -73,7 +73,7 @@ export function buildPrefsScript({ leagueIds, slugLeague }: PrefsScriptInput): s
     `for(k in G){s=G[k].split(' ');for(i=s.length;i--;)M[s[i]]=k}` +
     `function f(){var l=null,p=null,h=Object.prototype.hasOwnProperty,e=null;` +
     `try{d.setAttribute('data-js','')}catch(x){}` +
-    `try{l=localStorage.getItem('${LEAGUE_KEY}');p=localStorage.getItem('${PIN_KEY}')}catch(x){l=null;p=null}` +
+    `try{l=localStorage.getItem('${LEAGUE_KEY}');p=localStorage.getItem('${PINNED_TEAM_KEY}')}catch(x){l=null;p=null}` +
     `try{var v=p&&h.call(M,p)?p:null;` +
     `if(v)d.setAttribute('data-pin',v);else d.removeAttribute('data-pin');` +
     `if(p&&!v)d.setAttribute('data-pin-stale','');else d.removeAttribute('data-pin-stale');` +
