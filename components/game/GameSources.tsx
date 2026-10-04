@@ -1,3 +1,4 @@
+import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
@@ -25,6 +26,13 @@ import type { GameModel } from './game-model';
  * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
  * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
  * when that page is also a result pill under the recap.
+ *
+ * The cross-check sentence follows the game's league config: a game counted in a division with no
+ * official schedule (`official.mode` 'none', spec D23), or a league-postseason game or a game between
+ * two members of a league none of whose divisions has one, is "a league game", never "an official" one,
+ * and a game between two members of a league that decides a level game on 1 v 1s
+ * (`rules.leagueOvertime` 'shootout') adds the backfill's D24 exception: a level si.com score is
+ * never used there.
  */
 
 export interface GameSourceLineProps {
@@ -154,6 +162,29 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   // The cross-check sentence is about a SCORE, so it only belongs on a game that has one.
   const isFinal = display.kind === 'final';
   if (teamRows.length === 0 && !isFinal) return null;
+  // D24 (lib/backfill.ts): the league BOTH sides belong to, when it decides a level game on 1 v 1s.
+  // Lookups here never throw: the snapshot schema checks a tag's league id only for shape, so an id
+  // no longer configured reads as no league (and the page renders) rather than failing the build.
+  const pairLeague =
+    home.team && away.team && home.team.league === away.team.league ? (findLeague(home.team.league) ?? null) : null;
+  const shootout = pairLeague?.rules.leagueOvertime === 'shootout' ? pairLeague : null;
+  // D23: a game with no schedule document behind it has league games, but no official ones. A
+  // counted game reads its division; any other reads the league of its league-postseason tag (the
+  // EAL Super Regional), else the league both sides belong to, when none of its divisions has one.
+  const tag = model.game.postseason;
+  const ownLeague =
+    tag?.kind === 'league-postseason' && tag.leagueId !== null ? (findLeague(tag.leagueId) ?? pairLeague) : pairLeague;
+  const unscheduled =
+    model.division !== null
+      ? findDivision(model.division)?.official.mode === 'none'
+      : ownLeague !== null && ownLeague.divisions.every((d) => d.official.mode === 'none');
+  const leagueGame = unscheduled ? 'a league game' : 'an official league game';
+  // One string, so a page outside both cases renders the same markup as before.
+  const crossCheck =
+    `Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for ${leagueGame}, or its row is clearly wrong, we publish si.com\u2019s score and mark it; when both have a score and disagree, we publish MaxPreps\u2019 and show the disagreement rather than choosing quietly.` +
+    (shootout
+      ? ` A level si.com score between two ${shootout.shortName} teams is never used: a varsity game there is decided on 1 v 1s, and si.com does not say who won them.`
+      : '');
 
   return (
     <section className={className} aria-labelledby="game-sources-kicker">
@@ -203,10 +234,7 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
               : 'm-0 max-w-prose text-meta text-ink-3'
           }
         >
-          Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When
-          MaxPreps has no result for an official league game, or its row is clearly wrong, we publish
-          si.com&rsquo;s score and mark it; when both have a score and disagree, we publish
-          MaxPreps&rsquo; and show the disagreement rather than choosing quietly.
+          {crossCheck}
         </p>
       ) : null}
     </section>

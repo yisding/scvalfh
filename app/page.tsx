@@ -44,7 +44,7 @@ export default function HomePage() {
     <div className="pb-section-lg">
       <div data-scope="all">
         <PageHeader
-          title="NorCal field hockey"
+          title="NorCal High School Field Hockey Teams"
           srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL, MCAL and EAL"
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
@@ -73,6 +73,7 @@ export default function HomePage() {
           <LeagueCard
             key={card.id}
             card={card}
+            wide={cards.length % 2 === 1 && i === cards.length - 1}
             // The last card of an odd count spans both columns of the two-up grid, so five cards
             // read 2 + 2 + 1 full-width rather than ending on an orphan half-card.
             className={cards.length % 2 === 1 && i === cards.length - 1 ? 'min-[390px]:col-span-2' : undefined}

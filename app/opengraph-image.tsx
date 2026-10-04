@@ -51,7 +51,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 64, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
+          <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
           <div style={{ display: 'flex', marginTop: 16, height: 2, background: '#3d444d' }} />
         </div>
 

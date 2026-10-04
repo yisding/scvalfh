@@ -3,7 +3,10 @@
  * published cross-check only (never for order). Rows resolve by GUID, then name. A member missing
  * from the table warns unless config lists it in `maxprepsMissing`; a row config lists in
  * `maxprepsExtraRows` (a known non-member, EAL: Red Bluff's 0-0-0 row) is skipped without a warning;
- * a row count different from `maxprepsTeamCount` (which counts those rows) warns. A row MaxPreps
+ * a row count different from `maxprepsTeamCount` (which counts those rows) warns. The health's
+ * `reportedRows` counts the members the table resolved to (no extra row, no unknown school), as a
+ * carried table does (its member standings with a reported row), so a fresh read and a carried one
+ * print the same count; the source row's `rowCount` stays the table as read. A row MaxPreps
  * leaves undated (`modifiedOn` null, parsed as '') never sets the table's upstream date.
  *
  * 0 rows / HTTP error / schema drift / network → SOURCE STALE, never an abort: the previous
@@ -100,7 +103,7 @@ async function readTable(ctx: PipelineContext, state: RunState, leagueId: League
   }
   if (info) {
     info.reportedTable = 'ok';
-    info.reportedRows = rows.length;
+    info.reportedRows = seen.size;
   }
   ctx.source({
     ...base,

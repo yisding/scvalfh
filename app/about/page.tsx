@@ -401,8 +401,9 @@ export default function AboutPage() {
   const allTeams = getTeams();
   const commitCount = getCommitsFile().commitments.length;
 
-  // Standings flattened over every division (no literal division keys).
-  const allStandings = Object.values(getAllStandings()).flat();
+  // Standings by division, and flattened over every division (no literal division keys).
+  const standingsByDivision = getAllStandings();
+  const allStandings = Object.values(standingsByDivision).flat();
 
   const sbliveCross = getSbliveCrossCheck();
   const backfilled = sbliveCross?.backfilled ?? [];
@@ -449,6 +450,7 @@ export default function AboutPage() {
       id: d.id,
       heading: summary.divisions.find((x) => x.id === d.id)?.heading ?? null,
       maxprepsUrl: leagueStandingsUrl(d.id),
+      memberRows: (standingsByDivision[d.id] ?? []).filter((s) => s.reported !== null).length,
       knownCause: d.knownCause,
       official:
         d.official.mode === 'none'
@@ -759,7 +761,7 @@ export default function AboutPage() {
             <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
               club teams
             </Link>{' '}
-            pages list {getClubs().length} youth clubs (those around these schools, plus any other club
+            pages list {getClubs().length} youth clubs (the clubs found around these schools, plus any other club
             a player here is tied to) and, for each, the players on these varsity rosters that a public
             page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
             MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s

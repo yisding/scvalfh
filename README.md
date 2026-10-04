@@ -1,4 +1,4 @@
-# NorCal Field Hockey (repo: scvalfh)
+# NorCal High School Field Hockey (repo: scvalfh)
 
 Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
 five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast
@@ -61,8 +61,8 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 49 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
 | `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
-| `/clubs` | "Which clubs do players here play for?" The 13 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
-| `/clubs/[slug]` | One club (13 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
+| `/clubs` | "Which clubs do players here play for?" The 16 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
+| `/clubs/[slug]` | One club (16 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the 49 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one; a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket) |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal` is a 404) |
@@ -347,7 +347,9 @@ pnpm fetch-player-stats --dry-run                            # parse and report,
 ### Clubs
 
 `data/clubs.json` holds the youth field hockey clubs around the 43 schools swept on 2026-10-03, plus any other club a
-rostered player is tied to, and the ties themselves: which players on the tracked varsity rosters
+rostered player is tied to, plus three clubs met near the EAL teams' schools on 2026-10-04 (D-City in Davis and
+Roseville FHC, in the Sacramento area, and Chico Hotshots, in the North State; neither area was searched for every
+club), and the ties themselves: which players on the tracked varsity rosters
 a public page ties to which club (`affiliations`, joined to `data/rosters.json` on team slug +
 MaxPreps athleteId). A club record has its name and the shorter name the site shows, city, region,
 website, founding year, one factual sentence, the teams and programs it lists (each with the page
@@ -387,32 +389,39 @@ the file's `season` is `data/rosters.json`'s; every affiliation joins a row of t
 row's own `fullName`, and the row is not JV; every stated class year agrees with the row's grade
 (MaxPreps', else the overlay's; a row with no grade has nothing to check).
 
-Coverage on 2026-10-03, counted from the file: **13 clubs** (San Francisco 2, South Bay 7, East Bay
-2, Marin 1, and HTC, a Connecticut club whose California program trains in La Jolla; none on the
-Peninsula or the Central Coast) and **72 affiliations for 66 of the 716 varsity rows, at 22 of the 43
-schools**: SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. Five players are
-tied to more than one club. The schools of the six EAL teams were swept on 2026-10-04 with the same rule and added three
-affiliations, all Davis players tied to NorCal Impact (so 75 affiliations for 69 players at 23 schools,
-the 13 clubs unchanged); no club record was added for the clubs the sweep met around Davis, Roseville
-and Chico (DESIGN §22.8). Of the 2026-10-03 sweep's 72, by status 55 are current, 11 past and 6
-unknown; by confidence 57 high and 15 medium. They rest on 229 source entries (232 with the EAL ties) on 105 distinct URLs:
-an entry is one page backing one tie, so a club roster, a watchlist or a news story counts once for
-every player it names. The URLs are 103 pages, because two are cited under two URLs each: Stick
-Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps
-career page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49
-on 11, news 34 on 6, event lists 26 on 3 (29 with the EAL ties on the same 3 URLs; the NFHCA's 2025 and 2026 high school watchlists, and one
-MAX Field Hockey invitational), NCSA 24 on 21, other 19 on 9 (mostly MAX Field Hockey's club and
-school pages), MaxPreps career pages 17 on 17, school sites 2 on 2, and one Hudl profile. Six clubs
-have tied players in that sweep: SF Hawks 31 (all current), NorCal Impact 19 (all current; 22 with the
-three 2026-10-04 Davis ties), Fly FHC 10, Infinity
-8, Lightning 3 and HTC 1. The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa,
-Stryker, Hayward Hawks, Lions and Golden Gate Rippers) have a page with an empty state.
+Coverage, counted from the file: **16 clubs** (San Francisco 2, South Bay 7, East Bay 2, Marin 1, the
+Sacramento area 2, the North State 1, and HTC, a Connecticut club whose California program trains in La
+Jolla; none on the Peninsula or the Central Coast, both searched; the Sacramento area and the North State
+were not searched for every club) and **80 affiliations for 71 of the 811 varsity rows, at 24 of the 49
+schools**. The 2026-10-03 sweep made 72 of them, for 66 of the 716 varsity rows at 22 of the 43 schools:
+SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. By status, 55 of those 72 are
+current, 11 past and 6 unknown; by confidence, 57 are high and 15 medium. The schools of the six EAL
+teams were swept on 2026-10-04 with the same rule. That sweep added eight affiliations for five players,
+at Davis and Pleasant Valley. Three Davis players are tied to NorCal Impact (current, the NFHCA's
+2026-08-27 watchlist) and to D-City (two `unknown` from the 2025 watchlist, which the 2026 one
+contradicts, and one `past` from the player's own NCSA profile). Two Pleasant Valley players are tied to
+Chico Hotshots (current, from the club-teams block of their own MaxPreps career pages). The sweep also
+added three club records for clubs it met: D-City (Davis), Roseville FHC and Chico Hotshots. All 80
+split 60 current, 12 past and 8 unknown, and 65 high and 15 medium. Eight players are tied to more than
+one club. The ties rest on 237 source entries on 108 distinct URLs (229 on 105 for the 2026-10-03
+sweep). An entry is one page backing one tie, so a club roster, a watchlist or a news story counts once
+for every player it names. The URLs are 106 pages, because two are cited under two URLs each: Stick
+Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps career
+page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49 on 11,
+news 34 on 6, event lists 31 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one MAX Field
+Hockey invitational), NCSA 25 on 22, other 19 on 9 (mostly MAX Field Hockey's club and school pages),
+MaxPreps career pages 19 on 19, school sites 2 on 2, and one Hudl profile. Eight clubs have tied
+players: SF Hawks 31 (all current), NorCal Impact 22 (all current), Fly FHC 10, Infinity 8, Lightning 3,
+D-City 3 (none current), Chico Hotshots 2 (both current) and HTC 1. The other eight (Pac Heights,
+Performance Field Hockey, San Jose Khalsa, Stryker, Hayward Hawks, Lions, Golden Gate Rippers and
+Roseville FHC) have a page with an empty state.
 
 **It is research, not a script.** Like the roster overlay, it was gathered by hand from club
 directories, the clubs' own sites, recruiting profiles, MaxPreps career pages, the NFHCA's high
 school watchlists, MAX Field Hockey's club pages and local news. Every tie of the 2026-10-03 sweep
 was checked twice that day: a checker re-opened each source, then an independent refuter tried to
-break the match. The three ties the 2026-10-04 EAL sweep added were each confirmed by two verifiers.
+break the match. The eight ties the 2026-10-04 EAL sweep added were each confirmed by two
+independent checks that re-opened their sources.
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
@@ -466,9 +475,9 @@ program has a commitment, a college has one program per sport, one commitment pe
 sources agree with each other on a class a high school roster of the season can hold.
 
 Coverage on 2026-10-04, counted from the file (the six EAL teams' schools were swept the same day for
-field hockey commitments, and none was found): **16 commitments, 16 players at 9 of the 49 schools,
-to 14 colleges (15 programs).** By sport, 7 in field hockey, 7 in lacrosse, 1 in soccer (St. Lawrence)
-and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
+field hockey commitments and then in the every-sport round, and none was found): **16 commitments,
+16 players at 9 of the 49 schools, to 14 colleges (15 programs).** By sport, 7 in field hockey, 7
+in lacrosse, 1 in soccer (St. Lawrence) and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
 each), BVAL 2 (Christopher), PCAL 1 (Stevenson), MCAL 4 (Redwood 2, Berkeley, Marin Catholic), EAL none. By class
 13 from 2027 and 3 from 2028; by level 9 to NCAA Division I programs, 1 to Division II and 6 to
 Division III. The field hockey seven: UC Davis 2, Colgate, Iowa (Division I), Maryville (II), Bates
@@ -502,8 +511,17 @@ index for all 716 rows on the 43 teams then tracked, the field hockey, lacrosse 
 2025-26 story on 18 student papers and 8 local papers, and the club-tied players one by one. It found nine commitments in other sports
 and no new field hockey one that meets the rule; a checker and an independent refuter re-opened each
 (both kept the nine, and the refuter dropped a field hockey "planning to continue" that is a plan,
-not a commitment), and a final audit found every quote in the file on its page. Recall is partial:
-see `docs/DATA-SOURCES.md` §1.1j3 for the sources, what was rejected and why, and the gaps.
+not a commitment), and a final audit found every quote in the file on its page. Later that day the
+round was taken to the six EAL teams' schools, whose 95 rows had been swept for field hockey only:
+the same field hockey, lacrosse and soccer college pages and lists, ClubLax, TopDrawerSoccer and
+SoccerWire, NorCal club lists in five sports, a search of each of the 95 names since January 2025
+on five local papers' sites (the first 20 results on four of them) with full crawls of two papers'
+high school sections, two student papers, and two web searches for each junior and senior; the same
+day's recruiting-profiles research ran a SportsRecruits profile probe for all 95 in every sport and
+NCSA and FieldLevel probes for field hockey. It found no commitment in any sport; SportsRecruits'
+athlete search was not run for these rows and their freshmen and sophomores got no web searches, so
+EAL recall is lower than the other leagues'. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3
+for the sources, what was rejected and why, and the gaps.
 
 **When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
@@ -927,15 +945,17 @@ at once, at every build, starting from last season's:
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table
   as if it were complete.
 - **Club recall is partial.** A player is tied to a club only when a public page meets the linking
-  rule, so on 2026-10-04 69 of the 811 varsity rows have a club line, and 26 schools have none (seven
+  rule, so on 2026-10-04 71 of the 811 varsity rows have a club line, and 25 schools have none (seven
   of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
-  were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added three Davis ties),
+  were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added eight ties for five players at Davis and
+  Pleasant Valley, and three club records),
   and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
   the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
-  schools on 2026-10-04, for field hockey commitments only, with none found): a later signing,
+  schools on 2026-10-04, for field hockey and then every sport, with none found, though without
+  SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
 - JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
@@ -1017,8 +1037,8 @@ both load `.env` the way Next does. The Workers build empties `dist/` (it stages
 there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `pnpm start:vinext`.
 
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
-`next build` does — about 536 pages plus a 404 with the current snapshot, clubs and commitments
-files (537 .html on 2026-10-04, 14 of them the clubs pages and one `/commits`; the exact counts are
+`next build` does — about 539 pages plus a 404 with the current snapshot, clubs and commitments
+files (540 .html on 2026-10-04, 17 of them the clubs pages and one `/commits`; the exact counts are
 derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`),
 all `revalidate: false` in `dist/server/vinext-prerender.json`: every page (HTML and RSC payload)
 plus a 404 page, and every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root,

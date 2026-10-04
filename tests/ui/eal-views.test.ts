@@ -298,6 +298,39 @@ describe('/about, the EAL parts', () => {
     );
     expect(text).not.toMatch(/official league result|EAL schedule \(/);
   });
+
+  it('counts the member rows of the MaxPreps table, never its extra non-member row', () => {
+    const card = /<article[^>]*aria-label="EAL data health"[^>]*>([\s\S]*?)<\/article>/.exec(aboutHtml)?.[1] ?? '';
+    const health = data.getLeagueHealth(LEAGUE).divisions[0];
+    const members = data.getStandings(LEAGUE).filter((s) => s.reported !== null).length;
+    expect(health.reportedTable, 'lib/pipeline/steps/reported.ts').toBe('ok');
+    expect(health.reportedRows, 'lib/pipeline/steps/reported.ts: the members the table resolved to').toBe(members);
+    expect(textOf(card), 'components/about/LeagueHealthCard.tsx').toContain(`read this run (${members} member rows).`);
+  });
+
+  it('counts member rows from the standings, so an older snapshot’s stored count cannot print a wrong one', async () => {
+    // A snapshot written before reported.ts stopped counting MaxPreps' extra row stored one more
+    // than the members (7 for the six EAL teams); the card must still print the member count.
+    const { LeagueHealthCard } = await import('../../components/about/LeagueHealthCard');
+    const health = data.getLeagueHealth(LEAGUE);
+    const stale = { ...health, divisions: health.divisions.map((d) => ({ ...d, reportedRows: (d.reportedRows ?? 0) + 1 })) };
+    const division = leagues.getLeague(LEAGUE).divisions[0];
+    const members = data.getStandings(division.id).filter((s) => s.reported !== null).length;
+    const html = renderToStaticMarkup(
+      createElement(LeagueHealthCard, {
+        shortName: 'EAL',
+        name: 'Eastern Athletic League',
+        health: stale,
+        divisions: [
+          { id: division.id, heading: null, maxprepsUrl: 'https://example.invalid/', memberRows: members, knownCause: null, official: { mode: 'none', note: 'n' } },
+        ],
+        dropped: 0,
+        problems: [],
+      }),
+    );
+    expect(textOf(html)).toContain(`(${members} member rows)`);
+    expect(textOf(html)).not.toContain(`(${members + 1} member rows)`);
+  });
 });
 
 describe('/history/2025-26#eal', () => {

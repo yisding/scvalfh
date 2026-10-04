@@ -187,10 +187,24 @@ describe('the EAL reported table (tests/fixtures/maxpreps/standings-eal-2026-10-
     const source = result!.snapshot.sources.find((r) => r.kind === 'reported-standings' && r.scope?.division === 'eal');
     const newest = rows.map((r) => r.modifiedOn).filter(Boolean).sort().at(-1);
     expect(source).toMatchObject({ status: 'ok', rowCount: eal.maxprepsTeamCount, upstreamModifiedOn: newest });
+    // The health counts member rows only (the source row keeps the table as read), so it matches a carried table.
     const health = result!.snapshot.leagueHealth.find((h) => h.leagueId === 'eal')!;
-    expect(health.divisions[0]).toMatchObject({ reportedTable: 'ok', reportedRows: eal.maxprepsTeamCount });
+    expect(health.divisions[0]).toMatchObject({ reportedTable: 'ok', reportedRows: rows.length - extra.length });
     // Every member gets its reported row; the non-member row reaches no standing.
     const reportedSlugs = result!.snapshot.standings.filter((st) => st.division === 'eal' && st.reported).map((st) => st.slug);
     expect(reportedSlugs.sort()).toEqual(teamsInDivision('eal').map((t) => t.slug).sort());
+    expect(health.divisions[0].reportedRows).toBe(reportedSlugs.length);
+  });
+
+  it('a fresh read and a carried copy of the table report the same row count', async () => {
+    const variant = writeTempVariant({ 'maxpreps/standings/eal': { rel: 'maxpreps/standings/eal.json', body } });
+    const fresh = (await runCorpus({ variants: [variant], extraArgs: ['--leagues', 'eal'] })).result!.snapshot;
+    const failed = writeTempVariant({ 'maxpreps/standings/eal': 503 });
+    const { result } = await runCorpus({ variants: [failed], extraArgs: ['--leagues', 'eal'], previous: fresh });
+    const freshEal = fresh.leagueHealth.find((h) => h.leagueId === 'eal')!.divisions[0];
+    const carriedEal = result!.snapshot.leagueHealth.find((h) => h.leagueId === 'eal')!.divisions[0];
+    expect(freshEal.reportedTable).toBe('ok');
+    expect(carriedEal.reportedTable).toBe('carried');
+    expect(carriedEal.reportedRows).toBe(freshEal.reportedRows);
   });
 });

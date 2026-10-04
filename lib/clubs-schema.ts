@@ -1,11 +1,13 @@
 /**
  * The Zod contract for data/clubs.json — the youth field hockey clubs around the 43 schools swept on
- * 2026-10-03, plus any club a tracked player is tied to, and which players on the tracked varsity
- * rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
+ * 2026-10-03, plus any club a tracked player is tied to, plus three clubs met near the EAL teams'
+ * schools on 2026-10-04 (notes[4]), and which players on the tracked varsity rosters a public page
+ * ties to one (SPEC §1.1j2, DESIGN §17).
  *
- * The file is research, not a script's output: it was written by hand on its `capturedAt` date,
- * every affiliation checked twice (a checker re-opened each source, then an independent refuter
- * tried to break it), and a later sweep added ties checked by two verifiers (notes[5]); nothing
+ * The file is research, not a script's output: it was begun by hand on its `capturedAt` date (the
+ * first sweep), every affiliation checked twice (a checker re-opened each source, then an
+ * independent refuter tried to break it); a later sweep added ties and three club records
+ * (notes[5]), each tie checked twice, and each club record is dated by its own `checkedOn`; nothing
  * rebuilds it. Its facts are fixed; this contract only says what shape they must have.
  *
  * Separate from lib/clubs.ts (the read API, which imports the file) so tests and scripts can parse
@@ -33,7 +35,11 @@ import { z } from 'zod';
 
 import { TEAMS } from './teams';
 
-/** Where a club is based. Also the display order of /clubs' regions. */
+/**
+ * Where a club is based. Also the display order of /clubs' regions. `sacramento` (D-City, Roseville
+ * FHC) and `north-state` (Chico Hotshots) hold clubs met near the EAL teams' schools; neither area
+ * was searched for every club (lib/clubs.ts SEARCHED_REGIONS).
+ */
 export const CLUB_REGIONS = [
   'san-francisco',
   'peninsula',
@@ -42,6 +48,7 @@ export const CLUB_REGIONS = [
   'marin',
   'central-coast',
   'sacramento',
+  'north-state',
   'elsewhere',
 ] as const;
 export type ClubRegion = (typeof CLUB_REGIONS)[number];
@@ -118,6 +125,29 @@ export function isBannedHost(url: string): boolean {
     return false; // not a URL at all: isHttpsUrl refuses it under its own message
   }
   return BANNED_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+}
+
+/**
+ * Hosts that serve many unrelated sites, and how many leading path segments name one site there:
+ * Google Sites `/view/<site>` or `/<domain>/<site>` (2; 3 for classic `/a/<domain>/<site>`), TeamLinkt `/<league slug>` (1). A club's own
+ * site on one of them is the host plus those segments, so Davis High's Google Site is never taken
+ * for D-City's. Shared with components/commits/commit-view.ts.
+ */
+export const SHARED_SITE_HOSTS: ReadonlyMap<string, number> = new Map([
+  ['sites.google.com', 2],
+  ['leagues.teamlinkt.com', 1],
+]);
+
+/** Which site a URL is on: the host without `www.`, or, on a shared host, the host plus its site's path segments, lowercased. */
+export function clubSiteKey(url: string): string {
+  const u = new URL(url);
+  const host = u.hostname.toLowerCase().replace(/^www\./, '');
+  const depth = SHARED_SITE_HOSTS.get(host);
+  if (depth === undefined) return host;
+  const segments = u.pathname.toLowerCase().split('/').filter(Boolean);
+  // Classic Google Sites: /a/<domain>/<site>, one segment deeper than /<domain>/<site>.
+  const n = host === 'sites.google.com' && segments[0] === 'a' ? depth + 1 : depth;
+  return [host, ...segments.slice(0, n)].join('/');
 }
 
 /** Parses as a URL, and the scheme is https: these end up in an href. */

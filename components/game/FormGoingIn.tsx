@@ -59,8 +59,9 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
       {side.team ? (
         // The strip and "→ then [chip]" are ONE unit that never splits: when it does not fit
         // beside the name it moves whole, so the outcome chip never sits alone on a line. Below
-        // 360px it always takes its own line, aligned under the name.
-        <span className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap max-[359px]:ml-0 max-[359px]:basis-full max-[359px]:pl-[2.125rem]">
+        // 360px it always takes its own line, aligned under the name, and wraps: a linked strip is
+        // 40px a chip, so four or five games plus "then L" are wider than that line at 320.
+        <span className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap max-[359px]:ml-0 max-[359px]:basis-full max-[359px]:flex-wrap max-[359px]:gap-y-1 max-[359px]:pl-[2.125rem]">
           <FormStrip
             entries={side.formBefore}
             size={20}
