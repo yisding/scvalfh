@@ -12,7 +12,15 @@ import { LEAGUES, getLeague } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import type { PriorSeason } from '../../lib/prior-season-schema';
-import { ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, computeRatings, type TeamRating } from '../../lib/ratings';
+import {
+  ELO_BASE,
+  ELO_PER_GOAL,
+  MARGIN_CAP,
+  computeRatings,
+  getRatings,
+  type RatingTable,
+  type TeamRating,
+} from '../../lib/ratings';
 import type {
   FieldStatKey,
   GoalieStatKey,
@@ -534,16 +542,11 @@ export interface EloBoardView {
 }
 
 /**
- * The Elo board (DESIGN §20), from the same teams and games as the rest of the page. Exported
- * because each team page reads its own place on it: a team page says "3rd on the Elo board"
- * only for a row this board lists, so the two cannot disagree.
+ * The Elo board (DESIGN §20), from a rating table over the same teams and games as the rest of the
+ * page. getEloBoard is the bundled instance: each team page reads its own place on it, so a team
+ * page says "3rd on the Elo board" only for a row this board lists, and the two cannot disagree.
  */
-export function buildEloBoard(
-  teams: readonly Team[],
-  games: readonly Game[],
-  prior: PriorSeason | null = null,
-): EloBoardView {
-  const table = computeRatings(teams, games, prior);
+export function buildEloBoard(teams: readonly Team[], table: RatingTable): EloBoardView {
   const teamById = new Map(teams.map((t) => [t.id, t]));
   const lines = table.ratings.map((rating) => ({ team: teamById.get(rating.teamId)!, rating }));
   const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
@@ -608,10 +611,24 @@ function belowMinimum(
     .map((l) => `${l.team.name} (${gp(l)})`);
 }
 
+let bundledBoard: EloBoardView | null = null;
+
+/**
+ * The Elo board over the bundled snapshot and prior season (lib/ratings.ts getRatings), built once
+ * per process: what /leaders prints and what each team page reads its place from.
+ */
+export function getEloBoard(): EloBoardView {
+  return (bundledBoard ??= buildEloBoard(getSnapshot().teams, getRatings()));
+}
+
 // ---------------------------------------------------------------- the page
 
-export function buildLeadersView(sources: LeaderSources = defaultSources()): LeadersView {
-  const { teams, stats, standings, games } = sources;
+/** The /leaders page, from the bundled data by default or from `sources` (tests). */
+export function buildLeadersView(sources?: LeaderSources): LeadersView {
+  const elo = sources
+    ? buildEloBoard(sources.teams, computeRatings(sources.teams, sources.games, sources.prior ?? null))
+    : getEloBoard();
+  const { teams, stats, standings, games } = sources ?? defaultSources();
   const teamBySlug = new Map(teams.map((t) => [t.slug, t]));
 
   // ---- players
@@ -665,7 +682,6 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   const overallMin = qualifyingMinimum(lines.map((l) => l.overall.gp));
   const leagueMin = qualifyingMinimum(lines.map((l) => l.league.gp));
 
-  const elo = buildEloBoard(teams, games, sources.prior ?? null);
   const schools: LeaderBoard[] = [
     recordBoard(
       'best-record',

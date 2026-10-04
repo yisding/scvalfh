@@ -41,7 +41,6 @@ import {
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
-import { getPriorSeason } from '../../lib/prior-season';
 import { outcomesFor } from '../../lib/standings';
 import type {
   DivisionId,
@@ -56,7 +55,7 @@ import type {
   TeamSlug,
 } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
-import { buildEloBoard, type EloBoardView } from '../leaders/leaders-view';
+import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame } from '../ui/game-view';
@@ -106,21 +105,19 @@ export interface TeamEloView {
   boardPlace: { rank: number; tied: boolean } | null;
 }
 
-let eloBoard: EloBoardView | null = null;
-
-/** The Elo card for one team, from the same board /leaders prints (built once per process). */
+/** The Elo card for one team, read off the board /leaders prints (getEloBoard), so the two cannot disagree. */
 export function teamElo(slug: TeamSlug): TeamEloView {
-  eloBoard ??= buildEloBoard(getTeams(), getGames(), getPriorSeason());
-  const rating = eloBoard.ratingBySlug.get(slug);
-  const row = eloBoard.board.rows.find((r) => r.team.slug === slug);
-  const minGames = eloBoard.minimum.min;
+  const board = getEloBoard();
+  const rating = board.ratingBySlug.get(slug);
+  const row = board.board.rows.find((r) => r.team.slug === slug);
+  const minGames = board.minimum.min;
   const games = rating?.games ?? 0;
   return {
     elo: rating?.elo ?? null,
     games,
     preseason: rating !== undefined && games === 0,
     provisional: rating !== undefined && games > 0 && games < minGames,
-    seededFrom: eloBoard.seededFrom,
+    seededFrom: board.seededFrom,
     seeded: rating?.seeded ?? false,
     minGames,
     boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
