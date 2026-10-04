@@ -28,17 +28,12 @@ import { SITE_SCOPE_NOTE } from './site-url';
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
  * SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back on every
  * row, and say on every page where the numbers came from.
- *
- * `links` carries the page-specific deep links — the team's or the game's own source page.
  */
 export interface AttributionProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
   snapshotAt: string;
   /** The instant staleness is measured against (the build instant). */
   now?: string;
-  links?: { label: string; href: string }[];
-  /** A credit line for the page, e.g. the prior-season sources on /history. */
-  extraCredit?: string;
   className?: string;
 }
 
@@ -57,7 +52,7 @@ function joined(items: readonly React.ReactNode[]): React.ReactNode[] {
   ));
 }
 
-export function Attribution({ snapshotAt, now, links, extraCredit, className }: AttributionProps) {
+export function Attribution({ snapshotAt, now, className }: AttributionProps) {
   const seasonComplete = getSitePhase() === 'complete';
   const notAffiliated = [
     ...LEAGUES.map((l) => l.shortName),
@@ -107,9 +102,9 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           </p>
           <p className="mt-2 mb-0">{SITE_SCOPE_NOTE}</p>
         </div>
-        {/* The deep links, "About & sources" and the archive link are standalone actions, not words
-            in a sentence, so each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose
-            links in the paragraph above do not: they sit inside a sentence, which is the case 2.5.8
+        {/* "About & sources" and the archive link are standalone actions, not words in a
+            sentence, so each takes its own 24px box (`sx-action`, WCAG 2.5.8). The prose links in
+            the paragraph above do not: they sit inside a sentence, which is the case 2.5.8
             exempts. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
@@ -121,15 +116,6 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
             2025-26 archive
           </Link>
-          {links && links.length > 0 ? (
-            <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
-              {links.map((l) => (
-                <ExternalLink key={l.href} href={l.href} className="sx-action">
-                  {l.label}
-                </ExternalLink>
-              ))}
-            </div>
-          ) : null}
         </div>
         {/* The divider spans the whole footer grid; only the sentence is capped at the prose
             measure (32em, `--max-width-prose`). */}
@@ -137,7 +123,6 @@ export function Attribution({ snapshotAt, now, links, extraCredit, className }: 
           <p className="m-0 max-w-prose text-meta text-ink-3">
             Unofficial; not affiliated with {notAffiliated} or SI. Records are computed from
             published game results and may differ from official standings.
-            {extraCredit ? ` ${extraCredit}` : ''}
           </p>
         </div>
       </div>

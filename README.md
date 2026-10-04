@@ -966,9 +966,10 @@ at once, at every build, starting from last season's:
 
 ## Attribution and legal posture
 
-Every page that shows league data carries a visible attribution line and deep-links back to the
-originating MaxPreps/SBLive/league/cifccs.org page (`components/layout` attribution + every
-`Game`/`Standing` row's outbound link). This site stores its own **derived** records — normalized
+Every page carries the same visible attribution line in the global footer
+(`components/layout/Attribution.tsx`, rendered once by the root layout), and the deep links back
+to the originating MaxPreps/SBLive/league/cifccs.org page live on the rows themselves: every
+`Game`/`Standing` row's outbound link, the game page's sources and the team page. This site stores its own **derived** records — normalized
 scores and independently computed standings — not verbatim copies of any source page, refreshes
 on a self-imposed 1-2-runs-a-day budget well under any observed rate limit, sends an identifying
 User-Agent, and serves only its own cached static snapshot (it never proxies a live upstream

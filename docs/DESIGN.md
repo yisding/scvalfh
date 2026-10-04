@@ -2138,16 +2138,17 @@ scrollbars in step.
 ```ts
 interface AttributionProps {
   snapshotAt: string;              // ISO instant
-  links?: { label: string; href: string }[];   // page-specific deep links
-  extraCredit?: string;            // "Prior-season data from scval.com" on /history
+  now?: string;                    // the instant staleness is measured against (the build)
 }
 ```
 
-Always visible, never a tooltip, on **every** page: **"Data from MaxPreps and SBLive/SI"**
-followed by real deep links — the league page on both sources site-wide, and the *team's* or
-*game's* page when the component sits on `/teams/[slug]`, `/game/[id]`, or in an expanded
-`GameRow`. Plus the snapshot timestamp in Pacific, a link to `/about`, and the not-affiliated
-line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
+Always visible, never a tooltip, on **every** page: **"Data from MaxPreps and High School on SI
+(si.com)"**, each name a real link to the source. The footer is rendered once, by the root
+layout, so it carries only the global attribution and takes no per-page props: the *team's* and
+*game's* own source pages are deep-linked on the rows themselves, in `GameSources` on
+`/game/[id]` and on the team page, and `/history/2025-26`'s `scval.com` credit sits in that
+page's body (§3.9). Plus the snapshot timestamp in Pacific, a link to `/about`, and the
+not-affiliated line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
 
 **Stale-snapshot treatment** (`editorial`): at > 36h the footer stamp switches to `--sx-text`
 body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be
