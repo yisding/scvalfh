@@ -30,7 +30,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { ALL_DIVISIONS, getDivision, leagueOfDivision } from '../leagues';
-import { officialFixtureId } from '../official/schema';
+import { officialDocumentOf, officialFixtureId } from '../official/schema';
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '../teams';
 import type { DivisionId, Game, OfficialFixture, TeamSlug } from '../types';
 import { HttpClient, type HttpClientOptions } from './http';
@@ -41,12 +41,12 @@ import { HttpClient, type HttpClientOptions } from './http';
  * iterates these ONLY, so a bundled BVAL/PCAL/MCAL division can never be counted as a missing grid.
  */
 export function scvalPdfDivisions(): DivisionId[] {
-  return ALL_DIVISIONS.filter((d) => d.official.source === 'scval-pdf' && d.official.mode === 'live-pdf').map((d) => d.id);
+  return ALL_DIVISIONS.filter((d) => d.official.mode === 'live-pdf' && d.official.source === 'scval-pdf').map((d) => d.id);
 }
 
-/** The grid PDF of a division, from config (`getDivision(d).official.scheduleUrl`). */
+/** The grid PDF of a division, from config (`getDivision(d).official.scheduleUrl`; throws for a division with no schedule document). */
 export function scvalScheduleUrl(division: DivisionId): string {
-  return getDivision(division).official.scheduleUrl;
+  return officialDocumentOf(division).scheduleUrl;
 }
 
 export const SCVAL_FALL_INDEX = 'https://scval.com/fallSports/Fall_index.html';

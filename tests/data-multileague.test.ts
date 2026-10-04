@@ -7,7 +7,8 @@
  * are exact.
  *
  * Every assertion message names the module that produces the value, so a failure is routed to its
- * owner.
+ * owner. The corpus's manifest names four leagues: the EAL (added later) is frozen "not fetched in this
+ * run", with its six teams and an empty table.
  */
 
 import { readFileSync } from 'node:fs';
@@ -77,15 +78,15 @@ const MCAL_TABLE = [
 
 const MCAL_SEEDS = ['tamalpais', 'university-sf', 'redwood', 'marin-catholic', 'convent-sacred-heart', 'lick-wilmerding'];
 
-describe('both runs: the four leagues through lib/data', () => {
-  it('serve 43 teams, every league fresh, and the configured division tables', () => {
+describe('both runs: the corpus leagues through lib/data', () => {
+  it('serve 49 teams, every corpus league fresh (the EAL frozen), and the configured division tables', () => {
     for (const v of variants) {
-      expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(43);
+      expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(49);
       expect(
         v.data.getAllLeagueHealth().map((h) => `${h.leagueId}:${h.state}`),
         `lib/pipeline/steps/standings.ts: LeagueHealth states [${v.name}]`,
-      ).toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh']);
-      const shape = (['scval', 'bval', 'pcal', 'mcal'] as const).map((l) =>
+      ).toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
+      const shape = (['scval', 'bval', 'pcal', 'mcal', 'eal'] as const).map((l) =>
         v.data.getLeagueStandings(l).map((d) => `${d.division}:${d.heading ?? '-'}:${d.rows.length}`),
       );
       expect(shape, `lib/data.ts getLeagueStandings [${v.name}]`).toEqual([
@@ -93,7 +94,30 @@ describe('both runs: the four leagues through lib/data', () => {
         ['mt-hamilton:Mt. Hamilton:6', 'santa-teresa:Santa Teresa:6'],
         ['pcal:-:7'],
         ['marin-county:-:9'],
+        ['eal:-:6'],
       ]);
+    }
+  });
+
+  it("the EAL, not in this corpus's run: no counted game, no missing league result", () => {
+    for (const v of variants) {
+      expect(v.data.getMissingOfficialResults('eal'), `lib/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`).toEqual([]);
+      const eal = v.data.getAllLeagueHealth().find((h) => h.leagueId === 'eal');
+      expect(eal?.divisions, `lib/pipeline/steps/standings.ts: EAL DivisionHealth [${v.name}]`).toEqual([
+        {
+          divisionId: 'eal',
+          meta: 'skipped',
+          reportedTable: 'skipped',
+          reportedRows: null,
+          classification: 'contest-type',
+          official: null,
+          countedFinals: 0,
+          previousCountedFinals: null,
+          backfilled: 0,
+          missingLeaguePast: 0,
+        },
+      ]);
+      expect(v.snapshot.counts.byLeague.eal.leagueGames, `lib/pipeline/steps/assemble.ts [${v.name}]`).toBe(0);
     }
   });
 

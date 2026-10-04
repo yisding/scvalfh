@@ -19,8 +19,8 @@
  * the diff, because a wrong season id would silently publish last year's table.
  *
  * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
- * default pass (one team per division, 6 divisions) moves ~4.4 MB; probing all 43 teams would move
- * ~32 MB. That is why the daily cron never touches this endpoint.
+ * default pass (one team per division, 7 divisions) moves ~5.2 MB; probing all 49 teams would move
+ * ~36 MB. That is why the daily cron never touches this endpoint.
  */
 
 import { MaxPrepsClient, MaxPrepsError } from '../lib/sources/maxpreps';

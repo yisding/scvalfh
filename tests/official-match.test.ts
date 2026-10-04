@@ -21,7 +21,7 @@ import { classifyGames, postseasonTag } from '../lib/classify';
 import { DATA_QUALITY, LEAGUES, getLeague } from '../lib/leagues';
 import { applyExclusions, normalizeGames } from '../lib/normalize';
 import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '../lib/official/match';
-import { loadBundledFixtures } from '../lib/official/schema';
+import { loadBundledFixtures, officialDocumentOf } from '../lib/official/schema';
 import { officialChangesCellText, officialChangesHash, sha256Hex } from '../lib/official/validate';
 import {
   FixtureMissing,
@@ -170,7 +170,7 @@ describe('two-phase matcher on the all-2026-10-02 corpus', () => {
 
 const fx = (division: string, dateKey: string, away: string, home: string): OfficialFixture => {
   const league = LEAGUES.find((l) => l.divisions.some((d) => d.id === division))!;
-  const source = league.divisions.find((d) => d.id === division)!.official.source;
+  const source = officialDocumentOf(division).source;
   return {
     id: `${division}:${dateKey}:${away}@${home}`, league: league.id, division, dateKey, time: null,
     awayName: away, homeName: home, awaySlug: away, homeSlug: home, source,

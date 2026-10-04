@@ -13,13 +13,15 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '../lib/classify';
-import { ALL_DIVISIONS } from '../lib/leagues';
+import { ALL_DIVISIONS, getDivision } from '../lib/leagues';
 import { normalizeGames } from '../lib/normalize';
+import { readManifest } from '../lib/pipeline/corpus';
 import { StandingsResponseSchema } from '../lib/sources/maxpreps';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '../lib/standings';
 import { getTeamById, resolveTeam, teamsInDivision } from '../lib/teams';
 import type { ReportedRecord, TeamId } from '../lib/types';
-import { REPO, allScheduleRows, standingsFixture } from './helpers';
+import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
+import { runCorpus, writeTempVariant } from './pipeline/support/run-corpus';
 
 const reported = new Map<TeamId, ReportedRecord>();
 for (const which of ['da', 'ec'] as const) {
@@ -122,10 +124,16 @@ describe('computed vs reported', () => {
   });
 });
 
-describe('reported tables of all six divisions (all-2026-10-02 corpus)', () => {
+describe('reported tables of the corpus divisions (all-2026-10-02 corpus)', () => {
   const STANDINGS_DIR = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'standings');
+  // The divisions of the leagues the corpus was captured for (its manifest): the EAL came later.
+  const leagues: readonly string[] = readManifest(corpusDir('all-2026-10-02')).leagues;
 
-  for (const division of ALL_DIVISIONS) {
+  it('covers the six divisions of its four leagues', () => {
+    expect(ALL_DIVISIONS.filter((d) => leagues.includes(d.leagueId)).length).toBe(6);
+  });
+
+  for (const division of ALL_DIVISIONS.filter((d) => leagues.includes(d.leagueId))) {
     it(`${division.id}: every MaxPreps row resolves by GUID to a member of that division`, () => {
       const raw = JSON.parse(readFileSync(path.join(STANDINGS_DIR, `${division.id}.json`), 'utf8')) as unknown;
       const rows = StandingsResponseSchema.parse(raw).data;
@@ -150,4 +158,39 @@ describe('reported tables of all six divisions (all-2026-10-02 corpus)', () => {
       }
     });
   }
+});
+
+describe('the EAL reported table (tests/fixtures/maxpreps/standings-eal-2026-10-04.json)', () => {
+  const FILE = path.join(REPO, 'tests', 'fixtures', 'maxpreps', 'standings-eal-2026-10-04.json');
+  const body = readFileSync(FILE, 'utf8');
+  const rows = StandingsResponseSchema.parse(JSON.parse(body) as unknown).data;
+  const eal = getDivision('eal');
+  const extra = Object.keys(eal.maxprepsExtraRows);
+
+  it('holds maxprepsTeamCount rows: the six members by GUID, and the one known non-member row', () => {
+    expect(rows.length).toBe(eal.maxprepsTeamCount);
+    expect(extra).toHaveLength(1);
+    const members = rows.filter((r) => !extra.includes(r.schoolId));
+    expect(members.map((r) => getTeamById(r.schoolId)?.slug).sort()).toEqual(teamsInDivision('eal').map((t) => t.slug).sort());
+    for (const r of members) expect(getTeamById(r.schoolId)?.division, r.schoolName).toBe('eal');
+    const [nonMember] = rows.filter((r) => extra.includes(r.schoolId));
+    expect(getTeamById(nonMember.schoolId)).toBeUndefined();
+    // MaxPreps leaves that row undated (modifiedOn null), which parses as ''.
+    expect(nonMember.modifiedOn).toBe('');
+    for (const r of members) expect(r.modifiedOn, r.schoolName).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it('the reported step reads it with no unknown-school warning, and dates the table by its member rows', async () => {
+    const variant = writeTempVariant({ 'maxpreps/standings/eal': { rel: 'maxpreps/standings/eal.json', body } });
+    const { result, ctx } = await runCorpus({ variants: [variant], extraArgs: ['--leagues', 'eal'] });
+    expect(ctx.logLines.filter((l) => l.startsWith('WARN ') && l.includes('eal standings'))).toEqual([]);
+    const source = result!.snapshot.sources.find((r) => r.kind === 'reported-standings' && r.scope?.division === 'eal');
+    const newest = rows.map((r) => r.modifiedOn).filter(Boolean).sort().at(-1);
+    expect(source).toMatchObject({ status: 'ok', rowCount: eal.maxprepsTeamCount, upstreamModifiedOn: newest });
+    const health = result!.snapshot.leagueHealth.find((h) => h.leagueId === 'eal')!;
+    expect(health.divisions[0]).toMatchObject({ reportedTable: 'ok', reportedRows: eal.maxprepsTeamCount });
+    // Every member gets its reported row; the non-member row reaches no standing.
+    const reportedSlugs = result!.snapshot.standings.filter((st) => st.division === 'eal' && st.reported).map((st) => st.slug);
+    expect(reportedSlugs.sort()).toEqual(teamsInDivision('eal').map((t) => t.slug).sort());
+  });
 });

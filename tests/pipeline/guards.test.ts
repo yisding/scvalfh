@@ -55,9 +55,9 @@ beforeAll(async () => {
 describe('trigger d: the league is not in args.leagues', () => {
   it('no previous data: frozen, no games, "<SHORT> was not fetched in this run."', async () => {
     const { snapshot } = await snapshotOf({ corpus: 'scval' });
-    expect(snapshot.teams.length).toBe(43);
+    expect(snapshot.teams.length).toBe(49);
     expect(health(snapshot, 'scval')?.state).toBe('fresh');
-    for (const [id, short] of [['bval', 'BVAL'], ['pcal', 'PCAL'], ['mcal', 'MCAL']] as const) {
+    for (const [id, short] of [['bval', 'BVAL'], ['pcal', 'PCAL'], ['mcal', 'MCAL'], ['eal', 'EAL']] as const) {
       const h = health(snapshot, id);
       expect(h?.state, id).toBe('frozen');
       expect(h?.reasons, id).toEqual([`${short} was not fetched in this run.`]);
@@ -287,6 +287,7 @@ describe('systemic run abort', () => {
   });
 
   it('end to end: 26 of 43 feeds down aborts the run; 25 does not', async () => {
+    // 43 = the feeds of this run (the corpus's four leagues; the EAL is not in its runs).
     const slugs = teamsInLeague('scval').map((t) => t.slug).concat(teamsInLeague('bval').map((t) => t.slug));
     const down = (n: number) => writeTempVariant(Object.fromEntries(slugs.slice(0, n).map((s) => [`maxpreps/schedule/${s}`, 503])));
     await expect(runCorpus({ variants: [down(26)] })).rejects.toThrow(/systemic outage: 26 of 43 team schedule feeds failed/);

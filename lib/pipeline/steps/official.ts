@@ -12,6 +12,8 @@
  *    ('official-revision' per division vs `bundledSha256`) and the MCAL changes check
  *    ('official-changes' vs `officialChanges.sha256`) mark the row stale, the division
  *    `revisedUpstream` and the league `partial` with a reason — the bundled fixtures are STILL used.
+ *  - EAL (official mode 'none'): the league publishes no schedule, so nothing is fetched, loaded or
+ *    matched here; its league games are MaxPreps' league flag (classify step).
  *
  * Only leagues in `ctx.leaguesInRun()` are touched (the others are carried by the guards step).
  * `args.official === false` (--no-official) skips every request; bundled files are still loaded
@@ -21,7 +23,7 @@
 import { postseasonTag } from '../../classify';
 import { LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '../../leagues';
 import { matchOfficialFixtures } from '../../official/match';
-import { loadBundledFixtures } from '../../official/schema';
+import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '../../official/schema';
 import { assertDoubleRoundRobin } from '../../official/validate';
 import {
   PdftotextMissingError,
@@ -92,7 +94,7 @@ export function validationReason(league: LeagueConfig): string {
 }
 
 /** `BVAL revised the Mt. Hamilton schedule after our copy (revised 9/20/26); official dates may be out of date.` */
-export function revisionReason(division: DivisionConfig, league: LeagueConfig): string {
+export function revisionReason(division: DocumentDivision, league: LeagueConfig): string {
   const heading = divisionHeading(division.id);
   const what = heading === null ? 'its schedule' : `the ${heading} schedule`;
   const when = division.official.revisedOn ? ` (revised ${division.official.revisedOn})` : '';
@@ -143,7 +145,7 @@ function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<type
 
 // ---------------------------------------------------------------- SCVAL (live PDFs)
 
-async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions: readonly DivisionConfig[], state: StepState): Promise<void> {
+async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions: readonly DocumentDivision[], state: StepState): Promise<void> {
   const fixtures: OfficialFixture[] = [];
   const read = new Set<DivisionId>();
   const rows = new Map<DivisionId, SourceStatus>();
@@ -240,7 +242,7 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
 
 // ---------------------------------------------------------------- BVAL, PCAL, MCAL (bundled)
 
-async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions: readonly DivisionConfig[], state: StepState): Promise<void> {
+async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions: readonly DocumentDivision[], state: StepState): Promise<void> {
   const scopeOf = (d: DivisionConfig) => ({ league: league.id, division: d.id });
 
   // 1. Load + validate. Any failure degrades every division of the file.
@@ -364,8 +366,11 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
 
   for (const league of LEAGUES) {
     if (!inRun.has(league.id)) continue;
-    const live = league.divisions.filter((d) => d.official.mode === 'live-pdf');
-    const bundled = league.divisions.filter((d) => d.official.mode === 'bundled');
+    // A mode-'none' division (EAL) has no document: it is in neither list and is classified by
+    // MaxPreps' league flag (classify step), with no fixtures and no revision check.
+    const documented = league.divisions.filter(hasOfficialDocument);
+    const live = documented.filter((d) => d.official.mode === 'live-pdf');
+    const bundled = documented.filter((d) => d.official.mode === 'bundled');
     if (live.length > 0) await runLivePdfLeague(ctx, league, live, state);
     if (bundled.length > 0) await runBundledLeague(ctx, league, bundled, state);
   }

@@ -39,7 +39,7 @@ describe('parseLeaguesFlag', () => {
 });
 
 describe('scope', () => {
-  it('covers all 43 teams, in registry order, by default', () => {
+  it('covers all 49 teams, in registry order, by default', () => {
     expect(teamsInScope(null)).toEqual(TEAMS);
     expect(TEAMS.every((t) => inScope(t, null))).toBe(true);
   });
@@ -61,11 +61,12 @@ describe('summarizeByLeague', () => {
       ['bval', 12, 12],
       ['pcal', 7, 0],
       ['mcal', 9, 0],
+      ['eal', 6, 0],
     ]);
     // BVAL's rows are failures in the file, but a run that did not cover BVAL did not fail them.
     const scoped = summarizeByLeague(teams, ['scval']);
-    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0]);
-    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9]);
+    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0]);
+    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6]);
   });
 
   it('formats one line per league', () => {
@@ -81,11 +82,12 @@ describe('summarizeByLeague', () => {
     const dropped = new Set([leigh.slug, delMar.slug, 'st-ignatius']);
     const byLeague = summarizeByLeague(teams, ['scval'], dropped);
     // A covered team's dropped row is the fetch's business (re-read, or an error): not listed here.
-    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], []]);
+    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], []]);
     expect(formatLeagueSummary(byLeague[1])).toBe(
       `BVAL  12 teams · not in this run · 10 kept as they were · 2 pending, previous row dropped (${leigh.slug}, ${delMar.slug})`,
     );
     expect(formatLeagueSummary(byLeague[2])).toBe('PCAL   7 teams · not in this run (kept as they were)');
+    expect(formatLeagueSummary(byLeague[4])).toBe('EAL    6 teams · not in this run (kept as they were)');
     expect(runExitCode(byLeague)).toBe(1);
     // Every row dropped: nothing is said to be kept.
     const all = summarizeByLeague(teams, ['scval'], new Set(teamsInLeague('pcal').map((t) => t.slug)));
@@ -213,7 +215,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
       expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
       const log = describePrevious(p, 'data/rosters.json');
       expect(log).toHaveLength(1);
-      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its 43 row(s) are ignored, as if absent`)).toBe(true);
+      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its 49 row(s) are ignored, as if absent`)).toBe(true);
     }
   });
 

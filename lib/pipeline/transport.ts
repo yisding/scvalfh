@@ -5,14 +5,14 @@
  *  - FixtureTransport   a manifest-driven corpus (lib/pipeline/corpus.ts) with variant overlays;
  *  - RecordingTransport wraps another transport and writes every response into a new corpus;
  *  - MeteredTransport   wraps any of them: counts requests per host and logs every MaxPreps URL as
- *                       `maxpreps GET <url>` (so the 56-request budget and the never-requested
+ *                       `maxpreps GET <url>` (so the 64-request budget and the never-requested
  *                       Mission league id can be grepped from a run log, live or offline).
  *
  * Live resource map (frozen at the end of Stage A):
  *   maxpreps-*            URL builders of lib/sources/maxpreps.ts → MaxPrepsClient.raw (its gate, retries, UA)
- *   scval-pdf-text        getDivision(d).official.scheduleUrl → HttpClient.bytes → pdfToText
+ *   scval-pdf-text        scvalScheduleUrl(d) (config official.scheduleUrl) → HttpClient.bytes → pdfToText
  *   scval-standings-index SCVAL_STANDINGS_INDEX → HttpClient.text
- *   official-revision     getDivision(d).official.revisionCheckUrl → bytes → sha256 hex
+ *   official-revision     getDivision(d).official.revisionCheckUrl (bundled only) → bytes → sha256 hex
  *   official-changes      getLeague(l).officialChanges.url → text → officialChanges cell → sha256 hex
  *   sblive-*              sbliveScoresUrl(date) / the registry's si.com team page → HttpClient(SBLIVE_HTTP_OPTIONS)
  *   vnn-ics               vnnIcsUrl(VNN_SITE_IDS[team].siteId) → HttpClient.text
@@ -30,7 +30,7 @@ import { CCS_ICAL_URL } from '../sources/ccs';
 import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
 import { MaxPrepsClient, MaxPrepsError } from '../sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '../sources/sblive';
-import { SCVAL_STANDINGS_INDEX, pdfToText } from '../sources/scval-pdf';
+import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
@@ -94,11 +94,13 @@ export function resourceUrl(key: ResourceKey): string {
     case 'maxpreps-schedule':
       return MAXPREPS_URLS.scheduleUrl(teamOrThrow(key.team).id);
     case 'scval-pdf-text':
-      return getDivision(key.division).official.scheduleUrl;
+      return scvalScheduleUrl(key.division);
     case 'scval-standings-index':
       return SCVAL_STANDINGS_INDEX;
     case 'official-revision': {
-      const url = getDivision(key.division).official.revisionCheckUrl;
+      // Bundled divisions only: a live PDF is read whole and a 'none' division (EAL) has no document.
+      const official = getDivision(key.division).official;
+      const url = official.mode === 'bundled' ? official.revisionCheckUrl : null;
       if (!url) throw new Error(`lib/pipeline/transport.ts: ${key.division} has no revision-check URL`);
       return url;
     }

@@ -10,11 +10,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getDivision, getLeague } from '../lib/leagues';
+import { getLeague } from '../lib/leagues';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
   loadBundledFixtures,
+  officialDocumentOf,
   officialFixtureId,
   parseOfficialBundle,
   readOfficialBundle,
@@ -45,8 +46,8 @@ describe('official bundles: schema, config and the double round robin', () => {
       expect(() => parseOfficialBundle(raw(league), league)).not.toThrow();
       // One document per division, hashed exactly as config's bundledSha256.
       for (const doc of bundle.documents) {
-        expect(doc.sha256).toBe(getDivision(doc.division).official.bundledSha256);
-        expect(doc.url).toBe(getDivision(doc.division).official.revisionCheckUrl);
+        expect(doc.sha256).toBe(officialDocumentOf(doc.division).bundledSha256);
+        expect(doc.url).toBe(officialDocumentOf(doc.division).revisionCheckUrl);
       }
       expect(bundle.documents.map((d) => d.division)).toEqual(Object.keys(EXPECTED[league]));
     });
@@ -62,7 +63,7 @@ describe('official bundles: schema, config and the double round robin', () => {
         expect(() => assertDoubleRoundRobin(own, division)).not.toThrow();
         for (const f of own) {
           expect(f.league).toBe(league);
-          expect(f.source).toBe(getDivision(division).official.source);
+          expect(f.source).toBe(officialDocumentOf(division).source);
           expect(f.id).toBe(`${division}:${f.dateKey}:${f.awaySlug}@${f.homeSlug}`);
         }
       }
@@ -71,7 +72,7 @@ describe('official bundles: schema, config and the double round robin', () => {
     it(`${league}: the build script reproduces the committed file byte for byte`, () => {
       const built = buildBundles()[league];
       const file = outputFileOf(league);
-      expect(path.relative(REPO, file)).toBe(getLeague(league).divisions[0].official.bundledFile);
+      expect(path.relative(REPO, file)).toBe(officialDocumentOf(getLeague(league).divisions[0].id).bundledFile);
       expect(serializeBundle(built)).toBe(readFileSync(file, 'utf8'));
       // …and serializing what was read back is the identity.
       expect(serializeBundle(readOfficialBundle(league))).toBe(readFileSync(file, 'utf8'));

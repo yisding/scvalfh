@@ -9,7 +9,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { divisionsOf, getDivision } from '../../lib/leagues';
+import { LEAGUE_IDS, divisionsOf } from '../../lib/leagues';
+import { officialDocumentOf } from '../../lib/official/schema';
 import { TransportError } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { FixtureTransport } from '../../lib/pipeline/transport';
@@ -30,7 +31,9 @@ const transportFor = (variant: string) => new FixtureTransport(loadCorpus(ALL, [
 
 describe('variants', () => {
   it.runIf(process.env.B1_REBUILD_VARIANTS === '1')('rebuilds finals-regression/previous-snapshot.json', async () => {
-    // B-int: built with the real official (B2) and si.com (B3) steps.
+    // B-int: built with the real official (B2) and si.com (B3) steps. The committed file is frozen as a
+    // four-league v2 snapshot (written before the EAL was added): it exercises loadSnapshot's
+    // league-added upgrade, so it is not rebuilt for later config changes.
     const { stepOfficial } = await import('../../lib/pipeline/steps/official');
     const { stepSblive } = await import('../../lib/pipeline/steps/sblive');
     await writeFinalsRegressionVariant(stepOfficial, stepSblive);
@@ -63,8 +66,8 @@ describe('variants', () => {
     const mh = await t.get({ kind: 'official-revision', division: 'mt-hamilton' });
     const st = await t.get({ kind: 'official-revision', division: 'santa-teresa' });
     expect(mh.body).toMatch(/^[0-9a-f]{64}$/);
-    expect(mh.body).not.toBe(getDivision('mt-hamilton').official.bundledSha256);
-    expect(st.body).toBe(getDivision('santa-teresa').official.bundledSha256);
+    expect(mh.body).not.toBe(officialDocumentOf('mt-hamilton').bundledSha256);
+    expect(st.body).toBe(officialDocumentOf('santa-teresa').bundledSha256);
   });
 
   it('mcal-postseason: four synthetic finals Oct 24-30 (contestType 0 and 4) and the Oct 22 league game moved to Oct 23', async () => {
@@ -97,6 +100,9 @@ describe('variants', () => {
       expect(g?.status, id).toBe('final');
       expect(g?.countsFor, id).toBe('santa-teresa');
     }
+    // A four-league file: the league-added upgrade fills in the EAL as degraded, with nothing to carry.
+    expect(previous.season.leagues.map((l) => l.id)).toEqual(LEAGUE_IDS);
+    expect(previous.leagueHealth.find((h) => h.leagueId === 'eal')).toMatchObject({ state: 'degraded', lastFreshAt: null });
     const bval = previous.leagueHealth.find((h) => h.leagueId === 'bval');
     expect(bval?.state).toBe('fresh');
     expect(bval?.divisions.map((d) => d.divisionId)).toEqual(divisionsOf('bval').map((d) => d.id));

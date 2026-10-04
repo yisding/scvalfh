@@ -4,7 +4,9 @@
  * cross-check, and one `LeagueHealth` row per configured league in config order.
  *
  * `DivisionHealth.official.missingPast` comes from `missingOfficialResults()` (lib/standings.ts) —
- * the same function lib/data.ts uses, never a second implementation.
+ * the same function lib/data.ts uses, never a second implementation. A division whose league
+ * publishes no schedule (official mode 'none': EAL) has `official: null` and carries the same count,
+ * from the same function, as `missingLeaguePast`; no other division has that field.
  */
 
 import { LEAGUES } from '../../leagues';
@@ -28,7 +30,7 @@ export interface StandingsStepResult {
 
 function officialHealth(ctx: PipelineContext, state: RunState, league: LeagueConfig, divisionId: string): DivisionHealth['official'] {
   const division = league.divisions.find((d) => d.id === divisionId);
-  if (!division) return null;
+  if (!division || division.official.mode === 'none') return null;
   const matched = new Set(
     state.games.filter((g) => g.official?.division === divisionId).map((g) => g.official?.fixtureId as string),
   ).size;
@@ -55,6 +57,10 @@ function leagueHealthRow(ctx: PipelineContext, state: RunState, league: LeagueCo
   const divisions: DivisionHealth[] = league.divisions.map((d) => {
     const info = state.divisions.get(d.id);
     const counted = divisionGames(state.games, d.id);
+    const missingLeaguePast =
+      d.official.mode === 'none'
+        ? missingOfficialResults(state.games, state.unmatched, d.id, ctx.today).filter((r) => r.kind === 'missing').length
+        : null;
     return {
       divisionId: d.id,
       meta: info?.meta ?? 'skipped',
@@ -65,6 +71,7 @@ function leagueHealthRow(ctx: PipelineContext, state: RunState, league: LeagueCo
       countedFinals: counted.length,
       previousCountedFinals: previousDivisionHealth(ctx.previous, d.id)?.countedFinals ?? null,
       backfilled: counted.filter((g) => g.provenance.scores === 'sblive').length,
+      ...(missingLeaguePast !== null ? { missingLeaguePast } : {}),
     };
   });
   const feeds = [...state.feeds.values()].filter((f) => f.league === league.id);
