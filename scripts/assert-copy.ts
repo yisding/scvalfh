@@ -51,7 +51,7 @@
  *    nothing is shown for it that we could not read from an official source;
  *  - an available league's tables are the data's: every varsity row's league record is on the page.
  * `leaders.html` (the site-wide leaderboards):
- *  - has `id="players"`, `id="schools"` and the anchor of every board the view model builds;
+ *  - has `id="schools"`, then `id="players"`, and the anchor of every board the view model builds;
  *  - names every team that has entered no player stats, so no player board reads as if it covered
  *    all 49 teams.
  * And: each `playoffs/<league>.html` names its league's section (`playoffs/mcal.html`: "North Coast
@@ -299,11 +299,13 @@ if (!existsSync(historyPath)) {
       if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
     }
     // The Players section only: a team with no stats can still be named on a school board, which
-    // says nothing about its players.
+    // says nothing about its players. It follows the Schools section (DESIGN §23), so it runs to
+    // the end of <main>, which after it holds only the attribution line.
     const start = main.indexOf('<section id="players"');
-    const end = main.indexOf('<section id="schools"');
+    const schools = main.indexOf('<section id="schools"');
+    if (schools > start) fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
     // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
-    const players = (start >= 0 && end > start ? main.slice(start, end) : '')
+    const players = (schools >= 0 && schools < start ? main.slice(start) : '')
       .replace(/&#x27;|&#39;/g, "'")
       .replace(/&amp;/g, '&');
     const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));

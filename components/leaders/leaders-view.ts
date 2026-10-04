@@ -2,7 +2,6 @@ import { getSnapshot } from '../../lib/data';
 import {
   listWords,
   numberWord,
-  ordinal,
   recordString,
   recordWords,
   shortDate,
@@ -38,26 +37,28 @@ const LEAGUE_COUNT = numberWord(LEAGUES.length);
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * Schools (data/snapshot.json): the highest Elo rating (lib/ratings.ts, DESIGN §20), best record,
- * best league record, goals scored and allowed per game, and clean sheets. Records are the `Standing` rows the standings and team pages print (`overall`
- * is every final, `computed` the league games the table counts), so a team's record here is its
- * record everywhere. Clean sheets and the per-game rates come from the same finals, with forfeits
- * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a
- * minimum number of results, half the median team's, so a 1-0 team does not top a table of
- * 10-game seasons; the teams below it are named. The Elo board's minimum counts the games its fit
+ * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
+ * clean sheets, and last the highest Elo rating (lib/ratings.ts, DESIGN §20). Records are the
+ * `Standing` rows the standings and team pages print (`overall` is every final, `computed` the
+ * league games the table counts), so a team's record here is its record everywhere. Clean sheets
+ * and the per-game rates come from the same finals, with forfeits left out of goals as
+ * lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum number of
+ * results, half the median team's, so a 1-0 team does not top a table of 10-game seasons; the
+ * teams below it are named. The Elo board's minimum counts the games its fit
  * counts this season (finals between two registry teams), by the same rule; a team under it is
  * still rated on its own page, as provisional. The ratings start from last season's
  * (data/prior-season.json); synthetic sources without one start every team at average.
  *
  * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
- * and tied rows are listed by name. A board shows the places up to 10th; a tie for the last place
- * shown that would take it past 15 rows is counted in a line instead of listed.
+ * and tied rows are listed by name. A board shows the places up to 10th, and every player or school
+ * tied for the last of them, however many; a player board goes on to 25th the same way, behind a
+ * "Show N more" disclosure.
  */
 
 /** The places a board shows. */
 export const BOARD_PLACES = 10;
-/** The most rows a board lists: a tie for the last place that would pass this is counted instead. */
-export const BOARD_MAX_ROWS = 15;
+/** The places a player board shows once expanded. */
+export const EXPANDED_PLACES = 25;
 
 export interface LeaderColumn {
   key: string;
@@ -113,12 +114,24 @@ export interface LeaderBoard {
   /** The index of the column the board is ranked on. */
   rankedBy: number;
   rows: LeaderRow[];
-  /** "4 more players share 10th, with 2 assists each.": a tie too long to list. */
-  more: string | null;
+  /**
+   * A player board's places after `rows`, up to EXPANDED_PLACES, behind a disclosure; null when
+   * there are none, and always on a school board.
+   */
+  extra: LeaderExtra | null;
   /** One or two sentences under the board: what it counts and what it leaves out. */
   note: string;
   /** Shown instead of the table when no row qualifies. */
   empty: string;
+}
+
+export interface LeaderExtra {
+  /** The disclosure's summary: "Show 15 more players". */
+  summary: string;
+  /** The second table's caption, for a screen reader. */
+  caption: string;
+  /** The rows after the board's own, ranked on from them. */
+  rows: LeaderRow[];
 }
 
 export interface LeadersView {
@@ -170,13 +183,14 @@ interface Ranked<T> {
 
 /**
  * Standard competition ranking over `sorted` (best first): neighbours that are `same` share a
- * place. Keeps the places up to BOARD_PLACES; a tied group that would take the board past
- * BOARD_MAX_ROWS is left out whole and returned as `dropped`, with the place it would have shared.
+ * place. Keeps the places up to `places`, with every row tied for the last of them, so the rows for
+ * fewer places are always the first rows for more.
  */
 export function rankBoard<T>(
   sorted: readonly T[],
   same: (a: T, b: T) => boolean,
-): { rows: Ranked<T>[]; dropped: { items: T[]; place: number } | null } {
+  places = BOARD_PLACES,
+): Ranked<T>[] {
   const groups: T[][] = [];
   for (const item of sorted) {
     const last = groups[groups.length - 1];
@@ -186,12 +200,11 @@ export function rankBoard<T>(
   const rows: Ranked<T>[] = [];
   let place = 1;
   for (const group of groups) {
-    if (place > BOARD_PLACES) break;
-    if (rows.length + group.length > BOARD_MAX_ROWS) return { rows, dropped: { items: group, place } };
+    if (place > places) break;
     for (const item of group) rows.push({ item, rank: place, tied: group.length > 1 });
     place += group.length;
   }
-  return { rows, dropped: null };
+  return rows;
 }
 
 const byName = (a: string, b: string) => a.localeCompare(b);
@@ -235,8 +248,6 @@ interface PlayerBoardSpec {
   title: string;
   /** The stat in a sentence: "assists", "clean sheets". */
   statWord: string;
-  /** The ranked number in a sentence: ['point', 'points']. */
-  unit: [string, string];
   /** Who can lead it: "player" or "goalkeeper". */
   who: [string, string];
   stat: StatRef;
@@ -263,7 +274,6 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     id: 'most-points',
     title: 'Most points',
     statWord: 'points',
-    unit: ['point', 'points'],
     who: ['player', 'players'],
     stat: { block: 'field', key: 'points' },
     columns: [
@@ -278,7 +288,6 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     id: 'most-assists',
     title: 'Most assists',
     statWord: 'assists',
-    unit: ['assist', 'assists'],
     who: ['player', 'players'],
     stat: { block: 'field', key: 'assists' },
     columns: [
@@ -292,7 +301,6 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     id: 'most-saves',
     title: 'Most saves',
     statWord: 'saves',
-    unit: ['save', 'saves'],
     who: ['goalkeeper', 'goalkeepers'],
     stat: { block: 'goalkeeping', key: 'saves' },
     columns: [
@@ -318,7 +326,6 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     id: 'most-clean-sheets',
     title: 'Most clean sheets',
     statWord: 'clean sheets',
-    unit: ['clean sheet', 'clean sheets'],
     who: ['goalkeeper', 'goalkeepers'],
     stat: { block: 'goalkeeping', key: 'shutouts' },
     columns: [
@@ -349,7 +356,20 @@ function playerBoard(
         byName(a.player.fullName, b.player.fullName) ||
         byName(a.team.name, b.team.name),
     );
-  const { rows, dropped } = rankBoard(sorted, (a, b) => value(a) === value(b));
+  // Ranked once to 25th: the board's own rows are the places to 10th, the rest wait behind
+  // "Show N more" (rankBoard keeps a tie whole, so a tie never straddles the two).
+  const ranked = rankBoard(sorted, (a, b) => value(a) === value(b), EXPANDED_PLACES);
+  const listed: LeaderRow[] = ranked.map(({ item: e, rank, tied }, i) => ({
+    key: `${e.team.slug}:${e.player.careerId ?? `${e.player.shortName}-${i}`}`,
+    rank,
+    tied,
+    name: e.player.fullName,
+    team: teamRef(e.team, '#player-stats'),
+    cells: spec.columns.map((c) => c.cell(e)),
+  }));
+  const rows = listed.filter((r) => r.rank <= BOARD_PLACES);
+  const extra = listed.slice(rows.length);
+  const caption = `${spec.title}, players in all ${LEAGUE_COUNT} leagues, this season`;
 
   // Name whichever list is shorter: the few teams that do enter the stat, or the few with stats
   // that do not.
@@ -367,20 +387,16 @@ function playerBoard(
     kind: 'player',
     title: spec.title,
     meta: `From ${plural(tracking.length, 'team')}`,
-    caption: `${spec.title}, players in all ${LEAGUE_COUNT} leagues, this season`,
+    caption,
     columns: spec.columns.map(({ key, label, title }) => ({ key, label, title })),
     rankedBy: spec.rankedBy,
-    rows: rows.map(({ item: e, rank, tied }, i) => ({
-      key: `${e.team.slug}:${e.player.careerId ?? `${e.player.shortName}-${i}`}`,
-      rank,
-      tied,
-      name: e.player.fullName,
-      team: teamRef(e.team, '#player-stats'),
-      cells: spec.columns.map((c) => c.cell(e)),
-    })),
-    // "more" only when rows above the tie are listed: a tie for 1st past the cap is the whole board.
-    more: dropped
-      ? `${plural(dropped.items.length, `${rows.length ? 'more ' : ''}${spec.who[0]}`, `${rows.length ? 'more ' : ''}${spec.who[1]}`)} share ${ordinal(dropped.place)}, with ${plural(value(dropped.items[0]), spec.unit[0], spec.unit[1])} each.`
+    rows,
+    extra: extra.length
+      ? {
+          summary: `Show ${plural(extra.length, `more ${spec.who[0]}`, `more ${spec.who[1]}`)}`,
+          caption: `${caption}, continued`,
+          rows: extra,
+        }
       : null,
     note: `${spec.lead} ${coverage}`,
     empty:
@@ -476,14 +492,10 @@ function schoolBoard<L extends { team: Team }>(
     rankedBy: number;
     note: string;
     empty: string;
-    /** `listed`: whether any row is listed above the tie (then it is "N more teams"). */
-    more?: (count: number, place: number, sample: L, listed: boolean) => string;
     /** The team page anchor a row links to: '#elo'. */
     anchor?: string;
   },
 ): LeaderBoard {
-  const { rows, dropped } = rankBoard(sorted, same);
-  const teams = (count: number) => plural(count, rows.length ? 'more team' : 'team');
   return {
     id,
     kind: 'school',
@@ -492,7 +504,7 @@ function schoolBoard<L extends { team: Team }>(
     caption: `${title}, schools in all ${LEAGUE_COUNT} leagues, this season`,
     columns: spec.columns.map(({ key, label, title: t }) => ({ key, label, title: t })),
     rankedBy: spec.rankedBy,
-    rows: rows.map(({ item: l, rank, tied }) => ({
+    rows: rankBoard(sorted, same).map(({ item: l, rank, tied }) => ({
       key: l.team.slug,
       rank,
       tied,
@@ -500,10 +512,7 @@ function schoolBoard<L extends { team: Team }>(
       team: teamRef(l.team, spec.anchor),
       cells: spec.columns.map((c) => c.cell(l)),
     })),
-    more: dropped
-      ? (spec.more?.(dropped.items.length, dropped.place, dropped.items[0], rows.length > 0) ??
-        `${teams(dropped.items.length)} share ${ordinal(dropped.place)}.`)
-      : null,
+    extra: null,
     note: spec.note,
     empty: spec.empty,
   };
@@ -658,7 +667,6 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
 
   const elo = buildEloBoard(teams, games, sources.prior ?? null);
   const schools: LeaderBoard[] = [
-    elo.board,
     recordBoard(
       'best-record',
       'Best record',
@@ -745,10 +753,10 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
         rankedBy: 1,
         note: 'Finals in which the team did not concede, counted from every score on this site, so every team counts. The goalkeepers’ board counts only what coaches enter.',
         empty: 'No team has kept a clean sheet yet.',
-        more: (count, place, sample, listed) =>
-          `${plural(count, listed ? 'more team' : 'team')} share ${ordinal(place)}, with ${plural(sample.cleanSheets, 'clean sheet')} each.`,
       },
     ),
+    // Last of the school boards (DESIGN §23).
+    elo.board,
   ];
 
   const schoolNotes: string[] = [];

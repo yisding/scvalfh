@@ -7,6 +7,11 @@ import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
 
 /**
  * One /leaders board (DESIGN §16): an h3, a ranked table, and the line that says what it counts.
+ * A player board's places from 11th to 25th wait in a closed `<details>` under the table ("Show 15
+ * more players", DESIGN §23), so the board reads as a top 10 and opens with zero JavaScript. Every
+ * player or school tied for a board's last place is listed, however many. They
+ * are a second table with its own head and caption, in a card of the same width, so the columns
+ * line up with the first and its sticky head is there while the reader scrolls through them.
  *
  * A real `<table>`: a leaderboard is tabular data a reader scans down a column. The layout is
  * fixed from a `<colgroup>`, as on /history, so the numbers line up from board to board, and every
@@ -120,78 +125,102 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
   );
 }
 
-export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
+/** The table in its card: the board's own rows, or the ones behind "Show N more". */
+function BoardTable({
+  board,
+  rows,
+  caption,
+  className = '',
+}: {
+  board: LeaderBoard;
+  rows: readonly LeaderRow[];
+  caption: string;
+  className?: string;
+}) {
   const last = board.columns.length - 1;
+  return (
+    <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>
+      <table className="sx-table table-fixed text-meta">
+        <caption className="sr-only">{caption}</caption>
+        <colgroup>
+          {/* 48px: 16 of left padding, "T10" in 13px mono, 8 of gutter. */}
+          <col className="w-12" />
+          <col />
+          {board.columns.map((c, i) => (
+            <col
+              key={c.key}
+              className={i === last ? (LAST_WIDTH[c.key] ?? 'w-[3.75rem]') : (WIDTH[c.key] ?? 'w-11')}
+            />
+          ))}
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" className="pl-4 pr-2">
+              <span aria-hidden="true">#</span>
+              <span className="sr-only">Place</span>
+            </th>
+            <th scope="col">{board.kind === 'player' ? 'Player' : 'School'}</th>
+            {board.columns.map((c, i) => (
+              <th key={c.key} scope="col" className={`${GUTTER[c.key] ?? 'pl-2'} text-right ${i === last ? 'pr-4' : ''}`}>
+                <span aria-hidden="true">{c.label}</span>
+                <span className="sr-only">{c.title}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.key} data-team-slug={row.team.slug} className="h-14">
+              <td className="pl-4 pr-2 text-cell text-ink-3">
+                <Place row={row} />
+              </td>
+              <th scope="row" className="py-2 text-left font-normal">
+                {/* Only the pinned team's rows display this (app/globals.css), so the accent
+                    rule is never the only thing saying "your team". */}
+                <span className="sr-only">
+                  <span className="sx-pin-note">
+                    {board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '}
+                  </span>
+                </span>
+                <NameCell board={board} row={row} />
+              </th>
+              {row.cells.map((cell, i) => (
+                <td
+                  key={board.columns[i].key}
+                  className={`sx-num ${GUTTER[board.columns[i].key] ?? 'pl-2'} text-right text-cell ${
+                    i === board.rankedBy ? 'font-semibold text-ink' : 'text-ink-2'
+                  } ${i === last ? 'pr-4' : ''}`}
+                >
+                  <Cell cell={cell} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
+  const { extra } = board;
   return (
     <section id={board.id} className="min-w-0 scroll-mt-24">
       <SectionHeader as="h3" kicker={board.title} meta={board.meta} />
       {board.rows.length === 0 ? (
-        // No row listed: either nobody qualifies, or a tie for 1st is too long to list, in which
-        // case the count line is the board.
-        <p className="sx-card m-0 p-4 text-meta text-ink-2">{board.more ?? board.empty}</p>
+        // No row listed: nobody qualifies yet.
+        <p className="sx-card m-0 p-4 text-meta text-ink-2">{board.empty}</p>
       ) : (
-        <div className="sx-card sx-flush sx-bleed">
-          <table className="sx-table table-fixed text-meta">
-            <caption className="sr-only">{board.caption}</caption>
-            <colgroup>
-              {/* 48px: 16 of left padding, "T10" in 13px mono, 8 of gutter. */}
-              <col className="w-12" />
-              <col />
-              {board.columns.map((c, i) => (
-                <col
-                  key={c.key}
-                  className={i === last ? (LAST_WIDTH[c.key] ?? 'w-[3.75rem]') : (WIDTH[c.key] ?? 'w-11')}
-                />
-              ))}
-            </colgroup>
-            <thead>
-              <tr>
-                <th scope="col" className="pl-4 pr-2">
-                  <span aria-hidden="true">#</span>
-                  <span className="sr-only">Place</span>
-                </th>
-                <th scope="col">{board.kind === 'player' ? 'Player' : 'School'}</th>
-                {board.columns.map((c, i) => (
-                  <th key={c.key} scope="col" className={`${GUTTER[c.key] ?? 'pl-2'} text-right ${i === last ? 'pr-4' : ''}`}>
-                    <span aria-hidden="true">{c.label}</span>
-                    <span className="sr-only">{c.title}</span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {board.rows.map((row) => (
-                <tr key={row.key} data-team-slug={row.team.slug} className="h-14">
-                  <td className="pl-4 pr-2 text-cell text-ink-3">
-                    <Place row={row} />
-                  </td>
-                  <th scope="row" className="py-2 text-left font-normal">
-                    {/* Only the pinned team's rows display this (app/globals.css), so the accent
-                        rule is never the only thing saying "your team". */}
-                    <span className="sr-only">
-                      <span className="sx-pin-note">
-                        {board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '}
-                      </span>
-                    </span>
-                    <NameCell board={board} row={row} />
-                  </th>
-                  {row.cells.map((cell, i) => (
-                    <td
-                      key={board.columns[i].key}
-                      className={`sx-num ${GUTTER[board.columns[i].key] ?? 'pl-2'} text-right text-cell ${
-                        i === board.rankedBy ? 'font-semibold text-ink' : 'text-ink-2'
-                      } ${i === last ? 'pr-4' : ''}`}
-                    >
-                      <Cell cell={cell} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BoardTable board={board} rows={board.rows} caption={board.caption} />
       )}
-      {board.more && board.rows.length > 0 ? <p className="mt-2 mb-0 text-meta text-ink-2">{board.more}</p> : null}
+      {extra ? (
+        <details className="sx-disclosure mt-1">
+          <summary>{extra.summary}</summary>
+          {/* `ps-0`: the card keeps the board's full width, not the disclosure body's hang under
+              the summary text. */}
+          <BoardTable board={board} rows={extra.rows} caption={extra.caption} className="mt-1 ps-0" />
+        </details>
+      ) : null}
       <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{board.note}</p>
     </section>
   );

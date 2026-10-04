@@ -2753,6 +2753,8 @@ Each board is one table (`components/leaders/LeaderBoardTable.tsx`): place, name
 and league on a second line, or the school's league), and at most three numeric columns, so a 320px
 phone needs no scroller. The column a board ranks on is bold. Boards sit one per row on a phone and
 two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/schedule`).
+(Amended by §23: `#schools` now comes first, the Elo board is its last board, and a player board
+opens to 25th.)
 
 ### 16.2 Ranking and honesty
 
@@ -2762,7 +2764,8 @@ two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/s
   counted in a line ("4 more players share 10th, with 2 assists each.") instead, and a tie for 1st
   that long is the whole board ("16 goalkeepers share 1st, …"), never an empty-board message. The
   goals-per-game boards split equal rates by more games played, so a shared place there is an
-  equal rate over the same number of games.
+  equal rate over the same number of games. (Superseded by §23: a board lists every row tied for
+  its last place, however many, and no line counts a tie instead.)
 - **Player boards rank only what coaches enter.** A stat a team does not track is null for its
   players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
   meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
@@ -2797,7 +2800,7 @@ back to what it was.)
 
 `/leaders` HTML gzip at most 1.0 x the `standings` baseline (about 28 KB on 2026-10-03; nine boards
 of at most 15 rows cannot grow with the season), and its first-load JS at most the `standings`
-baseline + 20 KB. The page ships no client component of its own.
+baseline + 20 KB. The page ships no client component of its own. (The HTML line is 1.2 x since §23.)
 
 The home page's budget moved from 2.0 x to 2.2 x its baseline the same day. The 2026-10-03 data
 refresh had taken `/` to 51.2 KB HTML gzip, over the 49.9 KB line, before any of this. Two savings
@@ -3055,7 +3058,7 @@ game; the board's note says only what a 400-point gap means on the scale.
 | Place | What |
 |---|---|
 | Team page, under the stat tiles (`#elo`) | **Collapsed on purpose.** A closed disclosure under "How these numbers are counted", whose summary says only "Elo rating": a family checking its team's page meets the record first and never a low number it did not ask for. Opened: "<rating> points · <where it stands>" (the team's place on the board when the board lists it, "preseason, from 2025-26" before its first counted final, "provisional, from N games" below the board's minimum, otherwise "from N games"), a sentence or two on what the number means, and `How it is computed` → `/leaders#elo-rating`. A team with neither a final this season nor one last season reads "Not rated", never 1500. A team page never names a place below the board's top 10. `#elo` is the `<details>` itself, so a board link lands on the summary in every browser. This is the one team-specific fact in a disclosure, against the rule that keeps them for generic legends and methodology: the owner's choice, because the rating is an estimate and not a result. |
-| `/leaders`, first school board (`#elo-rating`) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over this season's games the fit counts (half the median, rounded up); the teams that have played but are under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found and the season it started from. |
+| `/leaders`, last school board (`#elo-rating`; first until §23) | "Highest Elo rating": the top 10 places (standard competition ranking, as every board), GP (games counted) and Elo, each row linking to the team's `#elo`. The minimum is the record boards' rule over this season's games the fit counts (half the median, rounded up); the teams that have played but are under it are named in the section's notes. The board's note says how the rating is computed, including the home edge it found and the season it started from. |
 
 ### 20.3 Budgets
 
@@ -3456,3 +3459,41 @@ from 13 pages to 16.
   the file's `capturedAt`, or a later record's `checkedOn` (2026-10-04).
 - **Not built.** The Sacramento Hockey Academy (a 2025 club on one Davis player's NCSA profile) was
   not researched. Neither the Sacramento area nor the North State was swept for every club.
+
+## 23. Leaders layout amendment (2026-10)
+
+The owner reordered `/leaders`, asked for longer player boards, and dropped the cap on ties. This
+section wins where §16 and §20 disagree. Everything else stands: the boards are tables, ranked 1, 2,
+2, 4 as §16.2 says, and the page ships no client component.
+
+- **Schools first.** `#schools` comes before `#players`, and the jump links follow ("Schools",
+  "Players"). The intro names the schools first. `scripts/assert-copy.ts` fails the build when the
+  Players section comes first, since the check that every team without player stats is named reads
+  from `#players` to the end of `<main>`.
+- **The Elo board is the last school board.** Best record, best league record, most goals per game,
+  fewest goals allowed per game, most clean sheets, then highest Elo rating. Its anchor
+  (`#elo-rating`), its top 10 and every team-page link to it are unchanged, and its minimum stays
+  last in the section's notes.
+- **No cap on ties.** Every board, school or player, lists every row tied for its last place,
+  however many. §16.2's 15-row cap and its count lines ("4 more players share 10th, …", "16
+  goalkeepers share 1st, …") are gone: a tie for 10th of twenty players is twenty-nine rows, and a
+  tie for 1st is the whole board. A board is empty only when nobody qualifies.
+- **Player boards open to 25th.** A player board still lists the places up to 10th, and the places
+  from 11th to 25th wait in a closed `<details>` under it, "Show 15 more players" ("… goalkeepers"
+  on the keeper boards), so the page reads as it did and opens with zero JavaScript. The expanded
+  places follow the same rule: a tie for 25th is listed whole. A tie is never split between the two
+  tables, so the expanded rows always start at a new place. The summary counts the rows behind it,
+  never "the top 25", because a board can have fewer or, with a tie, more.
+- **A second table, not hidden rows.** The extra rows are a second table, with its own head,
+  caption ("…, continued") and card of the same width, inside the `<details>`. The disclosure opens
+  below its summary as every other one on the site does (`disclosure-script.ts` keeps the summary
+  under the finger), the columns line up with the first table, and the sticky head is there while
+  the reader scrolls through 15 more rows. The card takes `ps-0`, so it keeps the board's full width
+  instead of the disclosure body's hang under the summary text.
+  School boards are unchanged: no disclosure.
+- **Budget.** On the 2026-10-04 data the four player boards gained 51 rows behind their
+  disclosures, taking `/leaders` from 29,328 to 34,664 bytes of HTML gzip, over the 1.0 x `standings`
+  line (33,128). The line moved to 1.2 x (39,754). Listing the assists board's ten-way tie for 24th
+  in full took it to 35,499 (89%). Without the cap, a long tie is the one way the page can grow: the
+  places are fixed, but not the rows that share them, so a big early-season tie can approach the
+  line, and `assert:budgets` says so. First-load JS is unchanged.
