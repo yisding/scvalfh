@@ -1,5 +1,5 @@
 import { GameCard, GameRow } from '../ui/GameRow';
-import type { Game, LeagueId, TeamSlug } from '../../lib/types';
+import type { Game, LeagueId } from '../../lib/types';
 
 import { gameFilterAttrs } from './filter-data-server';
 
@@ -18,18 +18,15 @@ import { gameFilterAttrs } from './filter-data-server';
  * That is the same "render both variants and hide one" pattern `StandingsTable` uses, because the
  * phone and desktop forms are genuinely different DOM rather than a restyle.
  *
- * With no `perspective` — /schedule/<league> and /scores/[date], a slate nobody is following one
- * team through — an upcoming league game prints each registry side's league record beside its name
- * (`showRecords`), which is what a reader sizing up a game before kickoff wants. A list oriented to
- * one team leaves them off: that team's own page already leads with its record.
+ * GameList is only ever a slate nobody is following one team through: /schedule/<league> and
+ * /scores/[date]. (The team page lists its games with GameLogRow, through TeamGameLog.) So every
+ * upcoming league game prints both sides' league records beside their names (`showRecords`), which
+ * is what a reader sizing up a game before kickoff wants, and every game shows its recap.
  */
 export interface GameListProps {
   games: readonly Game[];
-  perspective?: TeamSlug | null;
   /** A league-scoped list: a side from another league carries its league's short name. */
   scopeLeague?: LeagueId | null;
-  /** Default true on /schedule and /scores/[date]; the recap is never the only place a score is. */
-  showRecap?: boolean;
   /**
    * `bleed` (default): the phone band pulls itself out to the screen edge (`.sx-bleed`) and draws
    * its own line above and below. `grouped`: the HOST is already full-bleed (a /schedule date
@@ -44,23 +41,17 @@ export interface GameListProps {
    */
   tracks?: 'fill' | 'fit';
   className?: string;
-  id?: string;
 }
 
 export function GameList({
   games,
-  perspective = null,
   scopeLeague = null,
-  showRecap = true,
   variant = 'bleed',
   tracks = 'fill',
   className,
-  id,
 }: GameListProps) {
-  const showRecords = perspective === null;
   return (
     <ol
-      id={id}
       // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
       // interpolation stays out of the literal.
       className={[
@@ -80,23 +71,9 @@ export function GameList({
         // No display utility on the <li>: the filter toggles `hidden` on it, and a `display`
         // class would beat the attribute and leave a hole in the grid.
         <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
-          <GameRow
-            game={game}
-            perspective={perspective}
-            scopeLeague={scopeLeague}
-            showRecap={showRecap}
-            showRecords={showRecords}
-            className="md:hidden"
-          />
+          <GameRow game={game} scopeLeague={scopeLeague} showRecords className="md:hidden" />
           <div className="hidden h-full md:block">
-            <GameCard
-              game={game}
-              perspective={perspective}
-              scopeLeague={scopeLeague}
-              showRecap={showRecap}
-              showRecords={showRecords}
-              className="h-full"
-            />
+            <GameCard game={game} scopeLeague={scopeLeague} showRecords className="h-full" />
           </div>
         </li>
       ))}
