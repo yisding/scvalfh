@@ -41,8 +41,6 @@ export interface PlayInCardProps {
   game?: Game | null;
   /** The play-in of a pairing set (a 3px ink rule on the left edge — a position, never a hue). */
   emphasis?: boolean;
-  /** Heading level of the title (the page owns the outline). */
-  titleAs?: 'h3' | 'h4' | 'p';
   className?: string;
 }
 
@@ -118,7 +116,6 @@ export function PlayInCard({
   notes = [],
   game,
   emphasis = false,
-  titleAs: Title = 'p',
   className,
 }: PlayInCardProps) {
   return (
@@ -131,7 +128,9 @@ export function PlayInCard({
       }
     >
       <span className="sr-only">{sentence}</span>
-      <Title className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
+      {/* A paragraph, not a heading: the card's sentence above is what a screen reader hears, and
+          the page owns the outline. */}
+      <p className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
         <span>{title}</span>
         {when ? (
           <span className="font-normal text-ink-2">
@@ -139,7 +138,7 @@ export function PlayInCard({
             {when.timeLabel ? `, ${when.timeLabel}` : ''}
           </span>
         ) : null}
-      </Title>
+      </p>
       {/* Phone: the sides stack, and the connector is a divider row between them (a hairline
           either side of the pill), so each side has the card's full width and its name and seat
           line stay one tidy row at 320. From md: the mirrored three-column pairing. */}
