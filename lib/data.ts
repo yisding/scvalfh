@@ -915,7 +915,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
           `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
         href: `/playoffs/${league.id}`,
-        linkText: `${ps.name} →`,
+        linkText: ps.name,
       };
     }
     case 'unbracketed-tournament':
@@ -924,7 +924,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         label,
         sentence: `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
         href: `/playoffs#${league.id}`,
-        linkText: 'Postseason →',
+        linkText: 'Postseason',
       };
     case 'ccs-ladder': {
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
@@ -940,7 +940,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
       }
-      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs →' };
+      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs' };
     }
   }
 }

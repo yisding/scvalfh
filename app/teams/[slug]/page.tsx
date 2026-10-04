@@ -19,6 +19,7 @@ import {
 } from '../../../components/teams/player-stats-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import FormStrip from '../../../components/ui/FormStrip';
@@ -283,7 +284,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               prefetch={false}
               className="sx-pill bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
             >
-              {view.standingsLabel} &rarr;
+              {view.standingsLabel} <Arrow />
             </Link>
             {view.officialScheduleUrl ? (
               <ExternalLink

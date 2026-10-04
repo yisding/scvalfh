@@ -374,7 +374,7 @@ describe('data: postseason', () => {
     expect(sf.label).toBe('Automatic qualifier');
     expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Fri Oct 30.');
     expect(sf.href).toBe('/playoffs#scval');
-    expect(sf.linkText).toBe('CCS playoffs →');
+    expect(sf.linkText).toBe('CCS playoffs');
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
     expect(data.getTeamPostseasonLine('chico')).toBeNull();
@@ -542,7 +542,7 @@ describe('data: an EAL table with results', () => {
       label: 'Super Regional place',
       sentence: 'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
       href: '/playoffs#eal',
-      linkText: 'Postseason →',
+      linkText: 'Postseason',
     });
     expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
   });

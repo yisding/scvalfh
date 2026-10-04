@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { CCS } from '../../lib/leagues';
 import { splitStatusLabel } from '../playoffs/playoff-view';
+import Arrow from '../ui/Arrow';
 import ExternalLink from '../ui/ExternalLink';
 import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
@@ -64,7 +65,7 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
       <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
         <Link href={line.href} prefetch={false} className="sx-pill text-accent">
-          {line.linkText}
+          {line.linkText} <Arrow />
         </Link>
         {league.postseasonKind === 'ccs-ladder' ? (
           <ExternalLink href={CCS.bracketUrl} className="sx-pill">

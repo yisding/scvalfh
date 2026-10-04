@@ -17,6 +17,7 @@ import {
   type LeagueKeyDate,
   type ProjectionRow,
 } from '../../components/playoffs/playoff-view';
+import Arrow from '../../components/ui/Arrow';
 import BerthMeter from '../../components/ui/BerthMeter';
 import ExternalLink from '../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
@@ -243,7 +244,7 @@ export default function PlayoffsPage() {
             <p className="m-0">
               {`Following ${article(league.shortName)} ${league.shortName} team? The ${league.section.name} holds no field hockey championship. `}
               <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action text-accent hover:underline">
-                {`${name} →`}
+                {name} <Arrow />
               </Link>
             </p>
           </div>

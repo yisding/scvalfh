@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import EmptyState from '../ui/EmptyState';
 import SectionHeader from '../ui/SectionHeader';
 import { shortDate } from '../../lib/format';
@@ -44,7 +45,7 @@ export function CrossLeagueLatest({ view, className }: CrossLeagueLatestProps) {
                 <Link href={`/scores/${view.date}`} prefetch={false} className="sx-action text-accent hover:underline">
                   {group.total - group.games.length} more {group.shortName}{' '}
                   {group.total - group.games.length === 1 ? 'game' : 'games'} that day{' '}
-                  <span aria-hidden="true">&rarr;</span>
+                  <Arrow />
                 </Link>
               </p>
             ) : null}

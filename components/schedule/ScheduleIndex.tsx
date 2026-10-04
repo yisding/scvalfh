@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { longDate, plural, shortDate } from '../../lib/format';
 import type { Game, LeagueId } from '../../lib/types';
+import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 
@@ -147,7 +148,7 @@ function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: num
           prefetch={false}
           className="sx-action ml-auto shrink-0 text-meta font-medium text-accent no-underline hover:underline"
         >
-          The day<span className="sr-only">, {longDate(day.date)}</span> &rarr;
+          The day<span className="sr-only">, {longDate(day.date)}</span> <Arrow />
         </Link>
       </div>
       {day.leagues.map((league) => {
@@ -169,7 +170,7 @@ function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: num
                   prefetch={false}
                   className="sx-action text-meta font-medium text-accent hover:underline"
                 >
-                  +{more} more<span className="sr-only"> {league.shortName} {gameWord(more)} on {longDate(day.date)}</span> &rarr;
+                  +{more} more<span className="sr-only"> {league.shortName} {gameWord(more)} on {longDate(day.date)}</span> <Arrow />
                 </Link>
               </p>
             ) : null}
@@ -194,7 +195,7 @@ export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: Sche
               <span className="text-lead font-semibold text-ink">{card.shortName}</span>
               <span className="text-meta text-ink-3">{card.name}</span>
               <span className="text-body text-ink-2">
-                {cardLine(card)} <span aria-hidden="true">&rarr;</span>
+                {cardLine(card)} <Arrow />
               </span>
             </Link>
           </li>
@@ -238,9 +239,7 @@ export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: Sche
                     {day.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}
                   </span>
                 </span>
-                <span aria-hidden="true" className="shrink-0 text-ink-3">
-                  &rarr;
-                </span>
+                <Arrow className="shrink-0 text-ink-3" />
               </Link>
             </li>
           ))}

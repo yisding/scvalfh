@@ -630,7 +630,7 @@ export interface OverviewDivision {
   rows: StandingsRowData[];
   /** The labelled rule in the compact table; null when the division draws none (EAL). */
   ladderLine: { after: number; label: string } | null;
-  /** `Full <division heading ?? SHORT> table →` */
+  /** `Full <division heading ?? SHORT> table`; the page adds the aria-hidden arrow (components/ui/Arrow). */
   fullLabel: string;
   /** `/standings/<league>#<division>` */
   fullHref: string;

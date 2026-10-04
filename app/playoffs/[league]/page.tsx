@@ -6,6 +6,7 @@ import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site-url';
 import LeagueTournament from '../../../components/playoffs/LeagueTournament';
 import { buildTournamentView, type TournamentView } from '../../../components/playoffs/playoff-view';
+import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
@@ -138,7 +139,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         meta={
           ccsLeagues.length > 0 ? (
             <Link href="/playoffs" className="sx-action text-meta text-accent hover:underline">
-              {`CCS playoffs (${ccsLeagues.join(', ')}) →`}
+              {`CCS playoffs (${ccsLeagues.join(', ')})`} <Arrow />
             </Link>
           ) : null
         }

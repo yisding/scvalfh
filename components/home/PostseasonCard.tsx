@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import BerthMeter from '../ui/BerthMeter';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
@@ -40,7 +41,7 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
           <p className="mt-4 mb-0 text-meta">
             {/* Standalone action link: its own 24px box (`sx-action`, WCAG 2.5.8). */}
             <Link href={view.link.href} prefetch={false} className={`sx-action ${LINK}`}>
-              {view.link.label} <span aria-hidden="true">&rarr;</span>
+              {view.link.label} <Arrow />
             </Link>
           </p>
         </div>
@@ -77,7 +78,7 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
           {/* Kept on one line: it ends a wrapping sentence, and "CCS playoffs" stranded above
               its arrow (or the arrow alone on the next line) read as two things. */}
           <Link href={view.link.href} prefetch={false} className={`whitespace-nowrap ${LINK}`}>
-            {view.link.label} <span aria-hidden="true">&rarr;</span>
+            {view.link.label} <Arrow />
           </Link>
         </p>
       </div>

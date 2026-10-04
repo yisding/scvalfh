@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
+import Arrow from '../ui/Arrow';
 import { plural } from '../ui/plural';
 import { usePinnedTeam } from '../ui/use-pinned-team';
 import { listWords } from '../../lib/format';
@@ -377,7 +378,7 @@ export function TeamFinder({
               </ul>
               {view.more ? (
                 <Link href="/teams" prefetch={false} className="sx-action mt-1 inline-flex min-h-11 items-center text-accent">
-                  Search all {index.teams.length} on Teams →
+                  Search all {index.teams.length} on Teams <Arrow />
                 </Link>
               ) : null}
             </Fragment>

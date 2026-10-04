@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import type { PhaseLeadView } from './home-data';
 
 /**
@@ -29,7 +30,7 @@ export function PhaseLead({ lead, className }: PhaseLeadProps) {
         <>
           {' '}
           <Link href={lead.link.href} prefetch={false} className="text-accent hover:underline">
-            {lead.link.label} <span aria-hidden="true">&rarr;</span>
+            {lead.link.label} <Arrow />
           </Link>
         </>
       ) : null}

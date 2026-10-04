@@ -19,6 +19,7 @@ import {
   gameTitle,
 } from '../../../components/game/game-model';
 import { OG_BASE } from '../../../components/layout/site-url';
+import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';
 
@@ -100,7 +101,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
             href={stub.targetHref}
             className="sx-pill min-h-11 bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
           >
-            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} &rarr;
+            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} <Arrow />
           </Link>
         </p>
         <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
@@ -147,9 +148,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           href={`/scores/${game.dateKey}`}
           className="sx-action -ml-3 min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
-          <span aria-hidden="true" className="mr-1.5">
-            &larr;
-          </span>
+          <Arrow dir="left" className="mr-1.5" />
           {dayLabel} games
         </Link>
         {teamLinks.length > 0 ? (

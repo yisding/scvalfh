@@ -2167,7 +2167,8 @@ qualifier) ·
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
 new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
-§5.3) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
+§5.3) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its
+words alone; never baked into a data string) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
 server-side in `America/Los_Angeles` so it never hydration-mismatches).
 
 ---

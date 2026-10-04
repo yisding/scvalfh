@@ -6,6 +6,7 @@ import BackfillTable from '../../components/about/BackfillTable';
 import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
 import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '../../components/about/LeagueHealthCard';
 import SbliveCrossCheckSummary from '../../components/about/SbliveCrossCheckSummary';
+import Arrow from '../../components/ui/Arrow';
 import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
@@ -257,7 +258,7 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
           <p>{postseason.titleNote}</p>
           <p>
             <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
-              {postseason.name} &rarr;
+              {postseason.name} <Arrow />
             </Link>
           </p>
         </>

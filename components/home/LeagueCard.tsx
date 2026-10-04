@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import type { LeagueCardView } from './home-types';
 import SetLeagueButton from './SetLeagueButton';
 
@@ -61,7 +62,7 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
           prefetch={false}
           className="inline-flex min-h-11 items-center text-meta font-medium text-accent no-underline hover:underline"
         >
-          {card.shortName} standings <span aria-hidden="true">&nbsp;&rarr;</span>
+          {card.shortName} standings <Arrow />
         </Link>
       </div>
     </li>

@@ -201,17 +201,17 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
       if (!line) continue;
       if (v.league.postseasonKind === 'ccs-ladder') {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('CCS playoffs →');
+        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('CCS playoffs');
       } else if (v.league.postseasonKind === 'unbracketed-tournament') {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason →');
+        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason');
         expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
           'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
         );
         expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
       } else {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe('/playoffs/mcal');
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('MCAL tournament →');
+        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('MCAL tournament');
         expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
           'Top six make the MCAL tournament: quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed), final Fri Oct 30 at Tamalpais; seeds 1-2 get byes to the semifinals.',
         );
@@ -227,10 +227,11 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
   it('TeamPlayoffLine renders the line and no CCS bracket link for MCAL', async () => {
     const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
     const mcal = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('tamalpais')! }));
-    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('MCAL tournament →');
+    // The arrow is drawn, not spoken (components/ui/Arrow.tsx): the link's name is the words alone.
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('MCAL tournament <span aria-hidden="true">→</span>');
     expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').not.toContain('CCS');
     const scval = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('st-ignatius')! }));
-    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('CCS playoffs →');
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('CCS playoffs <span aria-hidden="true">→</span>');
     expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('Official CCS bracket');
   });
 });

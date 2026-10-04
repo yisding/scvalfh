@@ -5,6 +5,7 @@ import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE } from '../../components/layout/site-url';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
+import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
 
@@ -99,7 +100,7 @@ export default function StandingsPage() {
                       prefetch={false}
                       className="sx-action text-meta font-medium text-accent hover:underline"
                     >
-                      {division.fullLabel} &rarr;
+                      {division.fullLabel} <Arrow />
                     </Link>
                   </p>
                 </div>

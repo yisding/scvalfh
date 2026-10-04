@@ -7,6 +7,7 @@ import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site-url';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
+import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
@@ -139,7 +140,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
             prefetch={false}
             className="font-medium text-accent hover:underline"
           >
-            How standings are computed &rarr;
+            How standings are computed <Arrow />
           </Link>
         </p>
         {data.unevenGp.map((line) => (

@@ -7,6 +7,7 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
 import TeamFinder from '../../components/search/TeamFinder';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
 import { buildTeamsByLeague, teamsLeagueChips } from '../../components/teams/team-view';
+import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 
@@ -126,7 +127,7 @@ export default function TeamsPage() {
                         prefetch={false}
                         className="sx-action text-meta font-medium text-accent hover:underline"
                       >
-                        {division.fullLabel} &rarr;
+                        {division.fullLabel} <Arrow />
                       </Link>
                     </p>
                   </div>
