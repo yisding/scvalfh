@@ -1,5 +1,5 @@
 # Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
-# stats (all 43 teams, all four leagues), and commit data/snapshot.json and data/player-stats.json
+# stats (all 49 teams, all five leagues), and commit data/snapshot.json and data/player-stats.json
 # only where the CONTENT actually changed.
 #
 # Schedule (SPEC §5.2 — one to two runs a day, never more):
@@ -18,8 +18,8 @@
 # `inSeasonWindow` from lib/pipeline/steps/window.ts).
 #
 # Player stats ride the same run because they move after every game, as the scores do, and the
-# same commit, so a refresh is still one deploy. They cover every registry team of the four
-# leagues (43 small JSON calls through the MaxPreps client's politeness gate); a failure is scoped
+# same commit, so a refresh is still one deploy. They cover every registry team of the five
+# leagues (49 small JSON calls through the MaxPreps client's politeness gate); a failure is scoped
 # to the team, which keeps its previous rows (lib/fetch-scope.ts), so one league's outage never
 # blocks another's stats. Their fetch is allowed to fail: a MaxPreps hiccup on the stats endpoint
 # must never cost the day's scores. Nor may the stats file the fetch wrote: when the tests fail
@@ -146,10 +146,11 @@ jobs:
       # with that team's previous rows carried forward (status 'carried-forward'), which is worth
       # committing; a crash before it writes leaves the committed file as it was. Either way the
       # snapshot above still ships. It writes nothing when only its fetchedAt stamps would change.
-      # Its own timeout keeps a hung stats endpoint from eating the job's budget (43 teams, one
-      # request each at the MaxPreps politeness gate's pace of at most 3 at once and 500 ms apart,
-      # take about 25 seconds). The manual force and leagues inputs reach it through env, like
-      # Fetch data's, never by interpolation into the script.
+      # Its own timeout keeps a hung stats endpoint from eating the job's budget (49 teams, one
+      # request each at the MaxPreps politeness gate's pace of at most 3 at once and 500 ms apart;
+      # the 43 teams of the four leagues before the EAL took about 25 seconds). The manual force
+      # and leagues inputs reach it through env, like Fetch data's, never by interpolation into
+      # the script.
       - name: Fetch player stats
         id: stats
         continue-on-error: true

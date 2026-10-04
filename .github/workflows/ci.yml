@@ -101,7 +101,7 @@ jobs:
       # lost its generateStaticParams — the site would start rendering on demand. The counts are
       # EXACT and derived from data/snapshot.json, lib/leagues.ts and data/clubs.json (fixed pages;
       # standings and schedule per league; playoffs per league-tournament league; every game plus
-      # the superseded-game stubs; every game date; the 43 teams; the clubs of data/clubs.json), no
+      # the superseded-game stubs; every game date; the 49 teams; the clubs of data/clubs.json), no
       # prerendered path may contain ':' (a raw `sblive:` id), and each family with an OG image has
       # page/image parity BY NAME.
       - name: Assert every route is static
@@ -116,9 +116,12 @@ jobs:
 
       # SPEC §10.9 over the built HTML: no "Gabilan" (except the lowercase MaxPreps URL slug), no
       # "eliminated", no division label on a single-division league, no CCS concept inside <main>
-      # of an MCAL page, the old /standings#de-anza / #el-camino anchors still there, and nowhere
-      # a club affiliation's or college commitment's basis or source quote, which data/clubs.json
-      # and data/commits.json keep but never render.
+      # of an MCAL or EAL page (or in the /playoffs EAL card), none of the five EAL claims (DESIGN
+      # §22.5: the umpires' grid called official, Davis or Bella Vista called Northern Section
+      # schools, Red Bluff's status overstated, "EAL school", a seed word on an EAL page),
+      # the old /standings#de-anza / #el-camino anchors still there, and nowhere a club
+      # affiliation's or college commitment's basis or source quote, which data/clubs.json and
+      # data/commits.json keep but never render.
       - name: Assert copy honesty in the built pages
         run: pnpm assert:copy
 

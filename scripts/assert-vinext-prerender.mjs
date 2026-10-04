@@ -19,7 +19,7 @@
  * `season.leagues` id, `playoffs/<id>` for each league with `postseasonKind: 'league-tournament'`
  * (never read from the built sitemap, which would be circular), `game/<param>` for every game plus
  * one stub per `supersededGames` key (param = lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`),
- * `scores/<date>` for every distinct game date, `teams/<slug>` for the 43 teams. The clubs pages
+ * `scores/<date>` for every distinct game date, `teams/<slug>` for the 49 teams. The clubs pages
  * are derived from data/clubs.json instead (DESIGN §17, SPEC §1.1j2), read from the repo root as
  * the snapshot is: the fixed page `clubs`, and `clubs/<slug>` for exactly its slugs, with no OG card
  * (they take the root one); `commits` (DESIGN §21) is a fixed page, one page with the root card.
@@ -84,7 +84,9 @@ const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
 const stubParams = Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam);
 const dates = [...new Set(snapshot.games.map((g) => g.dateKey))];
 const slugs = snapshot.teams.map((t) => t.slug);
-if (slugs.length !== 43) fail(`the snapshot has ${slugs.length} teams, expected 43`);
+// A literal on purpose (plain .mjs, no registry import): a registry that grows or shrinks has to
+// touch this line, as the EAL's six teams did (43 → 49).
+if (slugs.length !== 49) fail(`the snapshot has ${slugs.length} teams, expected 49`);
 // One page per club of data/clubs.json, a club with no tied player included (lib/clubs.ts
 // getClubSlugs is the same set, in display order; order does not matter here).
 const clubSlugs = JSON.parse(fs.readFileSync('data/clubs.json', 'utf8')).clubs.map((c) => c.slug);
