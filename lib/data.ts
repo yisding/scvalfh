@@ -54,6 +54,7 @@ import {
   sortStandings,
 } from './standings';
 import type { MissingOfficialRow } from './standings';
+import { getTeamById, getTeamBySlug } from './teams';
 import type {
   CcsCalendarEvent,
   CcsPlayoffs,
@@ -321,15 +322,17 @@ export function getTeamsGrouped(): Array<{
   })).filter((g) => g.leagues.length > 0);
 }
 
-export function getTeamBySlug(slug: string): Team | undefined {
-  return snapshot.teams.find((t) => t.slug === slug);
-}
+/**
+ * The registry lookups (lib/teams.ts), re-exported so a page can name a team through this module.
+ * The snapshot's teams equal the registry, in membership and order (checkAgainstConfig #1), so
+ * there is one lookup, not a second scan of `snapshot.teams`.
+ */
+export { getTeamById, getTeamBySlug };
 
-export function getTeamById(id: string): Team | undefined {
-  return snapshot.teams.find((t) => t.id === id);
-}
-
-/** Accepts a slug or a MaxPreps GUID. */
+/**
+ * Accepts a slug or a MaxPreps GUID. Reads the registry (getTeamBySlug, getTeamById), which the
+ * snapshot's teams equal by checkAgainstConfig #1.
+ */
 export function resolveTeamRef(ref: string): Team | undefined {
   return getTeamBySlug(ref) ?? getTeamById(ref);
 }
