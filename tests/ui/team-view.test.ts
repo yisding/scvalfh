@@ -564,9 +564,22 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
       seededFrom: '2025-26',
     });
     expect(v.elo.elo, 'components/teams/team-view.ts elo gp 0').not.toBeNull();
+    expect(v.elo.seeded, 'components/teams/team-view.ts elo gp 0: its own start').toBe(true);
     const text = textOf(await zeroed.renderTeam(slug));
     expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} points · preseason, from 2025-26`);
     expect(text, 'components/teams/TeamElo.tsx gp 0').toContain('No counted result this season yet, so this is where it starts');
+  });
+
+  it('the Elo card says where THIS team started: its own rating from last season, or average', async () => {
+    const { TeamElo } = await import('../../components/teams/TeamElo');
+    const view = zeroed.v.buildTeamPageView(slug)!.elo;
+    const played = { ...view, elo: 1600, games: 8, preseason: false, provisional: false, boardPlace: null };
+    const seeded = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: true } })));
+    expect(seeded, 'components/teams/TeamElo.tsx seeded').toContain('It started the season from its 2025-26 rating');
+    // A program new to the registry: no 2025-26 rating, though every other team has one.
+    const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It played no 2025-26 final against the four leagues’ teams, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 
   it('the Elo card says a team with no rating at all is not rated, never a 1500 it has not earned', async () => {

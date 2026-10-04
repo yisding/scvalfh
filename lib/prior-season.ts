@@ -195,7 +195,7 @@ export function priorGamesFromFeeds(
       if (prev) {
         const same =
           prev.homeId === game.homeId
-            ? prev.homeScore === game.homeScore && prev.awayScore === game.awayScore
+            ? prev.site === game.site && prev.homeScore === game.homeScore && prev.awayScore === game.awayScore
             : prev.site === 'neutral' && game.site === 'neutral' && prev.homeScore === game.awayScore && prev.awayScore === game.homeScore;
         if (!same) conflicted.add(c.contestId);
         continue;

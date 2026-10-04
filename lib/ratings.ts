@@ -137,6 +137,7 @@ interface FitRow {
   hosted: boolean;
 }
 
+/** A goal margin limited to MARGIN_CAP either way. */
 const capped = (margin: number) => Math.max(-MARGIN_CAP, Math.min(MARGIN_CAP, margin));
 
 /**
@@ -184,6 +185,11 @@ function startsFrom(teams: readonly Team[], prior: PriorSeason): Map<TeamId, num
   return new Map(ids.map((id) => [id, CARRYOVER * (strength.get(id)! - mean)]));
 }
 
+/**
+ * Every rated team's Elo rating from this season's `games`, each team started from its rating
+ * over `prior` (last season) when given, else from average. Pure and deterministic: the same
+ * inputs in any order give the same table. See the header for the model and how it was chosen.
+ */
 export function computeRatings(
   teams: readonly Team[],
   games: readonly Game[],

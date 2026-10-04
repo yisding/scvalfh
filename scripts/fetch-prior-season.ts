@@ -55,6 +55,7 @@ interface Args {
   dryRun: boolean;
 }
 
+/** The command line (see USAGE); the season defaults to the one before lib/season.ts'. */
 function parseArgs(argv: readonly string[]): Args {
   const args: Args = {
     year: previousMaxprepsYear(SEASON_YEAR),
@@ -114,6 +115,7 @@ function render(file: PriorSeason): string {
   return `${top.slice(0, top.lastIndexOf('[]'))}[\n${lines.join(',\n')}\n  ]\n}\n`;
 }
 
+/** Fetch every registry team's feed for the season, normalize, validate, write (all or nothing). */
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const season = seasonLabel(args.year);

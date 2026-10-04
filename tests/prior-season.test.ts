@@ -189,4 +189,15 @@ describe('priorGamesFromFeeds', () => {
     expect(r.conflicts).toHaveLength(1);
     expect(r.conflicts[0]).toMatch(/^contest c4 \(2025-09-10, fremont v saratoga\): the two feeds disagree/);
   });
+
+  it('reports a contest one feed hosts and the other calls neutral, whichever feed comes first', () => {
+    // Same score, same side listed first: only the site differs, and it decides the home edge.
+    const hosted = row('c5', [{ slug: 'fremont', score: 2, at: 0 }, { slug: 'saratoga', score: 1, at: 1 }]);
+    const neutral = row('c5', [{ slug: 'fremont', score: 2, at: 2 }, { slug: 'saratoga', score: 1, at: 2 }]);
+    for (const [first, second] of [[hosted, neutral], [neutral, hosted]]) {
+      const r = priorGamesFromFeeds(new Map([['fremont', [first]], ['saratoga', [second]]]));
+      expect(r.games).toEqual([]);
+      expect(r.conflicts).toHaveLength(1);
+    }
+  });
 });

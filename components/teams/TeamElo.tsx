@@ -40,7 +40,11 @@ export function TeamElo({ elo, className }: { elo: TeamEloView; className?: stri
       : elo.preseason
         ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, fitted to last season’s finals. ${scale}`
         : `Fitted to every final between two of the four leagues’ teams this season, so each opponent’s strength counts as well as each goal margin.${
-            elo.seededFrom ? ` Each team started from its ${elo.seededFrom} rating, which counts for one game.` : ''
+            elo.seeded
+              ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
+              : elo.seededFrom
+                ? ` It played no ${elo.seededFrom} final against the four leagues’ teams, so it started from an average rating.`
+                : ''
           } ${scale}`;
 
   return (

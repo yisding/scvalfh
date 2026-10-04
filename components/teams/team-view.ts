@@ -82,8 +82,14 @@ export interface TeamEloView {
   preseason: boolean;
   /** Played this season, but fewer games than the Elo board's minimum, so not on the board yet. */
   provisional: boolean;
-  /** The season every rating starts from ("2025-26"); null when they start at average. */
+  /** The season the ratings start from ("2025-26"); null when every team starts at average. */
   seededFrom: string | null;
+  /**
+   * Whether THIS team started from its rating in `seededFrom`. False for a team with no final
+   * last season against the four leagues' teams (a program new to the registry): it started at
+   * average, even when every other team was seeded.
+   */
+  seeded: boolean;
   /** The Elo board's minimum games. */
   minGames: number;
   /** Its place in the board's top 10, as the board prints it; null when the board does not list it. */
@@ -105,6 +111,7 @@ export function teamElo(slug: TeamSlug): TeamEloView {
     preseason: rating !== undefined && games === 0,
     provisional: rating !== undefined && games > 0 && games < minGames,
     seededFrom: eloBoard.seededFrom,
+    seeded: rating?.seeded ?? false,
     minGames,
     boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
   };

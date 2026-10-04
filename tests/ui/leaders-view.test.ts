@@ -326,6 +326,32 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.note).not.toContain('started the season');
   });
 
+  it('says a team with no game last season started from average, only when one did', () => {
+    const fremont = getTeamBySlug('fremont')!;
+    const saratoga = getTeamBySlug('saratoga')!;
+    const prior = {
+      ...getPriorSeason(),
+      // Last season knew two of the four synthetic teams only.
+      games: [
+        {
+          contestId: 'p1',
+          date: '2025-09-10',
+          homeId: fremont.id,
+          homeSlug: 'fremont',
+          awayId: saratoga.id,
+          awaySlug: 'saratoga',
+          homeScore: 2,
+          awayScore: 0,
+          site: 'home' as const,
+        },
+      ],
+    };
+    const note = buildLeadersView({ ...sources(base), prior }).schools.find((b) => b.id === 'elo-rating')!.note;
+    expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it played none;');
+    // The committed season seeds every rated team, so its note makes no such claim.
+    expect(buildLeadersView().schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
+  });
+
   it('starts the committed board from last season, and says so', () => {
     const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
     expect(board.note).toContain(`started the season from its ${getPriorSeason().season} rating`);
