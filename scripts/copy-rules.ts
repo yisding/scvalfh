@@ -559,6 +559,18 @@ export function around(text: string, index: number): string {
   return text.slice(Math.max(0, index - 60), index + 60).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * `html` without each `<a>…</a>` whose text reads exactly `text` (tags, including React's `<!-- -->`
+ * text separators, dropped and whitespace collapsed): the one link a page may say a word in that the
+ * rest of it may not. It matches the words a reader sees, not the markup, so a link's arrow can be
+ * components/ui/Arrow's aria-hidden `<span>→</span>` or bare text alike.
+ */
+export function withoutLink(html: string, text: string): string {
+  return html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, (link, inner: string) =>
+    inner.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() === text ? '' : link,
+  );
+}
+
 // ---------------------------------------------------------------- /history/2025-26
 
 /** The two entities React writes in an attribute or text that a reason may contain. */

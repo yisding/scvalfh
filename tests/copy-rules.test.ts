@@ -5,7 +5,7 @@
  * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
  * Vista called Northern Section schools, Red Bluff's status overstated, "EAL school", a seed word);
  * how it reads a built page's visible text and its title, description and attribute text; and how
- * it cuts a page into one element per id.
+ * it cuts a page into one element per id and drops the one link a page may name CCS in.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -30,6 +30,7 @@ import {
   sectionById,
   umpireOfficialClaims,
   visibleText,
+  withoutLink,
 } from '../scripts/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
@@ -278,6 +279,23 @@ describe('mainElement: a built page\'s <main>', () => {
   it('is empty when the page has no <main>, and never matches a longer tag name', () => {
     expect(mainElement('<body><p>x</p></body>')).toBe('');
     expect(mainElement('<mainly>x</mainly>')).toBe('');
+  });
+});
+
+describe('withoutLink: the one link a page may say a word in', () => {
+  const words = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
+
+  it('drops a link whose text reads the words, whatever the arrow\'s markup', () => {
+    // As React renders `{words} <Arrow />` (components/ui/Arrow.tsx): a text separator, then the aria-hidden glyph.
+    const arrow = '<a class="sx-action" href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL)<!-- --> <span aria-hidden="true">→</span></a>';
+    expect(withoutLink(`<p>x</p>${arrow}<p>y</p>`, words)).toBe('<p>x</p><p>y</p>');
+    expect(withoutLink('<a href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL) →</a>', words)).toBe('');
+  });
+
+  it('keeps the words outside a link, and a link that says anything more', () => {
+    expect(withoutLink('<p>CCS playoffs (SCVAL, BVAL, PCAL) →</p>', words)).toBe('<p>CCS playoffs (SCVAL, BVAL, PCAL) →</p>');
+    const more = '<a href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL) → and the CCS picture</a>';
+    expect(withoutLink(more, words)).toBe(more);
   });
 });
 

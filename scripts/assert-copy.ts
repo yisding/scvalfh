@@ -94,6 +94,7 @@ import {
   sectionById,
   umpireOfficialClaims,
   visibleText,
+  withoutLink,
 } from './copy-rules';
 import { PUBLIC_TERMS } from './public-terms';
 
@@ -192,6 +193,7 @@ const leaguePages = (id: LeagueId): string[] => [
   ...snapshot.teams.filter((x) => x.league === id).map((t) => `teams/${t.slug}.html`),
 ];
 const nonCcsPages = nonCcsLeagues.flatMap((l) => leaguePages(l.id));
+/** The text of the one link a non-CCS page may name CCS in: app/playoffs/[league]/page.tsx's pointer to /playoffs. */
 const ALLOWED_CCS = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
 /** The CCS concepts no part of a non-CCS league's pages may carry. */
 function forbidCcs(file: string, part: string, where: string): void {
@@ -200,7 +202,7 @@ function forbidCcs(file: string, part: string, where: string): void {
   forbid(file, part, /CCS Division/i, `${where} says "CCS Division"`);
   forbid(file, part, /CCS picture/i, `${where} says "CCS picture"`);
   forbid(file, part, /holds \d+ of 16/i, `${where} carries a CCS berth meter`);
-  forbid(file, part.split(ALLOWED_CCS).join(''), /\bCCS\b/, `${where} names CCS outside the "CCS playoffs (SCVAL, BVAL, PCAL) →" link`);
+  forbid(file, withoutLink(part, ALLOWED_CCS), /\bCCS\b/, `${where} names CCS outside the "${ALLOWED_CCS}" link`);
 }
 for (const file of nonCcsPages) {
   const p = path.join(APP, file);
