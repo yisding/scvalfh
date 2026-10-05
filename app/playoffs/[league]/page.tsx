@@ -10,7 +10,7 @@ import {
   tournamentLeague,
   tournamentStaticParams,
   type TournamentConfig,
-} from '../../../components/playoffs/tournament-data';
+} from '../../../components/playoffs/tournament-league';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';

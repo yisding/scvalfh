@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { OG, OG_SIZE } from '../../../components/layout/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { ROUND_TITLES, type TournamentRoundView } from '../../../components/playoffs/playoff-view';
-import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-data';
+import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-league';
 import { getLeagueTournament, getTeamBySlug } from '../../../lib/data';
 import { listWords, shortDate } from '../../../lib/format';
 
@@ -14,7 +14,7 @@ import { listWords, shortDate } from '../../../lib/format';
  *
  * `dynamicParams` does not reach a metadata route (see app/teams/[slug]/opengraph-image.tsx), so this
  * file states its own `generateStaticParams` — the page's own `tournamentStaticParams` — and checks
- * the param with the page's `tournamentLeague` (components/playoffs/tournament-data.ts) BEFORE
+ * the param with the page's `tournamentLeague` (components/playoffs/tournament-league.ts) BEFORE
  * `getLeagueTournament`, which throws for a CCS league: `/playoffs/scval/opengraph-image` and
  * `/playoffs/nope/opengraph-image` answer 404 (SPEC §8.1). The round titles are the page's
  * `ROUND_TITLES` and a shared seat reads `A, B or C` as on the page. The alt is static: a per-league alt would
