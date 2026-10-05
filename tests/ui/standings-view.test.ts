@@ -438,3 +438,18 @@ describe('the preseason notice (standings-data.ts buildNotice, DESIGN §8)', () 
     });
   });
 });
+
+describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
+  const LL = 'components/standings/standings-view.ts ladderLineAfter';
+  const rows = (...places: Array<number | null>) =>
+    places.map((place) => ({ ranked: place !== null, place: place ?? 0 }));
+  it('is counted, not assumed: two teams level on the line both sit above it', () => {
+    expect(view.ladderLineAfter(rows(1, 2, 3, 3, 5), 3), LL).toBe(4);
+    expect(view.ladderLineAfter(rows(1, 1, 3, 4), 1), `${LL}: level on 1st`).toBe(2);
+  });
+  it('draws none before any result, when every row is above it, or with no line configured', () => {
+    expect(view.ladderLineAfter(rows(null, null, null), 3), `${LL}: no results`).toBeNull();
+    expect(view.ladderLineAfter(rows(1, 2, 3), 6), `${LL}: every row above`).toBeNull();
+    expect(view.ladderLineAfter(rows(1, 2, 3), null), `${LL}: no line`).toBeNull();
+  });
+});

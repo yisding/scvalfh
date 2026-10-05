@@ -195,6 +195,32 @@ export interface DivisionView {
 
 // ---------------------------------------------------------------- small helpers
 
+/**
+ * Where a table's labelled ladder line goes: after how many rows, or null for no line.
+ *
+ * COUNTED, not assumed: the line sits under every ranked row whose place is at or above `after`,
+ * so with two teams level on the line there are more rows above it than `after` says, and two
+ * teams level on 1st both sit above Santa Teresa's "Play-in host" line. No line before any
+ * result (nothing above it), none when every row is above it (nothing below), and none for a
+ * division that draws no line (`after` null: the EAL). Rows come in table order, ranked rows
+ * first, so the rows above the line are always the first ones. The full table
+ * (`buildDivisionView`), the compact one, the home mini table (over its shown rows) and the
+ * league-tournament seeds all place their line through here.
+ */
+export function ladderLineAfter(
+  rows: readonly { ranked: boolean; place: number }[],
+  after: number | null | undefined,
+): number | null {
+  if (after === null || after === undefined) return null;
+  const above = rows.filter((r) => r.ranked && r.place <= after).length;
+  return above > 0 && above < rows.length ? above : null;
+}
+
+/** A standings (or seeds) row as `ladderLineAfter` reads it. */
+export function ladderRow(row: { standing: Standing }): { ranked: boolean; place: number } {
+  return { ranked: row.standing.hasReportedResults, place: row.standing.computed.place };
+}
+
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
   return `Official schedule (${officialSourceFormat(source)})`;
@@ -354,12 +380,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   const ranked = rows.filter((r) => r.standing.hasReportedResults);
   const unrankedTeams = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
 
-  // COUNTED, not assumed: with two teams level on the line there are more rows above it. A division
-  // with no line (the EAL: every team is inside the Super Regional's top six) draws none.
+  // COUNTED, not assumed (ladderLineAfter). A division with no line (the EAL: every team is inside
+  // the Super Regional's top six) draws none.
   const line = config.ladderLine;
-  const aboveLine = line ? ranked.filter((r) => r.standing.computed.place <= line.after) : [];
-  const berthRuleAfter =
-    aboveLine.length > 0 && aboveLine.length < rows.length ? aboveLine.length : undefined;
+  const berthRuleAfter = ladderLineAfter(rows.map(ladderRow), line?.after) ?? undefined;
 
   // A level place spans as many finishing slots as the tied group has teams, so it can hold two
   // rungs at once; grouping on `playoffStatus` alone would make a rung (the play-in, say) vanish.

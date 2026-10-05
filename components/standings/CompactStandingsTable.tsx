@@ -5,6 +5,8 @@ import type { Standing } from '../../lib/types';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { StandingsRowData } from '../ui/StandingsTable';
 
+import { ladderLineAfter, ladderRow } from './standings-view';
+
 /**
  * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team
  * (monogram + short name, a link to the team page), GP, W-L-T, PTS. Every team of the division,
@@ -67,12 +69,7 @@ export function CompactStandingsTable({
   filterable = false,
   className,
 }: CompactStandingsTableProps) {
-  const above = ladderLine
-    ? rows.filter(
-        (r) => r.standing.hasReportedResults && r.standing.computed.place <= ladderLine.after,
-      ).length
-    : 0;
-  const lineAfter = above > 0 && above < rows.length ? above : null;
+  const lineAfter = ladderLineAfter(rows.map(ladderRow), ladderLine?.after);
 
   return (
     <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>

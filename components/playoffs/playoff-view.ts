@@ -1,8 +1,9 @@
 /**
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
  * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
- * is testable and safe anywhere. The only runtime imports are `lib/format` and the pure config in
- * `lib/leagues` (for `ladderFactsFor`). Server-only: no client component imports this module.
+ * is testable and safe anywhere. The only runtime imports are `lib/format`, the pure config in
+ * `lib/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
+ * tournament line). Server-only: no client component imports this module.
  *
  * CCS (SPEC §6.1, §10.7): the field is 16 teams, numbers only. Every CCS league qualifies by its own
  * LADDER (config): SCVAL's first three per division plus a 4th-place play-in, BVAL's Mt. Hamilton
@@ -51,6 +52,8 @@ import type {
   TournamentGame,
   TournamentSlot,
 } from '../../lib/types';
+
+import { ladderLineAfter, ladderRow } from '../standings/standings-view';
 
 // ---------------------------------------------------------------- small helpers
 
@@ -679,12 +682,9 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     label: standing.hasReportedResults ? label : 'No results reported',
   }));
 
-  let lineAfter = 0;
-  for (const [index, row] of seedRows.entries()) {
-    if (ladderLine && row.standing.hasReportedResults && row.standing.computed.place <= ladderLine.after) {
-      lineAfter = index + 1;
-    }
-  }
+  // The standings tables' own rule (ladderLineAfter): no line when every seed sits above it,
+  // which LeagueTournament never drew anyway.
+  const lineAfter = ladderLineAfter(seedRows.map(ladderRow), ladderLine?.after) ?? 0;
 
   const name = (slug: TeamSlug) => teamOf(slug)?.name ?? slug;
   const place = ordinal(lastPlace);

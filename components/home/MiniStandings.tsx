@@ -6,6 +6,7 @@ import SectionHeader from '../ui/SectionHeader';
 import { NoGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, ordinal } from '../../lib/format';
+import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-data';
 
@@ -103,14 +104,13 @@ export function MiniStandings({ division, href, showDivisionLabel, home, legend,
   const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));
   const where = showDivisionLabel && division.heading ? division.heading : division.leagueShort;
   const through = division.throughDate;
-  // The labelled line goes after PLACE `home.lineAfter`, not after a row index: two teams level on
-  // 1st both sit above Santa Teresa's "Play-in host" line. No line before any result, and none
-  // when every shown row is above it.
-  const lineIndex =
-    home.lineAfter === null
-      ? -1
-      : shown.reduce((at, row, i) => (row.hasResults && row.place <= (home.lineAfter as number) ? i : at), -1);
-  const lineAt = lineIndex >= 0 && lineIndex < shown.length - 1 ? lineIndex : -1;
+  // The labelled line goes after PLACE `home.lineAfter`, counted over the shown rows
+  // (ladderLineAfter): no line before any result, and none when every shown row is above it.
+  const lineAfter = ladderLineAfter(
+    shown.map((row) => ({ ranked: row.hasResults, place: row.place })),
+    home.lineAfter,
+  );
+  const lineAt = lineAfter === null ? -1 : lineAfter - 1;
   const kicker = showDivisionLabel && division.heading ? division.heading : 'League table';
   const subject = showDivisionLabel && division.heading
     ? `${division.heading} Division league standings`
