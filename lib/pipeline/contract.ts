@@ -168,8 +168,9 @@ export interface PipelineSteps { official: OfficialStep; sblive: SbliveStep }
 /**
  * The data/snapshot.meta.json object (§7.11), written by lib/pipeline/steps/assemble.ts. Besides the
  * tests, .github/workflows/update-data.yml reads it: `contentHash` (commit only when it changes),
- * `today`, `counts` and `commitSummary` (the commit message) and `fetchedAt` (issue bodies), so a
- * field renamed here must be renamed there too.
+ * `today`, `counts` and `commitSummary` (the commit message), so a field renamed here must be renamed
+ * there too; scripts/data-issues.ts reads `fetchedAt` and the previous run's `leagues` (the issues)
+ * through this type.
  */
 export interface SnapshotMeta {
   fetchedAt: string;
