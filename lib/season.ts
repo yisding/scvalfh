@@ -1,5 +1,5 @@
 /**
- * Verified season constants: a dependency-free constants leaf (type-only imports), because client
+ * Verified season constants: a dependency-free constants leaf (no imports), because client
  * modules reach it through lib/format. League, division and CCS facts live in lib/leagues.ts; the
  * Season record is built by lib/season-build.ts (SPEC §13.3).
  *
