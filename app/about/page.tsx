@@ -979,10 +979,10 @@ export default function AboutPage() {
               games on MaxPreps may not field a JV team, or may not have entered its schedule.
             </p>
             <p>
-              JV games are listed, never counted: no standings table, record, leader board, rating or
-              postseason picture on this site reads them, and they carry no league or non-league tag,
-              because MaxPreps&rsquo; JV league flags are unreliable and no league publishes JV
-              standings during the season.
+              JV games are kept apart from varsity: no varsity standings table, record, leader board,
+              rating or postseason picture on this site reads them. There are no JV standings yet, and
+              for now JV games carry no league or non-league tag, because MaxPreps&rsquo; JV league
+              flags are unreliable and no league publishes JV standings during the season.
             </p>
             <p>
               MaxPreps comes first, as for varsity. Each school&rsquo;s JV page on High School on SI

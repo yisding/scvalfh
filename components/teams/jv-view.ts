@@ -2,8 +2,8 @@
  * The JV lists' view model: a team page's "JV games" section and a day page's JV block.
  *
  * Every game comes from lib/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
- * lib/jv-merge.ts). A JV game is listed, never counted: these views feed no record, form strip,
- * margin chart or table, so a JV result can never be mistaken for a varsity one.
+ * lib/jv-merge.ts). JV games stay apart from varsity: these views feed no varsity record, form
+ * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
  */

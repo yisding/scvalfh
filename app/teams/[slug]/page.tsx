@@ -215,7 +215,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const sblive = team.external.sbliveGamesUrl;
   // Both exist for every registry team; an empty or pending team gets a stated empty state.
   const roster = buildRosterView(team.slug);
-  // The school's JV games (MaxPreps, supplemented by si.com): listed, never counted.
+  // The school's JV games (MaxPreps, supplemented by si.com): listed apart from every varsity count.
   const jv = buildTeamJvView(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
@@ -501,7 +501,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         </div>
 
         {/* The JV list comes after every varsity game section and before the players: it is the
-            same school's other team, and none of its games feeds anything above. Both columns
+            same school's other team, and none of its games feeds the varsity sections above. Both columns
             from 768px, like the lists below it. */}
         {jv ? (
           <section className="min-w-0 md:col-span-2" id="jv">
@@ -509,7 +509,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               kicker="JV games"
               meta={
                 jv.rows.length > 0
-                  ? `${jv.played} played${jv.toCome > 0 ? ` · ${jv.toCome} to come` : ''} · not counted`
+                  ? `${jv.played} played${jv.toCome > 0 ? ` · ${jv.toCome} to come` : ''}`
                   : undefined
               }
             />

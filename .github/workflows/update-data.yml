@@ -199,33 +199,45 @@ jobs:
       # rosters. A bad file must not be committed.
       #
       # The stats and the JV games are allowed to fail (above), so a file of theirs the tests refuse
-      # must not cost the snapshot either. When the suite fails, the JV file is restored first if it
-      # changed in this run, and the suite runs again; if it still fails and the stats file changed,
-      # that is restored too and the suite runs once more. The last verdict decides (the commit step
-      # then sees no change in a restored file). With neither file changed, the first verdict does.
+      # must not cost the snapshot either, and one file's failure must not cost the other file. When
+      # the suite fails, it runs again without this run's JV file (restored to the committed one);
+      # if that passes, the JV file was the problem. If not, this run's JV file goes back and the
+      # stats file is restored instead; if that passes, the stats file was the problem and the new
+      # JV file is kept. Only when neither alone is enough are both restored for a last run, whose
+      # verdict decides. A file that did not change in this run is never restored (the commit step
+      # then sees no change in a restored file), and with neither changed the first verdict decides.
       - name: Test
         id: test
         run: |
           set -uo pipefail
           if pnpm test; then exit 0; fi
-          restored=false
-          if ! git diff --quiet -- data/jv.json; then
-            echo "::warning::the tests failed with this run's data/jv.json; restoring the committed file and testing again"
+          jv_changed=false
+          stats_changed=false
+          git diff --quiet -- data/jv.json || jv_changed=true
+          git diff --quiet -- data/player-stats.json || stats_changed=true
+          if [ "$jv_changed" != true ] && [ "$stats_changed" != true ]; then
+            echo "::error::the tests failed and neither data/jv.json nor data/player-stats.json changed in this run"
+            exit 1
+          fi
+          if [ "$jv_changed" = true ]; then
+            NEW_JV="${RUNNER_TEMP:-/tmp}/jv-this-run.json"
+            cp data/jv.json "$NEW_JV"
+            echo "::warning::the tests failed; testing again without this run's data/jv.json"
             git checkout -- data/jv.json
-            echo "jv_restored=true" >> "$GITHUB_OUTPUT"
-            restored=true
-            if pnpm test; then exit 0; fi
+            if pnpm test; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+            if [ "$stats_changed" != true ]; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 1; fi
+            # Not the JV file alone: put it back and try without this run's stats file instead.
+            cp "$NEW_JV" data/jv.json
           fi
-          if ! git diff --quiet -- data/player-stats.json; then
-            echo "::warning::the tests failed with this run's data/player-stats.json; restoring the committed file and testing again"
-            git checkout -- data/player-stats.json
-            echo "stats_restored=true" >> "$GITHUB_OUTPUT"
-            pnpm test
-            exit $?
-          fi
-          if [ "$restored" = true ]; then exit 1; fi
-          echo "::error::the tests failed and neither data/jv.json nor data/player-stats.json changed in this run"
-          exit 1
+          echo "::warning::the tests failed; testing again without this run's data/player-stats.json"
+          git checkout -- data/player-stats.json
+          echo "stats_restored=true" >> "$GITHUB_OUTPUT"
+          if pnpm test; then exit 0; fi
+          if [ "$jv_changed" != true ]; then exit 1; fi
+          echo "::warning::the tests still failed; testing again without this run's data/jv.json either"
+          git checkout -- data/jv.json
+          echo "jv_restored=true" >> "$GITHUB_OUTPUT"
+          pnpm test
 
       # One open issue per official schedule revised upstream (a stale official-revision-check
       # row) and per league frozen in this run AND the previous one, each with the published

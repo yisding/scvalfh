@@ -10,8 +10,8 @@ import type { JvListSummary, TeamJvView } from './jv-view';
  * A team page's JV games (DESIGN §3.7's game log, one list): `Sep 14 (W) 4–0 vs Cupertino FINAL`.
  *
  * The rows are the varsity log's rows (GameLogRowBody, the same four columns) without the link —
- * a JV game has no page of its own — and without chips: a JV game is never a league, non-league or
- * postseason game for any table, so tagging it NL would claim something we do not decide. A score
+ * a JV game has no page of its own — and without chips: no JV game is classified as league,
+ * non-league or postseason yet, so tagging it NL would claim something we have not decided. A score
  * from si.com carries the †, as everywhere else; a MaxPreps score si.com reports differently gets
  * one line under its row saying so. The footnote says what the list is and is not.
  */
@@ -62,14 +62,15 @@ export function TeamJvGames({ view, perspective }: { view: TeamJvView; perspecti
 }
 
 /**
- * The one line under every JV list: listed, not counted; where the scores come from; the † when the
- * list has one; and a link to /about#jv. The link sits inside the sentence (WCAG 2.5.8's inline
+ * The one line under every JV list: kept apart from varsity, no JV standings yet; where the scores
+ * come from; the † when the list has one; and a link to /about#jv. The link sits inside the sentence (WCAG 2.5.8's inline
  * exception), like the day page's legend.
  */
 export function JvFootnote({ summary, className }: { summary: JvListSummary; className?: string }) {
   return (
     <p className={['mt-3 mb-0 max-w-prose text-meta text-ink-3', className].filter(Boolean).join(' ')}>
-      JV games are listed here, never counted in a standings table. Scores are MaxPreps&rsquo;
+      JV games are kept apart from the varsity tables, and there are no JV standings yet. Scores are
+      MaxPreps&rsquo;
       {summary.sbliveScores > 0 ? (
         <>
           ; a &dagger; marks a score from si.com where MaxPreps has none

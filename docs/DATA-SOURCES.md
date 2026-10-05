@@ -1421,8 +1421,9 @@ are not used for JV.
 ### 1.7 JV games — MaxPreps JV feeds, supplemented by si.com JV pages (`data/jv.json`)
 
 Built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`), twice a day in season after the player stats
-(`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **never
-counted** in any table, record, leader board, rating or postseason picture. Read 2026-10-05 **[V]**.
+(`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **kept apart
+from varsity**: no varsity table, record, leader board, rating or postseason picture reads them, and
+no JV standings are computed yet. Read 2026-10-05 **[V]**.
 
 - **MaxPreps.** The JV season has its own id: `__NEXT_DATA__.query` of
   `https://www.maxpreps.com/ca/field-hockey/jv/` gives `ssid` `fae4fc22-6de6-47ae-972d-e290b0ec31ef`,
@@ -2128,8 +2129,9 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   `/history/2025-26` marks the EAL `unavailable` with the sources checked.
 - No by-law ranks a team across leagues, and the CCS committee seeds by criteria we cannot compute,
   so the site shows no merged 1-16 order before CCS seeds.
-- JV games (§1.7) are listed, not counted: there is no in-season JV standings source and MaxPreps' JV
-  league flag is unreliable, so no JV table is computed. JV scores are thin where coaches do not enter
+- No JV table is computed yet (§1.7): there is no in-season JV standings source and MaxPreps' JV
+  league flag is unreliable, so JV league games would have to be identified another way (for example,
+  by matching the varsity fixture of the same day and pairing). JV scores are thin where coaches do not enter
   them (no MaxPreps score for any past BVAL or PCAL JV league game on 2026-10-05), si.com only partly
   fills that, and nothing says authoritatively which schools field a JV team. A day page exists only
   for a date with a varsity game, so a JV-only date is on the team pages alone.

@@ -18,8 +18,8 @@
  * pages list with different scores is never used. A row against a school outside the registry is
  * not matched: there is no id to match it by.
  *
- * Nothing here decides a table: a JV game never counts for standings (countsFor and postseason
- * stay null). Pure: no I/O, no clock — `today` is an input.
+ * Nothing here decides a table: a JV game counts for no varsity table or postseason (countsFor and
+ * postseason stay null), and no JV table is computed yet. Pure: no I/O, no clock — `today` is an input.
  */
 
 import { datesOf } from './backfill';

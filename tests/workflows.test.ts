@@ -187,7 +187,7 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     const res = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
       cwd: dir,
       encoding: 'utf8',
-      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: output, CALLS: calls },
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: output, CALLS: calls, RUNNER_TEMP: dir },
     });
     return {
       code: res.status,
@@ -244,12 +244,22 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     expect(r.output).not.toContain('stats_restored');
   });
 
-  it('restores both files when the suite still fails without the new JV file', () => {
+  it('keeps a good new JV file when only the new stats file failed the suite', () => {
+    const r = runStep({ stats: '{"stats":"bad"}\n', jv: '{"jv":"new"}\n' });
+    expect(r.code).toBe(0);
+    expect(r.jv).toBe('{"jv":"new"}\n');
+    expect(r.stats).toBe(committed);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test', 'pnpm test']);
+    expect(r.output).toContain('stats_restored=true');
+    expect(r.output).not.toContain('jv_restored');
+  });
+
+  it('restores both files when neither alone is enough', () => {
     const r = runStep({ stats: '{"stats":"bad"}\n', jv: '{"jv":"bad"}\n' });
     expect(r.code).toBe(0);
     expect(r.jv).toBe(committedJv);
     expect(r.stats).toBe(committed);
-    expect(r.calls).toEqual(['pnpm test', 'pnpm test', 'pnpm test']);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test', 'pnpm test', 'pnpm test']);
     expect(r.output).toContain('jv_restored=true');
     expect(r.output).toContain('stats_restored=true');
   });

@@ -253,7 +253,7 @@ describe('data/jv.json', () => {
     for (const t of TEAMS) expect(getJvTeam(t.slug)?.teamId).toBe(t.id);
   });
 
-  it('never lets a JV game count: no table, no postseason, in the file or after the merge', () => {
+  it('lets no JV game count for a varsity table or a postseason, in the file or after the merge', () => {
     for (const g of getJvMerge().games) {
       expect(g.countsFor).toBeNull();
       expect(g.postseason).toBeNull();

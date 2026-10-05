@@ -57,10 +57,10 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
 | `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (5 pages) |
-| `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date), then the day's JV games (`#jv`), listed and never counted |
+| `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date), then the day's JV games (`#jv`), kept apart from the varsity counts |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 49 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then the school's JV games (`#jv`, listed and never counted), its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 16 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (16 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the 49 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
@@ -142,10 +142,11 @@ season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 49 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
-stopping the run. It runs the test suite against what it just wrote; if the suite fails, it restores
-the committed `data/jv.json` (if this run changed it) and tests again, then the committed
-`data/player-stats.json` (likewise), so a JV or stats file the tests refuse never blocks the
-snapshot commit (the job Summary says when that happened). It then commits `data/snapshot.json` +
+stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
+again without this run's `data/jv.json`, then (keeping the new JV file) without this run's
+`data/player-stats.json`, and only then without either, so a JV or stats file the tests refuse never
+blocks the snapshot commit and never costs the other file's refresh (the job Summary says when a file
+was restored). It then commits `data/snapshot.json` +
 `data/snapshot.meta.json`, `data/player-stats.json` and `data/jv.json` **only where they changed**,
 in one commit. The commit is what triggers
 your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
@@ -359,9 +360,9 @@ pnpm fetch-player-stats --dry-run                            # parse and report,
 ### JV games
 
 Every team page has a "JV games" section (`#jv`) and every day page a JV block after the varsity
-games: the school's junior varsity games, **listed, never counted**. No standings table, record,
-form strip, leader board, Elo rating or postseason picture reads them, and they carry no league or
-non-league tag, because MaxPreps' JV league flags are unreliable (they disagree with the varsity game
+games: the school's junior varsity games, **kept apart from varsity**. No varsity standings table,
+record, form strip, leader board, Elo rating or postseason picture reads them. There are no JV
+standings yet, and for now JV games carry no league or non-league tag, because MaxPreps' JV league flags are unreliable (they disagree with the varsity game
 of the same day and pairing on 116 of 200 such games) and no league publishes JV standings in season.
 
 `data/jv.json` is built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`) from two sources, and keeps what
@@ -1045,8 +1046,8 @@ at once, at every build, starting from last season's:
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
-- JV games are listed, not counted: there are no JV standings, records or leaders, because
-  MaxPreps' JV league flags are unreliable and no league publishes JV standings in season. JV scores
+- There are no JV standings, records or leaders yet: MaxPreps' JV league flags are unreliable and no
+  league publishes JV standings in season, so league games would have to be identified another way. JV scores
   are thin where coaches do not enter them (on 2026-10-05 MaxPreps had no score for any past BVAL or
   PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
   stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a

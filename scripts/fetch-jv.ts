@@ -114,7 +114,7 @@ const NOTES = [
   'One entry per registry school, all five leagues. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.',
   'The site shows lib/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.',
   'A si.com JV side is one of ours only by its si.com JV team id (lib/jv-teams.ts), never by name.',
-  'JV games are listed, never counted: no standings, leaders, ratings or postseason read them.',
+  'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them, and no JV standings are computed yet.',
   'A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read.',
 ];
 

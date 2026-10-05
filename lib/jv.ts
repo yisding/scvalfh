@@ -10,8 +10,8 @@
  * "Today" for the merge is the file's own fetchedAt in America/Los_Angeles, never the wall clock,
  * so a given commit builds the same pages whenever it is built.
  *
- * JV games are listed, never counted: nothing here feeds a standings table, a leader board, a
- * rating or a postseason picture.
+ * JV games stay apart from varsity: nothing here feeds a varsity standings table, a leader board,
+ * a rating or a postseason picture, and no JV standings are computed yet.
  */
 
 import { readFileSync } from 'node:fs';
