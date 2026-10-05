@@ -10,8 +10,13 @@
  */
 
 import { listWords, monthDay, ordinal, plural, recordString } from '../../lib/format';
-import { getJvTable, getJvTables } from '../../lib/jv';
-import { JV_STANDINGS_MIN_REPORTED_SHARE, type JvDivisionTable, type JvStandingRow } from '../../lib/jv-standings';
+import { getJvClassification, getJvTable, getJvTables } from '../../lib/jv';
+import {
+  JV_STANDINGS_MIN_REPORTED_SHARE,
+  type JvClassification,
+  type JvDivisionTable,
+  type JvStandingRow,
+} from '../../lib/jv-standings';
 import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
@@ -30,11 +35,20 @@ export interface JvTableView {
   through: string | null;
   /** Why there is no table, when there is none. */
   emptyHeading: string | null;
-  /** "No JV league game on MaxPreps or si.com: Del Mar, Live Oak." */
+  /** "Valley Christian has no JV league game on MaxPreps or si.com, so is not in the table." */
   absentNote: string | null;
-  /** "Not counted (no varsity game matches): Valley Christian at Fremont, Sep 22." */
+  /** "Not counted: Valley Christian at Fremont, Sep 22 (no varsity game matches it)." Each game names its own reason. */
   uncountedNote: string | null;
 }
+
+/** Why an uncounted JV game is not counted, in words, for each reason lib/jv-standings.ts gives. */
+export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> = {
+  'no-varsity-counterpart': 'no varsity game matches it',
+  ambiguous: 'two varsity games are equally near it',
+  'varsity-postseason': 'its varsity game is a postseason game',
+};
+
+type UncountedReason = Extract<JvClassification, { kind: 'uncounted' }>['reason'];
 
 const SHARE_WORDS = `${Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}%`;
 
@@ -86,8 +100,12 @@ function viewOf(t: JvDivisionTable): JvTableView {
         ? `${listWords(absent)} ${absent.length === 1 ? 'has' : 'have'} no JV league game on MaxPreps or si.com, so ${absent.length === 1 ? 'is' : 'are'} not in the table.`
         : null,
     uncountedNote: t.uncounted.length
-      ? `Not counted (no varsity game matches): ${t.uncounted
-          .map((g) => `${shortNameOf(g.away.slug, g.away.name)} at ${shortNameOf(g.home.slug, g.home.name)}, ${monthDay(g.dateKey)}`)
+      ? `Not counted: ${t.uncounted
+          .map((g) => {
+            const c = getJvClassification(g.contestId);
+            const why = c?.kind === 'uncounted' ? ` (${UNCOUNTED_REASON_WORDS[c.reason]})` : '';
+            return `${shortNameOf(g.away.slug, g.away.name)} at ${shortNameOf(g.home.slug, g.home.name)}, ${monthDay(g.dateKey)}${why}`;
+          })
           .join('; ')}.`
       : null,
   };

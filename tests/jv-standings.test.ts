@@ -7,7 +7,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { buildJvTablesView, jvTableTitle, teamJvStanding } from '../components/standings/jv-standings-view';
+import {
+  UNCOUNTED_REASON_WORDS,
+  buildJvTablesView,
+  jvTableTitle,
+  teamJvStanding,
+} from '../components/standings/jv-standings-view';
 import { buildTeamJvView } from '../components/teams/jv-view';
 import { getSnapshot } from '../lib/data';
 import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '../lib/jv';
@@ -216,6 +221,22 @@ describe('the JV tables served from the committed files', () => {
         expect(v.coverage.length).toBeGreaterThan(0);
       }
     }
+  });
+
+  it('names each uncounted game with its own reason, never a reason it does not have', () => {
+    for (const l of LEAGUES) {
+      const tables = getJvTables(l.id);
+      for (const v of buildJvTablesView(l.id)) {
+        const t = tables.find((x) => x.division === v.division)!;
+        expect(v.uncountedNote === null).toBe(t.uncounted.length === 0);
+        for (const g of t.uncounted) {
+          const c = getJvClassification(g.contestId);
+          expect(c?.kind).toBe('uncounted');
+          if (c?.kind === 'uncounted') expect(v.uncountedNote).toContain(UNCOUNTED_REASON_WORDS[c.reason]);
+        }
+      }
+    }
+    expect(Object.keys(UNCOUNTED_REASON_WORDS).sort()).toEqual(['ambiguous', 'no-varsity-counterpart', 'varsity-postseason']);
   });
 
   it('chips a JV row by its classification, and none for an uncounted game', () => {
