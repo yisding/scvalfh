@@ -20,7 +20,7 @@ import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Server = typeof import('../../components/schedule/filter-data-server');
-type Index = typeof import('../../components/schedule/ScheduleIndex');
+type Index = typeof import('../../components/schedule/schedule-view');
 type Day = typeof import('../../components/schedule/day-summary');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -38,7 +38,7 @@ beforeAll(async () => {
   vi.resetModules();
   data = await import('../../lib/data');
   server = await import('../../components/schedule/filter-data-server');
-  index = await import('../../components/schedule/ScheduleIndex');
+  index = await import('../../components/schedule/schedule-view');
   day = await import('../../components/schedule/day-summary');
   Filters = (await import('../../components/schedule/ScheduleFilters')).ScheduleFilters;
   const leaguePage = (await import('../../app/schedule/[league]/page')).default;
@@ -191,21 +191,21 @@ describe('the /schedule index', () => {
     });
     expect(built.recent.length).toBeLessThanOrEqual(3);
     expect(built.next.length).toBeLessThanOrEqual(3);
-    expect(built.recent.every((d) => d.date <= today), 'components/schedule/ScheduleIndex.tsx recent').toBe(true);
-    expect(built.next.every((d) => d.date > today), 'components/schedule/ScheduleIndex.tsx next').toBe(true);
+    expect(built.recent.every((d) => d.date <= today), 'components/schedule/schedule-view.ts recent').toBe(true);
+    expect(built.next.every((d) => d.date > today), 'components/schedule/schedule-view.ts next').toBe(true);
     for (const d of built.days) {
       const games = data.getGames({ date: d.date });
       expect(d.total).toBe(games.length);
       for (const l of d.byLeague) {
         const id = data.getLeagueSummaries().find((x) => x.shortName === l.shortName)!.id;
-        expect(l.games, `components/schedule/ScheduleIndex.tsx ${d.date} ${id}`).toBe(
+        expect(l.games, `components/schedule/schedule-view.ts ${d.date} ${id}`).toBe(
           games.filter((g) => leagueOfSlug(g.home.slug) === id || leagueOfSlug(g.away.slug) === id).length,
         );
       }
     }
     expect(built.cards.map((c) => c.id)).toEqual(data.getLeagueIds());
     for (const card of built.cards) {
-      expect(card.games, `components/schedule/ScheduleIndex.tsx card ${card.id}`).toBe(
+      expect(card.games, `components/schedule/schedule-view.ts card ${card.id}`).toBe(
         data.getGames({ league: card.id }).length,
       );
     }
