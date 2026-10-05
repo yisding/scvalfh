@@ -17,7 +17,6 @@ import { getLeague } from '../../leagues';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../../sources/maxpreps';
 import { FETCHABLE_TEAMS, TEAMS } from '../../teams';
 import type { LeagueId, SourceStatus, Team } from '../../types';
-import { FixtureMissing, TransportError } from '../contract';
 import {
   asOfStamp,
   carriedFromOf,
@@ -26,6 +25,7 @@ import {
   type PipelineContext,
   type RunState,
 } from '../ledger';
+import { classifyFetchError, parseJsonBody } from '../read';
 import { resourceUrl } from '../transport';
 
 /** §7.5 trigger b: this share (or more) of a league's attempted feeds failed. */
@@ -56,17 +56,8 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
   try {
     const res = await ctx.transport.get(key);
     httpStatus = res.httpStatus;
-    let raw: unknown;
-    try {
-      raw = JSON.parse(res.body) as unknown;
-    } catch (err) {
-      throw new Error(`invalid JSON: ${(err as Error).message}`);
-    }
-    const parsed = ScheduleResponseSchema.safeParse(raw);
-    if (!parsed.success) {
-      throw new Error(`schema drift: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`).join('; ')}`);
-    }
-    const split = splitTbaRows(parsed.data.data);
+    const feed = parseJsonBody(res.body, ScheduleResponseSchema).data;
+    const split = splitTbaRows(feed);
     state.tbaDropped.push(...split.dropped);
     const rows = split.rows;
     // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
@@ -82,14 +73,13 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
     return {
       rows,
       status: 'ok',
-      source: { ...base, status: 'ok', httpStatus, rowCount: parsed.data.data.length },
+      source: { ...base, status: 'ok', httpStatus, rowCount: feed.length },
     };
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      return { rows: [], status: 'skipped', source: { ...base, status: 'skipped', error: 'not in corpus' } };
-    }
-    if (err instanceof TransportError && err.httpStatus !== null) httpStatus = err.httpStatus;
-    const message = (err as Error).message;
+    const failed = classifyFetchError(err);
+    if (failed.status === 'skipped') return { rows: [], status: 'skipped', source: { ...base, ...failed } };
+    if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
+    const message = failed.error;
     ctx.warn(`${team.slug} schedule failed: ${message}`, base.scope);
     const carry = previousGameCount(ctx, team) > 0;
     const carriedFrom = carry

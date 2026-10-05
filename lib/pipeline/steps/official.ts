@@ -36,8 +36,6 @@ import {
 } from '../../sources/scval-pdf';
 import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
 import {
-  FixtureMissing,
-  TransportError,
   type OfficialStep,
   type OfficialStepResult,
   type RawResponse,
@@ -45,23 +43,14 @@ import {
   type RunContext,
 } from '../contract';
 import { carriedFromOf } from '../ledger';
+import { classifyFetchError, type FetchFailure } from '../read';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
-/** A failed fetch, classified for its SourceStatus row. */
-interface FetchFailure {
-  status: 'error' | 'skipped';
-  error: string;
-  httpStatus?: number;
-}
-
+/** classifyFetchError, plus this step's own skip: a machine with no pdftotext cannot read a grid. */
 function failureOf(err: unknown): FetchFailure {
-  if (err instanceof FixtureMissing) return { status: 'skipped', error: 'not in corpus' };
   if (err instanceof PdftotextMissingError) return { status: 'skipped', error: err.message };
-  if (err instanceof TransportError) {
-    return { status: 'error', error: err.message, ...(err.httpStatus !== null ? { httpStatus: err.httpStatus } : {}) };
-  }
-  return { status: 'error', error: err instanceof Error ? err.message : String(err) };
+  return classifyFetchError(err);
 }
 
 async function fetchResource(ctx: RunContext, key: ResourceKey): Promise<{ ok: RawResponse } | { failed: FetchFailure }> {

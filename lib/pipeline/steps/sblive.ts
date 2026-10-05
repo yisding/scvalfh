@@ -28,13 +28,12 @@ import {
 import { getTeamBySlug, teamsInLeague } from '../../teams';
 import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
 import {
-  FixtureMissing,
-  TransportError,
   type ResourceKey,
   type RunContext,
   type SbliveStep,
   type SbliveStepResult,
 } from '../contract';
+import { classifyFetchError } from '../read';
 
 /** The scoreboard window (SPEC §7.7: ≤ 15 scoreboards). */
 export const SBLIVE_SCOREBOARD_DAYS = 14;
@@ -69,13 +68,10 @@ async function read(
       games,
     };
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      return { attempt: { row: base, outcome: 'skipped', error: 'not in corpus' }, games: [] };
-    }
-    const message = (err as Error).message;
-    ctx.warn(`${base.label} failed: ${message}`, base.scope);
-    const httpStatus = err instanceof TransportError && err.httpStatus !== null ? err.httpStatus : undefined;
-    return { attempt: { row: base, outcome: 'error', error: message, ...(httpStatus !== undefined ? { httpStatus } : {}) }, games: [] };
+    const { status, ...failed } = classifyFetchError(err);
+    if (status === 'skipped') return { attempt: { row: base, outcome: 'skipped', error: failed.error }, games: [] };
+    ctx.warn(`${base.label} failed: ${failed.error}`, base.scope);
+    return { attempt: { row: base, outcome: 'error', ...failed }, games: [] };
   }
 }
 

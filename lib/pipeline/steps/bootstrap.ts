@@ -7,7 +7,8 @@
 
 import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '../../season';
 import { parseBootstrap } from '../../sources/maxpreps';
-import { FixtureMissing, RunAbort, TransportError, type RunContext } from '../contract';
+import { RunAbort, type RunContext } from '../contract';
+import { classifyFetchError } from '../read';
 
 export async function stepBootstrap(ctx: RunContext): Promise<void> {
   const base = {
@@ -24,18 +25,14 @@ export async function stepBootstrap(ctx: RunContext): Promise<void> {
     body = res.body;
     httpStatus = res.httpStatus;
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      ctx.source({ ...base, status: 'skipped', error: 'not in corpus' });
+    const failed = classifyFetchError(err);
+    if (failed.status === 'skipped') {
+      ctx.source({ ...base, ...failed });
       ctx.log('  bootstrap: skipped (not in corpus)');
       return;
     }
-    ctx.warn(`bootstrap unreadable: ${(err as Error).message}`);
-    ctx.source({
-      ...base,
-      status: 'error',
-      ...(err instanceof TransportError && err.httpStatus !== null ? { httpStatus: err.httpStatus } : {}),
-      error: (err as Error).message,
-    });
+    ctx.warn(`bootstrap unreadable: ${failed.error}`);
+    ctx.source({ ...base, ...failed });
     return;
   }
 

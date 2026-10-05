@@ -12,8 +12,8 @@ import { divisionLabel, divisionsOf, getLeague, leagueOfDivision, sectionOf } fr
 import { SEASON_YEAR, SPORT_SEASON_ID } from '../../season';
 import { LeagueMetaSchema } from '../../sources/maxpreps';
 import type { DivisionId, LeagueId } from '../../types';
-import { FixtureMissing, TransportError } from '../contract';
 import { lastFreshStamp, type PipelineContext, type RunState } from '../ledger';
+import { classifyFetchError, parseJsonBody } from '../read';
 import { resourceUrl } from '../transport';
 
 const MetaEnvelope = z.looseObject({ data: LeagueMetaSchema });
@@ -61,27 +61,23 @@ async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueI
     body = res.body;
     httpStatus = res.httpStatus;
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      ctx.source({ ...base, status: 'skipped', error: 'not in corpus' });
+    const failed = classifyFetchError(err);
+    if (failed.status === 'skipped') {
+      ctx.source({ ...base, ...failed });
       setMeta('skipped');
       return;
     }
-    ctx.warn(`${division} league metadata unreadable: ${(err as Error).message}`, base.scope);
-    ctx.source({
-      ...base,
-      status: 'error',
-      ...(err instanceof TransportError && err.httpStatus !== null ? { httpStatus: err.httpStatus } : {}),
-      error: (err as Error).message,
-    });
+    ctx.warn(`${division} league metadata unreadable: ${failed.error}`, base.scope);
+    ctx.source({ ...base, ...failed });
     setMeta('error');
     return;
   }
 
   let meta: z.infer<typeof LeagueMetaSchema>;
   try {
-    meta = MetaEnvelope.parse(JSON.parse(body) as unknown).data;
+    meta = parseJsonBody(body, MetaEnvelope).data;
   } catch (err) {
-    const message = err instanceof z.ZodError ? `schema drift: ${err.issues[0]?.message ?? 'invalid'}` : (err as Error).message;
+    const message = (err as Error).message;
     ctx.warn(`${division} league metadata unreadable: ${message}`, base.scope);
     ctx.source({ ...base, status: 'error', httpStatus, error: message });
     setMeta('error');

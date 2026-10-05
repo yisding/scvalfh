@@ -15,16 +15,14 @@
  * `partial` with a reason sentence.
  */
 
-import { z } from 'zod';
-
 import { divisionLabel, getLeague } from '../../leagues';
 import { StandingsResponseSchema, type StandingsRow } from '../../sources/maxpreps';
 import { toReportedRecord } from '../../standings';
 import { resolveTeam, teamsInDivision } from '../../teams';
 import type { DivisionConfig } from '../../leagues';
 import type { LeagueId, SourceStatus } from '../../types';
-import { FixtureMissing, TransportError } from '../contract';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '../ledger';
+import { classifyFetchError, parseJsonBody } from '../read';
 import { resourceUrl } from '../transport';
 
 function readFailedReason(division: DivisionConfig, carriedFrom: string | null): string {
@@ -53,27 +51,17 @@ async function readTable(ctx: PipelineContext, state: RunState, leagueId: League
   try {
     const res = await ctx.transport.get(key);
     httpStatus = res.httpStatus;
-    let raw: unknown;
-    try {
-      raw = JSON.parse(res.body) as unknown;
-    } catch (err) {
-      throw new Error(`invalid JSON: ${(err as Error).message}`);
-    }
-    const parsed = StandingsResponseSchema.safeParse(raw);
-    if (!parsed.success) {
-      throw new Error(`schema drift: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`).join('; ')}`);
-    }
-    rows = parsed.data.data;
+    rows = parseJsonBody(res.body, StandingsResponseSchema).data;
     if (rows.length === 0) throw new Error('standings returned 0 rows');
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      ctx.source({ ...base, status: 'skipped', error: 'not in corpus' });
+    const failed = classifyFetchError(err);
+    if (failed.status === 'skipped') {
+      ctx.source({ ...base, ...failed });
       if (info) info.reportedTable = 'skipped';
       return;
     }
-    if (err instanceof TransportError && err.httpStatus !== null) httpStatus = err.httpStatus;
-    const message = err instanceof z.ZodError ? 'schema drift' : (err as Error).message;
-    carryReported(ctx, state, leagueId, division, base, message, httpStatus);
+    if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
+    carryReported(ctx, state, leagueId, division, base, failed.error, httpStatus);
     return;
   }
 
