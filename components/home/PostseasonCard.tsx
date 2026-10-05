@@ -6,7 +6,7 @@ import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { monthDay, shortDate } from '../../lib/format';
 
-import type { PostseasonView } from './home-data';
+import type { PostseasonView } from './home-view';
 
 /**
  * A league panel's postseason block (SPEC §10.1; replaces the SCVAL-only PlayoffsCard).

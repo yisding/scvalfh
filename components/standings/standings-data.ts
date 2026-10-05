@@ -34,7 +34,7 @@ import type { DivisionId, Game, LeagueId } from '../../lib/types';
  * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
  * `leaderLine` rows the root and /standings OG cards print.
  *
- * It sits beside the pure `standings-view.ts` the way `components/home/home-data.ts` sits beside
+ * It sits beside the pure `standings-view.ts` the way `components/home/home-view.ts` sits beside
  * the home views: this module reads the snapshot, and the view builders and components under
  * `components/standings/` take what is built here, so they can be reasoned about (and exercised
  * from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the

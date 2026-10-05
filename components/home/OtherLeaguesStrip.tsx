@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Arrow from '../ui/Arrow';
 import SectionHeader from '../ui/SectionHeader';
 
-import type { OtherLeagueLine } from './home-data';
+import type { OtherLeagueLine } from './home-view';
 
 /**
  * The other three leagues in one line each (SPEC §10.1): who leads each division —

@@ -3,7 +3,7 @@
  * Stage C builders hand to the pages (the built HTML is checked separately by
  * scripts/assert-copy.ts):
  *
- *   components/home/home-data.ts        getHomeData(): league panels, league cards, the 49 team views
+ *   components/home/home-view.ts        buildHomeView(): league panels, league cards, the 49 team views
  *   components/standings/standings-data.ts     getStandingsPageData(league) (division views built by
  *                                       components/standings/standings-view.ts)
  *   components/teams/team-view.ts       buildTeamPageView(slug), buildTeamsByLeague()
@@ -33,7 +33,7 @@
  * EAL panel, card and pinned views, /standings/eal, /schedule/eal and the /playoffs EAL card as
  * rendered, the EAL team pages (view model and rendered page) and every game model, where the postseason line and kicker, the
  * 1 v 1 note, the missing banner and the membership note carry real EAL data. Every expect message
- * starts with the PRODUCING module, e.g. `components/home/home-data.ts: MCAL panel`, so the
+ * starts with the PRODUCING module, e.g. `components/home/home-view.ts: MCAL panel`, so the
  * orchestrator routes a failure to its owner.
  */
 
@@ -55,12 +55,12 @@ import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
 
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
-type Home = typeof import('../../components/home/home-data');
+type Home = typeof import('../../components/home/home-view');
 type Standings = typeof import('../../components/standings/standings-data');
 type TeamView = typeof import('../../components/teams/team-view');
 type GameView = typeof import('../../components/game/game-view');
 
-const HD = 'components/home/home-data.ts';
+const HV = 'components/home/home-view.ts';
 const SD = 'components/standings/standings-data.ts (via components/standings/standings-view.ts)';
 const TV = 'components/teams/team-view.ts';
 const GV = 'components/game/game-view.ts';
@@ -70,7 +70,7 @@ const TP = 'app/teams/[slug]/page.tsx (rendered)';
 
 let data: Data;
 let leagues: Leagues;
-let home: ReturnType<Home['getHomeData']>;
+let home: ReturnType<Home['buildHomeView']>;
 let standings: Standings;
 let teamView: TeamView;
 let gameView: GameView;
@@ -99,11 +99,11 @@ beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');
-  const h = await import('../../components/home/home-data');
+  const h = await import('../../components/home/home-view');
   standings = await import('../../components/standings/standings-data');
   teamView = await import('../../components/teams/team-view');
   gameView = await import('../../components/game/game-view');
-  home = h.getHomeData();
+  home = h.buildHomeView();
   markConfig(leagues.LEAGUES);
   markConfig(leagues.SECTIONS);
   markConfig(leagues.CCS);
@@ -114,17 +114,17 @@ beforeAll(async () => {
   const s: Subject[] = [];
 
   for (const panel of home.panels) {
-    s.push({ producer: HD, label: `${panel.shortName} panel`, league: panel.id, value: panel });
-    s.push({ producer: HD, label: `${panel.shortName} panel next slate`, league: panel.id, value: panel.slate, unplayed: true });
+    s.push({ producer: HV, label: `${panel.shortName} panel`, league: panel.id, value: panel });
+    s.push({ producer: HV, label: `${panel.shortName} panel next slate`, league: panel.id, value: panel.slate, unplayed: true });
   }
-  for (const card of home.leagueCards) s.push({ producer: HD, label: `${card.shortName} league card`, league: card.id, value: card });
+  for (const card of home.leagueCards) s.push({ producer: HV, label: `${card.shortName} league card`, league: card.id, value: card });
   for (const tv of home.teamViews) {
     const slug = tv.slug;
-    s.push({ producer: HD, label: `teamViews[${slug}]`, league: leagueOfSlug.get(slug) ?? null, value: tv });
-    s.push({ producer: HD, label: `teamViews[${slug}].next`, league: leagueOfSlug.get(slug) ?? null, value: tv.next, unplayed: true });
+    s.push({ producer: HV, label: `teamViews[${slug}]`, league: leagueOfSlug.get(slug) ?? null, value: tv });
+    s.push({ producer: HV, label: `teamViews[${slug}].next`, league: leagueOfSlug.get(slug) ?? null, value: tv.next, unplayed: true });
   }
-  s.push({ producer: HD, label: 'status line', league: null, value: home.status });
-  s.push({ producer: HD, label: 'cross-league latest', league: null, value: home.crossLeagueLatest });
+  s.push({ producer: HV, label: 'status line', league: null, value: home.status });
+  s.push({ producer: HV, label: 'cross-league latest', league: null, value: home.crossLeagueLatest });
 
   for (const id of data.getLeagueIds()) {
     const short = leagues.getLeague(id).shortName;
@@ -164,7 +164,7 @@ async function collectEal(): Promise<EalCorpus> {
   vi.resetModules();
   const d: Data = await import('../../lib/data');
   const l: Leagues = await import('../../lib/leagues');
-  const h = (await import('../../components/home/home-data')).getHomeData();
+  const h = (await import('../../components/home/home-view')).buildHomeView();
   const sd: Standings = await import('../../components/standings/standings-data');
   const tv: TeamView = await import('../../components/teams/team-view');
   const gm: GameView = await import('../../components/game/game-view');
@@ -181,17 +181,17 @@ async function collectEal(): Promise<EalCorpus> {
   const leagueOfDivision = (div: string | null | undefined) => (div ? l.leagueOfDivision(div).id : null);
   const s: Subject[] = [];
   for (const panel of h.panels.filter((p) => ids.has(p.id))) {
-    s.push({ producer: HD, label: `${panel.shortName} panel (EAL corpus)`, league: panel.id, value: panel });
-    s.push({ producer: HD, label: `${panel.shortName} panel next slate (EAL corpus)`, league: panel.id, value: panel.slate, unplayed: true });
+    s.push({ producer: HV, label: `${panel.shortName} panel (EAL corpus)`, league: panel.id, value: panel });
+    s.push({ producer: HV, label: `${panel.shortName} panel next slate (EAL corpus)`, league: panel.id, value: panel.slate, unplayed: true });
   }
   for (const card of h.leagueCards.filter((c) => ids.has(c.id))) {
-    s.push({ producer: HD, label: `${card.shortName} league card (EAL corpus)`, league: card.id, value: card });
+    s.push({ producer: HV, label: `${card.shortName} league card (EAL corpus)`, league: card.id, value: card });
   }
   for (const view of h.teamViews) {
     const league = leagueOfSlug.get(view.slug) ?? null;
     if (!league || !ids.has(league)) continue;
-    s.push({ producer: HD, label: `teamViews[${view.slug}] (EAL corpus)`, league, value: view });
-    s.push({ producer: HD, label: `teamViews[${view.slug}].next (EAL corpus)`, league, value: view.next, unplayed: true });
+    s.push({ producer: HV, label: `teamViews[${view.slug}] (EAL corpus)`, league, value: view });
+    s.push({ producer: HV, label: `teamViews[${view.slug}].next (EAL corpus)`, league, value: view.next, unplayed: true });
   }
   const playoffsHtml = renderToStaticMarkup(createElement(playoffsPage));
   for (const id of ids) {
@@ -315,7 +315,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
   it('collects view models for all five leagues from every producer', () => {
     expect(data.getLeagueIds().length, 'lib/data.ts: league ids').toBe(leagues.LEAGUES.length);
     for (const id of data.getLeagueIds()) {
-      for (const producer of [HD, SD, TV]) {
+      for (const producer of [HV, SD, TV]) {
         expect(subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no view model for ${id}`).toBe(true);
       }
     }
@@ -326,13 +326,13 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     const ids = eal.leagues.UNBRACKETED_LEAGUE_IDS;
     expect(ids.length, 'lib/leagues.ts: unbracketed leagues').toBeGreaterThan(0);
     for (const id of ids) {
-      for (const producer of [HD, SD, TV, SP, PP, TP]) {
+      for (const producer of [HV, SD, TV, SP, PP, TP]) {
         expect(eal.subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no ${id} view on the EAL corpus`).toBe(true);
       }
       const teams = eal.data.getTeams().filter((t) => t.league === id).length;
       expect(eal.subjects.filter((s) => s.producer === TV && s.league === id).length, `${TV}: ${id} team pages`).toBe(teams);
-      expect(eal.subjects.filter((s) => s.producer === HD && s.league === id && s.label.startsWith('teamViews[') && !s.unplayed).length,
-        `${HD}: ${id} pinned views`).toBe(teams);
+      expect(eal.subjects.filter((s) => s.producer === HV && s.league === id && s.label.startsWith('teamViews[') && !s.unplayed).length,
+        `${HV}: ${id} pinned views`).toBe(teams);
       // The EAL corpus has finals counted, so the views carry real copy (not empty states).
       expect(eal.data.getGames().filter((g) => g.countsFor && eal.leagues.leagueOfDivision(g.countsFor).id === id && g.status === 'final').length,
         `${id}: counted league finals on the EAL corpus`).toBeGreaterThan(0);
@@ -361,11 +361,11 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     const ids = nonCcs();
     const allowed = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
     const views = all().filter((s) => s.league && ids.has(s.league));
-    expect(views.length, `${HD}: no non-CCS view models collected`).toBeGreaterThan(10);
-    expect(eal.subjects.filter((s) => s.league && ids.has(s.league)).length, `${HD}: no EAL-corpus view models collected`).toBeGreaterThan(10);
+    expect(views.length, `${HV}: no non-CCS view models collected`).toBeGreaterThan(10);
+    expect(eal.subjects.filter((s) => s.league && ids.has(s.league)).length, `${HV}: no EAL-corpus view models collected`).toBeGreaterThan(10);
     // Control: the same walk DOES see CCS copy in a CCS league's panel, so a pass below is real.
-    const ccsPanel = subjects.find((s) => s.producer === HD && s.league && !ids.has(s.league) && s.label.endsWith(' panel'));
-    expect(ccsPanel && offenders(ccsPanel, (v) => /\bCCS\b/.test(v)).length, `${HD}: a CCS panel names CCS`).toBeGreaterThan(0);
+    const ccsPanel = subjects.find((s) => s.producer === HV && s.league && !ids.has(s.league) && s.label.endsWith(' panel'));
+    expect(ccsPanel && offenders(ccsPanel, (v) => /\bCCS\b/.test(v)).length, `${HV}: a CCS panel names CCS`).toBeGreaterThan(0);
     for (const s of views) {
       expectNone(s, 'says "automatic qualifier"', (v) => !isUrl(v) && /automatic qualifier/i.test(v));
       expectNone(s, 'says "at-large"', (v) => !isUrl(v) && /at-large/i.test(v));
@@ -425,7 +425,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
   it('no seed word in an unbracketed league’s views (its seeding is quoted, never applied)', () => {
     const ids = new Set([...leagues.UNBRACKETED_LEAGUE_IDS, ...eal.leagues.UNBRACKETED_LEAGUE_IDS]);
     const views = all().filter((s) => s.league && ids.has(s.league));
-    expect(views.length, `${HD}: no unbracketed-league views collected`).toBeGreaterThan(10);
+    expect(views.length, `${HV}: no unbracketed-league views collected`).toBeGreaterThan(10);
     for (const s of views) expectNone(s, 'prints a seed word', (v) => !isUrl(v) && SEED_CLAIM.test(v));
   });
 });

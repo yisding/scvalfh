@@ -5,7 +5,7 @@ import EmptyState from '../ui/EmptyState';
 import SectionHeader from '../ui/SectionHeader';
 import { shortDate } from '../../lib/format';
 
-import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-data';
+import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-view';
 import { ResultRow } from './LatestScores';
 
 /**

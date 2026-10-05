@@ -5,7 +5,7 @@ import FindYourTeam from '../components/home/FindYourTeam';
 import LeagueCard from '../components/home/LeagueCard';
 import LeaguePanel from '../components/home/LeaguePanel';
 import MyTeamCard from '../components/home/MyTeamCard';
-import { getHomeData } from '../components/home/home-data';
+import { buildHomeView } from '../components/home/home-view';
 import LeagueSwitcher from '../components/layout/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
@@ -27,7 +27,7 @@ import { TEAMS } from '../lib/teams';
  * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
  * this page with `react-dom/server` under Vitest, which has no path alias.
  *
- * Everything is read through `components/home/home-data.ts` (which reads only `lib/data.ts`) and
+ * Everything is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; no page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.
  */
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
 
 export default function HomePage() {
-  const data = getHomeData();
+  const data = buildHomeView();
   const { status } = data;
 
   return (

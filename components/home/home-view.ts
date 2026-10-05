@@ -840,7 +840,7 @@ export interface HomeStatus {
   leagueShorts: string[];
 }
 
-export interface HomeData {
+export interface HomeView {
   today: string;
   status: HomeStatus;
   /** Every team (49), for the My-team slot. */
@@ -852,7 +852,7 @@ export interface HomeData {
   crossLeagueLatest: CrossLeagueLatest | null;
 }
 
-export function getHomeData(): HomeData {
+export function buildHomeView(): HomeView {
   const today = getToday();
   const summaries = getLeagueSummaries();
   const leagueIds = summaries.map((s) => s.id);

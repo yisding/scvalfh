@@ -8,7 +8,7 @@ import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords } from '../../lib/format';
 import { ladderLineAfter } from '../standings/standings-view';
 
-import type { MiniDivisionView, MiniRow } from './home-data';
+import type { MiniDivisionView, MiniRow } from './home-view';
 
 /**
  * One division's top of the table inside a league panel (SPEC §10.1, DESIGN §3.1).

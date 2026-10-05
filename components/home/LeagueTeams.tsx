@@ -1,6 +1,6 @@
 import SectionHeader from '../ui/SectionHeader';
 
-import type { LeagueTeamsView } from './home-data';
+import type { LeagueTeamsView } from './home-view';
 import PinTile from './PinTile';
 
 /**

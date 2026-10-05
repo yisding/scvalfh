@@ -7,7 +7,7 @@ import { plural } from '../ui/plural';
 import { gameKind } from '../ui/describe-game';
 import { shortDate } from '../../lib/format';
 import type { Game } from '../../lib/types';
-import type { NextLeagueDay } from './home-data';
+import type { NextLeagueDay } from './home-view';
 
 /**
  * A league's remaining slate for today, or the next day that has one (SPEC §10.1, DESIGN §3.1).
