@@ -12,7 +12,7 @@ import { SEASON_CALENDAR_YEAR } from '../lib/season';
  * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image
  * request — the same constraint that made TeamMonogram a color square instead of a hotlinked mascot.
  *
- * One row per league, config order: `SCVAL  De Anza: St Ignatius 18 pts · El Camino: Los Gatos 21
+ * One row per league, config order: `SCVAL  De Anza: St. Ignatius 18 pts · El Camino: Los Gatos 21
  * pts` — the leader(s) of each division with their points. A single-division league has no
  * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
  * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue. The row

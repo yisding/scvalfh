@@ -77,8 +77,8 @@ export interface GameSideModel {
   name: string;
   /**
    * The name for a `<title>` and an OG card: the full name, or `shortName` when the full one is
-   * too long for a link preview ("St. Ignatius College Preparatory" is 32 characters and would eat
-   * a whole title on its own). The page body uses `name`, except the season-series sentence,
+   * too long for a link preview (over 24 characters: "Convent of the Sacred Heart" is 27 and would
+   * eat a whole title on its own). The page body uses `name`, except the season-series sentence,
    * which uses the team's short name to match the meeting rows above it.
    */
   label: string;
@@ -827,10 +827,10 @@ export function buildGameView(param: string): GameModel | undefined {
       : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`,
     series: {
       meetings: games.map((g) => ({ game: g, isThisGame: g.contestId === game.contestId })),
-      // Short names, as the meeting rows above it ("at St Ignatius") and the team pills print
-      // them; a side outside the registry has no short name and keeps its own. Not `side.label`:
-      // that only shortens names over 24 characters, so "Saint Francis" would survive beside
-      // "St Francis". An abbreviated short name ("Lick-Wilm.", "Valley Chr.") gives way to the
+      // Short names, as the meeting rows above it ("at Mitty") and the team pills print them; a
+      // side outside the registry has no short name and keeps its own. Not `side.label`: that
+      // only shortens names over 24 characters, so "Archbishop Mitty" would survive beside
+      // "Mitty". An abbreviated short name ("Lick-Wilm.", "Valley Chr.") gives way to the
       // full name: its period reads as a sentence break, and a screen reader spells it out.
       summary: seriesSummary(
         game,

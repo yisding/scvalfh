@@ -52,7 +52,7 @@ export function numbered<T extends { label: string }>(links: T[]): T[] {
   });
 }
 
-/** The school a team slug is, by its registry name ("St. Ignatius College Preparatory"). */
+/** The school a team slug is, by its registry name ("Archbishop Mitty"). */
 export function schoolName(slug: string): string {
   return getTeamBySlug(slug)?.name ?? slug;
 }

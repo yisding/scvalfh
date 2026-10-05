@@ -192,8 +192,8 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
       {teamRows.length > 0 ? (
         <div className="sx-card sx-flush sx-bleed">
           {/* One row per school, so the links scan by team instead of repeating each school's
-              name in four equal-weight pills. The visible name is the SHORT one (F-26c): the full
-              "St. Ignatius College Preparatory" wrapped its row at 390, and the full name is still
+              name in four equal-weight pills. The visible name is the SHORT one (F-26c): a long full
+              name ("Convent of the Sacred Heart") wrapped its row at 390, and the full name is still
               what each pill announces. The pills are raised to the surface with the hairline
               ring, the site's capsule for a secondary link (F-56g). */}
           <ul className="sx-list">

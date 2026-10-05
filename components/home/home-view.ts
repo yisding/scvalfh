@@ -523,7 +523,7 @@ export interface OtherLeagueLine {
   id: LeagueId;
   shortName: string;
   href: string;
-  /** 'St Ignatius leads De Anza · Los Gatos leads El Camino' | 'Stevenson leads' | 'No league results yet' */
+  /** 'St. Ignatius leads De Anza · Los Gatos leads El Camino' | 'Stevenson leads' | 'No league results yet' */
   text: string;
 }
 
@@ -654,7 +654,7 @@ function afterScheduleOf(league: LeagueConfig): HomeLeaguePanel['afterSchedule']
 
 // ---------------------------------------------------------------- my-team views
 
-/** One score line: the registry short name ("St Ignatius" on a 358px card), glyph, weight, chip. */
+/** One score line: the registry short name ("Mitty" on a 358px card), glyph, weight, chip. */
 function homeSide(side: SideView): HomeLastDisplay['home'] {
   return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
 }

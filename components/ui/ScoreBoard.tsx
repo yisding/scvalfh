@@ -33,13 +33,12 @@ import { describeGame, statusLabelIsTime, type SideView } from './describe-game'
  * mark in the status line (it reads `sourceMark`), the line ends with its legend `† Score via
  * si.com`, and the board's screen-reader sentence ends with the same words.
  *
- * Names WRAP (two lines at most, balanced) instead of truncating: "St. Ignatius College
- * Preparatory" was cut to "St. Ignatius Colle…" on a phone. Between 768 and 1023px, where the
- * three-column board leaves each name the least room (about 217px at 768), a name longer than 27
- * characters (too long for that band's two-line clamp; today only "St. Ignatius College
- * Preparatory") is swapped for its short name. "Convent of the Sacred Heart" (27) and "San
- * Francisco University" (24) were measured at 768 and fit in two lines. Every other name prints in
- * full at every width.
+ * Names WRAP (two lines at most, balanced) instead of truncating: a long name was once cut
+ * mid-word on a phone. Between 768 and 1023px, where the three-column board leaves each name the
+ * least room (about 217px at 768), a name longer than 27 characters (too long for that band's
+ * two-line clamp; no registry name is, today) is swapped for its short name. "Convent of the Sacred
+ * Heart" (27) and "San Francisco University" (24) were measured at 768 and fit in two lines. Every
+ * other name prints in full at every width.
  */
 export interface ScoreBoardSideMeta {
   sub?: string | null;
@@ -98,8 +97,8 @@ function BoardSide({
             truncates: `break-words` keeps a long single word inside the column and `text-balance`
             evens the lines. From 768px `sx-clamp-2` caps a name at two lines; on a phone the
             sides are stacked full-width rows, so the clamp is lifted (`-webkit-line-clamp:
-            none`) — at 320 "St. Ignatius College Preparatory" beside a score needs three 18px
-            lines, and a clamp there cut it to "…College…". The short copy needs `-webkit-box`
+            none`) — at 320 a long name beside a score can need three 18px lines, and a clamp
+            there cut it mid-name. The short copy needs `-webkit-box`
             back explicitly, because a `block` utility would beat sx-clamp-2's display (a
             base-layer rule) and drop the clamp. */}
         <span

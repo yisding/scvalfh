@@ -1432,7 +1432,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 7,
         "slug": "st-ignatius",
@@ -7277,7 +7277,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 11,
         "slug": "st-ignatius",
@@ -8012,7 +8012,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 3,
         "slug": "st-ignatius",
@@ -8633,7 +8633,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 11,
         "slug": "st-ignatius",
@@ -9809,7 +9809,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 4,
         "slug": "st-ignatius",
@@ -11354,7 +11354,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 7,
         "slug": "st-ignatius",
@@ -12538,7 +12538,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 15,
         "slug": "st-ignatius",
@@ -13927,7 +13927,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": "W",
         "score": 5,
         "slug": "st-ignatius",
@@ -14163,7 +14163,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -15795,7 +15795,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -16913,7 +16913,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -17722,7 +17722,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -19354,7 +19354,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -19519,7 +19519,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -20045,7 +20045,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -20990,7 +20990,7 @@
       "forfeitBy": null,
       "home": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -22414,7 +22414,7 @@
     {
       "away": {
         "city": "San Francisco",
-        "name": "St. Ignatius College Preparatory",
+        "name": "St. Ignatius",
         "result": null,
         "score": null,
         "slug": "st-ignatius",
@@ -31704,9 +31704,9 @@
       "league": "scval",
       "mascot": "Wildcats",
       "mascotUrl": null,
-      "name": "St. Ignatius College Preparatory",
+      "name": "St. Ignatius",
       "section": "ccs",
-      "shortName": "St Ignatius",
+      "shortName": "St. Ignatius",
       "slug": "st-ignatius"
     },
     {
@@ -31743,7 +31743,7 @@
       "mascotUrl": null,
       "name": "Saint Francis",
       "section": "ccs",
-      "shortName": "St Francis",
+      "shortName": "Saint Francis",
       "slug": "saint-francis"
     },
     {
@@ -32583,7 +32583,7 @@
       "mascotUrl": null,
       "name": "Ann Sobrato",
       "section": "ccs",
-      "shortName": "Sobrato",
+      "shortName": "Ann Sobrato",
       "slug": "sobrato"
     },
     {
@@ -33086,7 +33086,7 @@
       "mascotUrl": null,
       "name": "San Francisco University",
       "section": "ncs",
-      "shortName": "University SF",
+      "shortName": "SF University",
       "slug": "university-sf"
     },
     {

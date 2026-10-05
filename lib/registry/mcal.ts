@@ -129,7 +129,7 @@ export const MCAL_SEEDS: readonly Seed[] = [
     id: '7ad2b4f5-955e-4a92-ac1f-a1acced4df4b',
     slug: 'university-sf',
     name: 'San Francisco University',
-    shortName: 'University SF',
+    shortName: 'SF University',
     abbr: 'UN',
     acronym: 'UHS',
     mascot: 'Red Devils',

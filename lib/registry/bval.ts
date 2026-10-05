@@ -236,7 +236,7 @@ export const BVAL_SEEDS: readonly Seed[] = [
     id: '01bf9fda-9b10-4f04-9eef-3195d7d501dc',
     slug: 'sobrato',
     name: 'Ann Sobrato',
-    shortName: 'Sobrato',
+    shortName: 'Ann Sobrato',
     abbr: 'SO',
     acronym: 'ASHS',
     mascot: 'Bulldogs',

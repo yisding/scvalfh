@@ -194,7 +194,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     const scval = data.panels.find((p) => p.id === 'scval')!;
     const line = (panel: typeof bval, id: string) => panel.others.find((o) => o.id === id)?.text;
     expect(bval.others.map((o) => o.id), `${HV}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
-    expect(line(bval, 'scval'), `${HV}: strip SCVAL`).toBe('St Francis leads De Anza · Mitty leads El Camino');
+    expect(line(bval, 'scval'), `${HV}: strip SCVAL`).toBe('Saint Francis leads De Anza · Mitty leads El Camino');
     expect(line(scval, 'bval'), `${HV}: strip BVAL`).toBe(
       'Christopher leads Mt. Hamilton · Prospect & Westmont lead Santa Teresa',
     );

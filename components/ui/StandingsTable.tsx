@@ -540,8 +540,8 @@ export function StandingsTable(props: StandingsTableProps) {
                         <RowLink href={hrefOf(row)} label={rowLabel(row)} className="max-md:scroll-mt-9" />
                         <span className="flex items-center gap-2">
                           <TeamMonogram team={row.team} size={24} />
-                          {/* shortName, not name: the phone team cell is ~158px at 390, so "St.
-                              Ignatius College Preparatory" would truncate mid-word. The row link's
+                          {/* shortName, not name: the phone team cell is ~158px at 390, so
+                              "Convent of the Sacred Heart" would truncate mid-word. The row link's
                               accessible name still carries the full school name. */}
                           <span className="min-w-0 truncate text-body font-semibold text-ink">
                             {row.team.shortName}

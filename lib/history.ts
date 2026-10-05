@@ -29,7 +29,7 @@ import {
 } from './history-schema';
 import { LEAGUE_IDS } from './leagues';
 import { failValidation } from './schema-primitives';
-import { getTeamBySlug } from './teams';
+import { getTeamBySlug, teamsInLeague } from './teams';
 import type { DivisionId, LeagueId, TeamSlug } from './types';
 
 export type {
@@ -105,6 +105,37 @@ export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory
   return entry?.status === 'available' ? entry.provenance : null;
 }
 
+/**
+ * The name the page prints for a school in the archive: the registry's canonical `name`, the one
+ * every other page uses. The file keeps each source's own spelling ("Saint Ignatius" in the team
+ * table, "St Ignatius" in the awards block, "MItty", "Presentation HS"), and `slug` is the join
+ * key; only a school with no slug prints as the source wrote it.
+ */
+export function historySchoolName(slug: TeamSlug | null, sourceName: string): string {
+  return (slug ? getTeamBySlug(slug)?.name : undefined) ?? sourceName;
+}
+
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * An overall award's value with its school written by the registry name, as `historySchoolName`
+ * does for rows and award lines: "St Ignatius- Olivia Van de Braak" → "St. Ignatius- Olivia Van de
+ * Braak", "…, Goalie, Presentation HS" → "…, Goalie, Presentation". The value is not split (the
+ * divisions write it three ways; see AwardsBlock), only the one school spelling in it is replaced:
+ * the longest name, short name or alias of one of the league's schools, matched case for case as
+ * whole words. A value naming none of them is returned as written.
+ */
+export function canonicalAwardValue(leagueId: LeagueId, value: string): string {
+  const spellings = teamsInLeague(leagueId)
+    .flatMap((t) => [t.name, t.shortName, ...t.aliases].map((spelling) => ({ spelling, name: t.name })))
+    .sort((a, b) => b.spelling.length - a.spelling.length);
+  for (const { spelling, name } of spellings) {
+    const re = new RegExp(`(?<![A-Za-z])${escapeRegExp(spelling)}(?![A-Za-z])`);
+    if (re.test(value)) return value.replace(re, name);
+  }
+  return value;
+}
+
 function divisionEntry(division: DivisionId): HistoryDivision | undefined {
   for (const { entry } of getAvailableHistoryLeagues()) {
     const found = entry.divisions.find((d) => d.division === division);
@@ -166,7 +197,7 @@ export function getHistoryDivisionChanges(
     for (const r of d.standings.varsity) {
       const team = r.slug ? getTeamBySlug(r.slug) : undefined;
       if (r.slug && team && team.division !== d.division) {
-        out.push({ slug: r.slug, name: r.name, historyDivision: d.division, registryDivision: team.division });
+        out.push({ slug: r.slug, name: team.name, historyDivision: d.division, registryDivision: team.division });
       }
     }
   }

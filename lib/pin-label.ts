@@ -4,16 +4,15 @@
  * `PinControl`'s label with it.
  *
  * WCAG 2.5.3 Label in Name (Level A): a tile shows `shortName`, so the accessible name must contain it. For
- * most teams the short name is inside the full name ('Tamalpais', 'Mitty' ⊂ 'Archbishop Mitty'); for the rest
- * ('St Francis' / 'Saint Francis', 'Valley Chr.', 'Archie Wms.', 'Lick-Wilm.', 'University SF', 'St Ignatius',
- * 'Pleasant Val.')
- * it is not, so the visible string leads and the full name follows in parentheses.
+ * most teams the short name is the full name, or inside it ('Tamalpais', 'Mitty' ⊂ 'Archbishop Mitty'); for the
+ * rest ('Valley Chr.', 'Archie Wms.', 'Lick-Wilm.', 'SF University', 'Pleasant Val.') it is not, so the visible
+ * string leads and the full name follows in parentheses.
  */
 
 /** U+00AD SOFT HYPHEN: invisible unless the line actually breaks there. */
 const SHY = '­';
 
-/** 'Pin Leigh, Mt. Hamilton · BVAL' | 'Pin Tamalpais, MCAL' | 'Pin St Francis (Saint Francis), De Anza · SCVAL'. */
+/** 'Pin Leigh, Mt. Hamilton · BVAL' | 'Pin Tamalpais, MCAL' | 'Pin Valley Chr. (Valley Christian), De Anza · SCVAL'. */
 export function pinLabel(t: { name: string; shortName: string; divisionHeading: string | null; leagueShort: string }): string {
   const name = t.name.toLowerCase().includes(t.shortName.toLowerCase()) ? t.name : `${t.shortName} (${t.name})`;
   return `Pin ${name}, ${t.divisionHeading ? `${t.divisionHeading} · ` : ''}${t.leagueShort}`;

@@ -25,7 +25,7 @@ import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
  * board, all of that team's players) with the visually hidden "Your team" note beside it.
  *
  * Below 640px a name cell shows the team's short name (the phone cell is about 100-125px wide, so
- * "St. Ignatius College Preparatory" would take four lines), and the full name from there. The row
+ * "Convent of the Sacred Heart" would take three lines), and the full name from there. The row
  * header has no `aria-label`: its content is what is read, so the pinned row's note is too.
  */
 

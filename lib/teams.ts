@@ -271,6 +271,11 @@ function assertRegistry(): void {
     if (!SLUG_PATTERN.test(t.slug)) fail(`bad slug "${t.slug}"`);
     if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
     if (t.shortName.length > 14) fail(`${t.slug}: shortName longer than 14 characters`);
+    // One full name and one short name per school: the short name differs only where the full
+    // name would not fit in 14 characters.
+    if (t.name.length <= 14 && t.shortName !== t.name) {
+      fail(`${t.slug}: shortName "${t.shortName}" differs from name "${t.name}", which fits in 14 characters`);
+    }
   }
 
   // 2. league, division and section agree with the config

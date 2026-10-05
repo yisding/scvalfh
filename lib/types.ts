@@ -128,9 +128,17 @@ export interface TeamExternalIds {
 export interface Team {
   id: TeamId;
   slug: TeamSlug;
-  /** Canonical display name (MaxPreps `schoolName`). */
+  /**
+   * The school's one canonical full name, everywhere the site names it in full: the name people
+   * use, without "High School" or "College Preparatory" ('St. Ignatius', 'Archbishop Mitty').
+   * Source spellings ('ST. IGNATIUS', 'MItty', 'Presentation HS') are aliases, never shown.
+   */
   name: string;
-  /** ≤ 14 characters. */
+  /**
+   * The one canonical short name (≤ 14 characters), for rows and tiles too narrow for `name`.
+   * Equal to `name` unless `name` is longer than 14 characters ('Mitty', 'Valley Chr.'); enforced
+   * at load (lib/teams.ts).
+   */
   shortName: string;
   /** 2 letters, unique across all 49 teams. */
   abbr: string;

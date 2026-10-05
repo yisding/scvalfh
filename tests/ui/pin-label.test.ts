@@ -36,7 +36,8 @@ describe('pinLabel', () => {
     expect(byslug('tamalpais')).toBe('Pin Tamalpais, MCAL');
     expect(byslug('carmel')).toBe('Pin Carmel, PCAL');
     expect(byslug('mitty')).toBe('Pin Archbishop Mitty, El Camino · SCVAL');
-    expect(byslug('saint-francis')).toBe('Pin St Francis (Saint Francis), De Anza · SCVAL');
+    expect(byslug('saint-francis')).toBe('Pin Saint Francis, De Anza · SCVAL');
+    expect(byslug('university-sf')).toBe('Pin SF University (San Francisco University), MCAL');
     expect(byslug('davis')).toBe('Pin Davis, EAL');
     expect(byslug('pleasant-valley')).toBe('Pin Pleasant Val. (Pleasant Valley), EAL');
   });
@@ -67,8 +68,6 @@ describe('pinLabel', () => {
       'archie-williams',
       'lick-wilmerding',
       'pleasant-valley',
-      'saint-francis',
-      'st-ignatius',
       'university-sf',
       'valley-christian',
     ]);

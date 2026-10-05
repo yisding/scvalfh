@@ -12,7 +12,7 @@ import {
  * localStorage pins, /teams/<slug> URLs, fixture names and the goldens depend on them.
  */
 const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name: string, division: string]> = [
-  ['st-ignatius', 'SI', '1dc4836b-4daf-4573-b525-27b474bd5366', 'St. Ignatius College Preparatory', 'de-anza'],
+  ['st-ignatius', 'SI', '1dc4836b-4daf-4573-b525-27b474bd5366', 'St. Ignatius', 'de-anza'],
   ['saint-francis', 'SF', 'de6d3780-e8f6-4a2a-93f2-b5d89499f9b0', 'Saint Francis', 'de-anza'],
   ['los-altos', 'LA', '0279f2de-d5ce-484d-b210-2286ded42058', 'Los Altos', 'de-anza'],
   ['valley-christian', 'VC', '8a8c04d2-5606-44cf-9993-34db55474240', 'Valley Christian', 'de-anza'],

@@ -145,7 +145,7 @@ export function finderView(
  * Split `pinLabel(entry)` around the visible short name: `[before, visible, after]`, so the button
  * can show `visible` and keep the rest sr-only. A short name inside the full name
  * (`Pin Archbishop Mitty, <detail>`) → ['Pin Archbishop ', 'Mitty', ', ']; one that is not
- * (`Pin St Francis (Saint Francis), <detail>`) → ['Pin ', 'St Francis', ' (Saint Francis), '].
+ * (`Pin Valley Chr. (Valley Christian), <detail>`) → ['Pin ', 'Valley Chr.', ' (Valley Christian), '].
  * The detail line is the visible second line.
  */
 function pinResultParts(entry: TeamSearchEntry): { before: string; visible: string; after: string; detail: string } {

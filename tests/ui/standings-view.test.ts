@@ -403,7 +403,7 @@ describe('OG card rows (standings-view.ts leaderClause over standings-page-view.
       if (!league) throw new Error(`no league ${id}`);
       return view.leaderClause(league.divisions.map((d) => sd.leaderLine(d.id, d.heading)));
     };
-    expect(row('scval'), `${SV}: OG SCVAL`).toBe('De Anza: St Francis 12 pts · El Camino: Mitty 15 pts');
+    expect(row('scval'), `${SV}: OG SCVAL`).toBe('De Anza: Saint Francis 12 pts · El Camino: Mitty 15 pts');
     expect(row('bval'), `${SV}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
     expect(row('pcal'), `${SV}: OG PCAL`).toBe('Stevenson 18 pts');
     const line = (names: string[]) => ({

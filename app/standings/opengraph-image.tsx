@@ -9,7 +9,7 @@ import { shortDate } from '../../lib/format';
 
 /**
  * The /standings OG card (SPEC §8.4): "Standings — every league", then one row per league —
- * `SCVAL  De Anza: St Ignatius 18 pts · El Camino: Los Gatos 21 pts` (short name and points;
+ * `SCVAL  De Anza: St. Ignatius 18 pts · El Camino: Los Gatos 21 pts` (short name and points;
  * co-leaders at most two names joined with " & ", then ` +<n>`; `No league results yet` before a
  * league's first result).
  *
