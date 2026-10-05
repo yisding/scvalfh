@@ -371,7 +371,7 @@ describe('MCAL officialChanges', () => {
 interface Recorded {
   ctx: RunContext;
   sources: SourceStatus[];
-  degraded: Array<{ league: LeagueId; state: Exclude<LeagueRunState, 'fresh'>; reason: string }>;
+  degraded: Array<{ league: LeagueId; state: Exclude<LeagueRunState, 'fresh'>; reason: string; cause?: string }>;
   warnings: string[];
 }
 
@@ -412,7 +412,7 @@ function makeCtx(opts: {
     previous: opts.previous ?? null,
     transport: opts.transport ?? corpusTransport(),
     source: (row) => void sources.push(row),
-    degrade: (league, state, reason) => void degraded.push({ league, state, reason }),
+    degrade: (league, state, reason, cause) => void degraded.push({ league, state, reason, cause }),
     drop: () => undefined,
     leaguesInRun: () => opts.leagues ?? LEAGUES.map((l) => l.id),
     log: () => undefined,
@@ -470,7 +470,7 @@ describe('stepOfficial over the corpus', () => {
     expect(rec.sources.find((r) => r.kind === 'official-revision-check' && r.scope?.division === 'mt-hamilton')).toMatchObject({
       status: 'stale', error: reason, id: 'bval-docx',
     });
-    expect(rec.degraded).toEqual([{ league: 'bval', state: 'partial', reason }]);
+    expect(rec.degraded).toEqual([{ league: 'bval', state: 'partial', reason, cause: 'upstream revised' }]);
     expect(res.games.filter((g) => g.official?.division === 'mt-hamilton')).toHaveLength(30);
   });
 
@@ -488,7 +488,7 @@ describe('stepOfficial over the corpus', () => {
       kind: 'official-revision-check', status: 'stale', error: reason,
     });
     expect([...res.revisedUpstream]).toEqual(['marin-county']);
-    expect(rec.degraded).toEqual([{ league: 'mcal', state: 'partial', reason }]);
+    expect(rec.degraded).toEqual([{ league: 'mcal', state: 'partial', reason, cause: 'schedule changes posted' }]);
     expect(res.games.filter((g) => g.official?.division === 'marin-county')).toHaveLength(72);
   });
 
@@ -511,6 +511,7 @@ describe('stepOfficial over the corpus', () => {
       {
         league: 'pcal', state: 'degraded',
         reason: "The official PCAL schedule file failed validation; league games are identified by MaxPreps' league flag this run.",
+        cause: 'official file invalid',
       },
     ]);
     expect(rec.sources.find((r) => r.kind === 'official-schedule' && r.scope?.division === 'pcal')?.status).toBe('error');
