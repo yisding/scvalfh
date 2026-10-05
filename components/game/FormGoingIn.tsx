@@ -1,12 +1,13 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import FormStrip from '../ui/FormStrip';
 import GhostMonogram from '../ui/GhostMonogram';
 import ResultChip, { CHIP_LABEL } from '../ui/ResultChip';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 
-import type { GameModel, GameSideModel } from './game-model';
+import type { GameModel, GameSideModel } from './game-view';
 
 /**
  * FORM GOING IN (DESIGN §3.5) — the last five LEAGUE results each side carried into this contest,
@@ -69,7 +70,7 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
           />
           {side.outcome ? (
             <span className="flex items-center gap-2 text-meta text-ink-3">
-              <span aria-hidden="true">&rarr;</span>
+              <Arrow />
               <span>then</span>
               {/* `aria-hidden` on the chip, as every other ResultChip consumer does (GameRow,
                   SeasonSeries, FormStrip). ResultChip is a `role="img"` with its own

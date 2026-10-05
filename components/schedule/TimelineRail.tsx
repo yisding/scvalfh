@@ -4,6 +4,7 @@ import { dateSpan, longDate, monthDay, parseLocal } from '../../lib/format';
 import { CCS, getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
+import Arrow from '../ui/Arrow';
 import type { RailKind } from './rail-targets';
 
 /**
@@ -212,7 +213,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
             className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
           >
             <span aria-hidden="true">{chip.label}</span>
-            <span aria-hidden="true">&rarr;</span>
+            <Arrow />
             <span className="sr-only">{chip.sr}</span>
           </Link>
         </li>

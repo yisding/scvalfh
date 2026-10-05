@@ -39,12 +39,12 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const workers = mode === 'cloudflare';
   /**
-   * SITE_URL and SCVAL_BUILD_AT are read at module scope (components/layout/site-url.ts,
+   * SITE_URL and SCVAL_BUILD_AT are read at module scope (components/layout/site.ts,
    * build-instant.ts). They are inlined here, once per build, so the prerendered pages and anything
    * rendered on request (every 404) carry the same values on both vinext targets. On a Worker,
    * process.env holds only Worker vars and the clock reads the Unix epoch at module scope, so
    * without this a request-time 404 said "Last updated 20726 days ago" and pointed og:image at
-   * http://localhost:3000. `undefined` keeps site-url.ts's own localhost fallback when SITE_URL is
+   * http://localhost:3000. `undefined` keeps site.ts's own localhost fallback when SITE_URL is
    * unset. loadEnv reads .env.[mode][.local] as vinext does, with process.env winning; it is called
    * here because `vinext-cloudflare deploy` builds without the vite CLI. Next reads both variables
    * at run time, as before.

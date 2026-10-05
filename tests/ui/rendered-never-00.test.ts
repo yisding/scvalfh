@@ -27,7 +27,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { buildGameModel, gameDescription, gameKicker, gameTitle } from '../../components/game/game-model';
+import { buildGameView, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
 import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
 import type { Game } from '../../lib/types';
@@ -35,7 +35,7 @@ import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
 
 interface Rendered {
   games: Game[];
-  buildGameModel: typeof buildGameModel;
+  buildGameView: typeof buildGameView;
   gameTitle: typeof gameTitle;
   gameDescription: typeof gameDescription;
   gameKicker: typeof gameKicker;
@@ -47,7 +47,7 @@ interface Rendered {
 
 const live: Rendered = {
   games: getGames(),
-  buildGameModel,
+  buildGameView,
   gameTitle,
   gameDescription,
   gameKicker,
@@ -147,7 +147,7 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
       const { r, nonFinal } = sets();
       const offenders: string[] = [];
       for (const game of nonFinal) {
-        const model = r.buildGameModel(game.contestId);
+        const model = r.buildGameView(game.contestId);
         expect(model).toBeDefined();
         for (const line of [r.gameTitle(model!), r.gameDescription(model!), r.gameKicker(model!)]) {
           if (SCORE_PAIR.test(line)) offenders.push(`${game.contestId}: ${line}`);
@@ -198,11 +198,11 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(corpusName);
       vi.resetModules();
       const data = await import('../../lib/data');
-      const model = await import('../../components/game/game-model');
+      const model = await import('../../components/game/game-view');
       const row = await import('../../components/ui/GameRow');
       corpus = {
         games: data.getGames(),
-        buildGameModel: model.buildGameModel,
+        buildGameView: model.buildGameView,
         gameTitle: model.gameTitle,
         gameDescription: model.gameDescription,
         gameKicker: model.gameKicker,

@@ -448,6 +448,18 @@ export function getLastLeagueResultDate(
   return dates.length ? dates[dates.length - 1] : null;
 }
 
+/**
+ * Non-league games played so far: finals of the league's teams that count for no table and are
+ * no postseason game (the `isNonLeague` predicate, components/ui/describe-game.ts), dated on or
+ * before `through`. The count the two pre-league-play notices (the home PhaseLead and the
+ * /standings banner) print, so they cannot count differently.
+ */
+export function getNonLeagueFinalsPlayed(leagueId: LeagueId, through: string = getToday()): number {
+  return getGames({ league: leagueId, status: 'final' }).filter(
+    (g) => g.countsFor === null && g.postseason === null && g.dateKey <= through,
+  ).length;
+}
+
 const PLAYABLE: GameStatus[] = ['scheduled', 'live', 'postponed'];
 
 function scoped(filter: { league?: LeagueId }): Game[] {
@@ -474,6 +486,17 @@ export function getLatestResultsDate(filter: { league?: LeagueId } = {}, asOf: s
     .map((g) => g.dateKey)
     .sort();
   return dates.length ? dates[dates.length - 1] : null;
+}
+
+/**
+ * The Scores tab's landing date, across every league or within one: the latest day at or before
+ * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
+ * result it is the next day with a contest; with no contests at all, none. BottomTabBar aims the
+ * tab at it and ScheduleList lays out the days around it, so the two cannot disagree.
+ */
+export function getScoresLandingDate(filter: { league?: LeagueId } = {}): string | null {
+  const today = getToday();
+  return getLatestResultsDate(filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
 }
 
 /**
@@ -915,7 +938,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
           `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
         href: `/playoffs/${league.id}`,
-        linkText: `${ps.name} →`,
+        linkText: ps.name,
       };
     }
     case 'unbracketed-tournament':
@@ -924,7 +947,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         label,
         sentence: `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
         href: `/playoffs#${league.id}`,
-        linkText: 'Postseason →',
+        linkText: 'Postseason',
       };
     case 'ccs-ladder': {
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
@@ -940,7 +963,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
       }
-      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs →' };
+      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs' };
     }
   }
 }

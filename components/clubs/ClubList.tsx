@@ -19,7 +19,11 @@ import type { ClubIndexRow } from './club-view';
  * Next 16 would otherwise download each club page as the list scrolls into view. Nothing here
  * wraps without a break: the full names, HTC's long city and the school list must reflow.
  */
-export function ClubList({ clubs }: { clubs: ClubIndexRow[] }) {
+export interface ClubListProps {
+  clubs: ClubIndexRow[];
+}
+
+export function ClubList({ clubs }: ClubListProps) {
   return (
     <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {clubs.map((club) => (

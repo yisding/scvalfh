@@ -1,9 +1,9 @@
 /**
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
- * The page reads the snapshot ONLY through lib/data.ts and every score goes through
- * lib/format's renderScore / components/ui/game-view's describeGame — nothing here reads
- * `game.home.score` to decide what to print. The only arithmetic in this file is counting
+ * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
+ * lib/format's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
+ * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
  * `localDateKey(snapshot.fetchedAt)` (getToday()), never Date.now(), so the build is
  * reproducible (BUILD-BRIEF).
@@ -13,7 +13,6 @@ import {
   getGames,
   getHeadToHead,
   getLastLeagueResultDate,
-  getLeagueSummaries,
   getOfficialFixtures,
   getStandingContext,
   getStandingFor,
@@ -36,6 +35,7 @@ import {
   ordinal,
   plural,
   recordString,
+  renderScore,
   shortDate,
   sideOutcome,
   timeOfDayPT,
@@ -55,11 +55,10 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame } from '../ui/game-view';
+import { describeGame } from '../ui/describe-game';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -139,7 +138,7 @@ export interface TeamLeagueCopy {
    * 'Super Regional' for an unbracketed league); null for a CCS ladder, whose event is CCS's.
    */
   postseasonName: string | null;
-  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL): the noun for a game in this team's table. */
+  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL): the noun for a game in this team's table. */
   gamesWord: 'division' | 'league';
   /** 'Article VI §1 (double round robin; …)' */
   doubleRoundRobin: string;
@@ -162,7 +161,7 @@ export interface TeamPageView {
   standing: Standing | undefined;
   league: TeamLeagueCopy;
   division: DivisionId;
-  /** null for a single-division league (PCAL, MCAL): never rendered as a division label. */
+  /** null for a single-division league (PCAL, MCAL, EAL): never rendered as a division label. */
   divisionHeading: string | null;
   /** `divisionHeading ?? league short`: what "of N in …" names. */
   scopeLabel: string;
@@ -347,10 +346,9 @@ function outcomeFor(game: Game, teamId: string): Outcome | null {
 
 /** The chip label's score, from this team's side: '0–7'. */
 function scorePair(game: Game, teamId: string): string | undefined {
-  const mine = game.home.teamId === teamId ? game.home : game.away;
-  const theirs = game.home.teamId === teamId ? game.away : game.home;
-  if (mine.score === null || theirs.score === null) return undefined;
-  return `${mine.score}–${theirs.score}`;
+  const score = renderScore(game);
+  if (score.kind !== 'final') return undefined;
+  return game.home.teamId === teamId ? `${score.home}–${score.away}` : `${score.away}–${score.home}`;
 }
 
 function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOpponent[] {
@@ -429,7 +427,8 @@ function dateLabelFor(dateKey: string, dateLocal: string, today: string): string
  * The scope is league-aware: an opponent from the page's own league is placed in its division
  * heading (or the league's short name for a one-table league: '2nd in MCAL'); one from another
  * league names that league too ('4th in SCVAL El Camino'), so a cross-league opponent's place is
- * never read as a place in this team's table. PCAL and MCAL never get a division label.
+ * never read as a place in this team's table. A single-division league (PCAL, MCAL, EAL) never
+ * gets a division label.
  */
 export function opponentRecordLine(opponent: Team | undefined, leagueId: LeagueId): string | null {
   if (!opponent) return null;
@@ -501,7 +500,7 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
-/** The NEXT card's external pills (named apart from game-view's private `chipsFor`). */
+/** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
   const address = game.venue.address;
@@ -743,15 +742,6 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
       ),
     })),
   }));
-}
-
-/** The anchor-mode LeagueSwitcher's chips and `#<league>` targets for /teams. */
-export function teamsLeagueChips(): { chips: LeagueChip[]; hrefs: Record<string, string> } {
-  const summaries = getLeagueSummaries();
-  return {
-    chips: summaries.map((l) => ({ id: l.id, shortName: l.shortName, sectionShort: l.section.shortName })),
-    hrefs: Object.fromEntries(summaries.map((l) => [l.id, `#${l.id}`])),
-  };
 }
 
 // ---------------------------------------------------------------- one-line headlines (OG card)

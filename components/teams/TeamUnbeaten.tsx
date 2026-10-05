@@ -15,8 +15,9 @@ import type { TeamPageView, UnbeatenOpponent } from './team-view';
  * with two meetings left, one, or none at all.
  *
  * An opponent whose remaining games exist ONLY in the league's official schedule is labelled
- * "unreported", never counted as a scheduled game we have a date and time for. The copy says
- * `division opponent` in a two-division league and `league opponent` in a single-division one.
+ * "unreported", never counted as a scheduled game we have a date and time for. The copy's noun is
+ * the league's `gamesWord`: `division opponent` in a two-division league and `league opponent` in a
+ * single-division one.
  */
 function statusOf(opponent: UnbeatenOpponent): string {
   if (opponent.nextDate !== null) return `next ${monthDay(opponent.nextDate)}`;
@@ -81,8 +82,12 @@ function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; le
   );
 }
 
-export function TeamUnbeaten({ view }: { view: TeamPageView }) {
-  const noun = view.divisionHeading === null ? 'league' : 'division';
+export interface TeamUnbeatenProps {
+  view: TeamPageView;
+}
+
+export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
+  const noun = view.league.gamesWord;
   const short = view.league.shortName;
   if (view.unbeaten.length === 0) {
     return (

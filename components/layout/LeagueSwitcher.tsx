@@ -7,6 +7,8 @@ import { setLeague, useEffectiveLeague } from '../ui/use-league';
 import type { SectionConfig } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
+import { ALL_LEAGUES } from './prefs-script';
+
 /**
  * The league chips (SPEC §8.3). One component, three modes:
  *
@@ -19,7 +21,9 @@ import type { LeagueId } from '../../lib/types';
  * - `link` (`/standings/[league]`, `/schedule/[league]`): `<nav>` of plain links, the page's league
  *   marked `aria-current="page"`, a leading `All` chip to the index page (`hrefs.all`). Following
  *   one NEVER writes the league; it works with JS off.
- * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links. Never writes.
+ * - `anchor` (`/standings`, `/teams`, `/playoffs`): `<nav>` of `#id` links to the page's own
+ *   sections, which may include route links (on /playoffs a tournament league's chip goes to
+ *   `/playoffs/<league>`). Never writes.
  *
  * Chip token: `text-micro` weight 600, `min-h-11 min-w-11 px-2`, 6px gap, `flex-wrap` (200% text
  * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
@@ -58,9 +62,6 @@ const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
   NCS: 'North Coast Section',
   NS: 'Northern Section',
 };
-
-/** The `All` chip's option value (matches the stored `'all'`). */
-const ALL = 'all';
 
 const CHIP = 'sx-league-chip';
 
@@ -121,14 +122,14 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
   const { league, ready } = useEffectiveLeague();
   const [said, setSaid] = useState('');
 
-  const choose = (id: LeagueId | typeof ALL) => {
+  const choose = (id: LeagueId | typeof ALL_LEAGUES) => {
     setLeague(id);
     const chip = leagues.find((l) => l.id === id);
     setSaid(chip ? `Showing ${chip.shortName}.` : 'Showing the latest from every league.');
   };
 
   const button = (id: string, text: string) => {
-    const selected = id === ALL ? league === null : league === id;
+    const selected = id === ALL_LEAGUES ? league === null : league === id;
     return (
       <button
         type="button"
@@ -150,7 +151,7 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
       aria-label={label}
       className={['sx-js-only flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}
     >
-      {includeAll ? button(ALL, 'All') : null}
+      {includeAll ? button(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} chip={(l) => button(l.id, l.shortName)} />
       <span role="status" aria-live="polite" className="sr-only">
         {said}
@@ -163,16 +164,17 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   const chip = (id: string, text: string) => {
     const href = hrefs[id];
     if (!href) return null;
-    const isCurrent = mode === 'link' && (id === ALL ? current === undefined : current === id);
+    const isCurrent = mode === 'link' && (id === ALL_LEAGUES ? current === undefined : current === id);
     const body = (
       <>
         {isCurrent ? <Check /> : null}
         {text}
       </>
     );
-    // Anchor chips stay on the page: a plain fragment link. Link chips are routes: no prefetch,
-    // because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
-    return mode === 'anchor' ? (
+    // A `#id` chip stays on the page: a plain fragment link. Any other href is a route, in either
+    // mode (/playoffs' tournament leagues are route chips in an anchor row): a `<Link>` with no
+    // prefetch, because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
+    return href.startsWith('#') ? (
       <a href={href} className={CHIP}>
         {body}
       </a>
@@ -185,7 +187,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
 
   return (
     <nav aria-label={label} className={['flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}>
-      {includeAll && mode === 'link' ? chip(ALL, 'All') : null}
+      {includeAll && mode === 'link' ? chip(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} chip={(l) => chip(l.id, l.shortName)} />
     </nav>
   );

@@ -16,7 +16,12 @@ import type { ClubProgramRow, ClubProgramsSource } from './club-view';
  * the shared one is not read as the same-named link under "Pages about the club". The detail is
  * free text from the club's site and always wraps.
  */
-export function ClubPrograms({ programs, shared }: { programs: ClubProgramRow[]; shared: ClubProgramsSource | null }) {
+export interface ClubProgramsProps {
+  programs: ClubProgramRow[];
+  shared: ClubProgramsSource | null;
+}
+
+export function ClubPrograms({ programs, shared }: ClubProgramsProps) {
   return (
     <div>
       <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">

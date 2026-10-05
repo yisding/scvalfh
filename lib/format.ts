@@ -10,7 +10,7 @@
  */
 
 import { TIME_ZONE } from './season';
-import type { Game, Outcome, Record3, ScoreView } from './types';
+import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const WEEKDAYS_LONG = [
@@ -345,6 +345,40 @@ export function ordinal(n: number): string {
 /** The rank cell: '1st', or an em dash for a team with no reported results (DESIGN §8). */
 export function ordinalPlace(place: number, hasResults = true): string {
   return hasResults ? ordinal(place) : EM_DASH;
+}
+
+/**
+ * A place in words, as a sentence or a screen reader says it: '7th', or 'tied for 7th' for a
+ * shared place (a level place the league's tiebreakers do not settle).
+ */
+export function placeWords(place: number, shared: boolean): string {
+  return shared ? `tied for ${ordinal(place)}` : ordinal(place);
+}
+
+/**
+ * A place as the eye reads it, in the site's two notations: a table cell's `7` / `T7`, and a
+ * pill's or a tile's `7th` / `T-7th`. The spoken form is always `placeWords`.
+ */
+export function placeMark(place: number, shared: boolean, form: 'table' | 'pill'): string {
+  if (form === 'table') return shared ? `T${place}` : String(place);
+  return shared ? `T-${ordinal(place)}` : ordinal(place);
+}
+
+/**
+ * What kind of document a league's official schedule is, as a link label names it: the BVAL
+ * sheet is a Google Doc, the rest are PDFs. A `Record` over every `OfficialSourceId`, so a new
+ * source fails typecheck until someone classifies it. The /standings link
+ * (`officialScheduleLabel`) and the /about health card (`officialSourceLabel`) both read it.
+ */
+const OFFICIAL_SOURCE_FORMAT: Readonly<Record<OfficialSourceId, 'PDF' | 'Google Doc'>> = {
+  'scval-pdf': 'PDF',
+  'bval-docx': 'Google Doc',
+  'pcal-pdf': 'PDF',
+  'mcal-pdf': 'PDF',
+};
+
+export function officialSourceFormat(source: OfficialSourceId): 'PDF' | 'Google Doc' {
+  return OFFICIAL_SOURCE_FORMAT[source];
 }
 
 /** A real 0 is '0'; a null is an en dash (DESIGN §5.3). NEVER coerce. */

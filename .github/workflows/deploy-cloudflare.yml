@@ -38,7 +38,7 @@
 #   - variable SITE_URL: the Worker's public origin (https://scvalfh.<subdomain>.workers.dev, or the
 #     custom domain routed to it). vite.config.ts inlines it at build time into every canonical
 #     URL, og:image, the sitemap and robots.txt; unset it would fall back to http://localhost:3000
-#     (components/layout/site-url.ts), so it is required here rather than defaulted.
+#     (components/layout/site.ts), so it is required here rather than defaulted.
 # With no CLOUDFLARE_API_TOKEN the run is a green no-op with a notice saying so: a fork, or this
 # repo before an account is connected, is not a failure. A token without the account ID or
 # SITE_URL is a half-done setup, and fails naming what is missing.
@@ -115,7 +115,7 @@ jobs:
             echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; README \"Cloudflare Workers\")"
             exit 1
           fi
-          # An origin, as site-url.ts expects (it drops one trailing slash): a path, query string or
+          # An origin, as site.ts expects (it drops one trailing slash): a path, query string or
           # stray whitespace would end up in front of every canonical URL and the sitemap. Host
           # characters only, an optional port, nothing after but one slash.
           origin_re='^https?://[A-Za-z0-9.-]+(:[0-9]+)?/?$'

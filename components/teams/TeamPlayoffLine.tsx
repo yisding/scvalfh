@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { CCS } from '../../lib/leagues';
 import { splitStatusLabel } from '../playoffs/playoff-view';
+import Arrow from '../ui/Arrow';
 import ExternalLink from '../ui/ExternalLink';
 import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
@@ -36,7 +37,11 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
  * official.
  */
-export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
+export interface TeamPlayoffLineProps {
+  view: TeamPageView;
+}
+
+export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
   const { postseasonLine: line, standing, league } = view;
   if (!line) {
     return (
@@ -63,8 +68,8 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
       ) : null}
       <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
-        <Link href={line.href} prefetch={false} className="sx-pill text-accent">
-          {line.linkText}
+        <Link href={line.href} prefetch={false} className="sx-pill">
+          {line.linkText} <Arrow />
         </Link>
         {league.postseasonKind === 'ccs-ladder' ? (
           <ExternalLink href={CCS.bracketUrl} className="sx-pill">

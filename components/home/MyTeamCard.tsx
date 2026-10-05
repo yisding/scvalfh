@@ -10,12 +10,11 @@ import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { GameDisplay } from '../ui/game-view';
+import type { GameDisplay } from '../ui/describe-game';
 import { formStripName } from '../ui/plural';
 import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
-import { UNPIN_ID, focusUnpin } from './FindYourTeam';
 import {
   postseasonCardLine,
   type HomeCardTeam,
@@ -363,6 +362,15 @@ function StalePin({ onUnpin }: { onUnpin: () => void }) {
       </p>
     </div>
   );
+}
+
+const UNPIN_ID = 'my-team-unpin';
+
+/** Focus the pinned card's Unpin button once it has rendered. */
+export function focusUnpin(): void {
+  const run = () => document.getElementById(UNPIN_ID)?.focus();
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
+  else run();
 }
 
 /**

@@ -32,7 +32,11 @@ function splitValue(record: Record3 | null): string | null {
   return recordString(record);
 }
 
-export function TeamSplits({ view }: { view: TeamPageView }) {
+export interface TeamSplitsProps {
+  view: TeamPageView;
+}
+
+export function TeamSplits({ view }: TeamSplitsProps) {
   const league = view.hasResults && view.standing ? view.standing.computed : null;
   const cells: Array<{ label: keyof typeof NO_GAMES; value: string | null }> = [
     { label: 'Home', value: splitValue(league?.homeRecord ?? null) },

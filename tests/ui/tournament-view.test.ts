@@ -26,6 +26,7 @@ import { textOf } from './html-text';
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/[league]/page.tsx';
 const OG = 'app/playoffs/[league]/opengraph-image.tsx';
+const DATA = 'components/playoffs/tournament-data.ts';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';
@@ -214,12 +215,14 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   let html = '';
   let page: typeof import('../../app/playoffs/[league]/page');
   let og: typeof import('../../app/playoffs/[league]/opengraph-image');
+  let data: typeof import('../../components/playoffs/tournament-data');
 
   beforeAll(async () => {
     process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
     vi.resetModules();
     page = await import('../../app/playoffs/[league]/page');
     og = await import('../../app/playoffs/[league]/opengraph-image');
+    data = await import('../../components/playoffs/tournament-data');
     const el = await page.default({ params: Promise.resolve({ league: 'mcal' }) } as never);
     html = renderToStaticMarkup(el as ReactElement);
   }, 600_000);
@@ -235,7 +238,17 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   it('generates only the tournament leagues, for the page and its OG image alike', () => {
     expect(page.generateStaticParams(), PAGE).toEqual([{ league: 'mcal' }]);
     expect(og.generateStaticParams(), OG).toEqual(page.generateStaticParams());
+    expect(data.tournamentStaticParams(), DATA).toEqual(page.generateStaticParams());
     expect(page.dynamicParams, PAGE).toBe(false);
+  });
+
+  it('finds the tournament league the page and its OG image both guard on, and nothing else', () => {
+    const found = data.tournamentLeague('mcal');
+    expect(found?.summary.id, DATA).toBe('mcal');
+    expect(found?.ps.name, DATA).toBe('MCAL tournament');
+    for (const league of ['scval', 'nope', 'ccs', 'eal']) {
+      expect(data.tournamentLeague(league), `${DATA}: ${league}`).toBeUndefined();
+    }
   });
 
   it('shows the header, the NCS note, seeds 1-6 with the tournament line and the bracket', () => {
@@ -254,6 +267,20 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(t, PAGE).toContain('Fri Oct 30 · at Tamalpais');
     expect(t, PAGE).toContain('How it works');
     expect(t, PAGE).toContain('This site follows the 2026 sheet.');
+  });
+
+  it('marks the pinned team like every other team list: data-team-slug on the row, the hidden note in its link', () => {
+    const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)"[\s\S]*?<a [^>]*href="\/teams\/([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
+    // Every MCAL team has a row in the seeds table, seeded or not.
+    expect(new Set(rows.map((m) => m[1])), 'components/playoffs/LeagueTournament.tsx seed rows').toEqual(
+      new Set([AW, RW, TM, BK, LW, UN, MC, CS, MA]),
+    );
+    for (const [, slug, href, inner] of rows) {
+      expect(href, 'components/playoffs/LeagueTournament.tsx row link').toBe(slug);
+      expect(inner, 'components/playoffs/LeagueTournament.tsx pin note').toContain(
+        '<span class="sr-only"><span class="sx-pin-note">Your team. </span>',
+      );
+    }
   });
 
   it('carries no CCS concept inside the page except the link to the CCS page', () => {

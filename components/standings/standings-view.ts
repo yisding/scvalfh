@@ -22,12 +22,13 @@
  *    rows sit at or above it) rather than assumed.
  *  - Postseason status is the league's ladder (`statusesOf(league)`); a team with no reported
  *    results gets NO projected place at all.
- *  - A division label is rendered only through `divisionHeading()`: PCAL and MCAL have none, and
- *    MaxPreps' own table names (config data only) are never a string here.
+ *  - A division label is rendered only through `divisionHeading()`: a single-division league
+ *    (PCAL, MCAL, EAL) has none, and MaxPreps' own table names (config data only) are never a
+ *    string here.
  */
 
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
-import { monthDay, ordinal, shortDate } from '../../lib/format';
+import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
 import {
   divisionHeading,
   getDivision,
@@ -97,7 +98,7 @@ export interface MissingRowView {
   key: string;
   dateKey: string;
   /** `Sep 4` */
-  date: string;
+  dateLabel: string;
   /** `Hollister at Carmel` (postponed rows add ` — Postponed`). */
   matchup: string;
   /** `Sep 4 Hollister at Carmel` — the two above, as one line. */
@@ -195,9 +196,35 @@ export interface DivisionView {
 
 // ---------------------------------------------------------------- small helpers
 
+/**
+ * Where a table's labelled ladder line goes: after how many rows, or null for no line.
+ *
+ * COUNTED, not assumed: the line sits under every ranked row whose place is at or above `after`,
+ * so with two teams level on the line there are more rows above it than `after` says, and two
+ * teams level on 1st both sit above Santa Teresa's "Play-in host" line. No line before any
+ * result (nothing above it), none when every row is above it (nothing below), and none for a
+ * division that draws no line (`after` null: the EAL). Rows come in table order, ranked rows
+ * first, so the rows above the line are always the first ones. The full table
+ * (`buildDivisionView`), the compact one, the home mini table (over its shown rows) and the
+ * league-tournament seeds all place their line through here.
+ */
+export function ladderLineAfter(
+  rows: readonly { ranked: boolean; place: number }[],
+  after: number | null | undefined,
+): number | null {
+  if (after === null || after === undefined) return null;
+  const above = rows.filter((r) => r.ranked && r.place <= after).length;
+  return above > 0 && above < rows.length ? above : null;
+}
+
+/** A standings (or seeds) row as `ladderLineAfter` reads it. */
+export function ladderRow(row: { standing: Standing }): { ranked: boolean; place: number } {
+  return { ranked: row.standing.hasReportedResults, place: row.standing.computed.place };
+}
+
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
-  return source === 'bval-docx' ? 'Official schedule (Google Doc)' : 'Official schedule (PDF)';
+  return `Official schedule (${officialSourceFormat(source)})`;
 }
 
 /**
@@ -300,14 +327,14 @@ function teamShort(teams: readonly Team[], slug: TeamSlug | null, fallback: stri
 function missingRowView(row: MissingOfficialResult, teams: readonly Team[], index: number): MissingRowView {
   const away = teamShort(teams, row.awaySlug, row.awayName);
   const home = teamShort(teams, row.homeSlug, row.homeName);
-  const date = monthDay(row.dateKey);
+  const dateLabel = monthDay(row.dateKey);
   const matchup = row.kind === 'postponed' ? `${away} at ${home} — Postponed` : `${away} at ${home}`;
   return {
     key: `${row.dateKey}-${row.awaySlug ?? row.awayName}-${row.homeSlug ?? row.homeName}-${index}`,
     dateKey: row.dateKey,
-    date,
+    dateLabel,
     matchup,
-    text: `${date} ${matchup}`,
+    text: `${dateLabel} ${matchup}`,
     sbliveNote:
       row.kind === 'missing' && row.sblive
         ? `si.com reports ${away} ${row.sblive.away}-${row.sblive.home} ${home}; not counted: ${row.sblive.note}`
@@ -354,12 +381,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   const ranked = rows.filter((r) => r.standing.hasReportedResults);
   const unrankedTeams = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
 
-  // COUNTED, not assumed: with two teams level on the line there are more rows above it. A division
-  // with no line (the EAL: every team is inside the Super Regional's top six) draws none.
+  // COUNTED, not assumed (ladderLineAfter). A division with no line (the EAL: every team is inside
+  // the Super Regional's top six) draws none.
   const line = config.ladderLine;
-  const aboveLine = line ? ranked.filter((r) => r.standing.computed.place <= line.after) : [];
-  const berthRuleAfter =
-    aboveLine.length > 0 && aboveLine.length < rows.length ? aboveLine.length : undefined;
+  const berthRuleAfter = ladderLineAfter(rows.map(ladderRow), line?.after) ?? undefined;
 
   // A level place spans as many finishing slots as the tied group has teams, so it can hold two
   // rungs at once; grouping on `playoffStatus` alone would make a rung (the play-in, say) vanish.
@@ -630,7 +655,7 @@ export interface OverviewDivision {
   rows: StandingsRowData[];
   /** The labelled rule in the compact table; null when the division draws none (EAL). */
   ladderLine: { after: number; label: string } | null;
-  /** `Full <division heading ?? SHORT> table →` */
+  /** `Full <division heading ?? SHORT> table`; the page adds the aria-hidden arrow (components/ui/Arrow). */
   fullLabel: string;
   /** `/standings/<league>#<division>` */
   fullHref: string;
@@ -717,4 +742,26 @@ export interface LeaderLine {
   teams: Array<{ name: string; record: string; pts: number }>;
   /** A tie at the top. */
   tiedAtTop: boolean;
+}
+
+/**
+ * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St Ignatius 18 pts
+ * · El Camino: Los Gatos 21 pts`; co-leaders at most two names joined with " & ", then ` +<n>`;
+ * `No league results yet` before any result. The one builder of this row for both OG cards (the
+ * root card, app/opengraph-image.tsx, and the /standings card) and the standings metadata.
+ */
+export function leaderClause(lines: readonly LeaderLine[]): string {
+  if (lines.every((line) => line.teams.length === 0)) return 'No league results yet';
+  return lines
+    .map((line) => {
+      const names =
+        line.teams.length === 0
+          ? 'no results yet'
+          : `${line.teams
+              .slice(0, 2)
+              .map((t) => t.name)
+              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].pts} pts`;
+      return line.heading ? `${line.heading}: ${names}` : names;
+    })
+    .join(' · ');
 }

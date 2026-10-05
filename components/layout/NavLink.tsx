@@ -10,8 +10,8 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
  * The only reason any navigation on this site is a client component: `aria-current` and the
  * active ink need the current path (DESIGN §1.3, §3.1), the league-aware target needs the
  * remembered league, and the pending wash needs the link's own navigation status. ONE module
- * serves both the desktop TopNav and the phone BottomTabBar, rather than one per bar (see
- * components/ui/PinControl.tsx for the app's full client-module list).
+ * serves both the desktop TopNav and the phone BottomTabBar, rather than one per bar
+ * (tests/ui/client-boundary.test.ts enumerates every client module).
  *
  * `prefetch={false}` on every nav link, deliberately. Every route on this site is STATIC, and
  * Next 16's default `auto` prefetches a static route in full — data included — the moment the link

@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/components/layout/site-url';
-import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
-import { getCommitsLastChecked } from '@/lib/commits';
+import { SITE_URL } from '../components/layout/site';
+import { getClubSlugs, getClubsLastChecked } from '../lib/clubs';
+import { getCommitsLastChecked } from '../lib/commits';
 import {
   getFetchedAt,
   getGameDates,
@@ -10,8 +10,8 @@ import {
   getLeagueIds,
   getTeams,
   getTournamentLeagueIds,
-} from '@/lib/data';
-import { gameHref } from '@/lib/game-id';
+} from '../lib/data';
+import { gameHref } from '../lib/game-id';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and

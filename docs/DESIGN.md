@@ -13,6 +13,12 @@
 > fifth league in a third section, the Northern Section; §22 at the end of this file records what
 > that changed and wins where it disagrees with §15 or anything above it.
 >
+> **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
+> build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
+> `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
+> so treat it as historical. New comments cite DESIGN, DATA-SOURCES, LEAGUE-RULES or BYLAWS
+> sections instead.
+>
 > **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
 > example below predates the news that Wilcox is not fielding a team this season. The site now
 > had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
@@ -51,15 +57,12 @@
 > deviation reads as a decision rather than an omission.
 >
 > One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"
-> (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The built app has **nine files
-> carrying `'use client'`** — `git grep -l "^'use client'" app components` is the check. Three more
-> are components: `NavLink` (the nav needs `usePathname` for `aria-current`), `PinnedTeamMarks` (the
-> pinned-team highlight after a client-side navigation, which the inline `<head>` script cannot do
-> because `DOMContentLoaded` fires once per document) and `app/error.tsx` (Next requires an error
-> boundary to be a Client Component). Two are the shared store behind the other three:
-> `use-pinned-team.ts` and `local-store.ts`. The number mattered beyond bookkeeping — "without a
-> fifth client module" was once written down as the reason the pinned-team highlight had to be an
-> inline script rather than a component, a constraint that had already been spent. What the §13
+> (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The count has grown with the
+> multi-league work, so no number is kept here: `git grep -l "^'use client'" app components` and
+> tests/ui/client-boundary.test.ts, which finds every client module itself, are the live
+> inventory. The number mattered beyond bookkeeping — "without a fifth client module" was once
+> written down as the reason the pinned-team highlight had to be an inline script rather than a
+> component, a constraint that had already been spent. What the §13
 > budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
 > 40 KB allowance (see the note on §13 above).
 >
@@ -84,7 +87,7 @@ weakness either judge named. Every weakness resolution is marked **[R-n]** and i
 **Verified stack in this repo** (`/home/yi/Code/scvalfh`): `next@16.3.6`,
 `tailwindcss@4.3.3`, React 19, TypeScript. Geist + Geist_Mono are present in
 `next/font/google`'s font data. No UI kit, no chart library — inline SVG and CSS only.
-One static JSON snapshot, rebuilt nightly by cron.
+One static JSON snapshot, rebuilt twice daily by cron (.github/workflows/update-data.yml).
 
 **The product test.** Every decision is settled by one question: *does this help a parent
 standing on the turf at Homestead at 5:40pm on a Tuesday, one-handed, on cellular?*
@@ -827,9 +830,10 @@ Sections, in order, each with a stable anchor:
 `#sources` — "Data from MaxPreps and SBLive/SI" with both deep links; the one sentence about
 mascot images ("the source carries a mascot image URL; we read it and discard it — each
 school is shown as a color monogram instead").
-`#updates` — "Rebuilt nightly by cron, about 5:00 AM Pacific. A game that finished at 7pm
-Thursday appears Friday morning. **Live scores are not collected** — anything marked LIVE is
-a scheduled window, not a running score."
+`#updates` — "Rebuilt twice daily by cron, about 10 PM and 7 AM Pacific
+(.github/workflows/update-data.yml). A game that finished at 7pm Thursday appears that night if
+its score is entered by about 10 PM, otherwise Friday morning. **Live scores are not
+collected** — anything marked LIVE is a scheduled window, not a running score."
 `#standings` — §11's eight rules, verbatim. Linked from every standings table footnote.
 `#conventions` — the nine-row result-rendering table from §5.2, verbatim.
 `#cross-check` — the published MaxPreps comparison log (§9), every mismatch with a deep link.
@@ -1177,12 +1181,6 @@ guardrail. **Divisions get no hue either** (§6.4).
     outline-offset: 2px;
     border-radius: var(--sx-r-tag);
   }
-  /* A sticky table header clips an outer ring — use an inset one there. */
-  :where(thead th, .sx-sticky-head):focus-visible { outline-offset: -2px; }
-  /* On a colored fill, a surface-colored inner ring keeps the outline readable. */
-  :where(.sx-on-fill):focus-visible { box-shadow: 0 0 0 1px var(--sx-surface) inset; }
-
-  [data-sticky="scrolled"] { box-shadow: var(--sx-shadow-raised); }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -1248,7 +1246,9 @@ display face anywhere.
   `--sx-zero`, **solid, never dashed**. Non-league games get a 2px left border in
   `--sx-border-strong` **plus** the `NL` tag — a shape-and-word cue, not a hue.
 - **Shadows:** two, neither decorative. `--sx-shadow-sticky` (a 1px hairline) on the sticky
-  bar at rest, `--sx-shadow-raised` once `data-sticky="scrolled"`. Dark mode sets
+  bar, scrolled or not, and `--sx-shadow-raised` under cards. The bar never swaps to the raised
+  shadow: `data-sticky="scrolled"`, like the `.sx-on-fill` and `.sx-sticky-head` focus hooks,
+  was not adopted, and globals.css carries none of them. Dark mode sets
   `--sx-shadow-raised: none` and leans on the border. **Neither token is self-referential**
   — each is a literal value in `:root`, aliased once into `@theme inline`. **[R-17]**
 - **Motion:** 120ms tap feedback (`background-color` → `--sx-surface-2`), 200ms for the theme
@@ -1890,7 +1890,6 @@ interface StandingsTableProps {
   gdDomain: number;                // max |gd| for THIS division — never global
   variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
   caption: string;                 // "De Anza Division league standings through Sep 24"
-  highlightSlug?: TeamSlug;        // the pinned team → 2px accent left rule
   berthRuleAfter?: number;         // draw a 2px rule after row N (the 7th auto berth)
   footnotes?: string[];            // rendered under the table, 13px --sx-text-3
 }
@@ -2057,7 +2056,6 @@ state reads across the whole bar), 4px rounded fill end, `7 / 16` printed at the
 interface PlayoffBracketProps {
   division: 'I' | 'II';
   rounds: BracketRound[];
-  highlightSlug?: TeamSlug;
 }
 interface BracketRound { name: 'Quarterfinals' | 'Semifinals' | 'Final';
                          date: string; games: BracketGame[] }
@@ -2129,7 +2127,9 @@ echo as removable mono chips. Zero results is a designed state (§8).
 ### 7.14 `ThemeToggle` — **`'use client'`**
 
 ```ts
-interface ThemeToggleProps {}      // no props
+interface ThemeToggleProps {
+  className?: string;
+}
 ```
 
 Three states — **System / Light / Dark** — cycled by one 44×44 button whose `aria-label` names
@@ -2144,16 +2144,17 @@ scrollbars in step.
 ```ts
 interface AttributionProps {
   snapshotAt: string;              // ISO instant
-  links?: { label: string; href: string }[];   // page-specific deep links
-  extraCredit?: string;            // "Prior-season data from scval.com" on /history
+  now?: string;                    // the instant staleness is measured against (the build)
 }
 ```
 
-Always visible, never a tooltip, on **every** page: **"Data from MaxPreps and SBLive/SI"**
-followed by real deep links — the league page on both sources site-wide, and the *team's* or
-*game's* page when the component sits on `/teams/[slug]`, `/game/[id]`, or in an expanded
-`GameRow`. Plus the snapshot timestamp in Pacific, a link to `/about`, and the not-affiliated
-line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
+Always visible, never a tooltip, on **every** page: **"Data from MaxPreps and High School on SI
+(si.com)"**, each name a real link to the source. The footer is rendered once, by the root
+layout, so it carries only the global attribution and takes no per-page props: the *team's* and
+*game's* own source pages are deep-linked on the rows themselves, in `GameSources` on
+`/game/[id]` and on the team page, and `/history/2025-26`'s `scval.com` credit sits in that
+page's body (§3.9). Plus the snapshot timestamp in Pacific, a link to `/about`, and the
+not-affiliated line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
 
 **Stale-snapshot treatment** (`editorial`): at > 36h the footer stamp switches to `--sx-text`
 body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be
@@ -2168,12 +2169,19 @@ timestamp nobody reads.
 `Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) · `StatusChip`
 (Tag's sentence-case sibling for a postseason status phrase, accent only for an automatic
 qualifier) ·
-`StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `share →` link to `/scores/[date]`) ·
+`StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `Day page` link, `dayHref`, to `/scores/[date]`) ·
 `TimelineRail` (anchor links to date-group ids) · `DivisionTabs` (plain `<a href="#de-anza">`
 anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**) ·
+`LeagueJumpLinks` (the "Jump to <league>" pills on `/standings`, `/schedule` and `/playoffs`,
+each shown before paint only for the remembered league by the league-scope stylesheet) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
 new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
-§5.3) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
+§5.3) · `PlaceMark` (a team's place in the two notations, `T7` in a table and `T-7th` in a pill
+or tile, with an sr-only "tied for 7th", or a dash and "not ranked" before any result; lib/format's
+`placeMark` / `placeWords` are the same notation as strings) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its
+words alone; never baked into a data string) · `OverviewDivisionBlock` (one division of the
+/standings and /teams overviews: its h4, its `CompactStandingsTable` and its `Full <division>
+table →` link, §18.1) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
 server-side in `America/Los_Angeles` so it never hydration-mismatches).
 
 ---
@@ -2479,8 +2487,13 @@ chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr
 (all *data-dense*).
 
 *Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
-`describeGame` (components/ui/game-view.ts) over `renderScore`, and every score glyph goes through
+`describeGame` (components/ui/describe-game.ts) over `renderScore`, and every score glyph goes through
 `ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
+
+*Later (2026-10):* the server-side pin channel (`highlightSlug` on `StandingsTable`,
+`DivisionStandings` and `PlayoffBracket`, drawing `.sx-pinned`) was removed: no static page can
+know the pin, so no caller ever passed it. A pinned row is marked only by `[data-pinned]` on its
+`data-team-slug` (§15), and `.sx-pinned` survives as the home pinned card's static class.
 
 ---
 
@@ -2633,9 +2646,10 @@ Focus after a write moves to the league panel heading or the My-team heading (WC
 
 One component, three modes: `scope` (home: buttons that write the league, disabled until
 hydrated, with a polite live region), `link` (`/standings/[league]`, `/schedule/[league]`: plain
-links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links). The chip
-is `text-micro` weight 600, `min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom
-wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
+links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links, plus a
+route link where a league has its own page, as /playoffs' tournament leagues do; a `#id` chip is a
+plain `<a>`, a route chip a `<Link prefetch={false}>`). The chip is `text-micro` weight 600,
+`min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
 about **273 px**, inside the 288 px content width. There are no visible section captions: the chips
 sit in two lists labelled for assistive technology ("Central Coast Section" and "North Coast
 Section") separated by a hairline. The selected chip is an accent-wash fill, accent ink, weight 600,
@@ -2969,8 +2983,9 @@ disagree.
 team tiles are replaced by that division's compact standings table: place (`T7` when shared), team
 (monogram and short name, a link to the team page), GP, W-L-T, PTS, the league's labelled ladder
 line, and a `Full <division> table →` link to `/standings/<league>#<division>`. It is the
-/standings overview's own table, built by the same view (`buildOverviewDivision`), so the two
-pages cannot disagree about a place. Every registry team is a row; a team with no results is listed
+/standings overview's own table, built by the same view (`buildOverviewDivision`) and drawn by the
+same block (`OverviewDivisionBlock`: the h4, the table and the link), so the two pages cannot
+disagree about a place. Every registry team is a row; a team with no results is listed
 last with dashes, never 0-0-0.
 
 The search filters the tables in place: it hides the rows that do not match (`data-team-tile` on

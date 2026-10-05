@@ -4,8 +4,10 @@ import EmptyState from '../ui/EmptyState';
 import { GameLine } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../ui/plural';
+import { gameKind } from '../ui/describe-game';
 import { shortDate } from '../../lib/format';
 import type { Game } from '../../lib/types';
+import type { NextLeagueDay } from './home-view';
 
 /**
  * A league's remaining slate for today, or the next day that has one (SPEC §10.1, DESIGN §3.1).
@@ -27,13 +29,7 @@ export interface NextSlateProps {
   kicker?: string;
   /** The league's first league day after `date` (its league games, every contest it has in
       `total`, and how many of those are postseason and non-league contests). */
-  nextLeague?: {
-    date: string;
-    games: Game[];
-    total: number;
-    postseason: number;
-    nonLeague: number;
-  } | null;
+  nextLeague?: Omit<NextLeagueDay, 'isToday'> | null;
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
   className?: string;
@@ -56,9 +52,9 @@ export function NextSlate({
 }: NextSlateProps) {
   const shown = games.slice(0, ROWS);
   // Counted over the whole shown day (`games`), not the capped list, so the meta matches the day.
-  const counted = games.filter((g) => g.countsFor !== null).length;
-  const post = games.filter((g) => g.countsFor === null && g.postseason !== null).length;
-  const nonLeague = games.length - counted - post;
+  const counted = games.filter((g) => gameKind(g) === 'league').length;
+  const post = games.filter((g) => gameKind(g) === 'postseason').length;
+  const nonLeague = games.filter((g) => gameKind(g) === 'non-league').length;
   const counts =
     [
       counted > 0 ? `${counted} league` : null,
@@ -71,7 +67,7 @@ export function NextSlate({
   // Judged over the whole day, like the counts: a league game cut off by `ROWS` is still that
   // day's, and the card must not say league play resumes on a later date under a "1 league" meta.
   const resume =
-    nextLeague && nextLeague.games.length > 0 && games.every((g) => g.countsFor === null)
+    nextLeague && nextLeague.games.length > 0 && games.every((g) => gameKind(g) !== 'league')
       ? nextLeague
       : null;
   // `resume.games` is that later day's playable games counted in THIS league's tables (a day after

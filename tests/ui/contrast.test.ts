@@ -225,7 +225,7 @@ describe('structure the design depends on', () => {
   });
 
   it('keeps the rule-and-kicker signature and the table / full-bleed utilities', () => {
-    for (const cls of ['.sx-kicker', '.sx-kicker-rule', '.sx-table', '.sx-bleed', '.sx-rowlink']) {
+    for (const cls of ['.sx-kicker', '.sx-kicker-rule', '.sx-table', '.sx-bleed']) {
       expect(CSS, `missing ${cls}`).toContain(cls);
     }
   });

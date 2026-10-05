@@ -1,10 +1,11 @@
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME } from '../../components/layout/site-url';
+import { OG, OG_SIZE } from '../../components/layout/og-theme';
+import { SITE_NAME } from '../../components/layout/site';
+import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
+import { leaderClause } from '../../components/standings/standings-view';
 import { getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-
-import { getStandingsOverviewData, leaderClause } from './standings-data';
 
 /**
  * The /standings OG card (SPEC §8.4): "Standings — every league", then one row per league —
@@ -17,16 +18,11 @@ import { getStandingsOverviewData, leaderClause } from './standings-data';
  * `heading`): the single-division leagues print none.
  */
 export const alt = `${SITE_NAME} — standings for every league: each division’s leaders with points`;
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
-const INK = '#f2f5f8';
-const MUTED = '#919ba5';
-const DIM = '#aab4bf';
-const RULE = '#3d444d';
-
 export default function StandingsOpengraphImage() {
-  const { leaders, leagues, throughDate } = getStandingsOverviewData();
+  const { leaders, leagues, throughDate } = buildStandingsOverviewView();
   const teamCount = getTeams().length;
 
   return new ImageResponse(
@@ -41,16 +37,16 @@ export default function StandingsOpengraphImage() {
           // Five league rows (EAL added): less vertical padding keeps the footer clear of the last
           // row, with room for a row that wraps.
           padding: '48px 64px',
-          background: '#0b0d10',
-          color: INK,
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 24, letterSpacing: 4, textTransform: 'uppercase', color: MUTED }}>
+          <div style={{ display: 'flex', fontSize: 24, letterSpacing: 4, textTransform: 'uppercase', color: OG.TEXT_3 }}>
             {SITE_NAME}
           </div>
-          <div style={{ display: 'flex', marginTop: 8, height: 2, background: RULE }} />
+          <div style={{ display: 'flex', marginTop: 8, height: 2, background: OG.RULE }} />
           <div style={{ display: 'flex', marginTop: 20, fontSize: 56, fontWeight: 600 }}>
             Standings — every league
           </div>
@@ -60,20 +56,20 @@ export default function StandingsOpengraphImage() {
           {leaders.map(({ league, lines }) => (
             <div
               key={league.id}
-              style={{ display: 'flex', alignItems: 'baseline', gap: 24, borderTop: `1px solid ${RULE}`, paddingTop: 10 }}
+              style={{ display: 'flex', alignItems: 'baseline', gap: 24, borderTop: `1px solid ${OG.RULE}`, paddingTop: 10 }}
             >
               <div style={{ display: 'flex', width: 120, fontSize: 30, fontWeight: 600 }}>{league.shortName}</div>
-              <div style={{ display: 'flex', flex: 1, fontSize: 26, color: DIM }}>{leaderClause(lines)}</div>
+              <div style={{ display: 'flex', flex: 1, fontSize: 26, color: OG.TEXT_2 }}>{leaderClause(lines)}</div>
             </div>
           ))}
         </div>
 
-        <div style={{ display: 'flex', fontSize: 20, color: MUTED }}>
+        <div style={{ display: 'flex', fontSize: 20, color: OG.TEXT_3 }}>
           {leagues.length} leagues &middot; {teamCount} teams
           {throughDate ? ` · results through ${shortDate(throughDate)}` : ''} &middot; unofficial
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

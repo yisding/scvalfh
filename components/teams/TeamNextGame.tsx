@@ -8,7 +8,7 @@ import ResultChip from '../ui/ResultChip';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame } from '../ui/game-view';
+import { describeGame, gameKindLabel } from '../ui/describe-game';
 import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**
@@ -119,7 +119,7 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
     <section className="flex min-w-0 flex-col">
       <SectionHeader
         kicker="Next"
-        meta={game.countsFor !== null ? 'League' : game.postseason !== null ? 'Postseason' : 'Non-league'}
+        meta={gameKindLabel(game)}
       />
       {/* `flex-1`: in the two-column grid the card fills its row beside the Last card, with the
           pill row pinned to its bottom edge (`mt-auto`), so the pair ends level. */}

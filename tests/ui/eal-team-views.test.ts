@@ -29,13 +29,13 @@ import { textOf } from './html-text';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
-type GameModelModule = typeof import('../../components/game/game-model');
+type GameViewModule = typeof import('../../components/game/game-view');
 
 interface Loaded {
   d: Data;
   l: Leagues;
   v: View;
-  gm: GameModelModule;
+  gm: GameViewModule;
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
   renderIndex: () => string;
@@ -57,7 +57,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   const d = await import('../../lib/data');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
-  const gm = await import('../../components/game/game-model');
+  const gm = await import('../../components/game/game-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const gamePage = await import('../../app/game/[id]/page');
   const indexPage = (await import('../../app/teams/page')).default;
@@ -206,37 +206,37 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.decider, 'lib/normalize.ts decider').toBe('SO');
     expect(game.shootout, 'lib/normalize.ts shootout').toBeNull();
-    const model = eal.gm.buildGameModel(game.contestId)!;
+    const model = eal.gm.buildGameView(game.contestId)!;
     const title = eal.gm.gameTitle(model);
-    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-model.ts gameTitle: ${title}`).toBe(true);
-    expect(eal.gm.gameKicker(model), 'components/game/game-model.ts gameKicker').toContain('SO');
+    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);
+    expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').toContain('SO');
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-model.ts scoreNote').toBe(
+    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
       `Level at 1–1; MaxPreps marks Chico the winner, which under the EAL’s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as Chico’s win and does not show the 1 v 1 tally.`,
     );
-    expect(model.resultConflictNote, 'components/game/game-model.ts: no level-score-marked-W/L note').toBeNull();
+    expect(model.resultConflictNote, 'components/game/game-view.ts: no level-score-marked-W/L note').toBeNull();
     const text = textOf(await eal.renderGame(game.contestId));
     expect(text, 'app/game/[id]/page.tsx note').toContain(model.scoreNote!);
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/counts it as a tie|level, so this site counts/);
-    expect(model.display.sentence, 'components/ui/game-view.ts sentence').toBe(
+    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
       'Chico 1, Davis 1, final; Chico won on 1 v 1s.',
     );
   });
 
   it('counts it as a win in the season series', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    const summary = eal.gm.buildGameModel(game.contestId)!.series.summary;
-    expect(summary, 'components/game/game-model.ts series summary').toMatch(/^Chico leads the season series 1-0\./);
-    expect(summary, 'components/game/game-model.ts series summary').not.toMatch(/draw|level/);
+    const summary = eal.gm.buildGameView(game.contestId)!.series.summary;
+    expect(summary, 'components/game/game-view.ts series summary').toMatch(/^Chico leads the season series 1-0\./);
+    expect(summary, 'components/game/game-view.ts series summary').not.toMatch(/draw|level/);
   });
 
   it('gives each side its outcome chip: Chico W, Davis L', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    const model = eal.gm.buildGameModel(game.contestId)!;
+    const model = eal.gm.buildGameView(game.contestId)!;
     const chico = [model.home, model.away].find((s) => s.team?.slug === 'chico')!;
     const davis = [model.home, model.away].find((s) => s.team?.slug === 'davis')!;
-    expect(chico.outcome, 'components/game/game-model.ts chico').toBe('W');
-    expect(davis.outcome, 'components/game/game-model.ts davis').toBe('L');
+    expect(chico.outcome, 'components/game/game-view.ts chico').toBe('W');
+    expect(davis.outcome, 'components/game/game-view.ts davis').toBe('L');
   });
 });
 
@@ -244,15 +244,15 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
   it('shows no overtime tag, and carries the note that MaxPreps may have recorded a 1 v 1 as a goal', async () => {
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     expect(game.otPeriods, 'lib/normalize.ts otPeriods as MaxPreps has it').toBe(3);
-    const model = eal.gm.buildGameModel(game.contestId)!;
-    expect(model.display.deciderTag, 'components/ui/game-view.ts deciderTag').toBeNull();
-    expect(eal.gm.gameTitle(model), 'components/game/game-model.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
-    expect(eal.gm.gameKicker(model), 'components/game/game-model.ts gameKicker').not.toMatch(/\bOT\b/);
-    expect(model.display.sentence, 'components/ui/game-view.ts sentence').toBe(
+    const model = eal.gm.buildGameView(game.contestId)!;
+    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBeNull();
+    expect(eal.gm.gameTitle(model), 'components/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
+    expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').not.toMatch(/\bOT\b/);
+    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
       'Chico 0, Pleasant Valley 1, final.',
     );
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-model.ts scoreNote').toBe(
+    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
       `MaxPreps records 3 overtime periods for this game, but the EAL plays one 10-minute overtime period and then 1 v 1s (${rule}), so MaxPreps may have recorded a 1 v 1 win as a goal. The score is shown as MaxPreps has it.`,
     );
     const text = textOf(await eal.renderGame(game.contestId));
@@ -334,16 +334,16 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
 describe('a Super Regional game (tag league-postseason)', () => {
   it('says it does not count in the league table, under the EAL Super Regional label', async () => {
     expect(tagged.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
-    const model = withTag.gm.buildGameModel(tagged.contestId)!;
-    expect(model.postseasonNotes, 'components/game/game-model.ts postseasonNotes').toEqual([
+    const model = withTag.gm.buildGameView(tagged.contestId)!;
+    expect(model.postseasonNotes, 'components/game/game-view.ts postseasonNotes').toEqual([
       'Super Regional game — it does not count in the league table.',
     ]);
-    expect(model.contextLabel, 'components/game/game-model.ts contextLabel').toBe('EAL Super Regional');
-    expect(model.countsAs.label, 'components/game/game-model.ts countsAs').toBe('EAL Super Regional');
+    expect(model.contextLabel, 'components/game/game-view.ts contextLabel').toBe('EAL Super Regional');
+    expect(model.countsAs.label, 'components/game/game-view.ts countsAs').toBe('EAL Super Regional');
     const text = textOf(await withTag.renderGame(tagged.contestId));
     expect(text, 'app/game/[id]/page.tsx').toContain('Super Regional game — it does not count in the league table.');
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/\bCCS\b/);
-    expect(withTag.gm.gameDescription(model), 'components/game/game-model.ts gameDescription').toContain(
+    expect(withTag.gm.gameDescription(model), 'components/game/game-view.ts gameDescription').toContain(
       'an EAL Super Regional game',
     );
   });

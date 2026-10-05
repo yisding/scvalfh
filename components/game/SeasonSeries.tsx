@@ -5,7 +5,7 @@ import { GameLogRowBody, gameLogRowClass } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../ui/plural';
 
-import type { GameModel } from './game-model';
+import type { GameModel } from './game-view';
 
 /**
  * THESE TWO THIS SEASON (DESIGN §3.5) — every contest between the same two schools, in date order,

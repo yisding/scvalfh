@@ -1,4 +1,4 @@
-import { formatStamp } from '../../lib/format';
+import { formatStamp, officialSourceFormat } from '../../lib/format';
 import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
 import { plural } from '../ui/plural';
@@ -78,7 +78,7 @@ const TABLE_WORDS = {
 
 /** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. Only for a league that publishes one (not mode 'none'). */
 export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {
-  return `${shortName} schedule (${source.endsWith('-docx') ? 'Google Doc' : 'PDF'})`;
+  return `${shortName} schedule (${officialSourceFormat(source)})`;
 }
 
 type DocumentOfficial = Exclude<HealthDivision['official'], { mode: 'none' }>;

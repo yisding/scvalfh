@@ -1,8 +1,9 @@
 /**
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
  * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
- * is testable and safe anywhere. The only runtime imports are `lib/format` and the pure config in
- * `lib/leagues` (for `ladderFactsFor`). Server-only: no client component imports this module.
+ * is testable and safe anywhere. The only runtime imports are `lib/format`, the pure config in
+ * `lib/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
+ * tournament line). Server-only: no client component imports this module.
  *
  * CCS (SPEC §6.1, §10.7): the field is 16 teams, numbers only. Every CCS league qualifies by its own
  * LADDER (config): SCVAL's first three per division plus a 4th-place play-in, BVAL's Mt. Hamilton
@@ -30,6 +31,7 @@ import {
   numberWord,
   ordinal,
   ordinalWord,
+  placeWords,
   recordString,
   shortDate,
   timeOfDayPT,
@@ -51,6 +53,8 @@ import type {
   TournamentGame,
   TournamentSlot,
 } from '../../lib/types';
+
+import { ladderLineAfter, ladderRow } from '../standings/standings-view';
 
 // ---------------------------------------------------------------- small helpers
 
@@ -75,11 +79,11 @@ export interface KeyDateRow {
   /** 'YYYY-MM-DD' — the `<time datetime>` value. */
   dateKey: string;
   /** 'Sat Nov 7' */
-  date: string;
+  dateLabel: string;
   /** '1:00 PM PT', or null for an all-day date. */
   time: string | null;
   /** The league a date belongs to ('SCVAL', 'BVAL'); null for a CCS date. */
-  league: string | null;
+  leagueShort: string | null;
   label: string;
   detail: string;
   /** One of the three tournament rounds (set in ink and semibold). */
@@ -91,7 +95,7 @@ export interface LeagueKeyDate {
   /** Stable key part, e.g. the league id. */
   id: string;
   /** 'SCVAL' */
-  league: string;
+  leagueShort: string;
   /** YYYY-MM-DD */
   date: string;
   /** League clock 'HH:MM' or null. */
@@ -115,9 +119,9 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
   ): KeyDateRow => ({
     key,
     dateKey: dateOnly(iso),
-    date: shortDate(iso),
+    dateLabel: shortDate(iso),
     time: opts.time ? timeOfDayPT(iso) : null,
-    league: null,
+    leagueShort: null,
     label,
     detail,
     isRound: opts.isRound ?? false,
@@ -134,9 +138,9 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
       (d): KeyDateRow => ({
         key: `league:${d.id}`,
         dateKey: dateOnly(d.date),
-        date: shortDate(d.date),
+        dateLabel: shortDate(d.date),
         time: d.time ? leagueClockPT(d.time) : null,
-        league: d.league,
+        leagueShort: d.leagueShort,
         label: d.label,
         detail: d.detail,
         isRound: false,
@@ -373,9 +377,7 @@ export function projectionRowLabel(row: ProjectionRow, divisionLabel: string): s
   if (!standing.hasReportedResults) {
     return `${team.name}: no results reported, not ranked in ${divisionLabel}`;
   }
-  const place = row.shared
-    ? `tied for ${ordinal(standing.computed.place)}`
-    : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, row.shared);
   return `${team.name}, ${place} in ${divisionLabel}, ${recordString(standing.computed)}, ${
     standing.computed.pts
   } points`;
@@ -596,7 +598,8 @@ export interface TournamentInput {
   ladderLine: { after: number; label: string } | null;
 }
 
-const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
+/** A bracket round's title, for the page's round headers and the OG card's round line alike. */
+export const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
   quarterfinal: 'Quarterfinals',
   semifinal: 'Semifinals',
   final: 'Final',
@@ -679,12 +682,9 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     label: standing.hasReportedResults ? label : 'No results reported',
   }));
 
-  let lineAfter = 0;
-  for (const [index, row] of seedRows.entries()) {
-    if (ladderLine && row.standing.hasReportedResults && row.standing.computed.place <= ladderLine.after) {
-      lineAfter = index + 1;
-    }
-  }
+  // The standings tables' own rule (ladderLineAfter): no line when every seed sits above it,
+  // which LeagueTournament never drew anyway.
+  const lineAfter = ladderLineAfter(seedRows.map(ladderRow), ladderLine?.after) ?? 0;
 
   const name = (slug: TeamSlug) => teamOf(slug)?.name ?? slug;
   const place = ordinal(lastPlace);

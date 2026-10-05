@@ -4,15 +4,17 @@ import { notFound } from 'next/navigation';
 
 import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
+import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
+import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
+import { leaderClause } from '../../../components/standings/standings-view';
+import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
-
-import { getStandingsPageData, leagueChips, leaderClause, leagueHrefs } from '../standings-data';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -41,7 +43,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const { league } = await params;
   const summary = getLeagueSummary(league);
   if (!summary) return { title: 'League not found' };
-  const { leaders, views } = getStandingsPageData(league);
+  const { leaders, views } = buildStandingsPageView(league);
   const through = views
     .map((v) => v.throughDate)
     .filter((d): d is string => d !== null)
@@ -63,7 +65,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   const { league } = await params;
   const summary = getLeagueSummary(league);
   if (!summary) notFound();
-  const data = getStandingsPageData(summary.id);
+  const data = buildStandingsPageView(summary.id);
   const multi = summary.divisions.length > 1;
   const tabs = data.views.map((view) => ({ href: `#${view.division}`, label: view.kicker }));
 
@@ -139,7 +141,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
             prefetch={false}
             className="font-medium text-accent hover:underline"
           >
-            How standings are computed &rarr;
+            How standings are computed <Arrow />
           </Link>
         </p>
         {data.unevenGp.map((line) => (
@@ -175,7 +177,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           <ExternalLink
             key={link.href}
             href={link.href}
-            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring"
           >
             {link.label}
           </ExternalLink>
@@ -184,7 +186,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           <Link
             href={`/history/2025-26#${summary.id}`}
             prefetch={false}
-            className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring"
           >
             Last season&rsquo;s final tables
           </Link>

@@ -18,6 +18,10 @@ export const BOOTSTRAP_URL = `${MAXPREPS_WEB}/ca/field-hockey/`;
 export const SEASON_YEAR = '26-27';
 /** [V] leagues/{id}/v1 .sportSeasonName */
 export const SEASON_LABEL = 'Girls Varsity Field Hockey Fall 26-27';
+/** '2026': the calendar year the fall season is played in. Derived from SEASON_YEAR, not read. */
+export const SEASON_CALENDAR_YEAR = `20${SEASON_YEAR.slice(0, 2)}`;
+/** 'Fall 2026': the season as the site's own copy names it. Derived from SEASON_YEAR, not read. */
+export const SEASON_DISPLAY = `Fall ${SEASON_CALENDAR_YEAR}`;
 /** [V] verdicts 25/28/33/36/37/52 */
 export const SPORT_SEASON_ID = 'e302eb3e-1a32-4f2d-934b-6f9d454f721e';
 /** [V] verdicts 5, 33 */

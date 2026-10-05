@@ -19,8 +19,8 @@ import { usePinnedTeam } from './use-pinned-team';
  * inserted via DOM updates don't execute in the browser").
  *
  * It renders NOTHING. It lives in the root layout beside the nav, which is already a client module,
- * and it owns one attribute on elements the server rendered — never a class, so a row marked from
- * the server through `StandingsTable`'s `highlightSlug` is left exactly as it was. The <html>
+ * and it owns one attribute on elements the server rendered — never a class, so it never touches
+ * an element's own className (the home card's literal `.sx-pinned`, its utilities). The <html>
  * pin flag the home card's height floor keys on is `data-pin`, which the prefs head script stamps
  * from the 49-slug registry map and `use-pinned-team` keeps in step on pin and unpin, so nothing
  * here touches <html>.

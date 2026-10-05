@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 
+import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
-import ScheduleIndex, { buildScheduleIndex } from '../../components/schedule/ScheduleIndex';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import ScheduleIndex from '../../components/schedule/ScheduleIndex';
 import { countGames } from '../../components/schedule/filter-data';
+import { buildScheduleIndex } from '../../components/schedule/schedule-view';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
 import { listWords } from '../../lib/format';
+import { SEASON_DISPLAY } from '../../lib/season';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of
@@ -34,7 +37,7 @@ function indexData() {
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = listWords(getLeagueSummaries().map((l) => l.shortName));
-  const description = `${counts.total} girls varsity field hockey contests in ${list} for Fall 2026: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
+  const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
   return {
     title: 'Schedule & results',
     description,
@@ -59,17 +62,7 @@ export default function SchedulePage() {
       />
 
       {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
-      <p className="m-0 mt-4 flex flex-wrap gap-2">
-        {leagues.map((league) => (
-          <a
-            key={league.id}
-            href={`#${league.id}`}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
-          >
-            Jump to {league.shortName} &darr;
-          </a>
-        ))}
-      </p>
+      <LeagueJumpLinks leagues={leagues} />
 
       <ScheduleIndex {...index} />
     </div>

@@ -1,4 +1,3 @@
-import type { LeagueChip } from '../../components/layout/LeagueSwitcher';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -9,7 +8,7 @@ import {
   type DivisionView,
   type LeaderLine,
   type OverviewSection,
-} from '../../components/standings/standings-view';
+} from './standings-view';
 import {
   getCoLeaders,
   getCrossCheck,
@@ -21,26 +20,29 @@ import {
   getLeagueIds,
   getLeagueSummary,
   getMissingOfficialResults,
+  getNonLeagueFinalsPlayed,
   getStandingContext,
   getStandings,
   getTeams,
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { getLeague, leagueOfDivision } from '../../lib/leagues';
+import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 
 /**
- * Everything /standings, /standings/<league> and their OG cards read, assembled once.
+ * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
+ * `leaderLine` rows the root and /standings OG cards print.
  *
- * This is the only module in the route that touches `lib/data`; the components under
- * `components/standings/` take what is built here, so they can be reasoned about (and exercised
- * from a test) without an `fs` read.
+ * It is the `lib/data`-reading side of a split with the pure `standings-view.ts`: this module reads
+ * the snapshot, and the view builders and components under `components/standings/` take what is
+ * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
+ * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
  */
-export interface StandingsPageData {
+export interface StandingsPageView {
   asOf: string;
   league: LeagueSummary;
   /** `LeagueConfig.membershipNote`, printed under the page header (EAL); null for most leagues. */
@@ -85,8 +87,12 @@ function buildDivisionStandingsView(division: DivisionId): DivisionView {
   });
 }
 
-/** The leaders of one table: every team at place 1 with results. */
-function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
+/**
+ * The leaders of one table: every team at place 1 with results. Exported for the root OG card
+ * (app/opengraph-image.tsx), which prints the same row as the /standings card through
+ * `leaderClause`.
+ */
+export function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
   const teams = getTeams();
   const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
   return {
@@ -102,9 +108,9 @@ function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
   };
 }
 
-export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
+export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
   const league = getLeagueSummary(leagueId);
-  if (!league) throw new Error(`app/standings/standings-data.ts: unknown league ${leagueId}`);
+  if (!league) throw new Error(`components/standings/standings-page-view.ts: unknown league ${leagueId}`);
   const views = league.divisions.map((d) => buildDivisionStandingsView(d.id));
   const several = league.divisions.length > 1;
 
@@ -134,22 +140,17 @@ export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
 /**
  * Before league play has produced a published result the tables are structurally complete but
  * numerically empty, and a reader deserves to be told why in a full sentence rather than left to
- * infer it from a table of em dashes (DESIGN §8, rows 1 and 2).
+ * infer it from a table of em dashes (DESIGN §8, rows 1 and 2). Exported for
+ * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
-function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageData['notice'] {
+export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;
-  const summary = getLeagueSummary(leagueId);
-  const firstLeague = getGames({ league: leagueId, leagueOnly: true })
-    .map((g) => g.dateKey)
-    .sort()[0];
-  const nonLeagueFinals = getGames({ league: leagueId, status: 'final' }).filter(
-    (g) => g.countsFor === null,
-  ).length;
-  const short = summary?.shortName ?? leagueId;
+  // The start date is config's (validated, so always set) and the count is games played so far,
+  // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
+  // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
+  const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {
-    heading: firstLeague
-      ? `${short} league play starts ${shortDate(firstLeague)}.`
-      : `${short} league play has not started.`,
+    heading: `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
@@ -162,7 +163,7 @@ function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageDa
 
 // ---------------------------------------------------------------- the /standings overview
 
-export interface StandingsOverviewData {
+export interface StandingsOverviewView {
   asOf: string;
   leagues: LeagueSummary[];
   sections: OverviewSection[];
@@ -171,7 +172,7 @@ export interface StandingsOverviewData {
   throughDate: string | null;
 }
 
-export function getStandingsOverviewData(): StandingsOverviewData {
+export function buildStandingsOverviewView(): StandingsOverviewView {
   const teams = getTeams();
   const leagues = getLeagueIds()
     .map((id) => getLeagueSummary(id))
@@ -196,41 +197,4 @@ export function getStandingsOverviewData(): StandingsOverviewData {
     })),
     throughDate: getLastLeagueResultDate(),
   };
-}
-
-/**
- * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St Ignatius 18 pts
- * · El Camino: Los Gatos 21 pts`; co-leaders at most two names joined with " & ", then ` +<n>`;
- * `No league results yet` before any result.
- */
-export function leaderClause(lines: readonly LeaderLine[]): string {
-  if (lines.every((line) => line.teams.length === 0)) return 'No league results yet';
-  return lines
-    .map((line) => {
-      const names =
-        line.teams.length === 0
-          ? 'no results yet'
-          : `${line.teams
-              .slice(0, 2)
-              .map((t) => t.name)
-              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].pts} pts`;
-      return line.heading ? `${line.heading}: ${names}` : names;
-    })
-    .join(' · ');
-}
-
-/** The `LeagueSwitcher` chips, config order (shared by the standings and schedule pages). */
-export function leagueChips(): LeagueChip[] {
-  return getLeagueIds()
-    .map((id) => getLeagueSummary(id))
-    .filter((l): l is LeagueSummary => l !== undefined)
-    .map((l) => ({ id: l.id, shortName: l.shortName, sectionShort: l.section.shortName }));
-}
-
-/** `{ all: base, <id>: base/<id> }` for a link-mode switcher, or `{ <id>: '#<id>' }` for anchor mode. */
-export function leagueHrefs(base: string | null): Record<string, string> {
-  const out: Record<string, string> = {};
-  if (base) out.all = base;
-  for (const id of getLeagueIds()) out[id] = base ? `${base}/${id}` : `#${id}`;
-  return out;
 }

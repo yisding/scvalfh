@@ -22,6 +22,11 @@ export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
   shortName: 'CCS' | 'NCS' | 'NS';
+  /**
+   * The section in a parenthesis after its leagues in short copy (SITE_DESCRIPTION): 'CCS', 'NCS',
+   * and 'Northern Section' in full, because no reader knows the Northern Section as "NS".
+   */
+  briefLabel: string;
   maxprepsSectionId: string;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
@@ -305,7 +310,7 @@ const MP = 'https://www.maxpreps.com';
 
 export const SECTIONS = [
   {
-    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS',
+    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
     holdsFieldHockeyChampionship: true,
     officialUrl: 'https://cifccs.org/sports/fh/index',
@@ -313,7 +318,7 @@ export const SECTIONS = [
     noChampionshipNote: null,
   },
   {
-    id: 'ncs', name: 'North Coast Section', shortName: 'NCS',
+    id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS',
     maxprepsSectionId: '89ae2e0f-e108-4054-9df3-329f0579f86d',
     holdsFieldHockeyChampionship: false,
     officialUrl: 'https://www.cifncs.org/',
@@ -322,7 +327,7 @@ export const SECTIONS = [
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
   },
   {
-    id: 'ns', name: 'Northern Section', shortName: 'NS',
+    id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section',
     maxprepsSectionId: '6249819d-12de-4bff-b0ab-38156006b001',
     // The "NSCIF Post Season Tournament" (the EAL's Super Regional, Oct 30-31) is on the Section's "Championship
     // Playoff Calendar": https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf
@@ -1077,6 +1082,16 @@ export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
 /** Every status the league's ladder can give, in ladder order, deduped. */
 export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];
+}
+
+/**
+ * The first official league date of the league (min over its divisions): the date the home
+ * PhaseLead and the /standings preseason notice both say league play starts.
+ */
+export function leaguePlayStarts(leagueId: LeagueId): string {
+  return getLeague(leagueId)
+    .divisions.map((d) => d.leaguePlay.first)
+    .reduce((a, b) => (b < a ? b : a));
 }
 
 /** The last official league date of the league (max over its divisions). */

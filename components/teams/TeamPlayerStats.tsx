@@ -99,7 +99,11 @@ function Goalie({ card }: { card: GoalieCard }) {
   );
 }
 
-export function TeamPlayerStats({ view }: { view: PlayerStatsView }) {
+export interface TeamPlayerStatsProps {
+  view: PlayerStatsView;
+}
+
+export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
   const { teamName } = view;
   const hasAny = view.scoring !== null || view.more !== null || view.goalies.length > 0;
 

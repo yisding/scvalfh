@@ -1,19 +1,19 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import Attribution from '@/components/layout/Attribution';
-import BottomTabBar from '@/components/layout/BottomTabBar';
-import SiteHeader from '@/components/layout/SiteHeader';
-import { BUILD_INSTANT } from '@/components/layout/build-instant';
-import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
-import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
-import { buildPrefsScript } from '@/components/layout/prefs-script';
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/components/layout/site-url';
-import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
-import { THEME_SCRIPT } from '@/components/layout/theme-script';
-import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';
-import { getFetchedAt, getTeams } from '@/lib/data';
-import { LEAGUE_IDS } from '@/lib/leagues';
+import Attribution from '../components/layout/Attribution';
+import BottomTabBar from '../components/layout/BottomTabBar';
+import SiteHeader from '../components/layout/SiteHeader';
+import { BUILD_INSTANT } from '../components/layout/build-instant';
+import { DISCLOSURE_SCRIPT } from '../components/layout/disclosure-script';
+import { buildLeagueScopeCss } from '../components/layout/league-scope-css';
+import { buildPrefsScript } from '../components/layout/prefs-script';
+import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../components/layout/site';
+import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
+import { THEME_SCRIPT } from '../components/layout/theme-script';
+import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
+import { getFetchedAt, getTeams } from '../lib/data';
+import { LEAGUE_IDS } from '../lib/leagues';
 
 import './globals.css';
 
@@ -53,13 +53,10 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  openGraph: {
-    type: 'website',
-    siteName: SITE_NAME,
-    title: `${SITE_NAME} — 2026`,
-    description: SITE_DESCRIPTION,
-    locale: 'en_US',
-  },
+  // The fallback for metadata that declares no `openGraph` of its own (a `generateMetadata` that
+  // answers an unknown param); every page, the 404 included, replaces it whole and states its own
+  // og:title (components/layout/site.ts OG_BASE).
+  openGraph: { ...OG_BASE },
   twitter: { card: 'summary_large_image' },
   // No `robots` here on purpose. `index, follow` is what a crawler assumes when the tag is absent,
   // so stating it bought nothing on a 200, and on a 404 it was actively wrong: not-found metadata

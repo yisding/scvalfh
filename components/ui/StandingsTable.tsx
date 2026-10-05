@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import type { StandingContext } from '../../lib/data';
-import { EM_DASH, ordinal, recordString, recordWords, streakString, winPct } from '../../lib/format';
+import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '../../lib/format';
 import { divisionHeading, getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
@@ -9,6 +9,7 @@ import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
 import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
+import PlaceMark from './PlaceMark';
 import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
 
@@ -71,7 +72,6 @@ export interface StandingsTableProps {
   variant: StandingsVariant;
   /** "De Anza Division league standings through Sep 29" */
   caption: string;
-  highlightSlug?: TeamSlug | null;
   /**
    * Teams whose published MaxPreps row disagrees with ours in ANY field (`snapshot.crossCheck`).
    * `standing.mismatch` only covers a W-L-T disagreement; today every mismatch flag is false while
@@ -132,24 +132,14 @@ function tableName(division: DivisionId): string {
  * a "T" over a "7".
  */
 function PlaceCell({ standing }: { standing: Standing }) {
-  if (!standing.hasReportedResults) {
-    return (
-      <span className="sx-num">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </span>
-    );
-  }
-  const { place } = standing.computed;
-  if (standing.tiebreak.shared) {
-    return (
-      <span className="sx-num whitespace-nowrap">
-        <span aria-hidden="true">T{place}</span>
-        <span className="sr-only">tied for {ordinal(place)}</span>
-      </span>
-    );
-  }
-  return <span className="sx-num">{place}</span>;
+  return (
+    <PlaceMark
+      place={standing.computed.place}
+      shared={standing.tiebreak.shared}
+      ranked={standing.hasReportedResults}
+      className="sx-num"
+    />
+  );
 }
 
 /**
@@ -217,9 +207,7 @@ function RowLink({ href, label, className }: { href: string; label: string; clas
 function rowLabel(row: StandingsRowData): string {
   const { standing, team } = row;
   if (!standing.hasReportedResults) return `${team.name}: no results reported yet`;
-  const place = standing.tiebreak.shared
-    ? `tied for ${ordinal(standing.computed.place)}`
-    : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, standing.tiebreak.shared);
   // The record in WORDS: "4-1-0" read aloud is a subtraction or a date, depending on the voice.
   return `${team.name}, ${place} in ${tableName(team.division)}, ${recordWords(
     standing.computed,
@@ -400,7 +388,7 @@ const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: 
 };
 
 export function StandingsTable(props: StandingsTableProps) {
-  const { variant, caption, highlightSlug, berthRuleAfter, gdDomain, className, id } = props;
+  const { variant, caption, berthRuleAfter, gdDomain, className, id } = props;
   const flagged = new Set<TeamSlug>(props.flaggedSlugs ?? []);
   const context = props.context;
   const columns = new Set<StandingsColumn>(context ? (props.columns ?? []) : []);
@@ -411,14 +399,10 @@ export function StandingsTable(props: StandingsTableProps) {
   const showNotes = variant !== 'mini' && (props.notes ?? 'inline') === 'inline';
   const notes = showNotes ? collectStandingsNotes({ ...props, rows }) : null;
 
-  const trClass = (row: StandingsRowData) => {
-    const classes = ['relative'];
-    // The pinned team's 2px accent left rule. A caller that already knows the team (the playoff
-    // bracket) passes `highlightSlug`; on the static pages the pin lives in localStorage, so
-    // `data-team-slug` below is what the end-of-body script in app/layout.tsx matches on.
-    if (highlightSlug && row.team.slug === highlightSlug) classes.push('sx-pinned');
-    return classes.join(' ');
-  };
+  // The pinned team's 2px accent left rule has one channel. The pages are static and the pin lives
+  // in localStorage, so every row carries `data-team-slug`, and the end-of-body script in
+  // app/layout.tsx (with components/ui/PinnedTeamMarks.tsx after a client navigation) sets
+  // `[data-pinned]` on the matching row.
   // The 2px automatic-qualifier cut: the one deliberately strong line in the table.
   const cut = (index: number) =>
     berthRuleAfter && index + 1 === berthRuleAfter
@@ -528,7 +512,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // A token in rem, not 68px: the row grows with the reader's browser text
                       // size, so the absolutely placed line 2 never rides up over line 1.
                       style={{ height: 'var(--spacing-row)', ...cut(index) }}
@@ -787,7 +771,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // rem, not px: the row grows with the browser text size.
                       style={{ height: 'var(--spacing-row-1)', ...cut(index) }}
                     >
@@ -876,7 +860,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     <tr
                       key={row.team.id}
                       data-team-slug={row.team.slug}
-                      className={trClass(row)}
+                      className="relative"
                       // rem, not px: the row grows with the browser text size.
                       style={{ height: 'var(--spacing-row-1)' }}
                     >
@@ -950,7 +934,7 @@ export function StandingsTable(props: StandingsTableProps) {
                   <tr
                     key={row.team.id}
                     data-team-slug={row.team.slug}
-                    className={trClass(row)}
+                    className="relative"
                     // rem, not px: the row grows with the browser text size.
                     style={{ height: 'var(--spacing-row-1)' }}
                   >

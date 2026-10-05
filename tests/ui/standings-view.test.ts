@@ -1,6 +1,6 @@
 /**
  * The standings pages' view models and markup (SPEC §10.3, §8.1, §10.0, §10.9):
- * `components/standings/standings-view.ts`, `app/standings/standings-data.ts`, the per-league page
+ * `components/standings/standings-view.ts`, `components/standings/standings-page-view.ts`, the per-league page
  * `/standings/<league>` and the all-league overview `/standings`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded by
@@ -19,12 +19,12 @@ import { corpusSnapshotPath } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
-type StandingsData = typeof import('../../app/standings/standings-data');
+type StandingsPageView = typeof import('../../components/standings/standings-page-view');
 type View = typeof import('../../components/standings/standings-view');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let data: Data;
-let sd: StandingsData;
+let sd: StandingsPageView;
 let view: View;
 let renderLeague: (league: string) => Promise<string>;
 let renderOverview: () => string;
@@ -33,7 +33,7 @@ beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
   data = await import('../../lib/data');
-  sd = await import('../../app/standings/standings-data');
+  sd = await import('../../components/standings/standings-page-view');
   view = await import('../../components/standings/standings-view');
   const leaguePage = (await import('../../app/standings/[league]/page')).default;
   const overviewPage = (await import('../../app/standings/page')).default;
@@ -57,7 +57,7 @@ function ids(html: string): string[] {
 describe('ladder badges and legends, per league (verbatim from config)', () => {
   const legends = (league: string) =>
     Object.fromEntries(
-      sd.getStandingsPageData(league).views.flatMap((v) => v.statusGroups.map((g) => [`${v.division}:${g.badge}`, g.label])),
+      sd.buildStandingsPageView(league).views.flatMap((v) => v.statusGroups.map((g) => [`${v.division}:${g.badge}`, g.label])),
     );
 
   it('SCVAL keeps today’s strings', () => {
@@ -66,7 +66,7 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
     expect(l['de-anza:Play-in'], 'components/standings/standings-view.ts SCVAL play-in').toBe(
       '4th place — play-in Fri Oct 30 for the SCVAL 7th berth',
     );
-    const scval = sd.getStandingsPageData('scval');
+    const scval = sd.buildStandingsPageView('scval');
     const deAnza = scval.views.find((v) => v.division === 'de-anza')!;
     expect(deAnza.caption, 'components/standings/standings-view.ts caption').toMatch(
       /^De Anza Division league standings, league games only, through /,
@@ -103,7 +103,7 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
       'Places 1-2 — bye to the semifinals, Wed Oct 28',
     );
     expect(l['marin-county:Top 6']).toBe('Places 3-6 — quarterfinal Mon Oct 26 (3 hosts 6, 4 hosts 5)');
-    const mcal = sd.getStandingsPageData('mcal').views[0];
+    const mcal = sd.buildStandingsPageView('mcal').views[0];
     expect(mcal.statusHeading, 'components/standings/standings-view.ts MCAL heading').toBe('MCAL tournament, as things stand');
     expect(mcal.playoffsHref).toBe('/playoffs/mcal');
   });
@@ -112,7 +112,7 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
 describe('single-division leagues have no division label', () => {
   it('kicker, caption and heading (view model)', () => {
     for (const league of ['pcal', 'mcal', 'eal']) {
-      const [v] = sd.getStandingsPageData(league).views;
+      const [v] = sd.buildStandingsPageView(league).views;
       expect(v.heading, `components/standings/standings-view.ts ${league} heading`).toBeNull();
       expect(v.kicker, `components/standings/standings-view.ts ${league} kicker`).toBe('League table');
       expect(v.caption).not.toMatch(/Division/);
@@ -184,7 +184,7 @@ describe('single-division leagues have no division label', () => {
 
 describe('missing official results and postponed rows', () => {
   it('Santa Teresa shows its two missing results with the one-line banner', async () => {
-    const st = sd.getStandingsPageData('bval').views.find((v) => v.division === 'santa-teresa')!;
+    const st = sd.buildStandingsPageView('bval').views.find((v) => v.division === 'santa-teresa')!;
     expect(st.missing.length, 'lib/data.ts getMissingOfficialResults(santa-teresa)').toBe(2);
     expect(st.missingBanner, 'components/standings/standings-view.ts banner').toBe(
       '⚑ 2 official league results missing — listed below the table.',
@@ -200,7 +200,7 @@ describe('missing official results and postponed rows', () => {
 
   it('singular banner, postponed rows listed after and never counted', () => {
     expect(view.missingBannerText(1)).toBe('⚑ 1 official league result missing — listed below the table.');
-    const base = sd.getStandingsPageData('scval').views[0];
+    const base = sd.buildStandingsPageView('scval').views[0];
     const row = (kind: 'missing' | 'postponed', dateKey: string): MissingOfficialResult => ({
       kind,
       dateKey,
@@ -260,8 +260,8 @@ describe('GP, LEFT and MAX', () => {
   });
 
   it('marks si.com-backfilled records with † and the footnote (PCAL corpus: three backfills)', async () => {
-    const pcal = sd.getStandingsPageData('pcal').views[0];
-    expect(pcal.backfilledGames, 'app/standings/standings-data.ts backfilledGames').toBe(3);
+    const pcal = sd.buildStandingsPageView('pcal').views[0];
+    expect(pcal.backfilledGames, 'components/standings/standings-page-view.ts backfilledGames').toBe(3);
     expect(pcal.backfillFootnote).toBe(
       '† Includes 3 results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).',
     );
@@ -273,10 +273,10 @@ describe('GP, LEFT and MAX', () => {
   });
 
   it('never claims agreement for Santa Teresa or PCAL', () => {
-    const st = sd.getStandingsPageData('bval').views.find((v) => v.division === 'santa-teresa')!;
+    const st = sd.buildStandingsPageView('bval').views.find((v) => v.division === 'santa-teresa')!;
     expect(st.comparison.agreement, 'components/standings/standings-view.ts').toBeNull();
     expect(st.comparison.leftOut).toEqual(['MaxPreps’ table leaves out Prospect.']);
-    const pcal = sd.getStandingsPageData('pcal').views[0];
+    const pcal = sd.buildStandingsPageView('pcal').views[0];
     expect(pcal.comparison.agreement).toBeNull();
     expect(pcal.comparison.knownCause).toMatch(/^MaxPreps is missing some of PCAL’s official league games/);
     expect(pcal.comparison.flag).toBe(false);
@@ -287,7 +287,7 @@ describe('GP, LEFT and MAX', () => {
     for (const s of ['scval-pdf', 'pcal-pdf', 'mcal-pdf'] as const) {
       expect(view.officialScheduleLabel(s)).toBe('Official schedule (PDF)');
     }
-    expect(sd.getStandingsPageData('mcal').views[0].scheduledPer).toBe('Scheduled per MCAL');
+    expect(sd.buildStandingsPageView('mcal').views[0].scheduledPer).toBe('Scheduled per MCAL');
   });
 
   it('writes the rules footnote with the league’s own points citation', () => {
@@ -348,7 +348,7 @@ describe('the /standings overview', () => {
 describe('status chips, rank rule and level reason (UI pass, from config)', () => {
   const texts = (league: string) =>
     Object.fromEntries(
-      sd.getStandingsPageData(league).views.map((v) => [v.division, v.statusGroups.map((g) => g.statusText)]),
+      sd.buildStandingsPageView(league).views.map((v) => [v.division, v.statusGroups.map((g) => g.statusText)]),
     );
 
   it('each chip is the ladder rung’s own label; MCAL’s carry no CCS concept', () => {
@@ -373,11 +373,11 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
   });
 
   it('the rank rule comes from each league’s citation', () => {
-    const [deAnza] = sd.getStandingsPageData('scval').views;
+    const [deAnza] = sd.buildStandingsPageView('scval').views;
     expect(deAnza.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
       'SCVAL ranks by points (Art. VI §2), and so do we.',
     );
-    const [mcal] = sd.getStandingsPageData('mcal').views;
+    const [mcal] = sd.buildStandingsPageView('mcal').views;
     expect(mcal.rankRule).toBe('MCAL ranks by points (MCAL Handbook §7a), and so do we.');
   });
 
@@ -392,5 +392,64 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
     const mcal = textOf(await renderLeague('mcal'));
     expect(mcal, 'app/standings/[league]/page.tsx mcal: SCVAL citation').not.toContain('Article VI');
     expect(renderOverview(), 'app/standings/page.tsx tie mark').not.toMatch(/\d=</);
+  });
+});
+
+describe('OG card rows (standings-view.ts leaderClause over standings-page-view.ts leaderLine: the root and /standings cards)', () => {
+  const SV = 'components/standings/standings-view.ts leaderClause';
+  it('names each division leader with points, co-leaders capped at two', () => {
+    const row = (id: string) => {
+      const league = data.getLeagueSummary(id as Parameters<Data['getLeagueSummary']>[0]);
+      if (!league) throw new Error(`no league ${id}`);
+      return view.leaderClause(league.divisions.map((d) => sd.leaderLine(d.id, d.heading)));
+    };
+    expect(row('scval'), `${SV}: OG SCVAL`).toBe('De Anza: St Francis 12 pts · El Camino: Mitty 15 pts');
+    expect(row('bval'), `${SV}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
+    expect(row('pcal'), `${SV}: OG PCAL`).toBe('Stevenson 18 pts');
+    const line = (names: string[]) => ({
+      division: 'de-anza',
+      heading: null,
+      teams: names.map((name) => ({ name, record: '4-0-0', pts: 12 })),
+      tiedAtTop: names.length > 1,
+    });
+    expect(view.leaderClause([line(['A', 'B', 'C', 'D'])]), `${SV}: OG co-leaders`).toBe('A & B +2 12 pts');
+    expect(view.leaderClause([line(['A', 'B'])]), `${SV}: OG co-leaders`).toBe('A & B 12 pts');
+    expect(view.leaderClause([line([])]), `${SV}: before any result`).toBe('No league results yet');
+  });
+});
+
+describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)', () => {
+  const SPV = 'components/standings/standings-page-view.ts buildNotice';
+  it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
+    for (const id of data.getLeagueIds().filter((l) => l !== 'eal')) {
+      expect(sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
+    }
+    // This corpus predates the EAL's league games, so its tables have no counted final yet.
+    expect(sd.buildStandingsPageView('eal').notice, `${SPV}: eal`).toEqual({
+      heading: 'EAL league play starts Mon Aug 24.',
+      body: 'These tables count league games only, so every record reads 0-0-0 until the first league result is published. The 4 non-league games played so far are on the schedule.',
+    });
+  });
+
+  it('dates league play from config and counts the non-league games played so far', () => {
+    expect(sd.buildNotice('scval', []), SPV).toEqual({
+      heading: 'SCVAL league play starts Wed Sep 9.',
+      body: 'These tables count league games only, so every record reads 0-0-0 until the first league result is published. The 47 non-league games played so far are on the schedule.',
+    });
+  });
+});
+
+describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
+  const LL = 'components/standings/standings-view.ts ladderLineAfter';
+  const rows = (...places: Array<number | null>) =>
+    places.map((place) => ({ ranked: place !== null, place: place ?? 0 }));
+  it('is counted, not assumed: two teams level on the line both sit above it', () => {
+    expect(view.ladderLineAfter(rows(1, 2, 3, 3, 5), 3), LL).toBe(4);
+    expect(view.ladderLineAfter(rows(1, 1, 3, 4), 1), `${LL}: level on 1st`).toBe(2);
+  });
+  it('draws none before any result, when every row is above it, or with no line configured', () => {
+    expect(view.ladderLineAfter(rows(null, null, null), 3), `${LL}: no results`).toBeNull();
+    expect(view.ladderLineAfter(rows(1, 2, 3), 6), `${LL}: every row above`).toBeNull();
+    expect(view.ladderLineAfter(rows(1, 2, 3), null), `${LL}: no line`).toBeNull();
   });
 });

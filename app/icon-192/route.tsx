@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/layout/monogram-image';
+import { monogramImage } from '../../components/layout/monogram-image';
 
 /**
  * `/icon-192` — the installable-app icon Chromium's install prompt requires, referenced from

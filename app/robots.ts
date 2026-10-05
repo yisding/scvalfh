@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/components/layout/site-url';
+import { SITE_URL } from '../components/layout/site';
 
 /**
- * /robots.txt. Everything is crawlable — the site is ten static route families of public scores —
- * and the sitemap is advertised so a crawler finds all ~250 pages without guessing.
+ * /robots.txt. Everything is crawlable — every route family is static public scores — and the
+ * sitemap (app/sitemap.ts) is advertised, so a crawler finds every prerendered page without guessing.
  */
 export default function robots(): MetadataRoute.Robots {
   return {

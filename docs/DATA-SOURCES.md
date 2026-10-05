@@ -2002,11 +2002,11 @@ the static snapshot, never proxy a live upstream request per visitor; honor a ta
 immediately. The bundled official fixtures are our own transcription of public schedules (dates,
 pairings and times), not copies of the documents.
 
-**Attribution text**, rendered in the site footer (`components/layout/Attribution.tsx`) and on the
-standings and scores pages:
+**Attribution text**, rendered in the site footer (`components/layout/Attribution.tsx`) on every
+page:
 
-> Data from **MaxPreps** (maxpreps.com) and **High School on SI** (si.com/high-school). League
-> alignment and rules from SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
+> Data from **MaxPreps** and **High School on SI (si.com)**. League alignment and rules from
+> SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
 > Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps
 > or SI. Records are computed from published game results and may differ from official standings.
 > Last updated {fetchedAt}.

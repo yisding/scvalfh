@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import { placeWords } from '../../lib/format';
 import { ELO_SCALE, LEAGUE_COUNT } from '../leaders/leaders-view';
 import { plural } from '../ui/plural';
 import type { TeamEloView } from './team-view';
@@ -21,13 +21,18 @@ import type { TeamEloView } from './team-view';
  * the rest. No team page names a place below the board's top 10, and a team with neither a final
  * this season nor a start from last reads "Not rated", never a 1500 it has not earned.
  */
-export function TeamElo({ elo, className }: { elo: TeamEloView; className?: string }) {
+export interface TeamEloProps {
+  elo: TeamEloView;
+  className?: string;
+}
+
+export function TeamElo({ elo, className }: TeamEloProps) {
   const { boardPlace } = elo;
   const sub =
     elo.elo === null
       ? 'no counted results yet'
       : boardPlace
-        ? `${boardPlace.tied ? 'tied for ' : ''}${ordinal(boardPlace.rank)} on the Elo board`
+        ? `${placeWords(boardPlace.rank, boardPlace.tied)} on the Elo board`
         : elo.preseason
           ? `preseason, from ${elo.seededFrom}`
           : elo.provisional

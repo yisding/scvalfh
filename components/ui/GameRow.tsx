@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { getStandingFor } from '../../lib/data';
 import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { findLeague } from '../../lib/leagues';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
 
@@ -14,7 +13,14 @@ import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import Tag from './Tag';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, statusLabelIsTime, type GameDisplay, type SideView } from './game-view';
+import {
+  describeGame,
+  gameKind,
+  otherLeagueSuffix,
+  statusLabelIsTime,
+  type GameDisplay,
+  type SideView,
+} from './describe-game';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).
@@ -85,15 +91,6 @@ export interface GameLogRowProps extends GameViewProps {
 
 /** The ghost monogram's words (a tooltip; the monogram itself is decorative). */
 export const NON_MEMBER_NOTE = `Not one of the ${TEAMS.length} teams this site follows`;
-
-/** ` · SCVAL` after a side from a league other than the list's own; '' otherwise. */
-function otherLeagueSuffix(slug: TeamSlug | null, scopeLeague: LeagueId | null | undefined): string {
-  if (!scopeLeague || !slug) return '';
-  const team = getTeamBySlug(slug);
-  if (!team || team.league === scopeLeague) return '';
-  const league = findLeague(team.league);
-  return league ? ` · ${league.shortName}` : '';
-}
 
 /**
  * A side's current league record ("1-4-0") for `showRecords`, or null when it should not print:
@@ -587,7 +584,7 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
 export function gameLogRowClass(game: Game, className?: string): string {
   // The non-league rule is `display.isNonLeague` (SPEC §10.4): neither counted for a league table
   // nor postseason. A postseason game is neither league nor NL, so it takes no rule.
-  const nonLeague = game.countsFor === null && game.postseason === null;
+  const nonLeague = gameKind(game) === 'non-league';
   return [
     'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta',
     nonLeague ? 'sx-nonleague' : null,

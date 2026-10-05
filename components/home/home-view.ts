@@ -20,6 +20,7 @@ import {
   getLastLeagueResultDate,
   getLatestResultsDate,
   getLeagueSummaries,
+  getNonLeagueFinalsPlayed,
   getOfficialFixtures,
   getPlayoffs,
   getSeasonPhase,
@@ -55,8 +56,11 @@ import { hasHistory } from '../../lib/history';
 import { outcomesFor, statusBadge } from '../../lib/standings';
 import {
   CCS,
+  divisionHeading,
   getDivision,
   getLeague,
+  isSingleDivision,
+  leaguePlayStarts,
   sectionOf,
   type DivisionConfig,
   type LeagueConfig,
@@ -67,8 +71,9 @@ import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
-import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
 
 import type {
@@ -167,11 +172,11 @@ function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeag
     ...day,
     games: day.games.filter((g) => countsInLeague(g, league)),
     total: all.length,
-    postseason: all.filter((g) => g.countsFor === null && g.postseason !== null).length,
+    postseason: all.filter((g) => gameKind(g) === 'postseason').length,
     // Counted directly rather than as `total − league − postseason`: `games` holds only the
     // PLAYABLE league games, so a league game already final that day would otherwise be
     // mis-counted as non-league.
-    nonLeague: all.filter((g) => g.countsFor === null && g.postseason === null).length,
+    nonLeague: all.filter((g) => gameKind(g) === 'non-league').length,
   };
 }
 
@@ -185,7 +190,7 @@ function unreportedDay(league: LeagueId, today: string, latest: string | null): 
   return null;
 }
 
-// ---------------------------------------------------------------- leaders (strip, OG card)
+// ---------------------------------------------------------------- leaders (other-leagues strip)
 
 export interface DivisionLeaders {
   /** Short names of every team in 1st place (level places included), registry/table order. */
@@ -203,26 +208,6 @@ function divisionLeaders(division: DivisionId): DivisionLeaders | null {
   };
 }
 
-/** 'St Ignatius', 'A & B', 'A & B +1'. */
-export function leaderNames(names: readonly string[]): string {
-  if (names.length <= 2) return names.join(' & ');
-  return `${names.slice(0, 2).join(' & ')} +${names.length - 2}`;
-}
-
-/** The root OG card's row text after a league's short name (SPEC §8.4). */
-export function leagueRowText(divisions: ReadonlyArray<{ id: string; heading: string | null }>): string {
-  const clauses = divisions.map((d) => {
-    const leaders = divisionLeaders(d.id);
-    if (!leaders) return null;
-    const who = `${leaderNames(leaders.names)} ${leaders.pts} pts`;
-    return d.heading ? `${d.heading}: ${who}` : who;
-  });
-  if (clauses.every((c) => c === null)) return 'No league results yet';
-  return clauses
-    .map((c, i) => c ?? `${divisions[i].heading ?? ''}: no results yet`)
-    .join(' · ');
-}
-
 // ---------------------------------------------------------------- phase lead
 
 export interface PhaseLeadView {
@@ -233,22 +218,16 @@ export interface PhaseLeadView {
   link: { href: string; label: string } | null;
 }
 
-function firstLeagueDate(league: LeagueConfig): string {
-  return league.divisions.map((d) => d.leaguePlay.first).reduce((a, b) => (b < a ? b : a));
-}
-
 /** The PhaseLead copy for a league in a phase on a day (exported for tests/ui/home-view.test.ts). */
 export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: string): PhaseLeadView | null {
   const short = league.shortName;
-  const firstLeague = firstLeagueDate(league);
+  const firstLeague = leaguePlayStarts(league.id);
   const ps = league.postseason;
   const keyDates = CCS.keyDates;
 
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
     // Games played SO FAR — a non-league final later in the season has not been played yet.
-    const nonLeague = getGames({ league: league.id, status: 'final' }).filter(
-      (g) => g.countsFor === null && g.postseason === null && g.dateKey <= today,
-    ).length;
+    const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
     return {
       lead: `${short} league play starts ${shortDate(firstLeague)}.`,
       body:
@@ -375,7 +354,7 @@ export interface MiniDivisionView {
   home: DivisionConfig['home'];
 }
 
-function miniDivision(league: LeagueConfig, division: DivisionConfig, single: boolean): MiniDivisionView {
+function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {
   const rows = getStandings(division.id).map((s): MiniRow => {
     const team = getTeamById(s.teamId);
     return {
@@ -395,7 +374,7 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig, single: bo
   });
   return {
     id: division.id,
-    heading: single ? null : division.label,
+    heading: divisionHeading(division.id),
     leagueShort: league.shortName,
     rows,
     total: rows.length,
@@ -549,7 +528,7 @@ export interface OtherLeagueLine {
 }
 
 function leagueLeadersLine(league: LeagueConfig): string {
-  const single = league.divisions.length === 1;
+  const single = isSingleDivision(league.id);
   const clauses = league.divisions.map((d) => {
     const leaders = divisionLeaders(d.id);
     if (!leaders) return single ? null : `no results yet in ${d.label}`;
@@ -615,7 +594,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
   const latestDate = getLatestResultsDate({ league: league.id });
   const unreported = unreportedDay(league.id, today, latestDate);
   const slateDate = getUpcoming(1, { league: league.id })[0]?.dateKey ?? null;
-  const single = league.divisions.length === 1;
+  const single = isSingleDivision(league.id);
   const firstGame = getGameDates({ league: league.id })[0] ?? null;
 
   return {
@@ -629,7 +608,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
     slate: slateDate ? leagueDay(league.id, slateDate, today, { playable: true }) : null,
     nextLeague: slateDate ? nextLeagueDay(league.id, slateDate, today) : null,
     firstGame,
-    divisions: league.divisions.map((d) => miniDivision(league, d, single)),
+    divisions: league.divisions.map((d) => miniDivision(league, d)),
     pointsLegend: `PTS: ${league.rules.citations.points}.`,
     teams: {
       leagueId: league.id,
@@ -637,14 +616,14 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
       singleDivision: single,
       groups: league.divisions.map((d) => ({
         id: d.id,
-        heading: single ? null : d.label,
+        heading: divisionHeading(d.id),
         // A–Z by the short name the tile prints, so a reader scans one alphabetical run per
         // division instead of the registry's order. Sorted here on the server, once, so the client
         // renders exactly the order the HTML shipped with.
         tiles: getTeams({ division: d.id })
           .slice()
           .sort((a, b) => a.shortName.localeCompare(b.shortName, 'en'))
-          .map((t) => pinTileView(t, league.shortName, single ? null : d.label)),
+          .map((t) => pinTileView(t, league.shortName, divisionHeading(d.id))),
       })),
     },
     postseason: postseasonView(league, phase, sectionOf(league.id).noChampionshipNote),
@@ -734,7 +713,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs),
-    kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
+    kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every
     // team (no layout shift).
@@ -771,8 +750,7 @@ export function buildTeamViews(): HomeTeamView[] {
   const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
   return getTeams().map((team) => {
     const league = getLeague(team.league);
-    const single = league.divisions.length === 1;
-    const heading = single ? null : getDivision(team.division).label;
+    const heading = divisionHeading(team.division);
     if (!contexts.has(team.division)) contexts.set(team.division, getStandingContext(team.division));
     const context = contexts.get(team.division)?.get(team.id);
     const standing = getStandingFor(team.slug);
@@ -862,7 +840,7 @@ export interface HomeStatus {
   leagueShorts: string[];
 }
 
-export interface HomeData {
+export interface HomeView {
   today: string;
   status: HomeStatus;
   /** Every team (49), for the My-team slot. */
@@ -874,7 +852,7 @@ export interface HomeData {
   crossLeagueLatest: CrossLeagueLatest | null;
 }
 
-export function getHomeData(): HomeData {
+export function buildHomeView(): HomeView {
   const today = getToday();
   const summaries = getLeagueSummaries();
   const leagueIds = summaries.map((s) => s.id);
@@ -888,7 +866,7 @@ export function getHomeData(): HomeData {
     },
     teamViews: buildTeamViews(),
     searchIndex: getTeamSearchIndex(),
-    leagueChips: summaries.map((s) => ({ id: s.id, shortName: s.shortName, sectionShort: s.section.shortName })),
+    leagueChips: leagueChips(),
     leagueCards: summaries.map((s) => ({
       id: s.id,
       shortName: s.shortName,

@@ -18,6 +18,13 @@
  *
  * A singleton link is deliberately NOT covered. One speculative payload for the one page a reader
  * is being pointed at is prefetching doing its job; the cost only appears when the link is a row.
+ *
+ * Layout chrome is the other shape that opts out. The header, nav and footer (app/layout.tsx) are
+ * on every page, so a default link there is a speculative download on every page load: the
+ * wordmark, every NavLink, the stamp's stale pill and the footer's actions (Attribution and the
+ * LastUpdated it renders) all carry the prop (components/layout/NavLink.tsx has the measurement).
+ * The singleton exemption above covers in-page content only, where the call is the author's, and
+ * most here opt out.
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -165,13 +172,19 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/playoffs/PlayoffProjection.tsx', '/teams/${row.team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
+      // The /standings and /teams overviews render one block per division, each with its
+      // `Full <division> table` link.
+      ['components/standings/OverviewDivisionBlock.tsx', 'href={division.fullHref}'],
       ['components/teams/TeamUnbeaten.tsx', '/teams/${opponent.slug}'],
-      ['components/about/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
-      ['components/about/AwardsBlock.tsx', '/teams/${team.slug}'],
+      ['components/history/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
+      ['components/history/AwardsBlock.tsx', '/teams/${team.slug}'],
       ['components/about/CrossCheckTable.tsx', '/teams/${team.slug}'],
       ['components/game/SeasonSeries.tsx', GAME_LINK],
-      ['components/schedule/DateHeader.tsx', 'href={shareHref}'],
+      ['components/schedule/DateHeader.tsx', 'href={dayHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
+      // EmptyState's internal action: the home page's LeaguePanel renders one per league inside
+      // panels.map(), each to a different /schedule/<league> page.
+      ['components/ui/EmptyState.tsx', 'href={action.href}'],
       // The team finder's "Divisions and leagues" results and the link-mode league chips are
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],
@@ -184,6 +197,12 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // /commits (DESIGN §21): a commitment line per roster row, and a school link per commitment row.
       ['components/teams/TeamRoster.tsx', 'href={line.college.href}'],
       ['components/commits/CommitList.tsx', 'href={row.school.href}'],
+      // Layout chrome (app/layout.tsx): on every page, so it opts out like the nav.
+      ['components/layout/SiteHeader.tsx', 'href="/"'],
+      ['components/layout/NavLink.tsx', 'href={target}'],
+      ['components/layout/Attribution.tsx', 'href="/about"'],
+      ['components/layout/Attribution.tsx', 'href="/history/2025-26"'],
+      ['components/ui/LastUpdated.tsx', '/about#updates'],
     ];
     for (const [rel, href] of WANT) {
       const src = readFileSync(path.join(ROOT, rel), 'utf8');

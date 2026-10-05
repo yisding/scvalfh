@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { EM_DASH, ordinal, scoreSentence } from '../../lib/format';
+import { placeWords, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 
@@ -36,32 +37,23 @@ export interface LeagueTournamentProps {
 }
 
 function PlaceCell({ row }: { row: SeedRowView }) {
-  const { standing } = row;
-  if (!standing.hasReportedResults) {
-    return (
-      <span className="sx-num text-ink-3">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </span>
-    );
-  }
-  const { place } = standing.computed;
-  // `T6`, the site-wide tie mark, with the sr-only "tied for 6th"; `whitespace-nowrap` so the
-  // narrow first column can never break the T from its number.
-  return row.shared ? (
-    <span className="sx-num whitespace-nowrap text-ink">
-      <span aria-hidden="true">T{place}</span>
-      <span className="sr-only">tied for {ordinal(place)}</span>
-    </span>
-  ) : (
-    <span className="sx-num text-ink">{place}</span>
+  const ranked = row.standing.hasReportedResults;
+  // `T6`, the site-wide tie mark, with the sr-only "tied for 6th" (PlaceMark).
+  return (
+    <PlaceMark
+      place={row.standing.computed.place}
+      shared={row.shared}
+      ranked={ranked}
+      className="sx-num"
+      tone={ranked ? 'text-ink' : 'text-ink-3'}
+    />
   );
 }
 
 function rowSentence(row: SeedRowView, leagueShort: string): string {
   const { team, standing } = row;
   if (!standing.hasReportedResults) return `${team.name}: no results reported, not ranked in ${leagueShort}`;
-  const place = row.shared ? `tied for ${ordinal(standing.computed.place)}` : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, row.shared);
   return `${team.name}, ${place} in ${leagueShort}, ${standing.computed.pts} points, ${row.gpText.replace('GP', 'league games counted')}`;
 }
 
@@ -93,7 +85,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
         <tbody>
           {seedRows.map((row, index) => (
             <Fragment key={row.team.slug}>
-              <tr className="relative" style={{ height: 56 }}>
+              <tr data-team-slug={row.team.slug} className="relative" style={{ height: 56 }}>
                 <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
                   <PlaceCell row={row} />
                 </td>
@@ -101,7 +93,12 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                   {/* One stretched row link per team; `prefetch={false}` like every per-row link
                       (components/layout/NavLink.tsx has the reasoning). */}
                   <Link href={`/teams/${row.team.slug}`} prefetch={false} className="absolute inset-0">
-                    <span className="sr-only">{rowSentence(row, leagueShort)}</span>
+                    <span className="sr-only">
+                      {/* Marked like every other team list: only the pinned row's note is
+                          displayed (app/globals.css), so the accent rule never speaks alone. */}
+                      <span className="sx-pin-note">Your team. </span>
+                      {rowSentence(row, leagueShort)}
+                    </span>
                   </Link>
                   <span className="flex items-center gap-3">
                     <TeamMonogram team={row.team} size={28} />

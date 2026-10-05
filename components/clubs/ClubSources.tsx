@@ -35,7 +35,11 @@ function HostList({ links }: { links: ClubHostLink[] }) {
   );
 }
 
-export function ClubSources({ view }: { view: ClubPageView }) {
+export interface ClubSourcesProps {
+  view: ClubPageView;
+}
+
+export function ClubSources({ view }: ClubSourcesProps) {
   return (
     <div>
       <p className="m-0 max-w-prose text-meta text-ink-2">

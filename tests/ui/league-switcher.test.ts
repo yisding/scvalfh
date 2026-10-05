@@ -21,6 +21,8 @@ const CHIPS: LeagueChip[] = [
   { id: 'eal', shortName: 'EAL', sectionShort: 'NS' },
 ];
 const HREFS = Object.fromEntries([['all', '/schedule'], ...CHIPS.map((c) => [c.id, `/schedule/${c.id}`])]);
+/** /playoffs' shape: fragment chips, with a route chip for a league that has its own page. */
+const ANCHOR_HREFS = Object.fromEntries(CHIPS.map((c) => [c.id, c.id === 'eal' ? '/playoffs/eal' : `#${c.id}`]));
 
 /** Each section list's opening tag, in order. */
 function lists(html: string): string[] {
@@ -30,6 +32,7 @@ function lists(html: string): string[] {
 describe.each([
   ['link', () => createElement(LeagueSwitcher, { mode: 'link', includeAll: true, label: 'Leagues', leagues: CHIPS, hrefs: HREFS, current: 'eal' })],
   ['scope', () => createElement(LeagueSwitcher, { mode: 'scope', includeAll: true, label: 'Your league', leagues: CHIPS })],
+  ['anchor', () => createElement(LeagueSwitcher, { mode: 'anchor', label: 'Leagues', leagues: CHIPS, hrefs: ANCHOR_HREFS })],
 ] as const)('%s mode', (_mode, element) => {
   const html = renderToStaticMarkup(element());
 

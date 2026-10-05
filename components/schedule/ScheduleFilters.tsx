@@ -3,11 +3,11 @@
 import { useState } from 'react';
 
 import EmptyState from '../ui/EmptyState';
+import { gameWord } from '../ui/plural';
 
 import {
   DEFAULT_FILTERS,
   contestWord,
-  gameWord,
   isDefaultFilters,
   unfilteredCountLine,
   type FilterState,
@@ -16,8 +16,8 @@ import {
 import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from './rail-targets';
 
 /**
- * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13); see
- * components/ui/PinControl.tsx for the app's full client-module list.
+ * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13);
+ * tests/ui/client-boundary.test.ts enumerates every client module.
  *
  * The complete, unfiltered, server-rendered list is ALREADY in the HTML. This component does not
  * own the list, does not receive it as props and never re-renders it: it toggles the `hidden`
@@ -40,7 +40,7 @@ import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from '
  * always visible — a filtered list that looks like the whole season is the failure mode here.
  *
  * League-aware (SPEC §10.4): the divisions come in as props — no division `<select>` at all for a
- * single-division league (PCAL, MCAL), and one team `<optgroup>` per division only where there
+ * single-division league (PCAL, MCAL, EAL), and one team `<optgroup>` per division only where there
  * are several. This module is a CLIENT module, so it imports nothing that reaches the registry or
  * the league config (SPEC §0.4); the page hands it plain data.
  *

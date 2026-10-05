@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import PlaceMark from '../ui/PlaceMark';
 import StatusChip from '../ui/StatusChip';
 
 import type { StatusGroup } from './standings-view';
@@ -10,6 +10,9 @@ import type { StatusGroup } from './standings-view';
  * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
  * the CCS picture; for MCAL it is the MCAL tournament line, and for the EAL its Super Regional
  * (linking the EAL card on /playoffs, since no bracket is published), with no CCS concept at all.
+ * So `heading`, `href` and `linkText` are required and have no defaults: the caller passes
+ * standings-view's links (`statusHeading`, `playoffsHref`, `playoffsLinkText`) for every league,
+ * and the band holds no league's copy of its own.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
@@ -42,10 +45,10 @@ import type { StatusGroup } from './standings-view';
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
-  heading?: string;
+  heading: string;
   /** `/playoffs#<league>` (a CCS league, or an unbracketed tournament's card) or `/playoffs/<league>`. */
-  href?: string;
-  linkText?: string;
+  href: string;
+  linkText: string;
   groups: StatusGroup[];
   caveat: string | null;
   /** Teams with `hasReportedResults === false`. */
@@ -55,9 +58,9 @@ export interface PlayoffStatusBandProps {
 
 export function PlayoffStatusBand({
   divisionLabel,
-  heading = 'CCS qualifying, as things stand',
-  href = '/playoffs',
-  linkText = 'Playoff picture',
+  heading,
+  href,
+  linkText,
   groups,
   caveat,
   unrankedTeams,
@@ -109,14 +112,7 @@ export function PlayoffStatusBand({
                   {/* The same `T` marker the table uses for a level place ("T7" there, "T-7th"
                       here), so the two never disagree about whether a place is settled. */}
                   <span className="sx-num whitespace-nowrap text-micro text-ink-3">
-                    {team.shared ? (
-                      <>
-                        <span aria-hidden="true">T-{ordinal(team.place)}</span>
-                        <span className="sr-only">tied for {ordinal(team.place)}</span>
-                      </>
-                    ) : (
-                      ordinal(team.place)
-                    )}
+                    <PlaceMark place={team.place} shared={team.shared} form="pill" />
                   </span>
                 </Link>
               ))}

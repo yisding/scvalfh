@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import AwardsBlock from '../../../components/about/AwardsBlock';
-import HistoryStandingsTable from '../../../components/about/HistoryStandingsTable';
+import AwardsBlock from '../../../components/history/AwardsBlock';
+import HistoryStandingsTable from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import TeamMonogram from '../../../components/ui/TeamMonogram';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { getTeamBySlug } from '../../../lib/data';
 import {
   getAvailableHistoryLeagues,
@@ -27,14 +27,15 @@ import type { LeagueId } from '../../../lib/types';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
- * per league (`#scval #bval #pcal #mcal`). A league whose own end-of-season documents we could
+ * per league (`#scval #bval #pcal #mcal #eal`). A league whose own end-of-season documents we could
  * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
  * record-only tables and the all-league awards; a league we found no official 2025-26 final
- * standings for (PCAL, MCAL) says so, with the reason, links any official document it did publish
+ * standings for (PCAL, MCAL, EAL) says so, with the reason, links any official document it did publish
  * (MCAL's all-league team), and shows no table in its place. Everything is
  * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
- * page is the only place last season's numbers live, and it is not part of the nightly snapshot.
+ * page is the only place last season's numbers live, and it is not part of the snapshot the
+ * scheduled update rebuilds.
  *
  * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
  * never from a literal list, so a league cannot be dropped or invented here. The header says only
@@ -42,17 +43,20 @@ import type { LeagueId } from '../../../lib/types';
  * source note. A long lede here pushed the first standings row under the phone tab bar.
  */
 const SEASON = getHistorySeason();
-const LEAGUES = getHistoryLeagues();
+const HISTORY_LEAGUES = getHistoryLeagues();
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
-/** "PCAL and MCAL are", "MCAL is", or null when every league has its tables. */
+/** "PCAL, MCAL and EAL are", "MCAL is", or null when every league has its tables. */
 const UNAVAILABLE_SUBJECT = UNAVAILABLE.length
   ? `${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'}`
   : null;
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = `${SEASON} final standings`;
+
 export const metadata: Metadata = {
-  title: `${SEASON} final standings`,
+  title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
     ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
@@ -60,7 +64,7 @@ export const metadata: Metadata = {
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : ''),
   alternates: { canonical: '/history/2025-26' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/history/2025-26' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/history/2025-26' },
 };
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
@@ -290,7 +294,7 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
 }
 
 export default function HistoryPage() {
-  const tabs = LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
+  const tabs = HISTORY_LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
 
   return (
@@ -320,7 +324,7 @@ export default function HistoryPage() {
       <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
-        {LEAGUES.map(({ id, entry }) =>
+        {HISTORY_LEAGUES.map(({ id, entry }) =>
           entry.status === 'available' ? (
             <AvailableLeague key={id} leagueId={id} entry={entry} />
           ) : (

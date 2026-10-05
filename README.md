@@ -3,7 +3,7 @@
 Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
 five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast
 Section and the Northern Section's EAL. Teams outside these five leagues appear only as opponents
-(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site-url.ts`). A static Next.js site rebuilt from one JSON
+(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
@@ -120,8 +120,9 @@ cifccs.org / VNN .ics ──┘
    per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
    (counts, timestamps, a per-league summary: what the update-data workflow uses for its commit
    message and job summary).
-3. **`next build`** (or `vite build` under vinext) reads only `data/snapshot.json` (`lib/data.ts`)
-   and prerenders every route — there is no request-time fetch, no database and no
+3. **`next build`** (or `vite build` under vinext) reads the `data/` JSON files the read APIs
+   import (`data/snapshot.json` via `lib/data.ts`, plus the files listed under "Local
+   development") and prerenders every route — there is no request-time fetch, no database and no
    `searchParams` anywhere. "Today" for rendering purposes is always derived from the snapshot's
    `fetchedAt`, never `Date.now()`, so a given commit builds byte-identically no matter when
    `next build` runs.
@@ -167,8 +168,9 @@ For this to work on a deployed copy of this repo:
 
 ### Self-hosting the cron
 
-If you're not using GitHub Actions, run the same two commands from any scheduler that can reach
-the internet on your host, twice a day during the season:
+If you're not using GitHub Actions, run the same commands (`fetch-player-stats` is optional, hence
+`|| true`) from any scheduler that can reach the internet on your host, twice a day during the
+season:
 
 ```cron
 0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && pnpm build
@@ -198,6 +200,13 @@ has the same list):
 | `--force` | bypass the Aug 1 - Nov 30 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn` | skip individual secondary sources |
+
+The fetch scripts (`fetch-data`, the other `fetch-*` scripts, `build-history` and
+`discover-season`) identify themselves with one descriptive User-Agent that carries a contact
+address (`POLITE_USER_AGENT` in `lib/sources/http.ts`; si.com, which refuses a non-browser one, gets
+a browser User-Agent instead). Set `SCVAL_CONTACT=<email>` in the scripts' environment to put your
+own deployment's address there. Only the scripts read it, at fetch time: it is not a build-time
+file override, and the build and the site never use it.
 
 ### Corpus and capture
 
@@ -574,10 +583,20 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles
-`data/snapshot.json`, `data/history-2025-26.json` and `data/prior-season.json` into its server code
-(`lib/data.ts`, `lib/history.ts` and `lib/prior-season.ts` import them), so no server reads
-`data/` at run time. The vinext scripts read the
+develop and build without ever calling a live upstream API. Every build bundles eight data files
+into its server code, each imported by its read module, so no server reads `data/` at run time:
+
+| File | Read by |
+|---|---|
+| `data/snapshot.json` | `lib/data.ts` |
+| `data/history-2025-26.json` | `lib/history.ts` |
+| `data/prior-season.json` | `lib/prior-season.ts` |
+| `data/player-stats.json` | `lib/player-stats.ts` |
+| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/rosters.ts` |
+| `data/clubs.json` | `lib/clubs.ts` |
+| `data/commits.json` | `lib/commits.ts` |
+
+The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
 Worker, two patches (see "The vinext patch") and its own outputs, `dist/`, `.vinext/` and
 `.cloudflare/`, all gitignored and skipped by `eslint.config.mjs`. `--mode cloudflare` is what
@@ -587,14 +606,25 @@ never `.env.production`.
 
 To point at a different snapshot file (e.g. a fixture-built one), set
 `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
-`data/history-2025-26.json`. Both are read with `node:fs` when the module loads, so they work
-under Next, vitest, tsx and vinext's Node target, never on a Worker, which has no filesystem to
-read them from: leave them unset for the Cloudflare scripts.
+`data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, and `SCVAL_ROSTERS`
+and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and `data/rosters-enrichment.json`. All five
+are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
+Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
+Cloudflare scripts. The other three files have no override.
+
+`node scripts/typecheck-scope.mjs <glob>…` runs the full typecheck but fails only on diagnostics
+inside the globs (for concurrent edits in one tree).
 
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
+
+Imports are relative everywhere (`app/`, `components/`, `lib/`, `scripts/`, `tests/`), never the
+`@/` alias that `tsconfig.json` declares: Vitest has no path alias (`vitest.config.mts`), and the
+tests import pages, view builders and route modules directly (tests/ui/home-view.test.ts renders
+`app/page.tsx` with `react-dom/server`), so a module that resolves only through `@/` fails the
+moment a test reaches it.
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test, build,
 and an assertion that every route family actually prerendered (no route should ever fall back to
@@ -631,7 +661,11 @@ to the single-league site's), the si.com backfill rules, the official-schedule m
 parsing,
 the "never render a missing score as 0-0" rule across every `GameRow` variant and every non-final
 game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover, unnamed
-rounds). Fixtures captured from real (offline) MaxPreps/SCVAL responses live under
+rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the recorded corpora (end to
+end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
+validators check `data/rosters.json`, `data/player-stats.json`, `data/clubs.json` and
+`data/commits.json`, and further suites pin the copy rules, the workflow files and the
+legacy-import guard. Fixtures captured from real (offline) MaxPreps/SCVAL responses live under
 `tests/fixtures/`.
 
 ## Next-season bootstrap
@@ -969,9 +1003,10 @@ at once, at every build, starting from last season's:
 
 ## Attribution and legal posture
 
-Every page that shows league data carries a visible attribution line and deep-links back to the
-originating MaxPreps/SBLive/league/cifccs.org page (`components/layout` attribution + every
-`Game`/`Standing` row's outbound link). This site stores its own **derived** records — normalized
+Every page carries the same visible attribution line in the global footer
+(`components/layout/Attribution.tsx`, rendered once by the root layout), and the deep links back
+to the originating MaxPreps/SBLive/league/cifccs.org page live on the rows themselves: every
+`Game`/`Standing` row's outbound link, the game page's sources and the team page. This site stores its own **derived** records — normalized
 scores and independently computed standings — not verbatim copies of any source page, refreshes
 on a self-imposed 1-2-runs-a-day budget well under any observed rate limit, sends an identifying
 User-Agent, and serves only its own cached static snapshot (it never proxies a live upstream
@@ -980,12 +1015,13 @@ attribution text rendered in the footer.
 
 ## Deploy notes
 
-Every route is prerendered at build time — no database, no request-time data fetching, and no API
-routes beyond the OG-image generators, which are prerendered too. It is NOT `output: 'export'`,
-though: serving it needs Next.js's own server, a host adapter that provides one, `vinext start` or
-vinext's Cloudflare Worker (see "vinext" and "Cloudflare Workers" below), because the 404s for
-unknown dynamic params and the metadata routes (`/icon`, `/apple-icon`, `/opengraph-image`,
-`/robots.txt`, `/sitemap.xml`) are served by the framework.
+Every route is prerendered at build time — no database, no request-time data fetching, and no
+Route Handlers beyond the OG-image generators and the `/icon-192` and `/icon-512` icons, all
+prerendered too. It is NOT `output: 'export'`, though: serving it needs Next.js's own server, a
+host adapter that provides one, `vinext start` or vinext's Cloudflare Worker (see "vinext" and
+"Cloudflare Workers" below), because the 404s for unknown dynamic params and the metadata routes
+(`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
+framework.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.
@@ -1010,10 +1046,10 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   run and snapshot refresh on `main` once an account is connected. See "vinext" and "Cloudflare
   Workers" below.
 
-`SITE_URL` defaults to `http://localhost:3000` (`components/layout/site-url.ts`) when unset, so
+`SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
-it and the three optional variables; copy it to `.env` for a local production build.
+it and the six optional variables; copy it to `.env` for a local production build.
 
 ### vinext
 
@@ -1028,9 +1064,9 @@ pnpm build:vinext && pnpm start:vinext   # vite build into dist/, then vinext st
 
 Run it behind any reverse proxy that can talk to a Node process, as with `next start`. `dist/` is
 the whole build output and the snapshot is bundled into it, so `vinext start` no longer needs
-`data/` beside it. `SCVAL_SNAPSHOT` and `SCVAL_HISTORY` still swap in another file through
-`node:fs` wherever the data modules load (the prerender, and `vinext start` for what it renders on
-request), so a server given one should get the file the build had. `SITE_URL` and `SCVAL_BUILD_AT`
+`data/` beside it. The `SCVAL_*` file overrides (see "Local development") still swap in another
+file through `node:fs` wherever the data modules load (the prerender, and `vinext start` for what
+it renders on request), so a server given one should get the file the build had. `SITE_URL` and `SCVAL_BUILD_AT`
 are fixed at build time on both vinext targets: `vite.config.ts` reads them with Vite's `loadEnv`
 (the process environment first, then the mode's `.env` files) and inlines them with `define`, so
 the prerendered pages and whatever is rendered on request (every 404) carry the same values,
@@ -1092,7 +1128,7 @@ its `ASSETS` binding; and `runWorkerFirst` keeps the raw `/_vinext/static-cache/
 fetched directly (they are 404s). The Worker renders only 404s on request. `cloudflare.config.ts`
 names the Worker `scvalfh`, turns on `nodejs_compat`, pins the compatibility date to the workerd
 release the plugin bundles and declares no vars: `SITE_URL` and `SCVAL_BUILD_AT` are inlined at
-build time (see "vinext"), and `SCVAL_SNAPSHOT`/`SCVAL_HISTORY` need a filesystem a Worker does not
+build time (see "vinext"), and the `SCVAL_*` file overrides need a filesystem a Worker does not
 have. `--mode cloudflare` loads `.env`, `.env.local`, `.env.cloudflare` and
 `.env.cloudflare.local`, never `.env.production`, so put the Worker build's `SITE_URL` in the
 environment or in `.env.cloudflare`.
@@ -1246,6 +1282,11 @@ compatibility date follows, so bump the two together and re-run the Workers buil
   multi-team ties are resolved, co-champions, the postseason, official sources and known data gaps.
 - `docs/BYLAWS-2026-27.md` — the verified SCVAL by-laws excerpt that governs standings, points,
   tiebreaks and CCS qualification.
+- `SPEC §n` and `BUILD-BRIEF` in code comments refer to the build-time research spec and build
+  brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
+  `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
+  so treat it as historical. New comments cite `docs/DESIGN.md`, `docs/DATA-SOURCES.md`,
+  `docs/LEAGUE-RULES.md` or `docs/BYLAWS-2026-27.md` sections instead.
 - `docs/DESIGN.md` — the implementation-ready design record: routes, tokens, component
   signatures, rendering rules, empty states, accessibility requirements. §15 is the multi-league
   amendment (what changed from the single-league design, and why). §22 is the EAL amendment (the

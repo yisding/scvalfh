@@ -19,15 +19,17 @@ import {
 } from '../../../components/teams/player-stats-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import FormStrip from '../../../components/ui/FormStrip';
+import { gameKindLabel } from '../../../components/ui/describe-game';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import { getTeamSlugs } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
@@ -201,9 +203,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leagueScheduled,
   } = view;
   // Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;
-  // PCAL and MCAL are unavailable, so their slugs have no rows), and the size of that division as
-  // it was then (the alignment can change between seasons: Leland played in Santa Teresa in
-  // 2025-26 and is in Mt. Hamilton now).
+  // PCAL, MCAL and the EAL are unavailable, so their slugs have no rows), and the size of that
+  // division as it was then (the alignment can change between seasons: Leland played in Santa
+  // Teresa in 2025-26 and is in Mt. Hamilton now).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
   const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
@@ -241,13 +243,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             kicker="Last"
             meta={
               last
-                ? `${shortDate(last.dateLocal)} · ${
-                    last.countsFor !== null
-                      ? 'League'
-                      : last.postseason !== null
-                        ? 'Postseason'
-                        : 'Non-league'
-                  }`
+                ? `${shortDate(last.dateLocal)} · ${gameKindLabel(last)}`
                 : undefined
             }
             action={{ href: '#league-log', label: 'All games' }}
@@ -281,14 +277,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <Link
               href={view.standingsHref}
               prefetch={false}
-              className="sx-pill bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
+              className="sx-pill sx-pill-ring"
             >
-              {view.standingsLabel} &rarr;
+              {view.standingsLabel} <Arrow />
             </Link>
             {view.officialScheduleUrl ? (
               <ExternalLink
                 href={view.officialScheduleUrl}
-                className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                className="sx-pill sx-pill-ring"
               >
                 Official {view.league.shortName} schedule
               </ExternalLink>
@@ -451,7 +447,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={team.external.maxprepsTeamUrl}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     MaxPreps: {team.name} field hockey
                   </ExternalLink>
@@ -461,7 +457,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={team.external.maxprepsScheduleUrl}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     MaxPreps schedule &amp; scores
                   </ExternalLink>
@@ -471,7 +467,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <li>
                   <ExternalLink
                     href={sblive}
-                    className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                    className="sx-pill sx-pill-ring"
                   >
                     High School on SI (si.com): {team.name}
                   </ExternalLink>

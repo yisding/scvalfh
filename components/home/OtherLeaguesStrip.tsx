@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import SectionHeader from '../ui/SectionHeader';
 
-import type { OtherLeagueLine } from './home-data';
+import type { OtherLeagueLine } from './home-view';
 
 /**
  * The other three leagues in one line each (SPEC §10.1): who leads each division —
@@ -32,9 +33,7 @@ export function OtherLeaguesStrip({ lines, className }: OtherLeaguesStripProps) 
               <span className="min-w-0">
                 <span className="font-semibold text-ink">{line.shortName}:</span> {line.text}
               </span>
-              <span aria-hidden="true" className="ml-auto shrink-0 text-accent">
-                &rarr;
-              </span>
+              <Arrow className="ml-auto shrink-0 text-accent" />
             </Link>
           </li>
         ))}

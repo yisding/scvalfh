@@ -5,7 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { postseasonTagOf } from '../components/ui/game-view';
+import { postseasonTagOf } from '../components/ui/describe-game';
 import {
   classifyGame,
   classifyGames,

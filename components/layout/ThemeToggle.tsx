@@ -7,8 +7,7 @@ import { useIsHydrated, useStoredValue, writeStored } from '../ui/local-store';
 import { THEME_STORAGE_KEY } from './theme-script';
 
 /**
- * System / Light / Dark, cycled by one 44×44 button (DESIGN §7.14). One of the nine client modules
- * in the whole app.
+ * System / Light / Dark, cycled by one 44×44 button (DESIGN §7.14).
  *
  * The accessible name comes from the button's CONTENTS and names both states: "Light theme is on.
  * Switch to dark theme." An `aria-label` was doing the second half on its own, which is exactly
@@ -99,7 +98,11 @@ function applyTheme(theme: Theme) {
   writeStored(THEME_STORAGE_KEY, theme === 'system' ? null : theme);
 }
 
-export function ThemeToggle({ className }: { className?: string }) {
+export interface ThemeToggleProps {
+  className?: string;
+}
+
+export function ThemeToggle({ className }: ThemeToggleProps) {
   const hydrated = useIsHydrated();
   const stored = useStoredValue(THEME_STORAGE_KEY);
   const theme: Theme =

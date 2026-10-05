@@ -12,13 +12,14 @@ import {
 } from '../../../components/game/GameSources';
 import SeasonSeries from '../../../components/game/SeasonSeries';
 import {
-  buildGameModel,
+  buildGameView,
   buildSupersededStub,
   gameDescription,
   gameStaticParams,
   gameTitle,
-} from '../../../components/game/game-model';
-import { OG_BASE } from '../../../components/layout/site-url';
+} from '../../../components/game/game-view';
+import { OG_BASE } from '../../../components/layout/site';
+import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';
 
@@ -36,7 +37,7 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  * `id` is `gameIdToParam(Game.contestId)`: the MaxPreps GUID itself (the snapshot's dedupe key, so
  * it is stable across rebuilds and cannot collide on a doubleheader), or `sblive-<n>` for a game
  * only si.com has (owner decision D2; the contest id `sblive:<n>` has a ':' no path should carry).
- * `buildGameModel` runs `paramToGameId` first. A `supersededGames` key — a si.com game MaxPreps has
+ * `buildGameView` runs `paramToGameId` first. A `supersededGames` key — a si.com game MaxPreps has
  * since published — is prerendered as a stub that links (and is canonical to) the MaxPreps game
  * (SPEC §8.1). The OG image's params are exactly these params (`gameStaticParams`).
  *
@@ -53,14 +54,17 @@ export function generateStaticParams(): Array<{ id: string }> {
 
 export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Promise<Metadata> {
   const { id } = await params;
-  const model = buildGameModel(id);
+  const model = buildGameView(id);
   if (!model) {
     const stub = buildSupersededStub(id);
     if (stub) {
+      const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
       return {
-        title: stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps',
+        title,
         description: stub.sentence,
         alternates: { canonical: stub.targetHref },
+        // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
+        openGraph: { ...OG_BASE, title },
         robots: { index: false, follow: true },
       };
     }
@@ -88,7 +92,7 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
 
 export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  const model = buildGameModel(id);
+  const model = buildGameView(id);
   if (!model) {
     const stub = buildSupersededStub(id);
     if (!stub) notFound();
@@ -98,9 +102,9 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         <p className="mt-4 mb-0">
           <Link
             href={stub.targetHref}
-            className="sx-pill min-h-11 bg-surface text-accent shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring min-h-11"
           >
-            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} &rarr;
+            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} <Arrow />
           </Link>
         </p>
         <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
@@ -147,9 +151,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           href={`/scores/${game.dateKey}`}
           className="sx-action -ml-3 min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
-          <span aria-hidden="true" className="mr-1.5">
-            &larr;
-          </span>
+          <Arrow dir="left" className="mr-1.5" />
           {dayLabel} games
         </Link>
         {teamLinks.length > 0 ? (
@@ -159,7 +161,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
                 key={team.slug}
                 href={`/teams/${team.slug}`}
                 prefetch={false}
-                className="sx-pill min-h-11 bg-surface px-3 shadow-[var(--sx-ring)] hover:bg-surface-2"
+                className="sx-pill sx-pill-ring min-h-11 px-3"
               >
                 {team.shortName}
                 <span aria-hidden="true"> &rsaquo;</span>
@@ -217,7 +219,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
                   className={
                     link.accent
                       ? 'sx-pill sx-pill-accent text-accent-ink!'
-                      : 'sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2'
+                      : 'sx-pill sx-pill-ring'
                   }
                 >
                   {link.label}

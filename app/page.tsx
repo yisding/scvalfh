@@ -5,11 +5,13 @@ import FindYourTeam from '../components/home/FindYourTeam';
 import LeagueCard from '../components/home/LeagueCard';
 import LeaguePanel from '../components/home/LeaguePanel';
 import MyTeamCard from '../components/home/MyTeamCard';
-import { getHomeData } from '../components/home/home-data';
+import { buildHomeView } from '../components/home/home-view';
 import LeagueSwitcher from '../components/layout/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
-import { OG_BASE } from '../components/layout/site-url';
-import { shortDate } from '../lib/format';
+import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
+import { listWords, shortDate } from '../lib/format';
+import { LEAGUES } from '../lib/leagues';
+import { TEAMS } from '../lib/teams';
 
 /**
  * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
@@ -22,22 +24,24 @@ import { shortDate } from '../lib/format';
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
  *
- * Imports are relative (not `@/`) so tests/ui/home-view.test.ts can render this page with
- * `react-dom/server` under Vitest, which has no path alias.
+ * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
+ * this page with `react-dom/server` under Vitest, which has no path alias.
  *
- * Everything is read through `components/home/home-data.ts` (which reads only `lib/data.ts`) and
+ * Everything is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; no page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.
  */
 export const metadata: Metadata = {
-  description:
-    'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated nightly.',
+  description: `Scores, standings and playoff pictures for the ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('name')}. Unofficial, updated twice daily.`,
   alternates: { canonical: '/' },
-  openGraph: { ...OG_BASE, url: '/' },
+  openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
 };
 
+/** 'SCVAL, BVAL, PCAL, MCAL and EAL', from the config (never a literal list), as app/not-found.tsx builds it. */
+const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
+
 export default function HomePage() {
-  const data = getHomeData();
+  const data = buildHomeView();
   const { status } = data;
 
   return (
@@ -45,7 +49,7 @@ export default function HomePage() {
       <div data-scope="all">
         <PageHeader
           title="NorCal High School Field Hockey Teams"
-          srTitle=" — girls varsity scores, standings and playoff pictures for SCVAL, BVAL, PCAL, MCAL and EAL"
+          srTitle={` — girls varsity scores, standings and playoff pictures for ${LEAGUE_LIST}`}
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
                are named by the switcher chips right below. From 640px it fits and comes back; the

@@ -2,7 +2,7 @@ import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
-import type { GameModel } from './game-model';
+import type { GameModel } from './game-view';
 
 /**
  * The source blocks of a game page.
@@ -207,7 +207,7 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
                   {side.maxprepsUrl ? (
                     <ExternalLink
                       href={side.maxprepsUrl}
-                      className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                      className="sx-pill sx-pill-ring"
                     >
                       <span className="sr-only">{side.name} on </span>MaxPreps
                     </ExternalLink>
@@ -215,7 +215,7 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
                   {side.sbliveUrl ? (
                     <ExternalLink
                       href={side.sbliveUrl}
-                      className="sx-pill bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+                      className="sx-pill sx-pill-ring"
                     >
                       <span className="sr-only">{side.name} on </span>si.com
                     </ExternalLink>

@@ -16,39 +16,39 @@ import { POSTSEASON_LEAD, postseasonCardLine } from '../../components/home/home-
 import { textOf } from './html-text';
 import { width } from './text-metrics';
 
-type HomeData = typeof import('../../components/home/home-data');
+type HomeView = typeof import('../../components/home/home-view');
 
-let home: HomeData;
-let data: ReturnType<HomeData['getHomeData']>;
+let home: HomeView;
+let data: ReturnType<HomeView['buildHomeView']>;
 let leagues: typeof import('../../lib/leagues');
 let pageHtml = '';
 const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
 
-const HD = 'components/home/home-data.ts';
+const HV = 'components/home/home-view.ts';
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  home = await import('../../components/home/home-data');
+  home = await import('../../components/home/home-view');
   leagues = await import('../../lib/leagues');
   const { default: HomePage } = await import('../../app/page');
   const { LeaguePanel } = await import('../../components/home/LeaguePanel');
-  data = home.getHomeData();
+  data = home.buildHomeView();
   pageHtml = renderToStaticMarkup(createElement(HomePage));
   renderPanel = (id: string) => {
     const cached = panelHtml.get(id);
     if (cached) return cached;
     const panel = data.panels.find((p) => p.id === id);
-    if (!panel) throw new Error(`${HD}: no panel for ${id}`);
+    if (!panel) throw new Error(`${HV}: no panel for ${id}`);
     const html = renderToStaticMarkup(createElement(LeaguePanel, { panel }));
     panelHtml.set(id, html);
     return html;
   };
 }, 600_000);
 
-describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
+describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {
-    expect(data.panels.map((p) => p.id), `${HD}: panels`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     for (const p of data.panels) {
       const html = renderPanel(p.id);
       expect(html, `components/home/LeaguePanel.tsx: ${p.id} scope`).toContain(`data-scope="${p.id}"`);
@@ -59,14 +59,14 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
 
   it('the MCAL panel carries no CCS concept', () => {
     const text = textOf(renderPanel('mcal'));
-    expect(text, `${HD}: MCAL panel`).not.toMatch(/automatic qualifier/i);
-    expect(text, `${HD}: MCAL panel`).not.toMatch(/at-large/i);
-    expect(text, `${HD}: MCAL panel`).not.toMatch(/CCS Division/i);
-    expect(text, `${HD}: MCAL panel`).not.toMatch(/\bCCS\b/);
+    expect(text, `${HV}: MCAL panel`).not.toMatch(/automatic qualifier/i);
+    expect(text, `${HV}: MCAL panel`).not.toMatch(/at-large/i);
+    expect(text, `${HV}: MCAL panel`).not.toMatch(/CCS Division/i);
+    expect(text, `${HV}: MCAL panel`).not.toMatch(/\bCCS\b/);
     const mcal = data.panels.find((p) => p.id === 'mcal')!;
-    expect(mcal.postseason.kind, `${HD}: MCAL postseason`).toBe('league-tournament');
+    expect(mcal.postseason.kind, `${HV}: MCAL postseason`).toBe('league-tournament');
     if (mcal.postseason.kind === 'league-tournament') {
-      expect(mcal.postseason.line, `${HD}: MCAL postseason line`).toBe(
+      expect(mcal.postseason.line, `${HV}: MCAL postseason line`).toBe(
         'MCAL tournament · Quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed) · Semifinals Wed Oct 28 · Final Fri Oct 30 at Tamalpais',
       );
       expect(mcal.postseason.link.href).toBe('/playoffs/mcal');
@@ -77,13 +77,13 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
   it('the EAL panel: the Super Regional line and note, no meter, no bracket and no CCS concept', () => {
     const eal = data.panels.find((p) => p.id === 'eal')!;
     const config = leagues.getLeague('eal');
-    expect(eal.postseason.kind, `${HD}: EAL postseason`).toBe('unbracketed-tournament');
+    expect(eal.postseason.kind, `${HV}: EAL postseason`).toBe('unbracketed-tournament');
     if (eal.postseason.kind === 'unbracketed-tournament' && config.postseason.kind === 'unbracketed-tournament') {
-      expect(eal.postseason.line, `${HD}: EAL postseason line`).toBe('Super Regional, Oct 30–31 — the top six qualify');
-      expect(eal.postseason.note, `${HD}: EAL postseason note`).toBe(config.postseason.note);
-      expect(eal.postseason.link, `${HD}: EAL postseason link`).toEqual({ href: '/playoffs#eal', label: 'Postseason' });
+      expect(eal.postseason.line, `${HV}: EAL postseason line`).toBe('Super Regional, Oct 30–31 — the top six qualify');
+      expect(eal.postseason.note, `${HV}: EAL postseason note`).toBe(config.postseason.note);
+      expect(eal.postseason.link, `${HV}: EAL postseason link`).toEqual({ href: '/playoffs#eal', label: 'Postseason' });
     }
-    expect(eal.afterSchedule, `${HD}: EAL afterSchedule`).toEqual({ href: '/playoffs#eal', label: 'Super Regional' });
+    expect(eal.afterSchedule, `${HV}: EAL afterSchedule`).toEqual({ href: '/playoffs#eal', label: 'Super Regional' });
     const html = renderPanel('eal');
     const text = textOf(html);
     expect(text, 'components/home/PostseasonCard.tsx: EAL kicker').toContain('Postseason');
@@ -92,22 +92,22 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     expect(html, 'components/home/PostseasonCard.tsx: EAL link href').toContain('href="/playoffs#eal"');
     expect(html, 'components/home/PostseasonCard.tsx: EAL has no meter').not.toContain('sx-meter');
     expect(html, 'components/home/PostseasonCard.tsx: EAL has no bracket page').not.toContain('href="/playoffs/eal"');
-    expect(text, `${HD}: EAL panel`).not.toMatch(/\bCCS\b/);
-    expect(text, `${HD}: EAL panel`).not.toMatch(/automatic qualifier/i);
-    expect(text, `${HD}: EAL panel`).not.toMatch(/at-large/i);
+    expect(text, `${HV}: EAL panel`).not.toMatch(/\bCCS\b/);
+    expect(text, `${HV}: EAL panel`).not.toMatch(/automatic qualifier/i);
+    expect(text, `${HV}: EAL panel`).not.toMatch(/at-large/i);
   });
 
   it('the CCS leagues show their berth sentence and CCS dates', () => {
     const labels = Object.fromEntries(
       data.panels.map((p) => [p.id, p.postseason.kind === 'ccs-ladder' ? p.postseason.meter.label : null]),
     );
-    expect(labels.scval, `${HD}: SCVAL berth sentence`).toBe(
+    expect(labels.scval, `${HV}: SCVAL berth sentence`).toBe(
       'SCVAL holds 7 of the 16 CCS berths automatically: the top three in each division, plus the winner of the fourth-place play-in (By-Laws Article VII §1–2).',
     );
-    expect(labels.bval, `${HD}: BVAL berth sentence`).toBe(
+    expect(labels.bval, `${HV}: BVAL berth sentence`).toBe(
       'BVAL holds 4 of the 16 CCS berths automatically: Mt. Hamilton’s top three, plus the winner of the Oct 31 play-in (Mt. Hamilton #4 at the Santa Teresa champion).',
     );
-    expect(labels.pcal, `${HD}: PCAL berth sentence`).toBe(
+    expect(labels.pcal, `${HV}: PCAL berth sentence`).toBe(
       'PCAL holds 2 of the 16 CCS berths automatically: the top two of the final standings.',
     );
     for (const id of ['scval', 'bval', 'pcal']) {
@@ -120,14 +120,14 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
   it('PCAL and MCAL mini tables carry no division label', () => {
     for (const id of ['pcal', 'mcal']) {
       const panel = data.panels.find((p) => p.id === id)!;
-      expect(panel.divisions.map((d) => d.heading), `${HD}: ${id} division heading`).toEqual([null]);
+      expect(panel.divisions.map((d) => d.heading), `${HV}: ${id} division heading`).toEqual([null]);
       const text = textOf(renderPanel(id));
       expect(text, `components/home/MiniStandings.tsx: ${id} kicker`).toContain('League table');
       expect(text, `components/home/MiniStandings.tsx: ${id}`).not.toMatch(/\b(PCAL|MCAL) Division\b/);
       expect(text, `components/home/MiniStandings.tsx: ${id}`).not.toMatch(/Gabilan/i);
     }
     const bval = data.panels.find((p) => p.id === 'bval')!;
-    expect(bval.divisions.map((d) => d.heading), `${HD}: BVAL division headings`).toEqual(['Mt. Hamilton', 'Santa Teresa']);
+    expect(bval.divisions.map((d) => d.heading), `${HV}: BVAL division headings`).toEqual(['Mt. Hamilton', 'Santa Teresa']);
   });
 
   it('the division `home` config drives each mini table', async () => {
@@ -143,14 +143,9 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     };
     for (const panel of data.panels) {
       for (const division of panel.divisions) {
-        expect(division.home, `${HD}: ${division.id} home`).toEqual(leagues.getDivision(division.id).home);
+        expect(division.home, `${HV}: ${division.id} home`).toEqual(leagues.getDivision(division.id).home);
         const html = renderToStaticMarkup(
-          createElement(MiniStandings, {
-            division,
-            href: division.href,
-            showDivisionLabel: division.heading !== null,
-            home: division.home,
-          }),
+          createElement(MiniStandings, { division }),
         );
         const want = expected[division.id];
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
@@ -159,17 +154,17 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
         expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
         if (want.line) expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} line`).toContain(want.line);
         // No line configured (the EAL: `lineAfter` null): no labelled separator row at all.
-        if (!want.line) expect(division.home.lineLabel, `${HD}: ${division.id} no line label`).toBeNull();
+        if (!want.line) expect(division.home.lineLabel, `${HV}: ${division.id} no line label`).toBeNull();
         if (division.home.lineAfter === null) {
           expect(html, `components/home/MiniStandings.tsx: ${division.id} no line`).not.toContain('border-t-2');
         }
         expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
-        expect(division.href, `${HD}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
+        expect(division.href, `${HV}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
       }
     }
     // The points legend: once per league, under its last table, citing the league's own rule.
     for (const panel of data.panels) {
-      expect(panel.pointsLegend, `${HD}: ${panel.id} legend`).toBe(
+      expect(panel.pointsLegend, `${HV}: ${panel.id} legend`).toBe(
         `PTS: ${leagues.getLeague(panel.id).rules.citations.points}.`,
       );
       const html = renderPanel(panel.id);
@@ -198,68 +193,75 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     const bval = data.panels.find((p) => p.id === 'bval')!;
     const scval = data.panels.find((p) => p.id === 'scval')!;
     const line = (panel: typeof bval, id: string) => panel.others.find((o) => o.id === id)?.text;
-    expect(bval.others.map((o) => o.id), `${HD}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
-    expect(line(bval, 'scval'), `${HD}: strip SCVAL`).toBe('St Francis leads De Anza · Mitty leads El Camino');
-    expect(line(scval, 'bval'), `${HD}: strip BVAL`).toBe(
+    expect(bval.others.map((o) => o.id), `${HV}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
+    expect(line(bval, 'scval'), `${HV}: strip SCVAL`).toBe('St Francis leads De Anza · Mitty leads El Camino');
+    expect(line(scval, 'bval'), `${HV}: strip BVAL`).toBe(
       'Christopher leads Mt. Hamilton · Prospect & Westmont lead Santa Teresa',
     );
-    expect(line(scval, 'pcal'), `${HD}: strip PCAL`).toBe('Stevenson leads');
-    expect(bval.others.every((o) => o.href === `/standings/${o.id}`), `${HD}: strip links`).toBe(true);
+    expect(line(scval, 'pcal'), `${HV}: strip PCAL`).toBe('Stevenson leads');
+    expect(bval.others.every((o) => o.href === `/standings/${o.id}`), `${HV}: strip links`).toBe(true);
   });
 
   it('writes the phase copy per league (dates from config)', () => {
-    const lead = (id: string, phase: Parameters<HomeData['phaseLead']>[1], today: string) =>
+    const lead = (id: string, phase: Parameters<HomeView['phaseLead']>[1], today: string) =>
       home.phaseLead(leagues.getLeague(id), phase, today);
-    expect(lead('mcal', 'regular', '2026-10-02'), `${HD}: regular renders nothing`).toBeNull();
-    expect(lead('mcal', 'tournament', '2026-10-24'), `${HD}: MCAL tournament`).toEqual({
+    expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
+    // Before the first league date (config's, lib/leagues leaguePlayStarts), counting the
+    // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
+    expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
+      lead: 'SCVAL league play starts Wed Sep 9.',
+      body: 'These tables count league games only, so the 15 non-league games played so far are on the schedule and in the overall records, not in the standings.',
+      link: { href: '/schedule/scval', label: 'Full schedule' },
+    });
+    expect(lead('mcal', 'tournament', '2026-10-24'), `${HV}: MCAL tournament`).toEqual({
       lead: 'MCAL league play is over.',
       body: 'Quarterfinals are Mon Oct 26 (a play-in Fri Oct 23 only if needed); the final is Fri Oct 30 at Tamalpais.',
       link: { href: '/playoffs/mcal', label: 'Bracket' },
     });
     const bval = lead('bval', 'play-in', '2026-10-31');
-    expect(`${bval?.lead} ${bval?.body}`, `${HD}: BVAL play-in`).toBe(
+    expect(`${bval?.lead} ${bval?.body}`, `${HV}: BVAL play-in`).toBe(
       'BVAL league play is over. Mt. Hamilton #4 plays at the Santa Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth; the CCS seeding meeting is Mon Nov 2.',
     );
     expect(bval?.link?.href).toBe('/playoffs#bval');
     const scval = lead('scval', 'crossover', '2026-10-29');
-    expect(`${scval?.lead} ${scval?.body}`, `${HD}: SCVAL crossover`).toBe(
+    expect(`${scval?.lead} ${scval?.body}`, `${HV}: SCVAL crossover`).toBe(
       'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
     );
     const pcal = lead('pcal', 'playoffs', '2026-11-03');
-    expect(`${pcal?.lead} ${pcal?.body}`, `${HD}: PCAL playoffs`).toBe(
+    expect(`${pcal?.lead} ${pcal?.body}`, `${HV}: PCAL playoffs`).toBe(
       'PCAL league play is over. CCS seeds the 16-team field on Mon Nov 2; quarterfinals are Sat Nov 7.',
     );
-    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${HD}: no last-season link: PCAL history is unavailable`).toBeNull();
+    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${HV}: no last-season link: PCAL history is unavailable`).toBeNull();
     expect(lead('mcal', 'complete', '2026-11-20')?.link).toBeNull();
     expect(lead('scval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#scval');
     expect(lead('bval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#bval');
     // The EAL: no bracket, so the tournament phase says what is (and is not) published, and the
     // CCS-ladder 'playoffs' copy never reaches it.
-    expect(lead('eal', 'tournament', '2026-10-30'), `${HD}: EAL tournament`).toEqual({
+    expect(lead('eal', 'tournament', '2026-10-30'), `${HV}: EAL tournament`).toEqual({
       lead: 'The Super Regional is Oct 30–31; its format and site are not published yet.',
       body: '',
       link: { href: '/playoffs#eal', label: 'Postseason' },
     });
-    expect(lead('eal', 'playoffs', '2026-11-03'), `${HD}: EAL never gets the CCS copy`).toBeNull();
-    expect(lead('eal', 'complete', '2026-11-20')?.link, `${HD}: no last-season link: EAL history is unavailable`).toBeNull();
+    expect(lead('eal', 'playoffs', '2026-11-03'), `${HV}: EAL never gets the CCS copy`).toBeNull();
+    expect(lead('eal', 'complete', '2026-11-20')?.link, `${HV}: no last-season link: EAL history is unavailable`).toBeNull();
   });
 });
 
 describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
   it('has a card per league with its facts and both ways on', async () => {
     const { LeagueCard } = await import('../../components/home/LeagueCard');
-    expect(data.leagueCards.map((c) => c.id), `${HD}: cards`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const bval = data.leagueCards.find((c) => c.id === 'bval')!;
-    expect(bval, `${HD}: BVAL card`).toMatchObject({
+    expect(bval, `${HV}: BVAL card`).toMatchObject({
       shortName: 'BVAL',
       name: 'Blossom Valley Athletic League',
       teamsLine: '12 teams',
       divisions: ['Mt. Hamilton', 'Santa Teresa'],
       region: 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
     });
-    expect(data.leagueCards.find((c) => c.id === 'pcal')?.divisions, `${HD}: PCAL card`).toEqual([]);
-    expect(data.leagueCards.find((c) => c.id === 'mcal')?.sectionShort, `${HD}: MCAL card`).toBe('NCS');
-    expect(data.leagueCards.find((c) => c.id === 'eal'), `${HD}: EAL card`).toMatchObject({
+    expect(data.leagueCards.find((c) => c.id === 'pcal')?.divisions, `${HV}: PCAL card`).toEqual([]);
+    expect(data.leagueCards.find((c) => c.id === 'mcal')?.sectionShort, `${HV}: MCAL card`).toBe('NCS');
+    expect(data.leagueCards.find((c) => c.id === 'eal'), `${HV}: EAL card`).toMatchObject({
       shortName: 'EAL',
       name: 'Eastern Athletic League',
       sectionShort: 'NS',
@@ -279,7 +281,7 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
   it('the last card of an odd count spans both columns (five cards: 2 + 2 + 1)', () => {
     const cards = [...pageHtml.matchAll(/<li class="sx-card flex[^"]*"/g)].map((m) => m[0]);
     expect(cards, 'app/page.tsx: one card per league').toHaveLength(data.leagueCards.length);
-    expect(data.leagueCards.length % 2, `${HD}: an odd count`).toBe(1);
+    expect(data.leagueCards.length % 2, `${HV}: an odd count`).toBe(1);
     cards.forEach((card, i) => {
       expect(card.includes('min-[390px]:col-span-2'), `app/page.tsx: card ${i + 1} spans`).toBe(i === cards.length - 1);
     });
@@ -320,45 +322,45 @@ describe('the rendered home page (app/page.tsx)', () => {
   });
 });
 
-describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team views)', () => {
+describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team views)', () => {
   /** The card's identity: the search index entry its view joins to on `slug` (MyTeamCard.tsx). */
   const cardTeam = (slug: string) => data.searchIndex.teams.find((t) => t.slug === slug)!;
 
   it('joins every view to exactly one search-index entry, and ships no identity of its own', () => {
     const slugs = data.teamViews.map((v) => v.slug);
-    expect(new Set(slugs).size, `${HD}: one view per team`).toBe(49);
-    expect([...slugs].sort(), `${HD}: views ↔ search index`).toEqual(data.searchIndex.teams.map((t) => t.slug).sort());
+    expect(new Set(slugs).size, `${HV}: one view per team`).toBe(49);
+    expect([...slugs].sort(), `${HV}: views ↔ search index`).toEqual(data.searchIndex.teams.map((t) => t.slug).sort());
     for (const v of data.teamViews) {
-      expect(Object.hasOwn(v, 'team'), `${HD}: ${v.slug} carries no second copy of the identity`).toBe(false);
+      expect(Object.hasOwn(v, 'team'), `${HV}: ${v.slug} carries no second copy of the identity`).toBe(false);
     }
   });
 
   it('has a view for all 49 teams with the meta, played and postseason lines', async () => {
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
-    expect(data.teamViews, `${HD}: team views`).toHaveLength(49);
+    expect(data.teamViews, `${HV}: team views`).toHaveLength(49);
     const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
-    expect(leigh.meta, `${HD}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
-    expect(leigh.played, `${HD}: played`).toBe('3 of 10 played');
-    expect(leigh.postseason, `${HD}: postseason line`).toBe('If the season ended today: Automatic qualifier');
-    expect(postseasonCardLine(leigh), `${HD}: postseason card line`).toBe('Today: Automatic qualifier');
-    expect(leigh.postseasonShort, `${HD}: no tie, no second copy of the line`).toBeUndefined();
+    expect(leigh.meta, `${HV}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
+    expect(leigh.played, `${HV}: played`).toBe('3 of 10 played');
+    expect(leigh.postseason, `${HV}: postseason line`).toBe('If the season ended today: Automatic qualifier');
+    expect(postseasonCardLine(leigh), `${HV}: postseason card line`).toBe('Today: Automatic qualifier');
+    expect(leigh.postseasonShort, `${HV}: no tie, no second copy of the line`).toBeUndefined();
     expect(leigh.tableHref).toBe('/standings/bval#mt-hamilton');
     const tam = data.teamViews.find((v) => v.slug === 'tamalpais')!;
-    expect(tam.meta, `${HD}: single-division meta`).toBe('1st · MCAL');
+    expect(tam.meta, `${HV}: single-division meta`).toBe('1st · MCAL');
     for (const v of data.teamViews) {
-      if (!v.hasResults) expect(v.postseason, `${HD}: ${v.slug} gp 0 has no postseason line`).toBeNull();
+      if (!v.hasResults) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
       expect(html, `components/home/MyTeamCard.tsx: ${v.slug} unpin id`).toContain('id="my-team-unpin"');
       if (v.postseason) expect(textOf(html)).toContain(v.postseason);
       const card = postseasonCardLine(v);
       if (card) expect(textOf(html)).toContain(card);
-      expect(card === null, `${HD}: ${v.slug} card line iff line`).toBe(v.postseason === null);
+      expect(card === null, `${HV}: ${v.slug} card line iff line`).toBe(v.postseason === null);
     }
   });
 
   it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
     const d = await import('../../lib/data');
-    const { describeGame } = await import('../../components/ui/game-view');
+    const { describeGame } = await import('../../components/ui/describe-game');
     const { gameHref } = await import('../../lib/game-id');
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
     let pending = 0;
@@ -369,11 +371,11 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
         .filter((g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= data.today)
         .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name));
       const newest = played.at(-1);
-      expect(v.last?.href ?? null, `${HD}: ${v.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
+      expect(v.last?.href ?? null, `${HV}: ${v.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
       if (!newest || !v.last) continue;
-      expect(Object.hasOwn(v.last, 'recap'), `${HD}: ${v.slug} carries no recap`).toBe(false);
+      expect(Object.hasOwn(v.last, 'recap'), `${HV}: ${v.slug} carries no recap`).toBe(false);
       const unreported = describeGame(newest, v.slug).kind === 'unreported';
-      expect(v.last.display.kind, `${HD}: ${v.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
+      expect(v.last.display.kind, `${HV}: ${v.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
       if (!unreported) continue;
       pending += 1;
       const text = textOf(renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} })));
@@ -381,7 +383,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
       if (v.last.display.note) expect(text, `components/home/MyTeamCard.tsx: ${v.slug} note`).toContain(v.last.display.note);
     }
     // The corpus has at least one such team, so the unreported branch is never vacuous.
-    expect(pending, `${HD}: a newest played game that is score-pending`).toBeGreaterThan(0);
+    expect(pending, `${HV}: a newest played game that is score-pending`).toBeGreaterThan(0);
   });
 
   // The card text is 288px wide at 320 (px-4 in a 320px card); the line is one truncated h-6 row,
@@ -394,7 +396,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     for (const v of data.teamViews) {
       const card = postseasonCardLine(v);
       if (!card) continue;
-      expect(at14(card), `${HD}: ${v.slug} "${card}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+      expect(at14(card), `${HV}: ${v.slug} "${card}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
     }
   });
 
@@ -406,28 +408,14 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
         for (const lead of Object.values(POSTSEASON_LEAD).map((l) => l.short)) {
           for (const r of mine) {
             const line = `${lead} ${r.label}`;
-            expect(at14(line), `${HD}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+            expect(at14(line), `${HV}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
           }
           for (let i = 0; i + 1 < mine.length; i++) {
             const line = `${lead} ${mine[i].badge} or ${mine[i + 1].badge} (tied)`;
-            expect(at14(line), `${HD}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
+            expect(at14(line), `${HV}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
           }
         }
       }
     }
-  });
-});
-
-describe('root OG card rows (home-data.ts leagueRowText, app/opengraph-image.tsx)', () => {
-  it('names each division leader with points, co-leaders capped at two', () => {
-    const row = (id: string) =>
-      home.leagueRowText(
-        leagues.getLeague(id).divisions.map((d) => ({ id: d.id, heading: leagues.divisionHeading(d.id) })),
-      );
-    expect(row('scval'), `${HD}: OG SCVAL`).toBe('De Anza: St Francis 12 pts · El Camino: Mitty 15 pts');
-    expect(row('bval'), `${HD}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
-    expect(row('pcal'), `${HD}: OG PCAL`).toBe('Stevenson 18 pts');
-    expect(home.leaderNames(['A', 'B', 'C', 'D']), `${HD}: OG co-leaders`).toBe('A & B +2');
-    expect(home.leaderNames(['A', 'B']), `${HD}: OG co-leaders`).toBe('A & B');
   });
 });

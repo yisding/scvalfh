@@ -2,8 +2,9 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
-import { gameWord } from '../../../components/schedule/filter-data';
-import { SITE_NAME } from '../../../components/layout/site-url';
+import { gameWord } from '../../../components/ui/plural';
+import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { SITE_NAME } from '../../../components/layout/site';
 import { getGameDates, getGames } from '../../../lib/data';
 import { EN_DASH, shortDate } from '../../../lib/format';
 
@@ -19,7 +20,7 @@ import { EN_DASH, shortDate } from '../../../lib/format';
  * — the final with the largest margin — leads the lines.
  */
 export const alt = 'One day of girls varsity field hockey scores';
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 /**
@@ -63,8 +64,8 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background: '#0b0d10',
-          color: '#f2f5f8',
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
@@ -75,12 +76,12 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
               fontSize: 26,
               letterSpacing: 4,
               textTransform: 'uppercase',
-              color: '#919ba5',
+              color: OG.TEXT_3,
             }}
           >
             {SITE_NAME} &middot; scores
           </div>
-          <div style={{ display: 'flex', marginTop: 8, height: 2, background: '#3d444d' }} />
+          <div style={{ display: 'flex', marginTop: 8, height: 2, background: OG.RULE }} />
           <div style={{ display: 'flex', marginTop: 20, fontSize: 48, fontWeight: 600 }}>
             {heading}
           </div>
@@ -88,7 +89,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
           {lines.length === 0 ? (
-            <div style={{ display: 'flex', fontSize: 34, color: '#aab4bf' }}>
+            <div style={{ display: 'flex', fontSize: 34, color: OG.TEXT_2 }}>
               Nothing is scheduled for this date.
             </div>
           ) : (
@@ -99,12 +100,12 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
                   display: 'flex',
                   alignItems: 'baseline',
                   justifyContent: 'space-between',
-                  borderTop: '1px solid #2b3138',
+                  borderTop: `1px solid ${OG.BORDER}`,
                   paddingTop: 10,
                   fontSize: 30,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'baseline', color: '#f2f5f8' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', color: OG.TEXT }}>
                   {line.awayName} {line.versus} {line.homeName}
                   {line.isNonLeague ? (
                     <div
@@ -113,7 +114,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
                         marginLeft: 12,
                         fontSize: 20,
                         letterSpacing: 2,
-                        color: '#919ba5',
+                        color: OG.TEXT_3,
                       }}
                     >
                       NL
@@ -124,7 +125,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
                   style={{
                     display: 'flex',
                     marginLeft: 32,
-                    color: line.showScores ? '#f2f5f8' : '#919ba5',
+                    color: line.showScores ? OG.TEXT : OG.TEXT_3,
                     fontWeight: line.showScores ? 600 : 400,
                     fontSize: line.showScores ? 34 : 24,
                     textTransform: line.showScores ? 'none' : 'uppercase',
@@ -139,7 +140,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
             ))
           )}
           {remaining > 0 ? (
-            <div style={{ display: 'flex', fontSize: 24, color: '#919ba5' }}>
+            <div style={{ display: 'flex', fontSize: 24, color: OG.TEXT_3 }}>
               + {remaining} more {gameWord(remaining)}
             </div>
           ) : null}
@@ -149,10 +150,10 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
           style={{
             display: 'flex',
             marginTop: 20,
-            borderTop: '2px solid #3d444d',
+            borderTop: `2px solid ${OG.RULE}`,
             paddingTop: 12,
             fontSize: 22,
-            color: '#919ba5',
+            color: OG.TEXT_3,
           }}
         >
           {games.length} {gameWord(games.length)} &middot; {finals} final &middot; unofficial
@@ -160,6 +161,6 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

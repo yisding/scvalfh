@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
-import { EM_DASH, ordinal, recordString } from '../../lib/format';
-import type { Standing } from '../../lib/types';
+import { EM_DASH, recordString } from '../../lib/format';
+import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { StandingsRowData } from '../ui/StandingsTable';
+
+import { ladderLineAfter, ladderRow } from './standings-view';
 
 /**
  * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team
@@ -38,28 +40,6 @@ export interface CompactStandingsTableProps {
   className?: string;
 }
 
-function Place({ standing }: { standing: Standing }) {
-  if (!standing.hasReportedResults) {
-    return (
-      <>
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </>
-    );
-  }
-  const { place } = standing.computed;
-  // A level place reads `T7`, as every table on the site prints it (StandingsTable, the playoff
-  // projection): never a second notation such as `7=` beside it.
-  return standing.tiebreak.shared ? (
-    <span className="whitespace-nowrap">
-      <span aria-hidden="true">T{place}</span>
-      <span className="sr-only">tied for {ordinal(place)}</span>
-    </span>
-  ) : (
-    <>{place}</>
-  );
-}
-
 export function CompactStandingsTable({
   rows,
   ladderLine,
@@ -67,12 +47,7 @@ export function CompactStandingsTable({
   filterable = false,
   className,
 }: CompactStandingsTableProps) {
-  const above = ladderLine
-    ? rows.filter(
-        (r) => r.standing.hasReportedResults && r.standing.computed.place <= ladderLine.after,
-      ).length
-    : 0;
-  const lineAfter = above > 0 && above < rows.length ? above : null;
+  const lineAfter = ladderLineAfter(rows.map(ladderRow), ladderLine?.after);
 
   return (
     <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>
@@ -107,7 +82,7 @@ export function CompactStandingsTable({
                 className="relative"
               >
                 <td className="sx-num w-[2.75rem] pl-gutter pr-2 text-ink-3">
-                  <Place standing={s} />
+                  <PlaceMark place={s.computed.place} shared={s.tiebreak.shared} ranked={has} />
                 </td>
                 <th scope="row" className="max-w-0 text-left font-normal">
                   <Link

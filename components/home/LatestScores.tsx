@@ -4,8 +4,7 @@ import ResultChip from '../ui/ResultChip';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
-import { describeGame, type SideView } from '../ui/game-view';
-import { getLeagueOfTeam } from '../../lib/data';
+import { describeGame, otherLeagueSuffix, type SideView } from '../ui/describe-game';
 import { shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { Game, LeagueId } from '../../lib/types';
@@ -84,12 +83,6 @@ export function LatestScores({
 }
 
 /** `Saint Francis · SCVAL` inside another league's panel; '' for a side of the panel's league. */
-function leagueSuffix(side: SideView, scopeLeague: LeagueId | null): string {
-  if (!scopeLeague || !side.slug) return '';
-  const league = getLeagueOfTeam(side.slug);
-  return league && league.id !== scopeLeague ? ` · ${league.shortName}` : '';
-}
-
 function SideLine({ side, showScore, suffix }: { side: SideView; showScore: boolean; suffix: string }) {
   return (
     <span className="flex min-h-6 items-center gap-2">
@@ -130,8 +123,8 @@ export function ResultRow({ game, scopeLeague = null }: { game: Game; scopeLeagu
         <StatusLabel display={display} className="[&>span:first-child]:leading-[0.875rem]" />
       </span>
       <span className="min-w-0 space-y-1" aria-hidden="true">
-        <SideLine side={display.away} showScore={display.showScores} suffix={leagueSuffix(display.away, scopeLeague)} />
-        <SideLine side={display.home} showScore={display.showScores} suffix={leagueSuffix(display.home, scopeLeague)} />
+        <SideLine side={display.away} showScore={display.showScores} suffix={otherLeagueSuffix(display.away.slug, scopeLeague)} />
+        <SideLine side={display.home} showScore={display.showScores} suffix={otherLeagueSuffix(display.home.slug, scopeLeague)} />
       </span>
     </Link>
   );

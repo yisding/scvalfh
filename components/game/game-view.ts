@@ -2,11 +2,13 @@
  * The /game/[id] view model — one pure assembly step shared by the page, its `generateMetadata`
  * and its `opengraph-image`, so a link preview and the page itself can never disagree.
  *
- * Every number here comes through `describeGame()` (components/ui/game-view.ts), which is the one
- * implementation of the DESIGN §5.2 table. Nothing in this module PRINTS `game.home.score` /
- * `game.away.score` (the one read, `isOneGoalFinal`, only decides whether the MCAL shootout caveat
- * is shown), so a missing score cannot become `0-0` in a page title, an OG card or a
- * `<meta name="description">` any more than it can in the body (DESIGN §5.3, §10.9e).
+ * Every number here comes through `describeGame()` (components/ui/describe-game.ts), which is the one
+ * implementation of the DESIGN §5.2 table, or straight from `renderScore()` (the season-series
+ * sentence's `ended 2-2`). Nothing in this module PRINTS `game.home.score` / `game.away.score`;
+ * the two null-guarded reads only decide which sentence is shown (`resultConflictNoteFor`'s level
+ * check, and `isOneGoalFinal`, the MCAL shootout caveat), so a missing score cannot become `0-0`
+ * in a page title, an OG card or a `<meta name="description">` any more than it can in the body
+ * (DESIGN §5.3, §10.9e).
  *
  * League-aware (SPEC §10.6): the sub-line is `<record> <division heading ?? league short>`, the
  * context is `BVAL · Santa Teresa`, `MCAL`, `MCAL semifinal` (the bracket round, when
@@ -30,7 +32,16 @@ import {
   getTeamForm,
   getTeams,
 } from '../../lib/data';
-import { dateWithYear, matchupJoiner, monthDay, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
+import {
+  dateWithYear,
+  matchupJoiner,
+  monthDay,
+  recordString,
+  renderScore,
+  shortDate,
+  sideOutcome,
+  timeOfDayPT,
+} from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
 import {
   divisionDisplay,
@@ -43,6 +54,7 @@ import {
   type LeagueConfig,
 } from '../../lib/leagues';
 import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
   DivisionId,
@@ -56,7 +68,7 @@ import type {
   TournamentGame,
 } from '../../lib/types';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/describe-game';
 
 // ---------------------------------------------------------------- types
 
@@ -267,7 +279,7 @@ export interface RecordAsOf {
  *
  * Only results with an outcome count (a played game with no published score is neither a W nor an
  * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
- * equals `standing.computed` (tests/ui/game-model-asof.test.ts holds that).
+ * equals `standing.computed` (tests/ui/game-view-asof.test.ts holds that).
  *
  * `undefined` for a side outside the team registry.
  */
@@ -304,7 +316,7 @@ function subFor(
   const scope = scopeOf(team.division);
   // The two no-record lines are longer than any record, so at phone widths they wrap: no-break
   // spaces inside the scope keep "El Camino" / "Mt. Hamilton" whole and move the break to the "·".
-  // Only here — the record line is compared to a plain-space string (game-model-asof test 1).
+  // Only here — the record line is compared to a plain-space string (game-view-asof test 1).
   const unbroken = scope.replace(/ /g, '\u00a0');
   // DESIGN §8's missing-data line is for a team the sources have NOTHING for. Never 0-0-0.
   if (!standing?.hasReportedResults) return `No league results reported · ${unbroken}`;
@@ -507,8 +519,12 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
       const g = flaggedTies[0];
       const flagged = g.home.result === 'W' ? g.home : g.away.result === 'W' ? g.away : null;
       const winner = flagged ? (sideKey(flagged) === keyHome ? homeName : awayName) : null;
+      // A flagged tie is a final with both scores (sideOutcome read 'T' off them), so the view is
+      // always 'final' here; the fallback only keeps the type honest.
+      const meeting = renderScore(g);
+      const ended = meeting.kind === 'final' ? `${meeting.home}-${meeting.away}` : 'level';
       sentences.push(
-        `Their only meeting this season ended ${g.home.score}-${g.away.score}, which this site counts as a draw; ${
+        `Their only meeting this season ended ${ended}, which this site counts as a draw; ${
           winner ? `MaxPreps lists ${winner} as the winner.` : 'MaxPreps’ result flags for it disagree.'
         }`,
       );
@@ -775,7 +791,7 @@ export function gameStaticParams(): Array<{ id: string }> {
  * superseded stub). `param` is the URL segment: `paramToGameId` runs FIRST, so `sblive-123` finds
  * `sblive:123`, and no accessor that can throw runs for an unknown id.
  */
-export function buildGameModel(param: string): GameModel | undefined {
+export function buildGameView(param: string): GameModel | undefined {
   const contestId = paramToGameId(param);
   const game = getGameById(contestId);
   if (!game) return undefined;
@@ -844,7 +860,7 @@ export function buildSupersededStub(param: string): SupersededStub | undefined {
   const map = getSupersededGames();
   const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
   if (typeof target !== 'string' || target === '') return undefined;
-  const targetModel = buildGameModel(gameIdToParam(target));
+  const targetModel = buildGameView(gameIdToParam(target));
   const short = targetModel?.league?.shortName;
   return {
     param: gameIdToParam(contestId),
@@ -896,14 +912,14 @@ function contextNoun(model: GameModel): string {
   return 'non-league game';
 }
 
-/** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026`. */
+/** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
 export function gameDescription(model: GameModel): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
-  const where = league ? `${league.name} girls varsity field hockey, Fall 2026` : 'girls varsity field hockey, Fall 2026';
+  const where = `${league ? `${league.name} ` : ''}girls varsity field hockey, ${SEASON_DISPLAY}`;
   if (game.recap) {
     const lead = article(context) === 'an' ? 'An' : 'A';
-    return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt nightly from MaxPreps.`;
+    return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
   }
   const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
@@ -912,8 +928,8 @@ export function gameDescription(model: GameModel): string {
     display.kind === 'unreported'
       ? 'Played; no score reported yet.'
       : model.source
-        ? 'Score via High School on SI (si.com); standings rebuilt nightly. Unofficial.'
-        : 'Scores and standings rebuilt nightly from MaxPreps. Unofficial.'
+        ? 'Score via High School on SI (si.com); standings rebuilt twice daily. Unofficial.'
+        : 'Scores and standings rebuilt twice daily from MaxPreps. Unofficial.'
   }`;
 }
 

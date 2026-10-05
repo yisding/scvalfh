@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
 import MissingValue from '../ui/MissingValue';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
@@ -64,13 +64,7 @@ function Cell({ cell }: { cell: LeaderCell }) {
 }
 
 function Place({ row }: { row: LeaderRow }) {
-  if (!row.tied) return <span className="sx-num">{row.rank}</span>;
-  return (
-    <span className="sx-num whitespace-nowrap">
-      <span aria-hidden="true">T{row.rank}</span>
-      <span className="sr-only">tied for {ordinal(row.rank)}</span>
-    </span>
-  );
+  return <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />;
 }
 
 /** Short name below 640px, the full name from there. */
@@ -97,7 +91,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
           <Link href={team.href} prefetch={false} className="text-ink-2 no-underline hover:underline">
             <TeamName name={team.name} shortName={team.shortName} />
           </Link>{' '}
-          <span aria-hidden="true">&middot;</span> {team.league}
+          <span aria-hidden="true">&middot;</span> {team.leagueShort}
         </span>
       </>
     );
@@ -112,7 +106,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
         <Link href={team.href} prefetch={false} className="block text-body text-ink no-underline hover:underline">
           <TeamName name={team.name} shortName={team.shortName} />
         </Link>
-        <span className="block text-meta text-ink-3">{team.league}</span>
+        <span className="block text-meta text-ink-3">{team.leagueShort}</span>
       </span>
     </span>
   );
@@ -195,7 +189,11 @@ function BoardTable({
   );
 }
 
-export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
+export interface LeaderBoardTableProps {
+  board: LeaderBoard;
+}
+
+export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
   const { extra } = board;
   return (
     <section id={board.id} className="min-w-0 scroll-mt-24">

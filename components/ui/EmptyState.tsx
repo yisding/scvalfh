@@ -46,7 +46,10 @@ export function EmptyState({
               {action.label}
             </ExternalLink>
           ) : (
-            <Link href={action.href} className="sx-pill min-h-11">
+            // `prefetch={false}`: LeaguePanel renders one of these per league inside app/page.tsx's
+            // panels.map(), each pointing at a different /schedule/<league> page
+            // (tests/ui/prefetch-policy.test.ts).
+            <Link href={action.href} prefetch={false} className="sx-pill min-h-11">
               {action.label}
             </Link>
           )}

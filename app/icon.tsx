@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/layout/monogram-image';
+import { monogramImage } from '../components/layout/monogram-image';
 
 /**
  * The favicon: a plain `FH` monogram (DESIGN §7.1's language, applied to the site itself).

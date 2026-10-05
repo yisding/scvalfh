@@ -1,11 +1,12 @@
 import { notFound } from 'next/navigation';
 
+import { OG_SIZE } from '../../../components/layout/og-theme';
+import { LEAGUE_STANDINGS_CARD_ALT, leagueStandingsCard } from '../../../components/standings/league-standings-card';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 
-import { leagueStandingsCard } from './og-card';
-
 /**
- * The `/standings/<league>` OG card (SPEC §8.4), rendered by `og-card.tsx`.
+ * The `/standings/<league>` OG card (SPEC §8.4), rendered by
+ * `components/standings/league-standings-card.tsx`.
  *
  * `dynamicParams` cannot reach a metadata route (Next's metadata-route loader drops it; see
  * app/teams/[slug]/opengraph-image.tsx), so this file states its own `generateStaticParams` —
@@ -13,8 +14,8 @@ import { leagueStandingsCard } from './og-card';
  * unknown league with a 404 (SPEC §8.1). The alt is static: a per-league alt would need
  * `generateImageMetadata`, which changes the image URL shape.
  */
-export const alt = 'League standings card: each division’s leaders with points and W-L-T';
-export const size = { width: 1200, height: 630 };
+export const alt = LEAGUE_STANDINGS_CARD_ALT;
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export function generateStaticParams(): { league: string }[] {
