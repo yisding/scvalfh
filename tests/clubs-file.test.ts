@@ -167,15 +167,15 @@ describe('data/clubs.json', () => {
     for (const a of raw.affiliations) expect(a.basis, `${a.fullName} (${a.club})`).toMatch(/[.!?]['"’”)]?$/);
   });
 
-  describe('as researched 2026-10-03 and 2026-10-04 (changes only with a new sweep)', () => {
+  describe('as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
     const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
 
-    it('holds 16 clubs and 80 affiliations: 71 of the 811 varsity rows, at 24 of the 49 schools', () => {
+    it('holds 16 clubs and 94 affiliations: 80 of the 811 varsity rows, at 25 of the 49 schools', () => {
       expect(raw.clubs).toHaveLength(16);
-      expect(raw.affiliations).toHaveLength(80);
-      expect(players.size).toBe(71);
-      expect(schools.size).toBe(24);
+      expect(raw.affiliations).toHaveLength(94);
+      expect(players.size).toBe(80);
+      expect(schools.size).toBe(25);
       const rows = teams.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
       expect(rows).toHaveLength(840);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
@@ -183,9 +183,9 @@ describe('data/clubs.json', () => {
       expect(teams).toHaveLength(49);
     });
 
-    it('counts 60 current, 12 past and 8 unknown; 65 high and 15 medium', () => {
-      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 60, past: 12, unknown: 8 });
-      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 65, medium: 15 });
+    it('counts 71 current, 13 past and 10 unknown; 79 high and 15 medium', () => {
+      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 71, past: 13, unknown: 10 });
+      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 79, medium: 15 });
       expect(raw.affiliations.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
         'Amelia Zedonis',
         'Brooklyn Barnard',
@@ -193,28 +193,30 @@ describe('data/clubs.json', () => {
         'Emma Traverso',
         'Gabrielle Moll',
         'Kira Kelly',
+        'Maisy Martin',
+        'Olivia Council',
         'Riya Mehrotra',
         'Ruhee Bhatnagar',
       ]);
     });
 
-    it('rests on 237 source entries on 108 distinct URLs, by kind', () => {
+    it('rests on 251 source entries on 118 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = raw.affiliations.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(237);
-      expect(new Set(sources.map((s) => s.url)).size).toBe(108);
+      expect(sources).toHaveLength(251);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(118);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
       // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
-      // name slugs), so the ties rest on 106 pages (103 from the 2026-10-03 sweep).
+      // name slugs), so the ties rest on 116 pages (103 from the 2026-10-03 sweep, 106 with 2026-10-04's).
       const page = (url: string) => url.replace(/\/$/, '').replace(/\/athletes\/[^/]+\/bio\/?\?careerid=/, '/careerid=');
-      expect(new Set(sources.map((s) => page(s.url))).size).toBe(106);
+      expect(new Set(sources.map((s) => page(s.url))).size).toBe(116);
       expect(countBy(sources, (s) => s.kind)).toEqual({
-        sportsrecruits: 57,
+        sportsrecruits: 67,
         'club-site': 49,
         news: 34,
         event: 31,
-        ncsa: 25,
+        ncsa: 29,
         other: 19,
         'maxpreps-career': 19,
         'school-site': 2,
@@ -223,17 +225,17 @@ describe('data/clubs.json', () => {
       const kinds = Object.keys(countBy(sources, (s) => s.kind));
       const urlsOf = (kind: string) => new Set(sources.filter((s) => s.kind === kind).map((s) => s.url)).size;
       expect(Object.fromEntries(kinds.map((k) => [k, urlsOf(k)]))).toEqual({
-        sportsrecruits: 36,
+        sportsrecruits: 43,
         'club-site': 11,
         news: 6,
         event: 3,
-        ncsa: 22,
+        ncsa: 25,
         other: 9,
         'maxpreps-career': 19,
         'school-site': 2,
         hudl: 1,
       });
-      // The one URL filed under two kinds (news for five players, other for two), hence 106 by kind.
+      // The one URL filed under two kinds (news for five players, other for two), hence 116 by kind.
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);
@@ -241,7 +243,7 @@ describe('data/clubs.json', () => {
       expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(91);
     });
 
-    it('ties players to eight clubs, and none to the other eight', () => {
+    it('ties players to nine clubs, and none to the other seven', () => {
       const byClub = Object.fromEntries(
         raw.clubs
           .map((c) => [c.slug, raw.affiliations.filter((a) => a.club === c.slug)] as const)
@@ -249,17 +251,17 @@ describe('data/clubs.json', () => {
           .map(([slug, list]) => [slug, { ...{ current: 0, past: 0, unknown: 0 }, ...countBy(list, (a) => a.status) }]),
       );
       expect(byClub).toEqual({
-        'sf-hawks': { current: 31, past: 0, unknown: 0 },
-        'norcal-impact': { current: 22, past: 0, unknown: 0 },
-        'fly-fhc': { current: 2, past: 4, unknown: 4 },
-        infinity: { current: 1, past: 6, unknown: 1 },
+        'sf-hawks': { current: 32, past: 0, unknown: 0 },
+        'norcal-impact': { current: 25, past: 0, unknown: 0 },
+        'fly-fhc': { current: 5, past: 4, unknown: 4 },
+        infinity: { current: 2, past: 6, unknown: 1 },
         lightning: { current: 1, past: 1, unknown: 1 },
-        'd-city': { current: 0, past: 1, unknown: 2 },
-        'chico-hotshots': { current: 2, past: 0, unknown: 0 },
-        htc: { current: 1, past: 0, unknown: 0 },
+        'golden-gate-rippers': { current: 0, past: 1, unknown: 0 },
+        'd-city': { current: 0, past: 1, unknown: 3 },
+        'chico-hotshots': { current: 4, past: 0, unknown: 1 },
+        htc: { current: 2, past: 0, unknown: 0 },
       });
       expect(raw.clubs.filter((c) => !byClub[c.slug]).map((c) => c.slug).sort()).toEqual([
-        'golden-gate-rippers',
         'hayward-hawks',
         'lions',
         'pac-heights',
@@ -279,8 +281,9 @@ describe('data/clubs.json', () => {
         ['Kira Kelly', 11, 'd-city', 'unknown', '2025-08-28'],
         ['Kate Loscutoff', 12, 'd-city', 'past', '2024'],
         ['Amelia Zedonis', 11, 'd-city', 'unknown', '2025-08-28'],
+        ['Maisy Martin', 11, 'd-city', 'unknown', null],
       ]);
-      for (const a of davis.filter((x) => x.club === 'd-city' && x.status === 'unknown')) {
+      for (const a of davis.filter((x) => x.club === 'd-city' && x.status === 'unknown' && x.asOf !== null)) {
         expect(a.sources.map((s) => s.url)).toEqual(['https://nfhca.org/2025-high-school-watchlist/']);
         expect(a.sources[0].quote).toMatch(/ \| Davis Senior High School \| D-City \| Sophomore \| /);
       }
@@ -305,9 +308,9 @@ describe('data/clubs.json', () => {
       });
     });
 
-    it('ties eight players to more than one club', () => {
+    it('ties 13 players to more than one club', () => {
       const n = Object.values(countBy(raw.affiliations, (a) => `${a.teamSlug} ${a.athleteId}`)).filter((k) => k > 1).length;
-      expect(n).toBe(8);
+      expect(n).toBe(13);
     });
 
     it('dates each club record: the first sweep’s on capturedAt, the three EAL-area clubs a day later', () => {
@@ -338,7 +341,7 @@ describe('data/clubs.json', () => {
           ];
         }),
       );
-      expect(byLeague).toEqual({ scval: [33, 12], bval: [16, 6], pcal: [0, 0], mcal: [17, 4], eal: [5, 2] });
+      expect(byLeague).toEqual({ scval: [36, 12], bval: [18, 6], pcal: [0, 0], mcal: [17, 4], eal: [9, 3] });
     });
   });
 });
@@ -390,7 +393,7 @@ describe('lib/clubs.ts', () => {
 
   it('serves each club\'s affiliations in file order, and [] for a club no tracked player is tied to', () => {
     const hawks = getClubAffiliations('sf-hawks');
-    expect(hawks).toHaveLength(31);
+    expect(hawks).toHaveLength(32);
     expect(hawks).toEqual(raw.affiliations.filter((a) => a.club === 'sf-hawks'));
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);
@@ -400,7 +403,7 @@ describe('lib/clubs.ts', () => {
 
   it('serves a team\'s affiliations', () => {
     const si = getTeamClubAffiliations('st-ignatius');
-    expect(si).toHaveLength(14);
+    expect(si).toHaveLength(16);
     expect(si.every((a) => a.teamSlug === 'st-ignatius')).toBe(true);
     expect(getTeamClubAffiliations('valley-christian')).toEqual([]);
   });

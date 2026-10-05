@@ -402,7 +402,7 @@ row's own `fullName`, and the row is not JV; every stated class year agrees with
 Coverage, counted from the file: **16 clubs** (San Francisco 2, South Bay 7, East Bay 2, Marin 1, the
 Sacramento area 2, the North State 1, and HTC, a Connecticut club whose California program trains in La
 Jolla; none on the Peninsula or the Central Coast, both searched; the Sacramento area and the North State
-were not searched for every club) and **80 affiliations for 71 of the 811 varsity rows, at 24 of the 49
+were not searched for every club) and **94 affiliations for 80 of the 811 varsity rows, at 25 of the 49
 schools**. The 2026-10-03 sweep made 72 of them, for 66 of the 716 varsity rows at 22 of the 43 schools:
 SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. By status, 55 of those 72 are
 current, 11 past and 6 unknown; by confidence, 57 are high and 15 medium. The schools of the six EAL
@@ -411,27 +411,31 @@ at Davis and Pleasant Valley. Three Davis players are tied to NorCal Impact (cur
 2026-08-27 watchlist) and to D-City (two `unknown` from the 2025 watchlist, which the 2026 one
 contradicts, and one `past` from the player's own NCSA profile). Two Pleasant Valley players are tied to
 Chico Hotshots (current, from the club-teams block of their own MaxPreps career pages). The sweep also
-added three club records for clubs it met: D-City (Davis), Roseville FHC and Chico Hotshots. All 80
-split 60 current, 12 past and 8 unknown, and 65 high and 15 medium. Eight players are tied to more than
-one club. The ties rest on 237 source entries on 108 distinct URLs (229 on 105 for the 2026-10-03
-sweep). An entry is one page backing one tie, so a club roster, a watchlist or a news story counts once
-for every player it names. The URLs are 106 pages, because two are cited under two URLs each: Stick
+added three club records for clubs it met: D-City (Davis), Roseville FHC and Chico Hotshots. On
+2026-10-05 every linked recruiting profile was re-read for the clubs it lists (SportsRecruits pages in a
+browser, since their club block is rendered by script, and NCSA pages), which added 14 ties for 13
+players whose own profile lists a club the file did not tie them to, all to clubs already in the file.
+All 94 split 71 current, 13 past and 10 unknown, and 79 high and 15 medium. Thirteen players are tied to
+more than one club. The ties rest on 251 source entries on 118 distinct URLs (229 on 105 for the
+2026-10-03 sweep, 237 on 108 with 2026-10-04's). An entry is one page backing one tie, so a club roster, a watchlist or a news story counts once
+for every player it names. The URLs are 116 pages, because two are cited under two URLs each: Stick
 Together's 2025 all-league page with and without its trailing slash, and Gabrielle Moll's MaxPreps career
-page under two name slugs. By kind, entries then URLs: SportsRecruits 57 on 36, club sites 49 on 11,
+page under two name slugs. By kind, entries then URLs: SportsRecruits 67 on 43, club sites 49 on 11,
 news 34 on 6, event lists 31 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one MAX Field
-Hockey invitational), NCSA 25 on 22, other 19 on 9 (mostly MAX Field Hockey's club and school pages),
-MaxPreps career pages 19 on 19, school sites 2 on 2, and one Hudl profile. Eight clubs have tied
-players: SF Hawks 31 (all current), NorCal Impact 22 (all current), Fly FHC 10, Infinity 8, Lightning 3,
-D-City 3 (none current), Chico Hotshots 2 (both current) and HTC 1. The other eight (Pac Heights,
-Performance Field Hockey, San Jose Khalsa, Stryker, Hayward Hawks, Lions, Golden Gate Rippers and
-Roseville FHC) have a page with an empty state.
+Hockey invitational), NCSA 29 on 25, other 19 on 9 (mostly MAX Field Hockey's club and school pages),
+MaxPreps career pages 19 on 19, school sites 2 on 2, and one Hudl profile. Nine clubs have tied
+players: SF Hawks 32 (all current), NorCal Impact 25 (all current), Fly FHC 13, Infinity 9, Chico
+Hotshots 5 (4 current), D-City 4 (none current), Lightning 3, HTC 2 (both current) and Golden Gate
+Rippers 1 (past). The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker,
+Hayward Hawks, Lions and Roseville FHC) have a page with an empty state.
 
 **It is research, not a script.** Like the roster overlay, it was gathered by hand from club
 directories, the clubs' own sites, recruiting profiles, MaxPreps career pages, the NFHCA's high
 school watchlists, MAX Field Hockey's club pages and local news. Every tie of the 2026-10-03 sweep
 was checked twice that day: a checker re-opened each source, then an independent refuter tried to
 break the match. The eight ties the 2026-10-04 EAL sweep added were each confirmed by two
-independent checks that re-opened their sources.
+independent checks that re-opened their sources, and so were the 14 ties of the 2026-10-05
+recruiting-profile pass (the pass itself, then an independent refuter).
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
@@ -980,11 +984,11 @@ at once, at every build, starting from last season's:
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table
   as if it were complete.
 - **Club recall is partial.** A player is tied to a club only when a public page meets the linking
-  rule, so on 2026-10-04 71 of the 811 varsity rows have a club line, and 25 schools have none (seven
+  rule, so on 2026-10-05 80 of the 811 varsity rows have a club line, and 24 schools have none (seven
   of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
   were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added eight ties for five players at Davis and
-  Pleasant Valley, and three club records),
-  and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
+  Pleasant Valley, and three club records; on 2026-10-05 a re-read of the linked recruiting profiles
+  added 14 ties for 13 players), and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
   the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
