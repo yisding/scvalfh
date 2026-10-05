@@ -6,6 +6,8 @@ import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, renam
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
+import { afterAll, beforeAll, vi } from 'vitest';
+
 import { readManifest } from '../lib/pipeline/corpus';
 import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
@@ -235,6 +237,23 @@ export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'):
     throw new Error(`tests/helpers.ts: scripts/fetch-player-stats.ts exited ${run.status}\n${run.output}`);
   }
   return PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
+}
+
+/**
+ * Points lib/data at a corpus snapshot for the whole test file: a beforeAll stubs SCVAL_SNAPSHOT
+ * with corpusSnapshotPath(corpus) (building it if no cached copy is current) and resets the module
+ * registry, and an afterAll restores the variable and resets it again. Call it at the top of the
+ * file, before the file's own beforeAll, which then dynamically imports lib/data and its readers.
+ */
+export function stubCorpusSnapshot(corpus: CorpusName): void {
+  beforeAll(() => {
+    vi.stubEnv('SCVAL_SNAPSHOT', corpusSnapshotPath(corpus));
+    vi.resetModules();
+  }, 600_000);
+  afterAll(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
 }
 
 // ---------------------------------------------------------------- synthetic games
