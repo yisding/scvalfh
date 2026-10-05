@@ -80,8 +80,8 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             come from. A raised card with the accent pill, so it reads as the one thing to act on
             here rather than one more footer link. `text-accent-ink!` because ExternalLink's own
             `text-accent` utility outranks the pill's accent-ink (globals.css), and accent on the
-            accent wash is 4.37:1 in dark mode, under AA. The top bar has no room for it (SiteHeader
-            measures 4px spare at 360) and the phone tab bar is navigation. */}
+            accent wash is 4.37:1 in dark mode, under AA. The top bar links the same thread
+            (SiteHeader), as a pill from 1120px and a line under the bar below that. */}
         <div className="sx-card mb-8 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between md:col-span-2 md:mb-4 md:px-5">
           <p className="m-0 max-w-prose">
             <strong className="font-semibold text-ink">See something missing?</strong> Post it, or
