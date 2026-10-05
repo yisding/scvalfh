@@ -18,6 +18,7 @@ import {
   getHistorySeason,
   getHistoryUnpublishedTies,
   getUnavailableHistoryLeagues,
+  historySchoolName,
   type AvailableLeagueHistory,
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
@@ -100,7 +101,7 @@ function Champions({ leagueId }: { leagueId: LeagueId }) {
               <p className="m-0 text-micro font-medium text-ink-3">
                 {getDivision(division)?.label ?? division} champion
               </p>
-              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{row.name}</p>
+              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{historySchoolName(row.slug, row.name)}</p>
               <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
             </div>
           </div>
@@ -236,7 +237,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
         )}
         {unpublishedTies.length > 0 ? (
           <p className="m-0">
-            {listWords(unpublishedTies.map((r) => r.name))}&rsquo;s record{unpublishedTies.length === 1 ? ' has' : 's have'} no
+            {listWords(unpublishedTies.map((r) => historySchoolName(r.slug, r.name)))}&rsquo;s record{unpublishedTies.length === 1 ? ' has' : 's have'} no
             ties field in the source ({unpublishedTies.map((r) => r.leagueRecord).join(', ')}), so{' '}
             {unpublishedTies.length === 1 ? 'it is' : 'they are'} shown as published; we do not assume zero ties.
           </p>

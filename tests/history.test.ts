@@ -686,6 +686,37 @@ describe('history: the league-aware read API', () => {
     // SCVAL's "2-10" rows are stored with t: 0 by its parser (unchanged); only BVAL carries null.
     expect(h.getHistoryUnpublishedTies('scval')).toEqual([]);
   });
+
+  it('names every school by its registry name, whatever the source wrote', async () => {
+    const h = await import('../lib/history');
+    expect(h.historySchoolName('mitty', 'MItty')).toBe('Archbishop Mitty');
+    expect(h.historySchoolName('presentation', 'Presentation HS')).toBe('Presentation');
+    expect(h.historySchoolName('saint-francis', 'St. Francis')).toBe('Saint Francis');
+    expect(h.historySchoolName('sobrato', 'Sobrato')).toBe('Ann Sobrato');
+    expect(h.historySchoolName(null, 'Wilcox')).toBe('Wilcox');
+
+    expect(h.canonicalAwardValue('scval', 'St Ignatius- Olivia Van de Braak')).toBe('St. Ignatius- Olivia Van de Braak');
+    expect(h.canonicalAwardValue('scval', 'St Francis- Genevieve Ferrini')).toBe('Saint Francis- Genevieve Ferrini');
+    expect(h.canonicalAwardValue('scval', 'Brooklyn Barnard, Goalie, Presentation HS')).toBe(
+      'Brooklyn Barnard, Goalie, Presentation',
+    );
+    expect(h.canonicalAwardValue('scval', 'Hana Mercado, Midfield, Archbishop Mitty')).toBe(
+      'Hana Mercado, Midfield, Archbishop Mitty',
+    );
+    expect(h.canonicalAwardValue('scval', 'Leaya Cleary Los Gatos 12')).toBe('Leaya Cleary Los Gatos 12');
+
+    // Every overall award in the committed file names exactly one of its league's schools, and once
+    // canonicalized, by that school's registry name.
+    for (const { id, entry } of h.getAvailableHistoryLeagues()) {
+      const names = teamsInLeague(id).map((t) => t.name);
+      for (const d of entry.divisions) {
+        for (const o of [d.awards.varsity, d.awards.jv].flatMap((a) => a?.overall ?? [])) {
+          const value = h.canonicalAwardValue(id, o.value);
+          expect(names.filter((n) => value.includes(n)), `${d.division} ${o.award}: ${value}`).toHaveLength(1);
+        }
+      }
+    }
+  });
 });
 
 // ------------------------------------------------------------------------------ the build script

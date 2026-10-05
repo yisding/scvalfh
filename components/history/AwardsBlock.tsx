@@ -2,13 +2,16 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { ordinal } from '../../lib/format';
-import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
+import { canonicalAwardValue, historySchoolName, type HistoryAwards, type HistoryPlayer } from '../../lib/history';
+import { leagueOfDivision } from '../../lib/leagues';
 
 /**
  * The 2025-26 all-league awards (DESIGN §3.9): overall award lines, then First Team / Second
  * Team / Honorable Mention as `<dl>`s. `value` on an overall award is the source's right-hand side
- * printed as written — the divisions write it differently, so this site does not try to
- * normalize it.
+ * printed as the source wrote it — the divisions write it differently, so this site does not try
+ * to split it — except that its school is written by the registry name (canonicalAwardValue), and
+ * so is every award line's school (historySchoolName): the page names a school the one way the rest
+ * of the site does, never "St Ignatius", "MItty" or "Presentation HS".
  */
 export interface AwardsBlockProps {
   awards: HistoryAwards | null;
@@ -47,6 +50,7 @@ function PlayerList({
       >
         {players.map((p, i) => {
           const team = p.slug ? getTeamBySlug(p.slug) : undefined;
+          const school = historySchoolName(p.slug, p.school);
           return (
             <div
               key={i}
@@ -73,10 +77,10 @@ function PlayerList({
                     prefetch={false}
                     className="text-accent hover:underline"
                   >
-                    {p.school}
+                    {school}
                   </Link>
                 ) : (
-                  <span>{p.school}</span>
+                  <span>{school}</span>
                 )}
               </span>
             </div>
@@ -95,6 +99,7 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
       </p>
     );
   }
+  const leagueId = leagueOfDivision(awards.division).id;
   return (
     <div className="flex flex-col gap-8">
       {awards.overall.length > 0 ? (
@@ -105,7 +110,7 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
           {awards.overall.map((o, i) => (
             <div key={i} className="sm:contents">
               <dt className="text-micro text-ink-3 sm:text-meta sm:text-ink-2">{o.award}</dt>
-              <dd className="m-0 text-body font-semibold text-ink sm:text-meta">{o.value}</dd>
+              <dd className="m-0 text-body font-semibold text-ink sm:text-meta">{canonicalAwardValue(leagueId, o.value)}</dd>
             </div>
           ))}
         </dl>

@@ -1511,7 +1511,22 @@ of an alarm.
 Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live responses. Colors,
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
 names, unique across all 49). The registry is `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled
-by `lib/teams.ts`, and a test pins the 15 SCVAL slugs, abbreviations and GUIDs. The si.com ids
+by `lib/teams.ts`, and a test pins the 15 SCVAL slugs, abbreviations and GUIDs.
+
+Each school has **one full name and one short name**, and every page prints one of the two. The
+full name (`name`) is the school's name without "High School" or "College Preparatory" (so
+"St. Ignatius", not MaxPreps' "St. Ignatius College Preparatory"). The short name (`shortName`,
+at most 16 characters, for narrow rows and tiles) is the name the school goes by, as its league's
+own documents write it: the full name itself, whole words of it, or one of the school's aliases,
+never an abbreviation made up for width. Four differ from the full name: Archbishop Mitty → Mitty,
+Ann Sobrato → Sobrato (the BVAL sheet), San Francisco University → SF University (an alias; MCAL's
+bare "University" reads as a college outside an MCAL table) and Convent of the Sacred Heart →
+Convent. Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
+`lib/teams.ts` fails at load on any other short name, and the short name is display only: matching
+keys on the name and the aliases, never on it, so bare "University" (also Irvine's on si.com) stays
+out of the index. Source spellings ("ST. IGNATIUS",
+"MItty", "Presentation HS", "St. Francis") are aliases for matching; the 2025-26 archive stores
+them verbatim but prints the registry name. The si.com ids
 are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed, the school id on
 a school-logo URL; "—" means not observed and is never guessed.
 
@@ -1519,7 +1534,7 @@ Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MC
 
 | slug | abbr | league | division | MaxPreps team id (GUID) | name | si.com team id | si.com school id |
 |---|---|---|---|---|---|---|---|
-| st-ignatius | SI | scval | de-anza | `1dc4836b-4daf-4573-b525-27b474bd5366` | St. Ignatius College Preparatory | 456831 | — |
+| st-ignatius | SI | scval | de-anza | `1dc4836b-4daf-4573-b525-27b474bd5366` | St. Ignatius | 456831 | — |
 | saint-francis | SF | scval | de-anza | `de6d3780-e8f6-4a2a-93f2-b5d89499f9b0` | Saint Francis | 457982 | — |
 | los-altos | LA | scval | de-anza | `0279f2de-d5ce-484d-b210-2286ded42058` | Los Altos | 458850 | 12174 |
 | valley-christian | VC | scval | de-anza | `8a8c04d2-5606-44cf-9993-34db55474240` | Valley Christian | 480709 | 319 |

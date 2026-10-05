@@ -425,7 +425,7 @@ export function GameCard({
   // The links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
   // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Full names, as
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
-  // printed short name, and "Valley Chr." was read out as letters. The visible "Game page" /
+  // printed short name, and an abbreviated one was read out as letters. The visible "Game page" /
   // "Box score" still starts the name, so label-in-name holds.
   const matchup = `${display.away.name} ${matchupJoiner(game)} ${display.home.name}`;
   // An upcoming card has no chip on either side; an invisible 28px slot there pushed both team
@@ -524,7 +524,7 @@ export function GameCard({
 
 /**
  * The compact "Next up" form: `5:30 PM  Homestead at Los Altos`. Normally one line; a matchup
- * that does not fit ("Scripps Ranch at St Francis" at 320) wraps WHOLE onto a second line,
+ * that does not fit ("Scripps Ranch at Saint Francis" at 320) wraps WHOLE onto a second line,
  * clamped at two, rather than losing its home team to an ellipsis. The time and the trailing
  * tag stay centred on the pair (`items-center`).
  *
@@ -649,9 +649,9 @@ export function GameLogRowBody({
         aria-hidden="true"
       >
         <span className="line-clamp-2 min-w-[6.5rem] flex-1 text-ink">
-          {/* The short name, as every game row prints it: "St. Ignatius College Preparatory"
-              was clamped to "at St. Ignatius College…" in a 320px log. The sr-only sentence
-              keeps the full name. */}
+          {/* The short name, as every game row prints it: a long full name ("Convent of the
+              Sacred Heart") was clamped mid-name in a 320px log. The sr-only sentence keeps the
+              full name. */}
           {display.versus ?? 'vs'} {opponentTeam ? opponentTeam.shortName : opponent.name}
         </span>
         <span className="flex max-w-full flex-wrap items-center gap-2">

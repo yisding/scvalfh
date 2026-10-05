@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { ordinal } from '../../lib/format';
-import type { HistoryRow } from '../../lib/history';
+import { historySchoolName, type HistoryRow } from '../../lib/history';
 import MissingValue from '../ui/MissingValue';
 import TeamMonogram from '../ui/TeamMonogram';
 
@@ -10,7 +10,8 @@ import TeamMonogram from '../ui/TeamMonogram';
  * The 2025-26 archive standings table (DESIGN §3.9) — final records only, no GD bar, no form
  * strip: the source PDF carries no game-level data, only a final W-L(-T) line per school.
  *
- * Three columns: place, team, league record. `overallRecord` is null for every SCVAL row (SPEC
+ * Three columns: place, team, league record. The team is named by the registry (historySchoolName),
+ * not by the source's spelling, so "St. Francis" in the PDF prints "Saint Francis" as everywhere else. `overallRecord` is null for every SCVAL row (SPEC
  * §1.3 — that PDF column was empty for the 2025-26 season), so SCVAL has no Overall column at
  * all: a column of nothing but em dashes told the reader nothing and cost every table a fourth
  * column of width. A league whose source publishes it (BVAL's sheet) gets a fourth column, Overall,
@@ -96,13 +97,14 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
         <tbody>
           {rows.map((row) => {
             const team = row.slug ? getTeamBySlug(row.slug) : undefined;
+            const name = historySchoolName(row.slug, row.name);
             const overall = row.overallRecord ? (
               <span className="sx-num whitespace-nowrap">{row.overallRecord}</span>
             ) : (
               <NotPublished />
             );
             return (
-              <tr key={`${row.place}-${row.name}`} className="h-12">
+              <tr key={`${row.place}-${row.slug ?? row.name}`} className="h-12">
                 <td className="sx-num pl-4 pr-2 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
@@ -125,11 +127,11 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                           second line, never a clipped record; `overflow-wrap: anywhere` breaks a
                           single long word under a large browser font rather than let it run
                           under the record. */}
-                      <span className="min-w-0 text-body text-ink [overflow-wrap:anywhere]">{row.name}</span>
+                      <span className="min-w-0 text-body text-ink [overflow-wrap:anywhere]">{name}</span>
                     </Link>
                   ) : (
                     <span className="flex items-center gap-2 text-body text-ink [overflow-wrap:anywhere]">
-                      {row.name}
+                      {name}
                     </span>
                   )}
                   {/* Below the break, the overall record sits under the name, indented past the

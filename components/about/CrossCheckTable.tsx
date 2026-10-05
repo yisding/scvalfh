@@ -63,7 +63,7 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
         <div key={team.id} className="max-w-prose">
           {/* The monogram holds the first line; the name, its flag and the table link wrap in
               their own box. The flag is glued to the name's last word (a no-break space), so a
-              long name like "St. Ignatius College Preparatory" never leaves it alone on a line;
+              long name like "Convent of the Sacred Heart" never leaves it alone on a line;
               when the link does not fit it drops under the name, still right-aligned. */}
           <div className="flex items-start gap-x-2">
             <TeamMonogram team={team} size={24} />

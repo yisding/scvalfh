@@ -49,7 +49,7 @@ export function scheduleFilterProps(
   divisions: Array<{ id: string; label: string }>;
 } {
   return {
-    // shortName, not name: "St. Ignatius College Preparatory" is 31 characters in a 176px
+    // shortName, not name: "Convent of the Sacred Heart" is 27 characters in a 176px
     // control, and the short form is the one the standings table and every game row use.
     teams: teams.map((team) => ({
       slug: team.slug,

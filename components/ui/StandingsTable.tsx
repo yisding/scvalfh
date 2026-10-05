@@ -483,11 +483,13 @@ export function StandingsTable(props: StandingsTableProps) {
                   <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
                     <Abbr short="Stk" long="Streak" />
                   </th>
-                  {/* Column budget at 390: 44 (#) + 146 (Team) + 32 (PTS) + 68 (League: 8 + 52
-                      + 8) + 100 (GD: 56 track + 4 + 24 numeral, three 13px mono glyphs, + 16
-                      gutter). Below 390 League gives up 12px of head padding, and below 375 GD
-                      keeps only its numeral, so a flagged "Monta Vista" stays whole at 320 and
-                      at 375 (it ends 1-2px short of the team cell there).
+                  {/* Column budget at 390: 44 (#) + 158 (Team) + 32 (PTS) + 68 (League: 8 + 52
+                      + 8) + 88 (GD: 44 track + 4 + 24 numeral, three 13px mono glyphs, + 16
+                      gutter). The track was 56 until the longest short names ("Lick-Wilmerding"
+                      125px of 16px semibold, "Valley Christian" 120, "Marin Academy" 119) needed
+                      the 12px it gave up: at 56 they truncated at 390 to "Lick-Wilmerd…". Below
+                      390 League gives up 12px of head padding, and below 375 GD keeps only its
+                      numeral, so a flagged "Monta Vista" stays whole at 320 and at 375.
                       The GD plot is the one thing that can afford to go. Below 375px the fixed
                       columns starved the team cell and long school names truncated to fragments,
                       against DESIGN §10.8's "reflow at 320px with no loss of content". The plot is
@@ -499,7 +501,7 @@ export function StandingsTable(props: StandingsTableProps) {
                       does not). The same unit the line-2 record and the mini table's query use. */}
                   <th
                     scope="col"
-                    className="w-[44px] pr-gutter text-right min-[23.4375rem]:w-[100px]"
+                    className="w-[44px] pr-gutter text-right min-[23.4375rem]:w-[88px]"
                   >
                     <Abbr short="GD" long="Goal difference" />
                   </th>
@@ -540,8 +542,8 @@ export function StandingsTable(props: StandingsTableProps) {
                         <RowLink href={hrefOf(row)} label={rowLabel(row)} className="max-md:scroll-mt-9" />
                         <span className="flex items-center gap-2">
                           <TeamMonogram team={row.team} size={24} />
-                          {/* shortName, not name: the phone team cell is ~158px at 390, so "St.
-                              Ignatius College Preparatory" would truncate mid-word. The row link's
+                          {/* shortName, not name: the phone team cell is ~158px at 390, so
+                              "Convent of the Sacred Heart" would truncate mid-word. The row link's
                               accessible name still carries the full school name. */}
                           <span className="min-w-0 truncate text-body font-semibold text-ink">
                             {row.team.shortName}
@@ -626,11 +628,11 @@ export function StandingsTable(props: StandingsTableProps) {
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
                             {streakString(s.computed.streak)}
                           </td>
-                          <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[100px]">
+                          <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[88px]">
                             <GoalDiffCell
                               value={s.computed.gd}
                               domain={gdDomain}
-                              track={56}
+                              track={44}
                               numberWidth={24}
                               numberClassName="text-cell"
                               barClassName="hidden min-[23.4375rem]:block"

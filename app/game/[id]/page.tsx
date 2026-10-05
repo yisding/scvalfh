@@ -143,7 +143,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           raised to the surface with the hairline ring and hover down to surface-2 (F-56g). The
           label is the team's SHORT name ("Mitty") and the capsule takes 12px of side padding
           rather than the pill's 16, which keeps most pairings on one line at 390. The two team
-          pills wrap as ONE group, so when the row does not fit (St Ignatius at St Francis at 390,
+          pills wrap as ONE group, so when the row does not fit (St. Ignatius at Saint Francis at 390,
           anything long at 320) they drop to a second line together instead of stranding the home
           pill alone. */}
       <p className="m-0 mt-4 flex flex-wrap items-center gap-2">

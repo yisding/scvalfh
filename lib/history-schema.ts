@@ -32,7 +32,10 @@ function leagueSchema(leagueId: LeagueId) {
     .object({
       /** The source's own finish order ("SCHOOL by finish" / the sheet's "Place"). Never recomputed. */
       place: z.number().int().min(1),
-      /** Verbatim source spelling, e.g. "St. Francis" where MaxPreps says "Saint Francis". */
+      /**
+       * Verbatim source spelling, e.g. "St. Francis" where the registry says "Saint Francis". Kept
+       * as provenance; the page prints the registry name (lib/history.ts historySchoolName).
+       */
       name: z.string().min(1),
       slug: teamSlug.nullable(),
       leagueRecord: z.string().regex(/^\d+-\d+(-\d+)?$/),

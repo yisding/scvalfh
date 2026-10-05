@@ -92,7 +92,7 @@ export interface LeaderCell {
 export interface LeaderTeamRef {
   slug: TeamSlug;
   name: string;
-  /** ≤ 14 characters, for a phone-width cell. */
+  /** ≤ 16 characters, for a phone-width cell. */
   shortName: string;
   /** "SCVAL" */
   leagueShort: string;

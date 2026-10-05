@@ -100,7 +100,7 @@ export function leaderLine(division: DivisionId, heading: string | null): Leader
     division,
     heading,
     teams: top.map((s) => ({
-      // shortName: "St. Ignatius College Preparatory" wraps to three lines on an OG card.
+      // shortName: "Convent of the Sacred Heart" wraps to three lines on an OG card.
       name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
       record: recordString(s.computed),
       pts: s.computed.pts,

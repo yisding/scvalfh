@@ -258,7 +258,7 @@ function TeamSentence({
   );
 }
 
-/** "St Francis (1st) and St Ignatius (2nd): MaxPreps lists them the other way round because …" */
+/** "Saint Francis (1st) and St. Ignatius (2nd): MaxPreps lists them the other way round because …" */
 function SwapSentence({
   a,
   b,

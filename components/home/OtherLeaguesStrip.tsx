@@ -7,7 +7,7 @@ import type { OtherLeagueLine } from './home-view';
 
 /**
  * The other three leagues in one line each (SPEC §10.1): who leads each division —
- * `SCVAL: St Ignatius leads De Anza · Los Gatos leads El Camino`, `PCAL: Stevenson leads`,
+ * `SCVAL: St. Ignatius leads De Anza · Los Gatos leads El Camino`, `PCAL: Stevenson leads`,
  * co-leaders `A & B lead`, `No league results yet` before any result. Each line links that league's
  * standings. A reader who follows one league still sees the rest of the area at a glance, and the
  * line costs no hue (leagues get none, DESIGN §6.4).

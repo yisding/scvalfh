@@ -12,7 +12,7 @@ import {
  * localStorage pins, /teams/<slug> URLs, fixture names and the goldens depend on them.
  */
 const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name: string, division: string]> = [
-  ['st-ignatius', 'SI', '1dc4836b-4daf-4573-b525-27b474bd5366', 'St. Ignatius College Preparatory', 'de-anza'],
+  ['st-ignatius', 'SI', '1dc4836b-4daf-4573-b525-27b474bd5366', 'St. Ignatius', 'de-anza'],
   ['saint-francis', 'SF', 'de6d3780-e8f6-4a2a-93f2-b5d89499f9b0', 'Saint Francis', 'de-anza'],
   ['los-altos', 'LA', '0279f2de-d5ce-484d-b210-2286ded42058', 'Los Altos', 'de-anza'],
   ['valley-christian', 'VC', '8a8c04d2-5606-44cf-9993-34db55474240', 'Valley Christian', 'de-anza'],
@@ -72,8 +72,16 @@ describe('teams: the registry is the five leagues', () => {
     for (const t of TEAMS) {
       expect(t.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
       expect(t.abbr).toMatch(/^[A-Z]{2}$/);
-      expect(t.shortName.length, t.slug).toBeLessThanOrEqual(14);
+      expect(t.shortName.length, t.slug).toBeLessThanOrEqual(16);
+      // The short name is the full name, whole words of it, or an alias: never a made-up abbreviation.
+      expect(` ${t.name} `.includes(` ${t.shortName} `) || t.aliases.includes(t.shortName), t.slug).toBe(true);
     }
+    expect(TEAMS.filter((t) => t.shortName !== t.name).map((t) => [t.slug, t.shortName])).toEqual([
+      ['mitty', 'Mitty'],
+      ['sobrato', 'Sobrato'],
+      ['university-sf', 'SF University'],
+      ['convent-sacred-heart', 'Convent'],
+    ]);
     expect(resolveTeam('santa-clara')!.abbr).toBe('SC');
     expect(resolveTeam('saratoga')!.abbr).toBe('SG');
   });
@@ -188,6 +196,8 @@ describe('teams: the registry is the five leagues', () => {
     for (const [input, slug] of cases) {
       expect(resolveTeam(input)?.slug, input).toBe(slug);
     }
+    // A short name is display only, never a key: bare "University" is also Irvine's on si.com.
+    expect(resolveTeam('University'), 'University').toBeUndefined();
     // Division and league names are never team spellings.
     for (const name of ['Mt. Hamilton', 'Santa Teresa', 'Marin County', 'De Anza', 'El Camino']) {
       expect(resolveTeam(name), name).toBeUndefined();

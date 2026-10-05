@@ -745,7 +745,7 @@ export interface LeaderLine {
 }
 
 /**
- * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St Ignatius 18 pts
+ * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St. Ignatius 18 pts
  * · El Camino: Los Gatos 21 pts`; co-leaders at most two names joined with " & ", then ` +<n>`;
  * `No league results yet` before any result. The one builder of this row for both OG cards (the
  * root card, app/opengraph-image.tsx, and the /standings card) and the standings metadata.

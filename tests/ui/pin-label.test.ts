@@ -36,9 +36,13 @@ describe('pinLabel', () => {
     expect(byslug('tamalpais')).toBe('Pin Tamalpais, MCAL');
     expect(byslug('carmel')).toBe('Pin Carmel, PCAL');
     expect(byslug('mitty')).toBe('Pin Archbishop Mitty, El Camino · SCVAL');
-    expect(byslug('saint-francis')).toBe('Pin St Francis (Saint Francis), De Anza · SCVAL');
+    expect(byslug('saint-francis')).toBe('Pin Saint Francis, De Anza · SCVAL');
+    expect(byslug('university-sf')).toBe('Pin SF University (San Francisco University), MCAL');
+    expect(byslug('sobrato')).toBe('Pin Ann Sobrato, Santa Teresa · BVAL');
     expect(byslug('davis')).toBe('Pin Davis, EAL');
-    expect(byslug('pleasant-valley')).toBe('Pin Pleasant Val. (Pleasant Valley), EAL');
+    expect(byslug('pleasant-valley')).toBe('Pin Pleasant Valley, EAL');
+    expect(pinLabel({ name: 'Full Name', shortName: 'FN', divisionHeading: null, leagueShort: 'MCAL' }))
+      .toBe('Pin FN (Full Name), MCAL');
   });
 
   it('has the label format for all 49 teams', () => {
@@ -63,15 +67,7 @@ describe('pinLabel', () => {
 
   it('adds the full name in parentheses only when the short name is not inside it', () => {
     const bracketed = IDENTITIES.filter((t) => pinLabel(t).includes('('));
-    expect(bracketed.map((t) => t.slug).sort()).toEqual([
-      'archie-williams',
-      'lick-wilmerding',
-      'pleasant-valley',
-      'saint-francis',
-      'st-ignatius',
-      'university-sf',
-      'valley-christian',
-    ]);
+    expect(bracketed.map((t) => t.slug)).toEqual(['university-sf']);
     for (const t of IDENTITIES) {
       if (bracketed.includes(t)) {
         expect(pinLabel(t).startsWith(`Pin ${t.shortName} (${t.name}), `), t.slug).toBe(true);
@@ -111,7 +107,8 @@ describe('pickerName', () => {
       .sort();
     expect(Object.keys(PICKER_BREAKS).sort()).toEqual(tooWide);
     expect(tooWide).toEqual([
-      'Christopher', 'Greenfield', 'Homestead', 'Presentation', 'Stevenson', 'Tamalpais', 'Westmont',
+      'Christopher', 'Greenfield', 'Homestead', 'Lick-Wilmerding', 'Presentation', 'Stevenson', 'Tamalpais',
+      'Westmont',
     ]);
     // Hollister fits and gets no break.
     expect(width('Hollister')).toBeLessThan(TILE_PX);

@@ -147,12 +147,15 @@ export const ACRONYM_COLLISIONS: readonly string[] = [
 ].sort();
 
 /**
- * The alias index: [id, slug, name, shortName, ...aliases] plus `acronym` ONLY when no other
- * team has the same normalized acronym. Any other collision throws at module load.
+ * The alias index: [id, slug, name, ...aliases] plus `acronym` ONLY when no other team has the
+ * same normalized acronym. Any other collision throws at module load. `shortName` is display only
+ * and not a key: it is whole words of `name` or already an alias, and a bare word of a name can be
+ * a statewide namesake that is deliberately not an alias ('University': San Francisco's, and
+ * Irvine's on si.com), so choosing a short name never adds a matching spelling.
  */
 const BY_KEY = new Map<string, Team>();
 for (const t of TEAMS) {
-  const spellings = [t.id, t.slug, t.name, t.shortName, ...t.aliases];
+  const spellings = [t.id, t.slug, t.name, ...t.aliases];
   if (!COLLIDING_ACRONYM_KEYS.has(normalizeTeamKey(t.acronym))) spellings.push(t.acronym);
   for (const raw of spellings) {
     const key = normalizeTeamKey(raw);
@@ -165,6 +168,11 @@ for (const t of TEAMS) {
     }
     BY_KEY.set(key, t);
   }
+}
+
+/** True when `part` is `whole`, or a run of whole words of it ('Mitty' of 'Archbishop Mitty'). */
+function isWholeWordsOf(part: string, whole: string): boolean {
+  return ` ${whole} `.includes(` ${part} `);
 }
 
 export function getTeamById(id: TeamId): Team | undefined {
@@ -181,7 +189,7 @@ export function teamOfSide(side: Pick<GameSide, 'teamId' | 'slug'>): Team | unde
 }
 
 /**
- * Resolve a MaxPreps GUID, our slug, a name, a shortName, an alias, or an acronym that is
+ * Resolve a MaxPreps GUID, our slug, a name, an alias, or an acronym that is
  * globally unique, to a Team.
  */
 export function resolveTeam(nameOrId: string | null | undefined): Team | undefined {
@@ -270,7 +278,13 @@ function assertRegistry(): void {
   for (const t of TEAMS) {
     if (!SLUG_PATTERN.test(t.slug)) fail(`bad slug "${t.slug}"`);
     if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
-    if (t.shortName.length > 14) fail(`${t.slug}: shortName longer than 14 characters`);
+    if (t.shortName.length > 16) fail(`${t.slug}: shortName longer than 16 characters`);
+    // One full name and one short name per school. The short name is the name the school goes by
+    // ('Mitty', 'Sobrato', 'Convent'): the full name itself, whole words of it, or a spelling a
+    // source uses (an alias: 'SF University'), never an abbreviation made up for width ('Valley Chr.').
+    if (!isWholeWordsOf(t.shortName, t.name) && !t.aliases.includes(t.shortName)) {
+      fail(`${t.slug}: shortName "${t.shortName}" is not "${t.name}", whole words of it, or an alias`);
+    }
   }
 
   // 2. league, division and section agree with the config
