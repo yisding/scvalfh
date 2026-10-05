@@ -10,7 +10,7 @@ import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { gameWord } from '../../../components/ui/plural';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE, SITE_NAME } from '../../../components/layout/site';
+import { OG_BASE } from '../../../components/layout/site';
 import {
   getGameDates,
   getGames,
@@ -66,12 +66,7 @@ export async function generateMetadata({
     title,
     description: summary.sentence,
     alternates: { canonical: `/scores/${date}` },
-    openGraph: {
-      ...OG_BASE,
-      title: `${title} — ${SITE_NAME}`,
-      description: summary.sentence,
-      url: `/scores/${date}`,
-    },
+    openGraph: { ...OG_BASE, title, description: summary.sentence, url: `/scores/${date}` },
   };
 }
 

@@ -62,11 +62,14 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'About & sources';
+
 export const metadata: Metadata = {
-  title: 'About & sources',
+  title: PAGE_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/about' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/about' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/about' },
 };
 
 /**

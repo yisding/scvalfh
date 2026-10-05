@@ -30,11 +30,14 @@ import { LEAGUES } from '../../lib/leagues';
 
 const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'Season leaders';
+
 export const metadata: Metadata = {
-  title: 'Season leaders',
+  title: PAGE_TITLE,
   description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records and highest Elo ratings, and the players with the most points, assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/leaders' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };
 
 const TABS = [

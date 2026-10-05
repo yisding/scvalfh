@@ -58,10 +58,13 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
   if (!model) {
     const stub = buildSupersededStub(id);
     if (stub) {
+      const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
       return {
-        title: stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps',
+        title,
         description: stub.sentence,
         alternates: { canonical: stub.targetHref },
+        // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
+        openGraph: { ...OG_BASE, title },
         robots: { index: false, follow: true },
       };
     }

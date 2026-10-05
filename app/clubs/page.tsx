@@ -7,6 +7,9 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/rosters';
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'Club teams';
+
 /**
  * /clubs — "Which clubs do players here play for?" (DESIGN §17.1, SPEC §1.1j2).
  *
@@ -30,10 +33,10 @@ import { getRosters } from '../../lib/rosters';
  * It takes the root OG card: there is no clubs card (DESIGN §17.6).
  */
 export const metadata: Metadata = {
-  title: 'Club teams',
+  title: PAGE_TITLE,
   description: `The youth field hockey clubs that players on the ${getRosters().teams.length} varsity rosters here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
   alternates: { canonical: '/clubs' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/clubs' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/clubs' },
 };
 
 export default function ClubsPage() {

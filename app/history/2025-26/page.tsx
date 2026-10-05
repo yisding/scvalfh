@@ -52,8 +52,11 @@ const UNAVAILABLE_SUBJECT = UNAVAILABLE.length
   ? `${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'}`
   : null;
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = `${SEASON} final standings`;
+
 export const metadata: Metadata = {
-  title: `${SEASON} final standings`,
+  title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
     ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
@@ -61,7 +64,7 @@ export const metadata: Metadata = {
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : ''),
   alternates: { canonical: '/history/2025-26' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/history/2025-26' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/history/2025-26' },
 };
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */

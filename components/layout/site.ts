@@ -46,6 +46,15 @@ export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, 
  * `app/layout.js` are **replaced** …"). A page that declared nothing but `url` therefore shipped
  * with no og:type, no og:site_name and no og:locale at all, which is eight of the ten route
  * families. Spread this first and override what differs (/game/[id] is `type: 'article'`).
+ *
+ * og:title never carries the site-name suffix: `siteName` (og:site_name) names the site on every
+ * page, so the title is the page's own (`Season leaders`, `MCAL tournament`, a team's record; the
+ * home page's is SITE_NAME), and every page states it. A page that leaves `openGraph.title` out
+ * inherits its TEMPLATED `<title>`, `… — NorCal High School Field Hockey`
+ * (node_modules/next/dist/lib/metadata/resolve-metadata.js `inheritFromMetadata`), which is how the
+ * suffix used to appear on some pages and not others. An `openGraph.title.template` in the root
+ * layout is no way out: vinext's metadata shim (node_modules/vinext/dist/shims/metadata.js) applies
+ * no og:title template, so the Next and vinext builds would print different og:titles.
  */
 export const OG_BASE = {
   type: 'website',

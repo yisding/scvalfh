@@ -11,6 +11,9 @@ import { plural } from '../../components/ui/plural';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/rosters';
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'College commitments';
+
 /**
  * /commits — "Who here has committed to play in college, and where?" (DESIGN §21.1, SPEC §1.1j3).
  *
@@ -30,10 +33,10 @@ import { getRosters } from '../../lib/rosters';
  * card: there is no commitments card. Neither the title nor the description names a player.
  */
 export const metadata: Metadata = {
-  title: 'College commitments',
+  title: PAGE_TITLE,
   description: `The colleges that players on the ${getRosters().teams.length} varsity rosters here have committed to play for, in field hockey and other sports, with a public source for every one. Unofficial and incomplete.`,
   alternates: { canonical: '/commits' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/commits' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/commits' },
 };
 
 export default function CommitsPage() {

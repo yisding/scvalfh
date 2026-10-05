@@ -11,6 +11,9 @@ import { buildTeamsByLeague } from '../../components/teams/team-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'Teams and standings';
+
 /**
  * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §18; SPEC §10.5, §9.3).
  *
@@ -45,11 +48,11 @@ import { getCounts, getTeamSearchIndex } from '../../lib/data';
  * and no group wrapper.
  */
 export const metadata: Metadata = {
-  title: 'Teams and standings',
+  title: PAGE_TITLE,
   description:
     'All 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. Find your school.',
   alternates: { canonical: '/teams' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/teams' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
 };
 
 export default function TeamsPage() {

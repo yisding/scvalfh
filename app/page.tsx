@@ -8,7 +8,7 @@ import MyTeamCard from '../components/home/MyTeamCard';
 import { getHomeData } from '../components/home/home-data';
 import LeagueSwitcher from '../components/layout/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
-import { OG_BASE } from '../components/layout/site';
+import { OG_BASE, SITE_NAME } from '../components/layout/site';
 import { shortDate } from '../lib/format';
 
 /**
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   description:
     'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated twice daily.',
   alternates: { canonical: '/' },
-  openGraph: { ...OG_BASE, url: '/' },
+  openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
 };
 
 export default function HomePage() {
