@@ -37,7 +37,7 @@ function DateItem({ row }: { row: KeyDateRow }) {
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          {row.league ? <span className="sx-badge">{row.league}</span> : null}
+          {row.leagueShort ? <span className="sx-badge">{row.leagueShort}</span> : null}
           <span className={['text-body text-ink', row.isRound ? 'font-semibold' : null].filter(Boolean).join(' ')}>
             {row.label}
           </span>

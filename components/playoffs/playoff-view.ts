@@ -83,7 +83,7 @@ export interface KeyDateRow {
   /** '1:00 PM PT', or null for an all-day date. */
   time: string | null;
   /** The league a date belongs to ('SCVAL', 'BVAL'); null for a CCS date. */
-  league: string | null;
+  leagueShort: string | null;
   label: string;
   detail: string;
   /** One of the three tournament rounds (set in ink and semibold). */
@@ -95,7 +95,7 @@ export interface LeagueKeyDate {
   /** Stable key part, e.g. the league id. */
   id: string;
   /** 'SCVAL' */
-  league: string;
+  leagueShort: string;
   /** YYYY-MM-DD */
   date: string;
   /** League clock 'HH:MM' or null. */
@@ -121,7 +121,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
     dateKey: dateOnly(iso),
     date: shortDate(iso),
     time: opts.time ? timeOfDayPT(iso) : null,
-    league: null,
+    leagueShort: null,
     label,
     detail,
     isRound: opts.isRound ?? false,
@@ -140,7 +140,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
         dateKey: dateOnly(d.date),
         date: shortDate(d.date),
         time: d.time ? leagueClockPT(d.time) : null,
-        league: d.league,
+        leagueShort: d.leagueShort,
         label: d.label,
         detail: d.detail,
         isRound: false,

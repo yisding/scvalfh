@@ -105,7 +105,7 @@ function leagueKeyDate(league: LeagueConfig): LeagueKeyDate | null {
     return `${tail[0].toUpperCase()}${tail.slice(1)}`;
   }))];
   const detail = pairings.length === 1 ? `${first.label}.` : `${purposes.join('. ')}.`;
-  return { id: league.id, league: league.shortName, date: first.date, time: first.time, label, detail };
+  return { id: league.id, leagueShort: league.shortName, date: first.date, time: first.time, label, detail };
 }
 
 interface LeagueBlock {

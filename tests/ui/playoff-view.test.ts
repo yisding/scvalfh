@@ -303,10 +303,10 @@ describe('splitStatusLabel', () => {
 describe('keyDateRows', () => {
   it('lists the CCS dates and each league’s own date, labelled with its league, in date order', () => {
     const rows = view.keyDateRows(data.getPlayoffs().keyDates, [
-      { id: 'bval', league: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
-      { id: 'scval', league: 'SCVAL', date: '2026-10-30', time: null, label: 'SCVAL crossover and 4th-place play-in', detail: 'y' },
+      { id: 'bval', leagueShort: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
+      { id: 'scval', leagueShort: 'SCVAL', date: '2026-10-30', time: null, label: 'SCVAL crossover and 4th-place play-in', detail: 'y' },
     ]);
-    expect(rows.map((r) => `${r.date}|${r.league ?? ''}|${r.label}|${r.time ?? ''}`), VIEW).toEqual([
+    expect(rows.map((r) => `${r.date}|${r.leagueShort ?? ''}|${r.label}|${r.time ?? ''}`), VIEW).toEqual([
       'Fri Oct 30|SCVAL|SCVAL crossover and 4th-place play-in|',
       'Sat Oct 31||CCS end of league season|',
       'Sat Oct 31|BVAL|BVAL play-in|11 AM PT',

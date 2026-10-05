@@ -91,7 +91,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
           <Link href={team.href} prefetch={false} className="text-ink-2 no-underline hover:underline">
             <TeamName name={team.name} shortName={team.shortName} />
           </Link>{' '}
-          <span aria-hidden="true">&middot;</span> {team.league}
+          <span aria-hidden="true">&middot;</span> {team.leagueShort}
         </span>
       </>
     );
@@ -106,7 +106,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
         <Link href={team.href} prefetch={false} className="block text-body text-ink no-underline hover:underline">
           <TeamName name={team.name} shortName={team.shortName} />
         </Link>
-        <span className="block text-meta text-ink-3">{team.league}</span>
+        <span className="block text-meta text-ink-3">{team.leagueShort}</span>
       </span>
     </span>
   );
