@@ -1460,8 +1460,8 @@ are not used for JV.
 
 Built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`), twice a day in season after the player stats
 (`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **kept apart
-from varsity**: no varsity table, record, leader board, rating or postseason picture reads them, and
-no JV standings are computed yet. Read 2026-10-05 **[V]**.
+from varsity**: no varsity table, record, leader board, rating or postseason picture reads them. JV
+tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026-10-05 **[V]**.
 
 - **MaxPreps.** The JV season has its own id: `__NEXT_DATA__.query` of
   `https://www.maxpreps.com/ca/field-hockey/jv/` gives `ssid` `fae4fc22-6de6-47ae-972d-e290b0ec31ef`,
@@ -1508,6 +1508,20 @@ no JV standings are computed yet. Read 2026-10-05 **[V]**.
 - **Cost:** 49 MaxPreps JSON calls through the MaxPreps client's gate and up to 48 si.com pages one at
   a time, 1 s apart (§1.2's client options), about a minute. A failure is scoped to the school and the
   source: its previous rows are carried (`carried-forward`).
+
+- **JV standings** (`lib/jv-standings.ts`, computed at build time from the file and the snapshot).
+  A JV game takes its varsity counterpart's classification: the varsity game of the same pair within
+  ±3 days, nearest (two equally near decide nothing), counts it for its division when the varsity game
+  counts (`countsFor`), makes it non-league when the varsity game is, and leaves it uncounted when the
+  varsity game is a postseason game; failing that, an official fixture no varsity contest matched
+  (`snapshot.officialFixtures`), same pair, ±3 days, counts it. A pair from different divisions or
+  outside the registry is non-league; a same-division pair with no counterpart is uncounted and named
+  on the page. Tables order on the league's points (3-1-0, SCVAL's own JV order in 2025-26), level
+  teams share a place (no JV tiebreak is published), and a table is shown only when at least 60% of
+  the division's played JV league games (final, or dated before the file's day and not postponed)
+  have a score. On 2026-10-05: 197 league (195 by varsity game, 2 by fixture), 70 non-league, 5
+  uncounted; shown: El Camino (12 of 18), MCAL (36 of 45), EAL (13 of 16); not shown: De Anza (8 of
+  16), Mt. Hamilton (0 of 4), PCAL (7 of 15, all from si.com); Santa Teresa has no JV league game.
 
 ### 1.6 Rejected sources (one line each)
 
@@ -2167,9 +2181,10 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   `/history/2025-26` marks the EAL `unavailable` with the sources checked.
 - No by-law ranks a team across leagues, and the CCS committee seeds by criteria we cannot compute,
   so the site shows no merged 1-16 order before CCS seeds.
-- No JV table is computed yet (§1.7): there is no in-season JV standings source and MaxPreps' JV
-  league flag is unreliable, so JV league games would have to be identified another way (for example,
-  by matching the varsity fixture of the same day and pairing). JV scores are thin where coaches do not enter
+- JV tables (§1.7) are computed, never copied: there is no in-season JV standings source and MaxPreps'
+  JV league flag is unreliable, so a JV league game is identified by its varsity counterpart (or an
+  unmatched official fixture), ordered on points with level teams sharing a place, and a table is shown
+  only once 60% of its played league games have a score. JV scores are thin where coaches do not enter
   them (no MaxPreps score for any past BVAL or PCAL JV league game on 2026-10-05), si.com only partly
   fills that, and nothing says authoritatively which schools field a JV team. A day page exists only
   for a date with a varsity game, so a JV-only date is on the team pages alone.

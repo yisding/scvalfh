@@ -37,7 +37,9 @@ import {
 import type { LeagueSummary } from '../../lib/data';
 import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
-import { getJvFile, getJvMerge } from '../../lib/jv';
+import { jvTableTitle } from '../../components/standings/jv-standings-view';
+import { getJvFile, getJvMerge, getJvTables } from '../../lib/jv';
+import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
 import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
@@ -497,6 +499,9 @@ export default function AboutPage() {
   const TOC = toc(leagues);
   const jvFile = getJvFile();
   const jvMerge = getJvMerge();
+  const jvAllTables = leagues.flatMap((l) => getJvTables(l.id));
+  const jvShown = jvAllTables.filter((t) => t.status === 'shown');
+  const jvUncounted = jvAllTables.reduce((n, t) => n + t.uncounted.length, 0);
   const leagueWords = listWords(leagues.map((l) => l.shortName));
   const historySeason = getHistorySeason();
   const historyAvailable = getAvailableHistoryLeagues();
@@ -980,9 +985,28 @@ export default function AboutPage() {
             </p>
             <p>
               JV games are kept apart from varsity: no varsity standings table, record, leader board,
-              rating or postseason picture on this site reads them. There are no JV standings yet, and
-              for now JV games carry no league or non-league tag, because MaxPreps&rsquo; JV league
-              flags are unreliable and no league publishes JV standings during the season.
+              rating or postseason picture on this site reads them. They have tables of their own, on
+              the{' '}
+              <Link href="/jv" prefetch={false} className="text-accent hover:underline">
+                JV standings
+              </Link>{' '}
+              page. MaxPreps&rsquo; JV league flags are unreliable and no
+              league publishes a JV schedule or JV standings during the season, but every league plays its
+              JV games alongside its varsity fixtures, so a JV game counts for a JV table when its varsity
+              counterpart (the same two schools within three days) counts for that division&rsquo;s varsity
+              table, or when it matches a fixture on the league&rsquo;s official schedule that no varsity
+              contest matched. A JV game between two schools of one division with no varsity counterpart
+              is not counted and is named under its table (today{' '}
+              {plural(jvUncounted, 'game', 'games')}).
+            </p>
+            <p>
+              A JV table is ordered on points (3 a win, 1 a tie, as SCVAL orders its own JV tables); no
+              league publishes a JV tiebreak, so teams level on points share a place. Coaches enter far
+              fewer JV scores than varsity ones, so a table is shown only once{' '}
+              {Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}% of its division&rsquo;s JV league games
+              played so far have a score; today that is{' '}
+              {jvShown.length > 0 ? listWords(jvShown.map((t) => jvTableTitle(t.division))) : 'none'}.
+              The others say how many of their games have a score.
             </p>
             <p>
               MaxPreps comes first, as for varsity. Each school&rsquo;s JV page on High School on SI

@@ -54,7 +54,8 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 |---|---|
 | `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit, then one panel per league: latest scores, mini standings, next games, teams and the postseason card |
 | `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal` and the other division anchors resolve with no JavaScript. Kept for links; the nav's Teams page carries the same tables |
-| `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
+| `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable; a pill links its JV tables on `/jv` |
+| `/jv` | JV standings: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each shown once enough of its JV league games have a score |
 | `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (5 pages) |
 | `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date), then the day's JV games (`#jv`), kept apart from the varsity counts |
@@ -361,9 +362,39 @@ pnpm fetch-player-stats --dry-run                            # parse and report,
 
 Every team page has a "JV games" section (`#jv`) and every day page a JV block after the varsity
 games: the school's junior varsity games, **kept apart from varsity**. No varsity standings table,
-record, form strip, leader board, Elo rating or postseason picture reads them. There are no JV
-standings yet, and for now JV games carry no league or non-league tag, because MaxPreps' JV league flags are unreliable (they disagree with the varsity game
-of the same day and pairing on 116 of 200 such games) and no league publishes JV standings in season.
+record, form strip, leader board, Elo rating or postseason picture reads them; they have JV tables
+of their own on `/jv` (see "JV standings" below), and a team page's JV header names the team's JV
+place when its table is shown and links it.
+
+#### JV standings
+
+`lib/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
+section per league (`app/jv/page.tsx`, `components/standings/JvStandings.tsx`, built by
+`components/standings/jv-standings-view.ts`). They are a page of their own, linked from each
+`/standings/<league>` page and from team pages, because the SCVAL standings page is at its weight
+budget and the JV tables are a different kind of claim, stated once at the top of `/jv`:
+
+- **Which JV games are league games.** MaxPreps' JV league flag (`contestType`) is not usable (it
+  disagrees with the varsity game of the same day and pairing on 116 of 200 such games), so a JV game
+  takes the classification of its varsity counterpart, the varsity game between the same two schools
+  within ±3 days (the nearest; two equally near decide nothing): it counts for that division's JV table
+  when the varsity game counts for its varsity table, and is non-league when the varsity game is. With
+  no varsity game, a fixture on the league's official schedule that no varsity contest matched counts
+  the same way. A game between two schools of different divisions, or against a school outside the
+  registry, is non-league; one between two schools of one division with no counterpart at all is not
+  counted and is named under the table. JV rows carry the matching league or NL chip; an uncounted
+  game carries none. On 2026-10-05: 197 league games (195 by varsity game, 2 by official fixture), 70
+  non-league, 5 uncounted.
+- **How a table is ordered.** On the league's points (3 a win, 1 a tie in all five), which is how
+  SCVAL ordered its published 2025-26 JV tables. No league publishes a JV tiebreak, so teams level on
+  points share a place. A school is in the table when it has at least one JV league game; a school
+  with none is named under it.
+- **When a table is shown.** Only once 60% of the division's JV league games already played (final,
+  or dated before the file's day and not postponed) have a score (`JV_STANDINGS_MIN_REPORTED_SHARE`),
+  so a table never ranks teams on whichever coaches enter scores; otherwise the page says how many do.
+  On 2026-10-05: El Camino 12 of 18, MCAL 36 of 45 and the EAL 13 of 16 are shown; De Anza (8 of 16),
+  Mt. Hamilton (0 of 4) and PCAL (7 of 15, all si.com's) are not; no Santa Teresa school has a JV league
+  game.
 
 `data/jv.json` is built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`) from two sources, and keeps what
 each said:
@@ -1050,8 +1081,10 @@ at once, at every build, starting from last season's:
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
-- There are no JV standings, records or leaders yet: MaxPreps' JV league flags are unreliable and no
-  league publishes JV standings in season, so league games would have to be identified another way. JV scores
+- JV tables are unofficial and computed: no league publishes JV standings in season, a JV league game
+  is identified by its varsity counterpart, and a table is shown only once 60% of its division's played
+  JV league games have a score (on 2026-10-05: El Camino, MCAL and the EAL). There are no JV leaders or
+  ratings. JV scores
   are thin where coaches do not enter them (on 2026-10-05 MaxPreps had no score for any past BVAL or
   PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
   stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a

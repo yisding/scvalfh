@@ -177,6 +177,17 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
   };
 }
 
+/**
+ * One team's record over `games` (finals, oldest first), with the league's `points` and a given
+ * `place`: the same accumulation every varsity row goes through (forfeits in W-L-T, not in goals).
+ * lib/jv-standings.ts builds the JV tables with it.
+ */
+export function recordOver(games: readonly Game[], teamId: TeamId, points: Points, place: number): ComputedRecord {
+  const tally = emptyTally();
+  for (const g of games) accumulate(tally, g, teamId);
+  return toComputed(tally, place, points);
+}
+
 /** countsFor === division && status === 'final', oldest first (`byDateThenId`; SCVAL Article VI §1). */
 export function divisionGames(games: readonly Game[], division: DivisionId): Game[] {
   return games.filter((g) => g.countsFor === division && g.status === 'final').sort(byDateThenId);

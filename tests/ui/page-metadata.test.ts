@@ -48,6 +48,7 @@ beforeAll(async () => {
     page('app/commits/page.tsx', () => import('../../app/commits/page')),
     page('app/game/[id]/page.tsx', () => import('../../app/game/[id]/page'), gameStaticParams()[0]),
     page('app/history/2025-26/page.tsx', () => import('../../app/history/2025-26/page')),
+    page('app/jv/page.tsx', () => import('../../app/jv/page')),
     page('app/leaders/page.tsx', () => import('../../app/leaders/page')),
     page('app/playoffs/page.tsx', () => import('../../app/playoffs/page')),
     page('app/playoffs/[league]/page.tsx', () => import('../../app/playoffs/[league]/page'), { league: 'mcal' }),

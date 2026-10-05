@@ -3,34 +3,45 @@ import { JvFootnote } from '../teams/TeamJvGames';
 import type { JvListSummary, JvRowView } from '../teams/jv-view';
 import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import StatusLabel from '../ui/StatusLabel';
+import StatusLabel, { GameChips } from '../ui/StatusLabel';
 
 /**
  * A day page's JV games: one compact card, a row per game — the time (or the status once there
  * is one), then the away and home school each with its score — under the varsity slate and never
- * mixed into it. Rows are not links: a JV game has no page of its own. A score from si.com
- * carries the † (StatusLabel), and a MaxPreps score si.com reports differently gets one line under
- * its row.
+ * mixed into it. Rows are not links: a JV game has no page of its own. A JV league game carries
+ * its league chip and a non-league one the NL chip and rule (lib/jv-standings.ts); a same-division
+ * game no varsity game matched carries neither. A score from si.com carries the † (StatusLabel), and
+ * a MaxPreps score si.com reports differently gets one line under its row.
  */
 export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[] } }) {
   return (
     <>
       <div className="sx-card sx-flush sx-bleed">
         <ol className="sx-list">
-          {view.rows.map(({ game, differsNote }) => {
+          {view.rows.map(({ game, differsNote, chips, nonLeague }) => {
             const display = describeGame(game);
             const isTime = statusLabelIsTime(game, display.statusLabel);
             return (
               <li key={game.contestId}>
-                <div className="grid min-h-row-1 grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta">
+                <div
+                  className={[
+                    'relative grid min-h-row-1 grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta',
+                    nonLeague ? 'sx-nonleague' : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
                   <span className="sr-only">{display.sentence}</span>
                   <span className="flex flex-col items-start gap-1" aria-hidden="true">
                     {isTime ? (
-                      <span className="sx-num text-cell text-ink-2">
-                        {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
-                      </span>
+                      <>
+                        <span className="sx-num text-cell text-ink-2">
+                          {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
+                        </span>
+                        {chips ? <GameChips display={display} /> : null}
+                      </>
                     ) : (
-                      <StatusLabel display={display} showChips={false} />
+                      <StatusLabel display={display} showChips={chips} />
                     )}
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5" aria-hidden="true">

@@ -18,8 +18,9 @@
  * pages list with different scores is never used. A row against a school outside the registry is
  * not matched: there is no id to match it by.
  *
- * Nothing here decides a table: a JV game counts for no varsity table or postseason (countsFor and
- * postseason stay null), and no JV table is computed yet. Pure: no I/O, no clock — `today` is an input.
+ * Nothing here decides a table: the merged games are unclassified (countsFor and postseason stay
+ * null); lib/jv-standings.ts classifies them for the JV tables, and no varsity table or postseason
+ * ever reads them. Pure: no I/O, no clock — `today` is an input.
  */
 
 import { datesOf } from './backfill';

@@ -2,14 +2,15 @@
  * The JV lists' view model: a team page's "JV games" section and a day page's JV block.
  *
  * Every game comes from lib/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
- * lib/jv-merge.ts). JV games stay apart from varsity: these views feed no varsity record, form
+ * lib/jv-merge.ts), classified by lib/jv-standings.ts: a JV league game is one whose varsity
+ * counterpart counts. JV games stay apart from varsity: these views feed no varsity record, form
  * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
  */
 
 import { localDateKey } from '../../lib/format';
-import { getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '../../lib/jv';
+import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '../../lib/jv';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, GameSide, TeamSlug } from '../../lib/types';
 
@@ -17,6 +18,10 @@ export interface JvRowView {
   game: Game;
   /** "si.com has Santa Clara 0, Monta Vista 4; MaxPreps’ score is shown." when the two disagree. */
   differsNote: string | null;
+  /** Show the league / NL chip: false for a same-division game no varsity game matched (uncounted). */
+  chips: boolean;
+  /** Draw the non-league rule: the game is classified non-league. */
+  nonLeague: boolean;
 }
 
 export interface JvListSummary {
@@ -63,7 +68,11 @@ function summarize(games: readonly Game[]): JvListSummary {
   };
 }
 
-const rowsOf = (games: readonly Game[]): JvRowView[] => games.map((game) => ({ game, differsNote: jvDiffersNote(game) }));
+const rowsOf = (games: readonly Game[]): JvRowView[] =>
+  games.map((game) => {
+    const kind = getJvClassification(game.contestId)?.kind;
+    return { game, differsNote: jvDiffersNote(game), chips: kind !== 'uncounted', nonLeague: kind === 'non-league' };
+  });
 
 /** A team page's JV section; null only for a slug that is not a registry team. */
 export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
