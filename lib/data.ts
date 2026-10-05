@@ -489,6 +489,17 @@ export function getLatestResultsDate(filter: { league?: LeagueId } = {}, asOf: s
 }
 
 /**
+ * The Scores tab's landing date, across every league or within one: the latest day at or before
+ * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
+ * result it is the next day with a contest; with no contests at all, none. BottomTabBar aims the
+ * tab at it and ScheduleList lays out the days around it, so the two cannot disagree.
+ */
+export function getScoresLandingDate(filter: { league?: LeagueId } = {}): string | null {
+  const today = getToday();
+  return getLatestResultsDate(filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
+}
+
+/**
  * Official fixtures (any league) with NO contest in the snapshot — render these as "scheduled
  * per <SHORT>, not reported".
  */

@@ -1,4 +1,4 @@
-import { getGameDates, getLatestResultsDate, getToday } from '../../lib/data';
+import { getScoresLandingDate } from '../../lib/data';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
@@ -42,16 +42,13 @@ const ICON_PROPS = {
 };
 
 /**
- * The Scores tab's landing date, across every league or within one: the latest day at or before
- * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
- * result it is the next day with a contest; with no contests at all, none. Each day on the
- * /schedule index's "Every game day" list (components/schedule/ScheduleIndex.tsx) and each date
- * group on /schedule/<id> (components/schedule/ScheduleList.tsx) carries its date key as its `id`.
+ * The Scores tab's landing date, across every league or within one (lib/data
+ * getScoresLandingDate, which ScheduleList also reads). Each day on the /schedule index's "Every
+ * game day" list (components/schedule/ScheduleIndex.tsx) and each date group on /schedule/<id>
+ * (components/schedule/ScheduleList.tsx) carries its date key as its `id`.
  */
 function scoresDate(league?: LeagueId): string | null {
-  const today = getToday();
-  const filter = league ? { league } : {};
-  return getLatestResultsDate(filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
+  return getScoresLandingDate(league ? { league } : {});
 }
 
 const withDate = (path: string, date: string | null) => (date ? `${path}#${date}` : path);

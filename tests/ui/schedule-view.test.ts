@@ -110,6 +110,17 @@ describe('league scoping (/schedule/<league>)', () => {
     expect(textOf(eal)).not.toMatch(/CCS Nov|\bCCS\b/);
     expect(textOf(eal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL|EAL)\b/);
   });
+
+  it('lands the Scores tab on a date group the league’s list lays out (lib/data getScoresLandingDate)', async () => {
+    for (const id of data.getLeagueIds()) {
+      const landing = data.getScoresLandingDate({ league: id });
+      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).not.toBeNull();
+      expect(data.getGameDates({ league: id }), `lib/data.ts getScoresLandingDate(${id})`).toContain(landing);
+      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).toBe(data.getLatestResultsDate({ league: id }));
+      const html = await renderLeague(id);
+      expect(html, `components/schedule/ScheduleList.tsx ${id}: #${landing}`).toContain(`id="${landing}"`);
+    }
+  });
 });
 
 describe('ScheduleFilters props', () => {
