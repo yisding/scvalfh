@@ -1131,8 +1131,9 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
 2. `gameTypeLabel` is unreliable — league-vs-non-league comes from MaxPreps `contestType` and each
    league's official schedule (§3.1), never from this label.
 3. Wilcox has 1 scheduled game, 0 played — effectively no coverage.
-4. `variables.level` is hardcoded `VARSITY` — no JV from this source, but a few **JV teams have
-   their own team id** (York, Tamalpais JV): those ids are ignored by config (§5.4).
+4. `variables.level` is hardcoded `VARSITY` on a varsity page, and the varsity pipeline reads no JV
+   from this source; a few **JV teams have their own team id** (York, Tamalpais JV), which the varsity
+   config ignores (§5.4). Every school's JV team page is read by `scripts/fetch-jv.ts` instead (§1.7).
 5. Team slugs must be recovered from `teamStandings[].team.webPath` or `opponent.team.webPath` —
    never guessed.
 6. Some rows are junk: a Salinas–Stevenson game appears twice, once under a `/new-york/` path.
@@ -1414,8 +1415,60 @@ Corrected SUMMARY regex (the naive `Junior Varsity` pattern misses `JV`-worded e
 (stable upsert key). Requires standard RFC 5545 line-unfolding before parsing. ⚠️ **No scores** —
 schedule/venue/time only. Opponent-name formatting differs per school — normalize.
 
-This is also the **only verified JV source** (MaxPreps has JV team pages but no JV pipeline was
-tested end to end).
+It carries JV events too, but the JV games are read from MaxPreps and si.com (§1.7); these feeds
+are not used for JV.
+
+### 1.7 JV games — MaxPreps JV feeds, supplemented by si.com JV pages (`data/jv.json`)
+
+Built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`), twice a day in season after the player stats
+(`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **never
+counted** in any table, record, leader board, rating or postseason picture. Read 2026-10-05 **[V]**.
+
+- **MaxPreps.** The JV season has its own id: `__NEXT_DATA__.query` of
+  `https://www.maxpreps.com/ca/field-hockey/jv/` gives `ssid` `fae4fc22-6de6-47ae-972d-e290b0ec31ef`,
+  `teamLevel` `JV`, `teamlevel` `c083cdee-7526-423c-a9c8-4e6da6d6f4e2`, `allSeasonId`
+  `d5b0e954-d53f-40cc-a3aa-c45b3a536618` (`JV_SPORT_SEASON_ID` in `lib/season.ts`). The team id is
+  the school's own, so `schedule-calculated/v1?teamId=<registry id>&sportSeasonId=<JV ssid>` (§1.1b)
+  is a school's JV schedule, same shape, each contest's `sportSeasonId` the JV one and its
+  `teamCanonicalUrl` ending `/field-hockey/jv/`. All 49 answered 200: 260 non-deleted contests between
+  Aug 18 and Oct 30, 91 final; Del Mar, Live Oak and Sobrato have no rows and Silver Creek only
+  deleted ones. Every contest both registry feeds list agrees on score and state (246 of 246).
+  Opponents outside the registry are names only (Stuart Hall 8 rows, York, Red Bluff, University
+  Prep Academy). Rows go through `normalizeGames` unchanged, so a JV game is a `Game`, and
+  `countsFor`/`postseason` stay null.
+- **MaxPreps' JV league flag is not usable.** Of 217 JV contests between two schools of one league,
+  200 fall on the same day and pairing as a varsity game, and on 116 of those `contestType` disagrees
+  with the varsity game's classification (every PCAL one). No JV game is tagged league or non-league.
+- **No JV standings anywhere in season.** `leagues/{id}/standings/v1?sportseasonid=<JV ssid>`
+  answers 200 with the **varsity** table, number for number (checked for De Anza, MCAL and PCAL):
+  the parameter is ignored for JV. SCVAL publishes JV final standings and JV all-league awards only
+  at season's end (§1.3; the 2025-26 ones are on `/history/2025-26`).
+- **si.com.** Each varsity games page's level switcher (`level.name` "Junior Varsity", `webPath`)
+  names the school's JV team page; the 48 paths (all but Marin Academy, which has no si.com page) are
+  in `lib/jv-teams.ts`. A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
+  name or by the varsity resolver (which ignores Tamalpais JV and York on purpose). Kept: scored
+  finals on `/california/field-hockey/games/` pages; the page must be the JV team asked for. On
+  2026-10-05: 68 scored JV finals; no EAL JV page has a score. Matched against MaxPreps by pair and
+  date, si.com agreed on 38 of 41 finals; the 3 disagreements include a reversed result
+  (Los Altos–Homestead, Sep 14).
+- **The merge** (`lib/jv-merge.ts`, run at build time from the file): MaxPreps first. A si.com final
+  of the same registry pair within ±1 day fills a MaxPreps game dated today or earlier that has no
+  score (`provenance.scores: 'sblive'`, backfill rule `score-pending`, the †), and is recorded beside
+  a MaxPreps final it disagrees with (`provenance.scoreConflict`; MaxPreps' score is shown). A si.com
+  final of two registry schools with no MaxPreps JV contest of the pair within ±14 days becomes a
+  `sblive:<id>` game (rule `absent-fixture`, host from si.com's `isHome`). Never used: a game two JV
+  pages list with different scores, a row against a school outside the registry, two rows equally
+  near one game. On 2026-10-05: 7 filled, 12 added (8 involve PCAL schools), 3 differ.
+- **Rosters and stats** (not shown): MaxPreps' `/jv/roster/` lists players for 11 schools (Homestead
+  25, Palo Alto 25, Monta Vista 12, Los Gatos 2, Leigh 18, Greenfield 3, Salinas 1, Tamalpais 22,
+  Bella Vista 19, Davis 19, Lassen 15) and `/jv/stats/` has leaders for 4 (Monta Vista, Bella Vista,
+  Davis, Lassen).
+- **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
+  followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
+  JV in Santa Catalina's place. None is read for JV.
+- **Cost:** 49 MaxPreps JSON calls through the MaxPreps client's gate and up to 48 si.com pages one at
+  a time, 1 s apart (§1.2's client options), about a minute. A failure is scoped to the school and the
+  source: its previous rows are carried (`carried-forward`).
 
 ### 1.6 Rejected sources (one line each)
 
@@ -2075,8 +2128,11 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   `/history/2025-26` marks the EAL `unavailable` with the sources checked.
 - No by-law ranks a team across leagues, and the CCS committee seeds by criteria we cannot compute,
   so the site shows no merged 1-16 order before CCS seeds.
-- JV is out of scope for v1: JV membership differs from varsity, and no JV pipeline was verified end
-  to end even though the VNN `.ics` feeds carry some JV events.
+- JV games (§1.7) are listed, not counted: there is no in-season JV standings source and MaxPreps' JV
+  league flag is unreliable, so no JV table is computed. JV scores are thin where coaches do not enter
+  them (no MaxPreps score for any past BVAL or PCAL JV league game on 2026-10-05), si.com only partly
+  fills that, and nothing says authoritatively which schools field a JV team. A day page exists only
+  for a date with a varsity game, so a JV-only date is on the team pages alone.
 - Rosters and player stats cover all 49 teams (§1.1j, §1.1k): the 43 teams of the four earlier leagues
   were read live on 2026-10-03 and the six EAL teams on 2026-10-04 (every page parsed, no team failed;
   Corning has no roster and no stats at MaxPreps), and the school-site and recruiting-page overlay

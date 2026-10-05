@@ -53,6 +53,7 @@ describe('the update-data commit and the deploy gate', () => {
   it('commits only files the gate accepts, and the gate accepts nothing else', () => {
     expect([...committedFiles].sort()).toEqual([...gateFiles].sort());
     expect([...gateFiles].sort()).toEqual([
+      'data/jv.json',
       'data/player-stats.json',
       'data/snapshot.json',
       'data/snapshot.meta.json',
@@ -107,6 +108,36 @@ describe('the player stats step', () => {
   });
 });
 
+describe('the JV games step', () => {
+  const step = stepBody(update, 'Fetch JV games');
+
+  it('runs the JV script, after the stats and before the tests', () => {
+    expect(step).toContain('pnpm fetch-jv "${args[@]}"');
+    const at = (s: string) => update.indexOf(s);
+    expect(at('- name: Fetch player stats')).toBeLessThan(at('- name: Fetch JV games'));
+    expect(at('- name: Fetch JV games')).toBeLessThan(at('- name: Test'));
+  });
+
+  it('can never fail the run: a JV outage must not cost the day’s scores', () => {
+    expect(step).toMatch(/continue-on-error: true/);
+    expect(step).toMatch(/timeout-minutes: \d+/);
+  });
+
+  it('passes the manual force and leagues inputs through env, validated, never interpolated', () => {
+    expect(step).toContain("FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}");
+    expect(step).toContain("LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}");
+    expect(step).toContain('[[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]]');
+    expect(step.slice(step.indexOf('run: |'))).not.toContain('inputs.');
+  });
+
+  it('is committed when it changed, alone or riding along with the snapshot or the stats', () => {
+    const commit = stepBody(update, 'Commit the data that changed');
+    expect(commit).toContain('if git diff --quiet -- data/jv.json; then JV=false; else JV=true; fi');
+    expect(commit).toContain('git commit -m "data: refresh JV games ${DAY} (${JV_SUMMARY})"');
+    expect(commit).toContain('${JV_TAIL}"');
+  });
+});
+
 /**
  * The Test step runs after the stats step, which is allowed to fail; a stats file the suite refuses
  * must not cost the snapshot commit either. The step's own shell runs here, in a scratch git repo
@@ -116,8 +147,9 @@ describe('the Test step never lets a stats file block the snapshot', () => {
   const step = stepBody(update, 'Test');
   const script = runBlock(step);
   const committed = '{"stats":"good"}\n';
+  const committedJv = '{"jv":"good"}\n';
 
-  function repo(files: { stats?: string; snapshot?: string }) {
+  function repo(files: { stats?: string; snapshot?: string; jv?: string }) {
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-test-step-'));
     const git = (...args: string[]) => {
       const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.com', ...args], { cwd: dir, encoding: 'utf8' });
@@ -126,24 +158,26 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     mkdirSync(path.join(dir, 'data'));
     writeFileSync(path.join(dir, 'data', 'player-stats.json'), committed);
     writeFileSync(path.join(dir, 'data', 'snapshot.json'), '{"snapshot":"good"}\n');
+    writeFileSync(path.join(dir, 'data', 'jv.json'), committedJv);
     git('init', '-q');
     git('add', '.');
     git('commit', '-q', '-m', 'init');
     // What this run's fetch steps wrote.
     if (files.stats) writeFileSync(path.join(dir, 'data', 'player-stats.json'), files.stats);
     if (files.snapshot) writeFileSync(path.join(dir, 'data', 'snapshot.json'), files.snapshot);
+    if (files.jv) writeFileSync(path.join(dir, 'data', 'jv.json'), files.jv);
     const bin = path.join(dir, '.bin');
     mkdirSync(bin);
     // `pnpm test` passes unless a data file says "bad"; every call is logged.
     writeFileSync(
       path.join(bin, 'pnpm'),
-      '#!/usr/bin/env bash\necho "pnpm $*" >> "$CALLS"\n! grep -q bad data/player-stats.json data/snapshot.json\n',
+      '#!/usr/bin/env bash\necho "pnpm $*" >> "$CALLS"\n! grep -q bad data/player-stats.json data/snapshot.json data/jv.json\n',
       { mode: 0o755 },
     );
     return { dir, bin };
   }
 
-  function runStep(files: { stats?: string; snapshot?: string }) {
+  function runStep(files: { stats?: string; snapshot?: string; jv?: string }) {
     const { dir, bin } = repo(files);
     const output = path.join(dir, '.github-output');
     const calls = path.join(dir, '.calls');
@@ -158,6 +192,7 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     return {
       code: res.status,
       stats: readFileSync(path.join(dir, 'data', 'player-stats.json'), 'utf8'),
+      jv: readFileSync(path.join(dir, 'data', 'jv.json'), 'utf8'),
       output: readFileSync(output, 'utf8'),
       calls: readFileSync(calls, 'utf8').trim().split('\n').filter(Boolean),
     };
@@ -197,6 +232,33 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     expect(r.code).toBe(1);
     expect(r.calls).toEqual(['pnpm test']);
     expect(r.output).toBe('');
+  });
+
+  it('restores the committed JV file first and passes when only the new one failed the suite', () => {
+    const r = runStep({ stats: '{"stats":"new"}\n', jv: '{"jv":"bad"}\n' });
+    expect(r.code).toBe(0);
+    expect(r.jv).toBe(committedJv);
+    expect(r.stats).toBe('{"stats":"new"}\n');
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test']);
+    expect(r.output).toContain('jv_restored=true');
+    expect(r.output).not.toContain('stats_restored');
+  });
+
+  it('restores both files when the suite still fails without the new JV file', () => {
+    const r = runStep({ stats: '{"stats":"bad"}\n', jv: '{"jv":"bad"}\n' });
+    expect(r.code).toBe(0);
+    expect(r.jv).toBe(committedJv);
+    expect(r.stats).toBe(committed);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test', 'pnpm test']);
+    expect(r.output).toContain('jv_restored=true');
+    expect(r.output).toContain('stats_restored=true');
+  });
+
+  it('fails when restoring the JV file was not enough and the stats file did not change', () => {
+    const r = runStep({ jv: '{"jv":"new"}\n', snapshot: '{"snapshot":"bad"}\n' });
+    expect(r.code).toBe(1);
+    expect(r.jv).toBe(committedJv);
+    expect(r.calls).toEqual(['pnpm test', 'pnpm test']);
   });
 
   it('runs before the commit step, which reads the restored file as no stats change', () => {

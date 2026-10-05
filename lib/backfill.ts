@@ -454,8 +454,11 @@ function sideOf(team: Team, score: number, other: number): GameSide {
   return { teamId: team.id, slug: team.slug, name: team.name, score, result: outcome(score, other) };
 }
 
-/** si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time. */
-function datesOf(row: SbliveGame): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
+/**
+ * si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time.
+ * Exported for lib/jv-merge.ts, which builds a si.com-only JV game the same way.
+ */
+export function datesOf(row: Pick<SbliveGame, 'dateIso' | 'dateKey'>): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
   const hasTime = /T\d{2}:\d{2}/.test(row.dateIso);
   const instant = hasTime ? new Date(row.dateIso) : null;
   if (instant && !Number.isNaN(instant.getTime())) {
