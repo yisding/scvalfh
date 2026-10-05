@@ -5,8 +5,7 @@ import type { Game, LeagueId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
-
-import { gameWord } from './filter-data';
+import { gameWord } from '../ui/plural';
 
 /** What the index needs to know about a team: its slug's league. */
 type SlugLeague = (slug: string) => LeagueId | undefined;

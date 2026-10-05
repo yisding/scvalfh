@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
-import { gameWord } from '../../../components/schedule/filter-data';
+import { gameWord } from '../../../components/ui/plural';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getGameDates, getGames } from '../../../lib/data';
 import { EN_DASH, shortDate } from '../../../lib/format';

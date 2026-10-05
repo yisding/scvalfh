@@ -6,9 +6,9 @@ import GameList from '../../../components/schedule/GameList';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
 import { dayGroups, daySummary, leaguesInvolved } from '../../../components/schedule/day-summary';
-import { gameWord } from '../../../components/schedule/filter-data';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
+import { gameWord } from '../../../components/ui/plural';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, SITE_NAME } from '../../../components/layout/site';
 import {

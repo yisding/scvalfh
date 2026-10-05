@@ -7,6 +7,11 @@ import { plural } from '../../lib/format';
 
 export { plural };
 
+/** 'game' / 'games' for a count printed separately (`{n} {gameWord(n)}`), never "1 games". */
+export function gameWord(n: number): string {
+  return n === 1 ? 'game' : 'games';
+}
+
 /** The accessible name of a team's form strip: 'Del Mar last 1 league game' / '… last 5 league games'. */
 export function formStripName(teamName: string, count: number): string {
   return `${teamName} last ${plural(count, 'league game')}`;

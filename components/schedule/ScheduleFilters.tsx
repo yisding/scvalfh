@@ -3,11 +3,11 @@
 import { useState } from 'react';
 
 import EmptyState from '../ui/EmptyState';
+import { gameWord } from '../ui/plural';
 
 import {
   DEFAULT_FILTERS,
   contestWord,
-  gameWord,
   isDefaultFilters,
   unfilteredCountLine,
   type FilterState,

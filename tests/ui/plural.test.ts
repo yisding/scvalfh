@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { formStripName, plural } from '../../components/ui/plural';
+import { formStripName, gameWord, plural } from '../../components/ui/plural';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
 
@@ -34,6 +34,12 @@ describe('plural()', () => {
   it('names a one-entry form strip in the singular', () => {
     expect(formStripName('Del Mar', 1)).toBe('Del Mar last 1 league game');
     expect(formStripName('Del Mar', 5)).toBe('Del Mar last 5 league games');
+  });
+
+  it('gives the bare word for a count printed separately', () => {
+    expect(gameWord(1)).toBe('game');
+    expect(gameWord(0)).toBe('games');
+    expect(gameWord(2)).toBe('games');
   });
 });
 

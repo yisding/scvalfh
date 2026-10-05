@@ -12,9 +12,9 @@ import { LEAGUES, findDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId } from '../../lib/types';
 import { describeGame } from '../ui/game-view';
-import { plural } from '../ui/plural';
+import { gameWord, plural } from '../ui/plural';
 
-import { countGames, gameWord, type ScheduleCounts } from './filter-data';
+import { countGames, type ScheduleCounts } from './filter-data';
 
 export interface DayLine {
   contestId: string;
