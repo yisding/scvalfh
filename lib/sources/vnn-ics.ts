@@ -20,7 +20,7 @@
 import { localDateKey, toLocalTimestamp } from '../format';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
 import type { Game, TeamSlug } from '../types';
-import { HttpClient, type HttpClientOptions, icsLine, unfoldIcs } from './http';
+import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */
 export const VNN_SITE_IDS: ReadonlyArray<{ slug: TeamSlug; siteId: string; school: string }> = [
@@ -239,22 +239,4 @@ export function carryVnnForward(
     return { ...game, ...patch };
   });
   return { games: out, carried };
-}
-
-// ---------------------------------------------------------------- client
-
-export class VnnClient {
-  private readonly http: HttpClient;
-
-  constructor(opts: HttpClientOptions = {}) {
-    this.http = new HttpClient(opts);
-  }
-
-  async getCalendar(
-    site: { slug: TeamSlug; siteId: string },
-  ): Promise<{ events: VnnEvent[]; url: string; httpStatus: number }> {
-    const url = vnnIcsUrl(site.siteId);
-    const res = await this.http.text(url, 'text/calendar,text/plain,*/*');
-    return { events: parseVnnIcs(res.body, site.slug), url, httpStatus: res.httpStatus };
-  }
 }
