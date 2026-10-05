@@ -10,7 +10,7 @@ import Arrow from '../../components/ui/Arrow';
 import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site';
+import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site';
 import { getClubs } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import {
@@ -1149,17 +1149,25 @@ export default function AboutPage() {
           <SectionHeader size="lg" kicker="Corrections &amp; contact" />
           <div className="sx-prose">
             <p>
-              This is an independent hobby project with no staffed inbox, so the fastest way to check
-              anything you think looks wrong is to compare it against the primary source directly
-              &mdash; every team, standings table and game on this site links back to its MaxPreps page,
-              and the league documents above link straight to each league&rsquo;s own files
-              {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}. If a number
-              here disagrees with one of those sources, that is exactly what{' '}
+              Spot a wrong score, a missing game, a misspelled name or a record that does not add up?
+              Post it in the{' '}
+              <ExternalLink href={DATA_CORRECTIONS_URL}>Data errors thread on our forum</ExternalLink>.
+              Say which page it is on, what it shows and what it should be, and, if you can, link where
+              you saw the right number. This is an independent hobby project with no staffed inbox, so
+              that thread is the place to send a correction.
+            </p>
+            <p>
+              Before posting, it is worth comparing against the primary source &mdash; every team,
+              standings table and game on this site links back to its MaxPreps page, and the league
+              documents above link straight to each league&rsquo;s own files
+              {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}. Most
+              scores here come from MaxPreps, so if MaxPreps has it wrong too, the school can correct it
+              there and the next update picks it up. If a number here disagrees with one of those
+              sources, check{' '}
               <a href="#cross-check" className="text-accent hover:underline">
                 the cross-check log
               </a>{' '}
-              is for, and it is worth checking there first: a real disagreement between sources is
-              published, not hidden.
+              first: a real disagreement between sources is published, not hidden.
             </p>
           </div>
         </section>

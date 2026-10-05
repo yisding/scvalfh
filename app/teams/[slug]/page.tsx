@@ -27,6 +27,7 @@ import { gameKindLabel } from '../../../components/ui/describe-game';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
+import ReportDataError from '../../../components/ui/ReportDataError';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { OG_BASE } from '../../../components/layout/site';
@@ -492,6 +493,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </Link>
               </p>
             ) : null}
+            <ReportDataError what="score, record or roster entry" className="mt-3" />
           </section>
         </div>
 

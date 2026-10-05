@@ -9,15 +9,16 @@ import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
-import { SITE_SCOPE_NOTE } from './site';
+import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
  * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
  * alignment and rules the site follows (each linked to its official site), the scope note naming
- * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
- * to last season's archive (2025-26 final standings, by league), and
+ * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, the link to report a data
+ * error (DATA_CORRECTIONS_URL), a link to /about and one to last season's archive (2025-26 final
+ * standings, by league), and
  * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
  * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern
  * Section" and can never drift from the config. A league with no document of its own (every
@@ -111,6 +112,15 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             from every route. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
+          {/* The corrections thread, directly under the stamp: "this is how fresh the data is"
+              and "tell us if it is wrong" belong together. First of the actions because it is the
+              one a reader comes looking for; in the footer because that is where every page, at
+              every width, already says where the numbers come from. The top bar has no room for it
+              (SiteHeader measures 4px spare at 360) and the phone tab bar is navigation. `gap-1`
+              restores the space before the arrow, which a flex box drops. */}
+          <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-action gap-1 font-medium">
+            Report a data error
+          </ExternalLink>
           <Link href="/about" prefetch={false} className="sx-action text-accent hover:underline">
             About &amp; sources
           </Link>
