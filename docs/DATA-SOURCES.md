@@ -1420,7 +1420,8 @@ tested end to end).
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
-  section, not league) — use `contest-ids-grouped-by-date-by-context/v2` instead.
+  section, not league) — the researched replacement is §1.1(c) `contest-ids-grouped-by-date-by-context/v2`.
+  The pipeline uses neither and reads each team's schedule feed.
 - `team-standings/v1` — only a 3-row window; use `leagues/{id}/standings/v1`.
 - `/ca/field-hockey/standings/`, `/ca/field-hockey/leagues/`, `/_next/data/{buildId}/…` — 404.
 - SBLive league-scoped scoreboard — inherits the wrong league membership.
