@@ -115,15 +115,12 @@ describe('data: teams', () => {
     expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
   });
 
-  it('looks a team up by slug or GUID, and names its league', () => {
+  it('looks a team up by slug or GUID', () => {
     const team = data.getTeamBySlug('los-altos');
     expect(team?.name).toBe('Los Altos');
     expect(data.getTeamById(team!.id)?.slug).toBe('los-altos');
-    expect(data.getLeagueOfTeam(team!.id)?.id).toBe('scval'); // a GUID resolves as well as a slug
+    expect(data.getTeamForm(team!.id)).toBeDefined(); // a GUID resolves as well as a slug
     expect(data.getTeamBySlug('nope')).toBeUndefined();
-    expect(data.getLeagueOfTeam('tamalpais')?.id).toBe('mcal');
-    expect(data.getLeagueOfTeam('nope')).toBeUndefined();
-    expect(data.getLeagueOfTeam('davis')?.id).toBe('eal');
     expect(data.getTeamSlugs()).toHaveLength(49);
   });
 

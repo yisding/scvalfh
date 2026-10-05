@@ -315,11 +315,6 @@ export function getTeamSlugs(): TeamSlug[] {
   return snapshot.teams.map((t) => t.slug);
 }
 
-export function getLeagueOfTeam(ref: string): LeagueSummary | undefined {
-  const team = resolveTeamRef(ref);
-  return team ? getLeagueSummary(team.league) : undefined;
-}
-
 let searchIndex: SearchIndex | null = null;
 
 /** The pre-serialized 49-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
