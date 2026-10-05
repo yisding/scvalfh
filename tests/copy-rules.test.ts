@@ -353,6 +353,26 @@ describe('historyPageProblems: the history page holds what the history data says
     expect(award).toHaveLength(1);
     expect(award[0]).toMatch(new RegExp(`^${id}: an unavailable league shows a result or award — “…`));
   });
+
+  it('reads the reason as React escapes it, decoding each entity once', () => {
+    if (unavailable?.entry.status !== 'unavailable') throw new Error('no unavailable league in the history data');
+    const { id } = unavailable;
+    const reason = `The league's "standings" page & its <archive> are gone, so nothing official was read.`;
+    const one = [{ id, entry: { ...unavailable.entry, reason } }];
+    const section = (text: string) => `<main><section id="${id}"><div><h3>Unavailable</h3><p>${text}</p></div></section></main>`;
+    // React escapes `& < > " '` in text.
+    const react = reason
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+    expect(historyPageProblems(section(react), one)).toEqual([]);
+    // An escaped `&#x27;` is the text `&#x27;`, never an apostrophe.
+    expect(historyPageProblems(section(react.replace('&#x27;', '&amp;#x27;')), one)).toEqual([
+      `${id}: the reason is not on the page`,
+    ]);
+  });
 });
 
 describe('visibleText: what a reader of a built page sees', () => {

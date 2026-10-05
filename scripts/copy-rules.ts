@@ -567,14 +567,24 @@ export function around(text: string, index: number): string {
  */
 export function withoutLink(html: string, text: string): string {
   return html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, (link, inner: string) =>
-    inner.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() === text ? '' : link,
+    withoutTags(inner).replace(/\s+/g, ' ').trim() === text ? '' : link,
   );
 }
 
-// ---------------------------------------------------------------- /history/2025-26
+/**
+ * `html` with every tag removed, repeated until nothing changes, as withoutScripts is (CodeQL
+ * js/incomplete-multi-character-sanitization): no removal can leave the pieces of a new tag behind.
+ */
+function withoutTags(html: string): string {
+  let out = html;
+  for (let before = ''; before !== out; ) {
+    before = out;
+    out = out.replace(/<[^>]*>/g, '');
+  }
+  return out;
+}
 
-/** The two entities React writes in an attribute or text that a reason may contain. */
-const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
+// ---------------------------------------------------------------- /history/2025-26
 
 /**
  * What the history page's `<main>` gets wrong about `leagues` (lib/history.ts getHistoryLeagues),
@@ -606,7 +616,7 @@ export function historyPageProblems(
       if (/Unavailable/.test(section)) problems.push(`${id}: an available league says "Unavailable"`);
     } else {
       if (!section.includes('Unavailable')) problems.push(`${id}: unavailable league has no "Unavailable" card`);
-      if (!attrDecode(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
+      if (!decodeEntities(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
       if (/<table/.test(section)) problems.push(`${id}: an unavailable league shows a table`);
       const award = /champion|winner|all-league|MVP|first team/i.exec(section);
       if (award) problems.push(`${id}: an unavailable league shows a result or award — “…${around(section, award.index)}…”`);
