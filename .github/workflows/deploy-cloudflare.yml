@@ -186,7 +186,7 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         if: steps.gate.outputs.ready == 'true'
