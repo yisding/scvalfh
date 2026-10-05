@@ -19,7 +19,7 @@ import {
   getGamesPlayedSpread,
   getGoalDiffDomain,
   getLastLeagueResultDate,
-  getLeagueIds,
+  getLeagueSummaries,
   getLeagueSummary,
   getMissingOfficialResults,
   getNonLeagueFinalsPlayed,
@@ -175,9 +175,7 @@ export interface StandingsOverviewView {
 
 export function buildStandingsOverviewView(): StandingsOverviewView {
   const teams = getTeams();
-  const leagues = getLeagueIds()
-    .map((id) => getLeagueSummary(id))
-    .filter((l): l is LeagueSummary => l !== undefined);
+  const leagues = getLeagueSummaries();
   const sections = overviewOutline(
     leagues.map((l) => l.id),
     (division) =>
