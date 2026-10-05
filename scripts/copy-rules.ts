@@ -520,6 +520,11 @@ function sharesRun(page: string, fragment: string, publicTerms: readonly string[
   return false;
 }
 
+/** A page's `<main>…</main>` element (one per page; the smoke test asserts it exists), '' when absent. */
+export function mainElement(html: string): string {
+  return /<main[\s>][\s\S]*?<\/main>/.exec(html)?.[0] ?? '';
+}
+
 /**
  * The `<section …>…</section>` element whose start tag carries `id="<id>"`, wherever that attribute
  * sits in the tag (React renders a division's `className` before its `id`, a league's after), up to

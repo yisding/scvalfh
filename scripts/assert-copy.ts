@@ -89,7 +89,9 @@ import {
   commitmentLeaks,
   elementById,
   historyPageProblems,
+  mainElement,
   nonMemberSectionClaims,
+  sectionById,
   umpireOfficialClaims,
   visibleText,
 } from './copy-rules';
@@ -109,14 +111,11 @@ function forbid(file: string, text: string, pattern: RegExp, what: string): void
   const m = pattern.exec(text);
   if (m) fail(file, `${what} — “…${around(text, m.index)}…”`);
 }
-/** The `<main>…</main>` element of a page (one per page; the smoke test asserts it exists). */
+/** The `<main>…</main>` element of a page (copy-rules mainElement), failing the page when it has none. */
 function mainOf(file: string, html: string): string {
-  const m = /<main[\s>][\s\S]*?<\/main>/.exec(html);
-  if (!m) {
-    fail(file, 'no <main> element');
-    return '';
-  }
-  return m[0];
+  const main = mainElement(html);
+  if (!main) fail(file, 'no <main> element');
+  return main;
 }
 
 const files = (readdirSync(APP, { recursive: true }) as string[])
@@ -269,19 +268,22 @@ if (!existsSync(historyPath)) {
       if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
     }
     // The Players section only: a team with no stats can still be named on a school board, which
-    // says nothing about its players. It follows the Schools section (DESIGN §23), so it runs to
-    // the end of <main>, which after it holds only the attribution line.
-    const start = main.indexOf('<section id="players"');
-    const schools = main.indexOf('<section id="schools"');
-    if (schools > start) fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
-    // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
-    const players = (schools >= 0 && schools < start ? main.slice(start) : '')
-      .replace(/&#x27;|&#39;/g, "'")
-      .replace(/&amp;/g, '&');
-    const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
-    for (const team of snapshot.teams) {
-      if (statSlugs.has(team.slug)) continue;
-      if (!players.includes(team.name)) fail(file, `${team.name} has no player stats, and the Players section does not say so`);
+    // says nothing about its players. It follows the Schools section (DESIGN §23).
+    const players = sectionById(main, 'players');
+    const schools = sectionById(main, 'schools');
+    if (!players) fail(file, 'no <section id="players">');
+    if (!schools) fail(file, 'no <section id="schools">');
+    if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
+      fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
+    }
+    if (players) {
+      // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
+      const playersText = players.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
+      const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
+      for (const team of snapshot.teams) {
+        if (statSlugs.has(team.slug)) continue;
+        if (!playersText.includes(team.name)) fail(file, `${team.name} has no player stats, and the Players section does not say so`);
+      }
     }
   }
 }

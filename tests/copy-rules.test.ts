@@ -25,6 +25,7 @@ import {
   commitmentLeaks,
   elementById,
   historyPageProblems,
+  mainElement,
   nonMemberSectionClaims,
   sectionById,
   umpireOfficialClaims,
@@ -264,6 +265,19 @@ describe('elementById: the /playoffs EAL card, a <div>', () => {
   it('is sectionById for the section element', () => {
     const html = '<section id="a"><section id="b"></section></section><div id="a"></div>';
     expect(sectionById(html, 'a')).toBe(elementById(html, 'a', 'section'));
+  });
+});
+
+describe('mainElement: a built page\'s <main>', () => {
+  it('takes the <main> element with its attributes, and nothing outside it', () => {
+    const html = '<body><header>h</header><main id="main" class="x"><p>one</p></main><footer>f</footer></body>';
+    expect(mainElement(html)).toBe('<main id="main" class="x"><p>one</p></main>');
+    expect(mainElement('<main><p>bare</p></main>')).toBe('<main><p>bare</p></main>');
+  });
+
+  it('is empty when the page has no <main>, and never matches a longer tag name', () => {
+    expect(mainElement('<body><p>x</p></body>')).toBe('');
+    expect(mainElement('<mainly>x</mainly>')).toBe('');
   });
 });
 
