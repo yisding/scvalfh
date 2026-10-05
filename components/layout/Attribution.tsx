@@ -78,7 +78,9 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             every page, at every width, is where a reader who has just seen a wrong score looks for
             what to do about it, and the footer is where the site already says where its numbers
             come from. A raised card with the accent pill, so it reads as the one thing to act on
-            here rather than one more footer link. The top bar has no room for it (SiteHeader
+            here rather than one more footer link. `text-accent-ink!` because ExternalLink's own
+            `text-accent` utility outranks the pill's accent-ink (globals.css), and accent on the
+            accent wash is 4.37:1 in dark mode, under AA. The top bar has no room for it (SiteHeader
             measures 4px spare at 360) and the phone tab bar is navigation. */}
         <div className="sx-card mb-8 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between md:col-span-2 md:mb-4 md:px-5">
           <p className="m-0 max-w-prose">
@@ -87,7 +89,7 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
           </p>
           <ExternalLink
             href={DATA_CORRECTIONS_URL}
-            className="sx-pill sx-pill-accent min-h-11 shrink-0 self-start sm:self-auto"
+            className="sx-pill sx-pill-accent min-h-11 shrink-0 self-start text-accent-ink! sm:self-auto"
           >
             Report a data error
           </ExternalLink>

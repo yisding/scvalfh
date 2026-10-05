@@ -474,9 +474,11 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 </li>
               ) : null}
               {/* Last, beside the sources a reader checks a wrong score or roster entry against;
-                  the one accent pill in the row, so it reads as the action rather than a source. */}
+                  the one accent pill in the row, so it reads as the action rather than a source.
+                  `text-accent-ink!`: ExternalLink's `text-accent` would otherwise win, and accent
+                  on the wash is under AA in dark mode (components/layout/Attribution.tsx). */}
               <li>
-                <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-pill sx-pill-accent">
+                <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-pill sx-pill-accent text-accent-ink!">
                   Report a data error
                 </ExternalLink>
               </li>

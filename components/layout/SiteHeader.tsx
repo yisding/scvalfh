@@ -128,15 +128,19 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
           40px link. NOT part of the sticky header: it scrolls away with the page, so the sticky
           stack every offset is measured against (--sx-sticky-top, html's scroll-padding-top, the
           division and date bars) stays the 48/64px bar, and the reader gets the height back once
-          they start reading. */}
-      <div className="border-b border-hairline bg-surface min-[70rem]:hidden">
+          they start reading. An <aside> with a label, so it sits in a landmark of its own: outside
+          every landmark, axe reports the line under `region`. */}
+      <aside
+        aria-label="Data corrections"
+        className="border-b border-hairline bg-surface min-[70rem]:hidden"
+      >
         <ExternalLink
           href={DATA_CORRECTIONS_URL}
           className="mx-auto flex min-h-10 max-w-content items-center gap-1 px-gutter text-meta font-medium no-underline md:px-gutter-lg"
         >
           <span className="text-ink-2">See something missing?</span> Report a data error
         </ExternalLink>
-      </div>
+      </aside>
     </>
   );
 }
