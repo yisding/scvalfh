@@ -303,7 +303,7 @@ function main(argv: readonly string[]): number {
     else if (a === '--out-dir') outDir = path.resolve(next());
     else if (a === '--bval-text') {
       const files = [argv[++i], argv[++i]];
-      if (files.some((f) => !f)) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
+      if (files.some((f) => f === undefined || f.startsWith('--'))) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
       bvalTexts = files.map((f) => readFileSync(path.resolve(f as string), 'utf8'));
     } else throw new Error(`unknown argument: ${a}`);
   }

@@ -70,7 +70,7 @@ function parseArgs(argv: readonly string[]): Args {
     const flag = argv[i];
     const value = () => {
       const v = argv[++i];
-      if (!v) throw new Error(`${flag} needs a value\n${USAGE}`);
+      if (v === undefined || v.startsWith('--')) throw new Error(`${flag} needs a value\n${USAGE}`);
       return v;
     };
     if (flag === '--year') args.year = value();

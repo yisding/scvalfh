@@ -711,6 +711,13 @@ describe('scripts/build-history.ts', () => {
     expect(bad.output).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
   }, 30_000);
 
+  it('refuses a flag where a value belongs, rather than writing a file named after it', () => {
+    const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', '--dry-run']);
+    expect(r.status).toBe(1);
+    expect(r.output).toMatch(/--out needs a value/);
+    expect(existsSync(path.join(REPO, '--dry-run'))).toBe(false);
+  }, 30_000);
+
   it('writes nothing, and exits 1, when a school does not resolve', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-bval-'));
     for (const f of readdirSync(BVAL_FIX)) {

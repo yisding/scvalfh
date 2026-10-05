@@ -78,7 +78,7 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v) throw new Error(`${arg} needs a value`);
+      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
