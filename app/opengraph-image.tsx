@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 
+import { OG, OG_SIZE } from '../components/layout/og-theme';
 import { SITE_NAME } from '../components/layout/site';
 import { leaderLine } from '../components/standings/standings-data';
 import { leaderClause } from '../components/standings/standings-view';
@@ -23,7 +24,7 @@ import { shortDate } from '../lib/format';
  * rows, on the live snapshot and with three rows wrapped.
  */
 export const alt = `${SITE_NAME} — 2026 standings, scores and playoffs`;
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export default function OpengraphImage() {
@@ -48,14 +49,14 @@ export default function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '56px 72px',
-          background: '#0b0d10',
-          color: '#f2f5f8',
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
-          <div style={{ display: 'flex', marginTop: 16, height: 2, background: '#3d444d' }} />
+          <div style={{ display: 'flex', marginTop: 16, height: 2, background: OG.RULE }} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -67,7 +68,7 @@ export default function OpengraphImage() {
                 alignItems: 'flex-start',
                 paddingTop: 10,
                 paddingBottom: 10,
-                borderBottom: '1px solid #3d444d',
+                borderBottom: `1px solid ${OG.RULE}`,
               }}
             >
               <div style={{ display: 'flex', width: 170, flexShrink: 0, fontSize: 32, lineHeight: 1.15, fontWeight: 600 }}>
@@ -78,11 +79,11 @@ export default function OpengraphImage() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', fontSize: 24, color: '#919ba5' }}>
+        <div style={{ display: 'flex', fontSize: 24, color: OG.TEXT_3 }}>
           {footer} &middot; unofficial
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

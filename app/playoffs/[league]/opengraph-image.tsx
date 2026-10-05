@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { notFound } from 'next/navigation';
 
+import { OG, OG_SIZE } from '../../../components/layout/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { ROUND_TITLES, type TournamentRoundView } from '../../../components/playoffs/playoff-view';
 import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-data';
@@ -20,12 +21,8 @@ import { listWords, shortDate } from '../../../lib/format';
  * need `generateImageMetadata`, which changes the image URL shape.
  */
 export const alt = 'League tournament card: the seeds from the league table and the round dates';
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
-
-const INK = '#f2f5f8';
-const MUTED = '#919ba5';
-const RULE = '#3d444d';
 
 export function generateStaticParams(): { league: string }[] {
   return tournamentStaticParams();
@@ -63,24 +60,24 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 64,
-          background: '#0b0d10',
-          color: INK,
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', fontSize: 60, fontWeight: 600 }}>{ps.name}</div>
-          <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: MUTED }}>{sub}</div>
-          <div style={{ display: 'flex', marginTop: 16, height: 2, background: RULE }} />
+          <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: OG.TEXT_3 }}>{sub}</div>
+          <div style={{ display: 'flex', marginTop: 16, height: 2, background: OG.RULE }} />
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {seeds.length === 0 ? (
-            <div style={{ display: 'flex', fontSize: 36, color: MUTED }}>No league results yet</div>
+            <div style={{ display: 'flex', fontSize: 36, color: OG.TEXT_3 }}>No league results yet</div>
           ) : (
             seeds.map((s) => (
               <div key={s.seed} style={{ display: 'flex', width: '50%', paddingTop: 12, fontSize: 36 }}>
-                <div style={{ display: 'flex', width: 48, color: MUTED }}>{s.seed}</div>
+                <div style={{ display: 'flex', width: 48, color: OG.TEXT_3 }}>{s.seed}</div>
                 <div style={{ display: 'flex' }}>{s.names}</div>
               </div>
             ))
@@ -88,13 +85,13 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 26, color: INK }}>{rounds.join(' · ')}</div>
-          <div style={{ display: 'flex', marginTop: 8, fontSize: 22, color: MUTED }}>
+          <div style={{ display: 'flex', fontSize: 26, color: OG.TEXT }}>{rounds.join(' · ')}</div>
+          <div style={{ display: 'flex', marginTop: 8, fontSize: 22, color: OG.TEXT_3 }}>
             {SITE_NAME} · {summary.shortName} · unofficial
           </div>
         </div>
       </div>
     ),
-    size,
+    { ...OG_SIZE },
   );
 }

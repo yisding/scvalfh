@@ -8,6 +8,7 @@ import {
   officialFixtureHeadline,
   placeScope,
 } from '../../../components/teams/team-view';
+import { OG, OG_SIZE } from '../../../components/layout/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
 import {
@@ -40,17 +41,12 @@ import {
  */
 export const alt =
   'Team card: league and division, place, league record, points, goals for and against, streak, last result and next game';
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export function generateStaticParams() {
   return getTeamSlugs().map((slug) => ({ slug }));
 }
-
-const INK = '#f2f5f8';
-const MUTED = '#aab4bf';
-const FAINT = '#919ba5';
-const RULE = '#3d444d';
 
 function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
@@ -61,16 +57,16 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
           fontSize: 20,
           letterSpacing: 3,
           textTransform: 'uppercase',
-          color: FAINT,
+          color: OG.TEXT_3,
         }}
       >
         {label}
       </div>
-      <div style={{ display: 'flex', marginTop: 8, fontSize: 38, fontWeight: 600, color: INK }}>
+      <div style={{ display: 'flex', marginTop: 8, fontSize: 38, fontWeight: 600, color: OG.TEXT }}>
         {value}
       </div>
       {note ? (
-        <div style={{ display: 'flex', marginTop: 4, fontSize: 20, color: MUTED }}>{note}</div>
+        <div style={{ display: 'flex', marginTop: 4, fontSize: 20, color: OG.TEXT_2 }}>{note}</div>
       ) : null}
     </div>
   );
@@ -120,8 +116,8 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background: '#0b0d10',
-          color: INK,
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
@@ -136,7 +132,7 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
               borderRadius: 16,
               background: `#${team.colors.primary}`,
               color: team.colors.onPrimary,
-              border: `2px solid ${RULE}`,
+              border: `2px solid ${OG.RULE}`,
               fontSize: 50,
               fontWeight: 600,
             }}
@@ -145,14 +141,14 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', fontSize: 58, fontWeight: 600 }}>{team.name}</div>
-            <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: MUTED }}>
+            <div style={{ display: 'flex', marginTop: 8, fontSize: 28, color: OG.TEXT_2 }}>
               {view.identityLine}
             </div>
-            <div style={{ display: 'flex', marginTop: 8, fontSize: 30, color: INK }}>{placeLine}</div>
+            <div style={{ display: 'flex', marginTop: 8, fontSize: 30, color: OG.TEXT }}>{placeLine}</div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${RULE}`, paddingTop: 24 }}>
+        <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${OG.RULE}`, paddingTop: 24 }}>
           <Stat label="League" value={record} />
           <Stat label="Pts" value={points} />
           <Stat label="GP" value={gp} />
@@ -162,16 +158,16 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', fontSize: 30, color: INK }}>Last: {lastLine}</div>
-          <div style={{ display: 'flex', fontSize: 30, color: MUTED }}>Next: {nextLine}</div>
+          <div style={{ display: 'flex', fontSize: 30, color: OG.TEXT }}>Last: {lastLine}</div>
+          <div style={{ display: 'flex', fontSize: 30, color: OG.TEXT_2 }}>Next: {nextLine}</div>
         </div>
 
-        <div style={{ display: 'flex', fontSize: 22, color: FAINT }}>
+        <div style={{ display: 'flex', fontSize: 22, color: OG.TEXT_3 }}>
           As of {formatStamp(getFetchedAt())} &middot; league games only &middot; unofficial
           &middot; {SITE_NAME}
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }
