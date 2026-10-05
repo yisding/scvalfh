@@ -1,5 +1,5 @@
 {
-  "builtBy": "research on 2026-10-03, and on 2026-10-04 for the schools of the six EAL teams and three club records near them: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on every rostered player's MaxPreps career page, the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked twice: on 2026-10-03 by a checker that re-opened each source and then by an independent refuter, on 2026-10-04 by two independent checks that each re-opened the sources",
+  "builtBy": "research on 2026-10-03, and on 2026-10-04 for the schools of the six EAL teams and three club records near them: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on every rostered player's MaxPreps career page, the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked twice: on 2026-10-03 by a checker that re-opened each source and then by an independent refuter, on 2026-10-04 by two independent checks that each re-opened the sources; on 2026-10-05, the club and team lists on every recruiting profile the roster overlay links (SportsRecruits pages read in a browser, since their club block is rendered by script, and NCSA pages), which added ties for players those pages list with a club the file did not tie them to",
   "capturedAt": "2026-10-03",
   "season": "26-27",
   "notes": [
@@ -9,7 +9,8 @@
     "status: current = the source reflects the 2025-26 or 2026-27 club seasons (dated August 2025 or later, a club's current-players page, or a live recruiting profile that lists the club); past = dated earlier, an alumni list, or a club the player's own page lists for earlier years; unknown = listed with no usable date, or a newer page names another club for the player. asOf is the date or season the source gives. confidence: high = one first-hand page names player, club and school (or is the player's own profile); medium = the match rests on a club roster's class-year heading plus the club's location, on a team nickname standing for the school, or on a single self-reported line.",
     "clubs[] are the youth field hockey clubs around the 43 schools of the four leagues swept on 2026-10-03 (San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast), plus any club a rostered player is tied to, plus three clubs met near the six EAL teams' schools on 2026-10-04 (D-City in Davis and Roseville FHC, region sacramento; Chico Hotshots, region north-state). Each record was read from the club's own site on its checkedOn date (2026-10-03, or 2026-10-04 for those three) and names no individual. Clubs that run only adult teams or only K-5 clinics are left out unless a rostered player is tied to them. Only the six areas named above were searched for clubs (lib/clubs.ts SEARCHED_REGIONS); the Sacramento area and the North State were not, so other clubs may be based there. capturedAt is the day of the first sweep; a later record carries its own checkedOn.",
     "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept on 2026-10-04 with the same rule, using: the NFHCA 2025 and 2026 high school watchlists, the NCFHA youth directory (https://www.ncfha.org/youth), SportsRecruits profile slugs, NCSA, fhcollegepath.com classes 2026-2028, MAX Field Hockey, the club-teams block of the 95 EAL rows' MaxPreps career pages (Corning's roster has no rows), and the sites of the clubs it met. It found eight ties for five players. At Davis: Kira Kelly, Kate Loscutoff and Amelia Zedonis to NorCal Impact (the 2026-08-27 watchlist, current), Kira Kelly and Amelia Zedonis to D-City (the 2025-08-28 watchlist; unknown, because the newer list names NorCal Impact) and Kate Loscutoff to D-City (her own NCSA profile, 2023 and 2024; past). At Pleasant Valley: Lilah Letcher and Kate Panighetti to Chico Hotshots (the club-teams block of each one's own MaxPreps career page, entries last modified 2026-09-29 and 2026-05-20; current). Each was confirmed by two independent checks that re-opened its source. Three club records were added for the clubs the sweep met: D-City, Roseville FHC and Chico Hotshots. No EAL player is tied to Roseville FHC: one name on its Summer 2026 league archive matches a Bella Vista row, but the page gives no school or class year, and a name alone never makes a match.",
-    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows of the 43 schools swept on 2026-10-03, and the 95 EAL rows on 2026-10-04), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md."
+    "Recall is partial. Sources searched: the NCFHA and BAFHA club directories, every club's own site, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on each rostered player's MaxPreps career page (all 716 varsity rows of the 43 schools swept on 2026-10-03, and the 95 EAL rows on 2026-10-04), the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together (sticktogetherfh.com), the Gilroy Dispatch and other local and school news, and USA Field Hockey lists. A name on a club roster with no school or class year was not enough; Fly FHC's team-roster page, which is behind a captcha, could not be re-read and none of its names are here. A player with no public page that meets the rule is not listed, whatever club they play for. See docs/DATA-SOURCES.md.",
+    "On 2026-10-05 every recruiting profile linked from data/rosters-enrichment.json, data/commits.json or this file was re-read for the clubs it lists: 74 SportsRecruits pages (read in a browser, since their CLUB and TEAMS blocks are rendered by script and are not in the page's HTML), 36 NCSA pages and 51 Hudl pages (Hudl lists school teams only). It added 14 ties for 13 players, all to clubs already in clubs[]. Left out: three Los Gatos players whose pages list NorCal Impact (and one, SF Hawks) are on JV rows; Nexus and other program teams ('U18 Sydney', 'Oranje U19', 'Futures/Nexus') are not clubs; lacrosse and soccer clubs (STEPS California, ADVNC, Verve, San Francisco Glens) do not count; and Kate Loscutoff's 2025 season with Sacramento Hockey Academy is not tied, because the club has no record here. Each new tie rests on the player's own profile, and each was re-checked by an independent refuter that re-opened the page, which names the club, the class year and (for all but Sophie Dhillon) the school; status follows the rule above, a live profile listing the club with no end date counting as current."
   ],
   "clubs": [
     {
@@ -4131,6 +4132,300 @@
         }
       ],
       "basis": "Her own MaxPreps career page (its careerId is the roster row's; Pleasant Valley, graduatingClass 2027, which matches grade 12) lists one club team: 'Hot Shots', club Chico Hotshots, Chico CA, sport Field Hockey, U19, joined 2026, season Spring, created 2026-05-19 and last modified 2026-05-20, with its team site set to the club's TeamLinkt site (leagues.teamlinkt.com/chicohotshotsfieldhockey). One first-hand page names the player, the club and the school, so confidence is high. Spring 2026 is in the 2025-26 club season and the entry is dated after August 2025, gives no end year, and no newer page names another club for her, so status is current, as of 2026-05-20 (as for Yoyo Cai). clubTeam is the entry's age group, U19, which the club lists as a spring 2026 team. The career home page and its bio page carry the same entry. Found by the 2026-10-04 MaxPreps sweep of all 95 EAL rows and confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entry). She is the only Panighetti on any roster."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "fullName": "Alyssa Montejano",
+      "club": "norcal-impact",
+      "clubTeam": "Wolves",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/alyssa_montejano",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR Gilroy, CA HOMETOWN Wolves, NorCal Impact CLUB … TEAMS Wolves, NorCal Impact 2 Christopher High School Gilroy , CA",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12), Gilroy, CA, and lists Christopher High School and the club team 'Wolves, NorCal Impact' under TEAMS, with NorCal Impact as her CLUB. The club and team list are rendered by script, so the page was read in a browser on 2026-10-05. It is a live profile with 2026 events and no end date, so the tie is current under the live-profile rule; her Infinity tie (the 2025 California Cup) stays past."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
+      "fullName": "Emma Traverso",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/emma_traverso",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR Saratoga, CA HOMETOWN NorCal Impact CLUB … TEAMS NorCal Impact Archbishop Mitty High School Saratoga , CA",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Saratoga, CA, names NorCal Impact as her CLUB and lists it under TEAMS beside Archbishop Mitty High School. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule; her NCSA page's San Jose Fly seasons end in 2025, which is why that tie stays unknown."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "fullName": "Maggie Magnano",
+      "club": "htc",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/margaret_magnano",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR San Rafael, CA HOMETOWN U19 Hawks Blue, San Francisco Youth Field Hockey Club CLUB … TEAMS St. Ignatius College Preparatory Girls Field Hockey … U19 Hawks Blue, San Francisco Youth Field Hockey Club … HTC- California",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (listed as Margaret Magnano, the one the roster overlay links) gives class of 2027 (agrees with grade 12) and lists three teams: St. Ignatius College Preparatory Girls Field Hockey, U19 Hawks Blue (San Francisco Youth Field Hockey Club) and 'HTC- California', which is HTC's California program (aliases HTC California, HTC-CA); the page does not say which of its groups. Read in a browser on 2026-10-05. The page gives no dates; it is a live profile with 2026 events, so current under the live-profile rule, alongside her SF Hawks tie."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "d5e8fc2f-06a0-4da7-9cba-3f54c6be249f",
+      "fullName": "Juliet Calderon",
+      "club": "infinity",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/juliet_calderon",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR Gilroy, CA HOMETOWN Infinity, Infinity CLUB … TEAMS Infinity, Infinity 9 Christopher High School Gilroy , CA",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Gilroy, CA, names Infinity as her CLUB and lists the team 'Infinity, Infinity' under TEAMS beside Christopher High School. Infinity Sports Club is the Gilroy field hockey club. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "willow-glen",
+      "athleteId": "3a2b6d71-e0a6-4232-a9ac-8c8bf8fa7705",
+      "fullName": "Isabella Alonzo",
+      "club": "norcal-impact",
+      "clubTeam": "NorCal Wolves",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/isabella_alonzo",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR SAN JOSE, CA HOMETOWN NorCal Wolves, NorCal Impact CLUB … TEAMS NorCal Wolves, NorCal Impact 4 Willow Glen High School San Jose , CA",
+          "statedSchool": "Willow Glen High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and San Jose, CA, names the club team 'NorCal Wolves, NorCal Impact' as her CLUB and lists it under TEAMS beside Willow Glen High School. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
+      "fullName": "Katarina Smith",
+      "club": "fly-fhc",
+      "clubTeam": "U19 Fly Black",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/katarina_smith",
+          "kind": "sportsrecruits",
+          "quote": "2027 GRAD YR Los Altos, CA HOMETOWN U19 Fly Black, San Jose Fly Field Hockey Club (226754) CLUB … TEAMS U19 Fly Black, San Jose Fly Field Hockey Club (226754) 81 Los Altos High School Varsity Los Altos , CA",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Los Altos, CA, names 'U19 Fly Black, San Jose Fly Field Hockey Club' as her CLUB and lists it under TEAMS beside Los Altos High School Varsity. San Jose Fly is Fly FHC's former name (an alias on the club record). Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with July 2026 events, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "fremont",
+      "athleteId": "6523e0ef-d011-4582-8aca-3f50dd2020a9",
+      "fullName": "Sophie Dhillon",
+      "club": "fly-fhc",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/sophie_dhillon",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Sunnyvale, CA HOMETOWN San Jose Fly Field Hockey Club (226754) CLUB … TEAMS San Jose Fly Field Hockey Club (226754) High School Team Sunnyvale , CA",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Sunnyvale, CA, where Fremont High School is, and names San Jose Fly Field Hockey Club (Fly FHC's former name) as her CLUB and under TEAMS. Its high school entry reads only 'High School Team, Sunnyvale', so the match rests on the class year plus a Sunnyvale hometown and a San Jose club. Read in a browser on 2026-10-05; a live profile with 2026 events, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "d1f30b24-6a0a-4f56-b88e-55d0b226494d",
+      "fullName": "Beatrix Hom",
+      "club": "sf-hawks",
+      "clubTeam": "U16 Yellow",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/beatrice_hom3",
+          "kind": "sportsrecruits",
+          "quote": "2029 GRAD YR San Francisco, CA HOMETOWN St. Ignatius College Preparatory Girls Field Hockey … TEAMS St. Ignatius College Preparatory Girls Field Hockey … U16 Yellow, San Francisco Hawks 83",
+          "statedSchool": "St. Ignatius College Preparatory",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (listed as Beatrice Hom, the one the roster overlay links) gives class of 2029 (agrees with grade 10) and San Francisco, CA, and lists two teams: St. Ignatius College Preparatory Girls Field Hockey and 'U16 Yellow, San Francisco Hawks', SF Hawks' U16 team. Read in a browser on 2026-10-05, since the team list is rendered by script. The page gives no dates; it is a live profile, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "chico",
+      "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
+      "fullName": "Evie Nielsen",
+      "club": "chico-hotshots",
+      "clubTeam": "Hotshots u19",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/evelyn_nielson",
+          "kind": "sportsrecruits",
+          "quote": "2028 GRAD YR Chico, CA HOMETOWN … I am Evelyn Nielsen but everyone calls me Evie. … During that time I’ve played for Chico High and the Chico Hotshots. … TEAMS Field Hockey, Chico High School - Field Hockey … Hotshots u19, Chico Hotshots 14",
+          "statedSchool": "Chico High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (listed as Evelyn Nielsen, slug evelyn_nielson; the one the roster overlay links) gives class of 2028 (agrees with grade 11) and Chico, CA; the bio says everyone calls her Evie and that she has played for Chico High and the Chico Hotshots, and TEAMS lists Chico High School - Field Hockey and 'Hotshots u19, Chico Hotshots'. Read in a browser on 2026-10-05. A live profile, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "chico",
+      "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
+      "fullName": "Evie Nielsen",
+      "club": "fly-fhc",
+      "clubTeam": "Guest player, Cal Cup 2026",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/evelyn_nielson",
+          "kind": "sportsrecruits",
+          "quote": "2028 GRAD YR Chico, CA HOMETOWN … I’ve also been a guest player for the San Jose Fly team at Cal Cup 2026. … TEAMS Field Hockey, Chico High School - Field Hockey … Hotshots u19, Chico Hotshots 14 San Jose Fly 70",
+          "statedSchool": "Chico High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2028, agrees with grade 11; Chico High School - Field Hockey) lists 'San Jose Fly' under TEAMS, and the bio says she has been a guest player for the San Jose Fly team at Cal Cup 2026. San Jose Fly is Fly FHC's former name. She was a guest at one 2026 tournament, not a member: her own club is Chico Hotshots, so any wording must say guest player. Read in a browser on 2026-10-05."
+    },
+    {
+      "teamSlug": "chico",
+      "athleteId": "c95dcf7e-8daf-4e12-9806-0800bb16faf0",
+      "fullName": "Quinn Karolyi",
+      "club": "chico-hotshots",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/chico/chico-high-school3/quinn-karolyi",
+          "kind": "ncsa",
+          "quote": "Quinn Karolyi '28 Recruiting Profile Chico High School Chico, CA Field Hockey … Club Information Seasons of Club Experience 2 seasons 2025 Chico Hotshots (U16) 2024 Chico Hotshots (U14)",
+          "statedSchool": "Chico High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Quinn Karolyi, Chico High School, Chico, CA, class of 2028 (agrees with grade 11), gives 'Club Chico Hotshots' in its header, and lists two club seasons: 2025 Chico Hotshots (U16) and 2024 Chico Hotshots (U14). It is a live profile with a May 2026 Cal Cup entry and names no other club, so the tie is current under the live-profile rule, as for Junali Dutta; no season after 2025 is listed, so asOf is null. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
+    },
+    {
+      "teamSlug": "chico",
+      "athleteId": "25e21b95-c6a1-4261-9f5e-78a4bed0a58e",
+      "fullName": "Olivia Council",
+      "club": "chico-hotshots",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/chico/chico-high-school3/olivia-council",
+          "kind": "ncsa",
+          "quote": "Olivia Council '27 Recruiting Profile Chico High School Chico, CA Field Hockey … Club Information Seasons of Club Experience 1 season 2024 Chico Hotshots (Unsure)",
+          "statedSchool": "Chico High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Olivia Council, Chico High School, Chico, CA, class of 2027 (agrees with grade 12), gives 'Club Chico Hotshots' in its header, and lists one club season, 2024 Chico Hotshots, with the team given as 'Unsure'. The page names no other club, but its latest dated item is a July 2025 camp and no club season after 2024 is listed, so the status is unknown as of 2024, as for Ruhee Bhatnagar. Her SportsRecruits profile lists no club. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
+    },
+    {
+      "teamSlug": "davis",
+      "athleteId": "9f299134-dfdc-4d38-9c8e-2ca464f186ae",
+      "fullName": "Maisy Martin",
+      "club": "d-city",
+      "clubTeam": "Spring training program",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/davis/davis-senior-high-school/maisy-martin",
+          "kind": "ncsa",
+          "quote": "Maisy Martin '28 Recruiting Profile Davis Senior High School Davis, CA Field Hockey … Training D-City Field Hockey 1 year Davis, CA club field hockey spring training program",
+          "statedSchool": "Davis Senior High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Maisy Martin, Davis Senior High School, Davis, CA, class of 2028 (agrees with grade 11), and lists under Training 'D-City Field Hockey, 1 year, Davis, CA club field hockey spring training program'. D-City is the Davis club. The page gives no year, so the status is unknown. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
+    },
+    {
+      "teamSlug": "tamalpais",
+      "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
+      "fullName": "Josie Stout",
+      "club": "golden-gate-rippers",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2021-2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mill-valley/tamalpais-high-school/josie-stout",
+          "kind": "ncsa",
+          "quote": "Josie Stout '28 Recruiting Profile Tamalpais High School Mill Valley, CA Field Hockey … Club Information … 2025 San Francisco Hawks (Club/Travel) 2024 Golden Gate Rippers (Club) 2023 Golden Gate Rippers (Club) 2022 Golden Gate Rippers (Club) 2021 Golden Gate Rippers (Club)",
+          "statedSchool": "Tamalpais High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA field hockey profile (already a source for her SF Hawks tie) names Josie Stout, Tamalpais High School, Mill Valley, CA, class of 2028 (agrees with grade 11), and lists Golden Gate Rippers for four club seasons, 2021 to 2024, before San Francisco Hawks in 2025. Golden Gate Rippers is the Marin field hockey club. Her current club is SF Hawks, so this tie is past. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
     }
   ]
 }

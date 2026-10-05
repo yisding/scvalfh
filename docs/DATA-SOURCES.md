@@ -480,9 +480,9 @@ a profile outside those routes could exist and not be linked.
 
 **(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
-DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04, not a script: nothing fetches
-or refreshes it. It holds 16 youth field hockey clubs (13 from 2026-10-03, 3 from
-2026-10-04) and 80 affiliations (72 from 2026-10-03, 8 from 2026-10-04), each a tie between a player on the 49 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
+recruiting profiles on 2026-10-05, not a script: nothing fetches or refreshes it. It holds 16 youth field hockey clubs (13 from 2026-10-03, 3 from
+2026-10-04) and 94 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05), each a tie between a player on the 49 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one
 factual sentence, its teams and programs (each with a short detail and the page it was read from;
 the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
@@ -507,11 +507,13 @@ source entries on 105 distinct URLs (237 on 108 with the eight 2026-10-04 ties: 
 entries on the two watchlist URLs already counted, one `ncsa` entry on a new URL and two
 `maxpreps-career` entries on two new URLs; 106 pages): an entry is one page backing one
 tie, so a club roster, a watchlist or a news story that names several players is one page and
-several entries. The counts are of URLs as the file spells them, and two pages are cited under two
-URLs each, so the ties rest on 103 pages: Stick Together's 2025 all-league page, with its trailing
+several entries. The 14 ties of 2026-10-05 add 14 entries (10 `sportsrecruits`, 4 `ncsa`) on 10 new
+URLs, for 251 entries on 118 URLs (116 pages). The counts are of URLs as the file spells them, and two pages are cited under two
+URLs each, so the 2026-10-03 sweep's ties rest on 103 pages (116 with the later ties): Stick Together's 2025 all-league page, with its trailing
 slash (`news` for five players, `other` for two) and without it (`news` for Olivia Taylor), and
 Gabrielle Moll's MaxPreps career page, under the name slugs `gabby-moll` and `gabrielle-moll` (one
-`careerid`). That one URL filed under two kinds is why the per-kind URL counts add up to 106.
+`careerid`). That one URL filed under two kinds is why the table's per-kind URL counts (the
+2026-10-03 sweep's) add up to 106, and to 119 with the later ties.
 
 | Kind | Entries | URLs | What it is |
 |---|---|---|---|
@@ -525,7 +527,8 @@ Gabrielle Moll's MaxPreps career page, under the name slugs `gabby-moll` and `ga
 | `school-site` | 2 | 2 | A MaxPreps all-time school roster, and Saint Francis's own athletics roster |
 | `hudl` | 1 | 1 | A Hudl profile |
 
-With the 2026-10-04 ties: `event` 31 on 3, `ncsa` 25 on 22, `maxpreps-career` 19 on 19.
+With the 2026-10-04 ties: `event` 31 on 3, `ncsa` 25 on 22, `maxpreps-career` 19 on 19. With the
+2026-10-05 ties: `sportsrecruits` 67 on 43, `ncsa` 29 on 25.
 
 The MaxPreps club-teams block was mined for all 716 varsity rows: 13 of the 17 entries (10 players)
 quote a field hockey club from it, and the other 4 give only the page's class year and team. Every
@@ -559,6 +562,25 @@ The eight ties of the 2026-10-04 EAL sweep were each confirmed by two independen
 re-opened their sources (for the three D-City and two Chico Hotshots ties, two verifiers working
 apart, after the verifier of the D-City record and the MaxPreps sweep had found them).
 
+*The 2026-10-05 recruiting-profile pass.* Every recruiting profile linked from
+`data/rosters-enrichment.json`, `data/commits.json` or this file was re-read for the clubs it lists:
+74 SportsRecruits pages, 36 NCSA pages and 51 Hudl pages. SportsRecruits renders an athlete's CLUB
+and TEAMS blocks by script, so they are not in the page's HTML (its JSON-LD gives only the headline
+club); those pages were read in headless Chromium. NCSA answers curl with HTTP 403 and was read with
+WebFetch. Hudl lists school teams only. The pass found 14 ties for 13 players whose own profile lists
+a club the file did not tie them to, all to clubs already in `clubs[]`: NorCal Impact (Alyssa
+Montejano, Emma Traverso, Isabella Alonzo), Fly FHC (Katarina Smith, Sophie Dhillon, and Evie Nielsen
+as a guest player at Cal Cup 2026), Infinity (Juliet Calderon), HTC (Maggie Magnano), SF Hawks
+(Beatrix Hom), Chico Hotshots (Evie Nielsen, Quinn Karolyi, Olivia Council), D-City (Maisy Martin, a
+spring training program) and Golden Gate Rippers (Josie Stout, 2021-2024, past). An independent
+refuter re-opened every page; it confirmed every quote and roster match, and its three corrections
+(one `basis` wording, and Quinn Karolyi current and Olivia Council `unknown` by the file's own
+precedents) were applied. Left out: three Los Gatos players whose pages list NorCal Impact (one also
+SF Hawks) are on JV rows; program teams ("U18 Sydney", "Oranje U19", "Futures/Nexus") are not clubs;
+lacrosse and soccer clubs (STEPS California, ADVNC, Verve, San Francisco Glens) do not count; and
+Kate Loscutoff's 2025 Sacramento Hockey Academy season and Gabrielle Moll's Cowtown Field Hockey are
+not tied, because neither club has a record.
+
 *Status and confidence.* `current` = the source reflects the 2025-26 or 2026-27 club season (dated
 August 2025 or later, a club's current-players page, or a live recruiting profile that lists the
 club); `past` = dated earlier, an alumni list, or a club the player's own page lists for earlier
@@ -569,7 +591,8 @@ gives, never as current. `high` = one first-hand page names the player, the club
 (or it is the player's own profile); `medium` = the match rests on a club roster's class-year
 heading plus the club's location, on a team nickname standing for the school, or on a single
 self-reported line. On 2026-10-03: 55 current, 11 past, 6 unknown; 57 high, 15 medium.
-With the 2026-10-04 ties: 60 current, 12 past, 8 unknown; 65 high, 15 medium.
+With the 2026-10-04 ties: 60 current, 12 past, 8 unknown; 65 high, 15 medium. With the 2026-10-05
+ties: 71 current, 13 past, 10 unknown; 79 high, 15 medium.
 
 Gotchas, found in the research (most are recorded in an affiliation's `basis` or in `notes[]`):
 - **SportsRecruits slugs** are shared across sports and people, and one player can have several:
@@ -620,7 +643,8 @@ Gotchas, found in the research (most are recorded in an affiliation's `basis` or
   have made Fly current, as of 2025), and the more conservative call stands, as her `basis` says.
   (Her SportsRecruits and FieldLevel pages give Los Altos, not Homestead, as noted in (j).) Emma
   Traverso's NCSA profile lists San Jose Fly seasons through 2025, but her SportsRecruits profile,
-  created 2026-01-02, says she has recently switched to NorCal Impact: Fly is `unknown`. Brooklyn
+  created 2026-01-02, says she has recently switched to NorCal Impact: Fly is `unknown`, and the
+  2026-10-05 pass ties her to NorCal Impact (current) from that profile's club block. Brooklyn
   Barnard's one Fly entry is "2025 San Jose Fly - Guest goalkeeper" on an undated profile, so hers
   is `unknown` too.
 - **Lightning's rosters are per sub-season** (`/roster/show/<team>?subseason=<id>`). Ruhee
@@ -678,7 +702,7 @@ sites. It added 8 ties for five players.
   block of their own MaxPreps career pages (entries last modified 2026-09-29 and 2026-05-20,
   current).
 
-The file now holds 80 affiliations for 71 players at 24 schools; eight players are tied to more
+The file now holds 94 affiliations for 80 players at 25 schools; thirteen players are tied to more
 than one club. The sweep met three clubs near the EAL teams' schools, and all three were added on
 2026-10-04: D-City FHC (Davis) and Roseville FHC, in the region `sacramento` (shown as the
 Sacramento area), and Chico Hotshots, in the new region `north-state` (the North State). Neither
@@ -686,22 +710,24 @@ area was searched for every club, so `SEARCHED_REGIONS` is unchanged and `/clubs
 
 | League | Players | By school |
 |---|---|---|
-| SCVAL | 33 at 12 of 15 | St. Ignatius 14, Saint Francis 5, Mitty 3, Los Altos 2, Palo Alto 2, Cupertino 1, Fremont 1, Homestead 1, Los Gatos 1, Lynbrook 1, Monta Vista 1, Presentation 1 |
-| BVAL | 16 at 6 of 12 | Christopher 6, Leigh 3, Willow Glen 3, Gilroy 2, Leland 1, Westmont 1 |
+| SCVAL | 36 at 12 of 15 | St. Ignatius 15, Saint Francis 5, Los Altos 3, Mitty 3, Fremont 2, Palo Alto 2, Cupertino 1, Homestead 1, Los Gatos 1, Lynbrook 1, Monta Vista 1, Presentation 1 |
+| BVAL | 18 at 6 of 12 | Christopher 7, Willow Glen 4, Leigh 3, Gilroy 2, Leland 1, Westmont 1 |
 | PCAL | 0 of 7 | none |
 | MCAL | 17 at 4 of 9 | Tamalpais 6, University 6, Convent of the Sacred Heart 3, Lick-Wilmerding 2 |
-| EAL (2026-10-04) | 5 at 2 of 6 | Davis 3, Pleasant Valley 2 |
+| EAL | 9 at 3 of 6 | Davis 4, Chico 3, Pleasant Valley 2 |
 
 None at 21 schools: SCVAL's Valley Christian, Santa Clara and Saratoga; BVAL's Branham, Del Mar,
 Live Oak, Prospect, Silver Creek and Sobrato; all seven PCAL schools; and MCAL's Archie Williams,
 Redwood, Berkeley, Marin Catholic and Marin Academy. Six of these (Del Mar, Silver Creek, Sobrato,
 Monterey, Santa Catalina, Marin Academy) list no players on MaxPreps, so there is no row to tie
-anyone to. In the EAL, none at Bella Vista, Chico, Corning and Lassen (Corning lists no players on
+anyone to. In the EAL, none at Bella Vista, Corning and Lassen (Corning lists no players on
 MaxPreps). By club (2026-10-03; NorCal Impact is 22, all current, with the three Davis ties): SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
 current, 4 past, 4 unknown), Infinity 8 (1, 6, 1), Lightning 3 (1, 1, 1) and HTC 1 (current); with the
-2026-10-04 ties, D-City 3 (0 current, 1 past, 2 unknown) and Chico Hotshots 2 (both current). Eight
-clubs have no tied player: Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker, Hayward
-Hawks, Lions, Golden Gate Rippers and Roseville FHC. No club was found on the Peninsula or the Central Coast,
+2026-10-04 ties, D-City 3 (0 current, 1 past, 2 unknown) and Chico Hotshots 2 (both current). With
+the 2026-10-05 ties: SF Hawks 32, NorCal Impact 25, Fly FHC 13 (5 current, 4 past, 4 unknown),
+Infinity 9 (2, 6, 1), Chico Hotshots 5 (4, 0, 1), D-City 4 (0, 1, 3), HTC 2 (both current) and Golden
+Gate Rippers 1 (past). Seven clubs have no tied player: Pac Heights, Performance Field Hockey, San Jose
+Khalsa, Stryker, Hayward Hawks, Lions and Roseville FHC. No club was found on the Peninsula or the Central Coast,
 though both were searched. The Sacramento area (D-City, Roseville FHC) and the North State (Chico
 Hotshots) were not searched for every club. Five clubs publish a roster page the club page links (SF
 Hawks, NorCal Impact, Lightning, Roseville FHC and HTC: 14 pages in all); the players on them who are not on the tracked rosters
