@@ -119,7 +119,7 @@ tuples, schema recovered from webpack module `deserializeContestList` — pin be
 with loud assertions), rendered `table tbody tr` (stable selectors: `span.hat/.name/.result/.score`
 — never styled-components class hashes), legacy scoreboard pages, individual game pages
 (`application/ld+json`, `@type: SportsEvent` — the only source of a game's street address; fetch
-lazily, one request per game, never in the nightly sweep).
+lazily, one request per game, never in the scheduled run).
 
 **(j) Team rosters** — `GET https://www.maxpreps.com/<teamCanonicalUrl path>/roster/` (HTML; captured
 and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb/react/team-roster/v1`,

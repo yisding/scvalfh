@@ -2160,7 +2160,7 @@ not-affiliated line. `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
 body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be
 missing. Why?"**, the *Why?* linking to `/about#updates`; the top bar's compact stamp becomes a
 single pill link, **"Updated 2 days ago"**, to the same place. Neither appears once
-`getSitePhase() === 'complete'`: the nightly update stops on purpose then, and the footer reads
+`getSitePhase() === 'complete'`: the scheduled update stops on purpose then, and the footer reads
 *"Season complete — final update <date>."* in quiet grey. Never hide a failure behind a
 timestamp nobody reads.
 
