@@ -21,9 +21,9 @@ import {
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '../lib/sources/http';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '../lib/season';
 import { getTeamBySlug } from '../lib/teams';
-import { REPO, allScheduleRows, standingsFixture } from './helpers';
+import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
 
-const CORPUS_SCHEDULES = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'schedule');
+const CORPUS_SCHEDULES = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'schedule');
 
 function corpusFeedText(slug: string): string {
   return readFileSync(path.join(CORPUS_SCHEDULES, `${slug}.json`), 'utf8');

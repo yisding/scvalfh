@@ -36,7 +36,7 @@ import { isExcludedFor, stepOfficial } from '../lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '../lib/sources/maxpreps';
 import { parseSchedulePdfText } from '../lib/sources/scval-pdf';
 import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
-import { REPO, allScheduleRows, game } from './helpers';
+import { REPO, allScheduleRows, corpusDir, game } from './helpers';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));
@@ -51,7 +51,7 @@ vi.mock('../lib/official/schema', async (importOriginal) => {
   };
 });
 
-const CORPUS = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02');
+const CORPUS = corpusDir('all-2026-10-02');
 const FETCHED_AT = '2026-10-02T15:00:00.000Z';
 const TODAY = '2026-10-02';
 

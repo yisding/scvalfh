@@ -125,7 +125,7 @@ describe('computed vs reported', () => {
 });
 
 describe('reported tables of the corpus divisions (all-2026-10-02 corpus)', () => {
-  const STANDINGS_DIR = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'standings');
+  const STANDINGS_DIR = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'standings');
   // The divisions of the leagues the corpus was captured for (its manifest): the EAL came later.
   const leagues: readonly string[] = readManifest(corpusDir('all-2026-10-02')).leagues;
 

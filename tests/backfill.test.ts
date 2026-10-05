@@ -33,6 +33,7 @@ import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';
+import { REPO, corpusDir } from './helpers';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';
@@ -767,8 +768,8 @@ describe('backfill rule 10: supersede and carry-forward', () => {
 });
 
 describe('backfill: the corpus si.com pages as parser/resolver facts', () => {
-  const CORPUS = path.join(__dirname, 'fixtures/corpus/all-2026-10-02/sblive');
-  const PCAL = path.join(__dirname, 'fixtures/sblive/pcal-1002');
+  const CORPUS = path.join(corpusDir('all-2026-10-02'), 'sblive');
+  const PCAL = path.join(REPO, 'tests', 'fixtures', 'sblive', 'pcal-1002');
   const read = (file: string) => readFileSync(file, 'utf8');
   const teamPages = ['carmel', 'greenfield', 'hollister', 'salinas', 'santa-catalina', 'stevenson'].flatMap((slug) =>
     parseTeamGamesPage(read(path.join(CORPUS, 'team-games', `${slug}.html`))),
@@ -816,7 +817,7 @@ describe('backfill: the corpus si.com pages as parser/resolver facts', () => {
 });
 
 describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconcile', () => {
-  const CORPUS = path.join(__dirname, 'fixtures/corpus/all-2026-10-02/sblive');
+  const CORPUS = path.join(corpusDir('all-2026-10-02'), 'sblive');
   const files: Record<string, string> = {
     'sblive/scores/2026-09-30': path.join(CORPUS, 'scores/2026-09-30.html'),
     'sblive/team-games/greenfield': path.join(CORPUS, 'team-games/greenfield.html'),

@@ -18,10 +18,9 @@ import type { OfficialStep, SbliveStep } from '../../../lib/pipeline/contract';
 import { SILENT_SINK } from '../../../lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '../../../lib/pipeline/run';
 import { stableStringify } from '../../../lib/stable-json';
-import { REPO } from '../../helpers';
+import { REPO, VARIANTS_DIR, corpusDir } from '../../helpers';
 
-export const CORPUS_ALL = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02');
-export const VARIANTS_DIR = path.join(REPO, 'tests', 'fixtures', 'corpus', 'variants');
+const CORPUS_ALL = corpusDir('all-2026-10-02');
 export const FINALS_REGRESSION_DIR = path.join(VARIANTS_DIR, 'finals-regression');
 export const FINALS_REGRESSION_PREVIOUS_AT = '2026-10-02T03:00:00.000Z';
 
