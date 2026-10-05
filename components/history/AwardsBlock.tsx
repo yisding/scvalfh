@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
-import { ordinal } from '../../lib/format';
+import { gradeWord } from '../../lib/format';
 import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
 import { leagueOfDivision } from '../../lib/leagues';
 import { awardLine, overallAwards, type AwardLine } from './history-view';
@@ -9,8 +9,9 @@ import { awardLine, overallAwards, type AwardLine } from './history-view';
 /**
  * The 2025-26 all-league awards (DESIGN §3.9): the overall awards, then First Team / Second
  * Team / Honorable Mention as `<dl>`s. Every winner and listed player reads the same way, in the
- * site's words (components/history/history-view.ts): the player, then position · grade · school,
- * the school linked to its team page. The documents write each of those several ways ("GK",
+ * site's words (components/history/history-view.ts), and the way the roster, /clubs, /commits and
+ * /leaders print a player: the player, then school · grade · position, the school linked to its
+ * team page and the grade a word ("Senior"). The documents write each of those several ways ("GK",
  * "Goalie", "Goalkeeper"; "St Ignatius", "MItty"; an overall award as "School- Player" or "Player
  * School Year"); the page never shows those differences.
  */
@@ -20,16 +21,15 @@ export interface AwardsBlockProps {
   levelLabel: string;
 }
 
-/** "Midfield · 12th grade · Los Gatos", the school linked; a part the document left out is not shown. */
+/** "Los Gatos · Senior · Midfield", the school linked; a part nobody published is not shown. */
 function AwardMeta({ line }: { line: AwardLine }) {
   const team = line.slug ? getTeamBySlug(line.slug) : undefined;
+  // A grade or position no source gives is null: say nothing rather than guess.
+  const facts = [line.year !== null ? gradeWord(line.year) : null, line.position].filter(
+    (f): f is string => f !== null,
+  );
   return (
     <span className="block text-meta text-ink-2">
-      {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never starts
-          a line with one ("· Cupertino"), nor splits "12th grade". A position or grade the
-          document does not give is null: say nothing rather than guess. */}
-      {line.position ? <>{line.position}&nbsp;&middot; </> : null}
-      {line.year !== null ? <>{ordinal(line.year)}&nbsp;grade&nbsp;&middot; </> : null}
       {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads the whole
           linked route the moment the link scrolls into view, and every award names a school, so
           one block is dozens of these. Navigation still fetches on click. */}
@@ -40,6 +40,13 @@ function AwardMeta({ line }: { line: AwardLine }) {
       ) : (
         <span>{line.school}</span>
       )}
+      {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never starts
+          a line with one ("· Senior"), and each fact kept whole ("Forward / Midfield"). */}
+      {facts.map((fact, i) => (
+        <span key={i}>
+          &nbsp;&middot; <span className="whitespace-nowrap">{fact}</span>
+        </span>
+      ))}
     </span>
   );
 }

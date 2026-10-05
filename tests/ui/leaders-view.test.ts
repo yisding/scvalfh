@@ -30,10 +30,12 @@ import {
   type LeaderSources,
 } from '../../components/leaders/leaders-view';
 import { statText } from '../../components/teams/player-stats-view';
+import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
-import { recordString } from '../../lib/format';
+import { gradeWord, recordString } from '../../lib/format';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
+import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { getRatings } from '../../lib/ratings';
 import {
   FIELD_STAT_KEYS,
@@ -128,6 +130,28 @@ describe('buildLeadersView — rules, over the committed data', () => {
         expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
       });
     }
+  });
+
+  it("prints each player's grade and position exactly as the team page's roster has them", () => {
+    let withFacts = 0;
+    for (const board of view.players) {
+      for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
+        const line = stats.find((t) => t.slug === row.team.slug)!.players.find((p) => p.fullName === row.name)!;
+        const rosterRow = getEnrichedTeamRoster(row.team.slug)!.players.find(
+          (p) => line.athleteId !== null && p.athleteId === line.athleteId,
+        );
+        const expected = rosterRow
+          ? [
+              ...(rosterRow.grade !== null ? [gradeWord(rosterRow.grade)] : []),
+              ...(rosterRow.positions.length > 0 ? [positionWords(rosterRow.positions)] : []),
+            ]
+          : [];
+        expect(row.facts, `${board.id}: ${row.name}`).toEqual(expected);
+        if (row.facts.length > 0) withFacts += 1;
+      }
+    }
+    // The join works: most listed players have a roster row with a grade or a position.
+    expect(withFacts).toBeGreaterThan(0);
   });
 
   it("prints each school's record as its standings row has it, and only for a school past the minimum", () => {
@@ -254,7 +278,7 @@ function teamStats(
   const players = (spec.players ?? []).map((p, i) => ({
     careerId: `${slug}-${i}`,
     careerUrl: null,
-    athleteId: null,
+    athleteId: `${slug}-a${i}`,
     fullName: p.name,
     shortName: p.name,
     jersey: String(i + 1),
@@ -496,6 +520,44 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     expect(view.playerNotes[1]).toBe(
       'Totals lag the scores where a coach has not entered the latest games: Archbishop Mitty (1 game since Sat Sep 19).',
     );
+  });
+
+  it("prints a player's grade and position as the roster has them, and only the ones it has", () => {
+    const v = buildLeadersView({
+      ...sources(games, stats),
+      rosters: [
+        {
+          slug: 'mitty',
+          players: [
+            { athleteId: 'mitty-a0', grade: 12, positions: ['F', 'M'] },
+            { athleteId: 'mitty-a1', grade: null, positions: ['D'] },
+            { athleteId: 'mitty-a3', grade: 10, positions: [] },
+          ],
+        },
+      ],
+    });
+    const facts = (id: string) =>
+      Object.fromEntries(v.players.find((b) => b.id === id)!.rows.map((r) => [r.name, r.facts]));
+    expect(facts('most-points')).toEqual({
+      'Dee Dunn': [],
+      'Ana Ames': ['Senior', 'Forward / Midfield'],
+      'Bea Bell': ['Defense'],
+      'Eve Eck': [],
+    });
+    expect(facts('most-saves')['Gia Gray']).toEqual(['Sophomore']);
+    // Printed after the school and league, each part kept whole, as the roster prints them: on a
+    // line of their own below 640px (the first dot hidden there), on the school's line from it.
+    const html = renderToStaticMarkup(
+      createElement(LeaderBoardTable, { board: v.players.find((b) => b.id === 'most-points')! }),
+    );
+    expect(html).toContain(
+      '<span class="whitespace-nowrap">SCVAL</span><span class="block sm:inline">' +
+        '<span class="hidden sm:inline">\u00a0<span aria-hidden="true">·</span> </span><span class="whitespace-nowrap">Senior</span>' +
+        '\u00a0<span aria-hidden="true">·</span> <span class="whitespace-nowrap">Forward / Midfield</span></span>',
+    );
+    // No rosters given: no facts, never a guess.
+    expect(board('most-points').rows.every((r) => r.facts.length === 0)).toBe(true);
+    for (const b of v.schools) for (const r of b.rows) expect(r.facts, b.id).toEqual([]);
   });
 
   it('says why a board is empty rather than drawing an empty table', () => {

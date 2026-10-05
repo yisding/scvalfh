@@ -819,7 +819,9 @@ Nov 2**: a skeleton bracket reads as real data (`editorial`).
 
 Two `StandingsTable`s in `variant="archive"` (final records only, no GD bars, no form — the
 PDF has no game-level data), then the all-league awards as two `<dl>`s (First Team / Second
-Team) and the overall award lines. Credits `scval.com` beside the global attribution line,
+Team) and the overall award lines. Every award line names the player, then school · grade ·
+position, the way the roster and `/leaders` print a player (the grade a word: "Senior"); a part no
+source gives is left out. Credits `scval.com` beside the global attribution line,
 because the two source PDFs are SCVAL's.
 
 ### 3.10 About — `/about`
@@ -2786,8 +2788,8 @@ else stands: static rendering, "today" from the snapshot, no new hue (§6.4, §1
 The page is built by `components/leaders/leaders-view.ts` from the two files every other page reads,
 so a player's line is the one on their team page and a school's record is the one in its standings row.
 Each board is one table (`components/leaders/LeaderBoardTable.tsx`): place, name (the player's team
-and league on a second line, or the school's league), and at most three numeric columns, so a 320px
-phone needs no scroller. The column a board ranks on is bold. Boards sit one per row on a phone and
+and league on a second line, then the grade and position the team page's roster gives, or the
+school's league), and at most three numeric columns, so a 320px phone needs no scroller. The column a board ranks on is bold. Boards sit one per row on a phone and
 two per row from 1024px. It has no OG card of its own (`ROOT_OG_IMAGE`, like `/schedule`).
 (Amended by §23: `#schools` now comes first, the Elo board is its last board, and a player board
 opens to 25th.)

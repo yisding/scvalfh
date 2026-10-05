@@ -1,8 +1,8 @@
 /**
  * `components/history/history-view.ts` and `AwardsBlock` over the committed
  * data/history-2025-26.json: every award line on /history/2025-26 reads one way (player, then
- * position · grade · school), in the site's words, with the school linked, whatever the document
- * wrote ("St Ignatius- Olivia Van de Braak", "Leaya Cleary Los Gatos 12", "GK", "Midfiled").
+ * school · grade · position, as the roster and /leaders print a player), in the site's words, with
+ * the school linked, whatever the document wrote ("St Ignatius- Olivia Van de Braak", "Leaya Cleary Los Gatos 12", "GK", "Midfiled").
  */
 
 import { createElement } from 'react';
@@ -14,6 +14,7 @@ import {
   awardLine,
   awardTitle,
   overallAwards,
+  rosterYear,
   splitOverallValue,
 } from '../../components/history/history-view';
 import { positionFromText } from '../../components/ui/position-words';
@@ -117,15 +118,20 @@ describe('overall awards', () => {
     expect(n).toBe(26);
   });
 
-  it('fills a grade or position only from the same document, and never against it', () => {
+  it('fills a grade from the same document first, then this season’s roster, and never against it', () => {
     const scval = blocks.find((b) => b.division === 'el-camino')!;
     const monisha = overallAwards('scval', scval.awards).find((o) => o.winner?.player === 'Monisha Preetham')!;
     // "Monisha Preetham, Monta Vista": her first-team line gives Midfield, 12th grade.
     expect(monisha.winner).toMatchObject({ position: 'Midfield', year: 12, school: 'Monta Vista' });
     const deAnza = blocks.find((b) => b.division === 'de-anza')!;
     const byAward = new Map(overallAwards('scval', deAnza.awards).map((o) => [o.award, o.winner!]));
-    // "St Ignatius- Olivia Van de Braak": no grade or position anywhere in the document.
-    expect(byAward.get('Offensive Player of the Year')).toMatchObject({ position: null, year: null });
+    // "St Ignatius- Olivia Van de Braak": no grade or position anywhere in the document. This
+    // season's St. Ignatius roster lists her as a junior, so she was a sophomore; her position
+    // this season says nothing about last season's, so it stays unshown.
+    expect(byAward.get('Offensive Player of the Year')).toMatchObject({ position: null, year: 10 });
+    expect(rosterYear('st-ignatius', 'Olivia Van de Braak')).toBe(10);
+    // "Los Altos- Alison Wilson": not on this season's roster, so no grade.
+    expect(byAward.get('Defensive Player of the Year')).toMatchObject({ position: null, year: null });
     // What the award means: a Junior of the Year is in 11th grade, a Goalkeeper of the Year a goalkeeper.
     expect(byAward.get('Junior of the Year')!.year).toBe(11);
     expect(byAward.get('Goalkeeper of the Year')!.position).toBe('Goalkeeper');
@@ -154,5 +160,15 @@ describe('AwardsBlock', () => {
       for (const o of awards.overall) expect(html, o.value).not.toContain(o.value);
       expect(html).not.toMatch(/\b(GK|Goalie|Defender|Midfielder|Midfiled)\b/);
     }
+  });
+
+  it('prints school · grade · position, the grade a word, as the roster and /leaders do', () => {
+    const deAnza = blocks.find((b) => b.division === 'de-anza')!;
+    const html = renderToStaticMarkup(createElement(AwardsBlock, { awards: deAnza.awards, levelLabel: 'Varsity' }));
+    // Sophie Ghosh, Saint Ignatius, Midfield, 12 in the document.
+    expect(html).toMatch(
+      /Sophie Ghosh<\/span><span[^>]*><a [^>]*>St\. Ignatius<\/a><span>\u00a0· <span class="whitespace-nowrap">Senior<\/span><\/span><span>\u00a0· <span class="whitespace-nowrap">Midfield<\/span><\/span><\/span>/,
+    );
+    expect(html).not.toMatch(/\d(st|nd|rd|th)\sgrade/);
   });
 });
