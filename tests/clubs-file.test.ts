@@ -362,6 +362,14 @@ describe('data/clubs.json: jvAffiliations', () => {
     }
   });
 
+  it('resolves each JV tie to its JV roster row', () => {
+    for (const a of getJvClubAffiliations()) {
+      const row = getAffiliatedPlayer(a);
+      expect(row.fullName, a.fullName).toBe(a.fullName);
+      expect(row.level, a.fullName).toBe('jv');
+    }
+  });
+
   it('keeps them out of everything that lists varsity ties', () => {
     expect(getJvClubAffiliations()).toEqual(raw.jvAffiliations);
     const jvPlayers = new Set(raw.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));

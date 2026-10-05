@@ -72,7 +72,7 @@ export function loadClubs(
   return loadAndJoin(raw, teams, season).file;
 }
 
-/** loadClubs, plus the merged row each tied player joined to, by `playerKey`. */
+/** loadClubs, plus the merged row each tied player (varsity or JV) joined to, by `playerKey`. */
 function loadAndJoin(
   raw: unknown,
   teams: readonly MergedTeamRoster[],
@@ -85,12 +85,14 @@ function loadAndJoin(
     throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);
   }
   const rows = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
-  joinToRoster(file.jvAffiliations, teams, season, {
+  const jvRows = joinToRoster(file.jvAffiliations, teams, season, {
     label: 'clubs',
     noun: 'jvAffiliations',
     subject: (a) => a.club,
     level: 'jv',
   });
+  // The schema keeps a player out of both lists, so the two maps never share a key.
+  for (const [key, row] of jvRows) rows.set(key, row);
   return { file, rows };
 }
 
@@ -166,8 +168,9 @@ export function getClubSlugs(): string[] {
 }
 
 /**
- * The ties for players on JV rows, in file order. They are kept out of every other function here
- * (the club pages, the club counts, the roster's club lines), which list varsity rows only.
+ * The ties for players on JV rows, in file order. They are kept out of every other listing here
+ * (the club pages, the club counts, the roster's club lines), which list varsity rows only;
+ * getAffiliatedPlayer resolves their rows like any other tie's.
  */
 export function getJvClubAffiliations(): readonly ClubAffiliation[] {
   return file.jvAffiliations;
