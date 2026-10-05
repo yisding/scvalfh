@@ -58,8 +58,8 @@ export const SITE_SCOPE_NOTE =
 
 /**
  * Where readers report a wrong score, date, name or record: the "Data errors" thread on the site's
- * forum. The footer links it on every page; team and game pages link it in their Elsewhere block,
- * beside the data a reader would be checking; /about#corrections explains what to include.
+ * forum. The footer opens with it on every page, the team page's Elsewhere row ends with it, and
+ * /about#corrections explains what to include.
  */
 export const DATA_CORRECTIONS_URL = 'https://ncfh.freeflarum.com/d/3-data-errors';
 

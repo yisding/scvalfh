@@ -14,11 +14,11 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
- * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
- * alignment and rules the site follows (each linked to its official site), the scope note naming
- * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, the link to report a data
- * error (DATA_CORRECTIONS_URL), a link to /about and one to last season's archive (2025-26 final
- * standings, by league), and
+ * It opens with the corrections call-out: "Spot a wrong score?" and an accent pill to the forum's
+ * Data errors thread (DATA_CORRECTIONS_URL). Then "Data from MaxPreps and High School on SI
+ * (si.com)" with real deep links, the leagues whose alignment and rules the site follows (each
+ * linked to its official site), the scope note naming exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
+ * to last season's archive (2025-26 final standings, by league), and
  * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
  * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern
  * Section" and can never drift from the config. A league with no document of its own (every
@@ -73,6 +73,24 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
           <main> and the header at every width. From 768px: sources on the left, the stamp and
           the actions on the right, the disclaimer across both under a divider. */}
       <div className="mx-auto max-w-content px-gutter py-10 text-meta text-ink-2 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-12 md:gap-y-4 md:px-gutter-lg md:py-12 xl:px-gutter-xl">
+        {/* The corrections call-out, first in the footer and across both columns: the end of
+            every page, at every width, is where a reader who has just seen a wrong score looks for
+            what to do about it, and the footer is where the site already says where its numbers
+            come from. A raised card with the accent pill, so it reads as the one thing to act on
+            here rather than one more footer link. The top bar has no room for it (SiteHeader
+            measures 4px spare at 360) and the phone tab bar is navigation. */}
+        <div className="sx-card mb-8 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between md:col-span-2 md:mb-4 md:px-5">
+          <p className="m-0 max-w-prose">
+            <strong className="font-semibold text-ink">Spot a wrong score?</strong> Wrong results,
+            missing games and misspelled names go in the Data errors thread on our forum.
+          </p>
+          <ExternalLink
+            href={DATA_CORRECTIONS_URL}
+            className="sx-pill sx-pill-accent min-h-11 shrink-0 self-start sm:self-auto"
+          >
+            Report a data error
+          </ExternalLink>
+        </div>
         <div className="max-w-prose">
           <p className="m-0">
             Data from{' '}
@@ -112,15 +130,6 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             from every route. */}
         <div className="mt-4 flex flex-col gap-2 md:mt-0 md:items-end">
           <LastUpdated at={snapshotAt} now={now} seasonComplete={seasonComplete} />
-          {/* The corrections thread, directly under the stamp: "this is how fresh the data is"
-              and "tell us if it is wrong" belong together. First of the actions because it is the
-              one a reader comes looking for; in the footer because that is where every page, at
-              every width, already says where the numbers come from. The top bar has no room for it
-              (SiteHeader measures 4px spare at 360) and the phone tab bar is navigation. `gap-1`
-              restores the space before the arrow, which a flex box drops. */}
-          <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-action gap-1 font-medium">
-            Report a data error
-          </ExternalLink>
           <Link href="/about" prefetch={false} className="sx-action text-accent hover:underline">
             About &amp; sources
           </Link>

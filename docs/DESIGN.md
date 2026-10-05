@@ -2160,12 +2160,12 @@ Always visible, never a tooltip, on **every** page: **"Data from MaxPreps and Hi
 layout, so it carries only the global attribution and takes no per-page props: the *team's* and
 *game's* own source pages are deep-linked on the rows themselves, in `GameSources` on
 `/game/[id]` and on the team page, and `/history/2025-26`'s `scval.com` credit sits in that
-page's body (§3.9). Plus the snapshot timestamp in Pacific, **"Report a data error ↗"** (the
-forum's Data errors thread, `DATA_CORRECTIONS_URL`) directly under it as the first action, a link
-to `/about`, and the not-affiliated line. The same thread is linked in a one-line `ReportDataError`
-sentence at the end of the Elsewhere block on every team and game page, where a reader checks a
-score against what they saw. Not in the top bar (no room at 360px) or the phone tab bar
-(navigation only). `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
+page's body (§3.9). Plus the snapshot timestamp in Pacific, a link to `/about`, and the
+not-affiliated line. The footer OPENS with the corrections call-out: a raised card across both
+columns, **"Spot a wrong score?"** and an accent pill, **"Report a data error ↗"**, to the forum's
+Data errors thread (`DATA_CORRECTIONS_URL`). The team page's Elsewhere row ends with the same pill,
+beside the sources a reader checks a score or roster entry against. Not in the top bar (no room
+at 360px) or the phone tab bar (navigation only). `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
 
 **Stale-snapshot treatment** (`editorial`): at > 36h the footer stamp switches to `--sx-text`
 body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be

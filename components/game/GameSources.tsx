@@ -1,6 +1,5 @@
 import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
-import ReportDataError from '../ui/ReportDataError';
 import SectionHeader from '../ui/SectionHeader';
 
 import type { GameModel } from './game-view';
@@ -27,8 +26,6 @@ import type { GameModel } from './game-view';
  * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
  * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
  * when that page is also a result pill under the recap.
- *
- * `GameElsewhere` ends with the corrections line (ReportDataError), on every game page.
  *
  * The cross-check sentence follows the game's league config: a game counted in a division with no
  * official schedule (`official.mode` 'none', spec D23), or a league-postseason game or a game between
@@ -162,10 +159,9 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
         ]
       : [],
   );
-  // The cross-check sentence is about a SCORE, so it only belongs on a game that has one. The
-  // corrections line belongs on every game (a wrong date or time is as reportable as a wrong
-  // score), so the block always renders.
+  // The cross-check sentence is about a SCORE, so it only belongs on a game that has one.
   const isFinal = display.kind === 'final';
+  if (teamRows.length === 0 && !isFinal) return null;
   // D24 (lib/backfill.ts): the league BOTH sides belong to, when it decides a level game on 1 v 1s.
   // Lookups here never throw: the snapshot schema checks a tag's league id only for shape, so an id
   // no longer configured reads as no league (and the page renders) rather than failing the build.
@@ -241,10 +237,6 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
           {crossCheck}
         </p>
       ) : null}
-      <ReportDataError
-        what={isFinal ? 'score, date or team' : 'date, time or team'}
-        className={teamRows.length > 0 || isFinal ? 'mt-3' : undefined}
-      />
     </section>
   );
 }
