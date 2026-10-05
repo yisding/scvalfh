@@ -34,16 +34,15 @@ import type { DivisionId, Game, LeagueId } from '../../lib/types';
  * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
  * `leaderLine` rows the root and /standings OG cards print.
  *
- * It sits beside the pure `standings-view.ts` the way `components/home/home-view.ts` sits beside
- * the home views: this module reads the snapshot, and the view builders and components under
- * `components/standings/` take what is built here, so they can be reasoned about (and exercised
- * from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
+ * It is the `lib/data`-reading side of a split with the pure `standings-view.ts`: this module reads
+ * the snapshot, and the view builders and components under `components/standings/` take what is
+ * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
  * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
  */
-export interface StandingsPageData {
+export interface StandingsPageView {
   asOf: string;
   league: LeagueSummary;
   /** `LeagueConfig.membershipNote`, printed under the page header (EAL); null for most leagues. */
@@ -109,9 +108,9 @@ export function leaderLine(division: DivisionId, heading: string | null): Leader
   };
 }
 
-export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
+export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
   const league = getLeagueSummary(leagueId);
-  if (!league) throw new Error(`components/standings/standings-data.ts: unknown league ${leagueId}`);
+  if (!league) throw new Error(`components/standings/standings-page-view.ts: unknown league ${leagueId}`);
   const views = league.divisions.map((d) => buildDivisionStandingsView(d.id));
   const several = league.divisions.length > 1;
 
@@ -144,7 +143,7 @@ export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
  * infer it from a table of em dashes (DESIGN §8, rows 1 and 2). Exported for
  * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
-export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageData['notice'] {
+export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;
   // The start date is config's (validated, so always set) and the count is games played so far,
   // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
@@ -164,7 +163,7 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
 
 // ---------------------------------------------------------------- the /standings overview
 
-export interface StandingsOverviewData {
+export interface StandingsOverviewView {
   asOf: string;
   leagues: LeagueSummary[];
   sections: OverviewSection[];
@@ -173,7 +172,7 @@ export interface StandingsOverviewData {
   throughDate: string | null;
 }
 
-export function getStandingsOverviewData(): StandingsOverviewData {
+export function buildStandingsOverviewView(): StandingsOverviewView {
   const teams = getTeams();
   const leagues = getLeagueIds()
     .map((id) => getLeagueSummary(id))

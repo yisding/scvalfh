@@ -8,7 +8,7 @@ import { leagueChips, leagueHrefs } from '../../../components/layout/league-chip
 import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
-import { getStandingsPageData } from '../../../components/standings/standings-data';
+import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
 import { leaderClause } from '../../../components/standings/standings-view';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const { league } = await params;
   const summary = getLeagueSummary(league);
   if (!summary) return { title: 'League not found' };
-  const { leaders, views } = getStandingsPageData(league);
+  const { leaders, views } = buildStandingsPageView(league);
   const through = views
     .map((v) => v.throughDate)
     .filter((d): d is string => d !== null)
@@ -65,7 +65,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   const { league } = await params;
   const summary = getLeagueSummary(league);
   if (!summary) notFound();
-  const data = getStandingsPageData(summary.id);
+  const data = buildStandingsPageView(summary.id);
   const multi = summary.divisions.length > 1;
   const tabs = data.views.map((view) => ({ href: `#${view.division}`, label: view.kicker }));
 

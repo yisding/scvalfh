@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { OG, OG_SIZE } from '../components/layout/og-theme';
 import { ROOT_OG_ALT, SITE_NAME } from '../components/layout/site';
-import { leaderLine } from '../components/standings/standings-data';
+import { leaderLine } from '../components/standings/standings-page-view';
 import { leaderClause } from '../components/standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../lib/data';
 import { shortDate } from '../lib/format';
@@ -16,7 +16,7 @@ import { SEASON_CALENDAR_YEAR } from '../lib/season';
  * pts` — the leader(s) of each division with their points. A single-division league has no
  * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
  * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue. The row
- * is the /standings card's own (standings-view's `leaderClause` over standings-data's
+ * is the /standings card's own (standings-view's `leaderClause` over standings-page-view's
  * `leaderLine`), so the two cards cannot word a league's leaders differently.
  *
  * Five rows have to fit between the title and the footer at 1200×630: 56px top and bottom padding

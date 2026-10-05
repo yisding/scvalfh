@@ -7,7 +7,7 @@ import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
-import { getStandingsOverviewData } from '../../components/standings/standings-data';
+import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
@@ -31,7 +31,7 @@ import { listWords, shortDate } from '../../lib/format';
  * Static: no search params, nothing derived from `Date.now()`.
  */
 export function generateMetadata(): Metadata {
-  const { leaders, throughDate } = getStandingsOverviewData();
+  const { leaders, throughDate } = buildStandingsOverviewView();
   const summary = leaders
     .map(({ league, lines }) => `${league.shortName}: ${leaderClause(lines)}`)
     .join('. ');
@@ -47,7 +47,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default function StandingsPage() {
-  const { leagues, sections } = getStandingsOverviewData();
+  const { leagues, sections } = buildStandingsOverviewView();
 
   return (
     <div className="pb-section-lg">

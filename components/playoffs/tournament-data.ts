@@ -3,8 +3,8 @@
  * which params the route prerenders, and the league plus its tournament config for one of them.
  *
  * It reads `lib/data`, so it sits beside the pure `playoff-view.ts` rather than in it, the way
- * `components/standings/standings-data.ts` sits beside `standings-view.ts`. The page and the OG
- * route both call these, so the OG card's params and its 404 guard cannot drift from the page's.
+ * `components/standings/standings-page-view.ts` sits beside `standings-view.ts`. The page and the
+ * OG route both call these, so the OG card's params and its 404 guard cannot drift from the page's.
  * They are not exported from the page itself because a page file may only export the route's own
  * names.
  */

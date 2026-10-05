@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { OG, OG_SIZE } from '../../components/layout/og-theme';
 import { SITE_NAME } from '../../components/layout/site';
-import { getStandingsOverviewData } from '../../components/standings/standings-data';
+import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
 import { leaderClause } from '../../components/standings/standings-view';
 import { getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
@@ -22,7 +22,7 @@ export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export default function StandingsOpengraphImage() {
-  const { leaders, leagues, throughDate } = getStandingsOverviewData();
+  const { leaders, leagues, throughDate } = buildStandingsOverviewView();
   const teamCount = getTeams().length;
 
   return new ImageResponse(

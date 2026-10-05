@@ -3,11 +3,13 @@
  * Stage C builders hand to the pages (the built HTML is checked separately by
  * scripts/assert-copy.ts):
  *
- *   components/home/home-view.ts        buildHomeView(): league panels, league cards, the 49 team views
- *   components/standings/standings-data.ts     getStandingsPageData(league) (division views built by
- *                                       components/standings/standings-view.ts)
- *   components/teams/team-view.ts       buildTeamPageView(slug), buildTeamsByLeague()
- *   components/game/game-view.ts       buildGameView(param) for every game, buildSupersededStub
+ *   components/home/home-view.ts                  buildHomeView(): league panels, league cards, the
+ *                                                 49 team views
+ *   components/standings/standings-page-view.ts   buildStandingsPageView(league) (division views
+ *                                                 built by components/standings/standings-view.ts)
+ *   components/teams/team-view.ts                 buildTeamPageView(slug), buildTeamsByLeague()
+ *   components/game/game-view.ts                  buildGameView(param) for every game,
+ *                                                 buildSupersededStub
  *
  * Rules (every string VALUE in the model, keys excluded):
  *  1. no "Gabilan" in any case, except the lowercase slug inside a MaxPreps URL;
@@ -56,12 +58,12 @@ import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type Home = typeof import('../../components/home/home-view');
-type Standings = typeof import('../../components/standings/standings-data');
+type Standings = typeof import('../../components/standings/standings-page-view');
 type TeamView = typeof import('../../components/teams/team-view');
 type GameView = typeof import('../../components/game/game-view');
 
 const HV = 'components/home/home-view.ts';
-const SD = 'components/standings/standings-data.ts (via components/standings/standings-view.ts)';
+const SPV = 'components/standings/standings-page-view.ts (via components/standings/standings-view.ts)';
 const TV = 'components/teams/team-view.ts';
 const GV = 'components/game/game-view.ts';
 const SP = 'app/schedule/[league]/page.tsx (rendered)';
@@ -100,7 +102,7 @@ beforeAll(async () => {
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');
   const h = await import('../../components/home/home-view');
-  standings = await import('../../components/standings/standings-data');
+  standings = await import('../../components/standings/standings-page-view');
   teamView = await import('../../components/teams/team-view');
   gameView = await import('../../components/game/game-view');
   home = h.buildHomeView();
@@ -128,9 +130,9 @@ beforeAll(async () => {
 
   for (const id of data.getLeagueIds()) {
     const short = leagues.getLeague(id).shortName;
-    s.push({ producer: SD, label: `${short} standings`, league: id, value: standings.getStandingsPageData(id) });
+    s.push({ producer: SPV, label: `${short} standings`, league: id, value: standings.buildStandingsPageView(id) });
   }
-  s.push({ producer: SD, label: 'standings overview', league: null, value: standings.getStandingsOverviewData() });
+  s.push({ producer: SPV, label: 'standings overview', league: null, value: standings.buildStandingsOverviewView() });
 
   for (const t of data.getTeams()) {
     s.push({ producer: TV, label: `team page ${t.slug}`, league: t.league, value: teamView.buildTeamPageView(t.slug) });
@@ -165,7 +167,7 @@ async function collectEal(): Promise<EalCorpus> {
   const d: Data = await import('../../lib/data');
   const l: Leagues = await import('../../lib/leagues');
   const h = (await import('../../components/home/home-view')).buildHomeView();
-  const sd: Standings = await import('../../components/standings/standings-data');
+  const sd: Standings = await import('../../components/standings/standings-page-view');
   const tv: TeamView = await import('../../components/teams/team-view');
   const gm: GameView = await import('../../components/game/game-view');
   const schedulePage = (await import('../../app/schedule/[league]/page')).default;
@@ -196,7 +198,7 @@ async function collectEal(): Promise<EalCorpus> {
   const playoffsHtml = renderToStaticMarkup(createElement(playoffsPage));
   for (const id of ids) {
     const short = l.getLeague(id).shortName;
-    s.push({ producer: SD, label: `${short} standings (EAL corpus)`, league: id, value: sd.getStandingsPageData(id) });
+    s.push({ producer: SPV, label: `${short} standings (EAL corpus)`, league: id, value: sd.buildStandingsPageView(id) });
     const params = { params: Promise.resolve({ league: id }) } as never;
     const scheduleHtml = renderToStaticMarkup((await schedulePage(params)) as ReactElement);
     s.push({ producer: SP, label: `/schedule/${id} (EAL corpus)`, league: id, value: visibleText(scheduleHtml) });
@@ -315,7 +317,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
   it('collects view models for all five leagues from every producer', () => {
     expect(data.getLeagueIds().length, 'lib/data.ts: league ids').toBe(leagues.LEAGUES.length);
     for (const id of data.getLeagueIds()) {
-      for (const producer of [HV, SD, TV]) {
+      for (const producer of [HV, SPV, TV]) {
         expect(subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no view model for ${id}`).toBe(true);
       }
     }
@@ -326,7 +328,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     const ids = eal.leagues.UNBRACKETED_LEAGUE_IDS;
     expect(ids.length, 'lib/leagues.ts: unbracketed leagues').toBeGreaterThan(0);
     for (const id of ids) {
-      for (const producer of [HV, SD, TV, SP, PP, TP]) {
+      for (const producer of [HV, SPV, TV, SP, PP, TP]) {
         expect(eal.subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no ${id} view on the EAL corpus`).toBe(true);
       }
       const teams = eal.data.getTeams().filter((t) => t.league === id).length;
@@ -345,7 +347,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     expect(ps.kind, 'lib/leagues.ts: postseason kind').toBe('unbracketed-tournament');
     if (ps.kind === 'unbracketed-tournament') expect(text, `${TP}: "${ps.name} picture" kicker`).toContain(`${ps.name} picture`);
     expect(text, `${GV}: the 1 v 1 note`).toMatch(/1 v 1s decided it/);
-    expect(text, `${SD}: the missing banner`).toMatch(/league results? missing/);
+    expect(text, `${SPV}: the missing banner`).toMatch(/league results? missing/);
     expect(text, `${SP}: membership note`).toContain(eal.leagues.getLeague(ids[0]).membershipNote ?? '(none)');
   });
 
