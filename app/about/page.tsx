@@ -150,7 +150,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
   // The multi-team paragraph describes how a separating step is applied; a chain with none (the EAL's
   // lone 'no-rule') has nothing to apply, so the paragraph would describe a procedure the rules lack.
   const anyStepSeparates = bucketStarts.length > 0 || rules.tiebreaks.default.some((s) => s !== 'no-rule');
-  const unit = rules.gamesWord === 'division' ? 'division' : 'league';
+  const unit = rules.gamesWord;
   // Only a league without a schedule document reaches the contest-type branch (EAL; SCVAL, the other
   // contest-type league, is quoted by QuotedRules instead).
   const postseasonNoun =
@@ -164,7 +164,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
             ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are ${postseasonNoun}.`
             : ''
         }`
-      : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${rules.gamesWord === 'division' ? 'division' : 'league'}; tournament and postseason games never count.${
+      : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${unit}; tournament and postseason games never count.${
           rules.postseasonFrom ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are tournament games.` : ''
         }`;
   return (

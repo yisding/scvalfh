@@ -56,8 +56,10 @@ import { hasHistory } from '../../lib/history';
 import { outcomesFor, statusBadge } from '../../lib/standings';
 import {
   CCS,
+  divisionHeading,
   getDivision,
   getLeague,
+  isSingleDivision,
   leaguePlayStarts,
   sectionOf,
   type DivisionConfig,
@@ -352,7 +354,7 @@ export interface MiniDivisionView {
   home: DivisionConfig['home'];
 }
 
-function miniDivision(league: LeagueConfig, division: DivisionConfig, single: boolean): MiniDivisionView {
+function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {
   const rows = getStandings(division.id).map((s): MiniRow => {
     const team = getTeamById(s.teamId);
     return {
@@ -372,7 +374,7 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig, single: bo
   });
   return {
     id: division.id,
-    heading: single ? null : division.label,
+    heading: divisionHeading(division.id),
     leagueShort: league.shortName,
     rows,
     total: rows.length,
@@ -526,7 +528,7 @@ export interface OtherLeagueLine {
 }
 
 function leagueLeadersLine(league: LeagueConfig): string {
-  const single = league.divisions.length === 1;
+  const single = isSingleDivision(league.id);
   const clauses = league.divisions.map((d) => {
     const leaders = divisionLeaders(d.id);
     if (!leaders) return single ? null : `no results yet in ${d.label}`;
@@ -592,7 +594,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
   const latestDate = getLatestResultsDate({ league: league.id });
   const unreported = unreportedDay(league.id, today, latestDate);
   const slateDate = getUpcoming(1, { league: league.id })[0]?.dateKey ?? null;
-  const single = league.divisions.length === 1;
+  const single = isSingleDivision(league.id);
   const firstGame = getGameDates({ league: league.id })[0] ?? null;
 
   return {
@@ -606,7 +608,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
     slate: slateDate ? leagueDay(league.id, slateDate, today, { playable: true }) : null,
     nextLeague: slateDate ? nextLeagueDay(league.id, slateDate, today) : null,
     firstGame,
-    divisions: league.divisions.map((d) => miniDivision(league, d, single)),
+    divisions: league.divisions.map((d) => miniDivision(league, d)),
     pointsLegend: `PTS: ${league.rules.citations.points}.`,
     teams: {
       leagueId: league.id,
@@ -614,14 +616,14 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
       singleDivision: single,
       groups: league.divisions.map((d) => ({
         id: d.id,
-        heading: single ? null : d.label,
+        heading: divisionHeading(d.id),
         // A–Z by the short name the tile prints, so a reader scans one alphabetical run per
         // division instead of the registry's order. Sorted here on the server, once, so the client
         // renders exactly the order the HTML shipped with.
         tiles: getTeams({ division: d.id })
           .slice()
           .sort((a, b) => a.shortName.localeCompare(b.shortName, 'en'))
-          .map((t) => pinTileView(t, league.shortName, single ? null : d.label)),
+          .map((t) => pinTileView(t, league.shortName, divisionHeading(d.id))),
       })),
     },
     postseason: postseasonView(league, phase, sectionOf(league.id).noChampionshipNote),
@@ -748,8 +750,7 @@ export function buildTeamViews(): HomeTeamView[] {
   const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
   return getTeams().map((team) => {
     const league = getLeague(team.league);
-    const single = league.divisions.length === 1;
-    const heading = single ? null : getDivision(team.division).label;
+    const heading = divisionHeading(team.division);
     if (!contexts.has(team.division)) contexts.set(team.division, getStandingContext(team.division));
     const context = contexts.get(team.division)?.get(team.id);
     const standing = getStandingFor(team.slug);
