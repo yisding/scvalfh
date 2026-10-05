@@ -6,9 +6,8 @@ import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import TeamFinder from '../../components/search/TeamFinder';
-import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
+import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
 import { buildTeamsByLeague } from '../../components/teams/team-view';
-import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 
@@ -106,31 +105,7 @@ export default function TeamsPage() {
                   <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{group.membershipNote}</p>
                 ) : null}
                 {group.divisions.map((division) => (
-                  <div
-                    key={division.division}
-                    id={division.anchorId ?? undefined}
-                    data-team-group=""
-                    className="mt-6"
-                  >
-                    {division.heading ? (
-                      <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4>
-                    ) : null}
-                    <CompactStandingsTable
-                      rows={division.rows}
-                      ladderLine={division.ladderLine}
-                      caption={division.caption}
-                      filterable
-                    />
-                    <p className="m-0 mt-2">
-                      <Link
-                        href={division.fullHref}
-                        prefetch={false}
-                        className="sx-action text-meta font-medium text-accent hover:underline"
-                      >
-                        {division.fullLabel} <Arrow />
-                      </Link>
-                    </p>
-                  </div>
+                  <OverviewDivisionBlock key={division.division} division={division} filterable teamGroup />
                 ))}
               </section>
             ))}

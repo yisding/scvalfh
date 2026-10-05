@@ -2168,7 +2168,9 @@ each shown before paint only for the remembered league by the league-scope style
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
 new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
 §5.3) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its
-words alone; never baked into a data string) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
+words alone; never baked into a data string) · `OverviewDivisionBlock` (one division of the
+/standings and /teams overviews: its h4, its `CompactStandingsTable` and its `Full <division>
+table →` link, §18.1) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
 server-side in `America/Los_Angeles` so it never hydration-mismatches).
 
 ---
@@ -2970,8 +2972,9 @@ disagree.
 team tiles are replaced by that division's compact standings table: place (`T7` when shared), team
 (monogram and short name, a link to the team page), GP, W-L-T, PTS, the league's labelled ladder
 line, and a `Full <division> table →` link to `/standings/<league>#<division>`. It is the
-/standings overview's own table, built by the same view (`buildOverviewDivision`), so the two
-pages cannot disagree about a place. Every registry team is a row; a team with no results is listed
+/standings overview's own table, built by the same view (`buildOverviewDivision`) and drawn by the
+same block (`OverviewDivisionBlock`: the h4, the table and the link), so the two pages cannot
+disagree about a place. Every registry team is a row; a team with no results is listed
 last with dashes, never 0-0-0.
 
 The search filters the tables in place: it hides the rows that do not match (`data-team-tile` on

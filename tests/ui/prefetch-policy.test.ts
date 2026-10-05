@@ -172,6 +172,9 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/playoffs/PlayoffProjection.tsx', '/teams/${row.team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
+      // The /standings and /teams overviews render one block per division, each with its
+      // `Full <division> table` link.
+      ['components/standings/OverviewDivisionBlock.tsx', 'href={division.fullHref}'],
       ['components/teams/TeamUnbeaten.tsx', '/teams/${opponent.slug}'],
       ['components/history/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
       ['components/history/AwardsBlock.tsx', '/teams/${team.slug}'],

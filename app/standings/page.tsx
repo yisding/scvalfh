@@ -6,9 +6,8 @@ import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
-import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
+import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
 import { leaderClause } from '../../components/standings/standings-view';
-import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
 
@@ -78,25 +77,7 @@ export default function StandingsPage() {
                 <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{league.membershipNote}</p>
               ) : null}
               {league.divisions.map((division) => (
-                <div key={division.division} id={division.anchorId ?? undefined} className="mt-6">
-                  {division.heading ? (
-                    <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4>
-                  ) : null}
-                  <CompactStandingsTable
-                    rows={division.rows}
-                    ladderLine={division.ladderLine}
-                    caption={division.caption}
-                  />
-                  <p className="m-0 mt-2">
-                    <Link
-                      href={division.fullHref}
-                      prefetch={false}
-                      className="sx-action text-meta font-medium text-accent hover:underline"
-                    >
-                      {division.fullLabel} <Arrow />
-                    </Link>
-                  </p>
-                </div>
+                <OverviewDivisionBlock key={division.division} division={division} />
               ))}
             </section>
           ))}
