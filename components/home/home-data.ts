@@ -73,7 +73,7 @@ import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
-import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
 import { plural } from '../ui/plural';
 
 import type {
@@ -172,11 +172,11 @@ function nextLeagueDay(league: LeagueId, after: string, today: string): NextLeag
     ...day,
     games: day.games.filter((g) => countsInLeague(g, league)),
     total: all.length,
-    postseason: all.filter((g) => g.countsFor === null && g.postseason !== null).length,
+    postseason: all.filter((g) => gameKind(g) === 'postseason').length,
     // Counted directly rather than as `total − league − postseason`: `games` holds only the
     // PLAYABLE league games, so a league game already final that day would otherwise be
     // mis-counted as non-league.
-    nonLeague: all.filter((g) => g.countsFor === null && g.postseason === null).length,
+    nonLeague: all.filter((g) => gameKind(g) === 'non-league').length,
   };
 }
 
@@ -713,7 +713,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs),
-    kindLabel: postseasonTagOf(game) ?? (game.countsFor !== null ? 'league' : 'non-league'),
+    kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every
     // team (no layout shift).

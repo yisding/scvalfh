@@ -14,7 +14,7 @@ import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import Tag from './Tag';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, statusLabelIsTime, type GameDisplay, type SideView } from './game-view';
+import { describeGame, gameKind, statusLabelIsTime, type GameDisplay, type SideView } from './game-view';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).
@@ -587,7 +587,7 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
 export function gameLogRowClass(game: Game, className?: string): string {
   // The non-league rule is `display.isNonLeague` (SPEC §10.4): neither counted for a league table
   // nor postseason. A postseason game is neither league nor NL, so it takes no rule.
-  const nonLeague = game.countsFor === null && game.postseason === null;
+  const nonLeague = gameKind(game) === 'non-league';
   return [
     'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta',
     nonLeague ? 'sx-nonleague' : null,

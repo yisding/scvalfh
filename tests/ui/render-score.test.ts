@@ -17,6 +17,7 @@ import { describe, expect, it } from 'vitest';
 import {
   describeCancelled,
   describeGame,
+  gameKind,
   gameKindLabel,
   overtimeInDoubt,
   signedMargin,
@@ -494,5 +495,19 @@ describe('game kind (SPEC §10.4, the team page’s Last and Next headers)', () 
     expect(gameKindLabel({ countsFor: 'de-anza', postseason: null })).toBe('League');
     expect(gameKindLabel({ countsFor: null, postseason: ccs })).toBe('Postseason');
     expect(gameKindLabel({ countsFor: null, postseason: null })).toBe('Non-league');
+  });
+
+  it('splits every game three ways, and a counted game is league even when it is also tagged', () => {
+    const ccs: Game['postseason'] = { kind: 'ccs', leagueId: null, via: 'ccs-window' };
+    expect(gameKind({ countsFor: 'de-anza', postseason: null })).toBe('league');
+    expect(gameKind({ countsFor: 'de-anza', postseason: ccs })).toBe('league');
+    expect(gameKind({ countsFor: null, postseason: ccs })).toBe('postseason');
+    expect(gameKind({ countsFor: null, postseason: null })).toBe('non-league');
+  });
+
+  it('marks a row non-league exactly when gameKind says non-league', () => {
+    for (const game of getGames()) {
+      expect(describeGame(game).isNonLeague).toBe(gameKind(game) === 'non-league');
+    }
   });
 });

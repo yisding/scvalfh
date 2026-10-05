@@ -131,18 +131,37 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   return `${league.shortName} ${word}`;
 }
 
+/** The three kinds of game the site tells apart (SPEC §10.4). */
+export type GameKind = 'league' | 'postseason' | 'non-league';
+
+/**
+ * What kind of game this is (SPEC §10.4): `league` when it counts for a division table
+ * (`countsFor`), else `postseason` when it carries a postseason tag, else `non-league`. The one
+ * definition of the split; `isNonLeague` below and every count of league, postseason and
+ * non-league games read it.
+ */
+export function gameKind(game: Pick<Game, 'countsFor' | 'postseason'>): GameKind {
+  if (game.countsFor !== null) return 'league';
+  return game.postseason !== null ? 'postseason' : 'non-league';
+}
+
+const GAME_KIND_LABEL: Readonly<Record<GameKind, 'League' | 'Postseason' | 'Non-league'>> = {
+  league: 'League',
+  postseason: 'Postseason',
+  'non-league': 'Non-league',
+};
+
 /**
  * The one word for what kind of game this is, as the team page's Last and Next headers print it
  * (SPEC §10.4): `League` for a counted game, `Postseason` for a tagged one, `Non-league` otherwise.
  */
 export function gameKindLabel(game: Pick<Game, 'countsFor' | 'postseason'>): 'League' | 'Postseason' | 'Non-league' {
-  if (game.countsFor !== null) return 'League';
-  return game.postseason !== null ? 'Postseason' : 'Non-league';
+  return GAME_KIND_LABEL[gameKind(game)];
 }
 
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
   return {
-    isNonLeague: game.countsFor === null && game.postseason === null,
+    isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
     sourceMark: game.provenance.scores === 'sblive' ? 'si.com' : null,
