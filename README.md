@@ -612,9 +612,6 @@ are read with `node:fs` when the module loads, so they work under Next, vitest, 
 Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
 Cloudflare scripts. The other three files have no override.
 
-`node scripts/typecheck-scope.mjs <glob>…` runs the full typecheck but fails only on diagnostics
-inside the globs (for concurrent edits in one tree).
-
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
@@ -665,8 +662,8 @@ rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the record
 end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
 validators check `data/rosters.json`, `data/player-stats.json`, `data/clubs.json` and
 `data/commits.json`, and further suites pin the copy rules, the workflow files and the
-legacy-import guard. Fixtures captured from real (offline) MaxPreps/SCVAL responses live under
-`tests/fixtures/`.
+update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
+captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
 
 ## Next-season bootstrap
 
