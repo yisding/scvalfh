@@ -39,7 +39,7 @@ const PAGE_TITLE = 'Teams and standings';
  * whose schools are not all in its section, the EAL, has its membership note under the h3) → each
  * division a plain h4 (omitted for a single-division league) over its table and its
  * `Full <division> table →` link.
- * The division wrapper carries the division id unless it equals the league id (PCAL), so
+ * The division wrapper carries the division id unless it equals the league id (PCAL, EAL), so
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
  *

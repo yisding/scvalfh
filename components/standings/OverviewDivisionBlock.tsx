@@ -15,7 +15,7 @@ import type { OverviewDivision } from './standings-view';
  * about the block's markup. The section and league wrappers above it, and each page's closing
  * legend, stay with the page: /teams carries the finder's hooks and a league action there.
  *
- * The wrapper carries the division id unless it equals the league id (PCAL), where the league's
+ * The wrapper carries the division id unless it equals the league id (PCAL, EAL), where the league's
  * heading has it, so every id on a page is unique. `teamGroup` adds the `data-team-group` hook the
  * /teams finder hides an emptied group by; `filterable` passes the finder's row hooks down to the
  * table.

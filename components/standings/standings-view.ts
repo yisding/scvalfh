@@ -647,7 +647,7 @@ export interface OverviewDivision {
   /** Division heading (h4) — null for a single-division league, which has no sub-header. */
   heading: string | null;
   /**
-   * The division block's id: the division id, unless it equals the league id (PCAL), where the
+   * The division block's id: the division id, unless it equals the league id (PCAL, EAL), where the
    * league's heading carries it — ONE element per id. It sits on the block, not the h4, because a
    * single-division league (MCAL: `#marin-county`) has no h4.
    */
