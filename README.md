@@ -1250,6 +1250,11 @@ compatibility date follows, so bump the two together and re-run the Workers buil
   multi-team ties are resolved, co-champions, the postseason, official sources and known data gaps.
 - `docs/BYLAWS-2026-27.md` — the verified SCVAL by-laws excerpt that governs standings, points,
   tiebreaks and CCS qualification.
+- `SPEC §n` and `BUILD-BRIEF` in code comments refer to the build-time research spec and build
+  brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
+  `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
+  so treat it as historical. New comments cite `docs/DESIGN.md`, `docs/DATA-SOURCES.md`,
+  `docs/LEAGUE-RULES.md` or `docs/BYLAWS-2026-27.md` sections instead.
 - `docs/DESIGN.md` — the implementation-ready design record: routes, tokens, component
   signatures, rendering rules, empty states, accessibility requirements. §15 is the multi-league
   amendment (what changed from the single-league design, and why). §22 is the EAL amendment (the

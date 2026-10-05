@@ -13,6 +13,12 @@
 > fifth league in a third section, the Northern Section; §22 at the end of this file records what
 > that changed and wins where it disagrees with §15 or anything above it.
 >
+> **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
+> build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
+> `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
+> so treat it as historical. New comments cite DESIGN, DATA-SOURCES, LEAGUE-RULES or BYLAWS
+> sections instead.
+>
 > **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
 > example below predates the news that Wilcox is not fielding a team this season. The site now
 > had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
