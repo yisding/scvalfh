@@ -79,7 +79,7 @@ export interface KeyDateRow {
   /** 'YYYY-MM-DD' — the `<time datetime>` value. */
   dateKey: string;
   /** 'Sat Nov 7' */
-  date: string;
+  dateLabel: string;
   /** '1:00 PM PT', or null for an all-day date. */
   time: string | null;
   /** The league a date belongs to ('SCVAL', 'BVAL'); null for a CCS date. */
@@ -119,7 +119,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
   ): KeyDateRow => ({
     key,
     dateKey: dateOnly(iso),
-    date: shortDate(iso),
+    dateLabel: shortDate(iso),
     time: opts.time ? timeOfDayPT(iso) : null,
     leagueShort: null,
     label,
@@ -138,7 +138,7 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
       (d): KeyDateRow => ({
         key: `league:${d.id}`,
         dateKey: dateOnly(d.date),
-        date: shortDate(d.date),
+        dateLabel: shortDate(d.date),
         time: d.time ? leagueClockPT(d.time) : null,
         leagueShort: d.leagueShort,
         label: d.label,

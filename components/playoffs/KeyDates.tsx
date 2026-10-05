@@ -32,7 +32,7 @@ function DateItem({ row }: { row: KeyDateRow }) {
   return (
     <li className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-3 px-gutter py-3 md:px-5">
       <span className={`sx-num text-cell ${row.isRound ? 'font-medium text-ink' : 'text-ink-2'}`}>
-        <time dateTime={row.dateKey}>{row.date}</time>
+        <time dateTime={row.dateKey}>{row.dateLabel}</time>
         {row.time ? <span className="block whitespace-nowrap text-ink-2">{row.time}</span> : null}
       </span>
       <span className="min-w-0">

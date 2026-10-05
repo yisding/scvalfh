@@ -306,7 +306,7 @@ describe('keyDateRows', () => {
       { id: 'bval', leagueShort: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
       { id: 'scval', leagueShort: 'SCVAL', date: '2026-10-30', time: null, label: 'SCVAL crossover and 4th-place play-in', detail: 'y' },
     ]);
-    expect(rows.map((r) => `${r.date}|${r.leagueShort ?? ''}|${r.label}|${r.time ?? ''}`), VIEW).toEqual([
+    expect(rows.map((r) => `${r.dateLabel}|${r.leagueShort ?? ''}|${r.label}|${r.time ?? ''}`), VIEW).toEqual([
       'Fri Oct 30|SCVAL|SCVAL crossover and 4th-place play-in|',
       'Sat Oct 31||CCS end of league season|',
       'Sat Oct 31|BVAL|BVAL play-in|11 AM PT',

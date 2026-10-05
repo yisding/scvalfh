@@ -339,7 +339,7 @@ export function StandingsNotes({
               {[...missing, ...postponed].map((row) => (
                 <li key={row.key}>
                   <time dateTime={row.dateKey} className="sx-num text-ink">
-                    {row.date}
+                    {row.dateLabel}
                   </time>{' '}
                   {row.matchup}
                   {row.sbliveNote ? <span className="block text-meta text-ink-3">{row.sbliveNote}</span> : null}

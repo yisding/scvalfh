@@ -97,7 +97,7 @@ export interface MissingRowView {
   key: string;
   dateKey: string;
   /** `Sep 4` */
-  date: string;
+  dateLabel: string;
   /** `Hollister at Carmel` (postponed rows add ` — Postponed`). */
   matchup: string;
   /** `Sep 4 Hollister at Carmel` — the two above, as one line. */
@@ -326,14 +326,14 @@ function teamShort(teams: readonly Team[], slug: TeamSlug | null, fallback: stri
 function missingRowView(row: MissingOfficialResult, teams: readonly Team[], index: number): MissingRowView {
   const away = teamShort(teams, row.awaySlug, row.awayName);
   const home = teamShort(teams, row.homeSlug, row.homeName);
-  const date = monthDay(row.dateKey);
+  const dateLabel = monthDay(row.dateKey);
   const matchup = row.kind === 'postponed' ? `${away} at ${home} — Postponed` : `${away} at ${home}`;
   return {
     key: `${row.dateKey}-${row.awaySlug ?? row.awayName}-${row.homeSlug ?? row.homeName}-${index}`,
     dateKey: row.dateKey,
-    date,
+    dateLabel,
     matchup,
-    text: `${date} ${matchup}`,
+    text: `${dateLabel} ${matchup}`,
     sbliveNote:
       row.kind === 'missing' && row.sblive
         ? `si.com reports ${away} ${row.sblive.away}-${row.sblive.home} ${home}; not counted: ${row.sblive.note}`
