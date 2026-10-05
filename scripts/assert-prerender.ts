@@ -4,12 +4,11 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it, read through the same
- * `loadSnapshot` the build uses, so a file written before a league was added is checked as the
- * build rendered it, upgraded), the league config
- * (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through lib/clubs.ts). So a family that
- * came back short, or long, or a page that lost its generateStaticParams (it would render on demand
- * instead), fails here by name:
+ * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
+ * reads it, so a file written before a league was added is checked as the build rendered it,
+ * upgraded), the league config (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through
+ * lib/clubs.ts). So a family that came back short, or long, or a page that lost its
+ * generateStaticParams (it would render on demand instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
  *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
@@ -49,14 +48,13 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { getClubSlugs } from '../lib/clubs';
+import { getSnapshot } from '../lib/data';
 import { gameIdToParam } from '../lib/game-id';
 import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
-import { loadSnapshot } from '../lib/snapshot-schema';
 import { TEAMS } from '../lib/teams';
 
 const APP = '.next/server/app';
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
 
 const problems: string[] = [];
 const fail = (msg: string) => problems.push(msg);
@@ -65,7 +63,7 @@ if (!existsSync(APP)) {
   console.error(`assert-prerender: ${APP} does not exist; run \`pnpm build\` first`);
   process.exit(1);
 }
-const snapshot = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
+const snapshot = getSnapshot();
 
 /** Every file under .next/server/app, as forward-slash paths relative to it. */
 const allFiles = (readdirSync(APP, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));

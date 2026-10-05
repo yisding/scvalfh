@@ -85,7 +85,8 @@ if (missing.length) fail('not prerendered: ' + missing.join(', '));
 // prerendered sitemap would make the check circular). League ids are season.leagues in config
 // order; the /playoffs/[league] family is the league-tournament leagues (MCAL). `gameIdToParam`
 // of lib/game-id.ts, restated: `sblive:<digits>` → `sblive-<digits>`, a GUID unchanged.
-const snapshot = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json', 'utf8'));
+// An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
+const snapshot = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || 'data/snapshot.json', 'utf8'));
 const gameIdToParam = (id) => id.replace(/^sblive:(\d+)$/, 'sblive-$1');
 const leagueIds = snapshot.season.leagues.map((l) => l.id);
 const tournamentIds = snapshot.season.leagues.filter((l) => l.postseasonKind === 'league-tournament').map((l) => l.id);

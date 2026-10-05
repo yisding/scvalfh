@@ -59,7 +59,8 @@ const BASE = process.env.SCVAL_BASE_URL ?? 'http://127.0.0.1:3117';
  * the five ids are the fallback when the script runs outside the repo.
  */
 function readSnapshot() {
-  const file = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
+  // An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
+  const file = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
 }
 const snapshot = readSnapshot();

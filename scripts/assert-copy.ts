@@ -66,6 +66,7 @@ import path from 'node:path';
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/clubs';
 import { getCommitsFile } from '../lib/commits';
+import { getSnapshot } from '../lib/data';
 import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import {
@@ -94,7 +95,6 @@ import {
 import { PUBLIC_TERMS } from './public-terms';
 
 const APP = '.next/server/app';
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
 
 if (!existsSync(APP)) {
   console.error(`assert-copy: ${APP} does not exist; run \`pnpm build\` first`);
@@ -186,9 +186,7 @@ for (const file of files) {
 }
 
 // ---------------------------------------------------------------- non-CCS (MCAL, EAL) pages, <main> only
-const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as {
-  teams: Array<{ slug: string; league: string; name: string }>;
-};
+const snapshot = getSnapshot();
 const nonCcsLeagues = LEAGUES.filter((l) => l.sectionId !== 'ccs');
 /** Each league's own pages: its standings and schedule, its tournament page if it has one, its team pages. */
 const leaguePages = (id: LeagueId): string[] => [
