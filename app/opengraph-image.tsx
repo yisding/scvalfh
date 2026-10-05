@@ -1,9 +1,9 @@
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME } from '@/components/layout/site';
-import { leaderClause } from '@/components/standings/standings-view';
-import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
-import { shortDate } from '@/lib/format';
+import { SITE_NAME } from '../components/layout/site';
+import { leaderClause } from '../components/standings/standings-view';
+import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../lib/data';
+import { shortDate } from '../lib/format';
 
 import { leaderLine } from './standings/standings-data';
 

@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/layout/monogram-image';
+import { monogramImage } from '../components/layout/monogram-image';
 
 /**
  * The iOS home-screen tile. iOS Add-to-Home-Screen does NOT read the web manifest's `icons`

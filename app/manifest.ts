@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '@/components/layout/site';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layout/site';
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the

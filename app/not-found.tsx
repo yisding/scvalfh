@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
-import { listWords } from '@/lib/format';
-import { getAvailableHistoryLeagues } from '@/lib/history';
-import { LEAGUES, getLeague } from '@/lib/leagues';
+import PageHeader from '../components/layout/PageHeader';
+import { listWords } from '../lib/format';
+import { getAvailableHistoryLeagues } from '../lib/history';
+import { LEAGUES, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',

@@ -22,8 +22,8 @@ import { shortDate } from '../lib/format';
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
  *
- * Imports are relative (not `@/`) so tests/ui/home-view.test.ts can render this page with
- * `react-dom/server` under Vitest, which has no path alias.
+ * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
+ * this page with `react-dom/server` under Vitest, which has no path alias.
  *
  * Everything is read through `components/home/home-data.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; no page calls `Date.now()`, and

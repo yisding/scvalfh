@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '../components/layout/PageHeader';
 
 /**
  * The route-level error boundary. Next 16 passes `retry`, not `reset`

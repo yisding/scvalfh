@@ -593,6 +593,12 @@ by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
 
+Imports are relative everywhere (`app/`, `components/`, `lib/`, `scripts/`, `tests/`), never the
+`@/` alias that `tsconfig.json` declares: Vitest has no path alias (`vitest.config.mts`), and the
+tests import pages, view builders and route modules directly (tests/ui/home-view.test.ts renders
+`app/page.tsx` with `react-dom/server`), so a module that resolves only through `@/` fails the
+moment a test reaches it.
+
 `.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test, build,
 and an assertion that every route family actually prerendered (no route should ever fall back to
 dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores/[date]` and
