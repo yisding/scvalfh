@@ -8,14 +8,13 @@ import { leagueChips, leagueHrefs } from '../../../components/layout/league-chip
 import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
+import { getStandingsPageData } from '../../../components/standings/standings-data';
 import { leaderClause } from '../../../components/standings/standings-view';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
-
-import { getStandingsPageData } from '../standings-data';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.

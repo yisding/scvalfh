@@ -8,7 +8,7 @@ import {
   type DivisionView,
   type LeaderLine,
   type OverviewSection,
-} from '../../components/standings/standings-view';
+} from './standings-view';
 import {
   getCoLeaders,
   getCrossCheck,
@@ -31,11 +31,14 @@ import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 
 /**
- * Everything /standings, /standings/<league> and their OG cards read, assembled once.
+ * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
+ * `leaderLine` rows the root and /standings OG cards print.
  *
- * This is the only module in the route that touches `lib/data`; the components under
+ * It sits beside the pure `standings-view.ts` the way `components/home/home-data.ts` sits beside
+ * the home views: this module reads the snapshot, and the view builders and components under
  * `components/standings/` take what is built here, so they can be reasoned about (and exercised
- * from a test) without an `fs` read.
+ * from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
+ * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
@@ -108,7 +111,7 @@ export function leaderLine(division: DivisionId, heading: string | null): Leader
 
 export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
   const league = getLeagueSummary(leagueId);
-  if (!league) throw new Error(`app/standings/standings-data.ts: unknown league ${leagueId}`);
+  if (!league) throw new Error(`components/standings/standings-data.ts: unknown league ${leagueId}`);
   const views = league.divisions.map((d) => buildDivisionStandingsView(d.id));
   const several = league.divisions.length > 1;
 

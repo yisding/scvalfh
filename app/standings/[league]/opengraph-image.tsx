@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 
+import { leagueStandingsCard } from '../../../components/standings/league-standings-card';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 
-import { leagueStandingsCard } from './og-card';
-
 /**
- * The `/standings/<league>` OG card (SPEC §8.4), rendered by `og-card.tsx`.
+ * The `/standings/<league>` OG card (SPEC §8.4), rendered by
+ * `components/standings/league-standings-card.tsx`.
  *
  * `dynamicParams` cannot reach a metadata route (Next's metadata-route loader drops it; see
  * app/teams/[slug]/opengraph-image.tsx), so this file states its own `generateStaticParams` —

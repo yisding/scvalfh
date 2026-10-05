@@ -1,6 +1,6 @@
 /**
  * The standings pages' view models and markup (SPEC §10.3, §8.1, §10.0, §10.9):
- * `components/standings/standings-view.ts`, `app/standings/standings-data.ts`, the per-league page
+ * `components/standings/standings-view.ts`, `components/standings/standings-data.ts`, the per-league page
  * `/standings/<league>` and the all-league overview `/standings`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded by
@@ -19,7 +19,7 @@ import { corpusSnapshotPath } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
-type StandingsData = typeof import('../../app/standings/standings-data');
+type StandingsData = typeof import('../../components/standings/standings-data');
 type View = typeof import('../../components/standings/standings-view');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -33,7 +33,7 @@ beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
   data = await import('../../lib/data');
-  sd = await import('../../app/standings/standings-data');
+  sd = await import('../../components/standings/standings-data');
   view = await import('../../components/standings/standings-view');
   const leaguePage = (await import('../../app/standings/[league]/page')).default;
   const overviewPage = (await import('../../app/standings/page')).default;
@@ -261,7 +261,7 @@ describe('GP, LEFT and MAX', () => {
 
   it('marks si.com-backfilled records with † and the footnote (PCAL corpus: three backfills)', async () => {
     const pcal = sd.getStandingsPageData('pcal').views[0];
-    expect(pcal.backfilledGames, 'app/standings/standings-data.ts backfilledGames').toBe(3);
+    expect(pcal.backfilledGames, 'components/standings/standings-data.ts backfilledGames').toBe(3);
     expect(pcal.backfillFootnote).toBe(
       '† Includes 3 results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).',
     );
@@ -419,7 +419,7 @@ describe('OG card rows (standings-view.ts leaderClause over standings-data.ts le
 });
 
 describe('the preseason notice (standings-data.ts buildNotice, DESIGN §8)', () => {
-  const SD = 'app/standings/standings-data.ts buildNotice';
+  const SD = 'components/standings/standings-data.ts buildNotice';
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
     for (const id of data.getLeagueIds().filter((l) => l !== 'eal')) {
       expect(sd.getStandingsPageData(id).notice, `${SD}: ${id}`).toBeNull();

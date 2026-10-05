@@ -1,11 +1,10 @@
 import { ImageResponse } from 'next/og';
 
 import { SITE_NAME } from '../components/layout/site';
+import { leaderLine } from '../components/standings/standings-data';
 import { leaderClause } from '../components/standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../lib/data';
 import { shortDate } from '../lib/format';
-
-import { leaderLine } from './standings/standings-data';
 
 /**
  * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image

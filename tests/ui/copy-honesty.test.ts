@@ -4,7 +4,7 @@
  * scripts/assert-copy.ts):
  *
  *   components/home/home-data.ts        getHomeData(): league panels, league cards, the 49 team views
- *   app/standings/standings-data.ts     getStandingsPageData(league) (division views built by
+ *   components/standings/standings-data.ts     getStandingsPageData(league) (division views built by
  *                                       components/standings/standings-view.ts)
  *   components/teams/team-view.ts       buildTeamPageView(slug), buildTeamsByLeague()
  *   components/game/game-model.ts       buildGameModel(param) for every game, buildSupersededStub
@@ -56,12 +56,12 @@ import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type Home = typeof import('../../components/home/home-data');
-type Standings = typeof import('../../app/standings/standings-data');
+type Standings = typeof import('../../components/standings/standings-data');
 type TeamView = typeof import('../../components/teams/team-view');
 type GameModel = typeof import('../../components/game/game-model');
 
 const HD = 'components/home/home-data.ts';
-const SD = 'app/standings/standings-data.ts (via components/standings/standings-view.ts)';
+const SD = 'components/standings/standings-data.ts (via components/standings/standings-view.ts)';
 const TV = 'components/teams/team-view.ts';
 const GM = 'components/game/game-model.ts';
 const SP = 'app/schedule/[league]/page.tsx (rendered)';
@@ -100,7 +100,7 @@ beforeAll(async () => {
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');
   const h = await import('../../components/home/home-data');
-  standings = await import('../../app/standings/standings-data');
+  standings = await import('../../components/standings/standings-data');
   teamView = await import('../../components/teams/team-view');
   gameModel = await import('../../components/game/game-model');
   home = h.getHomeData();
@@ -165,7 +165,7 @@ async function collectEal(): Promise<EalCorpus> {
   const d: Data = await import('../../lib/data');
   const l: Leagues = await import('../../lib/leagues');
   const h = (await import('../../components/home/home-data')).getHomeData();
-  const sd: Standings = await import('../../app/standings/standings-data');
+  const sd: Standings = await import('../../components/standings/standings-data');
   const tv: TeamView = await import('../../components/teams/team-view');
   const gm: GameModel = await import('../../components/game/game-model');
   const schedulePage = (await import('../../app/schedule/[league]/page')).default;

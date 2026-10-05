@@ -1,8 +1,8 @@
 import { ImageResponse } from 'next/og';
 
-import { SITE_WORDMARK } from '../../../components/layout/site';
-import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../../lib/data';
-import { formatStamp, shortDate } from '../../../lib/format';
+import { SITE_WORDMARK } from '../layout/site';
+import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../lib/data';
+import { formatStamp, shortDate } from '../../lib/format';
 
 /**
  * The league standings card (SPEC §8.4), shared by `/standings/<league>` and
@@ -25,7 +25,7 @@ const RULE = '#3d444d';
 
 export function leagueStandingsCard(leagueId: string): ImageResponse {
   const league = getLeagueSummary(leagueId);
-  if (!league) throw new Error(`app/standings/[league]/og-card.tsx: unknown league ${leagueId}`);
+  if (!league) throw new Error(`components/standings/league-standings-card.tsx: unknown league ${leagueId}`);
   const teams = getTeams();
   const single = league.divisions.length === 1;
   const through = getLastLeagueResultDate({ league: league.id });

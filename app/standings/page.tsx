@@ -7,11 +7,10 @@ import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
+import { getStandingsOverviewData } from '../../components/standings/standings-data';
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
-
-import { getStandingsOverviewData } from './standings-data';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as

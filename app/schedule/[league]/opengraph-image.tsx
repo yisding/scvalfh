@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation';
 
+import { leagueStandingsCard } from '../../../components/standings/league-standings-card';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
-
-import { leagueStandingsCard } from '../../standings/[league]/og-card';
 
 /**
  * The `/schedule/<league>` OG card: the same card as `/standings/<league>` (SPEC §8.4), rendered
- * by the shared function in `app/standings/[league]/og-card.tsx`.
+ * by the shared function in `components/standings/league-standings-card.tsx`.
  *
  * Same rules as its sibling (SPEC §8.1): `generateStaticParams` EXACTLY the page's, the param
  * validated before any accessor that can throw (`notFound()` for an unknown league), a static alt.

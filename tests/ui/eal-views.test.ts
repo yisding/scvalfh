@@ -20,7 +20,7 @@ import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
-type StandingsData = typeof import('../../app/standings/standings-data');
+type StandingsData = typeof import('../../components/standings/standings-data');
 type View = typeof import('../../components/standings/standings-view');
 
 const LEAGUE = 'eal';
@@ -64,7 +64,7 @@ beforeAll(async () => {
   vi.resetModules();
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');
-  sd = await import('../../app/standings/standings-data');
+  sd = await import('../../components/standings/standings-data');
   view = await import('../../components/standings/standings-view');
   const leagueStandings = (await import('../../app/standings/[league]/page')).default;
   const overview = (await import('../../app/standings/page')).default;
