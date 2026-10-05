@@ -1,14 +1,16 @@
-import {
-  buildDivisionView,
-  buildOverviewDivision,
-  coLeadersLine,
-  overviewOutline,
-  rulesFootnote,
-  unevenGpFootnote,
-  type DivisionView,
-  type LeaderLine,
-  type OverviewSection,
-} from './standings-view';
+/**
+ * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
+ * `leaderLine` rows the root and /standings OG cards print.
+ *
+ * It is the `lib/data`-reading side of a split with the pure `standings-view.ts`: this module reads
+ * the snapshot, and the view builders and components under `components/standings/` take what is
+ * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
+ * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
+ *
+ * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
+ * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
+ */
+
 import {
   getCoLeaders,
   getCrossCheck,
@@ -29,19 +31,18 @@ import {
 import { plural, recordString, shortDate } from '../../lib/format';
 import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
+import {
+  buildDivisionView,
+  buildOverviewDivision,
+  coLeadersLine,
+  overviewOutline,
+  rulesFootnote,
+  unevenGpFootnote,
+  type DivisionView,
+  type LeaderLine,
+  type OverviewSection,
+} from './standings-view';
 
-/**
- * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
- * `leaderLine` rows the root and /standings OG cards print.
- *
- * It is the `lib/data`-reading side of a split with the pure `standings-view.ts`: this module reads
- * the snapshot, and the view builders and components under `components/standings/` take what is
- * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
- * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
- *
- * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
- * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
- */
 export interface StandingsPageView {
   asOf: string;
   league: LeagueSummary;
