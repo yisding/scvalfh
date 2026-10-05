@@ -149,8 +149,9 @@ export const ACRONYM_COLLISIONS: readonly string[] = [
 /**
  * The alias index: [id, slug, name, ...aliases] plus `acronym` ONLY when no other team has the
  * same normalized acronym. Any other collision throws at module load. `shortName` is display only
- * and not a key: it is whole words of `name`, and a bare one can be a statewide namesake that is
- * deliberately not an alias ('University': San Francisco's, and Irvine's on si.com).
+ * and not a key: it is whole words of `name` or already an alias, and a bare word of a name can be
+ * a statewide namesake that is deliberately not an alias ('University': San Francisco's, and
+ * Irvine's on si.com), so choosing a short name never adds a matching spelling.
  */
 const BY_KEY = new Map<string, Team>();
 for (const t of TEAMS) {
@@ -279,10 +280,10 @@ function assertRegistry(): void {
     if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
     if (t.shortName.length > 16) fail(`${t.slug}: shortName longer than 16 characters`);
     // One full name and one short name per school. The short name is the name the school goes by
-    // ('Mitty', 'Sobrato', 'Convent'), so it is the full name itself or whole words of it, never an
-    // abbreviation made up for width ('Valley Chr.').
-    if (!isWholeWordsOf(t.shortName, t.name)) {
-      fail(`${t.slug}: shortName "${t.shortName}" is not "${t.name}" or whole words of it`);
+    // ('Mitty', 'Sobrato', 'Convent'): the full name itself, whole words of it, or a spelling a
+    // source uses (an alias: 'SF University'), never an abbreviation made up for width ('Valley Chr.').
+    if (!isWholeWordsOf(t.shortName, t.name) && !t.aliases.includes(t.shortName)) {
+      fail(`${t.slug}: shortName "${t.shortName}" is not "${t.name}", whole words of it, or an alias`);
     }
   }
 

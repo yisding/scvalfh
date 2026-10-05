@@ -3,10 +3,10 @@
  * imports): MyTeamCard, PinTile and TeamFinder are `'use client'` modules, and the team page builds
  * `PinControl`'s label with it.
  *
- * WCAG 2.5.3 Label in Name (Level A): a tile shows `shortName`, so the accessible name must contain it. Every
- * registry short name is the full name or whole words of it ('Tamalpais', 'Mitty' ⊂ 'Archbishop Mitty',
- * 'Sobrato' ⊂ 'Ann Sobrato'; lib/teams.ts enforces it), so the full name alone carries it. A short name that
- * were not inside the full name would lead, with the full name after it in parentheses.
+ * WCAG 2.5.3 Label in Name (Level A): a tile shows `shortName`, so the accessible name must contain it. Almost
+ * every short name is the full name or whole words of it ('Tamalpais', 'Mitty' ⊂ 'Archbishop Mitty',
+ * 'Sobrato' ⊂ 'Ann Sobrato'), so the full name alone carries it. The one that is not ('SF University', an
+ * alias of San Francisco University) leads, and the full name follows in parentheses.
  */
 
 /** U+00AD SOFT HYPHEN: invisible unless the line actually breaks there. */

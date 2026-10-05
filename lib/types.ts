@@ -136,9 +136,9 @@ export interface Team {
   name: string;
   /**
    * The one canonical short name (≤ 16 characters), for rows and tiles too narrow for `name`: the
-   * name the school goes by, as its league's documents write it ('Mitty', 'Sobrato', 'Convent',
-   * 'University'). It is `name` itself or whole words of it, never a made-up abbreviation;
-   * enforced at load (lib/teams.ts). Display only: resolution never keys on it.
+   * name the school goes by ('Mitty', 'Sobrato', 'Convent', 'SF University'). It is `name` itself,
+   * whole words of it, or one of the school's aliases (a spelling a source uses), never a made-up
+   * abbreviation; enforced at load (lib/teams.ts). Display only: resolution never keys on it.
    */
   shortName: string;
   /** 2 letters, unique across all 49 teams. */

@@ -73,13 +73,13 @@ describe('teams: the registry is the five leagues', () => {
       expect(t.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
       expect(t.abbr).toMatch(/^[A-Z]{2}$/);
       expect(t.shortName.length, t.slug).toBeLessThanOrEqual(16);
-      // The short name is the full name or whole words of it: never a made-up abbreviation.
-      expect(` ${t.name} `, t.slug).toContain(` ${t.shortName} `);
+      // The short name is the full name, whole words of it, or an alias: never a made-up abbreviation.
+      expect(` ${t.name} `.includes(` ${t.shortName} `) || t.aliases.includes(t.shortName), t.slug).toBe(true);
     }
     expect(TEAMS.filter((t) => t.shortName !== t.name).map((t) => [t.slug, t.shortName])).toEqual([
       ['mitty', 'Mitty'],
       ['sobrato', 'Sobrato'],
-      ['university-sf', 'University'],
+      ['university-sf', 'SF University'],
       ['convent-sacred-heart', 'Convent'],
     ]);
     expect(resolveTeam('santa-clara')!.abbr).toBe('SC');

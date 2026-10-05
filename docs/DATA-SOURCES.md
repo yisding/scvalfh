@@ -1517,13 +1517,14 @@ Each school has **one full name and one short name**, and every page prints one 
 full name (`name`) is the school's name without "High School" or "College Preparatory" (so
 "St. Ignatius", not MaxPreps' "St. Ignatius College Preparatory"). The short name (`shortName`,
 at most 16 characters, for narrow rows and tiles) is the name the school goes by, as its league's
-own documents write it, and it is the full name itself or whole words of it, never an abbreviation
-made up for width. Four differ from the full name: Archbishop Mitty → Mitty, Ann Sobrato → Sobrato
-(the BVAL sheet), San Francisco University → University (MCAL's schedule) and Convent of the
-Sacred Heart → Convent. Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are
-not used. `lib/teams.ts` fails at load if a short name is not whole words of its full name, and
-the short name is display only: matching keys on the name and the aliases, never on it, so bare
-"University" (also Irvine's on si.com) is not an alias. Source spellings ("ST. IGNATIUS",
+own documents write it: the full name itself, whole words of it, or one of the school's aliases,
+never an abbreviation made up for width. Four differ from the full name: Archbishop Mitty → Mitty,
+Ann Sobrato → Sobrato (the BVAL sheet), San Francisco University → SF University (an alias; MCAL's
+bare "University" reads as a college outside an MCAL table) and Convent of the Sacred Heart →
+Convent. Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
+`lib/teams.ts` fails at load on any other short name, and the short name is display only: matching
+keys on the name and the aliases, never on it, so bare "University" (also Irvine's on si.com) stays
+out of the index. Source spellings ("ST. IGNATIUS",
 "MItty", "Presentation HS", "St. Francis") are aliases for matching; the 2025-26 archive stores
 them verbatim but prints the registry name. The si.com ids
 are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed, the school id on
