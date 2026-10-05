@@ -36,6 +36,7 @@ import {
 } from '../lib/season';
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Team } from '../lib/types';
+import { runCli } from './cli';
 
 const USAGE = `Usage: pnpm exec tsx scripts/discover-season.ts [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
 
@@ -270,9 +271,4 @@ async function main(): Promise<number> {
   return 0;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  });
+runCli(main);

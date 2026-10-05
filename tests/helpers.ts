@@ -158,8 +158,8 @@ const corpusSnapshotMemo = new Map<string, string>();
  * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`), built
  * once into os.tmpdir() and reused afterwards — by later calls in this process and by later test
  * files and runs. The cache key hashes the manifest, the run's extra flags and the mtimes of
- * lib/**, scripts/fetch-data.ts and data/official/**, so any change to the pipeline or the corpus
- * rebuilds it. Stage C tests set `process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02')`
+ * lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/official/**, so any change to the pipeline
+ * or the corpus rebuilds it. Stage C tests set `process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02')`
  * and then dynamically import lib/data. The meta file is beside it (`*.meta.json`).
  */
 export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: readonly string[] } = {}): string {
@@ -175,7 +175,7 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
   ]) {
     hash.update(`${line}\n`);
   }
-  for (const file of [path.join(REPO, 'scripts', 'fetch-data.ts')]) hash.update(`${file}:${statSync(file).mtimeMs}\n`);
+  for (const file of [path.join(REPO, 'scripts', 'fetch-data.ts'), path.join(REPO, 'scripts', 'cli.ts')]) hash.update(`${file}:${statSync(file).mtimeMs}\n`);
   const key = `${corpus}-${hash.digest('hex').slice(0, 16)}`;
 
   const memo = corpusSnapshotMemo.get(key);

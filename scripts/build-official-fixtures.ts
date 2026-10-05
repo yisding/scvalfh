@@ -44,6 +44,7 @@ import {
 import { assertDoubleRoundRobin } from '../lib/official/validate';
 import { resolveOfficialName } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
+import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
@@ -330,11 +331,4 @@ function main(argv: readonly string[]): number {
 }
 
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) {
-  try {
-    process.exitCode = main(process.argv.slice(2));
-  } catch (err) {
-    console.error((err as Error).message);
-    process.exitCode = 1;
-  }
-}
+if (invokedDirectly) runCli(main);

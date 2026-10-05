@@ -55,6 +55,7 @@ import { HistorySchema } from '../lib/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
 import { stableStringify } from '../lib/stable-json';
+import { runCli } from './cli';
 
 interface Args {
   from: string | null;
@@ -382,9 +383,4 @@ async function main(): Promise<number> {
   return 0;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  });
+runCli(main);

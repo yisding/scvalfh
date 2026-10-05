@@ -63,6 +63,7 @@ import { SEASON_YEAR } from "../lib/season";
 import { stableStringify } from "../lib/stable-json";
 import { TEAMS } from "../lib/teams";
 import type { LeagueId } from "../lib/types";
+import { runCli } from "./cli";
 
 interface Args {
   fixtures: string | null;
@@ -301,11 +302,4 @@ async function main(): Promise<number> {
   return exitCode;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(
-      `FAILED: ${err instanceof Error ? err.message : String(err)}`,
-    );
-    process.exit(1);
-  });
+runCli(main);
