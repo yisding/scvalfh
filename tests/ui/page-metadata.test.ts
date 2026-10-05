@@ -4,7 +4,8 @@
  * left `openGraph.title` out would inherit the TEMPLATED `<title>` (`… — NorCal High School Field
  * Hockey`) on the Next build and not on vinext, which is how the suffix once came and went page by
  * page. One page per route family, its metadata read the way Next reads it (`metadata` or
- * `generateMetadata` with a real param), on the corpus snapshot.
+ * `generateMetadata` with a real param), on the corpus snapshot. Then the league list the site's
+ * descriptions build from config (leaguesBySectionWords), pinned to the words the literals had.
  */
 
 import type { Metadata } from 'next';
@@ -70,5 +71,30 @@ describe('og:title (components/layout/site.ts OG_BASE)', () => {
       expect(og?.title, `${path}: og:title carries no site-name suffix`).not.toMatch(new RegExp(` — ${SITE_NAME}$`));
       expect(og && 'siteName' in og ? og.siteName : undefined, `${path}: og:site_name`).toBe(SITE_NAME);
     }
+  });
+});
+
+describe('the league list in the site descriptions (components/layout/site.ts leaguesBySectionWords)', () => {
+  it('builds both styles from SECTIONS and LEAGUES, in config order', async () => {
+    const { leaguesBySectionWords } = await import('../../components/layout/site');
+    expect(leaguesBySectionWords('name')).toBe(
+      'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section)',
+    );
+    expect(leaguesBySectionWords('short')).toBe('SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section)');
+  });
+
+  it('SITE_DESCRIPTION and the home and /teams descriptions read as they did when they were literals', async () => {
+    const { SITE_DESCRIPTION } = await import('../../components/layout/site');
+    const home = (await import('../../app/page')).metadata;
+    const teams = (await import('../../app/teams/page')).metadata;
+    expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
+      'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.',
+    );
+    expect(home.description, 'app/page.tsx description').toBe(
+      'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated twice daily.',
+    );
+    expect(teams.description, 'app/teams/page.tsx description').toBe(
+      'All 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. Find your school.',
+    );
   });
 });

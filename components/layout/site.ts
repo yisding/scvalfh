@@ -1,11 +1,16 @@
 /**
  * The site's identity and shared metadata: its origin (SITE_URL), the branding strings (SITE_NAME,
- * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE) and the openGraph defaults
- * every route repeats (OG_BASE, ROOT_OG_ALT, ROOT_OG_IMAGE). Nothing here renders.
+ * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE), the league list the site's
+ * descriptions name (leaguesBySectionWords) and the openGraph defaults every route repeats
+ * (OG_BASE, ROOT_OG_ALT, ROOT_OG_IMAGE). Nothing here renders. Server-only: it reads the league
+ * config and the team registry.
  */
 import type { Metadata } from 'next';
 
+import { listWords } from '../../lib/format';
+import { LEAGUES, SECTIONS } from '../../lib/leagues';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
+import { TEAMS } from '../../lib/teams';
 
 import { OG_SIZE } from './og-theme';
 
@@ -29,8 +34,25 @@ export const SITE_NAME = 'NorCal High School Field Hockey';
 export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = 'NorCal FH';
-export const SITE_DESCRIPTION =
-  'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.';
+
+/**
+ * Every league, grouped by its section in config order, each group followed by its section in a
+ * parenthesis: `SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL
+ * (Northern Section)` with `'name'`, or each section's `briefLabel` with `'short'` (`… (CCS), MCAL
+ * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES, so a league added or dropped in the
+ * config changes every description that names them.
+ */
+export function leaguesBySectionWords(style: 'name' | 'short'): string {
+  const groups = SECTIONS.flatMap((section) => {
+    const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+    if (leagues.length === 0) return [];
+    const label = style === 'name' ? section.name : section.briefLabel;
+    return [`${listWords(leagues.map((l) => l.shortName))} (${label})`];
+  });
+  return listWords(groups);
+}
+
+export const SITE_DESCRIPTION = `Scores, standings, schedules and playoff pictures for ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('short')}. Rebuilt twice daily from MaxPreps; unofficial.`;
 export const SITE_SCOPE_NOTE =
   'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues appear only as opponents.';
 

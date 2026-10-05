@@ -4,7 +4,7 @@ import Link from 'next/link';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '../../components/layout/site';
 import TeamFinder from '../../components/search/TeamFinder';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
 import { buildTeamsByLeague } from '../../components/teams/team-view';
@@ -49,8 +49,7 @@ const PAGE_TITLE = 'Teams and standings';
  */
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description:
-    'All 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. Find your school.',
+  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. Find your school.`,
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
 };
@@ -63,7 +62,7 @@ export default function TeamsPage() {
     <div className="pb-section-lg" data-teams-page="">
       <PageHeader
         title="Teams and standings"
-        description={`All ${counts.teams} girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.`}
+        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.`}
       />
 
       {/* The finder is client-rendered on the server too, so its 48px field is in the first paint
