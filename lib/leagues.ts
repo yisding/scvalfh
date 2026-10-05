@@ -909,6 +909,7 @@ export const CCS: CcsConfig = {
   },
 };
 
+/** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
 export const DATA_QUALITY: DataQualityConfig = {
   ghostTeamIds: {
     '8396a0d3-8021-458d-b592-a5cb2c4a366d': 'Del Norte (Crescent City): a MaxPreps ghost (no league, team size 0); its contest duplicates Tamalpais vs Del Norte (San Diego)',

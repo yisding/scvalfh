@@ -1951,6 +1951,17 @@ corpus with `corpusSnapshotPath('all-2026-10-02')` (`tests/helpers.ts`); tests o
 `data/snapshot.json` assert invariants only, since that file changes every run. An offline run
 never touches the network.
 
+Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
+the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
+Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
+(`lib/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
+fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
+fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each
+game page shows), with the team and game pages they cite. No test, script or manifest reads these
+files except `team-456851-york-falcons.html`, which `tests/backfill.test.ts` parses (York is JV
+only, `DATA_QUALITY.sbliveIgnoredTeamIds`). Keep them when fixtures are refreshed.
+
 ### 5.6 Playoff polling from Oct 25
 
 Before the CCS poll window, render the postseason sections from the by-laws-derived dates and each
