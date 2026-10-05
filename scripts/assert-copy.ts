@@ -84,11 +84,12 @@ import {
   SCVAL_ONLY_CLAIM,
   SEED_CLAIM,
   affiliationLeaks,
+  around,
   attributeText,
   commitmentLeaks,
   elementById,
+  historyPageProblems,
   nonMemberSectionClaims,
-  sectionById,
   umpireOfficialClaims,
   visibleText,
 } from './copy-rules';
@@ -104,10 +105,6 @@ if (!existsSync(APP)) {
 const problems: string[] = [];
 const fail = (file: string, msg: string) => problems.push(`${file}: ${msg}`);
 
-/** A short window of text around a match, tags flattened, for the failure line. */
-function around(text: string, index: number): string {
-  return text.slice(Math.max(0, index - 60), index + 60).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-}
 function forbid(file: string, text: string, pattern: RegExp, what: string): void {
   const m = pattern.exec(text);
   if (m) fail(file, `${what} — “…${around(text, m.index)}…”`);
@@ -256,32 +253,7 @@ if (!existsSync(historyPath)) {
   const main = mainOf(historyFile, html);
   forbid(historyFile, main, /SCVAL[- ]only/i, 'says the archive is SCVAL-only');
   forbid(historyFile, main, /Only SCVAL/i, 'says only SCVAL has an archive');
-  /** A league's `<section … id="<league>" …>…</section>`, its division sections included. */
-  const sectionOf = (id: string): string => sectionById(main, id);
-  const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
-  for (const { id, entry } of getHistoryLeagues()) {
-    const section = sectionOf(id);
-    if (!section) {
-      fail(historyFile, `no <section id="${id}">`);
-      continue;
-    }
-    if (entry.status === 'available') {
-      for (const d of entry.divisions) {
-        if (!section.includes(`id="${d.division}"`)) fail(historyFile, `${id}: no id="${d.division}" division anchor`);
-        for (const row of d.standings.varsity) {
-          if (!section.includes(`>${row.leagueRecord}<`)) {
-            fail(historyFile, `${id}/${d.division}: ${row.name}'s record ${row.leagueRecord} is not on the page`);
-          }
-        }
-      }
-      if (/Unavailable/.test(section)) fail(historyFile, `${id}: an available league says "Unavailable"`);
-    } else {
-      if (!section.includes('Unavailable')) fail(historyFile, `${id}: unavailable league has no "Unavailable" card`);
-      if (!attrDecode(section).includes(entry.reason.slice(0, 40))) fail(historyFile, `${id}: the reason is not on the page`);
-      if (/<table/.test(section)) fail(historyFile, `${id}: an unavailable league shows a table`);
-      forbid(historyFile, section, /champion|winner|all-league|MVP|first team/i, `${id}: an unavailable league shows a result or award`);
-    }
-  }
+  for (const msg of historyPageProblems(main, getHistoryLeagues())) fail(historyFile, msg);
 }
 
 // ---------------------------------------------------------------- /leaders

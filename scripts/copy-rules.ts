@@ -3,6 +3,7 @@
  * test can import them without running the script's scan of the built site.
  */
 
+import type { LeagueHistory } from '../lib/history-schema';
 import { decodeEntities as decodeWith } from '../lib/html-entities';
 
 /**
@@ -546,4 +547,53 @@ export function elementById(html: string, id: string, tag: string): string {
   }
   // Never closed: everything after it is inside it.
   return html.slice(start.index);
+}
+
+/** A short window of text around a match, tags flattened, for a failure line. */
+export function around(text: string, index: number): string {
+  return text.slice(Math.max(0, index - 60), index + 60).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// ---------------------------------------------------------------- /history/2025-26
+
+/** The two entities React writes in an attribute or text that a reason may contain. */
+const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
+
+/**
+ * What the history page's `<main>` gets wrong about `leagues` (lib/history.ts getHistoryLeagues),
+ * one message per problem: every league has its `<section id="<league>">`; an available league has
+ * an anchor for each division and every varsity row's league record, and never says
+ * "Unavailable"; an unavailable league has the "Unavailable" card with its reason, and no table and
+ * no champion, winner or award, since nothing official was read for it.
+ */
+export function historyPageProblems(
+  main: string,
+  leagues: ReadonlyArray<{ id: string; entry: LeagueHistory }>,
+): string[] {
+  const problems: string[] = [];
+  for (const { id, entry } of leagues) {
+    const section = sectionById(main, id);
+    if (!section) {
+      problems.push(`no <section id="${id}">`);
+      continue;
+    }
+    if (entry.status === 'available') {
+      for (const d of entry.divisions) {
+        if (!section.includes(`id="${d.division}"`)) problems.push(`${id}: no id="${d.division}" division anchor`);
+        for (const row of d.standings.varsity) {
+          if (!section.includes(`>${row.leagueRecord}<`)) {
+            problems.push(`${id}/${d.division}: ${row.name}'s record ${row.leagueRecord} is not on the page`);
+          }
+        }
+      }
+      if (/Unavailable/.test(section)) problems.push(`${id}: an available league says "Unavailable"`);
+    } else {
+      if (!section.includes('Unavailable')) problems.push(`${id}: unavailable league has no "Unavailable" card`);
+      if (!attrDecode(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
+      if (/<table/.test(section)) problems.push(`${id}: an unavailable league shows a table`);
+      const award = /champion|winner|all-league|MVP|first team/i.exec(section);
+      if (award) problems.push(`${id}: an unavailable league shows a result or award — “…${around(section, award.index)}…”`);
+    }
+  }
+  return problems;
 }

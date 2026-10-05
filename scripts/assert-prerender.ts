@@ -27,8 +27,6 @@
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats
  *    (`id="player-stats"`) section: all 49 teams, in all five leagues (a missing one means a team page
  *    went back to showing them for SCVAL only);
- *  - `history/2025-26.html` has a section per league of lib/leagues.ts (`id="scval"` … `id="eal"`)
- *    and an anchor for each division of every league the history data marks available;
  *  - no prerendered path contains ':' (a raw `sblive:` id leaking into a URL);
  *  - OG/page parity BY NAME per family with an image: `game/X.html` ⇔ `game/X/opengraph-image`,
  *    and the same for `standings/<id>`, `schedule/<id>`, `playoffs/<id>`, `teams/<slug>` and
@@ -50,7 +48,6 @@ import path from 'node:path';
 import { getClubSlugs } from '../lib/clubs';
 import { getSnapshot } from '../lib/data';
 import { gameIdToParam } from '../lib/game-id';
-import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
 
@@ -180,22 +177,6 @@ family('teams', slugs, { og: true });
 family('history', ['2025-26'], { og: false });
 const clubSlugs = getClubSlugs();
 family('clubs', clubSlugs, { og: false });
-
-// The history page: one section per league, division anchors for every available league.
-{
-  const p = path.join(APP, 'history', '2025-26.html');
-  if (existsSync(p)) {
-    const html = readFileSync(p, 'utf8');
-    for (const { id, entry } of getHistoryLeagues()) {
-      if (!html.includes(`id="${id}"`)) fail(`history/2025-26: no section id="${id}"`);
-      if (entry.status === 'available') {
-        for (const d of entry.divisions) {
-          if (!html.includes(`id="${d.division}"`)) fail(`history/2025-26: no division anchor id="${d.division}"`);
-        }
-      }
-    }
-  }
-}
 
 // Roster and Player stats on every team page, all five leagues (the empty states count: a team
 // nothing has been collected for still says so, rather than dropping the section).
