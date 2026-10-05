@@ -29,6 +29,9 @@ import { hasHistory } from '../../../lib/history';
  * `--sx-sticky-top: 6rem` for the table heads; a single-division league has no bar and keeps the
  * root offset (no 48px gap under the top bar).
  *
+ * The league's JV tables are on /jv (`/jv#<league>`), linked from the pills at the foot; this page
+ * carries the varsity tables only.
+ *
  * Static: `generateStaticParams` from `getLeagueIds()` with `dynamicParams = false`, no
  * search params, nothing derived from `Date.now()`. Following this URL never writes the
  * remembered league (the switcher is in link mode).
@@ -182,6 +185,9 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
             {link.label}
           </ExternalLink>
         ))}
+        <Link href={`/jv#${summary.id}`} prefetch={false} className="sx-pill sx-pill-ring">
+          {summary.shortName} JV standings
+        </Link>
         {hasHistory(summary.id) ? (
           <Link
             href={`/history/2025-26#${summary.id}`}

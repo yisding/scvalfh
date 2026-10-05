@@ -33,6 +33,7 @@ export const FIXED_PAGES = [
   'history/2025-26',
   'clubs',
   'commits',
+  'jv',
 ] as const;
 
 /** The params each dynamic family must prerender, exactly. */

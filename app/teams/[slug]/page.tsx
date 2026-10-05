@@ -18,6 +18,7 @@ import {
   buildPlayerStatsView,
   type PlayerStatsView,
 } from '../../../components/teams/player-stats-view';
+import { teamJvStanding } from '../../../components/standings/jv-standings-view';
 import { buildTeamJvView } from '../../../components/teams/jv-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
@@ -217,6 +218,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const roster = buildRosterView(team.slug);
   // The school's JV games (MaxPreps, supplemented by si.com): listed apart from every varsity count.
   const jv = buildTeamJvView(team.slug);
+  // Its JV place, when its division's JV table is shown (lib/jv-standings.ts), and that table's anchor.
+  const jvStanding = teamJvStanding(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   const hasPlayedLeagueGames = marginEntries.some(
@@ -510,17 +513,20 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         </div>
 
         {/* The JV list comes after every varsity game section and before the players: it is the
-            same school's other team, and none of its games feeds the varsity sections above. Both columns
-            from 768px, like the lists below it. */}
+            same school's other team, and none of its games feeds the varsity sections above. Its
+            header names the team's JV place when its division's JV table is shown, and links that
+            table. Both columns from 768px, like the lists below it. */}
         {jv ? (
           <section className="min-w-0 md:col-span-2" id="jv">
             <SectionHeader
               kicker="JV games"
               meta={
-                jv.rows.length > 0
+                jvStanding?.line ??
+                (jv.rows.length > 0
                   ? `${jv.played} played${jv.toCome > 0 ? ` · ${jv.toCome} to come` : ''}`
-                  : undefined
+                  : undefined)
               }
+              action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}
             />
             <TeamJvGames view={jv} perspective={team.slug} />
           </section>

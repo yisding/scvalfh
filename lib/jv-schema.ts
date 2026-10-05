@@ -19,8 +19,9 @@
  *   3. every si.com row is a scored final, unique by si.com game id, with at least one side whose
  *      si.com JV team id is a registry school's, and two different teams
  *   4. a team's status says what the run did for it, per source; counts are recomputed, never trusted
- *   5. a JV game counts for no varsity table or postseason: countsFor and postseason are null (no
- *      JV table is computed yet)
+ *   5. stored JV games are unclassified (countsFor and postseason null): the file holds what MaxPreps
+ *      said, and lib/jv-standings.ts decides at load which JV table a game counts for, from its
+ *      varsity counterpart
  */
 
 import { z } from 'zod';
@@ -116,7 +117,7 @@ export const JvSbliveRowSchema = z
 
 export const JvGameSchema = GameSchema.refine((g) => !g.contestId.startsWith('sblive:'), 'stored JV games are MaxPreps contests')
   .refine((g) => g.home.slug !== null || g.away.slug !== null, 'a JV game needs a registry side')
-  .refine((g) => g.countsFor === null && g.postseason === null, 'a JV game counts for no varsity table or postseason');
+  .refine((g) => g.countsFor === null && g.postseason === null, 'stored JV games are unclassified: lib/jv-standings.ts classifies them at load');
 
 export const JvCountsSchema = z.object({
   teams: z.number().int(),

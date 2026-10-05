@@ -99,6 +99,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/playoffs',
   '/playoffs/mcal',
   '/leaders',
+  '/jv',
   '/about',
   '/history/2025-26',
   '/clubs',

@@ -11,17 +11,27 @@
  * so a given commit builds the same pages whenever it is built.
  *
  * JV games stay apart from varsity: nothing here feeds a varsity standings table, a leader board,
- * a rating or a postseason picture, and no JV standings are computed yet.
+ * a rating or a postseason picture. The JV tables are their own (lib/jv-standings.ts): a JV game is
+ * a league game when its varsity counterpart is, read from the snapshot (lib/data.ts), and the
+ * games this module serves carry that classification as `countsFor`.
  */
 
 import { readFileSync } from 'node:fs';
 
 import bundled from '../data/jv.json';
+import { getOfficialFixtures, getSnapshot } from './data';
 import { byDateThenId, localDateKey } from './format';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
+import {
+  classifyJvGames,
+  computeJvStandings,
+  withJvClassification,
+  type JvClassification,
+  type JvDivisionTable,
+} from './jv-standings';
 import { failValidation } from './schema-primitives';
-import type { Game, TeamSlug } from './types';
+import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from './types';
 
 export type { JvFile, JvTeam } from './jv-schema';
 
@@ -47,13 +57,20 @@ const merged: JvMergeResult = mergeJv({
   today: localDateKey(file.fetchedAt),
   fetchedAt: file.fetchedAt,
 });
+const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
+  merged.games,
+  getSnapshot().games,
+  getOfficialFixtures(),
+);
+const games: Game[] = withJvClassification(merged.games, classes);
+const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt));
 const TEAM_BY_SLUG = new Map<string, JvTeam>(file.teams.map((t) => [t.slug, t]));
 
 export function getJvFile(): JvFile {
   return file;
 }
 
-/** The merge's outcome: every published JV game and what si.com changed. */
+/** The merge's outcome, before classification: every published JV game and what si.com changed. */
 export function getJvMerge(): JvMergeResult {
   return merged;
 }
@@ -63,14 +80,29 @@ export function getJvTeam(slug: TeamSlug): JvTeam | undefined {
   return TEAM_BY_SLUG.get(slug);
 }
 
-/** A school's JV games, oldest first. */
+/** A school's JV games, classified, oldest first. */
 export function getJvGamesForTeam(slug: TeamSlug): Game[] {
-  return merged.games.filter((g) => g.home.slug === slug || g.away.slug === slug).sort(byDateThenId);
+  return games.filter((g) => g.home.slug === slug || g.away.slug === slug).sort(byDateThenId);
 }
 
-/** Every JV game on one date (YYYY-MM-DD), by time. */
+/** Every JV game on one date (YYYY-MM-DD), classified, by time. */
 export function getJvGamesOn(dateKey: string): Game[] {
-  return merged.games.filter((g) => g.dateKey === dateKey);
+  return games.filter((g) => g.dateKey === dateKey);
+}
+
+/** How one JV game was classified (lib/jv-standings.ts). */
+export function getJvClassification(contestId: ContestId): JvClassification | undefined {
+  return classes.get(contestId);
+}
+
+/** One division's JV table. */
+export function getJvTable(division: DivisionId): JvDivisionTable | undefined {
+  return tables.find((t) => t.division === division);
+}
+
+/** A league's JV tables, in division order. */
+export function getJvTables(league: LeagueId): JvDivisionTable[] {
+  return tables.filter((t) => t.league === league);
 }
 
 /** When the JV file was read (ISO UTC). */
