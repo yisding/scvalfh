@@ -218,7 +218,7 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     const text = textOf(await eal.renderGame(game.contestId));
     expect(text, 'app/game/[id]/page.tsx note').toContain(model.scoreNote!);
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/counts it as a tie|level, so this site counts/);
-    expect(model.display.sentence, 'components/ui/game-view.ts sentence').toBe(
+    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
       'Chico 1, Davis 1, final; Chico won on 1 v 1s.',
     );
   });
@@ -245,10 +245,10 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     expect(game.otPeriods, 'lib/normalize.ts otPeriods as MaxPreps has it').toBe(3);
     const model = eal.gm.buildGameModel(game.contestId)!;
-    expect(model.display.deciderTag, 'components/ui/game-view.ts deciderTag').toBeNull();
+    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBeNull();
     expect(eal.gm.gameTitle(model), 'components/game/game-model.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
     expect(eal.gm.gameKicker(model), 'components/game/game-model.ts gameKicker').not.toMatch(/\bOT\b/);
-    expect(model.display.sentence, 'components/ui/game-view.ts sentence').toBe(
+    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
       'Chico 0, Pleasant Valley 1, final.',
     );
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;

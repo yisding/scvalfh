@@ -450,7 +450,7 @@ export function getLastLeagueResultDate(
 
 /**
  * Non-league games played so far: finals of the league's teams that count for no table and are
- * no postseason game (the `isNonLeague` predicate, components/ui/game-view.ts), dated on or
+ * no postseason game (the `isNonLeague` predicate, components/ui/describe-game.ts), dated on or
  * before `through`. The count the two pre-league-play notices (the home PhaseLead and the
  * /standings banner) print, so they cannot count differently.
  */

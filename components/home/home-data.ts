@@ -73,7 +73,7 @@ import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
-import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
 
 import type {

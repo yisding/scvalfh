@@ -23,7 +23,7 @@ import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import FormStrip from '../../../components/ui/FormStrip';
-import { gameKindLabel } from '../../../components/ui/game-view';
+import { gameKindLabel } from '../../../components/ui/describe-game';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';

@@ -4,7 +4,7 @@ import ResultChip from '../ui/ResultChip';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
-import { describeGame, otherLeagueSuffix, type SideView } from '../ui/game-view';
+import { describeGame, otherLeagueSuffix, type SideView } from '../ui/describe-game';
 import { shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { Game, LeagueId } from '../../lib/types';

@@ -20,7 +20,7 @@ import {
   statusLabelIsTime,
   type GameDisplay,
   type SideView,
-} from './game-view';
+} from './describe-game';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).

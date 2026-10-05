@@ -10,7 +10,7 @@ import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { GameDisplay } from '../ui/game-view';
+import type { GameDisplay } from '../ui/describe-game';
 import { formStripName } from '../ui/plural';
 import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';

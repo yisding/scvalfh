@@ -6,7 +6,7 @@ import { GameRow } from '../ui/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, type SideView } from '../ui/game-view';
+import { describeGame, type SideView } from '../ui/describe-game';
 
 import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model';
 

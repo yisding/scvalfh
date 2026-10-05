@@ -4,7 +4,7 @@ import EmptyState from '../ui/EmptyState';
 import { GameLine } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../ui/plural';
-import { gameKind } from '../ui/game-view';
+import { gameKind } from '../ui/describe-game';
 import { shortDate } from '../../lib/format';
 import type { Game } from '../../lib/types';
 import type { NextLeagueDay } from './home-data';

@@ -7,7 +7,7 @@ import GhostMonogram from './GhostMonogram';
 import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, statusLabelIsTime, type SideView } from './game-view';
+import { describeGame, statusLabelIsTime, type SideView } from './describe-game';
 
 /**
  * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the

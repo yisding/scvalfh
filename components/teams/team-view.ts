@@ -2,7 +2,7 @@
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
  * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
- * lib/format's renderScore (the form chips' `0–7`) or components/ui/game-view's describeGame —
+ * lib/format's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
  * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
  * `localDateKey(snapshot.fetchedAt)` (getToday()), never Date.now(), so the build is
@@ -58,7 +58,7 @@ import type {
 import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame } from '../ui/game-view';
+import { describeGame } from '../ui/describe-game';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -500,7 +500,7 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
-/** The NEXT card's external pills (named apart from game-view's private `chipsFor`). */
+/** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
   const address = game.venue.address;

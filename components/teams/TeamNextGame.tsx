@@ -8,7 +8,7 @@ import ResultChip from '../ui/ResultChip';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, gameKindLabel } from '../ui/game-view';
+import { describeGame, gameKindLabel } from '../ui/describe-game';
 import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**

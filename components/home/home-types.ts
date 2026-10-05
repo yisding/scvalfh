@@ -14,7 +14,7 @@
 import type { SectionConfig } from '../../lib/leagues';
 import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
-import type { GameDisplay, SideView } from '../ui/game-view';
+import type { GameDisplay, SideView } from '../ui/describe-game';
 
 /**
  * The colors a small `TeamMonogram` draws with: the fill and its ink. The second school color is

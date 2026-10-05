@@ -11,7 +11,7 @@ import { matchupJoiner } from '../../lib/format';
 import { LEAGUES, findDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId } from '../../lib/types';
-import { describeGame } from '../ui/game-view';
+import { describeGame } from '../ui/describe-game';
 import { gameWord, plural } from '../ui/plural';
 
 import { countGames, type ScheduleCounts } from './filter-data';

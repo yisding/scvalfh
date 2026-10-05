@@ -2481,7 +2481,7 @@ chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr
 (all *data-dense*).
 
 *Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
-`describeGame` (components/ui/game-view.ts) over `renderScore`, and every score glyph goes through
+`describeGame` (components/ui/describe-game.ts) over `renderScore`, and every score glyph goes through
 `ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
 
 *Later (2026-10):* the server-side pin channel (`highlightSlug` on `StandingsTable`,

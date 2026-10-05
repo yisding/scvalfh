@@ -2,7 +2,7 @@
  * The /game/[id] view model — one pure assembly step shared by the page, its `generateMetadata`
  * and its `opengraph-image`, so a link preview and the page itself can never disagree.
  *
- * Every number here comes through `describeGame()` (components/ui/game-view.ts), which is the one
+ * Every number here comes through `describeGame()` (components/ui/describe-game.ts), which is the one
  * implementation of the DESIGN §5.2 table, or straight from `renderScore()` (the season-series
  * sentence's `ended 2-2`). Nothing in this module PRINTS `game.home.score` / `game.away.score`;
  * the two null-guarded reads only decide which sentence is shown (`resultConflictNoteFor`'s level
@@ -68,7 +68,7 @@ import type {
   TournamentGame,
 } from '../../lib/types';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/game-view';
+import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/describe-game';
 
 // ---------------------------------------------------------------- types
 

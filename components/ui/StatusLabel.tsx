@@ -1,5 +1,5 @@
 import Tag from './Tag';
-import type { GameDisplay, StatusTone } from './game-view';
+import type { GameDisplay, StatusTone } from './describe-game';
 
 /**
  * The written label beside every score: FINAL · LIVE · SCORE NOT REPORTED · POSTPONED ·
@@ -14,7 +14,7 @@ import type { GameDisplay, StatusTone } from './game-view';
  * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
  * already uppercase, so `uppercase` changes nothing a reader hears.
  *
- * Client-safe: it imports only TYPES from game-view (the home My-team card renders it).
+ * Client-safe: it imports only TYPES from describe-game (the home My-team card renders it).
  */
 export interface StatusLabelProps {
   display: GameDisplay;
