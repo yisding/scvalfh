@@ -593,24 +593,10 @@ export class ScvalClient {
     this.http = new HttpClient(opts);
   }
 
-  async getSchedule(division: DivisionId): Promise<{
-    schedule: OfficialSchedule;
-    url: string;
-    httpStatus: number;
-    bytes: number;
-  }> {
-    const url = scvalScheduleUrl(division);
-    const res = await this.http.bytes(url);
-    const text = pdfToText(res.body);
-    return {
-      schedule: parseSchedulePdfText(text, division),
-      url,
-      httpStatus: res.httpStatus,
-      bytes: res.body.byteLength,
-    };
-  }
-
-  /** The prior-season PDFs. Used by scripts/build-history.ts, never by the daily cron. */
+  /**
+   * The prior-season PDFs, for scripts/build-history.ts, which is why this class exists. The live
+   * grid and standings-index reads go through LiveTransport ('scval-pdf-text', 'scval-standings-index').
+   */
   async getHistory(): Promise<{
     standings: HistoryStandingsBlock[];
     allLeague: AllLeagueBlock[];
@@ -622,21 +608,6 @@ export class ScvalClient {
       standings: parseStandingsPdfText(pdfToText(standings.body)),
       allLeague: parseAllLeaguePdfText(pdfToText(allLeague.body)),
       urls: SCVAL_HISTORY_PDFS,
-    };
-  }
-
-  async getStandingsIndex(): Promise<{
-    link: StandingsPdfLink | null;
-    links: string[];
-    url: string;
-    httpStatus: number;
-  }> {
-    const res = await this.http.text(SCVAL_STANDINGS_INDEX);
-    return {
-      link: findStandingsPdfLink(res.body),
-      links: listFieldHockeyLinks(res.body),
-      url: SCVAL_STANDINGS_INDEX,
-      httpStatus: res.httpStatus,
     };
   }
 }
