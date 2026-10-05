@@ -12,7 +12,6 @@
  * committed data: if a parser drifts, the numbers on /history/2025-26 drift with it.
  */
 
-import { execFileSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -35,7 +34,7 @@ import {
   parseStandingsCsv,
 } from '../lib/sources/bval-sheet';
 import { getTeamBySlug, teamsInLeague } from '../lib/teams';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
 const standingsText = readFileSync(path.join(FIX, 'standings-2025-26.txt'), 'utf8');
@@ -692,34 +691,24 @@ describe('history: the league-aware read API', () => {
 // ------------------------------------------------------------------------------ the build script
 
 describe('scripts/build-history.ts', () => {
-  const tsx = path.join(REPO, 'node_modules', '.bin', 'tsx');
-  const script = path.join(REPO, 'scripts', 'build-history.ts');
   /** Run the script; returns its exit code and everything it printed. */
-  const run = (args: string[]) => {
-    try {
-      const out = execFileSync(tsx, [script, ...args], { cwd: REPO, stdio: 'pipe', encoding: 'utf8' });
-      return { code: 0, out };
-    } catch (err) {
-      const e = err as { status?: number; stdout?: string; stderr?: string };
-      return { code: e.status ?? 1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
-    }
-  };
+  const run = (args: string[]) => runScript('scripts/build-history.ts', args);
   const offline = ['--from', 'tests/fixtures/scval', '--bval-from', 'tests/fixtures/bval'];
 
   it('rebuilds the committed file byte for byte from the fixtures (the file is generated, never hand-edited)', () => {
     const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-history-')), 'history.json');
     const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', out]);
-    expect(r.code, r.out).toBe(0);
+    expect(r.status, r.output).toBe(0);
     expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'));
   }, 30_000);
 
   it('requires a valid --retrieved-on with --bval-from, rather than stamping today on old files', () => {
     const missing = run([...offline, '--dry-run']);
-    expect(missing.code).toBe(1);
-    expect(missing.out).toMatch(/--bval-from needs --retrieved-on YYYY-MM-DD/);
+    expect(missing.status).toBe(1);
+    expect(missing.output).toMatch(/--bval-from needs --retrieved-on YYYY-MM-DD/);
     const bad = run([...offline, '--retrieved-on', '2026-02-30', '--dry-run']);
-    expect(bad.code).toBe(1);
-    expect(bad.out).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
+    expect(bad.status).toBe(1);
+    expect(bad.output).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
   }, 30_000);
 
   it('writes nothing, and exits 1, when a school does not resolve', () => {
@@ -730,9 +719,9 @@ describe('scripts/build-history.ts', () => {
     }
     const out = path.join(dir, 'history.json');
     const r = run(['--from', 'tests/fixtures/scval', '--bval-from', dir, '--retrieved-on', '2026-10-03', '--out', out]);
-    expect(r.code).toBe(1);
-    expect(r.out).toMatch(/nothing written/);
-    expect(r.out).toMatch(/"Gilroyx" resolves to no registry team/);
+    expect(r.status).toBe(1);
+    expect(r.output).toMatch(/nothing written/);
+    expect(r.output).toMatch(/"Gilroyx" resolves to no registry team/);
     expect(existsSync(out)).toBe(false);
   }, 30_000);
 });

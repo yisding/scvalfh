@@ -19,7 +19,7 @@ import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
 import { loadSnapshot } from '../lib/snapshot-schema';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
 const update = read('update-data.yml');
@@ -331,13 +331,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
   }
 
   function run(root: string) {
-    const res = spawnSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [path.join(REPO, 'scripts', 'assert-prerender.ts')],
-      { cwd: root, encoding: 'utf8', env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } },
-    );
-    if (res.error) throw res.error;
-    return { status: res.status, output: `${res.stdout}${res.stderr}` };
+    return runScript('scripts/assert-prerender.ts', [], { cwd: root, env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } });
   }
 
   const notFound = (rel: string) => ({ [`${rel}.body`]: '', [`${rel}.meta`]: NOT_FOUND_META });
@@ -405,12 +399,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
 describe('assert-vinext-prerender before a vinext build', () => {
   it('fails in one line, naming the file it needs and the build that writes it', () => {
     const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-vinext-'));
-    const res = spawnSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [path.join(REPO, 'scripts', 'assert-vinext-prerender.ts')],
-      { cwd: root, encoding: 'utf8' },
-    );
-    if (res.error) throw res.error;
+    const res = runScript('scripts/assert-vinext-prerender.ts', [], { cwd: root });
     expect(res.stderr.trim()).toBe(
       'assert-vinext-prerender: dist/server/vinext-prerender.json does not exist; ' +
         'run `pnpm build:vinext` (or `pnpm build:cloudflare`) first',

@@ -4,7 +4,6 @@
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
 
-import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -23,7 +22,7 @@ import {
 import { getRosters, getTeamRoster, sortedPlayers } from '../lib/rosters';
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { TEAMS, teamsInLeague } from '../lib/teams';
-import { FIXTURE_DIR, REPO } from './helpers';
+import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const FILE = path.join(REPO, 'data', 'rosters.json');
 const text = readFileSync(FILE, 'utf8');
@@ -37,23 +36,9 @@ const FIXTURED = LEAGUES.map((l) => l.id).filter((id) =>
   teamsInLeague(id).every((t) => existsSync(path.join(FIXTURE_DIR, `roster-${t.slug}.html`))),
 );
 
-/** Run scripts/fetch-rosters.ts offline over the captures; returns the exit code and the output file. */
-function runScript(out: string, ...extra: string[]) {
-  const res = spawnSync(
-    path.join(REPO, 'node_modules', '.bin', 'tsx'),
-    [
-      path.join(REPO, 'scripts', 'fetch-rosters.ts'),
-      '--fixtures',
-      FIXTURE_DIR,
-      '--out',
-      out,
-      '--fetched-at',
-      raw.fetchedAt,
-      ...extra,
-    ],
-    { cwd: REPO, encoding: 'utf8' },
-  );
-  return { code: res.status, stdout: res.stdout, stderr: res.stderr };
+/** Run scripts/fetch-rosters.ts offline over the captures, writing to `out`. */
+function fetchRosters(out: string, ...extra: string[]) {
+  return runScript('scripts/fetch-rosters.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', raw.fetchedAt, ...extra]);
 }
 /** Whether a team belongs to a league whose every team has a capture. */
 const fixtured = (t: { slug: string }) => FIXTURED.includes(TEAMS.find((x) => x.slug === t.slug)!.league);
@@ -111,8 +96,8 @@ describe('data/rosters.json', () => {
   it('is what scripts/fetch-rosters.ts builds from the captures, for every league that has them', () => {
     expect(FIXTURED).toContain('scval');
     const out = tmpOut();
-    const { code, stderr } = runScript(out, '--leagues', FIXTURED.join(','));
-    expect(code, stderr).toBe(0);
+    const { status, stderr } = fetchRosters(out, '--leagues', FIXTURED.join(','));
+    expect(status, stderr).toBe(0);
     const built = read(out);
     expect(RostersSchema.safeParse(built).success).toBe(true);
     for (const l of FIXTURED) {
@@ -139,8 +124,8 @@ describe('data/rosters.json', () => {
     const edited = previous.teams.find((t) => fixtured(t) && t.players.length)!;
     edited.players[0].jersey = edited.players[0].jersey === '99' ? '98' : '99';
     writeFileSync(out, JSON.stringify(previous), 'utf8');
-    const { code, stderr, stdout } = runScript(out, '--leagues', FIXTURED.join(','), '--fetched-at', '2030-01-01T00:00:00.000Z');
-    expect(code, stderr).toBe(0);
+    const { status, stderr, stdout } = fetchRosters(out, '--leagues', FIXTURED.join(','), '--fetched-at', '2030-01-01T00:00:00.000Z');
+    expect(status, stderr).toBe(0);
     expect(stdout).toContain('wrote ');
     const built = read(out);
     const withoutStamps = (f: Rosters) => ({ ...f, fetchedAt: null, teams: f.teams.map(unstamped) });
@@ -224,8 +209,8 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
   it('leaves a league outside the run exactly as the previous file had it', () => {
     const out = tmpOut();
     writeFileSync(out, text, 'utf8');
-    const { code, stderr, stdout } = runScript(out, '--leagues', 'scval');
-    expect(code, stderr).toBe(0);
+    const { status, stderr, stdout } = fetchRosters(out, '--leagues', 'scval');
+    expect(status, stderr).toBe(0);
     expect(stdout).toContain('BVAL  12 teams · not in this run');
     const built = read(out);
     for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
@@ -237,8 +222,8 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
 
   it('reads a file with no row for a team as pending, and writes the file anyway', () => {
     const out = tmpOut();
-    const { code, stderr } = runScript(out, '--leagues', 'scval');
-    expect(code, stderr).toBe(0);
+    const { status, stderr } = fetchRosters(out, '--leagues', 'scval');
+    expect(status, stderr).toBe(0);
     const built = read(out);
     expect(built.teams).toHaveLength(ROSTER_TEAM_COUNT);
     for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
@@ -274,8 +259,8 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     expect(RostersSchema.safeParse(previous).success).toBe(true);
     writeFileSync(out, JSON.stringify(previous), 'utf8');
 
-    const { code, stdout } = runScript(out, '--leagues', 'scval,bval');
-    expect(code).toBe(1); // a team the run covered failed: the scheduler is told
+    const { status, stdout } = fetchRosters(out, '--leagues', 'scval,bval');
+    expect(status).toBe(1); // a team the run covered failed: the scheduler is told
     expect(stdout).toContain('SCVAL 15 teams · 15 ok');
     expect(stdout).toContain('PCAL   7 teams · not in this run');
     expect(stdout).toContain('EAL    6 teams · not in this run');
@@ -329,11 +314,7 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
 
     // An empty fixtures directory: every team of the run fails to read.
     const none = mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
-    const res = spawnSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [path.join(REPO, 'scripts', 'fetch-rosters.ts'), '--fixtures', none, '--leagues', 'bval', '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-      { cwd: REPO, encoding: 'utf8' },
-    );
+    const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', none, '--leagues', 'bval', '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
     expect(res.status, res.stderr).toBe(1);
     const built = read(out);
     const kept = built.teams.find((t) => t.slug === empty.slug)!;
@@ -349,11 +330,11 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
 
   it('leaves the file as it was when only fetchedAt (and failure text) would change', () => {
     const out = tmpOut();
-    const first = runScript(out, '--leagues', 'scval', '--fetched-at', '2026-10-04T00:00:00.000Z');
-    expect(first.code, first.stderr).toBe(0);
+    const first = fetchRosters(out, '--leagues', 'scval', '--fetched-at', '2026-10-04T00:00:00.000Z');
+    expect(first.status, first.stderr).toBe(0);
     const bytes = readFileSync(out, 'utf8');
-    const second = runScript(out, '--leagues', 'scval', '--fetched-at', '2026-10-05T00:00:00.000Z');
-    expect(second.code, second.stderr).toBe(0);
+    const second = fetchRosters(out, '--leagues', 'scval', '--fetched-at', '2026-10-05T00:00:00.000Z');
+    expect(second.status, second.stderr).toBe(0);
     expect(second.stdout).toContain('left as it was');
     expect(readFileSync(out, 'utf8')).toBe(bytes);
   });
@@ -378,11 +359,11 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
 
   it('rejects an unknown league, and --capture together with --fixtures', () => {
     const out = tmpOut();
-    const unknown = runScript(out, '--leagues', 'nope');
-    expect(unknown.code).toBe(1);
+    const unknown = fetchRosters(out, '--leagues', 'nope');
+    expect(unknown.status).toBe(1);
     expect(unknown.stderr).toContain('unknown league nope');
-    const both = runScript(out, '--capture', path.dirname(out));
-    expect(both.code).toBe(1);
+    const both = fetchRosters(out, '--capture', path.dirname(out));
+    expect(both.status).toBe(1);
     expect(both.stderr).toContain('cannot be combined with --fixtures');
   });
 });
@@ -392,12 +373,8 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   function runOver(previous: string, leagues: string, fixtures = FIXTURE_DIR) {
     const out = tmpOut();
     writeFileSync(out, previous, 'utf8');
-    const res = spawnSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [path.join(REPO, 'scripts', 'fetch-rosters.ts'), '--fixtures', fixtures, '--leagues', leagues, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-      { cwd: REPO, encoding: 'utf8' },
-    );
-    return { code: res.status, stdout: res.stdout, stderr: res.stderr, out };
+    const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', fixtures, '--leagues', leagues, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
+    return { ...res, out };
   }
   const emptyDir = () => mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
   const at = (file: Rosters, slug: string) => file.teams.findIndex((t) => t.slug === slug);
@@ -406,9 +383,9 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
     // Before: the whole file was refused and all 28 rows outside the run went to pending.
     const previous = structuredClone(raw);
     previous.teams[at(previous, 'leigh')].division = 'santa-teresa';
-    const { code, stdout, stderr, out } = runOver(JSON.stringify(previous), 'scval');
+    const { status, stdout, stderr, out } = runOver(JSON.stringify(previous), 'scval');
     // An uncovered team lost its row: the scheduler is told, and the file is still written.
-    expect(code, stderr).toBe(1);
+    expect(status, stderr).toBe(1);
     expect(stderr).toMatch(/WARN previous .*: 1 row\(s\) do not validate and are dropped/);
     expect(stderr).toMatch(/WARN {3}leigh: .*not the registry team's/);
     expect(stdout).toContain('BVAL  12 teams · not in this run · 11 kept as they were · 1 pending, previous row dropped (leigh)');
@@ -427,8 +404,8 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
     const previous = structuredClone(raw);
     previous.teams[at(previous, 'leigh')].teamId = TEAMS[0].id;
     // Every BVAL team fails to read (no captures at all).
-    const { code, stderr, out } = runOver(JSON.stringify(previous), 'bval', emptyDir());
-    expect(code).toBe(1);
+    const { status, stderr, out } = runOver(JSON.stringify(previous), 'bval', emptyDir());
+    expect(status).toBe(1);
     expect(stderr).toMatch(/WARN leigh: .*ENOENT.*\(its previous row was dropped: nothing to carry forward\)/);
     const built = read(out);
     expect(built.teams[at(built, 'leigh')].status).toBe('error');
@@ -440,8 +417,8 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   it('keeps every row when only the counts lie, says so, and rewrites the file with true counts', () => {
     const previous = structuredClone(raw);
     previous.counts.players += 1;
-    const { code, stderr, out } = runOver(JSON.stringify(previous), 'scval');
-    expect(code, stderr).toBe(0);
+    const { status, stderr, out } = runOver(JSON.stringify(previous), 'scval');
+    expect(status, stderr).toBe(0);
     expect(stderr).toMatch(/does not validate as a whole \(.*counts do not match the rows/);
     const built = read(out);
     expect(built.counts).toEqual(raw.counts);
@@ -452,8 +429,8 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
 
   it('stops without writing when the previous file is not JSON', () => {
     for (const text of ['{"teams": [', '<!doctype html>']) {
-      const { code, stdout, stderr, out } = runOver(text, 'scval');
-      expect(code, stdout).toBe(1);
+      const { status, stdout, stderr, out } = runOver(text, 'scval');
+      expect(status, stdout).toBe(1);
       expect(stderr).toMatch(/FAILED: the previous .* cannot be read: not JSON/);
       expect(stderr).toContain('Nothing written');
       expect(readFileSync(out, 'utf8')).toBe(text);
@@ -463,7 +440,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   it('ignores a previous file from another season: nothing kept, nothing carried', () => {
     const previous = { ...structuredClone(raw), season: '25-26' };
     const scoped = runOver(JSON.stringify(previous), 'scval');
-    expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
+    expect(scoped.status).toBe(1); // the uncovered leagues lost their rows
     expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 49 row\(s\) are ignored, as if absent/);
     expect(scoped.stdout).not.toContain('kept as they were');
     const built = read(scoped.out);
@@ -473,7 +450,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
     }
     // A failed fetch never carries last season's roster into this one.
     const failed = runOver(JSON.stringify(previous), 'bval', emptyDir());
-    expect(failed.code).toBe(1);
+    expect(failed.status).toBe(1);
     for (const team of teamsInLeague('bval')) {
       expect(read(failed.out).teams[at(raw, team.slug)].status, team.slug).toBe('error');
     }

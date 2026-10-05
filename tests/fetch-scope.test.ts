@@ -1,6 +1,5 @@
 /** lib/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
 
-import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -26,7 +25,7 @@ import {
 import { SEASON_YEAR } from '../lib/season';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS, teamsInLeague } from '../lib/teams';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 describe('parseLeaguesFlag', () => {
   it('reads a comma list, drops blanks and repeats', () => {
@@ -54,8 +53,7 @@ describe('parseFetchedAtFlag', () => {
 });
 
 describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
-  const run = (script: string, ...args: string[]) =>
-    spawnSync(path.join(REPO, 'node_modules', '.bin', 'tsx'), [path.join(REPO, 'scripts', script), ...args], { cwd: REPO, encoding: 'utf8' });
+  const run = (script: string, ...args: string[]) => runScript(`scripts/${script}`, args);
 
   for (const script of ['fetch-rosters.ts', 'fetch-player-stats.ts']) {
     it(`${script}: a bad --fetched-at and a flag where a value belongs both fail before anything runs`, () => {

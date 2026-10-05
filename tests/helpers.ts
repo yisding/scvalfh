@@ -1,6 +1,6 @@
 /** Shared test helpers: the offline fixture corpora, the cron run over them, and the synthetic Game builder. */
 
-import { execFileSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, renameSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -94,6 +94,29 @@ export interface CliRun {
   output: string;
 }
 
+/** The repo's tsx binary, which runs every scripts/*.ts CLI. */
+export const TSX = path.join(REPO, 'node_modules', '.bin', 'tsx');
+
+/**
+ * Runs a repo script (a path relative to the repo, such as `scripts/fetch-rosters.ts`) under tsx
+ * and returns what it printed. Never throws on a non-zero exit: callers assert on `status`. Only a
+ * failure to spawn at all throws.
+ */
+export function runScript(
+  script: string,
+  args: readonly string[],
+  opts: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
+): Omit<CliRun, 'out'> {
+  const res = spawnSync(TSX, [path.resolve(REPO, script), ...args], {
+    cwd: opts.cwd ?? REPO,
+    env: opts.env,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  if (res.error) throw res.error;
+  return { status: res.status, stdout: res.stdout, stderr: res.stderr, output: `${res.stdout}${res.stderr}` };
+}
+
 /**
  * Runs the real cron script (`scripts/fetch-data.ts --fixtures …`) over a corpus into a fresh temp
  * directory and returns what it printed. Never throws on a non-zero exit: callers assert on `status`.
@@ -104,23 +127,17 @@ export function runFixtureCli(opts: BuildOptions = {}): CliRun {
   const out = path.join(dir, 'snapshot.json');
   if (opts.previous) copyFileSync(opts.previous, out);
   const fetchedAt = opts.fetchedAt ?? readManifest(corpusDir(corpus)).fetchedAt;
-  const res = spawnSync(
-    path.join(REPO, 'node_modules', '.bin', 'tsx'),
-    [
-      path.join(REPO, 'scripts', 'fetch-data.ts'),
-      '--fixtures',
-      corpusDir(corpus),
-      ...(opts.variants ?? []).flatMap((v) => ['--variant', variantDir(v)]),
-      '--out',
-      out,
-      '--fetched-at',
-      fetchedAt,
-      ...(opts.extraArgs ?? []),
-    ],
-    { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
-  );
-  if (res.error) throw res.error;
-  return { out, status: res.status, stdout: res.stdout, stderr: res.stderr, output: `${res.stdout}${res.stderr}` };
+  const run = runScript('scripts/fetch-data.ts', [
+    '--fixtures',
+    corpusDir(corpus),
+    ...(opts.variants ?? []).flatMap((v) => ['--variant', variantDir(v)]),
+    '--out',
+    out,
+    '--fetched-at',
+    fetchedAt,
+    ...(opts.extraArgs ?? []),
+  ]);
+  return { out, ...run };
 }
 
 /**
@@ -203,22 +220,20 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
  */
 export function buildFixturePlayerStats(fetchedAt = '2026-10-02T14:00:00.000Z'): PlayerStatsFile {
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
-  execFileSync(
-    path.join(REPO, 'node_modules', '.bin', 'tsx'),
-    [
-      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
-      '--fixtures',
-      FIXTURE_DIR,
-      // The captures are SCVAL's; the other leagues' teams come out as 'pending'.
-      '--leagues',
-      'scval',
-      '--out',
-      out,
-      '--fetched-at',
-      fetchedAt,
-    ],
-    { cwd: REPO, stdio: 'pipe' },
-  );
+  const run = runScript('scripts/fetch-player-stats.ts', [
+    '--fixtures',
+    FIXTURE_DIR,
+    // The captures are SCVAL's; the other leagues' teams come out as 'pending'.
+    '--leagues',
+    'scval',
+    '--out',
+    out,
+    '--fetched-at',
+    fetchedAt,
+  ]);
+  if (run.status !== 0) {
+    throw new Error(`tests/helpers.ts: scripts/fetch-player-stats.ts exited ${run.status}\n${run.output}`);
+  }
   return PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
 }
 
