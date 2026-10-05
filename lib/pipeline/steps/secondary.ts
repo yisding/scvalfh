@@ -3,7 +3,8 @@
  *
  *  - VNN / PlayOn school calendars: venue + start-time corroboration (only for the verified sites
  *    whose team's league is in the run). PER SITE carry-forward: a school whose feed produced
- *    nothing this run keeps the venues and confirmed start times it published before.
+ *    nothing this run keeps the venues and confirmed start times it published before, and its
+ *    source row is stamped with when that school's own calendar was last fresh.
  *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
  *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
  *    corpus, a failed request) keeps the previous snapshot's value — the calendar its
@@ -79,12 +80,18 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
     const restored = carryVnnForward(missing, ctx.previous.games, games);
     games = restored.games;
     if (restored.carried) {
-      const carriedFrom = carriedFromOf(ctx.previous, (r) => r.id === 'vnn-ics' && r.status === 'ok');
-      ctx.sources.markStale(
-        (r) => r.id === 'vnn-ics' && missing.some((slug) => r.label === `${slug} school calendar`),
-        'carried forward from the previous snapshot',
-        carriedFrom,
-      );
+      for (const slug of missing) {
+        const label = `${slug} school calendar`;
+        const carriedFrom = carriedFromOf(
+          ctx.previous,
+          (r) => r.id === 'vnn-ics' && (r.scope?.team === slug || r.label === label),
+        );
+        ctx.sources.markStale(
+          (r) => r.id === 'vnn-ics' && r.label === label,
+          'carried forward from the previous snapshot',
+          carriedFrom,
+        );
+      }
       ctx.warn(
         `vnn: ${missing.join(', ')} produced no calendar events — carried ${restored.carried} ` +
           `venue/start-time ${restored.carried === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
