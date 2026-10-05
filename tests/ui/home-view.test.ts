@@ -211,6 +211,13 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
     const lead = (id: string, phase: Parameters<HomeData['phaseLead']>[1], today: string) =>
       home.phaseLead(leagues.getLeague(id), phase, today);
     expect(lead('mcal', 'regular', '2026-10-02'), `${HD}: regular renders nothing`).toBeNull();
+    // Before the first league date (config's, lib/leagues leaguePlayStarts), counting the
+    // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
+    expect(lead('scval', 'regular', '2026-09-01'), `${HD}: SCVAL before league play`).toEqual({
+      lead: 'SCVAL league play starts Wed Sep 9.',
+      body: 'These tables count league games only, so the 15 non-league games played so far are on the schedule and in the overall records, not in the standings.',
+      link: { href: '/schedule/scval', label: 'Full schedule' },
+    });
     expect(lead('mcal', 'tournament', '2026-10-24'), `${HD}: MCAL tournament`).toEqual({
       lead: 'MCAL league play is over.',
       body: 'Quarterfinals are Mon Oct 26 (a play-in Fri Oct 23 only if needed); the final is Fri Oct 30 at Tamalpais.',

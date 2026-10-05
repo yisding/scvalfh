@@ -417,3 +417,24 @@ describe('OG card rows (standings-view.ts leaderClause over standings-data.ts le
     expect(view.leaderClause([line([])]), `${SV}: before any result`).toBe('No league results yet');
   });
 });
+
+describe('the preseason notice (standings-data.ts buildNotice, DESIGN §8)', () => {
+  const SD = 'app/standings/standings-data.ts buildNotice';
+  it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
+    for (const id of data.getLeagueIds().filter((l) => l !== 'eal')) {
+      expect(sd.getStandingsPageData(id).notice, `${SD}: ${id}`).toBeNull();
+    }
+    // This corpus predates the EAL's league games, so its tables have no counted final yet.
+    expect(sd.getStandingsPageData('eal').notice, `${SD}: eal`).toEqual({
+      heading: 'EAL league play starts Mon Aug 24.',
+      body: 'These tables count league games only, so every record reads 0-0-0 until the first league result is published. The 4 non-league games played so far are on the schedule.',
+    });
+  });
+
+  it('dates league play from config and counts the non-league games played so far', () => {
+    expect(sd.buildNotice('scval', []), SD).toEqual({
+      heading: 'SCVAL league play starts Wed Sep 9.',
+      body: 'These tables count league games only, so every record reads 0-0-0 until the first league result is published. The 47 non-league games played so far are on the schedule.',
+    });
+  });
+});

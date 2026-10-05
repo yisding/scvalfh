@@ -20,13 +20,14 @@ import {
   getLeagueIds,
   getLeagueSummary,
   getMissingOfficialResults,
+  getNonLeagueFinalsPlayed,
   getStandingContext,
   getStandings,
   getTeams,
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { getLeague, leagueOfDivision } from '../../lib/leagues';
+import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 
 /**
@@ -137,22 +138,17 @@ export function getStandingsPageData(leagueId: LeagueId): StandingsPageData {
 /**
  * Before league play has produced a published result the tables are structurally complete but
  * numerically empty, and a reader deserves to be told why in a full sentence rather than left to
- * infer it from a table of em dashes (DESIGN §8, rows 1 and 2).
+ * infer it from a table of em dashes (DESIGN §8, rows 1 and 2). Exported for
+ * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
-function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageData['notice'] {
+export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageData['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;
-  const summary = getLeagueSummary(leagueId);
-  const firstLeague = getGames({ league: leagueId, leagueOnly: true })
-    .map((g) => g.dateKey)
-    .sort()[0];
-  const nonLeagueFinals = getGames({ league: leagueId, status: 'final' }).filter(
-    (g) => g.countsFor === null,
-  ).length;
-  const short = summary?.shortName ?? leagueId;
+  // The start date is config's (validated, so always set) and the count is games played so far,
+  // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
+  // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
+  const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {
-    heading: firstLeague
-      ? `${short} league play starts ${shortDate(firstLeague)}.`
-      : `${short} league play has not started.`,
+    heading: `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${

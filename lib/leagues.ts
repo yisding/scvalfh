@@ -1067,6 +1067,16 @@ export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];
 }
 
+/**
+ * The first official league date of the league (min over its divisions): the date the home
+ * PhaseLead and the /standings preseason notice both say league play starts.
+ */
+export function leaguePlayStarts(leagueId: LeagueId): string {
+  return getLeague(leagueId)
+    .divisions.map((d) => d.leaguePlay.first)
+    .reduce((a, b) => (b < a ? b : a));
+}
+
 /** The last official league date of the league (max over its divisions). */
 export function leaguePlayEnds(leagueId: LeagueId): string {
   return getLeague(leagueId)

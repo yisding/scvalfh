@@ -20,6 +20,7 @@ import {
   getLastLeagueResultDate,
   getLatestResultsDate,
   getLeagueSummaries,
+  getNonLeagueFinalsPlayed,
   getOfficialFixtures,
   getPlayoffs,
   getSeasonPhase,
@@ -57,6 +58,7 @@ import {
   CCS,
   getDivision,
   getLeague,
+  leaguePlayStarts,
   sectionOf,
   type DivisionConfig,
   type LeagueConfig,
@@ -214,22 +216,16 @@ export interface PhaseLeadView {
   link: { href: string; label: string } | null;
 }
 
-function firstLeagueDate(league: LeagueConfig): string {
-  return league.divisions.map((d) => d.leaguePlay.first).reduce((a, b) => (b < a ? b : a));
-}
-
 /** The PhaseLead copy for a league in a phase on a day (exported for tests/ui/home-view.test.ts). */
 export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: string): PhaseLeadView | null {
   const short = league.shortName;
-  const firstLeague = firstLeagueDate(league);
+  const firstLeague = leaguePlayStarts(league.id);
   const ps = league.postseason;
   const keyDates = CCS.keyDates;
 
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
     // Games played SO FAR — a non-league final later in the season has not been played yet.
-    const nonLeague = getGames({ league: league.id, status: 'final' }).filter(
-      (g) => g.countsFor === null && g.postseason === null && g.dateKey <= today,
-    ).length;
+    const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
     return {
       lead: `${short} league play starts ${shortDate(firstLeague)}.`,
       body:

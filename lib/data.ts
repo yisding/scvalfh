@@ -448,6 +448,18 @@ export function getLastLeagueResultDate(
   return dates.length ? dates[dates.length - 1] : null;
 }
 
+/**
+ * Non-league games played so far: finals of the league's teams that count for no table and are
+ * no postseason game (the `isNonLeague` predicate, components/ui/game-view.ts), dated on or
+ * before `through`. The count the two pre-league-play notices (the home PhaseLead and the
+ * /standings banner) print, so they cannot count differently.
+ */
+export function getNonLeagueFinalsPlayed(leagueId: LeagueId, through: string = getToday()): number {
+  return getGames({ league: leagueId, status: 'final' }).filter(
+    (g) => g.countsFor === null && g.postseason === null && g.dateKey <= through,
+  ).length;
+}
+
 const PLAYABLE: GameStatus[] = ['scheduled', 'live', 'postponed'];
 
 function scoped(filter: { league?: LeagueId }): Game[] {
