@@ -1,4 +1,4 @@
-import { EM_DASH, ordinal, perGame, recordString, signedGd, streakString } from '../../lib/format';
+import { EM_DASH, perGame, placeMark, placeWords, recordString, signedGd, streakString } from '../../lib/format';
 import { plural } from '../ui/plural';
 import StatTile from '../ui/StatTile';
 import type { TeamPageView } from './team-view';
@@ -51,8 +51,8 @@ export function TeamStatTiles({ view, className }: { view: TeamPageView; classNa
       <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <StatTile
           label="Place"
-          value={league ? `${sharedPlace ? 'T-' : ''}${ordinal(league.place)}` : null}
-          srValue={league && sharedPlace ? `tied for ${ordinal(league.place)}` : undefined}
+          value={league ? placeMark(league.place, sharedPlace, 'pill') : null}
+          srValue={league && sharedPlace ? placeWords(league.place, true) : undefined}
           sub={placeSub(view)}
           emphasis="hero"
         />

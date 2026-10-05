@@ -337,6 +337,23 @@ export function ordinalPlace(place: number, hasResults = true): string {
 }
 
 /**
+ * A place in words, as a sentence or a screen reader says it: '7th', or 'tied for 7th' for a
+ * shared place (a level place the league's tiebreakers do not settle).
+ */
+export function placeWords(place: number, shared: boolean): string {
+  return shared ? `tied for ${ordinal(place)}` : ordinal(place);
+}
+
+/**
+ * A place as the eye reads it, in the site's two notations: a table cell's `7` / `T7`, and a
+ * pill's or a tile's `7th` / `T-7th`. The spoken form is always `placeWords`.
+ */
+export function placeMark(place: number, shared: boolean, form: 'table' | 'pill'): string {
+  if (form === 'table') return shared ? `T${place}` : String(place);
+  return shared ? `T-${ordinal(place)}` : ordinal(place);
+}
+
+/**
  * What kind of document a league's official schedule is, as a link label names it: the BVAL
  * sheet is a Google Doc, the rest are PDFs. A `Record` over every `OfficialSourceId`, so a new
  * source fails typecheck until someone classifies it. The /standings link

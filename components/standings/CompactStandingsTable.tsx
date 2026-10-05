@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { EM_DASH, ordinal, recordString } from '../../lib/format';
-import type { Standing } from '../../lib/types';
+import { EM_DASH, recordString } from '../../lib/format';
+import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { StandingsRowData } from '../ui/StandingsTable';
 
@@ -38,28 +38,6 @@ export interface CompactStandingsTableProps {
   /** Carry the TeamFinder filter hooks (see above). */
   filterable?: boolean;
   className?: string;
-}
-
-function Place({ standing }: { standing: Standing }) {
-  if (!standing.hasReportedResults) {
-    return (
-      <>
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </>
-    );
-  }
-  const { place } = standing.computed;
-  // A level place reads `T7`, as every table on the site prints it (StandingsTable, the playoff
-  // projection): never a second notation such as `7=` beside it.
-  return standing.tiebreak.shared ? (
-    <span className="whitespace-nowrap">
-      <span aria-hidden="true">T{place}</span>
-      <span className="sr-only">tied for {ordinal(place)}</span>
-    </span>
-  ) : (
-    <>{place}</>
-  );
 }
 
 export function CompactStandingsTable({
@@ -104,7 +82,7 @@ export function CompactStandingsTable({
                 className="relative"
               >
                 <td className="sx-num w-[2.75rem] pl-gutter pr-2 text-ink-3">
-                  <Place standing={s} />
+                  <PlaceMark place={s.computed.place} shared={s.tiebreak.shared} ranked={has} />
                 </td>
                 <th scope="row" className="max-w-0 text-left font-normal">
                   <Link

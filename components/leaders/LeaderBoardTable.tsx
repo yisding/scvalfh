@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
 import MissingValue from '../ui/MissingValue';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
@@ -64,13 +64,7 @@ function Cell({ cell }: { cell: LeaderCell }) {
 }
 
 function Place({ row }: { row: LeaderRow }) {
-  if (!row.tied) return <span className="sx-num">{row.rank}</span>;
-  return (
-    <span className="sx-num whitespace-nowrap">
-      <span aria-hidden="true">T{row.rank}</span>
-      <span className="sr-only">tied for {ordinal(row.rank)}</span>
-    </span>
-  );
+  return <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />;
 }
 
 /** Short name below 640px, the full name from there. */

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import type { StandingContext } from '../../lib/data';
-import { EM_DASH, ordinal, recordString, recordWords, streakString, winPct } from '../../lib/format';
+import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '../../lib/format';
 import { divisionHeading, getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
@@ -9,6 +9,7 @@ import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
 import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
+import PlaceMark from './PlaceMark';
 import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
 
@@ -131,24 +132,14 @@ function tableName(division: DivisionId): string {
  * a "T" over a "7".
  */
 function PlaceCell({ standing }: { standing: Standing }) {
-  if (!standing.hasReportedResults) {
-    return (
-      <span className="sx-num">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </span>
-    );
-  }
-  const { place } = standing.computed;
-  if (standing.tiebreak.shared) {
-    return (
-      <span className="sx-num whitespace-nowrap">
-        <span aria-hidden="true">T{place}</span>
-        <span className="sr-only">tied for {ordinal(place)}</span>
-      </span>
-    );
-  }
-  return <span className="sx-num">{place}</span>;
+  return (
+    <PlaceMark
+      place={standing.computed.place}
+      shared={standing.tiebreak.shared}
+      ranked={standing.hasReportedResults}
+      className="sx-num"
+    />
+  );
 }
 
 /**
@@ -216,9 +207,7 @@ function RowLink({ href, label, className }: { href: string; label: string; clas
 function rowLabel(row: StandingsRowData): string {
   const { standing, team } = row;
   if (!standing.hasReportedResults) return `${team.name}: no results reported yet`;
-  const place = standing.tiebreak.shared
-    ? `tied for ${ordinal(standing.computed.place)}`
-    : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, standing.tiebreak.shared);
   // The record in WORDS: "4-1-0" read aloud is a subtraction or a date, depending on the voice.
   return `${team.name}, ${place} in ${tableName(team.division)}, ${recordWords(
     standing.computed,

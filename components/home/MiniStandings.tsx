@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 import { GoalDiffCell } from '../ui/GoalDiffBar';
-import MissingValue from '../ui/MissingValue';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import { NoGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
-import { EM_DASH, monthDay, ordinal } from '../../lib/format';
+import { EM_DASH, monthDay, placeWords } from '../../lib/format';
 import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-data';
@@ -53,32 +53,9 @@ export interface MiniStandingsProps {
   className?: string;
 }
 
-function placeText(row: MiniRow): string {
-  return row.shared ? `tied for ${ordinal(row.place)}` : ordinal(row.place);
-}
-
 function rowLabel(row: MiniRow, where: string): string {
   if (!row.hasResults) return `${row.name}: no results reported yet`;
-  return `${row.name}, ${placeText(row)} in ${where}, ${row.record}, ${row.pts} points`;
-}
-
-function PlaceCell({ row }: { row: MiniRow }) {
-  if (!row.hasResults) {
-    return (
-      <span className="sx-num">
-        <MissingValue words="not ranked" />
-      </span>
-    );
-  }
-  if (row.shared) {
-    return (
-      <span className="sx-num whitespace-nowrap">
-        <span aria-hidden="true">T{row.place}</span>
-        <span className="sr-only">tied for {ordinal(row.place)}</span>
-      </span>
-    );
-  }
-  return <span className="sx-num">{row.place}</span>;
+  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.record}, ${row.pts} points`;
 }
 
 const COLS = 6;
@@ -210,7 +187,7 @@ function MiniRowView({
     <>
       <tr data-team-slug={row.slug} className="relative" style={{ height: 'var(--spacing-row-1)' }}>
         <td className="w-[2.75rem] pl-gutter pr-2 text-ink-3">
-          <PlaceCell row={row} />
+          <PlaceMark place={row.place} shared={row.shared} ranked={row.hasResults} className="sx-num" />
         </td>
         <th scope="row" className="max-w-0 text-left font-normal">
           {/* The stretched row link (prefetch off: a static team route is downloaded in full on

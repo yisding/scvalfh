@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { EM_DASH, listWords, ordinal } from '../../lib/format';
+import { listWords } from '../../lib/format';
 import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import StatusChip from '../ui/StatusChip';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -71,27 +72,18 @@ export interface PlayoffProjectionProps {
 }
 
 function PlaceCell({ row }: { row: ProjectionRow }) {
-  const { standing } = row;
-  if (!standing.hasReportedResults) {
-    return (
-      <span className="sx-num text-ink-3">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </span>
-    );
-  }
-  const { place } = standing.computed;
+  const ranked = row.standing.hasReportedResults;
   // `T7`, the US tie mark this audience reads on every standings page, rather than the British
-  // `7=`. `whitespace-nowrap` so the narrow first column can never break the T from its number.
-  if (row.shared) {
-    return (
-      <span className="sx-num whitespace-nowrap text-ink">
-        <span aria-hidden="true">T{place}</span>
-        <span className="sr-only">tied for {ordinal(place)}</span>
-      </span>
-    );
-  }
-  return <span className="sx-num text-ink">{place}</span>;
+  // `7=` (PlaceMark).
+  return (
+    <PlaceMark
+      place={row.standing.computed.place}
+      shared={row.shared}
+      ranked={ranked}
+      className="sx-num"
+      tone={ranked ? 'text-ink' : 'text-ink-3'}
+    />
+  );
 }
 
 /**

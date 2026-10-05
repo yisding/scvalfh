@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import PlaceMark from '../ui/PlaceMark';
 import StatusChip from '../ui/StatusChip';
 
 import type { StatusGroup } from './standings-view';
@@ -109,14 +109,7 @@ export function PlayoffStatusBand({
                   {/* The same `T` marker the table uses for a level place ("T7" there, "T-7th"
                       here), so the two never disagree about whether a place is settled. */}
                   <span className="sx-num whitespace-nowrap text-micro text-ink-3">
-                    {team.shared ? (
-                      <>
-                        <span aria-hidden="true">T-{ordinal(team.place)}</span>
-                        <span className="sr-only">tied for {ordinal(team.place)}</span>
-                      </>
-                    ) : (
-                      ordinal(team.place)
-                    )}
+                    <PlaceMark place={team.place} shared={team.shared} form="pill" />
                   </span>
                 </Link>
               ))}

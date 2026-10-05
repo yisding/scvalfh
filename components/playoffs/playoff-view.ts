@@ -31,6 +31,7 @@ import {
   numberWord,
   ordinal,
   ordinalWord,
+  placeWords,
   recordString,
   shortDate,
   timeOfDayPT,
@@ -376,9 +377,7 @@ export function projectionRowLabel(row: ProjectionRow, divisionLabel: string): s
   if (!standing.hasReportedResults) {
     return `${team.name}: no results reported, not ranked in ${divisionLabel}`;
   }
-  const place = row.shared
-    ? `tied for ${ordinal(standing.computed.place)}`
-    : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, row.shared);
   return `${team.name}, ${place} in ${divisionLabel}, ${recordString(standing.computed)}, ${
     standing.computed.pts
   } points`;

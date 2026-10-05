@@ -1,5 +1,5 @@
-import { ordinal } from '../../lib/format';
 import PinControl from '../ui/PinControl';
+import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { TeamPageView } from './team-view';
 import { placeScope } from './team-view';
@@ -63,14 +63,7 @@ export function TeamIdentity({
         <p className="mt-1 mb-0 text-meta text-ink-2">{view.identityLine}</p>
         {place !== null ? (
           <p className="mt-0.5 mb-0 text-meta text-ink-2">
-            {shared ? (
-              <>
-                <span aria-hidden="true">T-{ordinal(place)}</span>
-                <span className="sr-only">tied for {ordinal(place)}</span>
-              </>
-            ) : (
-              ordinal(place)
-            )}{' '}
+            <PlaceMark place={place} shared={shared} form="pill" />{' '}
             {placeScope(view.divisionSize, view.scopeLabel)}
           </p>
         ) : null}

@@ -2167,7 +2167,9 @@ anchors, 44px, `scroll-margin-top` equal to the sticky stack; **no scroll-spy**)
 each shown before paint only for the remembered league by the league-scope stylesheet) ·
 `EmptyState` · `ExternalLink` (adds `↗`, `rel="noopener"`, and a visually-hidden "opens in a
 new tab") · `MissingValue` (an aria-hidden `—` plus visually hidden words such as "not recorded",
-§5.3) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its
+§5.3) · `PlaceMark` (a team's place in the two notations, `T7` in a table and `T-7th` in a pill
+or tile, with an sr-only "tied for 7th", or a dash and "not ranked" before any result; lib/format's
+`placeMark` / `placeWords` are the same notation as strings) · `Arrow` (a link's direction arrow, `→` `←` `↑` `↓`, aria-hidden so the link's name is its
 words alone; never baked into a data string) · `OverviewDivisionBlock` (one division of the
 /standings and /teams overviews: its h4, its `CompactStandingsTable` and its `Full <division>
 table →` link, §18.1) · `BottomTabBar` · `TopNav` · `LastUpdated` (`<time dateTime>`, formatted
