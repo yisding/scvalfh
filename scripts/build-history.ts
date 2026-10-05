@@ -107,8 +107,8 @@ function pick<T extends { division: string; level: string }>(
   return blocks.find((b) => b.division === division && b.level === level) ?? null;
 }
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
 
   let standings: HistoryStandingsBlock[];
   let allLeague: AllLeagueBlock[];

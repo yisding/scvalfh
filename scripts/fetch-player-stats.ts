@@ -155,8 +155,8 @@ const NOTES = [
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
   if (!args.force && !inSeasonWindow(today)) {

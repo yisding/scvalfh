@@ -100,8 +100,8 @@ function compare(label: string, ours: string | null, theirs: string | null | und
   diffs.push(`${label}: ${ours ?? 'null'} → ${t}`);
 }
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
     return 0;
