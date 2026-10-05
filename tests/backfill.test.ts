@@ -875,7 +875,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
   });
 
   it('skips everything with --no-sblive', async () => {
-    const { ctx, sources } = ctxWith(corpusGet, { args: { sblive: false } as RunContext['args'] });
+    const { ctx, sources } = ctxWith(corpusGet, { args: testRunArgs({ sblive: false }) });
     const res = await stepSblive(ctx, { games: [pending], unmatched: [GRE_AT_CAT] });
     expect(res).toEqual({ games: [pending], unmatched: [GRE_AT_CAT], sbliveCrossCheck: undefined });
     expect(sources).toEqual([]);
