@@ -2162,13 +2162,14 @@ layout, so it carries only the global attribution and takes no per-page props: t
 `/game/[id]` and on the team page, and `/history/2025-26`'s `scval.com` credit sits in that
 page's body (§3.9). Plus the snapshot timestamp in Pacific, a link to `/about`, and the
 not-affiliated line. The footer OPENS with the corrections call-out: a raised card across both
-columns, **"Spot a wrong score?"** and an accent pill, **"Report a data error ↗"**, to the forum's
-Data errors thread (`DATA_CORRECTIONS_URL`). The team page's Elsewhere row ends with the same pill,
-beside the sources a reader checks a score or roster entry against. The top bar carries it too
-(`SiteHeader`): from 1120px (70rem) a ringed **"Report an error ↗"** pill beside the stamp; below
-that a second, non-sticky line under the bar, **"Spot a wrong score? Report a data error ↗"**, that
-scrolls away with the page, so the sticky stack stays the 48/64px bar. Never in the phone tab bar
-(navigation only). `text-meta` `--sx-text-2` (7.69 / 8.55 — well past AA).
+columns, **"See something missing?"** and an accent pill, **"Report a data error ↗"**, to the
+forum's Data errors thread (`DATA_CORRECTIONS_URL`). The team page's Elsewhere row ends with the
+same pill, beside the sources a reader checks a score or roster entry against. The top bar
+carries it too (`SiteHeader`): from 1120px (70rem) a ringed **"Report an error ↗"** pill beside
+the stamp; below that a second, non-sticky line under the bar, **"See something missing? Report
+a data error ↗"**, that scrolls away with the page, so the sticky stack stays the 48/64px bar.
+Never in the phone tab bar (navigation only). `text-meta` `--sx-text-2` (7.69 / 8.55 — well past
+AA).
 
 **Stale-snapshot treatment** (`editorial`): at > 36h the footer stamp switches to `--sx-text`
 body ink on `--sx-accent-wash` and reads **"Not updated since Oct 2, so newer scores may be

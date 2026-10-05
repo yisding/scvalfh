@@ -14,16 +14,17 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
- * It opens with the corrections call-out: "Spot a wrong score?" and an accent pill to the forum's
- * Data errors thread (DATA_CORRECTIONS_URL). Then "Data from MaxPreps and High School on SI
+ * It opens with the corrections call-out: "See something missing?" and an accent pill to the
+ * forum's Data errors thread (DATA_CORRECTIONS_URL). Then "Data from MaxPreps and High School on SI
  * (si.com)" with real deep links, the leagues whose alignment and rules the site follows (each
- * linked to its official site), the scope note naming exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
- * to last season's archive (2025-26 final standings, by league), and
- * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
- * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern
- * Section" and can never drift from the config. A league with no document of its own (every
- * division `official.mode === 'none'`: the EAL) takes its rules from its section's guidelines, so
- * it is named in the second clause, linked to its `officialUrl`, not credited with alignment.
+ * linked to its official site), the scope note naming exactly what is covered (SPEC §11), the
+ * snapshot timestamp in Pacific, a link to /about and one to last season's archive (2025-26 final
+ * standings, by league), and the not-affiliated line. The league and section lists are built from
+ * lib/leagues.ts in config order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from
+ * the CIF Northern Section" and can never drift from the config. A league with no document of its
+ * own (every division `official.mode === 'none'`: the EAL) takes its rules from its section's
+ * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with
+ * alignment.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
@@ -81,8 +82,8 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             measures 4px spare at 360) and the phone tab bar is navigation. */}
         <div className="sx-card mb-8 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between md:col-span-2 md:mb-4 md:px-5">
           <p className="m-0 max-w-prose">
-            <strong className="font-semibold text-ink">Spot a wrong score?</strong> Wrong results,
-            missing games and misspelled names go in the Data errors thread on our forum.
+            <strong className="font-semibold text-ink">See something missing?</strong> Post it, or
+            anything that looks wrong, in the Data errors thread on our forum.
           </p>
           <ExternalLink
             href={DATA_CORRECTIONS_URL}

@@ -37,7 +37,8 @@ import TopNav from './TopNav';
  *
  * The corrections thread (DATA_CORRECTIONS_URL) rides with the bar. From 1120px (70rem) it is a
  * ringed "Report an error ↗" pill beside the stamp; below that it is a second line under the bar,
- * "Spot a wrong score? Report a data error ↗", which is not sticky and scrolls away with the page.
+ * "See something missing? Report a data error ↗", which is not sticky and scrolls away with the
+ * page.
  *
  * The home link's accessible name always starts with its visible label: "NorCal HS FH Field Hockey"
  * below 1280px, SITE_WORDMARK ("NorCal HS Field Hockey") from 1280px.
@@ -133,7 +134,7 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
           href={DATA_CORRECTIONS_URL}
           className="mx-auto flex min-h-10 max-w-content items-center gap-1 px-gutter text-meta font-medium no-underline md:px-gutter-lg"
         >
-          <span className="text-ink-2">Spot a wrong score?</span> Report a data error
+          <span className="text-ink-2">See something missing?</span> Report a data error
         </ExternalLink>
       </div>
     </>
