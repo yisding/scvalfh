@@ -5,7 +5,8 @@
  *
  * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
  * numbers are exactly what the team page shows: season totals as the coach entered them on
- * MaxPreps. Only teams whose coach tracks a stat can appear on its board, so every board says how
+ * MaxPreps. Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
+ * the stat line's athleteId), in the roster's words; a player the join misses shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
@@ -29,6 +30,7 @@
 
 import { getSnapshot } from '../../lib/data';
 import {
+  gradeWord,
   listWords,
   numberWord,
   recordString,
@@ -40,6 +42,7 @@ import {
 import { LEAGUES, getLeague } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
+import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
 import type { PriorSeason } from '../../lib/prior-season-schema';
 import {
   ELO_BASE,
@@ -59,6 +62,7 @@ import type {
 import type { ComputedRecord, Game, Standing, Team, TeamSlug } from '../../lib/types';
 import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
 import { plural } from '../ui/plural';
+import { positionWords } from '../ui/position-words';
 
 /** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
 export const LEAGUE_COUNT = numberWord(LEAGUES.length);
@@ -109,6 +113,11 @@ export interface LeaderRow {
   tied: boolean;
   /** The player's name on a player board, the school's on a school board. */
   name: string;
+  /**
+   * A player's grade in words and position(s), as the team page's roster prints them ("Senior",
+   * "Forward / Midfield"), only the ones the roster has; always empty on a school board.
+   */
+  facts: string[];
   team: LeaderTeamRef;
   /** One per column. */
   cells: LeaderCell[];
@@ -174,6 +183,17 @@ export interface LeaderSources {
   games: readonly Game[];
   /** Last season's results, the Elo rating's starting point; null starts every team at average. */
   prior?: PriorSeason | null;
+  /**
+   * The rosters a player's stat line joins to on its athleteId, for the grade and position the
+   * team page shows; left out, no row has either.
+   */
+  rosters?: readonly RosterSource[];
+}
+
+/** A team's roster rows, as far as a leaderboard reads them. */
+export interface RosterSource {
+  slug: TeamSlug;
+  players: readonly Pick<MergedPlayer, 'athleteId' | 'grade' | 'positions'>[];
 }
 
 function defaultSources(): LeaderSources {
@@ -184,6 +204,7 @@ function defaultSources(): LeaderSources {
     standings: snapshot.standings,
     games: snapshot.games,
     prior: getPriorSeason(),
+    rosters: getAllEnrichedRosters(),
   };
 }
 
@@ -255,6 +276,8 @@ interface PlayerEntry {
   player: PlayerStatLine;
   stats: TeamPlayerStats;
   team: Team;
+  /** LeaderRow.facts: the grade and position on the player's roster row. */
+  facts: string[];
 }
 
 interface PlayerBoardSpec {
@@ -351,6 +374,14 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
   },
 ];
 
+/** The grade and position(s) the team page's roster prints for a player, only those it has. */
+function playerFacts(p: RosterSource['players'][number]): string[] {
+  const facts: string[] = [];
+  if (p.grade !== null) facts.push(gradeWord(p.grade));
+  if (p.positions.length > 0) facts.push(positionWords(p.positions));
+  return facts;
+}
+
 /** School names, registry order: prose spells them out (shortName is for a narrow cell). */
 const names = (teams: readonly Team[]) => teams.map((t) => t.name);
 
@@ -378,6 +409,7 @@ function playerBoard(
     rank,
     tied,
     name: e.player.fullName,
+    facts: e.facts,
     team: teamRef(e.team, '#player-stats'),
     cells: spec.columns.map((c) => c.cell(e)),
   }));
@@ -523,6 +555,7 @@ function schoolBoard<L extends { team: Team }>(
       rank,
       tied,
       name: l.team.name,
+      facts: [],
       team: teamRef(l.team, spec.anchor),
       cells: spec.columns.map((c) => c.cell(l)),
     })),
@@ -634,15 +667,25 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
   const elo = sources
     ? buildEloBoard(sources.teams, computeRatings(sources.teams, sources.games, sources.prior ?? null))
     : getEloBoard();
-  const { teams, stats, standings, games } = sources ?? defaultSources();
+  const { teams, stats, standings, games, rosters = [] } = sources ?? defaultSources();
   const teamBySlug = new Map(teams.map((t) => [t.slug, t]));
+  const factsByPlayer = new Map(
+    rosters.flatMap((r) =>
+      r.players.flatMap((p) => (p.athleteId === null ? [] : [[`${r.slug}:${p.athleteId}`, playerFacts(p)] as const])),
+    ),
+  );
 
   // ---- players
   const withStats = stats
     .filter((s) => s.players.length > 0 && teamBySlug.has(s.slug))
     .map((s) => ({ stats: s, team: teamBySlug.get(s.slug)! }));
   const entries: PlayerEntry[] = withStats.flatMap(({ stats: s, team }) =>
-    s.players.map((player) => ({ player, stats: s, team })),
+    s.players.map((player) => ({
+      player,
+      stats: s,
+      team,
+      facts: (player.athleteId === null ? undefined : factsByPlayer.get(`${s.slug}:${player.athleteId}`)) ?? [],
+    })),
   );
   const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats));
 

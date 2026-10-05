@@ -27,6 +27,7 @@ import {
   historyPageProblems,
   mainElement,
   nonMemberSectionClaims,
+  restates,
   sectionById,
   umpireOfficialClaims,
   visibleText,
@@ -117,6 +118,39 @@ describe('affiliationLeaks (data/clubs.json: quotes and bases are kept, never re
     expect(affiliationLeaks('<p>Example’s teammates &amp; coach O’Neill: U19 Hawks Blue, Class</p>', file)).toEqual([
       'st-ignatius / Pat Example (sf-hawks): the quote from https://example.com/roster',
     ]);
+  });
+
+  it('excuses a quote that only restates an official line the page prints, and nothing more', () => {
+    const line = {
+      player: 'Pat Example',
+      terms: ['Freshman of the Year', 'Saint Ignatius Prep', 'St. Ignatius', 'Midfield', '9'],
+    };
+    const restating = {
+      affiliations: [
+        {
+          ...file.affiliations[0],
+          basis: 'Researchers matched the club blog to the roster.',
+          sources: [{ url: 'https://example.com/blog', quote: 'Freshman of the Year - Pat Example, Saint Ignatius Prep' }],
+        },
+      ],
+    };
+    // The archive prints the award line from the league's own document, the school first.
+    const page = '<dl><dt>Freshman of the Year</dt><dd>Pat Example<span>Saint Ignatius Prep</span></dd></dl>';
+    expect(affiliationLeaks(page, restating)).toEqual([
+      'st-ignatius / Pat Example (sf-hawks): the quote from https://example.com/blog',
+    ]);
+    expect(affiliationLeaks(page, restating, { restatedLines: [line] })).toEqual([]);
+    // Anything the line does not say keeps the quote a leak: a club, a coach, a teammate.
+    expect(restates('freshmanoftheyearpatexamplestignatius', [line])).toBe(true);
+    expect(restates('stignatiusmidfield9patexample', [line])).toBe(true);
+    expect(restates('freshmanoftheyearpatexamplestignatiussfhawksu19', [line])).toBe(false);
+    // The player must be the line's: another player's name with the same title and school is not.
+    expect(restates('freshmanoftheyearjosamplestignatius', [line])).toBe(false);
+    expect(restates('freshmanoftheyearstignatius', [line])).toBe(false);
+    // A basis is never excused.
+    expect(
+      affiliationLeaks(`${page}<p>Researchers matched the club blog to the roster.</p>`, restating, { restatedLines: [line] }),
+    ).toEqual(['st-ignatius / Pat Example (sf-hawks): its basis']);
   });
 
   it('ignores a fragment shorter than the floor, and a page that shows neither', () => {

@@ -15,13 +15,25 @@
  * Splitting an overall award is not guesswork: the school is the one spelling of a school in the
  * league (its registry name or an alias, the longest match, as whole words), a lone 9-12 is the
  * grade, and what is left is the player and, when there is one more part, the position. A grade or
- * position the line leaves out comes from the same document: the player's own line in that
+ * position the line leaves out comes from the same document first: the player's own line in that
  * division's team lists, else what the award itself means (a "Senior of the Year" is in 12th
- * grade, a "Goalkeeper of the Year" is a goalkeeper). A value that does not split that way is
- * printed as written.
+ * grade, a "Goalkeeper of the Year" is a goalkeeper). A grade still missing comes from the player's
+ * row on this season's roster at the same school, by the same name, a season back (a junior now
+ * was a sophomore then): a class year does not change between seasons. A position does not come
+ * from this season's roster, since a player can change position; it stays unshown. A value that
+ * does not split that way is printed as written.
+ *
+ * Every line then prints the way the rest of the site prints a player (the roster, /clubs,
+ * /commits, /leaders): the school, then the grade in words ("Senior"), then the position.
  */
 
-import { historySchoolName, type HistoryAwards, type HistoryPlayer } from '../../lib/history';
+import {
+  getHistorySeason,
+  historySchoolName,
+  type HistoryAwards,
+  type HistoryPlayer,
+} from '../../lib/history';
+import { getEnrichedTeamRoster, getRosters } from '../../lib/rosters';
 import { teamsInLeague } from '../../lib/teams';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 import { positionFromText } from '../ui/position-words';
@@ -31,7 +43,7 @@ export interface AwardLine {
   player: string;
   /** In the site's words; null when the document gives none. */
   position: string | null;
-  /** 9-12; null when neither the line nor the document gives one. */
+  /** 9-12; null when neither the document nor this season's roster gives one. */
   year: number | null;
   /** The registry name, or the document's spelling for a school the registry does not have. */
   school: string;
@@ -59,6 +71,31 @@ const CLASS_YEAR: Readonly<Record<string, number>> = { Senior: 12, Junior: 11, S
 
 export function awardTitle(raw: string): string {
   return AWARD_TITLES[raw] ?? raw;
+}
+
+const sameName = (a: string, b: string) =>
+  a.toLowerCase().replace(/\s+/g, ' ').trim() === b.toLowerCase().replace(/\s+/g, ' ').trim();
+
+/** The first year of a season, from "2025-26" or "26-27". */
+function seasonStart(season: string): number {
+  const m = /^(\d{2}|\d{4})-\d{2}$/.exec(season);
+  if (!m) throw new Error(`components/history/history-view.ts: cannot read season "${season}"`);
+  return m[1].length === 2 ? 2000 + Number(m[1]) : Number(m[1]);
+}
+
+/** How many seasons this season's roster is past the archive's (1: "26-27" after "2025-26"). */
+const SEASONS_SINCE = seasonStart(getRosters().season) - seasonStart(getHistorySeason());
+
+/**
+ * The archive season's grade of the player this season's roster lists at `slug` by the same name,
+ * or null: no such row, no grade on it, or one that would put the player outside 9-12 then.
+ */
+export function rosterYear(slug: TeamSlug | null, player: string): number | null {
+  if (slug === null) return null;
+  const row = getEnrichedTeamRoster(slug)?.players.find((p) => sameName(p.fullName, player));
+  if (!row || row.grade === null) return null;
+  const then = row.grade - SEASONS_SINCE;
+  return then >= 9 && then <= 12 ? then : null;
 }
 
 /** A team-list line in the site's words. */
@@ -112,9 +149,6 @@ export function splitOverallValue(
   return { player: rest[0], position: rest[1] ?? null, year, slug: school.slug };
 }
 
-const sameName = (a: string, b: string) =>
-  a.toLowerCase().replace(/\s+/g, ' ').trim() === b.toLowerCase().replace(/\s+/g, ' ').trim();
-
 /** One division's overall awards (varsity or JV), each split into a linked award line. */
 export function overallAwards(leagueId: LeagueId, awards: HistoryAwards): OverallAwardView[] {
   const listed = [...awards.firstTeam, ...awards.secondTeam, ...awards.honorableMention];
@@ -133,7 +167,11 @@ export function overallAwards(leagueId: LeagueId, awards: HistoryAwards): Overal
           positionFromText(split.position) ??
           positionFromText(own?.position ?? null) ??
           (award === 'Goalkeeper of the Year' ? 'Goalkeeper' : null),
-        year: split.year ?? own?.year ?? (classYear ? CLASS_YEAR[classYear] : null),
+        year:
+          split.year ??
+          own?.year ??
+          (classYear ? CLASS_YEAR[classYear] : null) ??
+          rosterYear(split.slug, split.player),
         school: historySchoolName(split.slug, ''),
         slug: split.slug,
       },

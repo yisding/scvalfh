@@ -349,6 +349,23 @@ export interface LeakOptions {
    * towards LEAK_MIN_PRIVATE. Without them every letter of an excerpt counts as private.
    */
   publicTerms?: readonly string[];
+  /**
+   * The official lines the page prints from a source of its own, each as the terms it is made of
+   * (one all-league award: its title, the player, the school's spellings). A quote fragment made of
+   * one line's terms alone, in any order and with the player among them, only restates that line
+   * ("Freshman of the Year - Quinley McCarroll, Los Altos" restates SCVAL's "Freshman of the Year:
+   * Los Altos- Quinley McCarroll"), so it is not reported. Anything else in the fragment (a
+   * teammate, a coach, a club) keeps it a leak, and a basis is always one. scripts/assert-copy.ts
+   * passes the archive's award lines (scripts/public-terms.ts ARCHIVE_LINES) for
+   * /history/2025-26 alone.
+   */
+  restatedLines?: ReadonlyArray<ArchiveLine>;
+}
+
+/** One official line a page prints: the player, and every other term the line is written with. */
+export interface ArchiveLine {
+  player: string;
+  terms: readonly string[];
 }
 
 const LEAK_ENTITIES: Readonly<Record<string, string>> = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ' };
@@ -388,13 +405,14 @@ function squash(text: string): string {
 export function affiliationLeaks(
   text: string,
   file: { affiliations: readonly LeakAffiliation[] },
-  { printsItself, publicTerms = [] }: LeakOptions = {},
+  { printsItself, publicTerms = [], restatedLines = [] }: LeakOptions = {},
 ): string[] {
   return leaks(
     squash(text),
     file.affiliations.map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
     printsItself,
     publicTerms,
+    restatedLines,
   );
 }
 
@@ -418,37 +436,60 @@ interface LeakCommitment {
 export function commitmentLeaks(
   text: string,
   file: { commitments: readonly LeakCommitment[] },
-  { printsItself, publicTerms = [] }: LeakOptions = {},
+  { printsItself, publicTerms = [], restatedLines = [] }: LeakOptions = {},
 ): string[] {
   return leaks(
     squash(text),
     file.commitments.map((c) => ({ who: `${c.teamSlug} / ${c.fullName} (${c.college})`, basis: c.basis, sources: c.sources })),
     printsItself,
     publicTerms,
+    restatedLines,
   );
 }
 
 /**
  * The shared rule: a record's basis anywhere on the page; a whole quote fragment of at least
  * LEAK_MIN_FRAGMENT; or an excerpt of one at least that long with LEAK_MIN_PRIVATE letters and
- * digits that are not public vocabulary.
+ * digits that are not public vocabulary. A fragment that only restates one of `restatedLines` is
+ * not one (LeakOptions.restatedLines).
  */
 function leaks(
   page: string,
   records: ReadonlyArray<{ who: string; basis: string; sources: ReadonlyArray<{ url: string; quote: string }> }>,
   printsItself: ReadonlySet<string> | undefined,
   publicTerms: readonly string[],
+  restatedLines: ReadonlyArray<ArchiveLine>,
 ): string[] {
   const found: string[] = [];
   for (const r of records) {
     if (page.includes(squashed(r.basis))) found.push(`${r.who}: its basis`);
     for (const s of r.sources) {
       if (printsItself?.has(s.url)) continue;
-      const hit = s.quote.split('…').some((fragment) => sharesRun(page, squashed(fragment), publicTerms));
+      const hit = s.quote
+        .split('…')
+        .some((fragment) => !restates(squashed(fragment), restatedLines) && sharesRun(page, squashed(fragment), publicTerms));
       if (hit) found.push(`${r.who}: the quote from ${s.url}`);
     }
   }
   return found;
+}
+
+/**
+ * Whether `fragment` (squashed) is made of one line's terms and nothing else, the player among
+ * them: each term is taken out wherever it occurs, longest first, and nothing may be left.
+ */
+export function restates(fragment: string, lines: ReadonlyArray<ArchiveLine>): boolean {
+  if (fragment === '') return false;
+  return lines.some((line) => {
+    const player = squashed(line.player);
+    if (player === '' || !fragment.includes(player)) return false;
+    const terms = [...new Set([player, ...line.terms.map(squashed)])]
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length);
+    let rest = fragment;
+    for (const term of terms) rest = rest.split(term).join('\u0000');
+    return rest.replace(/\u0000/g, '') === '';
+  });
 }
 
 /** `squash` of a record's text, kept: assert-copy checks every built page against the same records. */

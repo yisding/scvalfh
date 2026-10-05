@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import MissingValue from '../ui/MissingValue';
 import PlaceMark from '../ui/PlaceMark';
@@ -25,8 +26,10 @@ import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
  * board, all of that team's players) with the visually hidden "Your team" note beside it.
  *
  * Below 640px a name cell shows the team's short name (the phone cell is about 100-125px wide, so
- * "Convent of the Sacred Heart" would take three lines), and the full name from there. The row
- * header has no `aria-label`: its content is what is read, so the pinned row's note is too.
+ * "Convent of the Sacred Heart" would take three lines), and the full name from there. A player's
+ * grade and position follow the school and league, as the roster prints them ("Junior ·
+ * Midfield"): on the same line from 640px, on a line of their own below it. The row header has no
+ * `aria-label`: its content is what is read, so the pinned row's note is too.
  */
 
 /** Column widths, by the widest value each column holds in 13px mono plus its gutter. */
@@ -88,10 +91,39 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
       <>
         <span className="block text-body text-ink">{row.name}</span>
         <span className="block text-meta text-ink-3">
-          <Link href={team.href} prefetch={false} className="text-ink-2 no-underline hover:underline">
+          {/* The school is a link inside a run of text (school · league · grade · position), so it
+              is accent and underlined like the archive's and /commits' school links: the
+              globals.css rule that underlines a link in running text does not reach a `<th>`. */}
+          <Link
+            href={team.href}
+            prefetch={false}
+            className="text-accent underline decoration-from-font underline-offset-[0.2em]"
+          >
             <TeamName name={team.name} shortName={team.shortName} />
-          </Link>{' '}
-          <span aria-hidden="true">&middot;</span> {team.leagueShort}
+          </Link>
+          {/* A no-break space BEFORE each dot and each part kept whole (the AwardsBlock rule), so
+              a narrow cell wraps between parts and never starts a line with a dot. */}
+          &nbsp;<span aria-hidden="true">&middot;</span> <span className="whitespace-nowrap">{team.leagueShort}</span>
+          {row.facts.length > 0 ? (
+            // Grade and position: on the school's line from 640px; below it on a line of their
+            // own, so a 130-200px cell does not wrap "St. Ignatius · SCVAL · Junior ·" mid-run.
+            <span className="block sm:inline">
+              {row.facts.map((fact, i) => (
+                <Fragment key={fact}>
+                  {i === 0 ? (
+                    <span className="hidden sm:inline">
+                      &nbsp;<span aria-hidden="true">&middot;</span>{' '}
+                    </span>
+                  ) : (
+                    <>
+                      &nbsp;<span aria-hidden="true">&middot;</span>{' '}
+                    </>
+                  )}
+                  <span className="whitespace-nowrap">{fact}</span>
+                </Fragment>
+              ))}
+            </span>
+          ) : null}
         </span>
       </>
     );
