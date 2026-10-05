@@ -67,7 +67,7 @@ import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
-import { toLeagueChip } from '../layout/league-chips';
+import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, postseasonTagOf, type GameDisplay, type SideView } from '../ui/game-view';
 import { plural } from '../ui/plural';
@@ -869,7 +869,7 @@ export function getHomeData(): HomeData {
     },
     teamViews: buildTeamViews(),
     searchIndex: getTeamSearchIndex(),
-    leagueChips: summaries.map(toLeagueChip),
+    leagueChips: leagueChips(),
     leagueCards: summaries.map((s) => ({
       id: s.id,
       shortName: s.shortName,

@@ -13,7 +13,6 @@ import {
   getGames,
   getHeadToHead,
   getLastLeagueResultDate,
-  getLeagueSummaries,
   getOfficialFixtures,
   getStandingContext,
   getStandingFor,
@@ -56,8 +55,6 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
-import { toLeagueChip } from '../layout/league-chips';
 import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
@@ -744,15 +741,6 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
       ),
     })),
   }));
-}
-
-/** The anchor-mode LeagueSwitcher's chips and `#<league>` targets for /teams. */
-export function teamsLeagueChips(): { chips: LeagueChip[]; hrefs: Record<string, string> } {
-  const summaries = getLeagueSummaries();
-  return {
-    chips: summaries.map(toLeagueChip),
-    hrefs: Object.fromEntries(summaries.map((l) => [l.id, `#${l.id}`])),
-  };
 }
 
 // ---------------------------------------------------------------- one-line headlines (OG card)

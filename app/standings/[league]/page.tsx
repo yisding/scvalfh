@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
@@ -14,7 +15,7 @@ import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
 
-import { getStandingsPageData, leagueChips, leagueHrefs } from '../standings-data';
+import { getStandingsPageData } from '../standings-data';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.

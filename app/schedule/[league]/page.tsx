@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 
 import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import { OG_BASE } from '../../../components/layout/site';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import ScheduleFilters, { ScheduleFiltersFallback } from '../../../components/schedule/ScheduleFilters';
@@ -24,7 +25,6 @@ import {
 } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
 
-import { leagueChips, leagueHrefs } from '../../standings/standings-data';
 
 /**
  * `/schedule/<league>` — "My league's whole season" (SPEC §8.1, §10.4): every game with at least

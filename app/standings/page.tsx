@@ -4,6 +4,7 @@ import Link from 'next/link';
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
 import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
 import { leaderClause } from '../../components/standings/standings-view';
@@ -11,7 +12,7 @@ import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
 
-import { getStandingsOverviewData, leagueChips, leagueHrefs } from './standings-data';
+import { getStandingsOverviewData } from './standings-data';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as

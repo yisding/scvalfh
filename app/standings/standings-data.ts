@@ -1,5 +1,3 @@
-import type { LeagueChip } from '../../components/layout/LeagueSwitcher';
-import { toLeagueChip } from '../../components/layout/league-chips';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -201,20 +199,4 @@ export function getStandingsOverviewData(): StandingsOverviewData {
     })),
     throughDate: getLastLeagueResultDate(),
   };
-}
-
-/** The `LeagueSwitcher` chips, config order (shared by the standings and schedule pages). */
-export function leagueChips(): LeagueChip[] {
-  return getLeagueIds()
-    .map((id) => getLeagueSummary(id))
-    .filter((l): l is LeagueSummary => l !== undefined)
-    .map(toLeagueChip);
-}
-
-/** `{ all: base, <id>: base/<id> }` for a link-mode switcher, or `{ <id>: '#<id>' }` for anchor mode. */
-export function leagueHrefs(base: string | null): Record<string, string> {
-  const out: Record<string, string> = {};
-  if (base) out.all = base;
-  for (const id of getLeagueIds()) out[id] = base ? `${base}/${id}` : `#${id}`;
-  return out;
 }

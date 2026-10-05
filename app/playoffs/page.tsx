@@ -4,7 +4,7 @@ import Link from 'next/link';
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { toLeagueChip } from '../../components/layout/league-chips';
+import { leagueChips } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
@@ -198,7 +198,7 @@ export default function PlayoffsPage() {
     .map((s) => leagueKeyDate(getLeague(s.id)))
     .filter((d): d is LeagueKeyDate => d !== null);
 
-  const chips = summaries.map(toLeagueChip);
+  const chips = leagueChips();
   const hrefs: Record<string, string> = Object.fromEntries(
     summaries.map((s) => [s.id, tournamentIds.has(s.id) ? `/playoffs/${s.id}` : `#${s.id}`]),
   );
