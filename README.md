@@ -120,8 +120,9 @@ cifccs.org / VNN .ics ──┘
    per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
    (counts, timestamps, a per-league summary: what the update-data workflow uses for its commit
    message and job summary).
-3. **`next build`** (or `vite build` under vinext) reads only `data/snapshot.json` (`lib/data.ts`)
-   and prerenders every route — there is no request-time fetch, no database and no
+3. **`next build`** (or `vite build` under vinext) reads the `data/` JSON files the read APIs
+   import (`data/snapshot.json` via `lib/data.ts`, plus the files listed under "Local
+   development") and prerenders every route — there is no request-time fetch, no database and no
    `searchParams` anywhere. "Today" for rendering purposes is always derived from the snapshot's
    `fetchedAt`, never `Date.now()`, so a given commit builds byte-identically no matter when
    `next build` runs.
@@ -198,6 +199,13 @@ has the same list):
 | `--force` | bypass the Aug 1 - Nov 30 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn` | skip individual secondary sources |
+
+The fetch scripts (`fetch-data`, the other `fetch-*` scripts, `build-history` and
+`discover-season`) identify themselves with one descriptive User-Agent that carries a contact
+address (`POLITE_USER_AGENT` in `lib/sources/http.ts`; si.com, which refuses a non-browser one, gets
+a browser User-Agent instead). Set `SCVAL_CONTACT=<email>` in the scripts' environment to put your
+own deployment's address there. Only the scripts read it, at fetch time: it is not a build-time
+file override, and the build and the site never use it.
 
 ### Corpus and capture
 
@@ -571,10 +579,20 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles
-`data/snapshot.json`, `data/history-2025-26.json` and `data/prior-season.json` into its server code
-(`lib/data.ts`, `lib/history.ts` and `lib/prior-season.ts` import them), so no server reads
-`data/` at run time. The vinext scripts read the
+develop and build without ever calling a live upstream API. Every build bundles eight data files
+into its server code, each imported by its read module, so no server reads `data/` at run time:
+
+| File | Read by |
+|---|---|
+| `data/snapshot.json` | `lib/data.ts` |
+| `data/history-2025-26.json` | `lib/history.ts` |
+| `data/prior-season.json` | `lib/prior-season.ts` |
+| `data/player-stats.json` | `lib/player-stats.ts` |
+| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/rosters.ts` |
+| `data/clubs.json` | `lib/clubs.ts` |
+| `data/commits.json` | `lib/commits.ts` |
+
+The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
 Worker, two patches (see "The vinext patch") and its own outputs, `dist/`, `.vinext/` and
 `.cloudflare/`, all gitignored and skipped by `eslint.config.mjs`. `--mode cloudflare` is what
@@ -584,9 +602,11 @@ never `.env.production`.
 
 To point at a different snapshot file (e.g. a fixture-built one), set
 `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
-`data/history-2025-26.json`. Both are read with `node:fs` when the module loads, so they work
-under Next, vitest, tsx and vinext's Node target, never on a Worker, which has no filesystem to
-read them from: leave them unset for the Cloudflare scripts.
+`data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, and `SCVAL_ROSTERS`
+and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and `data/rosters-enrichment.json`. All five
+are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
+Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
+Cloudflare scripts. The other three files have no override.
 
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
@@ -1017,7 +1037,7 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
 `SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
-it and the three optional variables; copy it to `.env` for a local production build.
+it and the six optional variables; copy it to `.env` for a local production build.
 
 ### vinext
 
@@ -1032,9 +1052,9 @@ pnpm build:vinext && pnpm start:vinext   # vite build into dist/, then vinext st
 
 Run it behind any reverse proxy that can talk to a Node process, as with `next start`. `dist/` is
 the whole build output and the snapshot is bundled into it, so `vinext start` no longer needs
-`data/` beside it. `SCVAL_SNAPSHOT` and `SCVAL_HISTORY` still swap in another file through
-`node:fs` wherever the data modules load (the prerender, and `vinext start` for what it renders on
-request), so a server given one should get the file the build had. `SITE_URL` and `SCVAL_BUILD_AT`
+`data/` beside it. The `SCVAL_*` file overrides (see "Local development") still swap in another
+file through `node:fs` wherever the data modules load (the prerender, and `vinext start` for what
+it renders on request), so a server given one should get the file the build had. `SITE_URL` and `SCVAL_BUILD_AT`
 are fixed at build time on both vinext targets: `vite.config.ts` reads them with Vite's `loadEnv`
 (the process environment first, then the mode's `.env` files) and inlines them with `define`, so
 the prerendered pages and whatever is rendered on request (every 404) carry the same values,
@@ -1096,7 +1116,7 @@ its `ASSETS` binding; and `runWorkerFirst` keeps the raw `/_vinext/static-cache/
 fetched directly (they are 404s). The Worker renders only 404s on request. `cloudflare.config.ts`
 names the Worker `scvalfh`, turns on `nodejs_compat`, pins the compatibility date to the workerd
 release the plugin bundles and declares no vars: `SITE_URL` and `SCVAL_BUILD_AT` are inlined at
-build time (see "vinext"), and `SCVAL_SNAPSHOT`/`SCVAL_HISTORY` need a filesystem a Worker does not
+build time (see "vinext"), and the `SCVAL_*` file overrides need a filesystem a Worker does not
 have. `--mode cloudflare` loads `.env`, `.env.local`, `.env.cloudflare` and
 `.env.cloudflare.local`, never `.env.production`, so put the Worker build's `SITE_URL` in the
 environment or in `.env.cloudflare`.
