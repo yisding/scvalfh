@@ -5,9 +5,8 @@
  * that spawn these scripts, so `main` decides every other code by returning it (0 ok, 1 failed) —
  * never by calling process.exit itself, which would skip whatever the caller still had to log.
  *
- * The plain-node .mjs scripts (a11y-axe, assert-vinext-prerender, typecheck-scope) cannot import a
- * .ts module and keep their own endings; a11y-axe's exit 2 ('not run: dependencies missing') is
- * deliberate.
+ * The plain-node .mjs scripts (a11y-axe, typecheck-scope) cannot import a .ts module and keep their
+ * own endings; a11y-axe's exit 2 ('not run: dependencies missing') is deliberate.
  */
 
 export async function runCli(

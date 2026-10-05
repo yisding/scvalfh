@@ -7,8 +7,8 @@
  *
  * Run it from the repo root after a build:
  *
- *   pnpm build:vinext && node scripts/assert-vinext-prerender.mjs                  # Node target
- *   pnpm build:cloudflare && node scripts/assert-vinext-prerender.mjs --cloudflare # Workers target
+ *   pnpm build:vinext && pnpm assert:vinext                    # Node target
+ *   pnpm build:cloudflare && pnpm assert:vinext --cloudflare   # Workers target
  *
  * Both targets record each route in dist/server/vinext-prerender.json and write the pages (.html,
  * .rsc) and the metadata routes and Route Handlers (.route) under dist/server/prerendered-routes:
@@ -16,15 +16,16 @@
  * before packaging it. A skipped or errored route, or one with a revalidate lifetime, would be
  * rendered on demand by the server instead.
  *
- * The page families are EXACT, derived from the build's input, data/snapshot.json (or
- * SCVAL_SNAPSHOT), never from its output: `standings/<id>` and `schedule/<id>` for each
- * `season.leagues` id, `playoffs/<id>` for each league with `postseasonKind: 'league-tournament'`
- * (never read from the built sitemap, which would be circular), `game/<param>` for every game plus
- * one stub per `supersededGames` key (param = lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`),
- * `scores/<date>` for every distinct game date, `teams/<slug>` for the 49 teams. The clubs pages
- * are derived from data/clubs.json instead (DESIGN §17, SPEC §1.1j2), read from the repo root as
- * the snapshot is: the fixed page `clubs`, and `clubs/<slug>` for exactly its slugs, with no OG card
- * (they take the root one); `commits` (DESIGN §21) is a fixed page, one page with the root card.
+ * The page families are EXACT, derived from the build's input, never from its output (the built
+ * sitemap would make the check circular), by scripts/lib/prerender-expectations.ts, which
+ * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/snapshot.json or
+ * SCVAL_SNAPSHOT), cross-checked against lib/leagues.ts and the team registry, gives
+ * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
+ * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
+ * lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game
+ * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
+ * through lib/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
+ * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
  * No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
  * standings, schedule, playoffs, teams, scores), never by count. The prerendered sitemap must list
@@ -48,6 +49,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { getSnapshot } from '../lib/data';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
+
+interface PrerenderRoute {
+  route: string;
+  status: string;
+  revalidate: number | false;
+}
+interface CacheEntry {
+  kind: string;
+}
+
 const cloudflare = process.argv.includes('--cloudflare');
 
 const dir = 'dist/server/prerendered-routes';
@@ -57,80 +70,33 @@ if (!fs.existsSync(PRERENDER)) {
   process.exit(1);
 }
 
-const problems = [];
-const fail = (msg) => problems.push(msg);
+const problems: string[] = [];
+const fail = (msg: string) => problems.push(msg);
 
-const { routes } = JSON.parse(fs.readFileSync(PRERENDER, 'utf8'));
+const { routes } = JSON.parse(fs.readFileSync(PRERENDER, 'utf8')) as { routes: PrerenderRoute[] };
 const notRendered = routes.filter((r) => r.status !== 'rendered');
 if (notRendered.length) fail('not rendered by the build: ' + notRendered.map((r) => `${r.route} (${r.status})`).join(', '));
 const revalidating = routes.filter((r) => r.revalidate !== false);
 if (revalidating.length) fail('revalidates at runtime: ' + revalidating.map((r) => `${r.route} (${r.revalidate})`).join(', '));
-const files = fs.readdirSync(dir, { recursive: true }).map((f) => f.split(path.sep).join('/'));
+const files = (fs.readdirSync(dir, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
 const fileSet = new Set(files);
 
 // A raw contest id in a URL: `sblive:123` must be prerendered as `sblive-123` (lib/game-id.ts).
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
-const pages = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'commits'];
 const metadata = ['icon', 'apple-icon', 'icon-192', 'icon-512', 'opengraph-image', 'standings/opengraph-image',
   'manifest.webmanifest', 'sitemap.xml', 'robots.txt'];
 const missing = [
-  ...pages.map((p) => `${p}.html`).filter((f) => !fileSet.has(f)),
+  ...FIXED_PAGES.map((p) => `${p}.html`).filter((f) => !fileSet.has(f)),
   ...metadata.map((m) => `${m}.route`).filter((f) => !fileSet.has(f)),
 ];
 if (missing.length) fail('not prerendered: ' + missing.join(', '));
 
-// The expected families come from the build's INPUT, the snapshot, never from its output (the
-// prerendered sitemap would make the check circular). League ids are season.leagues in config
-// order; the /playoffs/[league] family is the league-tournament leagues (MCAL). `gameIdToParam`
-// of lib/game-id.ts, restated: `sblive:<digits>` → `sblive-<digits>`, a GUID unchanged.
-// An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
-const snapshot = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || 'data/snapshot.json', 'utf8'));
-const gameIdToParam = (id) => id.replace(/^sblive:(\d+)$/, 'sblive-$1');
-const leagueIds = snapshot.season.leagues.map((l) => l.id);
-const tournamentIds = snapshot.season.leagues.filter((l) => l.postseasonKind === 'league-tournament').map((l) => l.id);
-const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-const stubParams = Object.keys(snapshot.supersededGames ?? {}).map(gameIdToParam);
-const dates = [...new Set(snapshot.games.map((g) => g.dateKey))];
-const slugs = snapshot.teams.map((t) => t.slug);
-// A literal on purpose (plain .mjs, no registry import): a registry that grows or shrinks has to
-// touch this line, as the EAL's six teams did (43 → 49).
-if (slugs.length !== 49) fail(`the snapshot has ${slugs.length} teams, expected 49`);
-// One page per club of data/clubs.json, a club with no tied player included (lib/clubs.ts
-// getClubSlugs is the same set, in display order; order does not matter here).
-const clubSlugs = JSON.parse(fs.readFileSync('data/clubs.json', 'utf8')).clubs.map((c) => c.slug);
-
-const sample = (list) => list.slice(0, 5).join(', ') + (list.length > 5 ? `, … (${list.length})` : '');
-const without = (a, b) => { const bs = new Set(b); return a.filter((x) => !bs.has(x)); };
-/** The `.html` pages directly inside `<family>/`, by name. */
-const pagesIn = (family) => files.filter((f) => f.startsWith(`${family}/`) && f.endsWith('.html') && !f.slice(family.length + 1).includes('/'))
-  .map((f) => f.slice(family.length + 1, -'.html'.length));
-/** The names X with a prerendered `<family>/X/opengraph-image`. */
-const cardsIn = (family) => files.filter((f) => f.startsWith(`${family}/`) && f.endsWith('/opengraph-image.route'))
-  .map((f) => f.slice(family.length + 1, -'/opengraph-image.route'.length)).filter((x) => x && !x.includes('/'));
-const counts = [];
-/** EXACT page set per family, then OG/page parity BY NAME (never by count). */
-function family(name, expected, og = true) {
-  const got = pagesIn(name);
-  const absent = without(expected, got), extra = without(got, expected);
-  if (absent.length) fail(`${name}/: expected page(s) not prerendered: ${sample(absent)}`);
-  if (extra.length) fail(`${name}/: unexpected page(s) prerendered: ${sample(extra)}`);
-  counts.push(`${name} ${got.length}/${expected.length}`);
-  if (!og) return;
-  const cards = cardsIn(name);
-  const noCard = without(got, cards), noPage = without(cards, got);
-  if (noCard.length) fail(`${name}/: page without its opengraph-image: ${sample(noCard)}`);
-  if (noPage.length) fail(`${name}/: opengraph-image without its page: ${sample(noPage)}`);
-}
-family('standings', leagueIds);
-family('schedule', leagueIds);
-family('playoffs', tournamentIds);
-family('game', [...gameParams, ...stubParams]);
-family('scores', dates);
-family('teams', slugs);
-family('history', ['2025-26'], false);
-family('clubs', clubSlugs, false);
+const expected = expectedFamilies(getSnapshot(), fail);
+const { gameParams, stubParams } = expected;
+const { allFamilies, counts } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.route', fail });
+allFamilies(expected);
 console.log(`prerendered: ${routes.length} routes; ${counts.join('; ')} ` +
   `(game = ${gameParams.length} games + ${stubParams.length} superseded stubs)`);
 
@@ -161,7 +127,7 @@ if (problems.length) {
 console.log('assert-vinext-prerender: ok');
 
 /** What the Worker ships (see the header): each check is independent and reports on its own. */
-function checkCloudflare() {
+function checkCloudflare(): void {
   if (!fs.existsSync('.cloudflare/output')) {
     fail('.cloudflare/output does not exist; run `pnpm build:cloudflare` first');
     return;
@@ -169,14 +135,14 @@ function checkCloudflare() {
   // The Worker's Static Assets directory, wherever this build-output version puts it: the one
   // holding the static cache's index.
   const index = '_vinext/static-cache/index.json';
-  const found = fs.readdirSync('.cloudflare/output', { recursive: true })
+  const found = (fs.readdirSync('.cloudflare/output', { recursive: true }) as string[])
     .map((f) => f.split(path.sep).join('/')).filter((f) => f === index || f.endsWith(`/${index}`));
   if (found.length !== 1) {
     fail(`expected one ${index} under .cloudflare/output, found ${found.length}`);
     return;
   }
   const assets = path.join('.cloudflare/output', found[0].slice(0, -index.length));
-  const indexed = JSON.parse(fs.readFileSync(path.join(assets, index), 'utf8'));
+  const indexed = JSON.parse(fs.readFileSync(path.join(assets, index), 'utf8')) as Record<string, CacheEntry>;
   const listed = Object.values(indexed);
   const kinds = ['html', 'rsc', 'route'];
   const packaged = Object.fromEntries(kinds.map((k) => [k, listed.filter((e) => e.kind === k).length]));
@@ -197,18 +163,18 @@ function checkCloudflare() {
   if (!fs.existsSync(headersPath)) {
     fail(`${headersPath} is missing`);
   } else {
-    const rules = new Map();
-    let rule;
+    const rules = new Map<string, Record<string, string>>();
+    let rule: string | undefined;
     for (const line of fs.readFileSync(headersPath, 'utf8').split('\n')) {
       if (!line.trim() || line.trim().startsWith('#')) continue;
       if (!/^\s/.test(line)) rules.set((rule = line.trim()), rules.get(line.trim()) ?? {});
-      else if (rule && line.includes(':')) rules.get(rule)[line.slice(0, line.indexOf(':')).trim().toLowerCase()] = line.slice(line.indexOf(':') + 1).trim();
+      else if (rule && line.includes(':')) rules.get(rule)![line.slice(0, line.indexOf(':')).trim().toLowerCase()] = line.slice(line.indexOf(':') + 1).trim();
     }
     if (rules.get('/_next/static/*')?.['cache-control'] !== 'public, max-age=31536000, immutable') {
       fail(`${headersPath} has no 'public, max-age=31536000, immutable' Cache-Control rule for /_next/static/*`);
     }
   }
-  const compressed = fs.readdirSync(assets, { recursive: true }).filter((f) => /\.(br|gz|zst)$/.test(f));
+  const compressed = (fs.readdirSync(assets, { recursive: true }) as string[]).filter((f) => /\.(br|gz|zst)$/.test(f));
   if (compressed.length) fail(`precompressed copies would ship as assets: ${compressed.slice(0, 5).map((f) => path.join(assets, f)).join(', ')}`);
   // Top-level names .assetsignore keeps out of the upload (gitignore syntax; vinext writes bare
   // names, and the file itself is never uploaded).

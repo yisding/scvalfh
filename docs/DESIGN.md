@@ -3182,7 +3182,7 @@ a source for each; "Signed" appears only where a source says so; recall is parti
 - **No graduates.** Players who finished high school before the roster season are not on the
   rosters, so they cannot be joined, and naming them would break §21.2.
 - **No budget for `/commits`**, for §17.6's reason: `main` has no baseline to measure it against.
-- **Gates.** `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect
+- **Gates.** `assert:prerender`, `assert-vinext-prerender.ts` and `smoke-server.sh` expect
   `/commits` among the fixed pages; `a11y-axe.mjs` checks it in both themes at both widths.
 
 ### 21.7 Every sport (2026-10-04)

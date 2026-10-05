@@ -437,7 +437,7 @@ automatically.
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
 `getTeamClubAffiliations(team)` and `getPlayerClubs(team, athleteId)` (current, then listed, then
 earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
-about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.mjs` expect
+about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.ts` expect
 `clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
 expects `/clubs/nope` to be a 404, and `a11y-axe.mjs` checks `/clubs`, the first club page and the
 first club page with no tied player.
@@ -539,7 +539,7 @@ say. `/commits` is one static page (DESIGN §21): one section per class year, th
 how commitments are matched; every team page with a committed player shows a commitment line under
 that player's facts ("Committed: Colgate", or "Committed: St. Lawrence (soccer)" in another sport),
 linking the player's row there. The gates know the
-page: `assert:prerender`, `assert-vinext-prerender.mjs` and `smoke-server.sh` expect it among the
+page: `assert:prerender`, `assert-vinext-prerender.ts` and `smoke-server.sh` expect it among the
 fixed pages, and `a11y-axe.mjs` checks it.
 
 ## Local development
@@ -568,6 +568,7 @@ pnpm deploy:cloudflare   # vinext-cloudflare deploy — rebuilds it and uploads 
 pnpm assert:prerender    # after a build: every route family prerendered, with exact counts from the snapshot
 pnpm assert:budgets      # after a build: snapshot, page-weight and first-load JS budgets
 pnpm assert:copy         # after a build: copy-honesty scan of the built HTML
+pnpm assert:vinext       # after build:vinext (or build:cloudflare, with --cloudflare): the same route families
 pnpm build-official-fixtures   # rewrite data/official/*.json (never hand-edit them; --check verifies)
 pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, smoke and axe on each
 ```
@@ -610,7 +611,7 @@ target, run beside them (not after `gates`, so a vinext regression shows even wh
 `vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup with
 `vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then builds with
 `pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
-`scripts/assert-vinext-prerender.mjs` that every route rendered with `revalidate: false`, that the
+`scripts/assert-vinext-prerender.ts` that every route rendered with `revalidate: false`, that the
 static pages, metadata routes and Route Handlers are on disk, that the page families and their OG
 images are exactly the ones the Next build's assertion expects (standings, schedule, playoffs, game,
 date and team, with OG/page parity by name, plus the clubs pages, which have no OG card) and that
@@ -1042,7 +1043,7 @@ there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `p
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
 `next build` does — about 539 pages plus a 404 with the current snapshot, clubs and commitments
 files (540 .html on 2026-10-04, 17 of them the clubs pages and one `/commits`; the exact counts are
-derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.mjs`),
+derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.ts`),
 all `revalidate: false` in `dist/server/vinext-prerender.json`: every page (HTML and RSC payload)
 plus a 404 page, and every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root,
 `/standings`, one per league, game, date and team), `manifest.webmanifest`, `sitemap.xml` and

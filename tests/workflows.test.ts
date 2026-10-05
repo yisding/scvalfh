@@ -268,7 +268,7 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 
   it('requires the Build Output config and fails on an env file in the Worker output', () => {
     for (const text of [ci, gate]) {
-      expect(text).toContain('node scripts/assert-vinext-prerender.mjs --cloudflare');
+      expect(text).toContain('pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare');
       expect(text).toContain('pnpm exec tsx scripts/assert-budgets.ts --worker-only');
       expect(text).toContain('test -f .cloudflare/output/v0/config.json');
       expect(text).toContain(`find .cloudflare/output \\( -name '.dev.vars*' -o -name '.env*' \\) -print`);
@@ -399,16 +399,17 @@ describe('assert:prerender on a .next that has served traffic', () => {
 });
 
 /**
- * scripts/assert-vinext-prerender.mjs reports like the other build-output gates: a missing build is
+ * scripts/assert-vinext-prerender.ts reports like the other build-output gates: a missing build is
  * one line and exit 1, never a stack trace.
  */
 describe('assert-vinext-prerender before a vinext build', () => {
   it('fails in one line, naming the file it needs and the build that writes it', () => {
     const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-vinext-'));
-    const res = spawnSync(process.execPath, [path.join(REPO, 'scripts', 'assert-vinext-prerender.mjs')], {
-      cwd: root,
-      encoding: 'utf8',
-    });
+    const res = spawnSync(
+      path.join(REPO, 'node_modules', '.bin', 'tsx'),
+      [path.join(REPO, 'scripts', 'assert-vinext-prerender.ts')],
+      { cwd: root, encoding: 'utf8' },
+    );
     if (res.error) throw res.error;
     expect(res.stderr.trim()).toBe(
       'assert-vinext-prerender: dist/server/vinext-prerender.json does not exist; ' +

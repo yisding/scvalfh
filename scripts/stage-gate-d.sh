@@ -9,9 +9,9 @@
 #  1. `pnpm build`, then the build assertions: assert:prerender (exact route counts, ':' check,
 #     OG/page parity by name), assert:budgets (§12.4), assert:copy (§10.9 over the built HTML).
 #  2. `next start -p 3117` → wait for 200 → smoke `next` → axe → stop.
-#  3. `pnpm build:vinext` → assert-vinext-prerender.mjs → `vinext start --port 3118` → smoke `node`
+#  3. `pnpm build:vinext` → assert-vinext-prerender.ts → `vinext start --port 3118` → smoke `node`
 #     → axe → stop.
-#  4. `pnpm build:cloudflare` → assert-vinext-prerender.mjs --cloudflare → the Worker budget →
+#  4. `pnpm build:cloudflare` → assert-vinext-prerender.ts --cloudflare → the Worker budget →
 #     .cloudflare/output/v0/config.json exists and no .dev.vars*/.env* file is in the output →
 #     `vite preview --mode cloudflare --port 3119` → the first 404 (/standings/nope) in the fresh
 #     isolate must answer within 500 ms → smoke `workers` → axe →
@@ -166,7 +166,7 @@ stop 3117
 # ------------------------------------------------------------------ 3. vinext (Node)
 step "3. pnpm build:vinext"
 pnpm build:vinext
-node scripts/assert-vinext-prerender.mjs
+pnpm exec tsx scripts/assert-vinext-prerender.ts
 step "3. vinext start --port 3118"
 start vinext 3118 pnpm exec vinext start --port 3118
 check 'smoke vinext start' bash scripts/smoke-server.sh http://127.0.0.1:3118 node
@@ -176,7 +176,7 @@ stop 3118
 # ------------------------------------------------------------------ 4. vinext (Cloudflare Workers)
 step "4. pnpm build:cloudflare"
 SITE_URL=https://scvalfh.example.invalid pnpm build:cloudflare
-node scripts/assert-vinext-prerender.mjs --cloudflare
+pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
 pnpm exec tsx scripts/assert-budgets.ts --worker-only
 # As ci.yml's cloudflare job: the Build Output config is there, and nothing that can hold a secret
 # is: the plugin reads .dev.vars and .env* for local runs only, and all of .cloudflare/output is

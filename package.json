@@ -26,6 +26,7 @@
     "assert:prerender": "tsx scripts/assert-prerender.ts",
     "assert:budgets": "tsx scripts/assert-budgets.ts",
     "assert:copy": "tsx scripts/assert-copy.ts",
+    "assert:vinext": "tsx scripts/assert-vinext-prerender.ts",
     "gate:d": "bash scripts/stage-gate-d.sh"
   },
   "dependencies": {
