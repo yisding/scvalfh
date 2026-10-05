@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
+    "typecheck:scope": "node scripts/typecheck-scope.mjs",
     "test": "vitest run",
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",

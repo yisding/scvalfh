@@ -548,6 +548,8 @@ fixed pages, and `a11y-axe.mjs` checks it.
 pnpm install
 pnpm dev            # next dev (port 3000)
 pnpm typecheck      # next typegen, then tsc --noEmit
+pnpm typecheck:scope 'lib/**'   # dev-only, not a CI gate: the same tsc run, failing only on
+                                # diagnostics inside the given globs (agents sharing one tree)
 pnpm lint           # eslint
 pnpm test           # vitest run
 pnpm build          # next build — prerenders every route from data/snapshot.json
