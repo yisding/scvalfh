@@ -10,9 +10,9 @@
  * the same inputs always give the same bytes, and every division is checked with
  * assertDoubleRoundRobin before anything is written. Never hand-edit the outputs.
  *
- *   pnpm exec tsx scripts/build-official-fixtures.ts                       write the three files
- *   pnpm exec tsx scripts/build-official-fixtures.ts --check               exit 1 if a file differs
- *   pnpm exec tsx scripts/build-official-fixtures.ts --bval-text A.txt B.txt
+ *   pnpm build-official-fixtures                       write the three files
+ *   pnpm build-official-fixtures --check               exit 1 if a file differs
+ *   pnpm build-official-fixtures --bval-text A.txt B.txt
  *        BVAL fixtures/events parsed from the two docx texts (Mt. Hamilton, Santa Teresa) instead of
  *        the research JSON — the result must be identical (tests/bval-text.test.ts).
  *   --source-dir <dir>   (default tests/fixtures/official/source)

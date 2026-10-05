@@ -7,10 +7,11 @@
  *          from bval.org/standings and bval.org/all-league
  *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
  *
- *   pnpm exec tsx scripts/build-history.ts
- *   pnpm exec tsx scripts/build-history.ts --from tests/fixtures/scval \
+ *   pnpm build-history
+ *   pnpm build-history --from tests/fixtures/scval \
  *     --bval-from tests/fixtures/bval --retrieved-on 2026-10-03          # fully offline, from fixtures
- *   pnpm exec tsx scripts/build-history.ts --dry-run
+ *   pnpm build-history --dry-run
+ *   pnpm build-history --out <path>                                     # write somewhere else
  *
  * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
  * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.

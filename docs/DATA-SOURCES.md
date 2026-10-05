@@ -1256,7 +1256,7 @@ stale — dead weight, not used.
 BVAL, PCAL and MCAL publish their schedules as documents with no feed, so their league fixtures
 were transcribed once (2026-10-02) and are **bundled** in `data/official/{bval,pcal,mcal}-2026.json`
 (Zod-validated every time they load, in the cron and in tests). The files are written by
-`pnpm exec tsx scripts/build-official-fixtures.ts` from the transcriptions in
+`pnpm build-official-fixtures` from the transcriptions in
 `tests/fixtures/official/source/` and are never hand-edited. Each is a double round robin and is
 checked as one: every ordered pair a@b exactly once (n·(n−1) fixtures), each team plays its
 `gamesPerTeam`, no team twice on one date, every date inside the league-play window.
@@ -1291,11 +1291,11 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
 
 1. Download the new document(s) from the URLs above and keep the files.
 2. Update the transcription: for BVAL, convert both documents to text and run
-   `pnpm exec tsx scripts/build-official-fixtures.ts --bval-text <MtHamilton.txt> <SantaTeresa.txt>`
+   `pnpm build-official-fixtures --bval-text <MtHamilton.txt> <SantaTeresa.txt>`
    (the parser throws on any override form it does not know, so a surprise is loud); for PCAL and
    MCAL, edit `tests/fixtures/official/source/pcal-official-schedule-2026.json` or
    `mcal-fixtures-2026.json` to match the new document.
-3. Run `pnpm exec tsx scripts/build-official-fixtures.ts` (add `--check` to only compare). It
+3. Run `pnpm build-official-fixtures` (add `--check` to only compare). It
    validates each division as a double round robin before writing anything.
 4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
    may change.

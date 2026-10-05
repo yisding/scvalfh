@@ -9,8 +9,9 @@
  *   pnpm fetch-rosters --capture <dir>     live, and save each page read as <dir>/roster-<slug>.html
  *   pnpm fetch-rosters --out <path>        write somewhere else
  *   pnpm fetch-rosters --dry-run           parse and report, write nothing (captures included)
- *   a run whose rows equal the previous file's apart from fetchedAt / error text leaves it as it was
  *   pnpm fetch-rosters --fetched-at <iso>  pin the stamp (reproducible fixture builds)
+ *
+ * A run whose rows equal the previous file's apart from fetchedAt / error text leaves it as it was.
  *
  * Not part of the twice-daily cron: a roster changes a few times a season and each page is ~250 KB,
  * so this runs by hand or from a weekly schedule. The budget is the MaxPreps client's own
