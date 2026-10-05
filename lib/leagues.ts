@@ -88,7 +88,7 @@ export interface DivisionConfig {
    * === expectedTeams.
    */
   maxprepsExtraRows: Readonly<Record<TeamId, string>>;
-  /** 'full' = compare records, goals, place, pct (today's SCVAL); 'records-only' = W-L-T and goals; 'informational' = W-L-T only, labelled. */
+  /** 'full' = compare records, goals, place, pct (SCVAL's original comparison); 'records-only' = W-L-T and goals; 'informational' = W-L-T only, labelled. */
   reportedTrust: 'full' | 'records-only' | 'informational';
   /** Shown above the MaxPreps comparison for this table; null = none. */
   knownCause: string | null;
@@ -121,7 +121,7 @@ export interface LeagueRules {
   postseasonFrom: string | null;
   /** Human escape hatch: contests that are league games despite postseasonFrom. */
   leagueGameOverrides: readonly ContestId[];
-  /** 'legacy' = today's SCVAL matcher byte-for-byte; 'two-phase' = §7.8. */
+  /** 'legacy' = the original SCVAL matcher, byte-for-byte; 'two-phase' = §7.8. */
   matcher: 'legacy' | 'two-phase';
   tiebreaks: {
     /** Chain after 'points' for every points bucket without a byBucketStart entry. Last stage may be uncomputable. */
@@ -133,7 +133,7 @@ export interface LeagueRules {
     byBucketStart?: Readonly<Partial<Record<number, readonly TiebreakStage[]>>>;
   };
   multiTeam: 'partition-restart' | 'seed-one-restart';
-  /** 'zero' = today's SCVAL head-to-head (a team with no H2H game scores 0); 'skip' = the stage is skipped when any tied team has not met the others. */
+  /** 'zero' = the original SCVAL head-to-head (a team with no H2H game scores 0); 'skip' = the stage is skipped when any tied team has not met the others. */
   h2hUnmet: 'zero' | 'skip';
   drawNumbers: Readonly<Record<TeamSlug, number>> | null;
   /**
@@ -143,7 +143,7 @@ export interface LeagueRules {
    * varsity league game never ends level. D2 rule 4c (phantom tie) applies only when 'none'.
    */
   leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
-  /** Every string the engine prints. SCVAL's are today's BYLAW_CITATIONS, verbatim. */
+  /** Every string the engine prints. SCVAL's are the original BYLAW_CITATIONS, verbatim (golden-gated). */
   citations: {
     points: string;
     /** The points rule's short cite, inside the cross-check's place label ('Art. VI §2' for SCVAL, verbatim). */
@@ -390,7 +390,7 @@ const SCVAL: LeagueConfig = {
     matcher: 'legacy',
     tiebreaks: { default: ['head-to-head', 'division-wins', 'h2h-goals-against', 'h2h-goal-diff', 'coin-flip'] },
     multiTeam: 'partition-restart', h2hUnmet: 'zero', drawNumbers: null, leagueOvertime: 'sudden-victory',
-    // ↓ VERBATIM from today's lib/season.ts BYLAW_CITATIONS (golden-gated)
+    // ↓ VERBATIM from the original lib/season.ts BYLAW_CITATIONS (golden-gated)
     citations: {
       points: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie)',
       pointsShort: 'Art. VI §2',
@@ -412,7 +412,7 @@ const SCVAL: LeagueConfig = {
   postseason: {
     kind: 'ccs-ladder', autoBerths: 7,
     citation: 'Article VII §2 (first three in each division are automatic qualifiers; fourth place plays in for the SCVAL 7th AQ; the play-in loser and both fifth-place teams go to CCS for at-large consideration)',
-    // ↓ VERBATIM from today's PLAYOFF_STATUS_LABELS / OUTCOME_PHRASES / STATUS_BADGE / statusLabel()
+    // ↓ VERBATIM from the original PLAYOFF_STATUS_LABELS / OUTCOME_PHRASES / STATUS_BADGE / statusLabel()
     ladder: [
       { divisions: '*', places: [1, 3], status: 'aq', label: 'Automatic qualifier',
         phrase: 'automatic qualifier', badge: 'AQ', legend: 'Places 1-3 — automatic CCS qualifier' },
@@ -428,14 +428,14 @@ const SCVAL: LeagueConfig = {
       seats: [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }] as const,
       seatLabels: [`De Anza #${seed}`, `El Camino #${seed}`] as const, host: null,
       isPlayIn: seed === 4,
-      // ↓ VERBATIM from today's crossoverPairings()
+      // ↓ VERBATIM from the original crossoverPairings()
       label: seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
         : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
     })),
   },
   phases: [
-    { phase: 'regular', through: 'data' },        // today's formula (§5.9)
+    { phase: 'regular', through: 'data' },        // the original formula (§5.9)
     { phase: 'crossover', through: '2026-10-30' },
     { phase: 'playoffs', through: '2026-11-14' },
   ],

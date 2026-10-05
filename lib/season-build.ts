@@ -46,7 +46,7 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
   };
 }
 
-/** Global window (today's semantics, via lib/normalize seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
+/** Global window (the original single-league semantics, unchanged, via lib/normalize seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
 export function buildSeason(games: readonly Game[]): Season {
   const leagues: SeasonLeague[] = LEAGUES.map((l) => ({
     id: l.id,

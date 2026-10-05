@@ -47,7 +47,7 @@ export interface SeasonWindow {
   /** min dateLocal over the games in scope. */
   firstGame: string | null;
   /**
-   * Global window: max dateLocal where `isLeague` (today's semantics, unchanged).
+   * Global window: max dateLocal where `isLeague` (the original single-league semantics, unchanged).
    * League window: max dateLocal where `countsFor` is one of the league's divisions (any status).
    */
   lastLeagueGame: string | null;
@@ -96,7 +96,7 @@ export interface Season {
   sections: SeasonSection[];
   /** Config order: scval, bval, pcal, mcal, eal. */
   leagues: SeasonLeague[];
-  /** Global window over every kept contest — today's semantics. */
+  /** Global window over every kept contest — the original single-league semantics, unchanged. */
   window: SeasonWindow;
 }
 
@@ -310,7 +310,7 @@ export interface Game {
 /** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/leagues.ts). */
 export type TiebreakStage =
   | 'points'                   // placed on points alone
-  | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — today's code
+  | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — SCVAL's original stage
   | 'division-wins'            // SCVAL §4, BVAL §6c
   | 'h2h-goals-against'        // SCVAL §5
   | 'h2h-goal-diff'            // SCVAL §6, BVAL §6d
@@ -330,7 +330,7 @@ export type PlayoffStatus =
   | 'aq'           // automatic CCS berth by place
   | 'play-in'      // SCVAL 4th (Oct 30); BVAL Mt. Hamilton 4th and Santa Teresa 1st (Oct 31)
   | 'at-large'     // SCVAL 5th: submitted to CCS for at-large consideration
-  | 'out'          // SCVAL 6th+: "No automatic path" (today's wording)
+  | 'out'          // SCVAL 6th+: "No automatic path" (the original SCVAL wording)
   | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic-berth route" — never "eliminated"
   | 'bye'          // MCAL seeds 1-2
   | 'tournament'   // MCAL seeds 3-6; EAL places 1-6 (Super Regional)
