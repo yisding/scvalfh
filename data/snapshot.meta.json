@@ -1,11 +1,11 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0",
-  "contentHash": "e27d8aeb6ca5110180f47cbbf7ce7336e618db9d599e9159e4eb3d7af646974d",
+  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0",
+  "contentHash": "d5116b664b96b6599d55c03c34ab0afab5c4d7f94936b6a2a60506e2c2bed08e",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 67,
+        "finals": 68,
         "games": 117,
         "leagueGames": 60,
         "teams": 12
@@ -25,35 +25,35 @@
         "teams": 9
       },
       "pcal": {
-        "backfilled": 3,
+        "backfilled": 2,
         "finals": 41,
         "games": 57,
         "leagueGames": 36,
         "teams": 7
       },
       "scval": {
-        "backfilled": 1,
-        "finals": 97,
+        "backfilled": 0,
+        "finals": 98,
         "games": 158,
         "leagueGames": 96,
         "teams": 15
       }
     },
-    "finals": 230,
+    "finals": 232,
     "games": 397,
     "leagueGames": 294,
-    "mismatches": 8,
-    "pending": 5,
+    "mismatches": 6,
+    "pending": 3,
     "teams": 49
   },
   "crossCheck": {
-    "agreements": 75,
-    "backfilled": 3,
-    "compared": 139,
-    "conflicts": 2,
+    "agreements": 77,
+    "backfilled": 2,
+    "compared": 140,
+    "conflicts": 3,
     "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-05T11:57:12.665Z",
+  "fetchedAt": "2026-10-05T21:22:26.384Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -66,10 +66,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 12,
-      "finalsDelta": 0,
+      "countedFinals": 13,
+      "finalsDelta": 1,
       "id": "bval",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -496,7 +496,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-22",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -580,11 +580,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive del-mar games",
-      "rowCount": 10,
-      "status": "ok"
-    },
-    {
       "label": "sblive gilroy games",
       "rowCount": 17,
       "status": "ok"
@@ -592,6 +587,11 @@
     {
       "label": "sblive greenfield games",
       "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "sblive live-oak games",
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -616,7 +616,7 @@
     }
   ],
   "today": "2026-10-05",
-  "warnings": 39,
+  "warnings": 40,
   "window": {
     "firstGame": "2026-08-24T16:00:00",
     "lastGame": "2026-10-30T17:30:00",
