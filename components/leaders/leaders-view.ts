@@ -1,3 +1,32 @@
+/**
+ * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
+ * two files the rest of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert
+ * it over the committed data and over synthetic games.
+ *
+ * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
+ * numbers are exactly what the team page shows: season totals as the coach entered them on
+ * MaxPreps. Only teams whose coach tracks a stat can appear on its board, so every board says how
+ * many teams it covers and names the ones it leaves out, and the section says whose totals are
+ * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
+ *
+ * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
+ * clean sheets, and last the highest Elo rating (lib/ratings.ts, DESIGN §20). Records are the
+ * `Standing` rows the standings and team pages print (`overall` is every final, `computed` the
+ * league games the table counts), so a team's record here is its record everywhere. Clean sheets
+ * and the per-game rates come from the same finals, with forfeits left out of goals as
+ * lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum number of
+ * results, half the median team's, so a 1-0 team does not top a table of 10-game seasons; the
+ * teams below it are named. The Elo board's minimum counts the games its fit
+ * counts this season (finals between two registry teams), by the same rule; a team under it is
+ * still rated on its own page, as provisional. The ratings start from last season's
+ * (data/prior-season.json); synthetic sources without one start every team at average.
+ *
+ * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
+ * and tied rows are listed by name. A board shows the places up to 10th, and every player or school
+ * tied for the last of them, however many; a player board goes on to 25th the same way, behind a
+ * "Show N more" disclosure.
+ */
+
 import { getSnapshot } from '../../lib/data';
 import {
   listWords,
@@ -39,35 +68,6 @@ export const LEAGUE_COUNT = numberWord(LEAGUES.length);
  * Elo disclosure (components/teams/TeamElo.tsx) both say it, so the two always read the same.
  */
 export const ELO_SCALE = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal`;
-
-/**
- * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
- * two files the rest of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert
- * it over the committed data and over synthetic games.
- *
- * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
- * numbers are exactly what the team page shows: season totals as the coach entered them on
- * MaxPreps. Only teams whose coach tracks a stat can appear on its board, so every board says how
- * many teams it covers and names the ones it leaves out, and the section says whose totals are
- * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
- *
- * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
- * clean sheets, and last the highest Elo rating (lib/ratings.ts, DESIGN §20). Records are the
- * `Standing` rows the standings and team pages print (`overall` is every final, `computed` the
- * league games the table counts), so a team's record here is its record everywhere. Clean sheets
- * and the per-game rates come from the same finals, with forfeits left out of goals as
- * lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum number of
- * results, half the median team's, so a 1-0 team does not top a table of 10-game seasons; the
- * teams below it are named. The Elo board's minimum counts the games its fit
- * counts this season (finals between two registry teams), by the same rule; a team under it is
- * still rated on its own page, as provisional. The ratings start from last season's
- * (data/prior-season.json); synthetic sources without one start every team at average.
- *
- * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
- * and tied rows are listed by name. A board shows the places up to 10th, and every player or school
- * tied for the last of them, however many; a player board goes on to 25th the same way, behind a
- * "Show N more" disclosure.
- */
 
 /** The places a board shows. */
 export const BOARD_PLACES = 10;

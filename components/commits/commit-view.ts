@@ -1,3 +1,25 @@
+/**
+ * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
+ * DESIGN §21), derived from lib/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
+ * over the real files; every word the page or a roster line prints about a commitment is chosen
+ * here, in one module.
+ *
+ * What the page promises, and this module enforces (the clubs pages' posture, DESIGN §17.2):
+ *   - only rows on the tracked varsity rosters are named: every commitment joined a non-JV row of
+ *     data/rosters.json at load (lib/commits.ts), and is shown under that row's own spelling;
+ *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
+ *     the quote and the basis are for maintainers and can name people who are not players here;
+ *   - a commitment is never worded as more than its sources say: "Committed" unless a source says
+ *     the player signed, and the date is "as of" the earliest date a source gives, never called the
+ *     day the player decided;
+ *   - a commitment in another sport says which: the site is about field hockey, so field hockey
+ *     goes without saying on a roster line, and every other sport is named beside the college;
+ *   - link labels come from the source kind and the host, never from a URL path — apart from the
+ *     page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`), so a name in a slug is
+ *     never printed;
+ *   - every row links the pages it rests on, each URL once.
+ */
+
 import { clubDisplayName, getClubs } from '../../lib/clubs';
 import {
   collegeDisplayName,
@@ -24,28 +46,6 @@ import { getRosters } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
-
-/**
- * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
- * DESIGN §21), derived from lib/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
- * over the real files; every word the page or a roster line prints about a commitment is chosen
- * here, in one module.
- *
- * What the page promises, and this module enforces (the clubs pages' posture, DESIGN §17.2):
- *   - only rows on the tracked varsity rosters are named: every commitment joined a non-JV row of
- *     data/rosters.json at load (lib/commits.ts), and is shown under that row's own spelling;
- *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
- *     the quote and the basis are for maintainers and can name people who are not players here;
- *   - a commitment is never worded as more than its sources say: "Committed" unless a source says
- *     the player signed, and the date is "as of" the earliest date a source gives, never called the
- *     day the player decided;
- *   - a commitment in another sport says which: the site is about field hockey, so field hockey
- *     goes without saying on a roster line, and every other sport is named beside the college;
- *   - link labels come from the source kind and the host, never from a URL path — apart from the
- *     page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`), so a name in a slug is
- *     never printed;
- *   - every row links the pages it rests on, each URL once.
- */
 
 // ---------------------------------------------------------------- wording tables
 

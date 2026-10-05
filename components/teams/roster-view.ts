@@ -1,20 +1,3 @@
-import { getCommitsFile } from '../../lib/commits';
-import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
-import {
-  getEnrichedTeamRoster,
-  getRosters,
-  sortedPlayers,
-  type EnrichmentSource,
-  type MergedPlayer,
-  type MergedTeamRoster,
-  type OtherRosters,
-  type ProfilePlatform,
-  type RosterConflict,
-} from '../../lib/rosters';
-import type { TeamSlug } from '../../lib/types';
-import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
-import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view';
-
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
  * view in lib/rosters.ts, for every team of all five leagues. Pure, so tests/ui/roster-view.test.ts
@@ -38,6 +21,23 @@ import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view'
  *     §21.5), which cites the sources. It says "Signed" only where a source does. The words are
  *     components/commits/commit-view.ts' (`playerCommitLine`), shared with /commits.
  */
+
+import { getCommitsFile } from '../../lib/commits';
+import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
+import {
+  getEnrichedTeamRoster,
+  getRosters,
+  sortedPlayers,
+  type EnrichmentSource,
+  type MergedPlayer,
+  type MergedTeamRoster,
+  type OtherRosters,
+  type ProfilePlatform,
+  type RosterConflict,
+} from '../../lib/rosters';
+import type { TeamSlug } from '../../lib/types';
+import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
+import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view';
 
 /** MaxPreps' field hockey position codes. Anything else is printed as the coach wrote it. */
 const POSITION_WORDS: Record<string, string> = {

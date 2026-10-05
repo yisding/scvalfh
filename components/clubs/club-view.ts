@@ -1,3 +1,23 @@
+/**
+ * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
+ * derived from lib/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
+ * every word a club page or a club line prints about a club tie is chosen here, in one module.
+ *
+ * What the pages promise, and this module enforces:
+ *   - only rows on the tracked varsity rosters are named: a row is an affiliation, and every
+ *     affiliation joined a non-JV row of data/rosters.json at load (lib/clubs.ts), under that
+ *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
+ *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
+ *     the quote and the basis are for maintainers and can name people who are not players here, and
+ *     a per-row confidence mark is not built (DESIGN §17.6);
+ *   - `unknown` is never worded as current: it reads "Listed by <source>, <date>", and on the
+ *     roster its group is "Listed club";
+ *   - link labels come from the source kind and the host, never from a URL path — apart from the
+ *     page-type tests (`/athlete/`, `/roster`, `/organization/`), so a label stays true when a page
+ *     moves, and a name in a slug (a player's profile, a coach's page) is never printed;
+ *   - every player row links the pages it rests on, each URL once.
+ */
+
 import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '../../lib/format';
 import {
   SEARCHED_REGIONS,
@@ -19,26 +39,6 @@ import { getRosters } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
-
-/**
- * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
- * derived from lib/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
- * every word a club page or a club line prints about a club tie is chosen here, in one module.
- *
- * What the pages promise, and this module enforces:
- *   - only rows on the tracked varsity rosters are named: a row is an affiliation, and every
- *     affiliation joined a non-JV row of data/rosters.json at load (lib/clubs.ts), under that
- *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
- *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
- *     the quote and the basis are for maintainers and can name people who are not players here, and
- *     a per-row confidence mark is not built (DESIGN §17.6);
- *   - `unknown` is never worded as current: it reads "Listed by <source>, <date>", and on the
- *     roster its group is "Listed club";
- *   - link labels come from the source kind and the host, never from a URL path — apart from the
- *     page-type tests (`/athlete/`, `/roster`, `/organization/`), so a label stays true when a page
- *     moves, and a name in a slug (a player's profile, a coach's page) is never printed;
- *   - every player row links the pages it rests on, each URL once.
- */
 
 // ---------------------------------------------------------------- wording tables
 
