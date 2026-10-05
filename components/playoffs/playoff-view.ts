@@ -598,7 +598,8 @@ export interface TournamentInput {
   ladderLine: { after: number; label: string } | null;
 }
 
-const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
+/** A bracket round's title, for the page's round headers and the OG card's round line alike. */
+export const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
   quarterfinal: 'Quarterfinals',
   semifinal: 'Semifinals',
   final: 'Final',

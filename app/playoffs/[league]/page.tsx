@@ -6,25 +6,27 @@ import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';
 import LeagueTournament from '../../../components/playoffs/LeagueTournament';
 import { buildTournamentView, type TournamentView } from '../../../components/playoffs/playoff-view';
+import {
+  tournamentLeague,
+  tournamentStaticParams,
+  type TournamentConfig,
+} from '../../../components/playoffs/tournament-data';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import {
   getCcsField,
-  getLeagueSummary,
   getLeagueTournament,
   getSections,
   getStandingContext,
   getStandings,
   getTeamById,
   getTeamBySlug,
-  getTournamentLeagueIds,
 } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { getDivision, getLeague } from '../../../lib/leagues';
-import type { LeagueConfig } from '../../../lib/leagues';
+import { getDivision } from '../../../lib/leagues';
 import { outcomesFor, playoffOutcomeLabel } from '../../../lib/standings';
 import type { Team } from '../../../lib/types';
 
@@ -45,19 +47,7 @@ import type { Team } from '../../../lib/types';
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
-  return getTournamentLeagueIds().map((league) => ({ league }));
-}
-
-type TournamentConfig = Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>;
-
-/** The league and its tournament config, or undefined for any param that is not a tournament league. */
-function tournamentLeague(id: string): { summary: LeagueSummary; config: LeagueConfig; ps: TournamentConfig } | undefined {
-  if (!getTournamentLeagueIds().includes(id)) return undefined;
-  const summary = getLeagueSummary(id);
-  if (!summary) return undefined;
-  const config = getLeague(summary.id);
-  if (config.postseason.kind !== 'league-tournament') return undefined;
-  return { summary, config, ps: config.postseason };
+  return tournamentStaticParams();
 }
 
 function roundDate(ps: TournamentConfig, round: string): string | null {
