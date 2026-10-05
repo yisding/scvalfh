@@ -178,8 +178,9 @@ const corpusSnapshotMemo = new Map<string, string>();
  * once into os.tmpdir() and reused afterwards — by later calls in this process and by later test
  * files and runs. The cache key hashes the manifest, the run's extra flags and the mtimes of
  * lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/official/**, so any change to the pipeline
- * or the corpus rebuilds it. Stage C tests set `process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02')`
- * and then dynamically import lib/data. The meta file is beside it (`*.meta.json`).
+ * or the corpus rebuilds it. A test file that renders against a corpus points lib/data at it with
+ * `stubCorpusSnapshot(corpus)` below (which stubs SCVAL_SNAPSHOT to this path and resets the module
+ * cache) and then dynamically imports lib/data. The meta file is beside it (`*.meta.json`).
  */
 export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: readonly string[] } = {}): string {
   const extraArgs = [...(opts.extraArgs ?? [])];

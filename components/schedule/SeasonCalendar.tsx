@@ -115,7 +115,7 @@ export function SeasonCalendar({ dates, current, className }: SeasonCalendarProp
                   {week.map((date, d) => (
                     <td key={date ?? `pad-${d}`} className="p-0.5">
                       {date === null ? null : contestDays.has(date) ? (
-                        // prefetch={false}: 49 of these, one per day page (see DateHeader.tsx).
+                        // prefetch={false}: one of these per contest day, each linking to its day page (see DateHeader.tsx).
                         // `relative` gives the sr-only name a positioned ancestor inside the cell
                         // (the reason TimelineRail's chips carry it). A contest day is filled and
                         // in accent so it reads as a link without colour alone (weight + fill).

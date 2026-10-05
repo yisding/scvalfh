@@ -5,6 +5,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
+import { MissingValue } from '../ui/MissingValue';
 import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**
@@ -282,10 +283,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
                     {row.jersey.elsewhere ? <ElsewhereMark /> : null}
                   </>
                 ) : (
-                  <>
-                    <span aria-hidden="true">&mdash;</span>
-                    <span className="sr-only">No number listed</span>
-                  </>
+                  <MissingValue words="No number listed" />
                 )}
               </span>
             ) : null}

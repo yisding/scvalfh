@@ -10,7 +10,7 @@
  * or `U` can never land on another league's team. The file is validated at load (schema, league,
  * documents against config, ids); the double-round-robin checks live in lib/official/validate.ts.
  *
- * Never edit the JSON by hand: `pnpm exec tsx scripts/build-official-fixtures.ts` writes it.
+ * Never edit the JSON by hand: `pnpm build-official-fixtures` writes it.
  */
 
 import { readFileSync } from 'node:fs';

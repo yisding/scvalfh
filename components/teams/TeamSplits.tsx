@@ -1,5 +1,6 @@
-import { EM_DASH, recordString } from '../../lib/format';
+import { recordString } from '../../lib/format';
 import type { Record3 } from '../../lib/types';
+import { MissingValue } from '../ui/MissingValue';
 import type { TeamPageView } from './team-view';
 
 /**
@@ -53,12 +54,7 @@ export function TeamSplits({ view }: TeamSplitsProps) {
           <div key={cell.label} className="sx-card p-3 md:p-4">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
             <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
-              {cell.value ?? (
-                <>
-                  <span aria-hidden="true">{EM_DASH}</span>
-                  <span className="sr-only">{league ? NO_GAMES[cell.label] : 'not reported'}</span>
-                </>
-              )}
+              {cell.value ?? <MissingValue words={league ? NO_GAMES[cell.label] : 'not reported'} />}
             </dd>
           </div>
         ))}

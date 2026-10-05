@@ -400,9 +400,10 @@ export function StandingsTable(props: StandingsTableProps) {
   const notes = showNotes ? collectStandingsNotes({ ...props, rows }) : null;
 
   // The pinned team's 2px accent left rule has one channel. The pages are static and the pin lives
-  // in localStorage, so every row carries `data-team-slug`, and the end-of-body script in
-  // app/layout.tsx (with components/ui/PinnedTeamMarks.tsx after a client navigation) sets
-  // `[data-pinned]` on the matching row.
+  // in localStorage, so every row carries `data-team-slug`, and the pinned-team head script
+  // (components/layout/pinned-team-script.ts, run from app/layout.tsx's <head>; then
+  // components/ui/PinnedTeamMarks.tsx after a client navigation) sets `[data-pinned]` on the
+  // matching row.
   // The 2px automatic-qualifier cut: the one deliberately strong line in the table.
   const cut = (index: number) =>
     berthRuleAfter && index + 1 === berthRuleAfter

@@ -672,9 +672,9 @@ MaxPreps' season ids are **never hardcoded into more than one place** — they l
 re-asserted on every `fetch-data` run. When the season rolls over:
 
 ```bash
-pnpm discover-season                              # or: pnpm exec tsx scripts/discover-season.ts
-pnpm exec tsx scripts/discover-season.ts --ssid <sportSeasonId>   # pin explicitly if needed
-pnpm exec tsx scripts/discover-season.ts --help                   # usage; makes no request
+pnpm discover-season
+pnpm discover-season --ssid <sportSeasonId>   # pin explicitly if needed
+pnpm discover-season --help                   # usage; makes no request
 ```
 
 `scripts/discover-season.ts` reads the new `sportSeasonId`/`allSeasonId`/`genderSport`/
