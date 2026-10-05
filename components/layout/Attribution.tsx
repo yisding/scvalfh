@@ -9,20 +9,22 @@ import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
-import { SITE_SCOPE_NOTE } from './site';
+import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
  *
- * "Data from MaxPreps and High School on SI (si.com)" with real deep links, the leagues whose
- * alignment and rules the site follows (each linked to its official site), the scope note naming
- * exactly what is covered (SPEC §11), the snapshot timestamp in Pacific, a link to /about and one
- * to last season's archive (2025-26 final standings, by league), and
- * the not-affiliated line. The league and section lists are built from lib/leagues.ts in config
- * order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern
- * Section" and can never drift from the config. A league with no document of its own (every
- * division `official.mode === 'none'`: the EAL) takes its rules from its section's guidelines, so
- * it is named in the second clause, linked to its `officialUrl`, not credited with alignment.
+ * It opens with the corrections call-out: "See something missing?" and an accent pill to the
+ * forum's Data errors thread (DATA_CORRECTIONS_URL). Then "Data from MaxPreps and High School on SI
+ * (si.com)" with real deep links, the leagues whose alignment and rules the site follows (each
+ * linked to its official site), the scope note naming exactly what is covered (SPEC §11), the
+ * snapshot timestamp in Pacific, a link to /about and one to last season's archive (2025-26 final
+ * standings, by league), and the not-affiliated line. The league and section lists are built from
+ * lib/leagues.ts in config order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from
+ * the CIF Northern Section" and can never drift from the config. A league with no document of its
+ * own (every division `official.mode === 'none'`: the EAL) takes its rules from its section's
+ * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with
+ * alignment.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
@@ -72,6 +74,26 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
           <main> and the header at every width. From 768px: sources on the left, the stamp and
           the actions on the right, the disclaimer across both under a divider. */}
       <div className="mx-auto max-w-content px-gutter py-10 text-meta text-ink-2 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-12 md:gap-y-4 md:px-gutter-lg md:py-12 xl:px-gutter-xl">
+        {/* The corrections call-out, first in the footer and across both columns: the end of
+            every page, at every width, is where a reader who has just seen a wrong score looks for
+            what to do about it, and the footer is where the site already says where its numbers
+            come from. A raised card with the accent pill, so it reads as the one thing to act on
+            here rather than one more footer link. `text-accent-ink!` because ExternalLink's own
+            `text-accent` utility outranks the pill's accent-ink (globals.css), and accent on the
+            accent wash is 4.37:1 in dark mode, under AA. The top bar links the same thread
+            (SiteHeader), as a pill from 1120px and a line under the bar below that. */}
+        <div className="sx-card mb-8 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between md:col-span-2 md:mb-4 md:px-5">
+          <p className="m-0 max-w-prose">
+            <strong className="font-semibold text-ink">See something missing?</strong> Post it, or
+            anything that looks wrong, in the Data errors thread on our forum.
+          </p>
+          <ExternalLink
+            href={DATA_CORRECTIONS_URL}
+            className="sx-pill sx-pill-accent min-h-11 shrink-0 self-start text-accent-ink! sm:self-auto"
+          >
+            Report a data error
+          </ExternalLink>
+        </div>
         <div className="max-w-prose">
           <p className="m-0">
             Data from{' '}

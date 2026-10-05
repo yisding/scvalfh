@@ -29,7 +29,7 @@ import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE } from '../../../components/layout/site';
+import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
 import { getTeamSlugs } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
@@ -473,6 +473,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   </ExternalLink>
                 </li>
               ) : null}
+              {/* Last, beside the sources a reader checks a wrong score or roster entry against;
+                  the one accent pill in the row, so it reads as the action rather than a source.
+                  `text-accent-ink!`: ExternalLink's `text-accent` would otherwise win, and accent
+                  on the wash is under AA in dark mode (components/layout/Attribution.tsx). */}
+              <li>
+                <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-pill sx-pill-accent text-accent-ink!">
+                  Report a data error
+                </ExternalLink>
+              </li>
             </ul>
             {/* Last season in one line, record exactly as the league's 2025-26 standings
                 printed it ("1-13": SCVAL's PDF drops a zero tie count on some rows; BVAL's sheet

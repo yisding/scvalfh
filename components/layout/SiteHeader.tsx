@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
+import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
-import { SITE_WORDMARK } from './site';
+import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from './site';
 import ThemeToggle from './ThemeToggle';
 import TopNav from './TopNav';
 
@@ -34,6 +35,11 @@ import TopNav from './TopNav';
  * days ago") is narrower than the widest stamp. (Eight links, DESIGN §16, needed tighter capsules
  * and a later stamp; §18's merge of Standings into Teams gave the room back.)
  *
+ * The corrections thread (DATA_CORRECTIONS_URL) rides with the bar. From 1120px (70rem) it is a
+ * ringed "Report an error ↗" pill beside the stamp; below that it is a second line under the bar,
+ * "See something missing? Report a data error ↗", which is not sticky and scrolls away with the
+ * page.
+ *
  * The home link's accessible name always starts with its visible label: "NorCal HS FH Field Hockey"
  * below 1280px, SITE_WORDMARK ("NorCal HS Field Hockey") from 1280px.
  * Content is capped at 1200px, with the same 16 / 24 / 32px gutter as <main>.
@@ -59,52 +65,83 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
   // then shout "Updated 9 days ago" in every header, so the stamp stays a plain date.
   const seasonComplete = getSitePhase() === 'complete';
   return (
-    <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">
-      <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
-        {/* The wordmark is the home link. `h-full` makes it the height of the bar, so the whole
-            left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
-            1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp) and
-            "FH" stands in for it. "FH" stays in the accessible name: the visible label has to be
-            part of the name (WCAG 2.5.3) so "click NorCal HS FH" works for voice control, and the
-            sr-only tail still spells it out, so the name is "NorCal HS FH Field Hockey" below 1280px
-            and "NorCal HS Field Hockey" from 1280px. The leading spaces keep the computed name from
-            reading "NorCal HSFH" or "NorCal HSField Hockey". The 6px of padding, cancelled by the negative margin, is
-            room for the focus ring INSIDE the link: drawn outside, it ran into the screen edge. */}
-        <Link
-          href="/"
-          prefetch={false}
-          className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-1 rounded-chip px-1.5 xl:gap-2 text-ink no-underline focus-visible:-outline-offset-2"
+    <>
+      <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">
+        <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
+          {/* The wordmark is the home link. `h-full` makes it the height of the bar, so the whole
+              left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
+              1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp) and
+              "FH" stands in for it. "FH" stays in the accessible name: the visible label has to be
+              part of the name (WCAG 2.5.3) so "click NorCal HS FH" works for voice control, and the
+              sr-only tail still spells it out, so the name is "NorCal HS FH Field Hockey" below 1280px
+              and "NorCal HS Field Hockey" from 1280px. The leading spaces keep the computed name from
+              reading "NorCal HSFH" or "NorCal HSField Hockey". The 6px of padding, cancelled by the negative margin, is
+              room for the focus ring INSIDE the link: drawn outside, it ran into the screen edge. */}
+          <Link
+            href="/"
+            prefetch={false}
+            className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-1 rounded-chip px-1.5 xl:gap-2 text-ink no-underline focus-visible:-outline-offset-2"
+          >
+            <span className="text-body font-bold tracking-[-0.01em]">{WORDMARK_SHORT}</span>
+            <span className="text-body font-medium tracking-[-0.01em] text-ink-2 xl:hidden">
+              {' '}
+              {WORDMARK_TAIL_ABBR}
+            </span>
+            <span className="sr-only xl:not-sr-only xl:text-body xl:font-medium xl:tracking-[-0.01em] xl:text-ink-2">
+              {' '}
+              {WORDMARK_TAIL}
+            </span>
+          </Link>
+          <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
+          <span className="ml-auto flex shrink-0 items-center gap-2">
+            {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
+                where the seven nav links need the room; back from 896 (56rem, ≈ 33px to spare at the
+                widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
+                min-width variants by value only within one unit, and every px one sorts BEFORE
+                `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
+                font size, as `md` and `lg` do: at a 24px default the phone stamp starts at 540px,
+                so a 390px screen drops it rather than scrolling sideways. */}
+            <LastUpdated
+              at={snapshotAt}
+              now={now}
+              seasonComplete={seasonComplete}
+              variant="compact"
+              className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
+            />
+            {/* The corrections thread, from 1120px (70rem). Measured in Chromium with the widest
+                stamp: the pill is 141px, and with it the nav clears the stamp by 30px at 1120 and
+                16px from 1280, where the full wordmark takes 78px back; at 1088 it would not fit.
+                Below 70rem it is the second line under the bar instead. The short label is what
+                fits: "Report a data error" is 27px wider. The ringed pill, not the accent wash,
+                which is the lit nav capsule's fill. */}
+            <ExternalLink
+              href={DATA_CORRECTIONS_URL}
+              className="sx-pill sx-pill-ring hidden min-h-9 px-3 min-[70rem]:inline-flex"
+            >
+              Report an error
+            </ExternalLink>
+            <ThemeToggle />
+          </span>
+        </div>
+      </header>
+      {/* Below 1120px the corrections link is a second line under the bar, the whole line one
+          40px link. NOT part of the sticky header: it scrolls away with the page, so the sticky
+          stack every offset is measured against (--sx-sticky-top, html's scroll-padding-top, the
+          division and date bars) stays the 48/64px bar, and the reader gets the height back once
+          they start reading. An <aside> with a label, so it sits in a landmark of its own: outside
+          every landmark, axe reports the line under `region`. */}
+      <aside
+        aria-label="Data corrections"
+        className="border-b border-hairline bg-surface min-[70rem]:hidden"
+      >
+        <ExternalLink
+          href={DATA_CORRECTIONS_URL}
+          className="mx-auto flex min-h-10 max-w-content items-center gap-1 px-gutter text-meta font-medium no-underline md:px-gutter-lg"
         >
-          <span className="text-body font-bold tracking-[-0.01em]">{WORDMARK_SHORT}</span>
-          <span className="text-body font-medium tracking-[-0.01em] text-ink-2 xl:hidden">
-            {' '}
-            {WORDMARK_TAIL_ABBR}
-          </span>
-          <span className="sr-only xl:not-sr-only xl:text-body xl:font-medium xl:tracking-[-0.01em] xl:text-ink-2">
-            {' '}
-            {WORDMARK_TAIL}
-          </span>
-        </Link>
-        <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
-        <span className="ml-auto flex shrink-0 items-center gap-2">
-          {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
-              where the seven nav links need the room; back from 896 (56rem, ≈ 33px to spare at the
-              widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
-              min-width variants by value only within one unit, and every px one sorts BEFORE
-              `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
-              font size, as `md` and `lg` do: at a 24px default the phone stamp starts at 540px,
-              so a 390px screen drops it rather than scrolling sideways. */}
-          <LastUpdated
-            at={snapshotAt}
-            now={now}
-            seasonComplete={seasonComplete}
-            variant="compact"
-            className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
-          />
-          <ThemeToggle />
-        </span>
-      </div>
-    </header>
+          <span className="text-ink-2">See something missing?</span> Report a data error
+        </ExternalLink>
+      </aside>
+    </>
   );
 }
 

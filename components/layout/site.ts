@@ -1,8 +1,8 @@
 /**
  * The site's identity and shared metadata: its origin (SITE_URL), the branding strings (SITE_NAME,
- * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE), the league list the site's
- * descriptions name (leaguesBySectionWords) and the openGraph defaults every route repeats
- * (OG_BASE, ROOT_OG_ALT, ROOT_OG_IMAGE). Nothing here renders. Server-only: it reads the league
+ * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE), the corrections thread
+ * (DATA_CORRECTIONS_URL), the league list the site's descriptions name (leaguesBySectionWords) and
+ * the openGraph defaults every route repeats (OG_BASE, ROOT_OG_ALT, ROOT_OG_IMAGE). Nothing here renders. Server-only: it reads the league
  * config and the team registry.
  */
 import type { Metadata } from 'next';
@@ -55,6 +55,13 @@ export function leaguesBySectionWords(style: 'name' | 'short'): string {
 export const SITE_DESCRIPTION = `Scores, standings, schedules and playoff pictures for ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('short')}. Rebuilt twice daily from MaxPreps; unofficial.`;
 export const SITE_SCOPE_NOTE =
   'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues appear only as opponents.';
+
+/**
+ * Where readers report a wrong score, date, name or record: the "Data errors" thread on the site's
+ * forum. The footer opens with it on every page, the team page's Elsewhere row ends with it, and
+ * /about#corrections explains what to include.
+ */
+export const DATA_CORRECTIONS_URL = 'https://ncfh.freeflarum.com/d/3-data-errors';
 
 /** The root OG card's alt: app/opengraph-image.tsx's `alt`, and ROOT_OG_IMAGE's for the routes that borrow it. */
 export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, scores and playoffs`;
