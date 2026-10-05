@@ -509,10 +509,11 @@ entries on the two watchlist URLs already counted, one `ncsa` entry on a new URL
 tie, so a club roster, a watchlist or a news story that names several players is one page and
 several entries. The 14 ties of 2026-10-05 add 14 entries (10 `sportsrecruits`, 4 `ncsa`) on 10 new
 URLs, for 251 entries on 118 URLs (116 pages). The counts are of URLs as the file spells them, and two pages are cited under two
-URLs each, so the ties rest on 103 pages: Stick Together's 2025 all-league page, with its trailing
+URLs each, so the 2026-10-03 sweep's ties rest on 103 pages (116 with the later ties): Stick Together's 2025 all-league page, with its trailing
 slash (`news` for five players, `other` for two) and without it (`news` for Olivia Taylor), and
 Gabrielle Moll's MaxPreps career page, under the name slugs `gabby-moll` and `gabrielle-moll` (one
-`careerid`). That one URL filed under two kinds is why the per-kind URL counts add up to 106.
+`careerid`). That one URL filed under two kinds is why the table's per-kind URL counts (the
+2026-10-03 sweep's) add up to 106, and to 119 with the later ties.
 
 | Kind | Entries | URLs | What it is |
 |---|---|---|---|

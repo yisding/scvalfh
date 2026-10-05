@@ -235,7 +235,7 @@ describe('data/clubs.json', () => {
         'school-site': 2,
         hudl: 1,
       });
-      // The one URL filed under two kinds (news for five players, other for two), hence 116 by kind.
+      // The one URL filed under two kinds (news for five players, other for two), hence 119 by kind.
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);
