@@ -11,7 +11,7 @@
 import type { Metadata } from 'next';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '../helpers';
+import { stubCorpusSnapshot } from '../helpers';
 
 interface PageModule {
   metadata?: Metadata;
@@ -28,8 +28,9 @@ function read(mod: PageModule, params: Record<string, string> = {}): Promise<Met
   return Promise.resolve(mod.generateMetadata({ params: Promise.resolve(params) } as never));
 }
 
+stubCorpusSnapshot('all-2026-10-02');
+
 beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   ({ SITE_NAME } = await import('../../components/layout/site'));
   const data = await import('../../lib/data');
   const { getClubSlugs } = await import('../../lib/clubs');

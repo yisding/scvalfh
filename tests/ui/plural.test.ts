@@ -9,8 +9,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { formStripName, gameWord, plural } from '../../components/ui/plural';
-
-const ROOT = path.resolve(import.meta.dirname, '..', '..');
+import { REPO as ROOT } from '../helpers';
 
 function walk(dir: string): string[] {
   const out: string[] = [];
