@@ -1255,9 +1255,11 @@ display face anywhere.
   swap and `<details>` disclosure, 1.6s LIVE pulse. Nothing else animates. No page
   transitions; no skeleton flash — a re-filter holds the previous render at `opacity: .6`.
   All of it collapses under `prefers-reduced-motion: reduce`.
-- **Focus:** `:focus-visible` only — 2px `--sx-focus`, 2px offset, 4px radius, and
-  `outline-offset: -2px` on sticky table headers so the ring is not clipped by the scroll
-  container (`editorial`). Accent-vs-surface is 6.87 light / 5.88 dark, far past 3:1.
+- **Focus:** `:focus-visible` only — 2px `--sx-focus`, 2px offset, 4px radius; inside a
+  `.sx-flush` card (`overflow: clip`) the ring is drawn inset (`outline-offset: -2px`) so the
+  clip cannot eat it (globals.css). No table header cell is focusable, so the `editorial` inset
+  ring on sticky heads was dropped with the unused `.sx-sticky-head` hook. Accent-vs-surface is
+  6.87 light / 5.88 dark, far past 3:1.
 
 ---
 
@@ -1910,8 +1912,8 @@ interface StandingsRow {
 A real `<table>` with `<caption>` (visually hidden on phone, shown on desktop as the
 "through …" line), `<thead>` with `scope="col"`, and the team cell as `<th scope="row">`.
 `variant="phone"` renders the two-line 60px row of §3.2; the values it omits live on the team
-page, never behind a tooltip. Header is `position: sticky` under the anchor tabs, with
-`outline-offset: -2px` on its cells.
+page, never behind a tooltip. Header is `position: sticky` under the anchor tabs; its cells
+hold nothing focusable, so they carry no focus ring of their own.
 
 **No client-side sorting.** `data-dense` shipped a `SortableTableHead`; the table has one
 correct order (league win pct desc, §11.7) and re-sorting it is a coach's affordance that
@@ -2000,12 +2002,16 @@ interface StatTileProps {
   value: string | number | null;   // null → "—", and the tile keeps its full height
   sub?: string;                    // "league games only", "7th of 8"
   emphasis?: 'default' | 'hero';   // 'hero' = top of the text-figure clamp, ONE per view
+  srLabel?: string;                // spoken in place of label: "L5" → "5 losses in a row"
+  srValue?: string;                // spoken in place of value: "0 / 52" → "0 for, 52 against"
+  className?: string;
 }
 ```
 
-Label in `text-kicker` `--sx-text-3`; value in `.sx-figure` (Sans, **proportional** figures) at
-`text-figure`; `sub` at `text-meta` `--sx-text-2`. No border, no background — whitespace and a
-hairline above the row do the separating. **No sparkline** (§6.2). `null` renders `—` and the
+Each tile is an `.sx-card` holding one `<dl>` group: the `<dt>` label in `text-meta`
+`--sx-text-3`, then the `<dd>` value in `.sx-figure` (Sans, **proportional** figures), then an
+optional `<dd>` `sub` in `text-meta` `--sx-text-2` (a step smaller below 768px). The row is
+2-up below 768px and 4-up above. **No sparkline** (§6.2). `null` renders `—` and the
 tile reserves its footprint so the row never reflows.
 
 ### 7.8 `GoalDiffBar`
@@ -2254,7 +2260,8 @@ Every line is a gate, not an aspiration; §10.9 lists which ones CI enforces.
    tabs** — no keyboard trap to get wrong. The bracket is nested `<ol>`s that read as rounds in
    order. The bottom bar is a `<nav aria-label="Sections">` with `aria-current="page"`.
 5. **Keyboard.** `:focus-visible` only, one visible style, 2px ring at 2px offset;
-   `outline-offset: -2px` on sticky table headers so the ring isn't clipped. A skip link to
+   inset (`-2px`) inside `.sx-flush` clipped cards so the clip can't eat it; no `<th>` is
+   focusable. A skip link to
    `#main`. **DOM order matches visual order at both breakpoints** — the desktop 2-column grids
    have *phone* source order.
 6. **Screen-reader sentences, not glyph soup.** `FormStrip` announces *"Last 5 league games:
