@@ -16,10 +16,9 @@
 
 import { CCS } from '../leagues';
 import type { CcsCalendarEvent, CcsEventKind } from '../types';
-import { HttpClient, type HttpClientOptions, icsLine, unfoldIcs } from './http';
+import { icsLine, unfoldIcs } from './http';
 
 export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical';
-export const CCS_SPORT_HUB = 'https://cifccs.org/sports/fh/index';
 
 /**
  * Both CCS reads are gated to the run-up to the playoffs: nothing changes before the league season
@@ -154,26 +153,4 @@ export function readBracketPublished(html: string): { published: boolean; reason
     return { published: false, reason: 'page still carries class="not-published"' };
   }
   return { published: true, reason: 'the not-published marker is gone' };
-}
-
-// ---------------------------------------------------------------- client
-
-export class CcsClient {
-  private readonly http: HttpClient;
-
-  constructor(opts: HttpClientOptions = {}) {
-    this.http = new HttpClient(opts);
-  }
-
-  async getCalendar(): Promise<{ events: CcsCalendarEvent[]; url: string; httpStatus: number }> {
-    const res = await this.http.text(CCS_ICAL_URL, 'text/calendar,text/plain,*/*');
-    return { events: parseCcsIcal(res.body), url: CCS_ICAL_URL, httpStatus: res.httpStatus };
-  }
-
-  async getBracketState(
-    url: string,
-  ): Promise<{ published: boolean; reason: string; url: string; httpStatus: number }> {
-    const res = await this.http.text(url);
-    return { ...readBracketPublished(res.body), url, httpStatus: res.httpStatus };
-  }
 }

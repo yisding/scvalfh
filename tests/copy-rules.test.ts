@@ -5,11 +5,12 @@
  * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
  * Vista called Northern Section schools, Red Bluff's status overstated, "EAL school", a seed word);
  * how it reads a built page's visible text and its title, description and attribute text; and how
- * it cuts a page into one element per id.
+ * it cuts a page into one element per id and drops the one link a page may name CCS in.
  */
 
 import { describe, expect, it } from 'vitest';
 
+import { getHistoryLeagues } from '../lib/history';
 import { getLeague } from '../lib/leagues';
 import {
   EAL_SCHOOL_CLAIM,
@@ -23,10 +24,13 @@ import {
   attributeText,
   commitmentLeaks,
   elementById,
+  historyPageProblems,
+  mainElement,
   nonMemberSectionClaims,
   sectionById,
   umpireOfficialClaims,
   visibleText,
+  withoutLink,
 } from '../scripts/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
@@ -262,6 +266,112 @@ describe('elementById: the /playoffs EAL card, a <div>', () => {
   it('is sectionById for the section element', () => {
     const html = '<section id="a"><section id="b"></section></section><div id="a"></div>';
     expect(sectionById(html, 'a')).toBe(elementById(html, 'a', 'section'));
+  });
+});
+
+describe('mainElement: a built page\'s <main>', () => {
+  it('takes the <main> element with its attributes, and nothing outside it', () => {
+    const html = '<body><header>h</header><main id="main" class="x"><p>one</p></main><footer>f</footer></body>';
+    expect(mainElement(html)).toBe('<main id="main" class="x"><p>one</p></main>');
+    expect(mainElement('<main><p>bare</p></main>')).toBe('<main><p>bare</p></main>');
+  });
+
+  it('is empty when the page has no <main>, and never matches a longer tag name', () => {
+    expect(mainElement('<body><p>x</p></body>')).toBe('');
+    expect(mainElement('<mainly>x</mainly>')).toBe('');
+  });
+});
+
+describe('withoutLink: the one link a page may say a word in', () => {
+  const words = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
+
+  it('drops a link whose text reads the words, whatever the arrow\'s markup', () => {
+    // As React renders `{words} <Arrow />` (components/ui/Arrow.tsx): a text separator, then the aria-hidden glyph.
+    const arrow = '<a class="sx-action" href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL)<!-- --> <span aria-hidden="true">→</span></a>';
+    expect(withoutLink(`<p>x</p>${arrow}<p>y</p>`, words)).toBe('<p>x</p><p>y</p>');
+    expect(withoutLink('<a href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL) →</a>', words)).toBe('');
+  });
+
+  it('keeps the words outside a link, and a link that says anything more', () => {
+    expect(withoutLink('<p>CCS playoffs (SCVAL, BVAL, PCAL) →</p>', words)).toBe('<p>CCS playoffs (SCVAL, BVAL, PCAL) →</p>');
+    const more = '<a href="/playoffs">CCS playoffs (SCVAL, BVAL, PCAL) → and the CCS picture</a>';
+    expect(withoutLink(more, words)).toBe(more);
+  });
+});
+
+describe('historyPageProblems: the history page holds what the history data says', () => {
+  const leagues = getHistoryLeagues();
+  /** React's escaping of text: `&` and `'`. */
+  const escaped = (text: string) => text.replace(/&/g, '&amp;').replace(/'/g, '&#x27;');
+  /** The page's <main>, as app/history/2025-26 renders it, with one league's section edited. */
+  const page = (edit: { id: string; omit?: boolean; dropDivision?: boolean; tail?: string } | null = null) =>
+    '<main>' +
+    leagues
+      .filter(({ id }) => !(edit?.id === id && edit.omit))
+      .map(({ id, entry }) => {
+        const body =
+          entry.status === 'available'
+            ? entry.divisions
+                .filter((_, i) => !(edit?.id === id && edit.dropDivision && i === 0))
+                .map(
+                  (d) =>
+                    `<section class="min-w-0" id="${d.division}"><table>` +
+                    d.standings.varsity.map((r) => `<tr><td>${escaped(r.name)}</td><td>${r.leagueRecord}</td></tr>`).join('') +
+                    '</table></section>',
+                )
+                .join('')
+            : `<div><h3>Unavailable</h3><p>${escaped(entry.reason)}</p></div>`;
+        return `<section id="${id}" aria-label="${id}"><h2>${id}</h2>${body}${edit?.id === id ? (edit.tail ?? '') : ''}</section>`;
+      })
+      .join('') +
+    '</main>';
+  const available = leagues.find((l) => l.entry.status === 'available');
+  const unavailable = leagues.find((l) => l.entry.status === 'unavailable');
+
+  it('finds nothing on a complete page', () => {
+    expect(historyPageProblems(page(), leagues)).toEqual([]);
+  });
+
+  it('names a league whose section is gone', () => {
+    expect(historyPageProblems(page({ id: 'pcal', omit: true }), leagues)).toEqual(['no <section id="pcal">']);
+  });
+
+  it('names the division anchor an available league lost', () => {
+    if (available?.entry.status !== 'available') throw new Error('no available league in the history data');
+    const { id, entry } = available;
+    const problems = historyPageProblems(page({ id, dropDivision: true }), leagues);
+    expect(problems).toContain(`${id}: no id="${entry.divisions[0].division}" division anchor`);
+  });
+
+  it('reports an unavailable league that shows a table or an award', () => {
+    if (!unavailable) throw new Error('no unavailable league in the history data');
+    const { id } = unavailable;
+    expect(historyPageProblems(page({ id, tail: '<table><tr><td>1-0</td></tr></table>' }), leagues)).toEqual([
+      `${id}: an unavailable league shows a table`,
+    ]);
+    const award = historyPageProblems(page({ id, tail: '<p>League champion: Example</p>' }), leagues);
+    expect(award).toHaveLength(1);
+    expect(award[0]).toMatch(new RegExp(`^${id}: an unavailable league shows a result or award — “…`));
+  });
+
+  it('reads the reason as React escapes it, decoding each entity once', () => {
+    if (unavailable?.entry.status !== 'unavailable') throw new Error('no unavailable league in the history data');
+    const { id } = unavailable;
+    const reason = `The league's "standings" page & its <archive> are gone, so nothing official was read.`;
+    const one = [{ id, entry: { ...unavailable.entry, reason } }];
+    const section = (text: string) => `<main><section id="${id}"><div><h3>Unavailable</h3><p>${text}</p></div></section></main>`;
+    // React escapes `& < > " '` in text.
+    const react = reason
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+    expect(historyPageProblems(section(react), one)).toEqual([]);
+    // An escaped `&#x27;` is the text `&#x27;`, never an apostrophe.
+    expect(historyPageProblems(section(react.replace('&#x27;', '&amp;#x27;')), one)).toEqual([
+      `${id}: the reason is not on the page`,
+    ]);
   });
 });
 

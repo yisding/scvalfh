@@ -36,8 +36,6 @@ import { focusAfterWrite, setLeague, type LeagueFocus } from './use-league';
  * "that team is no longer in the data" instead of rendering a ghost team; `unpin()` or `pin()`
  * dismisses it.
  */
-// Defined in a server-safe module, because the layout's inline marker script needs it too.
-export { PINNED_TEAM_KEY };
 
 export interface PinOptions {
   /** `'card'` → focus `#my-team-heading`; `'panel'` → the pinned team's league panel header. */

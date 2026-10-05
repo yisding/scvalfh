@@ -20,14 +20,14 @@ import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
-type StandingsData = typeof import('../../app/standings/standings-data');
+type StandingsPageView = typeof import('../../components/standings/standings-page-view');
 type View = typeof import('../../components/standings/standings-view');
 
 const LEAGUE = 'eal';
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let data: Data;
 let leagues: Leagues;
-let sd: StandingsData;
+let sd: StandingsPageView;
 let view: View;
 let standingsHtml: string;
 let overviewHtml: string;
@@ -64,7 +64,7 @@ beforeAll(async () => {
   vi.resetModules();
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');
-  sd = await import('../../app/standings/standings-data');
+  sd = await import('../../components/standings/standings-page-view');
   view = await import('../../components/standings/standings-view');
   const leagueStandings = (await import('../../app/standings/[league]/page')).default;
   const overview = (await import('../../app/standings/page')).default;
@@ -90,11 +90,11 @@ describe('/standings/eal', () => {
     const note = leagues.getLeague(LEAGUE).membershipNote!;
     expect(note).toBeTruthy();
     expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx membershipNote').toContain(note);
-    expect(sd.getStandingsPageData(LEAGUE).membershipNote).toBe(note);
+    expect(sd.buildStandingsPageView(LEAGUE).membershipNote).toBe(note);
   });
 
   it('links no official schedule and says where its league games come from', () => {
-    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    const [v] = sd.buildStandingsPageView(LEAGUE).views;
     expect(v.officialSchedule, 'components/standings/standings-view.ts officialSchedule').toBeNull();
     expect(v.scheduledPer).toBe('League games as MaxPreps marks them (EAL publishes no schedule)');
     const text = textOf(standingsHtml);
@@ -105,7 +105,7 @@ describe('/standings/eal', () => {
   });
 
   it('words the rank rule and the order legend for a league that publishes no standings (D26)', () => {
-    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    const [v] = sd.buildStandingsPageView(LEAGUE).views;
     expect(v.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
       'EAL decides its title on points (NS Guidelines §VII.C.2) and publishes no standings; this site orders the whole table by the same points.',
     );
@@ -130,7 +130,7 @@ describe('/standings/eal', () => {
   });
 
   it('heads the band "Super Regional, as things stand", links the /playoffs card, and draws no 2px rule', () => {
-    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    const [v] = sd.buildStandingsPageView(LEAGUE).views;
     expect(v.statusHeading, 'components/standings/standings-view.ts statusHeading').toBe('Super Regional, as things stand');
     expect(v.playoffsHref).toBe(`/playoffs#${LEAGUE}`);
     expect(v.playoffsLinkText).toBe('Postseason');
@@ -161,7 +161,7 @@ describe('/standings/eal', () => {
     expect(rows.map((r) => r.game?.contestId).sort(), 'lib/data.ts getMissingOfficialResults(eal)').toEqual(expected);
     expect(expected.length, 'the EAL corpus has league games past their date with no score').toBeGreaterThan(0);
 
-    const [v] = sd.getStandingsPageData(LEAGUE).views;
+    const [v] = sd.buildStandingsPageView(LEAGUE).views;
     expect(v.missing).toHaveLength(expected.length);
     expect(v.missingBanner, 'components/standings/standings-view.ts missingBanner').toBe(
       expected.length === 1

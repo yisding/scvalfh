@@ -1,8 +1,8 @@
 /**
- * `recordAsOf` (components/game/game-model.ts) — the scoreboard sub-line is the league record AT
+ * `recordAsOf` (components/game/game-view.ts) — the scoreboard sub-line is the league record AT
  * the game, not today's (G-1).
  *
- * Built from the all-2026-10-02 CORPUS snapshot (SPEC §13.6), like the other game-model tests, so
+ * Built from the all-2026-10-02 CORPUS snapshot (SPEC §13.6), like the other game-view tests, so
  * the run is deterministic and a frozen league on the live snapshot cannot make standings and games
  * disagree. The one point where "as of this game" and "today" must agree is a team's most recent
  * league final, so that is the anchor. Earlier finals must then never show more games than the
@@ -14,7 +14,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { corpusSnapshotPath } from '../helpers';
 
 type Data = typeof import('../../lib/data');
-type Model = typeof import('../../components/game/game-model');
+type Model = typeof import('../../components/game/game-view');
 type Leagues = typeof import('../../lib/leagues');
 type Format = typeof import('../../lib/format');
 type GameIds = typeof import('../../lib/game-id');
@@ -30,7 +30,7 @@ beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
   d = await import('../../lib/data');
-  m = await import('../../components/game/game-model');
+  m = await import('../../components/game/game-view');
   leagues = await import('../../lib/leagues');
   fmt = await import('../../lib/format');
   ids = await import('../../lib/game-id');
@@ -50,7 +50,7 @@ describe('recordAsOf', () => {
       const standing = d.getStandingFor(team.slug);
       const latest = form?.leagueGames.filter((g) => g.outcome !== null).at(-1);
       if (!latest || !standing) continue;
-      const model = m.buildGameModel(ids.gameIdToParam(latest.contestId));
+      const model = m.buildGameView(ids.gameIdToParam(latest.contestId));
       expect(model, latest.contestId).toBeDefined();
       if (!model) continue;
       const side = model.home.team?.slug === team.slug ? model.home : model.away;
@@ -87,7 +87,7 @@ describe('recordAsOf', () => {
 
   it('never prints 0-0-0 — a side with no league result yet gets the honest line', () => {
     for (const game of d.getGames()) {
-      const model = m.buildGameModel(ids.gameIdToParam(game.contestId));
+      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null) continue;
         expect(side.sub.startsWith('0-0-0'), game.contestId).toBe(false);
@@ -98,7 +98,7 @@ describe('recordAsOf', () => {
   it("keeps 'not reported' for teams with no results — before a team's first league game it says 'yet'", () => {
     let yet = 0;
     for (const game of d.getGames()) {
-      const model = m.buildGameModel(ids.gameIdToParam(game.contestId));
+      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null) continue;
         if (side.standing?.hasReportedResults) {

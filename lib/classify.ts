@@ -3,7 +3,7 @@
  * the v1 migration) and persisted as `Game.countsFor` (SPEC §5.1). Pure: no I/O, no clock.
  *
  * Membership of the same division (`Game.leagueDivision`) is always necessary, never sufficient:
- *  - SCVAL keeps today's contest-type evidence (`isLeague`) and excludes only CCS section games,
+ *  - SCVAL keeps its original contest-type evidence (`isLeague`) and excludes only CCS section games,
  *    so its tables stay byte-identical to the goldens;
  *  - the EAL publishes no schedule, so it is classified by contest type too, and also excludes
  *    its own postseason (the Super Regional) and its `excludeContestTypes` rows (2, 4, 5);
@@ -13,18 +13,12 @@
 
 import { CCS, LEAGUES } from './leagues';
 import type { LeagueConfig } from './leagues';
-import { getTeamById, getTeamBySlug } from './teams';
-import type { DivisionId, Game, GameSide, LeagueId, PostseasonTag, Team } from './types';
+import { teamOfSide } from './teams';
+import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 
 export interface ClassifyOptions {
   /** Divisions whose official fixture file is missing/invalid this run: classified by contest-type, never by membership alone. */
   degradedDivisions?: ReadonlySet<DivisionId>;
-}
-
-/** The registry team on one side, by MaxPreps GUID first, then by slug. */
-function teamOf(side: Pick<GameSide, 'teamId' | 'slug'>): Team | undefined {
-  return (side.teamId ? getTeamById(side.teamId) : undefined)
-    ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
 }
 
 /** Read the config at call time (tests override leagues through vi.mock). */
@@ -40,7 +34,7 @@ function leagueOfDivisionId(id: DivisionId): LeagueConfig | undefined {
 export function leaguesOf(game: Pick<Game, 'home' | 'away'>): LeagueId[] {
   const out: LeagueId[] = [];
   for (const side of [game.home, game.away]) {
-    const team = teamOf(side);
+    const team = teamOfSide(side);
     if (team && !out.includes(team.league)) out.push(team.league);
   }
   return out;
@@ -48,8 +42,8 @@ export function leaguesOf(game: Pick<Game, 'home' | 'away'>): LeagueId[] {
 
 /** The one league both sides are registry members of, or null. */
 function sharedLeague(game: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
-  const home = teamOf(game.home);
-  const away = teamOf(game.away);
+  const home = teamOfSide(game.home);
+  const away = teamOfSide(game.away);
   if (!home || !away || home.league !== away.league) return null;
   return leagueById(home.league) ?? null;
 }
@@ -72,8 +66,8 @@ function sharedLeague(game: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
  *  4. null.
  */
 export function postseasonTag(game: Game): PostseasonTag | null {
-  const home = teamOf(game.home);
-  const away = teamOf(game.away);
+  const home = teamOfSide(game.home);
+  const away = teamOfSide(game.away);
   const league = sharedLeague(game);
 
   // 1. a configured pairing (SCVAL crossover ×4, BVAL play-in)

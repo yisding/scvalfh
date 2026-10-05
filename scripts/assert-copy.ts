@@ -66,6 +66,7 @@ import path from 'node:path';
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/clubs';
 import { getCommitsFile } from '../lib/commits';
+import { getSnapshot } from '../lib/data';
 import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import {
@@ -83,18 +84,21 @@ import {
   SCVAL_ONLY_CLAIM,
   SEED_CLAIM,
   affiliationLeaks,
+  around,
   attributeText,
   commitmentLeaks,
   elementById,
+  historyPageProblems,
+  mainElement,
   nonMemberSectionClaims,
   sectionById,
   umpireOfficialClaims,
   visibleText,
+  withoutLink,
 } from './copy-rules';
 import { PUBLIC_TERMS } from './public-terms';
 
 const APP = '.next/server/app';
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
 
 if (!existsSync(APP)) {
   console.error(`assert-copy: ${APP} does not exist; run \`pnpm build\` first`);
@@ -104,22 +108,15 @@ if (!existsSync(APP)) {
 const problems: string[] = [];
 const fail = (file: string, msg: string) => problems.push(`${file}: ${msg}`);
 
-/** A short window of text around a match, tags flattened, for the failure line. */
-function around(text: string, index: number): string {
-  return text.slice(Math.max(0, index - 60), index + 60).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-}
 function forbid(file: string, text: string, pattern: RegExp, what: string): void {
   const m = pattern.exec(text);
   if (m) fail(file, `${what} — “…${around(text, m.index)}…”`);
 }
-/** The `<main>…</main>` element of a page (one per page; the smoke test asserts it exists). */
+/** The `<main>…</main>` element of a page (copy-rules mainElement), failing the page when it has none. */
 function mainOf(file: string, html: string): string {
-  const m = /<main[\s>][\s\S]*?<\/main>/.exec(html);
-  if (!m) {
-    fail(file, 'no <main> element');
-    return '';
-  }
-  return m[0];
+  const main = mainElement(html);
+  if (!main) fail(file, 'no <main> element');
+  return main;
 }
 
 const files = (readdirSync(APP, { recursive: true }) as string[])
@@ -186,9 +183,7 @@ for (const file of files) {
 }
 
 // ---------------------------------------------------------------- non-CCS (MCAL, EAL) pages, <main> only
-const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8')) as {
-  teams: Array<{ slug: string; league: string; name: string }>;
-};
+const snapshot = getSnapshot();
 const nonCcsLeagues = LEAGUES.filter((l) => l.sectionId !== 'ccs');
 /** Each league's own pages: its standings and schedule, its tournament page if it has one, its team pages. */
 const leaguePages = (id: LeagueId): string[] => [
@@ -198,6 +193,7 @@ const leaguePages = (id: LeagueId): string[] => [
   ...snapshot.teams.filter((x) => x.league === id).map((t) => `teams/${t.slug}.html`),
 ];
 const nonCcsPages = nonCcsLeagues.flatMap((l) => leaguePages(l.id));
+/** The text of the one link a non-CCS page may name CCS in: app/playoffs/[league]/page.tsx's pointer to /playoffs. */
 const ALLOWED_CCS = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
 /** The CCS concepts no part of a non-CCS league's pages may carry. */
 function forbidCcs(file: string, part: string, where: string): void {
@@ -206,7 +202,7 @@ function forbidCcs(file: string, part: string, where: string): void {
   forbid(file, part, /CCS Division/i, `${where} says "CCS Division"`);
   forbid(file, part, /CCS picture/i, `${where} says "CCS picture"`);
   forbid(file, part, /holds \d+ of 16/i, `${where} carries a CCS berth meter`);
-  forbid(file, part.split(ALLOWED_CCS).join(''), /\bCCS\b/, `${where} names CCS outside the "CCS playoffs (SCVAL, BVAL, PCAL) →" link`);
+  forbid(file, withoutLink(part, ALLOWED_CCS), /\bCCS\b/, `${where} names CCS outside the "${ALLOWED_CCS}" link`);
 }
 for (const file of nonCcsPages) {
   const p = path.join(APP, file);
@@ -258,32 +254,7 @@ if (!existsSync(historyPath)) {
   const main = mainOf(historyFile, html);
   forbid(historyFile, main, /SCVAL[- ]only/i, 'says the archive is SCVAL-only');
   forbid(historyFile, main, /Only SCVAL/i, 'says only SCVAL has an archive');
-  /** A league's `<section … id="<league>" …>…</section>`, its division sections included. */
-  const sectionOf = (id: string): string => sectionById(main, id);
-  const attrDecode = (s: string) => s.replace(/&amp;/g, '&').replace(/&#x27;|&#39;/g, "'");
-  for (const { id, entry } of getHistoryLeagues()) {
-    const section = sectionOf(id);
-    if (!section) {
-      fail(historyFile, `no <section id="${id}">`);
-      continue;
-    }
-    if (entry.status === 'available') {
-      for (const d of entry.divisions) {
-        if (!section.includes(`id="${d.division}"`)) fail(historyFile, `${id}: no id="${d.division}" division anchor`);
-        for (const row of d.standings.varsity) {
-          if (!section.includes(`>${row.leagueRecord}<`)) {
-            fail(historyFile, `${id}/${d.division}: ${row.name}'s record ${row.leagueRecord} is not on the page`);
-          }
-        }
-      }
-      if (/Unavailable/.test(section)) fail(historyFile, `${id}: an available league says "Unavailable"`);
-    } else {
-      if (!section.includes('Unavailable')) fail(historyFile, `${id}: unavailable league has no "Unavailable" card`);
-      if (!attrDecode(section).includes(entry.reason.slice(0, 40))) fail(historyFile, `${id}: the reason is not on the page`);
-      if (/<table/.test(section)) fail(historyFile, `${id}: an unavailable league shows a table`);
-      forbid(historyFile, section, /champion|winner|all-league|MVP|first team/i, `${id}: an unavailable league shows a result or award`);
-    }
-  }
+  for (const msg of historyPageProblems(main, getHistoryLeagues())) fail(historyFile, msg);
 }
 
 // ---------------------------------------------------------------- /leaders
@@ -299,19 +270,22 @@ if (!existsSync(historyPath)) {
       if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
     }
     // The Players section only: a team with no stats can still be named on a school board, which
-    // says nothing about its players. It follows the Schools section (DESIGN §23), so it runs to
-    // the end of <main>, which after it holds only the attribution line.
-    const start = main.indexOf('<section id="players"');
-    const schools = main.indexOf('<section id="schools"');
-    if (schools > start) fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
-    // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
-    const players = (schools >= 0 && schools < start ? main.slice(start) : '')
-      .replace(/&#x27;|&#39;/g, "'")
-      .replace(/&amp;/g, '&');
-    const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
-    for (const team of snapshot.teams) {
-      if (statSlugs.has(team.slug)) continue;
-      if (!players.includes(team.name)) fail(file, `${team.name} has no player stats, and the Players section does not say so`);
+    // says nothing about its players. It follows the Schools section (DESIGN §23).
+    const players = sectionById(main, 'players');
+    const schools = sectionById(main, 'schools');
+    if (!players) fail(file, 'no <section id="players">');
+    if (!schools) fail(file, 'no <section id="schools">');
+    if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
+      fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
+    }
+    if (players) {
+      // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
+      const playersText = players.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
+      const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
+      for (const team of snapshot.teams) {
+        if (statSlugs.has(team.slug)) continue;
+        if (!playersText.includes(team.name)) fail(file, `${team.name} has no player stats, and the Players section does not say so`);
+      }
     }
   }
 }

@@ -2,12 +2,13 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import {
-  buildGameModel,
+  buildGameView,
   buildSupersededStub,
   gameKicker,
   gameStaticParams,
-} from '../../../components/game/game-model';
-import { SITE_NAME } from '../../../components/layout/site-url';
+} from '../../../components/game/game-view';
+import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { SITE_NAME } from '../../../components/layout/site';
 import { dateWithYear, timeOfDayPT } from '../../../lib/format';
 
 /**
@@ -33,18 +34,12 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  */
 
 export const alt = `${SITE_NAME} — game score card`;
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export function generateStaticParams(): Array<{ id: string }> {
   return gameStaticParams();
 }
-
-const INK = '#f2f5f8';
-const INK_2 = '#aab4bf';
-const INK_3 = '#919ba5';
-const RULE = '#3d444d';
-const BG = '#0b0d10';
 
 /**
  * `dynamicParams` cannot reach a metadata route — Next's metadata-route loader filters it out of
@@ -54,8 +49,8 @@ const BG = '#0b0d10';
  */
 export default async function Image({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  // paramToGameId runs inside buildGameModel before any accessor that can throw (SPEC §8.1).
-  const model = buildGameModel(id) ?? buildSupersededStub(id)?.targetModel;
+  // paramToGameId runs inside buildGameView before any accessor that can throw (SPEC §8.1).
+  const model = buildGameView(id) ?? buildSupersededStub(id)?.targetModel;
   if (!model) notFound();
 
   const { game, away, home, display } = model;
@@ -74,8 +69,8 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background: BG,
-          color: INK,
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
@@ -86,12 +81,12 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
               fontSize: 24,
               letterSpacing: 4,
               textTransform: 'uppercase',
-              color: INK_3,
+              color: OG.TEXT_3,
             }}
           >
             {gameKicker(model)}
           </div>
-          <div style={{ display: 'flex', marginTop: 10, height: 2, background: RULE }} />
+          <div style={{ display: 'flex', marginTop: 10, height: 2, background: OG.RULE }} />
         </div>
 
         {/* Away over home — the same order as every list and the scoreboard on the page. */}
@@ -106,7 +101,7 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
                 gap: 32,
                 paddingTop: index === 0 ? 0 : 18,
                 paddingBottom: index === 0 ? 18 : 0,
-                borderBottom: index === 0 ? `1px solid ${RULE}` : 'none',
+                borderBottom: index === 0 ? `1px solid ${OG.RULE}` : 'none',
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -115,13 +110,13 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
                     display: 'flex',
                     fontSize: 60,
                     fontWeight: side.view.weight === 'winner' ? 700 : 400,
-                    color: side.view.weight === 'loser' ? INK_2 : INK,
+                    color: side.view.weight === 'loser' ? OG.TEXT_2 : OG.TEXT,
                   }}
                 >
                   {side.label}
                 </div>
                 {side.sub ? (
-                  <div style={{ display: 'flex', marginTop: 8, fontSize: 26, color: INK_3 }}>
+                  <div style={{ display: 'flex', marginTop: 8, fontSize: 26, color: OG.TEXT_3 }}>
                     {side.sub}
                   </div>
                 ) : null}
@@ -135,9 +130,9 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
                     fontWeight: side.view.weight === 'winner' ? 700 : 400,
                     color: side.view.hasScore
                       ? side.view.weight === 'loser'
-                        ? INK_2
-                        : INK
-                      : INK_3,
+                        ? OG.TEXT_2
+                        : OG.TEXT
+                      : OG.TEXT_3,
                   }}
                 >
                   {side.view.glyph}
@@ -147,7 +142,7 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
           ))}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', color: INK_3, fontSize: 22 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', color: OG.TEXT_3, fontSize: 22 }}>
           <div style={{ display: 'flex' }}>{when}</div>
           <div style={{ display: 'flex', marginTop: 6 }}>
             {model.source ? `${SITE_NAME} · unofficial · Score via si.com` : `${SITE_NAME} · unofficial · data from MaxPreps`}
@@ -155,6 +150,6 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

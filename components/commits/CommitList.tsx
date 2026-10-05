@@ -73,7 +73,11 @@ function Row({ row }: { row: CommitRow }) {
   );
 }
 
-export function CommitList({ rows }: { rows: CommitRow[] }) {
+export interface CommitListProps {
+  rows: CommitRow[];
+}
+
+export function CommitList({ rows }: CommitListProps) {
   return (
     <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((row) => (

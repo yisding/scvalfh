@@ -3,7 +3,8 @@
  *
  *  - VNN / PlayOn school calendars: venue + start-time corroboration (only for the verified sites
  *    whose team's league is in the run). PER SITE carry-forward: a school whose feed produced
- *    nothing this run keeps the venues and confirmed start times it published before.
+ *    nothing this run keeps the venues and confirmed start times it published before, and its
+ *    source row is stamped with when that school's own calendar was last fresh.
  *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
  *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
  *    corpus, a failed request) keeps the previous snapshot's value — the calendar its
@@ -21,13 +22,10 @@ import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracke
 import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
 import { getTeamBySlug } from '../../teams';
 import type { Game } from '../../types';
-import { FixtureMissing, TransportError, type SecondaryStepResult } from '../contract';
+import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
+import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
-
-function statusOf(err: unknown): { httpStatus?: number } {
-  return err instanceof TransportError && err.httpStatus !== null ? { httpStatus: err.httpStatus } : {};
-}
 
 async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
   let games = [...input];
@@ -61,12 +59,9 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
       if (parsed.length) answered.add(site.slug);
       ctx.source({ ...base, status: 'ok', httpStatus: res.httpStatus, rowCount: parsed.length });
     } catch (err) {
-      if (err instanceof FixtureMissing) {
-        ctx.source({ ...base, status: 'skipped', error: 'not in corpus' });
-        continue;
-      }
-      ctx.warn(`vnn ${site.slug} calendar failed: ${(err as Error).message}`);
-      ctx.source({ ...base, status: 'error', ...statusOf(err), error: (err as Error).message });
+      const failed = classifyFetchError(err);
+      if (failed.status === 'error') ctx.warn(`vnn ${site.slug} calendar failed: ${failed.error}`);
+      ctx.source({ ...base, ...failed });
     }
   }
   if (events.length) {
@@ -85,12 +80,18 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
     const restored = carryVnnForward(missing, ctx.previous.games, games);
     games = restored.games;
     if (restored.carried) {
-      const carriedFrom = carriedFromOf(ctx.previous, (r) => r.id === 'vnn-ics' && r.status === 'ok');
-      ctx.sources.markStale(
-        (r) => r.id === 'vnn-ics' && missing.some((slug) => r.label === `${slug} school calendar`),
-        'carried forward from the previous snapshot',
-        carriedFrom,
-      );
+      for (const slug of missing) {
+        const label = `${slug} school calendar`;
+        const carriedFrom = carriedFromOf(
+          ctx.previous,
+          (r) => r.id === 'vnn-ics' && (r.scope?.team === slug || r.label === label),
+        );
+        ctx.sources.markStale(
+          (r) => r.id === 'vnn-ics' && r.label === label,
+          'carried forward from the previous snapshot',
+          carriedFrom,
+        );
+      }
       ctx.warn(
         `vnn: ${missing.join(', ')} produced no calendar events — carried ${restored.carried} ` +
           `venue/start-time ${restored.carried === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
@@ -178,14 +179,10 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     ctx.source({ ...calendarBase, status: 'ok', httpStatus: res.httpStatus, rowCount: events.length });
     ctx.log(`  ccs calendar: ${events.length} events · key dates ${check.confirmed ? 'confirmed' : 'DIFFER'}`);
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      ctx.source({ ...calendarBase, status: 'skipped', error: 'not in corpus' });
-      missed.push('calendar not in corpus');
-    } else {
-      ctx.warn(`ccs calendar failed: ${(err as Error).message}`);
-      ctx.source({ ...calendarBase, status: 'error', ...statusOf(err), error: (err as Error).message });
-      missed.push('calendar failed');
-    }
+    const failed = classifyFetchError(err);
+    if (failed.status === 'error') ctx.warn(`ccs calendar failed: ${failed.error}`);
+    ctx.source({ ...calendarBase, ...failed });
+    missed.push(failed.status === 'skipped' ? 'calendar not in corpus' : 'calendar failed');
   }
   try {
     const res = await ctx.transport.get({ kind: 'ccs-bracket' });
@@ -194,14 +191,10 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus });
     ctx.log(`  ccs bracket: ${state.published ? 'PUBLISHED' : 'not published'} (${state.reason})`);
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      ctx.source({ ...bracketBase, status: 'skipped', error: 'not in corpus' });
-      missed.push('bracket not in corpus');
-    } else {
-      ctx.warn(`ccs bracket page failed: ${(err as Error).message}`);
-      ctx.source({ ...bracketBase, status: 'error', ...statusOf(err), error: (err as Error).message });
-      missed.push('bracket page failed');
-    }
+    const failed = classifyFetchError(err);
+    if (failed.status === 'error') ctx.warn(`ccs bracket page failed: ${failed.error}`);
+    ctx.source({ ...bracketBase, ...failed });
+    missed.push(failed.status === 'skipped' ? 'bracket not in corpus' : 'bracket page failed');
   }
   return ccsState(ctx, read, missed.join(', '));
 }

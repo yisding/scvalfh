@@ -101,17 +101,17 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      # Pinned to the version this repo is developed and tested on, so a CI-only Node difference
-      # cannot be the reason a snapshot fails to build.
+      # Pinned in .nvmrc to the version this repo is developed and tested on, so a CI-only Node
+      # difference cannot be the reason a snapshot fails to build.
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
@@ -192,8 +192,9 @@ jobs:
 
       # One open issue per official schedule revised upstream (a stale official-revision-check
       # row) and per league frozen in this run AND the previous one, each with the published
-      # reasons as its body. Edited in place on later runs: never more than one open issue per
-      # title. Runs before the commit step, which may restore the unchanged files.
+      # reasons as its body (scripts/data-issues.ts builds them, typed and tested). Edited in place
+      # on later runs: never more than one open issue per title. Runs before the commit step, which
+      # may restore the unchanged files.
       - name: Open or update issues
         # Bookkeeping only: a GitHub API hiccup here must never cost the day's snapshot commit.
         continue-on-error: true
@@ -205,39 +206,7 @@ jobs:
           git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || echo '{}' > "$PREV"
           OUT="${RUNNER_TEMP:-/tmp}/issues"
           rm -rf "$OUT" && mkdir -p "$OUT"
-          node -e '
-            const fs = require("node:fs");
-            const path = require("node:path");
-            const [prevPath, outDir] = process.argv.slice(1);
-            const snap = JSON.parse(fs.readFileSync("data/snapshot.json", "utf8"));
-            const meta = JSON.parse(fs.readFileSync("data/snapshot.meta.json", "utf8"));
-            let prev = {};
-            try { prev = JSON.parse(fs.readFileSync(prevPath, "utf8")); } catch {}
-            const leagues = new Map((snap.season?.leagues ?? []).map((l) => [l.id, l]));
-            const out = [];
-            for (const row of snap.sources ?? []) {
-              if (row.kind !== "official-revision-check" || row.status !== "stale") continue;
-              const league = leagues.get(row.scope?.league);
-              if (!league) continue;
-              const division = league.divisions.length > 1 ? league.divisions.find((d) => d.id === row.scope?.division) : null;
-              const title = `Official schedule revised: ${league.shortName}${division ? ` ${division.label}` : ""}`;
-              out.push({ title, body: `${row.error ?? "The upstream document changed after our bundled copy."}\n\nChecked: ${row.url}\nRun: ${meta.fetchedAt}` });
-            }
-            const prevFrozen = new Set((prev.leagues ?? []).filter((l) => l.state === "frozen").map((l) => l.id));
-            for (const h of snap.leagueHealth ?? []) {
-              if (h.state !== "frozen" || !prevFrozen.has(h.leagueId)) continue;
-              const league = leagues.get(h.leagueId);
-              const since = h.lastFreshAt
-                ? new Date(h.lastFreshAt).toLocaleString("en-US", { timeZone: "America/Los_Angeles", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
-                : "the start of the season";
-              out.push({ title: `${league?.shortName ?? h.leagueId} frozen since ${since}`, body: `${h.reasons.join("\n\n") || "Frozen."}\n\nRun: ${meta.fetchedAt}` });
-            }
-            out.forEach((issue, i) => {
-              fs.writeFileSync(path.join(outDir, `${i}.title`), issue.title);
-              fs.writeFileSync(path.join(outDir, `${i}.body`), issue.body);
-            });
-            console.log(`${out.length} ${out.length === 1 ? "issue" : "issues"} to open or update`);
-          ' "$PREV" "$OUT"
+          pnpm exec tsx scripts/data-issues.ts "$PREV" "$OUT"
           for title_file in "$OUT"/*.title; do
             [ -e "$title_file" ] || continue
             title=$(cat "$title_file")

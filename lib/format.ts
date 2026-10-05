@@ -10,7 +10,7 @@
  */
 
 import { TIME_ZONE } from './season';
-import type { Game, Outcome, Record3, ScoreView } from './types';
+import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const WEEKDAYS_LONG = [
@@ -58,6 +58,30 @@ export function parseLocal(value: string): DateParts {
 export function weekdayIndex(value: string): number {
   const { year, month, day } = parseLocal(value);
   return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+}
+
+/** 'Saturday' for a local date or timestamp. */
+export function weekdayName(value: string): string {
+  return WEEKDAYS_LONG[weekdayIndex(value)];
+}
+
+/**
+ * Whole days since 1970-01-01 for a date key (a time suffix is ignored): integer arithmetic through
+ * Date.UTC, so no local zone can shift it.
+ */
+export function dayNumber(dateKey: string): number {
+  const { year, month, day } = parseLocal(dateKey);
+  return Date.UTC(year, month - 1, day) / 86_400_000;
+}
+
+/** Whole days from `a` to `b` (YYYY-MM-DD): negative when `b` is earlier. */
+export function dayDiff(a: string, b: string): number {
+  return dayNumber(b) - dayNumber(a);
+}
+
+/** The date key `days` days after `dateKey` (before it when negative). */
+export function shiftDateKey(dateKey: string, days: number): string {
+  return new Date((dayNumber(dateKey) + days) * 86_400_000).toISOString().slice(0, 10);
 }
 
 /** 'YYYY-MM-DD' — the URL key for /scores/[date] (SPEC §4, DESIGN §1.1). */
@@ -169,6 +193,21 @@ export function timeOfDayPT(value: string): string {
   return `${timeOfDay(value)} PT`;
 }
 
+/**
+ * A league config clock time ('HH:MM', a play-in or a tournament game): '11:00' → '11 AM',
+ * '16:30' → '4:30 PM'. Unlike `timeOfDay`, whole hours drop their ':00'.
+ */
+export function leagueClock(hhmm: string): string {
+  const [h, m] = hhmm.split(':').map(Number);
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? `:${pad(m)}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+/** '11 AM PT' — `leagueClock` labelled PT, as /playoffs prints it. */
+export function leagueClockPT(hhmm: string): string {
+  return `${leagueClock(hhmm)} PT`;
+}
+
 /** The value for a `<time datetime>` attribute. */
 export function dateTimeAttr(game: Pick<Game, 'dateLocal' | 'dateUtc' | 'isTimeTba'>): string {
   return game.isTimeTba ? isoDateKey(game.dateLocal) : game.dateUtc;
@@ -179,6 +218,17 @@ export function gameWhen(game: Pick<Game, 'dateLocal' | 'isTimeTba' | 'isDateTba
   if (game.isDateTba) return 'Date TBA';
   if (game.isTimeTba) return `${shortDate(game.dateLocal)}, time TBA`;
   return `${shortDate(game.dateLocal)}, ${timeOfDayPT(game.dateLocal)}`;
+}
+
+/**
+ * The canonical game order: oldest first by `dateLocal`; a contest id breaks a tie so the order never
+ * depends on how the pipeline built the array.
+ */
+export function byDateThenId(
+  a: { dateLocal: string; contestId: string },
+  b: { dateLocal: string; contestId: string },
+): number {
+  return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
 }
 
 // ---------------------------------------------------------------- instants
@@ -236,6 +286,14 @@ export function hoursBetween(aIso: string, bIso: string): number {
 
 // ---------------------------------------------------------------- records & numbers
 
+/**
+ * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
+ * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/ui/plural.ts re-exports it.
+ */
+export function plural(n: number, one: string, many: string = `${one}s`): string {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
 /** 'W-L-T', e.g. '4-1-0'. */
 export function recordString(r: Record3 | { w: number; l: number; t: number }): string {
   return `${r.w}-${r.l}-${r.t}`;
@@ -246,8 +304,7 @@ export function recordString(r: Record3 | { w: number; l: number; t: number }): 
  * is "four minus one minus zero" in some voices and a date in others; the words are unambiguous.
  */
 export function recordWords(r: Record3 | { w: number; l: number; t: number }): string {
-  const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-  return `${count(r.w, 'win', 'wins')}, ${count(r.l, 'loss', 'losses')}, ${count(r.t, 'tie', 'ties')}`;
+  return `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}, ${plural(r.t, 'tie')}`;
 }
 
 /** '+30' / '−24' / '0' — always signed, U+2212 for negatives (DESIGN §5.6). */
@@ -290,6 +347,40 @@ export function ordinalPlace(place: number, hasResults = true): string {
   return hasResults ? ordinal(place) : EM_DASH;
 }
 
+/**
+ * A place in words, as a sentence or a screen reader says it: '7th', or 'tied for 7th' for a
+ * shared place (a level place the league's tiebreakers do not settle).
+ */
+export function placeWords(place: number, shared: boolean): string {
+  return shared ? `tied for ${ordinal(place)}` : ordinal(place);
+}
+
+/**
+ * A place as the eye reads it, in the site's two notations: a table cell's `7` / `T7`, and a
+ * pill's or a tile's `7th` / `T-7th`. The spoken form is always `placeWords`.
+ */
+export function placeMark(place: number, shared: boolean, form: 'table' | 'pill'): string {
+  if (form === 'table') return shared ? `T${place}` : String(place);
+  return shared ? `T-${ordinal(place)}` : ordinal(place);
+}
+
+/**
+ * What kind of document a league's official schedule is, as a link label names it: the BVAL
+ * sheet is a Google Doc, the rest are PDFs. A `Record` over every `OfficialSourceId`, so a new
+ * source fails typecheck until someone classifies it. The /standings link
+ * (`officialScheduleLabel`) and the /about health card (`officialSourceLabel`) both read it.
+ */
+const OFFICIAL_SOURCE_FORMAT: Readonly<Record<OfficialSourceId, 'PDF' | 'Google Doc'>> = {
+  'scval-pdf': 'PDF',
+  'bval-docx': 'Google Doc',
+  'pcal-pdf': 'PDF',
+  'mcal-pdf': 'PDF',
+};
+
+export function officialSourceFormat(source: OfficialSourceId): 'PDF' | 'Google Doc' {
+  return OFFICIAL_SOURCE_FORMAT[source];
+}
+
 /** A real 0 is '0'; a null is an en dash (DESIGN §5.3). NEVER coerce. */
 export function scoreGlyph(score: number | null): string {
   return score === null ? EN_DASH : String(score);
@@ -301,7 +392,7 @@ export const OUTCOME_WORDS: Record<Outcome, string> = { W: 'win', L: 'loss', T: 
 export function formStripLabel(last5: readonly Outcome[]): string {
   if (last5.length === 0) return 'No league results yet.';
   const words = last5.map((o) => OUTCOME_WORDS[o]).join(', ');
-  return `Last ${last5.length} league game${last5.length === 1 ? '' : 's'}, oldest first: ${words}.`;
+  return `Last ${plural(last5.length, 'league game')}, oldest first: ${words}.`;
 }
 
 /** 'W5' / 'L3' / 'T1' (the US sports-page order: result, then length), or an em dash. */
@@ -390,16 +481,18 @@ export function scoreSentence(g: Game, opts: { quietOvertime?: boolean } = {}): 
     case 'postponed':
       return `${g.away.name} at ${g.home.name}: postponed.`;
     case 'scheduled':
-      return `${g.away.name} ${g.site === 'neutral' ? 'vs' : 'at'} ${g.home.name}: ${
+      return `${g.away.name} ${matchupJoiner(g)} ${g.home.name}: ${
         view.time ? `${view.time} PT` : 'time to be announced'
       }.`;
   }
 }
 
-/** 'vs' for a home or neutral game, 'at' for an away game, from one team's point of view. */
-export function versusLabel(game: Game, teamId: string): 'vs' | 'at' {
-  if (game.site === 'neutral') return 'vs';
-  return game.home.teamId === teamId ? 'vs' : 'at';
+/**
+ * The word between the away and the home side of a matchup: 'vs' at a neutral site, 'at'
+ * otherwise ('Fremont at Cupertino'). One team's own 'vs' / 'at' is `describeGame(...).versus`.
+ */
+export function matchupJoiner(game: Pick<Game, 'site'>): 'vs' | 'at' {
+  return game.site === 'neutral' ? 'vs' : 'at';
 }
 
 const NUMBER_WORDS = [
@@ -409,6 +502,15 @@ const NUMBER_WORDS = [
 /** 'zero' … 'ten' for a whole number 0-10, its digits otherwise ('six', '49'). */
 export function numberWord(n: number): string {
   return Number.isInteger(n) && n >= 0 && n <= 10 ? NUMBER_WORDS[n] : String(n);
+}
+
+const ORDINAL_WORDS = [
+  'zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
+] as const;
+
+/** 'zeroth' … 'tenth' for a whole number 0-10, `ordinal` otherwise ('fourth', '11th'). */
+export function ordinalWord(n: number): string {
+  return Number.isInteger(n) && n >= 0 && n <= 10 ? ORDINAL_WORDS[n] : ordinal(n);
 }
 
 /**
@@ -424,8 +526,11 @@ export function dateSpan(first: string, last: string): string {
   return `${monthDay(first)}${EN_DASH}${monthDay(last)}`;
 }
 
-/** 'A', 'A and B', 'A, B and C'. */
-export function listWords(words: readonly string[]): string {
+/**
+ * 'A', 'A and B', 'A, B and C'; with `conj` 'or' every contender for one seat ('A, B or C'), and
+ * with '&' the compact leader line ('A, B & C'). An empty list is ''.
+ */
+export function listWords(words: readonly string[], conj: 'and' | 'or' | '&' = 'and'): string {
   if (words.length <= 1) return words[0] ?? '';
-  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+  return `${words.slice(0, -1).join(', ')} ${conj} ${words[words.length - 1]}`;
 }

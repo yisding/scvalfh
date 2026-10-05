@@ -1,6 +1,7 @@
-import { formatStamp } from '../../lib/format';
+import { formatStamp, officialSourceFormat } from '../../lib/format';
 import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import { plural } from '../ui/plural';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
@@ -75,13 +76,9 @@ const TABLE_WORDS = {
   skipped: 'not requested',
 } as const;
 
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
-
 /** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. Only for a league that publishes one (not mode 'none'). */
 export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {
-  return `${shortName} schedule (${source.endsWith('-docx') ? 'Google Doc' : 'PDF'})`;
+  return `${shortName} schedule (${officialSourceFormat(source)})`;
 }
 
 type DocumentOfficial = Exclude<HealthDivision['official'], { mode: 'none' }>;
@@ -129,7 +126,10 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
     ? ['league result', 'league results']
     : ['official league result', 'official league results'];
   return (
-    <article className={`sx-card flex flex-col p-5${className ? ` ${className}` : ''}`} aria-label={`${shortName} data health`}>
+    <article
+      className={['sx-card flex flex-col p-5', className].filter(Boolean).join(' ')}
+      aria-label={`${shortName} data health`}
+    >
       <header>
         <h3 className="m-0 text-lead text-ink">{shortName}</h3>
         <p className="m-0 mt-0.5 text-meta text-ink-3">{name}</p>

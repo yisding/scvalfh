@@ -44,8 +44,8 @@
  */
 
 import { getSnapshot } from './data';
-import type { PriorSeason } from './prior-season';
-import { getPriorSeason } from './prior-season-data';
+import { getPriorSeason } from './prior-season';
+import type { PriorSeason } from './prior-season-schema';
 import type { Game, Team, TeamId, TeamSlug } from './types';
 
 /** The average rated team. */

@@ -11,7 +11,7 @@
  * It was read with @shuding/opentype.js 1.4.0-beta.0 (`charToGlyph(ch).advanceWidth` and
  * `getKerningValue(left, right)`, GPOS pair kerning), scaled to 12 px (× 12 / 1000) and then calibrated
  * × 1.112 so that the KERNED width reproduces what the browser renders at 12 px / 500 Geist, as
- * components/home/pin-label.ts recorded it: Homestead 70 px (here 70.1), Presentation 77 px (here 76.98),
+ * lib/pin-label.ts recorded it: Homestead 70 px (here 70.1), Presentation 77 px (here 76.98),
  * and SPEC §10.1's Hollister 50.9 px (here 50.93). The calibration only holds WITH kerning (the kerning-free
  * sums are 71.3 / 79.9 / 52.3 px), so `width()` adds pair kerning; `advanceSum()` is the kerning-free sum.
  *
@@ -20,7 +20,7 @@
  */
 
 /** Per-character advance at 12 px / 500 (px), calibrated as described above. */
-export const ADVANCE: Readonly<Record<string, number>> = {
+const ADVANCE: Readonly<Record<string, number>> = {
   '0': 8.847, '1': 5.124, '2': 8.26, '3': 8.18, '4': 8.207, '5': 8.353, '6': 7.913, '7': 6.992,
   '8': 8.06, '9': 7.913, ' ': 3.336, '!': 2.842, '"': 4.617, '#': 6.378, '$': 8.393, '%': 10.702,
   '&': 8.273, '\'': 2.375, '(': 3.656, ')': 3.656, '*': 5.738, '+': 7.446, ',': 2.682, '-': 5.591,
@@ -37,7 +37,7 @@ export const ADVANCE: Readonly<Record<string, number>> = {
 };
 
 /** Pair kerning at 12 px / 500 (px), keyed by the two characters; absent = 0. */
-export const KERNING: Readonly<Record<string, number>> = {
+const KERNING: Readonly<Record<string, number>> = {
   '&7': -0.907, '\'4': -0.4, '\'7': 0.133, '(2': -0.133, '(3': -0.067, '(4': -0.534, '(8': -0.107,
   ',1': -1.067, ',7': -0.801, '-1': -0.267, '-4': 0.133, '-7': -0.534, '.1': -1.067, '.7': -0.801,
   '00': 0.133, '01': -0.133, '04': -0.133, '06': 0.133, '07': -0.534, '1-': -0.133, '10': -0.133,

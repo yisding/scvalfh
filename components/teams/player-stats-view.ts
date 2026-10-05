@@ -1,13 +1,3 @@
-import { shortDate } from '../../lib/format';
-import { getTeamPlayerStats } from '../../lib/player-stats';
-import type {
-  FieldStatKey,
-  GoalieStatKey,
-  PlayerStatLine,
-  TeamPlayerStats,
-} from '../../lib/player-stats-schema';
-import type { Game, TeamSlug } from '../../lib/types';
-
 /**
  * The team page's player stats section (SPEC §1.1k), derived from data/player-stats.json, for every
  * team of all five leagues. Pure, so tests/ui/player-stats-view.test.ts can assert it over the real
@@ -29,6 +19,16 @@ import type { Game, TeamSlug } from '../../lib/types';
  * coach's "opponent shots on goal" below saves plus goals against (Leland, 2026-10-03: 10 shots
  * on goal, 36 saves, 9 against). The card says the figures disagree instead.
  */
+
+import { shortDate } from '../../lib/format';
+import { getTeamPlayerStats } from '../../lib/player-stats';
+import type {
+  FieldStatKey,
+  GoalieStatKey,
+  PlayerStatLine,
+  TeamPlayerStats,
+} from '../../lib/player-stats-schema';
+import type { Game, TeamSlug } from '../../lib/types';
 
 export interface StatColumn {
   key: string;

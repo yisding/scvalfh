@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import ExternalLink from './ExternalLink';
+
 /**
  * The house rule (DESIGN §8): say what is true, say when it changes.
  *
@@ -40,17 +42,14 @@ export function EmptyState({
            results, where every section is an empty state, these are the only links on the page. */
         <p className="mt-4 mb-0">
           {action.external ? (
-            <a
-              href={action.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="sx-pill min-h-11"
-            >
-              {action.label} <span aria-hidden="true">&#8599;</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
+            <ExternalLink href={action.href} className="sx-pill min-h-11">
+              {action.label}
+            </ExternalLink>
           ) : (
-            <Link href={action.href} className="sx-pill min-h-11">
+            // `prefetch={false}`: LeaguePanel renders one of these per league inside app/page.tsx's
+            // panels.map(), each pointing at a different /schedule/<league> page
+            // (tests/ui/prefetch-policy.test.ts).
+            <Link href={action.href} prefetch={false} className="sx-pill min-h-11">
               {action.label}
             </Link>
           )}

@@ -10,9 +10,9 @@
  * the same inputs always give the same bytes, and every division is checked with
  * assertDoubleRoundRobin before anything is written. Never hand-edit the outputs.
  *
- *   pnpm exec tsx scripts/build-official-fixtures.ts                       write the three files
- *   pnpm exec tsx scripts/build-official-fixtures.ts --check               exit 1 if a file differs
- *   pnpm exec tsx scripts/build-official-fixtures.ts --bval-text A.txt B.txt
+ *   pnpm build-official-fixtures                       write the three files
+ *   pnpm build-official-fixtures --check               exit 1 if a file differs
+ *   pnpm build-official-fixtures --bval-text A.txt B.txt
  *        BVAL fixtures/events parsed from the two docx texts (Mt. Hamilton, Santa Teresa) instead of
  *        the research JSON — the result must be identical (tests/bval-text.test.ts).
  *   --source-dir <dir>   (default tests/fixtures/official/source)
@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { plural } from '../lib/format';
 import { getDivision, getLeague } from '../lib/leagues';
 import { parseBvalScheduleText } from '../lib/official/bval-text';
 import {
@@ -43,10 +44,11 @@ import {
 import { assertDoubleRoundRobin } from '../lib/official/validate';
 import { resolveOfficialName } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
+import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
-export const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
-export const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'official');
+const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
+const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'official');
 
 /** The day the three sources were transcribed and re-checked (the research captures). */
 export const TRANSCRIBED_ON = '2026-10-02';
@@ -206,7 +208,7 @@ export function buildBvalFromText(texts: readonly string[]): OfficialBundle {
 }
 
 /** PCAL: codes through LEAGUES.pcal.officialCodes; varsity 16:00; names from the source's `codes`. */
-export function buildPcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
+function buildPcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
   const src = readJson<PcalSource>(path.join(sourceDir, SOURCE_FILES.pcal));
   const [division] = bundledDivisions('pcal');
   const name = (code: string) => {
@@ -241,7 +243,7 @@ function adjustedVarsityTime(note: string | undefined): string | null {
  * MCAL: the post-change `date`, `originalDate` only when it differs, `time` = the source's time
  * except where an approved-adjustment note states the varsity start (B@LW 9/29, LW@MC 10/15 → 16:30).
  */
-export function buildMcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
+function buildMcal(sourceDir = DEFAULT_SOURCE_DIR): OfficialBundle {
   const src = readJson<McalSource>(path.join(sourceDir, SOURCE_FILES.mcal));
   const [division] = bundledDivisions('mcal');
   const fixtures = src.fixtures.map((f) =>
@@ -283,10 +285,6 @@ export function outputFileOf(leagueId: BundledLeague, outDir = DEFAULT_OUT_DIR):
 
 // ---------------------------------------------------------------- CLI
 
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
-
 function main(argv: readonly string[]): number {
   let sourceDir = DEFAULT_SOURCE_DIR;
   let outDir = DEFAULT_OUT_DIR;
@@ -294,12 +292,18 @@ function main(argv: readonly string[]): number {
   let check = false;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
+    const next = () => {
+      const v = argv[i + 1];
+      if (v === undefined || v.startsWith('--')) throw new Error(`${a} needs a value`);
+      i += 1;
+      return v;
+    };
     if (a === '--check') check = true;
-    else if (a === '--source-dir') sourceDir = path.resolve(argv[++i] ?? '');
-    else if (a === '--out-dir') outDir = path.resolve(argv[++i] ?? '');
+    else if (a === '--source-dir') sourceDir = path.resolve(next());
+    else if (a === '--out-dir') outDir = path.resolve(next());
     else if (a === '--bval-text') {
       const files = [argv[++i], argv[++i]];
-      if (files.some((f) => !f)) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
+      if (files.some((f) => f === undefined || f.startsWith('--'))) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
       bvalTexts = files.map((f) => readFileSync(path.resolve(f as string), 'utf8'));
     } else throw new Error(`unknown argument: ${a}`);
   }
@@ -333,11 +337,4 @@ function main(argv: readonly string[]): number {
 }
 
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) {
-  try {
-    process.exitCode = main(process.argv.slice(2));
-  } catch (err) {
-    console.error((err as Error).message);
-    process.exitCode = 1;
-  }
-}
+if (invokedDirectly) runCli(main);

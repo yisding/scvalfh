@@ -26,13 +26,11 @@ import {
   MeteredTransport,
   RecordingTransport,
   hostOf,
-  officialChangesCellText,
   recordedExtension,
   resourceUrl,
-  sha256Hex,
 } from '../../lib/pipeline/transport';
 import { officialDocumentOf } from '../../lib/official/schema';
-import { tdCellBodies } from '../../lib/official/validate';
+import { officialChangesCellText, sha256Hex, tdCellBodies } from '../../lib/official/validate';
 import { BOOTSTRAP_URL } from '../../lib/season';
 import { HttpError, type HttpResponse } from '../../lib/sources/http';
 import { MaxPrepsError } from '../../lib/sources/maxpreps';

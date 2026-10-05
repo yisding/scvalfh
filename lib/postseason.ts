@@ -8,25 +8,29 @@
  *   QF       Mon Oct 26  qf-1: 5 at 4; qf-2: 6 at 3 (the higher seed's field)
  *   SF       Wed Oct 28  re-seeded: the LARGER remaining seed number at #1 (sf-1), the smaller at #2 (sf-2)
  *   final    Fri Oct 30  at Tamalpais, a fixed site whoever the finalists are
+ * The quarterfinal (5 at 4, 6 at 3) and semifinal (3-6) seat numbers follow the 2026 sheet and are written
+ * here, not derived from config; the qualifier count and the last place come from `LeagueConfig.postseason`.
  * The sheet's "(lowest seed (3-6) left in the tournament) at (1st)" means lowest-RANKED: in 2025 #5 University
  * upset #4 Lick-Wilmerding and the semifinals were #5 University at #1 Redwood, #3 Marin Catholic at #2 Tamalpais.
  *
- * `sixthPlaceRule` replays the standings engine's own procedure for the points bucket that holds place 6
- * (seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b, the same recursion as lib/standings.ts),
+ * `sixthPlaceRule` takes the play-in pair (or the 2-0 sweep) from the standings engine itself
+ * (lib/standings.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
  * so its contenders are exactly the teams the table shows sharing 6th with `resolvedBy: 'play-in'`.
  *
  * Only a 'league-tournament' league (MCAL) reaches this module. Of the five leagues, SCVAL, BVAL and PCAL go
  * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
  * bracket, so none is drawn for it.
  *
- * Imports only types, lib/leagues.ts and lib/teams.ts.
+ * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types.
  */
 
-import { findDivision, findLeague, type LeagueConfig } from './leagues';
+import { byDateThenId, sideOutcome } from './format';
+import { drawNumberOf, type LeagueConfig } from './leagues';
+import { lastSpotOutcome } from './standings';
 import { getTeamById, getTeamBySlug } from './teams';
 import type {
-  CrossoverSeat, Game, LeagueTournamentProjection, SeasonPhase, Standing, TeamId, TeamSlug, TiebreakStage,
-  TournamentGame, TournamentSlot,
+  CrossoverSeat, Game, LeagueTournamentProjection, SeasonPhase, Standing, TeamId, TeamSlug, TournamentGame,
+  TournamentSlot,
 } from './types';
 
 export interface SixthPlaceDecision {
@@ -35,7 +39,10 @@ export interface SixthPlaceDecision {
   contenders: TeamSlug[];
   /** Host slug, or null when not determinable yet. */
   host: TeamSlug | null;
-  /** The seat the play-in decides (6, or 5 and 6 in the three-way case). */
+  /**
+   * The place the play-in decides: [lastSpot.place] when a play-in is needed or possible, else []. A
+   * three-way tie for 5th places the 5th seed by draw number, so the pair still plays only for this place.
+   */
   seats: number[];
   note: string | null;
 }
@@ -49,8 +56,6 @@ export const SHOOTOUT_NOTE =
 /** Three-way tie for 5th whose two play-in teams' earlier meeting produced no winner (SPEC §6.2, verbatim). */
 export const EARLIER_MEETING_NOTE =
   'The higher draw number hosts because their earlier meeting did not produce a winner (MCAL Tie-Breaking Criteria: "or # if needed").';
-
-const DEFAULT_QUALIFIERS = 6;
 
 function tournamentOf(league: LeagueConfig): TournamentConfig {
   if (league.postseason.kind !== 'league-tournament') {
@@ -75,13 +80,15 @@ function makeGame(
 const clusterSize = (r: Standing): number => r.tiebreak.tiedWith.length + 1;
 const seatOf = (rows: readonly Standing[]): CrossoverSeat => rows.map((r) => ({ teamId: r.teamId, slug: r.slug }));
 
-/** Seeds 1..6 from the computed table (points, then the MCAL chain): the "cluster covers the slot" rule. */
-export function seedsFromStandings(rows: readonly Standing[]): Array<{ seed: number; seat: CrossoverSeat }> {
+/**
+ * Seeds 1..qualifiers (MCAL: 6) from the computed table (points, then the MCAL chain): the "cluster covers
+ * the slot" rule. Throws, like every builder here, for a league without a league tournament.
+ */
+export function seedsFromStandings(
+  rows: readonly Standing[], league: LeagueConfig,
+): Array<{ seed: number; seat: CrossoverSeat }> {
   const ranked = rows.filter((r) => r.hasReportedResults);
-  // The rows' league states its qualifier count (MCAL: 6).
-  const division = rows[0] ? findDivision(rows[0].division) : undefined;
-  const ps = division ? findLeague(division.leagueId)?.postseason : undefined;
-  const qualifiers = ps?.kind === 'league-tournament' ? ps.qualifiers : DEFAULT_QUALIFIERS;
+  const { qualifiers } = tournamentOf(league);
   const out: Array<{ seed: number; seat: CrossoverSeat }> = [];
   for (let seed = 1; seed <= qualifiers; seed++) {
     const covering = ranked.filter((r) => r.computed.place <= seed && seed < r.computed.place + clusterSize(r));
@@ -92,235 +99,60 @@ export function seedsFromStandings(rows: readonly Standing[]): Array<{ seed: num
 
 // ---------------------------------------------------------------- the 6th-place rule
 
-interface Outcome3 { w: number; l: number; t: number; gp: number }
-
-interface RuleCtx {
-  /** The division's counted finals (both scores known). */
-  finals: readonly Game[];
-  /** Every counted game of the division, any status (for "unplayed" and "earlier meeting"). */
-  counted: readonly Game[];
-  draws: Readonly<Record<TeamSlug, number>>;
-  chain: readonly TiebreakStage[];
-  L: number;
-  slugOf: (id: TeamId) => TeamSlug;
-  /** Set on the top-level path only (never inside a narrowing call). */
-  outcome: null | { kind: 'sweep'; winner: TeamId; loser: TeamId } | { kind: 'play-in'; pair: [TeamId, TeamId]; group: TeamId[]; fifth: TeamId | null };
-  /** The 5th seed placed by draw number in the three-way 5-7 case, waiting for its pair's outcome. */
-  fifth: TeamId | null;
-  fiveSevenGroup: TeamId[] | null;
-}
-
-const UNCOMPUTABLE: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule', 'play-in']);
-const PLAY_IN_CHAIN: readonly TiebreakStage[] = ['h2h-win-pct', 'record-above-tie', 'draw-number'];
-
-/** W/L/T of `id` in a final with both scores, by the scores (the engine's `perspective`). */
-function outcomeFor(g: Game, id: TeamId): 'W' | 'L' | 'T' | null {
-  const mine = g.home.teamId === id ? g.home : g.away.teamId === id ? g.away : null;
-  if (!mine) return null;
-  const theirs = mine === g.home ? g.away : g.home;
-  if (mine.score === null || theirs.score === null) return null;
-  return mine.score > theirs.score ? 'W' : mine.score < theirs.score ? 'L' : 'T';
-}
-
 const between = (g: Game, a: TeamId, b: TeamId): boolean =>
   (g.home.teamId === a && g.away.teamId === b) || (g.home.teamId === b && g.away.teamId === a);
-
-function recordVs(ctx: RuleCtx, id: TeamId, opponents: readonly TeamId[]): Outcome3 {
-  const r: Outcome3 = { w: 0, l: 0, t: 0, gp: 0 };
-  for (const g of ctx.finals) {
-    const other = g.home.teamId === id ? g.away.teamId : g.away.teamId === id ? g.home.teamId : null;
-    if (!other || !opponents.includes(other)) continue;
-    const o = outcomeFor(g, id);
-    if (!o) continue;
-    r.gp += 1;
-    if (o === 'W') r.w += 1;
-    else if (o === 'L') r.l += 1;
-    else r.t += 1;
-  }
-  return r;
-}
-
-const pct = (r: Outcome3): number => (r.w + r.t / 2) / r.gp;
-
-/** MCAL stage keys (SPEC §5.5), higher is better; null = stage skipped. */
-function stageKeys(stage: TiebreakStage, group: readonly TeamId[], above: readonly TeamId[], ctx: RuleCtx): number[] | null {
-  switch (stage) {
-    case 'h2h-win-pct': {
-      const recs = group.map((id) => recordVs(ctx, id, group.filter((x) => x !== id)));
-      if (recs.some((r) => r.gp === 0)) return null;
-      return recs.map(pct);
-    }
-    case 'record-above-tie': {
-      if (above.length === 0) return null;
-      const recs = group.map((id) => recordVs(ctx, id, above));
-      if (recs.some((r) => r.gp === 0)) return null;
-      return recs.map(pct);
-    }
-    case 'draw-number': {
-      const keys = group.map((id) => ctx.draws[ctx.slugOf(id)]);
-      if (keys.some((k) => k === undefined)) return null;
-      return keys.map((k) => -k);
-    }
-    default:
-      return null;
-  }
-}
-
-function pickFirst(
-  group: readonly TeamId[], chain: readonly TiebreakStage[], above: readonly TeamId[], ctx: RuleCtx,
-  narrow: (best: TeamId[]) => TeamId[],
-): { cluster: TeamId[]; terminal: boolean } {
-  for (const stage of chain) {
-    if (UNCOMPUTABLE.has(stage)) return { cluster: [...group], terminal: true };
-    const keys = stageKeys(stage, group, above, ctx);
-    if (keys === null || keys.every((k) => k === keys[0])) continue;
-    const max = Math.max(...keys);
-    const best = group.filter((_, i) => keys[i] === max);
-    if (best.length === 1) return { cluster: best, terminal: false };
-    return { cluster: narrow(best), terminal: false };
-  }
-  return { cluster: [...group], terminal: true };
-}
-
-/**
- * `top` is false inside a narrowing call (the subgroup a stage left level while seeding one team out of
- * a larger tie): the chain then runs among the subgroup only, and the last-place rules — which are for
- * teams tied ON POINTS for those places — never apply to it (lib/standings.ts `seedOne`'s `narrowing`).
- */
-function seedOne(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: RuleCtx, top: boolean): TeamId[][] {
-  if (group.length === 0) return [];
-  if (group.length === 1) return [[group[0]]];
-  if (top && place <= ctx.L && ctx.L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx, top);
-  const head = pickFirst(group, ctx.chain, above, ctx, (best) => seedOne(best, place, above, ctx, false)[0]);
-  if (head.terminal) return [head.cluster];
-  const rest = group.filter((id) => !head.cluster.includes(id));
-  return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx, top)];
-}
-
-function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: RuleCtx, top: boolean): TeamId[][] {
-  const { L } = ctx;
-  if (place < L) {
-    if (group.length === 3 && place === L - 1) {
-      // "tie breaking numbers will be used for placing #5"
-      const drawOf = (id: TeamId): number => ctx.draws[ctx.slugOf(id)] ?? Number.MAX_SAFE_INTEGER;
-      const first = [...group].sort((a, b) => drawOf(a) - drawOf(b))[0];
-      if (top) {
-        ctx.fifth = first;
-        ctx.fiveSevenGroup = [...group];
-      }
-      const rest = group.filter((id) => id !== first);
-      return [[first], ...seedOne(rest, L, [...above, first], ctx, top)];
-    }
-    const head = pickFirst(group, ctx.chain, above, ctx, (best) => seedOne(best, place, above, ctx, false)[0]);
-    if (head.terminal) return [head.cluster];
-    const rest = group.filter((id) => !head.cluster.includes(id));
-    return [head.cluster, ...seedOne(rest, place + head.cluster.length, [...above, ...head.cluster], ctx, top)];
-  }
-
-  // place === L
-  if (group.length === 2) {
-    const [a, b] = group;
-    const meetings = ctx.finals.filter((g) => between(g, a, b));
-    const aWins = meetings.filter((g) => outcomeFor(g, a) === 'W').length;
-    const bWins = meetings.filter((g) => outcomeFor(g, b) === 'W').length;
-    if (meetings.length >= 2 && (aWins === meetings.length || bWins === meetings.length)) {
-      const winner = aWins === meetings.length ? a : b;
-      const loser = winner === a ? b : a;
-      if (top) ctx.outcome = { kind: 'sweep', winner, loser };
-      return [[winner], [loser]];
-    }
-    if (top) ctx.outcome = { kind: 'play-in', pair: [a, b], group: ctx.fiveSevenGroup ?? [a, b], fifth: ctx.fifth };
-    return [[a, b]];
-  }
-
-  // Three or more level at L: criteria 1-2 then draw number pick the first play-in team; "the criteria will
-  // start OVER to determine the second"; the rest are placed below.
-  const pickPlayIn = (pool: readonly TeamId[], pickAbove: readonly TeamId[]): TeamId => {
-    const narrow = (best: TeamId[]): TeamId[] => pickFirst(best, PLAY_IN_CHAIN, pickAbove, ctx, narrow).cluster;
-    return pickFirst(pool, PLAY_IN_CHAIN, pickAbove, ctx, narrow).cluster[0];
-  };
-  const p1 = pickPlayIn(group, above);
-  const p2 = pickPlayIn(group.filter((id) => id !== p1), [...above, p1]);
-  if (top) ctx.outcome = { kind: 'play-in', pair: [p1, p2], group: [...group], fifth: null };
-  const rest = group.filter((id) => id !== p1 && id !== p2);
-  return [[p1, p2], ...seedOne(rest, L + 2, [...above, p1, p2], ctx, false)];
-}
 
 const nameOfSlug = (slug: TeamSlug): string => getTeamBySlug(slug)?.name ?? slug;
 
 const NO_PLAY_IN: SixthPlaceDecision = { playInNeeded: 'no', contenders: [], host: null, seats: [], note: null };
 
 /**
- * The last tournament place (SPEC §6.2, §5.4b). Works on POINTS: B = the points bucket holding place 6.
- * B within 1..6 → 'no'. Otherwise the engine's procedure decides the play-in pair (or a 2-0 sweep);
- * 'possible' while a league meeting the case depends on is unplayed.
+ * The last tournament place (SPEC §6.2, §5.4b). The engine (lib/standings.ts `lastSpotOutcome`) decides
+ * whether a play-in is needed and between whom, or that a 2-0 sweep settled it; this adds what only the
+ * bracket needs: 'possible' while a league meeting the case depends on is unplayed, the host (the higher
+ * draw number, or in the three-way 5-7 case the winner of the pair's earlier meeting) and the notes.
  */
 export function sixthPlaceRule(rows: readonly Standing[], games: readonly Game[], league: LeagueConfig): SixthPlaceDecision {
-  const ps = tournamentOf(league);
-  const L = ps.lastSpot.place;
-  const divisionIds = new Set(league.divisions.map((d) => d.id));
-  // Points order (the table's order is points first); the team(s) in place L are the L-th by points.
-  const ranked = rows
-    .filter((r) => r.hasReportedResults && divisionIds.has(r.division))
-    .sort((a, b) => b.computed.pts - a.computed.pts || a.computed.place - b.computed.place);
-  const atL = ranked[L - 1];
-  if (!atL) return NO_PLAY_IN;
-
-  const pts = atL.computed.pts;
-  const bucket = ranked.filter((r) => r.computed.pts === pts);
-  const start = 1 + ranked.filter((r) => r.computed.pts > pts).length;
-  if (start + bucket.length - 1 <= L) return NO_PLAY_IN;
+  const L = tournamentOf(league).lastSpot.place;
+  const outcome = lastSpotOutcome(rows, games, league);
+  if (outcome === null) return NO_PLAY_IN;
 
   const slugById = new Map(rows.map((r) => [r.teamId, r.slug]));
-  const counted = games.filter((g) => g.countsFor !== null && divisionIds.has(g.countsFor));
-  const ctx: RuleCtx = {
-    counted,
-    finals: counted.filter((g) => g.status === 'final' && g.home.score !== null && g.away.score !== null),
-    draws: league.rules.drawNumbers ?? {},
-    chain: league.rules.tiebreaks.byBucketStart?.[start] ?? league.rules.tiebreaks.default,
-    L,
-    slugOf: (id) => slugById.get(id) ?? getTeamById(id)?.slug ?? id,
-    outcome: null,
-    fifth: null,
-    fiveSevenGroup: null,
-  };
-  const above = ranked.filter((r) => r.computed.pts > pts).map((r) => r.teamId);
-  seedOne(bucket.map((r) => r.teamId), start, above, ctx, true);
-
-  const outcome = ctx.outcome;
-  if (outcome === null) return NO_PLAY_IN;
+  const slugOf = (id: TeamId): TeamSlug => slugById.get(id) ?? getTeamById(id)?.slug ?? id;
   if (outcome.kind === 'sweep') {
-    const [w, l] = [ctx.slugOf(outcome.winner), ctx.slugOf(outcome.loser)];
+    const [w, l] = [slugOf(outcome.winner), slugOf(outcome.loser)];
     return { ...NO_PLAY_IN, note: `${nameOfSlug(w)} won both meetings with ${nameOfSlug(l)}, so no play-in is needed.` };
   }
 
+  const divisionIds = new Set(league.divisions.map((d) => d.id));
+  const counted = games.filter((g) => g.countsFor !== null && divisionIds.has(g.countsFor));
+  const finals = counted.filter((g) => g.status === 'final' && g.home.score !== null && g.away.score !== null);
   const [a, b] = outcome.pair;
   // Unplayed = fewer than two final meetings (double round robin) between any two teams the case depends on.
   const group = outcome.group;
   let unplayed = false;
   for (let i = 0; i < group.length; i++) {
     for (let j = i + 1; j < group.length; j++) {
-      if (ctx.finals.filter((g) => between(g, group[i], group[j])).length < 2) unplayed = true;
+      if (finals.filter((g) => between(g, group[i], group[j])).length < 2) unplayed = true;
     }
   }
-  const drawOf = (id: TeamId): number => ctx.draws[ctx.slugOf(id)] ?? 0;
+  const drawOf = (id: TeamId): number => drawNumberOf(league.rules, slugOf(id));
   const higherDraw = drawOf(a) >= drawOf(b) ? a : b;
   let host: TeamId = higherDraw;
   let note: string | null = null;
   if (outcome.fifth !== null) {
     // Three-way tie for 5th: the winner of the pair's earlier meeting hosts, else the higher draw number.
-    const earlier = [...ctx.counted.filter((g) => between(g, a, b))]
-      .sort((x, y) => (x.dateLocal < y.dateLocal ? -1 : x.dateLocal > y.dateLocal ? 1 : 0))[0];
-    const result = earlier && earlier.status === 'final' ? outcomeFor(earlier, a) : null;
+    const earlier = [...counted.filter((g) => between(g, a, b))].sort(byDateThenId)[0];
+    const result = earlier ? sideOutcome(earlier, earlier.home.teamId === a ? 'home' : 'away') : null;
     if (result === 'W') host = a;
     else if (result === 'L') host = b;
     else note = EARLIER_MEETING_NOTE;
   }
-  const contenders = [a, b].map(ctx.slugOf);
+  const contenders = [a, b].map(slugOf);
   return {
     playInNeeded: unplayed ? 'possible' : 'yes',
     contenders,
-    host: ctx.slugOf(host),
+    host: slugOf(host),
     seats: [L],
     note,
   };
@@ -417,7 +249,7 @@ export function matchTournamentGames(games: readonly Game[], bracket: readonly T
   const used = new Set<string>();
   const candidates = games
     .filter((g) => g.postseason?.kind === 'mcal-tournament')
-    .sort((a, b) => (a.dateLocal < b.dateLocal ? -1 : a.dateLocal > b.dateLocal ? 1 : 0));
+    .sort(byDateThenId);
   return bracket.map((tg) => {
     const a = slugOfSlot(tg.home);
     const b = slugOfSlot(tg.away);
@@ -468,7 +300,7 @@ export function buildLeagueTournament(
   const own = rows.filter((r) => divisionIds.has(r.division));
   const decision = sixthPlaceRule(own, games, league);
 
-  const seeds = seedsFromStandings(own).slice(0, ps.qualifiers);
+  const seeds = seedsFromStandings(own, league);
   if (decision.playInNeeded !== 'no') {
     const idx = seeds.findIndex((s) => s.seed === L);
     if (idx >= 0) seeds[idx] = { seed: L, seat: decision.contenders.map((slug) => refOf(slug, seeds)) };

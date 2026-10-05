@@ -1,4 +1,4 @@
-import type { SideView } from './game-view';
+import type { SideView } from './describe-game';
 
 /**
  * The never-0-0 rule, rendered (DESIGN §5.2, §5.3).
@@ -11,9 +11,9 @@ import type { SideView } from './game-view';
  * `--sx-text`, the loser's 400 in `--sx-text-2`, so who won survives total desaturation with no
  * chip at all.
  *
- * Client-safe (SPEC §10.4): this module imports only TYPES from game-view, so a client component
- * (the home My-team card) can render it without reaching lib/teams. ScoreCell re-exports it for
- * server callers.
+ * Client-safe (SPEC §10.4): this module imports only TYPES from describe-game, so a client component
+ * (the home My-team card) can render it without reaching lib/teams. Server components import it
+ * directly.
  */
 export interface ScoreGlyphProps {
   side: SideView;

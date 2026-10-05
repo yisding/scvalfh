@@ -1,6 +1,6 @@
 import SectionHeader from '../ui/SectionHeader';
 
-import type { LeagueTeamsView } from './home-data';
+import type { LeagueTeamsView } from './home-view';
 import PinTile from './PinTile';
 
 /**
@@ -23,7 +23,7 @@ export function LeagueTeams({ view, className }: LeagueTeamsProps) {
     ? `Teams in ${view.shortName}.`
     : `Teams in ${view.shortName}, by division.`;
   return (
-    <section className={`[html[data-pin]_&]:hidden${className ? ` ${className}` : ''}`}>
+    <section className={['[html[data-pin]_&]:hidden', className].filter(Boolean).join(' ')}>
       <SectionHeader as="h3" kicker={`Teams in ${view.shortName}`} />
       <p className="sr-only">{intro} Choose one to pin it to the top of this page.</p>
       {view.groups.map((group, i) =>

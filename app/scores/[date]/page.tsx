@@ -6,11 +6,11 @@ import GameList from '../../../components/schedule/GameList';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
 import { dayGroups, daySummary, leaguesInvolved } from '../../../components/schedule/day-summary';
-import { gameWord } from '../../../components/schedule/filter-data';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
+import { gameWord } from '../../../components/ui/plural';
 import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE, SITE_NAME } from '../../../components/layout/site-url';
+import { OG_BASE } from '../../../components/layout/site';
 import {
   getGameDates,
   getGames,
@@ -24,10 +24,10 @@ import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
  *
- * One prerendered page per date that actually has a contest (49 today), which is what makes the
- * "Day page" link on every schedule date header a real URL instead of a clipboard trick. Unknown
- * dates `notFound()` rather than rendering an empty day, because an empty day and a day with no
- * games are different claims and only one of them is true.
+ * One prerendered page per date that actually has a contest (one per game date in the snapshot),
+ * which is what makes the "Day page" link on every schedule date header a real URL instead of a
+ * clipboard trick. Unknown dates `notFound()` rather than rendering an empty day, because an empty
+ * day and a day with no games are different claims and only one of them is true.
  *
  * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
  * a link to an empty Sunday would be a dead end. "Pick a date" (SeasonCalendar) jumps straight to
@@ -66,12 +66,7 @@ export async function generateMetadata({
     title,
     description: summary.sentence,
     alternates: { canonical: `/scores/${date}` },
-    openGraph: {
-      ...OG_BASE,
-      title: `${title} — ${SITE_NAME}`,
-      description: summary.sentence,
-      url: `/scores/${date}`,
-    },
+    openGraph: { ...OG_BASE, title, description: summary.sentence, url: `/scores/${date}` },
   };
 }
 
@@ -113,9 +108,9 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   if (date === today) badges.push('Today');
 
   /* This is the only way to walk the season day by day on a phone, so the steppers are 44px
-     pills (DESIGN §4.4), not bare text links. They sit on the card plane with the hairline ring
-     (`bg-surface shadow-[var(--sx-ring)]`), so in light mode they read as buttons rather than as
-     the surface-2 fact badges beside the h1; accent on surface is the strongest pairing the pill
+     pills (DESIGN §4.4), not bare text links. They are canvas pills (`sx-pill-ring`: the card
+     plane with the hairline ring), so in light mode they read as buttons rather than as the
+     surface-2 fact badges beside the h1; accent on surface is the strongest pairing the pill
      has. At the ends of the season the missing pill is a short badge — "First day" / "Last day",
      with " of the season" for screen readers only — so the steppers stay one line at 390. On a
      day with several leagues the "Full season" group wraps under them as one unit. */
@@ -124,7 +119,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       {previous ? (
         <Link
           href={`/scores/${previous}`}
-          className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+          className="sx-pill sx-pill-ring min-h-11"
         >
           <span aria-hidden="true">&lsaquo;</span>
           {shortDate(previous)}
@@ -138,7 +133,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       {next ? (
         <Link
           href={`/scores/${next}`}
-          className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+          className="sx-pill sx-pill-ring min-h-11"
         >
           {shortDate(next)}
           <span aria-hidden="true">&rsaquo;</span>
@@ -239,7 +234,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
             <a
               key={group.id}
               href={`#${group.id}`}
-              className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+              className="sx-pill sx-pill-ring min-h-11"
             >
               {group.kicker}
             </a>

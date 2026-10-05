@@ -10,7 +10,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
 import { DATA_QUALITY, LEAGUES } from '../../lib/leagues';
@@ -21,7 +21,7 @@ import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/
 import { divisionGames } from '../../lib/standings';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
 import type { Game, Snapshot } from '../../lib/types';
-import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli } from '../helpers';
+import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
 
 type DataModule = typeof import('../../lib/data');
 
@@ -41,7 +41,7 @@ function fileOf(key: string): string {
 }
 const members = new Map(teamsInLeague(LEAGUE).map((t) => [t.id, t]));
 
-const priorEnv = process.env.SCVAL_SNAPSHOT;
+stubCorpusSnapshot(EAL_CORPUS);
 let file: string;
 let snapshot: Snapshot;
 let data: DataModule;
@@ -49,15 +49,7 @@ let data: DataModule;
 beforeAll(async () => {
   file = corpusSnapshotPath(EAL_CORPUS);
   snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
-  process.env.SCVAL_SNAPSHOT = file;
-  vi.resetModules();
   data = (await import('../../lib/data')) as DataModule;
-});
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
 });
 
 /** The corpus's schedule rows, one per contest (every game is in both teams' feeds). */

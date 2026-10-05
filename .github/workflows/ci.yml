@@ -26,7 +26,7 @@
 # held to one response contract by the same script, scripts/smoke-server.sh, which names the few
 # checks that differ by deploy and why (route families with exact counts from the snapshot, the
 # unknown-param 404s of every dynamic family and their OG images, the old anchors).
-# scripts/assert-vinext-prerender.mjs is the prerender check both vinext builds share;
+# scripts/assert-vinext-prerender.ts is the prerender check both vinext builds share;
 # scripts/assert-prerender.ts is the `next build` one. scripts/a11y-axe.mjs also runs `/` once per
 # remembered league and with a pin, /teams with a query typed, a keyboard focus probe, and prints
 # the home-page fold measurements.
@@ -62,7 +62,7 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -70,7 +70,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
@@ -144,7 +144,7 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -152,7 +152,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
@@ -198,7 +198,7 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -206,7 +206,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
@@ -234,7 +234,7 @@ jobs:
       # revalidate lifetime, would be rendered on demand by the server instead; and the prerendered
       # sitemap must list exactly the prerendered pages.
       - name: Assert every route is prerendered
-        run: node scripts/assert-vinext-prerender.mjs
+        run: pnpm exec tsx scripts/assert-vinext-prerender.ts
 
       # Installed outside the checkout, as in the a11y job: here a reshaped node_modules could
       # swap the patched vinext for a stock one under the server (see .github/actions/install-axe).
@@ -282,7 +282,7 @@ jobs:
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to Node 26. action-setup reads packageManager from
+      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -290,7 +290,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       # This applies both patches (patchedDependencies in pnpm-workspace.yaml): vinext's, as in
@@ -334,7 +334,7 @@ jobs:
       - name: Assert every route is prerendered and packaged
         run: |
           set -euo pipefail
-          node scripts/assert-vinext-prerender.mjs --cloudflare
+          pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
           pnpm exec tsx scripts/assert-budgets.ts --worker-only
           test -f .cloudflare/output/v0/config.json || { echo "no Build Output config in .cloudflare/output"; exit 1; }
           leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)

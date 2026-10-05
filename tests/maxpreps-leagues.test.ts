@@ -22,7 +22,6 @@
  * asserted on the files built from the captures.
  */
 
-import { spawnSync } from 'node:child_process';
 import { copyFileSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -34,7 +33,7 @@ import { RostersSchema, type Rosters } from '../lib/rosters-schema';
 import { parsePlayerStats, joinToRoster } from '../lib/sources/maxpreps-player-stats';
 import { parseRosterPage, parseRosterTable } from '../lib/sources/maxpreps-roster';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
-import { FIXTURE_DIR, REPO } from './helpers';
+import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const ROSTER_SAMPLE = ['leigh', 'greenfield', 'del-mar', 'stevenson', 'monterey', 'university-sf', 'marin-catholic'];
 const STATS_SAMPLE = ['leigh', 'stevenson', 'university-sf', 'marin-catholic', 'berkeley', 'del-mar', 'monterey'];
@@ -54,7 +53,6 @@ const leagueOf = (slug: string) => getTeamBySlug(slug)!.league;
 
 // The EAL has no sampled capture: its six teams are in the run and fail like any team without one.
 const OTHERS = 'bval,pcal,mcal,eal';
-const TSX = path.join(REPO, 'node_modules', '.bin', 'tsx');
 
 /** A directory holding only the sampled captures. */
 function sampleDir(prefix: 'roster' | 'stats') {
@@ -75,18 +73,10 @@ let pinnedMemo: { rosters: Rosters; rostersPath: string; stats: PlayerStatsFile 
 function pinned() {
   if (pinnedMemo) return pinnedMemo;
   const rostersPath = tmpFile('rosters.json');
-  const r = spawnSync(
-    TSX,
-    [path.join(REPO, 'scripts', 'fetch-rosters.ts'), '--fixtures', sampleDir('roster'), '--leagues', OTHERS, '--out', rostersPath, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-    { cwd: REPO, encoding: 'utf8' },
-  );
+  const r = runScript('scripts/fetch-rosters.ts', ['--fixtures', sampleDir('roster'), '--leagues', OTHERS, '--out', rostersPath, '--fetched-at', '2026-10-04T00:00:00.000Z']);
   if (r.status !== 1) throw new Error(`fetch-rosters: expected exit 1, got ${r.status}: ${r.stderr}`);
   const statsPath = tmpFile('player-stats.json');
-  const st = spawnSync(
-    TSX,
-    [path.join(REPO, 'scripts', 'fetch-player-stats.ts'), '--fixtures', sampleDir('stats'), '--leagues', OTHERS, '--rosters', rostersPath, '--out', statsPath, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-    { cwd: REPO, encoding: 'utf8' },
-  );
+  const st = runScript('scripts/fetch-player-stats.ts', ['--fixtures', sampleDir('stats'), '--leagues', OTHERS, '--rosters', rostersPath, '--out', statsPath, '--fetched-at', '2026-10-04T00:00:00.000Z']);
   if (st.status !== 1) throw new Error(`fetch-player-stats: expected exit 1, got ${st.status}: ${st.stderr}`);
   pinnedMemo = {
     rostersPath,
@@ -327,11 +317,7 @@ describe('scripts offline over a partly captured league', () => {
     const dir = sampleDir('roster');
     const out = tmpFile('rosters.json');
     copyFileSync(path.join(REPO, 'data', 'rosters.json'), out);
-    const res = spawnSync(
-      TSX,
-      [path.join(REPO, 'scripts', 'fetch-rosters.ts'), '--fixtures', dir, '--leagues', OTHERS, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-      { cwd: REPO, encoding: 'utf8' },
-    );
+    const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', dir, '--leagues', OTHERS, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
     // Teams without a capture failed this run, so the exit code says so; the file is written anyway.
     expect(res.status, res.stderr).toBe(1);
     const built = RostersSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
@@ -365,11 +351,7 @@ describe('scripts offline over a partly captured league', () => {
     const dir = sampleDir('stats');
     const out = tmpFile('player-stats.json');
     copyFileSync(path.join(REPO, 'data', 'player-stats.json'), out);
-    const res = spawnSync(
-      TSX,
-      [path.join(REPO, 'scripts', 'fetch-player-stats.ts'), '--fixtures', dir, '--leagues', OTHERS, '--rosters', pinned().rostersPath, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z'],
-      { cwd: REPO, encoding: 'utf8' },
-    );
+    const res = runScript('scripts/fetch-player-stats.ts', ['--fixtures', dir, '--leagues', OTHERS, '--rosters', pinned().rostersPath, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
     expect(res.status, res.stderr).toBe(1);
     const built = PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
     for (const t of built.teams) {

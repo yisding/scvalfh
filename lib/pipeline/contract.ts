@@ -6,7 +6,7 @@
 
 import type {
   CcsCalendarEvent, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
-  SbliveCrossCheck, Snapshot, SourceStatus, TeamSlug,
+  SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
 } from '../types';
 
 /** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
@@ -114,7 +114,7 @@ export interface RunLog {
   warn(line: string, scope?: SourceStatus['scope']): void;
 }
 
-/** What steps may read and record. B1 implements it in lib/pipeline/ledger.ts. */
+/** What steps may read and record. The pipeline core implements it in lib/pipeline/ledger.ts (PipelineContext). */
 export interface RunContext extends RunLog {
   args: RunArgs;
   fetchedAt: string;
@@ -125,8 +125,11 @@ export interface RunContext extends RunLog {
   transport: Transport;
   /** Append a SourceStatus row; the ledger orders rows deterministically at assembly (§7.11). */
   source(row: SourceStatus): void;
-  /** Move a league's state only towards worse (fresh → partial → degraded | frozen) and record a reason sentence. */
-  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string): void;
+  /**
+   * Move a league's state only towards worse (fresh → partial → degraded | frozen) and record a
+   * reason sentence, plus a short `cause` for the commit summary ("official file invalid").
+   */
+  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void;
   drop(row: DroppedContest): void;
   /** Leagues this run fetches (args.leagues resolved). */
   leaguesInRun(): readonly LeagueId[];
@@ -142,7 +145,10 @@ export interface OfficialStepResult {
   revisedUpstream: Set<DivisionId>;
   /** Divisions whose official annotations were carried from the previous snapshot this run (DivisionHealth.official.carried). */
   carriedDivisions: Set<DivisionId>;
-  /** SCVAL standings-PDF poll (unchanged behaviour). */
+  /**
+   * The SCVAL standings-PDF poll: the PDF's URL, null when the index lists none, undefined when this
+   * run did not poll (assemble carries the previous value).
+   */
   officialStandingsPdfUrl?: string | null;
 }
 export type OfficialStep = (ctx: RunContext, games: Game[]) => Promise<OfficialStepResult>;
@@ -151,7 +157,7 @@ export interface SbliveStepResult {
   games: Game[];
   /** Fixtures still unmatched after rule-2 fills. */
   unmatched: OfficialFixture[];
-  crossCheck: SbliveCrossCheck | undefined;
+  sbliveCrossCheck: SbliveCrossCheck | undefined;
 }
 export type SbliveStep = (ctx: RunContext, input: { games: Game[]; unmatched: OfficialFixture[] }) => Promise<SbliveStepResult>;
 
@@ -159,9 +165,51 @@ export interface SecondaryStepResult { games: Game[]; ccsCalendar?: CcsCalendarE
 
 export interface PipelineSteps { official: OfficialStep; sblive: SbliveStep }
 
+/**
+ * The data/snapshot.meta.json object (§7.11), written by lib/pipeline/steps/assemble.ts. Besides the
+ * tests, .github/workflows/update-data.yml reads it: `contentHash` (commit only when it changes),
+ * `today`, `counts` and `commitSummary` (the commit message), so a field renamed here must be renamed
+ * there too; scripts/data-issues.ts reads `fetchedAt` and the previous run's `leagues` (the issues)
+ * through this type.
+ */
+export interface SnapshotMeta {
+  fetchedAt: string;
+  /** The snapshot's SHA-256 with every fetchedAt stripped (snapshotContentHash). */
+  contentHash: string;
+  /** The Pacific date of the run, YYYY-MM-DD. */
+  today: string;
+  counts: Snapshot['counts'];
+  /** The si.com cross-check in numbers; null when the run made none. */
+  crossCheck: {
+    compared: number;
+    agreements: number;
+    conflicts: number;
+    sbliveOnlyScored: number;
+    backfilled: number;
+  } | null;
+  officialFixturesUnmatched: number | null;
+  officialStandingsPdfUrl: string | null;
+  window: SeasonWindow;
+  sources: Array<{ label: string; status: SourceStatus['status']; rowCount: number | null }>;
+  /** How many WARN lines the run logged. */
+  warnings: number;
+  requests: { maxpreps: number; sblive: number; official: number };
+  leagues: Array<{
+    id: LeagueId;
+    state: LeagueRunState;
+    countedFinals: number;
+    finalsDelta: number;
+    missingPast: number;
+    backfilled: number;
+    reasons: string[];
+  }>;
+  /** "SCVAL +2 finals · BVAL +0 · …": the data commit's subject. */
+  commitSummary: string;
+}
+
 export interface PipelineResult {
   snapshot: Snapshot;
   /** The data/snapshot.meta.json object (§7.11). */
-  meta: Record<string, unknown>;
+  meta: SnapshotMeta;
   logLines: string[];
 }

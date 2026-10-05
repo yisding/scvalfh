@@ -73,7 +73,7 @@ export function roundKeyFor(dateKey: string, keyDates: CcsPlayoffs['keyDates']):
   return 'other';
 }
 
-export const ROUND_NAMES: Record<Exclude<RoundKey, 'other'>, string> = {
+const ROUND_NAMES: Record<Exclude<RoundKey, 'other'>, string> = {
   quarterfinals: 'Quarterfinals',
   semifinals: 'Semifinals',
   finals: 'Final',

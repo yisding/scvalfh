@@ -17,6 +17,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { ALL_DIVISIONS, LEAGUES, getLeague } from '../lib/leagues';
+import type { SnapshotMeta } from '../lib/pipeline/contract';
 import { readManifest } from '../lib/pipeline/corpus';
 import { SPORT_SEASON_ID } from '../lib/season';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
@@ -100,12 +101,7 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
   it('writes the meta file beside it, with per-league rows and the commit summary', () => {
     const metaPath = run.out.replace(/\.json$/, '.meta.json');
     expect(existsSync(metaPath)).toBe(true);
-    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as {
-      fetchedAt: string;
-      counts: { games: number };
-      leagues: Array<{ id: string; state: string }>;
-      commitSummary: string;
-    };
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as SnapshotMeta;
     expect(meta.fetchedAt).toBe(snapshot.fetchedAt);
     expect(meta.counts.games).toBe(snapshot.games.length);
     expect(meta.leagues.map((l) => `${l.id}:${l.state}`)).toEqual([

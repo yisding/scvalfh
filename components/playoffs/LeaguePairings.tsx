@@ -25,7 +25,7 @@ function toSide(seat: SeatView): PlayInSide {
 }
 
 /** The pairing's purpose from its config label: the words after ' — ', sentence case. */
-export function purposeOf(label: string): string | null {
+function purposeOf(label: string): string | null {
   const at = label.indexOf(' — ');
   if (at < 0) return null;
   const tail = label.slice(at + 3).trim();
@@ -37,9 +37,13 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
   const single = pairings.length === 1;
   return (
     <ol
-      className={`m-0 list-none space-y-3 p-0${single ? '' : ' lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0'}${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        'm-0 list-none space-y-3 p-0',
+        single ? null : 'lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {pairings.map((p) => {
         // With a host, read "visitor at host": the visitor is listed first.

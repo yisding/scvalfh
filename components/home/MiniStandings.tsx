@@ -1,11 +1,14 @@
 import Link from 'next/link';
 
 import { GoalDiffCell } from '../ui/GoalDiffBar';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
+import { NoGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
-import { EM_DASH, monthDay, ordinal } from '../../lib/format';
+import { EM_DASH, monthDay, placeWords } from '../../lib/format';
+import { ladderLineAfter } from '../standings/standings-view';
 
-import type { MiniDivisionView, MiniRow } from './home-data';
+import type { MiniDivisionView, MiniRow } from './home-view';
 
 /**
  * One division's top of the table inside a league panel (SPEC §10.1, DESIGN §3.1).
@@ -39,44 +42,16 @@ import type { MiniDivisionView, MiniRow } from './home-data';
  * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
  */
 export interface MiniStandingsProps {
+  /** The division's rows, its `href` (`/standings/<league>#<division>`), its `home` config and its heading (null for a single-division league). */
   division: MiniDivisionView;
-  /** `/standings/<league>#<division>` */
-  href: string;
-  /** false for a single-division league. */
-  showDivisionLabel: boolean;
-  home: MiniDivisionView['home'];
   /** The league's `PTS: <citation>.` sentence; pass it under the league's LAST table only. */
   legend?: string;
   className?: string;
 }
 
-function placeText(row: MiniRow): string {
-  return row.shared ? `tied for ${ordinal(row.place)}` : ordinal(row.place);
-}
-
 function rowLabel(row: MiniRow, where: string): string {
   if (!row.hasResults) return `${row.name}: no results reported yet`;
-  return `${row.name}, ${placeText(row)} in ${where}, ${row.record}, ${row.pts} points`;
-}
-
-function PlaceCell({ row }: { row: MiniRow }) {
-  if (!row.hasResults) {
-    return (
-      <span className="sx-num">
-        <span aria-hidden="true">{EM_DASH}</span>
-        <span className="sr-only">not ranked</span>
-      </span>
-    );
-  }
-  if (row.shared) {
-    return (
-      <span className="sx-num whitespace-nowrap">
-        <span aria-hidden="true">T{row.place}</span>
-        <span className="sr-only">tied for {ordinal(row.place)}</span>
-      </span>
-    );
-  }
-  return <span className="sx-num">{row.place}</span>;
+  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.record}, ${row.pts} points`;
 }
 
 const COLS = 6;
@@ -98,18 +73,20 @@ export function miniShownCount(
   return n;
 }
 
-export function MiniStandings({ division, href, showDivisionLabel, home, legend, className }: MiniStandingsProps) {
+export function MiniStandings({ division, legend, className }: MiniStandingsProps) {
+  const { href, home } = division;
+  // A single-division league (no heading) shows no division label.
+  const showDivisionLabel = division.heading !== null;
   const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));
   const where = showDivisionLabel && division.heading ? division.heading : division.leagueShort;
   const through = division.throughDate;
-  // The labelled line goes after PLACE `home.lineAfter`, not after a row index: two teams level on
-  // 1st both sit above Santa Teresa's "Play-in host" line. No line before any result, and none
-  // when every shown row is above it.
-  const lineIndex =
-    home.lineAfter === null
-      ? -1
-      : shown.reduce((at, row, i) => (row.hasResults && row.place <= (home.lineAfter as number) ? i : at), -1);
-  const lineAt = lineIndex >= 0 && lineIndex < shown.length - 1 ? lineIndex : -1;
+  // The labelled line goes after PLACE `home.lineAfter`, counted over the shown rows
+  // (ladderLineAfter): no line before any result, and none when every shown row is above it.
+  const lineAfter = ladderLineAfter(
+    shown.map((row) => ({ ranked: row.hasResults, place: row.place })),
+    home.lineAfter,
+  );
+  const lineAt = lineAfter === null ? -1 : lineAfter - 1;
   const kicker = showDivisionLabel && division.heading ? division.heading : 'League table';
   const subject = showDivisionLabel && division.heading
     ? `${division.heading} Division league standings`
@@ -207,9 +184,9 @@ function MiniRowView({
   const has = row.hasResults;
   return (
     <>
-      <tr data-team-slug={row.slug} className="relative" style={{ height: 52 }}>
+      <tr data-team-slug={row.slug} className="relative" style={{ height: 'var(--spacing-row-1)' }}>
         <td className="w-[2.75rem] pl-gutter pr-2 text-ink-3">
-          <PlaceCell row={row} />
+          <PlaceMark place={row.place} shared={row.shared} ranked={row.hasResults} className="sx-num" />
         </td>
         <th scope="row" className="max-w-0 text-left font-normal">
           {/* The stretched row link (prefetch off: a static team route is downloaded in full on
@@ -246,10 +223,7 @@ function MiniRowView({
               barClassName="hidden @min-[23.4375rem]:block"
             />
           ) : (
-            <span className="sx-num text-ink-3">
-              <span aria-hidden="true">&middot; {EM_DASH}</span>
-              <span className="sr-only">no goal differential</span>
-            </span>
+            <NoGoalDiff />
           )}
         </td>
       </tr>

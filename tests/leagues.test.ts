@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import {
   ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, LEAGUE_IDS,
   RESERVED_SEGMENTS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, assertLeagues, divisionDisplay,
-  divisionHeading, divisionLabel, divisionsOf, findDivision, findLeague, getDivision, getLeague,
+  divisionHeading, divisionLabel, divisionsOf, drawNumberOf, findDivision, findLeague, getDivision, getLeague,
   getSection, isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision,
   leaguePlayEnds, leagueStandingsUrl, seasonWindowBounds, sectionOf, statusesOf, tiebreakChainFor,
   type LeagueConfig,
@@ -162,6 +162,11 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       'head-to-head', 'division-wins', 'h2h-goals-against', 'h2h-goal-diff', 'coin-flip',
     ]);
     expect(tiebreakChainFor('marin-county', 1)).toEqual(['h2h-win-pct', 'record-above-tie', 'draw-number']);
+    expect(drawNumberOf(getLeague('mcal').rules, 'archie-williams')).toBe(1);
+    expect(drawNumberOf(getLeague('mcal').rules, 'marin-academy')).toBe(9);
+    // No fallback: a league without draw numbers, or a slug with none, is a caller's bug.
+    expect(() => drawNumberOf(getLeague('scval').rules, 'archie-williams')).toThrow(/no draw number/);
+    expect(() => drawNumberOf(getLeague('mcal').rules, 'homestead')).toThrow(/no draw number/);
     expect(leaguePlayEnds('scval')).toBe('2026-10-28');
     expect(leaguePlayEnds('bval')).toBe('2026-10-30');
     expect(leaguePlayEnds('mcal')).toBe('2026-10-22');
@@ -412,7 +417,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     expect(Object.keys(CCS.autoQualifiers).sort()).toEqual([...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort());
     for (const l of LEAGUES) {
       if (l.postseason.kind === 'ccs-ladder') {
-        expect(l.postseason.autoBerths).toBe((CCS.autoQualifiers as Record<string, number>)[l.id]);
+        expect(l.postseason.autoBerths).toBe(CCS.autoQualifiers[l.id]);
       }
     }
     expect(7 + 4 + 2 + 3).toBe(CCS.autoQualifiers.total);

@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
+import Arrow from '../ui/Arrow';
+import { plural } from '../ui/plural';
 import { usePinnedTeam } from '../ui/use-pinned-team';
+import { listWords } from '../../lib/format';
 import { pinLabel } from '../../lib/pin-label';
 import {
   normalizeQuery,
@@ -55,28 +58,21 @@ export interface TeamFinderProps {
   listId?: string;
   /** filter mode: id of an element hidden while the query is non-empty (the /teams anchor switcher). */
   hideWhileSearchingId?: string;
-  /** Default 'School, city or mascot'. */
+  /** Default DEFAULT_FINDER_LABEL. */
   label?: string;
   /** pin mode default 8. */
   limit?: number;
-  /** pin mode: called after a result is pinned (the caller manages focus: MyTeamCard → its handlePin; FindYourTeam → focus #my-team-unpin). */
+  /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass MyTeamCard's `focusUnpin`, which moves it to #my-team-unpin). */
   onPin?: (slug: string, leagueId: string) => void;
   className?: string;
 }
 
 export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
-export const PIN_LIMIT = 8;
+const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-
-function joinAnd(parts: readonly string[]): string {
-  if (parts.length <= 1) return parts.join('');
-  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
-}
-
 /** The same "a query at all" rule as `searchTeams`: ≥ 2 characters raw and compact. */
-export function isActiveQuery(query: string): boolean {
+function isActiveQuery(query: string): boolean {
   const raw = query.trim();
   return raw.length >= 2 && normalizeQuery(raw).compact.length >= 2;
 }
@@ -88,7 +84,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
 
 /** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
 function leagueList(index: SearchIndex): string {
-  return joinAnd([...new Set(index.teams.map((t) => t.leagueShort))]);
+  return listWords([...new Set(index.teams.map((t) => t.leagueShort))]);
 }
 
 export interface FinderView {
@@ -128,7 +124,7 @@ export function finderView(
   let message: string;
   if (parts.length > 0) {
     const one = matches.length + divisions + leagues === 1;
-    message = `${joinAnd(parts)} ${one ? 'matches' : 'match'} "${q}".`;
+    message = `${listWords(parts)} ${one ? 'matches' : 'match'} "${q}".`;
   } else if (result.notCovered.length > 0) {
     message = result.notCovered.map((n) => n.reason).join(' ');
   } else {
@@ -152,7 +148,7 @@ export function finderView(
  * (`Pin St Francis (Saint Francis), <detail>`) → ['Pin ', 'St Francis', ' (Saint Francis), '].
  * The detail line is the visible second line.
  */
-export function pinResultParts(entry: TeamSearchEntry): { before: string; visible: string; after: string; detail: string } {
+function pinResultParts(entry: TeamSearchEntry): { before: string; visible: string; after: string; detail: string } {
   const detail = pinResultDetail(entry);
   const label = pinLabel({
     name: entry.name,
@@ -212,7 +208,7 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
 }
 
 /** The line above the results when pinning cannot work in this browser. */
-export const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
+const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
 
 function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[]; kickerId: string }) {
   if (groups.length === 0) return null;
@@ -337,7 +333,7 @@ export function TeamFinder({
 
   return (
     <search
-      className={`sx-js-only block${className ? ` ${className}` : ''}`}
+      className={['sx-js-only block', className].filter(Boolean).join(' ')}
       data-searching={typing ? '' : undefined}
     >
       <label htmlFor={inputId} className="mb-1 block text-meta font-medium text-ink">
@@ -382,7 +378,7 @@ export function TeamFinder({
               </ul>
               {view.more ? (
                 <Link href="/teams" prefetch={false} className="sx-action mt-1 inline-flex min-h-11 items-center text-accent">
-                  Search all {index.teams.length} on Teams →
+                  Search all {index.teams.length} on Teams <Arrow />
                 </Link>
               ) : null}
             </Fragment>

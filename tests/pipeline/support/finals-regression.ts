@@ -6,8 +6,8 @@
  * (1cc606d9). Run against the corpus, BVAL's Santa Teresa counted finals drop by 3: §7.5 trigger c.
  *
  * Built by running the real pipeline over the corpus plus a temporary overlay that turns those
- * three contests into finals, with the real official (B2) and si.com (B3) steps. Rebuild with
- * `B1_REBUILD_VARIANTS=1 pnpm exec vitest run tests/pipeline/variants.test.ts`.
+ * three contests into finals, with the real official (steps/official.ts) and si.com
+ * (steps/sblive.ts) steps. Rebuild with `B1_REBUILD_VARIANTS=1 pnpm exec vitest run tests/pipeline/variants.test.ts`.
  */
 
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
@@ -17,11 +17,10 @@ import path from 'node:path';
 import type { OfficialStep, SbliveStep } from '../../../lib/pipeline/contract';
 import { SILENT_SINK } from '../../../lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '../../../lib/pipeline/run';
-import { stableStringify } from '../../../lib/snapshot-schema';
-import { REPO } from '../../helpers';
+import { stableStringify } from '../../../lib/stable-json';
+import { REPO, VARIANTS_DIR, corpusDir } from '../../helpers';
 
-export const CORPUS_ALL = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02');
-export const VARIANTS_DIR = path.join(REPO, 'tests', 'fixtures', 'corpus', 'variants');
+const CORPUS_ALL = corpusDir('all-2026-10-02');
 export const FINALS_REGRESSION_DIR = path.join(VARIANTS_DIR, 'finals-regression');
 export const FINALS_REGRESSION_PREVIOUS_AT = '2026-10-02T03:00:00.000Z';
 
@@ -38,7 +37,7 @@ interface RawTeam { score: number | null; result: string | null; homeAwayType: n
 interface RawRow { contest: { contestId: string; hasResult?: boolean; teams: RawTeam[] }; calculatedFields: { contestState: number } }
 
 /** A temporary overlay turning the REGRESSED_FINALS contests into finals. Returns its directory. */
-export function writeRegressionOverlay(): string {
+function writeRegressionOverlay(): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-overlay-'));
   const files: Record<string, string> = {};
   for (const slug of FEEDS) {
@@ -65,7 +64,7 @@ export function writeRegressionOverlay(): string {
 }
 
 /** Runs the pipeline over corpus + overlay and returns the previous snapshot's stable JSON. */
-export async function buildFinalsRegressionPrevious(official: OfficialStep, sblive: SbliveStep): Promise<string> {
+async function buildFinalsRegressionPrevious(official: OfficialStep, sblive: SbliveStep): Promise<string> {
   const overlay = writeRegressionOverlay();
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-')), 'snapshot.json');
   const args = parseRunArgs(

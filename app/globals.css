@@ -480,15 +480,22 @@
      BUTTON (Unpin, Pin this team, More filters) keeps ink. */
   a.sx-pill { color: var(--sx-accent); }
   .sx-pill.sx-pill-accent { background: var(--sx-accent-wash); color: var(--sx-accent-ink); font-weight: 600; }
+  /* The canvas pill: on the page background the plain surface-2 fill barely separates, so a pill
+     there is raised to the card plane with the hairline ring and hovers and presses down to
+     surface-2 (F-56g). Height stays the caller's: `min-h-11` only where the pill is primary. */
+  .sx-pill.sx-pill-ring { background: var(--sx-surface); box-shadow: var(--sx-ring); }
   /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
-     surface-3 chrome plane (its hover plane, already measured above), and the accent pill, which
-     keeps its wash, draws a 1px accent ring inside its edge. A pill with a utility background
-     (`bg-surface`, `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead —
-     utilities outrank this layer. */
+     surface-3 chrome plane (its hover plane, already measured above), the canvas pill to its own
+     surface-2 hover plane, and the accent pill, which keeps its wash, draws a 1px accent ring
+     inside its edge. A pill with a utility background (`bg-surface`,
+     `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead — utilities outrank
+     this layer. */
   .sx-pill:not(.sx-pill-accent):active { background: var(--sx-surface-3); }
+  .sx-pill.sx-pill-ring:active { background: var(--sx-surface-2); }
   .sx-pill.sx-pill-accent:active { box-shadow: inset 0 0 0 1px var(--sx-accent); }
   @media (hover: hover) {
     .sx-pill:hover { background: var(--sx-surface-3); }
+    .sx-pill.sx-pill-ring:hover { background: var(--sx-surface-2); }
     .sx-pill.sx-pill-accent:hover { background: var(--sx-accent-wash); text-decoration: underline; }
   }
   /* A small static fact pill: "as of Wed Sep 30", "3 final", a count beside a date. */
@@ -556,19 +563,12 @@
   .sx-table-wide thead th { height: 2.5rem; padding-block: 0; }
   .sx-table tbody tr { border-bottom: 1px solid var(--sx-divider); }
   .sx-table tbody tr:last-child { border-bottom: 0; }
-  /* The whole two-line row is one block-level <a>: its hit area is exactly the row. */
-  .sx-rowlink {
-    display: block;
-    height: 100%;
-    color: inherit;
-    text-decoration: none;
-  }
   @media (hover: hover) {
     .sx-table tbody tr:hover { background: var(--sx-surface-2); }
   }
-  .sx-table tbody tr:has(.sx-rowlink:active) { background: var(--sx-surface-2); }
-  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. Two independent
-     channels: `.sx-pinned` (server, `highlightSlug`) and `[data-pinned]` (the localStorage pin). */
+  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. `.sx-pinned` is the
+     home pinned card's static class (MyTeamCard); `[data-pinned]` is the localStorage pin, set on
+     a `[data-team-slug]` row or card by the pinned-team script and PinnedTeamMarks. */
   .sx-pinned,
   [data-team-slug][data-pinned] { box-shadow: inset 2px 0 0 var(--sx-accent); }
   /* On a card the rule widens to 3px and is COMPOSED with the ring in the same rule, so the
@@ -738,12 +738,6 @@
      is drawn on the capsule rather than as a rectangle around it. */
   .sx-navtop:focus-visible { outline: none; }
   .sx-navtop:focus-visible > .sx-indicator { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
-  /* A sticky table header clips an outer ring — use an inset one there. */
-  :where(thead th, .sx-sticky-head):focus-visible { outline-offset: -2px; }
-  /* On a colored fill, a surface-colored inner ring keeps the outline readable. */
-  :where(.sx-on-fill):focus-visible { box-shadow: 0 0 0 1px var(--sx-surface) inset; }
-
-  [data-sticky="scrolled"] { box-shadow: var(--sx-shadow-raised); }
 
   /* LIVE is a word and an accent dot. The pulse is the third, optional cue.
      Declared inside @layer base so the reduced-motion block below actually

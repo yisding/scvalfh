@@ -156,7 +156,7 @@ stubs=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
 # generateStaticParams family with EXACTLY the snapshot's count, or data/clubs.json's for /clubs/
-# (scripts/assert-vinext-prerender.mjs also matches the sitemap against the prerendered pages one
+# (scripts/assert-vinext-prerender.ts also matches the sitemap against the prerendered pages one
 # for one).
 expect /sitemap.xml 200 application/xml "$public"
 from_build /sitemap.xml

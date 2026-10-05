@@ -19,8 +19,9 @@
 
 import { z } from 'zod';
 
-import { contentKey } from './fetch-scope';
 import { ALL_DIVISIONS } from './leagues';
+import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
+import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Rosters cover every registry team, all five leagues: one entry per team of TEAMS. */
@@ -29,11 +30,9 @@ const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d
 /** How many teams a rosters file holds: TEAMS.length (49). */
 export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
 
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
 
-const teamSlug = id.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
-
-const division = id.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
+const division = slugId.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
 
 /** A team entry must carry its own registry id and division, not another team's. */
 export function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
@@ -41,34 +40,35 @@ export function agreesWithRegistry(t: { slug: string; teamId: string; division: 
   return team !== undefined && team.id === t.teamId && team.division === t.division;
 }
 
-/** Same scheme check as lib/snapshot-schema.ts: these end up in an href. */
-const httpUrl = z
-  .string()
-  .refine((v) => /^https?:\/\/\S+$/i.test(v), 'expected an http(s) URL');
-
 export const GRADE_CLASSES = ['Fr.', 'So.', 'Jr.', 'Sr.'] as const;
 
 export const RosterPlayerSchema = z
   .object({
-    /** MaxPreps per-season athlete GUID. */
+    /** MaxPreps per-season athlete GUID: a returning player gets a new one each year. */
     athleteId: z.string().min(1).nullable(),
     /** MaxPreps per-season roster-membership GUID. */
     rosterId: z.string().min(1).nullable(),
-    /** MaxPreps' stable person id. */
+    /** MaxPreps' stable person id, the same across seasons. */
     careerProfileId: z.string().min(1).nullable(),
-    /** The `?careerid=` short key in the career URL. */
+    /** The `?careerid=` short key in the career URL: the public identifier in links. */
     careerId: z.string().min(1).nullable(),
     firstName: z.string().min(1).nullable(),
     lastName: z.string().min(1).nullable(),
+    /** As the table prints it. Never empty. */
     fullName: z.string().min(1),
-    /** A string on purpose: "00" and "21/88" occur. */
+    /** A string on purpose: "00" and "21/88" occur. null when blank. */
     jersey: z.string().min(1).nullable(),
+    /** 9–12, or null when the coach left it blank. */
     grade: z.number().int().min(9).max(12).nullable(),
+    /** "Sr." / "Jr." / "So." / "Fr.", or null: always in step with `grade`. */
     gradeClass: z.enum(GRADE_CLASSES).nullable(),
+    /** position1..3 in order, blanks dropped (F / M / D / G observed). */
     positions: z.array(z.string().min(1)),
+    /** `positions` joined with ", ": exactly the table's Position cell; null when blank. */
     position: z.string().min(1).nullable(),
-    /** `5'7"`, as MaxPreps prints it. */
+    /** `5'7"`, as MaxPreps prints it; null when heightFeet is blank. */
     height: z.string().regex(/^\d'\d{1,2}"$/, 'expected feet\'inches"').nullable(),
+    /** Total inches, or null. */
     heightInches: z.number().int().min(1).nullable(),
     isCaptain: z.boolean(),
     careerUrl: httpUrl.nullable(),
@@ -229,7 +229,6 @@ const enrichmentKind = z.enum(ENRICHMENT_KINDS);
  * low    a profile field not tied to the season at all
  */
 const confidence = z.enum(['high', 'medium', 'low']);
-const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
 
 const sourced = {
   kind: enrichmentKind,
@@ -306,7 +305,7 @@ function hostOf(url: string): string | null {
 export const PlayerProfileSchema = z
   .object({
     platform: z.enum(PROFILE_PLATFORMS),
-    url: httpUrl.refine((v) => v.startsWith('https://'), 'expected an https URL'),
+    url: httpsUrl,
     /** The graduation year the profile states, when it states one. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     note: z.string().min(1).nullable(),
@@ -371,7 +370,7 @@ export const EnrichmentSourceSchema = z.object({
   kind: enrichmentKind,
   url: httpUrl,
   title: z.string().min(1),
-  capturedAt: dateOnly,
+  capturedAt: dateKey,
   confidence,
 });
 
@@ -391,7 +390,7 @@ export const EnrichedTeamSchema = z
 export const RosterEnrichmentSchema = z
   .object({
     season: z.string().min(1),
-    capturedAt: dateOnly,
+    capturedAt: dateKey,
     builtBy: z.string().min(1),
     notes: z.array(z.string().min(1)),
     /** One entry per registry team; a team nothing has been added for has empty lists. */

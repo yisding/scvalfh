@@ -45,6 +45,7 @@ import {
   type Rosters,
   type TeamRoster,
 } from './rosters-schema';
+import { dateKey, failValidation, httpsUrl } from './schema-primitives';
 import type { TeamSlug } from './types';
 
 export type {
@@ -77,11 +78,6 @@ function readOverride(envName: string, bundled: unknown): unknown {
   return JSON.parse(text) as unknown;
 }
 
-function failValidation(what: string, issues: Array<{ path: PropertyKey[]; message: string }>): never {
-  const lines = issues.slice(0, 10).map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-  throw new Error(`${what} failed validation:\n${lines.join('\n')}`);
-}
-
 /**
  * What other public sources showed for a team's CURRENT roster — the one claim a team page with
  * no MaxPreps players makes about them, so it is recorded per team rather than inferred:
@@ -93,16 +89,10 @@ function failValidation(what: string, issues: Array<{ path: PropertyKey[]; messa
  * It sits beside lib/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
  * validated here, at load.
  */
-const httpsUrl = z
-  .string()
-  .url()
-  .refine((v) => v.startsWith('https://'), 'expected an https URL');
-const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
-
 export const OtherRostersSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('none'), checkedOn: day, note: z.string().min(1) }).strict(),
+  z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
   z
-    .object({ status: z.literal('partial'), checkedOn: day, source: httpsUrl, summary: z.string().min(1) })
+    .object({ status: z.literal('partial'), checkedOn: dateKey, source: httpsUrl, summary: z.string().min(1) })
     .strict(),
   z.object({ status: z.literal('not-checked') }).strict(),
 ]);

@@ -13,14 +13,15 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES } from '../../lib/leagues';
-import { RunAbort, resourcePath, type Transport } from '../../lib/pipeline/contract';
+import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
 import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, runPipeline, writeOutputs } from '../../lib/pipeline/run';
 import { stepStandings } from '../../lib/pipeline/steps/standings';
 import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
-import { loadSnapshot, stableStringify } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot-schema';
+import { stableStringify } from '../../lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 import { game } from '../game-builder';
@@ -276,6 +277,17 @@ describe('prepareRun and the outputs', () => {
     expect(dry.previousFile).toBe(shipped);
   });
 
+  it('a dry run records no --capture corpus; a real run does', () => {
+    const live = (): Transport => ({ mode: 'live', get: async () => ({ url: '', httpStatus: 200, body: '' }) });
+    const capture = path.join(tmpOut(), '..', 'capture');
+    const dry = prepareRun(parseRunArgs(['--capture', capture, '--out', tmpOut(), '--dry-run'], opts), SILENT_SINK, live);
+    expect(dry.ctx.transport.mode).toBe('live');
+    expect(existsSync(capture)).toBe(false);
+    const wet = prepareRun(parseRunArgs(['--capture', capture, '--out', tmpOut()], opts), SILENT_SINK, live);
+    expect(wet.ctx.transport.mode).toBe('recording');
+    expect(existsSync(capture)).toBe(true);
+  });
+
   it('reads a v1 previous snapshot through loadSnapshot (migrated)', () => {
     const args = parseRunArgs(['--fixtures', corpusDir('scval'), '--out', path.join(REPO, 'tests', 'golden', 'snapshot-2026-10-02.v1.json'), '--dry-run'], opts);
     const prepared = prepareRun(args, SILENT_SINK);
@@ -297,11 +309,11 @@ describe('prepareRun and the outputs', () => {
     const snapshot: Snapshot = loadSnapshot(JSON.parse(text) as unknown);
     expect(snapshot.schemaVersion).toBe(2);
     expect(text).toBe(stableStringify(snapshot));
-    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as Record<string, unknown>;
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as SnapshotMeta;
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
-    expect(String(meta.commitSummary)).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
-    expect((meta.leagues as Array<{ id: string; state: string }>).map((l) => [l.id, l.state])).toEqual([
+    expect(meta.commitSummary).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
+    expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],
       ['bval', 'fresh'],
       ['pcal', 'fresh'],
@@ -348,6 +360,10 @@ describe('steps 07-08 never abort the run', () => {
       ['mcal', 'degraded'],
       ['eal', 'frozen'],
     ]);
+    expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.reasons).toEqual([
+      "The official PCAL schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.",
+    ]);
+    expect(run.result?.meta.commitSummary).toMatch(/PCAL degraded \(official schedule not applied\)/);
     expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.divisions[0].classification).toBe('fallback-contest-type');
     expect(snapshot.counts.byLeague.pcal.leagueGames).toBeGreaterThan(0);
   });

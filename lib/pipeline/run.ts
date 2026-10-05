@@ -10,8 +10,8 @@
  *   04 reported    unreadable table → SOURCE STALE (carried)
  *   05 schedules   failed feed → carried; ≥50% of a league's feeds → LEAGUE FREEZE (b)
  *   06 normalize   + exclusions, phantom dedupe, carry-forward
- *   07 official    B2 (stepOfficial)
- *   08 sblive      B3 (stepSblive)
+ *   07 official    the official step (steps/official.ts), injectable
+ *   08 sblive      the si.com step (steps/sblive.ts), injectable
  *   09 secondary   VNN, CCS
  *   10 classify    classifyGames with the official step's degraded divisions
  *   11 guards      finals regression (c), frozen-league substitution, systemic RUN ABORT
@@ -23,10 +23,12 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import path from 'node:path';
 
 import { carryCrossCheck } from '../crosscheck';
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../fetch-scope';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
-import { loadSnapshot, stableStringify } from '../snapshot-schema';
-import type { Game, LeagueId, OfficialFixture, Snapshot } from '../types';
+import { loadSnapshot } from '../snapshot-schema';
+import { stableStringify } from '../stable-json';
+import type { Game, OfficialFixture, Snapshot } from '../types';
 import {
   RunAbort,
   type OfficialStepResult,
@@ -44,6 +46,7 @@ import { stepClassify } from './steps/classify';
 import { markLeaguesNotInRun, stepGuards } from './steps/guards';
 import { stepLeagueMeta } from './steps/league-meta';
 import { stepNormalize } from './steps/normalize';
+import { notAppliedReason } from './steps/official';
 import { stepReported } from './steps/reported';
 import { stepSchedules } from './steps/schedules';
 import { stepSecondary } from './steps/secondary';
@@ -99,12 +102,7 @@ async function runOfficial(ctx: PipelineContext, steps: PipelineSteps, games: Ga
     for (const league of LEAGUES) {
       if (league.rules.classification !== 'official-fixtures' || !ctx.leaguesInRun().includes(league.id)) continue;
       for (const d of league.divisions) degraded.add(d.id);
-      ctx.leagues.degrade(
-        league.id,
-        'degraded',
-        `The official ${league.shortName} schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.`,
-        'official schedule not applied',
-      );
+      ctx.leagues.degrade(league.id, 'degraded', notAppliedReason(league), 'official schedule not applied');
     }
     return { games, unmatched: [], degradedDivisions: degraded, revisedUpstream: new Set(), carriedDivisions: new Set() };
   }
@@ -123,7 +121,7 @@ async function runSblive(
     ctx.warn(`si.com step failed: ${(err as Error).message}`);
     // The previous report, keeping only rows still true of these games (no stale conflict rows).
     const prior = ctx.previous?.sbliveCrossCheck;
-    return { games, unmatched, crossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
+    return { games, unmatched, sbliveCrossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
   }
 }
 
@@ -146,20 +144,22 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   await stepSchedules(ctx, state); // 05
   stepNormalize(ctx, state); // 06
 
-  // 07 official (B2)
-  state.official = await runOfficial(ctx, steps, state.games);
-  state.games = state.official.games;
-  state.unmatched = state.official.unmatched;
+  // 07 official (the injectable official step)
+  const { games: officialGames, unmatched, ...officialFlags } = await runOfficial(ctx, steps, state.games);
+  state.games = officialGames;
+  state.unmatched = unmatched;
+  state.official = officialFlags;
 
-  // 08 sblive (B3)
+  // 08 sblive (the injectable si.com step)
   const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
   state.games = sblive.games;
   state.unmatched = sblive.unmatched;
-  state.crossCheck = sblive.crossCheck;
+  state.sbliveCrossCheck = sblive.sbliveCrossCheck;
 
   // 09 secondary
-  state.secondary = await stepSecondary(ctx, state.games);
-  state.games = state.secondary.games;
+  const { games: secondaryGames, ...ccs } = await stepSecondary(ctx, state.games);
+  state.games = secondaryGames;
+  state.secondary = ccs;
 
   // 10 classify
   state.games = stepClassify(ctx, state.games, state.official.degradedDivisions);
@@ -183,7 +183,7 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --variant <dir>              apply a variant overlay on top of --fixtures (repeatable)
   --capture <dir>              live: also record every response into a new corpus at <dir>
   --out <path>                 snapshot path (default data/snapshot.json; the meta file goes beside it)
-  --dry-run                    validate and report, write nothing
+  --dry-run                    validate and report, write nothing (captures included)
   --fetched-at <iso>           pin the run's stamp (default: now; the corpus's stamp with --fixtures)
   --force                      run even outside the season window
   --leagues <a,b>              fetch only these leagues; the others are carried forward, frozen
@@ -193,15 +193,6 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --no-official                skip the official schedule sources (alias: --no-scval)
   --no-ccs                     skip the CCS calendar and bracket poll
   --no-vnn                     skip the VNN school calendars`;
-
-function leagueList(value: string, flag: string): LeagueId[] {
-  const ids = value.split(',').map((s) => s.trim()).filter(Boolean);
-  if (ids.length === 0) throw new Error(`${flag} needs at least one league id`);
-  for (const id of ids) {
-    if (!isLeagueId(id)) throw new Error(`${flag}: unknown league ${id} (known: ${LEAGUE_IDS.join(', ')})`);
-  }
-  return ids;
-}
 
 export interface ParseOptions {
   cwd: string;
@@ -245,15 +236,10 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
       case '--capture': args.capture = path.resolve(opts.cwd, next()); break;
       case '--out': args.out = path.resolve(opts.cwd, next()); break;
       case '--dry-run': args.dryRun = true; break;
-      case '--fetched-at': {
-        const v = next();
-        if (!/^\d{4}-\d{2}-\d{2}T/.test(v) || Number.isNaN(Date.parse(v))) throw new Error(`--fetched-at: not an ISO timestamp: ${v}`);
-        args.fetchedAt = v;
-        break;
-      }
+      case '--fetched-at': args.fetchedAt = parseFetchedAtFlag(next(), arg); break;
       case '--force': args.force = true; break;
-      case '--leagues': args.leagues = leagueList(next(), arg); break;
-      case '--accept-regression': args.acceptRegression.push(...leagueList(next(), arg)); break;
+      case '--leagues': args.leagues = parseLeaguesFlag(next(), arg); break;
+      case '--accept-regression': args.acceptRegression.push(...parseLeaguesFlag(next(), arg)); break;
       case '--no-sblive': args.sblive = false; break;
       case '--sblive-full': args.sbliveFull = true; break;
       case '--no-official':
@@ -293,7 +279,8 @@ export interface PreparedRun {
 /**
  * Resolves the transport, the previous snapshot and the defaults that depend on the corpus, and
  * builds the context. A corpus's (or variant's) `previous` snapshot is copied to `--out` first so
- * the run starts from it (on a dry run it is read in place and nothing is written).
+ * the run starts from it (on a dry run it is read in place and nothing is written). A dry run
+ * records no --capture corpus either, as fetch-rosters and fetch-player-stats do.
  */
 export function prepareRun(raw: RunArgs, sink: LogSink = CONSOLE_SINK, live?: () => Transport): PreparedRun {
   const args: RunArgs = { ...raw, variants: [...raw.variants], acceptRegression: [...raw.acceptRegression] };
@@ -307,7 +294,7 @@ export function prepareRun(raw: RunArgs, sink: LogSink = CONSOLE_SINK, live?: ()
   } else {
     const inner = live ? live() : new LiveTransport({ onLog: (line) => sink.log(line) });
     transport =
-      args.capture !== null
+      args.capture !== null && !args.dryRun
         ? new RecordingTransport(inner, args.capture, {
             id: `capture-${localDateKey(args.fetchedAt)}`,
             fetchedAt: args.fetchedAt,

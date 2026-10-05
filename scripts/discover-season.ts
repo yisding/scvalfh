@@ -2,10 +2,10 @@
 /**
  * Next-season bootstrap (SPEC §1.1h, §7.13). Run once, by hand, when the season rolls over.
  *
- *   pnpm exec tsx scripts/discover-season.ts
- *   pnpm exec tsx scripts/discover-season.ts --ssid <sportSeasonId>   pin the season explicitly
- *   pnpm exec tsx scripts/discover-season.ts --teams los-altos,mitty  probe these teams instead
- *   pnpm exec tsx scripts/discover-season.ts --help                   print usage, no request
+ *   pnpm discover-season
+ *   pnpm discover-season --ssid <sportSeasonId>   pin the season explicitly
+ *   pnpm discover-season --teams los-altos,mitty  probe these teams instead
+ *   pnpm discover-season --help                   print usage, no request
  *
  * What it does:
  *   1. reads `ssid` / `allSeasonId` / `genderSport` / `teamLevel` from the state hub's __NEXT_DATA__
@@ -36,8 +36,9 @@ import {
 } from '../lib/season';
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Team } from '../lib/types';
+import { runCli } from './cli';
 
-const USAGE = `Usage: pnpm exec tsx scripts/discover-season.ts [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
+const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
 
 Next-season bootstrap: reads the MaxPreps state hub, resolves each division's league through
 team-context/v1, asserts leagues/{id}/v1 agrees, and prints a diff plus a paste block. Never writes a file.
@@ -60,7 +61,7 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v) throw new Error(`${arg} needs a value`);
+      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
@@ -99,8 +100,8 @@ function compare(label: string, ours: string | null, theirs: string | null | und
   diffs.push(`${label}: ${ours ?? 'null'} → ${t}`);
 }
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
     return 0;
@@ -270,9 +271,4 @@ async function main(): Promise<number> {
   return 0;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  });
+runCli(main);

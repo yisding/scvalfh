@@ -1,5 +1,5 @@
 import Tag from './Tag';
-import type { GameDisplay, StatusTone } from './game-view';
+import type { GameDisplay, StatusTone } from './describe-game';
 
 /**
  * The written label beside every score: FINAL · LIVE · SCORE NOT REPORTED · POSTPONED ·
@@ -14,15 +14,16 @@ import type { GameDisplay, StatusTone } from './game-view';
  * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
  * already uppercase, so `uppercase` changes nothing a reader hears.
  *
- * Client-safe: it imports only TYPES from game-view (the home My-team card renders it).
+ * Client-safe: it imports only TYPES from describe-game (the home My-team card renders it).
  */
 export interface StatusLabelProps {
   display: GameDisplay;
   /**
-   * The game's chips (league / NL, postseason, †). Set it false in a context that prints them
+   * The game's chips (league / NL, postseason). Never the †: the source of a score travels with
+   * the score (SourceMark), with or without the chips. Set it false in a context that prints them
    * elsewhere, or where every game is the same kind and marking each one is noise (DESIGN §5.4).
    */
-  showNonLeague?: boolean;
+  showChips?: boolean;
   className?: string;
 }
 
@@ -37,7 +38,7 @@ const TONE: Record<StatusTone, string> = {
 const DECIDER_LABEL: Readonly<Record<string, string>> = { F: 'by forfeit', SO: 'decided on 1 v 1s' };
 
 /** The † beside a score published from si.com: a title for a pointer, words for a screen reader. */
-export function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
+function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
   if (display.sourceMark !== 'si.com') return null;
   return (
     <span className="font-sans text-micro font-semibold text-ink-3" title="Score via si.com">
@@ -62,7 +63,7 @@ export function GameChips({
   const { leagueTag, postseasonTag, isNonLeague } = display;
   if (!leagueTag && !postseasonTag && !isNonLeague) return null;
   return (
-    <span className={`inline-flex flex-wrap items-center gap-1${className ? ` ${className}` : ''}`}>
+    <span className={['inline-flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
       {leagueTag ? <Tag label={`${leagueTag} league game`}>{leagueTag}</Tag> : null}
       {isNonLeague ? <Tag label="non-league">NL</Tag> : null}
       {postseasonTag ? <Tag label={postseasonTag}>{postseasonTag}</Tag> : null}
@@ -70,7 +71,7 @@ export function GameChips({
   );
 }
 
-export function StatusLabel({ display, showNonLeague = true, className }: StatusLabelProps) {
+export function StatusLabel({ display, showChips = true, className }: StatusLabelProps) {
   return (
     <span
       className={`inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-sans text-micro font-semibold uppercase tracking-[0.04em] ${
@@ -89,7 +90,7 @@ export function StatusLabel({ display, showNonLeague = true, className }: Status
       ) : null}
       {/* The source of the score is never optional: it travels with the score. */}
       <SourceMark display={display} />
-      {showNonLeague ? <GameChips display={display} className="normal-case tracking-normal" /> : null}
+      {showChips ? <GameChips display={display} className="normal-case tracking-normal" /> : null}
     </span>
   );
 }

@@ -1,14 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE } from '../../components/layout/site-url';
-import CompactStandingsTable from '../../components/standings/CompactStandingsTable';
+import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
+import { OG_BASE } from '../../components/layout/site';
+import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
+import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
+import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
-
-import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from './standings-data';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as
@@ -16,7 +18,7 @@ import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from
  *
  * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
  * `#el-camino` are real elements here, as are `#ccs`/`#ncs`/`#ns` (sections), every league id and every
- * division id. A single-division league whose division id equals its league id (PCAL) has ONE
+ * division id. A single-division league whose division id equals its league id (PCAL, EAL) has ONE
  * element carrying the id; every id on the page is unique.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each
@@ -29,7 +31,7 @@ import { getStandingsOverviewData, leaderClause, leagueChips, leagueHrefs } from
  * Static: no search params, nothing derived from `Date.now()`.
  */
 export function generateMetadata(): Metadata {
-  const { leaders, throughDate } = getStandingsOverviewData();
+  const { leaders, throughDate } = buildStandingsOverviewView();
   const summary = leaders
     .map(({ league, lines }) => `${league.shortName}: ${leaderClause(lines)}`)
     .join('. ');
@@ -45,7 +47,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default function StandingsPage() {
-  const { leagues, sections } = getStandingsOverviewData();
+  const { leagues, sections } = buildStandingsOverviewView();
 
   return (
     <div className="pb-section-lg">
@@ -55,17 +57,7 @@ export default function StandingsPage() {
       />
 
       {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
-      <p className="m-0 mt-4 flex flex-wrap gap-2">
-        {leagues.map((league) => (
-          <a
-            key={league.id}
-            href={`#${league.id}`}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
-          >
-            Jump to {league.shortName} &darr;
-          </a>
-        ))}
-      </p>
+      <LeagueJumpLinks leagues={leagues} />
 
       <LeagueSwitcher mode="anchor" label="Leagues" leagues={leagueChips()} hrefs={leagueHrefs(null)} className="mt-4" />
 
@@ -84,25 +76,7 @@ export default function StandingsPage() {
                 <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{league.membershipNote}</p>
               ) : null}
               {league.divisions.map((division) => (
-                <div key={division.division} id={division.anchorId ?? undefined} className="mt-6">
-                  {division.heading ? (
-                    <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4>
-                  ) : null}
-                  <CompactStandingsTable
-                    rows={division.rows}
-                    ladderLine={division.ladderLine}
-                    caption={division.caption}
-                  />
-                  <p className="m-0 mt-2">
-                    <Link
-                      href={division.fullHref}
-                      prefetch={false}
-                      className="sx-action text-meta font-medium text-accent hover:underline"
-                    >
-                      {division.fullLabel} &rarr;
-                    </Link>
-                  </p>
-                </div>
+                <OverviewDivisionBlock key={division.division} division={division} />
               ))}
             </section>
           ))}

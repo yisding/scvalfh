@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import MissingValue from '../ui/MissingValue';
+import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
@@ -42,6 +43,7 @@ const LAST_WIDTH: Readonly<Record<string, string>> = {
   savePct: 'w-[4.5rem]',
   perGame: 'w-16',
 };
+
 /**
  * The gutter before a column: 8px, except before Pct, which follows the record. Both are
  * dash-separated mono numbers, and at 8px "10-0-0 1.000" read as one string.
@@ -50,17 +52,8 @@ const GUTTER: Readonly<Record<string, string>> = {
   pct: 'pl-3 sm:pl-5',
 };
 
-function Dash() {
-  return (
-    <>
-      <span aria-hidden="true">&mdash;</span>
-      <span className="sr-only">not recorded</span>
-    </>
-  );
-}
-
 function Cell({ cell }: { cell: LeaderCell }) {
-  if (cell.text === null) return <Dash />;
+  if (cell.text === null) return <MissingValue words="not recorded" />;
   if (!cell.sr) return <>{cell.text}</>;
   return (
     <>
@@ -71,13 +64,7 @@ function Cell({ cell }: { cell: LeaderCell }) {
 }
 
 function Place({ row }: { row: LeaderRow }) {
-  if (!row.tied) return <span className="sx-num">{row.rank}</span>;
-  return (
-    <span className="sx-num whitespace-nowrap">
-      <span aria-hidden="true">T{row.rank}</span>
-      <span className="sr-only">tied for {ordinal(row.rank)}</span>
-    </span>
-  );
+  return <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />;
 }
 
 /** Short name below 640px, the full name from there. */
@@ -104,7 +91,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
           <Link href={team.href} prefetch={false} className="text-ink-2 no-underline hover:underline">
             <TeamName name={team.name} shortName={team.shortName} />
           </Link>{' '}
-          <span aria-hidden="true">&middot;</span> {team.league}
+          <span aria-hidden="true">&middot;</span> {team.leagueShort}
         </span>
       </>
     );
@@ -119,7 +106,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
         <Link href={team.href} prefetch={false} className="block text-body text-ink no-underline hover:underline">
           <TeamName name={team.name} shortName={team.shortName} />
         </Link>
-        <span className="block text-meta text-ink-3">{team.league}</span>
+        <span className="block text-meta text-ink-3">{team.leagueShort}</span>
       </span>
     </span>
   );
@@ -202,7 +189,11 @@ function BoardTable({
   );
 }
 
-export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
+export interface LeaderBoardTableProps {
+  board: LeaderBoard;
+}
+
+export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
   const { extra } = board;
   return (
     <section id={board.id} className="min-w-0 scroll-mt-24">

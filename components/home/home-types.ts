@@ -3,7 +3,7 @@
  *
  * `MyTeamCard`, `PinTile`, `FindYourTeam` and `SetLeagueButton` are `'use client'`, so they cannot
  * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/leagues` (SPEC §0.4 client
- * boundary). Everything they need is computed on the server (`home-data.ts`) and passed as plain
+ * boundary). Everything they need is computed on the server (`home-view.ts`) and passed as plain
  * data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already resolved by
  * `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule stays in its
  * single place (`renderScore()` in lib/format.ts).
@@ -14,7 +14,7 @@
 import type { SectionConfig } from '../../lib/leagues';
 import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
-import type { GameDisplay, SideView } from '../ui/game-view';
+import type { GameDisplay, SideView } from '../ui/describe-game';
 
 /**
  * The colors a small `TeamMonogram` draws with: the fill and its ink. The second school color is

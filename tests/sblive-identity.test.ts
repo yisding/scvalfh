@@ -25,8 +25,9 @@ import {
   sbliveIdsFrom,
 } from '../lib/sources/sblive';
 import { TEAMS, normalizeTeamKey } from '../lib/teams';
+import { REPO } from './helpers';
 
-const DIR = path.join(__dirname, 'fixtures/sblive/identity');
+const DIR = path.join(REPO, 'tests', 'fixtures', 'sblive', 'identity');
 const read = (file: string) => readFileSync(path.join(DIR, file), 'utf8');
 
 const IMG_SCHOOL = (id: string) => `https://assets.scorebooklive.com/uploads/production/school/${id}/image/x.png`;

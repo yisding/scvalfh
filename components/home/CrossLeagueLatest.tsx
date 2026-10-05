@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
+import EmptyState from '../ui/EmptyState';
 import SectionHeader from '../ui/SectionHeader';
 import { shortDate } from '../../lib/format';
 
-import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-data';
+import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-view';
 import { ResultRow } from './LatestScores';
 
 /**
@@ -43,14 +45,18 @@ export function CrossLeagueLatest({ view, className }: CrossLeagueLatestProps) {
                 <Link href={`/scores/${view.date}`} prefetch={false} className="sx-action text-accent hover:underline">
                   {group.total - group.games.length} more {group.shortName}{' '}
                   {group.total - group.games.length === 1 ? 'game' : 'games'} that day{' '}
-                  <span aria-hidden="true">&rarr;</span>
+                  <Arrow />
                 </Link>
               </p>
             ) : null}
           </div>
         ))
       ) : (
-        <p className="m-0 text-meta text-ink-2">No results yet. Scores appear here the morning after a game is played.</p>
+        // The composition each league panel uses for the same state (LeaguePanel), pointed at the
+        // cross-league schedule index rather than one league's.
+        <EmptyState heading="No results yet." action={{ href: '/schedule', label: 'All schedules' }}>
+          Scores appear here the morning after a game is played.
+        </EmptyState>
       )}
     </section>
   );

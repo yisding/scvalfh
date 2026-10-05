@@ -29,14 +29,16 @@ import {
   findLeague,
   statusesOf,
 } from './leagues';
+import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from './snapshot-migrate';
+import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
-import type { DivisionId, Snapshot, TiebreakStage } from './types';
+import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage } from './types';
 
 // ---------------------------------------------------------------- primitives
 
 /** League, division and slug ids: validated strings; membership is checked in checkAgainstConfig. */
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'expected a lower-case id');
+const id = slugId;
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A MaxPreps contest GUID, or `sblive:<digits>` (owner decision D2, rule 2). */
@@ -45,15 +47,12 @@ const contestId = z
   .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
 const sectionId = z.enum(['ccs', 'ncs', 'ns']);
-const officialSourceId = z.enum(['scval-pdf', 'bval-docx', 'pcal-pdf', 'mcal-pdf']);
+const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
 const sourceId = z.enum([
   'maxpreps-api',
   'maxpreps-html',
   'sblive',
-  'scval-pdf',
-  'bval-docx',
-  'pcal-pdf',
-  'mcal-pdf',
+  ...OFFICIAL_SOURCE_IDS,
   'ccs-pdf',
   'ccs-ical',
   'vnn-ics',
@@ -62,7 +61,7 @@ const sourceId = z.enum([
 const gameStatus = z.enum(['scheduled', 'live', 'final', 'score-pending', 'postponed']);
 const decider = z.enum(['REG', 'OT', '2OT', 'SO', 'FORFEIT']);
 const record3 = z.object({ w: z.number().int(), l: z.number().int(), t: z.number().int() });
-const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+const dateOnly = dateKey;
 const scorePair = z.object({ home: z.number().int().min(0), away: z.number().int().min(0) });
 
 const tiebreakStage = z.enum([
@@ -93,20 +92,8 @@ const playoffStatus = z.enum([
   'below-line',
 ]);
 
-/**
- * Every URL in the snapshot that ends up in an `href`.
- *
- * All of them are third-party strings — `calculatedFields.canonicalUrl`, `nfhsStreamUrl` and
- * `goFanUrl` straight out of the MaxPreps JSON, the SBLive page links, and the standings-PDF href
- * scraped out of scval.com's HTML — and React does NOT filter a URL scheme, so a `javascript:` or
- * `data:` value from upstream would be emitted verbatim into a clickable link on a prerendered page.
- * The scheme check belongs at the same chokepoint that refuses a 0-0 non-final: it is the one place
- * the whole snapshot has to pass through. `lib/normalize.ts` drops a non-conforming URL to null with
- * a warning rather than failing the whole run over one bad row.
- */
-const httpUrl = z
-  .string()
-  .refine((v) => /^https?:\/\/\S+$/i.test(v), 'expected an http(s) URL');
+// Every URL in the snapshot that ends up in an `href` is `httpUrl` (lib/schema-primitives.ts says
+// why the scheme check sits at this chokepoint).
 
 // ---------------------------------------------------------------- teams
 
@@ -819,15 +806,14 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   });
 
   // 7. the CCS field.
-  const aq = s.playoffs.format.autoQualifiers as Record<string, number>;
+  const aq = s.playoffs.format.autoQualifiers;
   const keys = Object.keys(aq).sort().join('|');
   const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
   if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
-  const cfgAq = CCS.autoQualifiers as Readonly<Record<string, number>>;
   let sum = aq.atLarge ?? 0;
   for (const leagueId of CCS_LEAGUE_IDS) {
-    if (aq[leagueId] !== cfgAq[leagueId]) {
-      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${cfgAq[leagueId]}`);
+    if (aq[leagueId] !== CCS.autoQualifiers[leagueId]) {
+      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
     }
     sum += aq[leagueId] ?? 0;
   }
@@ -864,7 +850,6 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
 
 export const SnapshotSchema: z.ZodType<Snapshot> = SnapshotObject.superRefine(checkAgainstConfig);
 
-export type SnapshotInput = z.input<typeof SnapshotObject>;
 export type SnapshotOutput = z.infer<typeof SnapshotObject>;
 
 // Compile-time proof that the schema and the hand-written types agree, in both directions.
@@ -877,19 +862,12 @@ void _typeMatchesSchema;
 export function parseSnapshot(raw: unknown): Snapshot {
   const parsed = SnapshotSchema.safeParse(raw);
   if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
     const n = parsed.error.issues.length;
     throw new Error(
-      `snapshot failed validation (${n} ${n === 1 ? 'issue' : 'issues'}):\n${lines.join('\n')}`,
+      `snapshot failed validation (${n} ${n === 1 ? 'issue' : 'issues'}):\n${formatIssues(parsed.error.issues)}`,
     );
   }
   return parsed.data;
-}
-
-export function safeParseSnapshot(raw: unknown) {
-  return SnapshotSchema.safeParse(raw);
 }
 
 /**
@@ -902,26 +880,6 @@ export function loadSnapshot(raw: unknown): Snapshot {
 }
 
 // ---------------------------------------------------------------- canonical form
-
-/** Keys sorted at every level so a git diff shows only what really changed. */
-export function stableStringify(value: unknown): string {
-  const seen = new WeakSet<object>();
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      if (seen.has(node as object)) throw new Error('circular structure in snapshot');
-      seen.add(node as object);
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
 
 /**
  * Any key that holds a run's wall-clock stamp rather than a fact about the season.

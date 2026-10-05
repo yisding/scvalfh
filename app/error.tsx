@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '../components/layout/PageHeader';
 
 /**
  * The route-level error boundary. Next 16 passes `retry`, not `reset`
@@ -15,8 +15,8 @@ import PageHeader from '@/components/layout/PageHeader';
  * kept as a small reference line so a correction request can quote it.
  *
  * "Go to the home page" sits on the canvas, where the default `sx-pill` fill (surface-2) read as
- * a grey label rather than a control; `bg-surface` plus the hairline ring makes it a button,
- * the same canvas-pill treatment the other "See all"/stepper pills use.
+ * a grey label rather than a control; `sx-pill-ring` (the surface fill plus the hairline ring)
+ * makes it a button, the same canvas-pill treatment the other "See all"/stepper pills use.
  */
 export default function Error({
   error,
@@ -49,7 +49,7 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2"
+            className="sx-pill sx-pill-ring min-h-11"
           >
             Go to the home page
           </Link>

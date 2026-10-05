@@ -1,9 +1,9 @@
 /**
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
- * The page reads the snapshot ONLY through lib/data.ts and every score goes through
- * lib/format's renderScore / components/ui/game-view's describeGame — nothing here reads
- * `game.home.score` to decide what to print. The only arithmetic in this file is counting
+ * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
+ * lib/format's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
+ * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
  * `localDateKey(snapshot.fetchedAt)` (getToday()), never Date.now(), so the build is
  * reproducible (BUILD-BRIEF).
@@ -13,7 +13,6 @@ import {
   getGames,
   getHeadToHead,
   getLastLeagueResultDate,
-  getLeagueSummaries,
   getOfficialFixtures,
   getStandingContext,
   getStandingFor,
@@ -34,14 +33,15 @@ import {
   gameWhen,
   monthDay,
   ordinal,
+  plural,
   recordString,
+  renderScore,
   shortDate,
   sideOutcome,
   timeOfDayPT,
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
-import { getPriorSeason } from '../../lib/prior-season-data';
 import { outcomesFor } from '../../lib/standings';
 import type {
   DivisionId,
@@ -55,11 +55,10 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
-import { buildEloBoard, type EloBoardView } from '../leaders/leaders-view';
+import { getEloBoard } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame } from '../ui/game-view';
+import { describeGame } from '../ui/describe-game';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -106,21 +105,19 @@ export interface TeamEloView {
   boardPlace: { rank: number; tied: boolean } | null;
 }
 
-let eloBoard: EloBoardView | null = null;
-
-/** The Elo card for one team, from the same board /leaders prints (built once per process). */
-export function teamElo(slug: TeamSlug): TeamEloView {
-  eloBoard ??= buildEloBoard(getTeams(), getGames(), getPriorSeason());
-  const rating = eloBoard.ratingBySlug.get(slug);
-  const row = eloBoard.board.rows.find((r) => r.team.slug === slug);
-  const minGames = eloBoard.minimum.min;
+/** The Elo card for one team, read off the board /leaders prints (getEloBoard), so the two cannot disagree. */
+function teamElo(slug: TeamSlug): TeamEloView {
+  const board = getEloBoard();
+  const rating = board.ratingBySlug.get(slug);
+  const row = board.board.rows.find((r) => r.team.slug === slug);
+  const minGames = board.minimum.min;
   const games = rating?.games ?? 0;
   return {
     elo: rating?.elo ?? null,
     games,
     preseason: rating !== undefined && games === 0,
     provisional: rating !== undefined && games > 0 && games < minGames,
-    seededFrom: eloBoard.seededFrom,
+    seededFrom: board.seededFrom,
     seeded: rating?.seeded ?? false,
     minGames,
     boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
@@ -141,7 +138,7 @@ export interface TeamLeagueCopy {
    * 'Super Regional' for an unbracketed league); null for a CCS ladder, whose event is CCS's.
    */
   postseasonName: string | null;
-  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL): the noun for a game in this team's table. */
+  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL): the noun for a game in this team's table. */
   gamesWord: 'division' | 'league';
   /** 'Article VI §1 (double round robin; …)' */
   doubleRoundRobin: string;
@@ -164,7 +161,7 @@ export interface TeamPageView {
   standing: Standing | undefined;
   league: TeamLeagueCopy;
   division: DivisionId;
-  /** null for a single-division league (PCAL, MCAL): never rendered as a division label. */
+  /** null for a single-division league (PCAL, MCAL, EAL): never rendered as a division label. */
   divisionHeading: string | null;
   /** `divisionHeading ?? league short`: what "of N in …" names. */
   scopeLabel: string;
@@ -349,10 +346,9 @@ function outcomeFor(game: Game, teamId: string): Outcome | null {
 
 /** The chip label's score, from this team's side: '0–7'. */
 function scorePair(game: Game, teamId: string): string | undefined {
-  const mine = game.home.teamId === teamId ? game.home : game.away;
-  const theirs = game.home.teamId === teamId ? game.away : game.home;
-  if (mine.score === null || theirs.score === null) return undefined;
-  return `${mine.score}–${theirs.score}`;
+  const score = renderScore(game);
+  if (score.kind !== 'final') return undefined;
+  return game.home.teamId === teamId ? `${score.home}–${score.away}` : `${score.away}–${score.home}`;
 }
 
 function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOpponent[] {
@@ -431,7 +427,8 @@ function dateLabelFor(dateKey: string, dateLocal: string, today: string): string
  * The scope is league-aware: an opponent from the page's own league is placed in its division
  * heading (or the league's short name for a one-table league: '2nd in MCAL'); one from another
  * league names that league too ('4th in SCVAL El Camino'), so a cross-league opponent's place is
- * never read as a place in this team's table. PCAL and MCAL never get a division label.
+ * never read as a place in this team's table. A single-division league (PCAL, MCAL, EAL) never
+ * gets a division label.
  */
 export function opponentRecordLine(opponent: Team | undefined, leagueId: LeagueId): string | null {
   if (!opponent) return null;
@@ -503,7 +500,7 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
-/** The NEXT card's external pills (named apart from game-view's private `chipsFor`). */
+/** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
   const address = game.venue.address;
@@ -578,22 +575,30 @@ export function buildNextCard(
   return { kind: 'none' };
 }
 
-/** 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. */
-function fixtureOpponent(
+/** 'VALLEY CHRISTIAN' → 'Valley Christian', for a grid name with no registry row behind it. */
+function titleCase(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
+}
+
+/**
+ * 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. The one place a
+ * fixture's opponent is named (the team page, its OG card and home's pinned card): the registry
+ * short name, or the schedule's own spelling title-cased for a school outside the registry.
+ */
+export function fixtureOpponent(
   fixture: OfficialFixture,
-  team: Team,
-): { versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
+  team: Pick<Team, 'slug'>,
+): { mineIsHome: boolean; versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
   const mineIsHome = fixture.homeSlug === team.slug;
   const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
   const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
   return {
+    mineIsHome,
     versus: mineIsHome ? 'vs' : 'at',
     opponent,
-    opponentName: opponent
-      ? opponent.shortName
-      : mineIsHome
-        ? fixture.awayName
-        : fixture.homeName,
+    opponentName: opponent ? opponent.shortName : titleCase(mineIsHome ? fixture.awayName : fixture.homeName),
   };
 }
 
@@ -714,8 +719,6 @@ export interface TeamsSectionGroup {
   leagues: TeamsLeagueGroup[];
 }
 
-const teamsWord = (n: number) => `${n} ${n === 1 ? 'team' : 'teams'}`;
-
 /** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18). */
 export function buildTeamsByLeague(): TeamsSectionGroup[] {
   const teams = getTeams();
@@ -725,7 +728,7 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
     leagues: leagues.map(({ league, divisions }) => ({
       league,
       title: `${league.shortName} — ${league.name}`,
-      meta: teamsWord(league.teamCount),
+      meta: plural(league.teamCount, 'team'),
       membershipNote: getLeague(league.id).membershipNote,
       standingsHref: `/standings/${league.id}`,
       standingsLabel: `${league.shortName} standings`,
@@ -739,15 +742,6 @@ export function buildTeamsByLeague(): TeamsSectionGroup[] {
       ),
     })),
   }));
-}
-
-/** The anchor-mode LeagueSwitcher's chips and `#<league>` targets for /teams. */
-export function teamsLeagueChips(): { chips: LeagueChip[]; hrefs: Record<string, string> } {
-  const summaries = getLeagueSummaries();
-  return {
-    chips: summaries.map((l) => ({ id: l.id, shortName: l.shortName, sectionShort: l.section.shortName })),
-    hrefs: Object.fromEntries(summaries.map((l) => [l.id, `#${l.id}`])),
-  };
 }
 
 // ---------------------------------------------------------------- one-line headlines (OG card)
@@ -784,11 +778,7 @@ export function gameHeadline(game: Game, team: Team): string {
  * start time and no game page, so it must never read like a scheduled game we have details for.
  */
 export function officialFixtureHeadline(fixture: OfficialFixture, team: Team): string {
-  const mineIsHome = fixture.homeSlug === team.slug;
-  const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-  const opponentName = mineIsHome ? fixture.awayName : fixture.homeName;
-  const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
-  const name = opponent ? opponent.shortName : opponentName;
+  const { versus, opponentName } = fixtureOpponent(fixture, team);
   const short = getLeague(fixture.league).shortName;
-  return `${mineIsHome ? 'vs' : 'at'} ${name} · ${shortDate(fixture.dateKey)} (${short} schedule)`;
+  return `${versus} ${opponentName} · ${shortDate(fixture.dateKey)} (${short} schedule)`;
 }

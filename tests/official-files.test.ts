@@ -5,7 +5,8 @@
  * a fixture side.
  */
 
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -25,7 +26,7 @@ import { OfficialValidationError, assertDoubleRoundRobin } from '../lib/official
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '../lib/teams';
 import type { OfficialFixture } from '../lib/types';
 import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '../scripts/build-official-fixtures';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 const raw = (league: string): unknown =>
   JSON.parse(readFileSync(path.join(REPO, 'data', 'official', `${league}-2026.json`), 'utf8')) as unknown;
@@ -227,5 +228,15 @@ describe('assertDoubleRoundRobin', () => {
     const f = pcal();
     f[0] = { ...f[0], awaySlug: null, awayName: 'York' };
     expect(problems(f)).toContain('pcal:2026-09-02:stevenson@monterey: away "York" is not a member of pcal');
+  });
+});
+
+describe('scripts/build-official-fixtures.ts flags', () => {
+  it('refuses --out-dir without a value instead of writing into the working directory', () => {
+    const cwd = mkdtempSync(path.join(tmpdir(), 'scvalfh-official-'));
+    const res = runScript('scripts/build-official-fixtures.ts', ['--out-dir'], { cwd });
+    expect(res.stderr).toContain('FAILED: --out-dir needs a value');
+    expect(res.status).toBe(1);
+    expect(readdirSync(cwd)).toEqual([]);
   });
 });

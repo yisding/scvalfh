@@ -2,12 +2,11 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
-import type { TeamSlug } from '../../lib/types';
-import GameRow from '../ui/GameRow';
+import { GameRow } from '../ui/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, type SideView } from '../ui/game-view';
+import { describeGame, type SideView } from '../ui/describe-game';
 
 import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model';
 
@@ -29,8 +28,6 @@ import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model
  */
 export interface PlayoffBracketProps {
   path: BracketPath;
-  /** The pinned team, highlighted with the 2px accent rule wherever it appears. */
-  highlightSlug?: TeamSlug | null;
   /**
    * The level of each round's heading. The page owns the h1 and the section heading is an h2; the
    * caller renders a path-name h3 only when there is more than one path, so with a single path the
@@ -77,24 +74,12 @@ function BracketLine({
 }
 
 /** The desktop card. Phone uses `GameRow`, so this is the only bracket-specific game markup. */
-function BracketCard({
-  entry,
-  highlightSlug,
-}: {
-  entry: BracketGame;
-  highlightSlug?: TeamSlug | null;
-}) {
+function BracketCard({ entry }: { entry: BracketGame }) {
   const { game, seeds } = entry;
   const display = describeGame(game);
-  const pinned =
-    !!highlightSlug && (game.home.slug === highlightSlug || game.away.slug === highlightSlug);
   const named = isNamedSide(game.home) || isNamedSide(game.away);
   return (
-    <div
-      className={`sx-card min-w-0 flex-1${
-        pinned ? ' sx-pinned' : ''
-      }`}
-    >
+    <div className="sx-card min-w-0 flex-1">
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
@@ -106,7 +91,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={display.showScores} />
             <BracketLine side={display.home} seed={seeds.home} showScore={display.showScores} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </Link>
@@ -116,7 +101,7 @@ function BracketCard({
             <BracketLine side={display.away} seed={seeds.away} showScore={false} />
             <BracketLine side={display.home} seed={seeds.home} showScore={false} />
             <span className="block px-2 pb-1">
-              <StatusLabel display={display} showNonLeague={false} />
+              <StatusLabel display={display} showChips={false} />
             </span>
           </span>
         </span>
@@ -127,7 +112,6 @@ function BracketCard({
 
 export function PlayoffBracket({
   path,
-  highlightSlug,
   headingLevel: RoundHeading = 'h4',
   className,
 }: PlayoffBracketProps) {
@@ -151,7 +135,7 @@ export function PlayoffBracket({
                 <li key={entry.game.contestId}>
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
-                  <GameRow game={entry.game} showRecap={false} showNonLeague={false} />
+                  <GameRow game={entry.game} showRecap={false} showChips={false} />
                 </li>
               ))}
             </ol>
@@ -171,16 +155,19 @@ export function PlayoffBracket({
               <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
             </RoundHeading>
             <ol
-              className={`m-0 flex flex-1 list-none flex-col justify-around gap-4 p-0${
-                roundIndex > 0 ? ' border-l border-divider' : ''
-              }`}
+              className={[
+                'm-0 flex flex-1 list-none flex-col justify-around gap-4 p-0',
+                roundIndex > 0 ? 'border-l border-divider' : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
               {round.games.map((entry) => (
                 <li key={entry.game.contestId} className="flex min-w-0 items-center">
                   {roundIndex > 0 ? (
                     <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}
-                  <BracketCard entry={entry} highlightSlug={highlightSlug} />
+                  <BracketCard entry={entry} />
                   {roundIndex < rounds.length - 1 ? (
                     <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" />
                   ) : null}

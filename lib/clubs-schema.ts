@@ -33,6 +33,7 @@
 
 import { z } from 'zod';
 
+import { isCalendarDate, isHttpsUrl, slugId } from './schema-primitives';
 import { TEAMS } from './teams';
 
 /**
@@ -150,24 +151,6 @@ export function clubSiteKey(url: string): string {
   return [host, ...segments.slice(0, n)].join('/');
 }
 
-/** Parses as a URL, and the scheme is https: these end up in an href. */
-export function isHttpsUrl(url: string): boolean {
-  try {
-    return new URL(url).protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
-/** A real calendar day, YYYY-MM-DD (no 2026-02-30). Shared with lib/commits-schema.ts. */
-export function isCalendarDate(v: string): boolean {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-  if (!m) return false;
-  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
-  const date = new Date(Date.UTC(y, mo - 1, d));
-  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d;
-}
-
 /**
  * The five shapes an affiliation's `asOf` may take:
  *   YYYY-MM-DD   a real day                        2026-07-08
@@ -191,10 +174,8 @@ export function isAsOf(v: string): boolean {
 
 // ---------------------------------------------------------------- building blocks
 
-const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'expected a lower-case id');
-
 const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-const teamSlug = id.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
+const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
 
 const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
 
@@ -223,7 +204,7 @@ export const ClubSourceSchema = z.object({
 
 export const ClubSchema = z.object({
   /** Ours, kebab-case: the /clubs/<slug> path. */
-  slug: id,
+  slug: slugId,
   name: text,
   /** The display name when set ("SF Hawks"); `name` otherwise. */
   shortName: text.nullable(),
@@ -264,7 +245,7 @@ export const ClubAffiliationSchema = z.object({
   athleteId: text,
   /** As MaxPreps spells it; lib/clubs.ts refuses any other spelling. */
   fullName: text,
-  club: id,
+  club: slugId,
   /** The club's own team name ("U19 Hawks Blue"), when a source gives one. */
   clubTeam: text.nullable(),
   status: z.enum(AFFILIATION_STATUSES),

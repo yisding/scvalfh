@@ -7,15 +7,16 @@
  *          from bval.org/standings and bval.org/all-league
  *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
  *
- *   pnpm exec tsx scripts/build-history.ts
- *   pnpm exec tsx scripts/build-history.ts --from tests/fixtures/scval \
+ *   pnpm build-history
+ *   pnpm build-history --from tests/fixtures/scval \
  *     --bval-from tests/fixtures/bval --retrieved-on 2026-10-03          # fully offline, from fixtures
- *   pnpm exec tsx scripts/build-history.ts --dry-run
+ *   pnpm build-history --dry-run
+ *   pnpm build-history --out <path>                                     # write somewhere else
  *
  * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
  * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.
  *
- * Nothing is written unless the assembled file passes lib/history.ts' own schema and the build
+ * Nothing is written unless the assembled file passes lib/history-schema.ts' schema and the build
  * found no problem (an unresolved school, a missing block): it exits 1 instead.
  *
  * Run once per season, by hand — NOT from the cron. These documents are published once a year and
@@ -29,8 +30,7 @@
  * sheet) are not a standings table and are not stored.
  */
 
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -52,7 +52,11 @@ import {
   type BvalStandingsBlock,
 } from '../lib/sources/bval-sheet';
 import { HttpClient } from '../lib/sources/http';
+import { HistorySchema } from '../lib/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
+import { isCalendarDate } from '../lib/schema-primitives';
+import { stableStringify } from '../lib/stable-json';
+import { runCli } from './cli';
 
 interface Args {
   from: string | null;
@@ -60,13 +64,6 @@ interface Args {
   retrievedOn: string;
   out: string;
   dryRun: boolean;
-}
-
-/** A real calendar day written YYYY-MM-DD ("2026-02-30" is refused). */
-function isIsoDay(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const d = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -81,7 +78,7 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v) throw new Error(`${arg} needs a value`);
+      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
@@ -92,7 +89,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--dry-run') out.dryRun = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
-  if (out.retrievedOn !== null && !isIsoDay(out.retrievedOn)) {
+  if (out.retrievedOn !== null && !isCalendarDate(out.retrievedOn)) {
     throw new Error(`--retrieved-on must be a date written YYYY-MM-DD, got "${out.retrievedOn}"`);
   }
   // Offline, the documents were read whenever the fixtures were saved; today would be a guess.
@@ -100,23 +97,6 @@ function parseArgs(argv: readonly string[]): Args {
     throw new Error('--bval-from needs --retrieved-on YYYY-MM-DD: the day those BVAL files were read');
   }
   return { ...out, retrievedOn: out.retrievedOn ?? new Date().toISOString().slice(0, 10) };
-}
-
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
 }
 
 function pick<T extends { division: string; level: string }>(
@@ -127,8 +107,8 @@ function pick<T extends { division: string; level: string }>(
   return blocks.find((b) => b.division === division && b.level === level) ?? null;
 }
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
 
   let standings: HistoryStandingsBlock[];
   let allLeague: AllLeagueBlock[];
@@ -378,23 +358,15 @@ async function main(): Promise<number> {
   }
   console.log('PCAL, MCAL, EAL: unavailable (see reasons in the file)');
 
-  // Validate with lib/history.ts' own schema before anything is written. That module also validates
-  // a file when it is imported; SCVAL_HISTORY points that import-time load at this candidate rather
-  // than the committed file, so a broken committed file cannot block the rebuild that replaces it.
+  // Validate against the contract before anything is written. lib/history-schema.ts does not load
+  // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild
+  // that replaces it.
   const json = stableStringify(history);
-  const candidate = path.join(mkdtempSync(path.join(tmpdir(), 'build-history-')), 'history.json');
-  writeFileSync(candidate, json, 'utf8');
-  process.env.SCVAL_HISTORY = candidate;
-  try {
-    const { HistorySchema } = await import('../lib/history');
-    const parsed = HistorySchema.safeParse(JSON.parse(json));
-    if (!parsed.success) {
-      for (const i of parsed.error.issues.slice(0, 10)) {
-        problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
-      }
+  const parsed = HistorySchema.safeParse(JSON.parse(json));
+  if (!parsed.success) {
+    for (const i of parsed.error.issues.slice(0, 10)) {
+      problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
     }
-  } catch (err) {
-    problems.push(`schema: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   if (problems.length) {
@@ -412,9 +384,4 @@ async function main(): Promise<number> {
   return 0;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  });
+runCli(main);

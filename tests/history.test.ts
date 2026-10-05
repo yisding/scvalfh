@@ -12,13 +12,13 @@
  * committed data: if a parser drifts, the numbers on /history/2025-26 drift with it.
  */
 
-import { execFileSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { HistorySchema } from '../lib/history-schema';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,
@@ -27,13 +27,14 @@ import {
 import {
   BVAL_HISTORY_SOURCES,
   bvalDocExportUrl,
+  htmlTableRows,
   parseAllLeagueHtml,
   parseCsv,
   parseGradeYear,
   parseStandingsCsv,
 } from '../lib/sources/bval-sheet';
 import { getTeamBySlug, teamsInLeague } from '../lib/teams';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
 const standingsText = readFileSync(path.join(FIX, 'standings-2025-26.txt'), 'utf8');
@@ -329,8 +330,7 @@ describe('history: the SCVAL entry is scoped to SCVAL (SPEC §0.2 #12, §4.2)', 
     expect(varsity.length).toBe(scval.length);
   });
 
-  it('refuses a slug or a division from another league', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a slug or a division from another league', () => {
     expect(HistorySchema.safeParse(file).success).toBe(true);
     const foreign = structuredClone(file);
     foreign.leagues.scval.divisions[0].standings.varsity[0].slug = 'leigh';
@@ -486,6 +486,12 @@ describe('history: the BVAL all-league documents', () => {
     expect([...st.firstTeam, ...st.secondTeam].every((p) => p.slug !== null)).toBe(true);
   });
 
+  it("decodes each cell's entities in one pass, folding the typographic quotes", () => {
+    const html = '<body><table><tr><td>O&rsquo;Neil&nbsp;&amp; Co</td><td>&amp;lt;b&amp;gt; &#39;x&#x27;</td></tr></table>';
+    // `&amp;lt;` is the text `&lt;`, never `<`.
+    expect(htmlTableRows(html)).toEqual([["O'Neil & Co", "&lt;b&gt; 'x'"]]);
+  });
+
   it('maps grade words and numbers, and nothing else', () => {
     expect(['Freshman', 'Sophmore', 'Sophomore', 'Junior', 'Senior', '12', '9'].map(parseGradeYear)).toEqual([
       9, 10, 10, 11, 12, 12, 9,
@@ -555,11 +561,10 @@ describe('history: PCAL and MCAL are explicitly unavailable', () => {
     expect(mcal.checked.join(' ')).toContain('Playoffs/FieldHockeyPlayoffs_25.pdf (404');
   });
 
-  it('links MCAL\'s official 2025 all-league team without storing any of it', async () => {
+  it('links MCAL\'s official 2025 all-league team without storing any of it', () => {
     expect(file.leagues.mcal.alsoPublished).toEqual([
       { label: '2025 All-MCAL Field Hockey Team', url: 'https://www.mcalsports.org/FieldHockey.htm#FH25' },
     ]);
-    const { HistorySchema } = await import('../lib/history');
     // A link is all it may be: an awards block on an unavailable league is not part of the schema.
     const withAwards = structuredClone(file) as unknown as { leagues: { mcal: Record<string, unknown> } };
     withAwards.leagues.mcal.alsoPublished = [{ label: 'x', url: 'not a url' }];
@@ -593,8 +598,7 @@ describe('history: the EAL is explicitly unavailable', () => {
 });
 
 describe('history: the league-aware schema', () => {
-  it('refuses a file with a league missing, or a league that is neither available nor unavailable', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a file with a league missing, or a league that is neither available nor unavailable', () => {
     const missing = structuredClone(file) as unknown as { leagues: Record<string, unknown> };
     delete missing.leagues.mcal;
     expect(HistorySchema.safeParse(missing).success).toBe(false);
@@ -606,8 +610,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(odd).success).toBe(false);
   });
 
-  it('refuses a BVAL slug or division that belongs to SCVAL, and SCVAL ones in BVAL', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a BVAL slug or division that belongs to SCVAL, and SCVAL ones in BVAL', () => {
     const a = structuredClone(file);
     a.leagues.bval.divisions[0].standings.varsity[0].slug = 'los-gatos';
     expect(HistorySchema.safeParse(a).success).toBe(false);
@@ -616,8 +619,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(b).success).toBe(false);
   });
 
-  it('refuses a place gap and a record that disagrees with its w/l/t', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses a place gap and a record that disagrees with its w/l/t', () => {
     const gap = structuredClone(file);
     gap.leagues.bval.divisions[0].standings.varsity[2].place = 4;
     expect(HistorySchema.safeParse(gap).success).toBe(false);
@@ -626,8 +628,7 @@ describe('history: the league-aware schema', () => {
     expect(HistorySchema.safeParse(drift).success).toBe(false);
   });
 
-  it('refuses an unavailable league without a reason, and an unknown provenance source', async () => {
-    const { HistorySchema } = await import('../lib/history');
+  it('refuses an unavailable league without a reason, and an unknown provenance source', () => {
     const noReason = structuredClone(file);
     noReason.leagues.pcal.reason = '';
     expect(HistorySchema.safeParse(noReason).success).toBe(false);
@@ -690,34 +691,31 @@ describe('history: the league-aware read API', () => {
 // ------------------------------------------------------------------------------ the build script
 
 describe('scripts/build-history.ts', () => {
-  const tsx = path.join(REPO, 'node_modules', '.bin', 'tsx');
-  const script = path.join(REPO, 'scripts', 'build-history.ts');
   /** Run the script; returns its exit code and everything it printed. */
-  const run = (args: string[]) => {
-    try {
-      const out = execFileSync(tsx, [script, ...args], { cwd: REPO, stdio: 'pipe', encoding: 'utf8' });
-      return { code: 0, out };
-    } catch (err) {
-      const e = err as { status?: number; stdout?: string; stderr?: string };
-      return { code: e.status ?? 1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
-    }
-  };
+  const run = (args: string[]) => runScript('scripts/build-history.ts', args);
   const offline = ['--from', 'tests/fixtures/scval', '--bval-from', 'tests/fixtures/bval'];
 
   it('rebuilds the committed file byte for byte from the fixtures (the file is generated, never hand-edited)', () => {
     const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-history-')), 'history.json');
     const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', out]);
-    expect(r.code, r.out).toBe(0);
+    expect(r.status, r.output).toBe(0);
     expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'));
   }, 30_000);
 
   it('requires a valid --retrieved-on with --bval-from, rather than stamping today on old files', () => {
     const missing = run([...offline, '--dry-run']);
-    expect(missing.code).toBe(1);
-    expect(missing.out).toMatch(/--bval-from needs --retrieved-on YYYY-MM-DD/);
+    expect(missing.status).toBe(1);
+    expect(missing.output).toMatch(/--bval-from needs --retrieved-on YYYY-MM-DD/);
     const bad = run([...offline, '--retrieved-on', '2026-02-30', '--dry-run']);
-    expect(bad.code).toBe(1);
-    expect(bad.out).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
+    expect(bad.status).toBe(1);
+    expect(bad.output).toMatch(/--retrieved-on must be a date written YYYY-MM-DD/);
+  }, 30_000);
+
+  it('refuses a flag where a value belongs, rather than writing a file named after it', () => {
+    const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', '--dry-run']);
+    expect(r.status).toBe(1);
+    expect(r.output).toMatch(/--out needs a value/);
+    expect(existsSync(path.join(REPO, '--dry-run'))).toBe(false);
   }, 30_000);
 
   it('writes nothing, and exits 1, when a school does not resolve', () => {
@@ -728,9 +726,9 @@ describe('scripts/build-history.ts', () => {
     }
     const out = path.join(dir, 'history.json');
     const r = run(['--from', 'tests/fixtures/scval', '--bval-from', dir, '--retrieved-on', '2026-10-03', '--out', out]);
-    expect(r.code).toBe(1);
-    expect(r.out).toMatch(/nothing written/);
-    expect(r.out).toMatch(/"Gilroyx" resolves to no registry team/);
+    expect(r.status).toBe(1);
+    expect(r.output).toMatch(/nothing written/);
+    expect(r.output).toMatch(/"Gilroyx" resolves to no registry team/);
     expect(existsSync(out)).toBe(false);
   }, 30_000);
 });

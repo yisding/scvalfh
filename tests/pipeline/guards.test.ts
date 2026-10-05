@@ -11,7 +11,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGame } from '../../lib/classify';
-import { divisionsOf } from '../../lib/leagues';
+import { divisionsOf, getLeague } from '../../lib/leagues';
 import { RunAbort, type OfficialStep } from '../../lib/pipeline/contract';
 import { PipelineContext, SILENT_SINK, emptyRunState, type RunState, type TeamFeedInfo } from '../../lib/pipeline/ledger';
 import {
@@ -19,6 +19,8 @@ import {
   SYSTEMIC_FAILED_FEEDS_SHARE,
   SYSTEMIC_MIN_GAMES_SHARE,
   checkSystemic,
+  divisionClassification,
+  finalsMissingReason,
 } from '../../lib/pipeline/steps/guards';
 import { loadSnapshot } from '../../lib/snapshot-schema';
 import { divisionGames } from '../../lib/standings';
@@ -27,6 +29,7 @@ import type { Game, LeagueId, Snapshot } from '../../lib/types';
 import { variantDir } from '../helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
 import { naiveBvalOfficial, noopSblive } from './support/noop-steps';
+import { testRunArgs } from './support/run-args';
 import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const EARLIER = '2026-10-02T03:00:00.000Z'; // Thu Oct 1, 8:00 PM Pacific
@@ -182,6 +185,25 @@ describe('trigger c: finals regression', () => {
     expect(run.result?.meta.commitSummary).toMatch(/BVAL frozen \(finals regression\)/);
   });
 
+  it('the commit summary names the cause that froze the league, not an earlier partial one', async () => {
+    const official: OfficialStep = async (ctx, games) => {
+      ctx.degrade('bval', 'partial', 'A BVAL team feed was carried.', 'team feed carried');
+      return naiveBvalOfficial(ctx, games);
+    };
+    const { snapshot, run } = await snapshotOf({ variants: ['finals-regression'], previous: regressed, steps: { official, sblive: noopSblive } });
+    expect(health(snapshot, 'bval')?.state).toBe('frozen');
+    expect(run.result?.meta.commitSummary).toMatch(/BVAL frozen \(finals regression\)/);
+  });
+
+  it('a drop below the freeze line names the vanished contests in its partial reason', () => {
+    expect(finalsMissingReason('bval', 1, ['abc'])).toBe(
+      '1 BVAL result that was final in the last update is missing from MaxPreps now (abc); the table is computed without it.',
+    );
+    expect(finalsMissingReason('pcal', 2, [])).toBe(
+      '2 PCAL results that were final in the last update are missing from MaxPreps now; the table is computed without them.',
+    );
+  });
+
   it('--accept-regression bval publishes the fresh rows', async () => {
     const { snapshot } = await snapshotOf({ variants: ['finals-regression'], previous: regressed, steps: NAIVE, extraArgs: ['--accept-regression', 'bval'] });
     expect(health(snapshot, 'bval')?.state).toBe('fresh');
@@ -235,16 +257,20 @@ describe('frozen-league re-classification', () => {
     for (const g of intraGames(snapshot, 'bval')) expect(g.countsFor, g.contestId).toBe(classifyGame(g, { degradedDivisions: degraded }));
     expect(divisionGames(snapshot.games, 'mt-hamilton').length).toBe(divisionGames(previous.games, 'mt-hamilton').length);
   });
+
+  it('divisionClassification: the league rule, a degraded official-fixtures division falling back to contest-type', () => {
+    const degraded = new Set(['mt-hamilton', 'eal']);
+    expect(divisionClassification(getLeague('bval'), 'mt-hamilton', degraded)).toBe('fallback-contest-type');
+    expect(divisionClassification(getLeague('bval'), 'santa-teresa', degraded)).toBe('official-fixtures');
+    expect(divisionClassification(getLeague('eal'), 'eal', degraded)).toBe('contest-type');
+  });
 });
 
 describe('systemic run abort', () => {
   function ctxWith(previousGames: number, leagues: LeagueId[] | null = null): PipelineContext {
     const previous = previousGames > 0 ? ({ games: new Array(previousGames).fill({}), leagueHealth: [] } as unknown as Snapshot) : null;
     return new PipelineContext({
-      args: {
-        fixtures: null, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: '2026-10-02T15:00:00.000Z',
-        force: false, leagues, acceptRegression: [], sblive: true, sbliveFull: false, official: true, ccs: true, vnn: true,
-      },
+      args: testRunArgs({ leagues }),
       transport: { mode: 'fixture', get: async () => ({ url: '', httpStatus: 200, body: '' }) },
       previous,
       sink: SILENT_SINK,

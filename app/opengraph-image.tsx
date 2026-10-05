@@ -1,9 +1,12 @@
 import { ImageResponse } from 'next/og';
 
-import { leagueRowText } from '@/components/home/home-data';
-import { SITE_NAME } from '@/components/layout/site-url';
-import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
-import { shortDate } from '@/lib/format';
+import { OG, OG_SIZE } from '../components/layout/og-theme';
+import { ROOT_OG_ALT, SITE_NAME } from '../components/layout/site';
+import { leaderLine } from '../components/standings/standings-page-view';
+import { leaderClause } from '../components/standings/standings-view';
+import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../lib/data';
+import { shortDate } from '../lib/format';
+import { SEASON_CALENDAR_YEAR } from '../lib/season';
 
 /**
  * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image
@@ -12,15 +15,17 @@ import { shortDate } from '@/lib/format';
  * One row per league, config order: `SCVAL  De Anza: St Ignatius 18 pts · El Camino: Los Gatos 21
  * pts` — the leader(s) of each division with their points. A single-division league has no
  * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
- * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
+ * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue. The row
+ * is the /standings card's own (standings-view's `leaderClause` over standings-page-view's
+ * `leaderLine`), so the two cards cannot word a league's leaders differently.
  *
  * Five rows have to fit between the title and the footer at 1200×630: 56px top and bottom padding
  * and 10px row padding keep the footer on the card with up to three of the five rows wrapping to
  * a second line (BVAL's two divisions with co-leaders already do). Rendered and checked at five
  * rows, on the live snapshot and with three rows wrapped.
  */
-export const alt = `${SITE_NAME} — 2026 standings, scores and playoffs`;
-export const size = { width: 1200, height: 630 };
+export const alt = ROOT_OG_ALT;
+export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export default function OpengraphImage() {
@@ -29,7 +34,7 @@ export default function OpengraphImage() {
   const rows = leagues.map((league) => ({
     id: league.id,
     shortName: league.shortName,
-    text: leagueRowText(league.divisions),
+    text: leaderClause(league.divisions.map((d) => leaderLine(d.id, d.heading))),
   }));
   const footer = `${leagues.length} leagues · ${getTeams().length} teams · ${
     through ? `results through ${shortDate(through)}` : 'no results yet'
@@ -45,14 +50,14 @@ export default function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '56px 72px',
-          background: '#0b0d10',
-          color: '#f2f5f8',
+          background: OG.BG,
+          color: OG.TEXT,
           fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
-          <div style={{ display: 'flex', marginTop: 16, height: 2, background: '#3d444d' }} />
+          <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{`${SITE_NAME} · ${SEASON_CALENDAR_YEAR}`}</div>
+          <div style={{ display: 'flex', marginTop: 16, height: 2, background: OG.RULE }} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -64,7 +69,7 @@ export default function OpengraphImage() {
                 alignItems: 'flex-start',
                 paddingTop: 10,
                 paddingBottom: 10,
-                borderBottom: '1px solid #3d444d',
+                borderBottom: `1px solid ${OG.RULE}`,
               }}
             >
               <div style={{ display: 'flex', width: 170, flexShrink: 0, fontSize: 32, lineHeight: 1.15, fontWeight: 600 }}>
@@ -75,11 +80,11 @@ export default function OpengraphImage() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', fontSize: 24, color: '#919ba5' }}>
+        <div style={{ display: 'flex', fontSize: 24, color: OG.TEXT_3 }}>
           {footer} &middot; unofficial
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

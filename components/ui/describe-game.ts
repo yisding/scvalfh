@@ -1,11 +1,13 @@
 /**
- * The pure display helper behind ScoreCell, StatusLabel, GameRow, GameCard, GameLogRow and
- * ScoreBoard.
+ * The pure display helper behind StatusLabel, GameRow, GameCard, GameLogRow and ScoreBoard.
  *
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
  * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
- * components/ reads `game.home.score` / `game.away.score` directly — every score comes through
- * `renderScore()` in lib/format.ts, and every glyph through `scoreGlyph()`.
+ * components/ PRINTS `game.home.score` / `game.away.score`: every printed score comes from
+ * `renderScore()` in lib/format.ts (directly, or through `describeGame()`), and every glyph from
+ * `scoreGlyph()`. The raw reads that remain are null-guarded comparisons and arithmetic that
+ * print no score: the level check in game-view's `resultConflictNoteFor` and its
+ * `isOneGoalFinal`, day-summary's headline-game margin and leaders-view's goal totals.
  *
  * Deviation from DESIGN §5.2 worth knowing: the data model has no `cancelled` status, because
  * MaxPreps contestState 1 (Deleted) rows are dropped rather than stored (SPEC §5.5.2). The
@@ -16,7 +18,7 @@
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, timeOfDay } from '../../lib/format';
 import { findDivision, findLeague, leagueOfDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
+import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
@@ -101,8 +103,21 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
   other: null,
 };
 
+/**
+ * ` · SCVAL` after a side from a league other than the list's own (`scopeLeague`); '' otherwise,
+ * and '' for a side outside the registry or a list with no league of its own. The one rule behind
+ * GameRow's and LatestScores' cross-league names.
+ */
+export function otherLeagueSuffix(slug: TeamSlug | null, scopeLeague: LeagueId | null | undefined): string {
+  if (!scopeLeague || !slug) return '';
+  const team = getTeamBySlug(slug);
+  if (!team || team.league === scopeLeague) return '';
+  const league = findLeague(team.league);
+  return league ? ` · ${league.shortName}` : '';
+}
+
 /** The league chip of a counted game (`countsFor` → its league's short name). */
-export function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
+function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
   if (game.countsFor === null) return null;
   const division = findDivision(game.countsFor);
   return division ? (findLeague(division.leagueId)?.shortName ?? null) : null;
@@ -118,8 +133,9 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   if (tag.kind === 'ccs') return 'CCS';
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
-  // The tag names its league; the kind's prefix is the fallback for a tag written without one.
-  const league = findLeague(tag.leagueId ?? tag.kind.split('-')[0] ?? '');
+  // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs' and 'other' may not.
+  if (tag.leagueId === null) return null;
+  const league = findLeague(tag.leagueId);
   if (!league) return null;
   // An unbracketed league's postseason has a name of its own ('EAL Super Regional').
   if (tag.kind === 'league-postseason' && league.postseason.kind === 'unbracketed-tournament') {
@@ -128,9 +144,37 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
   return `${league.shortName} ${word}`;
 }
 
+/** The three kinds of game the site tells apart (SPEC §10.4). */
+export type GameKind = 'league' | 'postseason' | 'non-league';
+
+/**
+ * What kind of game this is (SPEC §10.4): `league` when it counts for a division table
+ * (`countsFor`), else `postseason` when it carries a postseason tag, else `non-league`. The one
+ * definition of the split; `isNonLeague` below and every count of league, postseason and
+ * non-league games read it.
+ */
+export function gameKind(game: Pick<Game, 'countsFor' | 'postseason'>): GameKind {
+  if (game.countsFor !== null) return 'league';
+  return game.postseason !== null ? 'postseason' : 'non-league';
+}
+
+const GAME_KIND_LABEL: Readonly<Record<GameKind, 'League' | 'Postseason' | 'Non-league'>> = {
+  league: 'League',
+  postseason: 'Postseason',
+  'non-league': 'Non-league',
+};
+
+/**
+ * The one word for what kind of game this is, as the team page's Last and Next headers print it
+ * (SPEC §10.4): `League` for a counted game, `Postseason` for a tagged one, `Non-league` otherwise.
+ */
+export function gameKindLabel(game: Pick<Game, 'countsFor' | 'postseason'>): 'League' | 'Postseason' | 'Non-league' {
+  return GAME_KIND_LABEL[gameKind(game)];
+}
+
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
   return {
-    isNonLeague: game.countsFor === null && game.postseason === null,
+    isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
     sourceMark: game.provenance.scores === 'sblive' ? 'si.com' : null,
@@ -334,11 +378,6 @@ export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
   return (
     statusLabel === 'TIME TBA' || (!game.isTimeTba && statusLabel === timeOfDay(game.dateLocal))
   );
-}
-
-/** 'Tue 5:30 PM' style label for a scheduled row, or 'TIME TBA'. */
-export function scheduledTime(game: Game): string {
-  return game.isTimeTba ? 'TIME TBA' : timeOfDay(game.dateLocal);
 }
 
 /** '+3' / '−7' / '0' for a per-game margin. */

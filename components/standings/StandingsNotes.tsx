@@ -72,12 +72,6 @@ export interface StandingsNotesProps {
   scheduledPer: string;
   /** `<SHORT> ranks by points (<citation>), and so do we.` or the EAL's title-only wording (standings-view `rankRule`). */
   rankRule: string;
-  /**
-   * What settles a level place (standings-view `levelReason`). Accepted but not printed: the
-   * mismatch line says only "tied for 7th here", because the tied group's own note in this list
-   * already names the league's last step (see the docblock, item 3).
-   */
-  levelReason?: string;
   className?: string;
 }
 
@@ -329,7 +323,7 @@ export function StandingsNotes({
   const items = toItems(byTeam(mismatches));
   return (
     <div
-      className={`sx-inset flex flex-col rounded-card-lg p-5 md:p-6${className ? ` ${className}` : ''}`}
+      className={['sx-inset flex flex-col rounded-card-lg p-5 md:p-6', className].filter(Boolean).join(' ')}
     >
       <h3 className="m-0 text-lead text-ink">
         Notes<span className="sr-only">: {divisionLabel}</span>
@@ -345,7 +339,7 @@ export function StandingsNotes({
               {[...missing, ...postponed].map((row) => (
                 <li key={row.key}>
                   <time dateTime={row.dateKey} className="sx-num text-ink">
-                    {row.date}
+                    {row.dateLabel}
                   </time>{' '}
                   {row.matchup}
                   {row.sbliveNote ? <span className="block text-meta text-ink-3">{row.sbliveNote}</span> : null}

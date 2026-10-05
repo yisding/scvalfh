@@ -4,8 +4,10 @@ import EmptyState from '../ui/EmptyState';
 import { GameLine } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../ui/plural';
+import { gameKind } from '../ui/describe-game';
 import { shortDate } from '../../lib/format';
 import type { Game } from '../../lib/types';
+import type { NextLeagueDay } from './home-view';
 
 /**
  * A league's remaining slate for today, or the next day that has one (SPEC §10.1, DESIGN §3.1).
@@ -25,22 +27,16 @@ export interface NextSlateProps {
   isToday: boolean;
   /** Overrides the kicker — "First games" before the season starts. */
   kicker?: string;
-  limit?: number;
   /** The league's first league day after `date` (its league games, every contest it has in
       `total`, and how many of those are postseason and non-league contests). */
-  nextLeague?: {
-    date: string;
-    games: Game[];
-    total: number;
-    postseason: number;
-    nonLeague: number;
-  } | null;
+  nextLeague?: Omit<NextLeagueDay, 'isToday'> | null;
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
-  as?: 'h2' | 'h3';
   className?: string;
 }
 
+/** Rows shown for the slate day; the action goes to the whole day on /scores/[date]. */
+const ROWS = 3;
 /** League games shown under "Next league games": enough to name the day, not a second slate. */
 const RESUME_LIMIT = 3;
 
@@ -50,17 +46,15 @@ export function NextSlate({
   total,
   isToday,
   kicker,
-  limit = 3,
   nextLeague,
   after,
-  as = 'h3',
   className,
 }: NextSlateProps) {
-  const shown = games.slice(0, limit);
+  const shown = games.slice(0, ROWS);
   // Counted over the whole shown day (`games`), not the capped list, so the meta matches the day.
-  const counted = games.filter((g) => g.countsFor !== null).length;
-  const post = games.filter((g) => g.countsFor === null && g.postseason !== null).length;
-  const nonLeague = games.length - counted - post;
+  const counted = games.filter((g) => gameKind(g) === 'league').length;
+  const post = games.filter((g) => gameKind(g) === 'postseason').length;
+  const nonLeague = games.filter((g) => gameKind(g) === 'non-league').length;
   const counts =
     [
       counted > 0 ? `${counted} league` : null,
@@ -70,10 +64,10 @@ export function NextSlate({
       .filter((part): part is string => part !== null)
       .join(', ') || plural(games.length, 'game');
   const has = date !== null && shown.length > 0;
-  // Judged over the whole day, like the counts: a league game cut off by `limit` is still that
+  // Judged over the whole day, like the counts: a league game cut off by `ROWS` is still that
   // day's, and the card must not say league play resumes on a later date under a "1 league" meta.
   const resume =
-    nextLeague && nextLeague.games.length > 0 && games.every((g) => g.countsFor === null)
+    nextLeague && nextLeague.games.length > 0 && games.every((g) => gameKind(g) !== 'league')
       ? nextLeague
       : null;
   // `resume.games` is that later day's playable games counted in THIS league's tables (a day after
@@ -83,12 +77,10 @@ export function NextSlate({
   const resumeLeague = resume ? resume.games.length : 0;
   const resumePost = resume ? resume.postseason : 0;
   const resumeOther = resume ? resume.nonLeague : 0;
-  // One level below the block's own heading (panel h2 → block h3 → sub-row h4).
-  const Sub = as === 'h2' ? 'h3' : 'h4';
   return (
     <section className={className}>
       <SectionHeader
-        as={as}
+        as="h3"
         kicker={kicker ?? (isToday ? 'Still to play today' : 'Next up')}
         meta={has ? (isToday && !kicker ? counts : `${shortDate(date)} · ${counts}`) : undefined}
         action={has ? { href: `/scores/${date}`, label: `All ${total} on ${shortDate(date)}` } : undefined}
@@ -108,7 +100,8 @@ export function NextSlate({
                same one-line form. */
             <div className="border-t border-divider">
               <div className="flex min-h-11 flex-wrap items-center gap-x-3 px-gutter py-1">
-                <Sub className="m-0 text-micro font-semibold text-ink-3">Next league games</Sub>
+                {/* One level below the block's own heading (panel h2 → block h3 → sub-row h4). */}
+                <h4 className="m-0 text-micro font-semibold text-ink-3">Next league games</h4>
                 {/* In a <p> so it takes the site's in-text link underline: in ink-2 it is
                     otherwise indistinguishable from the date it names. The link goes to the
                     whole day's /scores page, but a bare "3 games" under a "league games"

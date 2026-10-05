@@ -1,7 +1,10 @@
 import Link from 'next/link';
 
 import { CCS } from '../../lib/leagues';
+import { splitStatusLabel } from '../playoffs/playoff-view';
+import Arrow from '../ui/Arrow';
 import ExternalLink from '../ui/ExternalLink';
+import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
 
 /** 'MCAL tournament' | 'Super Regional' | 'playoff': the event a result-less team has no place in. */
@@ -34,7 +37,11 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
  * official.
  */
-export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
+export interface TeamPlayoffLineProps {
+  view: TeamPageView;
+}
+
+export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
   const { postseasonLine: line, standing, league } = view;
   if (!line) {
     return (
@@ -49,19 +56,11 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
   }
   // The chip is the label's head; a level place's " — <rule> decides it" tail is the tiebreak
   // note's job below, not the chip's.
-  const [chip] = line.label.split(' — ');
+  const { head } = splitStatusLabel(line.label);
   return (
     <div className="sx-card p-5 text-meta">
       <p className="m-0 mb-3">
-        <span
-          className={
-            view.postseasonAccent
-              ? 'inline-block rounded-tag bg-accent-wash px-2 py-1 text-micro font-semibold text-accent-ink'
-              : 'inline-block rounded-tag bg-surface-3 px-2 py-1 text-micro font-semibold text-ink-2'
-          }
-        >
-          {chip}
-        </span>
+        <StatusChip tone={view.postseasonAccent ? 'accent' : 'neutral'}>{head}</StatusChip>
       </p>
       <p className="m-0 text-body text-ink">{line.sentence}</p>
       {standing?.tiebreak.shared && standing.tiebreak.note ? (
@@ -69,8 +68,8 @@ export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
       ) : null}
       <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
-        <Link href={line.href} prefetch={false} className="sx-pill text-accent">
-          {line.linkText}
+        <Link href={line.href} prefetch={false} className="sx-pill">
+          {line.linkText} <Arrow />
         </Link>
         {league.postseasonKind === 'ccs-ladder' ? (
           <ExternalLink href={CCS.bracketUrl} className="sx-pill">

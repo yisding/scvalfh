@@ -7,17 +7,24 @@ import {
   clockTime,
   dateSpan,
   dateWithYear,
+  dayDiff,
+  dayNumber,
   formStripLabel,
   gameWhen,
   gradeWord,
   hoursBetween,
   isoDateKey,
+  leagueClock,
+  leagueClockPT,
+  listWords,
   localDateKey,
   longDate,
+  matchupJoiner,
   monthDay,
   numberWord,
   ordinal,
   ordinalPlace,
+  ordinalWord,
   partialDate,
   partialDateKind,
   perGame,
@@ -26,6 +33,7 @@ import {
   renderScore,
   scoreGlyph,
   scoreSentence,
+  shiftDateKey,
   shortDate,
   sideOutcome,
   signedGd,
@@ -33,7 +41,7 @@ import {
   timeOfDay,
   timeOfDayPT,
   toLocalTimestamp,
-  versusLabel,
+  weekdayName,
   winPct,
 } from '../lib/format';
 import { game } from './helpers';
@@ -204,10 +212,10 @@ describe('format: renderScore is the only place scores are read (DESIGN §5.2)',
     );
   });
 
-  it('says vs or at from one team point of view', () => {
+  it('joins away and home with at, or vs at a neutral site', () => {
     const g = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 0 });
-    expect(versusLabel(g, g.home.teamId!)).toBe('vs');
-    expect(versusLabel(g, g.away.teamId!)).toBe('at');
+    expect(matchupJoiner(g)).toBe('at');
+    expect(matchupJoiner({ ...g, site: 'neutral' })).toBe('vs');
   });
 });
 
@@ -273,11 +281,31 @@ describe('numberWord and dateSpan', () => {
     expect([11, 49, -1, 2.5].map(numberWord)).toEqual(['11', '49', '-1', '2.5']);
   });
 
+  it('words ordinals zeroth to tenth and falls back to ordinal() past them', () => {
+    expect([0, 1, 4, 7, 9, 10].map(ordinalWord)).toEqual(['zeroth', 'first', 'fourth', 'seventh', 'ninth', 'tenth']);
+    expect([11, 21, 22, 23].map(ordinalWord)).toEqual(['11th', '21st', '22nd', '23rd']);
+  });
+
+  it('names the weekday of a date key or a local timestamp', () => {
+    expect(weekdayName('2026-10-31')).toBe('Saturday');
+    expect(weekdayName('2026-09-29T16:00:00')).toBe('Tuesday');
+  });
+
   it('spans two dates with an en dash, naming the month once within a month', () => {
     expect(dateSpan('2026-10-30', '2026-10-31')).toBe('Oct 30–31');
     expect(dateSpan('2026-10-30', '2026-11-01')).toBe('Oct 30–Nov 1');
     expect(dateSpan('2026-10-30', '2026-10-30')).toBe('Oct 30');
     expect(dateSpan('2026-10-30', '2026-10-31')).toContain(EN_DASH);
+  });
+});
+
+describe('leagueClock', () => {
+  it('reads a config HH:MM, dropping :00 from a whole hour', () => {
+    expect(leagueClock('11:00')).toBe('11 AM');
+    expect(leagueClock('16:30')).toBe('4:30 PM');
+    expect(leagueClock('12:05')).toBe('12:05 PM');
+    expect(leagueClock('00:00')).toBe('12 AM');
+    expect(leagueClockPT('11:00')).toBe('11 AM PT');
   });
 });
 
@@ -325,5 +353,41 @@ describe('gradeWord', () => {
   it('words grades 9-12 and prints any other as its number', () => {
     expect([9, 10, 11, 12].map(gradeWord)).toEqual(['Freshman', 'Sophomore', 'Junior', 'Senior']);
     expect(gradeWord(8)).toBe('Grade 8');
+  });
+});
+
+describe('listWords', () => {
+  it('joins names the way a sentence does, with "and" by default', () => {
+    expect(listWords([])).toBe('');
+    expect(listWords(['Cupertino'])).toBe('Cupertino');
+    expect(listWords(['Cupertino', 'Homestead'])).toBe('Cupertino and Homestead');
+    expect(listWords(['A', 'B', 'C'])).toBe('A, B and C');
+  });
+
+  it('joins every contender for one seat with "or"', () => {
+    expect(listWords(['Cupertino'], 'or')).toBe('Cupertino');
+    expect(listWords(['A', 'B'], 'or')).toBe('A or B');
+    expect(listWords(['A', 'B', 'C'], 'or')).toBe('A, B or C');
+  });
+
+  it('joins a compact leader line with "&"', () => {
+    expect(listWords([], '&')).toBe('');
+    expect(listWords(['A', 'B'], '&')).toBe('A & B');
+    expect(listWords(['A', 'B', 'C'], '&')).toBe('A, B & C');
+  });
+});
+
+describe('day arithmetic on date keys', () => {
+  it('counts whole days, ignoring a time suffix', () => {
+    expect(dayNumber('1970-01-02')).toBe(1);
+    expect(dayNumber('2026-09-29T16:00:00')).toBe(dayNumber('2026-09-29'));
+    expect(dayDiff('2026-09-30', '2026-10-01')).toBe(1);
+    expect(dayDiff('2026-10-01', '2026-09-17')).toBe(-14);
+  });
+
+  it('shifts a key across month and year ends', () => {
+    expect(shiftDateKey('2026-10-02', -14)).toBe('2026-09-18');
+    expect(shiftDateKey('2026-10-31', 1)).toBe('2026-11-01');
+    expect(shiftDateKey('2027-01-01', -1)).toBe('2026-12-31');
   });
 });

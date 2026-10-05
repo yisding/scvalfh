@@ -19,20 +19,19 @@
  */
 
 import { classifyGames } from '../../classify';
-import { LEAGUES, getLeague } from '../../leagues';
+import { byDateThenId } from '../../format';
+import { LEAGUES, getLeague, type LeagueConfig } from '../../leagues';
 import { divisionGames } from '../../standings';
 import { teamsInLeague } from '../../teams';
 import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';
 import { RunAbort } from '../contract';
 import {
-  asOfStamp,
   hasPreviousData,
+  lastFreshStamp,
   previousDivisionHealth,
-  previousLeagueHealth,
   type PipelineContext,
   type RunState,
 } from '../ledger';
-import { byDateThenId } from './normalize';
 
 /** §7.5 (c): a division whose counted finals dropped by this many freezes its league. */
 export const FINALS_REGRESSION_FREEZE = 3;
@@ -44,9 +43,9 @@ export const SYSTEMIC_FAILED_FEEDS_SHARE = 0.6;
 /** §7.5 trigger d. */
 export function notInRunReason(previous: PipelineContext['previous'], leagueId: LeagueId): string {
   const short = getLeague(leagueId).shortName;
-  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
-  return hasPreviousData(previous, leagueId) && lastFresh
-    ? `${short} was not fetched in this run, so it is shown as of ${asOfStamp(lastFresh)}.`
+  const stamp = lastFreshStamp(previous, leagueId);
+  return stamp
+    ? `${short} was not fetched in this run, so it is shown as of ${stamp}.`
     : `${short} was not fetched in this run.`;
 }
 
@@ -59,14 +58,25 @@ export function markLeaguesNotInRun(ctx: PipelineContext): void {
   }
 }
 
+/** `3 BVAL results that were final in the last update are missing from MaxPreps now`. */
+function finalsHead(short: string, n: number): string {
+  return `${n} ${short} ${n === 1 ? 'result that was' : 'results that were'} final in the last update ${n === 1 ? 'is' : 'are'} missing from MaxPreps now`;
+}
+
 /** §7.5 trigger c reason (n ≥ 3). */
 export function finalsRegressionReason(previous: PipelineContext['previous'], leagueId: LeagueId, n: number): string {
   const short = getLeague(leagueId).shortName;
-  const head = `${n} ${short} ${n === 1 ? 'result that was' : 'results that were'} final in the last update ${n === 1 ? 'is' : 'are'} missing from MaxPreps now`;
-  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
-  return hasPreviousData(previous, leagueId) && lastFresh
-    ? `${head}, so ${short} is shown as of ${asOfStamp(lastFresh)} until someone checks.`
+  const head = finalsHead(short, n);
+  const stamp = lastFreshStamp(previous, leagueId);
+  return stamp
+    ? `${head}, so ${short} is shown as of ${stamp} until someone checks.`
     : `${head}; ${short} is shown without ${n === 1 ? 'it' : 'them'} until someone checks.`;
+}
+
+/** The partial reason for a drop below the freeze line (1-2 finals), naming the vanished contests. */
+export function finalsMissingReason(leagueId: LeagueId, n: number, ids: readonly string[]): string {
+  const listed = ids.length > 0 ? ` (${ids.join(', ')})` : '';
+  return `${finalsHead(getLeague(leagueId).shortName, n)}${listed}; the table is computed without ${n === 1 ? 'it' : 'them'}.`;
 }
 
 function vanishedFinals(ctx: PipelineContext, games: readonly Game[], division: DivisionId): Game[] {
@@ -122,14 +132,7 @@ export function checkFinalsRegression(ctx: PipelineContext, state: RunState): vo
         'finals regression',
       );
     } else if (smallDrop > 0) {
-      const n = smallDrop;
-      const ids = smallIds.length > 0 ? ` (${smallIds.join(', ')})` : '';
-      ctx.leagues.degrade(
-        leagueId,
-        'partial',
-        `${n} ${league.shortName} ${n === 1 ? 'result that was' : 'results that were'} final in the last update ${n === 1 ? 'is' : 'are'} missing from MaxPreps now${ids}; the table is computed without ${n === 1 ? 'it' : 'them'}.`,
-        'finals missing',
-      );
+      ctx.leagues.degrade(leagueId, 'partial', finalsMissingReason(leagueId, smallDrop, smallIds), 'finals missing');
     }
   }
 }
@@ -206,19 +209,25 @@ export function checkSystemic(ctx: PipelineContext, state: RunState): void {
   }
 }
 
+/**
+ * A division's DivisionHealth.classification this run: its league's rule, with an official-fixtures
+ * division whose fixture set is missing or invalid (`degraded`) falling back to contest-type.
+ */
+export function divisionClassification(
+  league: LeagueConfig,
+  divisionId: DivisionId,
+  degraded: ReadonlySet<DivisionId>,
+): DivisionHealth['classification'] {
+  if (league.rules.classification === 'contest-type') return 'contest-type';
+  return degraded.has(divisionId) ? 'fallback-contest-type' : 'official-fixtures';
+}
+
 /** DivisionHealth.classification for every division not copied from a frozen league's previous health. */
 export function fillClassification(state: RunState): void {
   for (const league of LEAGUES) {
     for (const d of league.divisions) {
       if (state.classification.has(d.id)) continue;
-      state.classification.set(
-        d.id,
-        league.rules.classification === 'contest-type'
-          ? 'contest-type'
-          : state.official.degradedDivisions.has(d.id)
-            ? 'fallback-contest-type'
-            : 'official-fixtures',
-      );
+      state.classification.set(d.id, divisionClassification(league, d.id, state.official.degradedDivisions));
     }
   }
 }

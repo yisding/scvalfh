@@ -1,6 +1,6 @@
 /**
- * Stage B-int (SPEC §12.2 `tests/pipeline/*`): the variant overlays end to end through the real
- * cron script with the real official (B2) and si.com (B3) steps. Each variant names one defect;
+ * The end-to-end suite (SPEC §12.2 `tests/pipeline/*`): the variant overlays end to end through the
+ * real cron script with the real official (steps/official.ts) and si.com (steps/sblive.ts) steps. Each variant names one defect;
  * the run must keep the other leagues fresh and never abort. Where a case needs "the last update",
  * it starts from the corpus's own snapshot (corpusSnapshotPath) copied to --out.
  *

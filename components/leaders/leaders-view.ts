@@ -1,31 +1,3 @@
-import { getSnapshot } from '../../lib/data';
-import {
-  listWords,
-  numberWord,
-  recordString,
-  recordWords,
-  shortDate,
-  signedGd,
-  winPct,
-} from '../../lib/format';
-import { LEAGUES, getLeague } from '../../lib/leagues';
-import { getPlayerStats } from '../../lib/player-stats';
-import type { PriorSeason } from '../../lib/prior-season';
-import { getPriorSeason } from '../../lib/prior-season-data';
-import { ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, computeRatings, type TeamRating } from '../../lib/ratings';
-import type {
-  FieldStatKey,
-  GoalieStatKey,
-  PlayerStatLine,
-  TeamPlayerStats,
-} from '../../lib/player-stats-schema';
-import type { ComputedRecord, Game, Standing, Team, TeamSlug } from '../../lib/types';
-import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
-import { plural } from '../ui/plural';
-
-/** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
-const LEAGUE_COUNT = numberWord(LEAGUES.length);
-
 /**
  * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
  * two files the rest of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert
@@ -55,6 +27,48 @@ const LEAGUE_COUNT = numberWord(LEAGUES.length);
  * "Show N more" disclosure.
  */
 
+import { getSnapshot } from '../../lib/data';
+import {
+  listWords,
+  numberWord,
+  recordString,
+  recordWords,
+  shortDate,
+  signedGd,
+  winPct,
+} from '../../lib/format';
+import { LEAGUES, getLeague } from '../../lib/leagues';
+import { getPlayerStats } from '../../lib/player-stats';
+import { getPriorSeason } from '../../lib/prior-season';
+import type { PriorSeason } from '../../lib/prior-season-schema';
+import {
+  ELO_BASE,
+  ELO_PER_GOAL,
+  MARGIN_CAP,
+  computeRatings,
+  getRatings,
+  type RatingTable,
+  type TeamRating,
+} from '../../lib/ratings';
+import type {
+  FieldStatKey,
+  GoalieStatKey,
+  PlayerStatLine,
+  TeamPlayerStats,
+} from '../../lib/player-stats-schema';
+import type { ComputedRecord, Game, Standing, Team, TeamSlug } from '../../lib/types';
+import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
+import { plural } from '../ui/plural';
+
+/** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
+export const LEAGUE_COUNT = numberWord(LEAGUES.length);
+
+/**
+ * What an Elo number means, without trailing punctuation: the board's note and the team page's
+ * Elo disclosure (components/teams/TeamElo.tsx) both say it, so the two always read the same.
+ */
+export const ELO_SCALE = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal`;
+
 /** The places a board shows. */
 export const BOARD_PLACES = 10;
 /** The places a player board shows once expanded. */
@@ -81,7 +95,7 @@ export interface LeaderTeamRef {
   /** ≤ 14 characters, for a phone-width cell. */
   shortName: string;
   /** "SCVAL" */
-  league: string;
+  leagueShort: string;
   /** The team page, at its player stats for a player row. */
   href: string;
   /** For the monogram. */
@@ -227,7 +241,7 @@ function teamRef(team: Team, anchor = ''): LeaderTeamRef {
     slug: team.slug,
     name: team.name,
     shortName: team.shortName,
-    league: getLeague(team.league).shortName,
+    leagueShort: getLeague(team.league).shortName,
     href: `/teams/${team.slug}${anchor}`,
     team: { abbr: team.abbr, name: team.name, colors: team.colors },
   };
@@ -534,16 +548,11 @@ export interface EloBoardView {
 }
 
 /**
- * The Elo board (DESIGN §20), from the same teams and games as the rest of the page. Exported
- * because each team page reads its own place on it: a team page says "3rd on the Elo board"
- * only for a row this board lists, so the two cannot disagree.
+ * The Elo board (DESIGN §20), from a rating table over the same teams and games as the rest of the
+ * page. getEloBoard is the bundled instance: each team page reads its own place on it, so a team
+ * page says "3rd on the Elo board" only for a row this board lists, and the two cannot disagree.
  */
-export function buildEloBoard(
-  teams: readonly Team[],
-  games: readonly Game[],
-  prior: PriorSeason | null = null,
-): EloBoardView {
-  const table = computeRatings(teams, games, prior);
+export function buildEloBoard(teams: readonly Team[], table: RatingTable): EloBoardView {
   const teamById = new Map(teams.map((t) => [t.id, t]));
   const lines = table.ratings.map((rating) => ({ team: teamById.get(rating.teamId)!, rating }));
   const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
@@ -574,7 +583,7 @@ export function buildEloBoard(
       note:
         `Every final between two of the ${plural(teams.length, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
-        `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
+        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No final between two of the ${plural(teams.length, 'team')} yet this season.`,
@@ -608,10 +617,24 @@ function belowMinimum(
     .map((l) => `${l.team.name} (${gp(l)})`);
 }
 
+let bundledBoard: EloBoardView | null = null;
+
+/**
+ * The Elo board over the bundled snapshot and prior season (lib/ratings.ts getRatings), built once
+ * per process: what /leaders prints and what each team page reads its place from.
+ */
+export function getEloBoard(): EloBoardView {
+  return (bundledBoard ??= buildEloBoard(getSnapshot().teams, getRatings()));
+}
+
 // ---------------------------------------------------------------- the page
 
-export function buildLeadersView(sources: LeaderSources = defaultSources()): LeadersView {
-  const { teams, stats, standings, games } = sources;
+/** The /leaders page, from the bundled data by default or from `sources` (tests). */
+export function buildLeadersView(sources?: LeaderSources): LeadersView {
+  const elo = sources
+    ? buildEloBoard(sources.teams, computeRatings(sources.teams, sources.games, sources.prior ?? null))
+    : getEloBoard();
+  const { teams, stats, standings, games } = sources ?? defaultSources();
   const teamBySlug = new Map(teams.map((t) => [t.slug, t]));
 
   // ---- players
@@ -665,7 +688,6 @@ export function buildLeadersView(sources: LeaderSources = defaultSources()): Lea
   const overallMin = qualifyingMinimum(lines.map((l) => l.overall.gp));
   const leagueMin = qualifyingMinimum(lines.map((l) => l.league.gp));
 
-  const elo = buildEloBoard(teams, games, sources.prior ?? null);
   const schools: LeaderBoard[] = [
     recordBoard(
       'best-record',

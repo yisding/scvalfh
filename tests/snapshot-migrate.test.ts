@@ -10,10 +10,12 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { loadSnapshot, parseSnapshot, stableStringify } from '../lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
+import { stableStringify } from '../lib/stable-json';
 import { divisionGames } from '../lib/standings';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';
+import { VARIANTS_DIR } from './helpers';
 
 const GOLDEN = path.join(import.meta.dirname, 'golden');
 const readV1 = (): Record<string, unknown> =>
@@ -251,7 +253,7 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
   });
 
   it('loads the frozen four-league finals-regression snapshot with a degraded EAL row', () => {
-    const file = path.join(import.meta.dirname, 'fixtures', 'corpus', 'variants', 'finals-regression', 'previous-snapshot.json');
+    const file = path.join(VARIANTS_DIR, 'finals-regression', 'previous-snapshot.json');
     const raw = JSON.parse(readFileSync(file, 'utf8')) as Snapshot;
     expect(raw.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
     expect(lacksConfiguredLeagues(raw)).toBe(true);

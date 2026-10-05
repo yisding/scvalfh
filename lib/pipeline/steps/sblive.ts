@@ -28,13 +28,12 @@ import {
 import { getTeamBySlug, teamsInLeague } from '../../teams';
 import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
 import {
-  FixtureMissing,
-  TransportError,
   type ResourceKey,
   type RunContext,
   type SbliveStep,
   type SbliveStepResult,
 } from '../contract';
+import { classifyFetchError } from '../read';
 
 /** The scoreboard window (SPEC §7.7: ≤ 15 scoreboards). */
 export const SBLIVE_SCOREBOARD_DAYS = 14;
@@ -69,17 +68,18 @@ async function read(
       games,
     };
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      return { attempt: { row: base, outcome: 'skipped', error: 'not in corpus' }, games: [] };
-    }
-    const message = (err as Error).message;
-    ctx.warn(`${base.label} failed: ${message}`, base.scope);
-    const httpStatus = err instanceof TransportError && err.httpStatus !== null ? err.httpStatus : undefined;
-    return { attempt: { row: base, outcome: 'error', error: message, ...(httpStatus !== undefined ? { httpStatus } : {}) }, games: [] };
+    const { status, ...failed } = classifyFetchError(err);
+    if (status === 'skipped') return { attempt: { row: base, outcome: 'skipped', error: failed.error }, games: [] };
+    ctx.warn(`${base.label} failed: ${failed.error}`, base.scope);
+    return { attempt: { row: base, outcome: 'error', ...failed }, games: [] };
   }
 }
 
-/** When this url was last fresh in the previous snapshot. */
+/**
+ * When this url was last fresh in the previous snapshot. Unlike carriedFromOf it matches by url (a
+ * scoreboard row has no scope) and has no run-stamp fallback: a page the last run did not read
+ * (a new scoreboard date) was never fresh, so it gets no carriedFrom at all.
+ */
 function lastFresh(ctx: RunContext, url: string): string | undefined {
   const prior = ctx.previous?.sources.find((r) => r.url === url && (r.status === 'ok' || r.status === 'stale'));
   if (!prior) return undefined;
@@ -146,7 +146,7 @@ function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixtur
     `  sblive: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}` +
       ` and ${result.rows.length} earlier si.com ${result.rows.length === 1 ? 'score' : 'scores'} still eligible`,
   );
-  return { games: carriedGames, unmatched: result.unmatched, crossCheck };
+  return { games: carriedGames, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
 }
 
 export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResult> => {
@@ -261,7 +261,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       `matched ${crossCheck.compared} · agree ${crossCheck.agreements} · conflicts ${crossCheck.conflicts.length} · ` +
       `backfilled ${crossCheck.backfilled.length} · si.com-only ${crossCheck.sbliveOnlyScored.length} · unmatched ${rec.unmatched}`,
   );
-  return { games: rec.games, unmatched: result.unmatched, crossCheck };
+  return { games: rec.games, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
 };
 
 /** A run without si.com data keeps the plain-disagreement markers it published before (rule 5). */

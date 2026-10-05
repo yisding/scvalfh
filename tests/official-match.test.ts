@@ -28,7 +28,6 @@ import {
   TransportError,
   resourcePath,
   type ResourceKey,
-  type RunArgs,
   type RunContext,
   type Transport,
 } from '../lib/pipeline/contract';
@@ -36,7 +35,8 @@ import { isExcludedFor, stepOfficial } from '../lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '../lib/sources/maxpreps';
 import { parseSchedulePdfText } from '../lib/sources/scval-pdf';
 import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
-import { REPO, allScheduleRows, game } from './helpers';
+import { REPO, allScheduleRows, corpusDir, game } from './helpers';
+import { testRunArgs } from './pipeline/support/run-args';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));
@@ -51,7 +51,7 @@ vi.mock('../lib/official/schema', async (importOriginal) => {
   };
 });
 
-const CORPUS = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02');
+const CORPUS = corpusDir('all-2026-10-02');
 const FETCHED_AT = '2026-10-02T15:00:00.000Z';
 const TODAY = '2026-10-02';
 
@@ -354,6 +354,16 @@ describe('MCAL officialChanges', () => {
     expect(sha256Hex('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
     expect(officialChangesHash('<td>nothing here</td>', changes.cellMarker)).toBeNull();
   });
+
+  it('matches the marker against the cell text, not its raw HTML', () => {
+    // A tag inside the marker, or an entity in it, still finds the cell: the decoded text is read.
+    expect(officialChangesCellText('<td>x</td><td><b>Girls</b> Field Hockey: Oct 12 moved</td>', 'Girls Field Hockey:'))
+      .toBe('Girls Field Hockey: Oct 12 moved');
+    expect(officialChangesCellText('<td>Boys &amp; Girls Field Hockey:&nbsp;none</td>', 'Boys & Girls Field Hockey:'))
+      .toBe('Boys & Girls Field Hockey: none');
+    expect(officialChangesHash('<td><i>Girls</i>&nbsp;Field Hockey: none</td>', 'Girls Field Hockey:'))
+      .toBe(sha256Hex('Girls Field Hockey: none'));
+  });
 });
 
 // ---------------------------------------------------------------- stepOfficial
@@ -361,7 +371,7 @@ describe('MCAL officialChanges', () => {
 interface Recorded {
   ctx: RunContext;
   sources: SourceStatus[];
-  degraded: Array<{ league: LeagueId; state: Exclude<LeagueRunState, 'fresh'>; reason: string }>;
+  degraded: Array<{ league: LeagueId; state: Exclude<LeagueRunState, 'fresh'>; reason: string; cause?: string }>;
   warnings: string[];
 }
 
@@ -391,11 +401,10 @@ function makeCtx(opts: {
   const sources: SourceStatus[] = [];
   const degraded: Recorded['degraded'] = [];
   const warnings: string[] = [];
-  const args: RunArgs = {
-    fixtures: CORPUS, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: FETCHED_AT, force: false,
-    leagues: opts.leagues ?? null, acceptRegression: [], sblive: false, sbliveFull: false,
-    official: opts.official ?? true, ccs: false, vnn: false,
-  };
+  const args = testRunArgs({
+    fixtures: CORPUS, fetchedAt: FETCHED_AT, leagues: opts.leagues ?? null,
+    sblive: false, official: opts.official ?? true, ccs: false, vnn: false,
+  });
   const ctx: RunContext = {
     args,
     fetchedAt: FETCHED_AT,
@@ -403,7 +412,7 @@ function makeCtx(opts: {
     previous: opts.previous ?? null,
     transport: opts.transport ?? corpusTransport(),
     source: (row) => void sources.push(row),
-    degrade: (league, state, reason) => void degraded.push({ league, state, reason }),
+    degrade: (league, state, reason, cause) => void degraded.push({ league, state, reason, cause }),
     drop: () => undefined,
     leaguesInRun: () => opts.leagues ?? LEAGUES.map((l) => l.id),
     log: () => undefined,
@@ -461,7 +470,7 @@ describe('stepOfficial over the corpus', () => {
     expect(rec.sources.find((r) => r.kind === 'official-revision-check' && r.scope?.division === 'mt-hamilton')).toMatchObject({
       status: 'stale', error: reason, id: 'bval-docx',
     });
-    expect(rec.degraded).toEqual([{ league: 'bval', state: 'partial', reason }]);
+    expect(rec.degraded).toEqual([{ league: 'bval', state: 'partial', reason, cause: 'upstream revised' }]);
     expect(res.games.filter((g) => g.official?.division === 'mt-hamilton')).toHaveLength(30);
   });
 
@@ -479,7 +488,7 @@ describe('stepOfficial over the corpus', () => {
       kind: 'official-revision-check', status: 'stale', error: reason,
     });
     expect([...res.revisedUpstream]).toEqual(['marin-county']);
-    expect(rec.degraded).toEqual([{ league: 'mcal', state: 'partial', reason }]);
+    expect(rec.degraded).toEqual([{ league: 'mcal', state: 'partial', reason, cause: 'schedule changes posted' }]);
     expect(res.games.filter((g) => g.official?.division === 'marin-county')).toHaveLength(72);
   });
 
@@ -502,6 +511,7 @@ describe('stepOfficial over the corpus', () => {
       {
         league: 'pcal', state: 'degraded',
         reason: "The official PCAL schedule file failed validation; league games are identified by MaxPreps' league flag this run.",
+        cause: 'official file invalid',
       },
     ]);
     expect(rec.sources.find((r) => r.kind === 'official-schedule' && r.scope?.division === 'pcal')?.status).toBe('error');
@@ -516,6 +526,7 @@ describe('stepOfficial over the corpus', () => {
       fetchedAt: '2026-10-01T15:00:00.000Z',
       games: first.games,
       officialFixtures: first.unmatched,
+      sources: [],
     } as unknown as Snapshot;
     const rec = makeCtx({ transport: corpusTransport({ 'scval/pdf-text/de-anza': 503 }), previous });
     const res = await stepOfficial(rec.ctx, games);
@@ -529,6 +540,27 @@ describe('stepOfficial over the corpus', () => {
     expect(stamp(res.games, 'de-anza')).toEqual(stamp(first.games, 'de-anza'));
     expect(stamp(res.games, 'el-camino')).toEqual(stamp(first.games, 'el-camino'));
     expect(res.unmatched.filter((f) => f.division === 'de-anza')).toEqual(first.unmatched.filter((f) => f.division === 'de-anza'));
+  });
+
+  it('a grid that failed in the previous run too keeps the stamp of when it was last read', async () => {
+    const first = await stepOfficial(makeCtx().ctx, games);
+    const previous = {
+      fetchedAt: '2026-10-01T15:00:00.000Z',
+      games: first.games,
+      officialFixtures: first.unmatched,
+      sources: [
+        {
+          id: 'scval-pdf', kind: 'official-schedule', scope: { league: 'scval', division: 'de-anza' },
+          label: 'De Anza official schedule (PDF)', url: 'https://example.invalid/de-anza.pdf',
+          fetchedAt: '2026-10-01T15:00:00.000Z', status: 'stale', carriedFrom: '2026-09-30T15:00:00.000Z',
+        },
+      ],
+    } as unknown as Snapshot;
+    const rec = makeCtx({ transport: corpusTransport({ 'scval/pdf-text/de-anza': 503 }), previous });
+    await stepOfficial(rec.ctx, games);
+    expect(rec.sources.find((r) => r.scope?.division === 'de-anza')).toMatchObject({
+      status: 'stale', carriedFrom: '2026-09-30T15:00:00.000Z',
+    });
   });
 
   it('touches only the leagues in the run', async () => {

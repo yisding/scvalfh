@@ -12,6 +12,7 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { getLeague } from '../lib/leagues';
 import { buildSeason } from '../lib/season-build';
 import { countsOf } from '../lib/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot-schema';
@@ -51,11 +52,6 @@ describe('data: identity and freshness', () => {
     // 2026-10-02T10:48Z is 3:48 AM PDT on the 2nd.
     expect(data.getToday()).toBe('2026-10-02');
   });
-
-  it('measures snapshot age against an instant you pass in', () => {
-    expect(data.getSnapshotAgeHours('2026-10-03T10:48:51.206Z')).toBeCloseTo(24, 3);
-    expect(data.getSnapshotAgeHours()).toBe(0);
-  });
 });
 
 describe('data: sections and leagues', () => {
@@ -88,8 +84,6 @@ describe('data: sections and leagues', () => {
   });
 
   it('exposes league health', () => {
-    expect(data.getAllLeagueHealth()).toHaveLength(5);
-    expect(data.getAllLeagueHealth().map((h) => h.leagueId)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     expect(data.getLeagueHealth('scval').state).toBe('fresh');
     expect(data.getLeagueHealth('mcal').state).toBe('degraded');
     expect(data.getLeagueHealth('eal').state).toBe('degraded');
@@ -121,15 +115,12 @@ describe('data: teams', () => {
     expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
   });
 
-  it('looks a team up by slug or GUID, and names its league', () => {
+  it('looks a team up by slug or GUID', () => {
     const team = data.getTeamBySlug('los-altos');
     expect(team?.name).toBe('Los Altos');
     expect(data.getTeamById(team!.id)?.slug).toBe('los-altos');
-    expect(data.resolveTeamRef(team!.id)?.slug).toBe('los-altos');
+    expect(data.getTeamForm(team!.id)).toBeDefined(); // a GUID resolves as well as a slug
     expect(data.getTeamBySlug('nope')).toBeUndefined();
-    expect(data.getLeagueOfTeam('tamalpais')?.id).toBe('mcal');
-    expect(data.getLeagueOfTeam('nope')).toBeUndefined();
-    expect(data.getLeagueOfTeam('davis')?.id).toBe('eal');
     expect(data.getTeamSlugs()).toHaveLength(49);
   });
 
@@ -186,29 +177,26 @@ describe('data: games', () => {
     );
   });
 
-  it('derives upcoming and recent from the snapshot stamp', () => {
+  it('derives upcoming from the snapshot stamp', () => {
     const upcoming = data.getUpcoming(5);
     expect(upcoming.length).toBe(5);
     for (const g of upcoming) {
       expect(g.dateKey >= data.getToday()).toBe(true);
       expect(g.status).not.toBe('final');
     }
-    const recent = data.getRecentResults(5);
-    expect(recent.length).toBe(5);
-    for (const g of recent) {
-      expect(g.status).toBe('final');
-      expect(g.dateKey <= data.getToday()).toBe(true);
-    }
-    expect(recent[0].dateLocal >= recent[1].dateLocal).toBe(true);
-    const early = data.getRecentResults(3, '2026-09-10T15:00:00.000Z');
-    for (const g of early) expect(g.dateKey <= '2026-09-10').toBe(true);
-    expect(data.getRecentResults(5, undefined, { league: 'pcal' }).every((g) =>
+    const early = data.getUpcoming(5, {}, '2026-09-10T15:00:00.000Z');
+    expect(early.length).toBe(5);
+    for (const g of early) expect(g.dateKey >= '2026-09-10').toBe(true);
+    const pcal = data.getUpcoming(5, { league: 'pcal' });
+    expect(pcal.length).toBeGreaterThan(0);
+    expect(pcal.every((g) =>
       [g.home.slug, g.away.slug].some((s) => s && data.getTeamBySlug(s)?.league === 'pcal'),
     )).toBe(true);
   });
 
   it('names the most recent day that actually has results', () => {
     expect(data.getLatestResultsDate()).toMatch(/^2026-(09|10)-\d{2}$/);
+    expect(data.getLatestResultsDate({}, '2026-09-10T15:00:00.000Z')! <= '2026-09-10').toBe(true);
     expect(data.getLastLeagueResultDate()).toMatch(/^2026-(09|10)-\d{2}$/);
     expect(data.getLastLeagueResultDate({ division: 'de-anza' })).toMatch(/^2026-/);
     expect(data.getLastLeagueResultDate({ league: 'scval' })).toBe(data.getLastLeagueResultDate());
@@ -217,17 +205,12 @@ describe('data: games', () => {
 });
 
 describe('data: standings and derived facts', () => {
-  it('returns a division table in finishing order, and a league’s tables', () => {
+  it('returns a division table in finishing order', () => {
     const table = data.getStandings('de-anza');
     expect(table.length).toBe(7);
     for (let i = 1; i < table.length; i += 1) {
       expect(table[i].computed.place).toBeGreaterThanOrEqual(table[i - 1].computed.place);
     }
-    expect(data.getLeagueStandings('bval').map((d) => [d.division, d.heading, d.rows.length])).toEqual([
-      ['mt-hamilton', 'Mt. Hamilton', 6],
-      ['santa-teresa', 'Santa Teresa', 6],
-    ]);
-    expect(data.getLeagueStandings('pcal')[0].heading).toBeNull();
     expect(Object.keys(data.getAllStandings())).toEqual([
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
     ]);
@@ -380,7 +363,6 @@ describe('data: postseason', () => {
       atLarge: 3,
       total: 16,
     });
-    expect(data.BRACKET_URL).toMatch(/^https:\/\/www\.maxpreps\.com\/tournament\//);
     expect(data.getPlayoffs().format.autoQualifiers.total).toBe(16);
   });
 
@@ -389,11 +371,22 @@ describe('data: postseason', () => {
     expect(sf.label).toBe('Automatic qualifier');
     expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Fri Oct 30.');
     expect(sf.href).toBe('/playoffs#scval');
-    expect(sf.linkText).toBe('CCS playoffs →');
+    expect(sf.linkText).toBe('CCS playoffs');
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
     expect(data.getTeamPostseasonLine('chico')).toBeNull();
     expect(data.getTeamPostseasonLine('nope')).toBeNull();
+  });
+
+  it('writes the play-in clause from the config, its berth ordinal from autoBerths', () => {
+    const bval = getLeague('bval');
+    if (bval.postseason.kind !== 'ccs-ladder') throw new Error('BVAL is a CCS ladder league');
+    const ps = bval.postseason;
+    const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in')!;
+    expect(data.playInClause(bval, ps, playIn)).toBe(
+      'Mt. Hamilton #4 plays at the Santa Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth',
+    );
+    expect(data.playInClause(bval, { ...ps, autoBerths: 5 }, playIn)).toMatch(/for BVAL’s fifth automatic CCS berth$/);
   });
 });
 
@@ -409,13 +402,13 @@ describe('data: head-to-head and form', () => {
   it('returns a team form strip over counted games only', () => {
     const form = data.getTeamForm('homestead');
     expect(form).toBeDefined();
-    expect(form!.last5.length).toBeGreaterThan(0);
-    expect(form!.leagueGames.length).toBeGreaterThan(form!.last5.length);
+    const last5 = data.getStandingFor('homestead')!.computed.last5;
+    expect(last5.length).toBeGreaterThan(0);
+    expect(form!.leagueGames.length).toBeGreaterThan(last5.length);
     for (const g of form!.leagueGames) {
-      expect(g.isLeague).toBe(true);
+      expect(data.getGameById(g.contestId)!.countsFor).not.toBeNull();
       if (g.status !== 'final') expect(g.margin).toBeNull();
     }
-    expect(form!.nonLeagueCount).toBeGreaterThan(0);
   });
 
   it('knows nothing of a school that is not fielding a team', () => {
@@ -435,12 +428,6 @@ describe('data: the secondary-source read API', () => {
     expect(data.getOfficialFixtures({ slug: 'wilcox' })).toEqual([]);
     expect(data.getSources().length).toBeGreaterThan(20);
     expect(data.getSources({ league: 'mcal' })).toEqual([]);
-  });
-
-  it('returns no score conflict for a game that has none, and undefined for an unknown id', () => {
-    const [game] = data.getGames({ status: 'final' });
-    expect(data.getScoreConflict(game.contestId)).toBeUndefined();
-    expect(data.getScoreConflict('no-such-contest')).toBeUndefined();
   });
 
   it('keeps the MaxPreps standings cross-check separate from the si.com score one', () => {
@@ -551,7 +538,7 @@ describe('data: an EAL table with results', () => {
       label: 'Super Regional place',
       sentence: 'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
       href: '/playoffs#eal',
-      linkText: 'Postseason →',
+      linkText: 'Postseason',
     });
     expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
   });

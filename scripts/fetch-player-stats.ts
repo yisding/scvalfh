@@ -51,11 +51,12 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
+  parseFetchedAtFlag,
   parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
-  stableStringify,
   summarizeByLeague,
+  teamsInScope,
   type PreviousFile,
 } from '../lib/fetch-scope';
 import { seasonWindowBounds } from '../lib/leagues';
@@ -80,9 +81,12 @@ import {
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
+import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
+import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
+import { runCli } from './cli';
 
 interface Args {
   fixtures: string | null;
@@ -110,7 +114,7 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v) throw new Error(`${arg} needs a value`);
+      if (!v || v.startsWith('--')) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
@@ -120,7 +124,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--rosters') out.rosters = path.resolve(next());
     else if (arg === '--out') out.out = path.resolve(next());
     else if (arg === '--dry-run') out.dryRun = true;
-    else if (arg === '--fetched-at') out.fetchedAt = next();
+    else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else if (arg === '--force') out.force = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
@@ -151,8 +155,8 @@ const NOTES = [
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
-async function main(): Promise<number> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
   if (!args.force && !inSeasonWindow(today)) {
@@ -182,7 +186,7 @@ async function main(): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-player-stats: offline, from ${args.fixtures}`
-      : `fetch-player-stats: ${TEAMS.filter((t) => inScope(t, args.leagues)).length} MaxPreps stats rollups` +
+      : `fetch-player-stats: ${teamsInScope(args.leagues).length} MaxPreps stats rollups` +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
   // --dry-run writes nothing, --capture included.
@@ -307,9 +311,7 @@ async function main(): Promise<number> {
   const validated = PlayerStatsFileSchema.safeParse(file);
   if (!validated.success) {
     console.error('FAILED: the assembled file does not validate:');
-    for (const issue of validated.error.issues.slice(0, 10)) {
-      console.error(`  ${issue.path.join('.') || '(root)'}: ${issue.message}`);
-    }
+    console.error(formatIssues(validated.error.issues));
     return 1;
   }
 
@@ -357,9 +359,4 @@ async function main(): Promise<number> {
   return exitCode;
 }
 
-main()
-  .then((code) => process.exit(code))
-  .catch((err: unknown) => {
-    console.error(`FAILED: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  });
+runCli(main);

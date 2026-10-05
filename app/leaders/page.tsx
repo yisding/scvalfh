@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { LEAGUE_COUNT, buildLeadersView } from '../../components/leaders/leaders-view';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords, numberWord } from '../../lib/format';
+import { listWords } from '../../lib/format';
 import { LEAGUES } from '../../lib/leagues';
 
 /**
@@ -30,11 +30,14 @@ import { LEAGUES } from '../../lib/leagues';
 
 const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'Season leaders';
+
 export const metadata: Metadata = {
-  title: 'Season leaders',
+  title: PAGE_TITLE,
   description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records and highest Elo ratings, and the players with the most points, assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/leaders' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };
 
 const TABS = [
@@ -50,7 +53,7 @@ export default function LeadersPage() {
     // (6rem); from md the pills sit in the title row and do not stick (as on /history).
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow={`All ${numberWord(LEAGUES.length)} leagues`}
+        eyebrow={`All ${LEAGUE_COUNT} leagues`}
         title="Season leaders"
         description={
           <>

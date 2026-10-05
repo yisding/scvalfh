@@ -1,8 +1,9 @@
 /**
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
  * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
- * is testable and safe anywhere. The only runtime imports are `lib/format` and the pure config in
- * `lib/leagues` (for `ladderFactsFor`). Server-only: no client component imports this module.
+ * is testable and safe anywhere. The only runtime imports are `lib/format`, the pure config in
+ * `lib/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
+ * tournament line). Server-only: no client component imports this module.
  *
  * CCS (SPEC §6.1, §10.7): the field is 16 teams, numbers only. Every CCS league qualifies by its own
  * LADDER (config): SCVAL's first three per division plus a 4th-place play-in, BVAL's Mt. Hamilton
@@ -24,12 +25,16 @@
 
 import {
   EM_DASH,
+  leagueClockPT,
+  listWords,
   monthDay,
+  numberWord,
   ordinal,
+  ordinalWord,
+  placeWords,
   recordString,
   shortDate,
   timeOfDayPT,
-  weekdayIndex,
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -49,58 +54,12 @@ import type {
   TournamentSlot,
 } from '../../lib/types';
 
+import { ladderLineAfter, ladderRow } from '../standings/standings-view';
+
 // ---------------------------------------------------------------- small helpers
-
-const WEEKDAY_NAMES = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-] as const;
-
-/** 'Saturday' for a local date or timestamp. */
-export function weekdayName(value: string): string {
-  return WEEKDAY_NAMES[weekdayIndex(value)];
-}
 
 function dateOnly(value: string): string {
   return value.slice(0, 10);
-}
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-
-/** 'three' for 3; the digits past ten. */
-export function numberWord(n: number): string {
-  return NUMBER_WORDS[n] ?? String(n);
-}
-
-const ORDINAL_WORDS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
-
-/** 'fourth' for 4; '11th' past ten. */
-export function ordinalWord(n: number): string {
-  return ORDINAL_WORDS[n] ?? ordinal(n);
-}
-
-/** '11:00' → '11 AM PT'; '16:30' → '4:30 PM PT'. A league clock time, always labelled PT. */
-export function clockLabel(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'} PT`;
-}
-
-/** 'Cupertino and Homestead' / 'Presentation, Santa Clara and Saratoga' */
-export function joinNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
-}
-
-/** 'A or B' / 'A, B or C' — every contender for one seat. */
-export function orNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
 }
 
 // ---------------------------------------------------------------- key dates
@@ -120,11 +79,11 @@ export interface KeyDateRow {
   /** 'YYYY-MM-DD' — the `<time datetime>` value. */
   dateKey: string;
   /** 'Sat Nov 7' */
-  date: string;
+  dateLabel: string;
   /** '1:00 PM PT', or null for an all-day date. */
   time: string | null;
   /** The league a date belongs to ('SCVAL', 'BVAL'); null for a CCS date. */
-  league: string | null;
+  leagueShort: string | null;
   label: string;
   detail: string;
   /** One of the three tournament rounds (set in ink and semibold). */
@@ -136,7 +95,7 @@ export interface LeagueKeyDate {
   /** Stable key part, e.g. the league id. */
   id: string;
   /** 'SCVAL' */
-  league: string;
+  leagueShort: string;
   /** YYYY-MM-DD */
   date: string;
   /** League clock 'HH:MM' or null. */
@@ -160,9 +119,9 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
   ): KeyDateRow => ({
     key,
     dateKey: dateOnly(iso),
-    date: shortDate(iso),
+    dateLabel: shortDate(iso),
     time: opts.time ? timeOfDayPT(iso) : null,
-    league: null,
+    leagueShort: null,
     label,
     detail,
     isRound: opts.isRound ?? false,
@@ -179,9 +138,9 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
       (d): KeyDateRow => ({
         key: `league:${d.id}`,
         dateKey: dateOnly(d.date),
-        date: shortDate(d.date),
-        time: d.time ? clockLabel(d.time) : null,
-        league: d.league,
+        dateLabel: shortDate(d.date),
+        time: d.time ? leagueClockPT(d.time) : null,
+        leagueShort: d.leagueShort,
         label: d.label,
         detail: d.detail,
         isRound: false,
@@ -194,31 +153,6 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
     .map((row, index) => ({ row, index }))
     .sort((a, b) => a.row.dateKey.localeCompare(b.row.dateKey) || a.index - b.index)
     .map(({ row }) => row);
-}
-
-export interface RoundTile {
-  key: KeyDateKey;
-  /** 'Nov 7' — short enough to hold the figure size at 107px of column. */
-  value: string;
-  /** 'Quarters' — the wireframe's tile label. */
-  label: string;
-  /** 'Saturday' */
-  sub: string;
-}
-
-/** The three round tiles of the DESIGN §3.8 wireframe: QUARTERS / SEMIS / FINAL. */
-export function roundTiles(k: CcsKeyDates): RoundTile[] {
-  const tile = (key: KeyDateKey, iso: string, label: string): RoundTile => ({
-    key,
-    value: shortDate(iso).slice(4),
-    label,
-    sub: weekdayName(iso),
-  });
-  return [
-    tile('quarterfinals', k.quarterfinals, 'Quarters'),
-    tile('semifinals', k.semifinals, 'Semis'),
-    tile('finals', k.finals, 'Final'),
-  ];
 }
 
 // ---------------------------------------------------------------- projection
@@ -374,7 +308,7 @@ export function buildDivisionProjection(
     // Name only the level teams contesting the last automatic place, not the clear leaders above.
     const level = autoRows.filter((r) => r.shared);
     notes.push(
-      `${joinNames((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
+      `${listWords((level.length > 1 ? level : autoRows).map((r) => r.team.name))} share the last of the ` +
         `top ${numberWord(n)} places, and ${divisionLabel} has only ${numberWord(n)} automatic berths — ` +
         `${ladder.unresolved}, so this row order is not a ruling.`,
     );
@@ -393,7 +327,7 @@ export function buildDivisionProjection(
       // play-in place; a row carrying more than one status straddles the boundary.
       const allAtPlace = playInRows.every((r) => r.statuses.length === 1);
       notes.push(
-        `${joinNames(playInRows.map((r) => r.team.name))} ${
+        `${listWords(playInRows.map((r) => r.team.name))} ${
           allAtPlace ? `are level at ${place}` : `are level across ${place}`
         }, so which of them plays in${when ? ` on${when}` : ''} is not settled — ${ladder.unresolved}.`,
       );
@@ -404,9 +338,9 @@ export function buildDivisionProjection(
     const place = ordinalWord(ladder.atLargePlace);
     notes.push(
       allAtPlace
-        ? `${joinNames(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
+        ? `${listWords(atLargeRows.map((r) => r.team.name))} are level at ${place}, so ` +
           `${divisionLabel} has two at-large candidates and no ${ordinalWord(ladder.atLargePlace + 1)} place today.`
-        : `${joinNames(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
+        : `${listWords(atLargeRows.map((r) => r.team.name))} are level across ${place}, so ` +
           `${divisionLabel} has more than one at-large candidate today.`,
     );
   }
@@ -425,6 +359,16 @@ export function recordLine(standing: Standing): string {
 }
 
 /**
+ * A status label's chip text and its tail: "Play-in game Oct 30 — a coin flip decides it" is the
+ * head "Play-in game Oct 30" and the tail "a coin flip decides it". The chip shows the head;
+ * /playoffs prints the tail under it, and the team page leaves it to the tiebreak note.
+ */
+export function splitStatusLabel(label: string): { head: string; tail: string | null } {
+  const [head, ...rest] = label.split(' — ');
+  return { head, tail: rest.length > 0 ? rest.join(' — ') : null };
+}
+
+/**
  * The row link's accessible sentence: name, place, record, points. It deliberately omits the
  * written status, which is real text in its own cell — repeating it would announce it twice.
  */
@@ -433,9 +377,7 @@ export function projectionRowLabel(row: ProjectionRow, divisionLabel: string): s
   if (!standing.hasReportedResults) {
     return `${team.name}: no results reported, not ranked in ${divisionLabel}`;
   }
-  const place = row.shared
-    ? `tied for ${ordinal(standing.computed.place)}`
-    : ordinal(standing.computed.place);
+  const place = placeWords(standing.computed.place, row.shared);
   return `${team.name}, ${place} in ${divisionLabel}, ${recordString(standing.computed)}, ${
     standing.computed.pts
   } points`;
@@ -513,7 +455,7 @@ export function buildPairingView(
     isPlayIn: pairing.isPlayIn,
     dateKey: pairing.date,
     dateLabel: shortDate(pairing.date),
-    timeLabel: pairing.time ? clockLabel(pairing.time) : null,
+    timeLabel: pairing.time ? leagueClockPT(pairing.time) : null,
     seats,
     connector: pairing.host === null ? 'vs' : 'at',
     unsettled,
@@ -559,7 +501,7 @@ export function pairingSentence(view: PairingView): string {
   const name = (seat: SeatView) =>
     seat.contenders.length === 0
       ? `${seat.label} (to be decided)`
-      : `${orNames(seat.contenders.map((c) => c.team.name))} (${seat.label}${seat.host ? ', host' : ''})`;
+      : `${listWords(seat.contenders.map((c) => c.team.name), 'or')} (${seat.label}${seat.host ? ', host' : ''})`;
   const [a, b] = view.seats;
   const pair =
     view.connector === 'at'
@@ -656,7 +598,8 @@ export interface TournamentInput {
   ladderLine: { after: number; label: string } | null;
 }
 
-const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
+/** A bracket round's title, for the page's round headers and the OG card's round line alike. */
+export const ROUND_TITLES: Readonly<Record<TournamentRoundView['round'], string>> = {
   quarterfinal: 'Quarterfinals',
   semifinal: 'Semifinals',
   final: 'Final',
@@ -683,7 +626,7 @@ export function slotView(
       const teams = contested ? seatTeams(contested.seat, teamOf) : [];
       return {
         seed: contested?.seed ?? null,
-        text: teams.length > 1 ? `${slot.label} (${orNames(teams.map((t) => t.shortName))})` : slot.label,
+        text: teams.length > 1 ? `${slot.label} (${listWords(teams.map((t) => t.shortName), 'or')})` : slot.label,
         teams,
         tbd: false,
       };
@@ -692,7 +635,7 @@ export function slotView(
   }
   const teams = seatTeams(slot.seat, teamOf);
   if (teams.length === 0) return { seed: slot.seed, text: 'TBD', teams: [], tbd: true };
-  return { seed: slot.seed, text: orNames(teams.map((t) => t.shortName)), teams, tbd: false };
+  return { seed: slot.seed, text: listWords(teams.map((t) => t.shortName), 'or'), teams, tbd: false };
 }
 
 function slotLabel(v: TournamentSlotView): string {
@@ -712,7 +655,7 @@ export function tournamentGameView(
     round: tg.round,
     dateKey: tg.date,
     dateLabel: shortDate(tg.date),
-    timeLabel: clockLabel(tg.time),
+    timeLabel: leagueClockPT(tg.time),
     home,
     away,
     connector,
@@ -739,12 +682,9 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     label: standing.hasReportedResults ? label : 'No results reported',
   }));
 
-  let lineAfter = 0;
-  for (const [index, row] of seedRows.entries()) {
-    if (ladderLine && row.standing.hasReportedResults && row.standing.computed.place <= ladderLine.after) {
-      lineAfter = index + 1;
-    }
-  }
+  // The standings tables' own rule (ladderLineAfter): no line when every seed sits above it,
+  // which LeagueTournament never drew anyway.
+  const lineAfter = ladderLineAfter(seedRows.map(ladderRow), ladderLine?.after) ?? 0;
 
   const name = (slug: TeamSlug) => teamOf(slug)?.name ?? slug;
   const place = ordinal(lastPlace);

@@ -17,10 +17,9 @@ import { describe, expect, it } from 'vitest';
 
 import { getClubSlugs } from '../lib/clubs';
 import { gameIdToParam } from '../lib/game-id';
-import { getHistoryLeagues } from '../lib/history';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
 import { loadSnapshot } from '../lib/snapshot-schema';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
 const update = read('update-data.yml');
@@ -269,7 +268,7 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 
   it('requires the Build Output config and fails on an env file in the Worker output', () => {
     for (const text of [ci, gate]) {
-      expect(text).toContain('node scripts/assert-vinext-prerender.mjs --cloudflare');
+      expect(text).toContain('pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare');
       expect(text).toContain('pnpm exec tsx scripts/assert-budgets.ts --worker-only');
       expect(text).toContain('test -f .cloudflare/output/v0/config.json');
       expect(text).toContain(`find .cloudflare/output \\( -name '.dev.vars*' -o -name '.env*' \\) -print`);
@@ -291,18 +290,6 @@ describe('assert:prerender on a .next that has served traffic', () => {
   const OK_META = JSON.stringify({ status: 200, headers: { 'content-type': 'image/png' } });
   const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
 
-  /** A league section for every league, a division anchor inside each available one. */
-  function historyBody(omit: string[] = []): string {
-    return getHistoryLeagues()
-      .filter(({ id }) => !omit.includes(id))
-      .map(({ id, entry }) =>
-        `<section id="${id}">${
-          entry.status === 'available' ? entry.divisions.map((d) => `<section id="${d.division}"></section>`).join('') : ''
-        }</section>`,
-      )
-      .join('');
-  }
-
   function tree(extra: Record<string, string>): string {
     const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-prerender-'));
     const app = path.join(root, '.next', 'server', 'app');
@@ -310,11 +297,9 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'clubs', 'commits']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'commits']) {
       put(`${p}.html`);
     }
-    // The history page: a section per league, and a division anchor for every available league.
-    put('history/2025-26.html', historyBody());
     put('opengraph-image.body');
     put('standings/opengraph-image.body');
     const families: Record<string, string[]> = {
@@ -346,13 +331,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
   }
 
   function run(root: string) {
-    const res = spawnSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      [path.join(REPO, 'scripts', 'assert-prerender.ts')],
-      { cwd: root, encoding: 'utf8', env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } },
-    );
-    if (res.error) throw res.error;
-    return { status: res.status, output: `${res.stdout}${res.stderr}` };
+    return runScript('scripts/assert-prerender.ts', [], { cwd: root, env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } });
   }
 
   const notFound = (rel: string) => ({ [`${rel}.body`]: '', [`${rel}.meta`]: NOT_FOUND_META });
@@ -378,12 +357,6 @@ describe('assert:prerender on a .next that has served traffic', () => {
     expect(r.output).toContain('ignoring 7 opengraph-image 404(s)');
     expect(r.output).toContain('assert-prerender: ok');
     expect(r.status).toBe(0);
-  });
-
-  it('fails a history page that lost a league section, naming it', () => {
-    const r = run(tree({ 'history/2025-26.html': historyBody(['pcal']) }));
-    expect(r.output).toContain('FAIL history/2025-26: no section id="pcal"');
-    expect(r.status).toBe(1);
   });
 
   it('fails a team page that lost its Roster or Player stats section, naming the team', () => {
@@ -416,5 +389,21 @@ describe('assert:prerender on a .next that has served traffic', () => {
       expect(r.output).toContain('FAIL standings/: opengraph-image without its page: standings/nope/opengraph-image');
       expect(r.status).toBe(1);
     }
+  });
+});
+
+/**
+ * scripts/assert-vinext-prerender.ts reports like the other build-output gates: a missing build is
+ * one line and exit 1, never a stack trace.
+ */
+describe('assert-vinext-prerender before a vinext build', () => {
+  it('fails in one line, naming the file it needs and the build that writes it', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-vinext-'));
+    const res = runScript('scripts/assert-vinext-prerender.ts', [], { cwd: root });
+    expect(res.stderr.trim()).toBe(
+      'assert-vinext-prerender: dist/server/vinext-prerender.json does not exist; ' +
+        'run `pnpm build:vinext` (or `pnpm build:cloudflare`) first',
+    );
+    expect(res.status).toBe(1);
   });
 });

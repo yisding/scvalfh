@@ -1,6 +1,6 @@
 /**
- * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through A4's pure functions in order:
- * `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
+ * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/normalize.ts's pure functions in
+ * order: `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
  * (DATA_QUALITY ghosts and excluded contests; an exclusion that no longer matches is logged once),
  * `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to the published
  * `dropped` list.
@@ -16,14 +16,11 @@
  *    keeping this run's row (a contest MaxPreps re-keyed since the last run).
  */
 
+import { byDateThenId } from '../../format';
 import { DATA_QUALITY } from '../../leagues';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../normalize';
 import type { Game } from '../../types';
 import type { PipelineContext, RunState } from '../ledger';
-
-export function byDateThenId(a: Game, b: Game): number {
-  return a.dateLocal === b.dateLocal ? a.contestId.localeCompare(b.contestId) : a.dateLocal.localeCompare(b.dateLocal);
-}
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
 function unclassified(g: Game): Game {

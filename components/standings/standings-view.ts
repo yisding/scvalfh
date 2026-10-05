@@ -22,18 +22,18 @@
  *    rows sit at or above it) rather than assumed.
  *  - Postseason status is the league's ladder (`statusesOf(league)`); a team with no reported
  *    results gets NO projected place at all.
- *  - A division label is rendered only through `divisionHeading()`: PCAL and MCAL have none, and
- *    MaxPreps' own table names (config data only) are never a string here.
+ *  - A division label is rendered only through `divisionHeading()`: a single-division league
+ *    (PCAL, MCAL, EAL) has none, and MaxPreps' own table names (config data only) are never a
+ *    string here.
  */
 
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
-import { monthDay, ordinal, shortDate } from '../../lib/format';
+import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
 import {
   divisionHeading,
   getDivision,
   getLeague,
   ladderFor,
-  leagueOfDivision,
   leagueStandingsUrl,
   sectionOf,
   statusesOf,
@@ -98,7 +98,7 @@ export interface MissingRowView {
   key: string;
   dateKey: string;
   /** `Sep 4` */
-  date: string;
+  dateLabel: string;
   /** `Hollister at Carmel` (postponed rows add ` — Postponed`). */
   matchup: string;
   /** `Sep 4 Hollister at Carmel` — the two above, as one line. */
@@ -188,13 +188,6 @@ export interface DivisionView {
    * (`rankRuleText`, from config).
    */
   rankRule: string;
-  /**
-   * What settles a place we hold LEVEL, in words: the league's `rules.unresolvedSuffix` without its
-   * leading "— " (and any trailing citation in parentheses turned into a comma clause, so it never
-   * nests inside a caller's parentheses). The Notes' mismatch line does not print it ("tied for
-   * 7th here"): the tied group's own note, in the same list, already cites the league's last step.
-   */
-  levelReason: string;
   sourceUrl: string;
   throughDate: string | null;
   leagueFinals: number;
@@ -203,9 +196,35 @@ export interface DivisionView {
 
 // ---------------------------------------------------------------- small helpers
 
+/**
+ * Where a table's labelled ladder line goes: after how many rows, or null for no line.
+ *
+ * COUNTED, not assumed: the line sits under every ranked row whose place is at or above `after`,
+ * so with two teams level on the line there are more rows above it than `after` says, and two
+ * teams level on 1st both sit above Santa Teresa's "Play-in host" line. No line before any
+ * result (nothing above it), none when every row is above it (nothing below), and none for a
+ * division that draws no line (`after` null: the EAL). Rows come in table order, ranked rows
+ * first, so the rows above the line are always the first ones. The full table
+ * (`buildDivisionView`), the compact one, the home mini table (over its shown rows) and the
+ * league-tournament seeds all place their line through here.
+ */
+export function ladderLineAfter(
+  rows: readonly { ranked: boolean; place: number }[],
+  after: number | null | undefined,
+): number | null {
+  if (after === null || after === undefined) return null;
+  const above = rows.filter((r) => r.ranked && r.place <= after).length;
+  return above > 0 && above < rows.length ? above : null;
+}
+
+/** A standings (or seeds) row as `ladderLineAfter` reads it. */
+export function ladderRow(row: { standing: Standing }): { ranked: boolean; place: number } {
+  return { ranked: row.standing.hasReportedResults, place: row.standing.computed.place };
+}
+
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
-  return source === 'bval-docx' ? 'Official schedule (Google Doc)' : 'Official schedule (PDF)';
+  return `Official schedule (${officialSourceFormat(source)})`;
 }
 
 /**
@@ -225,7 +244,7 @@ export function rankRuleText(league: LeagueConfig): string {
 }
 
 /** The legend's sentence on whose order the table is (by `rules.orderScope`). */
-export function orderLegendText(league: LeagueConfig): string {
+function orderLegendText(league: LeagueConfig): string {
   const short = league.shortName;
   switch (league.rules.orderScope) {
     case 'table': {
@@ -240,29 +259,17 @@ export function orderLegendText(league: LeagueConfig): string {
 }
 
 /** The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from. */
-export function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
+function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
   return official.mode === 'none'
     ? `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`
     : `Scheduled per ${league.shortName}`;
 }
 
 /** The intro of the missing-results list, by whether the league has a schedule document. */
-export function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
+function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
   return official.mode === 'none'
     ? `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`
     : `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
-}
-
-/**
- * `Article VI §7 decides it with a coin flip`; MCAL's `a play-in on Fri Oct 23 decides it, MCAL
- * Tie-Breaking Criteria` (its trailing parenthetical becomes a clause, so "(…(…))" never prints).
- */
-export function levelReasonText(league: LeagueConfig): string {
-  const reason = league.rules.unresolvedSuffix
-    .replace(/^—\s*/, '')
-    .replace(/\s*\(([^()]*)\)\s*$/, ', $1')
-    .trim();
-  return reason || 'the league decides it';
 }
 
 /**
@@ -283,22 +290,12 @@ export function backfillFootnoteText(n: number): string {
     : `† Includes ${n} results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).`;
 }
 
-/** The kicker of a division section: its heading, or `League table` for a one-table league. */
-export function divisionKicker(division: DivisionId): string {
-  return divisionHeading(division) ?? 'League table';
-}
-
-/** The heading, or the league's short name, for sentences ("… for every team in MCAL"). */
-export function tableLabel(division: DivisionId): string {
-  return divisionHeading(division) ?? leagueOfDivision(division).shortName;
-}
-
 /**
  * The postseason block's heading and link, from the league's postseason kind (no CCS for NCS or NS).
  * An unbracketed tournament (the EAL's Super Regional) has no bracket page: it links its card on
  * /playoffs.
  */
-export function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
+function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
@@ -311,7 +308,7 @@ export function postseasonLinks(league: LeagueConfig): { heading: string; href: 
 }
 
 /** The league's qualification rule, cited once in the legend (by postseason kind). */
-export function postseasonCitation(league: LeagueConfig): string {
+function postseasonCitation(league: LeagueConfig): string {
   const ps = league.postseason;
   switch (ps.kind) {
     case 'ccs-ladder':
@@ -330,14 +327,14 @@ function teamShort(teams: readonly Team[], slug: TeamSlug | null, fallback: stri
 function missingRowView(row: MissingOfficialResult, teams: readonly Team[], index: number): MissingRowView {
   const away = teamShort(teams, row.awaySlug, row.awayName);
   const home = teamShort(teams, row.homeSlug, row.homeName);
-  const date = monthDay(row.dateKey);
+  const dateLabel = monthDay(row.dateKey);
   const matchup = row.kind === 'postponed' ? `${away} at ${home} — Postponed` : `${away} at ${home}`;
   return {
     key: `${row.dateKey}-${row.awaySlug ?? row.awayName}-${row.homeSlug ?? row.homeName}-${index}`,
     dateKey: row.dateKey,
-    date,
+    dateLabel,
     matchup,
-    text: `${date} ${matchup}`,
+    text: `${dateLabel} ${matchup}`,
     sbliveNote:
       row.kind === 'missing' && row.sblive
         ? `si.com reports ${away} ${row.sblive.away}-${row.sblive.home} ${home}; not counted: ${row.sblive.note}`
@@ -384,12 +381,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   const ranked = rows.filter((r) => r.standing.hasReportedResults);
   const unrankedTeams = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
 
-  // COUNTED, not assumed: with two teams level on the line there are more rows above it. A division
-  // with no line (the EAL: every team is inside the Super Regional's top six) draws none.
+  // COUNTED, not assumed (ladderLineAfter). A division with no line (the EAL: every team is inside
+  // the Super Regional's top six) draws none.
   const line = config.ladderLine;
-  const aboveLine = line ? ranked.filter((r) => r.standing.computed.place <= line.after) : [];
-  const berthRuleAfter =
-    aboveLine.length > 0 && aboveLine.length < rows.length ? aboveLine.length : undefined;
+  const berthRuleAfter = ladderLineAfter(rows.map(ladderRow), line?.after) ?? undefined;
 
   // A level place spans as many finishing slots as the tied group has teams, so it can hold two
   // rungs at once; grouping on `playoffStatus` alone would make a rung (the play-in, say) vanish.
@@ -539,7 +534,6 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
         : { href: config.official.scheduleUrl, label: officialScheduleLabel(config.official.source) },
     scheduledPer: scheduledPerText(league, config.official),
     rankRule: rankRuleText(league),
-    levelReason: levelReasonText(league),
     sourceUrl: leagueStandingsUrl(input.division),
     throughDate: input.throughDate,
     leagueFinals: input.leagueFinals,
@@ -653,7 +647,7 @@ export interface OverviewDivision {
   /** Division heading (h4) — null for a single-division league, which has no sub-header. */
   heading: string | null;
   /**
-   * The division block's id: the division id, unless it equals the league id (PCAL), where the
+   * The division block's id: the division id, unless it equals the league id (PCAL, EAL), where the
    * league's heading carries it — ONE element per id. It sits on the block, not the h4, because a
    * single-division league (MCAL: `#marin-county`) has no h4.
    */
@@ -661,7 +655,7 @@ export interface OverviewDivision {
   rows: StandingsRowData[];
   /** The labelled rule in the compact table; null when the division draws none (EAL). */
   ladderLine: { after: number; label: string } | null;
-  /** `Full <division heading ?? SHORT> table →` */
+  /** `Full <division heading ?? SHORT> table`; the page adds the aria-hidden arrow (components/ui/Arrow). */
   fullLabel: string;
   /** `/standings/<league>#<division>` */
   fullHref: string;
@@ -748,4 +742,26 @@ export interface LeaderLine {
   teams: Array<{ name: string; record: string; pts: number }>;
   /** A tie at the top. */
   tiedAtTop: boolean;
+}
+
+/**
+ * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St Ignatius 18 pts
+ * · El Camino: Los Gatos 21 pts`; co-leaders at most two names joined with " & ", then ` +<n>`;
+ * `No league results yet` before any result. The one builder of this row for both OG cards (the
+ * root card, app/opengraph-image.tsx, and the /standings card) and the standings metadata.
+ */
+export function leaderClause(lines: readonly LeaderLine[]): string {
+  if (lines.every((line) => line.teams.length === 0)) return 'No league results yet';
+  return lines
+    .map((line) => {
+      const names =
+        line.teams.length === 0
+          ? 'no results yet'
+          : `${line.teams
+              .slice(0, 2)
+              .map((t) => t.name)
+              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].pts} pts`;
+      return line.heading ? `${line.heading}: ${names}` : names;
+    })
+    .join(' · ');
 }

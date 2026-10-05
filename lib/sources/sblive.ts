@@ -26,9 +26,9 @@ import { z } from 'zod';
 
 import { localDateKey } from '../format';
 import { DATA_QUALITY, LEAGUES } from '../leagues';
-import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam } from '../teams';
+import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';
-import { CHROME_USER_AGENT, HttpClient, type HttpClientOptions, htmlUnescape } from './http';
+import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
 
 export const SBLIVE_WEB = 'https://www.si.com/high-school/stats/california/field-hockey';
 export const SBLIVE_HOST = 'https://www.si.com';
@@ -61,18 +61,21 @@ export function sbliveGameIdOf(id: unknown): string | null {
 /** Called once per payload row a parser had to drop (a non-numeric game id). */
 export type SbliveParseWarn = (message: string) => void;
 
+/** A si.com league standings page: the page `parseStandingsTeamRefs` harvests team web paths from. */
 export function sbliveLeagueStandingsUrl(leagueSlug: string): string {
   return `${SBLIVE_WEB}/leagues/${leagueSlug}/standings`;
 }
 
 /**
  * si.com league standings slugs, from config (`LEAGUES[].sblive.leagueSlugs`) — used ONLY to harvest
- * team web paths, never for membership.
+ * team web paths, never for membership. The harvest (`sbliveLeagueStandingsUrl`, then
+ * `parseStandingsTeamRefs` and `harvestTeamWebPaths`) is a manual research path for recovering
+ * registry team ids: the cron never runs it (DATA-SOURCES §5.3).
  */
 export const SBLIVE_LEAGUE_SLUGS: readonly string[] = LEAGUES.flatMap((l) => l.sblive.leagueSlugs);
 
 /**
- * The HTTP options every si.com request uses (LiveTransport and SbliveClient). A Chrome-like UA is
+ * The HTTP options every si.com request uses (LiveTransport). A Chrome-like UA is
  * required — si.com 403s a non-browser agent (SPEC §1.2) — and the requests are spaced and serial:
  * a run reads at most ~23 si.com pages (SPEC §7.7).
  */
@@ -449,10 +452,7 @@ function orderSides(a: SbliveSide, b: SbliveSide): [SbliveSide, SbliveSide] {
 
 /** The unordered-pair half of the cross-check join key (SPEC §5.7). */
 export function sblivePairKey(sides: readonly SbliveSide[]): string {
-  return sides
-    .map((s) => s.slug ?? `name:${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`)
-    .sort()
-    .join('~');
+  return sides.map(sideJoinKey).sort().join('~');
 }
 
 export function sbliveGameKey(game: Pick<SbliveGame, 'dateKey' | 'sides'>): string {
@@ -589,43 +589,6 @@ export function harvestTeamWebPaths(html: string, url = ''): SbliveTeamRef[] {
     add(node.opponent.team.name, node.opponent.team.webPath, node.opponent.team.image);
   }
   return [...seen.values()];
-}
-
-// ---------------------------------------------------------------- client
-
-export interface SbliveFetchResult {
-  games: SbliveGame[];
-  /** One entry per request actually made. */
-  requests: Array<{ url: string; httpStatus: number; rowCount: number }>;
-  /** Non-fatal notes for the run log. */
-  warnings: string[];
-}
-
-export class SbliveClient {
-  private readonly http: HttpClient;
-
-  constructor(opts: HttpClientOptions = {}) {
-    // The Chrome-like UA is required: si.com 403s a non-browser agent (SPEC §1.2).
-    this.http = new HttpClient({ ...SBLIVE_HTTP_OPTIONS, ...opts });
-  }
-
-  async getTeamGames(sbliveSlug: string): Promise<{ games: SbliveGame[]; url: string; httpStatus: number }> {
-    const url = sbliveTeamGamesUrl(sbliveSlug);
-    const res = await this.http.text(url);
-    return { games: parseTeamGamesPage(res.body, url), url, httpStatus: res.httpStatus };
-  }
-
-  async getScores(date: string): Promise<{ games: SbliveGame[]; url: string; httpStatus: number }> {
-    const url = sbliveScoresUrl(date);
-    const res = await this.http.text(url);
-    return { games: parseScoresPage(res.body, url), url, httpStatus: res.httpStatus };
-  }
-
-  async getLeagueTeamRefs(leagueSlug: string): Promise<{ refs: SbliveTeamRef[]; url: string; httpStatus: number }> {
-    const url = sbliveLeagueStandingsUrl(leagueSlug);
-    const res = await this.http.text(url);
-    return { refs: parseStandingsTeamRefs(res.body, url), url, httpStatus: res.httpStatus };
-  }
 }
 
 /** Dedupe on the (date, unordered pair) key, preferring the row that actually carries scores. */

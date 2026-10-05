@@ -70,7 +70,11 @@ function PlayerRow({ row }: { row: ClubPlayerRow }) {
   );
 }
 
-export function ClubPlayers({ view }: { view: ClubPageView }) {
+export interface ClubPlayersProps {
+  view: ClubPageView;
+}
+
+export function ClubPlayers({ view }: ClubPlayersProps) {
   if (view.groups.length === 0) {
     return (
       <EmptyState heading={`No player on this site’s varsity rosters is tied to ${view.name}.`}>

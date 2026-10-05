@@ -3,6 +3,9 @@
  * test can import them without running the script's scan of the built site.
  */
 
+import type { LeagueHistory } from '../lib/history-schema';
+import { decodeEntities as decodeWith } from '../lib/html-entities';
+
 /**
  * A phrase that says something is limited to SCVAL: "SCVAL-only", "SCVAL only", "only SCVAL",
  * "only for the SCVAL", "SCVAL teams only".
@@ -226,22 +229,18 @@ export const SEED_CLAIM =
  * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
  * so these are the escapes plus the typographic names a hand-written string might carry.
  */
-const VISIBLE_ENTITIES: Readonly<Record<string, string>> = {
+const VISIBLE_ENTITIES: ReadonlyMap<string, string> = new Map(Object.entries({
   amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ',
   rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', ndash: '–', mdash: '—', middot: '·', hellip: '…',
   rarr: '→', larr: '←', uarr: '↑', darr: '↓',
-};
+}));
 
 /** Block elements: visibleText ends each with a line break, so their texts never run together. */
 const BLOCK_END = /^\/?(?:p|div|h[1-6]|li|ul|ol|dt|dd|dl|tr|td|th|table|section|article|header|footer|nav|main|aside|figcaption|figure|summary|details|caption|br|hr)\b/i;
 
-/** `text` with its character references decoded (VISIBLE_ENTITIES and numeric ones). */
+/** `text` with its character references decoded in one pass (VISIBLE_ENTITIES, any case, and numeric ones). */
 function decodeEntities(text: string): string {
-  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
-    if (e[0] !== '#') return VISIBLE_ENTITIES[e.toLowerCase()] ?? m;
-    const code = e[1] === 'x' || e[1] === 'X' ? Number.parseInt(e.slice(2), 16) : Number(e.slice(1));
-    return code <= 0x10ffff ? String.fromCodePoint(code) : m;
-  });
+  return decodeWith(text, VISIBLE_ENTITIES, { foldCase: true });
 }
 
 /**
@@ -521,6 +520,11 @@ function sharesRun(page: string, fragment: string, publicTerms: readonly string[
   return false;
 }
 
+/** A page's `<main>…</main>` element (one per page; the smoke test asserts it exists), '' when absent. */
+export function mainElement(html: string): string {
+  return /<main[\s>][\s\S]*?<\/main>/.exec(html)?.[0] ?? '';
+}
+
 /**
  * The `<section …>…</section>` element whose start tag carries `id="<id>"`, wherever that attribute
  * sits in the tag (React renders a division's `className` before its `id`, a league's after), up to
@@ -548,4 +552,75 @@ export function elementById(html: string, id: string, tag: string): string {
   }
   // Never closed: everything after it is inside it.
   return html.slice(start.index);
+}
+
+/** A short window of text around a match, tags flattened, for a failure line. */
+export function around(text: string, index: number): string {
+  return text.slice(Math.max(0, index - 60), index + 60).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * `html` without each `<a>…</a>` whose text reads exactly `text` (tags, including React's `<!-- -->`
+ * text separators, dropped and whitespace collapsed): the one link a page may say a word in that the
+ * rest of it may not. It matches the words a reader sees, not the markup, so a link's arrow can be
+ * components/ui/Arrow's aria-hidden `<span>→</span>` or bare text alike.
+ */
+export function withoutLink(html: string, text: string): string {
+  return html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, (link, inner: string) =>
+    withoutTags(inner).replace(/\s+/g, ' ').trim() === text ? '' : link,
+  );
+}
+
+/**
+ * `html` with every tag removed, repeated until nothing changes, as withoutScripts is (CodeQL
+ * js/incomplete-multi-character-sanitization): no removal can leave the pieces of a new tag behind.
+ */
+function withoutTags(html: string): string {
+  let out = html;
+  for (let before = ''; before !== out; ) {
+    before = out;
+    out = out.replace(/<[^>]*>/g, '');
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- /history/2025-26
+
+/**
+ * What the history page's `<main>` gets wrong about `leagues` (lib/history.ts getHistoryLeagues),
+ * one message per problem: every league has its `<section id="<league>">`; an available league has
+ * an anchor for each division and every varsity row's league record, and never says
+ * "Unavailable"; an unavailable league has the "Unavailable" card with its reason, and no table and
+ * no champion, winner or award, since nothing official was read for it.
+ */
+export function historyPageProblems(
+  main: string,
+  leagues: ReadonlyArray<{ id: string; entry: LeagueHistory }>,
+): string[] {
+  const problems: string[] = [];
+  for (const { id, entry } of leagues) {
+    const section = sectionById(main, id);
+    if (!section) {
+      problems.push(`no <section id="${id}">`);
+      continue;
+    }
+    if (entry.status === 'available') {
+      for (const d of entry.divisions) {
+        if (!section.includes(`id="${d.division}"`)) problems.push(`${id}: no id="${d.division}" division anchor`);
+        for (const row of d.standings.varsity) {
+          if (!section.includes(`>${row.leagueRecord}<`)) {
+            problems.push(`${id}/${d.division}: ${row.name}'s record ${row.leagueRecord} is not on the page`);
+          }
+        }
+      }
+      if (/Unavailable/.test(section)) problems.push(`${id}: an available league says "Unavailable"`);
+    } else {
+      if (!section.includes('Unavailable')) problems.push(`${id}: unavailable league has no "Unavailable" card`);
+      if (!decodeEntities(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
+      if (/<table/.test(section)) problems.push(`${id}: an unavailable league shows a table`);
+      const award = /champion|winner|all-league|MVP|first team/i.exec(section);
+      if (award) problems.push(`${id}: an unavailable league shows a result or award — “…${around(section, award.index)}…”`);
+    }
+  }
+  return problems;
 }

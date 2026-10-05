@@ -79,7 +79,7 @@ const TOP5 = [row(AW, 40, 1), row(RW, 37, 2), row(TM, 34, 3), row(BK, 31, 4), ro
 describe('seedsFromStandings', () => {
   it('fills seeds 1..6 by place with the "cluster covers the slot" rule', () => {
     const rows = [...TOP5, row(UN, 20, 6, { tiedWith: [MC], resolvedBy: 'play-in' }), row(MC, 20, 6, { tiedWith: [UN], resolvedBy: 'play-in' }), row(CS, 10, 8), row(MA, 0, 9, { gp: 0 })];
-    const seeds = seedsFromStandings(rows);
+    const seeds = seedsFromStandings(rows, MCAL);
     expect(seeds.map((s) => s.seed)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(seeds.slice(0, 5).map((s) => s.seat.map((x) => x.slug))).toEqual([[AW], [RW], [TM], [BK], [LW]]);
     expect(seeds[5].seat.map((x) => x.slug)).toEqual([UN, MC]);
@@ -88,7 +88,7 @@ describe('seedsFromStandings', () => {
 
   it('never seeds a team with no results', () => {
     const rows = [AW, RW, TM, BK, LW, UN, MC, CS, MA].map((s) => row(s, 0, 1, { gp: 0 }));
-    expect(seedsFromStandings(rows).every((s) => s.seat.length === 0)).toBe(true);
+    expect(seedsFromStandings(rows, MCAL).every((s) => s.seat.length === 0)).toBe(true);
   });
 });
 
@@ -242,7 +242,7 @@ describe('sixthPlaceRule', () => {
   });
 });
 
-const SEEDS = seedsFromStandings([...TOP5, row(UN, 20, 6), row(MC, 10, 7), row(CS, 5, 8), row(MA, 0, 9)]);
+const SEEDS = seedsFromStandings([...TOP5, row(UN, 20, 6), row(MC, 10, 7), row(CS, 5, 8), row(MA, 0, 9)], MCAL);
 const one = (slot: unknown) => (slot as { seat: Array<{ slug: string }> }).seat.map((s) => s.slug);
 
 describe('bracket builders', () => {
@@ -256,7 +256,7 @@ describe('bracket builders', () => {
   });
 
   it('quarterfinals: an undecided 6th seat waits for the play-in', () => {
-    const seeds = seedsFromStandings([...TOP5, row(UN, 20, 6, { tiedWith: [MC] }), row(MC, 20, 6, { tiedWith: [UN] })]);
+    const seeds = seedsFromStandings([...TOP5, row(UN, 20, 6, { tiedWith: [MC] }), row(MC, 20, 6, { tiedWith: [UN] })], MCAL);
     expect(quarterfinals(seeds, MCAL)[1].away).toEqual({ kind: 'winner-of', gameId: 'play-in', label: 'Play-in winner' });
   });
 

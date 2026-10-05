@@ -23,7 +23,8 @@ import {
   statusLegend,
 } from '../lib/standings';
 import { countsOf, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { parseSnapshot, stableStringify } from '../lib/snapshot-schema';
+import { parseSnapshot } from '../lib/snapshot-schema';
+import { stableStringify } from '../lib/stable-json';
 import type {
   Game,
   GameStatus,
@@ -34,10 +35,10 @@ import type {
 } from '../lib/types';
 import { teamsInLeague } from '../lib/teams';
 import { game } from './game-builder';
+import { REPO } from './helpers';
 
 type DataModule = typeof import('../lib/data');
 
-const REPO = path.resolve(import.meta.dirname, '..');
 const readJson = (p: string): unknown => JSON.parse(readFileSync(path.join(REPO, p), 'utf8'));
 
 interface GoldenRow {

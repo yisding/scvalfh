@@ -1,11 +1,12 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import BerthMeter from '../ui/BerthMeter';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { monthDay, shortDate } from '../../lib/format';
 
-import type { PostseasonView } from './home-data';
+import type { PostseasonView } from './home-view';
 
 /**
  * A league panel's postseason block (SPEC §10.1; replaces the SCVAL-only PlayoffsCard).
@@ -40,7 +41,7 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
           <p className="mt-4 mb-0 text-meta">
             {/* Standalone action link: its own 24px box (`sx-action`, WCAG 2.5.8). */}
             <Link href={view.link.href} prefetch={false} className={`sx-action ${LINK}`}>
-              {view.link.label} <span aria-hidden="true">&rarr;</span>
+              {view.link.label} <Arrow />
             </Link>
           </p>
         </div>
@@ -77,7 +78,7 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
           {/* Kept on one line: it ends a wrapping sentence, and "CCS playoffs" stranded above
               its arrow (or the arrow alone on the next line) read as two things. */}
           <Link href={view.link.href} prefetch={false} className={`whitespace-nowrap ${LINK}`}>
-            {view.link.label} <span aria-hidden="true">&rarr;</span>
+            {view.link.label} <Arrow />
           </Link>
         </p>
       </div>

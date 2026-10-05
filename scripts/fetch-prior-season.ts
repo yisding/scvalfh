@@ -39,11 +39,12 @@ import {
   seasonLabel,
   seasonWindow,
   type PriorSeason,
-} from '../lib/prior-season';
+} from '../lib/prior-season-schema';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
 import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { TeamSlug } from '../lib/types';
+import { runCli } from './cli';
 
 const USAGE =
   'Usage: pnpm fetch-prior-season [--year <yy-yy>] [--ssid <sportSeasonId>] [--out <path>] [--dry-run]';
@@ -53,6 +54,7 @@ interface Args {
   ssid: string | null;
   out: string;
   dryRun: boolean;
+  help: boolean;
 }
 
 /** The command line (see USAGE); the season defaults to the one before lib/season.ts'. */
@@ -62,24 +64,23 @@ function parseArgs(argv: readonly string[]): Args {
     ssid: null,
     out: path.resolve(import.meta.dirname, '..', 'data', 'prior-season.json'),
     dryRun: false,
+    help: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
     const value = () => {
       const v = argv[++i];
-      if (!v) throw new Error(`${flag} needs a value\n${USAGE}`);
+      if (v === undefined || v.startsWith('--')) throw new Error(`${flag} needs a value\n${USAGE}`);
       return v;
     };
     if (flag === '--year') args.year = value();
     else if (flag === '--ssid') args.ssid = value();
     else if (flag === '--out') args.out = path.resolve(value());
     else if (flag === '--dry-run') args.dryRun = true;
-    else if (flag === '--help') {
-      console.log(USAGE);
-      process.exit(0);
-    } else throw new Error(`unknown flag ${flag}\n${USAGE}`);
+    else if (flag === '--help') args.help = true;
+    else throw new Error(`unknown flag ${flag}\n${USAGE}`);
   }
-  if (!/^\d{2}-\d{2}$/.test(args.year)) throw new Error(`--year must look like 25-26\n${USAGE}`);
+  if (!args.help && !/^\d{2}-\d{2}$/.test(args.year)) throw new Error(`--year must look like 25-26\n${USAGE}`);
   return args;
 }
 
@@ -116,8 +117,12 @@ function render(file: PriorSeason): string {
 }
 
 /** Fetch every registry team's feed for the season, normalize, validate, write (all or nothing). */
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
+async function main(argv: readonly string[]): Promise<number> {
+  const args = parseArgs(argv);
+  if (args.help) {
+    console.log(USAGE);
+    return 0;
+  }
   const season = seasonLabel(args.year);
   const client = new MaxPrepsClient({ onLog: (line) => console.log(line) });
 
@@ -138,7 +143,7 @@ async function main(): Promise<void> {
   );
   if (failures.length > 0) {
     console.error(`fetch-prior-season: ${failures.length} feed(s) failed, nothing written:\n  ${failures.join('\n  ')}`);
-    process.exit(1);
+    return 1;
   }
 
   const { from, to } = seasonWindow(season);
@@ -149,13 +154,13 @@ async function main(): Promise<void> {
   );
   if (outside.length > 0) {
     console.error(`fetch-prior-season: rows outside ${season} (another season served?), nothing written:\n  ${outside.slice(0, 10).join('\n  ')}`);
-    process.exit(1);
+    return 1;
   }
 
   const { games, excluded, conflicts } = priorGamesFromFeeds(feeds);
   if (conflicts.length > 0) {
     console.error(`fetch-prior-season: nothing written:\n  ${conflicts.join('\n  ')}`);
-    process.exit(1);
+    return 1;
   }
 
   const file = PriorSeasonSchema.parse({
@@ -175,12 +180,10 @@ async function main(): Promise<void> {
       `left out: ${Object.entries(excluded).map(([k, v]) => `${k} ${v}`).join(', ')}; ` +
       (without.length ? `no game for ${without.join(', ')}` : `every registry team has a game`),
   );
-  if (args.dryRun) return;
+  if (args.dryRun) return 0;
   writeFileSync(args.out, render(file));
   console.log(`fetch-prior-season: wrote ${path.relative(process.cwd(), args.out)}`);
+  return 0;
 }
 
-main().catch((err: unknown) => {
-  console.error(`fetch-prior-season: ${(err as Error).message}`);
-  process.exit(1);
-});
+runCli(main);

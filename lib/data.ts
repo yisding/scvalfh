@@ -16,10 +16,11 @@ import bundledSnapshot from '../data/snapshot.json';
 
 import {
   dateSpan,
-  hoursBetween,
   isoDateKey,
+  leagueClock,
   localDateKey,
   numberWord,
+  ordinalWord,
   recordString,
   shortDate,
   sideOutcome,
@@ -40,7 +41,7 @@ import {
   leagueOfDivision,
   leaguePlayEnds,
 } from './leagues';
-import type { LeagueConfig, SectionConfig } from './leagues';
+import type { LeagueConfig, PairingConfig, PostseasonConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament } from './postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
@@ -54,12 +55,12 @@ import {
   sortStandings,
 } from './standings';
 import type { MissingOfficialRow } from './standings';
+import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
 import type {
   CcsCalendarEvent,
   CcsPlayoffs,
   ContestId,
   CrossCheckRow,
-  Division,
   DivisionId,
   DroppedContest,
   Game,
@@ -74,7 +75,6 @@ import type {
   PlayoffProjection,
   Record3,
   SbliveCrossCheck,
-  Season,
   SeasonPhase,
   SectionId,
   Snapshot,
@@ -122,10 +122,6 @@ export function getSnapshot(): Snapshot {
   return snapshot;
 }
 
-export function getSeason(): Season {
-  return snapshot.season;
-}
-
 export function getFetchedAt(): string {
   return snapshot.fetchedAt;
 }
@@ -133,11 +129,6 @@ export function getFetchedAt(): string {
 /** 'YYYY-MM-DD' in America/Los_Angeles, derived from the snapshot stamp. */
 export function getToday(): string {
   return localDateKey(snapshot.fetchedAt);
-}
-
-/** Hours since the snapshot was written, relative to an instant you supply. */
-export function getSnapshotAgeHours(now: string = snapshot.fetchedAt): number {
-  return hoursBetween(snapshot.fetchedAt, now);
 }
 
 export function getCounts(): Snapshot['counts'] {
@@ -183,11 +174,6 @@ export function getSbliveCrossCheck(): SbliveCrossCheck | undefined {
   return snapshot.sbliveCrossCheck;
 }
 
-/** The scoreConflict on one game, for the "sources disagree" marker on a row. */
-export function getScoreConflict(contestId: ContestId): Game['provenance']['scoreConflict'] {
-  return getGameById(contestId)?.provenance.scoreConflict;
-}
-
 /** null until SCVAL publishes a 2026-27 field hockey standings PDF; undefined if never polled. */
 export function getOfficialStandingsPdfUrl(): string | null | undefined {
   return snapshot.officialStandingsPdfUrl;
@@ -202,9 +188,6 @@ export function getCcsCalendar(): readonly CcsCalendarEvent[] | undefined {
 export function areKeyDatesConfirmed(): boolean | undefined {
   return snapshot.playoffs.keyDatesConfirmed;
 }
-
-/** MaxPreps' CCS tournament page (re-exported for pages). */
-export const BRACKET_URL: string = CCS.bracketUrl;
 
 /** 'sblive:<id>' games a MaxPreps contest has since superseded → that contest (D2 rule 10). */
 export function getSupersededGames(): Readonly<Record<ContestId, ContestId>> {
@@ -238,7 +221,7 @@ function summaryOf(league: LeagueConfig): LeagueSummary {
     id: d.id,
     label: d.label,
     heading: divisionHeading(d.id),
-    teamCount: snapshot.teams.filter((t) => t.division === d.id).length,
+    teamCount: getTeams(d.id).length,
   }));
   return {
     id: league.id,
@@ -285,10 +268,6 @@ export function getLeagueHealth(id: LeagueId): LeagueHealth {
   return row;
 }
 
-export function getAllLeagueHealth(): readonly LeagueHealth[] {
-  return snapshot.leagueHealth;
-}
-
 // ---------------------------------------------------------------- teams
 
 /** All 49 (registry order), one division (a bare id), or `{ league?, division? }`. */
@@ -305,42 +284,35 @@ export function getTeamsGrouped(): Array<{
   section: SectionConfig;
   leagues: Array<{
     league: LeagueSummary;
-    divisions: Array<{ id: DivisionId; heading: string | null; teams: Team[] }>;
+    divisions: Array<{ id: DivisionId; heading: string | null; teams: readonly Team[] }>;
   }>;
 }> {
   return SECTIONS.map((section) => ({
     section,
-    leagues: LEAGUES.filter((l) => l.sectionId === section.id).map((l) => ({
-      league: summaryOf(l),
-      divisions: l.divisions.map((d) => ({
-        id: d.id,
-        heading: divisionHeading(d.id),
-        teams: snapshot.teams.filter((t) => t.division === d.id),
-      })),
+    leagues: SUMMARIES.filter((s) => s.section.id === section.id).map((league) => ({
+      league,
+      divisions: league.divisions.map((d) => ({ id: d.id, heading: d.heading, teams: getTeams(d.id) })),
     })),
   })).filter((g) => g.leagues.length > 0);
 }
 
-export function getTeamBySlug(slug: string): Team | undefined {
-  return snapshot.teams.find((t) => t.slug === slug);
-}
+/**
+ * The registry lookups (lib/teams.ts), re-exported so a page can name a team through this module.
+ * The snapshot's teams equal the registry, in membership and order (checkAgainstConfig #1), so
+ * there is one lookup, not a second scan of `snapshot.teams`.
+ */
+export { getTeamById, getTeamBySlug };
 
-export function getTeamById(id: string): Team | undefined {
-  return snapshot.teams.find((t) => t.id === id);
-}
-
-/** Accepts a slug or a MaxPreps GUID. */
-export function resolveTeamRef(ref: string): Team | undefined {
+/**
+ * Accepts a slug or a MaxPreps GUID. Reads the registry (getTeamBySlug, getTeamById), which the
+ * snapshot's teams equal by checkAgainstConfig #1.
+ */
+function resolveTeamRef(ref: string): Team | undefined {
   return getTeamBySlug(ref) ?? getTeamById(ref);
 }
 
 export function getTeamSlugs(): TeamSlug[] {
   return snapshot.teams.map((t) => t.slug);
-}
-
-export function getLeagueOfTeam(ref: string): LeagueSummary | undefined {
-  const team = resolveTeamRef(ref);
-  return team ? getLeagueSummary(team.league) : undefined;
 }
 
 let searchIndex: SearchIndex | null = null;
@@ -370,7 +342,7 @@ export function getTeamSearchIndex(): SearchIndex {
       label: d.label,
       heading: divisionHeading(d.id),
       searchAliases: d.searchAliases,
-      teamCount: snapshot.teams.filter((t) => t.division === d.id).length,
+      teamCount: getTeams(d.id).length,
     })),
   }));
   searchIndex = buildSearchIndex(teams, leagues, DATA_QUALITY.notCovered);
@@ -404,13 +376,9 @@ function involvesTeam(game: Game, team: Team): boolean {
   );
 }
 
-function sideTeam(side: Game['home']): Team | undefined {
-  return (side.teamId ? getTeamById(side.teamId) : undefined) ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
-}
-
 function hasSideIn(game: Game, pred: (t: Team) => boolean): boolean {
-  const h = sideTeam(game.home);
-  const a = sideTeam(game.away);
+  const h = teamOfSide(game.home);
+  const a = teamOfSide(game.away);
   return (!!h && pred(h)) || (!!a && pred(a));
 }
 
@@ -475,6 +443,18 @@ export function getLastLeagueResultDate(
   return dates.length ? dates[dates.length - 1] : null;
 }
 
+/**
+ * Non-league games played so far: finals of the league's teams that count for no table and are
+ * no postseason game (the `isNonLeague` predicate, components/ui/describe-game.ts), dated on or
+ * before `through`. The count the two pre-league-play notices (the home PhaseLead and the
+ * /standings banner) print, so they cannot count differently.
+ */
+export function getNonLeagueFinalsPlayed(leagueId: LeagueId, through: string = getToday()): number {
+  return getGames({ league: leagueId, status: 'final' }).filter(
+    (g) => g.countsFor === null && g.postseason === null && g.dateKey <= through,
+  ).length;
+}
+
 const PLAYABLE: GameStatus[] = ['scheduled', 'live', 'postponed'];
 
 function scoped(filter: { league?: LeagueId }): Game[] {
@@ -482,7 +462,7 @@ function scoped(filter: { league?: LeagueId }): Game[] {
 }
 
 /** The next `n` contests at or after `asOf` (default: the snapshot stamp). */
-export function getUpcoming(n = 5, asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): Game[] {
+export function getUpcoming(n = 5, filter: { league?: LeagueId } = {}, asOf: string = snapshot.fetchedAt): Game[] {
   const today = localDateKey(asOf);
   return scoped(filter)
     .filter((g) => PLAYABLE.includes(g.status) && g.dateKey >= today)
@@ -490,26 +470,28 @@ export function getUpcoming(n = 5, asOf: string = snapshot.fetchedAt, filter: { 
     .slice(0, n);
 }
 
-/** The most recent `n` finals at or before `asOf`, newest first. */
-export function getRecentResults(n = 5, asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): Game[] {
-  const today = localDateKey(asOf);
-  return scoped(filter)
-    .filter((g) => g.status === 'final' && g.dateKey <= today)
-    .sort((a, b) => b.dateLocal.localeCompare(a.dateLocal))
-    .slice(0, n);
-}
-
 /**
  * The most recent date that actually has reported results, so the home page never shows a stale
  * day as if it were last night (DESIGN §8).
  */
-export function getLatestResultsDate(asOf: string = snapshot.fetchedAt, filter: { league?: LeagueId } = {}): string | null {
+export function getLatestResultsDate(filter: { league?: LeagueId } = {}, asOf: string = snapshot.fetchedAt): string | null {
   const today = localDateKey(asOf);
   const dates = scoped(filter)
     .filter((g) => g.status === 'final' && g.dateKey <= today)
     .map((g) => g.dateKey)
     .sort();
   return dates.length ? dates[dates.length - 1] : null;
+}
+
+/**
+ * The Scores tab's landing date, across every league or within one: the latest day at or before
+ * "today" (the snapshot's Pacific day, never the clock) with at least one final; before the first
+ * result it is the next day with a contest; with no contests at all, none. BottomTabBar aims the
+ * tab at it and ScheduleList lays out the days around it, so the two cannot disagree.
+ */
+export function getScoresLandingDate(filter: { league?: LeagueId } = {}): string | null {
+  const today = getToday();
+  return getLatestResultsDate(filter) ?? getGameDates(filter).find((d) => d >= today) ?? null;
 }
 
 /**
@@ -534,17 +516,6 @@ export function getOfficialFixtures(
 
 export function getStandings(division: DivisionId): Standing[] {
   return sortStandings(snapshot.standings.filter((s) => s.division === division));
-}
-
-/** A league's tables, division order; `heading` is null for a single-division league. */
-export function getLeagueStandings(
-  leagueId: LeagueId,
-): Array<{ division: DivisionId; heading: string | null; rows: Standing[] }> {
-  return getLeague(leagueId).divisions.map((d) => ({
-    division: d.id,
-    heading: divisionHeading(d.id),
-    rows: getStandings(d.id),
-  }));
 }
 
 export function getAllStandings(): Record<DivisionId, Standing[]> {
@@ -805,26 +776,18 @@ export interface FormGame {
   /** goals for − goals against; null unless the game is a counted final. */
   margin: number | null;
   outcome: Outcome | null;
-  /** countsFor !== null */
-  isLeague: boolean;
   /** Forfeits have no goal margin and are excluded from MarginStrip (DESIGN §5.7). */
   excludedFromMargin: boolean;
 }
 
 export interface TeamForm {
-  team: Team;
-  standing: Standing | undefined;
-  last5: Outcome[];
-  streak: Standing['computed']['streak'];
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
-  nonLeagueCount: number;
 }
 
 export function getTeamForm(ref: string): TeamForm | undefined {
   const team = resolveTeamRef(ref);
   if (!team) return undefined;
-  const standing = snapshot.standings.find((s) => s.teamId === team.id);
   const all = getGames({ teamId: team.id }).sort((a, b) =>
     a.dateLocal.localeCompare(b.dateLocal),
   );
@@ -847,18 +810,10 @@ export function getTeamForm(ref: string): TeamForm | undefined {
         status: g.status,
         margin: counted ? (mine.score as number) - (theirs.score as number) : null,
         outcome,
-        isLeague: true,
         excludedFromMargin: g.isForfeit,
       };
     });
-  return {
-    team,
-    standing,
-    last5: standing ? [...standing.computed.last5] : [],
-    streak: standing?.computed.streak ?? null,
-    leagueGames,
-    nonLeagueCount: all.filter((g) => g.countsFor === null).length,
-  };
+  return { leagueGames };
 }
 
 // ---------------------------------------------------------------- postseason
@@ -915,12 +870,11 @@ export function getCcsField(): {
   atLarge: number;
   total: number;
 } {
-  const aq = CCS.autoQualifiers as Readonly<Record<string, number>>;
   return {
     byLeague: CCS_LEAGUE_IDS.map((id) => ({
       leagueId: id,
       shortName: getLeague(id).shortName,
-      auto: aq[id],
+      auto: CCS.autoQualifiers[id],
     })),
     atLarge: CCS.autoQualifiers.atLarge,
     total: CCS.autoQualifiers.total,
@@ -944,16 +898,8 @@ export interface TeamPostseasonLine {
   linkText: string;
 }
 
-/** '11:00' → '11 AM'; '16:30' → '4:30 PM'. */
-function clock(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
-}
-
 /** §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit). */
-export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseasonLine | null {
-  void asOf;
+export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   const team = resolveTeamRef(ref);
   if (!team) return null;
   const row = snapshot.standings.find((s) => s.teamId === team.id);
@@ -979,7 +925,7 @@ export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseaso
           `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
           `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
         href: `/playoffs/${league.id}`,
-        linkText: `${ps.name} →`,
+        linkText: ps.name,
       };
     }
     case 'unbracketed-tournament':
@@ -988,7 +934,7 @@ export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseaso
         label,
         sentence: `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
         href: `/playoffs#${league.id}`,
-        linkText: 'Postseason →',
+        linkText: 'Postseason',
       };
     case 'ccs-ladder': {
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
@@ -997,23 +943,35 @@ export function getTeamPostseasonLine(ref: string, asOf?: string): TeamPostseaso
       if (crossover) {
         sentence = `The SCVAL crossover and the 4th-place play-in are ${shortDate(crossover.date)}.`;
       } else if (playIn && statuses.includes('play-in')) {
-        sentence =
-          `${playIn.seatLabels[1]} plays at the ${divisionLabelOf(playIn.seats[0].division)} champion ` +
-          `${shortDate(playIn.date)}${playIn.time ? `, ${clock(playIn.time)}` : ''}, for ${league.shortName}’s fourth automatic CCS berth.`;
+        sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {
         sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
       } else {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
       }
-      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs →' };
+      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs' };
     }
   }
 }
 
-function divisionLabelOf(id: DivisionId): string {
-  return getDivision(id).label;
+/**
+ * The BVAL-style play-in, as one clause with no closing stop: 'Mt. Hamilton #4 plays at the Santa
+ * Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth', the ordinal from the
+ * league's configured `autoBerths`. The team page ends it
+ * with a period; the home page's phase lead adds the CCS seeding meeting.
+ */
+export function playInClause(
+  league: Pick<LeagueConfig, 'shortName'>,
+  ps: Extract<PostseasonConfig, { kind: 'ccs-ladder' }>,
+  playIn: PairingConfig,
+): string {
+  return (
+    `${playIn.seatLabels[1]} plays at the ${getDivision(playIn.seats[0].division).label} champion ` +
+    `${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}, for ${league.shortName}’s ` +
+    `${ordinalWord(ps.autoBerths)} automatic CCS berth`
+  );
 }
 
 /** Re-exported so a page never has to import two modules to name a team id. */
-export type { Division, DivisionId, Game, LeagueId, Standing, Team, TeamId, TeamSlug };
+export type { DivisionId, Game, LeagueId, Standing, Team, TeamId, TeamSlug };

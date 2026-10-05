@@ -41,8 +41,6 @@ export interface PlayInCardProps {
   game?: Game | null;
   /** The play-in of a pairing set (a 3px ink rule on the left edge — a position, never a hue). */
   emphasis?: boolean;
-  /** Heading level of the title (the page owns the outline). */
-  titleAs?: 'h3' | 'h4' | 'p';
   className?: string;
 }
 
@@ -50,8 +48,8 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
   const [first, ...rest] = side.contenders;
   // The right-hand side mirrors at md (`flex-row-reverse`, right-aligned text); on a phone the two
   // sides STACK, each a full-width row reading left to right, so the names stay in a column.
-  const mirror = align === 'end' ? ' md:flex-row-reverse md:text-right' : '';
-  const row = `flex min-w-0 items-center gap-2${mirror}`;
+  const mirror = align === 'end' ? 'md:flex-row-reverse md:text-right' : null;
+  const row = ['flex min-w-0 items-center gap-2', mirror].filter(Boolean).join(' ');
   const host = side.host ? ' (host)' : '';
   // The sub line is sans: the seat ("Santa Teresa #1") is a label, and only the record's digits
   // are mono (DESIGN §4.3). The seat is one unbreakable unit, so a wrap can never strand "#1" (or
@@ -118,12 +116,11 @@ export function PlayInCard({
   notes = [],
   game,
   emphasis = false,
-  titleAs: Title = 'p',
   className,
 }: PlayInCardProps) {
   return (
     <div
-      className={`sx-card p-4${className ? ` ${className}` : ''}`}
+      className={['sx-card p-4', className].filter(Boolean).join(' ')}
       style={
         emphasis
           ? { boxShadow: 'inset 3px 0 0 var(--sx-text), var(--sx-ring), var(--sx-shadow-raised)' }
@@ -131,7 +128,9 @@ export function PlayInCard({
       }
     >
       <span className="sr-only">{sentence}</span>
-      <Title className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
+      {/* A paragraph, not a heading: the card's sentence above is what a screen reader hears, and
+          the page owns the outline. */}
+      <p className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
         <span>{title}</span>
         {when ? (
           <span className="font-normal text-ink-2">
@@ -139,7 +138,7 @@ export function PlayInCard({
             {when.timeLabel ? `, ${when.timeLabel}` : ''}
           </span>
         ) : null}
-      </Title>
+      </p>
       {/* Phone: the sides stack, and the connector is a divider row between them (a hairline
           either side of the pill), so each side has the card's full width and its name and seat
           line stay one tidy row at 320. From md: the mirrored three-column pairing. */}

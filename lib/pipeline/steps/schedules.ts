@@ -17,15 +17,15 @@ import { getLeague } from '../../leagues';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../../sources/maxpreps';
 import { FETCHABLE_TEAMS, TEAMS } from '../../teams';
 import type { LeagueId, SourceStatus, Team } from '../../types';
-import { FixtureMissing, TransportError } from '../contract';
 import {
   asOfStamp,
   carriedFromOf,
   hasPreviousData,
-  previousLeagueHealth,
+  lastFreshStamp,
   type PipelineContext,
   type RunState,
 } from '../ledger';
+import { classifyFetchError, parseJsonBody } from '../read';
 import { resourceUrl } from '../transport';
 
 /** §7.5 trigger b: this share (or more) of a league's attempted feeds failed. */
@@ -56,17 +56,8 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
   try {
     const res = await ctx.transport.get(key);
     httpStatus = res.httpStatus;
-    let raw: unknown;
-    try {
-      raw = JSON.parse(res.body) as unknown;
-    } catch (err) {
-      throw new Error(`invalid JSON: ${(err as Error).message}`);
-    }
-    const parsed = ScheduleResponseSchema.safeParse(raw);
-    if (!parsed.success) {
-      throw new Error(`schema drift: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`).join('; ')}`);
-    }
-    const split = splitTbaRows(parsed.data.data);
+    const feed = parseJsonBody(res.body, ScheduleResponseSchema).data;
+    const split = splitTbaRows(feed);
     state.tbaDropped.push(...split.dropped);
     const rows = split.rows;
     // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
@@ -82,14 +73,13 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
     return {
       rows,
       status: 'ok',
-      source: { ...base, status: 'ok', httpStatus, rowCount: parsed.data.data.length },
+      source: { ...base, status: 'ok', httpStatus, rowCount: feed.length },
     };
   } catch (err) {
-    if (err instanceof FixtureMissing) {
-      return { rows: [], status: 'skipped', source: { ...base, status: 'skipped', error: 'not in corpus' } };
-    }
-    if (err instanceof TransportError && err.httpStatus !== null) httpStatus = err.httpStatus;
-    const message = (err as Error).message;
+    const failed = classifyFetchError(err);
+    if (failed.status === 'skipped') return { rows: [], status: 'skipped', source: { ...base, ...failed } };
+    if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
+    const message = failed.error;
     ctx.warn(`${team.slug} schedule failed: ${message}`, base.scope);
     const carry = previousGameCount(ctx, team) > 0;
     const carriedFrom = carry
@@ -109,7 +99,7 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
   }
 }
 
-function teamFailedReason(ctx: PipelineContext, team: Team, carriedFrom: string | undefined): string {
+function teamFailedReason(team: Team, carriedFrom: string | undefined): string {
   return carriedFrom
     ? `MaxPreps did not answer for ${team.name}'s schedule this run; its games are carried from ${asOfStamp(carriedFrom)}.`
     : `MaxPreps did not answer for ${team.name}'s schedule this run, so its games may be incomplete.`;
@@ -124,9 +114,9 @@ export function feedsFailedReason(
 ): string {
   const short = getLeague(leagueId).shortName;
   const head = `MaxPreps did not answer for ${failed} of ${attempted} ${short} team schedules this run`;
-  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
-  return hasPreviousData(previous, leagueId) && lastFresh
-    ? `${head}, so ${short} is shown as of ${asOfStamp(lastFresh)}.`
+  const stamp = lastFreshStamp(previous, leagueId);
+  return stamp
+    ? `${head}, so ${short} is shown as of ${stamp}.`
     : `${head}; ${short} is shown from the schedules that did answer.`;
 }
 
@@ -153,7 +143,7 @@ export async function stepSchedules(ctx: PipelineContext, state: RunState): Prom
     const feed = state.feeds.get(team.slug);
     if (feed) feed.status = out.status;
     if (out.status === 'failed') {
-      ctx.leagues.degrade(team.league, 'partial', teamFailedReason(ctx, team, out.source.carriedFrom), 'team feed carried');
+      ctx.leagues.degrade(team.league, 'partial', teamFailedReason(team, out.source.carriedFrom), 'team feed carried');
     }
   }
 

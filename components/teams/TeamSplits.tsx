@@ -1,10 +1,11 @@
-import { EM_DASH, recordString } from '../../lib/format';
+import { recordString } from '../../lib/format';
 import type { Record3 } from '../../lib/types';
+import { MissingValue } from '../ui/MissingValue';
 import type { TeamPageView } from './team-view';
 
 /**
  * Home / away / neutral league splits (DESIGN §3.7, §12.5): three mini cards, label over value,
- * in the stat tiles' card recipe (StatTile `variant="card"`: 12px padding on a phone, 16px from
+ * in the stat tiles' card recipe (StatTile: 12px padding on a phone, 16px from
  * 768px, the label over a bold value) so the team page has one tile look.
  *
  * The value is set exactly like a StatTile value: `sx-figure`, Sans with proportional figures,
@@ -32,7 +33,11 @@ function splitValue(record: Record3 | null): string | null {
   return recordString(record);
 }
 
-export function TeamSplits({ view }: { view: TeamPageView }) {
+export interface TeamSplitsProps {
+  view: TeamPageView;
+}
+
+export function TeamSplits({ view }: TeamSplitsProps) {
   const league = view.hasResults && view.standing ? view.standing.computed : null;
   const cells: Array<{ label: keyof typeof NO_GAMES; value: string | null }> = [
     { label: 'Home', value: splitValue(league?.homeRecord ?? null) },
@@ -49,12 +54,7 @@ export function TeamSplits({ view }: { view: TeamPageView }) {
           <div key={cell.label} className="sx-card p-3 md:p-4">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
             <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
-              {cell.value ?? (
-                <>
-                  <span aria-hidden="true">{EM_DASH}</span>
-                  <span className="sr-only">{league ? NO_GAMES[cell.label] : 'not reported'}</span>
-                </>
-              )}
+              {cell.value ?? <MissingValue words={league ? NO_GAMES[cell.label] : 'not reported'} />}
             </dd>
           </div>
         ))}

@@ -18,9 +18,9 @@
  */
 
 import { localDateKey, toLocalTimestamp } from '../format';
-import { resolveTeam } from '../teams';
+import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
 import type { Game, TeamSlug } from '../types';
-import { HttpClient, type HttpClientOptions, icsLine, unfoldIcs } from './http';
+import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */
 export const VNN_SITE_IDS: ReadonlyArray<{ slug: TeamSlug; siteId: string; school: string }> = [
@@ -126,14 +126,6 @@ export interface ApplyVnnResult {
   warnings: string[];
 }
 
-function pairKey(a: string, b: string): string {
-  return [a, b].sort().join('~');
-}
-
-function sideKeyOf(side: { slug: TeamSlug | null; name: string }): string {
-  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
-}
-
 /**
  * Attach `venue.name` and `timeConfirmed` where MaxPreps has neither.
  *
@@ -152,10 +144,10 @@ export function applyVnnEvents(
     if (e.level !== 'Varsity') continue;
     if (!e.opponentSlug) {
       // A non-SCVAL opponent is still matchable by name, through the same normalization.
-      byKey.set(`${e.dateKey}|${pairKey(e.schoolSlug, `name:${e.opponentName.toLowerCase().replace(/[^a-z0-9]+/g, '')}`)}`, e);
+      byKey.set(`${e.dateKey}|${unorderedPairKey(e.schoolSlug, sideJoinKey({ slug: null, name: e.opponentName }))}`, e);
       continue;
     }
-    byKey.set(`${e.dateKey}|${pairKey(e.schoolSlug, e.opponentSlug)}`, e);
+    byKey.set(`${e.dateKey}|${unorderedPairKey(e.schoolSlug, e.opponentSlug)}`, e);
   }
 
   let venuesAdded = 0;
@@ -163,7 +155,7 @@ export function applyVnnEvents(
   const matched = new Set<string>();
 
   const out = games.map((game) => {
-    const key = `${game.dateKey}|${pairKey(sideKeyOf(game.home), sideKeyOf(game.away))}`;
+    const key = `${game.dateKey}|${unorderedPairKey(sideJoinKey(game.home), sideJoinKey(game.away))}`;
     const event = byKey.get(key);
     if (!event) return game;
     matched.add(key);
@@ -247,22 +239,4 @@ export function carryVnnForward(
     return { ...game, ...patch };
   });
   return { games: out, carried };
-}
-
-// ---------------------------------------------------------------- client
-
-export class VnnClient {
-  private readonly http: HttpClient;
-
-  constructor(opts: HttpClientOptions = {}) {
-    this.http = new HttpClient(opts);
-  }
-
-  async getCalendar(
-    site: { slug: TeamSlug; siteId: string },
-  ): Promise<{ events: VnnEvent[]; url: string; httpStatus: number }> {
-    const url = vnnIcsUrl(site.siteId);
-    const res = await this.http.text(url, 'text/calendar,text/plain,*/*');
-    return { events: parseVnnIcs(res.body, site.slug), url, httpStatus: res.httpStatus };
-  }
 }

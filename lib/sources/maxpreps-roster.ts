@@ -26,8 +26,8 @@ import { z } from 'zod';
 
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
-import { MAXPREPS_WEB, SPORT_SEASON_ID } from '../season';
-import type { TeamRoster } from '../rosters-schema';
+import { SPORT_SEASON_ID } from '../season';
+import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '../rosters-schema';
 import type { Team } from '../types';
 
 // ---------------------------------------------------------------- the positional map
@@ -87,45 +87,14 @@ export const COL = Object.fromEntries(ROSTER_KEYS.map((k, i) => [k, i])) as Reco
 /** The table header the cross-check expects, in order. Anything else is a redesign: stop. */
 export const ROSTER_TABLE_HEADERS = ['#', 'Player', 'Grade', 'Position', 'Height'] as const;
 
-export type GradeClass = 'Fr.' | 'So.' | 'Jr.' | 'Sr.';
+export type GradeClass = (typeof GRADE_CLASSES)[number];
 
-/** `classYear` ↔ `formattedClassYear`, as rendered. A 2026-27 senior is grade 12. */
-export const GRADE_LABELS: Record<number, GradeClass> = { 9: 'Fr.', 10: 'So.', 11: 'Jr.', 12: 'Sr.' };
+/** `classYear` ↔ `formattedClassYear`, as rendered (from lib/rosters-schema.ts GRADE_CLASSES). A 2026-27 senior is grade 12. */
+export const GRADE_LABELS: Readonly<Record<number, GradeClass>> = Object.fromEntries(
+  GRADE_CLASSES.map((label, i) => [i + 9, label]),
+);
 
 // ---------------------------------------------------------------- types
-
-export interface RosterPlayer {
-  /** `athleteId` — per-season; a returning player gets a new one each year. */
-  athleteId: string | null;
-  /** `rosterId` — per-season roster membership. */
-  rosterId: string | null;
-  /** `careerProfileId` — the stable person id across seasons. */
-  careerProfileId: string | null;
-  /** The `?careerid=` short key of the career URL — the public identifier in links. */
-  careerId: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  /** As the table prints it. Never empty. */
-  fullName: string;
-  /** Kept as a string: "00" and "21/88" are real values. null when blank. */
-  jersey: string | null;
-  /** 9–12, or null when the coach left it blank. */
-  grade: number | null;
-  /** "Sr." / "Jr." / "So." / "Fr.", or null — always in step with `grade`. */
-  gradeClass: GradeClass | null;
-  /** position1..3 in order, blanks dropped (F / M / D / G observed). */
-  positions: string[];
-  /** `positions` joined with ", " — exactly the table's Position cell; null when blank. */
-  position: string | null;
-  /** `5'7"` as the table prints it; null when heightFeet is blank. */
-  height: string | null;
-  /** Total inches, or null. */
-  heightInches: number | null;
-  isCaptain: boolean;
-  careerUrl: string | null;
-  /** When the roster row was created on MaxPreps (naive local time). */
-  createdOn: string | null;
-}
 
 export interface RosterPage {
   teamId: string;
@@ -207,11 +176,6 @@ export function careerIdFromUrl(url: string | null): string | null {
   if (!url) return null;
   const m = /[?&]careerid=([^&#]+)/i.exec(url);
   return m ? m[1] : null;
-}
-
-/** The absolute career URL for a relative table href, for callers that only have the table. */
-export function absoluteMaxprepsUrl(href: string): string {
-  return /^https?:\/\//i.test(href) ? href : `${MAXPREPS_WEB}${href.startsWith('/') ? '' : '/'}${href}`;
 }
 
 const str = (v: unknown): string | null =>

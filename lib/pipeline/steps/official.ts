@@ -36,31 +36,21 @@ import {
 } from '../../sources/scval-pdf';
 import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
 import {
-  FixtureMissing,
-  TransportError,
   type OfficialStep,
   type OfficialStepResult,
   type RawResponse,
   type ResourceKey,
   type RunContext,
 } from '../contract';
+import { carriedFromOf } from '../ledger';
+import { classifyFetchError, type FetchFailure } from '../read';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
-/** A failed fetch, classified for its SourceStatus row. */
-interface FetchFailure {
-  status: 'error' | 'skipped';
-  error: string;
-  httpStatus?: number;
-}
-
+/** classifyFetchError, plus this step's own skip: a machine with no pdftotext cannot read a grid. */
 function failureOf(err: unknown): FetchFailure {
-  if (err instanceof FixtureMissing) return { status: 'skipped', error: 'not in corpus' };
   if (err instanceof PdftotextMissingError) return { status: 'skipped', error: err.message };
-  if (err instanceof TransportError) {
-    return { status: 'error', error: err.message, ...(err.httpStatus !== null ? { httpStatus: err.httpStatus } : {}) };
-  }
-  return { status: 'error', error: err instanceof Error ? err.message : String(err) };
+  return classifyFetchError(err);
 }
 
 async function fetchResource(ctx: RunContext, key: ResourceKey): Promise<{ ok: RawResponse } | { failed: FetchFailure }> {
@@ -91,6 +81,11 @@ export function isExcludedFor(league: LeagueConfig): (game: Game) => boolean {
 /** `The official BVAL schedule file failed validation; …` (SPEC §7.8, verbatim). */
 export function validationReason(league: LeagueConfig): string {
   return `The official ${league.shortName} schedule file failed validation; league games are identified by MaxPreps' league flag this run.`;
+}
+
+/** The run.ts fallback's reason when the official step itself failed (threw) this run. */
+export function notAppliedReason(league: LeagueConfig): string {
+  return `The official ${league.shortName} schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.`;
 }
 
 /** `BVAL revised the Mt. Hamilton schedule after our copy (revised 9/20/26); official dates may be out of date.` */
@@ -136,7 +131,7 @@ function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<type
   const tag = league.shortName.toLowerCase();
   for (const w of result.warnings) ctx.warn(`${tag} fixture: ${w}`, scope);
   for (const d of result.leagueDisagreements) ctx.warn(`${tag} league flag: ${d}`, scope);
-  for (const r of result.reasons) ctx.degrade(league.id, 'partial', r);
+  for (const r of result.reasons) ctx.degrade(league.id, 'partial', r, 'official fixture not counted');
   ctx.log(
     `  ${tag}: ${result.matched}/${total} official fixtures matched a contest; ` +
       `${result.unmatched.length} unmatched`,
@@ -198,15 +193,17 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
     logMatch(ctx, league, result, fixtures.length);
   }
 
-  // Per division: a grid that was not read gets its previous annotations back.
+  // Per division: a grid that was not read gets its previous annotations back, stamped with when
+  // that grid was last read (carriedFromOf follows a row that was itself carried).
   for (const d of divisions) {
     if (read.has(d.id)) continue;
     const carried = carryDivision(ctx, state, league.id, d.id);
     const row = rows.get(d.id);
-    if (carried && row && row.status === 'error' && ctx.previous) {
-      rows.set(d.id, { ...row, status: 'stale', carriedFrom: ctx.previous.fetchedAt });
-    } else if (carried && row && ctx.previous) {
-      rows.set(d.id, { ...row, carriedFrom: ctx.previous.fetchedAt });
+    const carriedFrom = carriedFromOf(ctx.previous, (r) => r.kind === 'official-schedule' && r.scope?.division === d.id);
+    if (carried && row && row.status === 'error' && carriedFrom) {
+      rows.set(d.id, { ...row, status: 'stale', carriedFrom });
+    } else if (carried && row && carriedFrom) {
+      rows.set(d.id, { ...row, carriedFrom });
     }
   }
   for (const d of divisions) {
@@ -275,7 +272,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
       state.degradedDivisions.add(d.id);
       carryDivision(ctx, state, league.id, d.id);
     }
-    ctx.degrade(league.id, 'degraded', validationReason(league));
+    ctx.degrade(league.id, 'degraded', validationReason(league), 'official file invalid');
   }
 
   // 2. Revision checks (never change which fixtures are used).
@@ -306,7 +303,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
       ctx.source({ ...base, status: 'stale', httpStatus: res.ok.httpStatus, error: reason });
       state.revisedUpstream.add(d.id);
       ctx.warn(`${d.id}: upstream sha256 ${hash} ≠ bundled ${d.official.bundledSha256}`, base.scope);
-      ctx.degrade(league.id, 'partial', reason);
+      ctx.degrade(league.id, 'partial', reason, 'upstream revised');
     }
   }
 
@@ -334,7 +331,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
         const reason = changesReason(league);
         ctx.source({ ...base, status: 'stale', httpStatus: res.ok.httpStatus, error: reason });
         for (const d of divisions) state.revisedUpstream.add(d.id);
-        ctx.degrade(league.id, 'partial', reason);
+        ctx.degrade(league.id, 'partial', reason, 'schedule changes posted');
       }
     }
   }
@@ -373,11 +370,6 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
     const bundled = documented.filter((d) => d.official.mode === 'bundled');
     if (live.length > 0) await runLivePdfLeague(ctx, league, live, state);
     if (bundled.length > 0) await runBundledLeague(ctx, league, bundled, state);
-  }
-
-  // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.
-  if (state.officialStandingsPdfUrl === undefined && ctx.previous?.officialStandingsPdfUrl !== undefined) {
-    state.officialStandingsPdfUrl = ctx.previous.officialStandingsPdfUrl;
   }
 
   const result: OfficialStepResult = {

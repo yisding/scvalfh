@@ -3,7 +3,7 @@ import LeagueHealthNote from '../ui/LeagueHealthNote';
 import SectionHeader from '../ui/SectionHeader';
 import { longDate } from '../../lib/format';
 
-import type { HomeLeaguePanel } from './home-data';
+import type { HomeLeaguePanel } from './home-view';
 import LatestScores from './LatestScores';
 import LeagueTeams from './LeagueTeams';
 import MiniStandings from './MiniStandings';
@@ -87,9 +87,6 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
           <MiniStandings
             key={division.id}
             division={division}
-            href={division.href}
-            showDivisionLabel={division.heading !== null}
-            home={division.home}
             legend={i === lastDivision ? panel.pointsLegend : undefined}
           />
         ))}

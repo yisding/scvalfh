@@ -26,10 +26,11 @@
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { shortDate, sideOutcome } from './format';
+import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
 import {
   LEAGUES,
   divisionLabel,
+  drawNumberOf,
   getDivision,
   getLeague,
   ladderFor,
@@ -92,11 +93,14 @@ const emptyTally = (): Tally => ({
   results: [],
 });
 
-function bump(rec: Record3, outcome: Outcome): void {
+function bump(rec: { w: number; l: number; t: number }, outcome: Outcome): void {
   if (outcome === 'W') rec.w += 1;
   else if (outcome === 'L') rec.l += 1;
   else rec.t += 1;
 }
+
+/** CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6). */
+const winPct = (r: { w: number; t: number; gp: number }): number => (r.gp > 0 ? (r.w + r.t / 2) / r.gp : 0);
 
 /**
  * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
@@ -127,9 +131,7 @@ function accumulate(tally: Tally, game: Game, teamId: TeamId): void {
   const view = perspective(game, teamId);
   if (!view) return;
   tally.gp += 1;
-  if (view.outcome === 'W') tally.w += 1;
-  else if (view.outcome === 'L') tally.l += 1;
-  else tally.t += 1;
+  bump(tally, view.outcome);
   // Forfeits count in W-L-T but NOT in goals (DESIGN §11.6).
   if (!game.isForfeit) {
     tally.gf += view.for;
@@ -160,8 +162,7 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
     w,
     l,
     t,
-    // CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6).
-    winPct: gp > 0 ? (w + t / 2) / gp : 0,
+    winPct: winPct(tally),
     // The league's points (3-1-0 in all five leagues; SCVAL Article VI §2).
     pts: points.win * w + points.tie * t + points.loss * l,
     gf: tally.gf,
@@ -176,14 +177,9 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
   };
 }
 
-/** Oldest first; a contest id breaks a tie so the order never depends on how the pipeline built the array. */
-function byDateLocal(a: Game, b: Game): number {
-  return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
-}
-
-/** countsFor === division && status === 'final', sorted by dateLocal (SCVAL Article VI §1). */
+/** countsFor === division && status === 'final', oldest first (`byDateThenId`; SCVAL Article VI §1). */
 export function divisionGames(games: readonly Game[], division: DivisionId): Game[] {
-  return games.filter((g) => g.countsFor === division && g.status === 'final').sort(byDateLocal);
+  return games.filter((g) => g.countsFor === division && g.status === 'final').sort(byDateThenId);
 }
 
 // ---------------------------------------------------------------- tiebreakers
@@ -212,9 +208,7 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
       const row = out.get(id);
       if (!view || !row) continue;
       row.gp += 1;
-      if (view.outcome === 'W') row.w += 1;
-      else if (view.outcome === 'L') row.l += 1;
-      else row.t += 1;
+      bump(row, view.outcome);
       if (!game.isForfeit) {
         row.gf += view.for;
         row.ga += view.against;
@@ -285,7 +279,7 @@ const HALT = 'halt' as const;
 /**
  * Stage keys, higher is better; `null` = the stage is skipped for this group; `HALT` = the chain stops
  * here, unresolved (SPEC §5.5). `head-to-head`, `division-wins`, `h2h-goals-against` and
- * `h2h-goal-diff` are today's SCVAL code.
+ * `h2h-goal-diff` are SCVAL's original stages (golden-gated).
  */
 function stageKeys(
   stage: TiebreakStage,
@@ -313,18 +307,14 @@ function stageKeys(
           // "Better head-to-head record". With an equal number of head-to-head games the by-laws'
           // own currency (points) ranks them; with an unequal number (mid-season, or an unplayed
           // fixture) points would reward the team that simply played more, so use win percentage.
-          key = allEqualGp
-            ? rules.points.win * row.w + rules.points.tie * row.t
-            : row.gp > 0
-              ? (row.w + row.t / 2) / row.gp
-              : 0;
+          key = allEqualGp ? rules.points.win * row.w + rules.points.tie * row.t : winPct(row);
         } else if (stage === 'h2h-goals-against') {
           // "Least goals given up between head to head teams tied" — fewer is better.
           key = -row.ga;
         } else if (stage === 'h2h-goal-diff') {
           key = row.gf - row.ga;
         } else {
-          key = (row.w + row.t / 2) / row.gp;
+          key = winPct(row);
         }
         out.set(id, key);
       }
@@ -339,9 +329,7 @@ function stageKeys(
     case 'record-above-tie': {
       if (above.length === 0) return null;
       for (const id of group) {
-        let w = 0;
-        let t = 0;
-        let gp = 0;
+        const rec = { ...emptyRecord3(), gp: 0 };
         for (const g of ctx.games) {
           const ids = [g.home.teamId, g.away.teamId];
           if (!ids.includes(id)) continue;
@@ -349,12 +337,11 @@ function stageKeys(
           if (!other || !above.includes(other)) continue;
           const view = perspective(g, id);
           if (!view) continue;
-          gp += 1;
-          if (view.outcome === 'W') w += 1;
-          else if (view.outcome === 'T') t += 1;
+          rec.gp += 1;
+          bump(rec, view.outcome);
         }
-        if (gp === 0) return null;
-        out.set(id, (w + t / 2) / gp);
+        if (rec.gp === 0) return null;
+        out.set(id, winPct(rec));
       }
       return out;
     }
@@ -389,14 +376,8 @@ function stageKeys(
       return null;
     }
     case 'draw-number': {
-      const draws = rules.drawNumbers;
-      if (!draws) return null;
-      for (const id of group) {
-        const slug = getTeamById(id)?.slug;
-        const n = slug === undefined ? undefined : draws[slug];
-        if (n === undefined) return null;
-        out.set(id, -n);
-      }
+      if (!rules.drawNumbers) return null;
+      for (const id of group) out.set(id, -drawNumberOf(rules, slugOfId(id)));
       return out;
     }
     default:
@@ -417,10 +398,10 @@ function splitChain(chain: readonly TiebreakStage[]): {
   return { stages: [...chain], terminal: null };
 }
 
-// ---------------------------------------------------------------- partition-restart (SCVAL, PCAL)
+// ---------------------------------------------------------------- partition-restart (SCVAL, PCAL, EAL)
 
 /**
- * Today's `resolveGroup`, parameterized (SPEC §5.3): `chain` is the chain of the ORIGINAL points
+ * The original SCVAL `resolveGroup`, parameterized (SPEC §5.3): `chain` is the chain of the ORIGINAL points
  * bucket; a stage key of `null` skips the stage; the terminal uncomputable stage replaces the
  * literal 'coin-flip'.
  */
@@ -464,9 +445,23 @@ function resolveGroup(
 
 // ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
 
+/**
+ * How MCAL's last tournament place was settled (SPEC §5.4b), as `lastSpotSeed` decided it: one team swept
+ * the other 2-0, or a play-in between `pair`. `group` is every team the case depends on (the pair, plus
+ * the 5th seed in the three-way 5-7 case, or the whole bucket when three or more are level at the last
+ * place); `fifth` is the 5th seed draw numbers placed in the three-way 5-7 case.
+ */
+export type LastSpotOutcome =
+  | { kind: 'sweep'; winner: TeamId; loser: TeamId }
+  | { kind: 'play-in'; pair: [TeamId, TeamId]; group: TeamId[]; fifth: TeamId | null };
+
 interface SeedCtx extends DivisionCtx {
   bucketStart: number;
   below: TeamId[][];
+  /** Written by `lastSpotSeed`, which only ever runs on the top-level (non-narrowing) path. */
+  lastSpot: LastSpotOutcome | null;
+  /** The three-way 5-7 case: the 5th seed placed by draw number, and its group, waiting for the pair. */
+  fifth: { id: TeamId; group: TeamId[] } | null;
 }
 
 const byName = (ids: readonly TeamId[]): TeamId[] =>
@@ -549,10 +544,10 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
   if (place < L) {
     if (group.length === 3 && place === L - 1) {
       // "tie breaking numbers will be used for placing #5"
-      const draws = ctx.rules.drawNumbers ?? {};
-      const drawOf = (id: TeamId): number => draws[getTeamById(id)?.slug ?? ''] ?? Number.MAX_SAFE_INTEGER;
+      const drawOf = (id: TeamId): number => drawNumberOf(ctx.rules, slugOfId(id));
       const first = [...group].sort((a, b) => drawOf(a) - drawOf(b))[0];
       ctx.resolvedBy.set(first, 'draw-number');
+      ctx.fifth = { id: first, group: [...group] };
       const rest = group.filter((id) => id !== first);
       return [[first], ...seedOne(rest, L, [...above, first], ctx)];
     }
@@ -577,11 +572,13 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
       const loser = winner === a ? b : a;
       ctx.resolvedBy.set(winner, 'h2h-win-pct');
       ctx.resolvedBy.set(loser, 'h2h-win-pct');
+      ctx.lastSpot = { kind: 'sweep', winner, loser };
       return [[winner], [loser]];
     }
     // A split, a tie or an unplayed meeting: a play-in decides it.
     ctx.resolvedBy.set(a, 'play-in');
     ctx.resolvedBy.set(b, 'play-in');
+    ctx.lastSpot = { kind: 'play-in', pair: [a, b], group: ctx.fifth?.group ?? [a, b], fifth: ctx.fifth?.id ?? null };
     return [byName(group)];
   }
 
@@ -595,12 +592,70 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
   const p2 = pickPlayIn(group.filter((id) => id !== p1), [...above, p1]);
   ctx.resolvedBy.set(p1, 'play-in');
   ctx.resolvedBy.set(p2, 'play-in');
+  ctx.lastSpot = { kind: 'play-in', pair: [p1, p2], group: [...group], fifth: null };
   const rest = group.filter((id) => id !== p1 && id !== p2);
   return [byName([p1, p2]), ...seedOne(rest, L + 2, [...above, p1, p2], ctx)];
 }
 
+/**
+ * How the league's last tournament place is settled over `rows` (SPEC §5.4b), or null when no tie on
+ * points reaches past it (or the league has no league tournament). It runs this engine's own
+ * seed-one-restart over the points bucket holding the last place, with the division's counted finals
+ * (`divisionGames`) and the same chain lookup, so a play-in pair is exactly the pair the table shows
+ * sharing the place with `resolvedBy: 'play-in'`. lib/postseason.ts builds the bracket's play-in on it.
+ */
+export function lastSpotOutcome(
+  rows: readonly Standing[],
+  games: readonly Game[],
+  league: LeagueConfig,
+): LastSpotOutcome | null {
+  const ps = league.postseason;
+  if (ps.kind !== 'league-tournament') return null;
+  const L = ps.lastSpot.place;
+  const divisionIds = new Set(league.divisions.map((d) => d.id));
+  // Points order (the table's order is points first); the team(s) in place L are the L-th by points.
+  const ranked = rows
+    .filter((r) => r.hasReportedResults && divisionIds.has(r.division))
+    .sort((a, b) => b.computed.pts - a.computed.pts || a.computed.place - b.computed.place);
+  const atL = ranked[L - 1];
+  if (!atL) return null;
+  const pts = atL.computed.pts;
+  const bucket = ranked.filter((r) => r.computed.pts === pts);
+  const above = ranked.filter((r) => r.computed.pts > pts);
+  const bucketStart = 1 + above.length;
+  if (bucketStart + bucket.length - 1 <= L) return null;
+
+  // The lower buckets as placed clusters (a shared place is one cluster), for a stage that reads them.
+  const below: TeamId[][] = [];
+  let last: number | null = null;
+  for (const r of ranked.filter((x) => x.computed.pts < pts)) {
+    if (r.computed.place === last) below[below.length - 1].push(r.teamId);
+    else below.push([r.teamId]);
+    last = r.computed.place;
+  }
+  const ctx: SeedCtx = {
+    division: atL.division,
+    league,
+    rules: league.rules,
+    games: divisionGames(games, atL.division),
+    computed: new Map(rows.map((r) => [r.teamId, r.computed])),
+    resolvedBy: new Map(),
+    placedBelowOf: () => below,
+    bucketStart,
+    below,
+    lastSpot: null,
+    fifth: null,
+  };
+  seedOne(bucket.map((r) => r.teamId), bucketStart, above.map((r) => r.teamId), ctx);
+  return ctx.lastSpot;
+}
+
 function nameOf(id: TeamId): string {
   return getTeamById(id)?.name ?? id;
+}
+
+function slugOfId(id: TeamId): TeamSlug {
+  return getTeamById(id)?.slug ?? id;
 }
 
 // ---------------------------------------------------------------- reported rows
@@ -635,10 +690,6 @@ export function toReportedRecord(row: {
   return { ...row, streakResult };
 }
 
-function recordString(w: number, l: number, t: number): string {
-  return `${w}-${l}-${t}`;
-}
-
 // ---------------------------------------------------------------- main
 
 export interface ComputeOptions {
@@ -651,7 +702,7 @@ const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-lower-placed',
 ]);
 
-/** Loops LEAGUES → divisions → teamsInDivision; per division: today's body, with rules from config. */
+/** Loops LEAGUES → divisions → teamsInDivision; per division: the SCVAL procedure, with rules from config. */
 export function computeStandings(
   games: readonly Game[],
   opts: ComputeOptions = {},
@@ -659,7 +710,7 @@ export function computeStandings(
   const out: Standing[] = [];
   // Sorted like divisionGames: the overall record's last5 and streak read the order (si.com-only games
   // lib/backfill.ts builds are appended to the array, not placed by date).
-  const allFinals = games.filter((g) => g.status === 'final').sort(byDateLocal);
+  const allFinals = games.filter((g) => g.status === 'final').sort(byDateThenId);
   for (const league of LEAGUES) {
     for (const div of league.divisions) {
       out.push(...computeDivision(league, div.id, games, allFinals, opts));
@@ -742,12 +793,12 @@ function computeDivision(
     if (rules.multiTeam === 'partition-restart') {
       resolved[i] = resolveGroup(group, chain, above, below, ctx);
     } else {
-      resolved[i] = seedOne(group, bucketStart, above, { ...ctx, bucketStart, below });
+      resolved[i] = seedOne(group, bucketStart, above, { ...ctx, bucketStart, below, lastSpot: null, fifth: null });
     }
   };
 
   // Two passes (SPEC §5.4a): buckets whose chain reads other places go last, so the places they
-  // read are settled. For SCVAL every bucket is pass 1 and the order is today's.
+  // read are settled. For SCVAL every bucket is pass 1, and its order is unchanged from the goldens.
   const pass2 = (i: number): boolean =>
     buckets[i].group.length > 1 && buckets[i].chain.some((s) => PLACE_VS_STAGES.has(s));
   buckets.forEach((_, i) => {
@@ -805,7 +856,7 @@ function computeDivision(
   return rows;
 }
 
-/** Notes (SPEC §5.6), rendered verbatim. SCVAL's are today's exact strings. */
+/** Notes (SPEC §5.6), rendered verbatim. SCVAL's strings are pinned by the goldens. */
 function tiebreakNote(
   team: Team,
   record: ComputedRecord,
@@ -838,20 +889,20 @@ function compareToReported(
 ): { mismatch: boolean; detail?: string } {
   if (!reported) return { mismatch: false };
   const diffs: string[] = [];
-  const ours = recordString(computed.w, computed.l, computed.t);
-  const theirs = recordString(
-    reported.conferenceWins,
-    reported.conferenceLosses,
-    reported.conferenceTies,
-  );
+  const ours = recordString(computed);
+  const theirs = recordString({
+    w: reported.conferenceWins,
+    l: reported.conferenceLosses,
+    t: reported.conferenceTies,
+  });
   if (ours !== theirs) diffs.push(`league record ${ours} vs MaxPreps ${theirs}`);
 
-  const oursOverall = recordString(overall.w, overall.l, overall.t);
-  const theirsOverall = recordString(
-    reported.overallWins,
-    reported.overallLosses,
-    reported.overallTies,
-  );
+  const oursOverall = recordString(overall);
+  const theirsOverall = recordString({
+    w: reported.overallWins,
+    l: reported.overallLosses,
+    t: reported.overallTies,
+  });
   if (oursOverall !== theirsOverall) {
     diffs.push(`overall record ${oursOverall} vs MaxPreps ${theirsOverall}`);
   }
@@ -869,7 +920,7 @@ function compareToReported(
 
 /**
  * Field-by-field cross-check rows for /about#cross-check (DESIGN §9), by the division's
- * `reportedTrust` (SPEC §5.8): 'full' = today's six fields; 'records-only' = records and league
+ * `reportedTrust` (SPEC §5.8): 'full' = all six fields; 'records-only' = records and league
  * goals; 'informational' = league record only. Rows of a division with a known cause carry it.
  */
 export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[] {
@@ -893,14 +944,14 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     };
     push(
       'league record',
-      recordString(s.computed.w, s.computed.l, s.computed.t),
-      recordString(r.conferenceWins, r.conferenceLosses, r.conferenceTies),
+      recordString(s.computed),
+      recordString({ w: r.conferenceWins, l: r.conferenceLosses, t: r.conferenceTies }),
     );
     if (trust === 'informational') continue;
     push(
       'overall record',
-      recordString(s.overall.w, s.overall.l, s.overall.t),
-      recordString(r.overallWins, r.overallLosses, r.overallTies),
+      recordString(s.overall),
+      recordString({ w: r.overallWins, l: r.overallLosses, t: r.overallTies }),
     );
     push('league goals for', String(s.computed.gf), String(r.conferencePoints));
     push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));

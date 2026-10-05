@@ -19,7 +19,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-const CSS = readFileSync(path.join(process.cwd(), 'app', 'globals.css'), 'utf8');
+import { REPO } from '../helpers';
+
+const CSS = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
 
 type Tokens = Record<string, string>;
 
@@ -225,7 +227,7 @@ describe('structure the design depends on', () => {
   });
 
   it('keeps the rule-and-kicker signature and the table / full-bleed utilities', () => {
-    for (const cls of ['.sx-kicker', '.sx-kicker-rule', '.sx-table', '.sx-bleed', '.sx-rowlink']) {
+    for (const cls of ['.sx-kicker', '.sx-kicker-rule', '.sx-table', '.sx-bleed']) {
       expect(CSS, `missing ${cls}`).toContain(cls);
     }
   });

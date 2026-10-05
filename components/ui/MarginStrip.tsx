@@ -6,7 +6,7 @@ import type { FormGame } from '../../lib/data';
 import { getTeamBySlug } from '../../lib/teams';
 
 import EmptyState from './EmptyState';
-import { signedMargin } from './game-view';
+import { signedMargin } from './describe-game';
 
 /**
  * The second and last chart on the site (DESIGN §5.7, §7.9).

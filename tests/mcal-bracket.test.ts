@@ -50,7 +50,7 @@ function rowsOf(table: ReadonlyArray<{ teamId: string; w: number; l: number; t: 
 
 const REGULAR_2025 = bracket2025.table;
 const ROWS = rowsOf(REGULAR_2025);
-const seeds = seedsFromStandings(ROWS);
+const seeds = seedsFromStandings(ROWS, MCAL);
 const seedOf = (slug: string) => {
   const s = seeds.find((x) => x.seat.some((t) => t.slug === slug));
   if (!s) throw new Error(`${slug} is not seeded`);
@@ -110,11 +110,11 @@ describe('MCAL 2025 field hockey tournament', () => {
     // The reference threw on a points tie; here the table's tiebreak decides. TM to 40 points, level with RW.
     const tied = REGULAR_2025.map((r) => (slugOf(r.teamId) === TM ? { ...r, t: 4, l: 0 } : r));
     // Unresolved (shared 1st): both teams cover seats 1 and 2 — nobody is seeded by points alone.
-    const shared = seedsFromStandings(rowsOf(tied));
+    const shared = seedsFromStandings(rowsOf(tied), MCAL);
     expect(shared[0].seat.map((t) => t.slug).sort()).toEqual([RW, TM].sort());
     expect(shared[1].seat.map((t) => t.slug).sort()).toEqual([RW, TM].sort());
     // Resolved by MCAL criterion 1 (Tamalpais swept Redwood 2-0): Tamalpais 1st, Redwood 2nd.
-    const resolved = seedsFromStandings(rowsOf(tied, [2, 1, 3, 4, 5, 6, 7, 8, 9]));
+    const resolved = seedsFromStandings(rowsOf(tied, [2, 1, 3, 4, 5, 6, 7, 8, 9]), MCAL);
     expect(resolved.slice(0, 2).map((s) => s.seat.map((t) => t.slug))).toEqual([[TM], [RW]]);
   });
 });

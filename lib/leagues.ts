@@ -8,10 +8,12 @@
  */
 
 import type {
-  ContestId, DivisionId, LeagueId, OfficialSourceId, PlayoffStatus, SeasonPhase, SectionId,
-  TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
+  PlayoffStatus, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
-// lib/season.ts is a dependency-free constants leaf: the only runtime import besides types.
+// The runtime imports are two leaves: lib/season.ts (dependency-free constants) and
+// lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
+import { DATE_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 
 // ---------- shape (SPEC §2.1) ----------
@@ -20,6 +22,11 @@ export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
   shortName: 'CCS' | 'NCS' | 'NS';
+  /**
+   * The section in a parenthesis after its leagues in short copy (SITE_DESCRIPTION): 'CCS', 'NCS',
+   * and 'Northern Section' in full, because no reader knows the Northern Section as "NS".
+   */
+  briefLabel: string;
   maxprepsSectionId: string;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
@@ -81,7 +88,7 @@ export interface DivisionConfig {
    * === expectedTeams.
    */
   maxprepsExtraRows: Readonly<Record<TeamId, string>>;
-  /** 'full' = compare records, goals, place, pct (today's SCVAL); 'records-only' = W-L-T and goals; 'informational' = W-L-T only, labelled. */
+  /** 'full' = compare records, goals, place, pct (SCVAL's original comparison); 'records-only' = W-L-T and goals; 'informational' = W-L-T only, labelled. */
   reportedTrust: 'full' | 'records-only' | 'informational';
   /** Shown above the MaxPreps comparison for this table; null = none. */
   knownCause: string | null;
@@ -114,7 +121,7 @@ export interface LeagueRules {
   postseasonFrom: string | null;
   /** Human escape hatch: contests that are league games despite postseasonFrom. */
   leagueGameOverrides: readonly ContestId[];
-  /** 'legacy' = today's SCVAL matcher byte-for-byte; 'two-phase' = §7.8. */
+  /** 'legacy' = the original SCVAL matcher, byte-for-byte; 'two-phase' = §7.8. */
   matcher: 'legacy' | 'two-phase';
   tiebreaks: {
     /** Chain after 'points' for every points bucket without a byBucketStart entry. Last stage may be uncomputable. */
@@ -126,7 +133,7 @@ export interface LeagueRules {
     byBucketStart?: Readonly<Partial<Record<number, readonly TiebreakStage[]>>>;
   };
   multiTeam: 'partition-restart' | 'seed-one-restart';
-  /** 'zero' = today's SCVAL head-to-head (a team with no H2H game scores 0); 'skip' = the stage is skipped when any tied team has not met the others. */
+  /** 'zero' = the original SCVAL head-to-head (a team with no H2H game scores 0); 'skip' = the stage is skipped when any tied team has not met the others. */
   h2hUnmet: 'zero' | 'skip';
   drawNumbers: Readonly<Record<TeamSlug, number>> | null;
   /**
@@ -136,7 +143,7 @@ export interface LeagueRules {
    * varsity league game never ends level. D2 rule 4c (phantom tie) applies only when 'none'.
    */
   leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
-  /** Every string the engine prints. SCVAL's are today's BYLAW_CITATIONS, verbatim. */
+  /** Every string the engine prints. SCVAL's are the original BYLAW_CITATIONS, verbatim (golden-gated). */
   citations: {
     points: string;
     /** The points rule's short cite, inside the cross-check's place label ('Art. VI §2' for SCVAL, verbatim). */
@@ -281,13 +288,29 @@ export interface DataQualityConfig {
   notCovered: readonly { name: string; keys: readonly string[]; reason: string }[];
 }
 
+/**
+ * The CCS section block (SPEC §2.1). The snapshot's `playoffs.keyDates` / `playoffs.format` copies
+ * (lib/types.ts CcsPlayoffs) reuse these types, so config and snapshot cannot drift.
+ */
+export interface CcsConfig {
+  autoQualifiers: CcsAutoQualifiers;
+  ccsDivisions: readonly { name: CcsDivisionName; seeds: readonly [number, number] }[];
+  keyDates: CcsKeyDates;
+  highSeedHostsThrough: 'semifinals';
+  bracketUrl: string;
+  tournament: { id: string; division1BracketId: string; division2BracketId: string };
+  pollFrom: string;
+  citations: { allocation: string; change: string };
+  sources: { bylaws: string; index: string; ical: string };
+}
+
 // ---------- values (SPEC §2.2, verbatim) ----------
 
 const MP = 'https://www.maxpreps.com';
 
 export const SECTIONS = [
   {
-    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS',
+    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
     holdsFieldHockeyChampionship: true,
     officialUrl: 'https://cifccs.org/sports/fh/index',
@@ -295,7 +318,7 @@ export const SECTIONS = [
     noChampionshipNote: null,
   },
   {
-    id: 'ncs', name: 'North Coast Section', shortName: 'NCS',
+    id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS',
     maxprepsSectionId: '89ae2e0f-e108-4054-9df3-329f0579f86d',
     holdsFieldHockeyChampionship: false,
     officialUrl: 'https://www.cifncs.org/',
@@ -304,7 +327,7 @@ export const SECTIONS = [
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
   },
   {
-    id: 'ns', name: 'Northern Section', shortName: 'NS',
+    id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section',
     maxprepsSectionId: '6249819d-12de-4bff-b0ab-38156006b001',
     // The "NSCIF Post Season Tournament" (the EAL's Super Regional, Oct 30-31) is on the Section's "Championship
     // Playoff Calendar": https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf
@@ -367,7 +390,7 @@ const SCVAL: LeagueConfig = {
     matcher: 'legacy',
     tiebreaks: { default: ['head-to-head', 'division-wins', 'h2h-goals-against', 'h2h-goal-diff', 'coin-flip'] },
     multiTeam: 'partition-restart', h2hUnmet: 'zero', drawNumbers: null, leagueOvertime: 'sudden-victory',
-    // ↓ VERBATIM from today's lib/season.ts BYLAW_CITATIONS (golden-gated)
+    // ↓ VERBATIM from the original lib/season.ts BYLAW_CITATIONS (golden-gated)
     citations: {
       points: 'SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie)',
       pointsShort: 'Art. VI §2',
@@ -389,7 +412,7 @@ const SCVAL: LeagueConfig = {
   postseason: {
     kind: 'ccs-ladder', autoBerths: 7,
     citation: 'Article VII §2 (first three in each division are automatic qualifiers; fourth place plays in for the SCVAL 7th AQ; the play-in loser and both fifth-place teams go to CCS for at-large consideration)',
-    // ↓ VERBATIM from today's PLAYOFF_STATUS_LABELS / OUTCOME_PHRASES / STATUS_BADGE / statusLabel()
+    // ↓ VERBATIM from the original PLAYOFF_STATUS_LABELS / OUTCOME_PHRASES / STATUS_BADGE / statusLabel()
     ladder: [
       { divisions: '*', places: [1, 3], status: 'aq', label: 'Automatic qualifier',
         phrase: 'automatic qualifier', badge: 'AQ', legend: 'Places 1-3 — automatic CCS qualifier' },
@@ -405,14 +428,14 @@ const SCVAL: LeagueConfig = {
       seats: [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }] as const,
       seatLabels: [`De Anza #${seed}`, `El Camino #${seed}`] as const, host: null,
       isPlayIn: seed === 4,
-      // ↓ VERBATIM from today's crossoverPairings()
+      // ↓ VERBATIM from the original crossoverPairings()
       label: seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
         : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
     })),
   },
   phases: [
-    { phase: 'regular', through: 'data' },        // today's formula (§5.9)
+    { phase: 'regular', through: 'data' },        // the original formula (§5.9)
     { phase: 'crossover', through: '2026-10-30' },
     { phase: 'playoffs', through: '2026-11-14' },
   ],
@@ -859,7 +882,7 @@ const EAL: LeagueConfig = {
 export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL];
 
 /** The CCS section block (section data, not league data). */
-export const CCS = {
+export const CCS: CcsConfig = {
   autoQualifiers: { scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 },
   ccsDivisions: [
     { name: 'Division 1', seeds: [1, 8] },
@@ -889,8 +912,9 @@ export const CCS = {
     index: 'https://cifccs.org/sports/fh/index',
     ical: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
   },
-} as const;
+};
 
+/** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
 export const DATA_QUALITY: DataQualityConfig = {
   ghostTeamIds: {
     '8396a0d3-8021-458d-b592-a5cb2c4a366d': 'Del Norte (Crescent City): a MaxPreps ghost (no league, team size 0); its contest duplicates Tamalpais vs Del Norte (San Diego)',
@@ -1044,9 +1068,30 @@ export function tiebreakChainFor(id: DivisionId, bucketStartPlace: number): read
   return tiebreaks.byBucketStart?.[bucketStartPlace] ?? tiebreaks.default;
 }
 
+/**
+ * A team's draw number (MCAL's spring draw: lower wins a `draw-number` stage). Takes a slug, so this
+ * module never reads the registry; lib/teams.ts fails at import unless a league's `drawNumbers` keys are
+ * exactly its slugs, so a miss here is a caller's bug and throws instead of falling back.
+ */
+export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
+  const n = rules.drawNumbers?.[slug];
+  if (n === undefined) throw new Error(`lib/leagues.ts: no draw number for ${slug}`);
+  return n;
+}
+
 /** Every status the league's ladder can give, in ladder order, deduped. */
 export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];
+}
+
+/**
+ * The first official league date of the league (min over its divisions): the date the home
+ * PhaseLead and the /standings preseason notice both say league play starts.
+ */
+export function leaguePlayStarts(leagueId: LeagueId): string {
+  return getLeague(leagueId)
+    .divisions.map((d) => d.leaguePlay.first)
+    .reduce((a, b) => (b < a ? b : a));
 }
 
 /** The last official league date of the league (max over its divisions). */
@@ -1080,7 +1125,6 @@ const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(
 const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-higher-placed', 'record-vs-lower-placed',
 ]);
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** The ladder statuses a postseason kind may use. */
@@ -1272,7 +1316,7 @@ export function assertLeagues(): void {
     const section = SECTION_BY_ID.get(l.sectionId);
     const inWindow = (date: string, what: string): void => {
       const day = date.slice(0, 10);
-      if (!DATE_RE.test(day)) fail(`${what}: "${date}" is not a date`);
+      if (!DATE_PATTERN.test(day)) fail(`${what}: "${date}" is not a date`);
       if (section && (day < section.seasonWindow.start || day > section.seasonWindow.end)) {
         fail(`${what}: ${day} is outside the ${section.id} season window`);
       }
@@ -1346,11 +1390,12 @@ export function assertLeagues(): void {
   if (aqKeys.join() !== expectedKeys.join()) {
     fail(`CCS.autoQualifiers keys ${aqKeys.join(', ')} != ${expectedKeys.join(', ')}`);
   }
-  const aq = CCS.autoQualifiers as Readonly<Record<string, number>>;
-  let sum: number = CCS.autoQualifiers.atLarge;
+  let sum = CCS.autoQualifiers.atLarge;
   for (const l of LEAGUES) {
     if (l.postseason.kind !== 'ccs-ladder') continue;
-    if (l.postseason.autoBerths !== aq[l.id]) fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${aq[l.id]}`);
+    if (l.postseason.autoBerths !== CCS.autoQualifiers[l.id]) {
+      fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${CCS.autoQualifiers[l.id]}`);
+    }
     if (l.sectionId !== 'ccs') fail(`${l.id}: a CCS ladder league outside the CCS`);
     sum += l.postseason.autoBerths;
   }

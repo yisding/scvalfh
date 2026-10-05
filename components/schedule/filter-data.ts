@@ -108,7 +108,3 @@ export function unfilteredCountLine(counts: ScheduleCounts): string {
 export function contestWord(n: number): string {
   return n === 1 ? 'contest' : 'contests';
 }
-
-export function gameWord(n: number): string {
-  return n === 1 ? 'game' : 'games';
-}

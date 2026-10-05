@@ -1,6 +1,6 @@
 /**
- * Runs the real pipeline in-process over a corpus with B-unit (no-op or stand-in) official and
- * si.com steps. A `previous` snapshot object can be handed in directly (it is not re-parsed), so a
+ * Runs the real pipeline in-process over a corpus with the unit tests' (no-op or stand-in) official
+ * and si.com steps. A `previous` snapshot object can be handed in directly (it is not re-parsed), so a
  * test can shape exactly the previous run a guard compares against.
  */
 

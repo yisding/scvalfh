@@ -11,7 +11,6 @@
  * script publishes. Coverage (every team read) is asserted on files built from the captures.
  */
 
-import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -33,7 +32,7 @@ import { RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '../lib/sources/maxpreps-player-stats';
 import { TEAMS, teamsInLeague } from '../lib/teams';
-import { FIXTURE_DIR, REPO } from './helpers';
+import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
 
@@ -170,43 +169,16 @@ describe('data/player-stats.json', () => {
   });
 });
 
-/** Run the script offline against the captures, writing to `out`; returns its stdout. */
+/** Run the script offline against the captures, writing to `out`; asserts it exits 0 and returns its stdout. */
 function buildFromFixtures(out: string, fetchedAt: string, ...extra: string[]): string {
-  return execFileSync(
-    path.join(REPO, 'node_modules', '.bin', 'tsx'),
-    [
-      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
-      '--fixtures',
-      FIXTURE_DIR,
-      '--leagues',
-      'scval',
-      '--out',
-      out,
-      '--fetched-at',
-      fetchedAt,
-      ...extra,
-    ],
-    { cwd: REPO, stdio: 'pipe', encoding: 'utf8' },
-  );
+  const res = run(out, fetchedAt, '--leagues', 'scval', ...extra);
+  expect(res.status, res.output).toBe(0);
+  return res.stdout;
 }
 
 /** The same, for runs whose exit code or scope the test sets itself. */
 function run(out: string, fetchedAt: string, ...extra: string[]) {
-  const res = spawnSync(
-    path.join(REPO, 'node_modules', '.bin', 'tsx'),
-    [
-      path.join(REPO, 'scripts', 'fetch-player-stats.ts'),
-      '--fixtures',
-      FIXTURE_DIR,
-      '--out',
-      out,
-      '--fetched-at',
-      fetchedAt,
-      ...extra,
-    ],
-    { cwd: REPO, encoding: 'utf8' },
-  );
-  return { code: res.status, stdout: res.stdout, stderr: res.stderr };
+  return runScript('scripts/fetch-player-stats.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', fetchedAt, ...extra]);
 }
 
 const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
@@ -339,8 +311,8 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     expect(PlayerStatsFileSchema.safeParse(previous).success).toBe(true);
     writeFileSync(out, JSON.stringify(previous), 'utf8');
 
-    const { code, stdout } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval,bval');
-    expect(code).toBe(1); // a team the run covered failed: the scheduler is told
+    const { status, stdout } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval,bval');
+    expect(status).toBe(1); // a team the run covered failed: the scheduler is told
     expect(stdout).toContain('PCAL   7 teams · not in this run');
     const built = read(out);
     for (const team of teamsInLeague('scval')) {
@@ -372,8 +344,8 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
       fetchedAt: '2026-10-01T00:00:00.000Z',
     });
     writeFileSync(out, JSON.stringify(previous), 'utf8');
-    const { code } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
-    expect(code).toBe(1);
+    const { status } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
+    expect(status).toBe(1);
     const kept = read(out).teams.find((t) => t.slug === none.slug)!;
     expect(kept.status).toBe('carried-forward');
     expect(kept.players).toEqual([]);
@@ -416,8 +388,8 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     previous.teams[i].teamId = TEAMS[0].id;
     const out = tmpOut();
     writeFileSync(out, JSON.stringify(previous), 'utf8');
-    const { code, stdout, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
-    expect(code, stderr).toBe(1); // an uncovered team lost its row: the scheduler is told
+    const { status, stdout, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
+    expect(status, stderr).toBe(1); // an uncovered team lost its row: the scheduler is told
     expect(stderr).toMatch(/WARN previous .*: 1 row\(s\) do not validate and are dropped/);
     expect(stderr).toMatch(/WARN {3}leigh: .*teamId is not the registry team's/);
     expect(stdout).toContain('BVAL  12 teams · not in this run · 11 kept as they were · 1 pending, previous row dropped (leigh)');
@@ -438,8 +410,8 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     // A row that was read (none), but under another team's id: it does not validate, so it is dropped.
     Object.assign(previous.teams.find((t) => t.slug === victim.slug)!, { status: 'none', maxprepsTeamId: victim.id, fetchedAt: '2026-10-01T00:00:00.000Z', teamId: TEAMS[0].id });
     writeFileSync(out, JSON.stringify(previous), 'utf8');
-    const { code, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
-    expect(code).toBe(1);
+    const { status, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
+    expect(status).toBe(1);
     expect(stderr).toMatch(new RegExp(`WARN ${victim.slug}: .*ENOENT.*\\(its previous row was dropped: nothing to carry forward\\)`));
     expect(read(out).teams.find((t) => t.slug === victim.slug)!.status).toBe('error');
   });
@@ -447,8 +419,8 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
   it('stops without writing when the previous file is not JSON', () => {
     const out = tmpOut();
     writeFileSync(out, '{"teams": [', 'utf8');
-    const { code, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
-    expect(code).toBe(1);
+    const { status, stderr } = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
+    expect(status).toBe(1);
     expect(stderr).toMatch(/FAILED: the previous .* cannot be read: not JSON/);
     expect(readFileSync(out, 'utf8')).toBe('{"teams": [');
   });
@@ -458,7 +430,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     const out = tmpOut();
     writeFileSync(out, JSON.stringify(previous), 'utf8');
     const scoped = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'scval');
-    expect(scoped.code).toBe(1); // the uncovered leagues lost their rows
+    expect(scoped.status).toBe(1); // the uncovered leagues lost their rows
     expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 49 row\(s\) are ignored, as if absent/);
     expect(scoped.stdout).not.toContain('kept as they were');
     const built = read(out);
@@ -473,7 +445,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     last.season = '25-26';
     writeFileSync(out, JSON.stringify(last), 'utf8');
     const failed = run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'bval');
-    expect(failed.code).toBe(1);
+    expect(failed.status).toBe(1);
     expect(read(out).teams.find((t) => t.slug === victim.slug)!.status).toBe('error');
   });
 
@@ -481,7 +453,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     const out = tmpOut();
     expect(run(out, '2026-10-03T05:00:00.000Z', '--leagues', 'nope').stderr).toContain('unknown league nope');
     const both = run(out, '2026-10-03T05:00:00.000Z', '--capture', path.dirname(out));
-    expect(both.code).toBe(1);
+    expect(both.status).toBe(1);
     expect(both.stderr).toContain('cannot be combined with --fixtures');
   });
 });

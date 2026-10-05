@@ -9,7 +9,6 @@ import type { RawResponse } from '../lib/pipeline/contract';
 import {
   DEFAULT_USER_AGENT,
   MaxPrepsClient,
-  MaxPrepsEmptyStandingsError,
   MaxPrepsError,
   NEXT_DATA_RE,
   ScheduleResponseSchema,
@@ -22,9 +21,9 @@ import {
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '../lib/sources/http';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '../lib/season';
 import { getTeamBySlug } from '../lib/teams';
-import { REPO, allScheduleRows, standingsFixture } from './helpers';
+import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
 
-const CORPUS_SCHEDULES = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'schedule');
+const CORPUS_SCHEDULES = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'schedule');
 
 function corpusFeedText(slug: string): string {
   return readFileSync(path.join(CORPUS_SCHEDULES, `${slug}.json`), 'utf8');
@@ -58,7 +57,6 @@ describe('maxpreps: URLs', () => {
       `https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=TEAM&sportSeasonId=${SPORT_SEASON_ID}`,
     );
     expect(c.leagueMetaUrl('LEAGUE')).toBe('https://production.api.maxpreps.com/leagues/LEAGUE/v1');
-    expect(c.contestIdsUrl('LEAGUE')).toContain('contest-ids-grouped-by-date-by-context/v2');
   });
 });
 
@@ -234,17 +232,6 @@ describe('maxpreps: retries and the courtesy budget (SPEC §5.2-5.3)', () => {
     for (const ms of slept) expect(ms).toBeLessThanOrEqual(MAX_RETRY_AFTER_MS * 1.2);
   });
 
-  it('rejects a league standings response with zero rows, as its own abortable class', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(response(JSON.stringify({ data: [] })));
-    const c = client(fetchImpl as unknown as typeof fetch);
-    // SPEC §5.2.1 aborts the run for this, so the cron has to be able to tell it apart from an
-    // ordinary per-source failure, which it recovers from by carrying yesterday's rows forward.
-    await expect(c.getStandings('LEAGUE')).rejects.toThrow(
-      expect.objectContaining({ name: 'MaxPrepsEmptyStandingsError' }),
-    );
-    expect(MaxPrepsEmptyStandingsError.prototype).toBeInstanceOf(MaxPrepsError);
-  });
-
   it('rejects a team feed that contains no row for that team (the Presentation bug)', async () => {
     const rows = allScheduleRows().slice(0, 2);
     const fetchImpl = vi.fn().mockResolvedValue(response(JSON.stringify({ data: rows })));
@@ -257,7 +244,7 @@ describe('maxpreps: retries and the courtesy budget (SPEC §5.2-5.3)', () => {
       .fn()
       .mockResolvedValue(response(JSON.stringify({ data: [{ schoolId: 5 }] })));
     const c = client(fetchImpl as unknown as typeof fetch);
-    await expect(c.getStandings('LEAGUE')).rejects.toThrow(/schema drift/);
+    await expect(c.json(c.standingsUrl('LEAGUE'), StandingsResponseSchema)).rejects.toThrow(/schema drift/);
   });
 });
 

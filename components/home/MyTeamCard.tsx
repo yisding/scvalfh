@@ -10,12 +10,11 @@ import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { GameDisplay } from '../ui/game-view';
+import type { GameDisplay } from '../ui/describe-game';
 import { formStripName } from '../ui/plural';
 import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
-import { UNPIN_ID, focusUnpin } from './FindYourTeam';
 import {
   postseasonCardLine,
   type HomeCardTeam,
@@ -216,7 +215,7 @@ export function PinnedCard({
                       fill the line at 320px, and the game page carries them. The 6px gaps keep
                       that line whole at 320 with the chevron. */}
                   <span className="flex min-w-0 items-baseline gap-1.5">
-                    <StatusLabel display={display} showNonLeague={display.kind !== 'unreported'} />
+                    <StatusLabel display={display} showChips={display.kind !== 'unreported'} />
                     <time dateTime={last.dateTime} className="sx-num shrink-0 text-meta text-ink-3">
                       {last.dateLabel}
                     </time>
@@ -340,10 +339,10 @@ export function PinnedCard({
 }
 
 /** No pin, a league is effective: the finder and one line (SPEC §10.1). */
-export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
+function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () => void }) {
   return (
     <div className="flex flex-col bg-surface px-3 py-3 min-[22.5rem]:px-4 md:px-5">
-      <TeamFinder index={index} mode="pin" label="School, city or mascot" onPin={onPin} />
+      <TeamFinder index={index} mode="pin" onPin={onPin} />
       <p className="sx-clamp-2 mt-2 mb-0 h-10 text-meta text-ink-2">
         Pin your team: search, or pick it from your league’s team list below.
       </p>
@@ -352,7 +351,7 @@ export function CompactPrompt({ index, onPin }: { index: SearchIndex; onPin: () 
 }
 
 /** `html[data-pin-stale]`: DESIGN §8's message. */
-export function StalePin({ onUnpin }: { onUnpin: () => void }) {
+function StalePin({ onUnpin }: { onUnpin: () => void }) {
   return (
     <div className="flex min-h-[9rem] flex-col justify-center gap-3 bg-surface px-4 py-3 md:px-5">
       <p className="m-0 text-body text-ink">That team is no longer in the data.</p>
@@ -363,6 +362,15 @@ export function StalePin({ onUnpin }: { onUnpin: () => void }) {
       </p>
     </div>
   );
+}
+
+const UNPIN_ID = 'my-team-unpin';
+
+/** Focus the pinned card's Unpin button once it has rendered. */
+export function focusUnpin(): void {
+  const run = () => document.getElementById(UNPIN_ID)?.focus();
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
+  else run();
 }
 
 /**

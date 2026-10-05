@@ -1,5 +1,5 @@
-import { getLatestResultsDate, getToday } from '../../lib/data';
-import { parseLocal } from '../../lib/format';
+import { getScoresLandingDate } from '../../lib/data';
+import { dayNumber } from '../../lib/format';
 import type { Game, LeagueId } from '../../lib/types';
 
 import DateHeader from './DateHeader';
@@ -24,9 +24,9 @@ import GameList from './GameList';
  * scroll happens. A hard load gets that from the browser, which re-runs the fragment scroll while
  * the page settles; a client navigation (the Scores tab, `router.push`) scrolls ONCE, and the
  * groups that then render around the target swap their estimates for real heights and shove it off
- * its mark. So the days around the Scores tab's landing date (`landingDate` below) are never
- * skipped at all: `[content-visibility:visible]` lays them out from the first frame, and the one
- * scroll lands where the hard load does. A day page's "Full season" link can aim at any date, so it
+ * its mark. So the days around the Scores tab's landing date (lib/data `getScoresLandingDate`)
+ * are never skipped at all: `[content-visibility:visible]` lays them out from the first frame, and
+ * the one scroll lands where the hard load does. A day page's "Full season" link can aim at any date, so it
  * is a plain `<a>` (a document navigation) and gets the hard load's settling scroll instead.
  *
  * Each date header links to that day's own prerendered page, `/scores/[date]` ("Day page"), so a
@@ -34,34 +34,10 @@ import GameList from './GameList';
  */
 export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
-  /** Renders the "Day page" link (to /scores/[date]) on each date header. */
-  shareLinks?: boolean;
   /** A league-scoped list (`/schedule/<league>`): other leagues' sides carry their league's name. */
   scopeLeague?: LeagueId | null;
   className?: string;
   id?: string;
-}
-
-/**
- * The date the Scores tab opens on (BottomTabBar's per-league `/schedule/<league>#<date>`, F-1a),
- * from the same snapshot data: the league's latest day at or before "today" with at least one
- * final, otherwise its next day with a contest. League-aware so the always-laid-out window below
- * surrounds the date the tab actually aims at on this league's list. "Today" is the snapshot's
- * Pacific day, never the clock.
- */
-function landingDate(dates: readonly string[], league: LeagueId | null): string | null {
-  const today = getToday();
-  return (
-    getLatestResultsDate(undefined, league ? { league } : {}) ??
-    dates.find((d) => d >= today) ??
-    null
-  );
-}
-
-/** Whole days since 1970-01-01 for a 'YYYY-MM-DD' key: integer arithmetic, no clock read. */
-function dayNumber(date: string): number {
-  const { year, month, day } = parseLocal(date);
-  return Date.UTC(year, month - 1, day) / 86_400_000;
 }
 
 /**
@@ -74,9 +50,9 @@ const LANDING_WINDOW_DAYS = 7;
 
 /**
  * Per-group height estimates, kept just ABOVE the measured heights so a skipped group never
- * overflows its placeholder. A flat 16rem per card row was ~100px too tall for an upcoming row and
- * the 49 errors added up to ~3200px at 1280, which sent the rail's smooth "Today" scroll past the
- * target as the groups rendered on the way.
+ * overflows its placeholder. A flat 16rem per card row was ~100px too tall for an upcoming row and,
+ * when this was measured, the 49 errors added up to ~3200px at 1280, which sent the rail's smooth
+ * "Today" scroll past the target as the groups rendered on the way.
  *
  * Phone row: 76px, up to ~92px for a long status or FINAL + OT + NL. Card row: ~156px upcoming,
  * up to ~220px for a final with a two-line recap, plus the 16px grid gap.
@@ -88,14 +64,9 @@ function cardEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status === 'final' || g.recap) ? '15rem' : '11rem';
 }
 
-export function ScheduleList({
-  groups,
-  shareLinks = true,
-  scopeLeague = null,
-  className,
-  id,
-}: ScheduleListProps) {
-  const landing = landingDate(groups.map((group) => group.date), scopeLeague);
+export function ScheduleList({ groups, scopeLeague = null, className, id }: ScheduleListProps) {
+  // The date BottomTabBar's Scores tab aims at on this league's list (F-1a): one helper for both.
+  const landing = getScoresLandingDate(scopeLeague ? { league: scopeLeague } : {});
   const landingDay = landing ? dayNumber(landing) : null;
   return (
     // `max-md:mt-4`: on a phone the groups carry no top margin of their own (below), so the gap
@@ -152,7 +123,7 @@ export function ScheduleList({
           <DateHeader
             date={group.date}
             count={group.games.length}
-            shareHref={shareLinks ? `/scores/${group.date}` : undefined}
+            dayHref={`/scores/${group.date}`}
             sticky
           />
           <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />

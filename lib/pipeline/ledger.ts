@@ -142,6 +142,8 @@ export interface LeagueEntry {
   reasons: string[];
   /** Short causes for the commit summary ("meta season mismatch"), in order. */
   causes: string[];
+  /** The cause given with the degrade that last raised `state`: what the commit summary prints. */
+  stateCause?: string;
 }
 
 export class LeagueLedger {
@@ -157,10 +159,16 @@ export class LeagueLedger {
     return e;
   }
 
-  /** Only ever towards worse; the reason is recorded whatever the state does (deduped). */
+  /**
+   * Only ever towards worse; the reason and cause are recorded whatever the state does (deduped), and
+   * a cause that comes with a strictly worse state becomes the state's own cause.
+   */
   degrade(id: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void {
     const e = this.entry(id);
-    if (STATE_RANK[state] > STATE_RANK[e.state]) e.state = state;
+    if (STATE_RANK[state] > STATE_RANK[e.state]) {
+      e.state = state;
+      if (cause) e.stateCause = cause;
+    }
     if (reason && !e.reasons.includes(reason)) e.reasons.push(reason);
     if (cause && !e.causes.includes(cause)) e.causes.push(cause);
   }
@@ -175,6 +183,12 @@ export class LeagueLedger {
 
   causes(id: LeagueId): readonly string[] {
     return this.entry(id).causes;
+  }
+
+  /** The cause that set the league's current state, else its first recorded cause. */
+  stateCause(id: LeagueId): string | undefined {
+    const e = this.entry(id);
+    return e.stateCause ?? e.causes[0];
   }
 
   ids(): LeagueId[] {
@@ -229,7 +243,7 @@ export interface RunContextInit {
   sink?: LogSink;
 }
 
-/** B1's RunContext: what steps may read and record (SPEC §7.2). */
+/** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
 export class PipelineContext implements RunContext {
   readonly args: RunArgs;
   readonly fetchedAt: string;
@@ -271,8 +285,8 @@ export class PipelineContext implements RunContext {
     this.sources.add(row);
   }
 
-  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string): void {
-    this.leagues.degrade(leagueId, state, reason);
+  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void {
+    this.leagues.degrade(leagueId, state, reason, cause);
   }
 
   drop(row: DroppedContest): void {
@@ -281,10 +295,6 @@ export class PipelineContext implements RunContext {
 
   leaguesInRun(): readonly LeagueId[] {
     return this.inRun;
-  }
-
-  isInRun(leagueId: LeagueId): boolean {
-    return this.inRun.includes(leagueId);
   }
 }
 
@@ -323,6 +333,15 @@ export function hasPreviousData(previous: Snapshot | null, leagueId: LeagueId): 
   return previousLeagueHealth(previous, leagueId)?.lastFreshAt != null;
 }
 
+/**
+ * The "shown as of" stamp of a league's previous data (asOfStamp of its lastFreshAt), or null when the
+ * previous snapshot holds nothing to carry for it (hasPreviousData).
+ */
+export function lastFreshStamp(previous: Snapshot | null, leagueId: LeagueId): string | null {
+  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
+  return lastFresh === null ? null : asOfStamp(lastFresh);
+}
+
 /** When a carried source's data was last fresh: the previous row's own stamp, else the previous run's. */
 export function carriedFromOf(previous: Snapshot | null, pick: (row: SourceStatus) => boolean): string | undefined {
   if (!previous) return undefined;
@@ -350,7 +369,10 @@ export interface TeamFeedInfo {
   carried: boolean;
 }
 
-/** What the B1 steps hand each other (B2/B3 see only RunContext and their step input). */
+/**
+ * What the built-in steps (lib/pipeline/steps/*) share through run.ts. The injectable official and
+ * si.com steps (PipelineSteps) never see it: they get only RunContext and their step input.
+ */
 export interface RunState {
   divisions: Map<DivisionId, DivisionRunInfo>;
   /** MaxPreps' reported rows, keyed on schoolId (cross-check only). */
@@ -362,9 +384,11 @@ export interface RunState {
   tbaDropped: DroppedContest[];
   games: Game[];
   unmatched: OfficialFixture[];
-  official: OfficialStepResult;
-  crossCheck: SbliveCrossCheck | undefined;
-  secondary: SecondaryStepResult;
+  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
+  official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
+  sbliveCrossCheck: SbliveCrossCheck | undefined;
+  /** The secondary step's CCS state; its games moved into `games`. */
+  secondary: Omit<SecondaryStepResult, 'games'>;
   /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
   frozenFromPrevious: Set<LeagueId>;
   /** DivisionHealth.classification per division (a frozen league's is copied from the previous health). */
@@ -381,14 +405,12 @@ export function emptyRunState(): RunState {
     games: [],
     unmatched: [],
     official: {
-      games: [],
-      unmatched: [],
       degradedDivisions: new Set(),
       revisedUpstream: new Set(),
       carriedDivisions: new Set(),
     },
-    crossCheck: undefined,
-    secondary: { games: [], bracketPublished: false },
+    sbliveCrossCheck: undefined,
+    secondary: { bracketPublished: false },
     frozenFromPrevious: new Set(),
     classification: new Map(),
   };

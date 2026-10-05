@@ -1,13 +1,9 @@
 import Link from 'next/link';
 
-import { numberWord, ordinal } from '../../lib/format';
-import { LEAGUES } from '../../lib/leagues';
-import { ELO_BASE, ELO_PER_GOAL } from '../../lib/ratings';
+import { placeWords } from '../../lib/format';
+import { ELO_SCALE, LEAGUE_COUNT } from '../leaders/leaders-view';
 import { plural } from '../ui/plural';
 import type { TeamEloView } from './team-view';
-
-/** 'five': how many leagues the rating's games come from. */
-const LEAGUE_COUNT = numberWord(LEAGUES.length);
 
 /**
  * The team's Elo rating (DESIGN §20.2), kept low on purpose: a closed disclosure under the stat
@@ -25,19 +21,24 @@ const LEAGUE_COUNT = numberWord(LEAGUES.length);
  * the rest. No team page names a place below the board's top 10, and a team with neither a final
  * this season nor a start from last reads "Not rated", never a 1500 it has not earned.
  */
-export function TeamElo({ elo, className }: { elo: TeamEloView; className?: string }) {
+export interface TeamEloProps {
+  elo: TeamEloView;
+  className?: string;
+}
+
+export function TeamElo({ elo, className }: TeamEloProps) {
   const { boardPlace } = elo;
   const sub =
     elo.elo === null
       ? 'no counted results yet'
       : boardPlace
-        ? `${boardPlace.tied ? 'tied for ' : ''}${ordinal(boardPlace.rank)} on the Elo board`
+        ? `${placeWords(boardPlace.rank, boardPlace.tied)} on the Elo board`
         : elo.preseason
           ? `preseason, from ${elo.seededFrom}`
           : elo.provisional
             ? `provisional, from ${plural(elo.games, 'game')}`
             : `from ${plural(elo.games, 'game')}`;
-  const scale = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal. `;
+  const scale = `${ELO_SCALE}. `;
   const about =
     elo.elo === null
       ? `A rating needs at least one final against another of the ${LEAGUE_COUNT} leagues’ teams. `

@@ -2,7 +2,8 @@
  * lib/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
  * say, and never otherwise. Every rule needs both si.com sides resolved by si.com id, a si.com Final,
  * integer scores and a non-junk row. Fixtures here are hand-built OfficialFixture objects; the corpus
- * si.com pages are used only as parser/resolver facts (the end-to-end PCAL fills are asserted in B-int).
+ * si.com pages are used only as parser/resolver facts (the end-to-end PCAL fills are asserted in the
+ * end-to-end suite, tests/pipeline/end-to-end.test.ts).
  */
 
 import { readFileSync } from 'node:fs';
@@ -32,6 +33,8 @@ import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';
+import { REPO, corpusDir } from './helpers';
+import { testRunArgs } from './pipeline/support/run-args';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';
@@ -766,8 +769,8 @@ describe('backfill rule 10: supersede and carry-forward', () => {
 });
 
 describe('backfill: the corpus si.com pages as parser/resolver facts', () => {
-  const CORPUS = path.join(__dirname, 'fixtures/corpus/all-2026-10-02/sblive');
-  const PCAL = path.join(__dirname, 'fixtures/sblive/pcal-1002');
+  const CORPUS = path.join(corpusDir('all-2026-10-02'), 'sblive');
+  const PCAL = path.join(REPO, 'tests', 'fixtures', 'sblive', 'pcal-1002');
   const read = (file: string) => readFileSync(file, 'utf8');
   const teamPages = ['carmel', 'greenfield', 'hollister', 'salinas', 'santa-catalina', 'stevenson'].flatMap((slug) =>
     parseTeamGamesPage(read(path.join(CORPUS, 'team-games', `${slug}.html`))),
@@ -815,7 +818,7 @@ describe('backfill: the corpus si.com pages as parser/resolver facts', () => {
 });
 
 describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconcile', () => {
-  const CORPUS = path.join(__dirname, 'fixtures/corpus/all-2026-10-02/sblive');
+  const CORPUS = path.join(corpusDir('all-2026-10-02'), 'sblive');
   const files: Record<string, string> = {
     'sblive/scores/2026-09-30': path.join(CORPUS, 'scores/2026-09-30.html'),
     'sblive/team-games/greenfield': path.join(CORPUS, 'team-games/greenfield.html'),
@@ -826,7 +829,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
     const sources: SourceStatus[] = [];
     const lines: string[] = [];
     const ctx = {
-      args: { sblive: true, sbliveFull: false },
+      args: testRunArgs({ sblive: true }),
       fetchedAt: AT,
       today: TODAY,
       previous: null,
@@ -863,7 +866,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
       ['sblive-team-games', 'sblive greenfield games', 'ok'],
     ]);
     expect(res.unmatched).toEqual([]);
-    expect(res.crossCheck?.backfilled.map((r) => [r.contestId, r.rule, r.sblive])).toEqual([
+    expect(res.sbliveCrossCheck?.backfilled.map((r) => [r.contestId, r.rule, r.sblive])).toEqual([
       ['sblive:6541425', 'absent-fixture', { home: 1, away: 0 }],
       [pending.contestId, 'score-pending', { home: 9, away: 0 }],
       ['sblive:6543072', 'absent-fixture', { home: 1, away: 3 }],
@@ -872,9 +875,9 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
   });
 
   it('skips everything with --no-sblive', async () => {
-    const { ctx, sources } = ctxWith(corpusGet, { args: { sblive: false } as RunContext['args'] });
+    const { ctx, sources } = ctxWith(corpusGet, { args: testRunArgs({ sblive: false }) });
     const res = await stepSblive(ctx, { games: [pending], unmatched: [GRE_AT_CAT] });
-    expect(res).toEqual({ games: [pending], unmatched: [GRE_AT_CAT], crossCheck: undefined });
+    expect(res).toEqual({ games: [pending], unmatched: [GRE_AT_CAT], sbliveCrossCheck: undefined });
     expect(sources).toEqual([]);
   });
 
@@ -898,7 +901,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
     expect(sources.every((r) => r.status === 'stale' && r.httpStatus === 503)).toBe(true);
     expect(sources[0].carriedFrom).toBe('2026-10-01T15:00:00.000Z');
     expect(res.games[0]).toMatchObject({ status: 'final', home: { score: 9 }, provenance: { scores: 'sblive' } });
-    expect(res.crossCheck?.compared).toBe(4);
-    expect(res.crossCheck?.backfilled.map((r) => r.contestId)).toEqual([pending.contestId]);
+    expect(res.sbliveCrossCheck?.compared).toBe(4);
+    expect(res.sbliveCrossCheck?.backfilled.map((r) => r.contestId)).toEqual([pending.contestId]);
   });
 });

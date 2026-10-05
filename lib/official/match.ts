@@ -17,8 +17,8 @@
 
 import { postseasonTag } from '../classify';
 import { divisionLabel, getDivision, leagueOfDivision } from '../leagues';
-import { shortDate, monthDay } from '../format';
-import { getTeamBySlug, resolveTeam } from '../teams';
+import { dayDiff, monthDay, shiftDateKey, shortDate } from '../format';
+import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '../teams';
 import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
 
 export interface MatchOptions {
@@ -58,16 +58,8 @@ function orderedKey(away: string, home: string): string {
   return `${away}@${home}`;
 }
 
-function unorderedKey(a: string, b: string): string {
-  return [a, b].sort().join('~');
-}
-
-function sideKeyOf(side: { slug: TeamSlug | null; name: string }): string {
-  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
-}
-
 function days(a: string, b: string): number {
-  return Math.abs(Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86_400_000;
+  return Math.abs(dayDiff(a, b));
 }
 
 function stampOf(fixture: OfficialFixture, pass: Pass): OfficialStamp {
@@ -133,10 +125,10 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
   const byOrdered = new Map<string, Game[]>();
   for (const g of games) {
     if (opts.isExcluded(g)) continue;
-    const away = sideKeyOf(g.away);
-    const home = sideKeyOf(g.home);
+    const away = sideJoinKey(g.away);
+    const home = sideJoinKey(g.home);
     push(byDateOrdered, `${g.dateKey}|${orderedKey(away, home)}`, g);
-    push(byDateUnordered, `${g.dateKey}|${unorderedKey(away, home)}`, g);
+    push(byDateUnordered, `${g.dateKey}|${unorderedPairKey(away, home)}`, g);
     push(byOrdered, orderedKey(away, home), g);
   }
 
@@ -158,7 +150,7 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
     let pass: Pass = 'same-date';
     let game = take(byDateOrdered.get(`${fixture.dateKey}|${ordered}`));
     if (!game) {
-      const swapped = take(byDateUnordered.get(`${fixture.dateKey}|${unorderedKey(fixture.awaySlug, fixture.homeSlug)}`));
+      const swapped = take(byDateUnordered.get(`${fixture.dateKey}|${unorderedPairKey(fixture.awaySlug, fixture.homeSlug)}`));
       if (swapped) {
         warnings.push(
           `${fixture.dateKey} ${fixture.awayName} @ ${fixture.homeName}: ` +
@@ -244,12 +236,11 @@ function articleFor(acronym: string): 'A' | 'An' {
 
 /** The day before a YYYY-MM-DD date. */
 function dayBefore(dateKey: string): string {
-  return new Date(Date.parse(`${dateKey}T00:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
+  return shiftDateKey(dateKey, -1);
 }
 
 function teamDivision(side: GameSide): DivisionId | null {
-  const team = (side.teamId ? resolveTeam(side.teamId) : undefined) ?? (side.slug ? getTeamBySlug(side.slug) : undefined);
-  return team?.division ?? null;
+  return teamOfSide(side)?.division ?? null;
 }
 
 function excludedContestType(game: Game, excluded: readonly number[]): number | null {
@@ -277,11 +268,11 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
   const byDateUnordered = new Map<string, Game[]>();
   const byUnordered = new Map<string, Game[]>();
   for (const g of pool) {
-    const away = sideKeyOf(g.away);
-    const home = sideKeyOf(g.home);
+    const away = sideJoinKey(g.away);
+    const home = sideJoinKey(g.home);
     push(byDateOrdered, `${g.dateKey}|${orderedKey(away, home)}`, g);
-    push(byDateUnordered, `${g.dateKey}|${unorderedKey(away, home)}`, g);
-    push(byUnordered, unorderedKey(away, home), g);
+    push(byDateUnordered, `${g.dateKey}|${unorderedPairKey(away, home)}`, g);
+    push(byUnordered, unorderedPairKey(away, home), g);
   }
   const take = (list: Game[] | undefined): Game | null => {
     if (!list) return null;
@@ -314,7 +305,7 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
   // Pass 2: same date, host the other way round, for every fixture still open.
   for (const f of matchable) {
     if (done.has(f.id)) continue;
-    const g = take(byDateUnordered.get(`${f.dateKey}|${unorderedKey(f.awaySlug as string, f.homeSlug as string)}`));
+    const g = take(byDateUnordered.get(`${f.dateKey}|${unorderedPairKey(f.awaySlug as string, f.homeSlug as string)}`));
     if (!g) continue;
     const gridHost = fixtureSideName(f.homeSlug, f.homeName);
     warnings.push(`${f.dateKey} ${f.awayName} @ ${f.homeName}: MaxPreps has the host the other way round`);
@@ -330,7 +321,7 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
   const pairs: Array<{ fixture: OfficialFixture; game: Game; delta: number }> = [];
   for (const f of matchable) {
     if (done.has(f.id)) continue;
-    for (const g of byUnordered.get(unorderedKey(f.awaySlug as string, f.homeSlug as string)) ?? []) {
+    for (const g of byUnordered.get(unorderedPairKey(f.awaySlug as string, f.homeSlug as string)) ?? []) {
       if (consumed.has(g.contestId)) continue;
       const delta = days(g.dateKey, f.dateKey);
       const members = teamDivision(g.home) === f.division && teamDivision(g.away) === f.division;
@@ -365,11 +356,11 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
   const noteless = new Set<string>();
   for (const f of unmatched) {
     if (f.awaySlug === null || f.homeSlug === null) continue;
-    const key = unorderedKey(f.awaySlug, f.homeSlug);
+    const key = unorderedPairKey(f.awaySlug, f.homeSlug);
     const nearby = games.filter(
       (g) =>
         !consumed.has(g.contestId) &&
-        unorderedKey(sideKeyOf(g.away), sideKeyOf(g.home)) === key &&
+        unorderedPairKey(sideJoinKey(g.away), sideJoinKey(g.home)) === key &&
         days(g.dateKey, f.dateKey) <= window,
     );
     if (nearby.length === 0 || !nearby.every((g) => opts.isExcluded(g))) continue;
@@ -410,7 +401,7 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
 
   // Log: any fixture pair with three or more contests within the window of its fixtures.
   const pairDates = new Map<string, OfficialFixture[]>();
-  for (const f of matchable) push(pairDates, unorderedKey(f.awaySlug as string, f.homeSlug as string), f);
+  for (const f of matchable) push(pairDates, unorderedPairKey(f.awaySlug as string, f.homeSlug as string), f);
   for (const [key, list] of pairDates) {
     const first = list.reduce((m, f) => (f.dateKey < m ? f.dateKey : m), list[0].dateKey);
     const last = list.reduce((m, f) => (f.dateKey > m ? f.dateKey : m), list[0].dateKey);

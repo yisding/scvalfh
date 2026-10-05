@@ -1,6 +1,8 @@
 /**
  * What scripts/fetch-rosters.ts and scripts/fetch-player-stats.ts share: which registry teams a
- * run covers, and how a run reports its teams league by league.
+ * run covers, and how a run reports its teams league by league. The flag parsers for `--leagues`
+ * and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts parseRunArgs), so the
+ * three CLIs read those flags by one rule.
  *
  * Both scripts walk the whole 49-team registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
@@ -33,6 +35,14 @@ export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] 
   return [...new Set(ids)] as LeagueId[];
 }
 
+/** `--fetched-at <iso>`: an ISO timestamp ('2026-10-04T00:00:00.000Z'), returned as given; anything else throws. */
+export function parseFetchedAtFlag(value: string, flag = '--fetched-at'): string {
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(value) || Number.isNaN(Date.parse(value))) {
+    throw new Error(`${flag}: not an ISO timestamp: ${value}`);
+  }
+  return value;
+}
+
 /** The registry teams a run covers, in registry order: all 49, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {
   return leagues === null ? TEAMS : TEAMS.filter((t) => leagues.includes(t.league));
@@ -41,46 +51,6 @@ export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team
 /** Whether a run over `leagues` (null = every league) fetches this team. */
 export function inScope(team: Team, leagues: readonly LeagueId[] | null): boolean {
   return leagues === null || leagues.includes(team.league);
-}
-
-/** Keys sorted at every level, so re-running produces a byte-identical file. */
-export function stableStringify(value: unknown): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return `${JSON.stringify(normalize(value), null, 2)}\n`;
-}
-
-/**
- * `value` as JSON with keys sorted and every key in `ignore` dropped at every level. Two files with
- * the same key differ only in what `ignore` names, so a fetch script can leave the old file in
- * place and a scheduled refresh has nothing to commit. Both scripts ignore `fetchedAt` (when a row
- * was read) and `error` (a failure's free-form message, which can carry a duration or request id).
- */
-export function contentKey(value: unknown, ignore: readonly string[]): string {
-  const normalize = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(normalize);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const key of Object.keys(node as Record<string, unknown>).sort()) {
-        if (ignore.includes(key)) continue;
-        const v = (node as Record<string, unknown>)[key];
-        if (v !== undefined) out[key] = normalize(v);
-      }
-      return out;
-    }
-    return node;
-  };
-  return JSON.stringify(normalize(value));
 }
 
 // ---------------------------------------------------------------- the previous file

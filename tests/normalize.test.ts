@@ -17,7 +17,7 @@ import {
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { getTeamBySlug, resolveTeam } from '../lib/teams';
 import type { Game } from '../lib/types';
-import { REPO, allScheduleRows } from './helpers';
+import { allScheduleRows, corpusDir } from './helpers';
 
 const rows = allScheduleRows();
 const result = normalizeGames(rows, { fetchedAt: '2026-09-29T15:00:00.000Z' });
@@ -275,7 +275,7 @@ describe('normalize: contest.location is a 50-char free-text field', () => {
 
 // ---------------------------------------------------------------- SPEC §7.6 (multi-league corpus)
 
-const CORPUS_SCHEDULES = path.join(REPO, 'tests', 'fixtures', 'corpus', 'all-2026-10-02', 'maxpreps', 'schedule');
+const CORPUS_SCHEDULES = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'schedule');
 const FETCHED_AT = '2026-10-02T15:00:00.000Z';
 
 /** Every row of the 43 all-2026-10-02 schedule feeds, keyed by our slug (the file stem). */

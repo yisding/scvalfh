@@ -1,5 +1,5 @@
 /**
- * Verified season constants: a dependency-free constants leaf (type-only imports), because client
+ * Verified season constants: a dependency-free constants leaf (no imports), because client
  * modules reach it through lib/format. League, division and CCS facts live in lib/leagues.ts; the
  * Season record is built by lib/season-build.ts (SPEC §13.3).
  *
@@ -7,8 +7,6 @@
  * The bootstrap step in scripts/fetch-data.ts re-reads the season ids on every run and ABORTS
  * rather than publishing a half-migrated season if they ever change (SPEC §1.1h, §5.2).
  */
-
-import type { SeasonWindow } from './types';
 
 export const MAXPREPS_API = 'https://production.api.maxpreps.com';
 export const MAXPREPS_WEB = 'https://www.maxpreps.com';
@@ -20,6 +18,10 @@ export const BOOTSTRAP_URL = `${MAXPREPS_WEB}/ca/field-hockey/`;
 export const SEASON_YEAR = '26-27';
 /** [V] leagues/{id}/v1 .sportSeasonName */
 export const SEASON_LABEL = 'Girls Varsity Field Hockey Fall 26-27';
+/** '2026': the calendar year the fall season is played in. Derived from SEASON_YEAR, not read. */
+export const SEASON_CALENDAR_YEAR = `20${SEASON_YEAR.slice(0, 2)}`;
+/** 'Fall 2026': the season as the site's own copy names it. Derived from SEASON_YEAR, not read. */
+export const SEASON_DISPLAY = `Fall ${SEASON_CALENDAR_YEAR}`;
 /** [V] verdicts 25/28/33/36/37/52 */
 export const SPORT_SEASON_ID = 'e302eb3e-1a32-4f2d-934b-6f9d454f721e';
 /** [V] verdicts 5, 33 */
@@ -41,12 +43,6 @@ export const SOURCE_LINKS = {
   ccs: 'https://cifccs.org/sports/fh/index',
   ccsCalendar: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
 } as const;
-
-export const EMPTY_WINDOW: SeasonWindow = {
-  firstGame: null,
-  lastLeagueGame: null,
-  lastGame: null,
-};
 
 /** The IANA zone every date on the site is formatted in. */
 export const TIME_ZONE = 'America/Los_Angeles';

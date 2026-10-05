@@ -4,12 +4,11 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT` as lib/data.ts reads it, read through the same
- * `loadSnapshot` the build uses, so a file written before a league was added is checked as the
- * build rendered it, upgraded), the league config
- * (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through lib/clubs.ts). So a family that
- * came back short, or long, or a page that lost its generateStaticParams (it would render on demand
- * instead), fails here by name:
+ * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
+ * reads it, so a file written before a league was added is checked as the build rendered it,
+ * upgraded), the league config (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through
+ * lib/clubs.ts). So a family that came back short, or long, or a page that lost its
+ * generateStaticParams (it would render on demand instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
  *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
@@ -28,12 +27,13 @@
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats
  *    (`id="player-stats"`) section: all 49 teams, in all five leagues (a missing one means a team page
  *    went back to showing them for SCVAL only);
- *  - `history/2025-26.html` has a section per league of lib/leagues.ts (`id="scval"` … `id="eal"`)
- *    and an anchor for each division of every league the history data marks available;
  *  - no prerendered path contains ':' (a raw `sblive:` id leaking into a URL);
  *  - OG/page parity BY NAME per family with an image: `game/X.html` ⇔ `game/X/opengraph-image`,
  *    and the same for `standings/<id>`, `schedule/<id>`, `playoffs/<id>`, `teams/<slug>` and
  *    `scores/<date>` — never by count, so one missing card and one extra card cannot cancel out.
+ *
+ * The fixed pages, the families' params and the cross-checks are scripts/lib/prerender-expectations.ts,
+ * shared with the vinext gate (scripts/assert-vinext-prerender.ts), so the two cannot drift apart.
  *
  * `next build` writes a prerendered page as `<path>.html` (+ `.rsc`, `.meta`) and a prerendered
  * metadata route as `<path>.body` (+ `.meta`) under `.next/server/app`.
@@ -48,15 +48,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { getClubSlugs } from '../lib/clubs';
-import { gameIdToParam } from '../lib/game-id';
-import { getHistoryLeagues } from '../lib/history';
-import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
-import { loadSnapshot } from '../lib/snapshot-schema';
-import { TEAMS } from '../lib/teams';
+import { getSnapshot } from '../lib/data';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
 
 const APP = '.next/server/app';
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
 
 const problems: string[] = [];
 const fail = (msg: string) => problems.push(msg);
@@ -65,7 +60,7 @@ if (!existsSync(APP)) {
   console.error(`assert-prerender: ${APP} does not exist; run \`pnpm build\` first`);
   process.exit(1);
 }
-const snapshot = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
+const snapshot = getSnapshot();
 
 /** Every file under .next/server/app, as forward-slash paths relative to it. */
 const allFiles = (readdirSync(APP, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
@@ -100,104 +95,15 @@ const colon = files.filter((f) => f.includes(':') && /\.(html|rsc|body|meta|segm
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
 // ---------------------------------------------------------------- config agrees with the snapshot
-const snapshotLeagues = snapshot.season.leagues.map((l) => l.id);
-if (JSON.stringify(snapshotLeagues) !== JSON.stringify([...LEAGUE_IDS])) {
-  fail(`snapshot season.leagues [${snapshotLeagues.join(', ')}] ≠ lib/leagues.ts LEAGUE_IDS [${LEAGUE_IDS.join(', ')}]`);
-}
+const expected = expectedFamilies(snapshot, fail);
+const { gameParams, stubParams, dates, slugs, clubSlugs } = expected;
 
 // ---------------------------------------------------------------- fixed pages
-const FIXED = ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'commits'];
-for (const p of FIXED) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
+for (const p of FIXED_PAGES) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
 
 // ---------------------------------------------------------------- families
-/** The `.html` pages directly inside `<family>/`, by name (no extension). */
-function pagesIn(family: string): string[] {
-  const prefix = `${family}/`;
-  return files
-    .filter((f) => f.startsWith(prefix) && f.endsWith('.html') && !f.slice(prefix.length).includes('/'))
-    .map((f) => f.slice(prefix.length, -'.html'.length));
-}
-/** The names `X` with a prerendered `<family>/X/opengraph-image` card. */
-function cardsIn(family: string): string[] {
-  const prefix = `${family}/`;
-  const suffix = '/opengraph-image.body';
-  return files
-    .filter((f) => f.startsWith(prefix) && f.endsWith(suffix))
-    .map((f) => f.slice(prefix.length, -suffix.length))
-    .filter((name) => name !== '' && !name.includes('/') && !name.startsWith('['));
-}
-function diff(a: Iterable<string>, b: Iterable<string>): string[] {
-  const bs = new Set(b);
-  return [...a].filter((x) => !bs.has(x));
-}
-function sample(list: string[]): string {
-  return list.slice(0, 5).join(', ') + (list.length > 5 ? `, … (${list.length})` : '');
-}
-
-/** Exact page set for a family, then OG/page parity by name. */
-function family(name: string, expected: readonly string[], opts: { og: boolean }): void {
-  const got = pagesIn(name);
-  const missing = diff(expected, got);
-  const extra = diff(got, expected);
-  if (missing.length) fail(`${name}/: ${missing.length} expected page(s) not prerendered: ${sample(missing)}`);
-  if (extra.length) fail(`${name}/: ${extra.length} unexpected page(s) prerendered: ${sample(extra)}`);
-  if (new Set(expected).size !== expected.length) fail(`${name}/: the expected params contain duplicates`);
-  if (!opts.og) return;
-  const cards = cardsIn(name);
-  const noCard = diff(got, cards);
-  const noPage = diff(cards, got);
-  if (noCard.length) fail(`${name}/: page without its opengraph-image: ${sample(noCard.map((x) => `${name}/${x}.html`))}`);
-  if (noPage.length) fail(`${name}/: opengraph-image without its page: ${sample(noPage.map((x) => `${name}/${x}/opengraph-image`))}`);
-}
-
-const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-const stubParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
-const overlap = stubParams.filter((p) => gameParams.includes(p));
-if (overlap.length) fail(`superseded stubs that are also live games: ${sample(overlap)}`);
-const dates = [...new Set(snapshot.games.map((g) => g.dateKey))].sort();
-const slugs = snapshot.teams.map((t) => t.slug);
-{
-  const registry = TEAMS.map((t) => t.slug);
-  const missing = diff(registry, slugs);
-  const extra = diff(slugs, registry);
-  if (missing.length || extra.length || slugs.join('|') !== registry.join('|')) {
-    fail(
-      `snapshot teams ≠ the ${registry.length}-team registry (missing: ${sample(missing) || 'none'}; ` +
-        `extra: ${sample(extra) || 'none'}${missing.length || extra.length ? '' : '; order differs'})`,
-    );
-  }
-}
-const tournament = [...TOURNAMENT_LEAGUE_IDS];
-const snapshotTournament = snapshot.season.leagues.filter((l) => l.postseasonKind === 'league-tournament').map((l) => l.id);
-if (JSON.stringify(snapshotTournament) !== JSON.stringify(tournament)) {
-  fail(`snapshot tournament leagues [${snapshotTournament.join(', ')}] ≠ TOURNAMENT_LEAGUE_IDS [${tournament.join(', ')}]`);
-}
-
-family('standings', LEAGUE_IDS, { og: true });
-family('schedule', LEAGUE_IDS, { og: true });
-family('playoffs', tournament, { og: true });
-family('game', [...gameParams, ...stubParams], { og: true });
-family('scores', dates, { og: true });
-family('teams', slugs, { og: true });
-family('history', ['2025-26'], { og: false });
-const clubSlugs = getClubSlugs();
-family('clubs', clubSlugs, { og: false });
-
-// The history page: one section per league, division anchors for every available league.
-{
-  const p = path.join(APP, 'history', '2025-26.html');
-  if (existsSync(p)) {
-    const html = readFileSync(p, 'utf8');
-    for (const { id, entry } of getHistoryLeagues()) {
-      if (!html.includes(`id="${id}"`)) fail(`history/2025-26: no section id="${id}"`);
-      if (entry.status === 'available') {
-        for (const d of entry.divisions) {
-          if (!html.includes(`id="${d.division}"`)) fail(`history/2025-26: no division anchor id="${d.division}"`);
-        }
-      }
-    }
-  }
-}
+const { pagesIn, allFamilies } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.body', fail });
+allFamilies(expected);
 
 // Roster and Player stats on every team page, all five leagues (the empty states count: a team
 // nothing has been collected for still says so, rather than dropping the section).
@@ -219,8 +125,8 @@ for (const card of ['opengraph-image', 'standings/opengraph-image']) {
 
 const totalHtml = files.filter((f) => f.endsWith('.html') && !f.startsWith('_')).length;
 console.log(
-  `prerendered (next): ${totalHtml} pages — fixed ${FIXED.length}; standings ${pagesIn('standings').length}/${LEAGUE_IDS.length}; ` +
-    `schedule ${pagesIn('schedule').length}/${LEAGUE_IDS.length}; playoffs ${pagesIn('playoffs').length}/${tournament.length}; ` +
+  `prerendered (next): ${totalHtml} pages — fixed ${FIXED_PAGES.length}; standings ${pagesIn('standings').length}/${expected.leagueIds.length}; ` +
+    `schedule ${pagesIn('schedule').length}/${expected.leagueIds.length}; playoffs ${pagesIn('playoffs').length}/${expected.tournament.length}; ` +
     `game ${pagesIn('game').length} (${gameParams.length} games + ${stubParams.length} superseded stubs); ` +
     `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}; ` +
     `clubs ${pagesIn('clubs').length}/${clubSlugs.length}`,

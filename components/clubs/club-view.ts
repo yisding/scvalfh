@@ -1,25 +1,3 @@
-import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '../../lib/format';
-import {
-  SEARCHED_REGIONS,
-  clubDisplayName,
-  getAffiliatedPlayer,
-  getClub,
-  getClubAffiliations,
-  getClubs,
-  getClubsFile,
-  getPlayerClubs,
-  type AffiliationSource,
-  type AffiliationStatus,
-  type Club,
-  type ClubAffiliation,
-  type ClubRegion,
-} from '../../lib/clubs';
-import { CLUB_REGIONS, clubSiteKey } from '../../lib/clubs-schema';
-import { getRosters } from '../../lib/rosters';
-import { getTeamBySlug } from '../../lib/teams';
-import type { TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
-
 /**
  * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
  * derived from lib/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
@@ -39,6 +17,28 @@ import { plural } from '../ui/plural';
  *     moves, and a name in a slug (a player's profile, a coach's page) is never printed;
  *   - every player row links the pages it rests on, each URL once.
  */
+
+import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '../../lib/format';
+import {
+  SEARCHED_REGIONS,
+  clubDisplayName,
+  getAffiliatedPlayer,
+  getClub,
+  getClubAffiliations,
+  getClubs,
+  getClubsFile,
+  getPlayerClubs,
+  type AffiliationSource,
+  type AffiliationStatus,
+  type Club,
+  type ClubAffiliation,
+  type ClubRegion,
+} from '../../lib/clubs';
+import { CLUB_REGIONS, clubSiteKey } from '../../lib/clubs-schema';
+import { getRosters } from '../../lib/rosters';
+import type { TeamSlug } from '../../lib/types';
+import { plural } from '../ui/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
 
 // ---------------------------------------------------------------- wording tables
 
@@ -62,34 +62,19 @@ export const REGION_WORDS: Record<ClubRegion, { label: string; prep: 'in' | 'on'
   elsewhere: { label: 'Elsewhere', prep: 'in', place: 'other places' },
 };
 
-/** "A", "A or B", "A, B or C". `listWords` joins with "and" only. */
-function orWords(words: readonly string[]): string {
-  if (words.length <= 1) return words[0] ?? '';
-  return `${words.slice(0, -1).join(', ')} or ${words[words.length - 1]}`;
-}
-
 /**
  * "on the Peninsula or the Central Coast", "in the East Bay or on the Central Coast": the
  * preposition is repeated only where it changes.
  */
 function basedWords(regions: readonly ClubRegion[]): string {
-  return orWords(
+  return listWords(
     regions.map((r, i) => {
       const w = REGION_WORDS[r];
       return i > 0 && REGION_WORDS[regions[i - 1]].prep === w.prep ? w.place : `${w.prep} ${w.place}`;
     }),
+    'or',
   );
 }
-
-/** A news or other site a source sits on: its link text, and how a sentence names it. */
-const OUTLETS: Readonly<Record<string, { label: string; inSentence: string }>> = {
-  'sticktogetherfh.com': { label: 'Stick Together', inSentence: 'Stick Together' },
-  'gilroydispatch.com': { label: 'Gilroy Dispatch', inSentence: 'the Gilroy Dispatch' },
-  'scval.com': { label: 'SCVAL', inSentence: 'SCVAL' },
-  'nfhca.org': { label: 'NFHCA', inSentence: 'the NFHCA' },
-  'maxfh.longstreth.com': { label: 'MAX Field Hockey', inSentence: 'MAX Field Hockey' },
-  'sfhsathletics.com': { label: 'Saint Francis athletics', inSentence: 'Saint Francis athletics' },
-};
 
 /** The recruiting platforms: a profile's link text, and the platform's name in a sentence. */
 const PLATFORM_WORDS = {
@@ -98,15 +83,6 @@ const PLATFORM_WORDS = {
   fieldlevel: { label: 'FieldLevel profile', inSentence: 'FieldLevel' },
   'maxpreps-career': { label: 'MaxPreps profile', inSentence: 'MaxPreps' },
 } as const;
-
-/** The host without `www.`: "flyfhc.com", "nfhca.sportsrecruits.com". Every URL here is https (the schema). */
-function hostOf(url: string): string {
-  return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
-}
-
-function pathOf(url: string): string {
-  return new URL(url).pathname;
-}
 
 const isSportsRecruits = (host: string) => host === 'sportsrecruits.com' || host.endsWith('.sportsrecruits.com');
 
@@ -218,21 +194,6 @@ function endYear(asOf: string | null): number {
   if (kind === 'range') return Number(asOf.slice(5, 9));
   if (kind === 'season') return Number(asOf.slice(0, 4)) + 1;
   return Number(asOf.slice(0, 4));
-}
-
-/** " (2)", " (3)" on a label that repeats within one list, so no two links read the same. */
-function numbered<T extends { label: string }>(links: T[]): T[] {
-  const seen = new Map<string, number>();
-  return links.map((link) => {
-    const n = (seen.get(link.label) ?? 0) + 1;
-    seen.set(link.label, n);
-    return n === 1 ? link : { ...link, label: `${link.label} (${n})` };
-  });
-}
-
-/** The school a team slug is, by its registry name ("St. Ignatius College Preparatory"). */
-function schoolName(slug: string): string {
-  return getTeamBySlug(slug)?.name ?? slug;
 }
 
 // ---------------------------------------------------------------- shapes

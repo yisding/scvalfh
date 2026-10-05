@@ -6,10 +6,11 @@ import BackfillTable from '../../components/about/BackfillTable';
 import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
 import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '../../components/about/LeagueHealthCard';
 import SbliveCrossCheckSummary from '../../components/about/SbliveCrossCheckSummary';
+import Arrow from '../../components/ui/Arrow';
 import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site-url';
+import { OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site';
 import { getClubs } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import {
@@ -34,7 +35,7 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, listWords, numberWord, shortDate, timeOfDayPT } from '../../lib/format';
+import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
 import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
@@ -61,11 +62,14 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
 
+/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
+const PAGE_TITLE = 'About & sources';
+
 export const metadata: Metadata = {
-  title: 'About & sources',
+  title: PAGE_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/about' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, url: '/about' },
+  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/about' },
 };
 
 /**
@@ -101,10 +105,6 @@ function statusCounts(sources: readonly SourceStatus[]): Record<SourceStatus['st
   const out: Record<SourceStatus['status'], number> = { ok: 0, stale: 0, error: 0, skipped: 0 };
   for (const s of sources) out[s.status] += 1;
   return out;
-}
-
-function plural(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
 }
 
 const DROP_REASON_WORDS: Readonly<Record<DroppedContest['reason'], string>> = {
@@ -153,7 +153,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
   // The multi-team paragraph describes how a separating step is applied; a chain with none (the EAL's
   // lone 'no-rule') has nothing to apply, so the paragraph would describe a procedure the rules lack.
   const anyStepSeparates = bucketStarts.length > 0 || rules.tiebreaks.default.some((s) => s !== 'no-rule');
-  const unit = rules.gamesWord === 'division' ? 'division' : 'league';
+  const unit = rules.gamesWord;
   // Only a league without a schedule document reaches the contest-type branch (EAL; SCVAL, the other
   // contest-type league, is quoted by QuotedRules instead).
   const postseasonNoun =
@@ -167,7 +167,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
             ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are ${postseasonNoun}.`
             : ''
         }`
-      : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${rules.gamesWord === 'division' ? 'division' : 'league'}; tournament and postseason games never count.${
+      : `A game counts when it is on ${league.shortName}’s official schedule and both teams belong to the same ${unit}; tournament and postseason games never count.${
           rules.postseasonFrom ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are tournament games.` : ''
         }`;
   return (
@@ -187,7 +187,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
         <>
           {bucketStarts.map((start) => (
             <div key={start}>
-              <p className="m-0">A tie whose group starts at {start === 1 ? '1st' : start === 2 ? '2nd' : `${start}th`}:</p>
+              <p className="m-0">A tie whose group starts at {ordinal(start)}:</p>
               <ol className="mt-2 list-decimal">
                 {chainItems(league, byBucket[start] ?? []).map((text) => (
                   <li key={text}>{text}.</li>
@@ -261,7 +261,7 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
           <p>{postseason.titleNote}</p>
           <p>
             <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
-              {postseason.name} &rarr;
+              {postseason.name} <Arrow />
             </Link>
           </p>
         </>
@@ -1001,9 +1001,10 @@ export default function AboutPage() {
               This whole site is static: nothing here queries a live API when you load a page. Instead,
               an automated job re-fetches MaxPreps (and, on most runs, si.com, the league documents and
               the CCS calendar) and rebuilds the site from scratch, roughly twice a day during the
-              season &mdash; once overnight and once in the early morning, Pacific time &mdash; between
-              August and November. A game that finishes at 7 PM Thursday typically appears on the site
-              Friday morning, not that same night.
+              season &mdash; once in the late evening (about 10 PM) and once in the early morning
+              (about 7 AM), Pacific time &mdash; between August and November. A game that finishes at
+              7 PM Thursday appears that night if its score is entered by about 10 PM, otherwise Friday
+              morning.
             </p>
             <p>
               <b className="font-semibold text-ink">Live scores are not collected.</b> A game MaxPreps

@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/layout/monogram-image';
+import { monogramImage } from '../../components/layout/monogram-image';
 
 /**
  * `/icon-512` — the large installable-app icon (splash screen and app list), referenced from

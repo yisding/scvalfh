@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site-url';
+import { leagueChips } from '../../components/layout/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
@@ -12,12 +14,12 @@ import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../component
 import {
   buildDivisionProjection,
   buildPairingView,
-  joinNames,
   ladderFactsFor,
   pairingNotesFor,
   type LeagueKeyDate,
   type ProjectionRow,
 } from '../../components/playoffs/playoff-view';
+import Arrow from '../../components/ui/Arrow';
 import BerthMeter from '../../components/ui/BerthMeter';
 import ExternalLink from '../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
@@ -35,7 +37,7 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { monthDay, shortDate } from '../../lib/format';
+import { listWords, monthDay, shortDate } from '../../lib/format';
 import { UNBRACKETED_LEAGUE_IDS, getLeague } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
@@ -103,7 +105,7 @@ function leagueKeyDate(league: LeagueConfig): LeagueKeyDate | null {
     return `${tail[0].toUpperCase()}${tail.slice(1)}`;
   }))];
   const detail = pairings.length === 1 ? `${first.label}.` : `${purposes.join('. ')}.`;
-  return { id: league.id, league: league.shortName, date: first.date, time: first.time, label, detail };
+  return { id: league.id, leagueShort: league.shortName, date: first.date, time: first.time, label, detail };
 }
 
 interface LeagueBlock {
@@ -196,7 +198,7 @@ export default function PlayoffsPage() {
     .map((s) => leagueKeyDate(getLeague(s.id)))
     .filter((d): d is LeagueKeyDate => d !== null);
 
-  const chips = summaries.map((s) => ({ id: s.id, shortName: s.shortName, sectionShort: s.section.shortName }));
+  const chips = leagueChips();
   const hrefs: Record<string, string> = Object.fromEntries(
     summaries.map((s) => [s.id, tournamentIds.has(s.id) ? `/playoffs/${s.id}` : `#${s.id}`]),
   );
@@ -244,7 +246,7 @@ export default function PlayoffsPage() {
             <p className="m-0">
               {`Following ${article(league.shortName)} ${league.shortName} team? The ${league.section.name} holds no field hockey championship. `}
               <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action text-accent hover:underline">
-                {`${name} →`}
+                {name} <Arrow />
               </Link>
             </p>
           </div>
@@ -270,25 +272,13 @@ export default function PlayoffsPage() {
       })}
 
       {/* 3. Jump links (shown pre-paint only for the remembered league) and the league chips. */}
-      <p className="m-0 mt-4 flex flex-wrap gap-2">
-        {summaries.map((league) => (
-          <a
-            key={league.id}
-            href={hrefs[league.id]}
-            className={`sx-jump sx-jump-${league.id} sx-pill min-h-11 bg-surface shadow-[var(--sx-ring)] hover:bg-surface-2`}
-          >
-            {/* An unbracketed league's card sits above these links, so its arrow points up. */}
-            Jump to {league.shortName}{' '}
-            {tournamentIds.has(league.id) ? (
-              <>&rarr;</>
-            ) : UNBRACKETED_LEAGUE_IDS.includes(league.id) ? (
-              <>&uarr;</>
-            ) : (
-              <>&darr;</>
-            )}
-          </a>
-        ))}
-      </p>
+      {/* A tournament league's pill leads to its own page; an unbracketed league's card sits
+          above these links, so its arrow points up. */}
+      <LeagueJumpLinks
+        leagues={summaries}
+        hrefs={hrefs}
+        arrow={(id) => (tournamentIds.has(id) ? 'right' : UNBRACKETED_LEAGUE_IDS.includes(id) ? 'up' : 'down')}
+      />
       <LeagueSwitcher mode="anchor" label="Leagues" leagues={chips} hrefs={hrefs} className="mt-4" />
 
       {/* 4. The field: numbers only, ink only (no league hue). Each label names its unit, "berths"
@@ -393,13 +383,13 @@ export default function PlayoffsPage() {
             <div className="mt-4 flex flex-col gap-2 text-meta text-ink-2">
               {pending.length > 0 ? (
                 <p className="m-0">
-                  {joinNames(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
+                  {listWords(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
                   {pending.length === 1 ? 'has' : 'have'} no games in the snapshot yet. Pairings appear here as
                   CCS posts them.
                 </p>
               ) : null}
               <p className="m-0">
-                The CCS field is two eight-team divisions, {joinNames(ccsDivisionLabels(playoffs))}. The snapshot
+                The CCS field is two eight-team divisions, {listWords(ccsDivisionLabels(playoffs))}. The snapshot
                 does not label which division a game belongs to, so the games above are grouped by round and, where
                 the bracket splits into independent paths, by path.{' '}
                 <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
@@ -408,7 +398,7 @@ export default function PlayoffsPage() {
           </>
         ) : (
           <p className="m-0 max-w-prose text-body text-ink-2">
-            CCS seeds {joinNames(ccsDivisionLabels(playoffs))} at the {shortDate(keyDates.seedingMeeting)} meeting;
+            CCS seeds {listWords(ccsDivisionLabels(playoffs))} at the {shortDate(keyDates.seedingMeeting)} meeting;
             the bracket appears here that evening.{' '}
             <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink> &mdash; not yet posted.
           </p>

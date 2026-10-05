@@ -1,6 +1,5 @@
 import { ordinal } from '../../lib/format';
 import { leagueOfDivision } from '../../lib/leagues';
-import type { TeamSlug } from '../../lib/types';
 import LeagueHealthNote from '../ui/LeagueHealthNote';
 import SectionHeader from '../ui/SectionHeader';
 import StandingsTable, { collectStandingsNotes, type StandingsTableProps } from '../ui/StandingsTable';
@@ -32,8 +31,6 @@ import type { DivisionView } from './standings-view';
  */
 export interface DivisionStandingsProps {
   view: DivisionView;
-  /** The pinned team's 2px accent left rule, when a page above knows it. */
-  highlightSlug?: TeamSlug | null;
   /** Render the league's health note here (the page's first table only, so it is said once). */
   showHealth?: boolean;
   className?: string;
@@ -41,7 +38,6 @@ export interface DivisionStandingsProps {
 
 export function DivisionStandings({
   view,
-  highlightSlug = null,
   showHealth = false,
   className,
 }: DivisionStandingsProps) {
@@ -52,7 +48,6 @@ export function DivisionStandings({
     caption: view.caption,
     footnotes: view.footnotes,
     sourceUrl: view.sourceUrl,
-    highlightSlug,
     notes: 'none',
     context: view.context,
     columns: ['gp', 'left', 'max'],
@@ -108,7 +103,6 @@ export function DivisionStandings({
           officialSchedule={view.officialSchedule}
           scheduledPer={view.scheduledPer}
           rankRule={view.rankRule}
-          levelReason={view.levelReason}
         />
         <PlayoffStatusBand
           divisionLabel={view.label}
@@ -120,7 +114,12 @@ export function DivisionStandings({
           unrankedTeams={view.unrankedTeams}
           // A band with no ladder line (the unbracketed EAL) has nothing to align to the Notes
           // card's bottom edge, so it keeps its own height rather than stretching to blank space.
-          className={`sx-card flex flex-col p-5 md:p-6${view.ladderLineLabel === null ? ' lg:self-start' : ''}`}
+          className={[
+            'sx-card flex flex-col p-5 md:p-6',
+            view.ladderLineLabel === null ? 'lg:self-start' : null,
+          ]
+            .filter(Boolean)
+            .join(' ')}
         />
       </div>
     </section>

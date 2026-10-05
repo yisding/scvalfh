@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Arrow from '../ui/Arrow';
 import type { LeagueCardView } from './home-types';
 import SetLeagueButton from './SetLeagueButton';
 
@@ -25,9 +26,13 @@ export interface LeagueCardProps {
 export function LeagueCard({ card, className, wide }: LeagueCardProps) {
   return (
     <li
-      className={`sx-card flex min-w-0 flex-col p-4 md:p-5${wide ? ' lg:flex-row lg:items-center lg:justify-between lg:gap-8' : ''}${
-        className ? ` ${className}` : ''
-      }`}
+      className={[
+        'sx-card flex min-w-0 flex-col p-4 md:p-5',
+        wide ? 'lg:flex-row lg:items-center lg:justify-between lg:gap-8' : null,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <div className="min-w-0">
         <h3 className="m-0 text-title text-ink">
@@ -44,7 +49,12 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
         <p className="mt-1 mb-0 text-meta text-ink-3">{card.region}</p>
       </div>
       <div
-        className={`mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 pt-4${wide ? ' lg:mt-0 lg:shrink-0 lg:pt-0' : ''}`}
+        className={[
+          'mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 pt-4',
+          wide ? 'lg:mt-0 lg:shrink-0 lg:pt-0' : null,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         <SetLeagueButton leagueId={card.id} shortName={card.shortName} />
         <Link
@@ -52,7 +62,7 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
           prefetch={false}
           className="inline-flex min-h-11 items-center text-meta font-medium text-accent no-underline hover:underline"
         >
-          {card.shortName} standings <span aria-hidden="true">&nbsp;&rarr;</span>
+          {card.shortName} standings <Arrow />
         </Link>
       </div>
     </li>

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Scoped typecheck for agents working concurrently in one tree (SPEC §0.4, §12.1 "Tooling").
+ * Scoped typecheck for agents working concurrently in one tree (README, "Local development"): a
+ * dev-only aid, not part of the CI gate, which is `pnpm typecheck`.
  *
- *   node scripts/typecheck-scope.mjs <glob> [<glob>…]
+ *   pnpm typecheck:scope <glob> [<glob>…]      (node scripts/typecheck-scope.mjs <glob> [<glob>…])
  *
  * Runs `pnpm exec next typegen`, then `pnpm exec tsc --noEmit -p tsconfig.json --pretty false`
  * once over the whole project, and keeps only the diagnostics whose file path (relative to the

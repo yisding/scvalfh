@@ -59,7 +59,8 @@ confirmed on one game only, so it is **not encoded**: no tally is stored and the
 not show one (DESIGN §22.8). **[V] for that one game; [U] as a rule.**
 
 **(c) Contest ids grouped by date** — `GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=league&id={leagueId}&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25`.
-Cheap cron driver / same-day scoreboard. `data.contestIdsByDate[]`,
+Researched, not used: the pipeline never calls it (it reads each team's schedule feed instead).
+`data.contestIdsByDate[]`,
 `data.scoreboardCanonicalUrlToday`/`UrlTomorrow`/`UrlYesterday`. **[V]**
 
 **(d) Scoreboard contests by ids** — `POST /gatewayweb/react/scoreboard-contests-by-ids/basic/v2`,
@@ -118,7 +119,7 @@ tuples, schema recovered from webpack module `deserializeContestList` — pin be
 with loud assertions), rendered `table tbody tr` (stable selectors: `span.hat/.name/.result/.score`
 — never styled-components class hashes), legacy scoreboard pages, individual game pages
 (`application/ld+json`, `@type: SportsEvent` — the only source of a game's street address; fetch
-lazily, one request per game, never in the nightly sweep).
+lazily, one request per game, never in the scheduled run).
 
 **(j) Team rosters** — `GET https://www.maxpreps.com/<teamCanonicalUrl path>/roster/` (HTML; captured
 and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb/react/team-roster/v1`,
@@ -1071,7 +1072,7 @@ Gotchas, all **[V]**:
   script leaves the file untouched when only its `fetchedAt` stamps would move.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
-(`lib/prior-season.ts`, loaded by `lib/prior-season-data.ts`), built once a season by
+(`lib/prior-season-schema.ts`, loaded by `lib/prior-season.ts`), built once a season by
 `pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
 - The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
   sport-season the school has played (625 for Leigh), each with `sportSeasonId`, `sport`, `gender`,
@@ -1242,7 +1243,7 @@ redirects.
     6-4 Pleasant Valley above 7-5 Bella Vista, i.e. by win percentage) but is not a league document, and the
     site does not show standings from newspapers or third-party sites. No `alsoPublished`.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
-    extend `scripts/build-history.ts`, and the schema (`lib/history.ts`) already validates it against
+    extend `scripts/build-history.ts`, and the schema (`lib/history-schema.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
@@ -1255,7 +1256,7 @@ stale — dead weight, not used.
 BVAL, PCAL and MCAL publish their schedules as documents with no feed, so their league fixtures
 were transcribed once (2026-10-02) and are **bundled** in `data/official/{bval,pcal,mcal}-2026.json`
 (Zod-validated every time they load, in the cron and in tests). The files are written by
-`pnpm exec tsx scripts/build-official-fixtures.ts` from the transcriptions in
+`pnpm build-official-fixtures` from the transcriptions in
 `tests/fixtures/official/source/` and are never hand-edited. Each is a double round robin and is
 checked as one: every ordered pair a@b exactly once (n·(n−1) fixtures), each team plays its
 `gamesPerTeam`, no team twice on one date, every date inside the league-play window.
@@ -1290,11 +1291,11 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
 
 1. Download the new document(s) from the URLs above and keep the files.
 2. Update the transcription: for BVAL, convert both documents to text and run
-   `pnpm exec tsx scripts/build-official-fixtures.ts --bval-text <MtHamilton.txt> <SantaTeresa.txt>`
+   `pnpm build-official-fixtures --bval-text <MtHamilton.txt> <SantaTeresa.txt>`
    (the parser throws on any override form it does not know, so a surprise is loud); for PCAL and
    MCAL, edit `tests/fixtures/official/source/pcal-official-schedule-2026.json` or
    `mcal-fixtures-2026.json` to match the new document.
-3. Run `pnpm exec tsx scripts/build-official-fixtures.ts` (add `--check` to only compare). It
+3. Run `pnpm build-official-fixtures` (add `--check` to only compare). It
    validates each division as a double round robin before writing anything.
 4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
    may change.
@@ -1419,7 +1420,8 @@ tested end to end).
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
-  section, not league) — use `contest-ids-grouped-by-date-by-context/v2` instead.
+  section, not league) — the researched replacement is §1.1(c) `contest-ids-grouped-by-date-by-context/v2`.
+  The pipeline uses neither and reads each team's schedule feed.
 - `team-standings/v1` — only a 3-row window; use `leagues/{id}/standings/v1`.
 - `/ca/field-hockey/standings/`, `/ca/field-hockey/leagues/`, `/_next/data/{buildId}/…` — 404.
 - SBLive league-scoped scoreboard — inherits the wrong league membership.
@@ -1950,6 +1952,17 @@ corpus with `corpusSnapshotPath('all-2026-10-02')` (`tests/helpers.ts`); tests o
 `data/snapshot.json` assert invariants only, since that file changes every run. An offline run
 never touches the network.
 
+Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
+the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
+Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
+(`lib/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
+fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
+fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each
+game page shows), with the team and game pages they cite. No test, script or manifest reads these
+files except `team-456851-york-falcons.html`, which `tests/backfill.test.ts` parses (York is JV
+only, `DATA_QUALITY.sbliveIgnoredTeamIds`). Keep them when fixtures are refreshed.
+
 ### 5.6 Playoff polling from Oct 25
 
 Before the CCS poll window, render the postseason sections from the by-laws-derived dates and each
@@ -1990,11 +2003,11 @@ the static snapshot, never proxy a live upstream request per visitor; honor a ta
 immediately. The bundled official fixtures are our own transcription of public schedules (dates,
 pairings and times), not copies of the documents.
 
-**Attribution text**, rendered in the site footer (`components/layout/Attribution.tsx`) and on the
-standings and scores pages:
+**Attribution text**, rendered in the site footer (`components/layout/Attribution.tsx`) on every
+page:
 
-> Data from **MaxPreps** (maxpreps.com) and **High School on SI** (si.com/high-school). League
-> alignment and rules from SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
+> Data from **MaxPreps** and **High School on SI (si.com)**. League alignment and rules from
+> SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
 > Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps
 > or SI. Records are computed from published game results and may differ from official standings.
 > Last updated {fetchedAt}.

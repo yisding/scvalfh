@@ -5,16 +5,17 @@
  * line.
  */
 
+import { byDateThenId } from '../../format';
 import { CCS, getLeague } from '../../leagues';
 import { buildSeason } from '../../season-build';
 import { countsOf } from '../../snapshot-migrate';
-import { parseSnapshot, snapshotContentHash, stableStringify } from '../../snapshot-schema';
+import { parseSnapshot, snapshotContentHash } from '../../snapshot-schema';
+import { stableStringify } from '../../stable-json';
 import { TEAMS } from '../../teams';
 import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '../../types';
-import { RunAbort } from '../contract';
+import { RunAbort, type SnapshotMeta } from '../contract';
 import type { PipelineContext, RunState } from '../ledger';
 import type { RequestCounts } from '../transport';
-import { byDateThenId } from './normalize';
 import type { StandingsStepResult } from './standings';
 
 /** SPEC §7.11 budgets. */
@@ -50,17 +51,20 @@ function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {
   return [...fixtures].sort((a, b) => (a.dateKey === b.dateKey ? a.id.localeCompare(b.id) : a.dateKey.localeCompare(b.dateKey)));
 }
 
-/** `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4 · EAL +1` */
+/**
+ * `SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4 · EAL +1`. A frozen or
+ * degraded league names `causeOf` its state: the cause that set it (LeagueLedger.stateCause).
+ */
 export function commitSummaryOf(
   health: readonly LeagueHealth[],
-  causes: (leagueId: string) => readonly string[],
+  causeOf: (leagueId: string) => string | undefined,
 ): string {
   let unitWritten = false;
   return health
     .map((h) => {
       const short = getLeague(h.leagueId).shortName;
       if (h.state === 'frozen' || h.state === 'degraded') {
-        const cause = causes(h.leagueId)[0];
+        const cause = causeOf(h.leagueId);
         return `${short} ${h.state}${cause ? ` (${cause})` : ''}`;
       }
       const delta = finalsDeltaOf(h);
@@ -84,10 +88,11 @@ export interface AssembleInput {
 export function stepAssemble(
   ctx: PipelineContext,
   { state, table, requests }: AssembleInput,
-): { snapshot: Snapshot; meta: Record<string, unknown> } {
+): { snapshot: Snapshot; meta: SnapshotMeta } {
   const games = [...state.games].sort(byDateThenId);
   const sources = ctx.sources.ordered();
   const official = state.official;
+  // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.
   const officialStandingsPdfUrl =
     official.officialStandingsPdfUrl !== undefined ? official.officialStandingsPdfUrl : ctx.previous?.officialStandingsPdfUrl;
   const fixtures = sortFixtures(state.unmatched);
@@ -119,7 +124,7 @@ export function stepAssemble(
     leagueHealth: table.leagueHealth,
     dropped: ctx.dropped.all(),
     crossCheck: table.crossCheck,
-    ...(state.crossCheck ? { sbliveCrossCheck: state.crossCheck } : {}),
+    ...(state.sbliveCrossCheck ? { sbliveCrossCheck: state.sbliveCrossCheck } : {}),
     ...(anyOfficial ? { officialFixtures: fixtures } : {}),
     supersededGames: supersededGamesOf(games, ctx.previous),
     ...(officialStandingsPdfUrl === undefined ? {} : { officialStandingsPdfUrl }),
@@ -140,7 +145,7 @@ export function stepAssemble(
   if (sources.length > SOURCES_MAX) ctx.warn(`budget: ${sources.length} source rows, over the ${SOURCES_MAX}-row budget`);
 
   const health = snapshot.leagueHealth;
-  const commitSummary = commitSummaryOf(health, (id) => ctx.leagues.causes(id));
+  const commitSummary = commitSummaryOf(health, (id) => ctx.leagues.stateCause(id));
   const counts = snapshot.counts;
   const backfilled = snapshot.games.filter((g) => g.provenance.scores === 'sblive').length;
   const ok = sources.filter((s) => s.status === 'ok').length;
@@ -166,7 +171,7 @@ export function stepAssemble(
     for (const reason of h.reasons) ctx.log(`  ${h.leagueId} ${h.state}: ${reason}`);
   }
 
-  const meta: Record<string, unknown> = {
+  const meta: SnapshotMeta = {
     fetchedAt: ctx.fetchedAt,
     // The content identity with every fetchedAt stripped: the cron commits only when THIS changes.
     contentHash: snapshotContentHash(snapshot),

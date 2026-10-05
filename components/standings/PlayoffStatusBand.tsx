@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
+import PlaceMark from '../ui/PlaceMark';
+import StatusChip from '../ui/StatusChip';
 
 import type { StatusGroup } from './standings-view';
 
@@ -9,6 +10,9 @@ import type { StatusGroup } from './standings-view';
  * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
  * the CCS picture; for MCAL it is the MCAL tournament line, and for the EAL its Super Regional
  * (linking the EAL card on /playoffs, since no bracket is published), with no CCS concept at all.
+ * So `heading`, `href` and `linkText` are required and have no defaults: the caller passes
+ * standings-view's links (`statusHeading`, `playoffsHref`, `playoffsLinkText`) for every league,
+ * and the band holds no league's copy of its own.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
@@ -41,10 +45,10 @@ import type { StatusGroup } from './standings-view';
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
-  heading?: string;
+  heading: string;
   /** `/playoffs#<league>` (a CCS league, or an unbracketed tournament's card) or `/playoffs/<league>`. */
-  href?: string;
-  linkText?: string;
+  href: string;
+  linkText: string;
   groups: StatusGroup[];
   caveat: string | null;
   /** Teams with `hasReportedResults === false`. */
@@ -54,9 +58,9 @@ export interface PlayoffStatusBandProps {
 
 export function PlayoffStatusBand({
   divisionLabel,
-  heading = 'CCS qualifying, as things stand',
-  href = '/playoffs',
-  linkText = 'Playoff picture',
+  heading,
+  href,
+  linkText,
   groups,
   caveat,
   unrankedTeams,
@@ -88,15 +92,8 @@ export function PlayoffStatusBand({
             className="grid gap-3 py-3 md:grid-cols-[minmax(0,16rem)_1fr] md:gap-6 lg:grid-cols-1 lg:gap-2"
           >
             <dt className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              {/* The sentence-case chip /playoffs uses (PlayoffProjection's StatusBadge): Tag's
-                  tones, accent-ink on the wash only for the automatic qualifiers. */}
-              <span
-                className={`inline-block rounded-tag px-2 py-0.5 leading-5 text-micro font-semibold ${
-                  group.status === 'aq' ? 'bg-accent-wash text-accent-ink' : 'bg-surface-3 text-ink-2'
-                }`}
-              >
-                {group.statusText}
-              </span>
+              {/* The sentence-case chip /playoffs uses: accent only for the automatic qualifiers. */}
+              <StatusChip tone={group.status === 'aq' ? 'accent' : 'neutral'}>{group.statusText}</StatusChip>
               <span className="text-meta text-ink-2">{group.label}</span>
             </dt>
             <dd className="m-0 flex flex-wrap content-start gap-2">
@@ -115,14 +112,7 @@ export function PlayoffStatusBand({
                   {/* The same `T` marker the table uses for a level place ("T7" there, "T-7th"
                       here), so the two never disagree about whether a place is settled. */}
                   <span className="sx-num whitespace-nowrap text-micro text-ink-3">
-                    {team.shared ? (
-                      <>
-                        <span aria-hidden="true">T-{ordinal(team.place)}</span>
-                        <span className="sr-only">tied for {ordinal(team.place)}</span>
-                      </>
-                    ) : (
-                      ordinal(team.place)
-                    )}
+                    <PlaceMark place={team.place} shared={team.shared} form="pill" />
                   </span>
                 </Link>
               ))}

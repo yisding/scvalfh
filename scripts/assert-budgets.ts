@@ -33,11 +33,13 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 import { LEAGUE_IDS } from '../lib/leagues';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES } from '../lib/pipeline/steps/assemble';
 
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';
 const WORKER_BUNDLE = '.cloudflare/output/v0/workers/default/bundle';
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT ?? 'data/snapshot.json';
+// An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
+const SNAPSHOT = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
 const KB = 1024;
 
 interface Weights { html: number; htmlGzip: number; rsc: number; rscGzip: number; firstLoadJs: number }
@@ -70,8 +72,8 @@ function file(name: string): Buffer {
 if (!workerOnly) {
   // ------------------------------------------------------------ the snapshot
   const snapshotBytes = statSync(SNAPSHOT).size;
-  check('data/snapshot.json raw', snapshotBytes, 1_600_000, '1.6 MB');
-  if (snapshotBytes > 1_200_000) console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> 1.2 MB warning line)`);
+  check('data/snapshot.json raw', snapshotBytes, SNAPSHOT_MAX_BYTES, '1.6 MB');
+  if (snapshotBytes > SNAPSHOT_WARN_BYTES) console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> 1.2 MB warning line)`);
 
   // ------------------------------------------------------------ documents
   // 2.2 × since 2026-10-03 (it was 2.0 ×). The four-league home page reached 51.2 KB HTML gzip

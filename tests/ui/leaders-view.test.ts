@@ -33,7 +33,7 @@ import { statText } from '../../components/teams/player-stats-view';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { recordString } from '../../lib/format';
 import { getPlayerStats } from '../../lib/player-stats';
-import { getPriorSeason } from '../../lib/prior-season-data';
+import { getPriorSeason } from '../../lib/prior-season';
 import { getRatings } from '../../lib/ratings';
 import {
   FIELD_STAT_KEYS,

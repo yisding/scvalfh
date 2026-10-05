@@ -18,7 +18,9 @@
  *   3. agree with every class year a source states: with the row's grade when it has one, else
  *      with each other, and be a class a high school roster of the season can hold (a player with
  *      no grade anywhere still gets one class year, or none)
- * and the file's `season` must be rosters.json's.
+ * and the file's `season` must be rosters.json's. Steps 1-3 for a row with a grade are
+ * lib/roster-join.ts, shared with lib/clubs.ts; only the no-grade half of step 3 is this module's,
+ * because /commits groups players by class year (commitClassOf) and a club page shows none.
  *
  * A roster refetch can break this, as it can data/clubs.json. If `pnpm fetch-rosters` drops a
  * committed player's row or respells the name, or a season rollover changes `season`, this module
@@ -37,7 +39,9 @@ import {
   type Commitment,
   type CommitsFile,
 } from './commits-schema';
+import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { failValidation } from './schema-primitives';
 import { getTeamBySlug } from './teams';
 import type { TeamSlug } from './types';
 
@@ -66,64 +70,47 @@ export function loadCommits(
   teams: readonly MergedTeamRoster[] = getAllEnrichedRosters(),
   season: string = getRosters().season,
 ): CommitsFile {
+  return loadAndJoin(raw, teams, season).file;
+}
+
+/** loadCommits, plus the merged row each committed player joined to, by `playerKey`. */
+function loadAndJoin(
+  raw: unknown,
+  teams: readonly MergedTeamRoster[],
+  season: string,
+): { file: CommitsFile; rows: Map<string, MergedPlayer> } {
   const parsed = CommitsFileSchema.safeParse(raw);
-  if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-    throw new Error(`commits failed validation:\n${lines.join('\n')}`);
-  }
+  if (!parsed.success) failValidation('commits', parsed.error.issues);
   const file = parsed.data;
   if (file.season !== season) {
     throw new Error(`commits.json is for season ${file.season}, rosters for ${season}`);
   }
-  const fail = (team: string, who: string, college: string, what: string): never => {
-    throw new Error(`commits: ${team} / ${who} (${college}): ${what}`);
-  };
-  const bySlug = new Map(teams.map((t) => [t.slug, t]));
+  const rows = joinToRoster(file.commitments, teams, season, {
+    label: 'commits',
+    noun: 'commitments',
+    subject: (c) => c.college,
+  });
+  // Step 3 for a row with no grade (lib/roster-join.ts checked the rest): the sources must settle
+  // on one class year a high school roster of the season can hold, which commitClassOf shows.
   for (const c of file.commitments) {
-    const team = bySlug.get(c.teamSlug);
-    if (!team) fail(c.teamSlug, c.fullName, c.college, 'no such team in rosters.json');
-    const row = team!.players.find((p) => p.athleteId === c.athleteId);
-    if (!row) fail(c.teamSlug, c.fullName, c.college, `athleteId ${c.athleteId} is not a MaxPreps row of this team`);
-    if (c.fullName !== row!.fullName) fail(c.teamSlug, c.fullName, c.college, `MaxPreps spells this player "${row!.fullName}"`);
-    if (row!.level === 'jv') fail(c.teamSlug, c.fullName, c.college, 'a JV row: commitments list varsity rows only');
-    const grade = row!.grade;
+    if (rows.get(playerKey(c.teamSlug, c.athleteId))!.grade !== null) continue;
+    const fail = (what: string): never => {
+      throw new Error(`commits: ${c.teamSlug} / ${c.fullName} (${c.college}): ${what}`);
+    };
     const stated = [...new Set(c.sources.flatMap((s) => (s.statedClassYear === null ? [] : [s.statedClassYear])))];
-    if (grade !== null) {
-      for (const s of c.sources) {
-        if (s.statedClassYear !== null && s.statedClassYear !== classOf(season, grade)) {
-          fail(c.teamSlug, c.fullName, c.college, `${s.kind} source says class of ${s.statedClassYear}, the roster shows grade ${grade}`);
-        }
-      }
-    } else if (stated.length > 1) {
-      fail(c.teamSlug, c.fullName, c.college, `sources disagree on the class year (${stated.join(', ')}) and the roster has no grade`);
+    if (stated.length > 1) {
+      fail(`sources disagree on the class year (${stated.join(', ')}) and the roster has no grade`);
     } else if (stated.length === 1 && (stated[0] < classOf(season, 12) || stated[0] > classOf(season, 9))) {
       // A roster row is a 9th- to 12th-grader: any other class year is a graduate, or someone else.
-      fail(c.teamSlug, c.fullName, c.college, `a source says class of ${stated[0]}, not a class on a ${season} high school roster`);
+      fail(`a source says class of ${stated[0]}, not a class on a ${season} high school roster`);
     }
   }
-  return file;
+  return { file, rows };
 }
 
-const playerKey = (teamSlug: string, athleteId: string) => `${teamSlug} ${athleteId}`;
-
-const TEAMS_MERGED = getAllEnrichedRosters();
 const SEASON = getRosters().season;
-const file = loadCommits(bundled, TEAMS_MERGED, SEASON);
-
-/** The merged roster row each committed player joined to at load time, by `playerKey`. */
-const ROW_BY_PLAYER = new Map<string, MergedPlayer>();
-{
-  const wanted = new Set(file.commitments.map((c) => playerKey(c.teamSlug, c.athleteId)));
-  for (const team of TEAMS_MERGED) {
-    for (const p of team.players) {
-      if (p.athleteId !== null && wanted.has(playerKey(team.slug, p.athleteId))) {
-        ROW_BY_PLAYER.set(playerKey(team.slug, p.athleteId), p);
-      }
-    }
-  }
-}
+/** The file, and the merged roster row each committed player joined to at load time, by `playerKey`. */
+const { file, rows: ROW_BY_PLAYER } = loadAndJoin(bundled, getAllEnrichedRosters(), SEASON);
 
 /**
  * The merged roster row a commitment joined to at load time: the name, grade and level the team

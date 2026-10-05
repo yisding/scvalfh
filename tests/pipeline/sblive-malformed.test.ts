@@ -12,7 +12,8 @@ import { describe, expect, it } from 'vitest';
 
 import { stepOfficial } from '../../lib/pipeline/steps/official';
 import { stepSblive } from '../../lib/pipeline/steps/sblive';
-import { parseSnapshot, stableStringify } from '../../lib/snapshot-schema';
+import { parseSnapshot } from '../../lib/snapshot-schema';
+import { stableStringify } from '../../lib/stable-json';
 import { corpusDir } from '../helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';
 

@@ -5,6 +5,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
+import { MissingValue } from '../ui/MissingValue';
 import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**
@@ -17,7 +18,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * the facts that exist — a blank is never printed as a guess or a placeholder.
  *
  * The rows sit in one card with divider rules, in a row-major grid like the all-league lists on
- * /history (components/about/AwardsBlock.tsx): one column on a phone, two from 640px, three from
+ * /history (components/history/AwardsBlock.tsx): one column on a phone, two from 640px, three from
  * 1024px, where the section spans both page columns. A grid row's cells share one height, so the
  * rules run straight across. Reading order is DOM order: left to right, then down.
  *
@@ -219,7 +220,11 @@ function OtherRostersText({ view }: { view: RosterView }) {
   return <>We have not checked other public sources for this team.</>;
 }
 
-export function TeamRoster({ view }: { view: RosterView }) {
+export interface TeamRosterProps {
+  view: RosterView;
+}
+
+export function TeamRoster({ view }: TeamRosterProps) {
   const { rows, showNumbers, teamName } = view;
 
   if (view.status === 'error' || view.status === 'pending' || rows.length === 0) {
@@ -278,10 +283,7 @@ export function TeamRoster({ view }: { view: RosterView }) {
                     {row.jersey.elsewhere ? <ElsewhereMark /> : null}
                   </>
                 ) : (
-                  <>
-                    <span aria-hidden="true">&mdash;</span>
-                    <span className="sr-only">No number listed</span>
-                  </>
+                  <MissingValue words="No number listed" />
                 )}
               </span>
             ) : null}

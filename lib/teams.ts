@@ -16,7 +16,8 @@ import { MCAL_SEEDS } from './registry/mcal';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
-import type { DivisionId, LeagueId, Team, TeamId } from './types';
+import { SLUG_PATTERN } from './schema-primitives';
+import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
 const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
@@ -107,6 +108,22 @@ export function normalizeTeamKey(input: string): string {
   return flat.endsWith('highschool') ? flat.slice(0, -'highschool'.length) : flat;
 }
 
+/**
+ * One side of a game as the cross-source join key (SPEC §5.7): its registry slug, else `name:` and
+ * the name lower-cased with everything but a-z and 0-9 removed. Every source joined to MaxPreps
+ * (si.com in lib/crosscheck.ts and lib/sources/sblive.ts, the official schedules in
+ * lib/official/match.ts, the school calendars in lib/sources/vnn-ics.ts) keys a side with this, so
+ * the two halves of a join agree exactly.
+ */
+export function sideJoinKey(side: { slug: string | null; name: string }): string {
+  return side.slug ?? `name:${side.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}`;
+}
+
+/** Two side keys as one order-independent pair key, `a~b` sorted: the pair half of the cross-source join key (SPEC §5.7). */
+export function unorderedPairKey(a: string, b: string): string {
+  return [a, b].sort().join('~');
+}
+
 const BY_ID = new Map<string, Team>(TEAMS.map((t) => [t.id, t]));
 const BY_SLUG = new Map<string, Team>(TEAMS.map((t) => [t.slug, t]));
 
@@ -156,6 +173,11 @@ export function getTeamById(id: TeamId): Team | undefined {
 
 export function getTeamBySlug(slug: string): Team | undefined {
   return BY_SLUG.get(slug);
+}
+
+/** The registry team on one side of a game: by MaxPreps GUID first, then by slug. */
+export function teamOfSide(side: Pick<GameSide, 'teamId' | 'slug'>): Team | undefined {
+  return (side.teamId ? BY_ID.get(side.teamId) : undefined) ?? (side.slug ? BY_SLUG.get(side.slug) : undefined);
 }
 
 /**
@@ -228,7 +250,6 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
 
 // ---------- build-time asserts ----------
 
-const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const EXPECTED_ACRONYM_COLLISIONS = ['BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'PHS', 'SCHS', 'SHS'];
 
 function assertRegistry(): void {
@@ -247,7 +268,7 @@ function assertRegistry(): void {
     if (dupes.length) fail(`duplicate ${label}: ${[...new Set(dupes)].join(', ')}`);
   }
   for (const t of TEAMS) {
-    if (!SLUG_RE.test(t.slug)) fail(`bad slug "${t.slug}"`);
+    if (!SLUG_PATTERN.test(t.slug)) fail(`bad slug "${t.slug}"`);
     if (!/^[A-Z]{2}$/.test(t.abbr)) fail(`${t.slug}: abbr "${t.abbr}" is not 2 capital letters`);
     if (t.shortName.length > 14) fail(`${t.slug}: shortName longer than 14 characters`);
   }

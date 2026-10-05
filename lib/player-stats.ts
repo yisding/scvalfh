@@ -20,6 +20,7 @@ import {
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from './player-stats-schema';
+import { failValidation } from './schema-primitives';
 import type { TeamSlug } from './types';
 
 export type {
@@ -45,12 +46,7 @@ function load(): PlayerStatsFile {
     }
   }
   const parsed = PlayerStatsFileSchema.safeParse(raw);
-  if (!parsed.success) {
-    const lines = parsed.error.issues
-      .slice(0, 10)
-      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`);
-    throw new Error(`player-stats failed validation:\n${lines.join('\n')}`);
-  }
+  if (!parsed.success) failValidation('player-stats', parsed.error.issues);
   return parsed.data;
 }
 

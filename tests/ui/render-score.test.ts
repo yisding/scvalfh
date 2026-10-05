@@ -1,6 +1,6 @@
 /**
  * The eleven game-state rows of DESIGN §5.2, over the pure helper the UI actually uses
- * (components/ui/game-view.ts → `describeGame`, which wraps lib/format's `renderScore`).
+ * (components/ui/describe-game.ts → `describeGame`, which wraps lib/format's `renderScore`).
  *
  * The contract being pinned: a missing score is NEVER rendered as 0-0, a genuine 0 is
  * indistinguishable from nothing only to a careless reader (here it is full ink, `hasScore: true`),
@@ -14,7 +14,15 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { describeCancelled, describeGame, overtimeInDoubt, signedMargin } from '../../components/ui/game-view';
+import {
+  describeCancelled,
+  describeGame,
+  gameKind,
+  gameKindLabel,
+  otherLeagueSuffix,
+  overtimeInDoubt,
+  signedMargin,
+} from '../../components/ui/describe-game';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
 import { findDivision, findLeague } from '../../lib/leagues';
@@ -154,9 +162,9 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
   it('renders W for the flagged side, keeps the level goals and tags SO', () => {
     const d = describeGame(eal('W'));
     expect([d.home.glyph, d.away.glyph]).toEqual(['1', '1']);
-    expect([d.home.chip, d.away.chip], 'components/ui/game-view.ts chips').toEqual(['W', 'L']);
+    expect([d.home.chip, d.away.chip], 'components/ui/describe-game.ts chips').toEqual(['W', 'L']);
     expect([d.home.weight, d.away.weight]).toEqual(['winner', 'loser']);
-    expect(d.deciderTag, 'components/ui/game-view.ts deciderTagFor').toBe('SO');
+    expect(d.deciderTag, 'components/ui/describe-game.ts deciderTagFor').toBe('SO');
     expect(d.shootoutText).toBeNull();
     expect(d.sentence).toBe('Chico 1, Davis 1, final; Chico won on 1 v 1s.');
     expect(describeGame(eal('W'), 'davis').perspectiveOutcome).toBe('L');
@@ -184,7 +192,7 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
     const d = describeGame(
       final(2, 1, { countsFor: null, postseason: { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' } }),
     );
-    expect(d.postseasonTag, 'components/ui/game-view.ts postseasonTagOf').toBe('EAL Super Regional');
+    expect(d.postseasonTag, 'components/ui/describe-game.ts postseasonTagOf').toBe('EAL Super Regional');
     expect(d.isNonLeague).toBe(false);
   });
 });
@@ -206,7 +214,7 @@ describe('§5.2 row 4c — an overtime count the league’s rules cannot produce
 
   it('drops the tag and the overtime words in a shootout league', () => {
     const g = threeOt('eal');
-    expect(overtimeInDoubt(g), 'components/ui/game-view.ts overtimeInDoubt').toBe(true);
+    expect(overtimeInDoubt(g), 'components/ui/describe-game.ts overtimeInDoubt').toBe(true);
     const d = describeGame(g);
     expect(d.deciderTag).toBeNull();
     expect(d.sentence).toBe('Chico 0, Pleasant Valley 1, final.');
@@ -329,7 +337,7 @@ describe('§5.2 row 11 — non-league', () => {
 describe('chips — league, postseason and source (SPEC §10.4)', () => {
   it('gives a counted game its league chip and no NL', () => {
     const d = describeGame(final(2, 1));
-    expect(d.leagueTag, 'components/ui/game-view.ts leagueTag').toBe('SCVAL');
+    expect(d.leagueTag, 'components/ui/describe-game.ts leagueTag').toBe('SCVAL');
     expect(d.isNonLeague).toBe(false);
     expect(describeGame(final(2, 1, { countsFor: 'mt-hamilton' })).leagueTag).toBe('BVAL');
     expect(describeGame(final(2, 1, { countsFor: 'pcal' })).leagueTag).toBe('PCAL');
@@ -351,6 +359,8 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(tag('ccs', null).postseasonTag).toBe('CCS');
     expect(tag('ccs', null).isNonLeague).toBe(false);
     expect(tag('other', null).postseasonTag).toBeNull();
+    // A league kind always carries its league (lib/classify.ts); the chip never derives one from the kind string.
+    expect(tag('scval-crossover', null).postseasonTag).toBeNull();
   });
   it('marks a score published from si.com, and only that', () => {
     const sb = final(3, 1, {
@@ -436,14 +446,14 @@ describe('every league’s games in the bundled snapshot (invariants)', () => {
         offenders.push(`${g.contestId} ${g.status} ${glyphs.join('-')}`);
       }
     }
-    expect(offenders, 'components/ui/game-view.ts describeGame').toEqual([]);
+    expect(offenders, 'components/ui/describe-game.ts describeGame').toEqual([]);
   });
   it('tags every counted game with its own league and every si.com score with the source mark', () => {
     for (const g of games) {
       const d = describeGame(g);
       const league = g.countsFor ? findLeague(findDivision(g.countsFor)?.leagueId ?? '') : undefined;
-      expect(d.leagueTag, `components/ui/game-view.ts leagueTag ${g.contestId}`).toBe(league?.shortName ?? null);
-      expect(d.sourceMark, `components/ui/game-view.ts sourceMark ${g.contestId}`).toBe(
+      expect(d.leagueTag, `components/ui/describe-game.ts leagueTag ${g.contestId}`).toBe(league?.shortName ?? null);
+      expect(d.sourceMark, `components/ui/describe-game.ts sourceMark ${g.contestId}`).toBe(
         g.provenance.scores === 'sblive' ? 'si.com' : null,
       );
     }
@@ -477,5 +487,37 @@ describe('margin glyphs', () => {
     expect(signedMargin(3)).toBe('+3');
     expect(signedMargin(0)).toBe('0');
     expect(signedMargin(-7)).toBe('−7');
+  });
+});
+
+describe('game kind (SPEC §10.4, the team page’s Last and Next headers)', () => {
+  it('says League for a counted game, Postseason for a tagged one, Non-league otherwise', () => {
+    const ccs: Game['postseason'] = { kind: 'ccs', leagueId: null, via: 'ccs-window' };
+    expect(gameKindLabel({ countsFor: 'de-anza', postseason: null })).toBe('League');
+    expect(gameKindLabel({ countsFor: null, postseason: ccs })).toBe('Postseason');
+    expect(gameKindLabel({ countsFor: null, postseason: null })).toBe('Non-league');
+  });
+
+  it('splits every game three ways, and a counted game is league even when it is also tagged', () => {
+    const ccs: Game['postseason'] = { kind: 'ccs', leagueId: null, via: 'ccs-window' };
+    expect(gameKind({ countsFor: 'de-anza', postseason: null })).toBe('league');
+    expect(gameKind({ countsFor: 'de-anza', postseason: ccs })).toBe('league');
+    expect(gameKind({ countsFor: null, postseason: ccs })).toBe('postseason');
+    expect(gameKind({ countsFor: null, postseason: null })).toBe('non-league');
+  });
+
+  it('marks a row non-league exactly when gameKind says non-league', () => {
+    for (const game of getGames()) {
+      expect(describeGame(game).isNonLeague).toBe(gameKind(game) === 'non-league');
+    }
+  });
+});
+
+describe('other-league suffix (GameRow and LatestScores)', () => {
+  it('names the league of a side from outside the list’s league, and nothing otherwise', () => {
+    expect(otherLeagueSuffix('davis', 'scval')).toBe(' · EAL');
+    expect(otherLeagueSuffix('tamalpais', 'mcal')).toBe('');
+    expect(otherLeagueSuffix('tamalpais', null)).toBe('');
+    expect(otherLeagueSuffix(null, 'scval')).toBe('');
   });
 });

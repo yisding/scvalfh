@@ -4,7 +4,6 @@
  * value came from.
  */
 
-import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -26,7 +25,7 @@ import {
   getTeamRoster,
 } from '../lib/rosters';
 import { TEAMS, teamsInLeague } from '../lib/teams';
-import { REPO } from './helpers';
+import { REPO, runScript } from './helpers';
 
 /**
  * The numbers pinned below are what the 2026-10-02 research found for SCVAL, the one league
@@ -64,16 +63,8 @@ function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
     env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
     writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
   }
-  try {
-    execFileSync(
-      path.join(REPO, 'node_modules', '.bin', 'tsx'),
-      ['-e', "import('./lib/rosters.ts').then(() => console.log('LOADED'))"],
-      { cwd: REPO, stdio: 'pipe', env },
-    );
-    return '';
-  } catch (err) {
-    return String((err as { stderr?: Buffer }).stderr ?? '');
-  }
+  const run = runScript('lib/rosters.ts', [], { env });
+  return run.status === 0 ? '' : run.stderr;
 }
 
 /** A team's enrichment record for a MaxPreps row, created empty if the file has none yet. */

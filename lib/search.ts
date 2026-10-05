@@ -1,11 +1,13 @@
 /**
  * Team search (SPEC §9.1-§9.2): a pure, zero-network matcher over a pre-serialized 49-team index.
  *
- * Client-safe: ZERO runtime imports (types only). Result order is the index order (`LEAGUES` order, then
- * registry order, as `getTeamSearchIndex()` builds it) within a score. A league or division label NEVER
+ * Client-safe: its one runtime import is lib/format's `plural`, itself client-safe. Result order is
+ * the index order (`LEAGUES` order, then registry order, as `getTeamSearchIndex()` builds it) within
+ * a score. A league or division label NEVER
  * matches a team: those are separate group entries ("Divisions and leagues").
  */
 
+import { plural } from './format';
 import type { SectionConfig } from './leagues';
 import type { TeamColors } from './types';
 
@@ -73,8 +75,6 @@ function unique(xs: Iterable<string>): string[] {
   return [...new Set(xs)].filter(Boolean);
 }
 
-const plural = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
-
 export function buildSearchIndex(
   teams: readonly SearchInputTeam[],
   leagues: ReadonlyArray<{ id: string; shortName: string; name: string; sectionShort: SectionConfig['shortName'];
@@ -120,7 +120,7 @@ export function buildSearchIndex(
       kind: 'league',
       id: league.id,
       label: league.shortName,
-      detail: `${league.name} · ${league.sectionShort} · ${plural(teamCount, 'team', 'teams')}`,
+      detail: `${league.name} · ${league.sectionShort} · ${plural(teamCount, 'team')}`,
       href: `/standings/${league.id}`,
       keys: unique(leagueKeys.map((k) => tokensOf(k).join(' '))),
     });
@@ -131,7 +131,7 @@ export function buildSearchIndex(
         kind: 'division',
         id: d.id,
         label,
-        detail: `${league.shortName} division · ${plural(d.teamCount, 'team', 'teams')}`,
+        detail: `${league.shortName} division · ${plural(d.teamCount, 'team')}`,
         href: `/standings/${league.id}#${d.id}`,
         keys: unique([label, ...d.searchAliases].map((k) => tokensOf(k).join(' '))),
       });

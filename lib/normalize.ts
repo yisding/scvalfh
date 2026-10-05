@@ -21,6 +21,7 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
+import { byDateThenId } from './format';
 import { getLeague, type DataQualityConfig } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
@@ -287,11 +288,7 @@ export function normalizeGames(
   }
 
   // Stable order: by local date, then by contestId so the JSON diff is small.
-  games.sort((a, b) =>
-    a.dateLocal === b.dateLocal
-      ? a.contestId.localeCompare(b.contestId)
-      : a.dateLocal.localeCompare(b.dateLocal),
-  );
+  games.sort(byDateThenId);
 
   // A TBA row whose contest another feed published with both sides named is not a dropped contest.
   const published = new Set(games.map((g) => g.contestId));

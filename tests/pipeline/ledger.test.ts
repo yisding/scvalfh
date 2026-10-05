@@ -6,7 +6,6 @@
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../../lib/leagues';
-import type { RunArgs } from '../../lib/pipeline/contract';
 import {
   DroppedLedger,
   LeagueLedger,
@@ -15,21 +14,16 @@ import {
   SourceLedger,
   asOfStamp,
   hasPreviousData,
+  lastFreshStamp,
 } from '../../lib/pipeline/ledger';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot, SourceStatus } from '../../lib/types';
+import { testRunArgs } from './support/run-args';
 
 const AT = '2026-10-02T15:00:00.000Z';
 
 function row(kind: SourceStatus['kind'], scope: SourceStatus['scope'], label: string, url = 'https://example.com/'): SourceStatus {
   return { id: 'maxpreps-api', kind, ...(scope ? { scope } : {}), label, url, status: 'ok', fetchedAt: AT };
-}
-
-function args(over: Partial<RunArgs> = {}): RunArgs {
-  return {
-    fixtures: null, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: AT, force: false,
-    leagues: null, acceptRegression: [], sblive: true, sbliveFull: false, official: true, ccs: true, vnn: true, ...over,
-  };
 }
 
 /** A deterministic shuffle (so the test never depends on Math.random). */
@@ -110,6 +104,21 @@ describe('LeagueLedger', () => {
     expect(l.state('pcal')).toBe('degraded');
     expect(() => l.degrade('nope', 'partial', 'z')).toThrow(/unknown league/);
   });
+
+  it('names the cause that set the state, not the first one recorded', () => {
+    const l = new LeagueLedger();
+    l.degrade('bval', 'partial', 'one', 'team feed carried');
+    expect(l.stateCause('bval')).toBe('team feed carried');
+    l.degrade('bval', 'frozen', 'two', 'finals regression');
+    l.degrade('bval', 'degraded', 'three', 'official file invalid');
+    expect(l.stateCause('bval')).toBe('finals regression');
+    expect(l.causes('bval')).toEqual(['team feed carried', 'finals regression', 'official file invalid']);
+    // A worse state with no cause of its own falls back to the first cause recorded.
+    l.degrade('pcal', 'partial', 'x', 'reported table carried');
+    l.degrade('pcal', 'degraded', 'y');
+    expect(l.stateCause('pcal')).toBe('reported table carried');
+    expect(l.stateCause('mcal')).toBeUndefined();
+  });
 });
 
 describe('DroppedLedger', () => {
@@ -127,7 +136,7 @@ describe('DroppedLedger', () => {
 describe('PipelineContext', () => {
   it('derives today from fetchedAt (Pacific), never the clock, and lists leagues in config order', () => {
     const ctx = new PipelineContext({
-      args: args({ fetchedAt: '2026-10-03T05:00:00.000Z', leagues: ['mcal', 'scval'] }),
+      args: testRunArgs({ fetchedAt: '2026-10-03T05:00:00.000Z', leagues: ['mcal', 'scval'] }),
       transport: { mode: 'fixture', get: async () => ({ url: '', httpStatus: 200, body: '' }) },
       previous: null,
       sink: SILENT_SINK,
@@ -137,8 +146,9 @@ describe('PipelineContext', () => {
     ctx.warn('something', { league: 'mcal', team: 'tamalpais' });
     ctx.log('plain');
     expect(ctx.logLines).toEqual(['WARN something [mcal/tamalpais]', 'plain']);
-    ctx.degrade('mcal', 'partial', 'why');
+    ctx.degrade('mcal', 'partial', 'why', 'because');
     expect(ctx.leagues.state('mcal')).toBe('partial');
+    expect(ctx.leagues.stateCause('mcal')).toBe('because');
   });
 
   it('formats the as-of stamp and knows when a league has previous data', () => {
@@ -153,5 +163,8 @@ describe('PipelineContext', () => {
     expect(hasPreviousData(previous, 'bval')).toBe(false);
     expect(hasPreviousData(previous, 'pcal')).toBe(false);
     expect(hasPreviousData(null, 'scval')).toBe(false);
+    expect(lastFreshStamp(previous, 'scval')).toBe('Thu Oct 1, 7:00 AM');
+    expect(lastFreshStamp(previous, 'bval')).toBeNull();
+    expect(lastFreshStamp(null, 'scval')).toBeNull();
   });
 });

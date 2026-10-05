@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '@/components/layout/PageHeader';
-import { listWords } from '@/lib/format';
-import { getAvailableHistoryLeagues } from '@/lib/history';
-import { LEAGUES, getLeague } from '@/lib/leagues';
+import PageHeader from '../components/layout/PageHeader';
+import { OG_BASE } from '../components/layout/site';
+import { listWords } from '../lib/format';
+import { getAvailableHistoryLeagues } from '../lib/history';
+import { LEAGUES, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
+  // Stated, not inherited: an inherited og:title is the templated one, with the site-name suffix
+  // that no og:title carries (components/layout/site.ts OG_BASE).
+  openGraph: { ...OG_BASE, title: 'Page not found' },
 };
 
 /** 'SCVAL, BVAL, PCAL, MCAL and EAL', from the config (never a literal list). */
-const LEAGUE_LIST = LEAGUES.map((l) => l.shortName).reduce(
-  (acc, name, i, all) => (i === 0 ? name : `${acc}${i === all.length - 1 ? ' and ' : ', '}${name}`),
-  '',
-);
+const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
