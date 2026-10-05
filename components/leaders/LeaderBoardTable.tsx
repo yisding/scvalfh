@@ -91,7 +91,14 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
       <>
         <span className="block text-body text-ink">{row.name}</span>
         <span className="block text-meta text-ink-3">
-          <Link href={team.href} prefetch={false} className="text-ink-2 no-underline hover:underline">
+          {/* The school is a link inside a run of text (school · league · grade · position), so it
+              is accent and underlined like the archive's and /commits' school links: the
+              globals.css rule that underlines a link in running text does not reach a `<th>`. */}
+          <Link
+            href={team.href}
+            prefetch={false}
+            className="text-accent underline decoration-from-font underline-offset-[0.2em]"
+          >
             <TeamName name={team.name} shortName={team.shortName} />
           </Link>
           {/* A no-break space BEFORE each dot and each part kept whole (the AwardsBlock rule), so
