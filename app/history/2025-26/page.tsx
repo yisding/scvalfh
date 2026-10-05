@@ -27,10 +27,10 @@ import type { LeagueId } from '../../../lib/types';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
- * per league (`#scval #bval #pcal #mcal`). A league whose own end-of-season documents we could
+ * per league (`#scval #bval #pcal #mcal #eal`). A league whose own end-of-season documents we could
  * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
  * record-only tables and the all-league awards; a league we found no official 2025-26 final
- * standings for (PCAL, MCAL) says so, with the reason, links any official document it did publish
+ * standings for (PCAL, MCAL, EAL) says so, with the reason, links any official document it did publish
  * (MCAL's all-league team), and shows no table in its place. Everything is
  * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
@@ -46,7 +46,7 @@ const HISTORY_LEAGUES = getHistoryLeagues();
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
-/** "PCAL and MCAL are", "MCAL is", or null when every league has its tables. */
+/** "PCAL, MCAL and EAL are", "MCAL is", or null when every league has its tables. */
 const UNAVAILABLE_SUBJECT = UNAVAILABLE.length
   ? `${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'}`
   : null;

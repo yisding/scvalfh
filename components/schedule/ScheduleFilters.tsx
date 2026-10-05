@@ -40,7 +40,7 @@ import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from '
  * always visible — a filtered list that looks like the whole season is the failure mode here.
  *
  * League-aware (SPEC §10.4): the divisions come in as props — no division `<select>` at all for a
- * single-division league (PCAL, MCAL), and one team `<optgroup>` per division only where there
+ * single-division league (PCAL, MCAL, EAL), and one team `<optgroup>` per division only where there
  * are several. This module is a CLIENT module, so it imports nothing that reaches the registry or
  * the league config (SPEC §0.4); the page hands it plain data.
  *

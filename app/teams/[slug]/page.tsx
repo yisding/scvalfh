@@ -203,9 +203,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     leagueScheduled,
   } = view;
   // Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;
-  // PCAL and MCAL are unavailable, so their slugs have no rows), and the size of that division as
-  // it was then (the alignment can change between seasons: Leland played in Santa Teresa in
-  // 2025-26 and is in Mt. Hamilton now).
+  // PCAL, MCAL and the EAL are unavailable, so their slugs have no rows), and the size of that
+  // division as it was then (the alignment can change between seasons: Leland played in Santa
+  // Teresa in 2025-26 and is in Mt. Hamilton now).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historySize = history ? getHistoryStandings(history.division).length : 0;
   const historyScope = history ? lastSeasonScope(history.division, team.league) : '';

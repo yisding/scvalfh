@@ -22,8 +22,9 @@
  *    rows sit at or above it) rather than assumed.
  *  - Postseason status is the league's ladder (`statusesOf(league)`); a team with no reported
  *    results gets NO projected place at all.
- *  - A division label is rendered only through `divisionHeading()`: PCAL and MCAL have none, and
- *    MaxPreps' own table names (config data only) are never a string here.
+ *  - A division label is rendered only through `divisionHeading()`: a single-division league
+ *    (PCAL, MCAL, EAL) has none, and MaxPreps' own table names (config data only) are never a
+ *    string here.
  */
 
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';

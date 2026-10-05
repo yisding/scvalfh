@@ -19,7 +19,7 @@ import { getStandingsOverviewData } from './standings-data';
  *
  * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
  * `#el-camino` are real elements here, as are `#ccs`/`#ncs`/`#ns` (sections), every league id and every
- * division id. A single-division league whose division id equals its league id (PCAL) has ONE
+ * division id. A single-division league whose division id equals its league id (PCAL, EAL) has ONE
  * element carrying the id; every id on the page is unique.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each

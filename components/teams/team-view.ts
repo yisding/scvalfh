@@ -138,7 +138,7 @@ export interface TeamLeagueCopy {
    * 'Super Regional' for an unbracketed league); null for a CCS ladder, whose event is CCS's.
    */
   postseasonName: string | null;
-  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL): the noun for a game in this team's table. */
+  /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL): the noun for a game in this team's table. */
   gamesWord: 'division' | 'league';
   /** 'Article VI §1 (double round robin; …)' */
   doubleRoundRobin: string;
@@ -161,7 +161,7 @@ export interface TeamPageView {
   standing: Standing | undefined;
   league: TeamLeagueCopy;
   division: DivisionId;
-  /** null for a single-division league (PCAL, MCAL): never rendered as a division label. */
+  /** null for a single-division league (PCAL, MCAL, EAL): never rendered as a division label. */
   divisionHeading: string | null;
   /** `divisionHeading ?? league short`: what "of N in …" names. */
   scopeLabel: string;
@@ -427,7 +427,8 @@ function dateLabelFor(dateKey: string, dateLocal: string, today: string): string
  * The scope is league-aware: an opponent from the page's own league is placed in its division
  * heading (or the league's short name for a one-table league: '2nd in MCAL'); one from another
  * league names that league too ('4th in SCVAL El Camino'), so a cross-league opponent's place is
- * never read as a place in this team's table. PCAL and MCAL never get a division label.
+ * never read as a place in this team's table. A single-division league (PCAL, MCAL, EAL) never
+ * gets a division label.
  */
 export function opponentRecordLine(opponent: Team | undefined, leagueId: LeagueId): string | null {
   if (!opponent) return null;

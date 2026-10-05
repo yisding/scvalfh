@@ -13,8 +13,8 @@ import { formatStamp, shortDate } from '../../../lib/format';
  * request (DESIGN §12.4). A shared place prints as `T3`, the US sports-page mark the tables use:
  * the league's last step is the league's to run, and a card that silently picked a winner would be
  * the one place on the site that lies.
- * Division labels come only from `divisionHeading()` (via the league summary): PCAL and MCAL get
- * none.
+ * Division labels come only from `divisionHeading()` (via the league summary): a single-division
+ * league (PCAL, MCAL, EAL) gets none.
  */
 const CARD_SIZE = { width: 1200, height: 630 };
 
