@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og';
 import { OG, OG_SIZE } from '../layout/og-theme';
 import { SITE_WORDMARK } from '../layout/site';
 import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../lib/data';
-import { formatStamp, recordString, shortDate } from '../../lib/format';
+import { formatStamp, placeMark, recordString, shortDate } from '../../lib/format';
 
 /**
  * The alt both routes that render this card export (`export const alt = LEAGUE_STANDINGS_CARD_ALT`):
@@ -38,7 +38,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
       .slice(0, single ? 6 : 4)
       .map((s) => ({
         id: s.teamId,
-        place: `${s.tiebreak.shared ? 'T' : ''}${s.computed.place}`,
+        place: placeMark(s.computed.place, s.tiebreak.shared, 'table'),
         name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
         pts: s.computed.pts,
         record: recordString(s.computed),
