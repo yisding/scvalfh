@@ -693,7 +693,7 @@ current season). Run `pnpm build-history` once, by hand, after they are publishe
 from the Google Sheet and the two all-league documents linked from `https://bval.org/standings/`
 and `https://bval.org/all-league/` (`pnpm build-history --from tests/fixtures/scval --bval-from
 tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offline; `--retrieved-on`
-is required with `--bval-from`). The script validates the result against `lib/history.ts`' schema
+is required with `--bval-from`). The script validates the result against the schema in `lib/history-schema.ts`
 and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
 league (`available`, or `unavailable` with the reason: PCAL, MCAL and EAL for 2025-26), and is committed

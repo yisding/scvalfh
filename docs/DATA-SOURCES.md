@@ -1243,7 +1243,7 @@ redirects.
     6-4 Pleasant Valley above 7-5 Bella Vista, i.e. by win percentage) but is not a league document, and the
     site does not show standings from newspapers or third-party sites. No `alsoPublished`.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
-    extend `scripts/build-history.ts`, and the schema (`lib/history.ts`) already validates it against
+    extend `scripts/build-history.ts`, and the schema (`lib/history-schema.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
