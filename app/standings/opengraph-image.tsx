@@ -1,10 +1,11 @@
 import { ImageResponse } from 'next/og';
 
 import { SITE_NAME } from '../../components/layout/site';
+import { leaderClause } from '../../components/standings/standings-view';
 import { getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
 
-import { getStandingsOverviewData, leaderClause } from './standings-data';
+import { getStandingsOverviewData } from './standings-data';
 
 /**
  * The /standings OG card (SPEC §8.4): "Standings — every league", then one row per league —

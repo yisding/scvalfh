@@ -186,7 +186,7 @@ function unreportedDay(league: LeagueId, today: string, latest: string | null): 
   return null;
 }
 
-// ---------------------------------------------------------------- leaders (strip, OG card)
+// ---------------------------------------------------------------- leaders (other-leagues strip)
 
 export interface DivisionLeaders {
   /** Short names of every team in 1st place (level places included), registry/table order. */
@@ -202,26 +202,6 @@ function divisionLeaders(division: DivisionId): DivisionLeaders | null {
     names: top.map((s) => getTeamById(s.teamId)?.shortName ?? s.slug),
     pts: top[0].computed.pts,
   };
-}
-
-/** 'St Ignatius', 'A & B', 'A & B +1'. */
-export function leaderNames(names: readonly string[]): string {
-  if (names.length <= 2) return names.join(' & ');
-  return `${names.slice(0, 2).join(' & ')} +${names.length - 2}`;
-}
-
-/** The root OG card's row text after a league's short name (SPEC §8.4). */
-export function leagueRowText(divisions: ReadonlyArray<{ id: string; heading: string | null }>): string {
-  const clauses = divisions.map((d) => {
-    const leaders = divisionLeaders(d.id);
-    if (!leaders) return null;
-    const who = `${leaderNames(leaders.names)} ${leaders.pts} pts`;
-    return d.heading ? `${d.heading}: ${who}` : who;
-  });
-  if (clauses.every((c) => c === null)) return 'No league results yet';
-  return clauses
-    .map((c, i) => c ?? `${divisions[i].heading ?? ''}: no results yet`)
-    .join(' · ');
 }
 
 // ---------------------------------------------------------------- phase lead

@@ -417,17 +417,3 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-data.ts team 
     }
   });
 });
-
-describe('root OG card rows (home-data.ts leagueRowText, app/opengraph-image.tsx)', () => {
-  it('names each division leader with points, co-leaders capped at two', () => {
-    const row = (id: string) =>
-      home.leagueRowText(
-        leagues.getLeague(id).divisions.map((d) => ({ id: d.id, heading: leagues.divisionHeading(d.id) })),
-      );
-    expect(row('scval'), `${HD}: OG SCVAL`).toBe('De Anza: St Francis 12 pts · El Camino: Mitty 15 pts');
-    expect(row('bval'), `${HD}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
-    expect(row('pcal'), `${HD}: OG PCAL`).toBe('Stevenson 18 pts');
-    expect(home.leaderNames(['A', 'B', 'C', 'D']), `${HD}: OG co-leaders`).toBe('A & B +2');
-    expect(home.leaderNames(['A', 'B']), `${HD}: OG co-leaders`).toBe('A & B');
-  });
-});

@@ -1,9 +1,11 @@
 import { ImageResponse } from 'next/og';
 
-import { leagueRowText } from '@/components/home/home-data';
 import { SITE_NAME } from '@/components/layout/site';
+import { leaderClause } from '@/components/standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
 import { shortDate } from '@/lib/format';
+
+import { leaderLine } from './standings/standings-data';
 
 /**
  * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image
@@ -12,7 +14,9 @@ import { shortDate } from '@/lib/format';
  * One row per league, config order: `SCVAL  De Anza: St Ignatius 18 pts · El Camino: Los Gatos 21
  * pts` — the leader(s) of each division with their points. A single-division league has no
  * division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with " & ", then
- * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
+ * ` +<n>`. A league with no counted result reads `No league results yet`. No league hue. The row
+ * is the /standings card's own (standings-view's `leaderClause` over standings-data's
+ * `leaderLine`), so the two cards cannot word a league's leaders differently.
  *
  * Five rows have to fit between the title and the footer at 1200×630: 56px top and bottom padding
  * and 10px row padding keep the footer on the card with up to three of the five rows wrapping to
@@ -29,7 +33,7 @@ export default function OpengraphImage() {
   const rows = leagues.map((league) => ({
     id: league.id,
     shortName: league.shortName,
-    text: leagueRowText(league.divisions),
+    text: leaderClause(league.divisions.map((d) => leaderLine(d.id, d.heading))),
   }));
   const footer = `${leagues.length} leagues · ${getTeams().length} teams · ${
     through ? `results through ${shortDate(through)}` : 'no results yet'

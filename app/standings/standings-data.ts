@@ -86,8 +86,12 @@ function buildDivisionStandingsView(division: DivisionId): DivisionView {
   });
 }
 
-/** The leaders of one table: every team at place 1 with results. */
-function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
+/**
+ * The leaders of one table: every team at place 1 with results. Exported for the root OG card
+ * (app/opengraph-image.tsx), which prints the same row as the /standings card through
+ * `leaderClause`.
+ */
+export function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
   const teams = getTeams();
   const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
   return {
@@ -197,27 +201,6 @@ export function getStandingsOverviewData(): StandingsOverviewData {
     })),
     throughDate: getLastLeagueResultDate(),
   };
-}
-
-/**
- * One league's leaders as a single OG / metadata clause (SPEC §8.4): `De Anza: St Ignatius 18 pts
- * · El Camino: Los Gatos 21 pts`; co-leaders at most two names joined with " & ", then ` +<n>`;
- * `No league results yet` before any result.
- */
-export function leaderClause(lines: readonly LeaderLine[]): string {
-  if (lines.every((line) => line.teams.length === 0)) return 'No league results yet';
-  return lines
-    .map((line) => {
-      const names =
-        line.teams.length === 0
-          ? 'no results yet'
-          : `${line.teams
-              .slice(0, 2)
-              .map((t) => t.name)
-              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].pts} pts`;
-      return line.heading ? `${line.heading}: ${names}` : names;
-    })
-    .join(' · ');
 }
 
 /** The `LeagueSwitcher` chips, config order (shared by the standings and schedule pages). */

@@ -394,3 +394,26 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
     expect(renderOverview(), 'app/standings/page.tsx tie mark').not.toMatch(/\d=</);
   });
 });
+
+describe('OG card rows (standings-view.ts leaderClause over standings-data.ts leaderLine: the root and /standings cards)', () => {
+  const SV = 'components/standings/standings-view.ts leaderClause';
+  it('names each division leader with points, co-leaders capped at two', () => {
+    const row = (id: string) => {
+      const league = data.getLeagueSummary(id as Parameters<Data['getLeagueSummary']>[0]);
+      if (!league) throw new Error(`no league ${id}`);
+      return view.leaderClause(league.divisions.map((d) => sd.leaderLine(d.id, d.heading)));
+    };
+    expect(row('scval'), `${SV}: OG SCVAL`).toBe('De Anza: St Francis 12 pts · El Camino: Mitty 15 pts');
+    expect(row('bval'), `${SV}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
+    expect(row('pcal'), `${SV}: OG PCAL`).toBe('Stevenson 18 pts');
+    const line = (names: string[]) => ({
+      division: 'de-anza',
+      heading: null,
+      teams: names.map((name) => ({ name, record: '4-0-0', pts: 12 })),
+      tiedAtTop: names.length > 1,
+    });
+    expect(view.leaderClause([line(['A', 'B', 'C', 'D'])]), `${SV}: OG co-leaders`).toBe('A & B +2 12 pts');
+    expect(view.leaderClause([line(['A', 'B'])]), `${SV}: OG co-leaders`).toBe('A & B 12 pts');
+    expect(view.leaderClause([line([])]), `${SV}: before any result`).toBe('No league results yet');
+  });
+});
