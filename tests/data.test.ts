@@ -412,7 +412,6 @@ describe('data: head-to-head and form', () => {
       expect(data.getGameById(g.contestId)!.countsFor).not.toBeNull();
       if (g.status !== 'final') expect(g.margin).toBeNull();
     }
-    expect(form!.nonLeagueCount).toBeGreaterThan(0);
   });
 
   it('knows nothing of a school that is not fielding a team', () => {

@@ -788,11 +788,6 @@ export interface FormGame {
 export interface TeamForm {
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
-  /**
-   * Contests that count for no division. FormStrip no longer prints the "+ N non-league" caption
-   * (DESIGN §7.6): the team page writes that line from its own non-league log.
-   */
-  nonLeagueCount: number;
 }
 
 export function getTeamForm(ref: string): TeamForm | undefined {
@@ -823,10 +818,7 @@ export function getTeamForm(ref: string): TeamForm | undefined {
         excludedFromMargin: g.isForfeit,
       };
     });
-  return {
-    leagueGames,
-    nonLeagueCount: all.filter((g) => g.countsFor === null).length,
-  };
+  return { leagueGames };
 }
 
 // ---------------------------------------------------------------- postseason
