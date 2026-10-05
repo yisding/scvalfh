@@ -55,9 +55,10 @@ export interface GameViewProps {
   /** Default true on /schedule and /; false in dense tables. */
   showRecap?: boolean;
   /**
-   * The game's chips (league / NL, postseason, †), passed through to `StatusLabel`. It gates the
-   * whole chip group, not only NL. Set it false in a context that prints them elsewhere, or where
-   * every game is the same kind and marking each one is noise — a CCS bracket (DESIGN §5.4).
+   * The game's chips (league / NL, postseason), passed through to `StatusLabel`. It gates the
+   * whole chip group, not only NL — but never the †, which travels with the score. Set it false
+   * in a context that prints them elsewhere, or where every game is the same kind and marking
+   * each one is noise — a CCS bracket (DESIGN §5.4).
    */
   showChips?: boolean;
   /**

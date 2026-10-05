@@ -19,7 +19,8 @@ import type { GameDisplay, StatusTone } from './describe-game';
 export interface StatusLabelProps {
   display: GameDisplay;
   /**
-   * The game's chips (league / NL, postseason, †). Set it false in a context that prints them
+   * The game's chips (league / NL, postseason). Never the †: the source of a score travels with
+   * the score (SourceMark), with or without the chips. Set it false in a context that prints them
    * elsewhere, or where every game is the same kind and marking each one is noise (DESIGN §5.4).
    */
   showChips?: boolean;

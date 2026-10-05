@@ -2172,7 +2172,7 @@ timestamp nobody reads.
 
 ### 7.16 Small shared pieces
 
-`Tag` (`NL` `OT` `SO` `F` `†` — mono 11px, 4px radius, `--sx-surface-3` fill) · `StatusChip`
+`Tag` (`NL` `OT` `SO` `F` — mono 11px, 4px radius, `--sx-surface-3` fill) · `StatusChip`
 (Tag's sentence-case sibling for a postseason status phrase, accent only for an automatic
 qualifier) ·
 `StatusLabel` · `DateHeader` (sticky, `text-kicker`, with a `Day page` link, `dayHref`, to `/scores/[date]`) ·
@@ -2744,6 +2744,7 @@ Owner decision D2 lets si.com backfill MaxPreps under ten mechanical rules (see
 chip carries a † with the accessible text "Score via si.com" for such a score, the game page's source
 line reads "Score via High School on SI (si.com)" with both links, a standings row that includes one
 carries a † and a footnote, and `/about#backfills` lists every one with both values and the rule.
+On a game row the † is StatusLabel's SourceMark, a sans footnote mark, not a `Tag` (§7.16).
 
 ### 15.10 Budgets
 
