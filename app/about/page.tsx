@@ -998,9 +998,10 @@ export default function AboutPage() {
               This whole site is static: nothing here queries a live API when you load a page. Instead,
               an automated job re-fetches MaxPreps (and, on most runs, si.com, the league documents and
               the CCS calendar) and rebuilds the site from scratch, roughly twice a day during the
-              season &mdash; once overnight and once in the early morning, Pacific time &mdash; between
-              August and November. A game that finishes at 7 PM Thursday typically appears on the site
-              Friday morning, not that same night.
+              season &mdash; once in the late evening (about 10 PM) and once in the early morning
+              (about 7 AM), Pacific time &mdash; between August and November. A game that finishes at
+              7 PM Thursday appears that night if its score is entered by about 10 PM, otherwise Friday
+              morning.
             </p>
             <p>
               <b className="font-semibold text-ink">Live scores are not collected.</b> A game MaxPreps

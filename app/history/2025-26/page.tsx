@@ -34,7 +34,8 @@ import type { LeagueId } from '../../../lib/types';
  * (MCAL's all-league team), and shows no table in its place. Everything is
  * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
- * page is the only place last season's numbers live, and it is not part of the nightly snapshot.
+ * page is the only place last season's numbers live, and it is not part of the snapshot the
+ * scheduled update rebuilds.
  *
  * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
  * never from a literal list, so a league cannot be dropped or invented here. The header says only

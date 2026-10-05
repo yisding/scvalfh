@@ -16,7 +16,7 @@ import TopNav from './TopNav';
  * Phone: 48px, one line: the "NorCal HS FH" wordmark, the freshness stamp (from 360px), the theme
  * toggle. The stamp lives INSIDE the bar rather than occupying its own row, which returns that
  * row's height to the fold on every page. Past 36 hours it becomes the stale pill instead
- * (LastUpdated), so a failing nightly update shows at the top of every page, not only in the
+ * (LastUpdated), so a failing scheduled update shows at the top of every page, not only in the
  * footer — unless every league's season is over, when the update stops on purpose and the stamp
  * stays a plain date (`seasonComplete`).
  *
@@ -55,7 +55,7 @@ const WORDMARK_TAIL = WORDMARK_WORDS.slice(2).join(' ');
 const WORDMARK_TAIL_ABBR = WORDMARK_WORDS.slice(2).map((word) => word[0]).join('');
 
 export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
-  // After every league's season ends the nightly update stops on purpose; the stale pill would
+  // After every league's season ends the scheduled update stops on purpose; the stale pill would
   // then shout "Updated 9 days ago" in every header, so the stamp stays a plain date.
   const seasonComplete = getSitePhase() === 'complete';
   return (

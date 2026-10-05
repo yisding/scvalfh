@@ -26,11 +26,11 @@ import {
  * failure behind a timestamp nobody reads.
  *
  * `now` is the instant staleness is measured against. A static site cannot observe its own
- * staleness at view time, so the caller passes the BUILD instant: if the nightly fetch fails but
+ * staleness at view time, so the caller passes the BUILD instant: if the scheduled fetch fails but
  * the build still runs, `fetchedAt` is old against a fresh build and the warning appears — which
  * is exactly the failure this state is for.
  *
- * `seasonComplete`: once every league's season is over the nightly update stops on purpose, so an
+ * `seasonComplete`: once every league's season is over the scheduled update stops on purpose, so an
  * old stamp is not a failure. Then the stamp's stale state reads `Season complete — final update
  * <date>.` in the quiet grey instead of the alarm, and the top bar keeps its plain "Updated …"
  * stamp instead of the pill (SPEC §10.2; SiteHeader and Attribution pass

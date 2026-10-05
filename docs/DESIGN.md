@@ -81,7 +81,7 @@ weakness either judge named. Every weakness resolution is marked **[R-n]** and i
 **Verified stack in this repo** (`/home/yi/Code/scvalfh`): `next@16.3.6`,
 `tailwindcss@4.3.3`, React 19, TypeScript. Geist + Geist_Mono are present in
 `next/font/google`'s font data. No UI kit, no chart library — inline SVG and CSS only.
-One static JSON snapshot, rebuilt nightly by cron.
+One static JSON snapshot, rebuilt twice daily by cron (.github/workflows/update-data.yml).
 
 **The product test.** Every decision is settled by one question: *does this help a parent
 standing on the turf at Homestead at 5:40pm on a Tuesday, one-handed, on cellular?*
@@ -824,9 +824,10 @@ Sections, in order, each with a stable anchor:
 `#sources` — "Data from MaxPreps and SBLive/SI" with both deep links; the one sentence about
 mascot images ("the source carries a mascot image URL; we read it and discard it — each
 school is shown as a color monogram instead").
-`#updates` — "Rebuilt nightly by cron, about 5:00 AM Pacific. A game that finished at 7pm
-Thursday appears Friday morning. **Live scores are not collected** — anything marked LIVE is
-a scheduled window, not a running score."
+`#updates` — "Rebuilt twice daily by cron, about 10 PM and 7 AM Pacific
+(.github/workflows/update-data.yml). A game that finished at 7pm Thursday appears that night if
+its score is entered by about 10 PM, otherwise Friday morning. **Live scores are not
+collected** — anything marked LIVE is a scheduled window, not a running score."
 `#standings` — §11's eight rules, verbatim. Linked from every standings table footnote.
 `#conventions` — the nine-row result-rendering table from §5.2, verbatim.
 `#cross-check` — the published MaxPreps comparison log (§9), every mismatch with a deep link.

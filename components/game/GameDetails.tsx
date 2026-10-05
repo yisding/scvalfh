@@ -26,7 +26,7 @@ import type { GameModel } from './game-model';
  * 1. **`contest.location` is a NOTE field, not a venue field.** Live values include "Senior Night"
  *    and a coach's scoring note, so it is printed as a note and never labelled "Venue" (SPEC §4).
  * 2. **Directions appear only when a street address exists.** The per-game address is a lazy fetch
- *    that the nightly sweep does not make, so today no game has one and no map chip is rendered.
+ *    that the scheduled sweep does not make, so today no game has one and no map chip is rendered.
  *    A chip that cannot resolve a location is a dead affordance.
  * 3. **The venue we do know is the host school, not the field.** When the `.ics` feeds gave a real
  *    venue name it is shown; otherwise the line says who hosted, which is all MaxPreps published.

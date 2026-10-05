@@ -918,7 +918,7 @@ export function gameDescription(model: GameModel): string {
   const where = league ? `${league.name} girls varsity field hockey, Fall 2026` : 'girls varsity field hockey, Fall 2026';
   if (game.recap) {
     const lead = article(context) === 'an' ? 'An' : 'A';
-    return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt nightly from MaxPreps.`;
+    return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
   }
   const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
@@ -927,8 +927,8 @@ export function gameDescription(model: GameModel): string {
     display.kind === 'unreported'
       ? 'Played; no score reported yet.'
       : model.source
-        ? 'Score via High School on SI (si.com); standings rebuilt nightly. Unofficial.'
-        : 'Scores and standings rebuilt nightly from MaxPreps. Unofficial.'
+        ? 'Score via High School on SI (si.com); standings rebuilt twice daily. Unofficial.'
+        : 'Scores and standings rebuilt twice daily from MaxPreps. Unofficial.'
   }`;
 }
 

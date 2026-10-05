@@ -31,7 +31,7 @@ import { shortDate } from '../lib/format';
  */
 export const metadata: Metadata = {
   description:
-    'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated nightly.',
+    'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated twice daily.',
   alternates: { canonical: '/' },
   openGraph: { ...OG_BASE, url: '/' },
 };
