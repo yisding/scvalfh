@@ -1980,13 +1980,13 @@ interface FormStripProps {
   label: string;                   // "Homestead last 5 league games"
 }
 interface FormEntry {
-  outcome: Outcome; gameId: string; opponentAbbr: string;
-  score: string; date: string;     // for the per-chip aria-label
+  outcome: Outcome; contestId?: string; opponent?: string;
+  score?: string; date?: string;   // contestId links the chip; standings strips pass outcomes only (toFormEntries)
 }
 ```
 
 Row of `ResultChip`s with a **2px surface gap** between them. Newest gets a 2px `--sx-text`
-underline + visually-hidden "most recent". Each chip is a link to `/game/[id]` with
+underline + visually-hidden "most recent". Each chip with a `contestId` links to `/game/[id]` with
 `aria-label="Loss 0-7 vs Saint Francis, Sep 24"`. One sentence `aria-label` on the strip.
 Rules for zero/partial/skipped games are in §5.5. The direction caption and the `+ N non-league`
 caption are rendered by the page around the strip, not by the strip: the team page puts the
