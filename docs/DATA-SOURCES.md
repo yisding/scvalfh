@@ -715,6 +715,18 @@ throws at import, so `pnpm test` and the build fail with
 it by hand (on a rollover, redo the research for the new season). It is never pruned
 automatically.
 
+*JV ties.* `jvAffiliations` holds ties for players on JV rows, kept apart from `affiliations`, which
+list varsity rows only and are all the club pages, the club counts and the roster's club lines
+show. They are the same records under the same rules, except that each must join to a row the
+overlay marks JV (`lib/clubs.ts` refuses the file otherwise, and a player is in one list or the
+other, never both); `getJvClubAffiliations()` serves them, and nothing renders them yet. They were
+recorded on 2026-10-05 from the recruiting-profile re-read (a SportsRecruits page's CLUB and TEAMS
+blocks, read in a browser because they are rendered by script): four ties for three Los Gatos JV
+players, Casey Moorehouse (NorCal Impact and SF Hawks), Beatrix Monk (NorCal Impact U16) and Colette
+Von Klemperer (NorCal Impact), each on her own profile with a class year that agrees with the roster
+grade, and each current under the live-profile rule. Only the profiles the overlay links were read,
+so other JV players may have club ties no page here records.
+
 **(j3) College commitments** — `data/commits.json` (`lib/commits-schema.ts`, read by
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second

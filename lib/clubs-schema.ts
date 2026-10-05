@@ -24,7 +24,9 @@
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
  *   8. the join to data/rosters.json — the row exists, carries the same fullName, is not JV, and
  *      agrees with every stated class year — lives in lib/clubs.ts: this file cannot see the rosters
- * 1-3 are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with
+ *   9. `jvAffiliations` hold the same records for players on JV rows, under the same rules (1-8,
+ *      except that each must join to a JV row); a player is in one list or the other, never both
+ * 1-3 and 9's one-list rule are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with
  * a path (the lib/snapshot-schema.ts idiom).
  *
  * Club records name no individual (no coaches, no directors) and that is deliberate; nothing here
@@ -267,6 +269,11 @@ const ClubsFileObject = z.object({
   notes: z.array(text),
   clubs: z.array(ClubSchema).min(1),
   affiliations: z.array(ClubAffiliationSchema),
+  /**
+   * Ties for players on JV rows (the overlay's `level`), kept apart from `affiliations`, which list
+   * varsity rows only. Recorded on 2026-10-05; nothing renders them yet.
+   */
+  jvAffiliations: z.array(ClubAffiliationSchema).default([]),
 });
 
 type Ctx = z.RefinementCtx;
@@ -275,7 +282,7 @@ function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
   ctx.addIssue({ code: 'custom', path, message });
 }
 
-/** Invariants 1-3: what no single record can see. */
+/** Invariants 1-3, and 9's one-list rule: what no single record can see. */
 function checkClubsFile(f: z.infer<typeof ClubsFileObject>, ctx: Ctx): void {
   const slugs = new Set<string>();
   f.clubs.forEach((c, i) => {
@@ -290,6 +297,19 @@ function checkClubsFile(f: z.infer<typeof ClubsFileObject>, ctx: Ctx): void {
       issue(ctx, ['affiliations', i], `duplicate affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
     }
     triples.add(key);
+  });
+  const varsityPlayers = new Set(f.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
+  const jvTriples = new Set<string>();
+  f.jvAffiliations.forEach((a, i) => {
+    if (!slugs.has(a.club)) issue(ctx, ['jvAffiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
+    const key = `${a.teamSlug} ${a.athleteId} ${a.club}`;
+    if (jvTriples.has(key)) {
+      issue(ctx, ['jvAffiliations', i], `duplicate JV affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
+    }
+    jvTriples.add(key);
+    if (varsityPlayers.has(`${a.teamSlug} ${a.athleteId}`)) {
+      issue(ctx, ['jvAffiliations', i], `${a.teamSlug} / ${a.fullName} is also in affiliations`);
+    }
   });
 }
 
