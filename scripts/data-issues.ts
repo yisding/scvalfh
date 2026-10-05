@@ -16,8 +16,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { formatStamp, plural } from '../lib/format';
+import { plural } from '../lib/format';
 import type { SnapshotMeta } from '../lib/pipeline/contract';
+import { TIME_ZONE } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot-schema';
 import type { Snapshot } from '../lib/types';
 import { runCli } from './cli';
@@ -58,13 +59,29 @@ export function buildDataIssues(
   for (const h of snapshot.leagueHealth) {
     if (h.state !== 'frozen' || !prevFrozen.has(h.leagueId)) continue;
     const name = leagues.get(h.leagueId)?.shortName ?? h.leagueId;
-    const since = h.lastFreshAt ? formatStamp(h.lastFreshAt) : 'the start of the season';
+    const since = h.lastFreshAt ? frozenSince(h.lastFreshAt) : 'the start of the season';
     out.push({
       title: `${name} frozen since ${since}`,
       body: `${h.reasons.join('\n\n') || 'Frozen.'}\n\nRun: ${meta.fetchedAt}`,
     });
   }
   return out;
+}
+
+/**
+ * The frozen-league title's stamp, e.g. "Oct 1, 8:00 PM" in Pacific time. The title is the key the
+ * workflow's `gh` loop finds an open issue by, so it keeps the exact format the issues have always
+ * been opened with, not lib/format's formatStamp: a new format would miss every issue already open
+ * and open a duplicate beside it.
+ */
+function frozenSince(lastFreshAt: string): string {
+  return new Date(lastFreshAt).toLocaleString('en-US', {
+    timeZone: TIME_ZONE,
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 }
 
 /** The previous meta file's league states, or null when it is missing, unreadable or has none. */

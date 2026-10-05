@@ -60,9 +60,12 @@ describe('buildDataIssues', () => {
 
   it('opens an issue for a league frozen in both runs, with its Pacific last-fresh stamp', () => {
     const issues = buildDataIssues(snapshotWith({ frozen: ['mcal'] }), META, previous(['mcal']));
-    expect(issues).toEqual([
+    // The title keeps the format the workflow has always opened these issues with, because the gh
+    // loop finds the open issue by its exact title. An ICU that writes a narrow no-break space
+    // before "PM" writes it in the earlier titles too.
+    expect(issues.map((i) => ({ ...i, title: i.title.replace(/\u202f/g, ' ') }))).toEqual([
       {
-        title: 'MCAL frozen since Thu Oct 1, 8:00 PM PT',
+        title: 'MCAL frozen since Oct 1, 8:00 PM',
         body: 'MaxPreps did not answer.\n\nRun: 2026-10-03T14:00:00.000Z',
       },
     ]);
