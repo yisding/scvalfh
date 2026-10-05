@@ -33,6 +33,7 @@ import {
   getClubs,
   getClubsFile,
   getClubsLastChecked,
+  getJvClubAffiliations,
   getPlayerClubs,
   getTeamClubAffiliations,
   loadClubs,
@@ -85,6 +86,7 @@ function allUrls(f: ClubsFile): string[] {
       ...c.sources.map((s) => s.url),
     ]),
     ...f.affiliations.flatMap((a) => a.sources.map((s) => s.url)),
+    ...f.jvAffiliations.flatMap((a) => a.sources.map((s) => s.url)),
   ];
 }
 
@@ -346,6 +348,44 @@ describe('data/clubs.json', () => {
   });
 });
 
+describe('data/clubs.json: jvAffiliations', () => {
+  it('holds 4 ties for 3 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
+    expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
+      ['Casey Moorehouse', 9, 'norcal-impact', 'current', null],
+      ['Casey Moorehouse', 9, 'sf-hawks', 'current', null],
+      ['Beatrix Monk', 9, 'norcal-impact', 'current', 'U16'],
+      ['Colette Von Klemperer', 10, 'norcal-impact', 'current', null],
+    ]);
+    for (const a of raw.jvAffiliations) {
+      expect(a.teamSlug).toBe('los-gatos');
+      expect(rowOf(a)!.level, a.fullName).toBe('jv');
+      expect(rowOf(a)!.fullName).toBe(a.fullName);
+      for (const s of a.sources) expect(s.statedClassYear, a.fullName).toBe(classOf(season, rowOf(a)!.grade!));
+      expect(a.basis, a.fullName).toMatch(/[.!?]['"’”)]?$/);
+    }
+  });
+
+  it('resolves each JV tie to its JV roster row', () => {
+    for (const a of getJvClubAffiliations()) {
+      const row = getAffiliatedPlayer(a);
+      expect(row.fullName, a.fullName).toBe(a.fullName);
+      expect(row.level, a.fullName).toBe('jv');
+    }
+  });
+
+  it('keeps them out of everything that lists varsity ties', () => {
+    expect(getJvClubAffiliations()).toEqual(raw.jvAffiliations);
+    const jvPlayers = new Set(raw.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
+    const served = getClubSlugs().flatMap((slug) => getClubAffiliations(slug));
+    expect(served).toHaveLength(raw.affiliations.length);
+    expect(served.filter((a) => jvPlayers.has(`${a.teamSlug} ${a.athleteId}`))).toEqual([]);
+    for (const a of raw.jvAffiliations) {
+      expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([]);
+      expect(getTeamClubAffiliations(a.teamSlug)).not.toContainEqual(a);
+    }
+  });
+});
+
 describe('lib/clubs.ts', () => {
   it('orders clubs by region, then most tied players, then display name (DESIGN §17.5)', () => {
     expect(getClubSlugs()).toEqual([
@@ -559,6 +599,25 @@ describe('a bad file is refused at load', () => {
     const msg = loadError(bad);
     expect(msg).toMatch(/JV/);
     expect(msg).toContain(jv.fullName);
+  });
+
+  it('refuses a JV tie on a varsity row, to a club the file does not hold, or for a player also in affiliations', () => {
+    const varsity = structuredClone(raw);
+    const v = raw.affiliations[at('Lizzie Moorehouse')];
+    Object.assign(varsity.jvAffiliations[0], { athleteId: v.athleteId, fullName: v.fullName, club: 'sf-hawks' });
+    for (const s of varsity.jvAffiliations[0].sources) s.statedClassYear = null;
+    expect(refusals(varsity)).toEqual(['jvAffiliations.0: los-gatos / Lizzie Moorehouse is also in affiliations']);
+    varsity.affiliations.splice(at('Lizzie Moorehouse'), 1);
+    expect(loadError(varsity)).toMatch(/los-gatos \/ Lizzie Moorehouse \(sf-hawks\): not a JV row: jvAffiliations list JV rows only/);
+    const club = structuredClone(raw);
+    club.jvAffiliations[0].club = 'nope';
+    expect(loadError(club)).toContain('jvAffiliations.0.club: nope is not a club in clubs[]');
+    const twice = structuredClone(raw);
+    twice.jvAffiliations.push(structuredClone(twice.jvAffiliations[0]));
+    expect(refusals(twice)).toEqual(['jvAffiliations.4: duplicate JV affiliation: los-gatos / Casey Moorehouse / norcal-impact']);
+    const year = structuredClone(raw);
+    year.jvAffiliations[0].sources[0].statedClassYear = 2027;
+    expect(loadError(year)).toMatch(/Casey Moorehouse \(norcal-impact\): sportsrecruits source says class of 2027, the roster shows grade 9/);
   });
 
   it('refuses a team the rosters do not hold', () => {

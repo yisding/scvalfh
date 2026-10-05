@@ -1196,6 +1196,92 @@
       "checkedOn": "2026-10-03"
     }
   ],
+  "jvAffiliations": [
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
+      "fullName": "Casey Moorehouse",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
+      "fullName": "Casey Moorehouse",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact; SF Hawks is the San Francisco Youth Field Hockey Club. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
+      "fullName": "Beatrix Monk",
+      "club": "norcal-impact",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/beatrix_monk",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN U16, NorCal Impact CLUB … TEAMS U16, NorCal Impact 82 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, names 'U16, NorCal Impact' as her CLUB and lists it under TEAMS beside Los Gatos High School. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05; a live profile with 2026 events (the AAU Junior Olympics in August 2026), so current under the live-profile rule."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "7bf1074d-84a9-4d73-9028-ea16360038e9",
+      "fullName": "Colette Von Klemperer",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/colette_von_klemperer",
+          "kind": "sportsrecruits",
+          "quote": "2029 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact CLUB … My name is Colette (Coco) von Klemperer, Class of 2029 at Los Gatos High School and also a member of the NorCal Impact club team. … TEAMS NorCal Impact 21 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2029 (agrees with grade 10) and Los Gatos, CA, names NorCal Impact as her CLUB and under TEAMS beside Los Gatos High School, and her bio says she is Class of 2029 at Los Gatos High School and a member of the NorCal Impact club team. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05; a live profile, so current under the live-profile rule."
+    }
+  ],
   "affiliations": [
     {
       "teamSlug": "st-ignatius",
