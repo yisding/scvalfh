@@ -34,6 +34,7 @@ import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';
 import { REPO, corpusDir } from './helpers';
+import { testRunArgs } from './pipeline/support/run-args';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';
@@ -828,7 +829,7 @@ describe('stepSblive (SPEC §7.9): scoreboards, targeted team pages, D2, reconci
     const sources: SourceStatus[] = [];
     const lines: string[] = [];
     const ctx = {
-      args: { sblive: true, sbliveFull: false },
+      args: testRunArgs({ sblive: true }),
       fetchedAt: AT,
       today: TODAY,
       previous: null,

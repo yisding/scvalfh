@@ -6,7 +6,6 @@
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../../lib/leagues';
-import type { RunArgs } from '../../lib/pipeline/contract';
 import {
   DroppedLedger,
   LeagueLedger,
@@ -19,18 +18,12 @@ import {
 } from '../../lib/pipeline/ledger';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot, SourceStatus } from '../../lib/types';
+import { testRunArgs } from './support/run-args';
 
 const AT = '2026-10-02T15:00:00.000Z';
 
 function row(kind: SourceStatus['kind'], scope: SourceStatus['scope'], label: string, url = 'https://example.com/'): SourceStatus {
   return { id: 'maxpreps-api', kind, ...(scope ? { scope } : {}), label, url, status: 'ok', fetchedAt: AT };
-}
-
-function args(over: Partial<RunArgs> = {}): RunArgs {
-  return {
-    fixtures: null, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: AT, force: false,
-    leagues: null, acceptRegression: [], sblive: true, sbliveFull: false, official: true, ccs: true, vnn: true, ...over,
-  };
 }
 
 /** A deterministic shuffle (so the test never depends on Math.random). */
@@ -143,7 +136,7 @@ describe('DroppedLedger', () => {
 describe('PipelineContext', () => {
   it('derives today from fetchedAt (Pacific), never the clock, and lists leagues in config order', () => {
     const ctx = new PipelineContext({
-      args: args({ fetchedAt: '2026-10-03T05:00:00.000Z', leagues: ['mcal', 'scval'] }),
+      args: testRunArgs({ fetchedAt: '2026-10-03T05:00:00.000Z', leagues: ['mcal', 'scval'] }),
       transport: { mode: 'fixture', get: async () => ({ url: '', httpStatus: 200, body: '' }) },
       previous: null,
       sink: SILENT_SINK,

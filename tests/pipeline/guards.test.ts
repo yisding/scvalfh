@@ -29,6 +29,7 @@ import type { Game, LeagueId, Snapshot } from '../../lib/types';
 import { variantDir } from '../helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
 import { naiveBvalOfficial, noopSblive } from './support/noop-steps';
+import { testRunArgs } from './support/run-args';
 import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const EARLIER = '2026-10-02T03:00:00.000Z'; // Thu Oct 1, 8:00 PM Pacific
@@ -269,10 +270,7 @@ describe('systemic run abort', () => {
   function ctxWith(previousGames: number, leagues: LeagueId[] | null = null): PipelineContext {
     const previous = previousGames > 0 ? ({ games: new Array(previousGames).fill({}), leagueHealth: [] } as unknown as Snapshot) : null;
     return new PipelineContext({
-      args: {
-        fixtures: null, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: '2026-10-02T15:00:00.000Z',
-        force: false, leagues, acceptRegression: [], sblive: true, sbliveFull: false, official: true, ccs: true, vnn: true,
-      },
+      args: testRunArgs({ leagues }),
       transport: { mode: 'fixture', get: async () => ({ url: '', httpStatus: 200, body: '' }) },
       previous,
       sink: SILENT_SINK,

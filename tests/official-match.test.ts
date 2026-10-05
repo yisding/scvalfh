@@ -28,7 +28,6 @@ import {
   TransportError,
   resourcePath,
   type ResourceKey,
-  type RunArgs,
   type RunContext,
   type Transport,
 } from '../lib/pipeline/contract';
@@ -37,6 +36,7 @@ import { ScheduleResponseSchema } from '../lib/sources/maxpreps';
 import { parseSchedulePdfText } from '../lib/sources/scval-pdf';
 import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { REPO, allScheduleRows, corpusDir, game } from './helpers';
+import { testRunArgs } from './pipeline/support/run-args';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));
@@ -401,11 +401,10 @@ function makeCtx(opts: {
   const sources: SourceStatus[] = [];
   const degraded: Recorded['degraded'] = [];
   const warnings: string[] = [];
-  const args: RunArgs = {
-    fixtures: CORPUS, variants: [], capture: null, out: '/dev/null', dryRun: true, fetchedAt: FETCHED_AT, force: false,
-    leagues: opts.leagues ?? null, acceptRegression: [], sblive: false, sbliveFull: false,
-    official: opts.official ?? true, ccs: false, vnn: false,
-  };
+  const args = testRunArgs({
+    fixtures: CORPUS, fetchedAt: FETCHED_AT, leagues: opts.leagues ?? null,
+    sblive: false, official: opts.official ?? true, ccs: false, vnn: false,
+  });
   const ctx: RunContext = {
     args,
     fetchedAt: FETCHED_AT,
