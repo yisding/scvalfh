@@ -5,7 +5,9 @@
  * a fixture side.
  */
 
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, readdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -227,5 +229,20 @@ describe('assertDoubleRoundRobin', () => {
     const f = pcal();
     f[0] = { ...f[0], awaySlug: null, awayName: 'York' };
     expect(problems(f)).toContain('pcal:2026-09-02:stevenson@monterey: away "York" is not a member of pcal');
+  });
+});
+
+describe('scripts/build-official-fixtures.ts flags', () => {
+  it('refuses --out-dir without a value instead of writing into the working directory', () => {
+    const cwd = mkdtempSync(path.join(tmpdir(), 'scvalfh-official-'));
+    const res = spawnSync(
+      path.join(REPO, 'node_modules', '.bin', 'tsx'),
+      [path.join(REPO, 'scripts', 'build-official-fixtures.ts'), '--out-dir'],
+      { cwd, encoding: 'utf8' },
+    );
+    if (res.error) throw res.error;
+    expect(res.stderr).toContain('FAILED: --out-dir needs a value');
+    expect(res.status).toBe(1);
+    expect(readdirSync(cwd)).toEqual([]);
   });
 });

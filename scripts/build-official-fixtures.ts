@@ -292,9 +292,15 @@ function main(argv: readonly string[]): number {
   let check = false;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
+    const next = () => {
+      const v = argv[i + 1];
+      if (v === undefined || v.startsWith('--')) throw new Error(`${a} needs a value`);
+      i += 1;
+      return v;
+    };
     if (a === '--check') check = true;
-    else if (a === '--source-dir') sourceDir = path.resolve(argv[++i] ?? '');
-    else if (a === '--out-dir') outDir = path.resolve(argv[++i] ?? '');
+    else if (a === '--source-dir') sourceDir = path.resolve(next());
+    else if (a === '--out-dir') outDir = path.resolve(next());
     else if (a === '--bval-text') {
       const files = [argv[++i], argv[++i]];
       if (files.some((f) => !f)) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
