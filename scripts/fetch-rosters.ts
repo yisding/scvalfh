@@ -60,6 +60,7 @@ import {
   type Rosters,
   type TeamRoster,
 } from '../lib/rosters-schema';
+import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
@@ -249,9 +250,7 @@ async function main(): Promise<number> {
   const validated = RostersSchema.safeParse(rosters);
   if (!validated.success) {
     console.error('FAILED: the assembled file does not validate:');
-    for (const issue of validated.error.issues.slice(0, 10)) {
-      console.error(`  ${issue.path.join('.') || '(root)'}: ${issue.message}`);
-    }
+    console.error(formatIssues(validated.error.issues));
     return 1;
   }
 

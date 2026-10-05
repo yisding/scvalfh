@@ -1,7 +1,8 @@
 /**
  * The validation primitives every data file's contract shares: a lower-case id, a YYYY-MM-DD date
  * key, an http(s) or https URL bound for an `href`, the strict calendar-day and https checks, and the
- * one way a loader reports a schema failure (the first ten issues, each as `path: message`).
+ * one way a loader (and the fetch scripts' assembled-file check) reports a schema failure (the first
+ * ten issues, each as `path: message`).
  *
  * One declaration each, so a dataset's validation messages and strictness never depend on which
  * file declared it: lib/snapshot-schema.ts, lib/rosters-schema.ts, lib/player-stats-schema.ts,
