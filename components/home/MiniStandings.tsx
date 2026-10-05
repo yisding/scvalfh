@@ -42,12 +42,8 @@ import type { MiniDivisionView, MiniRow } from './home-data';
  * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
  */
 export interface MiniStandingsProps {
+  /** The division's rows, its `href` (`/standings/<league>#<division>`), its `home` config and its heading (null for a single-division league). */
   division: MiniDivisionView;
-  /** `/standings/<league>#<division>` */
-  href: string;
-  /** false for a single-division league. */
-  showDivisionLabel: boolean;
-  home: MiniDivisionView['home'];
   /** The league's `PTS: <citation>.` sentence; pass it under the league's LAST table only. */
   legend?: string;
   className?: string;
@@ -77,7 +73,10 @@ export function miniShownCount(
   return n;
 }
 
-export function MiniStandings({ division, href, showDivisionLabel, home, legend, className }: MiniStandingsProps) {
+export function MiniStandings({ division, legend, className }: MiniStandingsProps) {
+  const { href, home } = division;
+  // A single-division league (no heading) shows no division label.
+  const showDivisionLabel = division.heading !== null;
   const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));
   const where = showDivisionLabel && division.heading ? division.heading : division.leagueShort;
   const through = division.throughDate;

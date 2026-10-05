@@ -14,7 +14,11 @@ import type { CollegeRow } from './commit-view';
  * so links in a screen reader's list tell themselves apart. Nothing long is `nowrap`: official names
  * and the schools line reflow at 320px.
  */
-export function CollegeList({ colleges }: { colleges: CollegeRow[] }) {
+export interface CollegeListProps {
+  colleges: CollegeRow[];
+}
+
+export function CollegeList({ colleges }: CollegeListProps) {
   return (
     <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {colleges.map((college) => (

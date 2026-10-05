@@ -34,7 +34,12 @@ import { placeSub } from './team-view';
  */
 const STREAK_WORD = { W: ['win', 'wins'], L: ['loss', 'losses'], T: ['tie', 'ties'] } as const;
 
-export function TeamStatTiles({ view, className }: { view: TeamPageView; className?: string }) {
+export interface TeamStatTilesProps {
+  view: TeamPageView;
+  className?: string;
+}
+
+export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
   const { standing, hasResults, context } = view;
   const league = hasResults && standing ? standing.computed : null;
   const overall = hasResults && standing ? standing.overall : null;

@@ -42,10 +42,10 @@ import type { StatusGroup } from './standings-view';
 export interface PlayoffStatusBandProps {
   divisionLabel: string;
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
-  heading?: string;
+  heading: string;
   /** `/playoffs#<league>` (a CCS league, or an unbracketed tournament's card) or `/playoffs/<league>`. */
-  href?: string;
-  linkText?: string;
+  href: string;
+  linkText: string;
   groups: StatusGroup[];
   caveat: string | null;
   /** Teams with `hasReportedResults === false`. */
@@ -55,9 +55,9 @@ export interface PlayoffStatusBandProps {
 
 export function PlayoffStatusBand({
   divisionLabel,
-  heading = 'CCS qualifying, as things stand',
-  href = '/playoffs',
-  linkText = 'Playoff picture',
+  heading,
+  href,
+  linkText,
   groups,
   caveat,
   unrankedTeams,

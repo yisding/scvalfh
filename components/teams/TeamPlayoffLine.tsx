@@ -37,7 +37,11 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
  * official.
  */
-export function TeamPlayoffLine({ view }: { view: TeamPageView }) {
+export interface TeamPlayoffLineProps {
+  view: TeamPageView;
+}
+
+export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
   const { postseasonLine: line, standing, league } = view;
   if (!line) {
     return (

@@ -19,14 +19,13 @@ const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string 
   { href: '/about', label: 'About' },
 ];
 
-export function TopNav({
-  className,
-  slugLeague,
-}: {
+export interface TopNavProps {
   className?: string;
   /** `{ slug: league }` for every team (the same map the prefs script embeds). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
-}) {
+}
+
+export function TopNav({ className, slugLeague }: TopNavProps) {
   const hrefs = navLeagueHrefs();
   return (
     <nav aria-label="Main" className={className}>

@@ -219,7 +219,11 @@ function OtherRostersText({ view }: { view: RosterView }) {
   return <>We have not checked other public sources for this team.</>;
 }
 
-export function TeamRoster({ view }: { view: RosterView }) {
+export interface TeamRosterProps {
+  view: RosterView;
+}
+
+export function TeamRoster({ view }: TeamRosterProps) {
   const { rows, showNumbers, teamName } = view;
 
   if (view.status === 'error' || view.status === 'pending' || rows.length === 0) {

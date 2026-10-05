@@ -126,12 +126,12 @@ export const TABS = [
   },
 ];
 
-export function BottomTabBar({
-  slugLeague,
-}: {
+export interface BottomTabBarProps {
   /** `{ slug: league }` for every team (the same map the prefs script embeds). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
-}) {
+}
+
+export function BottomTabBar({ slugLeague }: BottomTabBarProps) {
   const hrefs = navLeagueHrefs();
   const scores = scoresHrefs();
   return (

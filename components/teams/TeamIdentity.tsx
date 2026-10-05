@@ -34,13 +34,12 @@ import { placeScope } from './team-view';
  * measured contrast guardrail, never an encoding (DESIGN §7.1, §12.4). No mascot image is ever
  * requested from a third party.
  */
-export function TeamIdentity({
-  view,
-  knownSlugs,
-}: {
+export interface TeamIdentityProps {
   view: TeamPageView;
   knownSlugs: readonly string[];
-}) {
+}
+
+export function TeamIdentity({ view, knownSlugs }: TeamIdentityProps) {
   const { team, standing, hasResults } = view;
   const place = hasResults && standing ? standing.computed.place : null;
   const shared = place !== null && (standing?.tiebreak.shared ?? false);

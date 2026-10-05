@@ -87,9 +87,6 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
           <MiniStandings
             key={division.id}
             division={division}
-            href={division.href}
-            showDivisionLabel={division.heading !== null}
-            home={division.home}
             legend={i === lastDivision ? panel.pointsLegend : undefined}
           />
         ))}

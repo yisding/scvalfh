@@ -2120,7 +2120,9 @@ echo as removable mono chips. Zero results is a designed state (§8).
 ### 7.14 `ThemeToggle` — **`'use client'`**
 
 ```ts
-interface ThemeToggleProps {}      // no props
+interface ThemeToggleProps {
+  className?: string;
+}
 ```
 
 Three states — **System / Light / Dark** — cycled by one 44×44 button whose `aria-label` names

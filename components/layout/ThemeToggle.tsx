@@ -98,7 +98,11 @@ function applyTheme(theme: Theme) {
   writeStored(THEME_STORAGE_KEY, theme === 'system' ? null : theme);
 }
 
-export function ThemeToggle({ className }: { className?: string }) {
+export interface ThemeToggleProps {
+  className?: string;
+}
+
+export function ThemeToggle({ className }: ThemeToggleProps) {
   const hydrated = useIsHydrated();
   const stored = useStoredValue(THEME_STORAGE_KEY);
   const theme: Theme =

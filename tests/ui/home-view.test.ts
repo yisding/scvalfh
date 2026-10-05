@@ -145,12 +145,7 @@ describe('home panels (components/home/home-data.ts → LeaguePanel)', () => {
       for (const division of panel.divisions) {
         expect(division.home, `${HD}: ${division.id} home`).toEqual(leagues.getDivision(division.id).home);
         const html = renderToStaticMarkup(
-          createElement(MiniStandings, {
-            division,
-            href: division.href,
-            showDivisionLabel: division.heading !== null,
-            home: division.home,
-          }),
+          createElement(MiniStandings, { division }),
         );
         const want = expected[division.id];
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;

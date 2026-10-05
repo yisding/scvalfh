@@ -81,7 +81,11 @@ function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; le
   );
 }
 
-export function TeamUnbeaten({ view }: { view: TeamPageView }) {
+export interface TeamUnbeatenProps {
+  view: TeamPageView;
+}
+
+export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
   const noun = view.divisionHeading === null ? 'league' : 'division';
   const short = view.league.shortName;
   if (view.unbeaten.length === 0) {

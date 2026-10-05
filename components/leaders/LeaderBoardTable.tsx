@@ -189,7 +189,11 @@ function BoardTable({
   );
 }
 
-export function LeaderBoardTable({ board }: { board: LeaderBoard }) {
+export interface LeaderBoardTableProps {
+  board: LeaderBoard;
+}
+
+export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
   const { extra } = board;
   return (
     <section id={board.id} className="min-w-0 scroll-mt-24">
