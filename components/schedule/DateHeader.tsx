@@ -7,7 +7,7 @@ import { gameWord } from '../ui/plural';
  * The date-group header (DESIGN §3.3, §7.16): `Thu Sep 24  (12 games)  ········  Day page`.
  *
  * A 48px sticky band on the canvas — a 16px day heading, a count badge and the Day page link — so
- * while you scroll 49 days of contests you always know which day you are looking at. The sticky
+ * while you scroll every game day of contests you always know which day you are looking at. The sticky
  * offset comes from `--sx-sticky-stack`, which the page sets to the height of whatever sticky
  * chrome sits above it — the same pattern `app/globals.css` already uses for `--sx-sticky-top` on
  * a sticky table head.
@@ -15,7 +15,7 @@ import { gameWord } from '../ui/plural';
  * "Day page" says where the link goes: `/scores/[date]`, prerendered for every date that has a
  * contest, i.e. a real URL to open, bookmark or send on (it used to read "Share", which promised a
  * share sheet it never opened). Its accessible name carries the date — "Day page for Thursday,
- * September 24" — because forty-nine identical "Day page" links are useless in a links list.
+ * September 24" — because dozens of identical "Day page" links are useless in a links list.
  *
  * The count span carries `data-date-count` + `data-total` so the filter can rewrite it to
  * "6 of 12 games" without the client needing to know anything about dates. It is sans with
@@ -67,8 +67,8 @@ export function DateHeader({ date, count, dayHref, sticky = false, className }: 
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
-          into view, and /schedule renders one of these per date group — 49 of them, i.e. 49 whole
-          day pages. Navigation still fetches on click. */}
+          into view, and /schedule/<league> renders one of these per date group, so one whole day
+          page per group. Navigation still fetches on click. */}
       {dayHref ? (
         <Link
           href={dayHref}

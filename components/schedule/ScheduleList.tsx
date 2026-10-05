@@ -50,9 +50,9 @@ const LANDING_WINDOW_DAYS = 7;
 
 /**
  * Per-group height estimates, kept just ABOVE the measured heights so a skipped group never
- * overflows its placeholder. A flat 16rem per card row was ~100px too tall for an upcoming row and
- * the 49 errors added up to ~3200px at 1280, which sent the rail's smooth "Today" scroll past the
- * target as the groups rendered on the way.
+ * overflows its placeholder. A flat 16rem per card row was ~100px too tall for an upcoming row and,
+ * when this was measured, the 49 errors added up to ~3200px at 1280, which sent the rail's smooth
+ * "Today" scroll past the target as the groups rendered on the way.
  *
  * Phone row: 76px, up to ~92px for a long status or FINAL + OT + NL. Card row: ~156px upcoming,
  * up to ~220px for a final with a two-line recap, plus the 16px grid gap.

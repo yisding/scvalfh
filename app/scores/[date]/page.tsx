@@ -24,10 +24,10 @@ import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
  *
- * One prerendered page per date that actually has a contest (49 today), which is what makes the
- * "Day page" link on every schedule date header a real URL instead of a clipboard trick. Unknown
- * dates `notFound()` rather than rendering an empty day, because an empty day and a day with no
- * games are different claims and only one of them is true.
+ * One prerendered page per date that actually has a contest (one per game date in the snapshot),
+ * which is what makes the "Day page" link on every schedule date header a real URL instead of a
+ * clipboard trick. Unknown dates `notFound()` rather than rendering an empty day, because an empty
+ * day and a day with no games are different claims and only one of them is true.
  *
  * The previous / next day pills step through dates that HAVE contests, not calendar neighbours:
  * a link to an empty Sunday would be a dead end. "Pick a date" (SeasonCalendar) jumps straight to
