@@ -168,8 +168,9 @@ For this to work on a deployed copy of this repo:
 
 ### Self-hosting the cron
 
-If you're not using GitHub Actions, run the same two commands from any scheduler that can reach
-the internet on your host, twice a day during the season:
+If you're not using GitHub Actions, run the same commands (`fetch-player-stats` is optional, hence
+`|| true`) from any scheduler that can reach the internet on your host, twice a day during the
+season:
 
 ```cron
 0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && pnpm build
@@ -608,6 +609,9 @@ are read with `node:fs` when the module loads, so they work under Next, vitest, 
 Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
 Cloudflare scripts. The other three files have no override.
 
+`node scripts/typecheck-scope.mjs <glob>…` runs the full typecheck but fails only on diagnostics
+inside the globs (for concurrent edits in one tree).
+
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
@@ -654,7 +658,11 @@ to the single-league site's), the si.com backfill rules, the official-schedule m
 parsing,
 the "never render a missing score as 0-0" rule across every `GameRow` variant and every non-final
 game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover, unnamed
-rounds). Fixtures captured from real (offline) MaxPreps/SCVAL responses live under
+rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the recorded corpora (end to
+end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
+validators check `data/rosters.json`, `data/player-stats.json`, `data/clubs.json` and
+`data/commits.json`, and further suites pin the copy rules, the workflow files and the
+legacy-import guard. Fixtures captured from real (offline) MaxPreps/SCVAL responses live under
 `tests/fixtures/`.
 
 ## Next-season bootstrap
@@ -1004,12 +1012,13 @@ attribution text rendered in the footer.
 
 ## Deploy notes
 
-Every route is prerendered at build time — no database, no request-time data fetching, and no API
-routes beyond the OG-image generators, which are prerendered too. It is NOT `output: 'export'`,
-though: serving it needs Next.js's own server, a host adapter that provides one, `vinext start` or
-vinext's Cloudflare Worker (see "vinext" and "Cloudflare Workers" below), because the 404s for
-unknown dynamic params and the metadata routes (`/icon`, `/apple-icon`, `/opengraph-image`,
-`/robots.txt`, `/sitemap.xml`) are served by the framework.
+Every route is prerendered at build time — no database, no request-time data fetching, and no
+Route Handlers beyond the OG-image generators and the `/icon-192` and `/icon-512` icons, all
+prerendered too. It is NOT `output: 'export'`, though: serving it needs Next.js's own server, a
+host adapter that provides one, `vinext start` or vinext's Cloudflare Worker (see "vinext" and
+"Cloudflare Workers" below), because the 404s for unknown dynamic params and the metadata routes
+(`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
+framework.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.
