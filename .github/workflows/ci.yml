@@ -70,7 +70,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
@@ -152,7 +152,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
@@ -206,7 +206,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
@@ -290,7 +290,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       # This applies both patches (patchedDependencies in pnpm-workspace.yaml): vinext's, as in

@@ -196,7 +196,7 @@ jobs:
         if: steps.gate.outputs.ready == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       # Applies both patches (pnpm-workspace.yaml); the build below depends on them as ci's
