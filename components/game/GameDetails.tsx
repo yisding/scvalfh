@@ -3,7 +3,7 @@ import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
-import type { GameModel } from './game-model';
+import type { GameModel } from './game-view';
 
 /**
  * The DETAILS card of DESIGN §3.5 — when, where, and the off-site links that are not the result's.

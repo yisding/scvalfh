@@ -23,9 +23,9 @@ import { describeGame, statusLabelIsTime, type SideView } from './describe-game'
  * `--text-display`: ScoreGlyph's own class string is frozen (tests/ui/rendered-never-00.test.ts).
  *
  * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza" or "10-1-1 MCAL". A
- * school outside the registry has no record to show (game-model gives it no sub), so its side gets
+ * school outside the registry has no record to show (game-view gives it no sub), so its side gets
  * a GhostMonogram tile (the same tile its rows use) and the sub line NON_MEMBER_NOTE ("Not one of
- * the N teams this site follows", from GameRow), written here rather than in game-model so the
+ * the N teams this site follows", from GameRow), written here rather than in game-view so the
  * page title and OG card, which share that model, are untouched.
  *
  * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) carries a

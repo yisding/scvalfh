@@ -33,7 +33,7 @@ beforeAll(async () => {
   ({ SITE_NAME } = await import('../../components/layout/site'));
   const data = await import('../../lib/data');
   const { getClubSlugs } = await import('../../lib/clubs');
-  const { gameStaticParams } = await import('../../components/game/game-model');
+  const { gameStaticParams } = await import('../../components/game/game-view');
   const page = (path: string, mod: () => Promise<PageModule>, params?: Record<string, string>) => ({
     path,
     load: async () => read(await mod(), params),

@@ -2,11 +2,11 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import {
-  buildGameModel,
+  buildGameView,
   buildSupersededStub,
   gameKicker,
   gameStaticParams,
-} from '../../../components/game/game-model';
+} from '../../../components/game/game-view';
 import { OG, OG_SIZE } from '../../../components/layout/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { dateWithYear, timeOfDayPT } from '../../../lib/format';
@@ -49,8 +49,8 @@ export function generateStaticParams(): Array<{ id: string }> {
  */
 export default async function Image({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  // paramToGameId runs inside buildGameModel before any accessor that can throw (SPEC §8.1).
-  const model = buildGameModel(id) ?? buildSupersededStub(id)?.targetModel;
+  // paramToGameId runs inside buildGameView before any accessor that can throw (SPEC §8.1).
+  const model = buildGameView(id) ?? buildSupersededStub(id)?.targetModel;
   if (!model) notFound();
 
   const { game, away, home, display } = model;

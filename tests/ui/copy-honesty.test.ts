@@ -7,7 +7,7 @@
  *   components/standings/standings-data.ts     getStandingsPageData(league) (division views built by
  *                                       components/standings/standings-view.ts)
  *   components/teams/team-view.ts       buildTeamPageView(slug), buildTeamsByLeague()
- *   components/game/game-model.ts       buildGameModel(param) for every game, buildSupersededStub
+ *   components/game/game-view.ts       buildGameView(param) for every game, buildSupersededStub
  *
  * Rules (every string VALUE in the model, keys excluded):
  *  1. no "Gabilan" in any case, except the lowercase slug inside a MaxPreps URL;
@@ -58,12 +58,12 @@ type Leagues = typeof import('../../lib/leagues');
 type Home = typeof import('../../components/home/home-data');
 type Standings = typeof import('../../components/standings/standings-data');
 type TeamView = typeof import('../../components/teams/team-view');
-type GameModel = typeof import('../../components/game/game-model');
+type GameView = typeof import('../../components/game/game-view');
 
 const HD = 'components/home/home-data.ts';
 const SD = 'components/standings/standings-data.ts (via components/standings/standings-view.ts)';
 const TV = 'components/teams/team-view.ts';
-const GM = 'components/game/game-model.ts';
+const GV = 'components/game/game-view.ts';
 const SP = 'app/schedule/[league]/page.tsx (rendered)';
 const PP = 'app/playoffs/page.tsx (rendered)';
 const TP = 'app/teams/[slug]/page.tsx (rendered)';
@@ -73,7 +73,7 @@ let leagues: Leagues;
 let home: ReturnType<Home['getHomeData']>;
 let standings: Standings;
 let teamView: TeamView;
-let gameModel: GameModel;
+let gameView: GameView;
 
 /** One view model under test: who produced it, which league it belongs to, the value. */
 interface Subject {
@@ -90,7 +90,7 @@ let subjects: Subject[] = [];
 interface EalCorpus {
   data: Data;
   leagues: Leagues;
-  gameModel: GameModel;
+  gameView: GameView;
   subjects: Subject[];
 }
 let eal: EalCorpus;
@@ -102,7 +102,7 @@ beforeAll(async () => {
   const h = await import('../../components/home/home-data');
   standings = await import('../../components/standings/standings-data');
   teamView = await import('../../components/teams/team-view');
-  gameModel = await import('../../components/game/game-model');
+  gameView = await import('../../components/game/game-view');
   home = h.getHomeData();
   markConfig(leagues.LEAGUES);
   markConfig(leagues.SECTIONS);
@@ -137,17 +137,17 @@ beforeAll(async () => {
   }
   s.push({ producer: TV, label: 'teams index', league: null, value: teamView.buildTeamsByLeague() });
 
-  for (const { id: param } of gameModel.gameStaticParams()) {
-    const model = gameModel.buildGameModel(param);
+  for (const { id: param } of gameView.gameStaticParams()) {
+    const model = gameView.buildGameView(param);
     if (!model) {
-      const stub = gameModel.buildSupersededStub(param);
-      s.push({ producer: GM, label: `superseded stub ${param}`, league: null, value: stub });
+      const stub = gameView.buildSupersededStub(param);
+      s.push({ producer: GV, label: `superseded stub ${param}`, league: null, value: stub });
       continue;
     }
     const g = model.game;
     // A game belongs to a league's views when it counts there or is that league's postseason game.
     const league = leagueOfDivision(g.countsFor) ?? g.postseason?.leagueId ?? null;
-    s.push({ producer: GM, label: `game ${param}`, league, value: model, unplayed: g.status !== 'final' });
+    s.push({ producer: GV, label: `game ${param}`, league, value: model, unplayed: g.status !== 'final' });
   }
   subjects = s;
 
@@ -167,7 +167,7 @@ async function collectEal(): Promise<EalCorpus> {
   const h = (await import('../../components/home/home-data')).getHomeData();
   const sd: Standings = await import('../../components/standings/standings-data');
   const tv: TeamView = await import('../../components/teams/team-view');
-  const gm: GameModel = await import('../../components/game/game-model');
+  const gm: GameView = await import('../../components/game/game-view');
   const schedulePage = (await import('../../app/schedule/[league]/page')).default;
   const playoffsPage = (await import('../../app/playoffs/page')).default;
   const teamPage = (await import('../../app/teams/[slug]/page')).default;
@@ -214,16 +214,16 @@ async function collectEal(): Promise<EalCorpus> {
     s.push({ producer: TP, label: `/teams/${t.slug} attributes (EAL corpus)`, league: t.league, value: attributeText(html) });
   }
   for (const { id: param } of gm.gameStaticParams()) {
-    const model = gm.buildGameModel(param);
+    const model = gm.buildGameView(param);
     if (!model) {
-      s.push({ producer: GM, label: `superseded stub ${param} (EAL corpus)`, league: null, value: gm.buildSupersededStub(param) });
+      s.push({ producer: GV, label: `superseded stub ${param} (EAL corpus)`, league: null, value: gm.buildSupersededStub(param) });
       continue;
     }
     const g = model.game;
     const league = leagueOfDivision(g.countsFor) ?? g.postseason?.leagueId ?? null;
-    s.push({ producer: GM, label: `game ${param} (EAL corpus)`, league, value: model, unplayed: g.status !== 'final' });
+    s.push({ producer: GV, label: `game ${param} (EAL corpus)`, league, value: model, unplayed: g.status !== 'final' });
   }
-  return { data: d, leagues: l, gameModel: gm, subjects: s };
+  return { data: d, leagues: l, gameView: gm, subjects: s };
 }
 
 // ---------------------------------------------------------------- string walking
@@ -319,7 +319,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
         expect(subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no view model for ${id}`).toBe(true);
       }
     }
-    expect(subjects.filter((s) => s.producer === GM).length, `${GM}: game models`).toBe(gameModel.gameStaticParams().length);
+    expect(subjects.filter((s) => s.producer === GV).length, `${GV}: game models`).toBe(gameView.gameStaticParams().length);
   });
 
   it('collects the EAL views on the EAL corpus, where the EAL has data', () => {
@@ -337,14 +337,14 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
       expect(eal.data.getGames().filter((g) => g.countsFor && eal.leagues.leagueOfDivision(g.countsFor).id === id && g.status === 'final').length,
         `${id}: counted league finals on the EAL corpus`).toBeGreaterThan(0);
     }
-    expect(eal.subjects.filter((s) => s.producer === GM).length, `${GM}: game models (EAL corpus)`).toBe(eal.gameModel.gameStaticParams().length);
+    expect(eal.subjects.filter((s) => s.producer === GV).length, `${GV}: game models (EAL corpus)`).toBe(eal.gameView.gameStaticParams().length);
     // The copy the second pass exists for is there to be checked: the Super Regional kicker, the
     // 1 v 1 note, the missing banner and the membership note.
     const text = eal.subjects.flatMap((s) => strings(s.value).map(([, v]) => v)).join('\n');
     const ps = eal.leagues.getLeague(ids[0]).postseason;
     expect(ps.kind, 'lib/leagues.ts: postseason kind').toBe('unbracketed-tournament');
     if (ps.kind === 'unbracketed-tournament') expect(text, `${TP}: "${ps.name} picture" kicker`).toContain(`${ps.name} picture`);
-    expect(text, `${GM}: the 1 v 1 note`).toMatch(/1 v 1s decided it/);
+    expect(text, `${GV}: the 1 v 1 note`).toMatch(/1 v 1s decided it/);
     expect(text, `${SD}: the missing banner`).toMatch(/league results? missing/);
     expect(text, `${SP}: membership note`).toContain(eal.leagues.getLeague(ids[0]).membershipNote ?? '(none)');
   });
@@ -379,8 +379,8 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
   it('a missing score never renders as 0-0', () => {
     const zeroZero = /(^|[^\w-])0\s*[-–]\s*0($|[^\w-])/;
     const unplayed = all().filter((s) => s.unplayed);
-    expect(unplayed.length, `${GM}: no unplayed games or slates collected`).toBeGreaterThan(0);
-    expect(eal.subjects.some((s) => s.unplayed && s.producer === GM), `${GM}: no unplayed EAL-corpus games collected`).toBe(true);
+    expect(unplayed.length, `${GV}: no unplayed games or slates collected`).toBeGreaterThan(0);
+    expect(eal.subjects.some((s) => s.unplayed && s.producer === GV), `${GV}: no unplayed EAL-corpus games collected`).toBe(true);
     for (const s of unplayed) expectNone(s, 'shows 0-0 for a game with no score', (v) => !isUrl(v) && zeroZero.test(v), { skipSnapshot: true });
   });
 

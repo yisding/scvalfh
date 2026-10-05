@@ -12,12 +12,12 @@ import {
 } from '../../../components/game/GameSources';
 import SeasonSeries from '../../../components/game/SeasonSeries';
 import {
-  buildGameModel,
+  buildGameView,
   buildSupersededStub,
   gameDescription,
   gameStaticParams,
   gameTitle,
-} from '../../../components/game/game-model';
+} from '../../../components/game/game-view';
 import { OG_BASE } from '../../../components/layout/site';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -37,7 +37,7 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  * `id` is `gameIdToParam(Game.contestId)`: the MaxPreps GUID itself (the snapshot's dedupe key, so
  * it is stable across rebuilds and cannot collide on a doubleheader), or `sblive-<n>` for a game
  * only si.com has (owner decision D2; the contest id `sblive:<n>` has a ':' no path should carry).
- * `buildGameModel` runs `paramToGameId` first. A `supersededGames` key — a si.com game MaxPreps has
+ * `buildGameView` runs `paramToGameId` first. A `supersededGames` key — a si.com game MaxPreps has
  * since published — is prerendered as a stub that links (and is canonical to) the MaxPreps game
  * (SPEC §8.1). The OG image's params are exactly these params (`gameStaticParams`).
  *
@@ -54,7 +54,7 @@ export function generateStaticParams(): Array<{ id: string }> {
 
 export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Promise<Metadata> {
   const { id } = await params;
-  const model = buildGameModel(id);
+  const model = buildGameView(id);
   if (!model) {
     const stub = buildSupersededStub(id);
     if (stub) {
@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
 
 export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  const model = buildGameModel(id);
+  const model = buildGameView(id);
   if (!model) {
     const stub = buildSupersededStub(id);
     if (!stub) notFound();

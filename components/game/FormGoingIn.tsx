@@ -7,7 +7,7 @@ import ResultChip, { CHIP_LABEL } from '../ui/ResultChip';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 
-import type { GameModel, GameSideModel } from './game-model';
+import type { GameModel, GameSideModel } from './game-view';
 
 /**
  * FORM GOING IN (DESIGN §3.5) — the last five LEAGUE results each side carried into this contest,

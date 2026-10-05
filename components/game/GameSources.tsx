@@ -2,7 +2,7 @@ import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
-import type { GameModel } from './game-model';
+import type { GameModel } from './game-view';
 
 /**
  * The source blocks of a game page.
