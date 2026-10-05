@@ -31814,7 +31814,7 @@
       "mascotUrl": null,
       "name": "Valley Christian",
       "section": "ccs",
-      "shortName": "Valley Chr.",
+      "shortName": "Valley Christian",
       "slug": "valley-christian"
     },
     {
@@ -32583,7 +32583,7 @@
       "mascotUrl": null,
       "name": "Ann Sobrato",
       "section": "ccs",
-      "shortName": "Ann Sobrato",
+      "shortName": "Sobrato",
       "slug": "sobrato"
     },
     {
@@ -32905,7 +32905,7 @@
       "mascotUrl": null,
       "name": "Archie Williams",
       "section": "ncs",
-      "shortName": "Archie Wms.",
+      "shortName": "Archie Williams",
       "slug": "archie-williams"
     },
     {
@@ -33050,7 +33050,7 @@
       "mascotUrl": null,
       "name": "Lick-Wilmerding",
       "section": "ncs",
-      "shortName": "Lick-Wilm.",
+      "shortName": "Lick-Wilmerding",
       "slug": "lick-wilmerding"
     },
     {
@@ -33086,7 +33086,7 @@
       "mascotUrl": null,
       "name": "San Francisco University",
       "section": "ncs",
-      "shortName": "SF University",
+      "shortName": "University",
       "slug": "university-sf"
     },
     {
@@ -33417,7 +33417,7 @@
       "mascotUrl": null,
       "name": "Pleasant Valley",
       "section": "ns",
-      "shortName": "Pleasant Val.",
+      "shortName": "Pleasant Valley",
       "slug": "pleasant-valley"
     }
   ]

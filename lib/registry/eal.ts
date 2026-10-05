@@ -131,7 +131,7 @@ export const EAL_SEEDS: readonly Seed[] = [
     id: '8e01c2fa-4888-483f-8d26-6a45518c1bd8',
     slug: 'pleasant-valley',
     name: 'Pleasant Valley',
-    shortName: 'Pleasant Val.',
+    shortName: 'Pleasant Valley',
     abbr: 'PV',
     acronym: 'PVHS',
     mascot: 'Vikings',

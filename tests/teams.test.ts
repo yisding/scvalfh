@@ -72,8 +72,16 @@ describe('teams: the registry is the five leagues', () => {
     for (const t of TEAMS) {
       expect(t.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
       expect(t.abbr).toMatch(/^[A-Z]{2}$/);
-      expect(t.shortName.length, t.slug).toBeLessThanOrEqual(14);
+      expect(t.shortName.length, t.slug).toBeLessThanOrEqual(16);
+      // The short name is the full name or whole words of it: never a made-up abbreviation.
+      expect(` ${t.name} `, t.slug).toContain(` ${t.shortName} `);
     }
+    expect(TEAMS.filter((t) => t.shortName !== t.name).map((t) => [t.slug, t.shortName])).toEqual([
+      ['mitty', 'Mitty'],
+      ['sobrato', 'Sobrato'],
+      ['university-sf', 'University'],
+      ['convent-sacred-heart', 'Convent'],
+    ]);
     expect(resolveTeam('santa-clara')!.abbr).toBe('SC');
     expect(resolveTeam('saratoga')!.abbr).toBe('SG');
   });
@@ -188,6 +196,8 @@ describe('teams: the registry is the five leagues', () => {
     for (const [input, slug] of cases) {
       expect(resolveTeam(input)?.slug, input).toBe(slug);
     }
+    // A short name is display only, never a key: bare "University" is also Irvine's on si.com.
+    expect(resolveTeam('University'), 'University').toBeUndefined();
     // Division and league names are never team spellings.
     for (const name of ['Mt. Hamilton', 'Santa Teresa', 'Marin County', 'De Anza', 'El Camino']) {
       expect(resolveTeam(name), name).toBeUndefined();

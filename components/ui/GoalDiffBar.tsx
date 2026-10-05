@@ -25,8 +25,8 @@ export interface GoalDiffBarProps {
   value: number | null;
   /** max |gd| for THIS division — never global. */
   domain: number;
-  /** Phone and mini 56px (28 per arm), desktop 64px. */
-  track?: 56 | 64;
+  /** Phone standings 44px (21 per arm), compact and mini 56px (27), desktop 64px. */
+  track?: 44 | 56 | 64;
   thickness?: 8 | 10;
   className?: string;
 }

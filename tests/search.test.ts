@@ -100,7 +100,7 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(r.teams.map((t) => [t.entry.slug, t.score])).toEqual([['carmel', 100]]);
   });
 
-  it('"University" → University SF', () => {
+  it('"University" → San Francisco University', () => {
     expect(slugs('University')[0]).toBe('university-sf');
     expect(slugs('university')).toEqual(['university-sf']);
   });

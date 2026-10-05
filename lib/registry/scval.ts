@@ -90,7 +90,7 @@ export const SCVAL_SEEDS: readonly Seed[] = [
     id: '8a8c04d2-5606-44cf-9993-34db55474240',
     slug: 'valley-christian',
     name: 'Valley Christian',
-    shortName: 'Valley Chr.',
+    shortName: 'Valley Christian',
     abbr: 'VC',
     acronym: 'VCHS',
     mascot: 'Warriors',

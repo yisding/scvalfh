@@ -425,7 +425,7 @@ export function GameCard({
   // The links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
   // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Full names, as
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
-  // printed short name, and "Valley Chr." was read out as letters. The visible "Game page" /
+  // printed short name, and an abbreviated one was read out as letters. The visible "Game page" /
   // "Box score" still starts the name, so label-in-name holds.
   const matchup = `${display.away.name} ${matchupJoiner(game)} ${display.home.name}`;
   // An upcoming card has no chip on either side; an invisible 28px slot there pushed both team
