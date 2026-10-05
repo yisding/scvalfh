@@ -220,19 +220,6 @@ export function splitTbaRows(rows: readonly ScheduleRow[]): {
   return { rows: kept, dropped };
 }
 
-/** GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2 (SPEC §1.1c). */
-export const ContestIdsByDateSchema = envelope(
-  z.looseObject({
-    contestIdsByDate: z.array(
-      z.looseObject({ date: z.string(), contestIds: z.array(z.string()) }),
-    ),
-    scoreboardCanonicalUrlToday: z.string().nullable().optional(),
-    scoreboardCanonicalUrlTomorrow: z.string().nullable().optional(),
-    scoreboardCanonicalUrlYesterday: z.string().nullable().optional(),
-  }),
-);
-export type ContestIdsByDate = z.infer<typeof ContestIdsByDateSchema>['data'];
-
 /**
  * GET /gatewayweb/react/team-context/v1?teamId=&sportSeasonId= (SPEC §1.1e).
  *
@@ -362,22 +349,6 @@ export class MaxPrepsError extends Error {
     this.httpStatus = opts.httpStatus;
     this.retryable = opts.retryable ?? false;
     this.body = opts.body;
-  }
-}
-
-/**
- * A league whose standings endpoint answers 200 with ZERO rows.
- *
- * SPEC §5.2.1 lists this alongside a changed ssid or year as a season-level assertion: the run
- * aborts and the previous snapshot is kept, because carrying yesterday's reported table forward
- * and then cross-checking today's computed table against it would invent — or hide — a mismatch
- * on /standings. It is its own class so the cron can tell it apart from an ordinary per-source
- * failure, which IS recoverable.
- */
-export class MaxPrepsEmptyStandingsError extends MaxPrepsError {
-  constructor(message: string, opts: { url: string; httpStatus?: number }) {
-    super(message, opts);
-    this.name = 'MaxPrepsEmptyStandingsError';
   }
 }
 
@@ -604,14 +575,6 @@ export class MaxPrepsClient {
     return `${MAXPREPS_API}/gatewayweb/react/schedule-calculated/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
   }
 
-  contestIdsUrl(leagueId: string): string {
-    return (
-      `${MAXPREPS_API}/gatewayweb/react/contest-ids-grouped-by-date-by-context/v2` +
-      `?context=league&id=${leagueId}&genderSport=girls,fieldhockey&level=Varsity` +
-      '&excludeTbaDate=true&nationalTeamCount=25'
-    );
-  }
-
   async getBootstrap(): Promise<Fetched<Bootstrap>> {
     const res = await this.text(BOOTSTRAP_URL);
     return { data: parseBootstrap(res.data), meta: res.meta };
@@ -620,19 +583,6 @@ export class MaxPrepsClient {
   async getLeagueMeta(leagueId: string): Promise<Fetched<LeagueMeta>> {
     const url = this.leagueMetaUrl(leagueId);
     const res = await this.json(url, envelope(LeagueMetaSchema));
-    return { data: res.data.data, meta: res.meta };
-  }
-
-  async getStandings(leagueId: string): Promise<Fetched<StandingsRow[]>> {
-    const url = this.standingsUrl(leagueId);
-    const res = await this.json(url, StandingsResponseSchema);
-    if (res.data.data.length === 0) {
-      // A league returning 0 rows aborts the run (SPEC §5.2.1).
-      throw new MaxPrepsEmptyStandingsError('standings returned 0 rows', {
-        url,
-        httpStatus: res.meta.httpStatus,
-      });
-    }
     return { data: res.data.data, meta: res.meta };
   }
 
@@ -667,12 +617,6 @@ export class MaxPrepsClient {
   ): Promise<Fetched<TeamContext>> {
     const url = this.teamContextUrl(teamId, sportSeasonId);
     const res = await this.json(url, TeamContextSchema);
-    return { data: res.data.data, meta: res.meta };
-  }
-
-  async getContestIdsByDate(leagueId: string): Promise<Fetched<ContestIdsByDate>> {
-    const url = this.contestIdsUrl(leagueId);
-    const res = await this.json(url, ContestIdsByDateSchema);
     return { data: res.data.data, meta: res.meta };
   }
 }

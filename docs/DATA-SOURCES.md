@@ -59,7 +59,8 @@ confirmed on one game only, so it is **not encoded**: no tally is stored and the
 not show one (DESIGN §22.8). **[V] for that one game; [U] as a rule.**
 
 **(c) Contest ids grouped by date** — `GET /gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=league&id={leagueId}&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25`.
-Cheap cron driver / same-day scoreboard. `data.contestIdsByDate[]`,
+Researched, not used: the pipeline never calls it (it reads each team's schedule feed instead).
+`data.contestIdsByDate[]`,
 `data.scoreboardCanonicalUrlToday`/`UrlTomorrow`/`UrlYesterday`. **[V]**
 
 **(d) Scoreboard contests by ids** — `POST /gatewayweb/react/scoreboard-contests-by-ids/basic/v2`,
