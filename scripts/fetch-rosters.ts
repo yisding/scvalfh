@@ -34,8 +34,8 @@
  * written.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import path from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import {
   describePrevious,
@@ -48,9 +48,9 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from "../lib/fetch-scope";
-import { MaxPrepsClient } from "../lib/sources/maxpreps";
-import { parseRosterPage, pendingRoster, rosterUrl } from "../lib/sources/maxpreps-roster";
+} from '../lib/fetch-scope';
+import { MaxPrepsClient } from '../lib/sources/maxpreps';
+import { parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
 import {
   RostersPartialSchema,
   RostersSchema,
@@ -59,12 +59,12 @@ import {
   rostersContentKey,
   type Rosters,
   type TeamRoster,
-} from "../lib/rosters-schema";
-import { SEASON_YEAR } from "../lib/season";
-import { stableStringify } from "../lib/stable-json";
-import { TEAMS } from "../lib/teams";
-import type { LeagueId } from "../lib/types";
-import { runCli } from "./cli";
+} from '../lib/rosters-schema';
+import { SEASON_YEAR } from '../lib/season';
+import { stableStringify } from '../lib/stable-json';
+import { TEAMS } from '../lib/teams';
+import type { LeagueId } from '../lib/types';
+import { runCli } from './cli';
 
 interface Args {
   fixtures: string | null;
@@ -80,7 +80,7 @@ function parseArgs(argv: readonly string[]): Args {
     fixtures: null,
     capture: null,
     leagues: null,
-    out: path.join(process.cwd(), "data", "rosters.json"),
+    out: path.join(process.cwd(), 'data', 'rosters.json'),
     dryRun: false,
     fetchedAt: null,
   };
@@ -88,19 +88,19 @@ function parseArgs(argv: readonly string[]): Args {
     const arg = argv[i];
     const next = () => {
       const v = argv[i + 1];
-      if (!v || v.startsWith("--")) throw new Error(`${arg} needs a value`);
+      if (!v || v.startsWith('--')) throw new Error(`${arg} needs a value`);
       i += 1;
       return v;
     };
-    if (arg === "--fixtures") out.fixtures = path.resolve(next());
-    else if (arg === "--capture") out.capture = path.resolve(next());
-    else if (arg === "--leagues") out.leagues = parseLeaguesFlag(next(), arg);
-    else if (arg === "--out") out.out = path.resolve(next());
-    else if (arg === "--dry-run") out.dryRun = true;
-    else if (arg === "--fetched-at") out.fetchedAt = parseFetchedAtFlag(next(), arg);
+    if (arg === '--fixtures') out.fixtures = path.resolve(next());
+    else if (arg === '--capture') out.capture = path.resolve(next());
+    else if (arg === '--leagues') out.leagues = parseLeaguesFlag(next(), arg);
+    else if (arg === '--out') out.out = path.resolve(next());
+    else if (arg === '--dry-run') out.dryRun = true;
+    else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else throw new Error(`unknown flag: ${arg}`);
   }
-  if (out.fixtures && out.capture) throw new Error("--capture records live pages; it cannot be combined with --fixtures");
+  if (out.fixtures && out.capture) throw new Error('--capture records live pages; it cannot be combined with --fixtures');
   return out;
 }
 
@@ -112,7 +112,7 @@ function parseArgs(argv: readonly string[]): Args {
  */
 function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
   if (!existsSync(file)) return null;
-  return readPreviousFile(readFileSync(file, "utf8"), {
+  return readPreviousFile(readFileSync(file, 'utf8'), {
     season: SEASON_YEAR,
     row: TeamRosterSchema,
     file: RostersPartialSchema,
@@ -120,10 +120,10 @@ function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
 }
 
 const NOTES = [
-  "One entry per registry team, all five leagues (SCVAL, BVAL, PCAL, MCAL, EAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+  'One entry per registry team, all five leagues (SCVAL, BVAL, PCAL, MCAL, EAL), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.',
   "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
-  "Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.",
-  "Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.",
+  'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.',
+  'Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.',
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
@@ -134,7 +134,7 @@ async function main(): Promise<number> {
   if (loaded && !loaded.readable) {
     console.error(
       `FAILED: the previous ${path.relative(process.cwd(), args.out)} cannot be read: ${loaded.reason}. ` +
-        "Nothing written: fix or remove it, then re-run.",
+        'Nothing written: fix or remove it, then re-run.',
     );
     return 1;
   }
@@ -149,7 +149,7 @@ async function main(): Promise<number> {
     args.fixtures
       ? `fetch-rosters: offline, from ${args.fixtures}`
       : `fetch-rosters: ${teamsInScope(args.leagues).length} MaxPreps roster pages` +
-          (args.leagues ? ` (${args.leagues.join(", ")} only)` : ""),
+          (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
   // --dry-run writes nothing, --capture included.
   const capture = args.dryRun ? null : args.capture;
@@ -174,25 +174,25 @@ async function main(): Promise<number> {
         if (args.fixtures) {
           html = readFileSync(
             path.join(args.fixtures, `roster-${team.slug}.html`),
-            "utf8",
+            'utf8',
           );
         } else {
-          if (!url) throw new Error("no MaxPreps team URL in the registry");
+          if (!url) throw new Error('no MaxPreps team URL in the registry');
           html = (await client.text(url)).data;
           if (capture) {
-            writeFileSync(path.join(capture, `roster-${team.slug}.html`), html, "utf8");
+            writeFileSync(path.join(capture, `roster-${team.slug}.html`), html, 'utf8');
           }
         }
         // A team with no data coverage has a placeholder registry id (no standings row to read a
         // GUID from), so the page's own id cannot be asserted against it; every other must match.
         const page = parseRosterPage(html, {
-          expectedTeamId: team.dataCoverage === "none" ? undefined : team.id,
+          expectedTeamId: team.dataCoverage === 'none' ? undefined : team.id,
           url: url ?? team.slug,
         });
         return {
           ...base,
           maxprepsTeamId: page.teamId,
-          status: page.players.length ? "ok" : "empty",
+          status: page.players.length ? 'ok' : 'empty',
           athleteCount: page.athleteCount,
           staffCount: page.staffCount,
           players: page.players,
@@ -205,7 +205,7 @@ async function main(): Promise<number> {
         const error = err instanceof Error ? err.message : String(err);
         console.warn(
           `WARN ${team.slug}: ${error}` +
-            (dropped.has(team.slug) ? " (its previous row was dropped: nothing to carry forward)" : ""),
+            (dropped.has(team.slug) ? ' (its previous row was dropped: nothing to carry forward)' : ''),
         );
         const prior = previous?.rows.get(team.slug);
         // Any row that was actually read (ok, empty, or itself carried forward) is still true: an
@@ -214,14 +214,14 @@ async function main(): Promise<number> {
           return {
             ...prior,
             ...base,
-            status: "carried-forward",
+            status: 'carried-forward',
             error,
           };
         }
         return {
           ...base,
           maxprepsTeamId: null,
-          status: "error",
+          status: 'error',
           athleteCount: null,
           staffCount: null,
           players: [],
@@ -238,8 +238,8 @@ async function main(): Promise<number> {
     season: SEASON_YEAR,
     fetchedAt,
     source: {
-      id: "maxpreps-html",
-      builtBy: "scripts/fetch-rosters.ts",
+      id: 'maxpreps-html',
+      builtBy: 'scripts/fetch-rosters.ts',
       notes: NOTES,
     },
     teams,
@@ -248,29 +248,29 @@ async function main(): Promise<number> {
 
   const validated = RostersSchema.safeParse(rosters);
   if (!validated.success) {
-    console.error("FAILED: the assembled file does not validate:");
+    console.error('FAILED: the assembled file does not validate:');
     for (const issue of validated.error.issues.slice(0, 10)) {
-      console.error(`  ${issue.path.join(".") || "(root)"}: ${issue.message}`);
+      console.error(`  ${issue.path.join('.') || '(root)'}: ${issue.message}`);
     }
     return 1;
   }
 
-  console.log("");
+  console.log('');
   for (const t of teams) {
     const n = t.players.length;
-    const pct = (k: (p: TeamRoster["players"][number]) => boolean) =>
-      n ? `${String(t.players.filter(k).length).padStart(2)}` : " -";
+    const pct = (k: (p: TeamRoster['players'][number]) => boolean) =>
+      n ? `${String(t.players.filter(k).length).padStart(2)}` : ' -';
     console.log(
       `${t.slug.padEnd(17)} ${t.status.padEnd(15)} ${String(n).padStart(2)} players · ` +
         `grade ${pct((p) => p.grade !== null)} · pos ${pct((p) => p.position !== null)} · ` +
         `# ${pct((p) => p.jersey !== null)} · ht ${pct((p) => p.height !== null)} · ` +
         `C ${pct((p) => p.isCaptain)}` +
-        (t.warnings.length ? ` · ${t.warnings.join("; ")}` : "") +
-        (t.error ? ` · ERROR ${t.error}` : ""),
+        (t.warnings.length ? ` · ${t.warnings.join('; ')}` : '') +
+        (t.error ? ` · ERROR ${t.error}` : ''),
     );
   }
   const byLeague = summarizeByLeague(teams, args.leagues, dropped);
-  console.log("");
+  console.log('');
   for (const l of byLeague) console.log(formatLeagueSummary(l));
   // A covered team that failed decides the exit code, and so does an uncovered one whose previous
   // row was dropped (it is pending now); a league left out of the run is otherwise not a failure.
@@ -282,11 +282,11 @@ async function main(): Promise<number> {
     `\n${c.players} players on ${c.teams} teams · ${c.withGrade} with a grade · ` +
       `${c.withPosition} with a position · ${c.withJersey} with a number · ` +
       `${c.withHeight} with a height · ${c.captains} captains · ${failed} team(s) failed this run` +
-      (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ""),
+      (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );
 
   if (args.dryRun) {
-    console.log("\ndry run: nothing written");
+    console.log('\ndry run: nothing written');
     return exitCode;
   }
   // Only a previous file that validates whole (and lost no row) can be left in place.
@@ -298,7 +298,7 @@ async function main(): Promise<number> {
     return exitCode;
   }
   mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(rosters), "utf8");
+  writeFileSync(args.out, stableStringify(rosters), 'utf8');
   console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
   return exitCode;
 }
