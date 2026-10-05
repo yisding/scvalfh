@@ -2,21 +2,46 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { ordinal } from '../../lib/format';
-import { canonicalAwardValue, historySchoolName, type HistoryAwards, type HistoryPlayer } from '../../lib/history';
+import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
 import { leagueOfDivision } from '../../lib/leagues';
+import { awardLine, overallAwards, type AwardLine } from './history-view';
 
 /**
- * The 2025-26 all-league awards (DESIGN §3.9): overall award lines, then First Team / Second
- * Team / Honorable Mention as `<dl>`s. `value` on an overall award is the source's right-hand side
- * printed as the source wrote it — the divisions write it differently, so this site does not try
- * to split it — except that its school is written by the registry name (canonicalAwardValue), and
- * so is every award line's school (historySchoolName): the page names a school the one way the rest
- * of the site does, never "St Ignatius", "MItty" or "Presentation HS".
+ * The 2025-26 all-league awards (DESIGN §3.9): the overall awards, then First Team / Second
+ * Team / Honorable Mention as `<dl>`s. Every winner and listed player reads the same way, in the
+ * site's words (components/history/history-view.ts): the player, then position · grade · school,
+ * the school linked to its team page. The documents write each of those several ways ("GK",
+ * "Goalie", "Goalkeeper"; "St Ignatius", "MItty"; an overall award as "School- Player" or "Player
+ * School Year"); the page never shows those differences.
  */
 export interface AwardsBlockProps {
   awards: HistoryAwards | null;
   /** "Varsity" or "JV" — used only in the empty-state sentence. */
   levelLabel: string;
+}
+
+/** "Midfield · 12th grade · Los Gatos", the school linked; a part the document left out is not shown. */
+function AwardMeta({ line }: { line: AwardLine }) {
+  const team = line.slug ? getTeamBySlug(line.slug) : undefined;
+  return (
+    <span className="block text-meta text-ink-2">
+      {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never starts
+          a line with one ("· Cupertino"), nor splits "12th grade". A position or grade the
+          document does not give is null: say nothing rather than guess. */}
+      {line.position ? <>{line.position}&nbsp;&middot; </> : null}
+      {line.year !== null ? <>{ordinal(line.year)}&nbsp;grade&nbsp;&middot; </> : null}
+      {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads the whole
+          linked route the moment the link scrolls into view, and every award names a school, so
+          one block is dozens of these. Navigation still fetches on click. */}
+      {team ? (
+        <Link href={`/teams/${team.slug}`} prefetch={false} className="text-accent hover:underline">
+          {line.school}
+        </Link>
+      ) : (
+        <span>{line.school}</span>
+      )}
+    </span>
+  );
 }
 
 function PlayerList({
@@ -49,8 +74,7 @@ function PlayerList({
         }`}
       >
         {players.map((p, i) => {
-          const team = p.slug ? getTeamBySlug(p.slug) : undefined;
-          const school = historySchoolName(p.slug, p.school);
+          const line = awardLine(p);
           return (
             <div
               key={i}
@@ -60,29 +84,8 @@ function PlayerList({
                 columns === 'sm' ? 'sm:[&:nth-child(2)]:border-t-0' : 'lg:[&:nth-child(2)]:border-t-0'
               }`}
             >
-              <span className="block text-body text-ink">{p.player}</span>
-              <span className="block text-meta text-ink-2">
-                {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and
-                    never starts a line with one ("· Cupertino"), nor splits "12th grade". */}
-                {/* A blank position cell in the source is null: say nothing rather than guess. */}
-                {p.position ? <>{p.position}&nbsp;&middot; </> : null}
-                {ordinal(p.year)}&nbsp;grade&nbsp;&middot;{' '}
-                {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads
-                    the whole linked route the moment the link scrolls into view, and every award
-                    names a school, so one block is dozens of these. Navigation still fetches on
-                    click. */}
-                {team ? (
-                  <Link
-                    href={`/teams/${team.slug}`}
-                    prefetch={false}
-                    className="text-accent hover:underline"
-                  >
-                    {school}
-                  </Link>
-                ) : (
-                  <span>{school}</span>
-                )}
-              </span>
+              <span className="block text-body text-ink">{line.player}</span>
+              <AwardMeta line={line} />
             </div>
           );
         })}
@@ -99,18 +102,27 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
       </p>
     );
   }
-  const leagueId = leagueOfDivision(awards.division).id;
+  const overall = overallAwards(leagueOfDivision(awards.division).id, awards);
   return (
     <div className="flex flex-col gap-8">
-      {awards.overall.length > 0 ? (
-        // A two-column grid, so every value starts at the same x: the label column is as wide as
-        // the longest label. On a phone each pair stacks (small label over the value) so a long
-        // value never wraps flush-left under its label.
-        <dl className="m-0 grid gap-y-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-2">
-          {awards.overall.map((o, i) => (
+      {overall.length > 0 ? (
+        // A two-column grid, so every winner starts at the same x: the label column is as wide as
+        // the longest title. On a phone each pair stacks (small title over the winner) so a long
+        // line never wraps flush-left under its title. The title sits on the name's line.
+        <dl className="m-0 grid gap-y-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-3">
+          {overall.map((o, i) => (
             <div key={i} className="sm:contents">
-              <dt className="text-micro text-ink-3 sm:text-meta sm:text-ink-2">{o.award}</dt>
-              <dd className="m-0 text-body font-semibold text-ink sm:text-meta">{canonicalAwardValue(leagueId, o.value)}</dd>
+              <dt className="text-micro text-ink-3 sm:pt-0.5 sm:text-meta sm:text-ink-2">{o.award}</dt>
+              <dd className="m-0">
+                {o.winner ? (
+                  <>
+                    <span className="block text-body font-semibold text-ink">{o.winner.player}</span>
+                    <AwardMeta line={o.winner} />
+                  </>
+                ) : (
+                  <span className="block text-body font-semibold text-ink">{o.value}</span>
+                )}
+              </dd>
             </div>
           ))}
         </dl>

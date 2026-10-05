@@ -29,7 +29,7 @@ import {
 } from './history-schema';
 import { LEAGUE_IDS } from './leagues';
 import { failValidation } from './schema-primitives';
-import { getTeamBySlug, teamsInLeague } from './teams';
+import { getTeamBySlug } from './teams';
 import type { DivisionId, LeagueId, TeamSlug } from './types';
 
 export type {
@@ -113,27 +113,6 @@ export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory
  */
 export function historySchoolName(slug: TeamSlug | null, sourceName: string): string {
   return (slug ? getTeamBySlug(slug)?.name : undefined) ?? sourceName;
-}
-
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-/**
- * An overall award's value with its school written by the registry name, as `historySchoolName`
- * does for rows and award lines: "St Ignatius- Olivia Van de Braak" → "St. Ignatius- Olivia Van de
- * Braak", "…, Goalie, Presentation HS" → "…, Goalie, Presentation". The value is not split (the
- * divisions write it three ways; see AwardsBlock), only the one school spelling in it is replaced:
- * the longest name, short name or alias of one of the league's schools, matched case for case as
- * whole words. A value naming none of them is returned as written.
- */
-export function canonicalAwardValue(leagueId: LeagueId, value: string): string {
-  const spellings = teamsInLeague(leagueId)
-    .flatMap((t) => [t.name, t.shortName, ...t.aliases].map((spelling) => ({ spelling, name: t.name })))
-    .sort((a, b) => b.spelling.length - a.spelling.length);
-  for (const { spelling, name } of spellings) {
-    const re = new RegExp(`(?<![A-Za-z])${escapeRegExp(spelling)}(?![A-Za-z])`);
-    if (re.test(value)) return value.replace(re, name);
-  }
-  return value;
 }
 
 function divisionEntry(division: DivisionId): HistoryDivision | undefined {

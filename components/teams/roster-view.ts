@@ -38,14 +38,7 @@ import {
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view';
-
-/** MaxPreps' field hockey position codes. Anything else is printed as the coach wrote it. */
-const POSITION_WORDS: Record<string, string> = {
-  F: 'Forward',
-  M: 'Midfield',
-  D: 'Defense',
-  G: 'Goalkeeper',
-};
+import { positionWords } from '../ui/position-words';
 
 /**
  * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier
@@ -216,10 +209,6 @@ export interface RosterView {
    * the one case that may claim no other source has a roster.
    */
   otherRosters: OtherRosters;
-}
-
-function positionWords(codes: readonly string[]): string {
-  return codes.map((c) => POSITION_WORDS[c] ?? c).join(' / ');
 }
 
 /** A conflict's value in the list's own words, lower-cased for the middle of a sentence. */

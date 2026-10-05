@@ -195,7 +195,7 @@ async function main(argv: readonly string[]): Promise<number> {
         'JV membership differs from varsity: De Anza JV has 6 teams (no Valley Christian, no Wilcox) and El Camino JV has 6 (no Saratoga, no Presentation).',
         'De Anza varsity had SEVEN teams in 2025-26 — Wilcox is new to the 2026-27 grid.',
         'School spellings are the PDFs\' own and are inconsistent even within one file ("St Ignatius" in the awards block, "Saint Ignatius" in the team table). `slug` is the join key.',
-        'Overall-award values are stored verbatim: De Anza writes "School- Player", El Camino writes "Player School Year" and "Player, Position, School". Splitting all three shapes would mean guessing.',
+        'Overall-award values are stored verbatim: De Anza writes "School- Player", El Camino writes "Player School Year" and "Player, Position, School". The page splits them around the one school spelling in each (components/history/history-view.ts); the file keeps the text as written.',
       ],
     },
     divisions: scvalDivisions,

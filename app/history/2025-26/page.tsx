@@ -183,7 +183,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
                   <SectionHeader
                     as="h3"
                     size="section"
-                    kicker={`${label} · all-league awards, varsity`}
+                    kicker={`${label} · varsity all-league awards`}
                     className="mt-section"
                   />
                   <AwardsBlock awards={d.awards.varsity} levelLabel="Varsity" />
@@ -192,7 +192,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
 
               {hasJvAwards ? (
                 <>
-                  <SectionHeader as="h3" size="section" kicker={`${label} · all-league awards, JV`} className="mt-section" />
+                  <SectionHeader as="h3" size="section" kicker={`${label} · JV all-league awards`} className="mt-section" />
                   <AwardsBlock awards={d.awards.jv} levelLabel="JV" />
                 </>
               ) : null}
