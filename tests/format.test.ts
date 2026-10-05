@@ -281,13 +281,9 @@ describe('numberWord and dateSpan', () => {
     expect([11, 49, -1, 2.5].map(numberWord)).toEqual(['11', '49', '-1', '2.5']);
   });
 
-  it('words an ordinal to tenth and prints anything past it as digits', () => {
-    expect([1, 4, 7, 10, 11, 22].map(ordinalWord)).toEqual(['first', 'fourth', 'seventh', 'tenth', '11th', '22nd']);
-  });
-
   it('words ordinals zeroth to tenth and falls back to ordinal() past them', () => {
-    expect([0, 1, 4, 9, 10].map(ordinalWord)).toEqual(['zeroth', 'first', 'fourth', 'ninth', 'tenth']);
-    expect([11, 21, 23].map(ordinalWord)).toEqual(['11th', '21st', '23rd']);
+    expect([0, 1, 4, 7, 9, 10].map(ordinalWord)).toEqual(['zeroth', 'first', 'fourth', 'seventh', 'ninth', 'tenth']);
+    expect([11, 21, 22, 23].map(ordinalWord)).toEqual(['11th', '21st', '22nd', '23rd']);
   });
 
   it('names the weekday of a date key or a local timestamp', () => {
