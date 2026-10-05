@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import GameList from '../../../components/schedule/GameList';
+import JvDayGames from '../../../components/schedule/JvDayGames';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
 import { dayGroups, daySummary, leaguesInvolved } from '../../../components/schedule/day-summary';
+import { buildDayJvView } from '../../../components/teams/jv-view';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { gameWord } from '../../../components/ui/plural';
@@ -38,7 +40,9 @@ import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
  * postseason games, `<SHORT> · <n> league games` — then `Non-league · <n>` for the rest; a game
  * appears once. The unreported official fixtures of the day are one block per league: on a past
  * day `Scheduled by <SHORT>, not reported` (SPEC §10.4); today and on a day still to come, more of
- * the day ("Also on <SHORT>’s schedule for this day…"), never a missing result.
+ * the day ("Also on <SHORT>’s schedule for this day…"), never a missing result. The day's JV games
+ * (lib/jv.ts) come last, in a block of their own (`#jv`), never mixed into a league group or a
+ * varsity count.
  */
 /** A registry team renders by its short name; anyone else is a name and nothing else. */
 function sideName(slug: string | null, fallback: string): string {
@@ -87,6 +91,8 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
     .map((league) => ({ league, rows: fixtures.filter((f) => f.league === league.id) }))
     .filter((block) => block.rows.length > 0);
   const groups = dayGroups(games);
+  // The day's JV games, after everything varsity (lib/jv.ts), apart from every varsity count.
+  const jv = buildDayJvView(date);
   /* The leagues whose /schedule/<league> lists this date: every league with a side in one of the
      day's games (a cross-league game is on both leagues' lists), config order. */
   const involved = new Set(leaguesInvolved(games));
@@ -311,6 +317,16 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
           </section>
         ),
       )}
+
+      {/* JV last of the games: the same schools' other teams, never mixed into the varsity
+          groups above or their counts. A day page exists only for a date with a varsity
+          contest, so a JV-only date is on the team pages alone. */}
+      {jv.rows.length > 0 ? (
+        <section id="jv" aria-labelledby="jv-heading" className="mt-section md:mt-section-lg">
+          <SectionHeader id="jv-heading" kicker="JV games" meta={`${jv.rows.length} ${gameWord(jv.rows.length)}`} />
+          <JvDayGames view={jv} />
+        </section>
+      ) : null}
 
       {/* One always-visible line under the day's games instead of a caption plus a "How scores
           are shown" disclosure: the zone every time here is in, the two states a reader can

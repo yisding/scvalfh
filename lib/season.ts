@@ -30,6 +30,12 @@ export const ALL_SEASON_ID = 'bfacc9ec-145e-4659-ba7e-0824d163d5fc';
 export const GENDER_SPORT = 'girls,fieldhockey' as const;
 /** [V] only Varsity is verified end to end */
 export const TEAM_LEVEL = 'Varsity' as const;
+/**
+ * [V] The JV season of the same sport: `__NEXT_DATA__.query.ssid` of maxpreps.com/ca/field-hockey/jv/
+ * (teamLevel 'JV', read 2026-10-05). Each team's JV games come from the same schedule-calculated
+ * call with this id; the team id stays the school's own (the registry id). scripts/fetch-jv.ts only.
+ */
+export const JV_SPORT_SEASON_ID = 'fae4fc22-6de6-47ae-972d-e290b0ec31ef';
 
 /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4). */
 export const CCS_BRACKET_URL =

@@ -57,10 +57,10 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable |
 | `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (5 pages) |
-| `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date) |
+| `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date), then the day's JV games (`#jv`), kept apart from the varsity counts |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 49 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 16 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
 | `/clubs/[slug]` | One club (16 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the 49 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
@@ -68,7 +68,7 @@ Every route is static. Dynamic routes list their params in `generateStaticParams
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal` is a 404) |
 | `/leaders` | Season leaders across all five leagues (`#schools`, `#players`, and one anchor per board): the schools with the best overall and league records, the most goals and fewest allowed per game, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating`), from every final in the snapshot; then the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL, MCAL and EAL shown as unavailable |
-| `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal #rules-eal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`) and every dropped contest (`#dropped`) |
+| `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal #rules-eal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
 (the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
@@ -141,11 +141,14 @@ season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 49 teams; see
-"Player stats" below), which is allowed to fail without stopping the run. It runs the test suite
-against what it just wrote; if the suite fails and `data/player-stats.json` changed in this run, it
-restores the committed stats file and runs the suite again, so a stats file the tests refuse never
-blocks the snapshot commit (the job Summary says when that happened). It then commits `data/snapshot.json` + `data/snapshot.meta.json` and
-`data/player-stats.json` **only where they changed**, in one commit. The commit is what triggers
+"Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
+stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
+again without this run's `data/jv.json`, then (keeping the new JV file) without this run's
+`data/player-stats.json`, and only then without either, so a JV or stats file the tests refuse never
+blocks the snapshot commit and never costs the other file's refresh (the job Summary says when a file
+was restored). It then commits `data/snapshot.json` +
+`data/snapshot.meta.json`, `data/player-stats.json` and `data/jv.json` **only where they changed**,
+in one commit. The commit is what triggers
 your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
 carry `[skip ci]`. The job fails, and commits nothing, only on a run abort; a frozen or partial
 league still publishes (with its reasons on the site). After a successful run it opens or updates
@@ -168,12 +171,12 @@ For this to work on a deployed copy of this repo:
 
 ### Self-hosting the cron
 
-If you're not using GitHub Actions, run the same commands (`fetch-player-stats` is optional, hence
-`|| true`) from any scheduler that can reach the internet on your host, twice a day during the
-season:
+If you're not using GitHub Actions, run the same commands (`fetch-player-stats` and `fetch-jv` are
+optional, hence `|| true`) from any scheduler that can reach the internet on your host, twice a day
+during the season:
 
 ```cron
-0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && pnpm build
+0 7,22 * 8-11 * cd /path/to/scvalfh && pnpm fetch-data && (pnpm fetch-player-stats || true) && (pnpm fetch-jv || true) && pnpm build
 ```
 
 Or by hand, any time:
@@ -352,6 +355,54 @@ pnpm fetch-player-stats --leagues bval,pcal                  # only these league
 pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON (SCVAL's: add --leagues scval)
 pnpm fetch-player-stats --capture <dir>                      # live, and save each response body, as received, as <dir>/stats-<slug>.json
 pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
+```
+
+### JV games
+
+Every team page has a "JV games" section (`#jv`) and every day page a JV block after the varsity
+games: the school's junior varsity games, **kept apart from varsity**. No varsity standings table,
+record, form strip, leader board, Elo rating or postseason picture reads them. There are no JV
+standings yet, and for now JV games carry no league or non-league tag, because MaxPreps' JV league flags are unreliable (they disagree with the varsity game
+of the same day and pairing on 116 of 200 such games) and no league publishes JV standings in season.
+
+`data/jv.json` is built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`) from two sources, and keeps what
+each said:
+
+- **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
+  season id (`JV_SPORT_SEASON_ID` in `lib/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
+  and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
+  as a varsity row does. On 2026-10-05: 260 games for 45 of the 49 schools, 91 with a score
+  (Del Mar, Live Oak, Sobrato and Silver Creek have none).
+- **si.com** (`sblive`): each school's JV team page (48 schools; Marin Academy has no si.com page),
+  scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv-teams.ts`,
+  read from each varsity page's level switcher), never by name.
+
+What the pages show is `mergeJv` (`lib/jv-merge.ts`) over the two, decided again on every build
+from the file's own `fetchedAt`. **MaxPreps comes first**; si.com only supplements it, for a game
+between two registry schools matched by pair and date (±1 day): it fills a past game MaxPreps has no
+score for, and adds a game MaxPreps does not list when MaxPreps has no JV game of that pair within
+±14 days (both marked †, as a varsity backfill is); where the two disagree on a final, MaxPreps'
+score stays and si.com's is noted under the row. A game si.com lists twice with different scores,
+or two si.com games equally near one MaxPreps game, is never used. On 2026-10-05 si.com filled 7
+scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagreed on 3.
+`lib/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
+(`components/teams/TeamJvGames.tsx`, `components/schedule/JvDayGames.tsx`).
+
+`update-data.yml` runs it after `fetch-player-stats`, on the same terms: it may fail without
+stopping the run, writes nothing outside the season window unless `--force`, leaves the file alone
+when only its stamps would change, takes `--leagues`, and scopes failures to the team and the
+source (a failed MaxPreps feed or si.com page keeps that school's previous rows, `carried-forward`).
+Cost per run: 49 small MaxPreps calls through the MaxPreps client's gate and up to 48 si.com pages,
+one at a time, 1 s apart (about a minute). A day page exists only for a date with a varsity game, so
+a JV-only date (Aug 18 in 2026) is on the team pages alone.
+
+```bash
+pnpm fetch-jv                                   # live: 49 MaxPreps JV feeds + 48 si.com JV pages → data/jv.json
+pnpm fetch-jv --leagues bval,pcal               # only these leagues; the others keep their rows
+pnpm fetch-jv --no-sblive                       # MaxPreps only; si.com rows are carried
+pnpm fetch-jv --fixtures tests/fixtures/jv --leagues pcal   # offline, from the PCAL captures
+pnpm fetch-jv --capture <dir>                   # live, and save every response as <dir>/jv-sched-<slug>.json / jv-sblive-<slug>.html
+pnpm fetch-jv --dry-run                         # parse and report, write nothing
 ```
 
 ### Clubs
@@ -587,7 +638,7 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles eight data files
+develop and build without ever calling a live upstream API. Every build bundles nine data files
 into its server code, each imported by its read module, so no server reads `data/` at run time:
 
 | File | Read by |
@@ -596,6 +647,7 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/history-2025-26.json` | `lib/history.ts` |
 | `data/prior-season.json` | `lib/prior-season.ts` |
 | `data/player-stats.json` | `lib/player-stats.ts` |
+| `data/jv.json` | `lib/jv.ts` |
 | `data/rosters.json`, `data/rosters-enrichment.json` | `lib/rosters.ts` |
 | `data/clubs.json` | `lib/clubs.ts` |
 | `data/commits.json` | `lib/commits.ts` |
@@ -610,9 +662,9 @@ never `.env.production`.
 
 To point at a different snapshot file (e.g. a fixture-built one), set
 `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
-`data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, and `SCVAL_ROSTERS`
-and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and `data/rosters-enrichment.json`. All five
-are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
+`data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, `SCVAL_JV` for
+`data/jv.json`, and `SCVAL_ROSTERS` and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and
+`data/rosters-enrichment.json`. All six are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
 Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
 Cloudflare scripts. The other three files have no override.
 
@@ -664,7 +716,8 @@ the "never render a missing score as 0-0" rule across every `GameRow` variant an
 game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover, unnamed
 rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the recorded corpora (end to
 end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
-validators check `data/rosters.json`, `data/player-stats.json`, `data/clubs.json` and
+validators check `data/rosters.json`, `data/player-stats.json`, `data/jv.json` (with the JV merge
+rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json` and
 `data/commits.json`, and further suites pin the copy rules, the workflow files and the
 update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
 captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
@@ -997,7 +1050,13 @@ at once, at every build, starting from last season's:
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
-- JV is out of scope; MaxPreps' season-year URL segment is cosmetic (it always serves the current
+- There are no JV standings, records or leaders yet: MaxPreps' JV league flags are unreliable and no
+  league publishes JV standings in season, so league games would have to be identified another way. JV scores
+  are thin where coaches do not enter them (on 2026-10-05 MaxPreps had no score for any past BVAL or
+  PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
+  stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a
+  JV team (York, PCAL's JV-only member, appears only as an opponent). See "JV games".
+- MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
   silently resolved. See `docs/DATA-SOURCES.md` §7 for the full list of open risks.
@@ -1181,8 +1240,9 @@ and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, beca
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
 `main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a
-`data: refresh snapshot` or `data: refresh player stats` message, nothing but the snapshot, its
-meta file and `data/player-stats.json`, tested by that job before it pushed) to the commit whose
+`data: refresh snapshot`, `data: refresh player stats` or `data: refresh JV games` message, nothing
+but the snapshot, its meta file, `data/player-stats.json` and `data/jv.json`, tested by that job
+before it pushed) to the commit whose
 code ships, and deploys only if that commit has a successful `ci` run on `main` and nothing but the
 data changed above it. `tests/workflows.test.ts` holds the two workflows to the same messages and
 files.

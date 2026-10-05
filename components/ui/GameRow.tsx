@@ -582,12 +582,16 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
  * dashes stack. The last column wraps the status under the opponent rather than truncating the
  * opponent: the opponent is the thing the row exists to say.
  */
+/** The log row's four-column grid, shared with the team page's JV list (components/teams/TeamJvGames.tsx). */
+export const GAME_LOG_ROW_GRID =
+  'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta';
+
 export function gameLogRowClass(game: Game, className?: string): string {
   // The non-league rule is `display.isNonLeague` (SPEC §10.4): neither counted for a league table
   // nor postseason. A postseason game is neither league nor NL, so it takes no rule.
   const nonLeague = gameKind(game) === 'non-league';
   return [
-    'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta',
+    GAME_LOG_ROW_GRID,
     nonLeague ? 'sx-nonleague' : null,
     className,
   ]

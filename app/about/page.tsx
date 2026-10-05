@@ -37,6 +37,7 @@ import {
 import type { LeagueSummary } from '../../lib/data';
 import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
+import { getJvFile, getJvMerge } from '../../lib/jv';
 import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
@@ -92,6 +93,7 @@ function toc(leagues: readonly LeagueSummary[]) {
     { id: 'conventions', label: 'How a score is shown' },
     { id: 'cross-check', label: 'Cross-check log' },
     { id: 'backfills', label: 'si.com backfills' },
+    { id: 'jv', label: 'JV games' },
     { id: 'dropped', label: 'Dropped contests' },
     { id: 'freshness', label: 'How often this updates' },
     { id: 'playoffs', label: 'Postseason' },
@@ -493,6 +495,8 @@ export default function AboutPage() {
   const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
 
   const TOC = toc(leagues);
+  const jvFile = getJvFile();
+  const jvMerge = getJvMerge();
   const leagueWords = listWords(leagues.map((l) => l.shortName));
   const historySeason = getHistorySeason();
   const historyAvailable = getAvailableHistoryLeagues();
@@ -959,6 +963,39 @@ export default function AboutPage() {
           </div>
           <div className="mt-stack">
             <BackfillTable rows={backfilled} />
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------------- JV */}
+        <section id="jv" className="mt-16">
+          <SectionHeader size="lg" kicker="JV games" meta={plural(jvMerge.games.length, 'game', 'games')} />
+          <div className="sx-prose">
+            <p>
+              Each team page and each day&rsquo;s scores also list the school&rsquo;s junior varsity
+              games, in a section of their own. They come from MaxPreps&rsquo; JV schedules (the same
+              feed as varsity, for the JV season), read with the rest of the update: today{' '}
+              {plural(jvFile.counts.games, 'game', 'games')} for {jvFile.counts.teamsWithGames} of the{' '}
+              {jvFile.counts.teams} schools, {jvFile.counts.finals} with a score. A school with no JV
+              games on MaxPreps may not field a JV team, or may not have entered its schedule.
+            </p>
+            <p>
+              JV games are kept apart from varsity: no varsity standings table, record, leader board,
+              rating or postseason picture on this site reads them. There are no JV standings yet, and
+              for now JV games carry no league or non-league tag, because MaxPreps&rsquo; JV league
+              flags are unreliable and no league publishes JV standings during the season.
+            </p>
+            <p>
+              MaxPreps comes first, as for varsity. Each school&rsquo;s JV page on High School on SI
+              (si.com) supplements it, matched only by si.com&rsquo;s own JV team ids and only for a game
+              between two of these schools on the same date or a day either side: si.com&rsquo;s final
+              fills a score MaxPreps has not reported (marked &dagger;; today{' '}
+              {plural(jvMerge.filled.length, 'game', 'games')}) and adds a game MaxPreps does not list at
+              all, when MaxPreps has no JV game between the two schools within two weeks of it (also
+              &dagger;; today {plural(jvMerge.added.length, 'game', 'games')}). When the two disagree on
+              a score, MaxPreps&rsquo; is shown and si.com&rsquo;s is noted under the game (today{' '}
+              {plural(jvMerge.differs.length, 'game', 'games')}). A game si.com lists twice with two
+              different scores is not used.
+            </p>
           </div>
         </section>
 

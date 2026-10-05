@@ -1,6 +1,7 @@
 # Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
-# stats (all 49 teams, all five leagues), and commit data/snapshot.json and data/player-stats.json
-# only where the CONTENT actually changed.
+# stats (all 49 teams, all five leagues), then the JV games (MaxPreps' JV schedules and si.com's JV
+# pages), and commit data/snapshot.json, data/player-stats.json and data/jv.json only where the
+# CONTENT actually changed.
 #
 # Schedule (SPEC §5.2 — one to two runs a day, never more):
 #   0 5  UTC = 10:00 PM Pacific during PDT — catches the evening's results once coaches enter them
@@ -25,6 +26,10 @@
 # must never cost the day's scores. Nor may the stats file the fetch wrote: when the tests fail
 # and data/player-stats.json changed in this run, the Test step restores the committed one and runs
 # the tests again, so only a failure that is not the stats file's blocks the snapshot commit.
+# The JV games ride the same run on the same terms as the stats (scripts/fetch-jv.ts: 49 MaxPreps JV
+# feeds through the same politeness gate, then up to 48 si.com JV pages one at a time, 1 s apart):
+# allowed to fail, scoped to the team and the source, and a JV file the tests refuse is restored the
+# same way, so JV never costs the day's scores or stats.
 # deploy-cloudflare.yml ships these commits
 # without a ci run of its own only because it recognises them; the commit step below says how, and
 # tests/workflows.test.ts holds the two files to it.
@@ -168,26 +173,70 @@ jobs:
           fi
           pnpm fetch-player-stats "${args[@]}"
 
+      # Never fatal, like the stats step above: the script exits 1 when a team's MaxPreps or si.com
+      # read failed, having still written the file with that team's previous rows carried forward;
+      # it writes nothing when only its fetchedAt stamps would change. The manual force and leagues
+      # inputs reach it through env, never by interpolation into the script.
+      - name: Fetch JV games
+        id: jv
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+          LEAGUES: ${{ github.event_name == 'workflow_dispatch' && inputs.leagues || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          if [ -n "$LEAGUES" ]; then
+            [[ "$LEAGUES" =~ ^[a-z0-9,-]+$ ]] || { echo "invalid leagues input: $LEAGUES"; exit 1; }
+            args+=(--leagues "$LEAGUES")
+          fi
+          pnpm fetch-jv "${args[@]}"
+
       # The suite validates what was just written: the snapshot's schema invariants, the never-0-0
       # rule and the standings arithmetic, and the player-stats contract and its join to the
       # rosters. A bad file must not be committed.
       #
-      # The stats are allowed to fail (above), so a stats file the tests refuse must not cost the
-      # snapshot either: when the suite fails and data/player-stats.json changed in this run, the
-      # committed file is restored (the commit step then sees no stats change) and the suite runs
-      # again; only that second verdict decides. With the stats file unchanged, the first does.
+      # The stats and the JV games are allowed to fail (above), so a file of theirs the tests refuse
+      # must not cost the snapshot either, and one file's failure must not cost the other file. When
+      # the suite fails, it runs again without this run's JV file (restored to the committed one);
+      # if that passes, the JV file was the problem. If not, this run's JV file goes back and the
+      # stats file is restored instead; if that passes, the stats file was the problem and the new
+      # JV file is kept. Only when neither alone is enough are both restored for a last run, whose
+      # verdict decides. A file that did not change in this run is never restored (the commit step
+      # then sees no change in a restored file), and with neither changed the first verdict decides.
       - name: Test
         id: test
         run: |
           set -uo pipefail
           if pnpm test; then exit 0; fi
-          if git diff --quiet -- data/player-stats.json; then
-            echo "::error::the tests failed and data/player-stats.json did not change in this run"
+          jv_changed=false
+          stats_changed=false
+          git diff --quiet -- data/jv.json || jv_changed=true
+          git diff --quiet -- data/player-stats.json || stats_changed=true
+          if [ "$jv_changed" != true ] && [ "$stats_changed" != true ]; then
+            echo "::error::the tests failed and neither data/jv.json nor data/player-stats.json changed in this run"
             exit 1
           fi
-          echo "::warning::the tests failed with this run's data/player-stats.json; restoring the committed file and testing again"
+          if [ "$jv_changed" = true ]; then
+            NEW_JV="${RUNNER_TEMP:-/tmp}/jv-this-run.json"
+            cp data/jv.json "$NEW_JV"
+            echo "::warning::the tests failed; testing again without this run's data/jv.json"
+            git checkout -- data/jv.json
+            if pnpm test; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+            if [ "$stats_changed" != true ]; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 1; fi
+            # Not the JV file alone: put it back and try without this run's stats file instead.
+            cp "$NEW_JV" data/jv.json
+          fi
+          echo "::warning::the tests failed; testing again without this run's data/player-stats.json"
           git checkout -- data/player-stats.json
           echo "stats_restored=true" >> "$GITHUB_OUTPUT"
+          if pnpm test; then exit 0; fi
+          if [ "$jv_changed" != true ]; then exit 1; fi
+          echo "::warning::the tests still failed; testing again without this run's data/jv.json either"
+          git checkout -- data/jv.json
+          echo "jv_restored=true" >> "$GITHUB_OUTPUT"
           pnpm test
 
       # One open issue per official schedule revised upstream (a stale official-revision-check
@@ -254,9 +303,13 @@ jobs:
           # would change (playerStatsContentKey in lib/player-stats-schema.ts), so a plain diff is
           # the content check.
           if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi
+          # The JV games: fetch-jv leaves the file untouched when only its stamps would change
+          # (jvContentKey in lib/jv-schema.ts), so a plain diff is the content check here too.
+          if git diff --quiet -- data/jv.json; then JV=false; else JV=true; fi
           echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
           echo "stats=$STATS" >> "$GITHUB_OUTPUT"
-          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ]; then
+          echo "jv=$JV" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ]; then
             echo "nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -265,13 +318,24 @@ jobs:
             const c = require("./data/player-stats.json").counts;
             process.stdout.write(`${c.players} players on ${c.teamsWithStats} teams`);
           ')
+          JV_SUMMARY=$(node -e '
+            const c = require("./data/jv.json").counts;
+            process.stdout.write(`${c.games} games, ${c.finals} final`);
+          ')
           # deploy-cloudflare.yml ships this commit without a ci run of its own only because it is
           # recognisably this one: author github-actions[bot], one parent, a message starting
-          # "data: refresh snapshot" or "data: refresh player stats", nothing but data/snapshot.json,
-          # data/snapshot.meta.json and data/player-stats.json. Keep the four in step
-          # (tests/workflows.test.ts checks the messages and files against the gate).
+          # "data: refresh snapshot", "data: refresh player stats" or "data: refresh JV games",
+          # nothing but data/snapshot.json, data/snapshot.meta.json, data/player-stats.json and
+          # data/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
+          # against the gate).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$JV" = "true" ]; then
+            git add data/jv.json
+          fi
+          # The message names the biggest change first; a JV change rides along as "+ JV games".
+          JV_TAIL=''
+          [ "$JV" = "true" ] && JV_TAIL=" + JV games (${JV_SUMMARY})"
           if [ "$SNAPSHOT" = "true" ]; then
             SUMMARY=$(node -e '
               const meta = require("./data/snapshot.meta.json");
@@ -285,15 +349,19 @@ jobs:
             ')
             if [ "$STATS" = "true" ]; then
               git add data/snapshot.json data/snapshot.meta.json data/player-stats.json
-              git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})"
+              git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})${JV_TAIL}"
             else
               git add data/snapshot.json data/snapshot.meta.json
-              git commit -m "data: refresh snapshot ${SUMMARY}"
+              git commit -m "data: refresh snapshot ${SUMMARY}${JV_TAIL}"
             fi
           else
             DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
-            git add data/player-stats.json
-            git commit -m "data: refresh player stats ${DAY} (${STATS_SUMMARY})"
+            if [ "$STATS" = "true" ]; then
+              git add data/player-stats.json
+              git commit -m "data: refresh player stats ${DAY} (${STATS_SUMMARY})${JV_TAIL}"
+            else
+              git commit -m "data: refresh JV games ${DAY} (${JV_SUMMARY})"
+            fi
           fi
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
@@ -317,6 +385,9 @@ jobs:
             echo "- player stats changed: \`${{ steps.commit.outputs.stats || 'false' }}\`"
             echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
             echo "- player stats restored after failing the tests: \`${{ steps.test.outputs.stats_restored || 'false' }}\`"
+            echo "- JV games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
+            echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
+            echo "- JV games restored after failing the tests: \`${{ steps.test.outputs.jv_restored || 'false' }}\`"
             if [ -f data/snapshot.meta.json ]; then
               echo ""
               echo '```json'
