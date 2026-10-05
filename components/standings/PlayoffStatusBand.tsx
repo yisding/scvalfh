@@ -10,6 +10,9 @@ import type { StatusGroup } from './standings-view';
  * (`statusBadge` / `statusLegend` from the league's config, SPEC §5.7). For a CCS league it is
  * the CCS picture; for MCAL it is the MCAL tournament line, and for the EAL its Super Regional
  * (linking the EAL card on /playoffs, since no bracket is published), with no CCS concept at all.
+ * So `heading`, `href` and `linkText` are required and have no defaults: the caller passes
+ * standings-view's links (`statusHeading`, `playoffsHref`, `playoffsLinkText`) for every league,
+ * and the band holds no league's copy of its own.
  *
  * It is a `<dl>` rather than an extra table column because the status is a property of a PLACE,
  * not of a team: "places 1-3" is the rule, and the teams are what currently occupy them. Reading
