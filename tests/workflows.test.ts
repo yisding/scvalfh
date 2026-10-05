@@ -418,3 +418,23 @@ describe('assert:prerender on a .next that has served traffic', () => {
     }
   });
 });
+
+/**
+ * scripts/assert-vinext-prerender.mjs reports like the other build-output gates: a missing build is
+ * one line and exit 1, never a stack trace.
+ */
+describe('assert-vinext-prerender before a vinext build', () => {
+  it('fails in one line, naming the file it needs and the build that writes it', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-vinext-'));
+    const res = spawnSync(process.execPath, [path.join(REPO, 'scripts', 'assert-vinext-prerender.mjs')], {
+      cwd: root,
+      encoding: 'utf8',
+    });
+    if (res.error) throw res.error;
+    expect(res.stderr.trim()).toBe(
+      'assert-vinext-prerender: dist/server/vinext-prerender.json does not exist; ' +
+        'run `pnpm build:vinext` (or `pnpm build:cloudflare`) first',
+    );
+    expect(res.status).toBe(1);
+  });
+});
