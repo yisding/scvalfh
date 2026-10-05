@@ -18,7 +18,7 @@
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, timeOfDay } from '../../lib/format';
 import { findDivision, findLeague, leagueOfDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
+import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
@@ -102,6 +102,19 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
   ccs: null,
   other: null,
 };
+
+/**
+ * ` · SCVAL` after a side from a league other than the list's own (`scopeLeague`); '' otherwise,
+ * and '' for a side outside the registry or a list with no league of its own. The one rule behind
+ * GameRow's and LatestScores' cross-league names.
+ */
+export function otherLeagueSuffix(slug: TeamSlug | null, scopeLeague: LeagueId | null | undefined): string {
+  if (!scopeLeague || !slug) return '';
+  const team = getTeamBySlug(slug);
+  if (!team || team.league === scopeLeague) return '';
+  const league = findLeague(team.league);
+  return league ? ` · ${league.shortName}` : '';
+}
 
 /** The league chip of a counted game (`countsFor` → its league's short name). */
 function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {

@@ -19,6 +19,7 @@ import {
   describeGame,
   gameKind,
   gameKindLabel,
+  otherLeagueSuffix,
   overtimeInDoubt,
   signedMargin,
 } from '../../components/ui/game-view';
@@ -509,5 +510,14 @@ describe('game kind (SPEC §10.4, the team page’s Last and Next headers)', () 
     for (const game of getGames()) {
       expect(describeGame(game).isNonLeague).toBe(gameKind(game) === 'non-league');
     }
+  });
+});
+
+describe('other-league suffix (GameRow and LatestScores)', () => {
+  it('names the league of a side from outside the list’s league, and nothing otherwise', () => {
+    expect(otherLeagueSuffix('davis', 'scval')).toBe(' · EAL');
+    expect(otherLeagueSuffix('tamalpais', 'mcal')).toBe('');
+    expect(otherLeagueSuffix('tamalpais', null)).toBe('');
+    expect(otherLeagueSuffix(null, 'scval')).toBe('');
   });
 });

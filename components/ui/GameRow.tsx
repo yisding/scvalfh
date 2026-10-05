@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { getStandingFor } from '../../lib/data';
 import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { findLeague } from '../../lib/leagues';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
 
@@ -14,7 +13,14 @@ import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import Tag from './Tag';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, gameKind, statusLabelIsTime, type GameDisplay, type SideView } from './game-view';
+import {
+  describeGame,
+  gameKind,
+  otherLeagueSuffix,
+  statusLabelIsTime,
+  type GameDisplay,
+  type SideView,
+} from './game-view';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).
@@ -85,15 +91,6 @@ export interface GameLogRowProps extends GameViewProps {
 
 /** The ghost monogram's words (a tooltip; the monogram itself is decorative). */
 export const NON_MEMBER_NOTE = `Not one of the ${TEAMS.length} teams this site follows`;
-
-/** ` · SCVAL` after a side from a league other than the list's own; '' otherwise. */
-function otherLeagueSuffix(slug: TeamSlug | null, scopeLeague: LeagueId | null | undefined): string {
-  if (!scopeLeague || !slug) return '';
-  const team = getTeamBySlug(slug);
-  if (!team || team.league === scopeLeague) return '';
-  const league = findLeague(team.league);
-  return league ? ` · ${league.shortName}` : '';
-}
 
 /**
  * A side's current league record ("1-4-0") for `showRecords`, or null when it should not print:
