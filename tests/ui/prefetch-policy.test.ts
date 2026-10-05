@@ -180,7 +180,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/history/AwardsBlock.tsx', '/teams/${team.slug}'],
       ['components/about/CrossCheckTable.tsx', '/teams/${team.slug}'],
       ['components/game/SeasonSeries.tsx', GAME_LINK],
-      ['components/schedule/DateHeader.tsx', 'href={shareHref}'],
+      ['components/schedule/DateHeader.tsx', 'href={dayHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
       // EmptyState's internal action: the home page's LeaguePanel renders one per league inside
       // panels.map(), each to a different /schedule/<league> page.

@@ -123,7 +123,7 @@ export function ScheduleList({ groups, scopeLeague = null, className, id }: Sche
           <DateHeader
             date={group.date}
             count={group.games.length}
-            shareHref={`/scores/${group.date}`}
+            dayHref={`/scores/${group.date}`}
             sticky
           />
           <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />

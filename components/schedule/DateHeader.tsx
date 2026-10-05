@@ -26,16 +26,13 @@ export interface DateHeaderProps {
   /** 'YYYY-MM-DD' */
   date: string;
   count: number;
-  /**
-   * Renders the "Day page" link to /scores/[date]. (The prop keeps its old name: the prefetch
-   * policy test, tests/ui/prefetch-policy.test.ts, holds this call site by `href={shareHref}`.)
-   */
-  shareHref?: string;
+  /** Renders the "Day page" link to this href, the day's own /scores/[date] page. */
+  dayHref?: string;
   sticky?: boolean;
   className?: string;
 }
 
-export function DateHeader({ date, count, shareHref, sticky = false, className }: DateHeaderProps) {
+export function DateHeader({ date, count, dayHref, sticky = false, className }: DateHeaderProps) {
   return (
     <div
       // Sticky on a phone, the header sits inside a full-bleed date group (ScheduleList), so it
@@ -72,9 +69,9 @@ export function DateHeader({ date, count, shareHref, sticky = false, className }
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and /schedule renders one of these per date group — 49 of them, i.e. 49 whole
           day pages. Navigation still fetches on click. */}
-      {shareHref ? (
+      {dayHref ? (
         <Link
-          href={shareHref}
+          href={dayHref}
           prefetch={false}
           className="sx-action ml-auto shrink-0 text-meta font-medium text-accent no-underline hover:underline"
         >
