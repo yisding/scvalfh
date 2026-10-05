@@ -24,6 +24,7 @@ import {
   getToday,
 } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
+import { SEASON_DISPLAY } from '../../../lib/season';
 
 
 /**
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   const title = `${summary.shortName} schedule and results`;
-  const description = `All ${plural(counts.total, 'contest')} involving ${summary.shortName} teams for Fall 2026, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const description = `All ${plural(counts.total, 'contest')} involving ${summary.shortName} teams for ${SEASON_DISPLAY}, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,

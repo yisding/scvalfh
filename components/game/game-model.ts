@@ -54,6 +54,7 @@ import {
   type LeagueConfig,
 } from '../../lib/leagues';
 import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
   DivisionId,
@@ -911,11 +912,11 @@ function contextNoun(model: GameModel): string {
   return 'non-league game';
 }
 
-/** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026`. */
+/** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
 export function gameDescription(model: GameModel): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
-  const where = league ? `${league.name} girls varsity field hockey, Fall 2026` : 'girls varsity field hockey, Fall 2026';
+  const where = `${league ? `${league.name} ` : ''}girls varsity field hockey, ${SEASON_DISPLAY}`;
   if (game.recap) {
     const lead = article(context) === 'an' ? 'An' : 'A';
     return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;

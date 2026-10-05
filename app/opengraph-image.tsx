@@ -1,11 +1,12 @@
 import { ImageResponse } from 'next/og';
 
 import { OG, OG_SIZE } from '../components/layout/og-theme';
-import { SITE_NAME } from '../components/layout/site';
+import { ROOT_OG_ALT, SITE_NAME } from '../components/layout/site';
 import { leaderLine } from '../components/standings/standings-data';
 import { leaderClause } from '../components/standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../lib/data';
 import { shortDate } from '../lib/format';
+import { SEASON_CALENDAR_YEAR } from '../lib/season';
 
 /**
  * The root OG card (SPEC §8.4). TEXT ONLY: no logo file, no school colors and no third-party image
@@ -23,7 +24,7 @@ import { shortDate } from '../lib/format';
  * a second line (BVAL's two divisions with co-leaders already do). Rendered and checked at five
  * rows, on the live snapshot and with three rows wrapped.
  */
-export const alt = `${SITE_NAME} — 2026 standings, scores and playoffs`;
+export const alt = ROOT_OG_ALT;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
@@ -55,7 +56,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{SITE_NAME} · 2026</div>
+          <div style={{ display: 'flex', fontSize: 56, fontWeight: 600 }}>{`${SITE_NAME} · ${SEASON_CALENDAR_YEAR}`}</div>
           <div style={{ display: 'flex', marginTop: 16, height: 2, background: OG.RULE }} />
         </div>
 

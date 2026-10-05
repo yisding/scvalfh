@@ -7,6 +7,7 @@ import ScheduleIndex, { buildScheduleIndex } from '../../components/schedule/Sch
 import { countGames } from '../../components/schedule/filter-data';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
 import { listWords } from '../../lib/format';
+import { SEASON_DISPLAY } from '../../lib/season';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of
@@ -35,7 +36,7 @@ function indexData() {
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = listWords(getLeagueSummaries().map((l) => l.shortName));
-  const description = `${counts.total} girls varsity field hockey contests in ${list} for Fall 2026: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
+  const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
   return {
     title: 'Schedule & results',
     description,

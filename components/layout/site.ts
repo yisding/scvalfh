@@ -1,9 +1,13 @@
 /**
  * The site's identity and shared metadata: its origin (SITE_URL), the branding strings (SITE_NAME,
  * SITE_WORDMARK, SITE_SHORT_NAME, SITE_DESCRIPTION, SITE_SCOPE_NOTE) and the openGraph defaults
- * every route repeats (OG_BASE, ROOT_OG_IMAGE). Nothing here renders.
+ * every route repeats (OG_BASE, ROOT_OG_ALT, ROOT_OG_IMAGE). Nothing here renders.
  */
 import type { Metadata } from 'next';
+
+import { SEASON_CALENDAR_YEAR } from '../../lib/season';
+
+import { OG_SIZE } from './og-theme';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -29,6 +33,9 @@ export const SITE_DESCRIPTION =
   'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.';
 export const SITE_SCOPE_NOTE =
   'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues appear only as opponents.';
+
+/** The root OG card's alt: app/opengraph-image.tsx's `alt`, and ROOT_OG_IMAGE's for the routes that borrow it. */
+export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, scores and playoffs`;
 
 /**
  * The `openGraph` fields every page has to repeat.
@@ -56,17 +63,18 @@ export const OG_BASE = {
  * only when that segment's metadata does not declare `openGraph.images`
  * (node_modules/next/dist/lib/metadata/resolve-metadata.js: "file based metadata is specified and
  * current level metadata openGraph.images is not specified"), so naming the root card on
- * /standings or /teams/[slug] would swap that page's specific card for the generic one. The
- * dimensions and alt text are repeated from app/opengraph-image.tsx, which is the only way to
- * state them for a route that is not the image's own segment.
+ * /standings or /teams/[slug] would swap that page's specific card for the generic one. A route
+ * that is not the image's own segment has to state the image's dimensions and alt itself; both
+ * come from the constants app/opengraph-image.tsx exports as its own (OG_SIZE, ROOT_OG_ALT), so
+ * they cannot drift from the card.
  */
 export const ROOT_OG_IMAGE: Pick<NonNullable<Metadata['openGraph']>, 'images'> = {
   images: [
     {
       url: '/opengraph-image',
-      width: 1200,
-      height: 630,
-      alt: `${SITE_NAME} — 2026 standings, scores and playoffs`,
+      width: OG_SIZE.width,
+      height: OG_SIZE.height,
+      alt: ROOT_OG_ALT,
       type: 'image/png',
     },
   ],

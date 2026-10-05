@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layout/site';
+import { SEASON_CALENDAR_YEAR } from '../lib/season';
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the
@@ -10,7 +11,7 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layo
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${SITE_NAME} — 2026`,
+    name: `${SITE_NAME} — ${SEASON_CALENDAR_YEAR}`,
     short_name: SITE_SHORT_NAME,
     description: SITE_DESCRIPTION,
     start_url: '/',
