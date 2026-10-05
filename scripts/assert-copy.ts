@@ -36,7 +36,11 @@
  * names the page and whose record leaked. One coincidence is not a leak: a quote is verbatim public
  * text, and a page that is NOT built from the clubs file can print the same document from a source
  * of its own and cite it (/history/2025-26 prints the SCVAL all-league PDF, which four quotes copy
- * a line of). On such a page a quote from a document the page itself links is not reported. On the
+ * a line of). On such a page a quote from a document the page itself links is not reported. On
+ * /history/2025-26, too, a quote that only restates one of the all-league award lines the page
+ * prints (its title, player, school, position and grade, in any order: a club's "Freshman of the
+ * Year - Quinley McCarroll, Los Altos" for SCVAL's "Freshman of the Year: Los Altos- Quinley
+ * McCarroll") is that official line in other words, not a leak (ARCHIVE_LINES). On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
  * The same rule covers data/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
@@ -96,7 +100,7 @@ import {
   visibleText,
   withoutLink,
 } from './copy-rules';
-import { PUBLIC_TERMS } from './public-terms';
+import { ARCHIVE_LINES, PUBLIC_TERMS } from './public-terms';
 
 const APP = '.next/server/app';
 
@@ -165,11 +169,16 @@ for (const file of files) {
     if (i >= 0) fail(file, `single-division league labelled as a division ("${label}") — “…${around(html, i)}…”`);
   }
   const printsItself = builtFromClubs(file) ? undefined : citedBy(html);
-  for (const leak of affiliationLeaks(html, clubsFile, { printsItself, publicTerms: PUBLIC_TERMS })) {
+  const restatedLines = file === 'history/2025-26.html' ? ARCHIVE_LINES : undefined;
+  for (const leak of affiliationLeaks(html, clubsFile, { printsItself, publicTerms: PUBLIC_TERMS, restatedLines })) {
     fail(file, `shows what data/clubs.json never renders: ${leak}`);
   }
   const printsCommitSource = builtFromCommits(file) ? undefined : commitCitedBy(html);
-  for (const leak of commitmentLeaks(html, commitsFile, { printsItself: printsCommitSource, publicTerms: PUBLIC_TERMS })) {
+  for (const leak of commitmentLeaks(html, commitsFile, {
+    printsItself: printsCommitSource,
+    publicTerms: PUBLIC_TERMS,
+    restatedLines,
+  })) {
     fail(file, `shows what data/commits.json never renders: ${leak}`);
   }
   // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
