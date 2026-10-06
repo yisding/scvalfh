@@ -993,7 +993,7 @@ export default function AboutPage() {
             </Link>{' '}
             pages list {getClubs().length} youth clubs (the clubs found around these schools, plus any other club
             a player here is tied to) and, for each, the players on these varsity rosters that a public
-            page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA or Hudl profile, a
+            page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA, Hudl or FieldLevel profile, a
             MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s
             club and school pages, or local news such as the Gilroy Dispatch and Stick Together. It was
             researched by hand, each tie checked twice when it was added, and is not part of the

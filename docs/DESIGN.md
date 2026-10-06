@@ -2891,7 +2891,8 @@ empty state says what was and was not found (§8).
 
 - **`/clubs`.** A lede that answers the question in one sentence (players, schools, clubs, and the
   two clubs with the most ties), then one section per region in a fixed order (San Francisco, the
-  Peninsula, the South Bay, the East Bay, Marin, the Central Coast, then the rest), then "How
+  Peninsula, the South Bay, the East Bay, Marin, the Central Coast, then the rest; §24.11 adds the
+  Southern California areas before the rest, and scopes each section to its half of the site), then "How
   players are matched" (`#how-matched`): who is listed, the linking rule, the two-pass check and
   its date, what "current", "earlier" and "listed by" mean, and that recall is partial. Each club row: the
   display name linking its page, the full name and city, the count of tied players (current and
@@ -3875,8 +3876,10 @@ addition there will cross it.
 - **No San Diego bracket, seed projection or power-ranking replication.** The site states the rule,
   the dates and each team's playoff division. The Section seeds at its Oct 31 meeting.
 - **No club or commitment sweep for Southern California.** The 50 teams' rosters have no club or
-  commitment lines, and `/clubs` and `/commits` cover the 49 NorCal teams' schools.
-- **No rosters-enrichment sweep for Southern California.** Its entries are stubs.
+  commitment lines, and `/clubs` and `/commits` cover the 49 NorCal teams' schools. (Built later, for
+  all 53 SoCal teams: §24.11.)
+- **No rosters-enrichment sweep for Southern California.** Its entries are stubs. (The recruiting-page
+  part was built later: §24.11. The school-athletics sweep was not.)
 - **No header-level region toggle.** The switcher sits in each page's content.
 - **No 1 v 1 tallies**, as in §22.8. That covers the San Diego shootouts too.
 - **The si.com statewide scoreboard is read only as far as its first page.** It server-renders the
@@ -4024,3 +4027,41 @@ and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. 
 (rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
 `division` rewritten, their contents unchanged.
 
+### 24.11 Recruiting profiles, clubs and commitments for Southern California (2026-10-06, last)
+
+The NorCal research of §17, §21 and the overlay's recruiting pages, repeated for the 53 Southern
+California teams' schools (842 varsity rows, eight teams with none) under the same rules, with a
+Southern California location standing for a Northern California one. The method, the counts and the
+gotchas are in `docs/DATA-SOURCES.md` §1.1j, §1.1j2 and §1.1j3; every candidate was re-opened by a
+checker and, separately, by a refuter, and only what both kept is in the files.
+
+- **Recruiting profiles** (`data/rosters-enrichment.json`): 267 for 202 players (134 Hudl, 64 NCSA,
+  55 SportsRecruits, 14 FieldLevel). The SoCal entries stop being stubs: each holds its profiles and
+  per-team notes, and, like the EAL's, no coaches or sources, so a SoCal team page still says other
+  public sources have not been checked. The roster shows a FieldLevel link as it shows the others.
+- **Clubs** (`data/clubs.json`): twelve club records and 75 ties for 67 players at 23 schools. Five
+  club regions join `CLUB_REGIONS` after the North State, `ventura`, `los-angeles`, `orange-county`,
+  `inland-empire` and `san-diego` ("Ventura County", "Los Angeles", "Orange County", "the Inland
+  Empire", "San Diego"), and all five join `SEARCHED_REGIONS`: the Inland Empire, which holds no club,
+  is named in the "no club based …" sentence with the Peninsula and the Central Coast. HTC moves from
+  `elsewhere` to `san-diego` (every HTC California season trains in La Jolla or Chula Vista), so no club
+  is `elsewhere` now and its heading does not render; its page gains the region label "San Diego".
+  `/clubs/[slug]` goes from 16 pages to 28.
+- **`/clubs` and the region toggle.** `CLUB_REGION_SITE_REGION` (`lib/clubs-schema.ts`) gives each club
+  region its half of the site; each region's section carries that `data-region-scope`, under a
+  `RegionSwitcher` row below the page header (the §24.3 pattern), so a reader sees their own half's
+  clubs; `elsewhere` would show under both. Without JavaScript every section renders, NorCal's first.
+  The first section of each half takes the first section's top margin. The lede, the count line and
+  `#how-matched` stay site-wide (the lede now reads "147 players from 48 schools are tied to 15 of these
+  28 clubs, the most to SF Hawks (32) and HTC (30)").
+- **Commitments** (`data/commits.json`): eleven, nine in field hockey and two in lacrosse, at seven
+  schools, to seven new colleges (Richmond, Johns Hopkins, Michigan, Michigan State, Muhlenberg,
+  Harvard, Oregon) and a new field hockey program at Cal. `/commits` is not region-scoped: one list by
+  class year, each row naming the school, as before.
+- **Copy.** The rule sentence on `/clubs` and `/commits` (`#how-matched`) no longer says "a Northern
+  California location": it reads "a location in the school’s half of the state, Northern or Southern
+  California".
+
+Not built: the school-athletics roster sweep for the 53 teams (grades, heights, numbers, positions,
+coaches), SportsRecruits' athlete search for their rows, and a club record for Poway Mystix, whose site
+could not be reached.
