@@ -2718,15 +2718,20 @@ rules clause.)
   How much a coach enters varies by program in every league.
 - College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04 (the six
   EAL teams' schools on 2026-10-04, for field hockey and then every sport, with none found, though
-  without SportsRecruits' athlete search or web searches for freshmen and sophomores), and nothing
-  refreshes them: recall is partial (16 of 811 varsity rows, at 9 schools, on 2026-10-04; social
+  without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
+  Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
+  web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
+  recall is partial (28 of the 1,653 varsity rows, at 16 of the 102 schools, on 2026-10-06; social
   media, where most are announced, never counts), a signing or decommitment after that date is not
   shown, and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
-- Club ties (§1.1j2) were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04,
-  adding eight ties for five players at Davis and Pleasant Valley, and three club records), and nothing refreshes them: recall is partial (on 2026-10-03, 66 of 716 varsity rows,
-  none at 21 schools), a `current` tie ages, and a roster refetch
-  that drops or respells a tied row fails the build until the tie is re-checked by hand.
+- Club ties (§1.1j2) were researched on 2026-10-03 (the six EAL teams' schools on 2026-10-04, adding
+  eight ties for five players at Davis and Pleasant Valley, and three club records), re-read from the
+  linked recruiting profiles on 2026-10-05 (14 more ties), and swept for the 53 Southern California
+  teams' schools on 2026-10-06 (twelve club records and 76 ties), and nothing refreshes them: recall is
+  partial (on 2026-10-06, 148 of the 1,653 varsity rows, at 48 of the 102 schools; the Los Angeles,
+  Orange County and Ventura clubs publish no rosters), a `current` tie ages, and a roster refetch that
+  drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
   history, by league"); PCAL, MCAL, the EAL and the four SoCal leagues are marked `unavailable` in
   `data/history-2025-26.json`,
