@@ -85,7 +85,9 @@ export default function ClubsPage() {
             club, and also either names the player&rsquo;s high school, or gives a class year that
             matches the player&rsquo;s grade along with a location in the school&rsquo;s half of
             the state, Northern or Southern California. A name alone
-            never counts, and a class year that disagrees with the roster rules a match out.
+            never counts, and a class year that disagrees with the roster rules a match out. A
+            nickname (Abby for Abigail) counts when the page otherwise meets that rule and a second
+            page, or the player&rsquo;s own, backs the match.
             Social-media posts, and lacrosse, soccer and ice hockey clubs, do not count.
           </p>
           <p className="mt-2 mb-0">

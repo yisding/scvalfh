@@ -100,7 +100,8 @@ export type AffiliationStatus = (typeof AFFILIATION_STATUSES)[number];
 /**
  * high    one first-hand page names player, club and school (or is the player's own profile)
  * medium  the match rests on a club roster's class-year heading plus the club's location, on a
- *         team nickname standing for the school, or on a single self-reported line
+ *         team nickname standing for the school, on a player's nickname or given name the page
+ *         does not tie to the school, or on a single self-reported line
  */
 export const AFFILIATION_CONFIDENCES = ['high', 'medium'] as const;
 export type AffiliationConfidence = (typeof AFFILIATION_CONFIDENCES)[number];

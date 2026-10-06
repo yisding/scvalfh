@@ -545,7 +545,11 @@ The rules:
   player and a field hockey club, and either name the player's high school, or give a class year
   that agrees with the roster grade together with a location in the school's half of the state,
   Northern or Southern California ("CA", or a hometown with no state, is not enough). A name alone
-  never makes a match, and a class year that disagrees rules one out. Lacrosse, soccer and ice
+  never makes a match, and a class year that disagrees rules one out. A nickname or given-name
+  form of the roster's first name counts when the page otherwise meets the rule and something
+  beyond the name backs it (a second page, the player's own page naming the same club, or a club
+  she is already tied to); such a match is medium confidence unless a page names the school
+  (revised 2026-10-06; before, a nickname counted only on a page naming the school). Lacrosse, soccer and ice
   hockey clubs do not count.
 - **Only players already on the tracked varsity rosters are named** (rows the overlay marks JV
   are out), each under the roster's own spelling. A club's own roster lists many more players; the

@@ -605,7 +605,12 @@ Southern California schools, the same in Southern California; "CA", or a hometow
 not enough). A name alone never makes a match, and a
 class year that disagrees with the roster grade rules one out (`lib/clubs.ts` refuses the file at
 load otherwise: MaxPreps' grade, else the overlay's; Riya Mehrotra and Gabrielle Moll have no grade
-anywhere, so theirs is not checked). A page may use a nickname when it names the school.
+anywhere, so theirs is not checked). A page may use a nickname or another form of the first name
+(Abby for Abigail, Samantha for Sami) when it otherwise meets the rule and the match is backed by
+something beyond the name: a second page naming the same player, club and class year, the player's
+own page (her MaxPreps career page) naming the same club, or a club she is already tied to here. Such
+a match is `medium` unless a page names the school. (The owner's revision of 2026-10-06; until then a
+nickname counted only on a page that named the school. The same rule holds for commitments.)
 Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts: no source or
 website may be on Instagram, Facebook, TikTok, X (Twitter), Threads, YouTube, Snapchat or LinkedIn,
 or their short links (`BANNED_HOSTS`, shared with §1.1j3). Only players
@@ -687,8 +692,9 @@ Gotchas, found in the research (most are recorded in an affiliation's `basis` or
 - **Spelling variants match only with the school or class year on the same page.** MaxPreps prints
   Nora Lagenfeld; the NFHCA 2026 watchlist prints Langenfeld beside Saint Francis and First-Year
   (class of 2030), and the school's own roster prints Langenfeld with the same number and position.
-  Nicknames are held to the same rule ("Maggie" Magnano is "Margaret" on her profile, "Evie"
-  Ferrini "Genevieve" on the watchlist). The site prints the roster's spelling.
+  Nicknames were held to the same rule ("Maggie" Magnano is "Margaret" on her profile, "Evie"
+  Ferrini "Genevieve" on the watchlist); since 2026-10-06 a nickname may also match on a class year
+  and location when a second page backs it (the rule above). The site prints the roster's spelling.
 - **A school nickname stands for the school in news stories.** The Gilroy Dispatch's 2025-07-18
   California Cup story groups Infinity's players as Cougars, which is Christopher; four ties rest
   on that grouping and are medium, and the story's date makes them `past`.
