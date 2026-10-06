@@ -491,8 +491,11 @@ describe('lib/clubs.ts', () => {
     expect(() => getAffiliatedPlayer({ teamSlug: 'st-ignatius', athleteId: 'nope' })).toThrow(/no roster row/);
   });
 
-  it('names the six areas notes[] says were searched', () => {
-    expect(SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay', 'east-bay', 'marin', 'central-coast']);
+  it('names the eleven areas notes[] says were searched: six in NorCal, five in SoCal', () => {
+    expect(SEARCHED_REGIONS).toEqual([
+      'san-francisco', 'peninsula', 'south-bay', 'east-bay', 'marin', 'central-coast',
+      'ventura', 'los-angeles', 'orange-county', 'inland-empire', 'san-diego',
+    ]);
     for (const r of SEARCHED_REGIONS) expect(CLUB_REGIONS).toContain(r);
     expect(SEARCHED_REGIONS).not.toContain('sacramento');
     expect(SEARCHED_REGIONS).not.toContain('north-state');
@@ -731,7 +734,7 @@ describe('a bad file is refused at load', () => {
       ['affiliations.0.status', (f) => ((f.affiliations[0] as { status: string }).status = 'former')],
       ['affiliations.0.sources.0.kind', (f) => ((f.affiliations[0].sources[0] as { kind: string }).kind = 'instagram')],
       ['affiliations.0.confidence', (f) => ((f.affiliations[0] as { confidence: string }).confidence = 'low')],
-      ['clubs.0.region', (f) => ((f.clubs[0] as { region: string }).region = 'los-angeles')],
+      ['clubs.0.region', (f) => ((f.clubs[0] as { region: string }).region = 'las-vegas')],
       ['affiliations.0.teamSlug', (f) => (f.affiliations[0].teamSlug = 'not-a-school')],
     ];
     for (const [where, edit] of cases) {

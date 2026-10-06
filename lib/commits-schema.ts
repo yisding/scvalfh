@@ -52,8 +52,8 @@ export type CommitStatus = (typeof COMMIT_STATUSES)[number];
 /**
  * high    one first-hand page names the player, the college and the school, or it is the player's
  *         own recruiting profile showing the commitment
- * medium  the match rests on a class year plus a Northern California location, on a nickname
- *         standing for the school, or on a single self-reported line on a list
+ * medium  the match rests on a class year plus a location in the school's half of California, on a
+ *         nickname standing for the school, or on a single self-reported line on a list
  */
 export const COMMIT_CONFIDENCES = ['high', 'medium'] as const;
 export type CommitConfidence = (typeof COMMIT_CONFIDENCES)[number];

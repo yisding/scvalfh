@@ -37,11 +37,15 @@ import { z } from 'zod';
 
 import { isCalendarDate, isHttpsUrl, slugId } from './schema-primitives';
 import { TEAMS } from './teams';
+import type { RegionId } from './types';
 
 /**
- * Where a club is based. Also the display order of /clubs' regions. `sacramento` (D-City, Roseville
- * FHC) and `north-state` (Chico Hotshots) hold clubs met near the EAL teams' schools; neither area
- * was searched for every club (lib/clubs.ts SEARCHED_REGIONS).
+ * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN
+ * §17.1), then Southern California's from Ventura County down to San Diego, then `elsewhere`. `sacramento` (D-City,
+ * Roseville FHC) and `north-state` (Chico Hotshots) hold clubs met near the EAL teams' schools;
+ * neither area was searched for every club (lib/clubs.ts SEARCHED_REGIONS). The five Southern
+ * California areas were added with the 2026-10-06 sweep of the Southern Section and San Diego
+ * Section schools, and each was searched (`inland-empire` holds no club).
  */
 export const CLUB_REGIONS = [
   'san-francisco',
@@ -52,9 +56,35 @@ export const CLUB_REGIONS = [
   'central-coast',
   'sacramento',
   'north-state',
+  'ventura',
+  'los-angeles',
+  'orange-county',
+  'inland-empire',
+  'san-diego',
   'elsewhere',
 ] as const;
 export type ClubRegion = (typeof CLUB_REGIONS)[number];
+
+/**
+ * The half of the site (the NorCal/SoCal toggle, lib/leagues.ts REGIONS) a club region sits in, which
+ * /clubs scopes its region sections by. `elsewhere` is in neither, so it shows under both.
+ */
+export const CLUB_REGION_SITE_REGION: Record<ClubRegion, RegionId | null> = {
+  'san-francisco': 'norcal',
+  peninsula: 'norcal',
+  'south-bay': 'norcal',
+  'east-bay': 'norcal',
+  marin: 'norcal',
+  'central-coast': 'norcal',
+  sacramento: 'norcal',
+  'north-state': 'norcal',
+  ventura: 'socal',
+  'los-angeles': 'socal',
+  'orange-county': 'socal',
+  'inland-empire': 'socal',
+  'san-diego': 'socal',
+  elsewhere: null,
+};
 
 /**
  * current  the source reflects the 2025-26 or 2026-27 club season (dated August 2025 or later, a

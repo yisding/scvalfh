@@ -203,9 +203,9 @@ export function getAffiliatedPlayer(a: Pick<ClubAffiliation, 'teamSlug' | 'athle
 }
 
 /**
- * The areas notes[4] says were swept for clubs. /clubs names those that hold none; a region that
- * holds a club but is not here (sacramento, north-state) is said not to have been searched for
- * every club.
+ * The areas the notes say were swept for clubs: the six of notes[4] and the five Southern California
+ * areas of the 2026-10-06 sweep. /clubs names those that hold none; a region that holds a club but is
+ * not here (sacramento, north-state) is said not to have been searched for every club.
  */
 export const SEARCHED_REGIONS: readonly ClubRegion[] = [
   'san-francisco',
@@ -214,4 +214,9 @@ export const SEARCHED_REGIONS: readonly ClubRegion[] = [
   'east-bay',
   'marin',
   'central-coast',
+  'ventura',
+  'los-angeles',
+  'orange-county',
+  'inland-empire',
+  'san-diego',
 ];
