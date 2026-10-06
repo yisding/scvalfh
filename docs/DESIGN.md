@@ -3599,6 +3599,7 @@ it says otherwise.
 | `/playoffs` | "Playoffs", with `#norcal` and `#socal` blocks. The Sunset, City, North County and Metro cards carry `id="sunset"`, `"city"`, `"north-county"` and `"metro"`. |
 | `/standings`, `/teams` | Region wrappers `#norcal` and `#socal`, plus the anchors `#ss`, `#sds`, `#sunset`, `#city`, `#north-county`, `#metro`, `#city-western`, `#city-eastern`, `#avocado`, `#palomar`, `#valley`, `#metro-mesa` and `#metro-south-bay` |
 | `/history/2025-26` | Gains `#sunset`, `#city`, `#north-county` and `#metro`, each marked unavailable with its reason (24.7) |
+| `/scores/[date]` | By region, as the other index pages (owner decision, 2026-10-06): `<section id="norcal" data-region-scope="norcal">` under an h2 "Northern California" holding its league groups (config order) and its Non-league group (both sides NorCal, or a NorCal team and a team outside the registry), as h3s; then, only on a day that has one, the unscoped `#between-regions` (h2 "NorCal vs SoCal") for the games with a side in each region, which no region block repeats; then `#socal` ("Southern California"), its repeated ids suffixed (`#non-league-socal`). A region with no game keeps its block with one sentence ("No Southern California games on this day."; "varsity" and a pointer when it has JV games that day). JV: `#jv` and `#jv-socal`, each region-scoped and omitted when empty. The header badges, the "Full season" links and the description go per region only when both regions have a game ("NorCal: 6 games" … "SoCal: 9 games"; a NorCal vs SoCal game counts in both, as on `/schedule`'s every-day rows); a one-region day keeps its whole-day header and description. The region switcher sits under the header. |
 
 The snapshot has 99 teams, 871 games and 64 game days. The sitemap lists **1,080 URLs**:
 
@@ -3646,7 +3647,7 @@ plus `:target` on the wrapper itself). On `/teams`, a search shows both regions'
 **Where it renders.**
 
 - On the home page, it leads the scope row, followed by a hairline.
-- As its own row under the page header on `/standings`, `/teams`, `/schedule`, `/playoffs`, `/jv` and `/history/2025-26`.
+- As its own row under the page header on `/standings`, `/teams`, `/schedule`, `/scores/[date]`, `/playoffs`, `/jv` and `/history/2025-26`.
 - On `/leaders` and `/history`, above the sticky division tabs, whose pills are region-scoped.
 - On `/about`, at the top of the content column.
 - Per-league pages show only their own region's league chips, plus All.
