@@ -20,6 +20,7 @@ import {
 import { positionFromText } from '../../components/ui/position-words';
 import { getAvailableHistoryLeagues, type HistoryAwards } from '../../lib/history';
 import { getTeamBySlug } from '../../lib/teams';
+import { textOf } from './html-text';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()
   .flatMap(({ id, entry }) =>
@@ -185,11 +186,11 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
       expect(html, `pill #${id}`).toMatch(new RegExp(`href="#${id}" data-region-scope="socal"`));
     }
     expect(html, 'region control').toContain('data-region-option="socal"');
-    const text = html.replace(/<[^>]+>/g, '');
+    const text = textOf(html);
     expect(text).toContain('Official, from the San Diego Section: 2025 CIFSDS playoff brackets (Google Sheet)');
     expect(text).toContain('year_id=175');
     // An unavailable SoCal card never claims a champion, a place or a record from the documents it links.
     const socal = html.slice(html.indexOf('<section id="sunset"'));
-    expect(socal.replace(/<[^>]+>/g, '')).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
+    expect(textOf(socal)).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
   });
 });
