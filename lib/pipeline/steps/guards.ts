@@ -222,8 +222,8 @@ export function divisionClassification(
   divisionId: DivisionId,
   degraded: ReadonlySet<DivisionId>,
 ): DivisionHealth['classification'] {
-  // 'contest-type' (EAL, Sunset) and 'membership' (the San Diego divisions and the Southern Section
-  // independents: both sides members of the division, whatever MaxPreps' league flag says) need no document, so
+  // 'contest-type' (EAL) and 'membership' (Sunset, the San Diego divisions and the LA independents: both
+  // sides members of the division, whatever MaxPreps' league flag says) need no document, so
   // they never fall back.
   if (league.rules.classification === 'contest-type') return 'contest-type';
   if (league.rules.classification === 'membership') return 'membership';

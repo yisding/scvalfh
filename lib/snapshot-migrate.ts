@@ -13,16 +13,26 @@
  * byte-identical. No schemaVersion bump: the upgrade is keyed on the league list, and a region is never
  * stored (it is derived from each section's config), so there is no new field to fill.
  *
- * Both return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "Rules changed" (v2 → v2, DESIGN §24.11). A v2 file whose games no longer classify as written — a
+ * league's classification rule changed (the Sunset: MaxPreps' flag → every game between two of the eight),
+ * or a team moved between divisions (Bonita and Chaminade: Sunset → the LA independents) after the file was
+ * written — is reclassified under the current config: `leagueDivision` from the registry, `countsFor` from
+ * the pipeline's classifier, and the affected divisions' standings rows, cross-check rows, health counts,
+ * season windows and counts recomputed by the same engine. Without it the pipeline's `readPrevious` would
+ * reject the file on its `countsFor` check and run with NO previous snapshot: no carry-forward, no finals
+ * regression guard, and a meta file that reports every existing final as newly added.
+ *
+ * All three return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
-import { classifyGames } from './classify';
-import { CCS, LEAGUES, LEAGUE_IDS, findDivision } from './leagues';
-import { buildSeason } from './season-build';
+import { classifyGame, classifyGames } from './classify';
+import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './leagues';
+import { buildSeason, leagueWindowOf } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
-import { TEAMS, getTeamById, getTeamBySlug, teamsInLeague } from './teams';
+import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from './teams';
 import type {
   DivisionHealth,
+  DivisionId,
   Game,
   GameSide,
   LeagueHealth,
@@ -365,6 +375,123 @@ export function addConfiguredLeagues(raw: unknown): unknown {
     playoffs,
     leagueHealth,
     crossCheck,
+    // 6. counts
+    counts: countsOf(games, standings),
+  };
+  return out;
+}
+
+// ---------------------------------------------------------------- "rules changed" (v2 → v2)
+
+/** The registry's `leagueDivision` of a game: set only when BOTH sides are members of one division (lib/normalize). */
+function registryDivision(g: Game): DivisionId | null {
+  const home = teamOfSide(g.home);
+  const away = teamOfSide(g.away);
+  return home && away && home.division === away.division ? home.division : null;
+}
+
+/** The divisions a file's health rows say fell back to MaxPreps' flag (the classifier's `degradedDivisions`). */
+function degradedDivisionsOf(leagueHealth: readonly LeagueHealth[]): Set<DivisionId> {
+  const out = new Set<DivisionId>();
+  for (const h of leagueHealth) {
+    for (const d of h.divisions) if (d.classification === 'fallback-contest-type') out.add(d.divisionId);
+  }
+  return out;
+}
+
+/** A game with its sides re-resolved and `leagueDivision` from the registry; classification runs over the list afterwards. */
+function reassign(g: Game): Game {
+  const home = upgradeSide(g.home);
+  const away = upgradeSide(g.away);
+  return { ...g, home, away, leagueDivision: registryDivision({ ...g, home, away }) };
+}
+
+/**
+ * A v2 object with at least one game that no longer classifies as written: its `leagueDivision` is not what
+ * the registry says now, or its `countsFor` is not what `classifyGame` returns under the current rules (with the
+ * file's own degraded set). False for anything else, including a file `parseSnapshot` would reject for another
+ * reason: that error is the caller's to report.
+ */
+export function needsReclassification(raw: unknown): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.leagueHealth)) return false;
+  try {
+    const degraded = degradedDivisionsOf(raw.leagueHealth as LeagueHealth[]);
+    return (raw.games as Game[]).some((g) => {
+      const division = registryDivision(g);
+      return division !== g.leagueDivision || classifyGame({ ...g, leagueDivision: division }, { degradedDivisions: degraded }) !== g.countsFor;
+    });
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Reclassifies a v2 file under the current config (DESIGN §24.11). In order: (1) every game side in `games`
+ * re-resolved by teamId, `leagueDivision` from the registry, then `postseason` and `countsFor` from the
+ * pipeline's `classifyGames` with the file's own degraded set; (2) the standings rows of every division whose
+ * classified games changed, recomputed by the same engine with MaxPreps' reported rows carried over (the other
+ * divisions' rows stay byte-identical); (3) the cross-check from the merged rows; (4) those divisions' health
+ * `countedFinals`, `backfilled` and `classification` (a rule that needs no document never falls back; the
+ * other counts need a clock or a feed and stay as written); (5) those leagues' season windows; (6) `counts`.
+ * Throws on input that `needsReclassification` rejects.
+ */
+export function reclassify(raw: unknown): unknown {
+  if (!needsReclassification(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot whose games need reclassifying');
+  const v2 = raw as unknown as Snapshot;
+  const degraded = degradedDivisionsOf(v2.leagueHealth);
+
+  // 1. games
+  const games = classifyGames(v2.games.map(reassign), { degradedDivisions: degraded });
+  const changed = new Set<DivisionId>();
+  v2.games.forEach((before, i) => {
+    const after = games[i];
+    if (before.leagueDivision === after.leagueDivision && before.countsFor === after.countsFor) return;
+    for (const d of [before.leagueDivision, after.leagueDivision, before.countsFor, after.countsFor]) if (d !== null) changed.add(d);
+  });
+  const changedLeagues = new Set([...changed].map((d) => leagueOfDivision(d).id));
+
+  // 2. standings: the changed divisions' rows from the engine, the rest as written, in config order
+  const reported = new Map<TeamId, ReportedRecord>();
+  for (const row of v2.standings) if (row.reported) reported.set(row.teamId, row.reported);
+  const recomputed = computeStandings(games, { reported });
+  const standings: Standing[] = [];
+  for (const league of LEAGUES) {
+    for (const d of league.divisions) {
+      standings.push(...(changed.has(d.id) ? recomputed : v2.standings).filter((r) => r.division === d.id));
+    }
+  }
+  assertFullTable(standings);
+
+  // 4. health counts of the changed divisions
+  const leagueHealth: LeagueHealth[] = v2.leagueHealth.map((h) => ({
+    ...h,
+    divisions: h.divisions.map((d): DivisionHealth => {
+      if (!changed.has(d.divisionId)) return d;
+      const counted = divisionGames(games, d.divisionId);
+      const rule = leagueOfDivision(d.divisionId).rules.classification;
+      return {
+        ...d,
+        classification: rule === 'contest-type' || rule === 'membership' ? rule : d.classification,
+        countedFinals: counted.length,
+        backfilled: counted.filter((g) => g.provenance.scores === 'sblive').length,
+      };
+    }),
+  }));
+
+  // 5. season windows of the changed leagues (`lastLeagueGame` reads countsFor)
+  const season: Snapshot['season'] = {
+    ...v2.season,
+    leagues: v2.season.leagues.map((l) => (changedLeagues.has(l.id) ? { ...l, window: leagueWindowOf(games, l.id) } : l)),
+  };
+
+  const out: Snapshot = {
+    ...v2,
+    season,
+    games,
+    standings,
+    // 3. cross-check
+    crossCheck: buildCrossCheck(standings),
+    leagueHealth,
     // 6. counts
     counts: countsOf(games, standings),
   };

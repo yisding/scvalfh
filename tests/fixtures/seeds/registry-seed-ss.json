@@ -57,7 +57,7 @@
       "section": "ss",
       "label": "Sunset League",
       "shortLabel": "Sunset",
-      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (10 schools) less Bonita and Chaminade, listed with the independents (owner decision 2026-10-06: MaxPreps marks none of their 26-27 games against the five Orange County schools as league games, and both play every other independent home and away); 26-27 league-flagged games. MaxPreps 26-27 table holds Chaparral, Great Oak, Temecula Valley and the two independents; the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs. Classification membership (owner decision 2026-10-06): every game between two of the eight counts, whatever MaxPreps' league flag says.",
+      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (10 schools) less Bonita and Chaminade, listed with the independents (owner decision 2026-10-06: MaxPreps marks none of their 26-27 games against the five Orange County schools as league games, and both play every other independent home and away); 26-27 games between two of the eight. MaxPreps 26-27 table holds Chaparral, Great Oak, Temecula Valley and the two independents; the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs. Classification membership (owner decision 2026-10-06): every game between two of the eight counts, whatever MaxPreps' league flag says.",
       "divisions": [
         {
           "id": "sunset",

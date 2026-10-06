@@ -389,9 +389,8 @@ Oak's Aug 27 home win over Bonita; Bonita is an independent here, so it counts f
 own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citing a league rule.
 
 **Ties in a game.** Blue Book Article 200 adopts the NFHS rules and says nothing on overtime [V]. A game
-between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11 [V]; MaxPreps does not mark it
-as a league game, so it is not a Sunset game here), and a Sunset league game has
-been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
+between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11 [V], a Sunset game here whether or
+not MaxPreps marks it one), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
 recorded as it is reported: `leagueOvertime: 'none'` (D2 rule 4c, a phantom si.com 0-0, applies). The
 Southern Section has no shootout rule (`SectionConfig.shootout` null).
 

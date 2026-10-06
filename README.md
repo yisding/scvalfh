@@ -81,8 +81,9 @@ league heading.
 None of the four Southern California leagues publishes a schedule, standings or a points rule that we
 could find, so the site orders their tables by its own 3-1-0 points and says so on every page. The
 Sunset is a field-hockey-only grouping of eight Southern Section schools in Orange and
-Riverside counties (not the all-sports Sunset League); its league games are the games MaxPreps marks as
-league games, and there is no round robin, so the site shows games played without "of N". In the San
+Riverside counties (not the all-sports Sunset League); its league games are every game between two of the
+eight outside a tournament, whether or not MaxPreps marks them, and there is no round robin, so the site
+shows games played without "of N". In the San
 Diego Section every pair of division-mates is scheduled twice except, on 2026-10-05 (Pacific), Metro
 Mesa's Bonita Vista and Helix, who meet once, and a game counts for a division when both sides are its
 members, whatever MaxPreps' league flag says (the flag misses many of them). Under the Section's
@@ -1104,10 +1105,10 @@ the known cause beside the comparison instead of an alarm.
 For BVAL, PCAL and MCAL a MaxPreps game counts toward the league table only when it matches a
 fixture on the league's official schedule (same date and home/away, or the same pair moved within
 two weeks), and never when MaxPreps marks it a tournament or neutral game or it is postseason play.
-SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. The EAL and
-the Sunset have no official schedule, so MaxPreps' league flag alone decides (a tournament or
-postseason game never counts). The San Diego divisions have none either, and there division
-membership decides, not the flag (see "San Diego Section" above). Official league games with no counted result yet are listed under the table as
+SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. The EAL has
+no official schedule, so MaxPreps' league flag alone decides (a tournament or postseason game never
+counts). The Sunset and the San Diego divisions have none either, and there division membership
+decides, not the flag (see "Sunset" and "San Diego Section" above). Official league games with no counted result yet are listed under the table as
 "missing", never counted; for the EAL, which has no official games to list, that means a game
 MaxPreps marks as a league game, dated before today, with no counted result.
 

@@ -94,7 +94,8 @@ function expectViolation(mutate: () => () => void, message: RegExp): void {
 describe('leagues: ids and helpers (SPEC §2.3)', () => {
   it('configures the nine leagues and the independents in order: NorCal first; one bracketed tournament, one unbracketed, two without a postseason, three section playoffs', () => {
     expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
-    // The LA independents are a group with no table, not a league: every count of leagues leaves them out.
+    // The LA independents are a group, not a league (their table counts their games against each other): every count
+    // of leagues leaves them out.
     expect(LEAGUES_PROPER.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
     expect(INDEPENDENT_LEAGUES.map((l) => l.id)).toEqual(['independents']);
     expect(LEAGUE_IDS.filter(isIndependentLeague)).toEqual(['independents']);

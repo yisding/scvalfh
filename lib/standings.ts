@@ -1066,8 +1066,8 @@ const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
  * the San Diego divisions): there are no fixtures, so the rows are its classified games
  * (countsFor === division) dated before `today`, with the same status rule and the contest id in
  * place of a fixture id. What "classified" means is the league's rule (lib/classify.ts): under
- * 'contest-type' (EAL, Sunset) a game MaxPreps flags as a league game between two members; under
- * 'membership' (San Diego) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
+ * 'contest-type' (EAL) a game MaxPreps flags as a league game between two members; under
+ * 'membership' (Sunset, San Diego, the LA independents) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
  * flagged or not — the double round robin is the schedule, so an unflagged Patrick Henry game
  * dated before today with no score is a missing league result too.
  */

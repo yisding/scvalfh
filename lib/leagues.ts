@@ -210,7 +210,7 @@ export interface LeagueRules {
   gamesWord: 'division' | 'league';
   /**
    * What makes a game a league game. 'contest-type' = MaxPreps' league flag (contestType 0 on either row)
-   * between two members (SCVAL, EAL, Sunset); 'official-fixtures' = a fixture in the league's own schedule
+   * between two members (SCVAL, EAL); 'official-fixtures' = a fixture in the league's own schedule
    * (BVAL, PCAL, MCAL); 'membership' = any game between two members of one division dated inside its
    * leaguePlay, whatever MaxPreps' flag says (the San Diego divisions: on MaxPreps' schedules division-mates
    * meet twice, a double round robin, except Metro Mesa's Bonita Vista and Helix, listed once, while MaxPreps
@@ -593,7 +593,7 @@ export const SECTIONS = [
     officialUrl: SS_FIELD_HOCKEY_URL,
     rulesSource: { name: 'CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', url: SS_BLUE_BOOK_FH_URL, format: 'PDF' },
     // Article 200 adopts the NFHS rules and says nothing on overtime; games between Sunset teams have ended level
-    // (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11; neither marked a league game), and a Sunset
+    // (Bonita 1-1 Marina, Aug 18, non-league; Fountain Valley 1-1 Marina, Sep 11, a Sunset game), and a Sunset
     // league game has gone to overtime (Great Oak 2-1 Temecula Valley, Oct 2). No shootout rule.
     shootout: null,
     // The start matches the other windows. The end is OUR choice, as for the Northern Section: one week after

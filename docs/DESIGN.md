@@ -4057,7 +4057,24 @@ schedule page "LA teams: schedule and results". The id, the URL (`/standings/ind
 "five Southern Section independents" clause built from the section's label. `standingsLabel` no longer
 special-cases the group.
 
-**Data (2026-10-06, 12:5xZ).** `pnpm fetch-data`: 102 teams, 879 games (544 league, up from 524), 542 finals,
-9 pending; `data/history-2025-26.json` regenerated (the group's name); the per-team files' `source` strings
-renamed.
+**Snapshot compatibility: the "rules changed" upgrade.** The schema checks every game's `countsFor` against
+`classifyGame` under the current rules, so the first `pnpm fetch-data` after this change could not load the
+committed flag-based snapshot: `readPrevious` caught the validation error and ran with no previous snapshot
+(no carry-forward for a league whose feeds fail, no finals regression guard, and a meta file reporting every
+existing final as newly added: "SCVAL +50 finals"). The regenerated file was complete, so nothing was lost,
+but a transient feed failure during such a run would have dropped a league's published data. `loadSnapshot`
+now has a third upgrade beside v1 → v2 and "league added" (`needsReclassification` / `reclassify`,
+lib/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
+between divisions, as Bonita and Chaminade did in §24.10), every game is re-resolved and reclassified under the
+current config and the affected divisions' standings rows, cross-check rows, health counts, season windows and
+counts are recomputed by the pipeline's own engine; the other divisions' rows stay byte-identical, and the
+counts that need a clock or a feed (`previousCountedFinals`, `missingLeaguePast`, the feed and table states)
+stay as written. The tests load the committed file rewritten under the flag rule, and with Bonita–Chaminade
+filed as a Sunset game, and get the committed file back byte for byte. Rule changes still want a regenerated
+snapshot in the same PR (the site builds from the committed file and should not depend on the upgrade), but
+the pipeline no longer starts from nothing when one lands.
+
+**Data (2026-10-06).** `pnpm fetch-data`, started from the flag-based snapshot through the upgrade above: 102
+teams, 879 games (544 league, up from 524), 542 finals, 9 pending; `data/history-2025-26.json` regenerated
+(the group's name); the per-team files' `source` strings renamed.
 
