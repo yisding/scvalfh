@@ -1,6 +1,6 @@
 {
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "ac67a51193bc8d0c4d9dcec5ff0402c5c7d06ecdc70c03d32c84a58dd39772e3",
+  "contentHash": "3ed452d37def4cf6d724a5857a0c066c6728225bf2828cdef675fda3dda20957",
   "counts": {
     "byLeague": {
       "bval": {
@@ -40,7 +40,7 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 60,
+        "finals": 61,
         "games": 93,
         "leagueGames": 31,
         "teams": 9
@@ -53,7 +53,7 @@
         "teams": 19
       },
       "pcal": {
-        "backfilled": 3,
+        "backfilled": 2,
         "finals": 43,
         "games": 57,
         "leagueGames": 36,
@@ -74,21 +74,21 @@
         "teams": 8
       }
     },
-    "finals": 542,
+    "finals": 543,
     "games": 879,
     "leagueGames": 544,
-    "mismatches": 19,
-    "pending": 9,
+    "mismatches": 17,
+    "pending": 8,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 155,
-    "backfilled": 3,
-    "compared": 236,
-    "conflicts": 7,
+    "agreements": 160,
+    "backfilled": 2,
+    "compared": 239,
+    "conflicts": 6,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-06T14:12:12.486Z",
+  "fetchedAt": "2026-10-06T19:18:32.611Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -109,7 +109,7 @@
       "state": "fresh"
     },
     {
-      "backfilled": 3,
+      "backfilled": 2,
       "countedFinals": 23,
       "finalsDelta": 0,
       "id": "pcal",
@@ -975,6 +975,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive carmel games",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
       "label": "sblive convent-sacred-heart games",
       "rowCount": 16,
       "status": "ok"
@@ -1005,11 +1010,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive monterey games",
-      "rowCount": 12,
-      "status": "ok"
-    },
-    {
       "label": "los-gatos school calendar",
       "rowCount": 12,
       "status": "ok"
@@ -1031,7 +1031,7 @@
     }
   ],
   "today": "2026-10-06",
-  "warnings": 46,
+  "warnings": 45,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
