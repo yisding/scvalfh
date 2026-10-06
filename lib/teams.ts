@@ -1,9 +1,13 @@
 /**
- * The 49-team membership registry: SCVAL 15, BVAL 12, PCAL 7, MCAL 9, EAL 6 (SPEC §3).
+ * The 99-team membership registry (SPEC §3; DESIGN §24 for the Southern California amendment):
+ * NorCal — SCVAL 15, BVAL 12, PCAL 7, MCAL 9, EAL 6 (49); SoCal — the Southern Section's Sunset 10
+ * and the San Diego Section's City 12, North County 19 and Metro 9 (50).
  *
  * THIS is the set of leagues, not the feed: every table is built from this constant and
- * left-joined against the feed. Seeds live in lib/registry/{scval,bval,pcal,mcal,eal}.ts; TEAMS is
- * assembled here in LEAGUES order (lib/leagues.ts).
+ * left-joined against the feed. Seeds live in
+ * lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro}.ts; TEAMS is assembled
+ * here in LEAGUES order (lib/leagues.ts), so the 49 NorCal teams keep their places and the SoCal 50
+ * follow the EAL.
  *
  * ids are MaxPreps GUIDs. Slugs and 2-letter abbrs are OURS and are never derived by string
  * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
@@ -11,11 +15,15 @@
 
 import { LEAGUES, findLeague, getLeague } from './leagues';
 import { BVAL_SEEDS } from './registry/bval';
+import { CITY_SEEDS } from './registry/city';
 import { EAL_SEEDS } from './registry/eal';
 import { MCAL_SEEDS } from './registry/mcal';
+import { METRO_SEEDS } from './registry/metro';
+import { NORTH_COUNTY_SEEDS } from './registry/north-county';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
+import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
@@ -90,12 +98,16 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = {
   pcal: PCAL_SEEDS,
   mcal: MCAL_SEEDS,
   eal: EAL_SEEDS,
+  sunset: SUNSET_SEEDS,
+  city: CITY_SEEDS,
+  'north-county': NORTH_COUNTY_SEEDS,
+  metro: METRO_SEEDS,
 };
 
-/** The registry (49), in LEAGUES order; within a league, the seed file's order. */
+/** The registry (99), in LEAGUES order; within a league, the seed file's order. */
 export const TEAMS: readonly Team[] = LEAGUES.flatMap((l) => SEEDS_BY_LEAGUE[l.id] ?? []).map(toTeam);
 
-/** Teams whose games MaxPreps actually publishes — one schedule request each (all 49 today). */
+/** Teams whose games MaxPreps actually publishes — one schedule request each (all 99 today). */
 export const FETCHABLE_TEAMS: readonly Team[] = TEAMS.filter(
   (t) => t.dataCoverage !== 'none',
 );
@@ -235,7 +247,9 @@ const WITHDRAWN_KEYS: ReadonlyMap<LeagueId, ReadonlySet<string>> = new Map(
 
 /**
  * Schools a league's official grid still lists that are NOT fielding a varsity team (Wilcox in
- * SCVAL, York in PCAL, Red Bluff in the EAL, which MaxPreps' table still lists). Their grid fixtures are dropped at parse time; they are not in the
+ * SCVAL, York in PCAL, Red Bluff in the EAL, which MaxPreps' table still lists), and the rows
+ * MaxPreps lists in a San Diego table for a school with no 2026 varsity game (Madison in City
+ * Eastern, Santana in its "Grossmont" table: LEAGUES city and metro withdrawnNames). Their grid fixtures are dropped at parse time; they are not in the
  * registry, so they appear nowhere on the site. Reads every league's `withdrawnNames` when
  * `leagueId` is omitted.
  */
@@ -258,7 +272,21 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
 
 // ---------- build-time asserts ----------
 
-const EXPECTED_ACRONYM_COLLISIONS = ['BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'PHS', 'SCHS', 'SHS'];
+/**
+ * Acronyms (MaxPreps `schoolNameAcronym`, copied verbatim) that two or more of the 99 teams share,
+ * so none of them is a resolver key. The Southern California seeds added BVHS, EHS, FHS, MCHS, MHS,
+ * MVHS, VCHS and WHS to the 49-team list (BHS CHS GHS HHS LHS PHS SCHS SHS). As a result seven NorCal
+ * acronyms that used to resolve no longer do: BVHS (Bella Vista, now shared with Bonita Vista), FHS
+ * (Fremont / Fallbrook), MCHS (Marin Catholic / Mt. Carmel), MHS (Monterey / Marina), MVHS (Monta
+ * Vista / Mission Vista), VCHS (Valley Christian / Valley Center) and WHS (Westmont / Westview).
+ * That is acceptable: an acronym is display only and is indexed only while it names one school; no
+ * league document, schedule or feed this site reads keys a team on it (official-grid codes are
+ * league-scoped in LeagueConfig.officialCodes), and every one of the seven keeps its name, aliases,
+ * slug and MaxPreps GUID as keys. Recomputed by running this module over the 99 seeds.
+ */
+const EXPECTED_ACRONYM_COLLISIONS = [
+  'BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS',
+];
 
 function assertRegistry(): void {
   const fail = (m: string): never => {
@@ -307,8 +335,8 @@ function assertRegistry(): void {
     }
   }
   const expectedTotal = LEAGUES.reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
-  if (TEAMS.length !== expectedTotal || TEAMS.length !== 49) {
-    fail(`expected 49 teams, got ${TEAMS.length}`);
+  if (TEAMS.length !== expectedTotal || TEAMS.length !== 99) {
+    fail(`expected 99 teams, got ${TEAMS.length}`);
   }
   if (FETCHABLE_TEAMS.length !== TEAMS.length) {
     fail(`expected ${TEAMS.length} fetchable teams, got ${FETCHABLE_TEAMS.length}`);

@@ -5,7 +5,7 @@
  *  - FixtureTransport   a manifest-driven corpus (lib/pipeline/corpus.ts) with variant overlays;
  *  - RecordingTransport wraps another transport and writes every response into a new corpus;
  *  - MeteredTransport   wraps any of them: counts requests per host and logs every MaxPreps URL as
- *                       `maxpreps GET <url>` (so the 64-request budget and the never-requested
+ *                       `maxpreps GET <url>` (so the 128-request budget and the never-requested
  *                       Mission league id can be grepped from a run log, live or offline).
  *
  * Live resource map (frozen at the end of Stage A):
@@ -32,7 +32,7 @@ import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '../sources/sblive';
 import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
 import { getTeamBySlug } from '../teams';
-import type { TeamSlug } from '../types';
+import type { DivisionId, TeamSlug } from '../types';
 import {
   FixtureMissing,
   TransportError,
@@ -78,6 +78,19 @@ function teamOrThrow(slug: TeamSlug) {
 }
 
 /**
+ * A division's MaxPreps league id, or a throw for a division MaxPreps publishes no table for (the
+ * San Diego Section's Valley division: lib/leagues.ts sets maxprepsLeagueId null, DESIGN-socal §2.1.7).
+ * Steps 03 and 04 never build a key for such a division (league-meta.ts and reported.ts skip it with
+ * no request), so reaching this throw is a pipeline bug, and it surfaces before any request instead
+ * of as a GET of `/leagues/null/v1`.
+ */
+function maxprepsLeagueIdOrThrow(division: DivisionId): string {
+  const id = getDivision(division).maxprepsLeagueId;
+  if (id === null) throw new Error(`lib/pipeline/transport.ts: MaxPreps publishes no table for ${division}`);
+  return id;
+}
+
+/**
  * The upstream URL of a resource, from the live resource map. Pure: used by LiveTransport to fetch
  * and by every other transport to label what it serves. Throws only for a key the configuration
  * cannot address (an unknown slug, a division with no revision-check URL).
@@ -87,9 +100,9 @@ export function resourceUrl(key: ResourceKey): string {
     case 'maxpreps-bootstrap':
       return BOOTSTRAP_URL;
     case 'maxpreps-league-meta':
-      return MAXPREPS_URLS.leagueMetaUrl(getDivision(key.division).maxprepsLeagueId);
+      return MAXPREPS_URLS.leagueMetaUrl(maxprepsLeagueIdOrThrow(key.division));
     case 'maxpreps-standings':
-      return MAXPREPS_URLS.standingsUrl(getDivision(key.division).maxprepsLeagueId);
+      return MAXPREPS_URLS.standingsUrl(maxprepsLeagueIdOrThrow(key.division));
     case 'maxpreps-schedule':
       return MAXPREPS_URLS.scheduleUrl(teamOrThrow(key.team).id);
     case 'scval-pdf-text':

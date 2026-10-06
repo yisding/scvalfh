@@ -1,20 +1,24 @@
 /**
  * lib/leagues.ts: the SPEC §2.4 invariants (also enforced by assertLeagues() at import), the §2.3
- * helpers, and the SCVAL strings that must stay byte-identical to today's.
+ * helpers, the SCVAL strings that must stay byte-identical to today's, and the Southern California
+ * amendment's regions, sections and four leagues (DESIGN-socal §2.1), their copy held to the site's
+ * honesty rules.
  */
 
 import { describe, expect, it } from 'vitest';
 
 import {
-  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, LEAGUE_IDS,
-  RESERVED_SEGMENTS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, assertLeagues, divisionDisplay,
-  divisionHeading, divisionLabel, divisionsOf, drawNumberOf, findDivision, findLeague, getDivision, getLeague,
-  getSection, isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision,
-  leaguePlayEnds, leagueStandingsUrl, seasonWindowBounds, sectionOf, statusesOf, tiebreakChainFor,
-  type LeagueConfig,
+  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, LEAGUES, LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS,
+  REGIONS, RESERVED_SEGMENTS, SECTIONS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS,
+  assertLeagues, divisionDisplay, divisionHeading, divisionLabel, divisionsOf, drawNumberOf, findDivision, findLeague,
+  getDivision, getLeague, getRegion, getSection, isLeagueId, isSingleDivision, ladderFor, ladderRung,
+  leagueOfDivision, leaguePlayEnds, leaguePlayStarts, leagueStandingsUrl, leaguesInRegion, regionOf,
+  seasonWindowBounds, sectionOf, sectionsInRegion, statusesOf, tiebreakChainFor,
+  type LeagueConfig, type SectionConfig,
 } from '../lib/leagues';
 import { CCS_BRACKET_URL } from '../lib/season';
-import type { PlayoffStatus, TiebreakStage } from '../lib/types';
+import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';
+import { SEED_CLAIM, umpireOfficialClaims } from '../scripts/copy-rules';
 
 const UNCOMPUTABLE: readonly TiebreakStage[] = ['coin-flip', 'ccs-points', 'no-rule'];
 
@@ -29,7 +33,9 @@ function chainsOf(l: LeagueConfig): Array<[number | null, readonly TiebreakStage
 
 /** Every string a league could render (Gabilan check). */
 function renderedStrings(l: LeagueConfig): string[] {
-  const out: string[] = [l.name, l.shortName, l.region, ...l.links.map((x) => x.label), l.membershipNote ?? ''];
+  const out: string[] = [
+    l.name, l.shortName, l.cities, l.alignmentSource, ...l.links.map((x) => x.label), l.membershipNote ?? '',
+  ];
   for (const d of l.divisions) {
     out.push(d.label, ...d.searchAliases, d.knownCause ?? '', d.home.lineLabel ?? '', d.ladderLine?.label ?? '');
     if (d.official.mode === 'none') out.push(d.official.note);
@@ -53,10 +59,23 @@ function renderedStrings(l: LeagueConfig): string[] {
     case 'unbracketed-tournament':
       out.push(ps.name, ps.note, ...Object.values(ps.citations));
       break;
+    case 'no-postseason':
+      out.push(ps.note, ps.sourceLabel, ...Object.values(ps.citations));
+      break;
+    case 'section-playoffs':
+      out.push(ps.name, ps.note, ps.qualificationLine, ps.sourceLabel, ...ps.divisions.map((d) => d.name), ...Object.values(ps.citations));
+      break;
   }
   out.push(...l.keyDates.map((k) => k.label));
+  // The league's section prints too, wherever the league's rules or postseason are explained.
+  const section: SectionConfig = getSection(l.sectionId);
+  out.push(section.name, section.briefLabel, section.rulesSource.name, section.noChampionshipNote ?? '');
+  if (section.shootout) out.push(section.shootout.words, section.shootout.citation);
   return out;
 }
+
+const SOCAL_IDS = ['sunset', 'city', 'north-county', 'metro'];
+const socal = (): LeagueConfig[] => LEAGUES.filter((l) => SOCAL_IDS.includes(l.id));
 
 /** Mutate the live config, expect assertLeagues() to throw, then restore. */
 function expectViolation(mutate: () => () => void, message: RegExp): void {
@@ -70,16 +89,90 @@ function expectViolation(mutate: () => () => void, message: RegExp): void {
 }
 
 describe('leagues: ids and helpers (SPEC §2.3)', () => {
-  it('configures the five leagues in order: MCAL is the only bracketed tournament league, EAL the only unbracketed one', () => {
-    expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+  it('configures the nine leagues in order: NorCal first; one bracketed tournament, one unbracketed, one without a postseason, three section playoffs', () => {
+    expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
     expect(CCS_LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal']);
     expect(TOURNAMENT_LEAGUE_IDS).toEqual(['mcal']);
     expect(UNBRACKETED_LEAGUE_IDS).toEqual(['eal']);
+    expect(NO_POSTSEASON_LEAGUE_IDS).toEqual(['sunset']);
+    expect(SECTION_PLAYOFFS_LEAGUE_IDS).toEqual(['city', 'north-county', 'metro']);
     expect(ALL_DIVISIONS.map((d) => d.id)).toEqual([
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
+      'sunset', 'city-western', 'city-eastern', 'avocado', 'palomar', 'valley', 'metro-mesa', 'metro-south-bay',
     ]);
-    expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
-    expect(SECTIONS.map((s) => s.shortName)).toEqual(['CCS', 'NCS', 'NS']);
+    expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+    expect(SECTIONS.map((s) => s.shortName)).toEqual(['CCS', 'NCS', 'NS', 'SS', 'SDS']);
+    expect(SECTIONS.map((s) => s.briefLabel)).toEqual(['CCS', 'NCS', 'Northern Section', 'Southern Section', 'San Diego Section']);
+    // Sixteen divisions' worth of teams: 49 NorCal + 50 SoCal = 99.
+    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(99);
+  });
+
+  it('splits the sections into two regions, NorCal first and by default; a league’s region is its section’s', () => {
+    expect(REGIONS).toEqual([
+      { id: 'norcal', name: 'Northern California', shortName: 'NorCal' },
+      { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
+    ]);
+    expect(DEFAULT_REGION).toBe('norcal');
+    expect(getRegion('socal').name).toBe('Southern California');
+    expect(() => getRegion('midcal' as RegionId)).toThrow(/lib\/leagues\.ts: unknown region/);
+    expect(SECTIONS.map((s) => [s.id, s.region])).toEqual([
+      ['ccs', 'norcal'], ['ncs', 'norcal'], ['ns', 'norcal'], ['ss', 'socal'], ['sds', 'socal'],
+    ]);
+    expect(sectionsInRegion('norcal').map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(sectionsInRegion('socal').map((s) => s.id)).toEqual(['ss', 'sds']);
+    expect(leaguesInRegion('norcal').map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(leaguesInRegion('socal').map((l) => l.id)).toEqual(SOCAL_IDS);
+    for (const l of LEAGUES) expect(regionOf(l.id), l.id).toBe(getSection(l.sectionId).region);
+    expect(() => regionOf('nope')).toThrow(/unknown league/);
+    // Each region is one contiguous run of LEAGUES (the switcher's lists and the no-JS reading order rely on it).
+    const regions = LEAGUES.map((l) => regionOf(l.id));
+    expect(regions.join(',')).toBe([...Array(5).fill('norcal'), ...Array(4).fill('socal')].join(','));
+    // The region ids are reserved route segments and name nothing else.
+    expect(RESERVED_SEGMENTS).toContain('norcal');
+    expect(RESERVED_SEGMENTS).toContain('socal');
+    const ids = [...SECTIONS.map((s) => s.id as string), ...LEAGUE_IDS, ...ALL_DIVISIONS.map((d) => d.id)];
+    for (const r of REGIONS) expect(ids).not.toContain(r.id);
+  });
+
+  it('names each section’s rules document and its shootout rule (null where none is published)', () => {
+    expect(SECTIONS.map((s) => [s.id, s.rulesSource.name, s.rulesSource.format])).toEqual([
+      ['ccs', 'CCS Field Hockey Bylaws 2026-27', 'PDF'],
+      ['ncs', 'CIF North Coast Section website', 'web page'],
+      ['ns', 'Northern Section Field Hockey Guidelines 2026-28', 'PDF'],
+      ['ss', 'CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', 'PDF'],
+      ['sds', 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Field Hockey)', 'Google Doc'],
+    ]);
+    expect(getSection('ccs').rulesSource.url).toBe(CCS.sources.bylaws);
+    expect(getSection('ns').rulesSource.url).toBe((getLeague('eal').postseason as { sourceUrl: string }).sourceUrl);
+    expect(getSection('ss').rulesSource.url).toBe('https://cifss.org/wp-content/uploads/2026/07/Field-Hockey-2026-27-Blue-Book.pdf');
+    expect(getSection('sds').rulesSource.url).toBe('https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit');
+    for (const s of SECTIONS) expect(s.rulesSource.url, s.id).toMatch(/^https:\/\//);
+    expect(SECTIONS.map((s) => [s.id, s.shootout?.words ?? null])).toEqual([
+      ['ccs', null], ['ncs', null], ['ns', '1 v 1s'], ['ss', null], ['sds', 'a shootout'],
+    ]);
+    expect(getSection('ns').shootout?.citation).toBe(
+      'Northern Section Field Hockey Guidelines §VII.E.4 (one 10-minute sudden-victory period, then 1 v 1s)',
+    );
+    expect(getSection('sds').shootout?.citation).toBe(
+      'San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures (a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal)',
+    );
+  });
+
+  it('adds the Southern Section (no playoffs) and the San Diego Section (its own playoffs)', () => {
+    expect(getSection('ss')).toMatchObject({
+      name: 'Southern Section', shortName: 'SS', holdsFieldHockeyChampionship: false,
+      maxprepsSectionId: '8e11e7d4-d3fa-4e6f-827f-652c29439d27',
+      officialUrl: 'https://cifss.org/sports/field-hockey/',
+      seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
+      noChampionshipNote: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    });
+    expect(getSection('sds')).toMatchObject({
+      name: 'San Diego Section', shortName: 'SDS', holdsFieldHockeyChampionship: true,
+      maxprepsSectionId: 'bab8c451-e991-413d-93ac-ee77067952a3',
+      officialUrl: 'https://www.cifsds.org/sports/fh/index',
+      seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
+      noChampionshipNote: null,
+    });
   });
 
   it('labels divisions, and single-division leagues have no division heading', () => {
@@ -123,6 +216,21 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(() => getSection('xyz' as 'ccs')).toThrow(/lib\/leagues\.ts/);
   });
 
+  it('builds no MaxPreps URL for a division MaxPreps has no table for, and keeps MaxPreps’ own table names', () => {
+    expect(leagueStandingsUrl('valley')).toBeNull();
+    expect(leagueStandingsUrl('metro-mesa')).toBe(
+      'https://www.maxpreps.com/ca/field-hockey/26-27/league/metro-south-bay/?leagueid=6dfe5a12-b82f-45d7-b103-71a5c13c0093',
+    );
+    expect(leagueStandingsUrl('sunset')).toBe(
+      'https://www.maxpreps.com/ca/field-hockey/26-27/league/sunset/?leagueid=aa46adc4-c188-4e3b-b5fd-857064176297',
+    );
+    for (const d of ALL_DIVISIONS) {
+      const url = leagueStandingsUrl(d.id);
+      if (url !== null) expect(url, d.id).not.toMatch(/null/);
+      expect(url === null, d.id).toBe(d.maxprepsLeagueId === null);
+    }
+  });
+
   it("keeps today's MaxPreps standings URLs for De Anza and El Camino", () => {
     expect(leagueStandingsUrl('de-anza')).toBe(
       'https://www.maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--de-anza/?leagueid=ea062dfe-9fb9-45c7-9839-0801993d6ac6',
@@ -150,6 +258,14 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(statusesOf('bval')).toEqual(['aq', 'play-in', 'no-aq-route']);
     expect(statusesOf('mcal')).toEqual(['bye', 'tournament', 'below-line']);
     expect(statusesOf('eal')).toEqual(['tournament', 'below-line']);
+    expect(statusesOf('sunset')).toEqual(['no-postseason']);
+    for (const id of ['city', 'north-county', 'metro']) expect(statusesOf(id), id).toEqual(['tournament', 'selection']);
+    expect(ladderRung('sunset', 1).label).toBe('No section playoffs');
+    expect(ladderRung('sunset', 10).status).toBe('no-postseason');
+    expect(ladderRung('city-western', 1).badge).toBe('1st');
+    expect(ladderRung('valley', 2).status).toBe('selection');
+    expect(tiebreakChainFor('sunset', 1)).toEqual(['no-rule']);
+    expect(tiebreakChainFor('metro-mesa', 2)).toEqual(['no-rule']);
     expect(ladderRung('eal', 6).label).toBe('Super Regional place');
     expect(ladderRung('eal', 7).status).toBe('below-line');
     expect(tiebreakChainFor('eal', 1)).toEqual(['no-rule']);
@@ -171,27 +287,53 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayEnds('bval')).toBe('2026-10-30');
     expect(leaguePlayEnds('mcal')).toBe('2026-10-22');
     expect(leaguePlayEnds('eal')).toBe('2026-10-28');
-    // The Northern Section's window (Aug 1 – Nov 7) sits inside the union.
+    expect(leaguePlayStarts('sunset')).toBe('2026-08-18');
+    expect(leaguePlayEnds('sunset')).toBe('2026-10-31');
+    expect(leaguePlayStarts('city')).toBe('2026-09-01');
+    expect(leaguePlayStarts('north-county')).toBe('2026-09-09');
+    expect(leaguePlayStarts('metro')).toBe('2026-09-28');
+    for (const id of ['city', 'north-county', 'metro']) expect(leaguePlayEnds(id), id).toBe('2026-10-30');
+    // The Northern, Southern and San Diego Sections' windows sit inside the union.
     expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-30' });
   });
 
   it('sets the overtime rule, the order scope and the MCAL schedule-changes page', () => {
     expect(LEAGUES.map((l) => [l.id, l.rules.leagueOvertime])).toEqual([
       ['scval', 'sudden-victory'], ['bval', 'sudden-victory'], ['pcal', 'none'], ['mcal', 'none'], ['eal', 'shootout'],
+      ['sunset', 'none'], ['city', 'shootout'], ['north-county', 'shootout'], ['metro', 'shootout'],
     ]);
-    // Every league's own document orders its table by points, except the EAL's, which decides only the title.
+    // Every NorCal league's own document orders its table by points, except the EAL's, which decides only the
+    // title; no SoCal league publishes a points rule, so this site orders those tables itself.
     expect(LEAGUES.map((l) => [l.id, l.rules.orderScope])).toEqual([
       ['scval', 'table'], ['bval', 'table'], ['pcal', 'table'], ['mcal', 'table'], ['eal', 'title'],
+      ['sunset', 'site'], ['city', 'site'], ['north-county', 'site'], ['metro', 'site'],
+    ]);
+    expect(LEAGUES.map((l) => [l.id, l.rules.classification])).toEqual([
+      ['scval', 'contest-type'], ['bval', 'official-fixtures'], ['pcal', 'official-fixtures'], ['mcal', 'official-fixtures'],
+      ['eal', 'contest-type'], ['sunset', 'contest-type'], ['city', 'membership'], ['north-county', 'membership'], ['metro', 'membership'],
     ]);
     expect(LEAGUES.map((l) => [l.id, l.membershipNote === null])).toEqual([
       ['scval', true], ['bval', true], ['pcal', true], ['mcal', true], ['eal', false],
+      ['sunset', false], ['city', true], ['north-county', true], ['metro', true],
     ]);
+    expect(LEAGUES.map((l) => [l.id, l.alignmentSource])).toEqual([
+      ['scval', 'its official schedule'], ['bval', 'its official schedule'], ['pcal', 'its official schedule'],
+      ['mcal', 'its official schedule'], ['eal', 'MaxPreps’ table and league flag'],
+      ['sunset', 'MaxPreps’ 2024-25 and 2025-26 Sunset tables'], ['city', 'the CIF-SDS 2026-27 League Alignment'],
+      ['north-county', 'the CIF-SDS 2026-27 League Alignment'], ['metro', 'the CIF-SDS 2026-27 League Alignment'],
+    ]);
+    // `region` was renamed `cities`; NorCal's words are unchanged.
+    expect(LEAGUES.slice(0, 5).map((l) => l.cities)).toEqual([
+      'Santa Clara County and San Francisco', 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
+      'Monterey County and Hollister', 'Marin County, San Francisco and Berkeley', 'Chico, Corning, Susanville, Davis and Fair Oaks',
+    ]);
+    expect('region' in getLeague('scval')).toBe(false);
     expect(getLeague('mcal').officialChanges).toEqual({
       url: 'https://www.mcalsports.org/Schedir.htm',
       cellMarker: 'Girls Field Hockey:',
       sha256: 'b1e5c523b251021522a77ed459d5d7035fe0c9100cb2b727f1ea63c467566b76',
     });
-    for (const id of ['scval', 'bval', 'pcal', 'eal']) expect(getLeague(id).officialChanges).toBeNull();
+    for (const id of ['scval', 'bval', 'pcal', 'eal', ...SOCAL_IDS]) expect(getLeague(id).officialChanges).toBeNull();
     expect(CCS.bracketUrl).toBe(CCS_BRACKET_URL);
   });
 });
@@ -368,7 +510,10 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
           expect(n, `${d.id} place ${p}`).toBe(1);
         }
       }
-      const allowed = { 'ccs-ladder': ccsStatuses, 'league-tournament': tournamentStatuses, 'unbracketed-tournament': unbracketedStatuses }[l.postseason.kind];
+      const allowed = {
+        'ccs-ladder': ccsStatuses, 'league-tournament': tournamentStatuses, 'unbracketed-tournament': unbracketedStatuses,
+        'no-postseason': ['no-postseason'] as PlayoffStatus[], 'section-playoffs': ['tournament', 'selection'] as PlayoffStatus[],
+      }[l.postseason.kind];
       for (const r of l.postseason.ladder) expect(allowed).toContain(r.status);
     }
     expectViolation(() => {
@@ -381,6 +526,21 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
       rung.status = 'bye';
       return () => { rung.status = 'below-line'; };
     }, /ladder status bye not allowed for unbracketed-tournament/);
+    expectViolation(() => {
+      const rung = getLeague('sunset').postseason.ladder[0] as { status: PlayoffStatus };
+      rung.status = 'below-line';
+      return () => { rung.status = 'no-postseason'; };
+    }, /ladder status below-line not allowed for no-postseason/);
+    expectViolation(() => {
+      const rung = getLeague('scval').postseason.ladder[3] as { status: PlayoffStatus };
+      rung.status = 'selection';
+      return () => { rung.status = 'out'; };
+    }, /ladder status selection not allowed for ccs-ladder/);
+    expectViolation(() => {
+      const rung = getLeague('metro').postseason.ladder[1] as { status: PlayoffStatus };
+      rung.status = 'no-postseason';
+      return () => { rung.status = 'selection'; };
+    }, /ladder status no-postseason not allowed for section-playoffs/);
   });
 
   it('2b. an unbracketed tournament: places 1..qualifiers are tournament, no rung straddles, dates after league play', () => {
@@ -500,7 +660,9 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     for (const l of LEAGUES) {
       const section = getSection(l.sectionId);
       for (const d of l.divisions) {
-        expect(d.gamesPerTeam).toBe((d.expectedTeams - 1) * 2);
+        // null only for the Sunset (no fixed schedule); every other division is a double round robin.
+        if (d.id === 'sunset') expect(d.gamesPerTeam).toBeNull();
+        else expect(d.gamesPerTeam, d.id).toBe((d.expectedTeams - 1) * 2);
         expect(d.leaguePlay.first <= d.leaguePlay.last).toBe(true);
         for (const date of [d.leaguePlay.first, d.leaguePlay.last]) {
           expect(date >= section.seasonWindow.start && date <= section.seasonWindow.end, `${d.id} ${date}`).toBe(true);
@@ -540,10 +702,10 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
     }, /bundled/);
   });
 
-  it("10b. official mode 'none' only on a contest-type league, with a note", () => {
+  it("10b. official mode 'none' only on a contest-type or membership league, with a note", () => {
     for (const d of ALL_DIVISIONS) {
       if (d.official.mode !== 'none') continue;
-      expect(leagueOfDivision(d.id).rules.classification, d.id).toBe('contest-type');
+      expect(['contest-type', 'membership'], d.id).toContain(leagueOfDivision(d.id).rules.classification);
       expect(d.official.note.length, d.id).toBeGreaterThan(0);
     }
     expectViolation(() => {
@@ -587,7 +749,15 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
       const r = getLeague('mcal').rules as { leagueOvertime: string };
       r.leagueOvertime = 'shootout';
       return () => { r.leagueOvertime = 'none'; };
-    }, /leagueOvertime 'shootout' needs classification 'contest-type'/);
+    }, /mcal: leagueOvertime 'shootout' exactly when its section ncs has a shootout rule/);
+    // With its section's rule in place too, an official-fixtures league still may not decide level games by shootout.
+    expectViolation(() => {
+      const r = getLeague('mcal').rules as { leagueOvertime: string };
+      const s = getSection('ncs') as { shootout: SectionConfig['shootout'] };
+      r.leagueOvertime = 'shootout';
+      s.shootout = { words: '1 v 1s', citation: 'a rule' };
+      return () => { r.leagueOvertime = 'none'; s.shootout = null; };
+    }, /leagueOvertime 'shootout' needs classification 'contest-type' or 'membership'/);
     expectViolation(() => {
       const l = getLeague('bval') as { membershipNote: string | null };
       l.membershipNote = '';
@@ -623,22 +793,453 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
       if (d.ladderLine !== null) expect(d.ladderLine.after).toBeLessThan(d.expectedTeams);
       else {
         const ps = leagueOfDivision(d.id).postseason;
-        expect(ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams, d.id).toBe(true);
+        expect((ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams) || ps.kind === 'no-postseason', d.id).toBe(true);
       }
     }
     expect(LEAGUES.map((l) => l.postseason.kind)).toEqual([
       'ccs-ladder', 'ccs-ladder', 'ccs-ladder', 'league-tournament', 'unbracketed-tournament',
+      'no-postseason', 'section-playoffs', 'section-playoffs', 'section-playoffs',
     ]);
     expectViolation(() => {
       const d = getDivision('pcal') as { ladderLine: { after: number; label: string } | null };
       const before = d.ladderLine;
       d.ladderLine = null;
       return () => { d.ladderLine = before; };
-    }, /ladderLine may be null only for an unbracketed tournament/);
+    }, /ladderLine may be null only for an unbracketed tournament whose qualifiers >= expectedTeams, or a league with no postseason/);
+    expectViolation(() => {
+      const d = getDivision('sunset') as { ladderLine: { after: number; label: string } | null };
+      d.ladderLine = { after: 1, label: 'Line' };
+      return () => { d.ladderLine = null; };
+    }, /sunset: a no-postseason league draws no ladder or home line/);
     expectViolation(() => {
       const h = getDivision('santa-teresa').home as { miniRows: number };
       h.miniRows = 7;
       return () => { h.miniRows = 3; };
     }, /miniRows/);
+  });
+});
+
+describe('leagues: the Sunset (Southern Section)', () => {
+  const sunset = getLeague('sunset');
+  const division = getDivision('sunset');
+
+  it('is a field hockey grouping of ten, named apart from the all-sports Sunset League', () => {
+    expect(sunset).toMatchObject({
+      sectionId: 'ss', name: 'Sunset Field Hockey League', shortName: 'Sunset',
+      cities: 'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills',
+      officialUrl: 'https://cifss.org/sports/field-hockey/',
+      sblive: { leagueSlugs: ['4249-sunset'], backfill: true },
+      withdrawnNames: [],
+      membershipNote: 'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+    });
+    expect(isSingleDivision('sunset')).toBe(true);
+    expect(divisionHeading('sunset')).toBeNull();
+    expect(divisionDisplay('sunset')).toBe('Sunset');
+    expect(division.searchAliases).toEqual(['Sunset']);
+  });
+
+  it('classifies by MaxPreps’ league flag, with no fixed schedule and a five-row MaxPreps table', () => {
+    expect(sunset.rules).toMatchObject({
+      classification: 'contest-type', excludeContestTypes: [2, 4], postseasonFrom: null, orderScope: 'site',
+      gamesWord: 'league', matcher: 'two-phase', tiebreaks: { default: ['no-rule'] }, leagueOvertime: 'none',
+      coChampionsLabel: 'Sunset co-leaders', unresolvedSuffix: '', drawNumbers: null, leagueGameOverrides: [],
+    });
+    expect(division).toMatchObject({
+      expectedTeams: 10, gamesPerTeam: null, leaguePlay: { first: '2026-08-18', last: '2026-10-31' },
+      maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297', maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
+      maxprepsTeamCount: 5, maxprepsExtraRows: {}, reportedTrust: 'informational', ladderLine: null,
+      home: { miniRows: 10, lineAfter: null, lineLabel: null },
+    });
+    expect(division.maxprepsMissing).toEqual(['edison', 'fountain-valley', 'huntington-beach', 'marina', 'newport-harbor']);
+    expect(division.official.mode === 'none' && division.official.note).toBe(
+      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight, putting Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
+    );
+    expect(division.knownCause).toBe(
+      'MaxPreps’ Sunset table lists five of the ten teams and orders them by winning percentage. This site orders all ten by 3-1-0 points. si.com marks more games as league games than MaxPreps does, so its Sunset records differ from ours.',
+    );
+  });
+
+  it('cites no league rule: the 3-1-0 order is this site’s, and the overtime citation names the Oct 2 overtime game', () => {
+    expect(sunset.rules.citations).toEqual({
+      points: 'this site’s 3-1-0 points (the league publishes no points rule)',
+      pointsShort: 'site 3-1-0',
+      order: 'no league document orders the table; this site orders it by its own 3-1-0 points',
+      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the ten that MaxPreps marks as a league game',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Sunset games have ended level and have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported.',
+      coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
+      stages: { 'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is' },
+    });
+  });
+
+  it('has no postseason: one rung for every place, a note, the Blue Book as its source', () => {
+    if (sunset.postseason.kind !== 'no-postseason') throw new Error('sunset has no postseason');
+    expect(sunset.postseason.ladder.map((r) => [r.divisions, r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
+      ['*', [1, 99], 'no-postseason', 'No section playoffs', 'no postseason', 'No playoffs',
+        'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)'],
+    ]);
+    expect(sunset.postseason.note).toBe(
+      'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    );
+    expect(sunset.postseason.citations.noPlayoffs).toMatch(/^CIF-SS Blue Book 2026-27, Bylaw 2011\.1 .* and Bylaw 3500\.2 /);
+    expect([sunset.postseason.sourceLabel, sunset.postseason.sourceUrl]).toEqual([
+      'CIF-SS Blue Book 2026-27', 'https://cifss.org/wp-content/uploads/2026/07/Field-Hockey-2026-27-Blue-Book.pdf',
+    ]);
+    expect(sunset.phases).toEqual([{ phase: 'regular', through: 'league-play' }]);
+    expect(sunset.keyDates).toEqual([{ id: 'last-contest', date: '2026-10-31', label: 'Last allowable Southern Section contest' }]);
+  });
+});
+
+describe('leagues: the San Diego Section (City, North County, Metro)', () => {
+  const sds = ['city', 'north-county', 'metro'].map(getLeague);
+
+  it('aligns the 40 teams in seven divisions from the CIF-SDS League Alignment', () => {
+    expect(sds.map((l) => [l.id, l.name, l.shortName, l.divisions.map((d) => [d.id, d.label, d.expectedTeams, d.gamesPerTeam])])).toEqual([
+      ['city', 'City Conference', 'City', [['city-western', 'City Western', 6, 10], ['city-eastern', 'City Eastern', 6, 10]]],
+      ['north-county', 'North County Conference', 'North County', [
+        ['avocado', 'Avocado', 6, 10], ['palomar', 'Palomar', 7, 12], ['valley', 'Valley', 6, 10],
+      ]],
+      ['metro', 'Metro Conference', 'Metro', [['metro-mesa', 'Metro Mesa', 5, 8], ['metro-south-bay', 'Metro South Bay', 4, 6]]],
+    ]);
+    expect(sds.flatMap((l) => l.divisions).reduce((n, d) => n + d.expectedTeams, 0)).toBe(40);
+    expect(divisionDisplay('metro-south-bay')).toBe('Metro · Metro South Bay');
+    expect(sds.map((l) => l.sblive.leagueSlugs)).toEqual([
+      ['4179-city-western', '4178-city-eastern'],
+      ['4170-avocado-east', '4171-avocado-west', '4234-palomar'],
+      ['4214-metro-mesa', '4199-grossmont'],
+    ]);
+    expect(sds.map((l) => l.withdrawnNames[0] ?? null)).toEqual(['Madison', null, 'Santana']);
+    for (const l of sds) {
+      expect(l.sectionId).toBe('sds');
+      expect(l.officialUrl).toBe('https://www.cifsds.org/sports/fh/index');
+      expect(l.membershipNote).toBeNull();
+    }
+  });
+
+  it('starts each division’s league play at its first game between two members and ends it Oct 30', () => {
+    expect(sds.flatMap((l) => l.divisions.map((d) => [d.id, d.leaguePlay.first, d.leaguePlay.last]))).toEqual([
+      ['city-western', '2026-09-01', '2026-10-30'], ['city-eastern', '2026-09-15', '2026-10-30'],
+      ['avocado', '2026-09-28', '2026-10-30'], ['palomar', '2026-09-09', '2026-10-30'], ['valley', '2026-09-28', '2026-10-30'],
+      ['metro-mesa', '2026-09-28', '2026-10-30'], ['metro-south-bay', '2026-10-07', '2026-10-30'],
+    ]);
+  });
+
+  it('counts every game between two members (membership), with MaxPreps’ tables reconciled division by division', () => {
+    for (const l of sds) {
+      expect(l.rules).toMatchObject({
+        classification: 'membership', excludeContestTypes: [2, 4], postseasonFrom: '2026-11-02', orderScope: 'site',
+        gamesWord: 'division', tiebreaks: { default: ['no-rule'] }, leagueOvertime: 'shootout', unresolvedSuffix: '',
+      });
+      expect(l.rules.coChampionsLabel).toBe(`${l.shortName} co-leaders`);
+      for (const d of l.divisions) {
+        expect(d.official).toEqual({
+          mode: 'none',
+          note: 'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; every pair of members meets twice, and this site counts both games as league games whether or not MaxPreps marks them as league games.',
+        });
+        expect(d.reportedTrust, d.id).toBe('informational');
+        expect(d.home, d.id).toEqual({ miniRows: d.expectedTeams, lineAfter: null, lineLabel: null });
+        expect(d.ladderLine, d.id).toEqual({ after: 1, label: 'Champion line' });
+      }
+    }
+    expect(ALL_DIVISIONS.filter((d) => getDivision(d.id).leagueId !== 'sunset' && SOCAL_IDS.includes(d.leagueId)).map((d) => [
+      d.id, d.maxprepsLeagueId, d.maxprepsName, d.maxprepsSlug, d.maxprepsTeamCount, d.maxprepsMissing, Object.keys(d.maxprepsExtraRows),
+    ])).toEqual([
+      ['city-western', '35dc98fe-887a-475b-992c-0edfe7fc4c58', 'City - Western', 'city--western', 6, [], []],
+      ['city-eastern', '6f9a29a0-78af-4d30-a087-cfa9feb91b89', 'City - Eastern', 'city--eastern', 6, ['patrick-henry'], ['fef1da70-bea2-4958-a60b-9962851f6a1d']],
+      ['avocado', '75ed156b-09c9-4a0c-ac58-11a371443815', 'Avocado', 'avocado', 4, ['mt-carmel', 'rancho-bernardo'], []],
+      ['palomar', 'e4a7e9c3-986b-446f-8547-8348be95e282', 'Palomar', 'palomar', 7, [], []],
+      ['valley', null, null, null, 0, ['escondido', 'mission-hills', 'sage-creek', 'san-pasqual', 'vista', 'westview'], []],
+      ['metro-mesa', '6dfe5a12-b82f-45d7-b103-71a5c13c0093', 'Metro- South Bay', 'metro-south-bay', 5, [], []],
+      ['metro-south-bay', 'ca8e2856-b13d-4aa7-8c15-37cb50a55c60', 'Grossmont', 'grossmont', 3, ['hilltop', 'southwest'], ['1125d6e8-e661-4190-a41d-5722364dee38']],
+    ]);
+    expect(getDivision('valley').knownCause).toBeNull();
+    expect(getDivision('metro-mesa').knownCause).toBe('MaxPreps files these five teams under ‘Metro- South Bay’.');
+    expect(getDivision('city-western').knownCause).toMatch(/Mission Bay’s five games against City Eastern teams/);
+    expect(getDivision('palomar').knownCause).toMatch(/also lists Rancho Buena Vista under Valley/);
+  });
+
+  it('cites the officials’ association’s overtime procedures and paraphrases the Green Book where its words are banned', () => {
+    for (const l of sds) {
+      expect(l.rules.citations.overtime).toBe(
+        'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
+      );
+      expect(l.rules.citations.doubleRoundRobin).toBe(
+        'every pair of members meets twice (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment); the league publishes no schedule',
+      );
+      expect(l.rules.citations.points).toBe('this site’s 3-1-0 points (the league publishes no points rule)');
+      expect(l.rules.citations.coChampions).toMatch(/^the league designates its champion/);
+    }
+  });
+
+  it('plays the Section playoffs: 1st has at least a play-in as designated champion, everyone else is by selection', () => {
+    for (const l of sds) {
+      const ps = l.postseason;
+      if (ps.kind !== 'section-playoffs') throw new Error(`${l.id} plays the section playoffs`);
+      expect(ps).toMatchObject({
+        name: 'San Diego Section playoffs', dates: { first: '2026-11-02', last: '2026-11-14' },
+        qualificationLine: 'San Diego Section playoffs, Nov 2–14 (finals Nov 14 at La Jolla HS): Open 8, Division I 12, Division II 12, placed by the Section from its power rankings; a designated league champion gets at least a play-in.',
+        divisions: [{ name: 'Open', teams: 8 }, { name: 'Division I', teams: 12 }, { name: 'Division II', teams: 12 }],
+        sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',
+        sourceUrl: 'https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit',
+        powerRankingsUrl: 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings',
+      });
+      expect(ps.ladder.map((r) => [r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
+        [[1, 1], 'tournament', 'League champion: at least a play-in', 'at least a play-in as league champion', '1st',
+          '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not.'],
+        [[2, 99], 'selection', 'No league route', 'no league route into the playoffs', 'Selection only',
+          '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
+      ]);
+      expect(ps.citations.roundDates).toBe(
+        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+      );
+      expect(Object.keys(ps.playoffDivisionOf)).toHaveLength(l.divisions.reduce((n, d) => n + d.expectedTeams, 0));
+      expect(l.phases).toEqual([{ phase: 'regular', through: 'league-play' }, { phase: 'tournament', through: '2026-11-14' }]);
+      expect(l.keyDates.map((k) => [k.id, k.date])).toEqual([
+        ['league-play-ends', '2026-10-30'], ['seeding-meeting', '2026-10-31'], ['play-in', '2026-11-02'], ['finals', '2026-11-14'],
+      ]);
+    }
+  });
+
+  it('records each team’s 2026 playoff division: 20 in Division I, 20 in Division II (the Divisions sheet)', () => {
+    const all = Object.assign({}, ...sds.map((l) => (l.postseason as { playoffDivisionOf: Record<string, 'I' | 'II'> }).playoffDivisionOf)) as Record<string, 'I' | 'II'>;
+    expect(Object.keys(all)).toHaveLength(40);
+    expect(Object.keys(all).filter((k) => all[k] === 'I').sort()).toEqual([
+      'bishops', 'canyon-crest-academy', 'canyon-hills', 'cathedral-catholic', 'clairemont', 'del-norte', 'eastlake', 'fallbrook',
+      'la-costa-canyon', 'la-jolla', 'la-jolla-country-day', 'mission-bay', 'mt-carmel', 'poway', 'rancho-bernardo',
+      'san-dieguito-academy', 'san-marcos', 'scripps-ranch', 'torrey-pines', 'university-city',
+    ]);
+    // Every Valley and Metro South Bay team is Division II; every maxprepsMissing slug has a division.
+    for (const d of ['valley', 'metro-south-bay']) {
+      for (const slug of getDivision(d).maxprepsMissing) expect(all[slug], slug).toBe('II');
+    }
+  });
+
+  it('excludes the two duplicate Palomar rows', () => {
+    expect(DATA_QUALITY.excludedContestIds['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a']).toMatch(/^Poway vs Fallbrook, Oct 9 .*Oct 13 \(0b3cfb7d\)/);
+    expect(DATA_QUALITY.excludedContestIds['9c027452-e21e-4e47-9eac-d2e800bfb42c']).toMatch(/^Mission Vista vs Fallbrook, Oct 30 .*Oct 29 \(5067646d\)/);
+  });
+});
+
+describe('leagues: not covered (search)', () => {
+  const reasonOf = (name: string): string | undefined => DATA_QUALITY.notCovered.find((n) => n.name === name)?.reason;
+
+  it('explains each school with games but no league, and each school with none, in whole sentences', () => {
+    expect(DATA_QUALITY.notCovered.map((n) => n.name)).toEqual([
+      'York', 'Wilcox', 'Red Bluff', 'Harvard-Westlake', 'Thousand Oaks', 'Glendora',
+      'Madison', 'Santana', 'Castle Park', 'Chula Vista', 'Montgomery', 'Sweetwater', 'Mayfair',
+    ]);
+    for (const school of ['Harvard-Westlake', 'Thousand Oaks', 'Glendora']) {
+      expect(reasonOf(school)).toBe(`${school} is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.`);
+    }
+    for (const school of ['Madison', 'Santana', 'Castle Park', 'Chula Vista', 'Montgomery', 'Sweetwater']) {
+      expect(reasonOf(school)).toBe(`${school} has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.`);
+    }
+    expect(reasonOf('Mayfair')).toBe('Mayfair has no 2026 varsity game on MaxPreps and is not on the Southern Section’s list of participating schools.');
+    for (const n of DATA_QUALITY.notCovered) {
+      expect(n.reason, n.name).toMatch(/^[A-Z].*\.$/);
+      expect(n.keys.length, n.name).toBeGreaterThan(0);
+    }
+  });
+
+  it('never calls a school with no games inactive, withdrawn, dropped or cancelled', () => {
+    const strings = [
+      ...DATA_QUALITY.notCovered.map((n) => n.reason), ...Object.values(DATA_QUALITY.excludedContestIds),
+      ...ALL_DIVISIONS.flatMap((d) => Object.values(d.maxprepsExtraRows)), ...socal().flatMap(renderedStrings),
+    ];
+    for (const s of strings) expect(s, s).not.toMatch(/\b(inactive|withdr\w*|dropped|cancel\w*|no (field hockey )?program)\b/i);
+  });
+});
+
+describe('leagues: SoCal copy is honest (DESIGN-socal §2.4 copy rules)', () => {
+  const strings = socal().flatMap((l) => renderedStrings(l).map((text) => [l.id, text] as const)).filter(([, t]) => t);
+
+  it('never says "at-large" or "automatic qualifier" (non-CCS pages), nor "eliminated"', () => {
+    for (const [id, t] of strings) expect(t, `${id}: ${t}`).not.toMatch(/automatic qualifier|at-large|eliminat/i);
+  });
+
+  it('never prints a seed word, so never the Green Book’s play-in sentence', () => {
+    for (const [id, t] of strings) {
+      expect(SEED_CLAIM.test(t), `${id}: ${t}`).toBe(false);
+      expect(t, `${id}: ${t}`).not.toMatch(/lowest-seeded/i);
+    }
+  });
+
+  it('says "Sunset League" only beside "all-sports", and never "Sunset school(s)/member(s)"', () => {
+    for (const [id, t] of strings) {
+      for (const sentence of t.split(/(?<=[.;])\s+/)) {
+        if (/\bSunset League\b/.test(sentence)) expect(sentence, `${id}: ${sentence}`).toMatch(/all-sports/);
+      }
+      expect(t, `${id}: ${t}`).not.toMatch(/\bSunset (school|member)s?\b/);
+    }
+  });
+
+  it('never says a league’s own rules order a table it publishes no rules for, and never calls an umpires’ source official', () => {
+    for (const [id, t] of strings) {
+      expect(t, `${id}: ${t}`).not.toMatch(/rules require/i);
+      expect(umpireOfficialClaims(t), `${id}: ${t}`).toEqual([]);
+    }
+  });
+});
+
+describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
+  it('reserves the region ids: no section, league or division may take one', () => {
+    expectViolation(() => {
+      const d = getDivision('valley') as { id: string };
+      d.id = 'socal';
+      return () => { d.id = 'valley'; };
+    }, /socal: a section, league or division id may not be a region id/);
+    expectViolation(() => {
+      const s = getSection('ss') as { region: string };
+      s.region = 'midcal';
+      return () => { s.region = 'socal'; };
+    }, /ss: unknown region midcal/);
+    expectViolation(() => {
+      const [ss, sds] = [getSection('ss'), getSection('sds')] as Array<{ region: string }>;
+      ss.region = 'norcal';
+      sds.region = 'norcal';
+      return () => { ss.region = 'socal'; sds.region = 'socal'; };
+    }, /region socal has no section/);
+  });
+
+  it('every section names its rules on https, and a shootout rule has its words', () => {
+    expectViolation(() => {
+      const r = getSection('ss').rulesSource as { url: string };
+      const before = r.url;
+      r.url = 'http://cifss.org/';
+      return () => { r.url = before; };
+    }, /ss: rulesSource\.url must start with https/);
+    expectViolation(() => {
+      const s = getSection('sds') as { shootout: SectionConfig['shootout'] };
+      const before = s.shootout;
+      s.shootout = { words: ' ', citation: 'x' };
+      return () => { s.shootout = before; };
+    }, /sds: shootout needs words and a citation/);
+  });
+
+  it('a section’s shootout rule and its leagues’ leagueOvertime agree both ways', () => {
+    expectViolation(() => {
+      const s = getSection('sds') as { shootout: SectionConfig['shootout'] };
+      const before = s.shootout;
+      s.shootout = null;
+      return () => { s.shootout = before; };
+    }, /city: leagueOvertime 'shootout' exactly when its section sds has a shootout rule/);
+    expectViolation(() => {
+      const r = getLeague('metro').rules as { leagueOvertime: string };
+      r.leagueOvertime = 'none';
+      return () => { r.leagueOvertime = 'shootout'; };
+    }, /metro: leagueOvertime 'shootout' exactly when its section sds has a shootout rule/);
+  });
+
+  it('a missing MaxPreps table names nothing and has no rows; a present one is a GUID with a name and slug', () => {
+    expectViolation(() => {
+      const d = getDivision('valley') as { maxprepsSlug: string | null };
+      d.maxprepsSlug = 'valley';
+      return () => { d.maxprepsSlug = null; };
+    }, /valley: maxprepsLeagueId null needs maxprepsName and maxprepsSlug null/);
+    expectViolation(() => {
+      const d = getDivision('valley') as { maxprepsTeamCount: number; maxprepsMissing: readonly string[] };
+      const before = d.maxprepsMissing;
+      d.maxprepsTeamCount = 1;
+      d.maxprepsMissing = before.slice(1);
+      return () => { d.maxprepsTeamCount = 0; d.maxprepsMissing = before; };
+    }, /valley: maxprepsLeagueId null needs maxprepsTeamCount 0/);
+    expectViolation(() => {
+      const d = getDivision('palomar') as { maxprepsName: string | null };
+      d.maxprepsName = null;
+      return () => { d.maxprepsName = 'Palomar'; };
+    }, /palomar: a MaxPreps table needs maxprepsName and maxprepsSlug/);
+    expectViolation(() => {
+      const d = getDivision('palomar') as { maxprepsLeagueId: string | null };
+      d.maxprepsLeagueId = 'palomar';
+      return () => { d.maxprepsLeagueId = 'e4a7e9c3-986b-446f-8547-8348be95e282'; };
+    }, /palomar: maxprepsLeagueId palomar is not a GUID/);
+  });
+
+  it('gamesPerTeam null only on a contest-type league with no official schedule', () => {
+    expectViolation(() => {
+      const d = getDivision('city-western') as { gamesPerTeam: number | null };
+      d.gamesPerTeam = null;
+      return () => { d.gamesPerTeam = 10; };
+    }, /city-western: gamesPerTeam null needs classification 'contest-type' and official mode 'none'/);
+    expectViolation(() => {
+      const d = getDivision('de-anza') as { gamesPerTeam: number | null };
+      d.gamesPerTeam = null;
+      return () => { d.gamesPerTeam = 12; };
+    }, /de-anza: gamesPerTeam null needs/);
+  });
+
+  it("'membership' only with official mode 'none'; 'none' never on an official-fixtures league", () => {
+    expectViolation(() => {
+      const d = getDivision('avocado') as { official: unknown };
+      const before = d.official;
+      d.official = {
+        mode: 'bundled', source: 'pcal-pdf', scheduleUrl: 'https://example.org/a.pdf', bundledFile: 'data/official/x.json',
+        revisionCheckUrl: 'https://example.org/a.pdf', bundledSha256: 'a'.repeat(64), revisedOn: null,
+      };
+      return () => { d.official = before; };
+    }, /avocado: classification 'membership' needs official mode 'none'/);
+  });
+
+  it('no postseason: a note, a source, no postseasonFrom', () => {
+    expectViolation(() => {
+      const ps = getLeague('sunset').postseason as { note: string };
+      const before = ps.note;
+      ps.note = '';
+      return () => { ps.note = before; };
+    }, /sunset: a no-postseason league needs a note/);
+    expectViolation(() => {
+      const r = getLeague('sunset').rules as { postseasonFrom: string | null };
+      r.postseasonFrom = '2026-11-01';
+      return () => { r.postseasonFrom = null; };
+    }, /sunset: a no-postseason league has no postseasonFrom/);
+    expectViolation(() => {
+      const ps = getLeague('sunset').postseason as { sourceUrl: string };
+      const before = ps.sourceUrl;
+      ps.sourceUrl = 'http://cifss.org/';
+      return () => { ps.sourceUrl = before; };
+    }, /sunset: postseason sourceUrl must start with https/);
+  });
+
+  it('section playoffs: only 1st is a league route, the dates follow league play, every member has a playoff division', () => {
+    expectViolation(() => {
+      const rung = getLeague('city').postseason.ladder[1] as { status: PlayoffStatus };
+      rung.status = 'tournament';
+      return () => { rung.status = 'selection'; };
+    }, /city: ladder rung \[2, 99\] is tournament, but only place 1 \(and only it\) is 'tournament'/);
+    expectViolation(() => {
+      const dates = (getLeague('north-county').postseason as { dates: { first: string } }).dates;
+      dates.first = '2026-10-30';
+      return () => { dates.first = '2026-11-02'; };
+    }, /avocado: postseason dates\.first is not after leaguePlay\.last/);
+    expectViolation(() => {
+      const r = getLeague('metro').rules as { postseasonFrom: string | null };
+      r.postseasonFrom = null;
+      return () => { r.postseasonFrom = '2026-11-02'; };
+    }, /metro: section playoffs need postseasonFrom on or before dates\.first/);
+    expectViolation(() => {
+      const ps = getLeague('metro').postseason as { playoffDivisionOf: Record<string, string> };
+      const before = ps.playoffDivisionOf;
+      ps.playoffDivisionOf = Object.fromEntries(Object.entries(before).filter(([slug]) => slug !== 'southwest'));
+      return () => { ps.playoffDivisionOf = before; };
+    }, /metro: 8 playoff divisions for 9 teams/);
+    expectViolation(() => {
+      const ps = getLeague('metro').postseason as { playoffDivisionOf: Record<string, string> };
+      const before = ps.playoffDivisionOf;
+      ps.playoffDivisionOf = { ...before, hilltop: 'III' };
+      return () => { ps.playoffDivisionOf = before; };
+    }, /metro: playoffDivisionOf hilltop is III, not I or II/);
+    expectViolation(() => {
+      const ps = getLeague('city').postseason as { powerRankingsUrl: string };
+      const before = ps.powerRankingsUrl;
+      ps.powerRankingsUrl = 'cifsds.org';
+      return () => { ps.powerRankingsUrl = before; };
+    }, /city: postseason sourceUrl and powerRankingsUrl must start with https/);
+  });
+
+  it("the CCS ladder stays inside the CCS", () => {
+    expectViolation(() => {
+      const l = getLeague('scval') as { sectionId: string };
+      l.sectionId = 'ncs';
+      return () => { l.sectionId = 'ccs'; };
+    }, /scval: a CCS ladder league outside the CCS/);
   });
 });

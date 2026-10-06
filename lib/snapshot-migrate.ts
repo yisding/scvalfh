@@ -7,8 +7,11 @@
  * leagues are present as registry teams with no results and a `degraded` health row that says why.
  *
  * "League added" (v2 → v2). A v2 file written before a configured league existed (the four-league
- * snapshot before the EAL) gains that league's sections, season entry, teams, empty standings rows and
- * a `degraded` health row; every existing league's rows stay byte-identical.
+ * snapshot before the EAL; the five-league NorCal snapshot before the Sunset and the three San Diego
+ * leagues, whose two sections arrive with them) gains those leagues' sections, season entries, teams,
+ * empty standings rows and a `degraded` health row each; every existing league's rows stay
+ * byte-identical. No schemaVersion bump: the upgrade is keyed on the league list, and a region is never
+ * stored (it is derived from each section's config), so there is no new field to fill.
  *
  * Both return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
@@ -43,7 +46,10 @@ export function isSnapshotV1(raw: unknown): boolean {
   return isObject(season) && isObject(season.leagues);
 }
 
-/** A side re-resolved by teamId through the 49-team registry (a now-registry opponent gains its slug and name). */
+/**
+ * A side re-resolved by teamId through the registry (a now-registry opponent gains its slug and name: the
+ * San Diego teams NorCal teams have already played become registry sides when their leagues are added).
+ */
 function upgradeSide(side: GameSide): GameSide {
   const team: Team | undefined = side.teamId ? getTeamById(side.teamId) : undefined;
   if (!team) return { ...side };
@@ -280,10 +286,11 @@ function mergeInConfigOrder<T extends { id: string }>(present: readonly T[], all
  * Adds the configured leagues a v2 file predates (D15). In order: (1) every game side in `games` and
  * `playoffs.games` re-resolved by teamId (a now-registry opponent gains its slug and name; teamId,
  * leagueDivision, countsFor and postseason are untouched, since a pre-league file holds no game
- * between two members of a new league); (2) `teams` = the registry; (3) the missing season sections
- * and leagues from `buildSeason`; (4) the missing divisions' standings rows (no results) and their
- * cross-check rows; (5) one `degraded` health row per missing league; (6) `counts` recomputed.
- * Throws on input that `lacksConfiguredLeagues` rejects.
+ * between two members of a new league: the NorCal snapshot's games all have a NorCal side, and a
+ * NorCal–San Diego game is in no table); (2) `teams` = the registry; (3) the missing season sections
+ * and leagues from `buildSeason`, inserted where config puts them; (4) the missing divisions' standings
+ * rows (no results) and their cross-check rows; (5) one `degraded` health row per missing league;
+ * (6) `counts` recomputed. Throws on input that `lacksConfiguredLeagues` rejects.
  */
 export function addConfiguredLeagues(raw: unknown): unknown {
   if (!lacksConfiguredLeagues(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot that lacks a configured league');

@@ -1,16 +1,19 @@
 # League rules — how each league's table is computed
 
-The five leagues this site covers agree on the points (3 for a win, 1 for a tie, 0 for a loss) and
-the ordering key (points; the EAL uses points to decide its title and publishes no standings, so this
-site extends them to the table). Four of them can end a league game in a tie; the EAL decides a level
-varsity game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
+The five Northern California leagues this site covers agree on the points (3 for a win, 1 for a tie, 0
+for a loss) and the ordering key (points; the EAL uses points to decide its title and publishes no
+standings, so this site extends them to the table). Four of them can end a league game in a tie; the EAL
+decides a level varsity game with 1 v 1s. The four Southern California leagues (the Sunset and the San
+Diego Section's City, North County and Metro conferences) publish no points rule, no standings and no
+schedule at all: this site orders their tables by its own 3-1-0 points and says so on every page
+(`orderScope: 'site'`). They differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
 It never guesses an order.
 
-Sources are the league's own documents as of 2026-10-02 (for the EAL, the CIF Northern Section's Field Hockey Guidelines, as of 2026-10-04): see "Official sources" in each section and
+Sources are the league's own documents as of 2026-10-02 (for the EAL, the CIF Northern Section's Field Hockey Guidelines, as of 2026-10-04; for the Sunset and the San Diego leagues, the Southern and San Diego Sections' documents and MaxPreps' schedules, as of 2026-10-06): see "Official sources" in each section and
 `docs/DATA-SOURCES.md` for URLs, hashes and how the schedules are kept current. SCVAL's by-laws
 are also quoted in `docs/BYLAWS-2026-27.md`.
 
@@ -21,7 +24,7 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    separate the teams (all keys equal) is skipped; a stage that is *not applicable* (for example,
    head-to-head when two teams never met) is skipped too.
 3. **Multi-team procedure.** The leagues differ here, and the difference changes results:
-   - `partition-restart` (SCVAL, PCAL, EAL): a stage splits the bucket into a better and a worse group;
+   - `partition-restart` (SCVAL, PCAL, EAL, Sunset, San Diego): a stage splits the bucket into a better and a worse group;
      each group restarts the chain from its first stage, using only its own members.
    - `seed-one-restart` (BVAL, MCAL): a stage picks the *one* best team for the current place; the
      chain then restarts among the rest for the next place.
@@ -29,8 +32,9 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    `no-rule`) ends the walk: the remaining teams share a place, listed by name, with the league's
    citation as the footnote.
 5. Only games that count toward the division table are used: two teams of the same division, a
-   league game by the league's own evidence (SCVAL and EAL: MaxPreps' league flag; BVAL, PCAL and
-   MCAL: it is on the official schedule), never a tournament, neutral or postseason game.
+   league game by the league's own evidence (SCVAL, EAL and Sunset: MaxPreps' league flag; BVAL, PCAL
+   and MCAL: it is on the official schedule; the San Diego divisions: any game between two members
+   inside league play, whatever MaxPreps' flag says), never a tournament, neutral or postseason game.
 6. A team with no results is named and listed last, never ranked by merit and never shown as 0-0-0.
 7. A tie at the top is shown as "Level on points at the top" until the league's regular phase is
    over; only then does the league's co-champion label appear.
@@ -341,6 +345,176 @@ standings are not available (`/history/2025-26`): the EAL published none.
 
 ---
 
+## Sunset — Sunset Field Hockey League (CIF Southern Section)
+
+Tags: **[V]** read on the page or document named, 2026-10-06; **[U]** not verified (the reason is given).
+
+**What it is.** A field-hockey-only grouping of ten Southern Section schools in Orange, Los Angeles and
+Riverside counties: Bonita (La Verne), Chaminade (West Hills), Chaparral, Great Oak and Temecula Valley
+(Temecula), Edison, Huntington Beach and Marina (Huntington Beach), Fountain Valley (Fountain Valley)
+and Newport Harbor (Newport Beach). It is **not** the all-sports Sunset League, an Orange County league with different
+members (Los Alamitos and Corona del Mar among them) [U: from a search snippet, not a league document];
+the site names it "Sunset Field Hockey League" and its copy never writes "Sunset League" except beside
+"all-sports". The ten are exactly MaxPreps' 2024-25 (`c538c7d2-…`) and 2025-26 (`1ab67ce6-…`) Sunset
+tables [V]. No Sunset website, bylaws, schedule or standings document exists that we could find [U: not
+found, not proven absent]. For 2026-27, MaxPreps' Sunset table (`aa46adc4-…`) lists five (Great Oak,
+Temecula Valley, Bonita, Chaminade, Chaparral) ordered by conference winning percentage, and gives the
+five Orange County schools no league (a zero GUID) [V]; si.com's table, which the Section's own scores
+site (scores.cifss.org) shows, lists eight of the ten plus two 0-0 rows (Westlake, Los Alamitos) and
+files Chaparral and Temecula Valley under "Southwestern" [V].
+
+**Which games count.** A game between two of the ten that MaxPreps marks as a league game (contestType 0
+on either row), leaving out tournament (2) and postseason (4) rows: classification `contest-type`, as
+for SCVAL and the EAL. League play runs Aug 18 (Bonita v Marina and Chaminade v Fountain Valley, the
+first such games) to Oct 31, the Section's last allowable contest [V: 2026-27 Sports Calendar; Blue Book
+Bylaw 2006]. There is **no round robin** [V: inventory 2026-10-06, the 45 pairs meet 2, 1 or 0 times:
+9, 30 and 6 pairs], so `gamesPerTeam` is null: the site prints games played without "of N" and shows no
+games-left or maximum-points column, and when teams' counts differ by two or more the standings say that
+points favour teams that have played more. MaxPreps flags 2 to 7 games a team [V]; si.com marks more games
+as league games than MaxPreps does [V], so its Sunset records differ from ours.
+
+**Points and order.** No league document awards points or orders the table, so the order is this site's
+own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citing a league rule.
+
+**Ties in a game.** Blue Book Article 200 adopts the NFHS rules and says nothing on overtime [V]. Sunset
+games have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11 [V]) and have been
+decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
+recorded as it is reported: `leagueOvertime: 'none'` (D2 rule 4c, a phantom si.com 0-0, applies). The
+Southern Section has no shootout rule (`SectionConfig.shootout` null).
+
+**Chain** (multi-team procedure: `partition-restart`; no stage separates a bucket):
+
+| Stage | Rule | Citation |
+|---|---|---|
+| 1 | no rule: no Sunset document exists that we could find (not computable; the teams share a place) | — |
+
+**Co-champions.** No published rule names a champion; teams level on points at the top are shown level,
+labelled "Sunset co-leaders" once league play is over.
+
+**Postseason.** None. "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No playoffs - See Bylaw 3500.2)" (Blue Book
+2026-27 Bylaw 2011.1) and "No playoffs will be conducted by the CIF Southern Section Office when less than
+20% of the membership field teams in that sport" (Bylaw 3500.2) [V]; the 2026-27 Sports Calendar lists
+CIF-SS Preliminaries and Finals "N/A" and scores.cifss.org shows "No Brackets Found" [V]; CIF holds no
+regional or state field hockey championship [V: cifstate.org]. The last Southern Section field hockey
+championship was in 1984 [V: CIF-SS History #134]. The config's postseason kind is `no-postseason`: one
+ladder rung for every place ("No section playoffs"), no ladder line and no band.
+
+**Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200, PDF), the 2026-27 Sports
+Calendar and the Season Preview, all linked from cifss.org/sports/field-hockey/ [V]. The Season Preview's
+list of participating schools names Bonita, Chaparral, Edison, Fountain Valley, Glendora, Great Oak,
+Huntington Beach, Marina, Newport Harbor, Temecula Valley and Thousand Oaks; it omits the private schools
+Chaminade and Harvard-Westlake, which do field teams [V]. Harvard-Westlake, Thousand Oaks and Glendora are
+each the only field hockey team in their all-sports MaxPreps league (League B, Marmonte, Palomares) with no
+league-flagged game [V], so they appear only as opponents. Mayfair has a 2026-27 MaxPreps team but no game
+and is not on the participating list [V].
+
+**Known data gaps.** MaxPreps' Sunset table holds five of the ten and orders them by winning percentage;
+its records are labelled informational. No 2025-26 Sunset standings document exists that we could find
+[U], so `/history/2025-26` shows none.
+
+---
+
+## The San Diego Section — City, North County and Metro conferences (CIF-SDS)
+
+Tags as above.
+
+**Alignment.** From the Section's 2026-27 League Alignment workbook [V] (CITY tab "LAST UPDATE: September
+10, 2026"; NORTH COUNTY "UPDATED 9/20/26"; METRO undated): City Western 6 (Bishop's, Canyon Hills,
+Cathedral Catholic, La Jolla, Mission Bay, Scripps Ranch); City Eastern 6 (Clairemont, La Jolla Country
+Day, Mira Mesa, Patrick Henry, Point Loma, University City); Avocado 6 (Canyon Crest Academy, La Costa
+Canyon, Mt. Carmel, Rancho Bernardo, San Marcos, Torrey Pines); Palomar 7 (Del Norte, Fallbrook, Mission
+Vista, Poway, Rancho Buena Vista, San Dieguito Academy, Valley Center); Valley 6 (Escondido, Mission
+Hills, Sage Creek, San Pasqual, Vista, Westview); Metro Mesa 5 (Bonita Vista, Eastlake, Helix, Olympian,
+Otay Ranch); Metro South Bay 4 (El Capitan, Granite Hills, Hilltop, Southwest). The sheet also lists
+Rancho Buena Vista under Valley; its league games are against Palomar teams and MaxPreps' Palomar table
+lists it, so it is Palomar's here [V]. The 40 are exactly the 40 programs with results in the Section's
+power rankings [V]. The site's league is the conference (City, North County, Metro) and its divisions are
+the Section's leagues; the division names are ours [U: the sheet labels them WESTERN, EASTERN, NC
+AVOCADO, NC PALOMAR, NC VALLEY, MESA and SOUTH BAY].
+
+**Which games count.** Every pair of division-mates meets exactly twice on MaxPreps' schedules (leaving
+out contestType 2 and 4) [V: inventory 2026-10-06], a double round robin of (teams − 1) × 2 games: 10,
+10, 10, 12, 10, 8 and 6. MaxPreps' league flag misses many of them (Patrick Henry 0 of 10 flagged, San
+Pasqual 3, Vista 4, Mt. Carmel 4, Escondido 5, Southwest 2 of 6) [V], so these divisions use
+classification `membership`: a game counts for a division when both sides are its members, neither row is
+contestType 2 or 4, and it is dated inside league play, whatever MaxPreps' flag says. A game MaxPreps flags
+between two divisions of one conference (Mission Bay's five against City Eastern teams [V]) counts in
+neither table. Two duplicate Palomar rows (Poway v Fallbrook on Oct 9 with no time, duplicating Oct 13;
+Mission Vista v Fallbrook on Oct 30 with no time, duplicating Oct 29) are excluded in
+`DATA_QUALITY.excludedContestIds`. League play starts at each division's first game between two members
+(City Western Sep 1, City Eastern Sep 15, Palomar Sep 9, Avocado, Valley and Metro Mesa Sep 28, Metro South
+Bay Oct 7) [V: inventory] and ends Oct 30, the Master Calendar's last contest [V]. **Conflict:** the San
+Diego Field Hockey Officials Association's calendar ends the regular season on Thu Oct 29 [V]; the
+Section's date is used.
+
+**Points and order.** No conference or league document awards points, publishes standings or orders a
+table that we could find [U: not found], so the order is this site's own 3-1-0 points (`orderScope:
+'site'`). The Section's power rankings list each school's league record from game-type labels its schools
+enter; they are not league standings and are not used.
+
+**Ties in a game.** The Green Book leaves the tiebreaker procedure "for regular season and playoff contests"
+to the preseason minutes (Bylaw 2000.1, special rule 3) [V], which are a Canva bulletin we could not read
+[U]. The officials' association's 2026 Mercy & Overtime Procedures [V] are the operative text: varsity
+regular season, a 10-minute 7 v 7 sudden-victory period, then a set of five 1 v 1 shootouts, then
+sudden-victory shootouts; "a total of one goal is awarded for the winner of the set". So a varsity game
+never ends level, across all three conferences. **MaxPreps often records such a win as a level score
+marked W and L** (eight 2026 finals, all with overtimePeriodsPlayed 0: Clairemont–Eastlake Sep 1,
+Escondido–El Capitan Sep 1, Canyon Crest–San Pasqual Sep 4, Mt. Carmel–Poway Sep 11, San Pasqual–San
+Dieguito Sep 14, Canyon Crest–Cathedral Sep 22, University City–Rancho Bernardo Sep 22, Westview–San
+Pasqual Oct 2) [V]; the Section's own power-rankings site is inconsistent ("W (0-0)" and "W (2-0)") [V].
+The site counts the flags as a win and marks the game "SO", for any two San Diego teams: the rule is the
+Section's (`SectionConfig.shootout`), not a conference's. How each source encodes a shootout in general
+is [U].
+
+**Chain** (multi-team procedure: `partition-restart`):
+
+| Stage | Rule | Citation |
+|---|---|---|
+| 1 | no rule: the Green Book leaves tiebreaks to the preseason minutes, which we could not read (the teams share a place) | Green Book 2000.1, special rule 3 |
+
+**Co-champions.** The league designates its champion: "In case of a tie for first place, the league is to
+designate its automatic qualifier" (Green Book, general playoff bylaws) [V]. The site shows teams level on
+points as level and labels them "{conference} co-leaders" once league play is over; it never names the
+champion.
+
+**Postseason** (`section-playoffs`; no bracket drawn, no place projected). Green Book 2026-27 Bylaw 2000.1
+[V]: "There will be 3 competitive divisions with 8 teams in the Open Division and 12 teams in Divisions I
+and II qualifying for the playoffs. Designated league champions (not co-champions or tri-champions) will
+be guaranteed entry into a play-in game in the CIFSDS playoffs." The Commissioner places teams from the
+approved power rankings with input from the coaches' advisory committee, with no appeal [V]; the eight
+Open Division teams are drawn from Division I at the end of the regular season [V: division-placement
+bylaw]. (The bylaw's play-in sentence names a seed position and is paraphrased on the site, never quoted:
+copy rule SEED_CLAIM.) The 2026 Divisions sheet (dated 2025-12-23) puts 20 of the 40 in Division I and 20
+in Division II [V]; each team's division is `playoffDivisionOf` in config. Open 8 plus Division I 12 is
+20 places for 20 Division I schools, so every Division I team may well play [U: our arithmetic; the
+Championship Bulletin that would say so returns the site shell instead of a PDF]. Division II has 12
+places for its 20. Dates: Master Calendar playoffs Nov 2–12, finals Nov 14 [V]; seeding meeting Oct 31,
+10 AM, by Zoom [V: advisory calendar]. Round dates come only from the officials' association's calendar
+[V page, not a Section document]: play-ins (if necessary) Mon Nov 2; first round Tue Nov 3 (Division II)
+and Wed Nov 4 (Division I); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue
+Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I), 6:00 (Open).
+The site attributes them to the association in the same sentence. The ladder: 1st, "League champion: at
+least a play-in" (the designated champion, which the league names, not this table); 2nd or lower, "No
+league route" (badge "Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
+
+**Official sources.** cifsds.org/sports/fh/index links the 2026 Divisions sheet, the League Alignment
+workbook, the Green Book (a Google Doc, "Revised June 16, 2026"), the 2025 Championship Brackets sheet and
+the power rankings [V]; the Championship Bulletin link is broken and the preseason and host-site
+bulletins are unreadable Canva pages [U]. The overtime procedures and the round dates are the San Diego
+Field Hockey Officials Association's (sdfhoa.weebly.com) [V].
+
+**Known data gaps.** MaxPreps' tables do not follow the alignment [V]: its City - Eastern table leaves out
+Patrick Henry and lists Madison (no 2026 varsity game); its Avocado table leaves out Mt. Carmel and Rancho
+Bernardo; it has no Valley table at all (`maxprepsLeagueId: null`, the cross-check is skipped); its "Metro-
+South Bay" table holds the five Metro Mesa teams; its "Grossmont" table holds El Capitan, Granite Hills
+and Santana (no 2026 varsity game) and lists no league for Hilltop or Southwest. MaxPreps counts Mission
+Bay's five games against City Eastern teams as league games, so its Mission Bay record (3-5-0 on Oct 6)
+is not a City Western record. Every San Diego table is labelled informational. Madison, Santana, Castle
+Park, Chula Vista, Montgomery and Sweetwater have a 2026-27 MaxPreps team but no game there or in the
+power rankings [V]; search names each.
+
+---
+
 ## At a glance
 
 | | SCVAL | BVAL | PCAL | MCAL | EAL |
@@ -355,3 +529,15 @@ standings are not available (`/history/2025-26`): the EAL published none.
 | Last resort | coin flip | coin flip | CCS points, coin flip or blind draw | draw number; 6th place by play-in | teams share a place |
 | Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31, no bracket published |
 | MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only | records and goals only |
+
+| | Sunset | City | North County | Metro |
+|---|---|---|---|---|
+| Section | SS | SDS | SDS | SDS |
+| Teams / divisions | 10 / 1 | 12 / 2 | 19 / 3 | 9 / 2 |
+| League games a team | no fixed number (2 to 7 flagged) | 10 | 10 or 12 | 6 or 8 |
+| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 |
+| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) |
+| League evidence | MaxPreps league flag | division membership | division membership | division membership |
+| Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) |
+| Postseason | none (Blue Book 2011.1, 3500.2) | Section playoffs Nov 2–14: Open 8, I 12, II 12 | same | same |
+| MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only |

@@ -5,7 +5,8 @@
  *   1. a final game carries two numbers
  *   2. a non-final game carries no numbers  → "a missing score is never 0-0"
  *   3. a decider exists exactly when the game is final
- *   4. shootout data exists only when decider === 'SO' (an SO decider may carry no tally: an EAL 1 v 1 win)
+ *   4. shootout data exists only when decider === 'SO' (an SO decider may carry no tally: an EAL 1 v 1 win,
+ *      or a San Diego Section shootout win MaxPreps records as a level score marked W and L)
  * Ids (league, division, slug) are validated strings here and checked against the config and the
  * registry in one snapshot-level `superRefine(checkAgainstConfig)`, whose every failure is a named
  * issue with a path.
@@ -27,6 +28,7 @@ import {
   SECTIONS,
   findDivision,
   findLeague,
+  getSection,
   statusesOf,
 } from './leagues';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
@@ -46,7 +48,8 @@ const contestId = z
   .string()
   .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
-const sectionId = z.enum(['ccs', 'ncs', 'ns']);
+// SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
+const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
 const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
 const sourceId = z.enum([
   'maxpreps-api',
@@ -90,6 +93,8 @@ const playoffStatus = z.enum([
   'bye',
   'tournament',
   'below-line',
+  'selection',
+  'no-postseason',
 ]);
 
 // Every URL in the snapshot that ends up in an `href` is `httpUrl` (lib/schema-primitives.ts says
@@ -142,9 +147,9 @@ const gameSide = z.object({
 });
 
 export const PostseasonTagSchema = z.object({
-  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'ccs', 'other']),
+  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'section-playoffs', 'ccs', 'other']),
   leagueId: id.nullable(),
-  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'ccs-window']),
+  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'section-postseason-window', 'ccs-window']),
 });
 
 export const OfficialStampSchema = z.object({
@@ -341,9 +346,10 @@ export const SeasonSchema = z.object({
       name: z.string().min(1),
       shortName: z.string().min(1),
       divisions: z.array(
-        z.object({ id, label: z.string().min(1), maxprepsLeagueId: z.string().min(1) }),
+        // null where MaxPreps has no table for the division (the San Diego Section's Valley); checked against config (#6).
+        z.object({ id, label: z.string().min(1), maxprepsLeagueId: z.string().min(1).nullable() }),
       ),
-      postseasonKind: z.enum(['ccs-ladder', 'league-tournament', 'unbracketed-tournament']),
+      postseasonKind: z.enum(['ccs-ladder', 'league-tournament', 'unbracketed-tournament', 'no-postseason', 'section-playoffs']),
       window: seasonWindow,
     }),
   ),
@@ -444,7 +450,7 @@ const divisionHealth = z.object({
   meta: z.enum(['ok', 'error', 'mismatch', 'skipped']),
   reportedTable: z.enum(['ok', 'carried', 'missing', 'skipped']),
   reportedRows: z.number().int().min(0).nullable(),
-  classification: z.enum(['contest-type', 'official-fixtures', 'fallback-contest-type']),
+  classification: z.enum(['contest-type', 'official-fixtures', 'membership', 'fallback-contest-type']),
   official: z
     .object({
       source: officialSourceId,
@@ -717,13 +723,15 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
         issue(ctx, ['games', i, 'official', 'source'], `official source ${g.official.source} is not ${d.official.source}`);
       }
     }
-    // 'SO' only where a league decides level games on 1 v 1s; without a tally, a level score flagged W/L.
+    // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
+    // shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout, which covers games between its
+    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/normalize.ts is.
     if (g.decider === 'SO') {
       const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
       const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
-      const league = home && away && home.league === away.league ? findLeague(home.league) : undefined;
-      if (league?.rules.leagueOvertime !== 'shootout') {
-        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two members of a 1 v 1 league (${g.contestId})`);
+      const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
+      if (!section?.shootout) {
+        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
       }
       if (g.shootout === null) {
         const flags = [g.home.result, g.away.result].sort().join('');

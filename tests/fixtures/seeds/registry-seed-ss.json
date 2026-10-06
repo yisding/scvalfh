@@ -1,0 +1,707 @@
+{
+  "generatedOn": "2026-10-06",
+  "scope": "SS (CIF Southern Section) Sunset field hockey league girls varsity 26-27",
+  "verified": {
+    "date": "2026-10-06",
+    "by": "offline build from the 2026-10-06 MaxPreps + si.com harvest (scratchpad/inventory), cross-checked field by field",
+    "maxpreps": [
+      "https://www.maxpreps.com/ca/field-hockey/schools/ __NEXT_DATA__ props.pageProps.groupings (200 CA schools; teamId = MaxPreps school GUID)",
+      "https://production.api.maxpreps.com/gatewayweb/react/team-context/v1?teamId={id}&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e (schoolName, schoolNameAcronym, schoolMascot, schoolCity, schoolColor1/2, canonicalUrl, leagueId)",
+      "https://production.api.maxpreps.com/leagues/{leagueId}/v1 and /leagues/{leagueId}/standings/v1?sportseasonid=e302eb3e-… (schoolColor1/2, teamCanonicalUrl per row)",
+      "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1 (schedule rows, contestType, deleted rows)"
+    ],
+    "sblive": [
+      "https://www.si.com/high-school/stats/california/field-hockey/leagues/{slug}/standings data-react-props teamStandings[].team.webPath (sbliveTeamId, sbliveSlug) and logo URL /uploads/production/school/{id}/ (sbliveSchoolId)",
+      "https://www.si.com/high-school/stats/california/field-hockey/teams/{slug} data-react-props query.team.school.id (sbliveSchoolId where the logo is a team image or absent) and level Varsity"
+    ],
+    "rules": {
+      "id": "MaxPreps teamId GUID (team-context teamId == standings schoolId)",
+      "name": "MaxPreps schoolName (no \"High School\"), except Southwest (MaxPreps \"Southwest SD\")",
+      "acronym": "team-context schoolNameAcronym verbatim (equal to the standings row where one exists)",
+      "mascot/city": "team-context schoolMascot (trimmed) / schoolCity; Mission Vista mascot from the school site (see its notes)",
+      "colors": "standings row schoolColor1/2 where the team has a 26-27 row; else team-context schoolColor1/2 (identical fields; verified equal for all 34 SoCal teams with both). Uppercase hex, no #.",
+      "colorSource": "\"maxpreps-standings\" for all 50 (the enum is maxpreps-standings | placeholder; placeholder means invented colours). Prospect precedent in registry-seed.json.",
+      "maxprepsPath": "path of team-context canonicalUrl (== standings teamCanonicalUrl where a row exists)",
+      "sblive*": "harvested only, never guessed; every one of the 50 matched by name + city on si.com; SDS slugs cross-checked against sds_team_table.md",
+      "aliases": "name, NAME, \"<name> High School\" (not for Bishop's, La Jolla Country Day and the two Academies, whose real names are not \"<name> High School\"), \"<name> <mascot>\" (MaxPreps mascot, plus si.com's where it differs), MaxPreps schoolName if different, MaxPreps formattedName without \", CA\" when it carries a city, si.com/CIFSDS-alignment spellings; no 2-letter tokens; checked against all 99 teams with lib/teams.ts normalizeTeamKey (see seeds/check_seeds.py)"
+    }
+  },
+  "sections": [
+    {
+      "id": "ss",
+      "label": "Southern Section",
+      "officialName": "CIF Southern Section",
+      "shortName": "SS",
+      "region": "socal",
+      "maxprepsSectionId": "8e11e7d4-d3fa-4e6f-827f-652c29439d27",
+      "maxprepsName": "Southern Section",
+      "maxprepsHubUrl": "https://www.maxpreps.com/ca/southern-section/field-hockey/",
+      "contestIdsUrl": "https://production.api.maxpreps.com/gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=section&id=8e11e7d4-d3fa-4e6f-827f-652c29439d27&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25",
+      "officialSite": "https://cifss.org/",
+      "fieldHockeyPage": "https://cifss.org/sports/field-hockey/",
+      "blueBookPdf": "https://cifss.org/wp-content/uploads/2026/09/2026-27-CIF-SS-Blue-Book-09.08.2026.pdf",
+      "fieldHockeyBlueBookPdf": "https://cifss.org/wp-content/uploads/2026/07/Field-Hockey-2026-27-Blue-Book.pdf",
+      "seasonPreviewPdf": "https://cifss.org/wp-content/uploads/2016/09/2026-2027-Field-Hockey-Season-Preview-MM-Edits.pdf",
+      "holdsFieldHockeyChampionship": false,
+      "noChampionshipEvidence": [
+        "Blue Book 2026-27 Bylaw 2011.1 \"GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No playoffs - See Bylaw 3500.2)\"; Bylaw 3500.2 (no playoffs when < 20% of the membership field teams)",
+        "https://cifss.org/wp-content/uploads/2026/07/2026-27-Sports-Calendar-7-1-2026.pdf (Field Hockey: CIF-SS Preliminaries N/A, Finals N/A; last allowable contest Oct 31, 2026)",
+        "https://scores.cifss.org/brackets?genderSport=FIELD_HOCKEY (\"No Brackets Found\", 2026-2027)",
+        "https://www.cifstate.org/sports/field_hockey/info (no CIF regional or state championship)"
+      ]
+    }
+  ],
+  "leagues": [
+    {
+      "id": "sunset",
+      "section": "ss",
+      "label": "Sunset League",
+      "shortLabel": "Sunset",
+      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (the same 10 schools) and 26-27 league-flagged games; MaxPreps 26-27 table holds only the inland/LA five, the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs.",
+      "divisions": [
+        {
+          "id": "sunset",
+          "label": "Sunset",
+          "maxprepsLeagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "maxprepsName": "Sunset",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/sunset/?leagueid=aa46adc4-c188-4e3b-b5fd-857064176297",
+          "teamCount": 10,
+          "maxprepsRows": 5,
+          "maxprepsMissing": [
+            "edison",
+            "fountain-valley",
+            "huntington-beach",
+            "marina",
+            "newport-harbor"
+          ],
+          "maxprepsExtraRows": {},
+          "members": [
+            "bonita",
+            "chaminade",
+            "chaparral",
+            "edison",
+            "fountain-valley",
+            "great-oak",
+            "huntington-beach",
+            "marina",
+            "newport-harbor",
+            "temecula-valley"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "1ab67ce6-46a6-42be-a7aa-dd2892d77dff",
+              "note": "all 10 schools in one table"
+            }
+          },
+          "siSbliveBuckets": [
+            "4249-sunset",
+            "4245-southwestern"
+          ]
+        }
+      ]
+    }
+  ],
+  "teams": [
+    {
+      "id": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
+      "slug": "bonita",
+      "name": "Bonita",
+      "shortName": "Bonita",
+      "abbr": "BN",
+      "acronym": "BHS",
+      "mascot": "Bearcats",
+      "city": "La Verne",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-verne/bonita-bearcats/field-hockey/",
+      "aliases": [
+        "Bonita",
+        "BONITA",
+        "Bonita High School",
+        "Bonita Bearcats",
+        "Bonita (La Verne)"
+      ],
+      "sbliveTeamId": "458494",
+      "sbliveSlug": "458494-bonita-bearcats",
+      "sbliveSchoolId": "10097",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 3,
+        "deletedRows": 1,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Bonita (La Verne, CIF-SS) is a different school from Bonita Vista (Chula Vista, CIF-SDS Metro Mesa); their keys (bonita / bonitavista) do not collide. Acronym BHS shared with Bishop's (and the existing BHS teams): display only."
+      }
+    },
+    {
+      "id": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
+      "slug": "chaminade",
+      "name": "Chaminade",
+      "shortName": "Chaminade",
+      "abbr": "CM",
+      "acronym": "CHS",
+      "mascot": "Eagles",
+      "city": "West Hills",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "CC4E10"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/west-hills/chaminade-eagles/field-hockey/",
+      "aliases": [
+        "Chaminade",
+        "CHAMINADE",
+        "Chaminade High School",
+        "Chaminade Eagles",
+        "Chaminade (West Hills)"
+      ],
+      "sbliveTeamId": "456824",
+      "sbliveSlug": "456824-chaminade-eagles",
+      "sbliveSchoolId": "141",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 16,
+        "liveLeagueRows": 2,
+        "deletedRows": 2,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Acronym CHS shared with Chaparral (and CCS/NS CHS teams): display only, not indexed. Private school omitted from the CIF-SS Season Preview participating list but fields a varsity team on MaxPreps and si.com."
+      }
+    },
+    {
+      "id": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
+      "slug": "chaparral",
+      "name": "Chaparral",
+      "shortName": "Chaparral",
+      "abbr": "CP",
+      "acronym": "CHS",
+      "mascot": "Pumas",
+      "city": "Temecula",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "00824B"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/temecula/chaparral-pumas/field-hockey/",
+      "aliases": [
+        "Chaparral",
+        "CHAPARRAL",
+        "Chaparral High School",
+        "Chaparral Pumas",
+        "Chaparral (Temecula)"
+      ],
+      "sbliveTeamId": "459144",
+      "sbliveSlug": "459144-chaparral-pumas",
+      "sbliveSchoolId": "13456",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 4,
+        "deletedRows": 5,
+        "sbliveBucket": "4245-southwestern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Acronym CHS shared with Chaminade (and CCS/NS CHS teams): display only. si.com lists it in bucket 4245-southwestern, not Sunset (si.com buckets are not membership evidence)."
+      }
+    },
+    {
+      "id": "c5a36b71-74a5-431f-94a3-8337d66dfbbb",
+      "slug": "edison",
+      "name": "Edison",
+      "shortName": "Edison",
+      "abbr": "ED",
+      "acronym": "EHS",
+      "mascot": "Chargers",
+      "city": "Huntington Beach",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/huntington-beach/edison-chargers/field-hockey/",
+      "aliases": [
+        "Edison",
+        "EDISON",
+        "Edison High School",
+        "Edison Chargers",
+        "Edison (Huntington Beach)"
+      ],
+      "sbliveTeamId": "458743",
+      "sbliveSlug": "458743-edison-chargers",
+      "sbliveSchoolId": "11313",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 19,
+        "liveLeagueRows": 7,
+        "deletedRows": 0,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Zero-GUID league on MaxPreps 26-27 (team-context leagueId 00000000-…, leagueName '', tda.hasPrimaryLeague false) but plays contestType-0 games vs the Sunset five and the other OC schools; 25-26 and 24-25 MaxPreps Sunset member (24-25 league champion 9-0-2). si.com Sunset bucket 4249 lists it."
+      }
+    },
+    {
+      "id": "79582922-a3b0-44a5-b210-8e51f3cfb731",
+      "slug": "fountain-valley",
+      "name": "Fountain Valley",
+      "shortName": "Fountain Valley",
+      "abbr": "FV",
+      "acronym": "FVHS",
+      "mascot": "Barons",
+      "city": "Fountain Valley",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/fountain-valley/fountain-valley-barons/field-hockey/",
+      "aliases": [
+        "Fountain Valley",
+        "FOUNTAIN VALLEY",
+        "Fountain Valley High School",
+        "Fountain Valley Barons"
+      ],
+      "sbliveTeamId": "458744",
+      "sbliveSlug": "458744-fountain-valley-barons",
+      "sbliveSchoolId": "11314",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 14,
+        "liveLeagueRows": 2,
+        "deletedRows": 1,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Zero-GUID league on MaxPreps 26-27; plays contestType-0 games vs Sunset teams; 25-26 MaxPreps Sunset member. si.com Sunset bucket 4249."
+      }
+    },
+    {
+      "id": "a36c1c30-9183-4514-8cd6-26824a6d7c50",
+      "slug": "great-oak",
+      "name": "Great Oak",
+      "shortName": "Great Oak",
+      "abbr": "GO",
+      "acronym": "GOHS",
+      "mascot": "Wolfpack",
+      "city": "Temecula",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/temecula/great-oak-wolfpack/field-hockey/",
+      "aliases": [
+        "Great Oak",
+        "GREAT OAK",
+        "Great Oak High School",
+        "Great Oak Wolfpack",
+        "Great Oak (Temecula)"
+      ],
+      "sbliveTeamId": "459145",
+      "sbliveSlug": "459145-great-oak-wolfpack",
+      "sbliveSchoolId": "13457",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 22,
+        "liveLeagueRows": 5,
+        "deletedRows": 1,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "f60cf593-eddc-4900-b1c9-b6362f852856",
+      "slug": "huntington-beach",
+      "name": "Huntington Beach",
+      "shortName": "Huntington Beach",
+      "abbr": "HB",
+      "acronym": "HBHS",
+      "mascot": "Oilers",
+      "city": "Huntington Beach",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "CC4E10",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/huntington-beach/huntington-beach-oilers/field-hockey/",
+      "aliases": [
+        "Huntington Beach",
+        "HUNTINGTON BEACH",
+        "Huntington Beach High School",
+        "Huntington Beach Oilers"
+      ],
+      "sbliveTeamId": "458746",
+      "sbliveSlug": "458746-huntington-beach-oilers",
+      "sbliveSchoolId": "11316",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 24,
+        "liveLeagueRows": 2,
+        "deletedRows": 2,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Zero-GUID league on MaxPreps 26-27 (HB team page __NEXT_DATA__ teamContext.data.leagueId all zeros); plays contestType-0 games vs Sunset teams; 25-26 MaxPreps Sunset member (8-0-1). si.com Sunset bucket 4249. shortName is the full name (16 chars, the assertRegistry limit). No 2-letter \"HB\" alias (2-letter tokens never enter the resolver); HB is its abbr."
+      }
+    },
+    {
+      "id": "96f0228e-b1db-4993-ad1e-5427b5592bcf",
+      "slug": "marina",
+      "name": "Marina",
+      "shortName": "Marina",
+      "abbr": "MR",
+      "acronym": "MHS",
+      "mascot": "Vikings",
+      "city": "Huntington Beach",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "046DFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/huntington-beach/marina-vikings/field-hockey/",
+      "aliases": [
+        "Marina",
+        "MARINA",
+        "Marina High School",
+        "Marina Vikings",
+        "Marina (Huntington Beach)"
+      ],
+      "sbliveTeamId": "458748",
+      "sbliveSlug": "458748-marina-vikings",
+      "sbliveSchoolId": "11317",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 14,
+        "liveLeagueRows": 2,
+        "deletedRows": 1,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Zero-GUID league on MaxPreps 26-27; plays contestType-0 games vs Sunset teams; 25-26 MaxPreps Sunset member. abbr MR because MA is Marin Academy's (MCAL). One state-5 (score not reported) contest: Newport Harbor @ Marina 2026-09-23 (47a7b327-2acc-413e-8126-e8f59852d6d8)."
+      }
+    },
+    {
+      "id": "86009247-6ae1-40e1-acfa-58c200528743",
+      "slug": "newport-harbor",
+      "name": "Newport Harbor",
+      "shortName": "Newport Harbor",
+      "abbr": "NH",
+      "acronym": "NHHS",
+      "mascot": "Sailors",
+      "city": "Newport Beach",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/newport-beach/newport-harbor-sailors/field-hockey/",
+      "aliases": [
+        "Newport Harbor",
+        "NEWPORT HARBOR",
+        "Newport Harbor High School",
+        "Newport Harbor Sailors",
+        "Newport Harbor (Newport Beach)"
+      ],
+      "sbliveTeamId": "458870",
+      "sbliveSlug": "458870-newport-harbor-sailors",
+      "sbliveSchoolId": "12274",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 18,
+        "liveLeagueRows": 2,
+        "deletedRows": 2,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Zero-GUID league on MaxPreps 26-27; plays contestType-0 games vs Sunset teams; 25-26 MaxPreps Sunset member. si.com Sunset bucket 4249."
+      }
+    },
+    {
+      "id": "8f350275-199e-4549-b574-2257e718069f",
+      "slug": "temecula-valley",
+      "name": "Temecula Valley",
+      "shortName": "Temecula Valley",
+      "abbr": "TV",
+      "acronym": "TVHS",
+      "mascot": "Golden Bears",
+      "city": "Temecula",
+      "section": "ss",
+      "league": "sunset",
+      "division": "sunset",
+      "dataCoverage": "full",
+      "colors": [
+        "4F311C",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/temecula/temecula-valley-golden-bears/field-hockey/",
+      "aliases": [
+        "Temecula Valley",
+        "TEMECULA VALLEY",
+        "Temecula Valley High School",
+        "Temecula Valley Golden Bears",
+        "Temecula Valley (Temecula)"
+      ],
+      "sbliveTeamId": "459147",
+      "sbliveSlug": "459147-temecula-valley-golden-bears",
+      "sbliveSchoolId": "13461",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 16,
+        "liveLeagueRows": 7,
+        "deletedRows": 1,
+        "sbliveBucket": "4245-southwestern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "si.com lists it in bucket 4245-southwestern, not Sunset (si.com buckets are not membership evidence)."
+      }
+    }
+  ],
+  "excludedTeams": [
+    {
+      "id": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+      "name": "Harvard-Westlake",
+      "reason": "Independent (MaxPreps one-team league \"League B\"); no league-flagged games. Not covered."
+    },
+    {
+      "id": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
+      "name": "Thousand Oaks",
+      "reason": "Independent (MaxPreps one-team league \"Marmonte\"); no league-flagged games. Not covered."
+    },
+    {
+      "id": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
+      "name": "Glendora",
+      "reason": "Independent (MaxPreps one-team league \"Palomares\"); no league-flagged games. Not covered."
+    },
+    {
+      "id": "988e6551-0eb6-440e-b231-99b2bcfb7a7c",
+      "name": "Mayfair",
+      "reason": "MaxPreps \"Suburban\" one-team league; no 2026-27 varsity game on MaxPreps."
+    },
+    {
+      "id": null,
+      "name": "Westlake and Los Alamitos (si.com Sunset bucket 4249)",
+      "reason": "si.com placeholder rows (0-0, no schedule); not on MaxPreps 26-27."
+    }
+  ],
+  "abbrsChosen": [
+    "BN=bonita",
+    "CM=chaminade",
+    "CP=chaparral",
+    "ED=edison",
+    "FV=fountain-valley",
+    "GO=great-oak",
+    "HB=huntington-beach",
+    "MR=marina",
+    "NH=newport-harbor",
+    "TV=temecula-valley"
+  ],
+  "abbrReconciliation": {
+    "rule": "lib/teams.ts assertRegistry requires abbr /^[A-Z]{2}$/ and unique across all registries (99 teams after this change).",
+    "existingAbbrs": [
+      "AW",
+      "BK",
+      "BR",
+      "BV",
+      "CA",
+      "CH",
+      "CI",
+      "CR",
+      "CS",
+      "CT",
+      "CU",
+      "DM",
+      "DV",
+      "FR",
+      "GI",
+      "GR",
+      "HM",
+      "HO",
+      "LA",
+      "LD",
+      "LE",
+      "LG",
+      "LO",
+      "LS",
+      "LW",
+      "LY",
+      "MA",
+      "MC",
+      "MI",
+      "MO",
+      "MV",
+      "PA",
+      "PR",
+      "PS",
+      "PV",
+      "RW",
+      "SA",
+      "SC",
+      "SF",
+      "SG",
+      "SI",
+      "SK",
+      "SO",
+      "ST",
+      "TM",
+      "UN",
+      "VC",
+      "WG",
+      "WM"
+    ],
+    "reserved": [
+      "RB (Red Bluff, NS seed excludedTeams candidateSeed)"
+    ],
+    "collisionsWithProposed": [],
+    "avoidedExisting": [
+      "MA (Marin Academy) -> Marina MR",
+      "MC (Marin Catholic) -> Mt. Carmel MT",
+      "CH (Christopher) -> Canyon Hills CN",
+      "CA (Carmel), CR (Corning) -> Canyon Crest Academy CY (CC went to Cathedral Catholic, CCHS)",
+      "VC (Valley Christian) -> Valley Center VE",
+      "MV (Monta Vista) -> Mission Vista MS",
+      "BV (Bella Vista) -> Bonita Vista BT",
+      "SC (Santa Clara), SG (Saratoga), SK (Silver Creek) -> Sage Creek SE",
+      "RB (reserved: Red Bluff) -> Rancho Bernardo RN, Rancho Buena Vista RV",
+      "LA (Los Altos) -> La Jolla LJ, La Costa Canyon LC, La Jolla Country Day CD (Country Day)"
+    ],
+    "acronymNote": "Acronyms stay MaxPreps verbatim. With all 99 teams, lib/teams.ts ACRONYM_COLLISIONS becomes [BHS, BVHS, CHS, EHS, FHS, GHS, HHS, LHS, MCHS, MHS, MVHS, PHS, SCHS, SHS, VCHS, WHS] (adds BVHS, EHS, FHS, MCHS, MHS, MVHS, VCHS, WHS), so EXPECTED_ACRONYM_COLLISIONS must be recomputed, and the acronyms of seven NorCal teams stop resolving: BVHS bella-vista (tests/teams.test.ts:128 expects it), FHS fremont, MCHS marin-catholic, MHS monterey, MVHS monta-vista, VCHS valley-christian, WHS westmont."
+  },
+  "sbliveIdentity": {
+    "verifiedOn": "2026-10-06",
+    "evidence": "scratchpad/inventory/sblive-ca-leagues.json (+ sblive-README.md); SDS slugs also in scratchpad/sds_team_table.md",
+    "ids": {
+      "bonita": {
+        "teamId": "458494",
+        "schoolId": "10097",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "chaminade": {
+        "teamId": "456824",
+        "schoolId": "141",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "chaparral": {
+        "teamId": "459144",
+        "schoolId": "13456",
+        "bucket": "4245-southwestern",
+        "schoolIdSource": "logo-url"
+      },
+      "edison": {
+        "teamId": "458743",
+        "schoolId": "11313",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "fountain-valley": {
+        "teamId": "458744",
+        "schoolId": "11314",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "great-oak": {
+        "teamId": "459145",
+        "schoolId": "13457",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "huntington-beach": {
+        "teamId": "458746",
+        "schoolId": "11316",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "marina": {
+        "teamId": "458748",
+        "schoolId": "11317",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "newport-harbor": {
+        "teamId": "458870",
+        "schoolId": "12274",
+        "bucket": "4249-sunset",
+        "schoolIdSource": "logo-url"
+      },
+      "temecula-valley": {
+        "teamId": "459147",
+        "schoolId": "13461",
+        "bucket": "4245-southwestern",
+        "schoolIdSource": "logo-url"
+      }
+    },
+    "ambiguousNamesNote": "si.com names of the ten are unique in the CA field hockey harvest (474 si.com team rows, 200 MaxPreps CA schools). The si.com team search (nameSearch) found one namesake the harvest missed: Marina (Marina, CA, 500865). \"Bonita\" (La Verne) and \"Bonita Vista\" (Chula Vista, SDS) are distinct keys.",
+    "nameSearch": {
+      "method": "https://www.si.com/high-school/stats/california/field-hockey/teams?name={name} (the search the EAL used, DATA-SOURCES §1.2 caveat 9), fetched 2026-10-06 with a browser User-Agent, one request at a time at least 600 ms apart, for the 50 names and the spellings Southwest SD, Mt Carmel, Bishops, Canyon Crest, San Dieguito, LJCD and RBV",
+      "result": "Every name returned exactly one team of that name except these, whose normalized names are added to STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts), so a si.com side with that name resolves only by its si.com team or school id. Fuzzy matches under other names (e.g. Bonita Vista for Bonita, Claremont for Clairemont) are not namesakes.",
+      "namesakes": {
+        "marina": "500865 Marina (Marina, CA; the CCS school with no 2026-27 varsity team; its games page lists 0 games)"
+      }
+    }
+  }
+}

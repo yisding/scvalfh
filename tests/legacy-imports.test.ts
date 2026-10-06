@@ -56,6 +56,18 @@ const ID_LITERALS = new Set([
   'mt-hamilton',
   'santa-teresa',
   'marin-county',
+  // The Southern California amendment (DESIGN-socal §2.1.8): four leagues, eight divisions ('sunset' is both).
+  'sunset',
+  'city',
+  'north-county',
+  'metro',
+  'city-western',
+  'city-eastern',
+  'avocado',
+  'palomar',
+  'valley',
+  'metro-mesa',
+  'metro-south-bay',
 ]);
 
 const ROOTS = ['app', 'components', 'scripts', 'tests'];
@@ -137,8 +149,9 @@ function scanSource(file: string, text: string): Finding[] {
 
     if (pageCode) {
       if ((ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) && ID_LITERALS.has(node.text)) {
-        // A module specifier is not a literal id (no such module exists, but be exact).
-        if (!(node.parent && (ts.isImportDeclaration(node.parent) || ts.isExportDeclaration(node.parent)))) {
+        // A module specifier is not a literal id (no such module exists, but be exact). Nor is a literal TYPE:
+        // `Pick<Team, 'city'>` names Team's `city` field, and the league id 'city' only ever arrives as data.
+        if (!(node.parent && (ts.isImportDeclaration(node.parent) || ts.isExportDeclaration(node.parent) || ts.isLiteralTypeNode(node.parent)))) {
           at(node, `league/division id literal '${node.text}' (read ids from lib/leagues.ts or lib/data.ts)`);
         }
       }
@@ -181,15 +194,17 @@ describe('legacy imports and literals (SPEC §0.4, §12.2)', () => {
       "const l = 'mcal';",
       'const d = <div data-scope="de-anza" />;',
       'const h = `/game/${id}`;',
+      "const s = { league: 'north-county' };",
     ].join('\n');
     const found = scanSource('components/probe.tsx', bad).map((f) => f.line);
-    expect(found).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(found).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     // Allowed: the new homes of moved names, ids in comments, a non-page directory's literals.
     const good = [
       "import { LEAGUE_IDS, leagueStandingsUrl } from '../lib/leagues';",
       "import { playoffStatusFor } from '../lib/standings';",
       "// 'scval' in a comment, and `/game/${id}` too",
       "import { gameHref } from '../lib/game-id';",
+      "type Where = Pick<Team, 'city' | 'division'>;",
     ].join('\n');
     expect(scanSource('components/probe.tsx', good)).toEqual([]);
     expect(scanSource('tests/probe.test.ts', "const l = 'scval';")).toEqual([]);

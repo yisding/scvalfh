@@ -1,0 +1,2457 @@
+{
+  "generatedOn": "2026-10-06",
+  "scope": "SDS (CIF San Diego Section) City, North County and Metro conferences girls varsity field hockey 26-27",
+  "verified": {
+    "date": "2026-10-06",
+    "by": "offline build from the 2026-10-06 MaxPreps + si.com harvest (scratchpad/inventory), cross-checked field by field",
+    "maxpreps": [
+      "https://www.maxpreps.com/ca/field-hockey/schools/ __NEXT_DATA__ props.pageProps.groupings (200 CA schools; teamId = MaxPreps school GUID)",
+      "https://production.api.maxpreps.com/gatewayweb/react/team-context/v1?teamId={id}&sportSeasonId=e302eb3e-1a32-4f2d-934b-6f9d454f721e (schoolName, schoolNameAcronym, schoolMascot, schoolCity, schoolColor1/2, canonicalUrl, leagueId)",
+      "https://production.api.maxpreps.com/leagues/{leagueId}/v1 and /leagues/{leagueId}/standings/v1?sportseasonid=e302eb3e-… (schoolColor1/2, teamCanonicalUrl per row)",
+      "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1 (schedule rows, contestType, deleted rows)"
+    ],
+    "sblive": [
+      "https://www.si.com/high-school/stats/california/field-hockey/leagues/{slug}/standings data-react-props teamStandings[].team.webPath (sbliveTeamId, sbliveSlug) and logo URL /uploads/production/school/{id}/ (sbliveSchoolId)",
+      "https://www.si.com/high-school/stats/california/field-hockey/teams/{slug} data-react-props query.team.school.id (sbliveSchoolId where the logo is a team image or absent) and level Varsity"
+    ],
+    "rules": {
+      "id": "MaxPreps teamId GUID (team-context teamId == standings schoolId)",
+      "name": "MaxPreps schoolName (no \"High School\"), except Southwest (MaxPreps \"Southwest SD\")",
+      "acronym": "team-context schoolNameAcronym verbatim (equal to the standings row where one exists)",
+      "mascot/city": "team-context schoolMascot (trimmed) / schoolCity; Mission Vista mascot from the school site (see its notes)",
+      "colors": "standings row schoolColor1/2 where the team has a 26-27 row; else team-context schoolColor1/2 (identical fields; verified equal for all 34 SoCal teams with both). Uppercase hex, no #.",
+      "colorSource": "\"maxpreps-standings\" for all 50 (the enum is maxpreps-standings | placeholder; placeholder means invented colours). Prospect precedent in registry-seed.json.",
+      "maxprepsPath": "path of team-context canonicalUrl (== standings teamCanonicalUrl where a row exists)",
+      "sblive*": "harvested only, never guessed; every one of the 50 matched by name + city on si.com; SDS slugs cross-checked against sds_team_table.md",
+      "aliases": "name, NAME, \"<name> High School\" (not for Bishop's, La Jolla Country Day and the two Academies, whose real names are not \"<name> High School\"), \"<name> <mascot>\" (MaxPreps mascot, plus si.com's where it differs), MaxPreps schoolName if different, MaxPreps formattedName without \", CA\" when it carries a city, si.com/CIFSDS-alignment spellings; no 2-letter tokens; checked against all 99 teams with lib/teams.ts normalizeTeamKey (see seeds/check_seeds.py)"
+    }
+  },
+  "sections": [
+    {
+      "id": "sds",
+      "label": "San Diego Section",
+      "officialName": "CIF San Diego Section",
+      "shortName": "SDS",
+      "region": "socal",
+      "maxprepsSectionId": "bab8c451-e991-413d-93ac-ee77067952a3",
+      "maxprepsName": "San Diego Section",
+      "maxprepsHubUrl": "https://www.maxpreps.com/ca/san-diego-section/field-hockey/",
+      "contestIdsUrl": "https://production.api.maxpreps.com/gatewayweb/react/contest-ids-grouped-by-date-by-context/v2?context=section&id=bab8c451-e991-413d-93ac-ee77067952a3&genderSport=girls,fieldhockey&level=Varsity&excludeTbaDate=true&nationalTeamCount=25",
+      "officialSite": "https://www.cifsds.org/",
+      "fieldHockeyPage": "https://www.cifsds.org/sports/fh/index",
+      "leagueAlignmentWorkbook": "https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms1idHy-n1zHwq7D06o1vfoFC7_cGgaI/edit#gid=1838785864",
+      "divisionsWorkbook": "https://docs.google.com/spreadsheets/d/1QCBW_GNcqL78iuebNMXXZm2K4PfzKW-hm5ogIQzVC3Y/edit?usp=sharing",
+      "greenBook": "https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit",
+      "powerRankings": "https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=176&sport_id=30&division_id={783|784|789}",
+      "overtimeProcedures": "https://sdfhoa.weebly.com/uploads/6/2/9/9/6299002/2026_field_hockey_overtime_procedures.pdf",
+      "holdsFieldHockeyChampionship": true,
+      "championshipEvidence": [
+        "CIFSDS Green Book 2026-27 (rev. June 16, 2026) 2000.1 Girls Field Hockey: Open (8, from Division I), Division I (12), Division II (12); designated league champions (not co-champions or tri-champions) are guaranteed entry into a play-in game; the Commissioner places teams from the CIFSDS power rankings",
+        "Finals Sat Nov 14, 2026 at La Jolla HS (D2 1:00, D1 3:30, Open 6:00); last regular-season contest Oct 30"
+      ]
+    }
+  ],
+  "leagues": [
+    {
+      "id": "city",
+      "section": "sds",
+      "label": "City Conference",
+      "shortLabel": "City",
+      "divisions": [
+        {
+          "id": "city-western",
+          "label": "City Western",
+          "maxprepsLeagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "maxprepsName": "City - Western",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/city--western/?leagueid=35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "teamCount": 6,
+          "maxprepsRows": 6,
+          "maxprepsMissing": [],
+          "maxprepsExtraRows": {},
+          "members": [
+            "bishops",
+            "canyon-hills",
+            "cathedral-catholic",
+            "la-jolla",
+            "mission-bay",
+            "scripps-ranch"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "45b7fc03-4d4f-4b7c-9468-bad83911d26b"
+            }
+          },
+          "siSbliveBuckets": [
+            "4179-city-western"
+          ]
+        },
+        {
+          "id": "city-eastern",
+          "label": "City Eastern",
+          "maxprepsLeagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "maxprepsName": "City - Eastern",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/city--eastern/?leagueid=6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "teamCount": 6,
+          "maxprepsRows": 6,
+          "maxprepsMissing": [
+            "patrick-henry"
+          ],
+          "maxprepsExtraRows": {
+            "fef1da70-bea2-4958-a60b-9962851f6a1d": "Madison (0 games, no 2026 varsity team)"
+          },
+          "members": [
+            "clairemont",
+            "la-jolla-country-day",
+            "mira-mesa",
+            "patrick-henry",
+            "point-loma",
+            "university-city"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "a45db511-d188-498b-9273-87e92461f380"
+            }
+          },
+          "siSbliveBuckets": [
+            "4178-city-eastern"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "north-county",
+      "section": "sds",
+      "label": "North County Conference",
+      "shortLabel": "North County",
+      "divisions": [
+        {
+          "id": "avocado",
+          "label": "Avocado",
+          "maxprepsLeagueId": "75ed156b-09c9-4a0c-ac58-11a371443815",
+          "maxprepsName": "Avocado",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/avocado/?leagueid=75ed156b-09c9-4a0c-ac58-11a371443815",
+          "teamCount": 6,
+          "maxprepsRows": 4,
+          "maxprepsMissing": [
+            "mt-carmel",
+            "rancho-bernardo"
+          ],
+          "maxprepsExtraRows": {},
+          "members": [
+            "canyon-crest-academy",
+            "la-costa-canyon",
+            "mt-carmel",
+            "rancho-bernardo",
+            "san-marcos",
+            "torrey-pines"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "6b06475a-5d33-4478-a10b-134384260170"
+            }
+          },
+          "siSbliveBuckets": [
+            "4171-avocado-west"
+          ]
+        },
+        {
+          "id": "palomar",
+          "label": "Palomar",
+          "maxprepsLeagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "maxprepsName": "Palomar",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/palomar/?leagueid=e4a7e9c3-986b-446f-8547-8348be95e282",
+          "teamCount": 7,
+          "maxprepsRows": 7,
+          "maxprepsMissing": [],
+          "maxprepsExtraRows": {},
+          "members": [
+            "del-norte",
+            "fallbrook",
+            "mission-vista",
+            "poway",
+            "rancho-buena-vista",
+            "san-dieguito-academy",
+            "valley-center"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "f841e850-221b-40ad-a87a-aa0970d8d08a"
+            }
+          },
+          "siSbliveBuckets": [
+            "4234-palomar"
+          ]
+        },
+        {
+          "id": "valley",
+          "label": "Valley",
+          "maxprepsLeagueId": null,
+          "maxprepsName": null,
+          "canonicalUrl": null,
+          "teamCount": 6,
+          "maxprepsRows": 0,
+          "maxprepsMissing": [
+            "escondido",
+            "mission-hills",
+            "sage-creek",
+            "san-pasqual",
+            "vista",
+            "westview"
+          ],
+          "maxprepsExtraRows": {},
+          "members": [
+            "escondido",
+            "mission-hills",
+            "sage-creek",
+            "san-pasqual",
+            "vista",
+            "westview"
+          ],
+          "priorSeasonLeagueIds": {},
+          "siSbliveBuckets": [
+            "4170-avocado-east"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "metro",
+      "section": "sds",
+      "label": "Metro Conference",
+      "shortLabel": "Metro",
+      "divisions": [
+        {
+          "id": "metro-mesa",
+          "label": "Metro Mesa",
+          "maxprepsLeagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "maxprepsName": "Metro- South Bay",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/metro-south-bay/?leagueid=6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "teamCount": 5,
+          "maxprepsRows": 5,
+          "maxprepsMissing": [],
+          "maxprepsExtraRows": {},
+          "members": [
+            "bonita-vista",
+            "eastlake",
+            "helix",
+            "olympian",
+            "otay-ranch"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "4419ffb2-aee4-47b8-8ef6-3dc49b363323",
+              "note": "MaxPreps name \"Metro- South Bay\""
+            }
+          },
+          "siSbliveBuckets": [
+            "4214-metro-mesa"
+          ]
+        },
+        {
+          "id": "metro-south-bay",
+          "label": "Metro South Bay",
+          "maxprepsLeagueId": "ca8e2856-b13d-4aa7-8c15-37cb50a55c60",
+          "maxprepsName": "Grossmont",
+          "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/grossmont/?leagueid=ca8e2856-b13d-4aa7-8c15-37cb50a55c60",
+          "teamCount": 4,
+          "maxprepsRows": 3,
+          "maxprepsMissing": [
+            "hilltop",
+            "southwest"
+          ],
+          "maxprepsExtraRows": {
+            "1125d6e8-e661-4190-a41d-5722364dee38": "Santana (0 games, no 2026 varsity team)"
+          },
+          "members": [
+            "el-capitan",
+            "granite-hills",
+            "hilltop",
+            "southwest"
+          ],
+          "priorSeasonLeagueIds": {
+            "25-26": {
+              "leagueId": "02ae3b4f-2854-4666-ac2d-aba8d2befcb5",
+              "note": "MaxPreps name \"Grossmont\""
+            }
+          },
+          "siSbliveBuckets": [
+            "4199-grossmont",
+            "4214-metro-mesa"
+          ]
+        }
+      ]
+    }
+  ],
+  "teams": [
+    {
+      "id": "9d14d198-9976-4ed2-872d-047b9f317035",
+      "slug": "bishops",
+      "name": "Bishop's",
+      "shortName": "Bishop's",
+      "abbr": "BI",
+      "acronym": "BHS",
+      "mascot": "Knights",
+      "city": "La Jolla",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "8F0018",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-jolla/bishops-knights/field-hockey/",
+      "aliases": [
+        "Bishop's",
+        "BISHOP'S",
+        "Bishop's Knights",
+        "Bishops",
+        "The Bishop's School",
+        "Bishop's School",
+        "Bishops Knights",
+        "Bishop's (La Jolla)"
+      ],
+      "sbliveTeamId": "456843",
+      "sbliveSlug": "456843-bishops-knights",
+      "sbliveSchoolId": "201",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 9,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "628",
+        "sbliveBucket": "4179-city-western",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "MaxPreps schoolName \"Bishop's\" (The Bishop's School, La Jolla); official CIFSDS alignment spells it \"BISHOPS\". Acronym BHS shared: display only."
+      }
+    },
+    {
+      "id": "5bcd4caa-2727-404f-8ea0-627dc9d0b1b1",
+      "slug": "canyon-hills",
+      "name": "Canyon Hills",
+      "shortName": "Canyon Hills",
+      "abbr": "CN",
+      "acronym": "CHHS",
+      "mascot": "Rattlers",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "CC0022"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/canyon-hills-rattlers/field-hockey/",
+      "aliases": [
+        "Canyon Hills",
+        "CANYON HILLS",
+        "Canyon Hills High School",
+        "Canyon Hills Rattlers",
+        "Canyon Hills (San Diego)"
+      ],
+      "sbliveTeamId": "459034",
+      "sbliveSlug": "459034-canyon-hills-rattlers",
+      "sbliveSchoolId": "12931",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 10,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "732",
+        "sbliveBucket": null,
+        "sbliveSchoolIdSource": "team page school.id",
+        "notes": "MaxPreps schoolMascot is \"Rattlers \" with a trailing space (team-context and standings); trimmed to \"Rattlers\". si.com puts team 459034 in no league bucket (league-less), school id from its team page."
+      }
+    },
+    {
+      "id": "15c34e49-1a29-4298-8a84-00a2ec6ae36b",
+      "slug": "cathedral-catholic",
+      "name": "Cathedral Catholic",
+      "shortName": "Cathedral",
+      "abbr": "CC",
+      "acronym": "CCHS",
+      "mascot": "Dons",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/cathedral-catholic-dons/field-hockey/",
+      "aliases": [
+        "Cathedral Catholic",
+        "CATHEDRAL CATHOLIC",
+        "Cathedral Catholic High School",
+        "Cathedral Catholic Dons",
+        "Cathedral Catholic (San Diego)"
+      ],
+      "sbliveTeamId": "458202",
+      "sbliveSlug": "458202-cathedral-catholic-dons",
+      "sbliveSchoolId": "6107",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 18,
+        "liveLeagueRows": 8,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "642",
+        "sbliveBucket": "4179-city-western",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "shortName \"Cathedral\" (whole words of the name). \"Cathedral\" alone is deliberately NOT an alias: Cathedral (Los Angeles) and Cathedral City (si.com 458908) are statewide namesakes."
+      }
+    },
+    {
+      "id": "582fa2b1-19ed-467d-85af-fc6971dd5a71",
+      "slug": "la-jolla",
+      "name": "La Jolla",
+      "shortName": "La Jolla",
+      "abbr": "LJ",
+      "acronym": "LJHS",
+      "mascot": "Vikings",
+      "city": "La Jolla",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-jolla/la-jolla-vikings/field-hockey/",
+      "aliases": [
+        "La Jolla",
+        "LA JOLLA",
+        "La Jolla High School",
+        "La Jolla Vikings"
+      ],
+      "sbliveTeamId": "459019",
+      "sbliveSlug": "459019-la-jolla-vikings",
+      "sbliveSchoolId": "12915",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 24,
+        "liveLeagueRows": 10,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "683",
+        "sbliveBucket": "4179-city-western",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "f2ec9dd0-0f24-4161-a2c3-2a9df393f220",
+      "slug": "mission-bay",
+      "name": "Mission Bay",
+      "shortName": "Mission Bay",
+      "abbr": "MB",
+      "acronym": "MBHS",
+      "mascot": "Buccaneers",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/mission-bay-buccaneers/field-hockey/",
+      "aliases": [
+        "Mission Bay",
+        "MISSION BAY",
+        "Mission Bay High School",
+        "Mission Bay Buccaneers",
+        "Mission Bay (San Diego)"
+      ],
+      "sbliveTeamId": "459025",
+      "sbliveSlug": "459025-mission-bay-buccaneers",
+      "sbliveSchoolId": "12919",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 19,
+        "liveLeagueRows": 10,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "693",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Plays league-flagged games against City Eastern teams as well (cross-division league games); MaxPreps City - Western row 3-5-0 counts them. Moved City Eastern -> City Western between 25-26 and 26-27. \"Mission\" alone is never an alias (Mission Bay / Mission Hills / Mission Vista)."
+      }
+    },
+    {
+      "id": "7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5",
+      "slug": "scripps-ranch",
+      "name": "Scripps Ranch",
+      "shortName": "Scripps Ranch",
+      "abbr": "SR",
+      "acronym": "SRHS",
+      "mascot": "Falcons",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-western",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "022C66"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/scripps-ranch-falcons/field-hockey/",
+      "aliases": [
+        "Scripps Ranch",
+        "SCRIPPS RANCH",
+        "Scripps Ranch High School",
+        "Scripps Ranch Falcons",
+        "Scripps Ranch (San Diego)"
+      ],
+      "sbliveTeamId": "459032",
+      "sbliveSlug": "459032-scripps-ranch-falcons",
+      "sbliveSchoolId": "12930",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "35dc98fe-887a-475b-992c-0edfe7fc4c58",
+          "leagueName": "City - Western",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 30,
+        "liveLeagueRows": 8,
+        "deletedRows": 6,
+        "cifsdshomeSchoolId": "731",
+        "sbliveBucket": "4179-city-western",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "50ebec25-d857-4178-9f5a-1a6241c43b85",
+      "slug": "clairemont",
+      "name": "Clairemont",
+      "shortName": "Clairemont",
+      "abbr": "CL",
+      "acronym": "CHS",
+      "mascot": "Captains",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "D5350B"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/clairemont-captains/field-hockey/",
+      "aliases": [
+        "Clairemont",
+        "CLAIREMONT",
+        "Clairemont High School",
+        "Clairemont Captains",
+        "Clairemont Chieftains",
+        "Clairemont (San Diego)"
+      ],
+      "sbliveTeamId": "459017",
+      "sbliveSlug": "459017-clairemont-chieftains",
+      "sbliveSchoolId": "12896",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "leagueName": "City - Eastern",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 22,
+        "liveLeagueRows": 8,
+        "deletedRows": 4,
+        "cifsdshomeSchoolId": "648",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "MaxPreps mascot \"Captains\"; si.com slug 459017-clairemont-chieftains (si.com mascot \"Chieftains\"): both \"<Name> <Mascot>\" spellings kept as aliases."
+      }
+    },
+    {
+      "id": "c24601db-aee8-4989-ba5d-bfbf0a91b927",
+      "slug": "la-jolla-country-day",
+      "name": "La Jolla Country Day",
+      "shortName": "LJCD",
+      "abbr": "CD",
+      "acronym": "LJCD",
+      "mascot": "Torreys",
+      "city": "La Jolla",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-jolla/la-jolla-country-day-torreys/field-hockey/",
+      "aliases": [
+        "La Jolla Country Day",
+        "LA JOLLA COUNTRY DAY",
+        "La Jolla Country Day Torreys",
+        "LJCD",
+        "La Jolla Country Day School",
+        "La Jolla Country Day (La Jolla)"
+      ],
+      "sbliveTeamId": "456865",
+      "sbliveSlug": "456865-la-jolla-country-day-torreys",
+      "sbliveSchoolId": "256",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "leagueName": "City - Eastern",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 9,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "684",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "shortName \"LJCD\" (also the MaxPreps acronym and the CIFSDS alignment spelling \"LJCD\"); LJCD is an alias. Moved City Western -> City Eastern between 25-26 and 26-27."
+      }
+    },
+    {
+      "id": "e551f0f0-28a3-4c13-8ade-1b9909ffa28c",
+      "slug": "mira-mesa",
+      "name": "Mira Mesa",
+      "shortName": "Mira Mesa",
+      "abbr": "MM",
+      "acronym": "MMHS",
+      "mascot": "Marauders",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/mira-mesa-marauders/field-hockey/",
+      "aliases": [
+        "Mira Mesa",
+        "MIRA MESA",
+        "Mira Mesa High School",
+        "Mira Mesa Marauders",
+        "Mira Mesa (San Diego)"
+      ],
+      "sbliveTeamId": "459023",
+      "sbliveSlug": "459023-mira-mesa-marauders",
+      "sbliveSchoolId": "12918",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "leagueName": "City - Eastern",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 17,
+        "liveLeagueRows": 9,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "692",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "e71f479e-b2c8-48da-a8b4-4f270c3afb92",
+      "slug": "patrick-henry",
+      "name": "Patrick Henry",
+      "shortName": "Patrick Henry",
+      "abbr": "PH",
+      "acronym": "PHHS",
+      "mascot": "Patriots",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/patrick-henry-patriots/field-hockey/",
+      "aliases": [
+        "Patrick Henry",
+        "PATRICK HENRY",
+        "Patrick Henry High School",
+        "Patrick Henry Patriots",
+        "Patrick Henry (San Diego)"
+      ],
+      "sbliveTeamId": "464779",
+      "sbliveSlug": "464779-patrick-henry-patriots",
+      "sbliveSchoolId": "30661",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 19,
+        "liveLeagueRows": 0,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "711",
+        "sbliveBucket": "4179-city-western",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Not in MaxPreps' City - Eastern standings (zero-GUID league in 26-27 team-context) and has NO league-flagged (contestType 0) games on MaxPreps: its 10 City Eastern fixtures (2026-09-29 .. 10-29, Point Loma, University City, La Jolla Country Day, Mira Mesa and Clairemont twice each) are all contestType 1 on its schedule-calculated rows. Membership from the CIFSDS League Alignment workbook only. si.com places it in bucket 4179-city-western (stale)."
+      }
+    },
+    {
+      "id": "91a74b43-700f-4e74-819e-d62b6dba12f7",
+      "slug": "point-loma",
+      "name": "Point Loma",
+      "shortName": "Point Loma",
+      "abbr": "PL",
+      "acronym": "PLHS",
+      "mascot": "Pointers",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "8F0018",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/point-loma-fighting-pointers/field-hockey/",
+      "aliases": [
+        "Point Loma",
+        "POINT LOMA",
+        "Point Loma High School",
+        "Point Loma Pointers",
+        "Point Loma Fighting Pointers",
+        "Point Loma (San Diego)"
+      ],
+      "sbliveTeamId": "459029",
+      "sbliveSlug": "459029-point-loma-pointers",
+      "sbliveSchoolId": "12921",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "leagueName": "City - Eastern",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 17,
+        "liveLeagueRows": 8,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "712",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "MaxPreps path slug is \"point-loma-fighting-pointers\" while schoolMascot is \"Pointers\": both spellings kept as aliases."
+      }
+    },
+    {
+      "id": "32f08693-bcfd-4a62-a463-77b91360f53b",
+      "slug": "university-city",
+      "name": "University City",
+      "shortName": "University City",
+      "abbr": "UC",
+      "acronym": "UCHS",
+      "mascot": "Centurions",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "city",
+      "division": "city-eastern",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/university-city-centurions/field-hockey/",
+      "aliases": [
+        "University City",
+        "UNIVERSITY CITY",
+        "University City High School",
+        "University City Centurions",
+        "University City (San Diego)"
+      ],
+      "sbliveTeamId": "459037",
+      "sbliveSlug": "459037-university-city-centurions",
+      "sbliveSchoolId": "12934",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6f9a29a0-78af-4d30-a087-cfa9feb91b89",
+          "leagueName": "City - Eastern",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 7,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "744",
+        "sbliveBucket": "4178-city-eastern",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "\"University\" alone is deliberately NOT an alias (statewide namesake: San Francisco University, MCAL registry, and University (Irvine) on si.com; STATEWIDE_AMBIGUOUS). Moved City Western -> City Eastern between 25-26 and 26-27."
+      }
+    },
+    {
+      "id": "91a207da-721f-4acf-a69c-cd7fa50a1f7a",
+      "slug": "canyon-crest-academy",
+      "name": "Canyon Crest Academy",
+      "shortName": "Canyon Crest",
+      "abbr": "CY",
+      "acronym": "CCA",
+      "mascot": "Ravens",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/canyon-crest-academy-ravens/field-hockey/",
+      "aliases": [
+        "Canyon Crest Academy",
+        "CANYON CREST ACADEMY",
+        "Canyon Crest Academy Ravens",
+        "Canyon Crest",
+        "Canyon Crest Academy (San Diego)"
+      ],
+      "sbliveTeamId": "459041",
+      "sbliveSlug": "459041-canyon-crest-academy-ravens",
+      "sbliveSchoolId": "12935",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "75ed156b-09c9-4a0c-ac58-11a371443815",
+          "leagueName": "Avocado",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 22,
+        "liveLeagueRows": 9,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "639",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "shortName \"Canyon Crest\" (whole words of the name; CIFSDS alignment spells it \"CANYON CREST\", kept as an alias). Acronym CCA. abbr CY because CC went to Cathedral Catholic (CCHS) and CA (Carmel) / CR (Corning) are taken."
+      }
+    },
+    {
+      "id": "78ad824a-61a0-462b-aa6f-1d5f6fb1bd5f",
+      "slug": "la-costa-canyon",
+      "name": "La Costa Canyon",
+      "shortName": "La Costa Canyon",
+      "abbr": "LC",
+      "acronym": "LCCHS",
+      "mascot": "Mavericks",
+      "city": "Carlsbad",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/carlsbad/la-costa-canyon-mavericks/field-hockey/",
+      "aliases": [
+        "La Costa Canyon",
+        "LA COSTA CANYON",
+        "La Costa Canyon High School",
+        "La Costa Canyon Mavericks",
+        "La Costa Canyon (Carlsbad)"
+      ],
+      "sbliveTeamId": "459043",
+      "sbliveSlug": "459043-la-costa-canyon-mavericks",
+      "sbliveSchoolId": "12936",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "75ed156b-09c9-4a0c-ac58-11a371443815",
+          "leagueName": "Avocado",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 30,
+        "liveLeagueRows": 8,
+        "deletedRows": 6,
+        "cifsdshomeSchoolId": "682",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "team-page school.id"
+      }
+    },
+    {
+      "id": "688ec7f8-2985-4e7e-900a-4d78f845b197",
+      "slug": "mt-carmel",
+      "name": "Mt. Carmel",
+      "shortName": "Mt. Carmel",
+      "abbr": "MT",
+      "acronym": "MCHS",
+      "mascot": "Sundevils",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/mt-carmel-sundevils/field-hockey/",
+      "aliases": [
+        "Mt. Carmel",
+        "MT. CARMEL",
+        "Mt. Carmel High School",
+        "Mt. Carmel Sundevils",
+        "Mt Carmel",
+        "Mount Carmel",
+        "Mt. Carmel (San Diego)"
+      ],
+      "sbliveTeamId": "458939",
+      "sbliveSlug": "458939-mt-carmel-sundevils",
+      "sbliveSchoolId": "12670",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 23,
+        "liveLeagueRows": 4,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "699",
+        "sbliveBucket": null,
+        "sbliveSchoolIdSource": "team page school.id",
+        "notes": "Not in MaxPreps' Avocado standings (zero-GUID league in 26-27); plays contestType-0 games vs Avocado teams; 25-26 MaxPreps Palomar member. Name as MaxPreps spells it (\"Mt. Carmel\"); aliases add \"Mt Carmel\" (CIFSDS alignment \"MT CARMEL\") and \"Mount Carmel\". Key \"mtcarmel\" does not collide with Carmel (CCS, key \"carmel\"). si.com team 458939 is in no league bucket (league-less), school id from its team page. abbr MT because MC is Marin Catholic's (MCAL)."
+      }
+    },
+    {
+      "id": "132d806e-7fa4-4bce-b92a-9db38786cf7b",
+      "slug": "rancho-bernardo",
+      "name": "Rancho Bernardo",
+      "shortName": "Rancho Bernardo",
+      "abbr": "RN",
+      "acronym": "RBHS",
+      "mascot": "Broncos",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "737272"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/rancho-bernardo-broncos/field-hockey/",
+      "aliases": [
+        "Rancho Bernardo",
+        "RANCHO BERNARDO",
+        "Rancho Bernardo High School",
+        "Rancho Bernardo Broncos",
+        "Rancho Bernardo (San Diego)"
+      ],
+      "sbliveTeamId": "458945",
+      "sbliveSlug": "458945-rancho-bernardo-broncos",
+      "sbliveSchoolId": "12672",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 27,
+        "liveLeagueRows": 8,
+        "deletedRows": 4,
+        "cifsdshomeSchoolId": "716",
+        "sbliveBucket": "4234-palomar",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "Not in MaxPreps' Avocado standings (zero-GUID league in 26-27); plays contestType-0 games vs Avocado teams; 25-26 MaxPreps Palomar member. si.com bucket 4234-palomar (stale). abbr RN: RB is held for Red Bluff (NS seed excludedTeams candidateSeed) and RB/RV pair poorly with Rancho Buena Vista."
+      }
+    },
+    {
+      "id": "ff3dcd2f-cdea-46e6-accf-fd929c0a4374",
+      "slug": "san-marcos",
+      "name": "San Marcos",
+      "shortName": "San Marcos",
+      "abbr": "SM",
+      "acronym": "SMHS",
+      "mascot": "Knights",
+      "city": "San Marcos",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-marcos/san-marcos-knights/field-hockey/",
+      "aliases": [
+        "San Marcos",
+        "SAN MARCOS",
+        "San Marcos High School",
+        "San Marcos Knights"
+      ],
+      "sbliveTeamId": "459066",
+      "sbliveSlug": "459066-san-marcos-knights",
+      "sbliveSchoolId": "13021",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "75ed156b-09c9-4a0c-ac58-11a371443815",
+          "leagueName": "Avocado",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 9,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "725",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "team-page school.id"
+      }
+    },
+    {
+      "id": "ad43e80f-2296-4b96-a0a9-44e6a8ea76f2",
+      "slug": "torrey-pines",
+      "name": "Torrey Pines",
+      "shortName": "Torrey Pines",
+      "abbr": "TP",
+      "acronym": "TPHS",
+      "mascot": "Falcons",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "avocado",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/torrey-pines-falcons/field-hockey/",
+      "aliases": [
+        "Torrey Pines",
+        "TORREY PINES",
+        "Torrey Pines High School",
+        "Torrey Pines Falcons",
+        "Torrey Pines (San Diego)"
+      ],
+      "sbliveTeamId": "459049",
+      "sbliveSlug": "459049-torrey-pines-falcons",
+      "sbliveSchoolId": "12940",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "75ed156b-09c9-4a0c-ac58-11a371443815",
+          "leagueName": "Avocado",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 26,
+        "liveLeagueRows": 10,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "742",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "ddf384b8-3189-4276-8703-71106d47a4d5",
+      "slug": "del-norte",
+      "name": "Del Norte",
+      "shortName": "Del Norte",
+      "abbr": "DN",
+      "acronym": "DNHS",
+      "mascot": "Nighthawks",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "00341E"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/del-norte-nighthawks/field-hockey/",
+      "aliases": [
+        "Del Norte",
+        "DEL NORTE",
+        "Del Norte High School",
+        "Del Norte Nighthawks",
+        "Del Norte (San Diego)"
+      ],
+      "sbliveTeamId": "458937",
+      "sbliveSlug": "458937-del-norte-nighthawks",
+      "sbliveSchoolId": "12669",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 12,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "654",
+        "sbliveBucket": "4234-palomar",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Del Norte (San Diego), NOT Del Norte (Crescent City): si.com 458937 (Palomar, San Diego). si.com also lists a Crescent City Del Norte (458609), so \"Del Norte\" resolves on si.com by id only (STATEWIDE_AMBIGUOUS). The Crescent City ghost seen on NorCal schedules stays in DATA_QUALITY.ghostTeamIds; \"Del Norte\" now resolves to this team."
+      }
+    },
+    {
+      "id": "7453dc74-befb-4c36-92ec-35bf99c3c718",
+      "slug": "fallbrook",
+      "name": "Fallbrook",
+      "shortName": "Fallbrook",
+      "abbr": "FB",
+      "acronym": "FHS",
+      "mascot": "Warriors",
+      "city": "Fallbrook",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/fallbrook/fallbrook-warriors/field-hockey/",
+      "aliases": [
+        "Fallbrook",
+        "FALLBROOK",
+        "Fallbrook High School",
+        "Fallbrook Warriors"
+      ],
+      "sbliveTeamId": "458653",
+      "sbliveSlug": "458653-fallbrook-warriors",
+      "sbliveSchoolId": "10923",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 25,
+        "liveLeagueRows": 14,
+        "deletedRows": 5,
+        "cifsdshomeSchoolId": "662",
+        "sbliveBucket": "4234-palomar",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "e9446588-3714-4a57-905e-cd9a097a48b0",
+      "slug": "mission-vista",
+      "name": "Mission Vista",
+      "shortName": "Mission Vista",
+      "abbr": "MS",
+      "acronym": "MVHS",
+      "mascot": "Timberwolves",
+      "city": "Oceanside",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "005B34",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/oceanside/mission-vista/field-hockey/",
+      "aliases": [
+        "Mission Vista",
+        "MISSION VISTA",
+        "Mission Vista High School",
+        "Mission Vista Timberwolves",
+        "Mission Vista (Oceanside)"
+      ],
+      "sbliveTeamId": "464852",
+      "sbliveSlug": "464852-mission-vista",
+      "sbliveSchoolId": "31920",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 20,
+        "liveLeagueRows": 13,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "695",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "Mascot: MaxPreps has no mascot (team-context schoolMascot null; the 26-27 team page https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/ __NEXT_DATA__ schoolMascot null, fetched 2026-10-06) and si.com has none (team 464852 mascot null, slug 464852-mission-vista). Mascot \"Timberwolves\" from the school's own site https://mvhs.vistausd.org/ (fetched 2026-10-06; title \"Home - Mission Vista High School\", 1306 Melrose Dr, Oceanside; link \"/athletics/home-of-the-timberwolves\" (\"Home of the Timberwolves\"), logo alt text \"Mission Vista Timberwolves\")."
+      }
+    },
+    {
+      "id": "9adef103-5c38-4dc2-a6c4-b36ea4f5400c",
+      "slug": "poway",
+      "name": "Poway",
+      "shortName": "Poway",
+      "abbr": "PW",
+      "acronym": "PHS",
+      "mascot": "Titans",
+      "city": "Poway",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "00341E",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/poway/poway-titans/field-hockey/",
+      "aliases": [
+        "Poway",
+        "POWAY",
+        "Poway High School",
+        "Poway Titans"
+      ],
+      "sbliveTeamId": "458942",
+      "sbliveSlug": "458942-poway-titans",
+      "sbliveSchoolId": "12671",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 26,
+        "liveLeagueRows": 13,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "713",
+        "sbliveBucket": "4234-palomar",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Moved Avocado -> Palomar between 25-26 and 26-27. Acronym PHS shared (Presentation/Prospect): display only."
+      }
+    },
+    {
+      "id": "f1f0e644-5c98-4d70-bd3c-ae7fb8992410",
+      "slug": "rancho-buena-vista",
+      "name": "Rancho Buena Vista",
+      "shortName": "RBV",
+      "abbr": "RV",
+      "acronym": "RBVHS",
+      "mascot": "Longhorns",
+      "city": "Vista",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "8F0018",
+        "737272"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/vista/rancho-buena-vista-longhorns/field-hockey/",
+      "aliases": [
+        "Rancho Buena Vista",
+        "RANCHO BUENA VISTA",
+        "Rancho Buena Vista High School",
+        "Rancho Buena Vista Longhorns",
+        "RBV",
+        "Rancho Buena Vista (Vista)"
+      ],
+      "sbliveTeamId": "459174",
+      "sbliveSlug": "459174-rancho-buena-vista-longhorns",
+      "sbliveSchoolId": "13718",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 6
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 12,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "717",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "shortName \"RBV\" (the CIFSDS alignment spelling; also an alias). The alignment workbook lists it twice (NC PALOMAR \"RBV\" and NC VALLEY \"RANCHO BUENA VISTA\"); its games place it in Palomar (league games vs Del Norte, Poway, San Dieguito Academy; MaxPreps Palomar row 0-5-0)."
+      }
+    },
+    {
+      "id": "a7064567-f2fe-442d-8200-34a28326d1b9",
+      "slug": "san-dieguito-academy",
+      "name": "San Dieguito Academy",
+      "shortName": "San Dieguito",
+      "abbr": "SD",
+      "acronym": "SDA",
+      "mascot": "Mustangs",
+      "city": "Encinitas",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/encinitas/san-dieguito-academy-mustangs/field-hockey/",
+      "aliases": [
+        "San Dieguito Academy",
+        "SAN DIEGUITO ACADEMY",
+        "San Dieguito Academy Mustangs",
+        "San Dieguito",
+        "San Dieguito Academy (Encinitas)"
+      ],
+      "sbliveTeamId": "459047",
+      "sbliveSlug": "459047-san-dieguito-academy-mustangs",
+      "sbliveSchoolId": "12938",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 12,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "724",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "shortName \"San Dieguito\" (whole words of the name; also an alias)."
+      }
+    },
+    {
+      "id": "673c037d-ae98-4fa1-a388-b127758ac382",
+      "slug": "valley-center",
+      "name": "Valley Center",
+      "shortName": "Valley Center",
+      "abbr": "VE",
+      "acronym": "VCHS",
+      "mascot": "Jaguars",
+      "city": "Valley Center",
+      "section": "sds",
+      "league": "north-county",
+      "division": "palomar",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "108073"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/valley-center/valley-center-jaguars/field-hockey/",
+      "aliases": [
+        "Valley Center",
+        "VALLEY CENTER",
+        "Valley Center High School",
+        "Valley Center Jaguars"
+      ],
+      "sbliveTeamId": "459167",
+      "sbliveSlug": "459167-valley-center-jaguars",
+      "sbliveSchoolId": "13667",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "e4a7e9c3-986b-446f-8547-8348be95e282",
+          "leagueName": "Palomar",
+          "place": 7
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 23,
+        "liveLeagueRows": 12,
+        "deletedRows": 11,
+        "cifsdshomeSchoolId": "746",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Moved Avocado -> Palomar between 25-26 and 26-27. abbr VE because VC is Valley Christian's. 11 deleted schedule rows (most of any team)."
+      }
+    },
+    {
+      "id": "226ea389-d063-46bb-8ccb-ede6f10c2ca6",
+      "slug": "escondido",
+      "name": "Escondido",
+      "shortName": "Escondido",
+      "abbr": "ES",
+      "acronym": "EHS",
+      "mascot": "Cougars",
+      "city": "Escondido",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "CC4E10",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/escondido/escondido-cougars/field-hockey/",
+      "aliases": [
+        "Escondido",
+        "ESCONDIDO",
+        "Escondido High School",
+        "Escondido Cougars"
+      ],
+      "sbliveTeamId": "458641",
+      "sbliveSlug": "458641-escondido-cougars",
+      "sbliveSchoolId": "10872",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 18,
+        "liveLeagueRows": 5,
+        "deletedRows": 1,
+        "cifsdshomeSchoolId": "659",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Valley division: MaxPreps has no table (zero-GUID league in 26-27); the six Valley schools play league-flagged games among themselves. Colors from team-context."
+      }
+    },
+    {
+      "id": "643a8f19-47aa-42a2-b5a4-0f52421f80b9",
+      "slug": "mission-hills",
+      "name": "Mission Hills",
+      "shortName": "Mission Hills",
+      "abbr": "MH",
+      "acronym": "MHHS",
+      "mascot": "Grizzlies",
+      "city": "San Marcos",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-marcos/mission-hills-grizzlies/field-hockey/",
+      "aliases": [
+        "Mission Hills",
+        "MISSION HILLS",
+        "Mission Hills High School",
+        "Mission Hills Grizzlies",
+        "Mission Hills (San Marcos)"
+      ],
+      "sbliveTeamId": "459063",
+      "sbliveSlug": "459063-mission-hills-grizzlies",
+      "sbliveSchoolId": "13020",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 23,
+        "liveLeagueRows": 9,
+        "deletedRows": 4,
+        "cifsdshomeSchoolId": "694",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Valley division (no MaxPreps table; zero-GUID league). Colors from team-context."
+      }
+    },
+    {
+      "id": "475c3bcb-9d28-457f-87b8-d979f9ff070f",
+      "slug": "sage-creek",
+      "name": "Sage Creek",
+      "shortName": "Sage Creek",
+      "abbr": "SE",
+      "acronym": "SCHS",
+      "mascot": "Bobcats",
+      "city": "Carlsbad",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/carlsbad/sage-creek-bobcats/field-hockey/",
+      "aliases": [
+        "Sage Creek",
+        "SAGE CREEK",
+        "Sage Creek High School",
+        "Sage Creek Bobcats",
+        "Sage Creek (Carlsbad)"
+      ],
+      "sbliveTeamId": "464866",
+      "sbliveSlug": "464866-sage-creek-bobcats",
+      "sbliveSchoolId": "31992",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 22,
+        "liveLeagueRows": 6,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "719",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "Valley division (no MaxPreps table; zero-GUID league). Colors from team-context. abbr SE: SC (Santa Clara), SG (Saratoga) and SK (Silver Creek) are taken."
+      }
+    },
+    {
+      "id": "a1109c06-7436-4b72-a30e-459eb6d00925",
+      "slug": "san-pasqual",
+      "name": "San Pasqual",
+      "shortName": "San Pasqual",
+      "abbr": "SP",
+      "acronym": "SPHS",
+      "mascot": "Golden Eagles",
+      "city": "Escondido",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/escondido/san-pasqual-golden-eagles/field-hockey/",
+      "aliases": [
+        "San Pasqual",
+        "SAN PASQUAL",
+        "San Pasqual High School",
+        "San Pasqual Golden Eagles",
+        "San Pasqual (Escondido)"
+      ],
+      "sbliveTeamId": "458644",
+      "sbliveSlug": "458644-san-pasqual-golden-eagles",
+      "sbliveSchoolId": "10874",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 27,
+        "liveLeagueRows": 3,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "726",
+        "sbliveBucket": "4171-avocado-west",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "Valley division (no MaxPreps table; zero-GUID league). Colors from team-context. Not \"San Pasqual Academy\" (a different MaxPreps school that appears as an opponent; key sanpasqualacademy does not collide)."
+      }
+    },
+    {
+      "id": "1f57d89b-3a6d-444a-9de1-2fba3f0017b6",
+      "slug": "vista",
+      "name": "Vista",
+      "shortName": "Vista",
+      "abbr": "VI",
+      "acronym": "VHS",
+      "mascot": "Panthers",
+      "city": "Vista",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/vista/vista-panthers/field-hockey/",
+      "aliases": [
+        "Vista",
+        "VISTA",
+        "Vista High School",
+        "Vista Panthers"
+      ],
+      "sbliveTeamId": "464777",
+      "sbliveSlug": "464777-vista-panthers",
+      "sbliveSchoolId": "30660",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 21,
+        "liveLeagueRows": 4,
+        "deletedRows": 4,
+        "cifsdshomeSchoolId": "748",
+        "sbliveBucket": "4170-avocado-east",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Valley division (no MaxPreps table; zero-GUID league). Colors from team-context. Key \"vista\" is distinct from Bella Vista, Bonita Vista, Mission Vista, Monta Vista and Rancho Buena Vista."
+      }
+    },
+    {
+      "id": "9ef67997-7f5d-4899-b500-2d0b5c758105",
+      "slug": "westview",
+      "name": "Westview",
+      "shortName": "Westview",
+      "abbr": "WV",
+      "acronym": "WHS",
+      "mascot": "Wolverines",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "north-county",
+      "division": "valley",
+      "dataCoverage": "full",
+      "colors": [
+        "C8880A",
+        "222222"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/westview-wolverines/field-hockey/",
+      "aliases": [
+        "Westview",
+        "WESTVIEW",
+        "Westview High School",
+        "Westview Wolverines",
+        "Westview (San Diego)"
+      ],
+      "sbliveTeamId": "458949",
+      "sbliveSlug": "458949-westview-wolverines",
+      "sbliveSchoolId": "12673",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 25,
+        "liveLeagueRows": 7,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "751",
+        "sbliveBucket": "4234-palomar",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Valley division (no MaxPreps table; zero-GUID league). Colors from team-context. si.com has two Westviews: ours is 458949 (Westview Wolverines, San Diego, bucket 4234-palomar); 464882 (Westview Wildcats, West Los Angeles, bucket 4223-mulholland) is NOT ours, so a bare \"Westview\" from si.com must resolve by team/school id (candidate for STATEWIDE_AMBIGUOUS)."
+      }
+    },
+    {
+      "id": "7f4d50f0-8690-493c-b4bc-262b512e8851",
+      "slug": "bonita-vista",
+      "name": "Bonita Vista",
+      "shortName": "Bonita Vista",
+      "abbr": "BT",
+      "acronym": "BVHS",
+      "mascot": "Barons",
+      "city": "Chula Vista",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-mesa",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chula-vista/bonita-vista-barons/field-hockey/",
+      "aliases": [
+        "Bonita Vista",
+        "BONITA VISTA",
+        "Bonita Vista High School",
+        "Bonita Vista Barons",
+        "Bonita Vista (Chula Vista)"
+      ],
+      "sbliveTeamId": "459119",
+      "sbliveSlug": "459119-bonita-vista-barons",
+      "sbliveSchoolId": "13407",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "leagueName": "Metro- South Bay",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 17,
+        "liveLeagueRows": 7,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "629",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "abbr BT because BV is Bella Vista's (EAL). Acronym BVHS is shared with Bella Vista: display only, not indexed. MaxPreps puts the Metro Mesa five in a table named \"Metro- South Bay\" (6dfe5a12)."
+      }
+    },
+    {
+      "id": "6aa8e46b-7aa9-4df3-9512-89a9d4827f7f",
+      "slug": "eastlake",
+      "name": "Eastlake",
+      "shortName": "Eastlake",
+      "abbr": "EL",
+      "acronym": "EHS",
+      "mascot": "Titans",
+      "city": "Chula Vista",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-mesa",
+      "dataCoverage": "full",
+      "colors": [
+        "034CB2",
+        "00824B"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chula-vista/eastlake-titans/field-hockey/",
+      "aliases": [
+        "Eastlake",
+        "EASTLAKE",
+        "Eastlake High School",
+        "Eastlake Titans",
+        "Eastlake (Chula Vista)"
+      ],
+      "sbliveTeamId": "459128",
+      "sbliveSlug": "459128-eastlake-titans",
+      "sbliveSchoolId": "13412",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "leagueName": "Metro- South Bay",
+          "place": 2
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 15,
+        "liveLeagueRows": 8,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "655",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Acronym EHS shared with Edison and Escondido: display only."
+      }
+    },
+    {
+      "id": "186dcece-fefd-4b67-b4c7-877b3e12beb2",
+      "slug": "helix",
+      "name": "Helix",
+      "shortName": "Helix",
+      "abbr": "HX",
+      "acronym": "HHS",
+      "mascot": "Scotties",
+      "city": "La Mesa",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-mesa",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "454444"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-mesa/helix-scotties/field-hockey/",
+      "aliases": [
+        "Helix",
+        "HELIX",
+        "Helix High School",
+        "Helix Scotties",
+        "Helix Highlanders",
+        "Helix (La Mesa)"
+      ],
+      "sbliveTeamId": "458715",
+      "sbliveSlug": "458715-helix-highlanders",
+      "sbliveSchoolId": "11156",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "leagueName": "Metro- South Bay",
+          "place": 5
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 25,
+        "liveLeagueRows": 7,
+        "deletedRows": 3,
+        "cifsdshomeSchoolId": "670",
+        "sbliveBucket": "4199-grossmont",
+        "sbliveSchoolIdSource": "team-page school.id",
+        "notes": "MaxPreps mascot \"Scotties\"; si.com slug 458715-helix-highlanders (si.com mascot \"Highlanders\"): both kept as aliases. Acronym HHS shared: display only."
+      }
+    },
+    {
+      "id": "0465e8ea-3eb0-4619-a74a-183e70c697e2",
+      "slug": "olympian",
+      "name": "Olympian",
+      "shortName": "Olympian",
+      "abbr": "OL",
+      "acronym": "OHS",
+      "mascot": "Eagles",
+      "city": "Chula Vista",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-mesa",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chula-vista/olympian-eagles/field-hockey/",
+      "aliases": [
+        "Olympian",
+        "OLYMPIAN",
+        "Olympian High School",
+        "Olympian Eagles",
+        "Olympian (Chula Vista)"
+      ],
+      "sbliveTeamId": "480708",
+      "sbliveSlug": "480708-olympian-eagles",
+      "sbliveSchoolId": "13417",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "leagueName": "Metro- South Bay",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 16,
+        "liveLeagueRows": 8,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "706",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "77e5b6a4-a166-4a88-b114-a38a9b28ccc4",
+      "slug": "otay-ranch",
+      "name": "Otay Ranch",
+      "shortName": "Otay Ranch",
+      "abbr": "OR",
+      "acronym": "ORHS",
+      "mascot": "Mustangs",
+      "city": "Chula Vista",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-mesa",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "046DFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chula-vista/otay-ranch-mustangs/field-hockey/",
+      "aliases": [
+        "Otay Ranch",
+        "OTAY RANCH",
+        "Otay Ranch High School",
+        "Otay Ranch Mustangs",
+        "Otay Ranch (Chula Vista)"
+      ],
+      "sbliveTeamId": "459134",
+      "sbliveSlug": "459134-otay-ranch-mustangs",
+      "sbliveSchoolId": "13419",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "6dfe5a12-b82f-45d7-b103-71a5c13c0093",
+          "leagueName": "Metro- South Bay",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 17,
+        "liveLeagueRows": 8,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "708",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "logo-url"
+      }
+    },
+    {
+      "id": "15d5e874-4af2-4d24-8e6b-be895937cb8c",
+      "slug": "el-capitan",
+      "name": "El Capitan",
+      "shortName": "El Capitan",
+      "abbr": "EC",
+      "acronym": "ECHS",
+      "mascot": "Vaqueros",
+      "city": "Lakeside",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-south-bay",
+      "dataCoverage": "full",
+      "colors": [
+        "222222",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/lakeside/el-capitan-vaqueros/field-hockey/",
+      "aliases": [
+        "El Capitan",
+        "EL CAPITAN",
+        "El Capitan High School",
+        "El Capitan Vaqueros",
+        "El Capitan (Lakeside)"
+      ],
+      "sbliveTeamId": "458711",
+      "sbliveSlug": "458711-el-capitan-vaqueros",
+      "sbliveSchoolId": "11149",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "ca8e2856-b13d-4aa7-8c15-37cb50a55c60",
+          "leagueName": "Grossmont",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 17,
+        "liveLeagueRows": 4,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "658",
+        "sbliveBucket": "4199-grossmont",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "MaxPreps table \"Grossmont\" (ca8e2856) holds El Capitan and Granite Hills (plus Santana, an extra 0-game row); official division is Metro South Bay."
+      }
+    },
+    {
+      "id": "aa2f89a2-0150-4223-89b4-ac73cbf343e9",
+      "slug": "granite-hills",
+      "name": "Granite Hills",
+      "shortName": "Granite Hills",
+      "abbr": "GH",
+      "acronym": "GHHS",
+      "mascot": "Eagles",
+      "city": "El Cajon",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-south-bay",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "046DFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/el-cajon/granite-hills-eagles/field-hockey/",
+      "aliases": [
+        "Granite Hills",
+        "GRANITE HILLS",
+        "Granite Hills High School",
+        "Granite Hills Eagles",
+        "Granite Hills (El Cajon)"
+      ],
+      "sbliveTeamId": "458713",
+      "sbliveSlug": "458713-granite-hills-eagles",
+      "sbliveSchoolId": "11152",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "ca8e2856-b13d-4aa7-8c15-37cb50a55c60",
+          "leagueName": "Grossmont",
+          "place": 1
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 15,
+        "liveLeagueRows": 4,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "666",
+        "sbliveBucket": "4199-grossmont",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "MaxPreps table \"Grossmont\" (ca8e2856); official division Metro South Bay."
+      }
+    },
+    {
+      "id": "ec21ffde-b216-47cc-9923-6308e239e9e0",
+      "slug": "hilltop",
+      "name": "Hilltop",
+      "shortName": "Hilltop",
+      "abbr": "HT",
+      "acronym": "HHS",
+      "mascot": "Lancers",
+      "city": "Chula Vista",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-south-bay",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/chula-vista/hilltop-lancers/field-hockey/",
+      "aliases": [
+        "Hilltop",
+        "HILLTOP",
+        "Hilltop High School",
+        "Hilltop Lancers",
+        "Hilltop (Chula Vista)"
+      ],
+      "sbliveTeamId": "459131",
+      "sbliveSlug": "459131-hilltop-lancers",
+      "sbliveSchoolId": "13413",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 19,
+        "liveLeagueRows": 6,
+        "deletedRows": 2,
+        "cifsdshomeSchoolId": "674",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Not in any MaxPreps table (zero-GUID league in 26-27); plays league-flagged games vs El Capitan, Granite Hills and Southwest. Colors from team-context. si.com bucket 4214-metro-mesa (stale). Acronym HHS shared: display only."
+      }
+    },
+    {
+      "id": "19409229-6768-4537-b8d7-4a7d2814aaad",
+      "slug": "southwest",
+      "name": "Southwest",
+      "shortName": "Southwest",
+      "abbr": "SW",
+      "acronym": "SSDHS",
+      "mascot": "Raiders",
+      "city": "San Diego",
+      "section": "sds",
+      "league": "metro",
+      "division": "metro-south-bay",
+      "dataCoverage": "full",
+      "colors": [
+        "CC0022",
+        "C8880A"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/san-diego/southwest-sd-raiders/field-hockey/",
+      "aliases": [
+        "Southwest",
+        "SOUTHWEST",
+        "Southwest High School",
+        "Southwest Raiders",
+        "Southwest SD",
+        "SOUTHWEST SD",
+        "Southwest SD Raiders",
+        "Southwest SD (San Diego)",
+        "Southwest (San Diego)"
+      ],
+      "sbliveTeamId": "459138",
+      "sbliveSlug": "459138-southwest-sd-raiders",
+      "sbliveSchoolId": "13422",
+      "notes": {
+        "maxprepsStandingsRow": null,
+        "colorsFrom": "gatewayweb/react/team-context/v1 teamData.schoolColor1/2 (no 26-27 MaxPreps standings row: colors are team-context teamData.schoolColor1/schoolColor2 (the same MaxPreps school-color fields the standings row carries; identical for all 34 SoCal teams that have both). colorSource stays \"maxpreps-standings\" because Team['colors']['source'] is 'maxpreps-standings' | 'placeholder' and 'placeholder' means invented colours; same precedent as Prospect in registry-seed.json.)",
+        "scheduleRows": 10,
+        "liveLeagueRows": 2,
+        "deletedRows": 0,
+        "cifsdshomeSchoolId": "735",
+        "sbliveBucket": "4214-metro-mesa",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "MaxPreps schoolName \"Southwest SD\" (Southwest, San Diego; maxprepsPath keeps \"southwest-sd-raiders\"); our name \"Southwest\", city San Diego, alias \"Southwest SD\" (MaxPreps and si.com spelling). Not in any MaxPreps table (zero-GUID league in 26-27); plays league-flagged games vs El Capitan/Granite Hills/Hilltop. Colors from team-context. Statewide namesake Southwest (El Centro, Imperial Valley) has no field hockey team on MaxPreps; si.com's team search lists one (583246, 0 games), so bare \"Southwest\" resolves on si.com by id only (STATEWIDE_AMBIGUOUS)."
+      }
+    }
+  ],
+  "excludedTeams": [
+    {
+      "id": "fef1da70-bea2-4958-a60b-9962851f6a1d",
+      "name": "Madison",
+      "reason": "Extra 0-0-0 row in MaxPreps City - Eastern (6f9a29a0); 0 games in 26-27; not in the CIFSDS alignment for field hockey. Same treatment as Red Bluff: city-eastern maxprepsExtraRows.",
+      "withdrawnNames": [
+        "Madison",
+        "MADISON",
+        "Madison High School",
+        "Madison Warhawks"
+      ]
+    },
+    {
+      "id": "1125d6e8-e661-4190-a41d-5722364dee38",
+      "name": "Santana",
+      "reason": "Extra 0-0-0 row in MaxPreps \"Grossmont\" (ca8e2856); 0 games in 26-27. metro-south-bay maxprepsExtraRows.",
+      "withdrawnNames": [
+        "Santana",
+        "SANTANA",
+        "Santana High School",
+        "Santana Sultans"
+      ]
+    },
+    {
+      "id": "0825dfb4-9381-4c79-a2ec-67000e1093d6",
+      "name": "Castle Park",
+      "reason": "Zero-GUID league; no 2026-27 varsity game on MaxPreps; in the CIFSDS Division II list but in no field hockey league block."
+    },
+    {
+      "id": "c6e1415a-faee-489c-8a2b-ded5cd4e4c80",
+      "name": "Chula Vista",
+      "reason": "Zero-GUID league; no 2026-27 varsity game on MaxPreps."
+    },
+    {
+      "id": "daa95aa0-bd2f-407b-9623-6347895a9044",
+      "name": "Montgomery",
+      "reason": "Zero-GUID league; no 2026-27 varsity game on MaxPreps."
+    },
+    {
+      "id": "afc64ae1-7d0c-4f4e-a3b8-8acfdcd84363",
+      "name": "Sweetwater",
+      "reason": "Zero-GUID league; no 2026-27 varsity game on MaxPreps."
+    }
+  ],
+  "abbrsChosen": [
+    "BI=bishops",
+    "CN=canyon-hills",
+    "CC=cathedral-catholic",
+    "LJ=la-jolla",
+    "MB=mission-bay",
+    "SR=scripps-ranch",
+    "CL=clairemont",
+    "CD=la-jolla-country-day",
+    "MM=mira-mesa",
+    "PH=patrick-henry",
+    "PL=point-loma",
+    "UC=university-city",
+    "CY=canyon-crest-academy",
+    "LC=la-costa-canyon",
+    "MT=mt-carmel",
+    "RN=rancho-bernardo",
+    "SM=san-marcos",
+    "TP=torrey-pines",
+    "DN=del-norte",
+    "FB=fallbrook",
+    "MS=mission-vista",
+    "PW=poway",
+    "RV=rancho-buena-vista",
+    "SD=san-dieguito-academy",
+    "VE=valley-center",
+    "ES=escondido",
+    "MH=mission-hills",
+    "SE=sage-creek",
+    "SP=san-pasqual",
+    "VI=vista",
+    "WV=westview",
+    "BT=bonita-vista",
+    "EL=eastlake",
+    "HX=helix",
+    "OL=olympian",
+    "OR=otay-ranch",
+    "EC=el-capitan",
+    "GH=granite-hills",
+    "HT=hilltop",
+    "SW=southwest"
+  ],
+  "abbrReconciliation": {
+    "rule": "lib/teams.ts assertRegistry requires abbr /^[A-Z]{2}$/ and unique across all registries (99 teams after this change).",
+    "existingAbbrs": [
+      "AW",
+      "BK",
+      "BR",
+      "BV",
+      "CA",
+      "CH",
+      "CI",
+      "CR",
+      "CS",
+      "CT",
+      "CU",
+      "DM",
+      "DV",
+      "FR",
+      "GI",
+      "GR",
+      "HM",
+      "HO",
+      "LA",
+      "LD",
+      "LE",
+      "LG",
+      "LO",
+      "LS",
+      "LW",
+      "LY",
+      "MA",
+      "MC",
+      "MI",
+      "MO",
+      "MV",
+      "PA",
+      "PR",
+      "PS",
+      "PV",
+      "RW",
+      "SA",
+      "SC",
+      "SF",
+      "SG",
+      "SI",
+      "SK",
+      "SO",
+      "ST",
+      "TM",
+      "UN",
+      "VC",
+      "WG",
+      "WM"
+    ],
+    "reserved": [
+      "RB (Red Bluff, NS seed excludedTeams candidateSeed)"
+    ],
+    "collisionsWithProposed": [],
+    "avoidedExisting": [
+      "MA (Marin Academy) -> Marina MR",
+      "MC (Marin Catholic) -> Mt. Carmel MT",
+      "CH (Christopher) -> Canyon Hills CN",
+      "CA (Carmel), CR (Corning) -> Canyon Crest Academy CY (CC went to Cathedral Catholic, CCHS)",
+      "VC (Valley Christian) -> Valley Center VE",
+      "MV (Monta Vista) -> Mission Vista MS",
+      "BV (Bella Vista) -> Bonita Vista BT",
+      "SC (Santa Clara), SG (Saratoga), SK (Silver Creek) -> Sage Creek SE",
+      "RB (reserved: Red Bluff) -> Rancho Bernardo RN, Rancho Buena Vista RV",
+      "LA (Los Altos) -> La Jolla LJ, La Costa Canyon LC, La Jolla Country Day CD (Country Day)"
+    ],
+    "acronymNote": "Acronyms stay MaxPreps verbatim. With all 99 teams, lib/teams.ts ACRONYM_COLLISIONS becomes [BHS, BVHS, CHS, EHS, FHS, GHS, HHS, LHS, MCHS, MHS, MVHS, PHS, SCHS, SHS, VCHS, WHS] (adds BVHS, EHS, FHS, MCHS, MHS, MVHS, VCHS, WHS), so EXPECTED_ACRONYM_COLLISIONS must be recomputed, and the acronyms of seven NorCal teams stop resolving: BVHS bella-vista (tests/teams.test.ts:128 expects it), FHS fremont, MCHS marin-catholic, MHS monterey, MVHS monta-vista, VCHS valley-christian, WHS westmont."
+  },
+  "sbliveIdentity": {
+    "verifiedOn": "2026-10-06",
+    "evidence": "scratchpad/inventory/sblive-ca-leagues.json (+ sblive-README.md); SDS slugs also in scratchpad/sds_team_table.md",
+    "ids": {
+      "bishops": {
+        "teamId": "456843",
+        "schoolId": "201",
+        "bucket": "4179-city-western",
+        "schoolIdSource": "team-page school.id"
+      },
+      "canyon-hills": {
+        "teamId": "459034",
+        "schoolId": "12931",
+        "bucket": null,
+        "schoolIdSource": "team page school.id"
+      },
+      "cathedral-catholic": {
+        "teamId": "458202",
+        "schoolId": "6107",
+        "bucket": "4179-city-western",
+        "schoolIdSource": "team-page school.id"
+      },
+      "la-jolla": {
+        "teamId": "459019",
+        "schoolId": "12915",
+        "bucket": "4179-city-western",
+        "schoolIdSource": "logo-url"
+      },
+      "mission-bay": {
+        "teamId": "459025",
+        "schoolId": "12919",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "scripps-ranch": {
+        "teamId": "459032",
+        "schoolId": "12930",
+        "bucket": "4179-city-western",
+        "schoolIdSource": "logo-url"
+      },
+      "clairemont": {
+        "teamId": "459017",
+        "schoolId": "12896",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "la-jolla-country-day": {
+        "teamId": "456865",
+        "schoolId": "256",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "mira-mesa": {
+        "teamId": "459023",
+        "schoolId": "12918",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "patrick-henry": {
+        "teamId": "464779",
+        "schoolId": "30661",
+        "bucket": "4179-city-western",
+        "schoolIdSource": "logo-url"
+      },
+      "point-loma": {
+        "teamId": "459029",
+        "schoolId": "12921",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "university-city": {
+        "teamId": "459037",
+        "schoolId": "12934",
+        "bucket": "4178-city-eastern",
+        "schoolIdSource": "logo-url"
+      },
+      "canyon-crest-academy": {
+        "teamId": "459041",
+        "schoolId": "12935",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "team-page school.id"
+      },
+      "la-costa-canyon": {
+        "teamId": "459043",
+        "schoolId": "12936",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "team-page school.id"
+      },
+      "mt-carmel": {
+        "teamId": "458939",
+        "schoolId": "12670",
+        "bucket": null,
+        "schoolIdSource": "team page school.id"
+      },
+      "rancho-bernardo": {
+        "teamId": "458945",
+        "schoolId": "12672",
+        "bucket": "4234-palomar",
+        "schoolIdSource": "team-page school.id"
+      },
+      "san-marcos": {
+        "teamId": "459066",
+        "schoolId": "13021",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "team-page school.id"
+      },
+      "torrey-pines": {
+        "teamId": "459049",
+        "schoolId": "12940",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "logo-url"
+      },
+      "del-norte": {
+        "teamId": "458937",
+        "schoolId": "12669",
+        "bucket": "4234-palomar",
+        "schoolIdSource": "logo-url"
+      },
+      "fallbrook": {
+        "teamId": "458653",
+        "schoolId": "10923",
+        "bucket": "4234-palomar",
+        "schoolIdSource": "logo-url"
+      },
+      "mission-vista": {
+        "teamId": "464852",
+        "schoolId": "31920",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "team-page school.id"
+      },
+      "poway": {
+        "teamId": "458942",
+        "schoolId": "12671",
+        "bucket": "4234-palomar",
+        "schoolIdSource": "logo-url"
+      },
+      "rancho-buena-vista": {
+        "teamId": "459174",
+        "schoolId": "13718",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "logo-url"
+      },
+      "san-dieguito-academy": {
+        "teamId": "459047",
+        "schoolId": "12938",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "team-page school.id"
+      },
+      "valley-center": {
+        "teamId": "459167",
+        "schoolId": "13667",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "logo-url"
+      },
+      "escondido": {
+        "teamId": "458641",
+        "schoolId": "10872",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "logo-url"
+      },
+      "mission-hills": {
+        "teamId": "459063",
+        "schoolId": "13020",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "logo-url"
+      },
+      "sage-creek": {
+        "teamId": "464866",
+        "schoolId": "31992",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "team-page school.id"
+      },
+      "san-pasqual": {
+        "teamId": "458644",
+        "schoolId": "10874",
+        "bucket": "4171-avocado-west",
+        "schoolIdSource": "team-page school.id"
+      },
+      "vista": {
+        "teamId": "464777",
+        "schoolId": "30660",
+        "bucket": "4170-avocado-east",
+        "schoolIdSource": "logo-url"
+      },
+      "westview": {
+        "teamId": "458949",
+        "schoolId": "12673",
+        "bucket": "4234-palomar",
+        "schoolIdSource": "logo-url"
+      },
+      "bonita-vista": {
+        "teamId": "459119",
+        "schoolId": "13407",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "team-page school.id"
+      },
+      "eastlake": {
+        "teamId": "459128",
+        "schoolId": "13412",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "logo-url"
+      },
+      "helix": {
+        "teamId": "458715",
+        "schoolId": "11156",
+        "bucket": "4199-grossmont",
+        "schoolIdSource": "team-page school.id"
+      },
+      "olympian": {
+        "teamId": "480708",
+        "schoolId": "13417",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "logo-url"
+      },
+      "otay-ranch": {
+        "teamId": "459134",
+        "schoolId": "13419",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "logo-url"
+      },
+      "el-capitan": {
+        "teamId": "458711",
+        "schoolId": "11149",
+        "bucket": "4199-grossmont",
+        "schoolIdSource": "logo-url"
+      },
+      "granite-hills": {
+        "teamId": "458713",
+        "schoolId": "11152",
+        "bucket": "4199-grossmont",
+        "schoolIdSource": "logo-url"
+      },
+      "hilltop": {
+        "teamId": "459131",
+        "schoolId": "13413",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "logo-url"
+      },
+      "southwest": {
+        "teamId": "459138",
+        "schoolId": "13422",
+        "bucket": "4214-metro-mesa",
+        "schoolIdSource": "logo-url"
+      }
+    },
+    "ambiguousNamesNote": "si.com namesakes: TWO \"Westview\" teams (ours 458949 San Diego; 464882 Westview Wildcats, West Los Angeles, bucket 4223-mulholland, 2 games) -> resolve Westview by team/school id, and consider adding \"Westview\" to STATEWIDE_AMBIGUOUS. \"Del Norte\": the Crescent City school is a MaxPreps ghost (DATA_QUALITY.ghostTeamIds), and the si.com team search (nameSearch) also lists a Crescent City Del Norte (458609), so \"Del Norte\" resolves by id only. \"University\" (Irvine 458756) is never an alias of University City. Canyon Hills (459034) and Mt. Carmel (458939) are in no si.com league bucket. Every sbliveSchoolId is harvested (logo URL or team page school.id, see schoolIdSource).",
+    "nameSearch": {
+      "method": "https://www.si.com/high-school/stats/california/field-hockey/teams?name={name} (the search the EAL used, DATA-SOURCES §1.2 caveat 9), fetched 2026-10-06 with a browser User-Agent, one request at a time at least 600 ms apart, for the 50 names and the spellings Southwest SD, Mt Carmel, Bishops, Canyon Crest, San Dieguito, LJCD and RBV",
+      "result": "Every name returned exactly one team of that name except these, whose normalized names are added to STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts), so a si.com side with that name resolves only by its si.com team or school id. Fuzzy matches under other names (e.g. Bonita Vista for Bonita, Claremont for Clairemont) are not namesakes.",
+      "namesakes": {
+        "san-marcos": "459073 San Marcos (Santa Barbara; slug san-marcos-royals; its games page serves si.com's index)",
+        "del-norte": "458609 Del Norte (Crescent City; school 10601; its games page lists 2 games on 2026-10-16, vs Tamalpais and Davis, the games MaxPreps gives Del Norte of San Diego)",
+        "mission-vista": "480754 Mission Vista ('Vista, CA'; slug mission-vista-timberwolves; its games page serves si.com's index); ours is 464852 (Oceanside), which carries the games",
+        "granite-hills": "554634 Granite Hills (Porterville) and 458466 Granite Hills (Apple Valley); both games pages serve si.com's index",
+        "southwest": "583246 Southwest (El Centro; school 32018; 0 games). Ours is listed as 'Southwest SD'",
+        "westview": "464882 Westview (West Los Angeles; school 32073; its games page lists 2 games, both vs Sage Creek, 2026-09-30 and 2026-10-28)"
+      }
+    }
+  }
+}

@@ -15,14 +15,33 @@ export type TeamId = string;
  */
 export type ContestId = string;
 
-export type SectionId = 'ccs' | 'ncs' | 'ns';
+/**
+ * The five CIF sections with a covered league: three in Northern California (CCS, NCS, NS) and two in
+ * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'). The snapshot
+ * schema's `sectionId` enum is this list (lib/snapshot-schema.ts proves the two agree at compile time).
+ */
+export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
 
-/** 'scval' | 'bval' | 'pcal' | 'mcal' | 'eal' as DATA. Validated against LEAGUES at load and at parse. */
+/**
+ * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
+ * (SectionConfig.region in lib/leagues.ts), so a league's or a team's region is always derived from its
+ * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/clubs-schema.ts) and not a
+ * venue's `address.region` (a state code): those are separate concepts that happen to share the word.
+ */
+export type RegionId = 'norcal' | 'socal';
+
+/**
+ * 'scval' | 'bval' | 'pcal' | 'mcal' | 'eal' | 'sunset' | 'city' | 'north-county' | 'metro' as DATA.
+ * Validated against LEAGUES at load and at parse.
+ */
 export type LeagueId = string;
 
 /**
- * One MaxPreps league table. Globally unique: 'de-anza' | 'el-camino' | 'mt-hamilton' |
- * 'santa-teresa' | 'pcal' | 'marin-county' | 'eal'. A single-division league may reuse its league id ('pcal', 'eal').
+ * One league table. Globally unique: 'de-anza' | 'el-camino' | 'mt-hamilton' | 'santa-teresa' | 'pcal' |
+ * 'marin-county' | 'eal' | 'sunset' | 'city-western' | 'city-eastern' | 'avocado' | 'palomar' | 'valley' |
+ * 'metro-mesa' | 'metro-south-bay'. A single-division league may reuse its league id ('pcal', 'eal',
+ * 'sunset'). Usually one MaxPreps table, but not always: the San Diego Section's Valley division has no
+ * MaxPreps table at all (DivisionConfig.maxprepsLeagueId null).
  */
 export type DivisionId = string;
 
@@ -66,8 +85,22 @@ export interface SeasonDivision {
   id: DivisionId;
   /** Our UI label ('De Anza', 'Mt. Hamilton', 'PCAL', 'MCAL', 'EAL'). MaxPreps' own name is NOT stored. */
   label: string;
-  maxprepsLeagueId: string;
+  /**
+   * MaxPreps' league GUID for this division's table, copied from config. null where MaxPreps publishes no
+   * table for the division (the San Diego Section's Valley: its six teams all sit in MaxPreps' zero-GUID
+   * "no league", inventory 2026-10-06), so the pipeline requests nothing for it.
+   */
+  maxprepsLeagueId: string | null;
 }
+
+/**
+ * Every LeagueConfig['postseason']['kind'] (lib/leagues.ts), as the snapshot stores it. 'no-postseason' is
+ * the Sunset (the CIF Southern Section holds no field hockey playoffs: Blue Book 2026-27 Bylaws 2011.1 and
+ * 3500.2); 'section-playoffs' is the three San Diego Section leagues (the Section's own Open/I/II
+ * playoffs, placed from its power rankings: Green Book 2026-27 Bylaw 2000.1).
+ */
+export type PostseasonKind =
+  | 'ccs-ladder' | 'league-tournament' | 'unbracketed-tournament' | 'no-postseason' | 'section-playoffs';
 
 export interface SeasonLeague {
   id: LeagueId;
@@ -76,7 +109,7 @@ export interface SeasonLeague {
   shortName: string;                  // 'BVAL'
   divisions: SeasonDivision[];
   /** NEW. Copied from config (LEAGUES[].postseason.kind) and validated against it (checkAgainstConfig #6). Lets scripts read the tournament leagues from the snapshot. */
-  postseasonKind: 'ccs-ladder' | 'league-tournament' | 'unbracketed-tournament';
+  postseasonKind: PostseasonKind;
   /**
    * Over games with at least one registry side in this league AND `postseason === null` (crossover, play-in,
    * MCAL tournament and CCS games never extend it). Drives this league's phase.
@@ -92,9 +125,9 @@ export interface Season {
   allSeasonId: string;
   genderSport: 'girls,fieldhockey';
   teamLevel: 'Varsity' | 'JV';
-  /** Config order: ccs, ncs, ns. */
+  /** Config order: ccs, ncs, ns, ss, sds. */
   sections: SeasonSection[];
-  /** Config order: scval, bval, pcal, mcal, eal. */
+  /** Config order: scval, bval, pcal, mcal, eal, sunset, city, north-county, metro. */
   leagues: SeasonLeague[];
   /** Global window over every kept contest — the original single-league semantics, unchanged. */
   window: SeasonWindow;
@@ -141,7 +174,7 @@ export interface Team {
    * abbreviation; enforced at load (lib/teams.ts). Display only: resolution never keys on it.
    */
   shortName: string;
-  /** 2 letters, unique across all 49 teams. */
+  /** 2 letters, unique across the whole registry (99 teams). */
   abbr: string;
   /** MaxPreps `schoolNameAcronym`. Display only: NOT unique; indexed for resolution only when unique. */
   acronym: string;
@@ -184,9 +217,13 @@ export type GameStatus =
 export type Outcome = 'W' | 'L' | 'T';
 
 /**
- * 'SO' = a level final that MaxPreps flags W/L between two members of a league whose
- * `rules.leagueOvertime` is 'shootout' (EAL: 1 v 1s); `Game.shootout` may then be null (the tally is
- * not stored). SCVAL/BVAL/PCAL/MCAL never produce it.
+ * 'SO' = a level final that MaxPreps flags W/L between two teams of a SECTION whose `shootout` rule is set
+ * (SectionConfig.shootout in lib/leagues.ts): the Northern Section's EAL (1 v 1s, NS Guidelines §VII.E.4)
+ * and the San Diego Section (a 5-player shootout; the San Diego Field Hockey Officials Association 2026
+ * Mercy & Overtime Procedures credit the winner one goal, but MaxPreps often keeps the level score and
+ * marks it W and L). Keyed on the section, not the league, because the San Diego rule covers every varsity
+ * game in the Section, across its three conferences. `Game.shootout` may then be null (the tally is not
+ * stored). The CCS, NCS and Southern Section leagues never produce it.
  */
 export type Decider = 'REG' | 'OT' | '2OT' | 'SO' | 'FORFEIT';
 
@@ -221,11 +258,22 @@ export interface PostseasonTag {
   /**
    * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
    * literal is kept for snapshot stability (lib/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
+   * 'section-playoffs' is the San Diego Section's playoffs (DESIGN-socal §2.1.7): any game between two
+   * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
+   * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
+   * one label for the whole tournament, never 'league-postseason'.
    */
-  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'ccs' | 'other';
-  /** Set for every kind except 'ccs' and 'other', which may be null (no shared registry league). */
+  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'section-playoffs' | 'ccs' | 'other';
+  /**
+   * Set for every league-scoped kind. 'ccs', 'other' and 'section-playoffs' may be null: no shared registry
+   * league (a San Diego playoff game between two conferences has none).
+   */
   leagueId: LeagueId | null;
-  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'ccs-window';
+  /**
+   * 'section-postseason-window' = dated on or after the section-playoffs leagues' `postseasonFrom` (the
+   * section-wide counterpart of 'league-postseason-window'); a contestType-4 row stays 'contest-type-4'.
+   */
+  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'section-postseason-window' | 'ccs-window';
 }
 
 /** Set when a contest matched a fixture in a league's official schedule. */
@@ -272,7 +320,7 @@ export interface Game {
    * this game belongs to. Standings count it once status === 'final'. Chips, filters and counts read it.
    */
   countsFor: DivisionId | null;
-  /** NEW. Crossover, play-in, MCAL tournament, EAL Super Regional and CCS games. */
+  /** NEW. Crossover, play-in, MCAL tournament, EAL Super Regional, San Diego Section playoff and CCS games. */
   postseason: PostseasonTag | null;
   otPeriods: number;
   isOt: boolean;
@@ -280,8 +328,9 @@ export interface Game {
   forfeitBy: 'home' | 'away' | null;
   decider: Decider | null;
   /**
-   * A tally, when one is stored (none today). An EAL 1 v 1 win has decider 'SO' and shootout null;
-   * MCAL tournament shootouts are stored by MaxPreps as goals (see caveat copy).
+   * A tally, when one is stored (none today). An EAL 1 v 1 win, and a San Diego Section shootout win that
+   * MaxPreps records as a level score marked W and L, have decider 'SO' and shootout null; MCAL tournament
+   * shootouts are stored by MaxPreps as goals (see caveat copy).
    */
   shootout: { home: number; away: number } | null;
   venue: GameVenue;
@@ -342,8 +391,11 @@ export type PlayoffStatus =
   | 'out'          // SCVAL 6th+: "No automatic path" (the original SCVAL wording)
   | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic-berth route" — never "eliminated"
   | 'bye'          // MCAL seeds 1-2
-  | 'tournament'   // MCAL seeds 3-6; EAL places 1-6 (Super Regional)
-  | 'below-line';  // MCAL 7th+
+  | 'tournament'   // MCAL seeds 3-6; EAL places 1-6 (Super Regional); San Diego 1st (a designated league
+                   //   champion is guaranteed at least a play-in, Green Book 2000.1)
+  | 'below-line'   // MCAL 7th+
+  | 'selection'    // San Diego 2nd+: no league route; the Section places teams from its power rankings
+  | 'no-postseason'; // the Sunset, every place: the CIF Southern Section holds no field hockey playoffs
 
 export interface ComputedRecord {
   gp: number;
@@ -603,7 +655,12 @@ export interface DivisionHealth {
   meta: 'ok' | 'error' | 'mismatch' | 'skipped';
   reportedTable: 'ok' | 'carried' | 'missing' | 'skipped';
   reportedRows: number | null;
-  classification: 'contest-type' | 'official-fixtures' | 'fallback-contest-type';
+  /**
+   * The division's LeagueRules.classification ('membership' = the San Diego divisions: both sides members,
+   * whatever MaxPreps' league flag says), or 'fallback-contest-type' when an official-fixtures division
+   * fell back to MaxPreps' flag this run.
+   */
+  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'fallback-contest-type';
   official: {
     source: OfficialSourceId;
     total: number;
@@ -618,8 +675,9 @@ export interface DivisionHealth {
   previousCountedFinals: number | null;
   backfilled: number;
   /**
-   * Only on a division whose official.mode is 'none' (EAL): league games MaxPreps flags, dated before
-   * today, with no counted result. Fixture-backed divisions carry this count in `official.missingPast`.
+   * Only on a division whose official.mode is 'none' (EAL, Sunset, the San Diego divisions): league games
+   * (MaxPreps-flagged, or for 'membership' every game between two members), dated before today, with no
+   * counted result. Fixture-backed divisions carry this count in `official.missingPast`.
    */
   missingLeaguePast?: number;
 }
@@ -713,7 +771,7 @@ export type SeasonPhase =
   | 'regular'
   | 'crossover'     // SCVAL only
   | 'play-in'       // BVAL only (Oct 31)
-  | 'tournament'    // MCAL (Oct 23-30), EAL (Oct 29-31)
+  | 'tournament'    // MCAL (Oct 23-30), EAL (Oct 29-31), San Diego Section playoffs (Nov 2-14)
   | 'playoffs'      // CCS bracket window (CCS leagues only)
   | 'complete';
 
@@ -725,7 +783,7 @@ export interface Snapshot {
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
   season: Season;
-  /** EXACTLY the registry (49), in registry order, left-joined against the feeds. */
+  /** EXACTLY the registry (99), in registry order, left-joined against the feeds. */
   teams: Team[];
   /** Deduped on contestId. */
   games: Game[];

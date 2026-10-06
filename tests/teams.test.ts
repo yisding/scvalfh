@@ -29,19 +29,25 @@ const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name:
   ['monta-vista', 'MV', '405614ad-a015-4270-b527-18e899c90824', 'Monta Vista', 'el-camino'],
 ];
 
-describe('teams: the registry is the five leagues', () => {
-  it('holds 49 teams, with per-division counts from the config', () => {
-    expect(TEAMS).toHaveLength(49);
+describe('teams: the registry is the nine leagues', () => {
+  it('holds 99 teams, with per-division counts from the config', () => {
+    expect(TEAMS).toHaveLength(99);
     expect(FETCHABLE_TEAMS).toHaveLength(TEAMS.length);
     for (const d of ALL_DIVISIONS) expect(teamsInDivision(d.id), d.id).toHaveLength(d.expectedTeams);
-    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(49);
+    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(99);
     expect(LEAGUES.map((l) => [l.id, teamsInLeague(l.id).length])).toEqual([
       ['scval', 15], ['bval', 12], ['pcal', 7], ['mcal', 9], ['eal', 6],
+      ['sunset', 10], ['city', 12], ['north-county', 19], ['metro', 9],
     ]);
-    // The EAL closes the registry, in alphabetical seed order.
-    expect(TEAMS.slice(-6).map((t) => t.slug)).toEqual([
+    // The EAL closes the 49 NorCal teams, which keep their places, in alphabetical seed order.
+    expect(TEAMS.slice(43, 49).map((t) => t.slug)).toEqual([
       'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
+    // The Sunset opens the SoCal 50, and Metro South Bay closes the registry (alphabetical in each division).
+    expect(TEAMS[49].slug).toBe('bonita');
+    expect(TEAMS.slice(-4).map((t) => t.slug)).toEqual(['el-capitan', 'granite-hills', 'hilltop', 'southwest']);
+    expect(TEAMS.slice(49).every((t) => t.section === 'ss' || t.section === 'sds')).toBe(true);
+    expect(TEAMS.slice(0, 49).some((t) => t.section === 'ss' || t.section === 'sds')).toBe(false);
   });
 
   it('freezes the 15 SCVAL slugs, abbrs, ids, names and divisions', () => {
@@ -64,7 +70,7 @@ describe('teams: the registry is the five leagues', () => {
     }
   });
 
-  it('has unique ids, slugs and abbrs across all 49, and well-formed slugs', () => {
+  it('has unique ids, slugs and abbrs across all 99, and well-formed slugs', () => {
     for (const key of ['id', 'slug', 'abbr'] as const) {
       const values = TEAMS.map((t) => t[key]);
       expect(new Set(values).size, key).toBe(TEAMS.length);
@@ -81,17 +87,47 @@ describe('teams: the registry is the five leagues', () => {
       ['sobrato', 'Sobrato'],
       ['university-sf', 'SF University'],
       ['convent-sacred-heart', 'Convent'],
+      ['cathedral-catholic', 'Cathedral'],
+      ['la-jolla-country-day', 'LJCD'],
+      ['canyon-crest-academy', 'Canyon Crest'],
+      ['rancho-buena-vista', 'RBV'],
+      ['san-dieguito-academy', 'San Dieguito'],
     ]);
+    // Every abbr is unique across both regions: the SoCal fallbacks avoid the 49 NorCal abbrs.
+    expect(new Set(TEAMS.map((t) => t.abbr)).size).toBe(99);
+    expect(['marina', 'mt-carmel', 'mission-vista', 'valley-center', 'bonita-vista', 'canyon-hills', 'canyon-crest-academy', 'sage-creek', 'rancho-bernardo']
+      .map((slug) => getTeamBySlug(slug)!.abbr)).toEqual(['MR', 'MT', 'MS', 'VE', 'BT', 'CN', 'CY', 'SE', 'RN']);
     expect(resolveTeam('santa-clara')!.abbr).toBe('SC');
     expect(resolveTeam('saratoga')!.abbr).toBe('SG');
   });
 
   it('does not index acronyms that two teams share', () => {
-    expect(ACRONYM_COLLISIONS).toEqual(['BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'PHS', 'SCHS', 'SHS']);
+    expect(ACRONYM_COLLISIONS).toEqual([
+      'BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS',
+    ]);
     for (const acronym of ACRONYM_COLLISIONS) expect(resolveTeam(acronym), acronym).toBeUndefined();
+    // Seven NorCal acronyms stopped resolving when the SoCal seeds arrived (display only, so nothing
+    // keyed on them): each now names a SoCal school too.
+    for (const [acronym, norcal, socal] of [
+      ['BVHS', 'bella-vista', 'bonita-vista'],
+      ['FHS', 'fremont', 'fallbrook'],
+      ['MCHS', 'marin-catholic', 'mt-carmel'],
+      ['MHS', 'monterey', 'marina'],
+      ['MVHS', 'monta-vista', 'mission-vista'],
+      ['VCHS', 'valley-christian', 'valley-center'],
+      ['WHS', 'westmont', 'westview'],
+    ] as const) {
+      expect([getTeamBySlug(norcal)!.acronym, getTeamBySlug(socal)!.acronym], acronym).toEqual([acronym, acronym]);
+      expect(resolveTeam(acronym), acronym).toBeUndefined();
+    }
+    // EHS is shared by three SoCal schools.
+    expect(TEAMS.filter((t) => t.acronym === 'EHS').map((t) => t.slug)).toEqual(['edison', 'escondido', 'eastlake']);
     // A unique acronym still resolves.
     expect(resolveTeam('LAHS')?.slug).toBe('los-altos');
     expect(resolveTeam('SICP')?.slug).toBe('st-ignatius');
+    expect(resolveTeam('CCA')?.slug).toBe('canyon-crest-academy');
+    expect(resolveTeam('RBVHS')?.slug).toBe('rancho-buena-vista');
+    expect(resolveTeam('SSDHS')?.slug).toBe('southwest');
   });
 
   it('never carries a bare "University" alias (ambiguous statewide)', () => {
@@ -122,12 +158,65 @@ describe('teams: the registry is the five leagues', () => {
     expect(resolveTeam('Lassen Grizzlies')?.slug).toBe('lassen');
     expect(resolveTeam('Corning Cardinals')?.slug).toBe('corning');
     expect(resolveTeam('288ca10d-8448-41e9-b26e-463df226b8c8')?.slug).toBe('davis');
-    // PVHS, DSHS and BVHS are unique acronyms; CHS (Chico, Corning) and LHS (Lassen) are shared.
+    // PVHS and DSHS are unique acronyms; CHS (Chico, Corning) and LHS (Lassen) are shared, and so,
+    // since the SoCal seeds, is BVHS (Bonita Vista), so it no longer resolves.
     expect(resolveTeam('PVHS')?.slug).toBe('pleasant-valley');
     expect(resolveTeam('DSHS')?.slug).toBe('davis');
-    expect(resolveTeam('BVHS')?.slug).toBe('bella-vista');
+    expect(resolveTeam('BVHS')).toBeUndefined();
+    expect(resolveTeam('Bella Vista')?.slug).toBe('bella-vista');
     for (const t of teamsInLeague('eal')) {
       expect([t.section, t.division], t.slug).toEqual(['ns', 'eal']);
+    }
+  });
+
+  it('resolves the Southern California teams by their names and the spellings sources use', () => {
+    const cases: Array<[string, string]> = [
+      ['Del Norte', 'del-norte'],
+      ['Del Norte (San Diego)', 'del-norte'],
+      ['La Jolla', 'la-jolla'],
+      ['La Jolla Country Day', 'la-jolla-country-day'],
+      ['LJCD', 'la-jolla-country-day'],
+      ["Bishop's", 'bishops'],
+      ['Bishops', 'bishops'],
+      ["The Bishop's School", 'bishops'],
+      ['Southwest SD', 'southwest'],
+      ['Southwest', 'southwest'],
+      ['RBV', 'rancho-buena-vista'],
+      ['Rancho Buena Vista', 'rancho-buena-vista'],
+      ['Mt. Carmel', 'mt-carmel'],
+      ['Mt Carmel', 'mt-carmel'],
+      ['Mount Carmel', 'mt-carmel'],
+      ['Canyon Crest', 'canyon-crest-academy'],
+      ['San Dieguito', 'san-dieguito-academy'],
+      ['Clairemont Chieftains', 'clairemont'],
+      ['Clairemont Captains', 'clairemont'],
+      ['Helix Highlanders', 'helix'],
+      ['Point Loma Fighting Pointers', 'point-loma'],
+      ['Edison (Huntington Beach)', 'edison'],
+      ['Huntington Beach', 'huntington-beach'],
+      ['Bonita', 'bonita'],
+      ['Bonita Vista', 'bonita-vista'],
+      ['Vista', 'vista'],
+      ['University City', 'university-city'],
+      ['Mission Vista Timberwolves', 'mission-vista'],
+      ['Westview', 'westview'],
+      ['Marina', 'marina'],
+    ];
+    for (const [input, slug] of cases) expect(resolveTeam(input)?.slug, input).toBe(slug);
+    // Near keys stay apart: Carmel (PCAL) is not Mt. Carmel, Bella and Monta Vista are not Vista.
+    expect(resolveTeam('Carmel')?.slug).toBe('carmel');
+    expect(resolveTeam('Bella Vista')?.slug).toBe('bella-vista');
+    expect(resolveTeam('Monta Vista')?.slug).toBe('monta-vista');
+    // The San Diego Del Norte is a member; the Crescent City ghost is not.
+    expect(isRegistryTeamId(getTeamBySlug('del-norte')!.id)).toBe(true);
+    expect(isRegistryTeamId('8396a0d3-8021-458d-b592-a5cb2c4a366d')).toBe(false);
+    // Partial words shared by several teams, and statewide namesakes, are never keys.
+    for (const name of ['Cathedral', 'Mission', 'Canyon', 'Country Day', 'Serra', 'University', 'HB', 'SD']) {
+      expect(resolveTeam(name), name).toBeUndefined();
+    }
+    for (const t of teamsInLeague('sunset')) expect([t.section, t.division], t.slug).toEqual(['ss', 'sunset']);
+    for (const id of ['city', 'north-county', 'metro'] as const) {
+      for (const t of teamsInLeague(id)) expect(t.section, t.slug).toBe('sds');
     }
   });
 
@@ -166,6 +255,11 @@ describe('teams: the registry is the five leagues', () => {
     expect(isRegistryTeamId('4d3da788-bbe2-4ab9-b854-d95aa9786cda')).toBe(false);
     expect(isWithdrawnSchool('Fremont')).toBe(false);
     expect(isWithdrawnSchool(null)).toBe(false);
+    // MaxPreps lists Madison (City Eastern) and Santana (its "Grossmont" table) with no 2026 varsity game.
+    expect(isWithdrawnSchool('Madison', 'city')).toBe(true);
+    expect(isWithdrawnSchool('Santana High School', 'metro')).toBe(true);
+    expect(isWithdrawnSchool('Madison', 'metro')).toBe(false);
+    for (const name of ['Madison', 'Santana']) expect(resolveTeam(name), name).toBeUndefined();
   });
 
   it('keys everything on the MaxPreps GUID, with our own slugs', () => {
@@ -199,7 +293,11 @@ describe('teams: the registry is the five leagues', () => {
     // A short name is display only, never a key: bare "University" is also Irvine's on si.com.
     expect(resolveTeam('University'), 'University').toBeUndefined();
     // Division and league names are never team spellings.
-    for (const name of ['Mt. Hamilton', 'Santa Teresa', 'Marin County', 'De Anza', 'El Camino']) {
+    for (const name of [
+      'Mt. Hamilton', 'Santa Teresa', 'Marin County', 'De Anza', 'El Camino', 'Sunset', 'City Western',
+      'City Eastern', 'North County', 'Avocado', 'Palomar', 'Valley', 'Metro', 'Metro Mesa', 'Metro South Bay',
+      'Grossmont',
+    ]) {
       expect(resolveTeam(name), name).toBeUndefined();
     }
   });
@@ -210,8 +308,12 @@ describe('teams: the registry is the five leagues', () => {
     expect(resolveTeam('  los   altos  ')?.slug).toBe('los-altos');
   });
 
-  it('does not resolve schools outside the five leagues', () => {
-    for (const name of ['Yuba City', 'La Jolla', 'Del Norte', 'Gunn', 'Irvington']) {
+  it('does not resolve schools outside the nine leagues', () => {
+    // La Jolla and Del Norte (San Diego) are members now; these are not.
+    for (const name of [
+      'Yuba City', 'Gunn', 'Irvington', 'Harvard-Westlake', 'Thousand Oaks', 'Glendora', 'Mayfair', 'Castle Park',
+      'Chula Vista', 'Montgomery', 'Sweetwater', 'San Pasqual Academy', 'Claremont',
+    ]) {
       expect(resolveTeam(name), name).toBeUndefined();
     }
     expect(resolveTeam(null)).toBeUndefined();
@@ -246,6 +348,10 @@ describe('teams: the registry is the five leagues', () => {
     expect(resolveTeam('palo-alto')!.external.vnnIcsUrl).toContain('2635290');
     expect(resolveTeam('los-gatos')!.external.vnnIcsUrl).toContain('2634860');
     expect(TEAMS.filter((t) => t.external.vnnIcsUrl)).toHaveLength(2);
+    // Every SoCal team carries a harvested si.com team id, slug and school id.
+    for (const t of TEAMS.slice(49)) expect(t.external.sbliveSchoolId, t.slug).toMatch(/^\d+$/);
+    expect(['westview', 'del-norte', 'southwest', 'mission-vista'].map((slug) => getTeamBySlug(slug)!.external.sbliveTeamId))
+      .toEqual(['458949', '458937', '459138', '464852']);
     // The six EAL teams carry si.com team ids, slugs and school ids (never their JV/FR ids).
     expect(teamsInLeague('eal').map((t) => [t.slug, t.external.sbliveTeamId, t.external.sbliveSchoolId])).toEqual([
       ['bella-vista', '459060', '12991'],

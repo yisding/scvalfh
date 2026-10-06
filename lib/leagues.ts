@@ -1,7 +1,8 @@
 /**
- * League configuration: every section, league, division, rule, tiebreak chain, citation, ladder,
- * pairing, phase, date and official source (SPEC §2). Nothing else in the codebase names a league,
- * a division or a by-law; teams live in lib/registry/* and are assembled by lib/teams.ts.
+ * League configuration: every region, section, league, division, rule, tiebreak chain, citation, ladder,
+ * pairing, phase, date and official source (SPEC §2; the Southern California amendment, DESIGN-socal §2.1).
+ * Nothing else in the codebase names a league, a division or a by-law; teams live in lib/registry/* and
+ * are assembled by lib/teams.ts.
  *
  * Pure data plus small helpers: no fs, no lib/data import, no snapshot. `assertLeagues()` runs at
  * module load and throws `lib/leagues.ts: <message>` on any violated invariant (SPEC §2.4).
@@ -9,27 +10,64 @@
 
 import type {
   CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
-  PlayoffStatus, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  PlayoffStatus, RegionId, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
 // The runtime imports are two leaves: lib/season.ts (dependency-free constants) and
 // lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
-import { DATE_PATTERN } from './schema-primitives';
+import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 
 // ---------- shape (SPEC §2.1) ----------
 
+/**
+ * One half of the site's NorCal/SoCal toggle (DESIGN-socal §2.1.1, §2.4). A region is a set of sections;
+ * a league's region is its section's, and nothing stores it (the snapshot derives it from config). The
+ * ids are reserved route segments (RESERVED_SEGMENTS) and never a section, league or division id, so a
+ * `#socal` anchor or a `data-region-scope="socal"` value can never be read as a league.
+ */
+export interface RegionConfig {
+  id: RegionId;
+  /** 'Northern California' | 'Southern California': headings and the live-region sentence. */
+  name: 'Northern California' | 'Southern California';
+  /** 'NorCal' | 'SoCal': the two buttons of the region switcher. */
+  shortName: 'NorCal' | 'SoCal';
+}
+
 export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
-  shortName: 'CCS' | 'NCS' | 'NS';
+  shortName: 'CCS' | 'NCS' | 'NS' | 'SS' | 'SDS';
   /**
    * The section in a parenthesis after its leagues in short copy (SITE_DESCRIPTION): 'CCS', 'NCS',
-   * and 'Northern Section' in full, because no reader knows the Northern Section as "NS".
+   * and 'Northern Section', 'Southern Section' and 'San Diego Section' in full, because no reader knows
+   * those three by their initials.
    */
   briefLabel: string;
+  /** The NorCal/SoCal half of the site this section's leagues sit in (DESIGN-socal §2.1.1). */
+  region: RegionId;
   maxprepsSectionId: string;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
+  /**
+   * The document the section's field hockey rules are in, for copy that names it (/about, the footer):
+   * the CCS bylaws, the Northern Section's Guidelines, the Southern Section's Blue Book Article 200, the San
+   * Diego Section's Green Book Bylaw 2000.1. `format` is the link's parenthesis ('PDF', 'Google Doc', 'web
+   * page'), so no reader writes "(PDF)" after a Google Doc. Replaces the `${section.name} Field Hockey
+   * Guidelines` template, which named a document only the Northern Section has.
+   */
+  rulesSource: { name: string; url: string; format: 'PDF' | 'Google Doc' | 'web page' };
+  /**
+   * How the section ends a level varsity game when it is not settled in overtime, or null when no section
+   * rule does (the game may end level). Set where a level final that MaxPreps marks W and L is a shootout
+   * win, decider 'SO' (lib/normalize.ts): the Northern Section (one 10-minute sudden-victory period, then
+   * 1 v 1s: NS Guidelines §VII.E.4) and the San Diego Section (a 10-minute 7 v 7 sudden-victory period,
+   * then 1 v 1 shootouts, the winner credited one goal: SDFHOA 2026 Mercy & Overtime Procedures; MaxPreps
+   * nonetheless records many such wins as a level score marked W and L, e.g. Mt. Carmel 0-0 Poway, Sep 11).
+   * Keyed on the section, not the league, because the San Diego rule covers games between its three
+   * conferences too. `words` is the noun phrase copy prints ('won on {words}'), `citation` the source.
+   * assertLeagues: set exactly when every league of the section has `leagueOvertime` 'shootout'.
+   */
+  shootout: { words: string; citation: string } | null;
   /** Inclusive local dates the cron expects data in (the fetch season-window guard is their union). */
   seasonWindow: { start: string; end: string };
   /** An NCS-style reader note, shown wherever a reader would otherwise look for a section bracket; null where the section holds the postseason. */
@@ -43,16 +81,35 @@ export interface DivisionConfig {
   label: string;
   /** Extra spellings for SEARCH only ('Mount Hamilton'); never team aliases. */
   searchAliases: readonly string[];
-  maxprepsLeagueId: string;
-  /** DATA ONLY — never rendered, never written to the snapshot. PCAL's is 'Pacific Coast - Gabilan'. */
-  maxprepsName: string;
+  /**
+   * MaxPreps' league GUID for this division's table. null where MaxPreps has no table for the division
+   * (the San Diego Section's Valley, whose six teams all sit in MaxPreps' zero-GUID "no league"): then
+   * maxprepsName and maxprepsSlug are null too, maxprepsTeamCount is 0, every member is in
+   * maxprepsMissing, nothing is requested for it and the MaxPreps comparison is skipped (asserted).
+   */
+  maxprepsLeagueId: string | null;
+  /**
+   * DATA ONLY — never rendered, never written to the snapshot. PCAL's is 'Pacific Coast - Gabilan'; Metro
+   * Mesa's is MaxPreps' 'Metro- South Bay' and Metro South Bay's is 'Grossmont' (MaxPreps' table names do
+   * not follow the San Diego Section's alignment; each division's knownCause says so).
+   */
+  maxprepsName: string | null;
   /** For leagueStandingsUrl(): `${MAXPREPS_WEB}/ca/field-hockey/${SEASON_YEAR}/league/${maxprepsSlug}/?leagueid=${maxprepsLeagueId}` */
-  maxprepsSlug: string;
+  maxprepsSlug: string | null;
   /** Registry count, asserted. */
   expectedTeams: number;
-  /** Official double round robin: (expectedTeams - 1) * 2. Drives "games left". */
-  gamesPerTeam: number;
-  /** First and last official league date. */
+  /**
+   * Official double round robin: (expectedTeams - 1) * 2. Drives "games left". null only where the league
+   * has no fixed schedule (the Sunset: no league schedule is published and its teams meet 0, 1 or 2 times),
+   * so no reader may print "of N", LEFT or MAX for it; assertLeagues allows null only with classification
+   * 'contest-type' and official mode 'none'.
+   */
+  gamesPerTeam: number | null;
+  /**
+   * First and last league date. From the league's official schedule where there is one; otherwise the
+   * first league game on MaxPreps' schedules (the Sunset: Aug 18; each San Diego division: its earliest
+   * game between two members, inventory 2026-10-06) and the section's last allowed league date.
+   */
   leaguePlay: { first: string; last: string };
   /**
    * The league's own schedule document. 'live-pdf' = SCVAL PDFs parsed each run; 'bundled' =
@@ -106,15 +163,30 @@ export interface LeagueRules {
   orderBy: 'points';
   /**
    * 'table' = the league's document orders the table by points (SCVAL, BVAL, PCAL, MCAL); 'title' = it uses
-   * points only to decide the champion and this site extends the same points to the table (EAL).
+   * points only to decide the champion and this site extends the same points to the table (EAL); 'site' = no
+   * league document orders the table or awards points at all (the Sunset and the three San Diego leagues),
+   * so this site orders it by its own 3-1-0 points and every reader says so — never "as {league} rules
+   * require" (DESIGN-socal §2.1.7).
    */
-  orderScope: 'table' | 'title';
-  /** The word in notes: 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL). */
-  gamesWord: 'division' | 'league';
-  classification: 'contest-type' | 'official-fixtures';
+  orderScope: 'table' | 'title' | 'site';
   /**
-   * contestTypes that never count (either row); applies to both classifications. SCVAL: [] (byte-identity).
-   * BVAL, PCAL, MCAL: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
+   * The word in notes: 'division' (SCVAL, BVAL and the multi-division San Diego leagues) | 'league' (PCAL,
+   * MCAL, EAL, Sunset).
+   */
+  gamesWord: 'division' | 'league';
+  /**
+   * What makes a game a league game. 'contest-type' = MaxPreps' league flag (contestType 0 on either row)
+   * between two members (SCVAL, EAL, Sunset); 'official-fixtures' = a fixture in the league's own schedule
+   * (BVAL, PCAL, MCAL); 'membership' = any game between two members of one division dated inside its
+   * leaguePlay, whatever MaxPreps' flag says (the San Diego divisions: every pair of division-mates meets
+   * exactly twice on MaxPreps' schedules, a double round robin, while MaxPreps flags as few as 0 of Patrick
+   * Henry's 10). Under all three, excludeContestTypes rows never count; 'membership' needs official mode
+   * 'none' (asserted).
+   */
+  classification: 'contest-type' | 'official-fixtures' | 'membership';
+  /**
+   * contestTypes that never count (either row); applies to every classification. SCVAL: [] (byte-identity).
+   * BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
    */
   excludeContestTypes: readonly number[];
   /** Games between two members on/after this local date are postseason (MCAL '2026-10-23', EAL '2026-10-30'). */
@@ -138,9 +210,12 @@ export interface LeagueRules {
   drawNumbers: Readonly<Record<TeamSlug, number>> | null;
   /**
    * How a tied league game ends. 'sudden-victory' (SCVAL Art. IV, BVAL §1a): a 7-minute golden-goal period may
-   * decide it. 'none' (PCAL [U] §1.6.4 for double round robin, MCAL: no regular-season overtime): ties stand.
-   * 'shootout' (EAL, NS Guidelines §VII.E.4): a 10-minute sudden-victory period, then 1 v 1s to a winner; a
-   * varsity league game never ends level. D2 rule 4c (phantom tie) applies only when 'none'.
+   * decide it. 'none' (PCAL [U] §1.6.4 for double round robin, MCAL: no regular-season overtime; the Sunset:
+   * no league or Southern Section rule is published, and its games have ended level and in overtime, so each
+   * is recorded as reported): ties stand. 'shootout' (EAL, NS Guidelines §VII.E.4; the San Diego leagues,
+   * SDFHOA 2026 procedures): overtime, then a shootout to a winner; a varsity game never ends level, and the
+   * section's SectionConfig.shootout says how (asserted both ways). D2 rule 4c (phantom tie) applies only
+   * when 'none'.
    */
   leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
   /** Every string the engine prints. SCVAL's are the original BYLAW_CITATIONS, verbatim (golden-gated). */
@@ -234,6 +309,53 @@ export type PostseasonConfig =
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
       sourceUrl: string;
+    }
+  | {
+      /**
+       * The section holds no playoffs and the league no tournament (the Sunset: CIF-SS Blue Book 2026-27
+       * Bylaws 2011.1 and 3500.2). One rung [1, 99] with status 'no-postseason', so every standings row
+       * still has a status and a label; readers suppress the ladder band and line by this kind, not by an
+       * empty ladder, and a team's postseason line is `note` (never "no results").
+       */
+      kind: 'no-postseason';
+      ladder: readonly LadderRung[];
+      /** One paragraph, rendered on /playoffs#<id> and as each team's postseason line. */
+      note: string;
+      citations: { noPlayoffs: string };
+      /** The source link's words ('CIF-SS Blue Book 2026-27'), so no reader templates a document name. */
+      sourceLabel: string;
+      sourceUrl: string;
+    }
+  | {
+      /**
+       * The section's own playoffs, which no league table qualifies a team for except at one point: the San
+       * Diego Section (Green Book 2026-27 Bylaw 2000.1: Open 8, Division I 12, Division II 12, placed by the
+       * Commissioner from the Section's power rankings; a designated league champion, not co-champions, is
+       * guaranteed at least a play-in game). No bracket and no seed projection is drawn.
+       */
+      kind: 'section-playoffs';
+      name: string;                       // 'San Diego Section playoffs'
+      /** The playoffs' published dates, inclusive (Master Calendar: Nov 2–12, finals Nov 14). */
+      dates: { first: string; last: string };
+      /** The one sentence a home lead, a PostseasonCard or a team page prints for the playoffs (never 'top N'). */
+      qualificationLine: string;
+      /** The playoff divisions and their field sizes, in bracket order. */
+      divisions: readonly { name: string; teams: number }[];
+      /**
+       * Each member's 2026 playoff division, 'I' or 'II' (the Section's 2026 Divisions sheet, dated
+       * 2025-12-23). Open Division teams are drawn from Division I at the end of the regular season, so no
+       * team is 'Open' here. Keys are exactly the league's slugs: lib/teams.ts cannot be imported here, so
+       * assertLeagues checks the count and the values and tests/teams.test.ts checks the keys.
+       */
+      playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>;
+      ladder: readonly LadderRung[];
+      /** `seeding` is paraphrased: no reader may quote Bylaw 2000.1's play-in sentence (SEED_CLAIM). */
+      citations: { qualification: string; seeding: string; format: string; roundDates: string };
+      /** One paragraph, rendered wherever a reader would look for a bracket. */
+      note: string;
+      sourceLabel: string;
+      sourceUrl: string;
+      powerRankingsUrl: string;
     };
 
 /** Ordered phase steps. 'data' = SCVAL's legacy formula; 'league-play' = max(last division leaguePlay.last, last league game of the league). */
@@ -244,8 +366,19 @@ export interface LeagueConfig {
   sectionId: SectionId;
   name: string;
   shortName: string;
-  /** Plain words for the league card. */
-  region: string;
+  /**
+   * Plain words for the league card: where its schools are ('Chico, Corning, Susanville, Davis and Fair
+   * Oaks'). Was `region`, renamed when RegionId (NorCal/SoCal) arrived, so the word means one thing in
+   * league config.
+   */
+  cities: string;
+  /**
+   * Where the league's membership and division alignment come from, as the object of "comes from …" in the
+   * /teams description, which groups these into one sentence: 'its official schedule' (SCVAL, BVAL, PCAL,
+   * MCAL), 'MaxPreps’ table and league flag' (EAL), 'MaxPreps’ 2024-25 and 2025-26 Sunset tables' (Sunset),
+   * 'the CIF-SDS 2026-27 League Alignment' (the San Diego leagues).
+   */
+  alignmentSource: string;
   officialUrl: string;
   links: readonly { label: string; href: string }[];
   sblive: { leagueSlugs: readonly string[]; backfill: boolean };
@@ -256,9 +389,9 @@ export interface LeagueConfig {
   /** Grid names that are not varsity teams; their fixtures are dropped silently, logged once. */
   withdrawnNames: readonly string[];
   /**
-   * Where the league's schools are not all members of its section, one sentence saying so, rendered under the
-   * league's heading wherever its schools are listed (EAL: Davis and Bella Vista are Sac-Joaquin schools).
-   * null = every school belongs to the league's section.
+   * Where the league's membership needs a sentence of its own, rendered under the league's heading wherever
+   * its schools are listed: the EAL (Davis and Bella Vista are Sac-Joaquin schools) and the Sunset (a field
+   * hockey grouping, not the all-sports Sunset League). null = nothing to say.
    */
   membershipNote: string | null;
   divisions: readonly DivisionConfig[];
@@ -284,7 +417,11 @@ export interface DataQualityConfig {
   sbliveIgnoredTeamIds: Readonly<Record<string, string>>;
   /** Documented and asserted never requested. */
   ignoredMaxprepsLeagueIds: Readonly<Record<string, string>>;
-  /** Search "not covered" entries (exact-key matches only). */
+  /**
+   * Search "not covered" entries (exact-key matches only). `reason` is printed verbatim as a whole sentence
+   * (components/search/TeamFinder.tsx), so each is one: never 'inactive', 'withdrew', 'dropped' or
+   * 'cancelled' for a school whose only fact is that it has no games.
+   */
   notCovered: readonly { name: string; keys: readonly string[]; reason: string }[];
 }
 
@@ -308,34 +445,116 @@ export interface CcsConfig {
 
 const MP = 'https://www.maxpreps.com';
 
+/** NorCal first: it is the default view (DEFAULT_REGION) and the reading order with JavaScript off. */
+export const REGIONS = [
+  { id: 'norcal', name: 'Northern California', shortName: 'NorCal' },
+  { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
+] as const satisfies readonly RegionConfig[];
+
+/** The view a first visit gets, and the one a page renders before any stored preference is read. */
+export const DEFAULT_REGION: RegionId = 'norcal';
+
+/** [V] the CCS Field Hockey Bylaws 2026-27 (also CCS.sources.bylaws below). */
+const CCS_BYLAWS_URL = 'https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf';
+/** [V] the Northern Section Field Hockey Guidelines 2026-28 (the EAL's rules and its Super Regional). */
+const NS_GUIDELINES_URL = 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf';
+/**
+ * [V] the Field Hockey excerpt of the CIF-SS Blue Book 2026-27 (Article 200; Bylaw 2011.1 "No playoffs - See
+ * Bylaw 3500.2"), linked from https://cifss.org/sports/field-hockey/ (fetched 2026-10-06).
+ */
+const SS_BLUE_BOOK_FH_URL = 'https://cifss.org/wp-content/uploads/2026/07/Field-Hockey-2026-27-Blue-Book.pdf';
+/** [V] the CIF Southern Section's field hockey page (calendar, season preview, the Blue Book excerpt). */
+const SS_FIELD_HOCKEY_URL = 'https://cifss.org/sports/field-hockey/';
+/** [V] the CIF San Diego Section's field hockey page (2026 Divisions, League Alignment, Green Book links). */
+const SDS_FIELD_HOCKEY_URL = 'https://www.cifsds.org/sports/fh/index';
+/** [V] the CIFSDS Green Book 2026-27 ("Revised June 16, 2026"), a Google Doc; Bylaw 2000.1 is Girls Field Hockey. */
+const SDS_GREEN_BOOK_URL = 'https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit';
+/** [V] the CIFSDS 2026-27 League Alignment workbook (field hockey blocks on the CITY, NORTH COUNTY and METRO tabs). */
+const SDS_ALIGNMENT_URL = 'https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms1idHy-n1zHwq7D06o1vfoFC7_cGgaI/edit#gid=1838785864';
+/** [V] the Section's power-rankings page (it embeds the cifsdshome.org widget the Commissioner places teams from). */
+const SDS_POWER_RANKINGS_URL = 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings';
+
 export const SECTIONS = [
   {
-    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS',
+    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
     holdsFieldHockeyChampionship: true,
     officialUrl: 'https://cifccs.org/sports/fh/index',
+    rulesSource: { name: 'CCS Field Hockey Bylaws 2026-27', url: CCS_BYLAWS_URL, format: 'PDF' },
+    shootout: null,
     seasonWindow: { start: '2026-08-01', end: '2026-11-30' },
     noChampionshipNote: null,
   },
   {
-    id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS',
+    id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS', region: 'norcal',
     maxprepsSectionId: '89ae2e0f-e108-4054-9df3-329f0579f86d',
     holdsFieldHockeyChampionship: false,
     officialUrl: 'https://www.cifncs.org/',
+    // The NCS publishes no field hockey rules document of its own (MCAL's handbook holds the league rules), so
+    // its rules source is the Section's site, the page this config already links.
+    rulesSource: { name: 'CIF North Coast Section website', url: 'https://www.cifncs.org/', format: 'web page' },
+    shootout: null,
     seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
   },
   {
-    id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section',
+    id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section', region: 'norcal',
     maxprepsSectionId: '6249819d-12de-4bff-b0ab-38156006b001',
     // The "NSCIF Post Season Tournament" (the EAL's Super Regional, Oct 30-31) is on the Section's "Championship
     // Playoff Calendar": https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf
     holdsFieldHockeyChampionship: true,
     officialUrl: 'https://www.cifns.org/sports/fh/index',
+    rulesSource: { name: 'Northern Section Field Hockey Guidelines 2026-28', url: NS_GUIDELINES_URL, format: 'PDF' },
+    // §VII.E.4, varsity: one 10-minute sudden-victory period, then 1 v 1s until there is a winner.
+    shootout: {
+      words: '1 v 1s',
+      citation: 'Northern Section Field Hockey Guidelines §VII.E.4 (one 10-minute sudden-victory period, then 1 v 1s)',
+    },
     // The start matches the CCS/NCS windows. The end is OUR choice, not a Section date: one week after the Super
     // Regional's last day (Oct 31), so a late result still lands.
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
+    noChampionshipNote: null,
+  },
+  {
+    // research-cifss.md §0-§1 [V]: Blue Book 2026-27 Bylaw 2011.1 "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No
+    // playoffs - See Bylaw 3500.2)"; 3500.2 "No playoffs will be conducted by the CIF Southern Section Office
+    // when less than 20% of the membership field teams in that sport"; the 2026-27 Sports Calendar lists CIF-SS
+    // Preliminaries and Finals "N/A" and the last allowable contest Sat Oct 31; cifstate.org: no CIF regional or
+    // state championship. MaxPreps sectionId from the Southern Section field hockey hub.
+    id: 'ss', name: 'Southern Section', shortName: 'SS', briefLabel: 'Southern Section', region: 'socal',
+    maxprepsSectionId: '8e11e7d4-d3fa-4e6f-827f-652c29439d27',
+    holdsFieldHockeyChampionship: false,
+    officialUrl: SS_FIELD_HOCKEY_URL,
+    rulesSource: { name: 'CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', url: SS_BLUE_BOOK_FH_URL, format: 'PDF' },
+    // Article 200 adopts the NFHS rules and says nothing on overtime; Sunset games have ended level (Bonita 1-1
+    // Marina, Aug 18) and in overtime (Great Oak 2-1 Temecula Valley, Oct 2). No shootout rule.
+    shootout: null,
+    // The start matches the other windows. The end is OUR choice, as for the Northern Section: one week after
+    // the Section's last allowable contest (Oct 31), so a late result still lands.
+    seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
+    noChampionshipNote:
+      'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+  },
+  {
+    // research-cifsds.md §0-§5 [V]: Green Book 2026-27 Bylaw 2000.1 (Open 8, Division I 12, Division II 12);
+    // Master Calendar 2026-27 (last contest Oct 30, playoffs Nov 2–12, finals Nov 14); MaxPreps sectionId
+    // from the San Diego Section field hockey hub.
+    id: 'sds', name: 'San Diego Section', shortName: 'SDS', briefLabel: 'San Diego Section', region: 'socal',
+    maxprepsSectionId: 'bab8c451-e991-413d-93ac-ee77067952a3',
+    holdsFieldHockeyChampionship: true,
+    officialUrl: SDS_FIELD_HOCKEY_URL,
+    rulesSource: { name: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Field Hockey)', url: SDS_GREEN_BOOK_URL, format: 'Google Doc' },
+    // The Green Book leaves the procedure to the preseason minutes (an unreadable Canva bulletin); the San Diego
+    // Field Hockey Officials Association's 2026 Mercy & Overtime Procedures (PDF, sdfhoa.weebly.com) are the
+    // operative text: varsity regular season, a 10-minute 7 v 7 sudden-victory period, then a set of five 1 v 1
+    // shootouts, then sudden-victory shootouts; "a total of one goal is awarded for the winner of the set".
+    shootout: {
+      words: 'a shootout',
+      citation: 'San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures (a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal)',
+    },
+    // The start matches the other windows; the end is one week after the Nov 14 finals (OUR choice).
+    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
     noChampionshipNote: null,
   },
 ] as const satisfies readonly SectionConfig[];
@@ -343,7 +562,8 @@ export const SECTIONS = [
 const SCVAL: LeagueConfig = {
   id: 'scval', sectionId: 'ccs',
   name: 'Santa Clara Valley Athletic League', shortName: 'SCVAL',
-  region: 'Santa Clara County and San Francisco',
+  cities: 'Santa Clara County and San Francisco',
+  alignmentSource: 'its official schedule',
   officialUrl: 'https://scval.com/fallSports/Fall_index.html',
   links: [
     { label: 'SCVAL fall sports', href: 'https://scval.com/fallSports/Fall_index.html' },
@@ -451,7 +671,8 @@ const BVAL_BYLAWS = 'BVAL Field Hockey By-Laws (rev. 8/13/24)';
 const BVAL: LeagueConfig = {
   id: 'bval', sectionId: 'ccs',
   name: 'Blossom Valley Athletic League', shortName: 'BVAL',
-  region: 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
+  cities: 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
+  alignmentSource: 'its official schedule',
   officialUrl: 'https://bval.org/field-hockey/',
   links: [
     { label: 'BVAL field hockey', href: 'https://bval.org/field-hockey/' },
@@ -567,7 +788,8 @@ const PCAL_BYLAWS = 'PCAL By-laws (rev. May 2025)';
 const PCAL: LeagueConfig = {
   id: 'pcal', sectionId: 'ccs',
   name: 'Pacific Coast Athletic League', shortName: 'PCAL',
-  region: 'Monterey County and Hollister',
+  cities: 'Monterey County and Hollister',
+  alignmentSource: 'its official schedule',
   officialUrl: 'https://pcalathletics.org/field-hockey/',
   links: [
     { label: 'PCAL field hockey', href: 'https://pcalathletics.org/field-hockey/' },
@@ -666,7 +888,8 @@ const MCAL_TB = 'MCAL Tie-Breaking Criteria (rev. 3/26)';
 const MCAL: LeagueConfig = {
   id: 'mcal', sectionId: 'ncs',
   name: 'Marin County Athletic League', shortName: 'MCAL',
-  region: 'Marin County, San Francisco and Berkeley',
+  cities: 'Marin County, San Francisco and Berkeley',
+  alignmentSource: 'its official schedule',
   officialUrl: 'https://www.mcalsports.org/FieldHockey.htm',
   links: [
     { label: 'MCAL field hockey', href: 'https://www.mcalsports.org/FieldHockey.htm' },
@@ -784,15 +1007,17 @@ const MCAL: LeagueConfig = {
 };
 
 const NS_FH = 'CIF Northern Section Field Hockey Guidelines 2026-28';
+// NS_GUIDELINES_URL (above) is the same document's PDF.
 
 const EAL: LeagueConfig = {
   id: 'eal', sectionId: 'ns',
   name: 'Eastern Athletic League', shortName: 'EAL',
-  region: 'Chico, Corning, Susanville, Davis and Fair Oaks',
+  cities: 'Chico, Corning, Susanville, Davis and Fair Oaks',
+  alignmentSource: 'MaxPreps’ table and league flag',
   officialUrl: 'https://www.cifns.org/sports/fh/index',
   links: [
     { label: 'CIF Northern Section field hockey', href: 'https://www.cifns.org/sports/fh/index' },
-    { label: 'Northern Section Field Hockey Guidelines 2026-28 (PDF)', href: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf' },
+    { label: 'Northern Section Field Hockey Guidelines 2026-28 (PDF)', href: NS_GUIDELINES_URL },
   ],
   sblive: { leagueSlugs: ['4190-eastern-athletic'], backfill: true },
   officialCodes: {},
@@ -866,7 +1091,7 @@ const EAL: LeagueConfig = {
       noFurtherPath: `${NS_FH} §V and §VI (NorCal and State qualification: “Not Applicable”)`,
     },
     note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
-    sourceUrl: 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf',
+    sourceUrl: NS_GUIDELINES_URL,
   },
   phases: [
     { phase: 'regular', through: 'league-play' },
@@ -879,7 +1104,412 @@ const EAL: LeagueConfig = {
   officialChanges: null,
 };
 
-export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL];
+// ---------- Southern California (DESIGN-socal §2.1; research-cifss.md, research-cifsds.md) ----------
+//
+// No SoCal league publishes a schedule, standings or a points rule, so all four are 'site' leagues: the
+// table is this site's 3-1-0 points, and every string below says so instead of citing a league rule.
+
+/** The three citations every 'site' league shares: no league document awards points or orders the table. */
+const SITE_POINTS_CITATIONS = {
+  points: 'this site’s 3-1-0 points (the league publishes no points rule)',
+  pointsShort: 'site 3-1-0',
+  order: 'no league document orders the table; this site orders it by its own 3-1-0 points',
+} as const;
+
+const SUNSET: LeagueConfig = {
+  // A field-hockey-only grouping, NOT the all-sports Sunset League (Orange County: Huntington Beach, Edison,
+  // Fountain Valley, Marina, Los Alamitos, Newport Harbor, Corona del Mar [U]): hence the name, which the copy
+  // rules keep apart from "Sunset League" (DESIGN-socal §2.4). Membership [V]: the ten schools of MaxPreps'
+  // 2024-25 (c538c7d2-…) and 2025-26 (1ab67ce6-…) Sunset tables; no Sunset site, bylaws, schedule or standings
+  // document was found [U: not found] (research-cifss.md §2).
+  id: 'sunset', sectionId: 'ss',
+  name: 'Sunset Field Hockey League', shortName: 'Sunset',
+  cities: 'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills',
+  alignmentSource: 'MaxPreps’ 2024-25 and 2025-26 Sunset tables',
+  officialUrl: SS_FIELD_HOCKEY_URL,
+  links: [
+    { label: 'CIF Southern Section field hockey', href: SS_FIELD_HOCKEY_URL },
+    { label: 'CIF-SS Blue Book 2026-27, Field Hockey (PDF)', href: SS_BLUE_BOOK_FH_URL },
+  ],
+  // si.com's Sunset table (also on scores.cifss.org) holds eight of the ten plus two 0-0 rows (Westlake, Los
+  // Alamitos); its Chaparral and Temecula Valley sit in 4245-southwestern, harvested by name only via TEAMS.
+  sblive: { leagueSlugs: ['4249-sunset'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  withdrawnNames: [],
+  membershipNote:
+    'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+  divisions: [
+    {
+      id: 'sunset', leagueId: 'sunset', label: 'Sunset', searchAliases: ['Sunset'],
+      // MaxPreps' 2026-27 Sunset table: five rows (Great Oak, Temecula Valley, Bonita, Chaminade, Chaparral), ordered
+      // by conference winning percentage; the five Orange County schools carry the zero-GUID league this season.
+      maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297',
+      maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
+      // No fixed schedule: the 45 pairs meet {2: 9, 1: 30, 0: 6} times (inventory 2026-10-06), so no "of N".
+      expectedTeams: 10, gamesPerTeam: null,
+      // First: Bonita–Marina and Chaminade–Fountain Valley, Aug 18 (the first games between two of the ten).
+      // Last: the Section's last allowable contest, Sat Oct 31 (Blue Book Bylaw 2006; 2026-27 Sports Calendar).
+      leaguePlay: { first: '2026-08-18', last: '2026-10-31' },
+      official: {
+        mode: 'none',
+        note: 'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight, putting Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
+      },
+      // 5 rows + the 5 Orange County schools MaxPreps assigns to no league − 0 = 10.
+      maxprepsTeamCount: 5,
+      maxprepsMissing: ['edison', 'fountain-valley', 'huntington-beach', 'marina', 'newport-harbor'],
+      maxprepsExtraRows: {},
+      reportedTrust: 'informational',
+      knownCause: 'MaxPreps’ Sunset table lists five of the ten teams and orders them by winning percentage. This site orders all ten by 3-1-0 points. si.com marks more games as league games than MaxPreps does, so its Sunset records differ from ours.',
+      home: { miniRows: 10, lineAfter: null, lineLabel: null },
+      // No postseason, so no line to draw.
+      ladderLine: null,
+    },
+  ],
+  rules: {
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'league',
+    // MaxPreps' league flag between two of the ten, as for the EAL; tournament (2) and postseason (4) rows never count.
+    classification: 'contest-type', excludeContestTypes: [2, 4],
+    postseasonFrom: null, leagueGameOverrides: [],
+    matcher: 'two-phase',
+    tiebreaks: { default: ['no-rule'] },
+    // 'none' keeps D2 rule 4c (a phantom si.com 0-0 tie) and records a level game as a tie: no rule says otherwise.
+    multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'none',
+    citations: {
+      ...SITE_POINTS_CITATIONS,
+      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the ten that MaxPreps marks as a league game',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Sunset games have ended level and have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported.',
+      coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
+      stages: {
+        'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is',
+      },
+    },
+    coChampionsLabel: 'Sunset co-leaders',
+    unresolvedSuffix: '',
+  },
+  postseason: {
+    kind: 'no-postseason',
+    ladder: [
+      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'No section playoffs',
+        phrase: 'no postseason', badge: 'No playoffs',
+        legend: 'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)' },
+    ],
+    note: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    citations: {
+      noPlayoffs: 'CIF-SS Blue Book 2026-27, Bylaw 2011.1 (“No playoffs - See Bylaw 3500.2”) and Bylaw 3500.2 (“No playoffs will be conducted by the CIF Southern Section Office when less than 20% of the membership field teams in that sport”)',
+    },
+    sourceLabel: 'CIF-SS Blue Book 2026-27',
+    sourceUrl: SS_BLUE_BOOK_FH_URL,
+  },
+  phases: [{ phase: 'regular', through: 'league-play' }],
+  keyDates: [{ id: 'last-contest', date: '2026-10-31', label: 'Last allowable Southern Section contest' }],
+  officialChanges: null,
+};
+
+/** Every San Diego division's official note (DESIGN-socal §2.1.6, verbatim). */
+const SDS_OFFICIAL_NOTE =
+  'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; every pair of members meets twice, and this site counts both games as league games whether or not MaxPreps marks them as league games.';
+
+const SDS_LINKS: LeagueConfig['links'] = [
+  { label: 'CIF San Diego Section field hockey', href: SDS_FIELD_HOCKEY_URL },
+  { label: 'CIF-SDS 2026-27 League Alignment (Google Sheet)', href: SDS_ALIGNMENT_URL },
+  { label: 'CIF-SDS Green Book 2026-27 (Google Doc)', href: SDS_GREEN_BOOK_URL },
+];
+
+/** The one official mode every San Diego division has (a fresh object each call, so tests can mutate one). */
+function sdsOfficial(): DivisionConfig['official'] {
+  return { mode: 'none', note: SDS_OFFICIAL_NOTE };
+}
+
+/**
+ * A San Diego league's rules (City, North County, Metro: one Section rule for all three). 'membership': every
+ * pair of division-mates meets exactly twice on MaxPreps' schedules (contestType 2 and 4 left out), a double
+ * round robin, while MaxPreps flags as few as 0 of Patrick Henry's 10 as league games (inventory 2026-10-06).
+ */
+function sdsRules(shortName: string): LeagueRules {
+  return {
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'division',
+    classification: 'membership', excludeContestTypes: [2, 4],
+    // The playoffs open with the play-ins on Mon Nov 2 (SDFHOA calendar); the Master Calendar's last contest is Oct 30.
+    postseasonFrom: '2026-11-02', leagueGameOverrides: [],
+    matcher: 'two-phase',
+    tiebreaks: { default: ['no-rule'] },
+    multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',
+    citations: {
+      ...SITE_POINTS_CITATIONS,
+      doubleRoundRobin: 'every pair of members meets twice (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment); the league publishes no schedule',
+      overtime: 'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
+      // Paraphrased: the Green Book's own words name the champion an "automatic qualifier", a phrase no
+      // non-CCS page may print (scripts/assert-copy.ts forbidCcs).
+      coChampions: 'the league designates its champion (CIF-SDS Green Book: with a tie for first place, the league designates which team goes forward); this table shows teams level on points as level',
+      stages: {
+        'no-rule': 'The CIF-SDS Green Book (Bylaw 2000.1, special rule 3) leaves the tiebreak procedure to the Section’s preseason minutes, which we could not read, so this tie is left as it is',
+      },
+    },
+    coChampionsLabel: `${shortName} co-leaders`,
+    unresolvedSuffix: '',
+  };
+}
+
+/**
+ * The San Diego Section playoffs, as one league's postseason (a fresh object per league). Green Book 2026-27
+ * Bylaw 2000.1 [V]; Master Calendar 2026-27 [V]; per-round dates and the finals site [V] only on the San Diego
+ * Field Hockey Officials Association's calendar (sdfhoa.weebly.com), which `citations.roundDates` says.
+ */
+function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>): PostseasonConfig {
+  return {
+    kind: 'section-playoffs',
+    name: 'San Diego Section playoffs',
+    dates: { first: '2026-11-02', last: '2026-11-14' },
+    qualificationLine: 'San Diego Section playoffs, Nov 2–14 (finals Nov 14 at La Jolla HS): Open 8, Division I 12, Division II 12, placed by the Section from its power rankings; a designated league champion gets at least a play-in.',
+    divisions: [{ name: 'Open', teams: 8 }, { name: 'Division I', teams: 12 }, { name: 'Division II', teams: 12 }],
+    playoffDivisionOf,
+    ladder: [
+      { divisions: '*', places: [1, 1], status: 'tournament', label: 'League champion: at least a play-in',
+        phrase: 'at least a play-in as league champion', badge: '1st',
+        legend: '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not.' },
+      { divisions: '*', places: [2, 99], status: 'selection', label: 'No league route',
+        phrase: 'no league route into the playoffs', badge: 'Selection only',
+        legend: '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)' },
+    ],
+    citations: {
+      qualification: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (“There will be 3 competitive divisions with 8 teams in the Open Division and 12 teams in Divisions I and II qualifying for the playoffs. Designated league champions (not co-champions or tri-champions) will be guaranteed entry into a play-in game in the CIFSDS playoffs.”)',
+      // Paraphrased on purpose: the bylaw's play-in sentence names a seed position, which SEED_CLAIM bans.
+      seeding: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (the Commissioner places teams from the Section’s approved power rankings, with input from the coaches’ advisory committee, and there is no appeal; a designated league champion left out of its division’s bracket hosts a play-in game) and the Green Book’s division-placement bylaw (the eight Open Division teams are drawn from Division I at the end of the regular season)',
+      format: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Open 8, Division I 12, Division II 12) and the CIF-SDS 2026-27 Master Calendar (playoffs Nov 2–12, finals Nov 14)',
+      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+    },
+    note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section places teams from its power rankings at its Oct 31 seeding meeting; until it publishes its brackets, this site draws none and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
+    sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',
+    sourceUrl: SDS_GREEN_BOOK_URL,
+    powerRankingsUrl: SDS_POWER_RANKINGS_URL,
+  };
+}
+
+/** The San Diego leagues' phases: the Section playoffs end with the Nov 14 finals. */
+function sdsPhases(): readonly PhaseStep[] {
+  return [
+    { phase: 'regular', through: 'league-play' },
+    { phase: 'tournament', through: '2026-11-14' },
+  ];
+}
+
+/**
+ * The San Diego leagues' dated events. Oct 30 is the Master Calendar's last contest (the SDFHOA calendar ends
+ * the regular season Oct 29; the Section's date wins, docs/LEAGUE-RULES.md records the conflict). The seeding
+ * meeting is the advisory calendar's (Oct 31, 10 AM, Zoom); the play-ins and the finals site are SDFHOA's.
+ */
+function sdsKeyDates(): LeagueConfig['keyDates'] {
+  return [
+    { id: 'league-play-ends', date: '2026-10-30', label: 'Last day of the San Diego Section regular season' },
+    { id: 'seeding-meeting', date: '2026-10-31', label: 'Section seeding meeting' },
+    { id: 'play-in', date: '2026-11-02', label: 'Section play-in games (only if needed)' },
+    { id: 'finals', date: '2026-11-14', label: 'Section finals at La Jolla HS' },
+  ];
+}
+
+/** San Diego leaguePlay.last: the Master Calendar's last contest, Oct 30, for every division. */
+const SDS_LEAGUE_PLAY_LAST = '2026-10-30';
+
+// Each division's leaguePlay.first is its earliest game between two members, neither row contestType 2 or 4,
+// not deleted, on MaxPreps' 2026-27 schedules (inventory/schedules, harvested 2026-10-06 ~00:05 UTC).
+
+const CITY: LeagueConfig = {
+  // The City Conference's two field hockey leagues, "WESTERN" and "EASTERN" on the CITY tab of the League
+  // Alignment ("LAST UPDATE: September 10, 2026") [V].
+  id: 'city', sectionId: 'sds',
+  name: 'City Conference', shortName: 'City',
+  cities: 'San Diego and La Jolla',
+  alignmentSource: 'the CIF-SDS 2026-27 League Alignment',
+  officialUrl: SDS_FIELD_HOCKEY_URL,
+  links: SDS_LINKS,
+  sblive: { leagueSlugs: ['4179-city-western', '4178-city-eastern'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  // Madison is MaxPreps' 0-0-0 City - Eastern row (fef1da70-…): no 2026 varsity game on MaxPreps or in the
+  // Section's power rankings, and not in the alignment's field hockey block. Spellings from MaxPreps and si.com.
+  withdrawnNames: ['Madison', 'MADISON', 'Madison High School', 'Madison Warhawks'],
+  membershipNote: null,
+  divisions: [
+    {
+      id: 'city-western', leagueId: 'city', label: 'City Western', searchAliases: [],
+      maxprepsLeagueId: '35dc98fe-887a-475b-992c-0edfe7fc4c58',
+      maxprepsName: 'City - Western', maxprepsSlug: 'city--western',
+      expectedTeams: 6, gamesPerTeam: 10,
+      // Scripps Ranch v La Jolla, Sep 1.
+      leaguePlay: { first: '2026-09-01', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      maxprepsTeamCount: 6, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
+      knownCause: 'MaxPreps counts Mission Bay’s five games against City Eastern teams as league games; the alignment puts Mission Bay in City Western, so they count in neither table here.',
+      home: { miniRows: 6, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+    {
+      id: 'city-eastern', leagueId: 'city', label: 'City Eastern', searchAliases: [],
+      maxprepsLeagueId: '6f9a29a0-78af-4d30-a087-cfa9feb91b89',
+      maxprepsName: 'City - Eastern', maxprepsSlug: 'city--eastern',
+      expectedTeams: 6, gamesPerTeam: 10,
+      // La Jolla Country Day v Mira Mesa, Sep 15.
+      leaguePlay: { first: '2026-09-15', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      // 6 rows (Madison's included) + Patrick Henry − Madison = 6.
+      maxprepsTeamCount: 6, maxprepsMissing: ['patrick-henry'],
+      maxprepsExtraRows: {
+        'fef1da70-bea2-4958-a60b-9962851f6a1d': 'Madison: a 0-0-0 row; Madison has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings',
+      },
+      reportedTrust: 'informational',
+      knownCause: 'MaxPreps’ table leaves out Patrick Henry and lists Madison, which has no varsity game; MaxPreps marks none of Patrick Henry’s league games as league games.',
+      home: { miniRows: 6, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+  ],
+  rules: sdsRules('City'),
+  // From the Section's 2026 Divisions sheet (research-cifsds.md §3.2, §6.1).
+  postseason: sdsPostseason({
+    bishops: 'I', 'canyon-hills': 'I', 'cathedral-catholic': 'I', 'la-jolla': 'I', 'mission-bay': 'I', 'scripps-ranch': 'I',
+    clairemont: 'I', 'la-jolla-country-day': 'I', 'mira-mesa': 'II', 'patrick-henry': 'II', 'point-loma': 'II', 'university-city': 'I',
+  }),
+  phases: sdsPhases(),
+  keyDates: sdsKeyDates(),
+  officialChanges: null,
+};
+
+const NORTH_COUNTY: LeagueConfig = {
+  // The North County Conference's three field hockey leagues, "NC AVOCADO", "NC PALOMAR" and "NC VALLEY" on the
+  // NORTH COUNTY tab ("UPDATED 9/20/26") [V]. Rancho Buena Vista is listed under both Palomar and Valley; its
+  // league games are Palomar's and MaxPreps' Palomar table lists it, so it is Palomar's here.
+  id: 'north-county', sectionId: 'sds',
+  name: 'North County Conference', shortName: 'North County',
+  cities: 'Carlsbad, Encinitas, Escondido, Fallbrook, Oceanside, Poway, San Marcos, Valley Center, Vista and north San Diego',
+  alignmentSource: 'the CIF-SDS 2026-27 League Alignment',
+  officialUrl: SDS_FIELD_HOCKEY_URL,
+  links: SDS_LINKS,
+  // si.com's buckets are stale (the Valley six are spread across avocado-east, avocado-west and palomar):
+  // harvested for team pages only, never membership.
+  sblive: { leagueSlugs: ['4170-avocado-east', '4171-avocado-west', '4234-palomar'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  withdrawnNames: [],
+  membershipNote: null,
+  divisions: [
+    {
+      id: 'avocado', leagueId: 'north-county', label: 'Avocado', searchAliases: [],
+      maxprepsLeagueId: '75ed156b-09c9-4a0c-ac58-11a371443815',
+      maxprepsName: 'Avocado', maxprepsSlug: 'avocado',
+      expectedTeams: 6, gamesPerTeam: 10,
+      // Rancho Bernardo v La Costa Canyon, Sep 28.
+      leaguePlay: { first: '2026-09-28', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      // 4 rows + Mt. Carmel and Rancho Bernardo (zero-GUID league on MaxPreps) = 6.
+      maxprepsTeamCount: 4, maxprepsMissing: ['mt-carmel', 'rancho-bernardo'], maxprepsExtraRows: {},
+      reportedTrust: 'informational',
+      knownCause: 'MaxPreps’ Avocado table leaves out Mt. Carmel and Rancho Bernardo, and MaxPreps marks only some games between Avocado teams as league games, so its records differ from ours.',
+      home: { miniRows: 6, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+    {
+      id: 'palomar', leagueId: 'north-county', label: 'Palomar', searchAliases: [],
+      maxprepsLeagueId: 'e4a7e9c3-986b-446f-8547-8348be95e282',
+      maxprepsName: 'Palomar', maxprepsSlug: 'palomar',
+      expectedTeams: 7, gamesPerTeam: 12,
+      // Del Norte v Rancho Buena Vista, Sep 9.
+      leaguePlay: { first: '2026-09-09', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      maxprepsTeamCount: 7, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
+      knownCause: 'The alignment sheet also lists Rancho Buena Vista under Valley; its league games are against Palomar teams.',
+      home: { miniRows: 7, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+    {
+      // MaxPreps has no Valley table: all six teams carry its zero-GUID league. Nothing is requested for it and
+      // the MaxPreps comparison is skipped ("MaxPreps publishes no table for this division"), so no knownCause.
+      id: 'valley', leagueId: 'north-county', label: 'Valley', searchAliases: [],
+      maxprepsLeagueId: null, maxprepsName: null, maxprepsSlug: null,
+      expectedTeams: 6, gamesPerTeam: 10,
+      // Escondido v Sage Creek, Sep 28 (both rows contestType 1: MaxPreps flags few Valley games).
+      leaguePlay: { first: '2026-09-28', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      maxprepsTeamCount: 0,
+      maxprepsMissing: ['escondido', 'mission-hills', 'sage-creek', 'san-pasqual', 'vista', 'westview'],
+      maxprepsExtraRows: {}, reportedTrust: 'informational', knownCause: null,
+      home: { miniRows: 6, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+  ],
+  rules: sdsRules('North County'),
+  postseason: sdsPostseason({
+    'canyon-crest-academy': 'I', 'la-costa-canyon': 'I', 'mt-carmel': 'I', 'rancho-bernardo': 'I', 'san-marcos': 'I', 'torrey-pines': 'I',
+    'del-norte': 'I', fallbrook: 'I', 'mission-vista': 'II', poway: 'I', 'rancho-buena-vista': 'II', 'san-dieguito-academy': 'I', 'valley-center': 'II',
+    escondido: 'II', 'mission-hills': 'II', 'sage-creek': 'II', 'san-pasqual': 'II', vista: 'II', westview: 'II',
+  }),
+  phases: sdsPhases(),
+  keyDates: sdsKeyDates(),
+  officialChanges: null,
+};
+
+const METRO: LeagueConfig = {
+  // The Metro Conference's two field hockey leagues, "MESA" and "SOUTH BAY" on the METRO tab [V] (the GROSSMONT
+  // tab notes that El Capitan, Helix and Granite Hills play field hockey in the Metro Conference).
+  id: 'metro', sectionId: 'sds',
+  name: 'Metro Conference', shortName: 'Metro',
+  cities: 'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego',
+  alignmentSource: 'the CIF-SDS 2026-27 League Alignment',
+  officialUrl: SDS_FIELD_HOCKEY_URL,
+  links: SDS_LINKS,
+  sblive: { leagueSlugs: ['4214-metro-mesa', '4199-grossmont'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  // Santana is the 0-0-0 row of MaxPreps' "Grossmont" table (1125d6e8-…): no 2026 varsity game on MaxPreps or in
+  // the Section's power rankings. Spellings from MaxPreps and si.com.
+  withdrawnNames: ['Santana', 'SANTANA', 'Santana High School', 'Santana Sultans'],
+  membershipNote: null,
+  divisions: [
+    {
+      id: 'metro-mesa', leagueId: 'metro', label: 'Metro Mesa', searchAliases: [],
+      // MaxPreps' "Metro- South Bay" table holds exactly the five Metro Mesa teams.
+      maxprepsLeagueId: '6dfe5a12-b82f-45d7-b103-71a5c13c0093',
+      maxprepsName: 'Metro- South Bay', maxprepsSlug: 'metro-south-bay',
+      expectedTeams: 5, gamesPerTeam: 8,
+      // Olympian v Otay Ranch, Sep 28.
+      leaguePlay: { first: '2026-09-28', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      maxprepsTeamCount: 5, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
+      knownCause: 'MaxPreps files these five teams under ‘Metro- South Bay’.',
+      home: { miniRows: 5, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+    {
+      id: 'metro-south-bay', leagueId: 'metro', label: 'Metro South Bay', searchAliases: [],
+      // MaxPreps' "Grossmont" table: El Capitan, Granite Hills and Santana.
+      maxprepsLeagueId: 'ca8e2856-b13d-4aa7-8c15-37cb50a55c60',
+      maxprepsName: 'Grossmont', maxprepsSlug: 'grossmont',
+      expectedTeams: 4, gamesPerTeam: 6,
+      // Hilltop v Southwest, Oct 7.
+      leaguePlay: { first: '2026-10-07', last: SDS_LEAGUE_PLAY_LAST },
+      official: sdsOfficial(),
+      // 3 rows + Hilltop and Southwest − Santana = 4.
+      maxprepsTeamCount: 3, maxprepsMissing: ['hilltop', 'southwest'],
+      maxprepsExtraRows: {
+        '1125d6e8-e661-4190-a41d-5722364dee38': 'Santana: a 0-0-0 row; Santana has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings',
+      },
+      reportedTrust: 'informational',
+      knownCause: 'MaxPreps files El Capitan and Granite Hills under ‘Grossmont’ with Santana, which has no varsity game, and lists no league for Hilltop or Southwest.',
+      home: { miniRows: 4, lineAfter: null, lineLabel: null },
+      ladderLine: { after: 1, label: 'Champion line' },
+    },
+  ],
+  rules: sdsRules('Metro'),
+  postseason: sdsPostseason({
+    'bonita-vista': 'II', eastlake: 'I', helix: 'II', olympian: 'II', 'otay-ranch': 'II',
+    'el-capitan': 'II', 'granite-hills': 'II', hilltop: 'II', southwest: 'II',
+  }),
+  phases: sdsPhases(),
+  keyDates: sdsKeyDates(),
+  officialChanges: null,
+};
+
+/** Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues). */
+export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO];
 
 /** The CCS section block (section data, not league data). */
 export const CCS: CcsConfig = {
@@ -908,7 +1538,7 @@ export const CCS: CcsConfig = {
     change: 'CCS Field Hockey Committee report 2025-11-20 §IV (PCAL reduced from 3 automatic berths to 2)',
   },
   sources: {
-    bylaws: 'https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf',
+    bylaws: CCS_BYLAWS_URL,
     index: 'https://cifccs.org/sports/fh/index',
     ical: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
   },
@@ -922,6 +1552,10 @@ export const DATA_QUALITY: DataQualityConfig = {
   excludedContestIds: {
     '5b9ff911-a640-4947-b9fd-8a629e775b33': 'Tamalpais vs the Del Norte (Crescent City) ghost; duplicates a05bedf5 (Tamalpais vs Del Norte, San Diego)',
     '5cf5e3df-6e72-4f44-9b8d-e69da30b85c5': 'Archie Williams at Marin Academy, Aug 18: not on the official MCAL schedule; a spurious unscored row',
+    // Two duplicate Palomar rows (inventory 2026-10-06): each sits on a date with no time, and the pair already has
+    // its two meetings, so counting either would add a third game and a false "league result missing" row.
+    'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a second MaxPreps row for their Palomar game on Oct 13 (0b3cfb7d); the pair meets twice, and both meetings are on the schedule',
+    '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); the pair meets twice, and both meetings are on the schedule',
   },
   sbliveIgnoredTeamIds: {
     '456851': 'York (PCAL): JV only',
@@ -938,11 +1572,63 @@ export const DATA_QUALITY: DataQualityConfig = {
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
     { name: 'Wilcox', keys: ['Wilcox', 'Adrian Wilcox'], reason: 'Wilcox is not fielding a varsity team in 2026.' },
     { name: 'Red Bluff', keys: ['Red Bluff', 'Red Bluff High School', 'Red Bluff Spartans'], reason: 'Red Bluff is not fielding a varsity team in 2026.' },
+    // Southern Section schools with games but no league: each is the only field hockey team in its all-sports
+    // MaxPreps league (League B, Marmonte, Palomares) and has no league-flagged game (research-cifss.md §2a).
+    // Mascots from their si.com team slugs.
+    {
+      name: 'Harvard-Westlake', keys: ['Harvard Westlake', 'Harvard-Westlake School', 'Harvard-Westlake Wolverines'],
+      reason: 'Harvard-Westlake is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
+    },
+    {
+      name: 'Thousand Oaks', keys: ['Thousand Oaks High School', 'Thousand Oaks Lancers'],
+      reason: 'Thousand Oaks is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
+    },
+    {
+      name: 'Glendora', keys: ['Glendora High School', 'Glendora Tartans'],
+      reason: 'Glendora is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
+    },
+    // San Diego Section schools with a 2026-27 MaxPreps team and no game: Madison and Santana are 0-0-0 rows of
+    // MaxPreps tables (LEAGUES city and metro withdrawnNames); the other four carry MaxPreps' zero-GUID league.
+    // None has a game in the Section's power rankings (Castle Park is listed there with 0 points). Mascots
+    // from si.com team slugs where si.com has one (research-cifsds.md §8).
+    {
+      name: 'Madison', keys: ['Madison High School', 'Madison Warhawks'],
+      reason: 'Madison has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    {
+      name: 'Santana', keys: ['Santana High School', 'Santana Sultans'],
+      reason: 'Santana has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    {
+      name: 'Castle Park', keys: ['Castle Park High School', 'Castle Park Trojans'],
+      reason: 'Castle Park has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    {
+      name: 'Chula Vista', keys: ['Chula Vista High School', 'Chula Vista Spartans'],
+      reason: 'Chula Vista has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    {
+      name: 'Montgomery', keys: ['Montgomery High School'],
+      reason: 'Montgomery has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    {
+      name: 'Sweetwater', keys: ['Sweetwater High School'],
+      reason: 'Sweetwater has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    // MaxPreps' one-team "Suburban" league; not on the Southern Section's 2026-27 list of participating schools
+    // (the Season Preview, June 2026).
+    { name: 'Mayfair', keys: ['Mayfair High School'], reason: 'Mayfair has no 2026 varsity game on MaxPreps and is not on the Southern Section’s list of participating schools.' },
   ],
 };
 
-/** Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league], /playoffs/[league]). */
-export const RESERVED_SEGMENTS = ['opengraph-image', 'twitter-image', 'icon', 'apple-icon', 'sitemap', 'robots', 'manifest'] as const;
+/**
+ * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
+ * /playoffs/[league]), plus the two region ids: 'norcal' and 'socal' are page anchors and `data-region-scope`
+ * values (DESIGN-socal §2.4), so no section, league or division may take one (asserted).
+ */
+export const RESERVED_SEGMENTS = [
+  'opengraph-image', 'twitter-image', 'icon', 'apple-icon', 'sitemap', 'robots', 'manifest', 'norcal', 'socal',
+] as const;
 
 // ---------- helpers (the Stage-A API, SPEC §2.3) ----------
 
@@ -966,9 +1652,42 @@ export const UNBRACKETED_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
   (l) => l.postseason.kind === 'unbracketed-tournament',
 ).map((l) => l.id);
 
+/** Leagues with no postseason at all (['sunset']): /playoffs gives each a card of its own. */
+export const NO_POSTSEASON_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
+  (l) => l.postseason.kind === 'no-postseason',
+).map((l) => l.id);
+
+/** Leagues whose postseason is their section's own playoffs (['city', 'north-county', 'metro']). */
+export const SECTION_PLAYOFFS_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
+  (l) => l.postseason.kind === 'section-playoffs',
+).map((l) => l.id);
+
+const REGION_BY_ID = new Map<string, RegionConfig>(REGIONS.map((r) => [r.id, r]));
 const SECTION_BY_ID = new Map<string, SectionConfig>(SECTIONS.map((s) => [s.id, s]));
 const LEAGUE_BY_ID = new Map<string, LeagueConfig>(LEAGUES.map((l) => [l.id, l]));
 const DIVISION_BY_ID = new Map<string, DivisionConfig>(ALL_DIVISIONS.map((d) => [d.id, d]));
+
+/** Throws on an unknown id. */
+export function getRegion(id: RegionId): RegionConfig {
+  const r = REGION_BY_ID.get(id);
+  if (!r) throw new Error(`lib/leagues.ts: unknown region "${id}"`);
+  return r;
+}
+
+/** A league's region: its section's (never stored). Throws on an unknown league. */
+export function regionOf(leagueId: LeagueId): RegionId {
+  return sectionOf(leagueId).region;
+}
+
+/** The region's sections, config order. */
+export function sectionsInRegion(region: RegionId): readonly SectionConfig[] {
+  return SECTIONS.filter((s) => s.region === region);
+}
+
+/** The region's leagues, config order (LEAGUES lists NorCal first, so each region is one contiguous run). */
+export function leaguesInRegion(region: RegionId): readonly LeagueConfig[] {
+  return LEAGUES.filter((l) => regionOf(l.id) === region);
+}
 
 /** Throws on an unknown id. */
 export function getSection(id: SectionId): SectionConfig {
@@ -1039,10 +1758,12 @@ export function divisionDisplay(id: DivisionId): string {
 
 /**
  * MaxPreps league standings page — the deep link on every standings table. The double hyphen in
- * the slug is the league name's " - " joiner; dropping ?leagueid= hard-404s.
+ * the slug is the league name's " - " joiner; dropping ?leagueid= hard-404s. null for a division
+ * MaxPreps has no table for (the San Diego Section's Valley): never '/league/null/'.
  */
-export function leagueStandingsUrl(id: DivisionId): string {
+export function leagueStandingsUrl(id: DivisionId): string | null {
   const d = getDivision(id);
+  if (d.maxprepsLeagueId === null || d.maxprepsSlug === null) return null;
   return `${MP}/ca/field-hockey/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
 }
 
@@ -1122,6 +1843,8 @@ const TOURNAMENT_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffSt
   'bye', 'tournament', 'below-line',
 ]);
 const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'below-line']);
+const NO_POSTSEASON_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['no-postseason']);
+const SECTION_PLAYOFFS_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'selection']);
 const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-higher-placed', 'record-vs-lower-placed',
 ]);
@@ -1133,6 +1856,8 @@ function allowedStatuses(kind: PostseasonConfig['kind']): ReadonlySet<PlayoffSta
     case 'ccs-ladder': return CCS_LADDER_STATUSES;
     case 'league-tournament': return TOURNAMENT_LADDER_STATUSES;
     case 'unbracketed-tournament': return UNBRACKETED_STATUSES;
+    case 'no-postseason': return NO_POSTSEASON_STATUSES;
+    case 'section-playoffs': return SECTION_PLAYOFFS_STATUSES;
   }
 }
 
@@ -1157,17 +1882,45 @@ export function assertLeagues(): void {
   ];
 
   // 1. ids
+  const regionIds = REGIONS.map((r) => r.id as string);
   const sectionIds = SECTIONS.map((s) => s.id as string);
   const leagueIds = LEAGUES.map((l) => l.id);
   const divisionIds = ALL_DIVISIONS.map((d) => d.id);
   for (const [label, ids] of [
-    ['section', sectionIds], ['league', leagueIds], ['division', divisionIds],
+    ['region', regionIds], ['section', sectionIds], ['league', leagueIds], ['division', divisionIds],
   ] as const) {
     const d = dupes(ids);
     if (d.length) fail(`duplicate ${label} id: ${d.join(', ')}`);
   }
+  // A region id is a page anchor and a data-region-scope value: reserved, and never a section, league or division.
+  for (const id of regionIds) {
+    if (!(RESERVED_SEGMENTS as readonly string[]).includes(id)) fail(`region ${id} is not a reserved segment`);
+  }
+  for (const id of [...sectionIds, ...leagueIds, ...divisionIds]) {
+    if (regionIds.includes(id)) fail(`${id}: a section, league or division id may not be a region id`);
+  }
   const shortDupes = dupes(SECTIONS.map((s) => s.shortName as string));
   if (shortDupes.length) fail(`duplicate section shortName: ${shortDupes.join(', ')}`);
+  // 1b. sections: a known region each, every region used, a rules source, a well-formed shootout rule
+  for (const s of SECTIONS as readonly SectionConfig[]) {
+    if (!regionIds.includes(s.region)) fail(`${s.id}: unknown region ${s.region}`);
+    if (!s.rulesSource.name.trim()) fail(`${s.id}: rulesSource needs a name`);
+    if (!s.rulesSource.url.startsWith('https://')) fail(`${s.id}: rulesSource.url must start with https://`);
+    if (s.shootout !== null && !(s.shootout.words.trim() && s.shootout.citation.trim())) {
+      fail(`${s.id}: shootout needs words and a citation (use null for none)`);
+    }
+    // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
+    // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).
+    for (const l of LEAGUES) {
+      if (l.sectionId !== s.id) continue;
+      if ((s.shootout !== null) !== (l.rules.leagueOvertime === 'shootout')) {
+        fail(`${l.id}: leagueOvertime 'shootout' exactly when its section ${s.id} has a shootout rule`);
+      }
+    }
+  }
+  for (const id of regionIds) {
+    if (!SECTIONS.some((s) => s.region === id)) fail(`region ${id} has no section`);
+  }
   for (const l of LEAGUES) {
     if (!sectionIds.includes(l.sectionId)) fail(`${l.id}: unknown section ${l.sectionId}`);
     if ((RESERVED_SEGMENTS as readonly string[]).includes(l.id)) fail(`${l.id}: league id is a reserved route segment`);
@@ -1228,6 +1981,57 @@ export function assertLeagues(): void {
         fail(`${l.id}: an unbracketed tournament needs postseasonFrom on or before dates.first`);
       }
     }
+    // 2c. no postseason: one sentence and its source; no postseason games, so no postseasonFrom and no line
+    if (ps.kind === 'no-postseason') {
+      if (!ps.note.trim()) fail(`${l.id}: a no-postseason league needs a note`);
+      if (!ps.citations.noPlayoffs.trim()) fail(`${l.id}: empty postseason citation noPlayoffs`);
+      if (!ps.sourceLabel.trim()) fail(`${l.id}: a no-postseason league needs a sourceLabel`);
+      if (!ps.sourceUrl.startsWith('https://')) fail(`${l.id}: postseason sourceUrl must start with https://`);
+      if (l.rules.postseasonFrom !== null) fail(`${l.id}: a no-postseason league has no postseasonFrom`);
+      for (const d of l.divisions) {
+        if (d.ladderLine !== null || d.home.lineAfter !== null) fail(`${d.id}: a no-postseason league draws no ladder or home line`);
+      }
+    }
+    // 2d. section playoffs: only 1st has a league route ('tournament', the designated champion's play-in), every
+    // other place is 'selection'; the field, the dates after league play, each member's playoff division
+    if (ps.kind === 'section-playoffs') {
+      for (const rung of ps.ladder) {
+        const champion = rung.places[0] === 1 && rung.places[1] === 1;
+        if ((rung.status === 'tournament') !== champion) {
+          fail(`${l.id}: ladder rung [${rung.places[0]}, ${rung.places[1]}] is ${rung.status}, but only place 1 (and only it) is 'tournament'`);
+        }
+      }
+      for (const [key, text] of [
+        ['name', ps.name], ['note', ps.note], ['qualificationLine', ps.qualificationLine], ['sourceLabel', ps.sourceLabel],
+      ] as const) {
+        if (!text.trim()) fail(`${l.id}: section playoffs need a ${key}`);
+      }
+      for (const [key, text] of Object.entries(ps.citations)) {
+        if (!text.trim()) fail(`${l.id}: empty postseason citation ${key}`);
+      }
+      for (const url of [ps.sourceUrl, ps.powerRankingsUrl]) {
+        if (!url.startsWith('https://')) fail(`${l.id}: postseason sourceUrl and powerRankingsUrl must start with https://`);
+      }
+      if (ps.divisions.length === 0) fail(`${l.id}: section playoffs need their divisions`);
+      for (const d of ps.divisions) {
+        if (!d.name.trim() || !(Number.isInteger(d.teams) && d.teams >= 1)) fail(`${l.id}: bad playoff division ${d.name}`);
+      }
+      if (ps.dates.first > ps.dates.last) fail(`${l.id}: postseason dates.first after dates.last`);
+      for (const d of l.divisions) {
+        if (!(ps.dates.first > d.leaguePlay.last)) fail(`${d.id}: postseason dates.first is not after leaguePlay.last`);
+      }
+      if (l.rules.postseasonFrom === null || !(l.rules.postseasonFrom <= ps.dates.first)) {
+        fail(`${l.id}: section playoffs need postseasonFrom on or before dates.first`);
+      }
+      // Shape only: lib/teams.ts asserts the keys are exactly the league's slugs (this module never reads the registry).
+      const entries = Object.entries(ps.playoffDivisionOf);
+      const total = l.divisions.reduce((n, d) => n + d.expectedTeams, 0);
+      if (entries.length !== total) fail(`${l.id}: ${entries.length} playoff divisions for ${total} teams`);
+      for (const [slug, div] of entries) {
+        if (!SLUG_PATTERN.test(slug)) fail(`${l.id}: playoffDivisionOf key ${slug} is not a slug`);
+        if (div !== 'I' && div !== 'II') fail(`${l.id}: playoffDivisionOf ${slug} is ${String(div)}, not I or II`);
+      }
+    }
 
     for (const div of ownDivisions) {
       const covered = new Array<number>(100).fill(0);
@@ -1285,9 +2089,10 @@ export function assertLeagues(): void {
       if (!rules.unresolvedSuffix) fail(`${l.id}: a league tournament needs an unresolvedSuffix`);
     }
     if (rules.excludeContestTypes.includes(0)) fail(`${l.id}: excludeContestTypes may not contain 0 (the league flag)`);
-    // 'shootout' is built only for contest-type classification (no official fixtures to match level games against).
-    if (rules.leagueOvertime === 'shootout' && rules.classification !== 'contest-type') {
-      fail(`${l.id}: leagueOvertime 'shootout' needs classification 'contest-type'`);
+    // 'shootout' is built only where no official fixtures decide what counts (none to match level games against):
+    // MaxPreps' league flag (EAL) or division membership (the San Diego leagues).
+    if (rules.leagueOvertime === 'shootout' && rules.classification === 'official-fixtures') {
+      fail(`${l.id}: leagueOvertime 'shootout' needs classification 'contest-type' or 'membership'`);
     }
 
     // 5. draw numbers
@@ -1322,23 +2127,31 @@ export function assertLeagues(): void {
       }
     };
     for (const d of l.divisions) {
-      if (d.gamesPerTeam !== (d.expectedTeams - 1) * 2) fail(`${d.id}: gamesPerTeam ${d.gamesPerTeam}`);
+      // A double round robin, or (null) no fixed schedule at all: only where MaxPreps' flag alone says what counts.
+      if (d.gamesPerTeam === null) {
+        if (!(rules.classification === 'contest-type' && d.official.mode === 'none')) {
+          fail(`${d.id}: gamesPerTeam null needs classification 'contest-type' and official mode 'none'`);
+        }
+      } else if (d.gamesPerTeam !== (d.expectedTeams - 1) * 2) fail(`${d.id}: gamesPerTeam ${d.gamesPerTeam}`);
       if (d.leaguePlay.first > d.leaguePlay.last) fail(`${d.id}: leaguePlay first after last`);
       if (rules.postseasonFrom !== null && !(d.leaguePlay.last < rules.postseasonFrom)) {
         fail(`${d.id}: leaguePlay.last is not before postseasonFrom`);
       }
       inWindow(d.leaguePlay.first, `${d.id} leaguePlay.first`);
       inWindow(d.leaguePlay.last, `${d.id} leaguePlay.last`);
-      // 10. official sources: bundled ones name their file, URL and hash; 'none' only on a contest-type league
-      // (so an official-fixtures league never has a 'none' division)
+      // 10. official sources: bundled ones name their file, URL and hash; 'none' only on a contest-type or a
+      // membership league (so an official-fixtures league never has a 'none' division), and a membership league
+      // only with 'none' (a league with fixtures classifies by them)
       if (d.official.mode === 'bundled' && !(d.official.bundledFile && d.official.revisionCheckUrl && d.official.bundledSha256)) {
         fail(`${d.id}: a bundled official source needs bundledFile, revisionCheckUrl and bundledSha256`);
       }
       if (d.official.mode === 'none') {
-        if (rules.classification !== 'contest-type') {
+        if (rules.classification === 'official-fixtures') {
           fail(`${d.id}: official mode 'none' on an ${rules.classification} league (no fixtures to classify by)`);
         }
         if (!d.official.note.trim()) fail(`${d.id}: official mode 'none' needs a note`);
+      } else if (rules.classification === 'membership') {
+        fail(`${d.id}: classification 'membership' needs official mode 'none'`);
       }
       // 12. home mini table and ladder line
       if (d.home.miniRows > d.expectedTeams) fail(`${d.id}: home.miniRows > expectedTeams`);
@@ -1349,11 +2162,20 @@ export function assertLeagues(): void {
         fail(`${d.id}: home.lineAfter and home.lineLabel must both be set or both be null`);
       }
       if (d.ladderLine === null) {
-        if (!(ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams)) {
-          fail(`${d.id}: ladderLine may be null only for an unbracketed tournament whose qualifiers >= expectedTeams`);
+        if (!((ps.kind === 'unbracketed-tournament' && ps.qualifiers >= d.expectedTeams) || ps.kind === 'no-postseason')) {
+          fail(`${d.id}: ladderLine may be null only for an unbracketed tournament whose qualifiers >= expectedTeams, or a league with no postseason`);
         }
       } else if (!(d.ladderLine.after < d.expectedTeams)) {
         fail(`${d.id}: ladderLine.after must be < expectedTeams`);
+      }
+      // MaxPreps' table, or (maxprepsLeagueId null) the absence of one: then nothing names it, it has no rows,
+      // and every member is one it omits (the equation below).
+      if (d.maxprepsLeagueId === null) {
+        if (d.maxprepsName !== null || d.maxprepsSlug !== null) fail(`${d.id}: maxprepsLeagueId null needs maxprepsName and maxprepsSlug null`);
+        if (d.maxprepsTeamCount !== 0) fail(`${d.id}: maxprepsLeagueId null needs maxprepsTeamCount 0`);
+      } else {
+        if (!GUID_RE.test(d.maxprepsLeagueId)) fail(`${d.id}: maxprepsLeagueId ${d.maxprepsLeagueId} is not a GUID`);
+        if (!d.maxprepsName || !d.maxprepsSlug) fail(`${d.id}: a MaxPreps table needs maxprepsName and maxprepsSlug`);
       }
       // MaxPreps' table: its rows, plus the members it omits, less its known non-member rows, are the registry.
       for (const [id, reason] of Object.entries(d.maxprepsExtraRows)) {
@@ -1378,8 +2200,11 @@ export function assertLeagues(): void {
         for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
         break;
       case 'unbracketed-tournament':
+      case 'section-playoffs':
         inWindow(ps.dates.first, `${l.id} postseason dates.first`);
         inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        break;
+      case 'no-postseason':
         break;
     }
   }

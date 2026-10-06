@@ -74,6 +74,7 @@ import type {
   Outcome,
   PlayoffProjection,
   Record3,
+  RegionId,
   SbliveCrossCheck,
   SeasonPhase,
   SectionId,
@@ -200,7 +201,10 @@ export interface LeagueSummary {
   id: LeagueId;
   name: string;
   shortName: string;
-  region: string;
+  /** NorCal or SoCal: the league's section's region (DESIGN-socal §2.1.1), for the region switcher and wrappers. */
+  region: RegionId;
+  /** Plain words for the league card ('Chico, Corning, Susanville, Davis and Fair Oaks'): LeagueConfig.cities. */
+  cities: string;
   section: { id: SectionId; name: string; shortName: SectionConfig['shortName'] };
   singleDivision: boolean;
   divisions: Array<{ id: DivisionId; label: string; heading: string | null; teamCount: number }>;
@@ -227,7 +231,8 @@ function summaryOf(league: LeagueConfig): LeagueSummary {
     id: league.id,
     name: league.name,
     shortName: league.shortName,
-    region: league.region,
+    region: section.region,
+    cities: league.cities,
     section: { id: section.id, name: section.name, shortName: section.shortName },
     singleDivision: league.divisions.length === 1,
     divisions,
@@ -243,7 +248,7 @@ export function getSections(): readonly SectionConfig[] {
   return SECTIONS;
 }
 
-/** One summary per league, config order (scval, bval, pcal, mcal, eal). */
+/** One summary per league, config order (scval, bval, pcal, mcal, eal, sunset, city, north-county, metro). */
 export function getLeagueSummaries(): LeagueSummary[] {
   return SUMMARIES;
 }

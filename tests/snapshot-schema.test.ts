@@ -14,6 +14,7 @@ import {
   parseSnapshot,
   snapshotContentHash,
 } from '../lib/snapshot-schema';
+import { TEAMS } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';
 import { game } from './game-builder';
 
@@ -69,7 +70,8 @@ function sbliveGame(over: Partial<Game> = {}): Game {
 describe('snapshot schema: accepts a real snapshot', () => {
   it('validates the migrated committed snapshot', () => {
     expect(() => parseSnapshot(baseSnapshot())).not.toThrow();
-    expect(MIGRATED.teams).toHaveLength(49);
+    expect(MIGRATED.teams).toHaveLength(TEAMS.length);
+    expect(MIGRATED.teams).toHaveLength(99);
   });
 
   it('loadSnapshot upgrades v1 and passes v2 through', () => {
@@ -175,7 +177,7 @@ describe('snapshot schema: game invariants (DESIGN §5.1)', () => {
 describe('snapshot schema: checkAgainstConfig', () => {
   it('1. names the missing team when teams do not equal the registry', () => {
     const s = baseSnapshot();
-    const broken = { ...s, teams: s.teams.slice(0, 48), counts: { ...s.counts, teams: 48 } };
+    const broken = { ...s, teams: s.teams.filter((t) => t.slug !== 'pleasant-valley'), counts: { ...s.counts, teams: s.teams.length - 1 } };
     expect(issuesOf(broken)).toMatch(/teams do not equal the registry \(missing: pleasant-valley, extra: none\)/);
   });
 
@@ -307,7 +309,7 @@ describe('snapshot schema: checkAgainstConfig', () => {
     expect(issuesOf(s)).toMatch(/a backfilled game must carry sblive scores/);
   });
 
-  it('4. an SO decider only between two members of a 1 v 1 league, level and flagged W/L when it has no tally', () => {
+  it('4. an SO decider only between two teams of a section that decides level games by shootout, level and flagged W/L when it has no tally', () => {
     const ok = baseSnapshot();
     const so = oneVOneGame();
     expect(so.countsFor).toBe('eal');
@@ -321,13 +323,25 @@ describe('snapshot schema: checkAgainstConfig', () => {
     const scval = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 1, date: '2026-09-28' });
     cases.push([
       { ...scval, home: { ...scval.home, result: 'W' }, away: { ...scval.away, result: 'L' }, decider: 'SO' },
-      /decider SO but the sides are not two members of a 1 v 1 league/,
+      /decider SO but the sides are not two teams of a section that decides level games by shootout/,
     ]);
     // An EAL team against a team of another league.
     const cross = game({ home: 'chico', away: 'tamalpais', hs: 1, as: 1, league: false });
     cases.push([
       { ...cross, home: { ...cross.home, result: 'W' }, away: { ...cross.away, result: 'L' }, decider: 'SO' },
-      /decider SO but the sides are not two members of a 1 v 1 league/,
+      /decider SO but the sides are not two teams of a section that decides level games by shootout/,
+    ]);
+    // Two Sunset teams: the Southern Section has no shootout rule (its level games stand).
+    const sunset = game({ home: 'great-oak', away: 'temecula-valley', hs: 1, as: 1, league: false, date: '2026-10-02' });
+    cases.push([
+      { ...sunset, home: { ...sunset.home, result: 'W' }, away: { ...sunset.away, result: 'L' }, decider: 'SO' },
+      /decider SO but the sides are not two teams of a section that decides level games by shootout/,
+    ]);
+    // A Sunset team against a San Diego team: two sections, so no shared rule.
+    const ssSds = game({ home: 'torrey-pines', away: 'huntington-beach', hs: 2, as: 2, league: false, date: '2026-09-18' });
+    cases.push([
+      { ...ssSds, home: { ...ssSds.home, result: 'W' }, away: { ...ssSds.away, result: 'L' }, decider: 'SO' },
+      /decider SO but the sides are not two teams of a section that decides level games by shootout/,
     ]);
     // No tally and a score that is not level.
     cases.push([oneVOneGame({ away: { ...so.away, score: 0 } }), /decider SO without a tally needs a level score flagged W\/L/]);
@@ -404,9 +418,53 @@ describe('snapshot schema: checkAgainstConfig', () => {
     expect(issuesOf(u)).toMatch(/a superseded game is still in games/);
   });
 
+  it('4. an SO decider between two San Diego teams of different conferences: the Section’s shootout rule covers them', () => {
+    // Cathedral Catholic (City) and Canyon Crest Academy (North County), Sep 22: 0-0 on MaxPreps, marked W and L.
+    const s = baseSnapshot();
+    const g = game({ home: 'cathedral-catholic', away: 'canyon-crest-academy', hs: 0, as: 0, league: false, date: '2026-09-22' });
+    expect(g.countsFor).toBeNull();
+    s.games.push({ ...g, home: { ...g.home, result: 'W' }, away: { ...g.away, result: 'L' }, decider: 'SO' });
+    s.counts.games += 1;
+    expect(() => parseSnapshot(s)).not.toThrow();
+  });
+
+  it('accepts the five sections, every postseason kind, the new statuses and the section-playoffs tag', () => {
+    const s = baseSnapshot();
+    expect(s.season.sections.map((x) => x.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+    expect(s.season.leagues.map((l) => [l.id, l.postseasonKind])).toEqual([
+      ['scval', 'ccs-ladder'], ['bval', 'ccs-ladder'], ['pcal', 'ccs-ladder'], ['mcal', 'league-tournament'],
+      ['eal', 'unbracketed-tournament'], ['sunset', 'no-postseason'], ['city', 'section-playoffs'],
+      ['north-county', 'section-playoffs'], ['metro', 'section-playoffs'],
+    ]);
+    // A division MaxPreps has no table for carries a null league id, exactly as config does.
+    const valley = s.season.leagues.find((l) => l.id === 'north-county')!.divisions.find((d) => d.id === 'valley')!;
+    expect(valley.maxprepsLeagueId).toBeNull();
+    const broken = structuredClone(s);
+    broken.season.leagues.find((l) => l.id === 'north-county')!.divisions.find((d) => d.id === 'valley')!.maxprepsLeagueId =
+      '75ed156b-09c9-4a0c-ac58-11a371443815';
+    expect(issuesOf(broken)).toMatch(/valley maxprepsLeagueId differs from config/);
+    expect(TeamSchema.safeParse(s.teams.find((t) => t.slug === 'la-jolla')).success).toBe(true);
+    expect(s.teams.find((t) => t.slug === 'edison')?.section).toBe('ss');
+    expect(PostseasonTagSchema.safeParse({ kind: 'section-playoffs', leagueId: null, via: 'section-postseason-window' }).success).toBe(true);
+    expect(PostseasonTagSchema.safeParse({ kind: 'section-playoffs', leagueId: 'city', via: 'contest-type-4' }).success).toBe(true);
+    expect(PostseasonTagSchema.safeParse({ kind: 'sds-playoffs', leagueId: null, via: 'contest-type-4' }).success).toBe(false);
+    // The two new statuses, on a row with results, must be its league's.
+    const statusOk = structuredClone(s);
+    const sunsetRow = statusOk.standings.find((r) => r.slug === 'edison')!;
+    expect(sunsetRow.playoffStatus).toBe('no-postseason');
+    sunsetRow.hasReportedResults = true;
+    expect(() => parseSnapshot(statusOk)).not.toThrow();
+    sunsetRow.playoffStatus = 'selection';
+    expect(issuesOf(statusOk)).toMatch(/edison: selection is not a sunset status/);
+    // A health row for a membership division.
+    const city = s.leagueHealth.find((h) => h.leagueId === 'city')!;
+    expect(city.divisions.map((d) => d.classification)).toEqual(['membership', 'membership']);
+    expect(LeagueHealthSchema.safeParse(city).success).toBe(true);
+  });
+
   it('accepts the third section, the unbracketed postseason kind and the league-postseason tag', () => {
     const s = baseSnapshot();
-    expect(s.season.sections.map((x) => x.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(s.season.sections.map((x) => x.id).slice(0, 3)).toEqual(['ccs', 'ncs', 'ns']);
     expect(s.season.leagues.find((l) => l.id === 'eal')?.postseasonKind).toBe('unbracketed-tournament');
     expect(SeasonSchema.safeParse(s.season).success).toBe(true);
     expect(TeamSchema.safeParse(s.teams.find((t) => t.slug === 'davis')).success).toBe(true);

@@ -38,8 +38,9 @@ describe('normalizeQuery', () => {
 });
 
 describe('buildSearchIndex', () => {
-  it('holds the 49 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
+  it('holds the 99 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
     expect(INDEX.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
+    expect(INDEX.teams).toHaveLength(99);
     const labels = new Set(
       LEAGUES.flatMap((l) => [l.shortName, l.name, ...l.divisions.flatMap((d) => [d.label, ...d.searchAliases])])
         .map((s) => normalizeQuery(s).compact),
@@ -47,7 +48,8 @@ describe('buildSearchIndex', () => {
     for (const t of INDEX.teams) {
       for (const k of t.keys.whole) expect(labels.has(k), `${t.slug}: ${k}`).toBe(false);
       for (const tok of [...t.keys.nameTokens, ...t.keys.cityTokens, ...t.keys.mascotTokens]) {
-        expect(['scval', 'bval', 'pcal', 'mcal', 'eal', 'gabilan'], `${t.slug}: ${tok}`).not.toContain(tok);
+        // 'city' and 'metro' are not in this list: 'University City' is a school's own name, not the City Conference.
+        expect(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'gabilan'], `${t.slug}: ${tok}`).not.toContain(tok);
       }
     }
     expect(INDEX.teams.find((t) => t.slug === 'leigh')!.divisionLabel).toBe('Mt. Hamilton');
@@ -59,7 +61,20 @@ describe('buildSearchIndex', () => {
       'league:scval', 'division:de-anza', 'division:el-camino',
       'league:bval', 'division:mt-hamilton', 'division:santa-teresa',
       'league:pcal', 'league:mcal', 'league:eal',
+      'league:sunset',
+      'league:city', 'division:city-western', 'division:city-eastern',
+      'league:north-county', 'division:avocado', 'division:palomar', 'division:valley',
+      'league:metro', 'division:metro-mesa', 'division:metro-south-bay',
     ]);
+    expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'sunset')).toMatchObject({
+      label: 'Sunset', detail: 'Sunset Field Hockey League · SS · 10 teams', href: '/standings/sunset',
+    });
+    expect(INDEX.groups.find((g) => g.id === 'palomar')).toMatchObject({
+      label: 'Palomar', detail: 'North County division · 7 teams', href: '/standings/north-county#palomar',
+    });
+    expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'metro')).toMatchObject({
+      label: 'Metro', detail: 'Metro Conference · SDS · 9 teams', href: '/standings/metro',
+    });
     const st = INDEX.groups.find((g) => g.id === 'santa-teresa')!;
     expect(st).toMatchObject({ label: 'Santa Teresa', detail: 'BVAL division · 6 teams', href: '/standings/bval#santa-teresa' });
     const mcal = INDEX.groups.find((g) => g.id === 'mcal')!;
@@ -95,18 +110,22 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(groupIds('santa')).toContain('division:santa-teresa');
   });
 
-  it('"Carmel" → Carmel only (score 100)', () => {
+  it('"Carmel" → Carmel first (score 100), then Mt. Carmel on a name word', () => {
     const r = searchTeams(INDEX, 'Carmel');
-    expect(r.teams.map((t) => [t.entry.slug, t.score])).toEqual([['carmel', 100]]);
+    expect(r.teams.map((t) => [t.entry.slug, t.score])).toEqual([['carmel', 100], ['mt-carmel', 70]]);
+    expect(slugs('Mt. Carmel')[0]).toBe('mt-carmel');
+    expect(slugs('Mount Carmel')[0]).toBe('mt-carmel');
   });
 
-  it('"University" → San Francisco University', () => {
+  it('"University" → San Francisco University, then University City', () => {
     expect(slugs('University')[0]).toBe('university-sf');
-    expect(slugs('university')).toEqual(['university-sf']);
+    expect(slugs('university')).toEqual(['university-sf', 'university-city']);
+    expect(slugs('University City')).toEqual(['university-city']);
   });
 
-  it('"Del Norte" → nothing', () => {
-    expect(searchTeams(INDEX, 'Del Norte')).toEqual({ teams: [], groups: [], notCovered: [] });
+  it('"Del Norte" → the San Diego school (the Crescent City ghost is MaxPreps data only)', () => {
+    expect(searchTeams(INDEX, 'Del Norte')).toMatchObject({ groups: [], notCovered: [] });
+    expect(slugs('Del Norte')).toEqual(['del-norte']);
   });
 
   it('"York" and "Wilcox" → not covered, exact keys only', () => {
@@ -179,7 +198,8 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(groupIds('marin county')).toEqual(['league:mcal']);
     expect(slugs('marin county')).toEqual([]);
     expect(groupIds('marin')).toEqual(['league:mcal']);
-    expect(slugs('marin')).toEqual(['marin-catholic', 'marin-academy']);
+    // Marina (Huntington Beach) starts with "marin" too: a whole-key prefix (80) below the two name-word matches.
+    expect(slugs('marin')).toEqual(['marin-catholic', 'marin-academy', 'marina']);
   });
 
   it('"Gabilan" → nothing at all', () => {
@@ -200,7 +220,7 @@ describe('searchTeams — §9.2 regression cases', () => {
     expect(slugs('monterey')).toEqual(['monterey', 'santa-catalina']);
   });
 
-  it('every one of the 49 names returns that team first', () => {
+  it('every one of the 99 names returns that team first', () => {
     for (const t of TEAMS) expect(slugs(t.name)[0], t.name).toBe(t.slug);
   });
 
@@ -221,5 +241,58 @@ describe('searchTeams — §9.2 regression cases', () => {
     const top = searchTeams(INDEX, 'san jose', { limit: 8 }).teams;
     expect(all.length).toBeGreaterThan(8);
     expect(top).toEqual(all.slice(0, 8));
+  });
+});
+
+describe('searchTeams — the Southern California amendment', () => {
+  it('"Harvard-Westlake", "Thousand Oaks", "Glendora" → not covered: the only team in its league', () => {
+    for (const [q, name] of [
+      ['Harvard-Westlake', 'Harvard-Westlake'], ['harvard westlake', 'Harvard-Westlake'],
+      ['Thousand Oaks', 'Thousand Oaks'], ['Thousand Oaks Lancers', 'Thousand Oaks'],
+      ['Glendora', 'Glendora'], ['glendora tartans', 'Glendora'],
+    ] as const) {
+      const r = searchTeams(INDEX, q);
+      expect(r.teams, q).toEqual([]);
+      expect(r.notCovered.map((n) => n.reason), q).toEqual([
+        `${name} is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.`,
+      ]);
+    }
+    expect(searchTeams(INDEX, 'Harvard').notCovered).toEqual([]);
+  });
+
+  it('"Madison", "Santana", "Mayfair" → not covered: no 2026 varsity game', () => {
+    expect(searchTeams(INDEX, 'Madison').notCovered.map((n) => n.reason)).toEqual([
+      'Madison has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    ]);
+    expect(searchTeams(INDEX, 'Santana Sultans').notCovered.map((n) => n.name)).toEqual(['Santana']);
+    expect(searchTeams(INDEX, 'Mayfair').notCovered.map((n) => n.reason)).toEqual([
+      'Mayfair has no 2026 varsity game on MaxPreps and is not on the Southern Section’s list of participating schools.',
+    ]);
+    for (const q of ['Madison', 'Santana', 'Mayfair', 'Castle Park', 'Montgomery', 'Sweetwater']) expect(slugs(q), q).toEqual([]);
+  });
+
+  it('"Chula Vista" → the five Chula Vista teams on city, and the note that Chula Vista High has no game', () => {
+    const r = searchTeams(INDEX, 'Chula Vista');
+    expect(r.teams.map((t) => t.entry.slug).sort()).toEqual(
+      TEAMS.filter((t) => t.city === 'Chula Vista').map((t) => t.slug).sort(),
+    );
+    expect(r.notCovered.map((n) => n.name)).toEqual(['Chula Vista']);
+  });
+
+  it('finds the SoCal leagues and divisions as groups, never as teams', () => {
+    expect(groupIds('Sunset')).toEqual(['league:sunset']);
+    expect(slugs('Sunset')).toEqual([]);
+    expect(groupIds('North County')).toEqual(['league:north-county']);
+    expect(groupIds('City Western')).toEqual(['division:city-western']);
+    expect(groupIds('metro')).toEqual(['league:metro', 'division:metro-mesa', 'division:metro-south-bay']);
+    expect(groupIds('Avocado')).toEqual(['division:avocado']);
+  });
+
+  it('"LJCD" and "RBV" resolve as aliases; two-letter abbrs win for the new teams too', () => {
+    expect(slugs('LJCD')[0]).toBe('la-jolla-country-day');
+    expect(slugs('RBV')[0]).toBe('rancho-buena-vista');
+    for (const [q, slug] of [['HB', 'huntington-beach'], ['TP', 'torrey-pines'], ['EL', 'eastlake']]) {
+      expect(searchTeams(INDEX, q).teams[0], q).toMatchObject({ score: 90, why: 'abbr', entry: { slug } });
+    }
   });
 });

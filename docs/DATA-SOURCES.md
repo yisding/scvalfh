@@ -1612,12 +1612,14 @@ of an alarm.
   MaxPreps on 2026-10-04 (§1.3a), and the Section's Sport Dates sheet disagrees with the Guidelines
   on the last contest (§1.4).
 
-### 2.1 The 49 teams
+### 2.1 The 99 teams
 
 Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live responses. Colors,
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
-names, unique across all 49). The registry is `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled
-by `lib/teams.ts`, and a test pins the 15 SCVAL slugs, abbreviations and GUIDs.
+names, unique across all 99). The registry is
+`lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro}.ts`, assembled by
+`lib/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 50 SoCal teams), and a
+test pins the 15 SCVAL slugs, abbreviations and GUIDs.
 
 Each school has **one full name and one short name**, and every page prints one of the two. The
 full name (`name`) is the school's name without "High School" or "College Preparatory" (so
@@ -1627,7 +1629,11 @@ own documents write it: the full name itself, whole words of it, or one of the s
 never an abbreviation made up for width. Four differ from the full name: Archbishop Mitty → Mitty,
 Ann Sobrato → Sobrato (the BVAL sheet), San Francisco University → SF University (an alias; MCAL's
 bare "University" reads as a college outside an MCAL table) and Convent of the Sacred Heart →
-Convent. Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
+Convent. In Southern California five more differ, each as the CIF San Diego Section's 2026-27 League
+Alignment writes the school: Cathedral Catholic → Cathedral (whole words; deliberately not an alias,
+since Cathedral of Los Angeles and Cathedral City are statewide namesakes), La Jolla Country Day →
+LJCD and Rancho Buena Vista → RBV (both aliases), Canyon Crest Academy → Canyon Crest and San
+Dieguito Academy → San Dieguito (whole words, and aliases). Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
 `lib/teams.ts` fails at load on any other short name, and the short name is display only: matching
 keys on the name and the aliases, never on it, so bare "University" (also Irvine's on si.com) stays
 out of the index. Source spellings ("ST. IGNATIUS",
@@ -1636,7 +1642,9 @@ them verbatim but prints the registry name. The si.com ids
 are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed, the school id on
 a school-logo URL; "—" means not observed and is never guessed.
 
-Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49.
+Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49
+in NorCal; Sunset 10, City Western 6, City Eastern 6, Avocado 6, Palomar 7, Valley 6, Metro Mesa 5,
+Metro South Bay 4 = 50 in SoCal; 99 in all.
 
 | slug | abbr | league | division | MaxPreps team id (GUID) | name | si.com team id | si.com school id |
 |---|---|---|---|---|---|---|---|
@@ -1689,12 +1697,95 @@ Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MC
 | davis | DV | eal | eal | `288ca10d-8448-41e9-b26e-463df226b8c8` | Davis (MaxPreps: Davis Sr.) | 458605 | 10575 |
 | lassen | LS | eal | eal | `b4268b1c-b3df-4dd5-b52c-5355d8a48e42` | Lassen | 458783 | 11554 |
 | pleasant-valley | PV | eal | eal | `8e01c2fa-4888-483f-8d26-6a45518c1bd8` | Pleasant Valley | 458566 | 10337 |
+| bonita | BN | sunset | sunset | `4c2dd7e8-2f3e-43aa-891b-9218932cdf9d` | Bonita | 458494 | 10097 |
+| chaminade | CM | sunset | sunset | `742a32d0-2dc9-4aa8-ad92-8c4576f73a12` | Chaminade | 456824 | 141 |
+| chaparral | CP | sunset | sunset | `d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e` | Chaparral | 459144 | 13456 |
+| edison | ED | sunset | sunset | `c5a36b71-74a5-431f-94a3-8337d66dfbbb` | Edison | 458743 | 11313 |
+| fountain-valley | FV | sunset | sunset | `79582922-a3b0-44a5-b210-8e51f3cfb731` | Fountain Valley | 458744 | 11314 |
+| great-oak | GO | sunset | sunset | `a36c1c30-9183-4514-8cd6-26824a6d7c50` | Great Oak | 459145 | 13457 |
+| huntington-beach | HB | sunset | sunset | `f60cf593-eddc-4900-b1c9-b6362f852856` | Huntington Beach | 458746 | 11316 |
+| marina | MR | sunset | sunset | `96f0228e-b1db-4993-ad1e-5427b5592bcf` | Marina | 458748 | 11317 |
+| newport-harbor | NH | sunset | sunset | `86009247-6ae1-40e1-acfa-58c200528743` | Newport Harbor | 458870 | 12274 |
+| temecula-valley | TV | sunset | sunset | `8f350275-199e-4549-b574-2257e718069f` | Temecula Valley | 459147 | 13461 |
+| bishops | BI | city | city-western | `9d14d198-9976-4ed2-872d-047b9f317035` | Bishop's | 456843 | 201 |
+| canyon-hills | CN | city | city-western | `5bcd4caa-2727-404f-8ea0-627dc9d0b1b1` | Canyon Hills | 459034 | 12931 |
+| cathedral-catholic | CC | city | city-western | `15c34e49-1a29-4298-8a84-00a2ec6ae36b` | Cathedral Catholic | 458202 | 6107 |
+| la-jolla | LJ | city | city-western | `582fa2b1-19ed-467d-85af-fc6971dd5a71` | La Jolla | 459019 | 12915 |
+| mission-bay | MB | city | city-western | `f2ec9dd0-0f24-4161-a2c3-2a9df393f220` | Mission Bay | 459025 | 12919 |
+| scripps-ranch | SR | city | city-western | `7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5` | Scripps Ranch | 459032 | 12930 |
+| clairemont | CL | city | city-eastern | `50ebec25-d857-4178-9f5a-1a6241c43b85` | Clairemont | 459017 | 12896 |
+| la-jolla-country-day | CD | city | city-eastern | `c24601db-aee8-4989-ba5d-bfbf0a91b927` | La Jolla Country Day | 456865 | 256 |
+| mira-mesa | MM | city | city-eastern | `e551f0f0-28a3-4c13-8ade-1b9909ffa28c` | Mira Mesa | 459023 | 12918 |
+| patrick-henry | PH | city | city-eastern | `e71f479e-b2c8-48da-a8b4-4f270c3afb92` | Patrick Henry | 464779 | 30661 |
+| point-loma | PL | city | city-eastern | `91a74b43-700f-4e74-819e-d62b6dba12f7` | Point Loma | 459029 | 12921 |
+| university-city | UC | city | city-eastern | `32f08693-bcfd-4a62-a463-77b91360f53b` | University City | 459037 | 12934 |
+| canyon-crest-academy | CY | north-county | avocado | `91a207da-721f-4acf-a69c-cd7fa50a1f7a` | Canyon Crest Academy | 459041 | 12935 |
+| la-costa-canyon | LC | north-county | avocado | `78ad824a-61a0-462b-aa6f-1d5f6fb1bd5f` | La Costa Canyon | 459043 | 12936 |
+| mt-carmel | MT | north-county | avocado | `688ec7f8-2985-4e7e-900a-4d78f845b197` | Mt. Carmel | 458939 | 12670 |
+| rancho-bernardo | RN | north-county | avocado | `132d806e-7fa4-4bce-b92a-9db38786cf7b` | Rancho Bernardo | 458945 | 12672 |
+| san-marcos | SM | north-county | avocado | `ff3dcd2f-cdea-46e6-accf-fd929c0a4374` | San Marcos | 459066 | 13021 |
+| torrey-pines | TP | north-county | avocado | `ad43e80f-2296-4b96-a0a9-44e6a8ea76f2` | Torrey Pines | 459049 | 12940 |
+| del-norte | DN | north-county | palomar | `ddf384b8-3189-4276-8703-71106d47a4d5` | Del Norte | 458937 | 12669 |
+| fallbrook | FB | north-county | palomar | `7453dc74-befb-4c36-92ec-35bf99c3c718` | Fallbrook | 458653 | 10923 |
+| mission-vista | MS | north-county | palomar | `e9446588-3714-4a57-905e-cd9a097a48b0` | Mission Vista | 464852 | 31920 |
+| poway | PW | north-county | palomar | `9adef103-5c38-4dc2-a6c4-b36ea4f5400c` | Poway | 458942 | 12671 |
+| rancho-buena-vista | RV | north-county | palomar | `f1f0e644-5c98-4d70-bd3c-ae7fb8992410` | Rancho Buena Vista | 459174 | 13718 |
+| san-dieguito-academy | SD | north-county | palomar | `a7064567-f2fe-442d-8200-34a28326d1b9` | San Dieguito Academy | 459047 | 12938 |
+| valley-center | VE | north-county | palomar | `673c037d-ae98-4fa1-a388-b127758ac382` | Valley Center | 459167 | 13667 |
+| escondido | ES | north-county | valley | `226ea389-d063-46bb-8ccb-ede6f10c2ca6` | Escondido | 458641 | 10872 |
+| mission-hills | MH | north-county | valley | `643a8f19-47aa-42a2-b5a4-0f52421f80b9` | Mission Hills | 459063 | 13020 |
+| sage-creek | SE | north-county | valley | `475c3bcb-9d28-457f-87b8-d979f9ff070f` | Sage Creek | 464866 | 31992 |
+| san-pasqual | SP | north-county | valley | `a1109c06-7436-4b72-a30e-459eb6d00925` | San Pasqual | 458644 | 10874 |
+| vista | VI | north-county | valley | `1f57d89b-3a6d-444a-9de1-2fba3f0017b6` | Vista | 464777 | 30660 |
+| westview | WV | north-county | valley | `9ef67997-7f5d-4899-b500-2d0b5c758105` | Westview | 458949 | 12673 |
+| bonita-vista | BT | metro | metro-mesa | `7f4d50f0-8690-493c-b4bc-262b512e8851` | Bonita Vista | 459119 | 13407 |
+| eastlake | EL | metro | metro-mesa | `6aa8e46b-7aa9-4df3-9512-89a9d4827f7f` | Eastlake | 459128 | 13412 |
+| helix | HX | metro | metro-mesa | `186dcece-fefd-4b67-b4c7-877b3e12beb2` | Helix | 458715 | 11156 |
+| olympian | OL | metro | metro-mesa | `0465e8ea-3eb0-4619-a74a-183e70c697e2` | Olympian | 480708 | 13417 |
+| otay-ranch | OR | metro | metro-mesa | `77e5b6a4-a166-4a88-b114-a38a9b28ccc4` | Otay Ranch | 459134 | 13419 |
+| el-capitan | EC | metro | metro-south-bay | `15d5e874-4af2-4d24-8e6b-be895937cb8c` | El Capitan | 458711 | 11149 |
+| granite-hills | GH | metro | metro-south-bay | `aa2f89a2-0150-4223-89b4-ac73cbf343e9` | Granite Hills | 458713 | 11152 |
+| hilltop | HT | metro | metro-south-bay | `ec21ffde-b216-47cc-9923-6308e239e9e0` | Hilltop | 459131 | 13413 |
+| southwest | SW | metro | metro-south-bay | `19409229-6768-4537-b8d7-4a7d2814aaad` | Southwest (MaxPreps: Southwest SD) | 459138 | 13422 |
 
 The EAL rows were read from MaxPreps' standings and team-context responses on 2026-10-04 (the team
 GUID equals the standings row's `schoolId` for all seven rows; mascot and city come from team-context,
 not standings) and are in alphabetical order. Chico and Corning share the acronym CHS and Lassen's LHS
 joins an existing one, but BVHS, DSHS and PVHS are unique, so the expected acronym collisions are
 unchanged. The EAL's six abbreviations collide with none of the other 43.
+
+The 50 Southern California rows were read on 2026-10-06 from MaxPreps' team-context and standings
+responses and si.com's league and team pages, and are transcribed by script from
+`tests/fixtures/seeds/registry-seed-ss.json` (Sunset) and `registry-seed-sds.json` (City, North
+County, Metro), which keep each value's provenance; they are alphabetical within each division.
+Names are MaxPreps' `schoolName`, except Southwest, which MaxPreps and si.com call "Southwest SD"
+(kept as an alias and in its MaxPreps path). Mascots are MaxPreps', except Mission Vista's
+"Timberwolves", which neither MaxPreps nor si.com carries and which comes from the school's own site
+(mvhs.vistausd.org, 2026-10-06); Canyon Hills' "Rattlers " is trimmed, and si.com's other mascots for
+Clairemont (Chieftains) and Helix (Highlanders) are aliases. Colours come from the MaxPreps standings
+row, or, for the 16 teams with no 2026-27 standings row (the five Orange County Sunset schools,
+Mt. Carmel, Rancho Bernardo, Patrick Henry, Hilltop, Southwest and the Valley six), from
+team-context's `schoolColor1`/`schoolColor2`, the same MaxPreps fields. Every si.com team id, slug
+and school id was harvested (36 school ids from logo URLs, 14 from the team page's `school.id`),
+never guessed; si.com's league buckets are stale and are never membership evidence.
+
+Where the natural abbreviation was taken the SoCal seeds use MR (Marina; MA is Marin Academy), MT
+(Mt. Carmel; MC is Marin Catholic), CN (Canyon Hills; CH is Christopher), CY (Canyon Crest Academy;
+CC is Cathedral Catholic), VE (Valley Center; VC is Valley Christian), MS (Mission Vista; MV is Monta
+Vista), BT (Bonita Vista; BV is Bella Vista), SE (Sage Creek), RN and RV (Rancho Bernardo and Rancho
+Buena Vista; RB is held for Red Bluff) and CD (La Jolla Country Day). With 99 teams the shared
+acronyms are BHS, BVHS, CHS, EHS, FHS, GHS, HHS, LHS, MCHS, MHS, MVHS, PHS, SCHS, SHS, VCHS and WHS.
+Acronyms are display only and are indexed only while one school carries them, so seven NorCal
+acronyms no longer resolve: BVHS (Bella Vista), FHS (Fremont), MCHS (Marin Catholic), MHS
+(Monterey), MVHS (Monta Vista), VCHS (Valley Christian) and WHS (Westmont). No source this site reads
+keys a team on an acronym, and each keeps its name, aliases, slug and GUID.
+
+si.com's team search (§1.2 caveat 9), run on 2026-10-06 for the 50 names, found a second California
+team named Westview (West Los Angeles, 464882), Del Norte (Crescent City, 458609), Marina (Marina,
+500865), San Marcos (Santa Barbara, 459073), Mission Vista (480754, a second entry for "Vista, CA"),
+Granite Hills (Porterville 554634 and Apple Valley 458466) and Southwest (El Centro, 583246; si.com
+calls ours "Southwest SD"). Those seven names joined `STATEWIDE_AMBIGUOUS` (§5.3), so an si.com side
+with one of them resolves to our team only by its si.com team or school id.
 
 ⚠️ **Do not use the Presentation HTML schedule page** — it 200s but serves Los Gatos data
 (MaxPreps routing/canonical bug). This is the single strongest argument for keying everything on
@@ -1709,13 +1800,20 @@ the school Santa Teresa High School fields no team. If it ever does, its slug mu
 | Wilcox (SCVAL De Anza grid) | not fielding a team | in SCVAL's `withdrawnNames`; its 14 grid fixtures are dropped when the PDF is parsed; si.com id 485528 ignored |
 | York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered" |
 | Red Bluff (EAL) `4d3da788-bbe2-4ab9-b854-d95aa9786cda` | not fielding a varsity team in 2026 (§3.2) | still a 0-0-0 row in MaxPreps' EAL table (`maxprepsExtraRows`, skipped silently); in the EAL's `withdrawnNames`; si.com ids 490259, 490260 and 635037 ignored; team search answers "not covered" |
-| Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list |
-| Del Norte (San Diego) `ddf384b8-3189-4276-8703-71106d47a4d5` | a real school outside the registry; MaxPreps lists Davis against it at a neutral site on 2026-10-16 | an ordinary non-member opponent: the game is non-league, with a bare name |
-| Irvington, North Salinas, Notre Dame (Salinas), Gunn, San Jose, North Monterey County, University Prep Academy, Marina (CCS) | no 2026-27 varsity team | nothing to do |
+| Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list. si.com also has a Crescent City Del Norte (458609), which it shows playing Tamalpais and Davis on 2026-10-16, the games MaxPreps gives Del Norte of San Diego (a registry team since the SoCal amendment, §2.1); "Del Norte" is in `STATEWIDE_AMBIGUOUS`, so neither si.com row resolves by name |
+| Irvington, North Salinas, Notre Dame (Salinas), Gunn, San Jose, North Monterey County, University Prep Academy | no 2026-27 varsity team | nothing to do |
+| Marina (CCS) | no 2026-27 varsity team | nothing to do. si.com lists it (500865, no games); "Marina" now names the Sunset school, and is in `STATEWIDE_AMBIGUOUS` |
+| Harvard-Westlake `9dc04c54-8c9d-4b30-a1d2-fcc167363342`, Thousand Oaks `70a363e2-26b8-4ef5-8ad0-20979f66399a`, Glendora `1228375e-e4c0-453e-aed4-d0b0693b3c52` (Southern Section) | each is the only field hockey team in its MaxPreps league (League B, Marmonte, Palomares), so it plays no league games and has no table | an ordinary non-member opponent in its games against covered teams; team search answers "not covered" (`DATA_QUALITY.notCovered`) |
+| Mayfair `988e6551-0eb6-440e-b231-99b2bcfb7a7c` (Southern Section) | no 2026 varsity game on MaxPreps, and not on the Southern Section's list of participating schools | nothing to fetch; team search answers "not covered" |
+| Westlake, Los Alamitos (si.com's Sunset table) | 0-0 rows with no games on si.com; no 2026-27 MaxPreps team | nothing to do (si.com league buckets are never membership evidence) |
+| Madison `fef1da70-bea2-4958-a60b-9962851f6a1d` (San Diego Section) | a 0-0-0 row in MaxPreps' City - Eastern table; no 2026 varsity game on MaxPreps or in the Section's power rankings, and not in the Section's 2026-27 field hockey alignment | City Eastern `maxprepsExtraRows` (skipped silently) and the City Conference's `withdrawnNames`; team search answers "not covered" |
+| Santana `1125d6e8-e661-4190-a41d-5722364dee38` (San Diego Section) | a 0-0-0 row in MaxPreps' "Grossmont" table (Metro South Bay's El Capitan and Granite Hills); no 2026 varsity game on MaxPreps or in the Section's power rankings | Metro South Bay `maxprepsExtraRows` and the Metro Conference's `withdrawnNames`; team search answers "not covered" |
+| Castle Park, Chula Vista, Montgomery, Sweetwater (San Diego Section) | no 2026 varsity game on MaxPreps or in the Section's power rankings | nothing to fetch; team search answers "not covered" |
+| si.com's other Westview (West Los Angeles, 464882), San Marcos (Santa Barbara, 459073), Mission Vista (480754), Granite Hills (Porterville 554634, Apple Valley 458466) and Southwest (El Centro, 583246) | si.com teams that share a SoCal member's name (§2.1) | in `STATEWIDE_AMBIGUOUS`: never resolved by name, so their rows never join to ours |
 
 Every other school that appears as an opponent (out-of-area, other sections) is a **non-member**:
 its games are ordinary non-league games, modeled with `teamId: null` and a bare name, never given a
-Team record, and shown as "Not one of the 49 teams this site follows" (the number is the registry's
+Team record, and shown as "Not one of the 99 teams this site follows" (the number is the registry's
 size).
 
 ### 2.3 Name normalization

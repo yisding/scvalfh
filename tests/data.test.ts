@@ -55,10 +55,24 @@ describe('data: identity and freshness', () => {
 });
 
 describe('data: sections and leagues', () => {
-  it('summarises the five leagues in config order', () => {
+  it('summarises the nine leagues in config order, each with its region and its cities', () => {
     const leagues = data.getLeagueSummaries();
-    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
-    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6]);
+    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
+    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9]);
+    // `region` is NorCal/SoCal (from the section); the card's place words moved to `cities`, unchanged for NorCal.
+    expect(leagues.map((l) => l.region)).toEqual([...Array(5).fill('norcal'), ...Array(4).fill('socal')]);
+    expect(leagues.map((l) => l.cities)).toEqual([
+      'Santa Clara County and San Francisco', 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
+      'Monterey County and Hollister', 'Marin County, San Francisco and Berkeley', 'Chico, Corning, Susanville, Davis and Fair Oaks',
+      'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills', 'San Diego and La Jolla',
+      'Carlsbad, Encinitas, Escondido, Fallbrook, Oceanside, Poway, San Marcos, Valley Center, Vista and north San Diego',
+      'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego',
+    ]);
+    expect(data.getLeagueSummary('sunset')!.section).toEqual({ id: 'ss', name: 'Southern Section', shortName: 'SS' });
+    expect(data.getLeagueSummary('north-county')!.divisions.map((d) => [d.id, d.heading, d.teamCount])).toEqual([
+      ['avocado', 'Avocado', 6], ['palomar', 'Palomar', 7], ['valley', 'Valley', 6],
+    ]);
+    expect(data.getLeagueSummary('sunset')!.singleDivision).toBe(true);
     const bval = data.getLeagueSummary('bval')!;
     expect(bval.section).toEqual({ id: 'ccs', name: 'Central Coast Section', shortName: 'CCS' });
     expect(bval.singleDivision).toBe(false);
