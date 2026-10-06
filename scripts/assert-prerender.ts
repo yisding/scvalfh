@@ -19,7 +19,7 @@
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
  *    stub per `supersededGames` key (counted separately);
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
- *    Southern Section independents joined, 99 with the Southern California amendment; the snapshot's team
+ *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates

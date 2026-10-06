@@ -23,7 +23,7 @@
  * independents: 18 teams) moves ~13 MB; probing all 102 teams would move ~75 MB. A division configured with no MaxPreps table (maxprepsLeagueId null: the San Diego Section's
  * Valley) is still probed, and the diff says whether one of its members now carries a league. That is why the daily cron never touches this endpoint.
  *
- * A group with no league (the Southern Section independents, DESIGN §24.9) is probed member by member (three
+ * A group with no league (the LA independents, DESIGN §24.9) is probed member by member (three
  * more team contexts, ~2.2 MB): each is the only field hockey team in its own all-sports league, so MaxPreps
  * lists a league for each, and that is expected. The diff names each member's league and asks a human to
  * check that the school is still that league's only field hockey team; it is never counted as a change.
@@ -320,7 +320,7 @@ async function main(argv: readonly string[]): Promise<number> {
       'source, LeagueConfig.alignmentSource, not from these leagueIds), CCS.keyDates, each league\'s keyDates and the ' +
       'postseason dates. Provenance by league: SCVAL from the two scval.com PDFs, BVAL/PCAL/MCAL from their bundled ' +
       'official documents, EAL from MaxPreps\' table and league flag, the Sunset from MaxPreps\' 2024-25 and 2025-26 ' +
-      'Sunset tables, City/North County/Metro from the CIF-SDS League Alignment, the Southern Section independents ' +
+      'Sunset tables, City/North County/Metro from the CIF-SDS League Alignment, the LA independents ' +
       'from each school\'s MaxPreps team page (each the only field hockey team in its all-sports league).',
   );
   return 0;

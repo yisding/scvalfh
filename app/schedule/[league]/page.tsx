@@ -24,7 +24,7 @@ import {
   getToday,
 } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
-import { isIndependentLeague } from '../../../lib/leagues';
+import { isIndependentLeague, standaloneName } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
 
 
@@ -47,11 +47,11 @@ import { SEASON_DISPLAY } from '../../../lib/season';
  * `LIVE` is never a running score anywhere on this site: the snapshot is a once- or twice-daily
  * cron, and `/about#updates` says so in plain words.
  *
- * The Southern Section independents (DESIGN §24.9) get the same page; its title is "Independent teams:
- * schedule and results" (its short name is an adjective) and its header says "the independents".
+ * The LA independents (DESIGN §24.9, §24.11) get the same page; its title is "LA teams: schedule and results"
+ * and its header says "the LA independents" (standaloneName).
  */
 
-/** 'SCVAL schedule and results'; for the independents, 'Independent teams: schedule and results'. */
+/** 'SCVAL schedule and results'; for the LA independents, 'LA teams: schedule and results'. */
 function scheduleTitle(summary: { id: string; shortName: string }): string {
   return isIndependentLeague(summary.id)
     ? `${summary.shortName} teams: schedule and results`
@@ -69,8 +69,8 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   const title = scheduleTitle(summary);
-  // 'involving SCVAL teams'; the independents' short name is an adjective, so theirs is 'involving the independents'.
-  const involving = isIndependentLeague(summary.id) ? 'the independents' : `${summary.shortName} teams`;
+  // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
+  const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
   const description = `All ${plural(counts.total, 'contest')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
@@ -92,6 +92,8 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
   const { teams, divisions } = scheduleFilterProps(summary, getTeams({ league: summary.id }));
   const fixtures = getOfficialFixtures({ league: summary.id });
   const span = dates.length > 0 ? `${monthDay(dates[0])} – ${monthDay(dates[dates.length - 1])}` : null;
+  // 'involving SCVAL teams'; the LA independents are named by their standaloneName (as in generateMetadata).
+  const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
 
   return (
     // `scroll-behavior: auto` on <html> while this page is mounted: a smooth scroll to a date
@@ -103,7 +105,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
         description={
           span ? (
             <>
-              {summary.name} &middot; {span} &middot; every contest involving {isIndependentLeague(summary.id) ? 'the independents,' : <>{summary.shortName} teams,</>}{' '}
+              {summary.name} &middot; {span} &middot; every contest involving {involving},{' '}
               league and non-league, oldest
               first &middot; all times Pacific
             </>

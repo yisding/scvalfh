@@ -376,7 +376,7 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
     case 'no-postseason': {
-      // The Sunset and the Southern Section independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
+      // The Sunset and the LA independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
       // follows, and the note says why. Both end with the Section's last allowable contest (leaguePlay.last).
       return {
         ...base,
@@ -830,7 +830,7 @@ export function alignmentSentence(): string {
   for (const league of leaguesInRegion('socal')) {
     const group = groups.find((g) => g.source === league.alignmentSource);
     // 'the Sunset' reads as a league name; the San Diego conferences read as names already; a group of
-    // independents is named in full ('the Southern Section independents'): its short name is an adjective.
+    // independents is named in full ('the LA independents'): its short name is an adjective.
     const name =
       league.independents
         ? `the ${league.name}`
@@ -852,7 +852,7 @@ export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
     id: section.id,
     name: section.name,
     leagues: leagues.map(({ league, divisions }) => {
-      // A group of independents (the Southern Section independents) is headed by its name: its short name is
+      // A group of independents (the LA independents) is headed by its name: its short name is
       // an adjective.
       const independent = getLeague(league.id).independents === true;
       return {

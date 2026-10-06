@@ -128,7 +128,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       for (const board of [...r.players, ...r.schools]) {
         expectRanked(board);
         expect(board.columns[board.rankedBy], board.id).toBeDefined();
-        // SoCal's boards also take the Southern Section independents (DESIGN §24.9), named after the leagues,
+        // SoCal's boards also take the LA independents (DESIGN §24.9), named after the leagues,
         // except the league-record board: a team that plays no league games has no league record to rank.
         const leagueOnly = board.id.startsWith('best-league-record');
         const independents = r.independentCount > 0 && !leagueOnly ? ' and five independents' : '';

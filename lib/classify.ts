@@ -14,7 +14,7 @@
  *    play each other home and away on MaxPreps' schedules (a double round robin; on Mon Oct 5 Pacific
  *    every pair was listed twice except Bonita Vista and Helix, once), while MaxPreps flags as few as 0
  *    of Patrick Henry's 10 as league games;
- *  - the Southern Section independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks,
+ *  - the LA independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks,
  *    five schools in no field hockey league; DESIGN §24.10) are a 'membership' division too: every game
  *    between two of them inside the group's leaguePlay counts for its table, though MaxPreps flags only
  *    Bonita's two games with Chaminade.
@@ -175,7 +175,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
 /**
  * The division whose table this game belongs to, for ANY status. null unless leagueDivision !== null. Then by the
  * division's league rule:
- *  - 'membership' (the San Diego divisions and the Southern Section independents):
+ *  - 'membership' (the San Diego divisions and the LA independents):
  *        null if game.postseason !== null
  *        null if contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes ([2, 4]: tournament and
  *          postseason rows)

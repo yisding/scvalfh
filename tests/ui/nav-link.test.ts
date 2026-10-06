@@ -74,7 +74,7 @@ describe('the league hrefs the bars hand to NavLink', () => {
       city: '/playoffs#city',
       'north-county': '/playoffs#north-county',
       metro: '/playoffs#metro',
-      // The Southern Section independents' 'no-postseason' card (DESIGN §24.9).
+      // The LA independents' 'no-postseason' card (DESIGN §24.9).
       independents: '/playoffs#independents',
     });
     expect(HREFS['/standings']).toBeUndefined();

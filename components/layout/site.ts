@@ -54,7 +54,7 @@ export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 export const SITE_SHORT_NAME = 'NorCal FH';
 
 /**
- * A group of independents in a list of what is covered: `five Southern Section independents`, from the config
+ * A group of independents in a list of what is covered: `five LA independents`, from the config
  * (the group's team count and its section's briefLabel), so the words follow the registry. The group is
  * covered but is not a league, so no list calls it one and no count of leagues includes it (LEAGUES_PROPER,
  * DESIGN §24.9, §24.10).
@@ -66,7 +66,7 @@ export function independentsWords(group: LeagueConfig): string {
 
 /**
  * Every covered league by its short name, then each group of independents by its name: 'SCVAL, BVAL, PCAL,
- * MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents' (DESIGN §24.9). For copy that
+ * MCAL, EAL, Sunset, City, North, Metro and the LA independents' (DESIGN §24.9). For copy that
  * names what the site covers in one list; never 'and Independent', whose short name is an adjective.
  */
 export function coveredLeagueWords(): string {
@@ -80,9 +80,9 @@ export function coveredLeagueWords(): string {
  * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES_PROPER, so a league added or dropped
  * in the config changes every description that names them. The independent groups follow the leagues as
  * one item each (`independentsWords`), so a sentence about every covered team stays true: `… City, North
- * and Metro (San Diego Section) and five Southern Section independents`. `region` limits it to that
+ * and Metro (San Diego Section) and five LA independents`. `region` limits it to that
  * region's sections (`'socal'`, short: `Sunset (Southern Section), City, North and Metro (San Diego Section)
- * and five Southern Section independents`); omitted, it names all nine leagues in config order, NorCal
+ * and five LA independents`); omitted, it names all nine leagues in config order, NorCal
  * first, then the independents.
  */
 export function leaguesBySectionWords(style: 'name' | 'short', region?: RegionId): string {

@@ -662,7 +662,7 @@ export interface DivisionHealth {
   reportedTable: 'ok' | 'carried' | 'missing' | 'skipped';
   reportedRows: number | null;
   /**
-   * The division's LeagueRules.classification ('membership' = the San Diego divisions and the Southern Section
+   * The division's LeagueRules.classification ('membership' = Sunset, the San Diego divisions and the LA
    * independents: both sides members, whatever MaxPreps' league flag says), or 'fallback-contest-type' when an
    * official-fixtures division fell back to MaxPreps' flag this run.
    */

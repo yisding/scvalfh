@@ -1928,9 +1928,9 @@ classification evidence says it is a league game. This is decided once, in the p
 |---|---|---|
 | SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
-| Sunset | MaxPreps `contestType === 0` (`contest-type`: no Sunset document exists to check against) | `contestType` 2 and 4 |
+| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, and every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags) |
 | City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
-| Southern Section independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
+| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -1984,8 +1984,10 @@ classification evidence says it is a league game. This is decided once, in the p
 
 The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `LeagueHealth`,
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
-`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, and
-a version-2 file written before a configured league existed gains that league on load, DESIGN §22.7).
+`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
+version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
+version-2 file whose games no longer classify under the current rules or registry is reclassified on load,
+DESIGN §24.11).
 Load-bearing rules baked into it:
 
 - `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-member opponents — every

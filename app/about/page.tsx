@@ -96,7 +96,7 @@ function rulesDocument(section: Pick<SectionConfig, 'name' | 'rulesSource'>): st
 
 /**
  * 'the EAL', 'the Sunset' (a one-table league is named like one), 'City' (a conference reads as a name), 'the
- * Southern Section independents' (a group with no table is named in full: its short name is an adjective).
+ * LA independents' (a group with no table is named in full: its short name is an adjective).
  */
 function leagueRef(summary: Pick<LeagueSummary, 'id' | 'name' | 'shortName' | 'singleDivision'>): string {
   if (isIndependentLeague(summary.id)) return `the ${summary.name}`;
@@ -131,7 +131,7 @@ function toc(leagues: readonly LeagueSummary[]): Array<{ id: string; label: stri
   return [
     { id: 'sources', label: 'Data sources' },
     { id: 'standings', label: 'Standings, points & tiebreaks' },
-    // A group with no table (the Southern Section independents) has no rules of its own: its entry is its name.
+    // A group with no table (the LA independents) has no rules of its own: its entry is its name.
     ...leagues.map((l) => ({
       id: `rules-${l.id}`,
       label: isIndependentLeague(l.id) ? l.name : `${l.shortName} rules`,
@@ -494,7 +494,7 @@ export default function AboutPage() {
   const counted = statusCounts(sources);
   const erroring = sources.filter((s) => s.status === 'error');
   const leagues = getLeagueSummaries();
-  // The leagues proper, and the groups of independents (the Southern Section independents, DESIGN §24.10): a
+  // The leagues proper, and the groups of independents (the LA independents, DESIGN §24.10): a
   // sentence about league rules speaks for the first only; the group's table is this site's count of the
   // independents' games against each other, and its card says so.
   const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
@@ -913,7 +913,7 @@ export default function AboutPage() {
                 rules come from (`rulesSource`), and its postseason in one sentence from config. */}
             {socalSections.map((section) => {
               const sectionLeagues = leagues.filter((l) => l.section.id === section.id);
-              // A group with no table (the Southern Section independents) is under the Section's rules too, but
+              // A group with no table (the LA independents) is under the Section's rules too, but
               // it is no league that could have published rules or a schedule: the sentence says so apart.
               const sectionTabled = sectionLeagues.filter((l) => !isIndependentLeague(l.id));
               const sectionGroups = sectionLeagues.filter((l) => isIndependentLeague(l.id));
@@ -1172,7 +1172,7 @@ export default function AboutPage() {
             so, rather than silently picking a side. Where a league&rsquo;s MaxPreps table differs for a
             known reason, those rows are listed separately under the reason.
           </p>
-          {/* No group with no table (the Southern Section independents): there is nothing of theirs to compare. */}
+          {/* No group with no table (the LA independents): there is nothing of theirs to compare. */}
           {perLeague.filter((l) => !isIndependentLeague(l.summary.id)).map((l) => (
             <div key={l.summary.id} data-region-scope={l.summary.region} className="mt-section">
               <h3 className="m-0 mb-3 text-lead text-ink">

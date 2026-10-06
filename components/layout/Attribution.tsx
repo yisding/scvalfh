@@ -76,7 +76,7 @@ function joined(items: readonly React.ReactNode[]): React.ReactNode[] {
 
 export function Attribution({ snapshotAt, now, className }: AttributionProps) {
   const seasonComplete = getSitePhase() === 'complete';
-  // The leagues only: the Southern Section independents are three schools in no league, not an organization
+  // The leagues only: the LA independents are three schools in no league, not an organization
   // (DESIGN §24.9); their alignment and rules sentences are the scope note's and the Section's.
   const notAffiliated = [
     ...LEAGUES_PROPER.map((l) => l.shortName),

@@ -240,9 +240,9 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
     // Games played SO FAR — a non-league final later in the season has not been played yet.
     const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
-    // A group of independents (the Southern Section independents, DESIGN §24.10) has no league play: its table
+    // A group of independents (the LA independents, DESIGN §24.10) has no league play: its table
     // counts the games between its members, so the lead names the first of those and the body says what the
-    // table counts. 'Independent' is an adjective, so the sentence names the group (standaloneName).
+    // table counts. 'LA' alone names a place, so the sentence names the group (standaloneName).
     if (league.independents) {
       return {
         lead: `The first game between two of ${standaloneName(league.id)} is ${shortDate(firstLeague)}.`,
@@ -618,8 +618,8 @@ export interface LeagueTeamsView {
   leagueId: LeagueId;
   shortName: string;
   /**
-   * The block's heading: 'Teams in SCVAL'; for a group with no league (the Southern Section independents)
-   * 'Independent teams', since its short name is an adjective and no team is "in" it.
+   * The block's heading: 'Teams in SCVAL'; for a group with no league (the LA independents)
+   * 'LA teams', since no team is "in" a group of independents.
    */
   title: string;
   singleDivision: boolean;

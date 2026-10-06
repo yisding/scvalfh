@@ -244,7 +244,7 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
   });
 });
 
-describe('classify: the Southern Section independents (membership, DESIGN §24.10)', () => {
+describe('classify: the LA independents (membership, DESIGN §24.10)', () => {
   it('counts a game between two independents inside the group’s span, flagged by MaxPreps or not', () => {
     // Harvard-Westlake 5, Glendora 0 on Sep 8 (MaxPreps: non-league) and Bonita 2, Chaminade 1 on Sep 29 (MaxPreps:
     // a Sunset league game): both count for the group's table.
@@ -408,13 +408,20 @@ describe('classify: the San Diego Section playoffs tag (section-playoffs)', () =
   });
 });
 
-describe('classify: Sunset (contest-type, no postseason)', () => {
-  it('counts only a game MaxPreps flags between two of the eight', () => {
+describe('classify: Sunset (membership, no postseason; DESIGN §24.11)', () => {
+  it('counts every game between two of the eight inside Aug 25 – Oct 31, flagged by MaxPreps or not, tournament rows aside', () => {
     expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11' }).countsFor).toBe('sunset');
-    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', league: false }).countsFor).toBeNull();
+    // Fountain Valley 1-1 Marina, Sep 11: MaxPreps marks it non-league; it counts.
+    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', league: false }).countsFor).toBe('sunset');
+    // Great Oak at Temecula Valley, Sep 4: non-league on MaxPreps, league on Oct 2; both count.
+    expect(game({ home: 'temecula-valley', away: 'great-oak', hs: 1, as: 2, date: '2026-09-04', league: false }).countsFor).toBe('sunset');
     expect(
       game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', contestTypes: { home: 0, away: 2 } }).countsFor,
     ).toBeNull();
+    // Before the first game between two of the eight (Aug 25): nothing counts.
+    expect(game({ home: 'edison', away: 'marina', hs: 1, as: 1, date: '2026-08-20', league: false }).countsFor).toBeNull();
+    // A Sunset team against an independent: never a Sunset game, flagged or not (Bonita at Great Oak, Aug 27).
+    expect(game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' }).countsFor).toBeNull();
   });
 
   it('tags a contestType 4 Sunset game other: the Southern Section holds no playoffs', () => {

@@ -34,7 +34,7 @@ import { getLeague, standingsLabel } from '../../../lib/leagues';
  * The league's JV tables are on /jv (`/jv#<league>`), linked from the pills at the foot; this page
  * carries the varsity tables only.
  *
- * The Southern Section independents (DESIGN §24.10) get the same page as a league: their table counts their
+ * The LA independents (DESIGN §24.10) get the same page as a league: their table counts their
  * games against each other, and its notes carry the group's own sentence (`official.note`). The title names the
  * group ('Independents standings'), since its short name is an adjective.
  *

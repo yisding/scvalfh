@@ -7,7 +7,7 @@
  *          from bval.org/standings and bval.org/all-league
  *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
  *   Sunset, City, North County, Metro  'unavailable' likewise (DESIGN-socal §2.2)
- *   Southern Section independents  'unavailable': this site's grouping, so no 2025-26 table of it was published (DESIGN §24.10)
+ *   LA independents  'unavailable': this site's grouping, so no 2025-26 table of it was published (DESIGN §24.10)
  *
  *   pnpm build-history
  *   pnpm build-history --from tests/fixtures/scval \
@@ -378,7 +378,7 @@ async function main(argv: readonly string[]): Promise<number> {
     ],
   });
 
-  // ---- The Southern Section independents (DESIGN §24.9, §24.10): the group is this site's (2026-10-06), so no
+  // ---- The LA independents (DESIGN §24.9, §24.10): the group is this site's (2026-10-06), so no
   // 2025-26 table of it was ever published. Checked 2026-10-06 with MaxPreps' standings API for the 2025-26
   // season (leagues/{id}/standings/v1?sportseasonid=8ae4cbab-…): Glendora's, Harvard-Westlake's and Thousand
   // Oaks' all-sports league tables for that season (the league ids are those in each team's MaxPreps
@@ -389,7 +389,7 @@ async function main(argv: readonly string[]): Promise<number> {
     status: 'unavailable',
     league: getLeague('independents').name,
     reason:
-      'The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
+      'The LA independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
     checkedOn: '2026-10-06',
     checked: [
       'https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)',
@@ -420,7 +420,7 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     console.log(`  ${d.standings.varsity.map((r) => `${r.name} ${r.leagueRecord}`).join(' · ')}`);
   }
-  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, Southern Section independents: unavailable (see reasons in the file)');
+  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, LA independents: unavailable (see reasons in the file)');
 
   // Validate against the contract before anything is written. lib/history-schema.ts does not load
   // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild

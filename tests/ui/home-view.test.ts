@@ -247,7 +247,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // The independents (DESIGN §24.10): the lead names the first game between two of them, never "Independent
     // league play", and the body says the table counts only games between them.
     expect(lead('independents', 'regular', '2026-08-10'), `${HV}: independents before their first game`).toEqual({
-      lead: 'The first game between two of the independents is Tue Sep 8.',
+      lead: 'The first game between two of the LA independents is Tue Sep 8.',
       body: 'No games have been played yet, so every record below is empty on purpose.',
       link: { href: '/schedule/independents', label: 'Full schedule' },
     });
@@ -368,7 +368,7 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
       divisions: [],
     });
     expect(data.leagueCards.map((c) => c.showName), `${HV}: card button names`).toEqual([
-      'SCVAL', 'BVAL', 'PCAL', 'MCAL', 'EAL', 'Sunset', 'City', 'North County', 'Metro', 'the independents',
+      'SCVAL', 'BVAL', 'PCAL', 'MCAL', 'EAL', 'Sunset', 'City', 'North County', 'Metro', 'the LA independents',
     ]);
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
@@ -424,7 +424,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
       /Results through \w{3} \w{3} \d{1,2} · 49 NorCal teams · SCVAL · BVAL · PCAL · MCAL · EAL/,
     );
-    expect(textOf(pageHtml), 'app/page.tsx: SoCal status line').toMatch(/· 53 SoCal teams · Sunset · City · North · Metro · Independent/);
+    expect(textOf(pageHtml), 'app/page.tsx: SoCal status line').toMatch(/· 53 SoCal teams · Sunset · City · North · Metro · LA/);
     // ONE finder, outside every region block; the region control leads the scope row.
     expect(pageHtml.split('aria-labelledby="find-your-team"').length - 1).toBe(1);
     expect(pageHtml, 'app/page.tsx: region control').toMatch(/data-region-option="norcal"[\s\S]*data-league-option="all"/);

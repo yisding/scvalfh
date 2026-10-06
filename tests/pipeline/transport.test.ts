@@ -164,7 +164,7 @@ describe('the live resource map', () => {
     const maxpreps = everyKey().filter((k) => k.kind.startsWith('maxpreps-'));
     const count = (kind: ResourceKey['kind']) => maxpreps.filter((k) => k.kind === kind).length;
     // 16 divisions, of which two have no MaxPreps table: the San Diego Valley (DESIGN-socal §2.1.7) and the
-    // Southern Section independents, a group with no league at all (DESIGN §24.9).
+    // LA independents, a group with no league at all (DESIGN §24.9).
     const withTable = ALL_DIVISIONS.filter((d) => d.maxprepsLeagueId !== null);
     expect(ALL_DIVISIONS.map((d) => d.id).filter((id) => !withTable.some((d) => d.id === id))).toEqual(['valley', 'independents']);
     expect([count('maxpreps-bootstrap'), count('maxpreps-league-meta'), count('maxpreps-standings'), count('maxpreps-schedule')]).toEqual([

@@ -48,7 +48,7 @@ describe('data/prior-season.json', () => {
    * row dated 2026-09-17 (contest 26fef99d…) sat in the 25-26 feed; the script listed it and counted
    * it as deleted. A refetch that changes these numbers is a new season file and is re-pinned here.
    *
-   * Refetched the same day over all 102 teams, when the Southern Section independents (Glendora,
+   * Refetched the same day over all 102 teams, when the LA independents (Glendora,
    * Harvard-Westlake, Thousand Oaks) joined the registry: the 412 NorCal, 473 SoCal and 11 cross-region
    * finals are unchanged, and the three add 40 SoCal–SoCal finals (513), every one against a Southern
    * California team or each other. outsideRegistry falls from 51 to 16 (their games were rows outside the

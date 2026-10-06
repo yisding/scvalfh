@@ -1026,7 +1026,11 @@ export function unevenGamesSentence(
     return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
   }
   const league = getLeague(leagueId);
-  return `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
+  // 'membership' with no fixed schedule (the Sunset, the LA independents): every game between two members counts,
+  // so the gap is in games played against each other; 'contest-type' with none (no league today): MaxPreps' flag.
+  return league.rules.classification === 'membership'
+    ? `Teams have played between ${spread.min} and ${spread.max} games against other ${league.shortName} teams, and there is no fixed league schedule, so points favour teams that have played more.`
+    : `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
 }
 
 // ---------------------------------------------------------------- missing official results
@@ -1062,8 +1066,8 @@ const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
  * the San Diego divisions): there are no fixtures, so the rows are its classified games
  * (countsFor === division) dated before `today`, with the same status rule and the contest id in
  * place of a fixture id. What "classified" means is the league's rule (lib/classify.ts): under
- * 'contest-type' (EAL, Sunset) a game MaxPreps flags as a league game between two members; under
- * 'membership' (San Diego) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
+ * 'contest-type' (EAL) a game MaxPreps flags as a league game between two members; under
+ * 'membership' (Sunset, San Diego, the LA independents) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
  * flagged or not — the double round robin is the schedule, so an unflagged Patrick Henry game
  * dated before today with no score is a missing league result too.
  */

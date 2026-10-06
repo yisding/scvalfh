@@ -89,8 +89,8 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
     home.lineAfter,
   );
   const lineAt = lineAfter === null ? -1 : lineAfter - 1;
-  // A group of independents (the Southern Section independents, DESIGN §24.10) is in no league: its kicker is
-  // 'Table' and its caption names the group in full, never 'Independent league standings'.
+  // A group of independents (the LA independents, DESIGN §24.10) is in no league: its kicker is
+  // 'Table' and its caption names the group in full, never 'LA league standings'.
   const league = getLeague(getDivision(division.id).leagueId);
   const kicker = showDivisionLabel && division.heading ? division.heading : league.independents ? 'Table' : 'League table';
   // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its

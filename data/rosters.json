@@ -15,7 +15,7 @@
     "builtBy": "scripts/fetch-rosters.ts",
     "id": "maxpreps-html",
     "notes": [
-      "One entry per registry team, all 9 leagues (SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro) and the Southern Section independents, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 9 leagues (SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro) and the LA independents, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
       "Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.",
       "Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.",

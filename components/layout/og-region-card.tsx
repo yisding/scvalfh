@@ -75,7 +75,7 @@ export function regionCardColumns(
   return REGIONS.map((region) => ({
     region: region.id,
     heading: region.name,
-    // Every table of the region, the Southern Section independents' included (DESIGN §24.10); the group's row is
+    // Every table of the region, the LA independents' included (DESIGN §24.10); the group's row is
     // labelled by its division ('Independents'), since its short name is an adjective.
     rows: leagues
       .filter((l) => l.region === region.id)
