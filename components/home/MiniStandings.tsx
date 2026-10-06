@@ -6,7 +6,7 @@ import SectionHeader from '../ui/SectionHeader';
 import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords } from '../../lib/format';
-import { getDivision, regionOf } from '../../lib/leagues';
+import { getDivision, getLeague, regionOf } from '../../lib/leagues';
 import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
@@ -89,14 +89,19 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
     home.lineAfter,
   );
   const lineAt = lineAfter === null ? -1 : lineAfter - 1;
-  const kicker = showDivisionLabel && division.heading ? division.heading : 'League table';
+  // A group of independents (the Southern Section independents, DESIGN §24.10) is in no league: its kicker is
+  // 'Table' and its caption names the group in full, never 'Independent league standings'.
+  const league = getLeague(getDivision(division.id).leagueId);
+  const kicker = showDivisionLabel && division.heading ? division.heading : league.independents ? 'Table' : 'League table';
   // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its
   // "Division I" / "Division II" are playoff tiers (standings-view.ts tableWords, review 2026-10-06).
   const subject = showDivisionLabel && division.heading
-    ? regionOf(getDivision(division.id).leagueId) === 'socal'
+    ? regionOf(league.id) === 'socal'
       ? `${division.heading} league standings`
       : `${division.heading} Division league standings`
-    : `${division.leagueShort} league standings`;
+    : league.independents
+      ? `${league.name} standings`
+      : `${division.leagueShort} league standings`;
   return (
     <section className={className}>
       <SectionHeader

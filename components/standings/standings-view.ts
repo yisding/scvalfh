@@ -309,10 +309,13 @@ function orderLegendText(league: LeagueConfig): string {
 /**
  * The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from:
  * MaxPreps' league flag (the EAL, the Sunset: 'contest-type'), or every game between two division members
- * on MaxPreps' schedules (the San Diego leagues: 'membership', whose flag misses many league games).
+ * on MaxPreps' schedules (the San Diego leagues: 'membership', whose flag misses many league games). A group
+ * of independents (the Southern Section independents, DESIGN §24.10) is in no league, so its line is the
+ * division's own note: why the five are grouped and what the table counts.
  */
 function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
   if (official.mode !== 'none') return `Scheduled per ${league.shortName}`;
+  if (league.independents) return official.note.replace(/\.$/, '');
   // The subject is the league alone, so it is its `standaloneName`: 'North publishes no schedule' could
   // be read as a direction, 'North County publishes no schedule' cannot. Every other league's is its short name.
   const subject = standaloneName(league.id);
@@ -546,11 +549,15 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   // BVAL's Mt. Hamilton). The San Diego Section's alignment calls City Western or Palomar a league
   // inside a conference, and its own "Division I" / "Division II" are playoff tiers, so a SoCal
   // caption reads "Palomar league standings" (review 2026-10-06).
+  // A group of independents is named in full: 'Southern Section independents standings', never 'Independent
+  // league standings' (DESIGN §24.10).
   const tableWords = heading
     ? regionOf(league.id) === 'socal'
       ? `${heading} league standings`
       : `${heading} Division league standings`
-    : `${league.shortName} league standings`;
+    : league.independents
+      ? `${league.name} standings`
+      : `${league.shortName} league standings`;
   const caption = through
     ? `${tableWords}, league games only, through ${through}. Computed from published results; unofficial.`
     : `${tableWords}. No league game has been reported yet.`;

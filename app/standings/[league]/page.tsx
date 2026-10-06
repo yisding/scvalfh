@@ -114,7 +114,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
       }
     >
       <PageHeader
-        title={`${summary.shortName} standings`}
+        title={standingsLabel(summary.id)}
         description={`${summary.name} · ${summary.section.name} · league games only`}
         aside={multi ? <DivisionTabs variant="inline" tabs={tabs} /> : undefined}
         asideClassName={multi ? 'hidden md:block' : undefined}
