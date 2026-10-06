@@ -927,11 +927,18 @@ describe('normalize: overtime a game note states (Homestead, Oct 5)', () => {
     expect(overtimeFromNote('won in OT 2-1')).toBe(1);
     expect(overtimeFromNote('won 3-2 OT')).toBe(1);
     expect(overtimeFromNote('1:2 OT')).toBe(1);
+    // A negation only counts right before the mention.
+    expect(overtimeFromNote('no goals in OT, tied 1-1')).toBe(1);
+    expect(overtimeFromNote('not a league game, won in overtime')).toBe(1);
     for (const note of [
       'Senior Night',
       'no OT, tie stands',
       'No overtime played',
       'No double OT, tie stands',
+      'not OT, ended level',
+      'Finished without overtime',
+      'never OT in this league',
+      'Not double OT',
       'OTHS gym',
       'Hot day, lots of water',
       'Not a league game',
