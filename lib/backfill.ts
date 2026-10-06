@@ -296,14 +296,21 @@ function sameLeagueOf(g: Pick<Game, 'home' | 'away'>): string | null {
 /**
  * The section `g`'s two sides are both teams of when it ends a level varsity game with a shootout
  * (SectionConfig.shootout set: the Northern Section, the San Diego Section), else null. Keyed on the section
- * as lib/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too.
+ * as lib/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too, and with
+ * the same tournament exception: a row MaxPreps marks contestType 2 on either side, in a section whose rule
+ * does not reach tournaments (`shootout.coversTournaments` false: the SDFHOA procedures cover the regular
+ * season and the playoffs, not invitational tournaments), is governed by no shootout rule, so normalize
+ * records its level final as a tie and rules 3 and 4 here may use a level si.com score for it.
  */
-function shootoutSectionOf(g: Pick<Game, 'home' | 'away'>): SectionConfig | null {
+function shootoutSectionOf(g: Pick<Game, 'home' | 'away' | 'contestTypes'>): SectionConfig | null {
   const h = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
   const a = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
   if (!h || !a || h.section !== a.section) return null;
   const section = getSection(h.section);
-  return section.shootout ? section : null;
+  if (!section.shootout) return null;
+  const isTournamentRow = g.contestTypes.home === 2 || g.contestTypes.away === 2;
+  if (isTournamentRow && !section.shootout.coversTournaments) return null;
+  return section;
 }
 
 /**
@@ -317,7 +324,7 @@ function shootoutGroupName(section: SectionConfig): string {
 }
 
 /** A level si.com score in a shootout section says nothing about who won, so no rule writes it. */
-function isUnusableLevelScore(g: Pick<Game, 'home' | 'away'>, s: { home: number; away: number }): boolean {
+function isUnusableLevelScore(g: Pick<Game, 'home' | 'away' | 'contestTypes'>, s: { home: number; away: number }): boolean {
   return s.home === s.away && shootoutSectionOf(g) !== null;
 }
 
@@ -694,7 +701,8 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
           // EAL); '…a varsity San Diego Section game is decided by a shootout and si.com does not say who won it…'.
           // The rule's words, whatever the section's inference, with 'outside a tournament' where the rule does
           // not reach tournaments (the SDFHOA procedures), so the note never says a tournament game cannot end
-          // level. The D24 rule itself is unchanged: no level si.com score between two such teams is written.
+          // level. A tournament row in such a section never reaches this branch (shootoutSectionOf), so its
+          // level si.com score is written as a tie, as normalize records a level MaxPreps final of it.
           const { decidedOn, pronoun } = shootoutPhrases(shootout.shootout.words);
           const scope = shootout.shootout.coversTournaments ? '' : ' outside a tournament';
           skipped.push(

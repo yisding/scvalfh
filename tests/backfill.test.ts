@@ -578,6 +578,29 @@ describe('backfill: the Southern California leagues (DESIGN-socal §2.1.3)', () 
     }
   });
 
+  it('rule 3 fills a level si.com score for a San Diego TOURNAMENT row (the SDFHOA rule does not reach tournaments), as normalize records such a final a tie', () => {
+    const pending = game({ home: 'la-jolla', away: 'scripps-ranch', date: '2026-09-12', status: 'score-pending', contestTypes: { home: 2, away: 2 } });
+    const res = applyBackfill(input({ games: [pending], sblive: [sb('2026-09-12', ['la-jolla', 0], ['scripps-ranch', 0])] }));
+    expect(res.games[0].provenance.backfill?.rule).toBe('score-pending');
+    expect(res.games[0].status).toBe('final');
+    expect([res.games[0].home.result, res.games[0].away.result]).toEqual(['T', 'T']);
+    expect(res.skipped).toEqual([]);
+
+    // One side marked a tournament row is enough; a final marked wrong (rule 4a) is overridden too.
+    const oneSide = game({ home: 'la-jolla', away: 'scripps-ranch', date: '2026-09-12', hs: 2, as: 1, contestTypes: { home: 2, away: 0 } });
+    const bad = { ...oneSide, provenance: { ...oneSide.provenance, resultConflict: 'the side with more goals is marked L' } };
+    const fixed = applyBackfill(input({ games: [bad], sblive: [sb('2026-09-12', ['la-jolla', 1], ['scripps-ranch', 1])] })).games[0];
+    expect(fixed.provenance.backfill?.rule).toBe('contradictory-result');
+    expect([fixed.home.score, fixed.away.score]).toEqual([1, 1]);
+
+    // The EAL's rule covers tournaments (coversTournaments true), so its tournament row is still refused.
+    const eal = game({ home: 'chico', away: 'davis', date: '2026-09-12', status: 'score-pending', contestTypes: { home: 2, away: 2 } });
+    const ealRes = applyBackfill(input({ games: [eal], sblive: [sb('2026-09-12', ['chico', 1], ['davis', 1])] }));
+    expect(ealRes.games[0]).toBe(eal);
+    expect(ealRes.skipped).toHaveLength(1);
+    expect(ealRes.skipped[0].note).toMatch(/varsity EAL game is decided on 1 v 1s/);
+  });
+
   it('rule 3 fills a level si.com score between two Sunset teams (no shootout rule: a level game stands)', () => {
     const pending = game({ home: 'edison', away: 'marina', date: '2026-09-29', status: 'score-pending' });
     const res = applyBackfill(input({ games: [pending], sblive: [sb('2026-09-29', ['edison', 1], ['marina', 1])] }));
