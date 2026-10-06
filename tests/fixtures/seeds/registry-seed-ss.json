@@ -1,6 +1,6 @@
 {
   "generatedOn": "2026-10-06",
-  "scope": "SS (CIF Southern Section) Sunset field hockey league and the Southern Section independents (Glendora, Harvard-Westlake, Thousand Oaks), girls varsity 26-27",
+  "scope": "SS (CIF Southern Section) Sunset field hockey league (8) and the Southern Section independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks), girls varsity 26-27",
   "verified": {
     "date": "2026-10-06",
     "by": "offline build from the 2026-10-06 MaxPreps + si.com harvest (scratchpad/inventory), cross-checked field by field",
@@ -57,7 +57,7 @@
       "section": "ss",
       "label": "Sunset League",
       "shortLabel": "Sunset",
-      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (the same 10 schools) and 26-27 league-flagged games; MaxPreps 26-27 table holds only the inland/LA five, the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs.",
+      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (10 schools) less Bonita and Chaminade, listed with the independents (owner decision 2026-10-06: MaxPreps marks none of their 26-27 games against the five Orange County schools as league games, and both play every other independent home and away); 26-27 league-flagged games. MaxPreps 26-27 table holds Chaparral, Great Oak, Temecula Valley and the two independents; the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs.",
       "divisions": [
         {
           "id": "sunset",
@@ -65,7 +65,7 @@
           "maxprepsLeagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
           "maxprepsName": "Sunset",
           "canonicalUrl": "https://www.maxpreps.com/ca/field-hockey/26-27/league/sunset/?leagueid=aa46adc4-c188-4e3b-b5fd-857064176297",
-          "teamCount": 10,
+          "teamCount": 8,
           "maxprepsRows": 5,
           "maxprepsMissing": [
             "edison",
@@ -74,10 +74,11 @@
             "marina",
             "newport-harbor"
           ],
-          "maxprepsExtraRows": {},
+          "maxprepsExtraRows": {
+            "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d": "Bonita (listed with the Southern Section independents here)",
+            "742a32d0-2dc9-4aa8-ad92-8c4576f73a12": "Chaminade (listed with the Southern Section independents here)"
+          },
           "members": [
-            "bonita",
-            "chaminade",
             "chaparral",
             "edison",
             "fountain-valley",
@@ -90,7 +91,7 @@
           "priorSeasonLeagueIds": {
             "25-26": {
               "leagueId": "1ab67ce6-46a6-42be-a7aa-dd2892d77dff",
-              "note": "all 10 schools in one table"
+              "note": "all 10 schools in one table (Bonita and Chaminade included)"
             }
           },
           "siSbliveBuckets": [
@@ -105,7 +106,7 @@
       "section": "ss",
       "label": "Southern Section independents",
       "shortLabel": "Independent",
-      "note": "Not a league: Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports MaxPreps league (Palomares, League B, Marmonte) in 2026-27 and in 2025-26, and none plays a game MaxPreps marks as a league game. No table, no schedule, no CIF-SS playoffs. Added 2026-10-06 (owner decision: every California team with a 2026 varsity game is covered).",
+      "note": "Not a league: five Southern Section schools in no field hockey league, grouped by this site. Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports MaxPreps league (Palomares, League B, Marmonte) in 2026-27 and in 2025-26. Bonita and Chaminade are in MaxPreps' and si.com's 26-27 Sunset tables, but MaxPreps marks none of their games against the five Orange County Sunset teams as league games and both play every other independent home and away (owner decision 2026-10-06). The table counts games between the five (classification membership). No MaxPreps table, no schedule document, no CIF-SS playoffs. Added 2026-10-06 (owner decision: every California team with a 2026 varsity game is covered).",
       "divisions": [
         {
           "id": "independents",
@@ -113,15 +114,19 @@
           "maxprepsLeagueId": null,
           "maxprepsName": null,
           "canonicalUrl": null,
-          "teamCount": 3,
+          "teamCount": 5,
           "maxprepsRows": 0,
           "maxprepsMissing": [
+            "bonita",
+            "chaminade",
             "glendora",
             "harvard-westlake",
             "thousand-oaks"
           ],
           "maxprepsExtraRows": {},
           "members": [
+            "bonita",
+            "chaminade",
             "glendora",
             "harvard-westlake",
             "thousand-oaks"
@@ -138,9 +143,18 @@
             "thousand-oaks": {
               "26-27": "05c0b9ef-a947-4d34-8855-b1c0878e7d12 Marmonte",
               "25-26": "392fb703-cc64-46d7-8d21-819e13a78c3f Marmonte"
+            },
+            "bonita": {
+              "26-27": "aa46adc4-c188-4e3b-b5fd-857064176297 Sunset (MaxPreps files the school's field hockey here; listed with the independents on this site)",
+              "25-26": "1ab67ce6-46a6-42be-a7aa-dd2892d77dff Sunset"
+            },
+            "chaminade": {
+              "26-27": "aa46adc4-c188-4e3b-b5fd-857064176297 Sunset (MaxPreps files the school's field hockey here; listed with the independents on this site)",
+              "25-26": "1ab67ce6-46a6-42be-a7aa-dd2892d77dff Sunset"
             }
           },
           "siSbliveBuckets": [
+            "4249-sunset (Bonita, Chaminade)",
             "4235-palomares",
             "4207-league-b",
             "4213-marmonte"
@@ -150,94 +164,6 @@
     }
   ],
   "teams": [
-    {
-      "id": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
-      "slug": "bonita",
-      "name": "Bonita",
-      "shortName": "Bonita",
-      "abbr": "BN",
-      "acronym": "BHS",
-      "mascot": "Bearcats",
-      "city": "La Verne",
-      "section": "ss",
-      "league": "sunset",
-      "division": "sunset",
-      "dataCoverage": "full",
-      "colors": [
-        "00824B",
-        "FFFFFF"
-      ],
-      "colorSource": "maxpreps-standings",
-      "maxprepsPath": "/ca/la-verne/bonita-bearcats/field-hockey/",
-      "aliases": [
-        "Bonita",
-        "BONITA",
-        "Bonita High School",
-        "Bonita Bearcats",
-        "Bonita (La Verne)"
-      ],
-      "sbliveTeamId": "458494",
-      "sbliveSlug": "458494-bonita-bearcats",
-      "sbliveSchoolId": "10097",
-      "notes": {
-        "maxprepsStandingsRow": {
-          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
-          "leagueName": "Sunset",
-          "place": 3
-        },
-        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
-        "scheduleRows": 21,
-        "liveLeagueRows": 3,
-        "deletedRows": 1,
-        "sbliveBucket": "4249-sunset",
-        "sbliveSchoolIdSource": "logo-url",
-        "notes": "Bonita (La Verne, CIF-SS) is a different school from Bonita Vista (Chula Vista, CIF-SDS Metro Mesa); their keys (bonita / bonitavista) do not collide. Acronym BHS shared with Bishop's (and the existing BHS teams): display only."
-      }
-    },
-    {
-      "id": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
-      "slug": "chaminade",
-      "name": "Chaminade",
-      "shortName": "Chaminade",
-      "abbr": "CM",
-      "acronym": "CHS",
-      "mascot": "Eagles",
-      "city": "West Hills",
-      "section": "ss",
-      "league": "sunset",
-      "division": "sunset",
-      "dataCoverage": "full",
-      "colors": [
-        "022C66",
-        "CC4E10"
-      ],
-      "colorSource": "maxpreps-standings",
-      "maxprepsPath": "/ca/west-hills/chaminade-eagles/field-hockey/",
-      "aliases": [
-        "Chaminade",
-        "CHAMINADE",
-        "Chaminade High School",
-        "Chaminade Eagles",
-        "Chaminade (West Hills)"
-      ],
-      "sbliveTeamId": "456824",
-      "sbliveSlug": "456824-chaminade-eagles",
-      "sbliveSchoolId": "141",
-      "notes": {
-        "maxprepsStandingsRow": {
-          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
-          "leagueName": "Sunset",
-          "place": 4
-        },
-        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
-        "scheduleRows": 16,
-        "liveLeagueRows": 2,
-        "deletedRows": 2,
-        "sbliveBucket": "4249-sunset",
-        "sbliveSchoolIdSource": "logo-url",
-        "notes": "Acronym CHS shared with Chaparral (and CCS/NS CHS teams): display only, not indexed. Private school omitted from the CIF-SS Season Preview participating list but fields a varsity team on MaxPreps and si.com."
-      }
-    },
     {
       "id": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "slug": "chaparral",
@@ -568,6 +494,94 @@
       }
     },
     {
+      "id": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
+      "slug": "bonita",
+      "name": "Bonita",
+      "shortName": "Bonita",
+      "abbr": "BN",
+      "acronym": "BHS",
+      "mascot": "Bearcats",
+      "city": "La Verne",
+      "section": "ss",
+      "league": "independents",
+      "division": "independents",
+      "dataCoverage": "full",
+      "colors": [
+        "00824B",
+        "FFFFFF"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/la-verne/bonita-bearcats/field-hockey/",
+      "aliases": [
+        "Bonita",
+        "BONITA",
+        "Bonita High School",
+        "Bonita Bearcats",
+        "Bonita (La Verne)"
+      ],
+      "sbliveTeamId": "458494",
+      "sbliveSlug": "458494-bonita-bearcats",
+      "sbliveSchoolId": "10097",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 3
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 21,
+        "liveLeagueRows": 3,
+        "deletedRows": 1,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Bonita (La Verne, CIF-SS) is a different school from Bonita Vista (Chula Vista, CIF-SDS Metro Mesa); their keys (bonita / bonitavista) do not collide. Acronym BHS shared with Bishop's (and the existing BHS teams): display only."
+      }
+    },
+    {
+      "id": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
+      "slug": "chaminade",
+      "name": "Chaminade",
+      "shortName": "Chaminade",
+      "abbr": "CM",
+      "acronym": "CHS",
+      "mascot": "Eagles",
+      "city": "West Hills",
+      "section": "ss",
+      "league": "independents",
+      "division": "independents",
+      "dataCoverage": "full",
+      "colors": [
+        "022C66",
+        "CC4E10"
+      ],
+      "colorSource": "maxpreps-standings",
+      "maxprepsPath": "/ca/west-hills/chaminade-eagles/field-hockey/",
+      "aliases": [
+        "Chaminade",
+        "CHAMINADE",
+        "Chaminade High School",
+        "Chaminade Eagles",
+        "Chaminade (West Hills)"
+      ],
+      "sbliveTeamId": "456824",
+      "sbliveSlug": "456824-chaminade-eagles",
+      "sbliveSchoolId": "141",
+      "notes": {
+        "maxprepsStandingsRow": {
+          "leagueId": "aa46adc4-c188-4e3b-b5fd-857064176297",
+          "leagueName": "Sunset",
+          "place": 4
+        },
+        "colorsFrom": "leagues/{leagueId}/standings/v1 schoolColor1/2",
+        "scheduleRows": 16,
+        "liveLeagueRows": 2,
+        "deletedRows": 2,
+        "sbliveBucket": "4249-sunset",
+        "sbliveSchoolIdSource": "logo-url",
+        "notes": "Acronym CHS shared with Chaparral (and CCS/NS CHS teams): display only, not indexed. Private school omitted from the CIF-SS Season Preview participating list but fields a varsity team on MaxPreps and si.com."
+      }
+    },
+    {
       "id": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
       "slug": "glendora",
       "name": "Glendora",
@@ -700,8 +714,6 @@
     }
   ],
   "abbrsChosen": [
-    "BN=bonita",
-    "CM=chaminade",
     "CP=chaparral",
     "ED=edison",
     "FV=fountain-valley",
@@ -710,6 +722,8 @@
     "MR=marina",
     "NH=newport-harbor",
     "TV=temecula-valley",
+    "BN=bonita",
+    "CM=chaminade",
     "GL=glendora",
     "HW=harvard-westlake",
     "TO=thousand-oaks"

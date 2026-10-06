@@ -20,7 +20,8 @@
 > changed and wins where it disagrees with §22 or anything above it. Later the same day the Southern
 > Section's three independents (Glendora, Harvard-Westlake and Thousand Oaks, no league games) joined:
 > 102 teams in nine leagues and one group with no table, and North County's short name became "North"
-> (§24.9).
+> (§24.9). Later still, Bonita and Chaminade moved from the Sunset to the independents, and the
+> group of five got a table of its games against each other (§24.10, which wins over §24.9).
 >
 > **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
 > build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
@@ -2781,7 +2782,7 @@ framework) still apply.
 (Extended by §22: a fifth league, the EAL, in a third section, the Northern Section; 49 teams.)
 (Extended by §24: nine leagues in five sections and two regions, 99 teams; the page-weight
 multipliers and the Worker allowance were raised from a measurement on 2026-10-06, §24.6. With the
-three independents, 102 teams, no page line moved, §24.9.)
+three independents, 102 teams, no page line moved, §24.9; the five independents' table, §24.10.)
 
 ## 16. Leaders amendment (2026-10)
 
@@ -3887,6 +3888,11 @@ addition there will cross it.
 
 ### 24.9 The Southern Section independents, and North's short name (2026-10-06, later)
 
+> **Superseded in part by §24.10 (the same day, later):** the group has five members (Bonita and
+> Chaminade joined it from the Sunset) and a table of their games against each other. The "no table",
+> "no league games" and "three" rows below describe the state between the two decisions; §24.10 says
+> what stands.
+
 Glendora, Harvard-Westlake and Thousand Oaks joined on 2026-10-06, so every California team we found
 with a 2026 varsity game on MaxPreps is covered: **102 teams, 49 NorCal and 53 SoCal, in nine leagues
 and one group of three independents**. Each is the only field hockey team in its all-sports league on
@@ -3900,7 +3906,7 @@ disagree.
 |---|---|---|
 | The three appear only as opponents (24.1 scope note, 24.8) | **A group, not a league**: `LeagueId` `'independents'` (name "Southern Section independents", short name "Independent", section `ss`), after Metro in `LEAGUES`, with one division `independents` (3 teams, `gamesPerTeam` null, `maxprepsLeagueId` null, `official.mode` 'none'). Its registry is `lib/registry/independents.ts`, transcribed from `tests/fixtures/seeds/registry-seed-ss.json`. | They have a 2026 varsity schedule and the Southern Section rules, but no league. Shown only as opponents, their 37 games were invisible except from the other side. |
 | Three classifications (`contest-type`, `official-fixtures`, `membership`) | A fourth, **`independent`**: `lib/classify.ts` returns null for every game of the group, so `countsFor` is always null; `DivisionHealth.classification` and the snapshot schema take the value. | A game between two independents (Harvard-Westlake 5, Glendora 0 on Sep 8) is not a league game: they share no league. |
-| "Nine leagues" is `LEAGUES.length` | **`LEAGUES_WITH_TABLES`** (9) and **`INDEPENDENT_LEAGUES`** (1) in `lib/leagues.ts`; every count of leagues uses the first and names the independents apart: "nine leagues and the Southern Section's three independents", "all four SoCal leagues and three independents", `coveredLeagueWords()`, `independentsWords()`. The site never prints "ten leagues" (a `leaders-view` test checks). | They are not a league, and a tenth "league" with no games would be a false count. |
+| "Nine leagues" is `LEAGUES.length` | **`LEAGUES_WITH_TABLES`** (9; renamed `LEAGUES_PROPER` in §24.10) and **`INDEPENDENT_LEAGUES`** (1) in `lib/leagues.ts`; every count of leagues uses the first and names the independents apart: "nine leagues and the Southern Section's three independents", "all four SoCal leagues and three independents", `coveredLeagueWords()`, `independentsWords()`. The site never prints "ten leagues" (a `leaders-view` test checks). | They are not a league, and a tenth "league" with no games would be a false count. |
 | Scope note: "Teams outside these nine leagues, including … Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents." | "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand Oaks), which play no league games. Other teams appear only as opponents." `SITE_DESCRIPTION` says "… for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents." | The old note's exception is now covered. |
 | North County's short name "North County" | **"North"** (owner decision, 2026-10-06: "North County" made the chip too wide). The name ("North County Conference") and search are unchanged: search keys are the short name and the name, so "North County" still finds it. Where the short name would stand alone as a control's target or a sentence's subject, a new `LeagueConfig.standaloneName` is used through `standaloneName(id)`: "Jump to North County ↓", "Show North County here", "(North County publishes no schedule)". Every other league's is its short name, except the independents' ("Jump to the independents ↓", "Show the independents here"). The scope note's noun is the shared last word: "City, North and Metro conferences". | "Jump to North ↓", alone on a pill, reads as a direction; "Show Independent here" names nothing. In a list ("City, North and Metro"), a label ("North · Palomar") or a row tag ("Poway · North") the context makes it the league. |
 | A league not fetched reads "<SHORT> was not fetched in this run." | For a group: "The Southern Section independents were not fetched in this run." Every league's sentence is unchanged. | "Independent was not fetched" names nothing. |
@@ -3962,3 +3968,58 @@ slugs and one more league) from 2,816 to **3,072 B**.
 No enrichment sweep for them (stubs, as for the other 50 SoCal teams). `scripts/discover-season.ts`
 probes each of the three and asks a human to check that each is still its league's only field hockey
 team; it does not decide that itself.
+
+### 24.10 Bonita and Chaminade are independents, and the independents have a table (2026-10-06, later still)
+
+Owner decisions, 2026-10-06: "I believe Chaminade and Bonita should be classified as independents and
+not Sunset", and "let's give the independents a standings table also". Both checked against the
+sources before the change, and both built.
+
+**What the sources say about Bonita and Chaminade.** MaxPreps' 2026-27 Sunset table (`aa46adc4-…`)
+lists them with Chaparral, Great Oak and Temecula Valley, and si.com's Sunset table (the one the
+Section's scores site, scores.cifss.org, shows) lists them with six of the eight; MaxPreps' 2024-25 and
+2025-26 Sunset tables listed them too, and si.com's team profiles say "Sunset". No published document
+calls them independents. Against that: MaxPreps marks none of their nine 2026 games against the five
+Orange County Sunset teams as a league game (Bonita: Marina Aug 18, Huntington Beach Aug 25, Newport
+Harbor Sep 1, Edison Sep 10; Chaminade: Fountain Valley Aug 18, Edison Aug 20, Marina Aug 24,
+Huntington Beach Sep 16, Newport Harbor Oct 6; all contestType 1), while it does mark the Temecula
+three's games against those schools; and each of the two plays every one of Glendora, Harvard-Westlake
+and Thousand Oaks, and each other, home and away (all ten pairs of the five meet, nine of them twice,
+Chaminade–Thousand Oaks three times). The one MaxPreps league flag between the two and a Sunset team is
+Bonita at Great Oak, Aug 27. So the site lists them with the independents, says on every surface that
+MaxPreps and si.com list them in the Sunset, and skips their MaxPreps Sunset rows as the Sunset's
+`maxprepsExtraRows` (a registry team of another division may be one; `lib/teams.ts`).
+
+**The group gets a table.** The five are still not a league, and nothing calls them one: a new
+`LeagueConfig.independents: true` flag carries the group identity (`isIndependentLeague`,
+`INDEPENDENT_LEAGUES`, `LEAGUES_PROPER`, the renamed `LEAGUES_WITH_TABLES`), and "nine leagues and
+five independents" stays the count. The `'independent'` classification is gone: the group is a
+`'membership'` division, as the San Diego divisions are, so every game between two of the five dated
+Sep 8 to Oct 31 (tournament and postseason rows left out) counts for its table, whatever MaxPreps'
+flag says, ordered by this site's 3-1-0 points (`orderScope: 'site'`, `gamesPerTeam` null since the
+pairs meet two or three times; `assertLeagues` now allows null on a membership division with no
+document). Everything built for "a group with no table" is removed: `IndependentGroup.tsx`,
+`IndependentGroupView`, the `independent` fields of the division, overview and mini views, the
+independents' branches on the team page (overall-only tiles, "All games" form and margins, no "Who we
+haven't beaten"), the game page ("Plays no league games"), the JV page and tables, the home panel's
+lead and pinned card, the standings pages and the about page's `IndependentRules`. The independents
+now render through every league path, and the site's "league game" vocabulary covers the group's games
+on the strength of the division's note, printed under its tables and on /about: "The table counts
+every game between two of the five, whether or not MaxPreps marks it as a league game (it marks only
+Bonita's two games with Chaminade), and orders them by this site's 3-1-0 points."
+
+| Earlier decision (§24.9) | Now |
+|---|---|
+| Sunset: ten teams, Aug 18 first league date, MaxPreps table five of ten | Eight teams (Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor, Temecula Valley), `leaguePlay.first` Aug 25 (Chaparral–Temecula Valley), MaxPreps table three of eight plus the two extra rows, `miniRows` 8; the knownCause says Great Oak's Aug 27 win over Bonita, which MaxPreps counts, is not counted here. The overtime citation names only Fountain Valley 1-1 Marina. |
+| Independents: three, `classification: 'independent'`, no table | Five, `independents: true`, `classification: 'membership'`, `leaguePlay` Sep 8 to Oct 31, `expectedTeams` 5, `maxprepsMissing` all five, `miniRows` 5, cities "Glendora, La Verne, Studio City, Thousand Oaks and West Hills", a `membershipNote` under the heading. |
+| Copy: "play no league games", "no league table", "<SHORT> games" links to the schedule | The scope note: "plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks), schools in no field hockey league". Standings links read "Independents standings" (`standingsLabel` in `lib/leagues.ts`: "Independent standings" would read as "unofficial standings"); the overview and /teams count the independents' table ("Every division in SCVAL, …, Metro and the independents"); the preseason notice for the group reads "The first game between two of the independents is …". |
+| Leaders: the league-record board left the independents out because they had no league record | Still left out: their table is not a league record (the board's scope stays "all four SoCal leagues"); every other SoCal board says "and five independents". |
+| The region OG cards listed no independents row; `/history/2025-26` said "had no league table to publish" | The SoCal column of the root and `/standings` OG cards gets an "Independents" row (its division label: the short name is an adjective) with the table's leader clause; the history page and `/about` say "The Southern Section independents are this site’s grouping, so no table of them was published." |
+| `/history/2025-26`: "played as independents in 2025-26 too" | "The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.", with MaxPreps' 2025-26 Sunset table added to what was checked. |
+
+**Data (2026-10-06, 12:00Z).** `pnpm fetch-data` again: 102 teams, 879 games (524 league), 542 finals,
+9 pending; the independents' table counts 21 games (13 final), the Sunset 15 (its 18 less Great Oak–Bonita
+and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. The per-team files
+(rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
+`division` rewritten, their contents unchanged.
+

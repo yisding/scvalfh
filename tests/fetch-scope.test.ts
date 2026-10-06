@@ -94,23 +94,23 @@ describe('summarizeByLeague', () => {
       ['pcal', 7, 0],
       ['mcal', 9, 0],
       ['eal', 6, 0],
-      ['sunset', 10, 0],
+      ['sunset', 8, 0],
       ['city', 12, 0],
       ['north-county', 19, 0],
       ['metro', 9, 0],
-      ['independents', 3, 0],
+      ['independents', 5, 0],
     ]);
     // BVAL's rows are failures in the file, but a run that did not cover BVAL did not fail them.
     const scoped = summarizeByLeague(teams, ['scval']);
     expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 10, 12, 19, 9, 3]);
+    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 8, 12, 19, 9, 5]);
     // A Southern California run (the leagues WP3 fetched rosters, stats and JV for on 2026-10-06).
     const socal = summarizeByLeague(teams, ['sunset', 'city', 'north-county', 'metro']);
-    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0, 3]);
+    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0, 5]);
     expect(runExitCode(socal)).toBe(0);
     // The independents' own run (2026-10-06, when the group joined the registry): the other 99 kept.
     const independents = summarizeByLeague(teams, ['independents']);
-    expect(independents.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9, 0]);
+    expect(independents.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 8, 12, 19, 9, 0]);
     expect(runExitCode(independents)).toBe(0);
   });
 

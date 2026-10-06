@@ -53,9 +53,9 @@ const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
 /**
- * The unavailable leagues that have a table this season, and the groups that never have one (the Southern
- * Section independents, DESIGN §24.9): "we found no official final standings" is said of the first only,
- * since a group with no league games had no standings to find.
+ * The unavailable leagues, and the groups of independents (the Southern Section independents, DESIGN §24.9,
+ * §24.10): "we found no official final standings" is said of the first only, since the group is this site's
+ * grouping and nobody published a table of it.
  */
 const UNAVAILABLE_LEAGUES = UNAVAILABLE.filter((l) => !isIndependentLeague(l.id));
 const UNAVAILABLE_GROUPS = UNAVAILABLE.filter((l) => isIndependentLeague(l.id));
@@ -63,9 +63,9 @@ const UNAVAILABLE_GROUPS = UNAVAILABLE.filter((l) => isIndependentLeague(l.id));
 const UNAVAILABLE_SUBJECT = UNAVAILABLE_LEAGUES.length
   ? `${listWords(UNAVAILABLE_LEAGUES.map((l) => short(l.id)))} ${UNAVAILABLE_LEAGUES.length === 1 ? 'is' : 'are'}`
   : null;
-/** "The Southern Section independents had no league table to publish.", or null with no such group. */
+/** "The Southern Section independents are this site’s grouping, so no table of them was published.", or null with no such group. */
 const GROUPS_SENTENCE = UNAVAILABLE_GROUPS.length
-  ? `${listWords(UNAVAILABLE_GROUPS.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} had no league table to publish.`
+  ? `${listWords(UNAVAILABLE_GROUPS.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
   : null;
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
@@ -306,10 +306,10 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
         {/* `break-words`: the checked list quotes whole URLs, which would otherwise widen a
             320px page past the screen. */}
         <p className="m-0 mt-3 max-w-prose break-words text-meta text-ink-3">
-          {/* A group with no league table (DESIGN §24.9) has no current standings either: its page lists the teams. */}
+          {/* A group of independents (DESIGN §24.10): its current table is this site's, under the group's name. */}
           {isIndependentLeague(leagueId) ? (
             <>
-              Checked {entry.checkedOn}: {entry.checked.join('; ')}. This season&rsquo;s {league.name} are listed on{' '}
+              Checked {entry.checkedOn}: {entry.checked.join('; ')}. This season&rsquo;s table of the {league.name} is on{' '}
               <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
                 the {league.name} page
               </Link>{' '}

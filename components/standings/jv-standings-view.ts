@@ -17,7 +17,7 @@ import {
   type JvDivisionTable,
   type JvStandingRow,
 } from '../../lib/jv-standings';
-import { divisionHeading, getDivision, getLeague, isIndependentDivision, isSingleDivision } from '../../lib/leagues';
+import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
 
@@ -123,8 +123,6 @@ export function buildJvTablesView(league: LeagueId): JvTableView[] {
 export function teamJvStanding(slug: TeamSlug): { line: string | null; href: string } | null {
   const team = getTeamBySlug(slug);
   if (!team) return null;
-  // A team with no league games (the Southern Section independents) has no JV table either.
-  if (isIndependentDivision(team.division)) return null;
   const table = getJvTable(team.division);
   if (!table) return null;
   const href = `/jv#${isSingleDivision(team.league) ? team.league : team.division}`;

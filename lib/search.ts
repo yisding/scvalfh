@@ -33,7 +33,7 @@ export interface GroupSearchEntry {
   href: string;               // '/standings/bval#santa-teresa' | '/standings/mcal'
   keys: string[];             // normalized: label, searchAliases, league full name
   /**
-   * A league group whose short name does not read as a name in a list (the Southern Section independents:
+   * A group of independents whose short name does not read as a name in a list (the Southern Section independents:
    * 'Independent' is an adjective) carries the words a list uses instead: 'the Southern Section independents'.
    * Absent for every other group (the finder lists `label`), so the shipped index grows by one field.
    */
@@ -87,7 +87,7 @@ function unique(xs: Iterable<string>): string[] {
 export function buildSearchIndex(
   teams: readonly SearchInputTeam[],
   leagues: ReadonlyArray<{ id: string; shortName: string; name: string; sectionShort: SectionConfig['shortName'];
-    /** A group with no league table (DESIGN §24.9): its group entry carries `listName`. */
+    /** A group of independents (DESIGN §24.9): its group entry carries `listName`. */
     independent?: boolean;
     divisions: ReadonlyArray<{ id: string; label: string; heading: string | null; searchAliases: readonly string[]; teamCount: number }> }>,
   notCovered: ReadonlyArray<{ name: string; keys: readonly string[]; reason: string }>,

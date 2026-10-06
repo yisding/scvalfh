@@ -3,9 +3,9 @@
 Condensed from the build-time research spec and amended for the nine-league site: in Northern
 California SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast Section and
 EAL in the Northern Section; in Southern California the Sunset in the Southern Section, the City,
-North County and Metro conferences in the San Diego Section, and the Southern Section's three
-independents, Glendora, Harvard-Westlake and Thousand Oaks, which play no league games (102 teams;
-DESIGN §24, §24.9).
+North County and Metro conferences in the San Diego Section, and the Southern Section's five
+independents, Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey
+league whose games against each other are the group's table (102 teams; DESIGN §24, §24.9, §24.10).
 Confidence tags: **[V]** independently verified against a live response or document; **[U]**
 claimed but not independently re-verified; **[TODO]** open item. Values below were
 captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line below, are
@@ -134,7 +134,7 @@ and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
 (`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
 
-**Scope: every registry team, all nine leagues and the three independents (102).** The roster page is the same page for a team
+**Scope: every registry team, all nine leagues and the five independents (102).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
 `data/rosters.json` (`lib/rosters-schema.ts`) holds exactly one entry per team, in registry order,
 each carrying its registry id and division. Everything below that says "captured 2026-10-02" was
@@ -1028,7 +1028,7 @@ hand; on a rollover, redo the research (the seniors will have graduated).
 `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
 (JSON; captured and verified 2026-10-02 on the 15 SCVAL teams, and 2026-10-03 on a sample of the
 other three leagues; the rest of those were read live by the script, and the six EAL teams on
-2026-10-04). Like the rosters it joins to, it covers every registry team, all nine leagues and the three independents (102): one
+2026-10-04). Like the rosters it joins to, it covers every registry team, all nine leagues and the five independents (102): one
 call per team,
 and `data/player-stats.json` (`lib/player-stats-schema.ts`) holds exactly one entry per team in
 registry order. The same adapter reads every league and throws on any drift. A team's `status` is
@@ -1659,12 +1659,14 @@ of an alarm.
   `maxprepsExtraRows`: 7 rows + 0 missing − 1 extra = 6 teams. Two league games had no score at
   MaxPreps on 2026-10-04 (§1.3a), and the Section's Sport Dates sheet disagrees with the Guidelines
   on the last contest (§1.4).
-- **Sunset:** MaxPreps' Sunset table **lists five of the ten teams** (Great Oak, Temecula Valley,
-  Bonita, Chaminade, Chaparral) and orders them by winning percentage; the five Orange County schools
-  (Edison, Fountain Valley, Huntington Beach, Marina, Newport Harbor) have no MaxPreps league for
+- **Sunset:** MaxPreps' Sunset table **lists three of the eight teams** (Great Oak, Temecula Valley,
+  Chaparral), with Bonita and Chaminade (`maxprepsExtraRows`: the site lists them with the Southern
+  Section independents, DESIGN §24.10), and orders them by winning percentage; the five Orange County
+  schools (Edison, Fountain Valley, Huntington Beach, Marina, Newport Harbor) have no MaxPreps league for
   2026-27. si.com marks more games as league games than MaxPreps does, so its Sunset records differ
-  from ours. No Sunset schedule, standings or rules document was found **[U]**; the ten members come
-  from MaxPreps' 2024-25 and 2025-26 Sunset tables.
+  from ours, and MaxPreps' league flag on Great Oak's Aug 27 win over Bonita counts for neither table
+  here. No Sunset schedule, standings or rules document was found **[U]**; the eight members are eight
+  of the ten in MaxPreps' 2024-25 and 2025-26 Sunset tables.
 - **City:** MaxPreps counts Mission Bay's five games against City Eastern teams as league games (which
   is why MaxPreps shows Mission Bay 3-5-0 in its table on 2026-10-06); the alignment puts Mission Bay in City Western, so they count in neither
   table here. MaxPreps' City Eastern table leaves out Patrick Henry, marks none of its league games as
@@ -1688,8 +1690,8 @@ Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live 
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
 names, unique across all 102). The registry is
 `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled by
-`lib/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 50 SoCal league teams,
-then the three independents), and a
+`lib/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 48 SoCal league teams,
+then the five independents), and a
 test pins the 15 SCVAL slugs, abbreviations and GUIDs.
 
 Each school has **one full name and one short name**, and every page prints one of the two. The
@@ -1714,8 +1716,8 @@ are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed
 a school-logo URL; "—" means not observed and is never guessed.
 
 Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49
-in NorCal; Sunset 10, City Western 6, City Eastern 6, Avocado 6, Palomar 7, Valley 6, Metro Mesa 5,
-Metro South Bay 4, independents 3 = 53 in SoCal; 102 in all.
+in NorCal; Sunset 8, City Western 6, City Eastern 6, Avocado 6, Palomar 7, Valley 6, Metro Mesa 5,
+Metro South Bay 4, independents 5 = 53 in SoCal; 102 in all.
 
 | slug | abbr | league | division | MaxPreps team id (GUID) | name | si.com team id | si.com school id |
 |---|---|---|---|---|---|---|---|
@@ -1768,8 +1770,6 @@ Metro South Bay 4, independents 3 = 53 in SoCal; 102 in all.
 | davis | DV | eal | eal | `288ca10d-8448-41e9-b26e-463df226b8c8` | Davis (MaxPreps: Davis Sr.) | 458605 | 10575 |
 | lassen | LS | eal | eal | `b4268b1c-b3df-4dd5-b52c-5355d8a48e42` | Lassen | 458783 | 11554 |
 | pleasant-valley | PV | eal | eal | `8e01c2fa-4888-483f-8d26-6a45518c1bd8` | Pleasant Valley | 458566 | 10337 |
-| bonita | BN | sunset | sunset | `4c2dd7e8-2f3e-43aa-891b-9218932cdf9d` | Bonita | 458494 | 10097 |
-| chaminade | CM | sunset | sunset | `742a32d0-2dc9-4aa8-ad92-8c4576f73a12` | Chaminade | 456824 | 141 |
 | chaparral | CP | sunset | sunset | `d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e` | Chaparral | 459144 | 13456 |
 | edison | ED | sunset | sunset | `c5a36b71-74a5-431f-94a3-8337d66dfbbb` | Edison | 458743 | 11313 |
 | fountain-valley | FV | sunset | sunset | `79582922-a3b0-44a5-b210-8e51f3cfb731` | Fountain Valley | 458744 | 11314 |
@@ -1818,6 +1818,8 @@ Metro South Bay 4, independents 3 = 53 in SoCal; 102 in all.
 | granite-hills | GH | metro | metro-south-bay | `aa2f89a2-0150-4223-89b4-ac73cbf343e9` | Granite Hills | 458713 | 11152 |
 | hilltop | HT | metro | metro-south-bay | `ec21ffde-b216-47cc-9923-6308e239e9e0` | Hilltop | 459131 | 13413 |
 | southwest | SW | metro | metro-south-bay | `19409229-6768-4537-b8d7-4a7d2814aaad` | Southwest (MaxPreps: Southwest SD) | 459138 | 13422 |
+| bonita | BN | independents | independents | `4c2dd7e8-2f3e-43aa-891b-9218932cdf9d` | Bonita | 458494 | 10097 |
+| chaminade | CM | independents | independents | `742a32d0-2dc9-4aa8-ad92-8c4576f73a12` | Chaminade | 456824 | 141 |
 | glendora | GL | independents | independents | `1228375e-e4c0-453e-aed4-d0b0693b3c52` | Glendora | 458698 | 11109 |
 | harvard-westlake | HW | independents | independents | `9dc04c54-8c9d-4b30-a1d2-fcc167363342` | Harvard-Westlake | 458394 | 9623 |
 | thousand-oaks | TO | independents | independents | `70a363e2-26b8-4ef5-8ad0-20979f66399a` | Thousand Oaks | 458583 | 10465 |
@@ -1837,17 +1839,19 @@ Names are MaxPreps' `schoolName`, except Southwest, which MaxPreps and si.com ca
 "Timberwolves", which neither MaxPreps nor si.com carries and which comes from the school's own site
 (mvhs.vistausd.org, 2026-10-06); Canyon Hills' "Rattlers " is trimmed, and si.com's other mascots for
 Clairemont (Chieftains) and Helix (Highlanders) are aliases. Colours come from the MaxPreps standings
-row, or, for the 16 teams with no 2026-27 standings row (the five Orange County Sunset schools,
+row, or, for the 16 teams with no 2026-27 standings row (the five Orange County Sunset teams,
 Mt. Carmel, Rancho Bernardo, Patrick Henry, Hilltop, Southwest and the Valley six), from
 team-context's `schoolColor1`/`schoolColor2`, the same MaxPreps fields. Every si.com team id, slug
 and school id was harvested (36 school ids from logo URLs, 14 from the team page's `school.id`),
 never guessed; si.com's league buckets are stale and are never membership evidence.
 
-The three independents' rows were read on 2026-10-06 the same way and are appended to
+The independents' rows were read on 2026-10-06 the same way and follow the Sunset's in
 `tests/fixtures/seeds/registry-seed-ss.json` (transcribed by script into `lib/registry/independents.ts`).
-Each is the only field hockey team in its MaxPreps league for 2026-27 (Glendora: Palomares; Harvard-
-Westlake: League B; Thousand Oaks: Marmonte), and MaxPreps' 2025-26 standings for the same three
-leagues list one row each, so they are a group with no league, not a division. Colours are the MaxPreps standings fields (Glendora and Harvard-Westlake CC0022/222222,
+Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their MaxPreps league
+for 2026-27 (Palomares; League B; Marmonte), and MaxPreps' 2025-26 standings for the same three leagues
+list one row each; Bonita and Chaminade are rows of MaxPreps' Sunset table that the site lists with the
+independents instead (owner decision, 2026-10-06; DESIGN §24.10), so the five are a group in no league,
+with a table of their games against each other. Colours are the MaxPreps standings fields (Glendora and Harvard-Westlake CC0022/222222,
 Thousand Oaks 00824B/FFFFFF); abbreviations GL, HW and TO collide with none of the other 99; si.com's
 team search on 2026-10-06 found no second California team with any of the three names. Their si.com JV
 pages are 481707 (Glendora), 482355 (Harvard-Westlake) and 482332 (Thousand Oaks).
@@ -1926,7 +1930,7 @@ classification evidence says it is a league game. This is decided once, in the p
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
 | Sunset | MaxPreps `contestType === 0` (`contest-type`: no Sunset document exists to check against) | `contestType` 2 and 4 |
 | City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
-| Southern Section independents | **none** (`classification: 'independent'`): each of Glendora, Harvard-Westlake and Thousand Oaks is the only field hockey team in its all-sports league, so no game is a league game, whatever MaxPreps' flag says; `lib/classify.ts` returns null for every game, the group has no standings, and its games count only in the teams' overall records and the Elo fit | every game: a game between two of the three (Harvard-Westlake 5, Glendora 0 on Sep 8) is non-league too |
+| Southern Section independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -2023,11 +2027,11 @@ non-league fixtures, because the schedule feed is per-team, not per-league. The 
 (divisions with a MaxPreps table) + fetchable teams: of the 16 divisions, the San Diego Section's
 Valley has no MaxPreps table (`maxprepsLeagueId: null`), so its two requests are never made (no
 `/leagues/null/v1`) and its cross-check is reported as skipped, and neither has the Southern Section
-independents' group, which no MaxPreps table gathers (each sits alone in its own league), so only its
-three schedules are read.
+independents' group, which no MaxPreps table gathers (two of its five sit in MaxPreps' Sunset table, three
+alone in their own leagues), so only its five schedules are read.
 
 **Player stats — 102 more MaxPreps requests, in a separate process:** the workflow then
-runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all nine leagues and the three independents, §1.1k) as a non-fatal step
+runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all nine leagues and the five independents, §1.1k) as a non-fatal step
 (`continue-on-error`), so a stats outage never costs the day's scores, and commits
 `data/player-stats.json` with the snapshot when its content changed. It is not part of the 131 below
 and shares no abort scope with the pipeline.
@@ -2356,8 +2360,8 @@ page:
 with the site's scope note beneath it (`SITE_SCOPE_NOTE`, components/layout/site.ts): "Covers the CIF
 Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL,
 the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro
-conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand
-Oaks), which play no league games. Other teams appear only as opponents." (The EAL is named in its own clause
+conferences, plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake
+and Thousand Oaks), schools in no field hockey league. Other teams appear only as opponents." (The EAL is named in its own clause
 because it has no league document: its rules come from the Section's Guidelines, and the clause links
 the Section's field hockey page. The independents have no league, so the footer's lists of leagues
 (the rules clause, "not affiliated with") name the nine leagues only. The SoCal leagues publish no rules we could find, so each is named
@@ -2418,9 +2422,10 @@ rules clause.)
 - Rosters and player stats cover all 102 teams (§1.1j, §1.1k): the 43 teams of the four earlier leagues
   were read live on 2026-10-03 and the six EAL teams on 2026-10-04 (every page parsed, no team failed;
   Corning has no roster and no stats at MaxPreps), and all 99 again on 2026-10-05 Pacific (`fetchedAt`
-  2026-10-06T02:26Z, `counts.errors` 0), the first read of the 50 SoCal teams; the three independents
-were first read on 2026-10-06 (`--leagues independents`: Glendora 19 players, Harvard-Westlake 25 and
-18 with stats, Thousand Oaks 21; Glendora and Thousand Oaks publish no stats). The school-site and
+  2026-10-06T02:26Z, `counts.errors` 0), the first read of the 50 SoCal teams (Bonita and Chaminade among them,
+  then Sunset teams; independents since later that day, DESIGN §24.10); Glendora, Harvard-Westlake and
+  Thousand Oaks were first read on 2026-10-06 (`--leagues independents`: Glendora 19 players, Harvard-Westlake
+  25 and 18 with stats, Thousand Oaks 21; Glendora and Thousand Oaks publish no stats). The school-site and
   recruiting-page overlay covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL
   2026-10-03, recall partial in each), with only recruiting profiles for the EAL (2026-10-04). The 53
   Sunset, City, North County, Metro and independent teams have stub overlay entries with empty lists: no enrichment

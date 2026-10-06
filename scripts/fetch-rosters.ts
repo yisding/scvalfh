@@ -60,7 +60,7 @@ import {
   type Rosters,
   type TeamRoster,
 } from '../lib/rosters-schema';
-import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES } from '../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
 import { stableStringify } from '../lib/stable-json';
@@ -122,7 +122,7 @@ function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
 }
 
 const NOTES = [
-  `One entry per registry team, all ${LEAGUES_WITH_TABLES.length} leagues (${LEAGUES_WITH_TABLES.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
+  `One entry per registry team, all ${LEAGUES_PROPER.length} leagues (${LEAGUES_PROPER.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
   "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
   'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.',
   'Soft-deleted rows (isDeleted) are dropped, as MaxPreps hides them. athleteId and rosterId are per-season ids; careerProfileId / careerId identify the player across seasons.',

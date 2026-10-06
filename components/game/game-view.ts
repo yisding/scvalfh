@@ -50,7 +50,6 @@ import {
   findDivision,
   findLeague,
   getLeague,
-  isIndependentDivision,
   leagueOfDivision,
   type LeagueConfig,
 } from '../../lib/leagues';
@@ -104,11 +103,6 @@ export interface GameSideModel {
   formBefore: FormEntry[];
   /** How many league games this side had played before this one — the form caption's subject. */
   playedBefore: number;
-  /**
-   * The side plays no league games (the Southern Section independents, DESIGN §24.9): its record line says so
-   * and its Form going in row says so instead of an empty strip.
-   */
-  independent: boolean;
   /** This game's result from this side, when it is a final. */
   outcome: Outcome | null;
   /** The side's own page on si.com, when the slug was verified upstream. */
@@ -328,8 +322,6 @@ function subFor(
   standing: Standing | undefined,
 ): string | null {
   if (!team) return null;
-  // A team in no league (the Southern Section independents) has no league record to show, ever.
-  if (isIndependentDivision(team.division)) return `No league games · ${getLeague(team.league).shortName}`;
   const scope = scopeOf(team.division);
   // The two no-record lines are longer than any record, so at phone widths they wrap: no-break
   // spaces inside the scope keep "El Camino" / "Mt. Hamilton" whole and move the break to the "·".
@@ -351,8 +343,7 @@ function recordsCaptionFor(
   away: GameSideModel,
   home: GameSideModel,
 ): string | null {
-  // A side in no league (the Southern Section independents) has no league record to caption.
-  const members = [away, home].filter((side) => side.team && !side.independent).length;
+  const members = [away, home].filter((side) => side.team).length;
   if (members === 0) return null;
   const subject = members === 1 ? 'League record' : 'League records';
   if (game.status === 'postponed') return `${subject} to date`;
@@ -437,7 +428,6 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
     sub: subFor(recordAsOf(game, side), team, standing),
     formBefore: entries,
     playedBefore,
-    independent: team !== undefined && isIndependentDivision(team.division),
     outcome,
     sbliveUrl: team?.external.sbliveGamesUrl,
     view,

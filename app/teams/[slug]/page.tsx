@@ -119,12 +119,8 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * publishes none (the EAL) does not get. The postseason section's anchor is `#postseason` on
  * every page, so no MCAL URL carries a CCS concept either.
  *
- * A team that plays no league games (the Southern Section independents, DESIGN §24.9) gets the same page
- * minus everything a league gives: the Place tile reads "Independent", there are no League, GP or MAX tiles,
- * Form and Margin chart all its games and say so ("All games, oldest to newest"), "Who we haven't beaten" is
- * not drawn (no division opponents), and the League game log is one sentence; the Non-league log is its
- * "All games" list (`#games`, where Last's "All games" points). The Elo card and the postseason card (the
- * no-postseason note) are unchanged.
+ * A Southern Section independent (DESIGN §24.10) gets the same page as a league team: its table is the
+ * group's (its games against the other four), so "League" here means those games, as the standings page says.
  */
 
 /** All 99 prerendered; anything else is a 404 rather than a runtime render. */
@@ -139,13 +135,8 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   const view = buildTeamPageView(slug);
   if (!view) return { title: 'Team not found' };
   const { team, standing, hasResults } = view;
-  // An independent has no league record: its overall record, and what it is.
-  const independent = view.league.classification === 'independent';
-  const record = independent
-    ? standing && standing.overall.gp > 0
-      ? `${recordString(standing.overall)} overall, an independent with no league games`
-      : 'an independent with no league games, no results reported'
-    : hasResults && standing
+  const record =
+    hasResults && standing
       ? `${recordString(standing.computed)} in ${view.scopeLabel} (${standing.computed.pts} pts)`
       : `${view.scopeLabel} — no results reported`;
   const extras = rosterExtras(
@@ -257,12 +248,9 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     null,
   );
   const firstLeagueGame = earliestLeague !== null && earliestLeague.dateKey > today ? earliestLeague : null;
-  // An independent's Form and Margin chart all its games (team-view.ts), so "played" means any game.
-  const independent = view.league.classification === 'independent';
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
-  const marginPlayed = marginEntries.filter((entry) => entry.margin !== null && !entry.excludedFromMargin).length;
 
   const leagueLogSpans = hasPlayedLeagueGames && officialFixtures.length > 0;
   const fixturesSpan = !leagueLogSpans && officialFixtures.length > 6;
@@ -292,7 +280,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 ? `${shortDate(last.dateLocal)} · ${gameKindLabel(last)}`
                 : undefined
             }
-            action={{ href: independent ? '#games' : '#league-log', label: 'All games' }}
+            action={{ href: '#league-log', label: 'All games' }}
           />
           {last ? (
             <>
@@ -343,7 +331,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         {hasPlayedLeagueGames ? (
           <>
             <section className="min-w-0 md:max-lg:col-span-2">
-              <SectionHeader kicker="Form" meta={independent ? 'All games, oldest to newest' : 'League, oldest to newest'} />
+              <SectionHeader kicker="Form" meta="League, oldest to newest" />
               {/* 24px chips fill more of their 40px tap boxes, so the five read as one sequence;
                   the direction is in the heading's meta, and the non-league count gets its own
                   line instead of trailing off the end of the strip. */}
@@ -352,10 +340,10 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   <FormStrip
                     entries={formEntries}
                     size={24}
-                    label={formStripName(team.name, formEntries.length, independent ? 'all' : 'league')}
+                    label={formStripName(team.name, formEntries.length)}
                   />
                 </div>
-                {nonLeagueLog.length > 0 && !independent ? (
+                {nonLeagueLog.length > 0 ? (
                   <p className="mt-2 mb-0 text-meta text-ink-3">
                     {`+ ${plural(nonLeagueLog.length, 'other game')}, not counted here`}
                   </p>
@@ -365,8 +353,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
 
             <section className="min-w-0 md:max-lg:col-span-2 lg:row-span-2">
               <SectionHeader
-                kicker={independent ? 'Margin by game' : 'Margin by league game'}
-                meta={independent ? `All games · ${marginPlayed} played` : `${leaguePlayed} played`}
+                kicker="Margin by league game"
+                meta={`${leaguePlayed} played`}
               />
               {/* `slots`: the team's real league slate (`leagueScheduled`, from the official
                   schedule or the league's games per team). A league with no fixed schedule (the
@@ -376,7 +364,6 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   entries={marginEntries}
                   teamName={team.name}
                   slots={leagueScheduled ?? marginEntries.length}
-                  scope={independent ? 'all' : 'league'}
                   className="hidden md:block"
                   height={200}
                 />
@@ -384,7 +371,6 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   entries={marginEntries}
                   teamName={team.name}
                   slots={leagueScheduled ?? marginEntries.length}
-                  scope={independent ? 'all' : 'league'}
                   className="md:hidden"
                   height={160}
                 />
@@ -394,11 +380,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         ) : (
           <section className="min-w-0 md:col-span-2">
             <SectionHeader kicker="Form and goal margin" />
-            {independent ? (
-              <EmptyState heading={`No results reported for ${team.name} yet.`} action={maxprepsAction}>
-                {team.name} plays no league games, so this would chart all its games. Their schedule is below.
-              </EmptyState>
-            ) : firstLeagueGame ? (
+            {firstLeagueGame ? (
               <EmptyState
                 heading={`${team.name} has not played a ${view.scopeLabel} game yet.`}
                 action={maxprepsAction}
@@ -430,26 +412,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <TeamPlayoffLine view={view} />
         </section>
 
-        {/* No division opponents for an independent, so no "Who we haven't beaten". */}
-        {independent ? null : (
-          <section className="min-w-0 md:max-lg:col-span-2">
-            <SectionHeader
-              kicker="Who we haven't beaten"
-              meta={`${view.scopeLabel} only`}
-            />
-            <TeamUnbeaten view={view} />
-          </section>
-        )}
+        <section className="min-w-0 md:max-lg:col-span-2">
+          <SectionHeader
+            kicker="Who we haven't beaten"
+            meta={`${view.scopeLabel} only`}
+          />
+          <TeamUnbeaten view={view} />
+        </section>
 
-        {independent ? (
-          <section id="league-log" className="min-w-0 md:max-lg:col-span-2">
-            <SectionHeader kicker="League games" />
-            <p className="m-0 max-w-prose text-body text-ink-2">
-              {team.name} plays no league games: it is the only field hockey team in its all-sports league, so every
-              game it plays is in the list of all games below.
-            </p>
-          </section>
-        ) : (
         <section
           id="league-log"
           className={
@@ -481,7 +451,6 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             }
           />
         </section>
-        )}
 
         {officialFixtures.length > 0 ? (
           <section
@@ -503,22 +472,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         {/* Non-league + Elsewhere: two grid items, or (logOutweighs) one lg column beside the
             League log. `contents` keeps them two grid items below 1024px either way. */}
         <div className={logOutweighs ? 'contents lg:flex lg:flex-col lg:gap-y-section-lg' : 'contents'}>
-          <section id={independent ? 'games' : undefined} className="min-w-0 md:max-lg:col-span-2">
+          <section className="min-w-0 md:max-lg:col-span-2">
             <SectionHeader
-              kicker={independent ? 'All games' : view.postseasonCount > 0 ? 'Non-league and postseason' : 'Non-league'}
+              kicker={view.postseasonCount > 0 ? 'Non-league and postseason' : 'Non-league'}
               meta={plural(nonLeagueLog.length, 'game')}
             />
             <TeamGameLog
               games={nonLeagueLog}
               perspective={team.slug}
-              emptyHeading={
-                independent ? `No games are published for ${team.name} yet.` : `${team.name} has no non-league games this season.`
-              }
-              emptyBody={
-                independent
-                  ? 'MaxPreps lists none for this season so far.'
-                  : `Every game on their schedule counts toward the ${view.scopeLabel} table.`
-              }
+              emptyHeading={`${team.name} has no non-league games this season.`}
+              emptyBody={`Every game on their schedule counts toward the ${view.scopeLabel} table.`}
             />
           </section>
 

@@ -6,7 +6,7 @@ import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import { listWords } from '../../lib/format';
-import { LEAGUES_WITH_TABLES, SECTIONS, getSection } from '../../lib/leagues';
+import { LEAGUES_PROPER, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
@@ -59,7 +59,7 @@ function hasNoRules(league: LeagueConfig): boolean {
 /** The orderScope 'site' leagues grouped by section, config order: [[SS, [Sunset]], [SDS, [City, …]]]. */
 function noRulesBySection() {
   return SECTIONS.flatMap((section) => {
-    const leagues = LEAGUES_WITH_TABLES.filter((l) => l.sectionId === section.id && hasNoRules(l));
+    const leagues = LEAGUES_PROPER.filter((l) => l.sectionId === section.id && hasNoRules(l));
     return leagues.length === 0 ? [] : [{ section, leagues }];
   });
 }
@@ -79,7 +79,7 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
   // The leagues only: the Southern Section independents are three schools in no league, not an organization
   // (DESIGN §24.9); their alignment and rules sentences are the scope note's and the Section's.
   const notAffiliated = [
-    ...LEAGUES_WITH_TABLES.map((l) => l.shortName),
+    ...LEAGUES_PROPER.map((l) => l.shortName),
     ...SECTIONS.map((s) => `CIF-${s.shortName}`),
     'MaxPreps',
   ].join(', ');
@@ -128,13 +128,13 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             </ExternalLink>
             . League alignment and rules from{' '}
             {joined(
-              LEAGUES_WITH_TABLES.filter((l) => !hasNoDocument(l)).map((l) => (
+              LEAGUES_PROPER.filter((l) => !hasNoDocument(l)).map((l) => (
                 <ExternalLink key={l.id} href={l.officialUrl} arrow={false}>
                   {l.shortName}
                 </ExternalLink>
               )),
             )}
-            {LEAGUES_WITH_TABLES.filter((l) => hasNoDocument(l) && !hasNoRules(l)).map((l) => (
+            {LEAGUES_PROPER.filter((l) => hasNoDocument(l) && !hasNoRules(l)).map((l) => (
               <Fragment key={l.id}>
                 ; {l.shortName} rules from the{' '}
                 <ExternalLink href={l.officialUrl} arrow={false}>

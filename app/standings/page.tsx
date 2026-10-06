@@ -11,7 +11,7 @@ import { buildStandingsOverviewView } from '../../components/standings/standings
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
-import { getLeague, isIndependentLeague } from '../../lib/leagues';
+import { getLeague, isIndependentLeague, standaloneName } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 /**
@@ -50,26 +50,26 @@ export function generateMetadata(): Metadata {
 }
 
 /**
- * 'Sunset, City, North and Metro': the leagues whose table order is this site's own points. A group with no
- * table (the Southern Section independents) orders nothing, so it is not one of them.
+ * 'Sunset, City, North, Metro and the independents': the leagues whose table order is this site's own points,
+ * the Southern Section independents' table among them (named by its standaloneName: 'Independent' is an adjective).
  */
 function siteOrderedLeagues(leagues: readonly { id: LeagueId; shortName: string }[]): string[] {
   return leagues
-    .filter((l) => getLeague(l.id).rules.orderScope === 'site' && !isIndependentLeague(l.id))
-    .map((l) => l.shortName);
+    .filter((l) => getLeague(l.id).rules.orderScope === 'site')
+    .map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
 }
 
 export default function StandingsPage() {
   const { leagues, regions } = buildStandingsOverviewView();
   const siteOrdered = siteOrderedLeagues(leagues);
-  // The leagues with a table; the independents' block (no table) sits under its section like a league's.
-  const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
+  // Every table, the independents' included, named as a reader names it.
+  const tabled = leagues.map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
 
   return (
     <div className="pb-section-lg">
       <PageHeader
         title="Standings"
-        description={`Every division in ${listWords(tabled.map((l) => l.shortName))} · league games only`}
+        description={`Every division in ${listWords(tabled)} · league games only`}
       />
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). */}

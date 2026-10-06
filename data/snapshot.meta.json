@@ -1,6 +1,6 @@
 {
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · Independent +0",
-  "contentHash": "96b0598de1b45a0b5b4708679bc8be5ad2ed10ab093ac1a24bb85f76835d8d7a",
+  "contentHash": "71d5ecad438211f8dd0737a03a10c7bcffb40457d460038f2f5dce0bbd956f3c",
   "counts": {
     "byLeague": {
       "bval": {
@@ -26,10 +26,10 @@
       },
       "independents": {
         "backfilled": 0,
-        "finals": 29,
-        "games": 37,
-        "leagueGames": 0,
-        "teams": 3
+        "finals": 46,
+        "games": 56,
+        "leagueGames": 21,
+        "teams": 5
       },
       "mcal": {
         "backfilled": 0,
@@ -47,52 +47,52 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 160,
+        "finals": 161,
         "games": 244,
         "leagueGames": 102,
         "teams": 19
       },
       "pcal": {
-        "backfilled": 2,
-        "finals": 42,
+        "backfilled": 3,
+        "finals": 43,
         "games": 57,
         "leagueGames": 36,
         "teams": 7
       },
       "scval": {
         "backfilled": 0,
-        "finals": 101,
+        "finals": 102,
         "games": 159,
         "leagueGames": 97,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 98,
-        "games": 120,
-        "leagueGames": 18,
-        "teams": 10
+        "finals": 83,
+        "games": 99,
+        "leagueGames": 15,
+        "teams": 8
       }
     },
-    "finals": 539,
+    "finals": 542,
     "games": 879,
-    "leagueGames": 506,
-    "mismatches": 15,
-    "pending": 12,
+    "leagueGames": 524,
+    "mismatches": 17,
+    "pending": 9,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 154,
-    "backfilled": 2,
-    "compared": 223,
-    "conflicts": 6,
+    "agreements": 155,
+    "backfilled": 3,
+    "compared": 236,
+    "conflicts": 7,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-06T05:58:34.143Z",
+  "fetchedAt": "2026-10-06T12:22:17.520Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 49,
+      "countedFinals": 50,
       "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
@@ -109,8 +109,8 @@
       "state": "fresh"
     },
     {
-      "backfilled": 2,
-      "countedFinals": 22,
+      "backfilled": 3,
+      "countedFinals": 23,
       "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 0,
@@ -122,7 +122,7 @@
       "countedFinals": 49,
       "finalsDelta": 0,
       "id": "mcal",
-      "missingPast": 0,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -131,13 +131,13 @@
       "countedFinals": 16,
       "finalsDelta": 0,
       "id": "eal",
-      "missingPast": 2,
+      "missingPast": 3,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 11,
+      "countedFinals": 9,
       "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
@@ -155,10 +155,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 29,
+      "countedFinals": 30,
       "finalsDelta": 0,
       "id": "north-county",
-      "missingPast": 0,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -173,7 +173,7 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 0,
+      "countedFinals": 13,
       "finalsDelta": 0,
       "id": "independents",
       "missingPast": 0,
@@ -580,16 +580,6 @@
       "status": "ok"
     },
     {
-      "label": "bonita schedule",
-      "rowCount": 21,
-      "status": "ok"
-    },
-    {
-      "label": "chaminade schedule",
-      "rowCount": 16,
-      "status": "ok"
-    },
-    {
       "label": "chaparral schedule",
       "rowCount": 23,
       "status": "ok"
@@ -890,6 +880,16 @@
       "status": "ok"
     },
     {
+      "label": "bonita schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "chaminade schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
       "label": "glendora schedule",
       "rowCount": 14,
       "status": "ok"
@@ -902,11 +902,6 @@
     {
       "label": "thousand-oaks schedule",
       "rowCount": 14,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-09-21",
-      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -970,12 +965,12 @@
       "status": "ok"
     },
     {
-      "label": "sblive berkeley games",
-      "rowCount": 17,
+      "label": "sblive scoreboard 2026-10-06",
+      "rowCount": 24,
       "status": "ok"
     },
     {
-      "label": "sblive carmel games",
+      "label": "sblive berkeley games",
       "rowCount": 17,
       "status": "ok"
     },
@@ -1005,7 +1000,12 @@
       "status": "ok"
     },
     {
-      "label": "sblive live-oak games",
+      "label": "sblive lick-wilmerding games",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "sblive monterey games",
       "rowCount": 12,
       "status": "ok"
     },
@@ -1030,8 +1030,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-05",
-  "warnings": 44,
+  "today": "2026-10-06",
+  "warnings": 46,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",

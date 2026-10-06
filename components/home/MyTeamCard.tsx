@@ -180,12 +180,9 @@ export function PinnedCard({
       <div className="flex h-6 shrink-0 items-center gap-2 text-meta">
         <span className="min-w-0 flex-1 truncate text-ink-2">{view.meta}</span>
         {view.played ? <span className="sx-num shrink-0 text-ink-3">{view.played}</span> : null}
-        {/* No link for a team with no league table (the Southern Section independents). */}
-        {view.tableHref ? (
-          <Link href={view.tableHref} prefetch={false} className="shrink-0 font-medium text-accent no-underline hover:underline">
-            Table
-          </Link>
-        ) : null}
+        <Link href={view.tableHref} prefetch={false} className="shrink-0 font-medium text-accent no-underline hover:underline">
+          Table
+        </Link>
       </div>
       {view.postseason ? (
         /* The short form is what fits one 320px line; the full sentence is the accessible text. */
@@ -323,22 +320,17 @@ export function PinnedCard({
         <FormStrip
           entries={view.form.map((outcome) => ({ outcome }))}
           size={20}
-          label={formStripName(team.name, view.form.length, view.formScope ?? 'league')}
+          label={formStripName(team.name, view.form.length)}
         />
         <span className="ml-auto flex min-w-0 flex-col items-end text-meta text-ink-2 min-[24.375rem]:block min-[24.375rem]:truncate">
-          {/* A team with no league games has no league record to show (formScope 'all'). */}
-          {view.formScope === 'all' ? null : (
-            <span>
-              <span className="sx-num">{view.leagueRecord}</span> league
-            </span>
-          )}
           <span>
-            {view.formScope === 'all' ? null : (
-              <span aria-hidden="true" className="hidden min-[24.375rem]:inline">
-                {' '}
-                &middot;{' '}
-              </span>
-            )}
+            <span className="sx-num">{view.leagueRecord}</span> league
+          </span>
+          <span>
+            <span aria-hidden="true" className="hidden min-[24.375rem]:inline">
+              {' '}
+              &middot;{' '}
+            </span>
             <span className="sx-num">{view.overallRecord}</span> overall
           </span>
         </span>

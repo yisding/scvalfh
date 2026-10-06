@@ -11,7 +11,7 @@ import LeagueSwitcher, { RegionSwitcher } from '../components/layout/LeagueSwitc
 import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
 import { listWords, shortDate } from '../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES } from '../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
 
 /**
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
  * config (never a literal list): the leagues, then each group with no table by its name (DESIGN §24.9).
  */
 const LEAGUE_LIST = listWords([
-  ...LEAGUES_WITH_TABLES.map((l) => l.shortName),
+  ...LEAGUES_PROPER.map((l) => l.shortName),
   ...INDEPENDENT_LEAGUES.map((l) => `the ${l.name}`),
 ]);
 

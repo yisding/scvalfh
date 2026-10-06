@@ -503,16 +503,15 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
 
 describe('every league’s games in the bundled snapshot (invariants)', () => {
   const games = getGames();
-  it('has games in every league, and none counted for the independents (no league games, DESIGN §24.9)', () => {
+  it('has counted games in every league and in the independents’ table (their games against each other, DESIGN §24.10)', () => {
     for (const league of getLeagueSummaries()) {
       const counted = games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length;
-      if (league.id === 'independents') {
-        expect(counted, 'lib/classify.ts: no game counts for the independents').toBe(0);
-        expect(games.some((g) => [g.home.slug, g.away.slug].some((s) => s === 'glendora')), 'Glendora plays').toBe(true);
-        continue;
-      }
       expect(counted, `lib/data.ts: ${league.id} has counted games`).toBeGreaterThan(0);
     }
+    // A game MaxPreps flags between an independent and a Sunset team (Bonita at Great Oak, Aug 27) counts for neither.
+    const crossover = games.filter((g) => g.isLeague && [g.home.slug, g.away.slug].includes('bonita') && [g.home.slug, g.away.slug].includes('great-oak'));
+    expect(crossover.length, 'the snapshot has Bonita at Great Oak').toBeGreaterThan(0);
+    for (const g of crossover) expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBeNull();
   });
   it('never renders a missing score as 0-0, and renders every real score as published', () => {
     const offenders: string[] = [];

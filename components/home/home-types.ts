@@ -135,15 +135,10 @@ export interface HomeTeamView {
    * card derives its line with `postseasonCardLine`), so 99 views do not ship the line twice.
    */
   postseasonShort?: string;
-  /** `/standings/<league>#<division>`; null for a team with no league table (the Southern Section independents). */
-  tableHref: string | null;
+  /** `/standings/<league>#<division>`. */
+  tableHref: string;
   /** false ⇒ nothing reported: no record is invented, and the card says so (DESIGN §8). */
   hasResults: boolean;
-  /**
-   * Set only for a team that plays no league games (the Southern Section independents, DESIGN §24.9): its
-   * Form strip is its last games of any kind, and the records row shows the overall record alone.
-   */
-  formScope?: 'all';
   /** '0-4-0' league and overall, or an em dash when nothing is reported. */
   leagueRecord: string;
   overallRecord: string;
@@ -183,10 +178,7 @@ export interface LeagueCardView {
   /** Division labels; empty for a single-division league. */
   divisions: string[];
   standingsHref: string;
-  /**
-   * The plain link's words: '<SHORT> standings', or for a group with no league table (the Southern Section
-   * independents) '<SHORT> games', with `standingsHref` its schedule page: it has no standings to open.
-   */
+  /** The plain link's words: '<SHORT> standings' (home-view.ts standingsLabel: 'Independents standings' for the group). */
   standingsLabel: string;
   /**
    * The words in the card's `Show <…> here` button: the league's `standaloneName` (lib/leagues.ts), its

@@ -1,6 +1,6 @@
 /**
  * The read API for data/rosters.json and data/rosters-enrichment.json — every registry team's
- * roster, all nine leagues and the three independents (SPEC §1.1j).
+ * roster, all nine leagues and the five independents (SPEC §1.1j).
  *
  * Two files, one view:
  *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or

@@ -11,6 +11,7 @@ import NextSlate from './NextSlate';
 import OtherLeaguesStrip from './OtherLeaguesStrip';
 import PhaseLead from './PhaseLead';
 import PostseasonCard from './PostseasonCard';
+import { isIndependentLeague } from '../../lib/leagues';
 
 /**
  * One league's home panel (SPEC §10.1). Every league's panel is in the static HTML; the scope
@@ -35,9 +36,9 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
   const { latest, unreported, slate } = panel;
   const multi = panel.divisions.length > 1;
   const lastDivision = panel.divisions.length - 1;
-  // A group with no league (the Southern Section independents, DESIGN §24.9): its short name is an
+  // A group of independents (the Southern Section independents, DESIGN §24.9): its short name is an
   // adjective, so the empty states name the teams instead of "the first Independent games".
-  const independent = panel.divisions.some((d) => d.independent !== null);
+  const independent = isIndependentLeague(panel.id);
 
   return (
     <section data-scope={panel.id} aria-labelledby={headingId} className={STACK}>

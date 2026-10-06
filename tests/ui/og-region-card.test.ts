@@ -92,25 +92,27 @@ async function renderPng(element: ReactElement, height: number): Promise<ReturnT
 }
 
 describe('the two-region leaders card (components/layout/og-region-card.tsx)', () => {
-  it('lays the nine leagues out in two region columns, NorCal first (the independents have no table, so no row)', async () => {
+  it('lays the nine leagues and the independents’ table out in two region columns, NorCal first (DESIGN §24.10)', async () => {
     const { regionCardColumns } = await import('../../components/layout/og-region-card');
     const columns = regionCardColumns();
     expect(columns.map((c) => c.heading)).toEqual(['Northern California', 'Southern California']);
     expect(columns.map((c) => c.rows.map((r) => r.id))).toEqual([
       ['scval', 'bval', 'pcal', 'mcal', 'eal'],
-      ['sunset', 'city', 'north-county', 'metro'],
+      ['sunset', 'city', 'north-county', 'metro', 'independents'],
     ]);
+    // The group's row is labelled by its division, not its adjective short name.
+    expect(columns[1].rows.map((r) => r.shortName)).toEqual(['Sunset', 'City', 'North', 'Metro', 'Independents']);
   });
 
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {
     const { rootCardProps, standingsCardProps } = await import('../../components/layout/og-region-card');
     const root = rootCardProps();
     expect(root.title).toBe('NorCal HS Field Hockey · 2026');
-    expect(root.footer).toMatch(/^9 leagues, 3 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
+    expect(root.footer).toMatch(/^9 leagues, 5 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
     const standings = standingsCardProps();
     expect(standings.eyebrow).toBe('NorCal HS Field Hockey');
     expect(standings.title).toBe('Standings — every league');
-    expect(standings.footer).toMatch(/^9 leagues, 3 independents · 102 teams( · results through \S.*)? · unofficial$/);
+    expect(standings.footer).toMatch(/^9 leagues, 5 independents · 102 teams( · results through \S.*)? · unofficial$/);
   });
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {

@@ -15,7 +15,7 @@ const INDEX = buildSearchIndex(
   LEAGUES.map((l) => ({
     id: l.id, shortName: l.shortName, name: l.name,
     sectionShort: SECTIONS.find((s) => s.id === l.sectionId)!.shortName,
-    ...(l.rules.classification === 'independent' ? { independent: true } : {}),
+    ...(l.independents ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id, label: d.label, heading: l.divisions.length === 1 ? null : d.label,
       searchAliases: d.searchAliases, teamCount: d.expectedTeams,
@@ -69,7 +69,7 @@ describe('buildSearchIndex', () => {
       'league:independents',
     ]);
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'sunset')).toMatchObject({
-      label: 'Sunset', detail: 'Sunset field hockey league · SS · 10 teams', href: '/standings/sunset',
+      label: 'Sunset', detail: 'Sunset field hockey league · SS · 8 teams', href: '/standings/sunset',
     });
     expect(INDEX.groups.find((g) => g.id === 'palomar')).toMatchObject({
       label: 'Palomar', detail: 'North division · 7 teams', href: '/standings/north-county#palomar',
@@ -79,7 +79,7 @@ describe('buildSearchIndex', () => {
       label: 'North', detail: 'North County Conference · SDS · 19 teams', href: '/standings/north-county',
     });
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'independents')).toMatchObject({
-      label: 'Independent', detail: 'Southern Section independents · SS · 3 teams', href: '/standings/independents',
+      label: 'Independent', detail: 'Southern Section independents · SS · 5 teams', href: '/standings/independents',
     });
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'metro')).toMatchObject({
       label: 'Metro', detail: 'Metro Conference · SDS · 9 teams', href: '/standings/metro',

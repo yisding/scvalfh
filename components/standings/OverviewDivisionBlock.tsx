@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Arrow from '../ui/Arrow';
 
 import CompactStandingsTable from './CompactStandingsTable';
-import IndependentGroup from './IndependentGroup';
 import type { OverviewDivision } from './standings-view';
 
 /**
@@ -33,17 +32,12 @@ export function OverviewDivisionBlock({ division, filterable = false, teamGroup 
   return (
     <div id={division.anchorId ?? undefined} data-team-group={teamGroup ? '' : undefined} className="mt-6">
       {division.heading ? <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4> : null}
-      {/* A group with no league table (the Southern Section independents) draws its note and team links. */}
-      {division.independent ? (
-        <IndependentGroup group={division.independent} filterable={filterable} />
-      ) : (
-        <CompactStandingsTable
-          rows={division.rows}
-          ladderLine={division.ladderLine}
-          caption={division.caption}
-          filterable={filterable}
-        />
-      )}
+      <CompactStandingsTable
+        rows={division.rows}
+        ladderLine={division.ladderLine}
+        caption={division.caption}
+        filterable={filterable}
+      />
       <p className="m-0 mt-2">
         {/* prefetch off: the full league pages are static, and `auto` would download each one
             the moment its link scrolls into view. */}

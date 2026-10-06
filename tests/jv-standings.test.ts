@@ -198,11 +198,6 @@ describe('the JV tables served from the committed files', () => {
 
   it('names a team’s JV place only where its table is shown', () => {
     for (const t of TEAMS) {
-      // A team with no league games (the Southern Section independents) has no JV table to link.
-      if (t.league === 'independents') {
-        expect(teamJvStanding(t.slug), t.slug).toBeNull();
-        continue;
-      }
       const s = teamJvStanding(t.slug)!;
       const single = LEAGUES.find((l) => l.id === t.league)!.divisions.length === 1;
       expect(s.href).toBe(`/jv#${single ? t.league : t.division}`);

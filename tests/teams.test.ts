@@ -37,17 +37,19 @@ describe('teams: the registry is the nine leagues and the Southern Section indep
     expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(102);
     expect(LEAGUES.map((l) => [l.id, teamsInLeague(l.id).length])).toEqual([
       ['scval', 15], ['bval', 12], ['pcal', 7], ['mcal', 9], ['eal', 6],
-      ['sunset', 10], ['city', 12], ['north-county', 19], ['metro', 9], ['independents', 3],
+      ['sunset', 8], ['city', 12], ['north-county', 19], ['metro', 9], ['independents', 5],
     ]);
     // The EAL closes the 49 NorCal teams, which keep their places, in alphabetical seed order.
     expect(TEAMS.slice(43, 49).map((t) => t.slug)).toEqual([
       'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
-    // The Sunset opens the SoCal 53, Metro South Bay closes the 50 league teams, and the three independents
-    // close the registry (alphabetical in each division).
-    expect(TEAMS[49].slug).toBe('bonita');
-    expect(TEAMS.slice(95, 99).map((t) => t.slug)).toEqual(['el-capitan', 'granite-hills', 'hilltop', 'southwest']);
-    expect(TEAMS.slice(-3).map((t) => [t.slug, t.abbr, t.acronym, t.division])).toEqual([
+    // The Sunset opens the SoCal 53, Metro South Bay closes the 48 league teams, and the five independents
+    // close the registry (alphabetical in each division; Bonita and Chaminade are independents, DESIGN §24.10).
+    expect(TEAMS[49].slug).toBe('chaparral');
+    expect(TEAMS.slice(93, 97).map((t) => t.slug)).toEqual(['el-capitan', 'granite-hills', 'hilltop', 'southwest']);
+    expect(TEAMS.slice(-5).map((t) => [t.slug, t.abbr, t.acronym, t.division])).toEqual([
+      ['bonita', 'BN', 'BHS', 'independents'],
+      ['chaminade', 'CM', 'CHS', 'independents'],
       ['glendora', 'GL', 'GHS', 'independents'],
       ['harvard-westlake', 'HW', 'HWHS', 'independents'],
       ['thousand-oaks', 'TO', 'TOHS', 'independents'],

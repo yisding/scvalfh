@@ -6,7 +6,7 @@
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
  * is about to overwrite — the same split as lib/rosters-schema.ts / lib/rosters.ts.
  *
- * Player stats cover every registry team, all nine leagues and the three independents, like the rosters they join to: slugs
+ * Player stats cover every registry team, all nine leagues and the five independents, like the rosters they join to: slugs
  * and team ids are checked against the 102-team registry, and the file holds exactly one entry per
  * team.
  *
@@ -26,7 +26,7 @@ import { httpUrl, slugId } from './schema-primitives';
 import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
-/** Player stats cover every registry team, all nine leagues and the three independents: one entry per team of TEAMS. */
+/** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 /** How many teams a player-stats file holds: TEAMS.length (102). */
 export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;

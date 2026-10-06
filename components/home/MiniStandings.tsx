@@ -7,7 +7,6 @@ import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords } from '../../lib/format';
 import { getDivision, regionOf } from '../../lib/leagues';
-import IndependentGroup from '../standings/IndependentGroup';
 import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
@@ -43,9 +42,6 @@ import type { MiniDivisionView, MiniRow } from './home-view';
  *
  * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
  *
- * A group with no league table (the Southern Section independents, DESIGN §24.9) draws no table: no place,
- * GP, League record, PTS or GD, no "no league games yet" (there will never be any), and no legend. Its
- * kicker says there is no table, its block says why (the group's note) and links the three teams.
  */
 export interface MiniStandingsProps {
   /** The division's rows, its `href` (`/standings/<league>#<division>`), its `home` config and its heading (null for a single-division league). */
@@ -81,14 +77,6 @@ export function miniShownCount(
 
 export function MiniStandings({ division, legend, className }: MiniStandingsProps) {
   const { href, home } = division;
-  if (division.independent) {
-    return (
-      <section className={className}>
-        <SectionHeader as="h3" kicker="No league table" />
-        <IndependentGroup group={division.independent} />
-      </section>
-    );
-  }
   // A single-division league (no heading) shows no division label.
   const showDivisionLabel = division.heading !== null;
   const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));

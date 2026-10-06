@@ -194,39 +194,6 @@ function chainItems(league: LeagueConfig, chain: readonly TiebreakStage[]): stri
   return chain.map((stage) => league.rules.citations.stages[stage] ?? stage);
 }
 
-/**
- * A group with no league table (the Southern Section independents, DESIGN §24.9): no points, order, schedule,
- * co-champions or tiebreak to state, because there are no league games. The block says that once, from the
- * group's note, keeps the one Section rule that does reach their games (overtime: none is published, so
- * results stand as reported) and gives the postseason as the Section states it.
- */
-function IndependentRules({ league }: { league: LeagueConfig }) {
-  const notes = [...new Set(league.divisions.flatMap((d) => (d.official.mode === 'none' ? [d.official.note] : [])))];
-  return (
-    <div className="sx-prose">
-      {notes.map((note) => (
-        <p key={note}>{note}</p>
-      ))}
-      <p>
-        No game counts toward a table, so there are no points, no standings order and no tiebreaks to apply. A
-        game between two of them is a non-league game like any other.
-      </p>
-      <h4 className={H4}>Overtime</h4>
-      <p>{league.rules.citations.overtime}.</p>
-      <h4 className={H4}>Postseason</h4>
-      <GeneratedPostseason league={league} />
-      <p className="text-meta text-ink-2">
-        {league.links.map((l, i) => (
-          <span key={l.href}>
-            {i > 0 ? ' · ' : ''}
-            <ExternalLink href={l.href}>{l.label}</ExternalLink>
-          </span>
-        ))}
-      </p>
-    </div>
-  );
-}
-
 function GeneratedRules({ league }: { league: LeagueConfig }) {
   const { rules, postseason } = league;
   const byBucket = rules.tiebreaks.byBucketStart ?? {};
@@ -527,8 +494,9 @@ export default function AboutPage() {
   const counted = statusCounts(sources);
   const erroring = sources.filter((s) => s.status === 'error');
   const leagues = getLeagueSummaries();
-  // The leagues with a table, and the groups without one (the Southern Section independents, DESIGN §24.9):
-  // a sentence about rules, points, tables or cross-checks speaks for the first only.
+  // The leagues proper, and the groups of independents (the Southern Section independents, DESIGN §24.10): a
+  // sentence about league rules speaks for the first only; the group's table is this site's count of the
+  // independents' games against each other, and its card says so.
   const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
   const independentGroups = leagues.filter((l) => isIndependentLeague(l.id));
   const sections = getSections();
@@ -668,7 +636,7 @@ export default function AboutPage() {
   const jvAllTables = leagues.flatMap((l) => getJvTables(l.id));
   const jvShown = jvAllTables.filter((t) => t.status === 'shown');
   const jvUncounted = jvAllTables.reduce((n, t) => n + t.uncounted.length, 0);
-  // 'SCVAL, BVAL, …, Metro and the Southern Section’s three independents': the leagues, then each group by name.
+  // 'SCVAL, BVAL, …, Metro and the Southern Section’s five independents': the leagues, then each group by name.
   const leagueWords = listWords([
     ...tabled.map((l) => l.shortName),
     ...independentGroups.map((g) => `the ${g.section.name}’s ${numberWord(g.teamCount)} independents`),
@@ -818,11 +786,11 @@ export default function AboutPage() {
                 </dt>
                 <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                   {isIndependentLeague(summary.id) ? (
-                    // A group with no table: no league rules and no league documents to quote. Its note says
-                    // why; the Section's rules still govern their games (overtime, the season's last date).
+                    // A group of independents: no league rules and no league documents to quote. Its note says
+                    // what its table counts; the Section's rules govern their games (overtime, the season's last date).
                     <span className="block">
-                      {officialNotes.join(' ')} The Southern Section rules that still apply to their games are
-                      under{' '}
+                      {officialNotes.join(' ')} The Southern Section rules that apply to their games, and how the
+                      table is ordered, are under{' '}
                       <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
                         {summary.name}
                       </a>
@@ -1006,9 +974,9 @@ export default function AboutPage() {
                 sites or newspapers.
               </>
             ) : null}
-            {/* The independents had no league table to publish (DESIGN §24.9): said apart, not as a gap. */}
+            {/* The independents are this site's grouping (DESIGN §24.10): said apart, not as a gap. */}
             {historyUnavailableGroups.length > 0
-              ? ` ${listWords(historyUnavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} had no league table to publish.`
+              ? ` ${listWords(historyUnavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
               : null}
             {historyPublishedOnly.length > 0 ? (
               <>
@@ -1101,9 +1069,7 @@ export default function AboutPage() {
                 id={`rules-${summary.id}-heading`}
                 kicker={isIndependentLeague(summary.id) ? summary.name : `${summary.shortName} — ${summary.name}`}
               />
-              {isIndependentLeague(summary.id) ? (
-                <IndependentRules league={config} />
-              ) : isQuotedLeague(config) ? (
+              {isQuotedLeague(config) ? (
                 <QuotedRules league={config} />
               ) : (
                 <GeneratedRules league={config} />

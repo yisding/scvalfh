@@ -453,7 +453,7 @@ const divisionHealth = z.object({
   meta: z.enum(['ok', 'error', 'mismatch', 'skipped']),
   reportedTable: z.enum(['ok', 'carried', 'missing', 'skipped']),
   reportedRows: z.number().int().min(0).nullable(),
-  classification: z.enum(['contest-type', 'official-fixtures', 'membership', 'independent', 'fallback-contest-type']),
+  classification: z.enum(['contest-type', 'official-fixtures', 'membership', 'fallback-contest-type']),
   official: z
     .object({
       source: officialSourceId,

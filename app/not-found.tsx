@@ -5,7 +5,7 @@ import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history';
-import { LEAGUES_WITH_TABLES, getLeague } from '../lib/leagues';
+import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
  * the leagues with a table: the Southern Section independents have none (DESIGN §24.9), so "every table in
  * the nine leagues" stays exact.
  */
-const LEAGUE_COUNT = `the ${numberWord(LEAGUES_WITH_TABLES.length)} leagues`;
+const LEAGUE_COUNT = `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },

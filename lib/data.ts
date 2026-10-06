@@ -374,7 +374,7 @@ export function getTeamSearchIndex(): SearchIndex {
     shortName: l.shortName,
     name: l.name,
     sectionShort: sectionConfig(l.sectionId).shortName,
-    ...(l.rules.classification === 'independent' ? { independent: true } : {}),
+    ...(l.independents ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id,
       label: d.label,
@@ -861,11 +861,6 @@ export interface FormGame {
 export interface TeamForm {
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
-  /**
-   * Every contest in date order, played or not: the MarginStrip axis for a team that plays no league games
-   * (the Southern Section independents, DESIGN §24.9), whose page charts all its games and says so.
-   */
-  allGames: FormGame[];
 }
 
 export function getTeamForm(ref: string): TeamForm | undefined {
@@ -895,7 +890,7 @@ export function getTeamForm(ref: string): TeamForm | undefined {
     };
   });
   const leagueGames = allGames.filter((_, i) => all[i].countsFor !== null);
-  return { leagueGames, allGames };
+  return { leagueGames };
 }
 
 // ---------------------------------------------------------------- postseason

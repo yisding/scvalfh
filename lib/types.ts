@@ -662,11 +662,11 @@ export interface DivisionHealth {
   reportedTable: 'ok' | 'carried' | 'missing' | 'skipped';
   reportedRows: number | null;
   /**
-   * The division's LeagueRules.classification ('membership' = the San Diego divisions: both sides members,
-   * whatever MaxPreps' league flag says; 'independent' = the Southern Section independents, where no game
-   * counts), or 'fallback-contest-type' when an official-fixtures division fell back to MaxPreps' flag this run.
+   * The division's LeagueRules.classification ('membership' = the San Diego divisions and the Southern Section
+   * independents: both sides members, whatever MaxPreps' league flag says), or 'fallback-contest-type' when an
+   * official-fixtures division fell back to MaxPreps' flag this run.
    */
-  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'independent' | 'fallback-contest-type';
+  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'fallback-contest-type';
   official: {
     source: OfficialSourceId;
     total: number;

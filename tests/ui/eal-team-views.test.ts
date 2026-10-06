@@ -366,7 +366,7 @@ describe('/teams on the EAL corpus', () => {
     expect(textOf(html).split(note).length - 1, 'app/teams/page.tsx note appears once').toBe(1);
     const groups = eal.v.buildTeamsByLeague().flatMap((s) => s.leagues);
     // The EAL and the Sunset (a field hockey grouping, not the all-sports league of that name) carry one.
-    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/team-view.ts groups').toEqual(['eal', 'sunset']);
+    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/team-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
     // Nine leagues and the Southern Section independents' group (DESIGN §24.9).
     expect(groups.length, 'components/teams/team-view.ts nine league groups and the independents').toBe(10);
   });

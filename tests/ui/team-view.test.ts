@@ -93,17 +93,16 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v, `components/teams/team-view.ts ${team.slug}`).toBeDefined();
         if (!v) continue;
         seen += 1;
-        // A team that plays no league games (the Southern Section independents, DESIGN §24.9): no place, no
-        // league log, no scheduled count, and its standings link is the group's page under its full name.
+        // A Southern Section independent (DESIGN §24.10): a league team's view, with the group's table (no fixed
+        // schedule, so no scheduled count) and its standings link labelled 'Independents standings'.
         if (leagues.isIndependentDivision(division.id)) {
           expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe('Independent');
+          expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
           expect(v.standingsHref, `components/teams/team-view.ts ${team.slug} standingsHref`).toBe(
             `/standings/${division.leagueId}#${division.id}`,
           );
-          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('Southern Section independents');
-          expect(v.leagueLog, `components/teams/team-view.ts ${team.slug} leagueLog`).toEqual([]);
+          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('Independents standings');
           expect(v.leagueScheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
-          expect(v.unbeaten, `components/teams/team-view.ts ${team.slug} unbeaten`).toEqual([]);
           continue;
         }
         expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
@@ -350,12 +349,13 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const text = textOf(html);
       expect(text, `components/teams/TeamIdentity.tsx ${team.slug}`).toContain(v.identityLine);
       expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings`).toContain(`href="${v.standingsHref}"`);
-      // An independent has no standings: the link names its group (DESIGN §24.9), and there is no GP tile.
+      // A Southern Section independent (DESIGN §24.10): the standings link reads 'Independents standings' (its short
+      // name is an adjective), and its GP tile prints the bare count, as the Sunset's does (no fixed schedule).
       if (leagues.isIndependentLeague(team.league)) {
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain(`${v.league.name} →`);
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} no standings label`).not.toContain(`${v.league.shortName} standings`);
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} no league table`).toContain('Place Independent no league table');
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} no GP`).not.toMatch(/\bGP\s*\d/);
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('Independents standings →');
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} no adjective label`).not.toContain('Independent standings');
+        expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
         expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
         continue;
       }
@@ -474,7 +474,7 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(html, 'app/teams/page.tsx NCS h2').toMatch(/<h2[^>]*>North Coast Section<\/h2>/);
     expect(html, 'app/teams/page.tsx NS h2').toMatch(/<h2[^>]*>Northern Section<\/h2>/);
     expect(html, 'app/teams/page.tsx section labelling').toContain('<section aria-labelledby="ccs"');
-    // Nine leagues and the Southern Section independents' group (no table, so no h4: DESIGN §24.9).
+    // Nine leagues and the Southern Section independents (one table, so no h4: DESIGN §24.10).
     expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(10);
     const h4s = [...html.matchAll(/<h4 class="m-0 mb-3 text-lead text-ink">([^<]+)<\/h4>/g)].map((m) => m[1]);
     expect(h4s, 'app/teams/page.tsx division h4s').toEqual([
@@ -494,33 +494,27 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect([...order].sort((a, b) => a - b), 'app/teams/page.tsx order').toEqual(order);
   });
 
-  it('the finder hooks: 99 standings rows and 3 independents with data-team-tile, ladder rows, group wrappers, the switcher', () => {
+  it('the finder hooks: 102 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
     const html = renderIndex();
     // Every team is a row of its division's standings table (DESIGN §18), and the row is the
     // finder's hook: no <li> tiles any more.
     const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
-    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(99);
+    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(102);
     for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
-    // The independents have no table: each is an item of its group's block, with the same hook (DESIGN §24.9).
-    const items = [...html.matchAll(/<li data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
-    expect(items.map((m) => m[1]), 'components/standings/IndependentGroup.tsx data-team-tile').toEqual([
-      'glendora', 'harvard-westlake', 'thousand-oaks',
-    ]);
-    for (const [, slug, tile] of items) expect(tile, slug).toBe(slug);
-    expect(new Set([...rows, ...items].map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
+    expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
     expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
     // The pinned row says so in words, not with the accent rule alone: every row's link carries the
     // hidden note the pinned-team CSS reveals (the old tiles did too).
     const links = [...html.matchAll(/<tr data-team-slug="[^"]+"[\s\S]*?<a [^>]*href="\/teams\/[^"]+"[^>]*>([\s\S]*?)<\/a>/g)];
-    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(99);
+    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(102);
     for (const [, inner] of links) {
       expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
         '<span class="sr-only"><span class="sx-pin-note">Your team. </span></span>',
       );
     }
-    // Fifteen tables, one per division, each in a group wrapper the finder can hide (5 sections, 9
-    // leagues, 15 divisions), and the independents' group and its one block, with no table (DESIGN §24.9).
-    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(15);
+    // Sixteen tables, one per division, each in a group wrapper the finder can hide (5 sections, 9
+    // leagues and the independents, 16 divisions; the independents' table is one of them, DESIGN §24.10).
+    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(16);
     expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(5 + 10 + 16);
     // A division with a ladder line drawn marks it, so a search never leaves it between rows.
     const lines = [...html.matchAll(/<tr data-hide-while-searching="">\s*<td colSpan="5"[^>]*>([^<]+)</g)].map((m) => m[1]);
@@ -534,7 +528,7 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
     const text = textOf(html);
     expect(text, 'app/teams/page.tsx description').toContain(
-      'each in its division’s standings table (the independents play no league games, so they have none). League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages (each is the only field hockey team in its league) for the Southern Section independents.',
+      'each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other) for the Southern Section independents.',
     );
     expect(text, 'app/teams/page.tsx description').toContain('All 102 girls varsity teams in ');
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
@@ -753,7 +747,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
     // "Counted": last season's forfeits, unscored finals and games against outside schools are not
     // in the file, so a team can have played and still have no start.
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the nine leagues’ teams and the Southern Section’s three independents, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the nine leagues’ teams and the Southern Section’s five independents, so it started from an average rating.');
     expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 

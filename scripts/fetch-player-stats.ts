@@ -59,7 +59,7 @@ import {
   teamsInScope,
   type PreviousFile,
 } from '../lib/fetch-scope';
-import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES, seasonWindowBounds } from '../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
@@ -148,7 +148,7 @@ function loadPrevious(file: string): PreviousFile<TeamPlayerStats, PlayerStatsFi
 }
 
 const NOTES = [
-  `One entry per registry team, all ${LEAGUES_WITH_TABLES.length} leagues (${LEAGUES_WITH_TABLES.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
+  `One entry per registry team, all ${LEAGUES_PROPER.length} leagues (${LEAGUES_PROPER.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
   "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
   'Every number is what the coach entered on MaxPreps, for all of this season\'s varsity games, league and non-league alike. Coverage is the coach\'s choice: a team MaxPreps has no stats for is status none.',
   "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",

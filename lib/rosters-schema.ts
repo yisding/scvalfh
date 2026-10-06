@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all nine leagues and the three independents
+ * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all nine leagues and the five independents
  * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 102-team registry.
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
@@ -24,7 +24,7 @@ import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
-/** Rosters cover every registry team, all nine leagues and the three independents: one entry per team of TEAMS. */
+/** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d.id));
 /** How many teams a rosters file holds: TEAMS.length (102). */

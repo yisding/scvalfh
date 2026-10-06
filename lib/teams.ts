@@ -2,13 +2,13 @@
  * The 102-team membership registry (SPEC §3; DESIGN §24 for the Southern California amendment):
  * NorCal — SCVAL 15, BVAL 12, PCAL 7, MCAL 9, EAL 6 (49); SoCal — the Southern Section's Sunset 10,
  * the San Diego Section's City 12, North County 19 and Metro 9, and the Southern Section's three
- * independents, a group with no league table (53; DESIGN §24.9).
+ * independents, five schools in no league with a table of their own (53; DESIGN §24.9, §24.10).
  *
  * THIS is the set of leagues, not the feed: every table is built from this constant and
  * left-joined against the feed. Seeds live in
  * lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts; TEAMS is
  * assembled here in LEAGUES order (lib/leagues.ts), so the 49 NorCal teams keep their places, the SoCal
- * 50 follow the EAL, and the three independents come last.
+ * 48 follow the EAL, and the five independents come last.
  *
  * ids are MaxPreps GUIDs. Slugs and 2-letter abbrs are OURS and are never derived by string
  * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
@@ -365,9 +365,12 @@ function assertRegistry(): void {
       for (const slug of d.maxprepsMissing) {
         if (BY_SLUG.get(slug)?.division !== d.id) fail(`${d.id}.maxprepsMissing: ${slug} is not a member`);
       }
-      // A known non-member row (EAL: Red Bluff) is never a registry team.
+      // A known non-member row is never a member of this division: a school outside the registry (EAL: Red
+      // Bluff), or a registry team of another division (Sunset: Bonita and Chaminade, MaxPreps' Sunset rows
+      // this site lists with the Southern Section independents, DESIGN §24.10).
       for (const id of Object.keys(d.maxprepsExtraRows)) {
-        if (BY_ID.has(id)) fail(`${d.id}.maxprepsExtraRows: ${id} is a registry team (${BY_ID.get(id)!.slug})`);
+        const team = BY_ID.get(id);
+        if (team && team.division === d.id) fail(`${d.id}.maxprepsExtraRows: ${id} is a member (${team.slug})`);
       }
     }
   }

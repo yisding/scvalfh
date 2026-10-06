@@ -358,11 +358,11 @@ describe('the /standings overview', () => {
     expect(html.indexOf('id="sds"')).toBeGreaterThan(socal);
     // The Sunset's membership note under its heading; the region control under the header.
     expect(textOf(html)).toContain(
-      'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+      'The Sunset here is a field hockey grouping of eight Southern Section schools in Orange and Riverside counties, not the all-sports Sunset League.',
     );
     expect(html, 'app/standings/page.tsx region control').toContain('data-region-option="socal"');
     // The points sentence names the 'site' leagues and never says their rules require anything.
-    expect(textOf(html)).toContain('(Sunset, City, North and Metro publish no points rule, so there the order is this site’s own points)');
+    expect(textOf(html)).toContain('(Sunset, City, North, Metro and the independents publish no points rule, so there the order is this site’s own points)');
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/standings/page.tsx duplicate ids').toEqual([]);
   });
@@ -459,10 +459,11 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
   const SPV = 'components/standings/standings-page-view.ts buildNotice';
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
     // The corpus predates the Southern California leagues too: they load with no games at all.
-    const empty = ['eal', 'sunset', 'city', 'north-county', 'metro'];
-    // The independents play no league games: never a "league play starts" notice (DESIGN §24.9).
-    expect(sd.buildStandingsPageView('independents').notice, `${SPV}: independents`).toBeNull();
-    empty.push('independents');
+    const empty = ['eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
+    // The independents' notice names the group, not "Independent league play" (DESIGN §24.10).
+    expect(sd.buildStandingsPageView('independents').notice?.heading, `${SPV}: independents`).toBe(
+      'The first game between two of the independents is Tue Sep 8.',
+    );
     for (const id of data.getLeagueIds().filter((l) => !empty.includes(l))) {
       expect(sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
     }

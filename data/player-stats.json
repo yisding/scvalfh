@@ -11009,176 +11009,6 @@
       "error": null,
       "fetchedAt": "2026-10-06T02:22:56.586Z",
       "lastUpdated": null,
-      "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
-      "name": "Bonita",
-      "players": [],
-      "slug": "bonita",
-      "statsUrl": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/stats/",
-      "status": "none",
-      "teamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
-      "totals": {
-        "field": {},
-        "goalkeeping": {}
-      },
-      "tracked": {
-        "field": [],
-        "goalkeeping": []
-      },
-      "warnings": []
-    },
-    {
-      "error": null,
-      "fetchedAt": "2026-10-06T02:22:56.586Z",
-      "lastUpdated": "2026-08-25T12:38:25",
-      "maxprepsTeamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
-      "name": "Chaminade",
-      "players": [
-        {
-          "athleteId": "daf29084-2509-4a75-bfe1-484781fa888c",
-          "careerId": "r9qh94q61e5ue",
-          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/laila-kim/?careerid=r9qh94q61e5ue",
-          "field": {
-            "assists": null,
-            "gameWinningGoals": null,
-            "gamesPlayed": 3,
-            "goals": 2,
-            "minutes": null,
-            "points": 4,
-            "shots": 0,
-            "shotsOnGoal": null,
-            "steals": null
-          },
-          "fullName": "Laila Kim",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "L. Kim"
-        },
-        {
-          "athleteId": "cb699bf7-6933-47b4-b7a4-a9df9e653e7b",
-          "careerId": "jb8q3u0tru2qa",
-          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/addison-honeycutt/?careerid=jb8q3u0tru2qa",
-          "field": {
-            "assists": null,
-            "gameWinningGoals": null,
-            "gamesPlayed": 3,
-            "goals": 2,
-            "minutes": null,
-            "points": 4,
-            "shots": 0,
-            "shotsOnGoal": null,
-            "steals": null
-          },
-          "fullName": "Addison Honeycutt",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "A. Honeycutt"
-        },
-        {
-          "athleteId": "26e42c01-0efd-42c2-aee2-913fca4df9c0",
-          "careerId": "adhfoasm8oqm6",
-          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/kaitlyn-aaronson/?careerid=adhfoasm8oqm6",
-          "field": {
-            "assists": null,
-            "gameWinningGoals": null,
-            "gamesPlayed": 3,
-            "goals": 2,
-            "minutes": null,
-            "points": 4,
-            "shots": 1,
-            "shotsOnGoal": null,
-            "steals": null
-          },
-          "fullName": "Kaitlyn Aaronson",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "K. Aaronson"
-        },
-        {
-          "athleteId": "b71dfb93-65fb-4043-ab86-0c2912e7a5fc",
-          "careerId": "aiie0ccdt5pff",
-          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/sophia-reyes/?careerid=aiie0ccdt5pff",
-          "field": null,
-          "fullName": "Sophia Reyes",
-          "goalkeeping": {
-            "gamesPlayed": 3,
-            "goalsAgainst": 11,
-            "losses": null,
-            "minutes": 45,
-            "opponentShotsOnGoal": null,
-            "overtimeMinutes": null,
-            "saves": 81,
-            "shutouts": null,
-            "ties": null,
-            "wins": null
-          },
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "S. Reyes"
-        },
-        {
-          "athleteId": "75c3eb78-b90a-484e-9578-66ebd013bbee",
-          "careerId": "i3bn8jhhcbm44",
-          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/emily-tracton/?careerid=i3bn8jhhcbm44",
-          "field": null,
-          "fullName": "Emily Tracton",
-          "goalkeeping": {
-            "gamesPlayed": 2,
-            "goalsAgainst": 0,
-            "losses": null,
-            "minutes": 15,
-            "opponentShotsOnGoal": null,
-            "overtimeMinutes": null,
-            "saves": 4,
-            "shutouts": null,
-            "ties": null,
-            "wins": null
-          },
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "E. Tracton"
-        }
-      ],
-      "slug": "chaminade",
-      "statsUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/field-hockey/stats/",
-      "status": "ok",
-      "teamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
-      "totals": {
-        "field": {
-          "gamesPlayed": 3,
-          "goals": 6,
-          "points": 12,
-          "shots": 1
-        },
-        "goalkeeping": {
-          "gamesPlayed": 3,
-          "goalsAgainst": 11,
-          "minutes": 60,
-          "saves": 85
-        }
-      },
-      "tracked": {
-        "field": [
-          "gamesPlayed",
-          "goals",
-          "points",
-          "shots"
-        ],
-        "goalkeeping": [
-          "gamesPlayed",
-          "minutes",
-          "saves",
-          "goalsAgainst"
-        ]
-      },
-      "warnings": []
-    },
-    {
-      "error": null,
-      "fetchedAt": "2026-10-06T02:22:56.586Z",
-      "lastUpdated": null,
       "maxprepsTeamId": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "name": "Chaparral",
       "players": [],
@@ -19880,6 +19710,176 @@
       "tracked": {
         "field": [],
         "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-10-06T02:22:56.586Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
+      "name": "Bonita",
+      "players": [],
+      "slug": "bonita",
+      "statsUrl": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/stats/",
+      "status": "none",
+      "teamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-10-06T02:22:56.586Z",
+      "lastUpdated": "2026-08-25T12:38:25",
+      "maxprepsTeamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
+      "name": "Chaminade",
+      "players": [
+        {
+          "athleteId": "daf29084-2509-4a75-bfe1-484781fa888c",
+          "careerId": "r9qh94q61e5ue",
+          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/laila-kim/?careerid=r9qh94q61e5ue",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": null,
+            "gamesPlayed": 3,
+            "goals": 2,
+            "minutes": null,
+            "points": 4,
+            "shots": 0,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Laila Kim",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "L. Kim"
+        },
+        {
+          "athleteId": "cb699bf7-6933-47b4-b7a4-a9df9e653e7b",
+          "careerId": "jb8q3u0tru2qa",
+          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/addison-honeycutt/?careerid=jb8q3u0tru2qa",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": null,
+            "gamesPlayed": 3,
+            "goals": 2,
+            "minutes": null,
+            "points": 4,
+            "shots": 0,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Addison Honeycutt",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "A. Honeycutt"
+        },
+        {
+          "athleteId": "26e42c01-0efd-42c2-aee2-913fca4df9c0",
+          "careerId": "adhfoasm8oqm6",
+          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/kaitlyn-aaronson/?careerid=adhfoasm8oqm6",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": null,
+            "gamesPlayed": 3,
+            "goals": 2,
+            "minutes": null,
+            "points": 4,
+            "shots": 1,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Kaitlyn Aaronson",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "K. Aaronson"
+        },
+        {
+          "athleteId": "b71dfb93-65fb-4043-ab86-0c2912e7a5fc",
+          "careerId": "aiie0ccdt5pff",
+          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/sophia-reyes/?careerid=aiie0ccdt5pff",
+          "field": null,
+          "fullName": "Sophia Reyes",
+          "goalkeeping": {
+            "gamesPlayed": 3,
+            "goalsAgainst": 11,
+            "losses": null,
+            "minutes": 45,
+            "opponentShotsOnGoal": null,
+            "overtimeMinutes": null,
+            "saves": 81,
+            "shutouts": null,
+            "ties": null,
+            "wins": null
+          },
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "S. Reyes"
+        },
+        {
+          "athleteId": "75c3eb78-b90a-484e-9578-66ebd013bbee",
+          "careerId": "i3bn8jhhcbm44",
+          "careerUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/athletes/emily-tracton/?careerid=i3bn8jhhcbm44",
+          "field": null,
+          "fullName": "Emily Tracton",
+          "goalkeeping": {
+            "gamesPlayed": 2,
+            "goalsAgainst": 0,
+            "losses": null,
+            "minutes": 15,
+            "opponentShotsOnGoal": null,
+            "overtimeMinutes": null,
+            "saves": 4,
+            "shutouts": null,
+            "ties": null,
+            "wins": null
+          },
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "E. Tracton"
+        }
+      ],
+      "slug": "chaminade",
+      "statsUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/field-hockey/stats/",
+      "status": "ok",
+      "teamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
+      "totals": {
+        "field": {
+          "gamesPlayed": 3,
+          "goals": 6,
+          "points": 12,
+          "shots": 1
+        },
+        "goalkeeping": {
+          "gamesPlayed": 3,
+          "goalsAgainst": 11,
+          "minutes": 60,
+          "saves": 85
+        }
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "goals",
+          "points",
+          "shots"
+        ],
+        "goalkeeping": [
+          "gamesPlayed",
+          "minutes",
+          "saves",
+          "goalsAgainst"
+        ]
       },
       "warnings": []
     },

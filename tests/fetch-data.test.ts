@@ -235,11 +235,11 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
       pcal: { teams: 7, games: 56, leagueGames: 36, finals: 38, backfilled: 3 },
       mcal: { teams: 9, games: 86, leagueGames: 72, finals: 56, backfilled: 0 },
       eal: { teams: 6, games: 9, leagueGames: 0, finals: 4, backfilled: 0 },
-      sunset: { teams: 10, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
+      sunset: { teams: 8, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       city: { teams: 12, games: 10, leagueGames: 0, finals: 2, backfilled: 0 },
       'north-county': { teams: 19, games: 4, leagueGames: 0, finals: 2, backfilled: 0 },
       metro: { teams: 9, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
-      independents: { teams: 3, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
+      independents: { teams: 5, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
     });
     const socal = new Set(['sunset', 'city', 'north-county', 'metro']);
     const leagueOf = new Map(TEAMS.map((t) => [t.slug, t.league]));

@@ -8,7 +8,6 @@ import { leagueChips, leagueHrefs } from '../../../components/layout/league-chip
 import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
-import IndependentGroup from '../../../components/standings/IndependentGroup';
 import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
 import { leaderClause } from '../../../components/standings/standings-view';
 import Arrow from '../../../components/ui/Arrow';
@@ -17,8 +16,7 @@ import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
-import { getLeague, isIndependentLeague } from '../../../lib/leagues';
-import SectionHeader from '../../../components/ui/SectionHeader';
+import { getLeague, standingsLabel } from '../../../lib/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -36,9 +34,9 @@ import SectionHeader from '../../../components/ui/SectionHeader';
  * The league's JV tables are on /jv (`/jv#<league>`), linked from the pills at the foot; this page
  * carries the varsity tables only.
  *
- * A group with no league table (the Southern Section independents, DESIGN §24.9) gets the same URL and the
- * same chips, but no table, legend, rules line or "league games only": its header names the group, and the
- * page says why there is no table (the group's note), links its teams and says what its postseason is.
+ * The Southern Section independents (DESIGN §24.10) get the same page as a league: their table counts their
+ * games against each other, and its notes carry the group's own sentence (`official.note`). The title names the
+ * group ('Independents standings'), since its short name is an adjective.
  *
  * Static: `generateStaticParams` from `getLeagueIds()` with `dynamicParams = false`, no
  * search params, nothing derived from `Date.now()`. Following this URL never writes the
@@ -54,25 +52,13 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const { league } = await params;
   const summary = getLeagueSummary(league);
   if (!summary) return { title: 'League not found' };
-  if (isIndependentLeague(summary.id)) {
-    // No table, so no leaders and no "ordered on points": the group's own sentence says what there is.
-    const title = summary.name;
-    const view = buildStandingsPageView(league).views[0];
-    const description = view?.independent?.note ?? `${summary.name}: no league games, so no table.`;
-    return {
-      title,
-      description,
-      alternates: { canonical: `/standings/${summary.id}` },
-      openGraph: { ...OG_BASE, title, description, url: `/standings/${summary.id}` },
-    };
-  }
   const { leaders, views } = buildStandingsPageView(league);
   const through = views
     .map((v) => v.throughDate)
     .filter((d): d is string => d !== null)
     .sort()
     .at(-1);
-  const title = `${summary.shortName} standings`;
+  const title = standingsLabel(summary.id);
   // A 'site' league publishes no points rule (the Sunset, the San Diego leagues): the points are this site's.
   const site = getLeague(summary.id).rules.orderScope === 'site';
   const description = `${summary.name}, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
@@ -91,7 +77,6 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   const summary = getLeagueSummary(league);
   if (!summary) notFound();
   const data = buildStandingsPageView(summary.id);
-  if (isIndependentLeague(summary.id)) return <IndependentStandings data={data} />;
   const multi = summary.divisions.length > 1;
   const tabs = data.views.map((view) => ({ href: `#${view.division}`, label: view.kicker }));
 
@@ -229,67 +214,6 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
             Last season&rsquo;s final tables
           </Link>
         ) : null}
-      </div>
-    </div>
-  );
-}
-
-/**
- * /standings/<group> for a group with no league table (the Southern Section independents): the header names
- * the group, the section's one block says why there is no table and links each team, and the postseason card
- * is the section's no-postseason note with its source. Nothing here is a place, a point or a league game.
- */
-function IndependentStandings({ data }: { data: ReturnType<typeof buildStandingsPageView> }) {
-  const { league: summary } = data;
-  const view = data.views[0];
-  return (
-    <div className="pb-section-lg">
-      <PageHeader title={summary.name} description={`${summary.section.name} · no league games, so no table`} />
-
-      <LeagueSwitcher
-        mode="link"
-        includeAll
-        label="Leagues"
-        leagues={leagueChips(summary.region)}
-        current={summary.id}
-        hrefs={leagueHrefs('/standings', summary.region)}
-        className="mt-4"
-      />
-
-      {view ? (
-        <section id={view.division} aria-labelledby={`${view.division}-heading`} className="mt-8 md:mt-10">
-          <SectionHeader id={`${view.division}-heading`} kicker="No league table" />
-          {view.independent ? <IndependentGroup group={view.independent} /> : null}
-          {view.noPostseason ? (
-            <div className="sx-card mt-6 flex flex-col p-5 md:p-6">
-              <h3 className="m-0 text-lead text-ink">{view.statusHeading}</h3>
-              <p className="mt-2 mb-0 max-w-prose text-meta text-ink-2">{view.noPostseason.note}</p>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 pt-4">
-                <ExternalLink href={view.noPostseason.sourceUrl} className="sx-action gap-1 text-meta font-medium">
-                  {view.noPostseason.sourceLabel}
-                </ExternalLink>
-                <Link
-                  href={view.playoffsHref}
-                  prefetch={false}
-                  className="sx-action text-meta font-medium text-accent hover:underline"
-                >
-                  {view.playoffsLinkText}
-                </Link>
-              </div>
-            </div>
-          ) : null}
-        </section>
-      ) : null}
-
-      <div className="mt-6 flex flex-wrap gap-2">
-        {summary.links.map((link) => (
-          <ExternalLink key={link.href} href={link.href} className="sx-pill sx-pill-ring">
-            {link.label}
-          </ExternalLink>
-        ))}
-        <Link href={`/schedule/${summary.id}`} prefetch={false} className="sx-pill sx-pill-ring">
-          Every game involving {isIndependentLeague(summary.id) ? 'the independents' : <>{summary.shortName} teams</>}
-        </Link>
       </div>
     </div>
   );

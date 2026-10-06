@@ -29,7 +29,7 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, type RegionConfig } from '../../lib/leagues';
+import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName, type RegionConfig } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
 import {
   buildDivisionView,
@@ -145,16 +145,17 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
  * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
 export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
-  // A group with no league games (the Southern Section independents, DESIGN §24.9) has no league play to
-  // start and no table to read 0-0-0: no notice, ever.
-  if (isIndependentLeague(leagueId)) return null;
   if (views.some((v) => v.leagueFinals > 0)) return null;
   // The start date is config's (validated, so always set) and the count is games played so far,
   // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
   // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
   const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {
-    heading: `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
+    // A group of independents has no league play: its games against each other start (its short name is an
+    // adjective, so the sentence names the group: standaloneName).
+    heading: isIndependentLeague(leagueId)
+      ? `The first game between two of ${standaloneName(leagueId)} is ${shortDate(leaguePlayStarts(leagueId))}.`
+      : `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
@@ -183,8 +184,7 @@ export interface StandingsOverviewView {
   /** NorCal, then SoCal: the same sections, split by region for the page's region wrappers. */
   regions: StandingsOverviewRegion[];
   /**
-   * Per league with a table, each table's leaders (OG card, metadata). A group with no table (the Southern
-   * Section independents) has no leaders, so it has no line here.
+   * Per league, each table's leaders (OG card, metadata); the Southern Section independents' table included.
    */
   leaders: Array<{ league: LeagueSummary; lines: LeaderLine[] }>;
   throughDate: string | null;
@@ -219,7 +219,6 @@ export function buildStandingsOverviewView(): StandingsOverviewView {
       };
     }),
     leaders: leagues
-      .filter((league) => !isIndependentLeague(league.id))
       .map((league) => ({
         league,
         lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),

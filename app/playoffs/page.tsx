@@ -613,8 +613,8 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
 /**
  * A league with no postseason (the Sunset, `id=<league>`): the config's note and its source, nothing to
  * project. The Southern Section independents' card (`#independents`) is headed by the group's name and
- * opens with the group's own note (they play as independents: no league games, no table), then the
- * Section's.
+ * opens with the group's own note (schools in no league, whose table is their games against each other),
+ * then the Section's.
  */
 function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
   const league = getLeague(summary.id);

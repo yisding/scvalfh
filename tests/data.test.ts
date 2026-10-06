@@ -58,15 +58,15 @@ describe('data: sections and leagues', () => {
   it('summarises the nine leagues and the independents in config order, each with its region and its cities', () => {
     const leagues = data.getLeagueSummaries();
     expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
-    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9, 3]);
+    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6, 8, 12, 19, 9, 5]);
     // `region` is NorCal/SoCal (from the section); the card's place words moved to `cities`, unchanged for NorCal.
     expect(leagues.map((l) => l.region)).toEqual([...Array(5).fill('norcal'), ...Array(5).fill('socal')]);
     expect(leagues.map((l) => l.cities)).toEqual([
       'Santa Clara County and San Francisco', 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
       'Monterey County and Hollister', 'Marin County, San Francisco and Berkeley', 'Chico, Corning, Susanville, Davis and Fair Oaks',
-      'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills', 'San Diego and La Jolla',
+      'Huntington Beach, Newport Beach, Fountain Valley and Temecula', 'San Diego and La Jolla',
       'Carlsbad, Encinitas, Escondido, Fallbrook, Oceanside, Poway, San Marcos, Valley Center, Vista and north San Diego',
-      'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego', 'Glendora, Studio City and Thousand Oaks',
+      'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego', 'Glendora, La Verne, Studio City, Thousand Oaks and West Hills',
     ]);
     expect(data.getLeagueSummary('sunset')!.section).toEqual({ id: 'ss', name: 'Southern Section', shortName: 'SS' });
     expect(data.getLeagueSummary('north-county')!.divisions.map((d) => [d.id, d.heading, d.teamCount])).toEqual([
@@ -131,10 +131,10 @@ describe('data: teams', () => {
     expect(data.getTeams({ league: 'eal' }).map((t) => t.slug)).toEqual([
       'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
-    expect(data.getTeams({ league: 'sunset' })).toHaveLength(10);
+    expect(data.getTeams({ league: 'sunset' })).toHaveLength(8);
     expect(data.getTeams({ league: 'north-county' })).toHaveLength(19);
     expect(data.getTeams('valley')).toHaveLength(6);
-    expect(data.getTeams({ league: 'independents' }).map((t) => t.slug)).toEqual(['glendora', 'harvard-westlake', 'thousand-oaks']);
+    expect(data.getTeams({ league: 'independents' }).map((t) => t.slug)).toEqual(['bonita', 'chaminade', 'glendora', 'harvard-westlake', 'thousand-oaks']);
   });
 
   it('groups section → league → division', () => {
@@ -153,8 +153,8 @@ describe('data: teams', () => {
     const socal = data.getTeamsGrouped('socal');
     expect(socal.map((g) => g.section.id)).toEqual(['ss', 'sds']);
     expect(socal[0].leagues.map((l) => [l.league.id, l.divisions.map((d) => [d.id, d.heading, d.teams.length])])).toEqual([
-      ['sunset', [['sunset', null, 10]]],
-      ['independents', [['independents', null, 3]]],
+      ['sunset', [['sunset', null, 8]]],
+      ['independents', [['independents', null, 5]]],
     ]);
     expect(socal[1].leagues.map((l) => [l.league.id, l.divisions.map((d) => [d.id, d.heading, d.teams.length])])).toEqual([
       ['city', [['city-western', 'City Western', 6], ['city-eastern', 'City Eastern', 6]]],
@@ -294,7 +294,7 @@ describe('data: standings and derived facts', () => {
     }
     // The Sunset has no fixed schedule (gamesPerTeam null): no "of N", no LEFT, no MAX.
     const sunset = data.getStandingContext('sunset');
-    expect(sunset.size).toBe(10);
+    expect(sunset.size).toBe(8);
     for (const c of sunset.values()) expect([c.scheduled, c.counted, c.remaining, c.maxPts]).toEqual([null, 0, null, null]);
     // A San Diego division plays a double round robin: Palomar's seven teams play 12 each.
     for (const c of data.getStandingContext('palomar').values()) {
@@ -648,8 +648,10 @@ describe('data: an EAL table with results', () => {
  * NOT flagged a league game: membership counts it anyway). City Eastern: Patrick Henry–Point Loma (Sep 29,
  * unflagged, no score) is a missing league result. Mission Bay–Clairemont is flagged between two City
  * divisions: neither table. North County: Mt. Carmel–Poway is an Avocado–Palomar game, no table. Metro South
- * Bay plays its first game Oct 7. The Sunset: Bonita has played three of the ten, Marina, Edison and
- * Chaminade one each, so the spread is 1 to 3 with no fixed schedule.
+ * Bay plays its first game Oct 7. The Sunset: Temecula Valley has played three of the eight, Marina, Edison and
+ * Chaparral one each, so the spread is 0 to 3 with no fixed schedule. The independents (DESIGN §24.10): Bonita
+ * at Great Oak is flagged by MaxPreps but counts for neither table; Harvard-Westlake–Glendora counts for the
+ * group's table though MaxPreps marks it non-league.
  */
 describe('data: Southern California tables with results', () => {
   let socal: DataModule;
@@ -670,11 +672,13 @@ describe('data: Southern California tables with results', () => {
       crossDivision,
       game({ home: 'mt-carmel', away: 'poway', hs: 0, as: 0, date: '2026-09-11', results: { home: 'W', away: 'L' } }),
       game({ home: 'hilltop', away: 'southwest', date: '2026-10-07' }),
-      game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' }),
-      game({ home: 'edison', away: 'bonita', hs: 0, as: 2, date: '2026-09-01' }),
-      game({ home: 'bonita', away: 'chaminade', hs: 3, as: 0, date: '2026-09-10' }),
-      // The Southern Section independents (DESIGN §24.9): a non-league game, so the group has a season too.
-      game({ home: 'harvard-westlake', away: 'great-oak', hs: 2, as: 1, date: '2026-08-18', league: false }),
+      game({ home: 'temecula-valley', away: 'marina', hs: 9, as: 0, date: '2026-09-28' }),
+      game({ home: 'edison', away: 'temecula-valley', hs: 0, as: 2, date: '2026-10-01' }),
+      game({ home: 'temecula-valley', away: 'chaparral', hs: 7, as: 0, date: '2026-10-05' }),
+      // The Southern Section independents (DESIGN §24.10): a game between two of the five counts for the group's
+      // table whatever MaxPreps' flag says; a flagged game against a Sunset team counts for neither.
+      game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-08', league: false }),
+      game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' }),
     ];
     const games = [...base.games, ...added];
     const socalLeagues = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
@@ -737,7 +741,7 @@ describe('data: Southern California tables with results', () => {
       expect(c.remaining).toBeNull();
       expect(c.maxPts).toBeNull();
     }
-    expect(socal.getStandingContext('sunset').get(socal.getTeamBySlug('bonita')!.id)!.counted).toBe(3);
+    expect(socal.getStandingContext('sunset').get(socal.getTeamBySlug('temecula-valley')!.id)!.counted).toBe(3);
     // Every member is in the spread, a team with no counted game at 0: the table lists it with GP 0, so a
     // sentence starting from the lowest team with a result ('between 1 and …') would be false under it.
     expect(socal.getStandings('sunset').some((r) => r.computed.gp === 0)).toBe(true);

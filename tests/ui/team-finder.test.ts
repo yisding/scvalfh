@@ -194,8 +194,11 @@ describe('pin-mode result buttons', () => {
     expect(resultDetail(tam), 'NorCal: the line is unchanged').toBe('MCAL');
     const palomar = index.teams.find((t) => t.slug === 'poway')!;
     expect(resultDetail(palomar)).toBe('Palomar · North · San Diego Section');
+    const edison = index.teams.find((t) => t.slug === 'edison')!;
+    expect(resultDetail(edison)).toBe('Sunset · Southern Section');
+    // A Southern Section independent: the group's short name, as a league's (DESIGN §24.10).
     const bonita = index.teams.find((t) => t.slug === 'bonita')!;
-    expect(resultDetail(bonita)).toBe('Sunset · Southern Section');
+    expect(resultDetail(bonita)).toBe('Independent · Southern Section');
   });
 });
 

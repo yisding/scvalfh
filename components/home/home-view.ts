@@ -67,6 +67,7 @@ import {
   getDivision,
   getLeague,
   isIndependentLeague,
+  standingsLabel,
   isSingleDivision,
   leaguePlayStarts,
   sectionOf,
@@ -82,7 +83,6 @@ import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
-import { independentGroupView, type IndependentGroupView } from '../standings/standings-view';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
@@ -236,34 +236,25 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   const ps = league.postseason;
   const keyDates = CCS.keyDates;
 
-  // A group with no league table (the Southern Section independents, DESIGN §24.9): no league play to start
-  // or end, so the lead says what there is instead. Its leaguePlay.first is the group's first game.
-  if (isIndependentLeague(league.id)) {
-    if (phase === 'complete') {
-      return {
-        lead: 'The season is over.',
-        body: 'These teams play no league games, so there is no final table; every game they played is on their team pages.',
-        link: null,
-      };
-    }
-    if (phase === 'preseason' || today < firstLeague) {
-      // The first game's date only while it is still ahead: a snapshot with no result for them yet (one written
-      // before they were added) can be preseason for this group long after Aug 18.
-      return {
-        lead: 'No league games.',
-        body:
-          today < firstLeague
-            ? `These teams play no league games, so there is no table; their first game is ${shortDate(firstLeague)}.`
-            : 'These teams play no league games, so there is no table.',
-        link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
-      };
-    }
-    return null;
-  }
 
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
     // Games played SO FAR — a non-league final later in the season has not been played yet.
     const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
+    // A group of independents (the Southern Section independents, DESIGN §24.10) has no league play: its table
+    // counts the games between its members, so the lead names the first of those and the body says what the
+    // table counts. 'Independent' is an adjective, so the sentence names the group (standaloneName).
+    if (league.independents) {
+      return {
+        lead: `The first game between two of ${standaloneName(league.id)} is ${shortDate(firstLeague)}.`,
+        body:
+          nonLeague > 0
+            ? `The table counts only games between the independents, so the ${plural(nonLeague, 'game')} played so far against other teams ${
+                nonLeague === 1 ? 'is' : 'are'
+              } on the schedule and in the overall records, not in the standings.`
+            : 'No games have been played yet, so every record below is empty on purpose.',
+        link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
+      };
+    }
     return {
       lead: `${short} league play starts ${shortDate(firstLeague)}.`,
       body:
@@ -405,8 +396,6 @@ export interface MiniDivisionView {
   href: string;
   /** `getDivision(d).home`, never a map keyed by division id. */
   home: DivisionConfig['home'];
-  /** A group with no league table (the Southern Section independents): drawn instead of the mini table. */
-  independent: IndependentGroupView | null;
 }
 
 function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {
@@ -437,7 +426,6 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
     throughDate: getLastLeagueResultDate({ division: division.id }),
     href: `/standings/${league.id}#${division.id}`,
     home: division.home,
-    independent: independentGroupView(division.id, getTeams()),
   };
 }
 
@@ -613,8 +601,6 @@ export interface OtherLeagueLine {
 }
 
 function leagueLeadersLine(league: LeagueConfig): string {
-  // A group with no league table (the Southern Section independents) has no leaders and never will.
-  if (isIndependentLeague(league.id)) return 'No league table';
   const single = isSingleDivision(league.id);
   const clauses = league.divisions.map((d) => {
     const leaders = divisionLeaders(d.id);
@@ -891,27 +877,6 @@ export function buildTeamViews(): HomeTeamView[] {
         ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
         : null;
     const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
-    // A team that plays no league games (the Southern Section independents): no place, no table, no league
-    // record; its form is its last games of any kind, and "has results" means any final at all.
-    if (isIndependentLeague(league.id)) {
-      const overallPlayed = standing !== undefined && standing.overall.gp > 0;
-      return {
-        slug: team.slug,
-        meta: `${league.shortName} · no league table`,
-        played: null,
-        postseason: line ? `${lead.full} ${line.label}` : null,
-        ...(shortLabel ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
-        tableHref: null,
-        hasResults: overallPlayed,
-        formScope: 'all',
-        leagueRecord: EM_DASH,
-        overallRecord: overallPlayed && standing ? recordString(standing.overall) : EM_DASH,
-        form: overallPlayed && standing ? [...standing.overall.last5] : [],
-        last: last ? lastGameView(last, team.slug) : null,
-        next: next ? nextGameView(next, team.slug) : null,
-        officialNext: next ? null : officialNextView(team, today, league.shortName),
-      };
-    }
     return {
       // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
       slug: team.slug,
@@ -1032,7 +997,6 @@ export interface HomeView {
 
 /** A league's card in "Find your team" (`LeagueCard`). */
 function leagueCardView(s: LeagueSummary): LeagueCardView {
-  const independent = isIndependentLeague(s.id);
   return {
     id: s.id,
     shortName: s.shortName,
@@ -1042,8 +1006,8 @@ function leagueCardView(s: LeagueSummary): LeagueCardView {
     cities: s.cities,
     teamsLine: plural(s.teamCount, 'team', 'teams'),
     divisions: s.singleDivision ? [] : s.divisions.map((d) => d.label),
-    standingsHref: independent ? `/schedule/${s.id}` : `/standings/${s.id}`,
-    standingsLabel: independent ? `${s.shortName} games` : `${s.shortName} standings`,
+    standingsHref: `/standings/${s.id}`,
+    standingsLabel: standingsLabel(s.id),
     showName: standaloneName(s.id),
   };
 }

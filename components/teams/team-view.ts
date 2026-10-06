@@ -53,6 +53,7 @@ import {
   regionOf,
   type LeagueRules,
   type PostseasonConfig,
+  standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
 import { outcomesFor } from '../../lib/standings';
@@ -227,10 +228,7 @@ export interface TeamPageView {
   nonLeagueLog: Game[];
   /** How many of `nonLeagueLog` are postseason games (crossover, play-in, tournament, CCS). */
   postseasonCount: number;
-  /**
-   * getTeamForm().leagueGames — what MarginStrip takes; for a team that plays no league games (the Southern
-   * Section independents, `league.classification` 'independent') getTeamForm().allGames, and the page says so.
-   */
+  /** getTeamForm().leagueGames — what MarginStrip takes. */
   marginEntries: FormGame[];
   /** The most recent game at or before today that has been played — final OR score-pending. */
   last: Game | null;
@@ -245,7 +243,7 @@ export interface TeamPageView {
    */
   leagueScheduled: number | null;
   unbeaten: UnbeatenOpponent[];
-  /** Last five league finals (for an independent: last five finals of any kind), oldest first, each linking to its game page. */
+  /** Last five league finals, oldest first, each linking to its game page. */
   formEntries: FormEntry[];
   /** Everything the NEXT card prints, derived here so TeamNextGame stays presentational. */
   nextCard: NextCard;
@@ -378,26 +376,15 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
     case 'no-postseason': {
-      // The Sunset (CIF-SS Blue Book 2011.1, 3500.2): no playoff game follows, and the note says why. The
-      // Southern Section independents play no league games, so there is no league season to end: their
-      // leaguePlay.last is only the last game listed, and the Section's last allowable contest is the bound.
-      if (league.rules.classification === 'independent') {
-        const last = league.keyDates.find((d) => d.id === 'last-contest');
-        return {
-          ...base,
-          postseasonKind: ps.kind,
-          postseasonName: null,
-          seasonEndSentence: last
-            ? `The Southern Section’s last allowable contest is ${shortDate(last.date)}.`
-            : 'These teams play no league games.',
-          bracketSentence: ps.note,
-        };
-      }
+      // The Sunset and the Southern Section independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
+      // follows, and the note says why. Both end with the Section's last allowable contest (leaguePlay.last).
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: null,
-        seasonEndSentence: `The ${league.shortName} season ends ${shortDate(ends)}.`,
+        seasonEndSentence: league.independents
+          ? `The independents’ season ends ${shortDate(ends)}, the Southern Section’s last allowable contest.`
+          : `The ${league.shortName} season ends ${shortDate(ends)}.`,
         bracketSentence: ps.note,
       };
     }
@@ -514,13 +501,6 @@ function dateLabelFor(dateKey: string, dateLocal: string, today: string): string
 export function opponentRecordLine(opponent: Team | undefined, leagueId: LeagueId): string | null {
   if (!opponent) return null;
   const standing = getStandingFor(opponent.slug);
-  // An opponent that plays no league games (the Southern Section independents, DESIGN §24.9) has no place
-  // and never will: its overall record and what it is ('5-3-1 overall · Independent').
-  if (getLeague(opponent.league).rules.classification === 'independent') {
-    return standing && standing.overall.gp > 0
-      ? `${recordString(standing.overall)} overall \u00b7 ${getLeague(opponent.league).shortName}`
-      : 'no results yet';
-  }
   if (!standing || !standing.hasReportedResults) return 'no league results yet';
   const place = `${standing.tiebreak.shared ? 'tied ' : ''}${ordinal(standing.computed.place)}`;
   const heading = divisionHeading(opponent.division);
@@ -735,11 +715,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   const officialFixtures = getOfficialFixtures({ slug: team.slug });
   const next = upcoming.length > 0 ? upcoming[0] : null;
 
-  // A team that plays no league games (the Southern Section independents, DESIGN §24.9): Form and Margin
-  // chart every game, and the page's kickers say "All games"; nothing else of a league is drawn for it.
-  const independent = league.classification === 'independent';
-  const formFinals = independent ? finals : leagueFinals;
-  const formEntries: FormEntry[] = formFinals.slice(-5).map((game) => {
+  const formEntries: FormEntry[] = leagueFinals.slice(-5).map((game) => {
     const theirs = game.home.teamId === team.id ? game.away : game.home;
     const outcome = outcomeFor(game, team.id);
     return {
@@ -772,8 +748,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
       leagueShort: league.shortName,
     }),
     standingsHref: `/standings/${league.id}#${team.division}`,
-    // A group with no table: the link opens the group's page (why there is no table), by its name.
-    standingsLabel: independent ? league.name : `${league.shortName} standings`,
+    standingsLabel: standingsLabel(league.id),
     officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
     context,
@@ -782,14 +757,13 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     leagueLog,
     nonLeagueLog,
     postseasonCount: nonLeagueLog.filter((g) => g.postseason !== null).length,
-    marginEntries: (independent ? form?.allGames : form?.leagueGames) ?? [],
+    marginEntries: form?.leagueGames ?? [],
     last: played.length > 0 ? played[played.length - 1] : null,
     next,
     officialFixtures,
     leaguePlayed: leagueFinals.length,
     leagueScheduled: context?.scheduled ?? division.gamesPerTeam,
-    // No division opponents to have beaten: an independent's "who we haven't beaten" has no league to scope it.
-    unbeaten: independent ? [] : buildUnbeaten(team, leagueLog, today),
+    unbeaten: buildUnbeaten(team, leagueLog, today),
     formEntries,
     nextCard: buildNextCard(team, next, officialFixtures, today, league),
     elo: teamElo(team),
@@ -855,10 +829,10 @@ export function alignmentSentence(): string {
   const groups: Array<{ source: string; leagues: string[] }> = [];
   for (const league of leaguesInRegion('socal')) {
     const group = groups.find((g) => g.source === league.alignmentSource);
-    // 'the Sunset' reads as a league name; the San Diego conferences read as names already; a group with no
-    // table is named in full ('the Southern Section independents'): its short name is an adjective.
+    // 'the Sunset' reads as a league name; the San Diego conferences read as names already; a group of
+    // independents is named in full ('the Southern Section independents'): its short name is an adjective.
     const name =
-      league.rules.classification === 'independent'
+      league.independents
         ? `the ${league.name}`
         : league.divisions.length === 1
           ? `the ${league.shortName}`
@@ -878,16 +852,16 @@ export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
     id: section.id,
     name: section.name,
     leagues: leagues.map(({ league, divisions }) => {
-      // A group with no league table (the Southern Section independents): headed by its name, and its action is
-      // its games, since there are no standings to open.
-      const independent = getLeague(league.id).rules.classification === 'independent';
+      // A group of independents (the Southern Section independents) is headed by its name: its short name is
+      // an adjective.
+      const independent = getLeague(league.id).independents === true;
       return {
         league,
         title: independent ? league.name : `${league.shortName} — ${league.name}`,
         meta: plural(league.teamCount, 'team'),
         membershipNote: getLeague(league.id).membershipNote,
-        standingsHref: independent ? `/schedule/${league.id}` : `/standings/${league.id}`,
-        standingsLabel: independent ? `${league.shortName} games` : `${league.shortName} standings`,
+        standingsHref: `/standings/${league.id}`,
+        standingsLabel: standingsLabel(league.id),
         divisions: divisions.map((d) =>
           buildOverviewDivision({
             division: d.id,

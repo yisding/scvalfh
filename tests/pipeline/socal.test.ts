@@ -145,7 +145,7 @@ describeIfCaptured('the SoCal corpus run', () => {
     }
   });
 
-  it('asks MaxPreps for 1 + 2 × 7 division tables + 50 schedules = 65 resources, never /leagues/null/', () => {
+  it('asks MaxPreps for 1 + 2 × 7 division tables + 48 schedules = 63 resources, never /leagues/null/', () => {
     const cli = runFixtureCli({ corpus: SOCAL_CORPUS });
     expect(cli.status, cli.output).toBe(0);
     const urls = cli.output.split('\n').filter((l) => l.startsWith('maxpreps GET '));
@@ -153,7 +153,9 @@ describeIfCaptured('the SoCal corpus run', () => {
       .flatMap((l) => l.divisions)
       .filter((d) => d.maxprepsLeagueId !== null);
     expect(withTable).toHaveLength(7);
-    expect(urls, 'lib/pipeline/transport.ts').toHaveLength(1 + 2 * withTable.length + 50);
+    // 48 schedules: the four leagues' teams. Bonita and Chaminade are independents (DESIGN §24.10), a league not in
+    // this run, so their captured schedules are not read; their games reach the snapshot from their opponents' feeds.
+    expect(urls, 'lib/pipeline/transport.ts').toHaveLength(1 + 2 * withTable.length + 48);
     expect(cli.output, 'lib/pipeline/transport.ts').not.toContain('/leagues/null/');
     expect(cli.output, 'lib/pipeline/steps/league-meta.ts').toContain(`league metadata valley: skipped (${NO_MAXPREPS_TABLE_REASON})`);
     expect(cli.output, 'lib/pipeline/steps/reported.ts').toContain(`standings valley: skipped (${NO_MAXPREPS_TABLE_REASON})`);
@@ -168,13 +170,14 @@ describeIfCaptured('the SoCal corpus run', () => {
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       mcal: { teams: 9, games: 4, leagueGames: 0, finals: 2, backfilled: 0 },
       eal: { teams: 6, games: 1, leagueGames: 0, finals: 0, backfilled: 0 },
-      sunset: { teams: 10, games: 120, leagueGames: 18, finals: 98, backfilled: 0 },
+      sunset: { teams: 8, games: 99, leagueGames: 15, finals: 83, backfilled: 0 },
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
       metro: { teams: 9, games: 93, leagueGames: 31, finals: 59, backfilled: 0 },
-      // Not in the run: the Sunset and San Diego feeds' 30 games against the three independents (24 final),
-      // none of them a league game; their games against each other are in no captured feed.
-      independents: { teams: 3, games: 30, leagueGames: 0, finals: 24, backfilled: 0 },
+      // Not in the run: the Sunset and San Diego feeds' 34 games against the five independents (32 final), none
+      // counted for the group's table (which counts games between two of the five: Bonita–Chaminade is in neither
+      // team's feed here, both being out of the run, and the frozen league keeps no counted games).
+      independents: { teams: 5, games: 34, leagueGames: 0, finals: 32, backfilled: 0 },
     });
   });
 });
@@ -219,7 +222,10 @@ describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table',
 });
 
 describeIfCaptured('the membership classification (the San Diego divisions)', () => {
-  const SDS_DIVISIONS = LEAGUES.filter((l) => l.rules.classification === 'membership').flatMap((l) => l.divisions);
+  // The Southern Section independents are a membership division too (DESIGN §24.10), but not in this run.
+  const SDS_DIVISIONS = LEAGUES.filter((l) => l.rules.classification === 'membership' && (SOCAL as readonly string[]).includes(l.id)).flatMap(
+    (l) => l.divisions,
+  );
 
   it('reports membership for every San Diego division and contest-type for the Sunset', () => {
     for (const h of snapshot.leagueHealth.filter((x) => (SOCAL as readonly string[]).includes(x.leagueId))) {

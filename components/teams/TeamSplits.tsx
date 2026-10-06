@@ -37,24 +37,9 @@ export interface TeamSplitsProps {
   view: TeamPageView;
 }
 
-/** The same splits over all games, for a team that plays no league games (the Southern Section independents). */
-const NO_GAMES_ALL = {
-  Home: 'no home games',
-  Away: 'no away games',
-  Neutral: 'no neutral-site games',
-} as const;
-
 export function TeamSplits({ view }: TeamSplitsProps) {
-  // A team with no league games (the Southern Section independents, DESIGN §24.9): its splits are all games.
-  const independent = view.league.classification === 'independent';
-  const league = independent
-    ? view.standing && view.standing.overall.gp > 0
-      ? view.standing.overall
-      : null
-    : view.hasResults && view.standing
-      ? view.standing.computed
-      : null;
-  const noGames = independent ? NO_GAMES_ALL : NO_GAMES;
+  const league = view.hasResults && view.standing ? view.standing.computed : null;
+  const noGames = NO_GAMES;
   const cells: Array<{ label: keyof typeof NO_GAMES; value: string | null }> = [
     { label: 'Home', value: splitValue(league?.homeRecord ?? null) },
     { label: 'Away', value: splitValue(league?.awayRecord ?? null) },
@@ -76,7 +61,7 @@ export function TeamSplits({ view }: TeamSplitsProps) {
         ))}
       </dl>
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        {independent ? 'All games, won-lost-tied.' : 'League games only, won-lost-tied.'}
+        League games only, won-lost-tied.
       </p>
     </div>
   );

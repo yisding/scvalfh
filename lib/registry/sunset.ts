@@ -1,18 +1,20 @@
 /**
- * The 10 Sunset seeds (the CIF Southern Section's field hockey Sunset), transcribed by script from
+ * The 8 Sunset seeds (the CIF Southern Section's field hockey Sunset), transcribed by script from
  * tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-06; checked field by field by
  * tests/registry-seeds.test.ts). Seed order is alphabetical.
  *
- * The Sunset here is a field-hockey-only grouping of ten Southern Section schools in Orange, Los
- * Angeles and Riverside counties, not the all-sports Sunset League. No Sunset document (site,
- * bylaws, schedule or standings) was found, so membership rests on MaxPreps: its 2024-25 and
- * 2025-26 Sunset tables list exactly these ten, and in 2026-27 they play the games MaxPreps marks
- * as Sunset league games. MaxPreps' 2026-27 table lists five of them (Bonita, Chaminade, Chaparral,
- * Great Oak, Temecula Valley); the five Orange County schools carry an all-zero league id this
- * season (LEAGUES sunset maxprepsMissing). si.com files Chaparral and Temecula Valley under
- * "Southwestern": si.com league buckets are never membership evidence. Harvard-Westlake, Thousand
- * Oaks and Glendora (each the only field hockey team in its league) and Mayfair (no 2026 varsity
- * game on MaxPreps) are not seeds (DATA_QUALITY.notCovered).
+ * The Sunset here is a field-hockey-only grouping of eight Southern Section schools in Orange and
+ * Riverside counties, not the all-sports Sunset League. No Sunset document (site, bylaws, schedule
+ * or standings) was found, so membership rests on MaxPreps: its 2024-25 and 2025-26 Sunset tables
+ * list these eight and two more, Bonita and Chaminade, and in 2026-27 the eight play the games
+ * MaxPreps marks as Sunset league games. Bonita and Chaminade are seeds of lib/registry/independents.ts
+ * instead (owner decision, 2026-10-06; DESIGN §24.10): MaxPreps marks none of their 2026 games against
+ * the five Orange County schools as a league game, and both play every other independent home and
+ * away. MaxPreps' 2026-27 table lists three of the eight (Chaparral, Great Oak, Temecula Valley) with
+ * those two; the five Orange County schools carry an all-zero league id this season (LEAGUES sunset
+ * maxprepsMissing). si.com files Chaparral and Temecula Valley under "Southwestern": si.com league
+ * buckets are never membership evidence. Mayfair (no 2026 varsity game on MaxPreps) is not a seed
+ * (DATA_QUALITY.notCovered).
  *
  * Names, acronyms, mascots and cities come from MaxPreps' team-context payload. Colours come from
  * the MaxPreps standings row, else (commented per team) from team-context's
@@ -21,59 +23,13 @@
  * other value, 'placeholder', means invented colours. si.com team ids, slugs and school ids were
  * harvested from si.com league and team pages on 2026-10-06, never guessed. si.com's team search
  * lists a second Marina (Marina, CA), so "Marina" is a statewide namesake (STATEWIDE_AMBIGUOUS in
- * lib/sources/sblive.ts) and resolves on si.com by id only; the other nine names are unique there.
+ * lib/sources/sblive.ts) and resolves on si.com by id only; the other seven names are unique there.
  */
 
 import type { Seed } from './seed';
 
 export const SUNSET_SEEDS: readonly Seed[] = [
-  // ----- Sunset (10; MaxPreps' 2026-27 table lists five: the Orange County five are maxprepsMissing) -----
-  {
-    id: '4c2dd7e8-2f3e-43aa-891b-9218932cdf9d',
-    slug: 'bonita',
-    name: 'Bonita',
-    shortName: 'Bonita',
-    abbr: 'BN',
-    acronym: 'BHS',
-    mascot: 'Bearcats',
-    city: 'La Verne',
-    section: 'ss',
-    league: 'sunset',
-    division: 'sunset',
-    dataCoverage: 'full',
-    colors: ['00824B', 'FFFFFF'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/la-verne/bonita-bearcats/field-hockey/',
-    aliases: [
-      'Bonita', 'BONITA', 'Bonita High School', 'Bonita Bearcats', 'Bonita (La Verne)',
-    ],
-    sbliveTeamId: '458494',
-    sbliveSlug: '458494-bonita-bearcats',
-    sbliveSchoolId: '10097',
-  },
-  {
-    id: '742a32d0-2dc9-4aa8-ad92-8c4576f73a12',
-    slug: 'chaminade',
-    name: 'Chaminade',
-    shortName: 'Chaminade',
-    abbr: 'CM',
-    acronym: 'CHS',
-    mascot: 'Eagles',
-    city: 'West Hills',
-    section: 'ss',
-    league: 'sunset',
-    division: 'sunset',
-    dataCoverage: 'full',
-    colors: ['022C66', 'CC4E10'],
-    colorSource: 'maxpreps-standings',
-    maxprepsPath: '/ca/west-hills/chaminade-eagles/field-hockey/',
-    aliases: [
-      'Chaminade', 'CHAMINADE', 'Chaminade High School', 'Chaminade Eagles', 'Chaminade (West Hills)',
-    ],
-    sbliveTeamId: '456824',
-    sbliveSlug: '456824-chaminade-eagles',
-    sbliveSchoolId: '141',
-  },
+  // ----- Sunset (8; MaxPreps' 2026-27 table lists three of them: the Orange County five are maxprepsMissing) -----
   {
     id: 'd9fa2972-0bc2-4d7b-baa4-aaa7d69c119e',
     slug: 'chaparral',

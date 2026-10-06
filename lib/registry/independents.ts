@@ -1,26 +1,76 @@
 /**
- * The 3 Southern Section independents (Glendora, Harvard-Westlake, Thousand Oaks), transcribed by script
- * from tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-05 Pacific; checked field by field by
- * tests/registry-seeds.test.ts). Seed order is alphabetical.
+ * The 5 Southern Section independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks),
+ * transcribed by script from tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-06; checked field
+ * by field by tests/registry-seeds.test.ts). Seed order is alphabetical.
  *
- * Each is the only field hockey team in its all-sports MaxPreps league for 2026-27 (Palomares, League B,
- * Marmonte), and none plays a game MaxPreps marks as a league game; MaxPreps' 2025-26 tables of the same
- * three leagues each list only that school too. So they are a group with no league table (LEAGUES
- * 'independents', classification 'independent'), not a league: every game they play is a non-league game.
+ * Five Southern Section schools in no field hockey league, grouped by this site (LEAGUES 'independents',
+ * `independents: true`, classification 'membership': the table counts their games against each other).
+ * Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports
+ * MaxPreps league for 2026-27 (Palomares, League B, Marmonte), as in 2025-26. Bonita and Chaminade sit in
+ * MaxPreps' and si.com's 2026-27 Sunset tables, but MaxPreps marks none of their 2026 games against the
+ * five Orange County Sunset teams as a league game, and both play every other independent home and away,
+ * so they are independents here (owner decision, 2026-10-06; DESIGN §24.10), not Sunset seeds.
  *
- * Names, acronyms, mascots and cities come from MaxPreps' team-context payload. No MaxPreps standings row
- * groups any of them with another field hockey team, so colours come from team-context's
- * schoolColor1/schoolColor2, as for the five zero-GUID Sunset teams (lib/registry/sunset.ts header): the
- * same MaxPreps school-colour fields, colorSource 'maxpreps-standings'. si.com team ids, slugs and school
- * ids were harvested from the si.com league pages 4235-palomares, 4207-league-b and 4213-marmonte (each
- * also lists placeholder rows with no games), never guessed; the si.com team search finds no namesake of
- * any of the three names.
+ * Names, acronyms, mascots and cities come from MaxPreps' team-context payload. Bonita's and Chaminade's
+ * colours come from their MaxPreps Sunset standings rows; the other three have no standings row with another
+ * field hockey team, so theirs come from team-context's schoolColor1/schoolColor2, as for the five zero-GUID
+ * Sunset teams (lib/registry/sunset.ts header): the same MaxPreps school-colour fields, colorSource
+ * 'maxpreps-standings'. si.com team ids, slugs and school ids were harvested from the si.com league pages
+ * 4249-sunset (Bonita, Chaminade), 4235-palomares, 4207-league-b and 4213-marmonte (each also lists
+ * placeholder rows with no games), never guessed; the si.com team search finds no namesake of any of the
+ * five names.
  */
 
 import type { Seed } from './seed';
 
 export const INDEPENDENTS_SEEDS: readonly Seed[] = [
-  // ----- Southern Section independents (3; no MaxPreps table groups them: all three are maxprepsMissing) -----
+  // ----- Southern Section independents (5; no MaxPreps table groups them: all five are maxprepsMissing) -----
+  {
+    id: '4c2dd7e8-2f3e-43aa-891b-9218932cdf9d',
+    slug: 'bonita',
+    name: 'Bonita',
+    shortName: 'Bonita',
+    abbr: 'BN',
+    acronym: 'BHS',
+    mascot: 'Bearcats',
+    city: 'La Verne',
+    section: 'ss',
+    league: 'independents',
+    division: 'independents',
+    dataCoverage: 'full',
+    colors: ['00824B', 'FFFFFF'],
+    colorSource: 'maxpreps-standings',
+    maxprepsPath: '/ca/la-verne/bonita-bearcats/field-hockey/',
+    aliases: [
+      'Bonita', 'BONITA', 'Bonita High School', 'Bonita Bearcats', 'Bonita (La Verne)',
+    ],
+    sbliveTeamId: '458494',
+    sbliveSlug: '458494-bonita-bearcats',
+    sbliveSchoolId: '10097',
+  },
+  {
+    id: '742a32d0-2dc9-4aa8-ad92-8c4576f73a12',
+    slug: 'chaminade',
+    name: 'Chaminade',
+    shortName: 'Chaminade',
+    abbr: 'CM',
+    acronym: 'CHS',
+    mascot: 'Eagles',
+    city: 'West Hills',
+    section: 'ss',
+    league: 'independents',
+    division: 'independents',
+    dataCoverage: 'full',
+    colors: ['022C66', 'CC4E10'],
+    colorSource: 'maxpreps-standings',
+    maxprepsPath: '/ca/west-hills/chaminade-eagles/field-hockey/',
+    aliases: [
+      'Chaminade', 'CHAMINADE', 'Chaminade High School', 'Chaminade Eagles', 'Chaminade (West Hills)',
+    ],
+    sbliveTeamId: '456824',
+    sbliveSlug: '456824-chaminade-eagles',
+    sbliveSchoolId: '141',
+  },
   {
     id: '1228375e-e4c0-453e-aed4-d0b0693b3c52',
     slug: 'glendora',

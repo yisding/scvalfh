@@ -17,7 +17,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { numberWord } from '../../lib/format';
 
 /**
- * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues and the three independents: the
+ * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues and the five independents: the
  * schools with the best records, the most goals per game, the fewest allowed, the most clean
  * sheets and the highest Elo rating (lib/ratings.ts, DESIGN §20), and the players with the most
  * points, assists, saves and clean sheets.
@@ -154,7 +154,7 @@ export default function LeadersPage() {
   );
 }
 
-/** "NorCal’s five leagues" | "SoCal’s four leagues and three independents": a region section's scope, from config. */
+/** "NorCal’s five leagues" | "SoCal’s four leagues and five independents": a region section's scope, from config. */
 function regionLeagues(region: RegionLeadersView): string {
   const independents = region.independentCount > 0 ? ` and ${numberWord(region.independentCount)} independents` : '';
   return `${region.shortName}’s ${numberWord(region.leagueCount)} leagues${independents}`;

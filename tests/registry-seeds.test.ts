@@ -1,8 +1,8 @@
 /**
  * lib/registry/* is a transcription of the five verified registry seeds in tests/fixtures/seeds/
  * (CCS, NCS, the Northern Section's EAL, and for Southern California the Southern Section's Sunset and
- * its three independents, and the San Diego Section's City, North County and Metro conferences). The
- * SS seed file holds the Sunset ten and then the three independents; TEAMS (LEAGUES order) puts the
+ * its five independents, and the San Diego Section's City, North County and Metro conferences). The
+ * SS seed file holds the Sunset eight and then the five independents; TEAMS (LEAGUES order) puts the
  * independents last, after the San Diego Section's 40. Every transcribed field
  * must equal the seed JSON (SPEC §3.1), except the documented differences:
  *   - `section` is derived from the league (ccs for scval/bval/pcal, ncs for mcal, ns for eal, ss for
@@ -66,7 +66,7 @@ const NSS_JSON = readSeed('registry-seed-ns.json');
 const SS_JSON = readSeed('registry-seed-ss.json');
 const SDS_JSON = readSeed('registry-seed-sds.json');
 const ALL_JSON = [...CCS_JSON, ...NCS_JSON, ...NSS_JSON, ...SS_JSON, ...SDS_JSON];
-/** The registry's order: LEAGUES order, so the SS file's three independents follow the San Diego Section's 40. */
+/** The registry's order: LEAGUES order, so the SS file's five independents follow the San Diego Section's 40. */
 const REGISTRY_JSON = [
   ...CCS_JSON, ...NCS_JSON, ...NSS_JSON, ...SS_JSON.filter((s) => s.league !== 'independents'), ...SDS_JSON,
   ...SS_JSON.filter((s) => s.league === 'independents'),
@@ -105,9 +105,9 @@ describe('registry seeds: lib/registry/* equals tests/fixtures/seeds/*.json', ()
     expect(SEEDS).toHaveLength(102);
     expect(SEEDS.map((s) => s.slug)).toEqual(REGISTRY_JSON.map((s) => s.slug));
     expect(TEAMS.map((t) => t.slug)).toEqual(REGISTRY_JSON.map((s) => s.slug));
-    // The SS seed file: the Sunset ten, then the three independents, each run alphabetical.
-    expect(SS_JSON.map((s) => s.league)).toEqual([...Array(10).fill('sunset'), ...Array(3).fill('independents')]);
-    expect(INDEPENDENTS_SEEDS.map((s) => s.slug)).toEqual(['glendora', 'harvard-westlake', 'thousand-oaks']);
+    // The SS seed file: the Sunset eight, then the five independents, each run alphabetical.
+    expect(SS_JSON.map((s) => s.league)).toEqual([...Array(8).fill('sunset'), ...Array(5).fill('independents')]);
+    expect(INDEPENDENTS_SEEDS.map((s) => s.slug)).toEqual(['bonita', 'chaminade', 'glendora', 'harvard-westlake', 'thousand-oaks']);
     expect(SCVAL_SEEDS.every((s) => s.league === 'scval')).toBe(true);
     expect(BVAL_SEEDS.every((s) => s.league === 'bval')).toBe(true);
     expect(PCAL_SEEDS.every((s) => s.league === 'pcal')).toBe(true);
@@ -128,8 +128,8 @@ describe('registry seeds: lib/registry/* equals tests/fixtures/seeds/*.json', ()
       else runs.push([s.division, 1]);
     }
     expect(runs).toEqual([
-      ['sunset', 10], ['city-western', 6], ['city-eastern', 6], ['avocado', 6], ['palomar', 7], ['valley', 6],
-      ['metro-mesa', 5], ['metro-south-bay', 4], ['independents', 3],
+      ['sunset', 8], ['city-western', 6], ['city-eastern', 6], ['avocado', 6], ['palomar', 7], ['valley', 6],
+      ['metro-mesa', 5], ['metro-south-bay', 4], ['independents', 5],
     ]);
     for (const [division] of runs) {
       const slugs = SOCAL_SEEDS.filter((s) => s.division === division).map((s) => s.slug);

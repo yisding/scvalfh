@@ -361,7 +361,7 @@ describe('the "league added" upgrade for the four Southern California leagues an
       ['metro', 'degraded', ['No Metro data in this snapshot yet: it was written before Metro was added.'],
         [['metro-mesa', 'membership'], ['metro-south-bay', 'membership']]],
       ['independents', 'degraded', ['No data for the Southern Section independents in this snapshot yet: it was written before they were added.'],
-        [['independents', 'independent']]],
+        [['independents', 'membership']]],
     ]);
     // The new rows carry no results; the Sunset's single rung still gives each a status.
     const added = upgraded.standings.slice(49);

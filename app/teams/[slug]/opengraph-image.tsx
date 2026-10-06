@@ -84,21 +84,15 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
   if (!view) notFound();
 
   const { team, standing, hasResults, last, next } = view;
-  // A team that plays no league games (the Southern Section independents, DESIGN §24.9): no place, points
-  // or GP; its card prints its overall figures and says "all games" where the others say "league games".
-  const independent = view.league.classification === 'independent';
-  const overall = standing && standing.overall.gp > 0 ? standing.overall : null;
   const known = hasResults && standing ? standing : null;
   const record = known ? recordString(known.computed) : EM_DASH;
   // `<place> of <N> in <division heading or league short>`; a team with no results is never
   // placed (SPEC §8.4). A shared place is a real tiebreak outcome, so it says so.
-  const placeLine = independent
-    ? 'Independent: no league games, so no league table'
-    : known
-      ? `${ordinal(known.computed.place)} ${placeScope(view.divisionSize, view.scopeLabel)}${
-          known.tiebreak.shared ? ' (tied)' : ''
-        }`
-      : 'No results reported yet';
+  const placeLine = known
+    ? `${ordinal(known.computed.place)} ${placeScope(view.divisionSize, view.scopeLabel)}${
+        known.tiebreak.shared ? ' (tied)' : ''
+      }`
+    : 'No results reported yet';
   // `6/12`, or the bare count where the league has no fixed schedule (the Sunset: no "of N").
   const gp = view.context
     ? view.context.scheduled === null
@@ -159,23 +153,14 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
           </div>
         </div>
 
-        {independent ? (
-          <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${OG.RULE}`, paddingTop: 24 }}>
-            <Stat label="Overall" value={overall ? recordString(overall) : EM_DASH} />
-            <Stat label="Goals F / A" value={overall ? `${overall.gf} / ${overall.ga}` : EM_DASH} />
-            <Stat label="Diff" value={overall ? signedGd(overall.gd) : EM_DASH} />
-            <Stat label="Streak" value={overall ? streakString(overall.streak) : EM_DASH} />
-          </div>
-        ) : (
-          <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${OG.RULE}`, paddingTop: 24 }}>
-            <Stat label="League" value={record} />
-            <Stat label="Pts" value={points} />
-            <Stat label="GP" value={gp} />
-            <Stat label="Goals F / A" value={goals} />
-            <Stat label="Diff" value={diff} />
-            <Stat label="Streak" value={streak} />
-          </div>
-        )}
+        <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${OG.RULE}`, paddingTop: 24 }}>
+          <Stat label="League" value={record} />
+          <Stat label="Pts" value={points} />
+          <Stat label="GP" value={gp} />
+          <Stat label="Goals F / A" value={goals} />
+          <Stat label="Diff" value={diff} />
+          <Stat label="Streak" value={streak} />
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', fontSize: 30, color: OG.TEXT }}>Last: {lastLine}</div>
@@ -183,7 +168,7 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
         </div>
 
         <div style={{ display: 'flex', fontSize: 22, color: OG.TEXT_3 }}>
-          As of {formatStamp(getFetchedAt())} &middot; {independent ? 'all games' : 'league games only'} &middot; unofficial
+          As of {formatStamp(getFetchedAt())} &middot; league games only &middot; unofficial
           &middot; {SITE_NAME}
         </div>
       </div>

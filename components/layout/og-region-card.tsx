@@ -2,7 +2,7 @@ import { buildStandingsOverviewView, leaderLine } from '../standings/standings-p
 import { leaderClause, type LeaderLine } from '../standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES, REGIONS, isIndependentLeague } from '../../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '../../lib/leagues';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 
@@ -75,20 +75,25 @@ export function regionCardColumns(
   return REGIONS.map((region) => ({
     region: region.id,
     heading: region.name,
-    // A group with no league table (the Southern Section independents) has no leaders, so no row.
+    // Every table of the region, the Southern Section independents' included (DESIGN §24.10); the group's row is
+    // labelled by its division ('Independents'), since its short name is an adjective.
     rows: leagues
-      .filter((l) => l.region === region.id && !isIndependentLeague(l.id))
-      .map((l) => ({ id: l.id, shortName: l.shortName, text: leaderClause(linesOf(l.id)) })),
+      .filter((l) => l.region === region.id)
+      .map((l) => ({
+        id: l.id,
+        shortName: isIndependentLeague(l.id) ? (l.divisions[0]?.label ?? l.shortName) : l.shortName,
+        text: leaderClause(linesOf(l.id)),
+      })),
   }));
 }
 
 /**
- * `9 leagues, 3 independents`: the leagues with a table, then the teams in no league (DESIGN §24.9), so a
- * card never counts the independents as a tenth league.
+ * `9 leagues, 5 independents`: the leagues proper, then the teams in no league (DESIGN §24.9), so a card
+ * never counts the independents as a tenth league.
  */
 function leagueCountWords(): string {
   const independents = INDEPENDENT_LEAGUES.reduce((n, g) => n + g.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
-  return `${LEAGUES_WITH_TABLES.length} leagues${independents > 0 ? `, ${independents} independents` : ''}`;
+  return `${LEAGUES_PROPER.length} leagues${independents > 0 ? `, ${independents} independents` : ''}`;
 }
 
 export interface RegionCardProps {

@@ -47,12 +47,11 @@ import { SEASON_DISPLAY } from '../../../lib/season';
  * `LIVE` is never a running score anywhere on this site: the snapshot is a once- or twice-daily
  * cron, and `/about#updates` says so in plain words.
  *
- * A group with no league table (the Southern Section independents, DESIGN §24.9) gets the same page; its
- * title is "Independent teams: schedule and results" (its short name is an adjective), and its header says
- * every contest involving the independents is a non-league game.
+ * The Southern Section independents (DESIGN §24.9) get the same page; its title is "Independent teams:
+ * schedule and results" (its short name is an adjective) and its header says "the independents".
  */
 
-/** 'SCVAL schedule and results'; for a group with no table, 'Independent teams: schedule and results'. */
+/** 'SCVAL schedule and results'; for the independents, 'Independent teams: schedule and results'. */
 function scheduleTitle(summary: { id: string; shortName: string }): string {
   return isIndependentLeague(summary.id)
     ? `${summary.shortName} teams: schedule and results`
@@ -105,7 +104,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
           span ? (
             <>
               {summary.name} &middot; {span} &middot; every contest involving {isIndependentLeague(summary.id) ? 'the independents,' : <>{summary.shortName} teams,</>}{' '}
-              {isIndependentLeague(summary.id) ? 'all of them non-league games' : 'league and non-league'}, oldest
+              league and non-league, oldest
               first &middot; all times Pacific
             </>
           ) : (

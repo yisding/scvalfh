@@ -4,8 +4,8 @@ Scores, standings, schedules and playoff pictures for the 49 girls varsity field
 Northern California's five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in
 the North Coast Section and the Northern Section's EAL. The site also covers Southern California's
 53 teams (the Southern Section's Sunset field hockey league, the San Diego Section's City, North
-County and Metro conferences, and the Southern Section's three independents, Glendora,
-Harvard-Westlake and Thousand Oaks, which play no league games) behind a NorCal/SoCal toggle whose
+County and Metro conferences, and the Southern Section's five independents, Bonita, Chaminade,
+Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey league) behind a NorCal/SoCal toggle whose
 default is NorCal, because the owner keeps the NorCal focus (2026-10-06); the browser remembers the
 choice, and without JavaScript both regions show, NorCal first. Every California team we found with
 a 2026 varsity game on MaxPreps (2026-10-06) is covered; other teams appear only as opponents (this is the site's scope
@@ -26,22 +26,26 @@ Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture"
 | PCAL — Pacific Coast Athletic League | NorCal | CCS | one division (7) | 7 |
 | MCAL — Marin County Athletic League | NorCal | NCS | one division (9) | 9 |
 | EAL — Eastern Athletic League | NorCal | NS | one division (6) | 6 |
-| Sunset — Sunset field hockey league | SoCal | SS | one division (10) | 10 |
+| Sunset — Sunset field hockey league | SoCal | SS | one division (8) | 8 |
 | City — City Conference | SoCal | SDS | City Western (6), City Eastern (6) | 12 |
 | North — North County Conference | SoCal | SDS | Avocado (6), Palomar (7), Valley (6) | 19 |
 | Metro — Metro Conference | SoCal | SDS | Metro Mesa (5), Metro South Bay (4) | 9 |
-| Independent — Southern Section independents | SoCal | SS | no league table: Glendora, Harvard-Westlake, Thousand Oaks | 3 |
+| Independent — Southern Section independents | SoCal | SS | one table (5): Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks | 5 |
 
 102 teams in all, 49 in Northern California and 53 in Southern California, in nine leagues and one
 group of independents. The North County Conference's short name is "North" (owner decision,
 2026-10-06: "North County" made its chip too wide); where the short name would stand alone as a
 control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
-as a direction ("Jump to North County ↓"). The Southern Section independents are not a league: each is
-the only field hockey team in its all-sports league (the Palomares League, League B and the Marmonte
-League on MaxPreps), so they play no league games and have no league table, standings, ladder or
-postseason; the site lists them as a group (short name "Independent", `classification:
-'independent'` in `lib/leagues.ts`) and every count of leagues names them apart ("nine leagues and
-three independents", never "ten leagues"). PCAL, MCAL, EAL and the
+as a direction ("Jump to North County ↓"). The Southern Section independents are not a league: five
+Southern Section schools in no field hockey league, grouped by this site (short name "Independent",
+`independents: true` in `lib/leagues.ts`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
+Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
+none of their games against the five Orange County Sunset teams as a league game and both play every
+other independent home and away, so they are independents here (owner decision, 2026-10-06). The group
+has a table of its members' games against each other (`classification: 'membership'`, ordered by this
+site's 3-1-0 points; no ladder or postseason), and every count of leagues names it apart ("nine
+leagues and five independents", never "ten leagues"). PCAL, MCAL, EAL and the
 Sunset are single-division leagues, so the site shows no division picker and no division label for
 them. A San Diego conference is a league here and the Section's leagues are its divisions (the
 Section's 2026-27 League Alignment; the division names are ours). Every league fact (ids, MaxPreps
@@ -76,7 +80,7 @@ league heading.
 
 None of the four Southern California leagues publishes a schedule, standings or a points rule that we
 could find, so the site orders their tables by its own 3-1-0 points and says so on every page. The
-Sunset is a field-hockey-only grouping of ten Southern Section schools in Orange, Los Angeles and
+Sunset is a field-hockey-only grouping of eight Southern Section schools in Orange and
 Riverside counties (not the all-sports Sunset League); its league games are the games MaxPreps marks as
 league games, and there is no round robin, so the site shows games played without "of N". In the San
 Diego Section every pair of division-mates is scheduled twice except, on 2026-10-05 (Pacific), Metro
@@ -315,7 +319,7 @@ bundled fixtures are still used until someone re-transcribes them (the runbook i
 
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
-from the 102 MaxPreps roster pages (every registry team, all nine leagues and the three independents; one entry per team) and
+from the 102 MaxPreps roster pages (every registry team, all nine leagues and the five independents; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
 season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
@@ -352,7 +356,7 @@ other on a grade MaxPreps leaves blank, the grade stays blank and each source is
 way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
-page, in all nine leagues and the three independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
+page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
 built by `components/teams/roster-view.ts`): varsity only, a † on every value that did not come
 from MaxPreps, the coaches, every recorded disagreement and a link to each source. A team with no
 list says why instead of showing an empty card: MaxPreps lists no players, the last update failed
@@ -378,7 +382,7 @@ pnpm fetch-rosters --dry-run                            # parse and report, writ
 
 ### Player stats
 
-All nine leagues and the three independents, like the rosters it joins to: `fetch-player-stats` iterates the 102-team registry,
+All nine leagues and the five independents, like the rosters it joins to: `fetch-player-stats` iterates the 102-team registry,
 and every team page has a Player stats section.
 
 `data/player-stats.json` holds each team's season player stats as the coach entered them on
@@ -1015,20 +1019,27 @@ Sunset table lists five of the ten, ordered by winning percentage, and si.com's 
 
 ### Southern Section independents
 
-Glendora, Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports
-leagues (the Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages), so
-they play no league games and have no league table; MaxPreps' 2025-26 tables for those three leagues
-each list one field hockey team too. The site lists them as one group, "Southern Section independents"
-(short name "Independent"), with `classification: 'independent'`: `lib/classify.ts` counts no game for
-the group, so every game they play is non-league, and the group has no standings, places, PTS, GP,
-tiebreaks, ladder line or co-leaders. Where a league shows its table, the group shows its note and its
-three team links instead (`components/standings/IndependentGroup.tsx`): on `/standings`,
-`/standings/independents`, `/teams` and the home panel. Their team pages count every figure over all
-their games (overall record, streak, form, margins, splits), and their games count in the Elo fit and
-on the SoCal school boards (not the league-record board). **Postseason:** none, for the Sunset's reason
-(Blue Book 2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game,
-Oct 31 at the latest. No MaxPreps or si.com table groups the three; the site reads their team
-schedules and si.com's one-school league pages (backfill only).
+Five Southern Section schools in no field hockey league, grouped by this site as "Southern Section
+independents" (short name "Independent", `independents: true` in `lib/leagues.ts`). Glendora,
+Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
+Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
+tables for those three leagues each list one field hockey team too). Bonita and Chaminade sit in
+MaxPreps' and si.com's 2026-27 Sunset tables (as in MaxPreps' 2024-25 and 2025-26 tables), but MaxPreps
+marks none of their nine 2026 games against the five Orange County Sunset teams as a league game, and
+each plays every other independent home and away, so the site lists them here (owner decision,
+2026-10-06). **Which games count:** every game between two of the five, whether or not MaxPreps marks it
+a league game (it marks only Bonita's two games with Chaminade), outside tournaments and inside Sep 8 to
+Oct 31 (`classification: 'membership'`, as the San Diego divisions). Nine of the ten pairs meet home and
+away and Chaminade–Thousand Oaks three times, so `gamesPerTeam` is null and GP is shown without "of N".
+The one game MaxPreps flags between an independent and a Sunset team, Bonita at Great Oak on Aug 27,
+counts for neither table. **Points, ties:** no league exists to publish a rule, so the table is this
+site's own 3-1-0 and teams level on points share a place ("Independent co-leaders" at the top once the
+season is over). Every page that shows the table says it is this site's count of the five's games
+against each other (the division's note). **Postseason:** none, for the Sunset's reason (Blue Book
+2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game, Oct 31 at the
+latest. No MaxPreps or si.com table groups the five; the site reads their team schedules, and si.com's
+Sunset page and one-school league pages for backfill only. Their games count in the Elo fit and on the
+SoCal school boards; the league-record board leaves them out, since their table is not a league record.
 
 ### San Diego Section: City, North County and Metro
 
@@ -1076,7 +1087,7 @@ inconsistencies (see `docs/DATA-SOURCES.md` §7). MaxPreps' reported row is kept
 `Standing` for cross-check and shown as a flagged mismatch (⚑) when it disagrees with the
 computed one; see `/about`. A division whose MaxPreps table is known to differ (Santa Teresa
 leaves out Prospect; PCAL's is missing games; MaxPreps orders MCAL and the EAL by winning percentage
-and lists Red Bluff in the EAL; its Sunset table lists five of the ten; its San Diego tables do not
+and lists Red Bluff in the EAL; its Sunset table lists three of the eight, with Bonita and Chaminade; its San Diego tables do not
 follow the Section's alignment) shows
 the known cause beside the comparison instead of an alarm.
 
@@ -1122,7 +1133,7 @@ Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behin
 rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
 team meets the record first, and the ten highest in each region are a board on `/leaders`
 (`#elo-rating` for NorCal, `#elo-rating-socal` for SoCal). The ratings are on one scale across all
-nine leagues and the three independents: there is one fit, over both regions, and each board takes its region's rows from it. It is in Elo points (1500 is the average
+nine leagues and the five independents: there is one fit, over both regions, and each board takes its region's rows from it. It is in Elo points (1500 is the average
 rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not computed game
 by game: classic Elo moves two ratings after each game, which over one season of about ten games a
 team leaves it mostly where it started. Instead every final between two of the 102 teams is fitted
@@ -1153,7 +1164,7 @@ at once, at every build, starting from last season's:
   (95%).
 - **What counts.** Every final between two of the 102 teams, league or not, postseason included,
   with its published score (a si.com backfill too). Forfeits, finals without a score and games
-  against schools outside the nine leagues and the three independents are left out, last season's included. The fit uses goals,
+  against schools outside the nine leagues and the five independents are left out, last season's included. The fit uses goals,
   so an EAL game decided on 1 v 1s, or a level San Diego game MaxPreps marks W and L, counts as level
   there.
   The model's constants (the 5-goal cap, the one-game weight of last season, 175 points a goal) were
@@ -1195,8 +1206,8 @@ at once, at every build, starting from last season's:
   have no 2026 varsity game on MaxPreps either (each team's schedule returned no game on 2026-10-06),
   so none has a page. The team search prints a sentence for each. Harvard-Westlake, Thousand Oaks and
   Glendora, each the only field hockey team in its all-sports league, are covered as the Southern
-  Section independents: they have team pages and count in the Elo fit and the SoCal boards, but no
-  league table, standings or ladder (DESIGN §24.9).
+  Section independents: they have team pages and count in the Elo fit and the SoCal boards, and their
+  table is this site's count of their games against each other, with no ladder (DESIGN §24.9, §24.10).
 - **MaxPreps is wrong or incomplete for some leagues.** MaxPreps' Santa Teresa table leaves out
   Prospect and counts four of its league games as non-league; its PCAL data is missing some
   official league games and dates others differently; it orders MCAL and the EAL by winning percentage and,
@@ -1208,8 +1219,9 @@ at once, at every build, starting from last season's:
   from the league's official schedule (the EAL has none: from MaxPreps' league flag) and says what
   differs, per league, on `/about#health`.
 - **MaxPreps' Southern California league assignments are missing for several teams.** Its 2026-27
-  Sunset table holds five of the ten (Great Oak, Temecula Valley, Bonita, Chaminade, Chaparral) and
-  gives the five Orange County schools no league at all. In San Diego it has no Valley table, its City
+  Sunset table holds three of the eight (Great Oak, Temecula Valley, Chaparral), with Bonita and
+  Chaminade, which this site lists with the independents, and gives the five Orange County schools no
+  league at all. In San Diego it has no Valley table, its City
   Eastern table leaves out Patrick Henry and lists Madison, its Avocado table leaves out Mt. Carmel and
   Rancho Bernardo, its "Metro- South Bay" table holds the Metro Mesa teams, and its "Grossmont" table
   holds El Capitan, Granite Hills and Santana while Hilltop and Southwest have no league. Its league

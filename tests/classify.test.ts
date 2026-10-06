@@ -244,22 +244,34 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
   });
 });
 
-describe('classify: the Southern Section independents (classification independent, DESIGN §24.9)', () => {
-  it('counts no game between two independents, flagged by MaxPreps or not, in or out of the group’s game span', () => {
-    // Harvard-Westlake 5, Glendora 0 on Sep 8: two of the group, so leagueDivision is theirs, but no game counts.
+describe('classify: the Southern Section independents (membership, DESIGN §24.10)', () => {
+  it('counts a game between two independents inside the group’s span, flagged by MaxPreps or not', () => {
+    // Harvard-Westlake 5, Glendora 0 on Sep 8 (MaxPreps: non-league) and Bonita 2, Chaminade 1 on Sep 29 (MaxPreps:
+    // a Sunset league game): both count for the group's table.
     for (const league of [true, false]) {
       const g = game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-08', league });
       expect(g.leagueDivision, `league flag ${league}`).toBe('independents');
-      expect(g.countsFor, `league flag ${league}`).toBeNull();
-      expect(classifyGame(g), `league flag ${league}`).toBeNull();
+      expect(g.countsFor, `league flag ${league}`).toBe('independents');
+      expect(classifyGame(g), `league flag ${league}`).toBe('independents');
       expect(g.postseason).toBeNull();
     }
+    expect(game({ home: 'chaminade', away: 'bonita', hs: 1, as: 2, date: '2026-09-29' }).countsFor).toBe('independents');
+    // A tournament row never counts; nor does a game before the group's first (Sep 8).
+    expect(
+      game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-08', contestTypes: { home: 2, away: 2 } }).countsFor,
+    ).toBeNull();
+    expect(game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-01', league: false }).countsFor).toBeNull();
   });
 
-  it('counts no game against a league team either, and leaves that team’s league untouched', () => {
+  it('counts no game against a league team, flagged or not, and leaves that team’s league untouched', () => {
     const g = game({ home: 'great-oak', away: 'harvard-westlake', hs: 2, as: 4, date: '2026-08-18' });
     expect(g.countsFor).toBeNull();
-    const sunset = game({ home: 'great-oak', away: 'bonita', hs: 2, as: 1, date: '2026-09-15' });
+    // Bonita at Great Oak, Aug 27: MaxPreps marks it a Sunset league game; Bonita is an independent here, so it
+    // counts for neither table.
+    const flagged = game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' });
+    expect(flagged.leagueDivision).toBeNull();
+    expect(flagged.countsFor).toBeNull();
+    const sunset = game({ home: 'great-oak', away: 'chaparral', hs: 6, as: 0, date: '2026-09-11' });
     expect(sunset.countsFor).toBe('sunset');
   });
 });
@@ -397,11 +409,11 @@ describe('classify: the San Diego Section playoffs tag (section-playoffs)', () =
 });
 
 describe('classify: Sunset (contest-type, no postseason)', () => {
-  it('counts only a game MaxPreps flags between two of the ten', () => {
-    expect(game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' }).countsFor).toBe('sunset');
-    expect(game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18', league: false }).countsFor).toBeNull();
+  it('counts only a game MaxPreps flags between two of the eight', () => {
+    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11' }).countsFor).toBe('sunset');
+    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', league: false }).countsFor).toBeNull();
     expect(
-      game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18', contestTypes: { home: 0, away: 2 } }).countsFor,
+      game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', contestTypes: { home: 0, away: 2 } }).countsFor,
     ).toBeNull();
   });
 

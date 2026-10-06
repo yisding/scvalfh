@@ -34315,44 +34315,6 @@
       "maxpreps": {
         "error": null,
         "fetchedAt": "2026-10-06T03:27:26.415Z",
-        "rowCount": 9,
-        "status": "ok"
-      },
-      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/jv/schedule/",
-      "name": "Bonita",
-      "sblive": {
-        "error": null,
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
-        "rowCount": 7,
-        "status": "ok"
-      },
-      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/458495-bonita-bearcats-jv/games",
-      "slug": "bonita",
-      "teamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d"
-    },
-    {
-      "maxpreps": {
-        "error": null,
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
-        "rowCount": 1,
-        "status": "ok"
-      },
-      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/field-hockey/jv/schedule/",
-      "name": "Chaminade",
-      "sblive": {
-        "error": null,
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
-        "rowCount": 0,
-        "status": "ok"
-      },
-      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/483205-chaminade-eagles-jv/games",
-      "slug": "chaminade",
-      "teamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12"
-    },
-    {
-      "maxpreps": {
-        "error": null,
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
         "rowCount": 10,
         "status": "ok"
       },
@@ -35260,6 +35222,44 @@
       "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/459139-southwest-sd-raiders-jv/games",
       "slug": "southwest",
       "teamId": "19409229-6768-4537-b8d7-4a7d2814aaad"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "rowCount": 9,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/jv/schedule/",
+      "name": "Bonita",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "rowCount": 7,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/458495-bonita-bearcats-jv/games",
+      "slug": "bonita",
+      "teamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/west-hills/chaminade-eagles/field-hockey/jv/schedule/",
+      "name": "Chaminade",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/483205-chaminade-eagles-jv/games",
+      "slug": "chaminade",
+      "teamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12"
     },
     {
       "maxpreps": {

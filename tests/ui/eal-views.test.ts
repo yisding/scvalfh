@@ -272,7 +272,7 @@ describe('/about, the EAL parts', () => {
     expect(textOf(byId(aboutHtml, 'playoffs')), 'app/about/page.tsx Postseason').toContain(
       `Northern Section: ${ps.note} Northern Section Field Hockey Guidelines (PDF)`,
     );
-    expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all nine leagues and the three Southern Section independents:/);
+    expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all nine leagues and the five Southern Section independents:/);
   });
 
   it('names the reported scores, not the Guidelines, as the EAL’s record for seeding, and dates no sweep wrongly', () => {

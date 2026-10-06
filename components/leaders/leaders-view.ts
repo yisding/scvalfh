@@ -1,5 +1,5 @@
 /**
- * The /leaders page (DESIGN §16): leaderboards over all nine leagues and the three independents, built once per region (NorCal, then
+ * The /leaders page (DESIGN §16): leaderboards over all nine leagues and the five independents, built once per region (NorCal, then
  * SoCal: DESIGN-socal §2.3, §2.4), derived from the two files the rest of the site already reads. Pure, so
  * tests/ui/leaders-view.test.ts can assert it over the committed data and over synthetic games.
  *
@@ -53,7 +53,7 @@ import {
 } from '../../lib/format';
 import {
   INDEPENDENT_LEAGUES,
-  LEAGUES_WITH_TABLES,
+  LEAGUES_PROPER,
   REGIONS,
   getLeague,
   getSection,
@@ -87,22 +87,22 @@ import { plural } from '../ui/plural';
 import { positionWords } from '../ui/position-words';
 
 /**
- * 'nine': the number of configured leagues with a table, in words. The Elo fit spans all of them and the
+ * 'nine': the number of configured leagues proper, in words. The Elo fit spans all of them and the
  * independent groups too (one scale), so the copy that speaks for the whole fit says 'the nine leagues'
  * teams' and adds AND_INDEPENDENTS; a board speaks for its region's. Never 'ten leagues': the Southern
  * Section independents are not a league (DESIGN §24.9).
  */
-export const LEAGUE_COUNT = numberWord(LEAGUES_WITH_TABLES.length);
+export const LEAGUE_COUNT = numberWord(LEAGUES_PROPER.length);
 
 /**
- * ' and the Southern Section’s three independents' ('' with no independent group): the covered teams that
+ * ' and the Southern Section’s five independents' ('' with no independent group): the covered teams that
  * are in no league, named after a count of leagues wherever the sentence speaks for every covered team.
  */
 export const AND_INDEPENDENTS = INDEPENDENT_LEAGUES.map(
   (g) => ` and the ${getSection(g.sectionId).name}’s ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
 ).join('');
 
-/** ' and three independents' ('' with none): the short form, for an eyebrow. */
+/** ' and five independents' ('' with none): the short form, for an eyebrow. */
 export const AND_INDEPENDENTS_SHORT = INDEPENDENT_LEAGUES.map(
   (g) => ` and ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
 ).join('');
@@ -297,30 +297,31 @@ function defaultSources(): LeaderSources {
 interface BoardScope {
   /** '' | '-socal' */
   suffix: '' | '-socal';
-  /** 'all five NorCal leagues', 'all four SoCal leagues and three independents': the captions' scope. */
+  /** 'all five NorCal leagues', 'all four SoCal leagues and five independents': the captions' scope. */
   leagues: string;
   /**
-   * The same without the independents ('all four SoCal leagues'): the league-record board's scope, since a
-   * team that plays no league games has no league record to rank (DESIGN §24.9).
+   * The same without the independents ('all four SoCal leagues'): the league-record board's scope. The
+   * independents' table counts their games against each other, not league games, so that board leaves them
+   * out (DESIGN §24.10).
    */
   leaguesOnly: string;
 }
 
 /**
- * A region's leagues with a table, and its independents' team count (the Southern Section independents are
- * SoCal's: no league, so not counted as one, DESIGN §24.9).
+ * A region's leagues proper, and its independents' team count (the Southern Section independents are SoCal's:
+ * no league, so not counted as one, DESIGN §24.9).
  */
 function regionCounts(region: RegionId): { leagues: number; independents: number } {
   const all = leaguesInRegion(region);
   return {
-    leagues: all.filter((l) => l.rules.classification !== 'independent').length,
+    leagues: all.filter((l) => !l.independents).length,
     independents: all
-      .filter((l) => l.rules.classification === 'independent')
+      .filter((l) => l.independents)
       .reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0),
   };
 }
 
-/** A region's board scope: 'all five NorCal leagues', 'all four SoCal leagues and three independents'. */
+/** A region's board scope: 'all five NorCal leagues', 'all four SoCal leagues and five independents'. */
 function boardScope(region: RegionId): BoardScope {
   const config = REGIONS.find((r) => r.id === region)!;
   const counts = regionCounts(region);

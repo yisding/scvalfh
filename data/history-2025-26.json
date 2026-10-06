@@ -577,11 +577,12 @@
       "checked": [
         "https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)",
         "https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405 (MaxPreps’ 2025-26 League B table: Harvard-Westlake is its only field hockey team)",
-        "https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)"
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/sunset/?leagueid=1ab67ce6-46a6-42be-a7aa-dd2892d77dff (MaxPreps’ 2025-26 Sunset table: Bonita and Chaminade with the eight Sunset teams)"
       ],
       "checkedOn": "2026-10-06",
       "league": "Southern Section independents",
-      "reason": "Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.",
+      "reason": "The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.",
       "status": "unavailable"
     },
     "mcal": {

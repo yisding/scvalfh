@@ -11,7 +11,7 @@ import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/te
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES } from '../../lib/leagues';
+import { LEAGUES_PROPER } from '../../lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -54,13 +54,8 @@ const PAGE_TITLE = 'Teams and standings';
  * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */
-/**
- * Where the teams are listed: each league team in its division's table, and (DESIGN §24.9) the independents,
- * who play no league games, in their group's block instead of a table.
- */
-const WHERE_LISTED = `each in its division’s standings table${
-  INDEPENDENT_LEAGUES.length > 0 ? ' (the independents play no league games, so they have none)' : ''
-}`;
+/** Where the teams are listed: each in its division's table, the Southern Section independents' included (DESIGN §24.10). */
+const WHERE_LISTED = 'each in its division’s standings table';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -73,7 +68,7 @@ export default function TeamsPage() {
   const counts = getCounts();
   const regions = buildTeamsByRegion();
   // The leagues whose order is this site's own points; a group with no table orders nothing.
-  const siteOrdered = LEAGUES_WITH_TABLES.filter((l) => l.rules.orderScope === 'site').map((l) => l.shortName);
+  const siteOrdered = LEAGUES_PROPER.filter((l) => l.rules.orderScope === 'site').map((l) => l.shortName);
 
   return (
     <div className="pb-section-lg" data-teams-page="">

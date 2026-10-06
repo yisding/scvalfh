@@ -8,16 +8,17 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES, LEAGUES_WITH_TABLES,
+  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES, LEAGUES_PROPER,
   LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS,
   REGIONS, RESERVED_SEGMENTS, SECTIONS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS,
   assertLeagues, divisionDisplay, divisionHeading, divisionLabel, divisionsOf, drawNumberOf, findDivision, findLeague,
   getDivision, getLeague, getRegion, getSection, isIndependentDivision, isIndependentLeague, isLeagueId, isSingleDivision,
   ladderFor, ladderRung,
   leagueOfDivision, leaguePlayEnds, leaguePlayStarts, leagueStandingsUrl, leaguesInRegion, regionOf,
-  seasonWindowBounds, sectionOf, sectionsInRegion, statusesOf, tiebreakChainFor,
+  seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
   type LeagueConfig, type SectionConfig,
 } from '../lib/leagues';
+import { getTeamById } from '../lib/teams';
 import { CCS_BRACKET_URL } from '../lib/season';
 import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';
 import { SEED_CLAIM, umpireOfficialClaims } from '../scripts/copy-rules';
@@ -94,7 +95,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
   it('configures the nine leagues and the independents in order: NorCal first; one bracketed tournament, one unbracketed, two without a postseason, three section playoffs', () => {
     expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
     // The Southern Section independents are a group with no table, not a league: every count of leagues leaves them out.
-    expect(LEAGUES_WITH_TABLES.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
+    expect(LEAGUES_PROPER.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
     expect(INDEPENDENT_LEAGUES.map((l) => l.id)).toEqual(['independents']);
     expect(LEAGUE_IDS.filter(isIndependentLeague)).toEqual(['independents']);
     expect(isIndependentDivision('independents')).toBe(true);
@@ -112,7 +113,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
     expect(SECTIONS.map((s) => s.shortName)).toEqual(['CCS', 'NCS', 'NS', 'SS', 'SDS']);
     expect(SECTIONS.map((s) => s.briefLabel)).toEqual(['CCS', 'NCS', 'Northern Section', 'Southern Section', 'San Diego Section']);
-    // Sixteen divisions' worth of teams: 49 NorCal + 53 SoCal (the 50 league teams and the three independents) = 102.
+    // Sixteen divisions' worth of teams: 49 NorCal + 53 SoCal (the 48 league teams and the five independents) = 102.
     expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(102);
   });
 
@@ -309,7 +310,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayEnds('bval')).toBe('2026-10-30');
     expect(leaguePlayEnds('mcal')).toBe('2026-10-22');
     expect(leaguePlayEnds('eal')).toBe('2026-10-28');
-    expect(leaguePlayStarts('sunset')).toBe('2026-08-18');
+    expect(leaguePlayStarts('sunset')).toBe('2026-08-25');
     expect(leaguePlayEnds('sunset')).toBe('2026-10-31');
     expect(leaguePlayStarts('city')).toBe('2026-09-01');
     expect(leaguePlayStarts('north-county')).toBe('2026-09-09');
@@ -333,18 +334,18 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(LEAGUES.map((l) => [l.id, l.rules.classification])).toEqual([
       ['scval', 'contest-type'], ['bval', 'official-fixtures'], ['pcal', 'official-fixtures'], ['mcal', 'official-fixtures'],
       ['eal', 'contest-type'], ['sunset', 'contest-type'], ['city', 'membership'], ['north-county', 'membership'], ['metro', 'membership'],
-      ['independents', 'independent'],
+      ['independents', 'membership'],
     ]);
     expect(LEAGUES.map((l) => [l.id, l.membershipNote === null])).toEqual([
       ['scval', true], ['bval', true], ['pcal', true], ['mcal', true], ['eal', false],
-      ['sunset', false], ['city', true], ['north-county', true], ['metro', true], ['independents', true],
+      ['sunset', false], ['city', true], ['north-county', true], ['metro', true], ['independents', false],
     ]);
     expect(LEAGUES.map((l) => [l.id, l.alignmentSource])).toEqual([
       ['scval', 'its official schedule'], ['bval', 'its official schedule'], ['pcal', 'its official schedule'],
       ['mcal', 'its official schedule'], ['eal', 'MaxPreps’ table and league flag'],
       ['sunset', 'MaxPreps’ 2024-25 and 2025-26 Sunset tables'], ['city', 'the CIF-SDS 2026-27 League Alignment'],
       ['north-county', 'the CIF-SDS 2026-27 League Alignment'], ['metro', 'the CIF-SDS 2026-27 League Alignment'],
-      ['independents', 'MaxPreps’ 2026-27 team pages (each is the only field hockey team in its league)'],
+      ['independents', 'MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other)'],
     ]);
     // `region` was renamed `cities`; NorCal's words are unchanged.
     expect(LEAGUES.slice(0, 5).map((l) => l.cities)).toEqual([
@@ -730,7 +731,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
   it("10b. official mode 'none' only on a contest-type, membership or independent league, with a note", () => {
     for (const d of ALL_DIVISIONS) {
       if (d.official.mode !== 'none') continue;
-      expect(['contest-type', 'membership', 'independent'], d.id).toContain(leagueOfDivision(d.id).rules.classification);
+      expect(['contest-type', 'membership'], d.id).toContain(leagueOfDivision(d.id).rules.classification);
       expect(d.official.note.length, d.id).toBeGreaterThan(0);
     }
     expectViolation(() => {
@@ -851,11 +852,11 @@ describe('leagues: the Sunset (Southern Section)', () => {
   it('is a field hockey grouping of ten, named apart from the all-sports Sunset League', () => {
     expect(sunset).toMatchObject({
       sectionId: 'ss', name: 'Sunset field hockey league', shortName: 'Sunset',
-      cities: 'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills',
+      cities: 'Huntington Beach, Newport Beach, Fountain Valley and Temecula',
       officialUrl: 'https://cifss.org/sports/field-hockey/',
       sblive: { leagueSlugs: ['4249-sunset'], backfill: true },
       withdrawnNames: [],
-      membershipNote: 'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+      membershipNote: 'The Sunset here is a field hockey grouping of eight Southern Section schools in Orange and Riverside counties, not the all-sports Sunset League.',
     });
     expect(isSingleDivision('sunset')).toBe(true);
     expect(divisionHeading('sunset')).toBeNull();
@@ -870,17 +871,23 @@ describe('leagues: the Sunset (Southern Section)', () => {
       coChampionsLabel: 'Sunset co-leaders', unresolvedSuffix: '', drawNumbers: null, leagueGameOverrides: [],
     });
     expect(division).toMatchObject({
-      expectedTeams: 10, gamesPerTeam: null, leaguePlay: { first: '2026-08-18', last: '2026-10-31' },
+      expectedTeams: 8, gamesPerTeam: null, leaguePlay: { first: '2026-08-25', last: '2026-10-31' },
       maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297', maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
-      maxprepsTeamCount: 5, maxprepsExtraRows: {}, reportedTrust: 'informational', ladderLine: null,
-      home: { miniRows: 10, lineAfter: null, lineLabel: null },
+      maxprepsTeamCount: 5, reportedTrust: 'informational', ladderLine: null,
+      home: { miniRows: 8, lineAfter: null, lineLabel: null },
     });
     expect(division.maxprepsMissing).toEqual(['edison', 'fountain-valley', 'huntington-beach', 'marina', 'newport-harbor']);
+    // MaxPreps' Sunset rows for the two independents (DESIGN §24.10): registry teams of another division, skipped.
+    expect(Object.keys(division.maxprepsExtraRows).sort()).toEqual([
+      '4c2dd7e8-2f3e-43aa-891b-9218932cdf9d', '742a32d0-2dc9-4aa8-ad92-8c4576f73a12',
+    ]);
+    expect(getTeamById('4c2dd7e8-2f3e-43aa-891b-9218932cdf9d')?.slug).toBe('bonita');
+    expect(getTeamById('742a32d0-2dc9-4aa8-ad92-8c4576f73a12')?.slug).toBe('chaminade');
     expect(division.official.mode === 'none' && division.official.note).toBe(
-      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight of them, plus Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
+      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The eight teams here are eight of the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26; the other two, Bonita and Chaminade, are listed with the Southern Section independents (that group’s note says why). For 2026-27, MaxPreps’ table lists three of the eight, with Bonita and Chaminade, and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists six of the eight, with Bonita, Chaminade, and Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the eight that MaxPreps marks as a league game, so teams play different numbers.',
     );
     expect(division.knownCause).toBe(
-      'MaxPreps’ Sunset table lists five of the ten teams and orders them by winning percentage. This site orders all ten by 3-1-0 points. si.com marks more games as league games than MaxPreps does, so its Sunset records differ from ours.',
+      'MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, and orders them by winning percentage. This site orders all eight by 3-1-0 points and lists Bonita and Chaminade with the Southern Section independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted here. si.com marks more games as league games than MaxPreps does, so its Sunset records differ from ours.',
     );
   });
 
@@ -889,8 +896,8 @@ describe('leagues: the Sunset (Southern Section)', () => {
       points: 'this site’s 3-1-0 points (the league publishes no points rule)',
       pointsShort: 'site 3-1-0',
       order: 'no league document orders the table; this site orders it by its own 3-1-0 points',
-      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the ten that MaxPreps marks as a league game',
-      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Games between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11; MaxPreps marks neither as a league game), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
+      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the eight that MaxPreps marks as a league game',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). A game between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11; MaxPreps does not mark it as a league game), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
       coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
       stages: { 'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is' },
     });
@@ -1220,12 +1227,7 @@ describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
     }, /palomar: maxprepsLeagueId palomar is not a GUID/);
   });
 
-  it('gamesPerTeam null only on a contest-type or independent league with no official schedule', () => {
-    expectViolation(() => {
-      const d = getDivision('city-western') as { gamesPerTeam: number | null };
-      d.gamesPerTeam = null;
-      return () => { d.gamesPerTeam = 10; };
-    }, /city-western: gamesPerTeam null needs classification 'contest-type' or 'independent' and official mode 'none'/);
+  it('gamesPerTeam null only on a contest-type or membership league with no official schedule', () => {
     expectViolation(() => {
       const d = getDivision('de-anza') as { gamesPerTeam: number | null };
       d.gamesPerTeam = null;
@@ -1310,51 +1312,59 @@ describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
   });
 });
 
-describe('leagues: the Southern Section independents (DESIGN §24.9)', () => {
+describe('leagues: the Southern Section independents (DESIGN §24.9, §24.10)', () => {
   const group = getLeague('independents');
   const division = getDivision('independents');
 
-  it('is a group with no league table: no MaxPreps table, no schedule, no postseason, nothing to compare', () => {
-    expect([group.sectionId, group.name, group.shortName, group.cities]).toEqual([
-      'ss', 'Southern Section independents', 'Independent', 'Glendora, Studio City and Thousand Oaks',
+  it('is a group of five with a table of its members’ games: membership, no MaxPreps table, no postseason', () => {
+    expect([group.sectionId, group.name, group.shortName, group.cities, group.independents]).toEqual([
+      'ss', 'Southern Section independents', 'Independent', 'Glendora, La Verne, Studio City, Thousand Oaks and West Hills', true,
     ]);
     expect(group.sblive.leagueSlugs).toEqual(['4235-palomares', '4207-league-b', '4213-marmonte']);
     expect(group.rules).toMatchObject({
-      classification: 'independent', orderScope: 'site', gamesWord: 'league', excludeContestTypes: [2, 4],
+      classification: 'membership', orderScope: 'site', gamesWord: 'league', excludeContestTypes: [2, 4],
       postseasonFrom: null, leagueOvertime: 'none', tiebreaks: { default: ['no-rule'] },
     });
     expect(division).toMatchObject({
-      label: 'Independents', searchAliases: ['Independents', 'independent'], expectedTeams: 3, gamesPerTeam: null,
+      label: 'Independents', searchAliases: ['Independents', 'independent'], expectedTeams: 5, gamesPerTeam: null,
       maxprepsLeagueId: null, maxprepsName: null, maxprepsSlug: null, maxprepsTeamCount: 0,
-      maxprepsMissing: ['glendora', 'harvard-westlake', 'thousand-oaks'], reportedTrust: 'informational',
-      knownCause: null, ladderLine: null, home: { miniRows: 3, lineAfter: null, lineLabel: null },
+      maxprepsMissing: ['bonita', 'chaminade', 'glendora', 'harvard-westlake', 'thousand-oaks'], reportedTrust: 'informational',
+      knownCause: null, ladderLine: null, home: { miniRows: 5, lineAfter: null, lineLabel: null },
     });
-    // The earliest and latest of the three teams' games on MaxPreps (Harvard-Westlake's Aug 18 and Oct 20).
-    expect(division.leaguePlay).toEqual({ first: '2026-08-18', last: '2026-10-20' });
+    // The first games between two of the five (Sep 8) to the Section's last allowable contest.
+    expect(division.leaguePlay).toEqual({ first: '2026-09-08', last: '2026-10-31' });
     expect(division.official).toEqual({
       mode: 'none',
-      note: 'Glendora, Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the Palomares League, League B and the Marmonte League on MaxPreps), so they play no league games and have no league table. Every game they play is on their team pages, and each counts in the Elo fit.',
+      note: 'No league gathers these five schools. Glendora, Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues on MaxPreps (the Palomares League, League B and the Marmonte League). MaxPreps and si.com list Bonita and Chaminade in the Sunset, but MaxPreps marks none of their games against the five Orange County Sunset teams as a league game, and each plays every other independent home and away, so this site lists them here. The table counts every game between two of the five, whether or not MaxPreps marks it as a league game (it marks only Bonita’s two games with Chaminade), and orders them by this site’s 3-1-0 points.',
     });
+    expect(group.membershipNote).toBe(
+      'The independents are five Southern Section schools in no field hockey league. The table counts their games against each other.',
+    );
     expect(group.postseason.kind).toBe('no-postseason');
     expect(group.keyDates).toEqual([{ id: 'last-contest', date: '2026-10-31', label: 'Last allowable Southern Section contest' }]);
     expect(leagueStandingsUrl('independents')).toBeNull();
+    expect(isIndependentLeague('independents')).toBe(true);
+    expect(LEAGUES_PROPER.map((l) => l.id)).not.toContain('independents');
+    expect(INDEPENDENT_LEAGUES.map((l) => l.id)).toEqual(['independents']);
+    expect(standingsLabel('independents')).toBe('Independents standings');
+    expect(standingsLabel('sunset')).toBe('Sunset standings');
   });
 
-  it('says only what is true of a group with no league games: no citation claims a rule', () => {
+  it('says only what is true of a group in no league: no citation claims a league rule', () => {
     const c = group.rules.citations;
     for (const text of [c.points, c.order, c.doubleRoundRobin, c.coChampions, c.stages['no-rule'] ?? '']) {
-      expect(text, text).toMatch(/no league (games|schedule|table)/i);
+      expect(text, text).toMatch(/no league( exists| schedule| names| to publish)/i);
     }
     expect(c.overtime).toBe('No Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules), so this site records each game as it is reported');
   });
 
-  it("'independent' needs official mode 'none', no MaxPreps table, no fixed schedule, no postseason, no line and no cause", () => {
+  it("a group of independents needs membership, official mode 'none', no MaxPreps table, no postseason, no line and no cause", () => {
     const d = division as unknown as Record<string, unknown>;
     const cases: Array<[string, unknown, RegExp]> = [
-      ['maxprepsLeagueId', '37e34960-1d6f-4028-a4f8-4fba3e99f9be', /independents: classification 'independent' needs maxprepsLeagueId null/],
-      ['gamesPerTeam', 4, /independents: (classification 'independent' needs gamesPerTeam null|gamesPerTeam 4)/],
-      ['reportedTrust', 'records-only', /independents: classification 'independent' needs reportedTrust 'informational'/],
-      ['knownCause', 'A cause.', /independents: classification 'independent' needs knownCause null/],
+      ['maxprepsLeagueId', '37e34960-1d6f-4028-a4f8-4fba3e99f9be', /independents: a group of independents needs maxprepsLeagueId null/],
+      ['gamesPerTeam', 4, /independents: gamesPerTeam 4/],
+      ['reportedTrust', 'records-only', /independents: a group of independents needs reportedTrust 'informational'/],
+      ['knownCause', 'A cause.', /independents: a group of independents needs knownCause null/],
     ];
     for (const [key, value, message] of cases) {
       expectViolation(() => {
@@ -1373,5 +1383,10 @@ describe('leagues: the Southern Section independents (DESIGN §24.9)', () => {
         };
       }, message);
     }
+    expectViolation(() => {
+      const r = group.rules as { classification: string };
+      r.classification = 'contest-type';
+      return () => { r.classification = 'membership'; };
+    }, /independents: a group of independents needs classification 'membership'/);
   });
 });

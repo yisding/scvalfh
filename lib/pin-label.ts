@@ -32,7 +32,7 @@ export function pinLabel(t: { name: string; shortName: string; divisionHeading: 
  * Pleasant (53.7) and Corning (47.8), and the other SoCal words near the line: Chaparral (59.5), Cathedral
  * and Westview (59.3), Temecula (58.3), Olympian (57.4), Fallbrook (56.9). The SoCal breaks are at syllables
  * (Cham·i·nade, Hun·ting·ton, Claire·mont, Es·con·di·do, South·west), one each: every piece with its hyphen
- * is ≤ 54 px. The three independents' words fit with no break: Thousand 59.4, Westlake 56.7, Glendora 55.0,
+ * is ≤ 54 px. Three of the independents' words fit with no break: Thousand 59.4, Westlake 56.7, Glendora 55.0,
  * Harvard- 53.6 (Harvard-Westlake breaks after its hyphen, as Lick-Wilmerding does). Keyed by the exact short name, so a rename stops matching instead of hyphenating the wrong
  * word; tests/ui/pin-label.test.ts asserts the key set.
  */

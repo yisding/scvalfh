@@ -80,15 +80,15 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   it('builds both styles from SECTIONS and LEAGUES, in config order, the independents named after the leagues', async () => {
     const { coveredLeagueWords, leaguesBySectionWords } = await import('../../components/layout/site');
     expect(leaguesBySectionWords('name')).toBe(
-      'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section), EAL (Northern Section), Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents',
+      'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section), EAL (Northern Section), Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents',
     );
     expect(leaguesBySectionWords('short')).toBe(
-      'SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents',
+      'SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents',
     );
     // Per region (SITE_DESCRIPTION's two clauses).
     expect(leaguesBySectionWords('short', 'norcal')).toBe('SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section)');
     expect(leaguesBySectionWords('short', 'socal')).toBe(
-      'Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents',
+      'Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents',
     );
     expect(coveredLeagueWords()).toBe('SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents');
   });
@@ -96,12 +96,12 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   it('SITE_DESCRIPTION (NorCal first, per region) and the scope note name the nine leagues, the independents and five sections from config', async () => {
     const { SITE_DESCRIPTION, SITE_SCOPE_NOTE } = await import('../../components/layout/site');
     expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
-      'Scores, standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents. Rebuilt twice daily from MaxPreps; unofficial.',
+      'Scores, standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents. Rebuilt twice daily from MaxPreps; unofficial.',
     );
     // The independents are covered (DESIGN §24.9): the note names them as covered, and "Other teams" are
     // the ones that appear only as opponents. Never "ten leagues".
     expect(SITE_SCOPE_NOTE, 'components/layout/site.ts SITE_SCOPE_NOTE').toBe(
-      'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand Oaks), which play no league games. Other teams appear only as opponents.',
+      'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro conferences, plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks), schools in no field hockey league. Other teams appear only as opponents.',
     );
     expect(`${SITE_DESCRIPTION} ${SITE_SCOPE_NOTE}`).not.toMatch(/\bten leagues\b|\b10 leagues\b/);
   });

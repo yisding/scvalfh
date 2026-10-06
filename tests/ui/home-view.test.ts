@@ -155,6 +155,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       valley: { rows: 6, line: null },
       'metro-mesa': { rows: 5, line: null },
       'metro-south-bay': { rows: 4, line: null },
+      independents: { rows: 5, line: null },
     };
     for (const panel of data.panels) {
       for (const division of panel.divisions) {
@@ -162,18 +163,6 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         const html = renderToStaticMarkup(
           createElement(MiniStandings, { division }),
         );
-        // A group with no league table (the Southern Section independents, DESIGN §24.9): its note and
-        // its teams, never a table, a GP column or a place.
-        if (division.independent) {
-          expect(html, `components/home/MiniStandings.tsx: ${division.id} no table`).not.toContain('<table');
-          expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} kicker`).toContain('No league table');
-          expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} note`).toContain(division.independent.note);
-          for (const t of division.independent.teams) {
-            expect(html, `components/home/MiniStandings.tsx: ${t.slug} link`).toContain(`href="${t.href}"`);
-          }
-          continue;
-        }
-        expect(division.independent, `${HV}: ${division.id} is a league division`).toBeNull();
         const want = expected[division.id];
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
         // `want.rows`, plus any team sharing the place at the cutoff.
@@ -201,15 +190,15 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         );
       }
     }
-    // The points legend: once per league, under its last table, citing the league's own rule. The
-    // independents have no table, so no legend is drawn for them.
+    // The points legend: once per league, under its last table, citing the league's own rule (the
+    // independents' table included, DESIGN §24.10).
     for (const panel of data.panels) {
       expect(panel.pointsLegend, `${HV}: ${panel.id} legend`).toBe(
         `PTS: ${leagues.getLeague(panel.id).rules.citations.points}.`,
       );
       const html = renderPanel(panel.id);
       expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(
-        leagues.isIndependentLeague(panel.id) ? 0 : 1,
+        1,
       );
     }
   });
@@ -239,8 +228,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     expect(bval.others.map((o) => o.id), `${HV}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
     const city = data.panels.find((p) => p.id === 'city')!;
     expect(city.others.map((o) => o.id), `${HV}: City strip`).toEqual(['sunset', 'north-county', 'metro', 'independents']);
-    // The independents' line never names a leader: they have no table (DESIGN §24.9).
-    expect(line(city, 'independents'), `${HV}: strip independents`).toBe('No league table');
+    // The independents' table has no result in this corpus (DESIGN §24.10).
+    expect(line(city, 'independents'), `${HV}: strip independents`).toBe('No league results yet');
     // Its link is the group's own /standings page, which says why there is no table and lists the teams.
     expect(city.others.find((o) => o.id === 'independents')?.href, `${HV}: strip independents href`).toBe('/standings/independents');
     expect(line(bval, 'scval'), `${HV}: strip SCVAL`).toBe('Saint Francis leads De Anza · Mitty leads El Camino');
@@ -255,18 +244,14 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     const lead = (id: string, phase: Parameters<HomeView['phaseLead']>[1], today: string) =>
       home.phaseLead(leagues.getLeague(id), phase, today);
     expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
-    // The independents (DESIGN §24.9): no league play to start, so the lead says there is no table, and
-    // names their first game only while it is ahead.
+    // The independents (DESIGN §24.10): the lead names the first game between two of them, never "Independent
+    // league play", and the body says the table counts only games between them.
     expect(lead('independents', 'regular', '2026-08-10'), `${HV}: independents before their first game`).toEqual({
-      lead: 'No league games.',
-      body: 'These teams play no league games, so there is no table; their first game is Tue Aug 18.',
+      lead: 'The first game between two of the independents is Tue Sep 8.',
+      body: 'No games have been played yet, so every record below is empty on purpose.',
       link: { href: '/schedule/independents', label: 'Full schedule' },
     });
-    expect(lead('independents', 'preseason', '2026-10-02')?.body, `${HV}: independents, no result yet, after Aug 18`).toBe(
-      'These teams play no league games, so there is no table.',
-    );
-    expect(lead('independents', 'regular', '2026-10-06'), `${HV}: independents in season`).toBeNull();
-    expect(lead('independents', 'complete', '2026-11-01')?.lead, `${HV}: independents complete`).toBe('The season is over.');
+    expect(lead('independents', 'regular', '2026-09-08'), `${HV}: independents in season`).toBeNull();
     // Before the first league date (config's, lib/leagues leaguePlayStarts), counting the
     // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
     expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
@@ -387,13 +372,10 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
     ]);
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
-      // The independents: no standings to open, so the plain link is their schedule (DESIGN §24.9). The
-      // button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
-      const independent = leagues.isIndependentLeague(card.id);
+      // The button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
       expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${leagues.standaloneName(card.id)} here`);
-      expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(
-        independent ? `href="/schedule/${card.id}"` : `href="/standings/${card.id}"`,
-      );
+      expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(`href="/standings/${card.id}"`);
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(leagues.standingsLabel(card.id));
       expect(html, 'components/home/SetLeagueButton.tsx: js-only, disabled before hydration').toMatch(
         /<button[^>]*disabled=""[^>]*class="sx-js-only/,
       );

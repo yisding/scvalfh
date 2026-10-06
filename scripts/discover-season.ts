@@ -140,7 +140,8 @@ async function main(argv: readonly string[]): Promise<number> {
     ? TEAMS.filter((t) => args.teams?.includes(t.slug))
     : ALL_DIVISIONS.flatMap((d) => {
         const members = teamsInDivision(d.id);
-        // An independent group's members share no league, so one of them says nothing about the others.
+        // The independents share no MaxPreps league (two sit in its Sunset table, three alone in their all-sports
+        // leagues), so one of them says nothing about the others.
         if (isIndependentDivision(d.id)) return members;
         const rep = members.find((t) => t.dataCoverage !== 'none') ?? members[0];
         return rep ? [rep] : [];
@@ -231,9 +232,10 @@ async function main(argv: readonly string[]): Promise<number> {
   for (const division of ALL_DIVISIONS) {
     const probed = wanted.some((t) => t.division === division.id);
     if (isIndependentDivision(division.id)) {
-      // Each independent is the only field hockey team in its all-sports league (lib/leagues.ts INDEPENDENTS),
-      // so a league upstream is expected. Whether it is still the only one is a question for a human: the
-      // league's MaxPreps standings page lists every field hockey team it has.
+      // Each independent has a MaxPreps league upstream (Bonita and Chaminade the Sunset; the other three each
+      // the only field hockey team in their all-sports league, lib/leagues.ts INDEPENDENTS), so one is expected.
+      // Whether the grouping still holds is a question for a human: a league's MaxPreps standings page lists
+      // every field hockey team it has.
       const members = rows.filter((r) => wanted.some((t) => t.slug === r.slug && t.division === division.id));
       if (members.length === 0) {
         console.log(`  ${division.id}: a group with no league, not probed (no --teams member is in this division)`);
