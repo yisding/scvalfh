@@ -1,15 +1,17 @@
 {
-  "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more. 2026-10-04, the six Eastern Athletic League teams' schools: a field hockey sweep, then the every-sport round over their 95 varsity rows with the same rule and source families (SportsRecruits' college pages for field hockey, women's lacrosse and women's soccer, FH College Path, Stick Together, MAX Field Hockey and the other field hockey lists, TopDrawerSoccer, SoccerWire, ClubLax and the NorCal lacrosse, soccer, volleyball, softball and basketball club lists, MileSplit, the local and student papers that cover these schools, the schools' sites, and two web searches for each junior and senior), with the same day's recruiting-profiles research supplying a SportsRecruits profile-address probe for all 95 in every sport and NCSA and FieldLevel probes for field hockey; it found no commitment, and SportsRecruits' athlete search was not run for those rows",
-  "capturedAt": "2026-10-04",
+  "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more. 2026-10-04, the six Eastern Athletic League teams' schools: a field hockey sweep, then the every-sport round over their 95 varsity rows with the same rule and source families (SportsRecruits' college pages for field hockey, women's lacrosse and women's soccer, FH College Path, Stick Together, MAX Field Hockey and the other field hockey lists, TopDrawerSoccer, SoccerWire, ClubLax and the NorCal lacrosse, soccer, volleyball, softball and basketball club lists, MileSplit, the local and student papers that cover these schools, the schools' sites, and two web searches for each junior and senior), with the same day's recruiting-profiles research supplying a SportsRecruits profile-address probe for all 95 in every sport and NCSA and FieldLevel probes for field hockey; it found no commitment, and SportsRecruits' athlete search was not run for those rows. 2026-10-06, the 53 Southern California teams' schools: the same every-sport round over their 842 varsity rows (field hockey and other-sport lists read whole, local and school news, a SportsRecruits profile-address probe in every sport for every row, and two web searches for every row), every candidate re-opened by a checker and an independent refuter",
+  "capturedAt": "2026-10-06",
   "season": "26-27",
   "notes": [
-    "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03 and 2026-10-04, and the six Eastern Athletic League teams swept on 2026-10-04) a public page says have committed to play a sport in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Field hockey is the site's sport, but a commitment in any sport counts (since 2026-10-04): many players here also play lacrosse, soccer or basketball, and commit there. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43, and Corning, one of the six EAL teams' schools), each under the roster's own spelling.",
-    "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in the context of one sport, and either name the player's high school, or give a class year that agrees with the roster grade together with a Northern California location (the player's hometown, or a club or team based in Northern California). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out; two same-name players in one region (two class-of-2027 Phoebe Millers, in Larkspur and San Francisco) are told apart by a page that names the school. College interests, offers, visits, camps, watchlists, a plan to play somewhere ('planning to continue her career at …'), and a place on a college's club team are not commitments.",
+    "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03 and 2026-10-04, the six Eastern Athletic League teams swept on 2026-10-04, and the 53 Southern California teams swept on 2026-10-06) a public page says have committed to play a sport in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Field hockey is the site's sport, but a commitment in any sport counts (since 2026-10-04): many players here also play lacrosse, soccer or basketball, and commit there. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43, Corning, one of the six EAL teams' schools, and nine of the 53 Southern California teams), each under the roster's own spelling.",
+    "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in the context of one sport, and either name the player's high school, or give a class year that agrees with the roster grade together with a location in the school's half of the state, Northern or Southern California (the player's hometown, or a club or team based there; \"CA\" alone is not enough). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out; two same-name players in one region (two class-of-2027 Phoebe Millers, in Larkspur and San Francisco) are told apart by a page that names the school. College interests, offers, visits, camps, watchlists, a plan to play somewhere ('planning to continue her career at …'), and a place on a college's club team are not commitments.",
     "Social media is never a source (lib/clubs-schema.ts BANNED_HOSTS). Many commitments are announced only there, so a commitment with no other public page is not in this file. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered. A page that draws its list only once a script runs (SportsRecruits' /committed/<club> pages, MAX Field Hockey's search) is not cited, so every quote can be checked against the page's own HTML; STEPS California's page answers plain requests with a bot challenge but serves its table as HTML, which WebFetch reads.",
-    "status: 'signed' only where a source says signed; otherwise 'committed'. No source found by 2026-10-04 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date, or the month a story says the player committed), or null. Every kept source was confirmed by two independent reads. A date that only one read saw is not used: MAX Field Hockey's hidden table dates, and the 'Committed to … on M/D/YYYY' tooltip SportsRecruits draws on a profile with a script.",
-    "confidence: high = one first-hand page names the player, the college and the school, or it is the player's own recruiting profile showing the commitment; medium = the match rests on one line of a compiled list plus class year and a Northern California club.",
+    "status: 'signed' only where a source says signed; otherwise 'committed'. No source found by 2026-10-06 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date, or the month a story says the player committed), or null. Every kept source was confirmed by two independent reads. A date that only one read saw is not used: MAX Field Hockey's hidden table dates, and the 'Committed to … on M/D/YYYY' tooltip SportsRecruits draws on a profile with a script.",
+    "confidence: high = one first-hand page names the player, the college and the school, or it is the player's own recruiting profile showing the commitment; medium = the match rests on one line of a compiled list plus class year and a club in the school's half of the state.",
     "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept twice on 2026-10-04. The first sweep looked for field hockey commitments only (the NFHCA 2026 high school watchlist, the NCFHA youth directory, SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey) and found none; the day's every-sport round (see builtBy) had then covered only the 43 teams tracked before. The every-sport round was then extended to their 95 varsity rows (Bella Vista 19, Chico 20, Davis 19, Lassen 15, Pleasant Valley 22; Corning has no roster rows) under the same rule: SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,652); FH College Path's class lists; Stick Together's whole archive; HTC's alumnae list; Play College Field Hockey's sheet; the NFHCA watchlist; MAX Field Hockey's table (986 rows, not cited); TopDrawerSoccer's and SoccerWire's California girls' lists for 2027 to 2030; ClubLax's commitments database; NorCal lacrosse, soccer, volleyball, softball and basketball club lists; MileSplit's California signings; a search of each of the 95 names, since January 2025, on the sites of the Chico Enterprise-Record, Red Bluff Daily News, Davis Enterprise, Daily Democrat and Paradise Post (the first 20 results on each of the four WordPress papers), full crawls since January 2025 of the Enterprise-Record's high school section (340 posts) and Red Bluff's high school and local sports sections, and Davis High's and Pleasant Valley's student papers; the schools' sites; and two web searches for each of the 78 juniors and seniors. The same day's recruiting-profiles research ran SportsRecruits' profile-address probe for all 95 rows (1,242 addresses in every sport, 88 live profiles, nine showing a commitment, each another player by class year or state) and NCSA and FieldLevel probes, for field hockey only. It found no commitment in any sport, so the EAL still adds no row. Not run for these rows: SportsRecruits' athlete search, which turned up every commitment in the file that rests on a SportsRecruits profile; the 17 freshmen and sophomores got no web searches; Lassen County's local news sites refused requests. EAL recall is therefore lower than the other leagues', and the absence of a commitment is not proof that none exists.",
     "EAL near misses, none a commitment: three Davis players on the NFHCA 2026 high school watchlist, which names no college; a Davis junior's own field hockey profile, which states a goal to play in college, and a Davis senior's SportsRecruits bio, which says she would love to continue to play at the collegiate level (both plans); a SportsRecruits soccer entry with a Davis senior's exact name whose class year is 2025, which disagrees with the roster grade (another player, in Virginia); the class-of-2026 commitments from Chico, Pleasant Valley and Davis in Stick Together and the Davis Enterprise's May 23, 2026 signing story, whose players have graduated and are not on these rosters; and same-surname entries with another first name, state or class year on SportsRecruits, FH College Path, TopDrawerSoccer and SoccerWire. An Action News Now story on Chico High soccer players committing to Division I (October 28, 2021) names Priscilla Ward and Taylor Dever, neither on these rosters. The Chico and Pleasant Valley 'Athlete Committed' pages are a health program, not college commitments.",
+    "The schools of the 53 Southern California teams (the Sunset, City, North and Metro teams and the five Southern Section independents: 842 varsity rows, nine teams with none) were swept on 2026-10-06 in every sport by the same rule, a Southern California location standing for a Northern California one. Field hockey lists, read whole and matched against all 842 rows: SportsRecruits' 290 field hockey college pages and the commits API behind their \"See More Commits\" button (35,060 records over 285 programs, 2,900 in field hockey), with every class-of-2027-or-later profile opened; FH College Path's class lists; MAX Field Hockey (leads only, not cited); Play College Field Hockey's sheet; RUSH's player directory and alumni pages, HTC, Coastal Clash, Myto, VCRD, the Surfers, the Royals and the SoCal Field Hockey Federation; the NFHCA 2026 watchlist. Other sports: SportsRecruits' women's lacrosse, soccer, volleyball, basketball, water polo and softball college pages, ten SoCal lacrosse clubs' commitment pages, TopDrawerSoccer, SoccerWire, Prep Soccer, ClubLax, Lacrosse Masters, Prep Girls Lacrosse and other lacrosse lists, MileSplit, Prep Dig, Prep Softball and Prep Hoops. News: the San Diego Union-Tribune, the OC Register and the other Southern California News Group papers, the Coronado Times, Scripps Ranch News, and the student papers and athletics sites that answered (the Falconer, the Harvard-Westlake Chronicle, Bishop's and Cathedral Catholic). Player by player: a SportsRecruits profile-address probe in every sport for all 842 rows (9,558 addresses for the 700 juniors, seniors and ungraded rows, and 2,514 more for all rows), and two web searches for every row (the first pass reached the juniors, seniors and most ungraded rows; a second pass, at the owner's request, the 50 freshmen, the 92 sophomores and the 88 ungraded rows the first had not reached, 456 searches). It found eleven commitments: nine in field hockey (Rietti to Richmond, Hauer to Johns Hopkins, Conway to Michigan, Schlumberger to Harvard, Ippolito to Michigan State, Eva Allen to Cal, Storm to Harvard, Roldan to UC Davis and Rennie to Muhlenberg) and two in lacrosse (Emerson Davis to Harvard and Palecek to Oregon). Each was re-opened by a checker and, separately, by a refuter told to break it; both kept all eleven. SportsRecruits' athlete search was not run for these rows.",
+    "Southern California near misses, none a commitment: a Canyon Hills senior whom FH College Path lists under her given name (with a San Diego club) as a Columbia commit, while no page that names her school names the college, so a nickname is not matched; a Torrey Pines senior whom only Play College Field Hockey's sheet (name and college) lists, with no page tying that line to her school or a Southern California location; a soccer commit with a Southwest player's name whose profiles give another school and city; a swim commit with a Rancho Bernardo player's name whose post gives no school and a graduating class that disagrees; a Cathedral Catholic player's older sister (class of 2026, graduated); and SportsRecruits profiles under rostered names that show a commitment but another class year or state (62 in all).",
     "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most."
   ],
   "colleges": [
@@ -111,6 +113,12 @@
       "state": "CA",
       "programs": [
         {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "ACC",
+          "url": "https://calbears.com/sports/field-hockey"
+        },
+        {
           "sport": "lacrosse",
           "division": "ncaa-d1",
           "conference": "ACC",
@@ -118,6 +126,22 @@
         }
       ],
       "sources": [
+        {
+          "url": "https://calbears.com/sports/field-hockey",
+          "what": "Cal athletics field hockey page, titled 'Field Hockey - California Golden Bears Athletics'. The site answers curl and headless Chromium with HTTP 403; the title was read through WebFetch, which returned no conference text."
+        },
+        {
+          "url": "https://calbears.com/sports/field-hockey/schedule",
+          "what": "Cal athletics '2026 Field Hockey Schedule - California Golden Bears Athletics' (title only through WebFetch)."
+        },
+        {
+          "url": "https://calbears.com/news/2026/1/28/field-hockey-seven-bears-earn-acc-all-academic-honors.aspx",
+          "what": "Cal athletics story in its field hockey section headed 'Seven Bears Earn ACC All-Academic Honors - California Golden Bears Athletics' (Jan 28, 2026), so the team is in the ACC. Headline only through WebFetch."
+        },
+        {
+          "url": "https://gostanford.com/sports/field-hockey/schedule",
+          "what": "Stanford's 2026 field hockey schedule (HTTP 200; Stanford plays in the ACC): conference record 'Conf. 0-3' and a game 'Thu Oct 29 ... vs. Senior Night vs. California Stanford, Calif.', so Cal is on an ACC team's schedule. It does not tag the game ACC; corroboration only."
+        },
         {
           "url": "https://calbears.com/sports/womens-lacrosse",
           "what": "Cal athletics women's lacrosse page, titled 'Lacrosse - California Golden Bears Athletics'. The site refuses plain requests; read via WebFetch."
@@ -131,7 +155,7 @@
           "what": "NCAA.com's school page: 'Division I - Berkeley, CA', University of California, conference Atlantic Coast."
         }
       ],
-      "checkedOn": "2026-10-04"
+      "checkedOn": "2026-10-06"
     },
     {
       "slug": "colgate",
@@ -162,6 +186,50 @@
         }
       ],
       "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "harvard",
+      "name": "Harvard University",
+      "shortName": "Harvard",
+      "city": "Cambridge",
+      "state": "MA",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Ivy League",
+          "url": "https://gocrimson.com/sports/field-hockey"
+        },
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "Ivy League",
+          "url": "https://gocrimson.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://gocrimson.com/sports/field-hockey",
+          "what": "Harvard athletics field hockey page, titled 'Field Hockey - Harvard University'. The site answers curl and headless Chromium with HTTP 403; read through WebFetch, whose summary notes the page's links 'Ivy League on ESPN+' and 'Ivy League Admissions Statement'."
+        },
+        {
+          "url": "https://gocrimson.com/sports/womens-lacrosse",
+          "what": "Harvard athletics women's lacrosse page, titled \"Women's Lacrosse - Harvard University\"; read through WebFetch (HTTP 403 to curl), same Ivy League links."
+        },
+        {
+          "url": "https://ivyleague.com/standings.aspx?path=fhockey",
+          "what": "Ivy League '2026 Field Hockey Standings' (HTTP 403 to curl; read through WebFetch): Harvard 3-0, Cornell 3-0, Columbia 2-1, Princeton 2-1, Yale, Dartmouth, Brown, Penn."
+        },
+        {
+          "url": "https://ivyleague.com/standings.aspx?path=wlax",
+          "what": "Ivy League \"2026 Women's Lacrosse Standings\" (read through WebFetch): Yale 6-1 down to Columbia 1-6 and Harvard 1-6, so Harvard's women's lacrosse team plays in the Ivy League."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/harvard",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION I - BOSTON, MA', Harvard University, 'CONFERENCE THE IVY LEAGUE'. The city here (Cambridge) is Harvard's mailing city, from harvard.edu/contact-harvard/ ('Harvard University, Massachusetts Hall, Cambridge, MA 02138'); NCAA.com's page prints Boston."
+        }
+      ],
+      "checkedOn": "2026-10-06"
     },
     {
       "slug": "iowa",
@@ -228,6 +296,32 @@
       "checkedOn": "2026-10-04"
     },
     {
+      "slug": "johns-hopkins",
+      "name": "Johns Hopkins University",
+      "shortName": "Johns Hopkins",
+      "city": "Baltimore",
+      "state": "MD",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "Centennial Conference",
+          "url": "https://hopkinssports.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://hopkinssports.com/sports/field-hockey",
+          "what": "Hopkins athletics field hockey page, titled 'Field Hockey - Johns Hopkins University Athletics' (HTTP 200). The page's embedded Sidearm metadata reads related_sport 'fhockey', school_name 'Johns Hopkins University', school_division 'DIII' and school_conference 'Centennial'."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/johns-hopkins",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION III - BALTIMORE, MD', Johns Hopkins University, 'CONFERENCE CENTENNIAL'."
+        }
+      ],
+      "checkedOn": "2026-10-06"
+    },
+    {
       "slug": "marist",
       "name": "Marist University",
       "shortName": "Marist",
@@ -286,6 +380,152 @@
         }
       ],
       "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "michigan",
+      "name": "University of Michigan",
+      "shortName": "Michigan",
+      "city": "Ann Arbor",
+      "state": "MI",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Big Ten",
+          "url": "https://mgoblue.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://mgoblue.com/sports/field-hockey",
+          "what": "Michigan athletics field hockey page, titled 'Field Hockey - University of Michigan Athletics'. The site answers curl and headless Chromium with HTTP 403; the title was read through WebFetch."
+        },
+        {
+          "url": "https://bigten.org/standings.aspx?path=fhockey",
+          "what": "Big Ten Conference '2026 Field Hockey Standings' (HTTP 200): the table lists Penn State, Michigan (1-3 conference), Rutgers, Ohio State and Michigan State (0-4), so Michigan's field hockey team plays in the Big Ten."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/michigan",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION I - ANN ARBOR, MI', University of Michigan, 'CONFERENCE BIG TEN'."
+        }
+      ],
+      "checkedOn": "2026-10-06"
+    },
+    {
+      "slug": "michigan-state",
+      "name": "Michigan State University",
+      "shortName": "Michigan State",
+      "city": "East Lansing",
+      "state": "MI",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Big Ten",
+          "url": "https://msuspartans.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://msuspartans.com/sports/field-hockey",
+          "what": "Michigan State athletics field hockey page, titled 'Field Hockey - Michigan State University Athletics'. The site answers curl and headless Chromium with HTTP 403; the title was read through WebFetch."
+        },
+        {
+          "url": "https://bigten.org/standings.aspx?path=fhockey",
+          "what": "Big Ten Conference '2026 Field Hockey Standings' (HTTP 200): the table lists Michigan State (0-4 conference) beside Penn State, Michigan, Rutgers and Ohio State."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/michigan-st",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION I - EAST LANSING, MI', Michigan State University, 'CONFERENCE BIG TEN'."
+        }
+      ],
+      "checkedOn": "2026-10-06"
+    },
+    {
+      "slug": "muhlenberg",
+      "name": "Muhlenberg College",
+      "shortName": "Muhlenberg",
+      "city": "Allentown",
+      "state": "PA",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "Centennial Conference",
+          "url": "https://muhlenbergsports.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://muhlenbergsports.com/sports/field-hockey",
+          "what": "Muhlenberg athletics field hockey page, titled 'Field Hockey - Muhlenberg College Athletics' (HTTP 200). The page's embedded Sidearm metadata reads related_sport 'fhockey', school_name 'Muhlenberg College', school_division 'DIII' and school_conference 'Centennial'."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/muhlenberg",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION III - ALLENTOWN, PA', Muhlenberg College, 'CONFERENCE CENTENNIAL'."
+        }
+      ],
+      "checkedOn": "2026-10-06"
+    },
+    {
+      "slug": "oregon",
+      "name": "University of Oregon",
+      "shortName": "Oregon",
+      "city": "Eugene",
+      "state": "OR",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d1",
+          "conference": "Big Ten",
+          "url": "https://goducks.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://goducks.com/sports/womens-lacrosse",
+          "what": "Oregon athletics women's lacrosse page, titled \"Women's Lacrosse - University of Oregon Athletics\". The site answers curl and headless Chromium with HTTP 403; the title was read through WebFetch."
+        },
+        {
+          "url": "https://bigten.org/standings.aspx?path=wlax",
+          "what": "Big Ten Conference \"2026 Women's Lacrosse Standings\" (HTTP 200): the table lists Johns Hopkins, Michigan, Penn State, USC and Oregon (0-8 conference, 6-10 overall), so Oregon's lacrosse team plays in the Big Ten."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/oregon",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION I - EUGENE, OR', University of Oregon, 'CONFERENCE BIG TEN' (the university's conference, which its lacrosse team plays in)."
+        }
+      ],
+      "checkedOn": "2026-10-06"
+    },
+    {
+      "slug": "richmond",
+      "name": "University of Richmond",
+      "shortName": "Richmond",
+      "city": "Richmond",
+      "state": "VA",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Atlantic 10",
+          "url": "https://richmondspiders.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://richmondspiders.com/sports/field-hockey",
+          "what": "Richmond athletics field hockey page, titled 'Field Hockey - University of Richmond Athletics'. The site answers curl and headless Chromium with HTTP 403; the title was read through WebFetch, which returned no conference text."
+        },
+        {
+          "url": "https://richmondspiders.com/news/2025/11/8/spider-field-hockey-falls-in-a10-championship",
+          "what": "Richmond athletics story headed 'Spider Field Hockey Falls in A-10 Championship' (address dated 2025/11/8), so the field hockey team plays in the A-10 (Atlantic 10). Headline only; WebFetch returned no body."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/richmond",
+          "what": "NCAA.com school page, rendered in a browser: 'DIVISION I - RICHMOND, VA', University of Richmond, 'CONFERENCE ATLANTIC 10'."
+        }
+      ],
+      "checkedOn": "2026-10-06"
     },
     {
       "slug": "san-diego-state",
@@ -399,6 +639,14 @@
       ],
       "sources": [
         {
+          "url": "https://ucdavisaggies.com/news/2026/1/12/field-hockey-eleven-aggies-named-to-inaugural-mpsf-all-academic-team.aspx",
+          "what": "UC Davis athletics story of Jan 12, 2026, 'Eleven Aggies Named to Inaugural MPSF All-Academic Team' (field hockey section; read through WebFetch): UC Davis field hockey completed its inaugural season in the Mountain Pacific Sports Federation; the honorees include Larissa Roldan."
+        },
+        {
+          "url": "https://ucdavisaggies.com/sports/field-hockey/schedule/2026",
+          "what": "UC Davis '2026 Field Hockey Schedule' (read through WebFetch; curl gets HTTP 403): conference record 0-0 and 'MPSF Championship' on Nov 6 and Nov 7 at Newark, Del."
+        },
+        {
           "url": "https://ucdavisaggies.com/sports/field-hockey/schedule",
           "what": "2026 Field Hockey Schedule. The season record block shows Conf 0-0, and the postseason entries are 'MPSF Championship' on Nov 6 and 7 in Newark, Del., linked to https://mpsports.org/sports/fh. Read via WebFetch, which summarizes the page."
         },
@@ -412,7 +660,7 @@
         },
         {
           "url": "https://www.ncaa.com/schools/uc-davis",
-          "what": "NCAA.com's UC Davis school page: 'Division I - Davis, CA'. Its conference line (Mountain West) is the university's primary conference, not field hockey's."
+          "what": "NCAA.com's UC Davis school page, rendered in a browser: 'DIVISION I - DAVIS, CA', UC Davis, 'CONFERENCE MOUNTAIN WEST' (the university's primary conference, not field hockey's)."
         },
         {
           "url": "https://ucdavisaggies.com/sports/womens-lacrosse/schedule",
@@ -423,7 +671,7 @@
           "what": "UC Davis athletics story of Feb 21, 2024: women's lacrosse joined the Big 12 as an affiliate member from the 2024-25 season. Read via WebFetch."
         }
       ],
-      "checkedOn": "2026-10-04"
+      "checkedOn": "2026-10-06"
     },
     {
       "slug": "vassar",
@@ -487,6 +735,196 @@
       "basis": "Her own SportsRecruits lacrosse profile: class of 2027, Berkeley, CA, ADVNC Lacrosse (a Bay Area girls' club), committed to Vassar College; ADVNC's own commitments page lists 'Violet Potts - Berkeley - Vassar' under its 2027 class. Neither page's text names a high school, so the match rests on the class year plus a Berkeley, CA hometown and a Bay Area club; SportsRecruits' club commitment pages (rendered by script, so not cited) list her with Berkeley High School, Berkeley, CA, which rules out the Berkeley High School in South Carolina. No date, no signing wording."
     },
     {
+      "teamSlug": "bishops",
+      "athleteId": "780f681e-83e2-420f-b1c1-e3f68cde2d63",
+      "fullName": "Lola Conway",
+      "college": "michigan",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/lola_conway",
+          "kind": "sportsrecruits",
+          "quote": "Watch Lola's recruiting video • 2028 • Midfield, Forward, Defense • San Diego, CA • Committed to University of Michigan … Bishop's La Jolla , CA",
+          "statedSchool": "Bishop's (La Jolla, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-2028.html",
+          "kind": "event",
+          "quote": "University of Michigan (7 commits) … Lola Conway CA Mid HTC-CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/michigan/university_ofichigan",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Lola Conway, 2028 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2028, San Diego, CA hometown, club HTC CA) shows 'Committed to University of Michigan'; its TEAMS block, drawn by script, lists the school as 'Bishop's, La Jolla, CA' (The Bishop's School), so the school is named on the profile itself. FH College Path's class of 2028 list (under University of Michigan: 'Lola Conway CA Mid HTC-CA') and SportsRecruits' Michigan page (whose own address slug is university_ofichigan; it lists her and describes her highlight video as 'from Bishop's in La Jolla, CA') agree; the latter repeats the profile and is not independent. MAX Field Hockey also lists her but is not cited. No dated page found: the profile's script-drawn tooltip reads 'on 7/17/2026', which is not used, and the school newspaper and San Diego Union-Tribune stories on her name no college, so asOf is null. Roster row grade 11 = 2028, which agrees. No signing wording."
+    },
+    {
+      "teamSlug": "bishops",
+      "athleteId": "02610c42-03d0-4411-9af0-80cdaf3b2ce6",
+      "fullName": "Emerson Davis",
+      "college": "harvard",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/emerson_davis8",
+          "kind": "sportsrecruits",
+          "quote": "Watch Emerson's recruiting video • 2028 • Midfield, Defense, Draw Specialist, Attack • Mad Dog Girls Lacrosse - West Elite • San Diego, CA • Committed to Harvard University … The Bishops School San Diego , CA",
+          "statedSchool": "The Bishops School (San Diego, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-lacrosse/massachusetts/harvard_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Emerson Davis, 2028 Lacrosse",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (iwlca. subdomain, address emerson_davis8; the other Emerson Davis profiles at addresses 1-10 are other people): class of 2028, Midfield/Defense/Draw Specialist/Attack, Mad Dog Girls Lacrosse - West Elite, San Diego, CA, 'Committed to Harvard University'. Its TEAMS block, drawn by script, lists The Bishops School, San Diego, CA, so the school is named; the roster row (Bishop's, grade 11 = 2028) agrees. SportsRecruits' Harvard women's lacrosse page lists her (repeats the profile, not independent). The commitment is for lacrosse, not field hockey. No dated source: the profile's script-drawn tooltip reads 'on 9/15/2026', which is not used, so asOf is null; a class of 2028 could first commit on 2026-09-01. No signing wording."
+    },
+    {
+      "teamSlug": "canyon-hills",
+      "athleteId": "5369e061-d371-41ca-9654-bf7245e98432",
+      "fullName": "Eva Allen",
+      "college": "cal",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/eva_jo_allen",
+          "kind": "sportsrecruits",
+          "quote": "Watch Eva Jo's recruiting video • 2028 • Forward, Midfield • San Diego, CA • Committed to University of California - Berkeley … Class of 2028, Canyon Hills High School (San Diego, CA)",
+          "statedSchool": "Canyon Hills High School (San Diego, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-2028.html",
+          "kind": "event",
+          "quote": "University of California - Berkeley (CAL) (4 commits) … Eva Jo Allen CA Fwd-Mid Rush FH",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.rushfieldhockey.org/player-directory/elite-performance-group/eva-allen/",
+          "kind": "club-site",
+          "quote": "Eva Allen Graduation Year: 2028 Position: M/F College Commitment:",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/california/university_of_california_berkeley",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Eva Jo Allen, 2028 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile, under the name Eva Jo Allen (address eva_jo_allen; the roster spells it Eva Allen), shows 'Committed to University of California - Berkeley'. Its bio reads 'My name is Eva Jo Allen, a varsity field hockey captain, Class of 2028, Canyon Hills High School (San Diego, CA)' (static meta description) and its TEAMS block lists Canyon Hills High School, San Diego, CA and the Rush clubs, so the school and class year are named and cover the given-plus-middle-name difference; the roster row is Eva Allen, junior (2028), jersey 2. FH College Path's class of 2028 list (under University of California - Berkeley (CAL): 'Eva Jo Allen CA Fwd-Mid Rush FH') and SportsRecruits' Cal page (repeats the profile, not independent) agree. Rush Field Hockey's Elite Performance Group page for 'Eva Allen' (graduation year 2028) has a 'College Commitment' field that holds only a logo linking to calbears.com/sports/field-hockey; the college is shown by the link, not in text, so it corroborates only. MAX Field Hockey also lists her but is not cited. Undated: the profile's script-drawn tooltip reads 'on 6/25/2026', which is not used. No signing wording."
+    },
+    {
+      "teamSlug": "canyon-hills",
+      "athleteId": "16ffe819-dbaa-4046-bc8f-a29406bcaedc",
+      "fullName": "Rylie Storm",
+      "college": "harvard",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.fhcollegepath.com/class-of-2028.html",
+          "kind": "event",
+          "quote": "Harvard University (2 commits) … Rylie Storm CA Fwd-Mid Rush FH",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "One line on FH College Path's class of 2028 list puts 'Rylie Storm CA Fwd-Mid Rush FH' under Harvard University (2 commits); the list names no school and gives only 'CA' as a place. The match therefore rests on the class year (2028, the roster's junior grade) plus the club Rush Field Hockey, a Southern California club (rushfieldhockey.org/contact-us/ gives RUSH Field Hockey, Inc., 681 Sparta Drive, Encinitas, CA 92024, and a San Diego coach address). No page names Canyon Hills together with Harvard. Her own SportsRecruits field hockey profile (class of 2028, San Diego, CA, Rush Devils, Midfield/Forward; TEAMS block 'Canyon Hills (formerly Serra) High') shows no commitment, and Rush's own Elite Performance Group page for her (graduation year 2028, position B/F) has no College Commitment field and so is not cited; Harvard's SportsRecruits page does not list her. Those are absences, not contradictions, but they leave the commitment resting on this one self-reported list line, so medium. MAX Field Hockey also lists her (Canyon Hills, Rush, Harvard) but is not cited. Undated. Treat as the weakest entry of the set."
+    },
+    {
+      "teamSlug": "canyon-hills",
+      "athleteId": "1ad802a5-00af-48e0-8def-6c9f83097760",
+      "fullName": "Reese Roldan",
+      "college": "uc-davis",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "REESE ROLDAN CA DEF-MID RUSH FH UC DAVIS",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.rushfieldhockey.org/player-directory/elite-performance-group/reese-roldan/",
+          "kind": "club-site",
+          "quote": "Reese Roldan Graduation Year: 2027 Position: B/M College Commitment:",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "One line on FH College Path's class of 2027 list ('REESE ROLDAN CA DEF-MID RUSH FH UC DAVIS') names the college but no school and only 'CA' as a place; the match rests on the class year (2027, the roster's senior grade) plus the club Rush Field Hockey, a Southern California club (rushfieldhockey.org/contact-us/: Encinitas, CA, with a San Diego coach address). Rush's own Elite Performance Group page for her (graduation year 2027, position B/M) has a 'College Commitment' field that holds only a logo (davis.png) linking to ucdavisaggies.com/sports/field-hockey, so the college is shown by the link, not in text. No page names Canyon Hills together with UC Davis. Her own SportsRecruits field hockey profile (class of 2027, San Diego, CA, Rush Devils; TEAMS block lists Canyon Hills) shows a 'Committed' badge once rendered by script, but the badge names no college (its tooltip reads 'You have been added to an event or team roster as a committed athlete.'), and the static meta description ends at 'San Diego, CA' with no 'Committed to'; the profile ties her to Canyon Hills and the badge is consistent with a commitment, but it is not cited because it does not name the college. Larissa Roldan, a UC Davis midfielder from Canyon Hills (UC Davis's own roster), is a different player, probably a relative. Not on SportsRecruits' UC Davis list; MAX Field Hockey does not list her. The college rests on the one self-reported list line plus a logo link, so medium. Undated."
+    },
+    {
+      "teamSlug": "cathedral-catholic",
+      "athleteId": "73fea592-4d78-4966-9bbd-f2c7e2e6cb82",
+      "fullName": "Lia Palecek",
+      "college": "oregon",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/lia_palecek",
+          "kind": "sportsrecruits",
+          "quote": "Watch Lia's recruiting video • 2028 • Attack • Mad Dog Girls Lacrosse - West Elite • Carlsbad, CA • Committed to University of Oregon … Cathedral Catholic High School San Diego , CA",
+          "statedSchool": "Cathedral Catholic High School (San Diego, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-lacrosse/oregon/university_of_oregon",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Lia Palecek, 2028 Lacrosse",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (iwlca. subdomain): class of 2028, Attack, Mad Dog Girls Lacrosse - West Elite, Carlsbad, CA, 'Committed to University of Oregon'. Its TEAMS block, drawn by script, lists Cathedral Catholic High School, San Diego, CA. The roster row has no grade (classOf null), so the stated class 2028 is accepted under the ungraded rule; Cathedral Catholic's own spring all-league page ('Lia Palecek ’28') and the San Diego Union-Tribune's May 15, 2025 lacrosse preview agree on the class but do not mention a commitment, so they are not cited (the UT's June 19, 2026 All-CIF list labels her 'Sr.', which looks like a slip). SportsRecruits' Oregon lacrosse page lists her (repeats the profile, not independent). Her older sister Lyla Palecek (class of 2026, Denver lacrosse) is a different player. First Class Lacrosse's 'Best in Class 2028 Uncommitted Players' list (updated Oct 6, 2026) does not list her. No dated source: the profile's script-drawn tooltip reads 'on 9/25/2026', which is not used, so asOf is null; a class of 2028 could first commit on 2026-09-01. The commitment is for lacrosse. No signing wording."
+    },
+    {
       "teamSlug": "christopher",
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
       "fullName": "Alyssa Montejano",
@@ -535,6 +973,43 @@
         }
       ],
       "basis": "One line on FH College Path's class of 2028 Division I list: name, CA, forward-midfield, Infinity Sports Club, under UC Davis. No school is named, so the match rests on the class year plus Infinity, a Gilroy club this row is already tied to in data/clubs.json; her own SportsRecruits profile shows no commitment (absence, not contradiction). Medium: a single compiled line. The only other Hemeon on those lists is a Maryland class of 2026 player."
+    },
+    {
+      "teamSlug": "harvard-westlake",
+      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "fullName": "Margaux Schlumberger",
+      "college": "harvard",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/margaux_schlumberger",
+          "kind": "sportsrecruits",
+          "quote": "Watch Margaux's recruiting video • 2027 • Midfield, Forward • Santa Monica, CA • Committed to Harvard University … Harvard Westlake High School Studio City , CA",
+          "statedSchool": "Harvard Westlake High School (Studio City, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "MARGAUX SCHLUMBERGER CA MID VCRD HARVARD",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/massachusetts/harvard_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Margaux Schlumberger, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2027, Santa Monica, CA; clubs Rush Devils / VCRD) shows 'Committed to Harvard University'; its TEAMS block, drawn by script, lists Harvard Westlake High School, Studio City, CA. FH College Path's class of 2027 list ('MARGAUX SCHLUMBERGER CA MID VCRD HARVARD') and SportsRecruits' Harvard page (repeats the profile, not independent) agree. The 'Harvard' in the school's name is unrelated to the college; the profile says 'Committed to Harvard University'. MAX Field Hockey also lists her but is not cited; the NFHCA 2026 watchlist names her with no college. Undated: the profile's script-drawn tooltip reads 'on 7/7/2025', which is not used. Roster row grade 12 = 2027, which agrees. No signing wording."
     },
     {
       "teamSlug": "los-altos",
@@ -706,6 +1181,43 @@
       "basis": "Single source: her own SportsRecruits field hockey profile, class of 2027, San Jose, CA, written as a junior starter at Saint Francis High School, says committed to Bates College. Undated. Her NCSA profile and club page show no commitment field; nothing contradicts it. SportsRecruits' Bates page (added 2026-10-04) lists her from the same profile, so it is a second page, not an independent source; it gives no date. MAX Field Hockey lists her (2027, Saint Francis) with no college."
     },
     {
+      "teamSlug": "san-dieguito-academy",
+      "athleteId": "fd2a0675-b08c-485a-abb5-b724ce388333",
+      "fullName": "Ella Rennie",
+      "college": "muhlenberg",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2026-06-19",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/ella_rennie",
+          "kind": "sportsrecruits",
+          "quote": "Watch Ella's recruiting video • 2027 • Defense, Midfield • Encinitas, CA • Committed to Muhlenberg College … San Dieguito Academy HS Encinitas , CA",
+          "statedSchool": "San Dieguito Academy HS (Encinitas, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuUu-d08EmqUxIT9EIkcTngF8GMVor9zILxrOotoA6yN_jI9AUYWwcXgZA7fsgbEzddjzT69nt8LhZ/pub?gid=1142398457&single=true&output=csv",
+          "kind": "event",
+          "quote": "Ella,Rennie,Muhlenberg,2027,\"June 19, 2026\",",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "June 19, 2026"
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/pennsylvania/muhlenberg_college",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Ella Rennie, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2027, Encinitas, CA; club Coastal Clash) shows 'Committed to Muhlenberg College'; its TEAMS block, drawn by script, lists San Dieguito Academy HS, Encinitas, CA, and its bio says 'Varsity Captain, 2026'. Play College Field Hockey's commitments sheet (the published Google Sheet that playcollegefieldhockey.com/commitments embeds; it gives only first name, last name, college, class and date, no school or place, so it corroborates a match the profile makes) has 'Ella,Rennie,Muhlenberg,2027,\"June 19, 2026\",' and is the only dated source (asOf, a day the sheet calls the date committed). The profile's script-drawn tooltip reads 'on 8/5/2026', later than the sheet; not used. SportsRecruits' Muhlenberg page lists her (repeats the profile, not independent). The roster row has no grade (classOf null), so the stated class 2027 is accepted under the ungraded rule. Not on FH College Path's lists (Division I only). No signing wording."
+    },
+    {
       "teamSlug": "saratoga",
       "athleteId": "1a13275a-f4aa-4129-9c1e-35f0e791793f",
       "fullName": "Emma Williams",
@@ -725,6 +1237,75 @@
         }
       ],
       "basis": "The Saratoga Falcon (Saratoga High School's student paper; its masthead reads 'The Student News Site of Saratoga High School') reported on Mar 20, 2026 that junior Emma Williams committed to play Division III basketball at Bryn Mawr College, in late February (asOf is that month). The story mentions her fall field hockey season and names her twin sister Evelyn, also on Saratoga's roster, separately; junior in spring 2026 is the class of 2027, as the roster has it. Single source."
+    },
+    {
+      "teamSlug": "scripps-ranch",
+      "athleteId": "fe657007-2bac-428f-a486-af93022670d2",
+      "fullName": "Samantha Ippolito",
+      "college": "michigan-state",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2025-09-22",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/samantha_ippolito",
+          "kind": "sportsrecruits",
+          "quote": "Review Samantha's academic and athletic recruiting information • 2027 • Midfield, Forward • San Diego, CA • Committed to Michigan State University … Scripps Ranch San Diego , CA",
+          "statedSchool": "Scripps Ranch (San Diego, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.sandiegouniontribune.com/2025/09/22/san-diegos-athletes-of-the-week-include-stars-in-football-volleyball-cross-country-and-field-hockey/",
+          "kind": "news",
+          "quote": "Sammy Ippolito Scripps Ranch Field hockey A junior who has verbally committed to Michigan State, Ippolito scored the match’s only goal",
+          "statedSchool": "Scripps Ranch",
+          "statedClassYear": null,
+          "sourceDate": "September 22, 2025"
+        },
+        {
+          "url": "https://scrippsranchnews.com/field-hockey-team-works-for-another-deep-run/",
+          "kind": "news",
+          "quote": "junior co-captain Sammy Ippolito who has already committed to play field hockey at Michigan State University",
+          "statedSchool": "Scripps Ranch High School",
+          "statedClassYear": null,
+          "sourceDate": "October 3, 2025"
+        },
+        {
+          "url": "https://scrippsranchnews.com/field-hockey-looks-to-close-season-hot/",
+          "kind": "news",
+          "quote": "Sammy Ippolito, who has already committed to Michigan State",
+          "statedSchool": "Scripps Ranch High School",
+          "statedClassYear": null,
+          "sourceDate": "September 21, 2026"
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "SAMMY IPPOLITO CA MID-FWD RUSH FH MICHIGAN STATE",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.rushfieldhockey.org/player-directory/elite-performance-group/sammy-ippolito/",
+          "kind": "club-site",
+          "quote": "Sammy Ippolito Graduation Year: 2027 Position: M/F College Commitment:",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/michigan/michigan_state_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Samantha Ippolito, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The roster row is Samantha Ippolito (no grade). Her own SportsRecruits field hockey profile, under that name (class of 2027, San Diego, CA), shows 'Committed to Michigan State University'; its TEAMS block, drawn by script, lists Scripps Ranch, San Diego, CA. Three pages call her Sammy and name Scripps Ranch: the San Diego Union-Tribune's Sep 22, 2025 Athletes of the Week ('A junior who has verbally committed to Michigan State'; asOf), the Scripps Ranch News of Oct 3, 2025 (junior co-captain) and of Sep 21, 2026. The two Scripps Ranch News pages show no date on the page; the dates are the publication dates its WordPress API gives (2025-10-03, 2026-09-21), and the pages' own text places them in the 2025 and 2026 seasons. A junior in fall 2025 is the class of 2027, which agrees with the profile; the roster row has no grade, so any stated class 2027-2030 would be accepted (the profile's 2027 is the one stated). FH College Path's class of 2027 list ('SAMMY IPPOLITO CA MID-FWD RUSH FH MICHIGAN STATE'; a nickname and no school, so it corroborates only) and SportsRecruits' Michigan State page (repeats the profile) agree. Rush Field Hockey's Elite Performance Group page for her (graduation year 2027) has a 'College Commitment' field that holds only a logo linking to msuspartans.com/sports/field-hockey, so the college is shown by the link, not in text; it corroborates only. The profile's script-drawn tooltip reads 'on 1/6/2026', later than the Sep 2025 story, which shows the tooltip is a profile date and is not used. MAX Field Hockey also lists her but is not cited. Her younger teammate CJ Ippolito is another player. No signing wording."
     },
     {
       "teamSlug": "st-ignatius",
@@ -1008,6 +1589,96 @@
         }
       ],
       "basis": "Her own SportsRecruits lacrosse profile (a goalie, class of 2027, Pacific Grove, CA, Verve Lacrosse) says committed to Trinity College - Connecticut; Lacrosse Masters' girls' commitment list, independent of SportsRecruits, lists her under Trinity College as 'Verve Lacrosse / Stevenson School - CA - 2027'; SportsRecruits' Trinity page repeats the profile. A unique name. No date."
+    },
+    {
+      "teamSlug": "torrey-pines",
+      "athleteId": "316a7db0-9932-4db1-bf3b-3b7b1cb7094b",
+      "fullName": "Dylan Rietti",
+      "college": "richmond",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2026-07",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/dylan_rietti",
+          "kind": "sportsrecruits",
+          "quote": "Watch Dylan's recruiting video • 2027 • Midfield, Defense • HTC Field Hockey Club • Rancho Santa Fe, California • Committed to University of Richmond … Torrey Pines High School",
+          "statedSchool": "Torrey Pines High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://torreypinesfalconer.com/15434/sports/__trashed-5/",
+          "kind": "news",
+          "quote": "Rietti is committed to playing field hockey at the Division I level at the University of Richmond … Rietti committed to collegiate field hockey in July before beginning her senior year",
+          "statedSchool": "Torrey Pines High School",
+          "statedClassYear": null,
+          "sourceDate": "September 22, 2026"
+        },
+        {
+          "url": "https://torreypinesfalconer.com/15301/sports/athletic-college-commitments-process/",
+          "kind": "news",
+          "quote": "DI University of Richmond field hockey commit Dylan Rietti (12) discussed a different path of the commitment process",
+          "statedSchool": "Torrey Pines High School",
+          "statedClassYear": null,
+          "sourceDate": "September 16, 2026"
+        },
+        {
+          "url": "https://www.fhcollegepath.com/class-of-20271.html",
+          "kind": "event",
+          "quote": "DYLAN RIETTI CA MID HTC-CA UNIVERSITY OF RICHMOND",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/virginia/university_of_richmond",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Dylan Rietti, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2027, HTC Field Hockey Club, Rancho Santa Fe, CA; its TEAMS block, drawn by script, lists Torrey Pines High School, San Diego, CA) shows 'Committed to University of Richmond'. The Falconer, Torrey Pines High School's student paper, calls her a Torrey Pines varsity captain in its Sep 22, 2026 Athlete of the Month story: committed to Division I field hockey at Richmond, 'in July before beginning her senior year' (asOf is that month), and again on Sep 16, 2026 ('DI University of Richmond field hockey commit Dylan Rietti (12)'; the Falconer's pages are served to curl as HTTP 200). FH College Path's class of 2027 list has the line 'DYLAN RIETTI CA MID HTC-CA UNIVERSITY OF RICHMOND' (no school; corroboration), and SportsRecruits' Richmond page lists her under Committed Athletes (it repeats the profile, so it is not independent). The profile's own commitment tooltip, drawn by script, reads 'on 7/19/2026'; that date is not used (a profile edit date, not a commitment date: the Falconer says July and the tooltip dates elsewhere disagree with dated news). MAX Field Hockey also lists her but is not cited. The NFHCA 2026 watchlist names her with no college. Roster row grade 12 = 2027, which agrees. No signing wording."
+    },
+    {
+      "teamSlug": "torrey-pines",
+      "athleteId": "a1ff46fb-b63e-4d7b-a825-611706758648",
+      "fullName": "Ava Hauer",
+      "college": "johns-hopkins",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2026-09-16",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/ava_hauer",
+          "kind": "sportsrecruits",
+          "quote": "Watch Ava's recruiting video • 2027 • Forward, Midfield • HTC Field Hockey Club • Del Mar, CA • Committed to Johns Hopkins University … a varsity player on the Torrey Pines High School team",
+          "statedSchool": "Torrey Pines High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://torreypinesfalconer.com/15301/sports/athletic-college-commitments-process/",
+          "kind": "news",
+          "quote": "Hauer and Rietti committed for field hockey while Qian committed for swimming. … Rietti’s teammate Ava Hauer (12) also committed for DIII field hockey to Johns Hopkins University",
+          "statedSchool": "Torrey Pines High School",
+          "statedClassYear": null,
+          "sourceDate": "September 16, 2026"
+        },
+        {
+          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/maryland/johns_hopkins_university",
+          "kind": "sportsrecruits",
+          "quote": "Committed Athletes … Ava Hauer, 2027 Field Hockey",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (class of 2027, HTC Field Hockey Club, Del Mar, CA) shows 'Committed to Johns Hopkins University'; its bio says she is 'a varsity player on the Torrey Pines High School team' and its TEAMS block lists Torrey Pines High School, San Diego, CA. The Falconer (Torrey Pines High School's student paper), Sep 16, 2026, says Hauer (12) 'also committed for DIII field hockey to Johns Hopkins University' (asOf is that date, the earliest dated page; it gives no commitment day). SportsRecruits' Johns Hopkins page lists her (repeats the profile, not independent). The profile's script-drawn commitment tooltip reads 'on 7/1/2026'; not used (profile date, undocumented). She is not on FH College Path's lists (Division I only). MAX Field Hockey also lists her but is not cited. Roster row grade 12 = 2027, which agrees. No signing wording."
     }
   ]
 }

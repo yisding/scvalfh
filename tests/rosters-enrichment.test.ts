@@ -110,8 +110,8 @@ describe('data/rosters-enrichment.json', () => {
       expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
     }
     expect(raw.season).toBe(base.season);
-    // The overlay is stamped 2026-10-04 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
-    // 2026-10-03, the EAL's recruiting pages 2026-10-04); the roster file may be re-read later (see the athleteId join below), never earlier.
+    // The overlay is stamped 2026-10-06 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
+    // 2026-10-03, the EAL's recruiting pages 2026-10-04, Southern California's 2026-10-06); the roster file may be re-read later (see the athleteId join below), never earlier.
     expect(raw.capturedAt <= base.fetchedAt.slice(0, 10)).toBe(true);
   });
 
@@ -199,7 +199,7 @@ describe('data/rosters-enrichment.json', () => {
       'marin-academy': 'partial',
     });
     // The EAL has had no school-athletics sweep: Corning (empty) records no otherRosters, and its view says not-checked.
-    // Neither have the four Southern California leagues nor the independents (stub entries, 2026-10-06): an
+    // Neither have the four Southern California leagues nor the independents (recruiting pages only, 2026-10-06): an
     // empty SoCal roster (Chaparral, Fountain Valley, …) is not-checked too, never "none".
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const unswept = (slug: string) => EAL_SLUGS.has(slug) || SOCAL.has(getTeamBySlug(slug)!.league);
@@ -398,7 +398,8 @@ describe('recruiting profiles', () => {
   it('what was found for the EAL, as captured on 2026-10-04: recruiting pages only, no school-site sweep', () => {
     const eal = raw.teams.filter((t) => EAL_SLUGS.has(t.slug));
     expect(eal.map((t) => t.slug)).toEqual(teamsInLeague('eal').map((t) => t.slug));
-    expect(raw.capturedAt).toBe('2026-10-04');
+    // The file's stamp moved to 2026-10-06 with the Southern California sweep (the next test).
+    expect(raw.capturedAt).toBe('2026-10-06');
     // No coaches or sources, and no MaxPreps field filled: the school-athletics sweep has not been done.
     for (const t of eal) {
       expect([t.coaches, t.sources], t.slug).toEqual([[], []]);
@@ -430,8 +431,10 @@ describe('recruiting profiles', () => {
     const profiles = eal.flatMap((t) => t.players.flatMap((p) => p.profiles));
     expect(profiles.length).toBe(33);
     expect(eal.flatMap((t) => t.players).length).toBe(29);
-    // The other four leagues' counts are untouched: 99 profiles for 83 players.
-    const earlier = raw.teams.filter((t) => !EAL_SLUGS.has(t.slug)).flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
+    // The other four NorCal leagues' counts are untouched: 99 profiles for 83 players.
+    const earlier = raw.teams
+      .filter((t) => SCVAL_SLUGS.has(t.slug) || SWEPT_OTHER_SLUGS.has(t.slug))
+      .flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
     expect(earlier.flatMap((p) => p.profiles).length).toBe(99);
     expect(earlier.length).toBe(83);
     // NCSA first on a row that has more than one platform.
@@ -444,6 +447,97 @@ describe('recruiting profiles', () => {
     expect(evie.profiles.find((p) => p.platform === 'sportsrecruits')!.url).toBe('https://nfhca.sportsrecruits.com/athlete/evelyn_nielson');
     // The page that says class of 2027 for a grade-11 player (Zolie Judge) is not linked.
     expect(profiles.map((p) => p.url)).not.toContain('https://www.hudl.com/profile/28010179');
+  });
+
+  it('what was found for Southern California, as captured on 2026-10-06: recruiting pages only, no school-site sweep', () => {
+    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
+    const socal = raw.teams.filter((t) => SOCAL.has(getTeamBySlug(t.slug)!.league));
+    expect(socal).toHaveLength(53);
+    for (const t of socal) {
+      expect([t.coaches, t.sources], t.slug).toEqual([[], []]);
+      for (const p of t.players) {
+        expect([p.grade, p.positions, p.jersey, p.height, p.level, p.conflicts], `${t.slug} / ${p.fullName}`).toEqual([null, null, null, null, null, []]);
+        expect(p.profiles.length, `${t.slug} / ${p.fullName}`).toBeGreaterThan(0);
+      }
+      expect(t.notes[0], t.slug).toMatch(/^Recruiting pages swept 2026-10-06 by the rule in docs\/DATA-SOURCES\.md: /);
+      expect(t.notes.at(-1), t.slug).toBe(
+        'The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled.',
+      );
+    }
+    const byTeam = Object.fromEntries(
+      socal.map((t) => {
+        const profiles = t.players.flatMap((p) => p.profiles);
+        const n = (k: string) => profiles.filter((x) => x.platform === k).length;
+        return [
+          t.slug,
+          { players: t.players.length, profiles: profiles.length, ncsa: n('ncsa'), sportsrecruits: n('sportsrecruits'), hudl: n('hudl'), fieldlevel: n('fieldlevel') },
+        ];
+      }),
+    );
+    expect(byTeam).toEqual({
+      'chaparral': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'edison': { players: 3, profiles: 4, ncsa: 3, sportsrecruits: 1, hudl: 0, fieldlevel: 0 },
+      'fountain-valley': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'great-oak': { players: 4, profiles: 5, ncsa: 2, sportsrecruits: 3, hudl: 0, fieldlevel: 0 },
+      'huntington-beach': { players: 3, profiles: 5, ncsa: 1, sportsrecruits: 3, hudl: 0, fieldlevel: 1 },
+      'marina': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'newport-harbor': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'temecula-valley': { players: 3, profiles: 6, ncsa: 3, sportsrecruits: 1, hudl: 0, fieldlevel: 2 },
+      'bishops': { players: 24, profiles: 37, ncsa: 3, sportsrecruits: 9, hudl: 24, fieldlevel: 1 },
+      'canyon-hills': { players: 3, profiles: 4, ncsa: 1, sportsrecruits: 3, hudl: 0, fieldlevel: 0 },
+      'cathedral-catholic': { players: 3, profiles: 6, ncsa: 3, sportsrecruits: 2, hudl: 1, fieldlevel: 0 },
+      'la-jolla': { players: 2, profiles: 3, ncsa: 2, sportsrecruits: 1, hudl: 0, fieldlevel: 0 },
+      'mission-bay': { players: 2, profiles: 4, ncsa: 2, sportsrecruits: 2, hudl: 0, fieldlevel: 0 },
+      'scripps-ranch': { players: 3, profiles: 5, ncsa: 2, sportsrecruits: 2, hudl: 0, fieldlevel: 1 },
+      'clairemont': { players: 3, profiles: 4, ncsa: 1, sportsrecruits: 1, hudl: 2, fieldlevel: 0 },
+      'la-jolla-country-day': { players: 9, profiles: 12, ncsa: 3, sportsrecruits: 1, hudl: 8, fieldlevel: 0 },
+      'mira-mesa': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'patrick-henry': { players: 3, profiles: 3, ncsa: 1, sportsrecruits: 0, hudl: 2, fieldlevel: 0 },
+      'point-loma': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'university-city': { players: 13, profiles: 16, ncsa: 1, sportsrecruits: 3, hudl: 12, fieldlevel: 0 },
+      'canyon-crest-academy': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'la-costa-canyon': { players: 5, profiles: 6, ncsa: 1, sportsrecruits: 1, hudl: 4, fieldlevel: 0 },
+      'mt-carmel': { players: 2, profiles: 2, ncsa: 2, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'rancho-bernardo': { players: 1, profiles: 1, ncsa: 1, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'san-marcos': { players: 4, profiles: 6, ncsa: 2, sportsrecruits: 2, hudl: 0, fieldlevel: 2 },
+      'torrey-pines': { players: 13, profiles: 24, ncsa: 3, sportsrecruits: 6, hudl: 12, fieldlevel: 3 },
+      'del-norte': { players: 2, profiles: 2, ncsa: 2, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'fallbrook': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'mission-vista': { players: 4, profiles: 4, ncsa: 3, sportsrecruits: 1, hudl: 0, fieldlevel: 0 },
+      'poway': { players: 2, profiles: 4, ncsa: 2, sportsrecruits: 2, hudl: 0, fieldlevel: 0 },
+      'rancho-buena-vista': { players: 1, profiles: 1, ncsa: 1, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'san-dieguito-academy': { players: 16, profiles: 18, ncsa: 1, sportsrecruits: 1, hudl: 16, fieldlevel: 0 },
+      'valley-center': { players: 5, profiles: 5, ncsa: 0, sportsrecruits: 0, hudl: 5, fieldlevel: 0 },
+      'escondido': { players: 5, profiles: 5, ncsa: 3, sportsrecruits: 0, hudl: 2, fieldlevel: 0 },
+      'mission-hills': { players: 6, profiles: 6, ncsa: 6, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'sage-creek': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'san-pasqual': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'vista': { players: 7, profiles: 11, ncsa: 1, sportsrecruits: 0, hudl: 7, fieldlevel: 3 },
+      'westview': { players: 1, profiles: 2, ncsa: 1, sportsrecruits: 1, hudl: 0, fieldlevel: 0 },
+      'bonita-vista': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'eastlake': { players: 1, profiles: 1, ncsa: 1, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'helix': { players: 3, profiles: 5, ncsa: 1, sportsrecruits: 3, hudl: 0, fieldlevel: 1 },
+      'olympian': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'otay-ranch': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'el-capitan': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'granite-hills': { players: 2, profiles: 2, ncsa: 1, sportsrecruits: 1, hudl: 0, fieldlevel: 0 },
+      'hilltop': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'southwest': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'bonita': { players: 9, profiles: 9, ncsa: 1, sportsrecruits: 0, hudl: 8, fieldlevel: 0 },
+      'chaminade': { players: 12, profiles: 13, ncsa: 1, sportsrecruits: 0, hudl: 12, fieldlevel: 0 },
+      'glendora': { players: 0, profiles: 0, ncsa: 0, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+      'harvard-westlake': { players: 22, profiles: 25, ncsa: 1, sportsrecruits: 5, hudl: 19, fieldlevel: 0 },
+      'thousand-oaks': { players: 1, profiles: 1, ncsa: 1, sportsrecruits: 0, hudl: 0, fieldlevel: 0 },
+    });
+    const profiles = socal.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    expect(profiles).toHaveLength(267);
+    expect(socal.flatMap((t) => t.players)).toHaveLength(202);
+    // MaxPreps lists Téa Hunnius twice (Téa and Tea): her Hudl page is linked once, on the row it spells.
+    const hw = socal.find((t) => t.slug === 'harvard-westlake')!;
+    expect(hw.players.map((p) => p.fullName)).toContain('Téa Hunnius');
+    expect(hw.players.map((p) => p.fullName)).not.toContain('Tea Hunnius');
+    // A hometown with no state is not California: Alexis Andersen's page ("Thousand Oaks", no school) is not linked.
+    expect(profiles.map((p) => p.url)).not.toContain('https://nfhca.sportsrecruits.com/athlete/alexis_andersen');
   });
 
   it('reaches the merged view', () => {

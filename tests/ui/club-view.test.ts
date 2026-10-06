@@ -231,17 +231,25 @@ describe('buildClubsIndexView (/clubs)', () => {
   const rows = index.regions.flatMap((r) => r.clubs);
 
   it('groups the clubs by region, in CLUB_REGIONS order, each club once in display order', () => {
-    expect(index.regions.map((r) => r.id)).toEqual(['san-francisco', 'south-bay', 'east-bay', 'marin', 'sacramento', 'north-state', 'elsewhere']);
-    expect(index.regions.map((r) => r.heading)).toEqual(['San Francisco', 'South Bay', 'East Bay', 'Marin', 'Sacramento area', 'North State', 'Elsewhere']);
-    expect(index.regions.map((r) => r.meta)).toEqual(['2 clubs', '7 clubs', '2 clubs', '1 club', '2 clubs', '1 club', '1 club']);
+    expect(index.regions.map((r) => r.id)).toEqual([
+      'san-francisco', 'south-bay', 'east-bay', 'marin', 'sacramento', 'north-state',
+      'ventura', 'los-angeles', 'orange-county', 'san-diego',
+    ]);
+    expect(index.regions.map((r) => r.heading)).toEqual([
+      'San Francisco', 'South Bay', 'East Bay', 'Marin', 'Sacramento area', 'North State',
+      'Ventura County', 'Los Angeles', 'Orange County', 'San Diego',
+    ]);
+    expect(index.regions.map((r) => r.meta)).toEqual(['2 clubs', '7 clubs', '2 clubs', '1 club', '2 clubs', '1 club', '2 clubs', '2 clubs', '4 clubs', '5 clubs']);
+    // Each region's section is scoped to its half of the site (the NorCal/SoCal toggle).
+    expect(index.regions.map((r) => r.siteRegion)).toEqual([...Array(6).fill('norcal'), ...Array(4).fill('socal')]);
     expect(rows.map((r) => r.slug)).toEqual(getClubSlugs());
     expect(rows.map((r) => r.slug)).toEqual(getClubs().map((c) => c.slug));
     for (const r of index.regions) for (const c of r.clubs) expect(club(c.slug).region, c.slug).toBe(r.id);
   });
 
   it('names the searched areas that hold no club', () => {
-    expect(index.regionsWithoutClubs).toEqual(['Peninsula', 'Central Coast']);
-    expect(index.regionsWithoutClubsSentence).toBe('This list has no club based on the Peninsula or the Central Coast.');
+    expect(index.regionsWithoutClubs).toEqual(['Peninsula', 'Central Coast', 'Inland Empire']);
+    expect(index.regionsWithoutClubsSentence).toBe('This list has no club based on the Peninsula, the Central Coast or in the Inland Empire.');
     expect(REGION_WORDS.marin.label).toBe('Marin');
     expect(index.regionsNotSearched).toEqual(['Sacramento area', 'North State']);
     expect(index.regionsNotSearchedSentence).toBe('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
@@ -264,7 +272,13 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(line('fly-fhc')).toBe('13 players: 5 current, 8 earlier or not known to be current');
     expect(line('infinity')).toBe('9 players: 2 current, 7 earlier or not known to be current');
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
-    expect(line('htc')).toBe('2 current players');
+    expect(line('htc')).toBe('30 players: 26 current, 4 earlier or not known to be current');
+    expect(line('rush')).toBe('15 players: 13 current, 2 earlier or not known to be current');
+    expect(line('myto')).toBe('15 players: 13 current, 2 earlier or not known to be current');
+    expect(line('vcrd')).toBe('6 current players');
+    expect(line('bulldogs')).toBe('No player from these rosters found');
+    expect(rows.find((r) => r.slug === 'htc')!.subline).toBe('HTC Field Hockey Club · La Jolla, CA (HTC California)');
+    expect(rows.find((r) => r.slug === 'la-tigers')!.subline).toBe('LA Tigers Sports Club');
     expect(line('pac-heights')).toBe('No player from these rosters found');
     expect(line('d-city')).toBe('4 players, all earlier or not known to be current');
     expect(line('roseville-fhc')).toBe('No player from these rosters found');
@@ -286,9 +300,9 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([80, 25, 16, 9]);
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([147, 48, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 80 players from 25 schools are tied to 9 of these 16 clubs, the most to SF Hawks (32) and NorCal Impact (25).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 147 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (32) and HTC (30).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -362,7 +376,9 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(viewOf('performance-fh').fullName).toBeNull();
     expect(viewOf('sf-hawks').fullName).toBe('San Francisco Youth Field Hockey Club');
     expect(viewOf('sf-hawks').regionLabel).toBeNull(); // it would only repeat the city
-    expect(viewOf('htc').regionLabel).toBeNull(); // "Elsewhere" says nothing
+    expect(viewOf('htc').regionLabel).toBe('San Diego'); // HTC California trains in La Jolla and Chula Vista
+    expect(viewOf('rush').regionLabel).toBe('San Diego'); // Encinitas, in San Diego County
+    expect(viewOf('la-tigers').regionLabel).toBe('Los Angeles'); // no city given
     expect(viewOf('fly-fhc').regionLabel).toBe('South Bay');
     expect(viewOf('fly-fhc').facts).toEqual(['Los Altos', 'Founded 2001']);
     expect(viewOf('lightning').facts).toEqual(['Los Altos Hills']);
@@ -489,7 +505,11 @@ describe('the clubs routes, rendered', () => {
     }
     const index = renderIndex();
     const levels = headings(index);
-    expect(levels).toEqual([1, 2, 2, 2, 2, 2, 2, 2, 2]);
+    expect(levels).toEqual([1, ...Array(11).fill(2)]);
+    // Each region's section carries its half of the site's scope, under the region switcher.
+    expect(index).toContain('data-region-option="socal"');
+    expect(index).toMatch(/<section aria-labelledby="san-francisco" data-region-scope="norcal"/);
+    expect(index).toMatch(/<section aria-labelledby="san-diego" data-region-scope="socal"/);
     expect(index).toContain('<section aria-labelledby="how-matched"');
     const how = textOf(sectionOf(index, 'how-matched'));
     expect(how).toContain('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
@@ -504,7 +524,7 @@ describe('the clubs routes, rendered', () => {
     expect(html).toMatch(/<a href="https:\/\/sfyouthfieldhockey\.com\/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline sx-pill">SF Hawks website/);
     expect(textOf(html)).toContain('San Francisco · Founded 2017');
     const htc = textOf(await renderClub('htc'));
-    expect(htc).toContain('Madison, CT (HTC California trains in La Jolla, CA) · Founded 2009');
+    expect(htc).toContain('La Jolla, CA (HTC California) · Founded 2009');
     expect(textOf(/<h1[^>]*>([\s\S]*?)<\/h1>/.exec(await renderClub('performance-fh'))![1]).trim()).toBe('Performance Field Hockey');
   });
 
@@ -622,7 +642,7 @@ describe('the clubs routes, rendered', () => {
     for (const text of texts) for (const name of names) expect(text, name).not.toContain(name);
     const descriptionOf = async (slug: string) =>
       (await generateMetadata({ params: Promise.resolve({ slug }) } as never)).description;
-    expect(await descriptionOf('htc')).toContain('2 players on this site’s varsity rosters are tied to it, each with a source. Unofficial and incomplete.');
+    expect(await descriptionOf('htc')).toContain('30 players on this site’s varsity rosters are tied to it, each with a source. Unofficial and incomplete.');
     expect(await descriptionOf('golden-gate-rippers')).toContain('1 player on this site’s varsity rosters is tied to it, with a source. Unofficial and incomplete.');
     expect(await descriptionOf('sf-hawks')).toContain('32 players on this site’s varsity rosters are tied to it, each with a source.');
     expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
@@ -638,7 +658,7 @@ describe('the clubs routes, rendered', () => {
     const pages: Array<[string, string]> = [['/clubs', renderIndex()]];
     for (const slug of getClubSlugs()) pages.push([`/clubs/${slug}`, await renderClub(slug)]);
     const teams = [...new Set(file.affiliations.map((a) => a.teamSlug))];
-    expect(teams).toHaveLength(25);
+    expect(teams).toHaveLength(48);
     for (const slug of teams) pages.push([`/teams/${slug}`, await renderTeam(slug)]);
     for (const [route, html] of pages) expect(affiliationLeaks(html, file, { publicTerms: PUBLIC_TERMS }), route).toEqual([]);
   });
