@@ -25,7 +25,7 @@ import {
   type PlayerStatsView,
 } from '../../components/teams/player-stats-view';
 import { buildTeamPageView } from '../../components/teams/team-view';
-import { getAllPlayerStatsWithNotes } from '../../lib/note-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import type {
   GoalieStatKey,

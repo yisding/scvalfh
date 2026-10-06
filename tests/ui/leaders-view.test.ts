@@ -40,7 +40,7 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
-import { getAllPlayerStatsWithNotes } from '../../lib/note-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { computeRatings, getRatings } from '../../lib/ratings';

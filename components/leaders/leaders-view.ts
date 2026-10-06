@@ -61,7 +61,7 @@ import {
   regionOf,
   type RegionConfig,
 } from '../../lib/leagues';
-import { getAllPlayerStatsWithNotes } from '../../lib/note-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
 import type { PriorSeason } from '../../lib/prior-season-schema';

@@ -17,7 +17,7 @@ import { statText } from './player-stats-view';
  * Column heads are abbreviations a reader may not know (GWG, SOG), so each head carries its full
  * name for a screen reader and the legend under the tables spells every one out.
  *
- * Goals and saves a coach wrote in a game note instead (lib/note-stats.ts) are added in, and every
+ * Goals, assists and saves a coach wrote in a game note instead (lib/note-stats.ts) are added in, and every
  * row or card holding one carries a mark that the list of noted games under the tables explains.
  */
 

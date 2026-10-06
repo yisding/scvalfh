@@ -1,40 +1,47 @@
 /**
- * Player stats a coach wrote in MaxPreps' game note instead of the stats sheet (SPEC §1.1k).
+ * Player stats a coach wrote in MaxPreps' game note instead of the stats sheet (SPEC §1.1k), for
+ * every registry team.
  *
  * MaxPreps' `contest.location` is a 50-character free-text note (lib/normalize.ts splitLocation),
  * and some coaches use it as a box score: Homestead's read "goals scored Gabby Molly, Emry Borges"
  * (Sep 30), "tied in OT 1:1  goal scored by Emery Borges" (Oct 5) and "Lacey played 3Q had 7
- * saves. Noa played last…" (Sep 28), while the team's MaxPreps stats held the same four one-goal
- * scorers from Sep 28 on and no goalkeeping at all. This module reads those notes and adds what
- * they say to the MaxPreps numbers, so the team page and /leaders count those goals and saves.
+ * saves. Noa played last…" (Sep 28). This module reads those notes on any team's finals and adds
+ * what they say to the MaxPreps numbers, so the team page and /leaders count them.
  *
- * Two kinds of statement are read, and nothing else:
- *   - goals: "goal(s) scored (by) A, B", "goal(s) by A", "goals: A (2), B", "scorers: …"; a name
- *     may carry a count, "(2)", "x2" or a trailing "2";
- *   - saves: "<Name> … N saves" (the clause starts with the keeper's name) or "N saves by <Name>".
+ * What is read — goals, assists and saves, nothing else:
+ *   - a list after a lead-in: "goal(s) scored (by) A, B", "goals by/from …", "goals: A (2), B",
+ *     "scorers: …", "assists: …"; a goal may name its assist: "A from B", "A (assist B)";
+ *   - a statement per comma-separated piece: "A scored", "A scored twice", "A scored 2 goals",
+ *     "A 2 goals", "A had a goal", "A with two assists", "A hat trick", "hat trick for A";
+ *   - saves: "<Name> … N saves" (the piece opens with the keeper's name) or "N saves by <Name>".
+ * A count is a digit, a word up to five, "twice" or "hat trick" (3). A piece that mentions goals,
+ * assists, saves or scoring but fits none of these is reported, never guessed at.
  *
- * A name is credited only when it resolves to exactly one player on exactly one of the game's two
- * rosters (data/rosters.json): the full name, a curated alias (lib/name-aliases.ts), or a single
- * first or last name only one roster player has. Anything else is left out and reported, never
- * guessed.
+ * Names (resolveName). A name is credited only when it resolves to exactly one player on exactly
+ * one of the game's two rosters (data/rosters.json): the full name; a curated alias
+ * (lib/name-aliases.ts); a full name whose first name is a common nickname of the roster's
+ * ("Gabby" for Gabrielle), or either half one letter off ("Emery" for Emry, "Molly" for Moll), or
+ * whose last name is the last word of a longer one; or a lone first or last name only one roster
+ * player has. Anything else is left out and reported.
  *
  * Guards, each reported in `warnings` when it drops something:
  *   - only finals count, and never a forfeit;
  *   - a game's note cannot credit a team with more goals than it scored in that game;
+ *   - a noted game whose goals, assists or saves the coach has ALSO entered on MaxPreps (the
+ *     team's per-game totals, `gameTotals`, read by scripts/fetch-player-stats.ts for every team
+ *     a note credits: teamsCreditedByNotes) adds none of that stat: it is on the sheet already;
  *   - the MaxPreps goals plus every noted goal cannot exceed the goals the team has scored in all
- *     its finals. If it would, the coach has most likely entered some of the noted goals on
- *     MaxPreps since, so no noted goal is added for that team.
- * The stats file holds season totals only, so a note goal cannot be matched to a stats-sheet goal
- * one by one here; the third guard is what stops a double count. MaxPreps' per-game TEAM stats
- * (`team-season-game-stats/rollup/v1`, docs/DATA-SOURCES.md §1.1k) can: on 2026-10-06 Homestead's
- * four goals were entered on Lynbrook and Los Altos, and none on the three noted games.
+ *     its finals. If it would, no noted goal is added for that team. This is the only check when
+ *     the per-game totals could not be read.
  *
- * Points follow MaxPreps' rule, 2 per goal (lib/player-stats-schema.ts), on teams that track them.
+ * Points follow MaxPreps' rule, 2 per goal and 1 per assist (lib/player-stats-schema.ts), on teams
+ * that track them.
+ *
+ * Pure: everything it reads is passed in, so scripts/fetch-player-stats.ts can use it without
+ * loading the files it is about to write. lib/player-stats.ts wires it to the committed data.
  */
 
-import { getSnapshot } from './data';
 import { NAME_ALIASES, type NameAlias } from './name-aliases';
-import { getPlayerStats, getTeamPlayerStats } from './player-stats';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -43,10 +50,12 @@ import {
   type PlayerStatLine,
   type TeamPlayerStats,
 } from './player-stats-schema';
-import { getTeamRoster } from './rosters';
 import type { Game, TeamSlug } from './types';
 
 // ---------------------------------------------------------------- parsing
+
+export type NoteStatKind = 'goals' | 'assists' | 'saves';
+export const NOTE_STAT_KINDS: readonly NoteStatKind[] = ['goals', 'assists', 'saves'];
 
 export interface NotedName {
   /** The name as the note writes it. */
@@ -56,72 +65,156 @@ export interface NotedName {
 
 export interface ParsedNote {
   goals: NotedName[];
+  assists: NotedName[];
   saves: NotedName[];
-  /** Pieces that looked like a stat but could not be read as one. */
+  /** Pieces that mention a stat but could not be read as one. */
   unread: string[];
 }
 
-const NAME = /^[\p{L}][\p{L}'’.\- ]*$/u;
+const COUNT_WORDS: Record<string, number> = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, twice: 2 };
+const COUNT = String.raw`(\d+|an?|one|two|three|four|five)`;
 
-/** "goal scored by", "goals scored", "goals by", "goals:", "scorers:" — the rest of the clause lists names. */
-const GOAL_LEAD = /\bgoals?\s+(?:scored\s+by|scored|by)\b\s*:?\s*|\b(?:goals?|scorers?)\s*:\s*/i;
-/** "7 saves by Lacey", "7 saves for Lacey". */
-const SAVES_BY = /\b(\d+)\s+saves?\s+(?:by|for|from)\s+(.+)$/i;
-/** "had 7 saves", "7 saves". */
-const SAVES = /\b(\d+)\s+saves?\b/i;
-/** The capitalized words a clause opens with: "Lacey" in "Lacey played 3Q had 7 saves". */
-const LEADING_NAME = /^([\p{Lu}][\p{L}'’-]*(?:\s+[\p{Lu}][\p{L}'’-]*){0,2})(?=\s|$)/u;
-
-function clauses(note: string): string[] {
-  return note
-    .split(/(?<=[.;!?])\s+|\s{2,}|\s+[-–—|]\s+/)
-    .map((c) => c.trim().replace(/[.;!?…]+$/, '').trim())
-    .filter(Boolean);
+function countOf(raw: string | undefined): number {
+  if (!raw) return 1;
+  const s = raw.trim().toLowerCase();
+  return /^\d+$/.test(s) ? Number(s) : (COUNT_WORDS[s] ?? 1);
 }
 
-/** "Emry Borges (2)" → 2 goals; "Emry Borges" → 1. null when the piece is not a name. */
+/** Letters, spaces, apostrophes, periods and hyphens; at most four words. */
+function isName(s: string): boolean {
+  return /^[\p{L}][\p{L}'’.\- ]*$/u.test(s) && s.trim().split(/\s+/).length <= 4;
+}
+
+/** "A and B" → [A, B]. */
+function splitNames(s: string): string[] {
+  return s.split(/\s*(?:&|\+|\band\b)\s*/i).map((x) => x.trim()).filter(Boolean);
+}
+
+/** A piece that talks about stats, whether or not it can be read. */
+const STAT_WORDS = /\b(?:goals?|assists?|saves?|scored|scorers?|hat[\s-]?trick)\b/i;
+
+/** "goal scored by", "goals scored", "goals by", "goals:", "scorers:", "goal -" — a list of scorers follows. */
+const GOAL_LEAD = /\bgoals?\s+(?:scored\s+by|scored|by|from)\b\s*:?\s*|\b(?:goals?|scorers?)\s*[:\-–]\s*/i;
+/** "assists:", "assists by", "assist -" — a list of assisters follows. */
+const ASSIST_LEAD = /\bassists?\s+(?:by|from)\b\s*:?\s*|\bassists?\s*[:\-–]\s*/i;
+/** Inside a scorer list: "A from B", "A (assist B)", "A, assisted by B". */
+const ASSIST_TAIL = /\s*\(?\s*(?:assisted\s+by|assist(?:\s+by)?|ast\.?|from)\s+([^)]+?)\s*\)?$/i;
+
+/** "Emry Borges (2)", "Emry Borges x2", "Emry Borges 2" → a count; else 1. null when not a name. */
 function namedCount(piece: string): NotedName | null {
   const s = piece.trim().replace(/[.;!?…]+$/, '').trim();
   if (!s) return null;
   const m = /^(.*?)(?:\s*\(\s*(\d+)\s*\)|\s+[x×]\s*(\d+)|\s+(\d+))$/iu.exec(s);
   const written = (m ? m[1] : s).trim();
   const count = m ? Number(m[2] ?? m[3] ?? m[4]) : 1;
-  if (!written || !NAME.test(written) || written.split(/\s+/).length > 4 || count < 1) return null;
+  if (!written || !isName(written) || count < 1) return null;
   return { written, count };
 }
 
-/** Read the goals and saves a game note states. Pure; knows nothing of rosters. */
-export function parseStatNote(note: string | null | undefined): ParsedNote {
-  const out: ParsedNote = { goals: [], saves: [], unread: [] };
-  if (!note) return out;
-  for (const clause of clauses(note)) {
-    const lead = GOAL_LEAD.exec(clause);
-    if (lead) {
-      const list = clause.slice(lead.index + lead[0].length);
-      for (const piece of list.split(/\s*(?:,|&|\+|\band\b)\s*/i)) {
-        if (!piece.trim()) continue;
-        const named = namedCount(piece);
-        if (named) out.goals.push(named);
-        else out.unread.push(piece.trim());
-      }
+/** One statement per piece: [kind, names, count] when the piece is one. */
+const STATEMENTS: Array<{ re: RegExp; kind: NoteStatKind; name: number; count?: number; fixed?: number }> = [
+  // "A scored", "A scored twice", "A scored 2", "A scored two goals", "A scored a hat trick"
+  { re: /^(.+?)\s+(?:scored|netted)(?:\s+a\s+hat[\s-]?trick)$/i, kind: 'goals', name: 1, fixed: 3 },
+  { re: new RegExp(String.raw`^(.+?)\s+(?:scored|netted)(?:\s+${COUNT.replace('|one', '|twice|one')}(?:\s+goals?)?)?$`, 'i'), kind: 'goals', name: 1, count: 2 },
+  // "A 2 goals", "A had a goal", "A with two goals", "A - 2 goals"
+  { re: new RegExp(String.raw`^(.+?)\s+(?:had\s+|with\s+|added\s+|got\s+|[-–:]\s*)?${COUNT}\s+goals?$`, 'i'), kind: 'goals', name: 1, count: 2 },
+  // "A hat trick", "A had a hat trick", "hat trick for A"
+  { re: /^(.+?)\s+(?:had\s+|with\s+|got\s+)?(?:a\s+)?hat[\s-]?trick$/i, kind: 'goals', name: 1, fixed: 3 },
+  { re: /^hat[\s-]?trick\s+(?:for|by)\s+(.+)$/i, kind: 'goals', name: 1, fixed: 3 },
+  // "A 2 assists", "A had an assist", "A with two assists"
+  { re: new RegExp(String.raw`^(.+?)\s+(?:had\s+|with\s+|added\s+|got\s+|[-–:]\s*)?${COUNT}\s+assists?$`, 'i'), kind: 'assists', name: 1, count: 2 },
+  // "7 saves by Lacey"
+  { re: /^(\d+)\s+saves?\s+(?:by|for|from)\s+(.+)$/i, kind: 'saves', name: 2, count: 1 },
+];
+
+/** The capitalized words a piece opens with: "Lacey" in "Lacey played 3Q had 7 saves". */
+const LEADING_NAME = /^([\p{Lu}][\p{L}'’-]*(?:\s+[\p{Lu}][\p{L}'’-]*){0,2})(?=\s|$)/u;
+const SAVES = /\b(\d+)\s+saves?\b/i;
+
+function clauses(note: string): string[] {
+  return note
+    .split(/(?<=[.;!?])\s+|\s{2,}/)
+    .map((c) => c.trim().replace(/[.;!?…]+$/, '').trim())
+    .filter(Boolean);
+}
+
+function readList(list: string, kind: 'goals' | 'assists', out: ParsedNote): void {
+  for (const raw of list.split(/\s*(?:,|&|\+|\band\b)\s*(?![^(]*\))/i)) {
+    const piece = raw.trim();
+    if (!piece) continue;
+    const tail = kind === 'goals' ? ASSIST_TAIL.exec(piece) : null;
+    const scorer = namedCount(tail ? piece.slice(0, tail.index) : piece);
+    if (!scorer) {
+      out.unread.push(piece);
       continue;
     }
-    for (const part of clause.split(/\s*(?:,|\band\b)\s*/i)) {
-      const by = SAVES_BY.exec(part);
-      if (by) {
-        const named = namedCount(by[2]);
-        if (named) out.saves.push({ written: named.written, count: Number(by[1]) });
-        else out.unread.push(part);
+    out[kind].push(scorer);
+    if (tail) {
+      const helper = namedCount(tail[1]);
+      if (helper) out.assists.push({ written: helper.written, count: 1 });
+      else out.unread.push(tail[1]);
+    }
+  }
+}
+
+/** One comma-separated piece outside a list. true when it was read as a stat. */
+function readPiece(piece: string, out: ParsedNote): boolean {
+  for (const s of STATEMENTS) {
+    const m = s.re.exec(piece);
+    if (!m) continue;
+    const names = splitNames(m[s.name]);
+    if (names.length === 0 || !names.every(isName)) continue;
+    const count = s.fixed ?? (s.count ? countOf(m[s.count]) : 1);
+    for (const written of names) out[s.kind].push({ written, count });
+    return true;
+  }
+  const saves = SAVES.exec(piece);
+  const name = saves ? LEADING_NAME.exec(piece) : null;
+  if (saves && name) {
+    out.saves.push({ written: name[1], count: Number(saves[1]) });
+    return true;
+  }
+  return false;
+}
+
+/** Read the goals, assists and saves a game note states. Pure; knows nothing of rosters. */
+export function parseStatNote(note: string | null | undefined): ParsedNote {
+  const out: ParsedNote = { goals: [], assists: [], saves: [], unread: [] };
+  if (!note) return out;
+  for (const clause of clauses(note)) {
+    const goal = GOAL_LEAD.exec(clause);
+    const assist = ASSIST_LEAD.exec(clause);
+    // The first lead-in decides: what is before it is pieces, what is after it a list (up to the
+    // other lead-in, when both appear: "goals: A, B; assists: C" is two clauses already).
+    const lead = goal && (!assist || goal.index <= assist.index) ? { m: goal, kind: 'goals' as const } : assist ? { m: assist, kind: 'assists' as const } : null;
+    const before = lead ? clause.slice(0, lead.m.index) : clause;
+    for (const raw of before.split(/\s*,\s*/)) {
+      const piece = raw.trim();
+      if (!piece) continue;
+      // "A 4 saves and B 2 saves": each half a statement of its own. "A and B scored" is one.
+      const halves = piece.split(/\s+and\s+/i);
+      if (halves.length > 1 && halves.every((h) => readPiece(h, { goals: [], assists: [], saves: [], unread: [] }))) {
+        for (const h of halves) readPiece(h, out);
         continue;
       }
-      const saves = SAVES.exec(part);
-      if (!saves) continue;
-      const name = LEADING_NAME.exec(part);
-      if (name) out.saves.push({ written: name[1], count: Number(saves[1]) });
-      else out.unread.push(part);
+      if (!readPiece(piece, out) && STAT_WORDS.test(piece)) out.unread.push(piece);
+    }
+    if (lead) {
+      let list = clause.slice(lead.m.index + lead.m[0].length);
+      const other = lead.kind === 'goals' ? ASSIST_LEAD.exec(list) : GOAL_LEAD.exec(list);
+      if (other) {
+        readList(list.slice(other.index + other[0].length), lead.kind === 'goals' ? 'assists' : 'goals', out);
+        list = list.slice(0, other.index);
+      }
+      readList(list.replace(/[,;\s]+$/, ''), lead.kind, out);
     }
   }
   return out;
+}
+
+/** Does this note state any goal, assist or save? */
+export function hasStats(parsed: ParsedNote): boolean {
+  return NOTE_STAT_KINDS.some((k) => parsed[k].length > 0);
 }
 
 // ---------------------------------------------------------------- names
@@ -137,7 +230,36 @@ export interface NoteRosterPlayer {
   jersey: string | null;
 }
 
-export type NameMatch = 'roster' | 'alias' | 'first-name' | 'last-name';
+export type NameMatch = 'roster' | 'alias' | 'nickname' | 'near-spelling' | 'partial' | 'first-name' | 'last-name';
+
+/**
+ * Common short forms of given names, each mapped to the full names it stands for. Matching goes
+ * both ways (a note's "Gabby" finds a roster's Gabrielle, a note's "Gabrielle" a roster's Gabby),
+ * and two short forms of one name match each other ("Maddie" and "Madi").
+ */
+const NICKNAMES: Record<string, readonly string[]> = {
+  abby: ['abigail'], abbie: ['abigail'], abbey: ['abigail'],
+  addie: ['addison', 'adelaide', 'adeline'], addy: ['addison', 'adelaide', 'adeline'],
+  alex: ['alexandra', 'alexa', 'alexis', 'alexandria'], lexi: ['alexandra', 'alexis', 'alexa'], lexie: ['alexandra', 'alexis', 'alexa'],
+  ally: ['allison', 'alison', 'alexandra', 'alyssa'], allie: ['allison', 'alison', 'alexandra', 'alyssa'], ali: ['allison', 'alison', 'alexandra', 'alyssa'],
+  annie: ['anna', 'ann', 'anne', 'annabel', 'annabelle'],
+  becca: ['rebecca'], becky: ['rebecca'],
+  bella: ['isabella', 'isabel', 'isabelle', 'annabella', 'arabella'], izzy: ['isabella', 'isabel', 'isabelle'], izzie: ['isabella', 'isabel', 'isabelle'],
+  cat: ['catherine', 'katherine', 'kathryn', 'caitlin'], kat: ['katherine', 'kathryn', 'catherine'],
+  kate: ['katherine', 'kathryn', 'catherine', 'kaitlyn'], katie: ['katherine', 'kathryn', 'catherine', 'kaitlyn'], kathy: ['katherine', 'kathryn', 'catherine'],
+  cece: ['cecilia', 'cecelia'], charlie: ['charlotte'], callie: ['caroline', 'calista'], caro: ['caroline', 'carolina'],
+  ella: ['eleanor', 'elena', 'gabriella', 'isabella', 'ellen'], ellie: ['eleanor', 'elizabeth', 'ellen', 'elena', 'eliana'],
+  liz: ['elizabeth'], lizzie: ['elizabeth'], lizzy: ['elizabeth'], beth: ['elizabeth', 'bethany'], libby: ['elizabeth'], eliza: ['elizabeth'], betsy: ['elizabeth'],
+  em: ['emma', 'emily', 'emerson', 'emilia'], emmy: ['emma', 'emily', 'emilia'],
+  gabby: ['gabrielle', 'gabriella'], gabbi: ['gabrielle', 'gabriella'], gabbie: ['gabrielle', 'gabriella'], gabi: ['gabrielle', 'gabriella'], gaby: ['gabrielle', 'gabriella'],
+  jen: ['jennifer'], jenny: ['jennifer'], jess: ['jessica'], jessie: ['jessica'], josie: ['josephine'],
+  kenzie: ['mackenzie', 'mckenzie'],
+  maddie: ['madison', 'madeline', 'madelyn', 'madeleine'], maddy: ['madison', 'madeline', 'madelyn', 'madeleine'], madi: ['madison', 'madeline', 'madelyn'],
+  mandy: ['amanda'], meg: ['megan', 'margaret'], maggie: ['margaret', 'magdalena'],
+  nat: ['natalie', 'natalia'], nikki: ['nicole', 'nicola'], liv: ['olivia'], livvy: ['olivia'], livi: ['olivia'],
+  rosie: ['rose', 'rosalind', 'rosemary'], sam: ['samantha'], sammy: ['samantha'], sophie: ['sophia'],
+  steph: ['stephanie'], tori: ['victoria'], vicky: ['victoria'], val: ['valerie', 'valentina'], andie: ['andrea'],
+};
 
 function norm(s: string): string {
   return s
@@ -149,9 +271,49 @@ function norm(s: string): string {
     .toLowerCase();
 }
 
+/** The full names a given name can stand for, itself included. */
+function givenForms(name: string): Set<string> {
+  const out = new Set([name, ...(NICKNAMES[name] ?? [])]);
+  for (const [short, full] of Object.entries(NICKNAMES)) if (full.includes(name)) out.add(short);
+  return out;
+}
+
+/** At most one letter added, dropped or changed: "emery"/"emry", "molly"/"moll". */
+function oneEditApart(a: string, b: string): boolean {
+  if (a === b) return true;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+  const rest = (x: string, skip: number) => x.slice(i + skip);
+  return a.length === b.length
+    ? rest(a, 1) === rest(b, 1)
+    : a.length > b.length
+      ? rest(a, 1) === rest(b, 0)
+      : rest(a, 0) === rest(b, 1);
+}
+
+/** Short names are too easy to mistype into someone else's: one-letter tolerance needs 4 letters. */
+const near = (a: string, b: string) => a.length >= 4 && b.length >= 4 && oneEditApart(a, b);
+
+type PartMatch = 'exact' | 'nickname' | 'near' | 'partial' | null;
+
+function firstMatch(written: string, roster: string): PartMatch {
+  if (written === roster) return 'exact';
+  const forms = givenForms(written);
+  if (forms.has(roster) || [...givenForms(roster)].some((f) => forms.has(f))) return 'nickname';
+  return near(written, roster) ? 'near' : null;
+}
+
+function lastMatch(written: string, roster: string): PartMatch {
+  if (written === roster) return 'exact';
+  const words = roster.split(' ');
+  if (words.length > 1 && (words.at(-1) === written || words[0] === written)) return 'partial';
+  return near(written, roster) ? 'near' : null;
+}
+
 /**
- * The one roster player a written name means, or null. A single word matches a first or last name
- * only when exactly one player on the roster has it.
+ * The one roster player a written name means, or null. See the module comment for the rules; a
+ * rule that finds two players finds none.
  */
 export function resolveName(
   written: string,
@@ -168,12 +330,25 @@ export function resolveName(
     const hit = players.filter((p) => norm(p.fullName) === norm(alias.fullName));
     return hit.length === 1 ? { player: hit[0], via: 'alias' } : null;
   }
-  if (w.includes(' ')) return null;
-  const first = players.filter((p) => p.firstName && norm(p.firstName) === w);
-  const last = players.filter((p) => p.lastName && norm(p.lastName) === w);
-  if (first.length === 1 && last.length === 0) return { player: first[0], via: 'first-name' };
-  if (last.length === 1 && first.length === 0) return { player: last[0], via: 'last-name' };
-  return null;
+  const words = w.split(' ');
+  if (words.length === 1) {
+    const first = players.filter((p) => p.firstName && norm(p.firstName) === w);
+    const last = players.filter((p) => p.lastName && norm(p.lastName) === w);
+    if (first.length === 1 && last.length === 0) return { player: first[0], via: 'first-name' };
+    if (last.length === 1 && first.length === 0) return { player: last[0], via: 'last-name' };
+    return null;
+  }
+  const [givenWritten, familyWritten] = [words[0], words.slice(1).join(' ')];
+  const hits = players.flatMap((p) => {
+    if (!p.firstName || !p.lastName) return [];
+    const f = firstMatch(givenWritten, norm(p.firstName));
+    const l = lastMatch(familyWritten, norm(p.lastName));
+    if (!f || !l) return [];
+    const parts = [f, l];
+    const via: NameMatch = parts.includes('nickname') ? 'nickname' : parts.includes('near') ? 'near-spelling' : 'partial';
+    return [{ player: p, via }];
+  });
+  return hits.length === 1 ? hits[0] : null;
 }
 
 // ---------------------------------------------------------------- credits per team
@@ -196,6 +371,7 @@ export interface NoteCredit {
   fullName: string;
   jersey: string | null;
   goals: number;
+  assists: number;
   saves: number;
 }
 
@@ -214,15 +390,23 @@ export interface NoteSources {
   aliases?: readonly NameAlias[];
 }
 
-function defaultSources(): NoteSources {
-  return {
-    games: getSnapshot().games,
-    roster: (slug) => getTeamRoster(slug)?.players,
-  };
+const total = (c: Pick<NoteCredit, NoteStatKind>) => c.goals + c.assists + c.saves;
+
+/**
+ * The teams whose players a game note on a final credits: the ones whose per-game MaxPreps totals
+ * scripts/fetch-player-stats.ts reads, to tell whether those stats are on the sheet already.
+ */
+export function teamsCreditedByNotes(sources: NoteSources): Set<TeamSlug> {
+  const sides = new Set<TeamSlug>();
+  for (const g of sources.games) {
+    if (g.status !== 'final' || g.isForfeit || !hasStats(parseStatNote(g.venue.text))) continue;
+    for (const side of [g.home, g.away]) if (side.slug) sides.add(side.slug);
+  }
+  return new Set([...sides].filter((slug) => noteStatsFor(slug, sources).credits.length > 0));
 }
 
 /** Every credit the notes on `slug`'s finals give its players. */
-export function noteStatsFor(slug: TeamSlug, sources: NoteSources = defaultSources()): TeamNoteStats {
+export function noteStatsFor(slug: TeamSlug, sources: NoteSources): TeamNoteStats {
   const aliases = sources.aliases ?? NAME_ALIASES;
   const credits: NoteCredit[] = [];
   const warnings: string[] = [];
@@ -240,16 +424,17 @@ export function noteStatsFor(slug: TeamSlug, sources: NoteSources = defaultSourc
 
     const note = g.venue.text;
     const parsed = parseStatNote(note);
-    if (!note || (parsed.goals.length === 0 && parsed.saves.length === 0 && parsed.unread.length === 0)) continue;
+    if (!note || (!hasStats(parsed) && parsed.unread.length === 0)) continue;
     const where = `${g.dateKey} ${g.away.name} at ${g.home.name}`;
     if (!final) {
-      warnings.push(`${where}: the note names stats but the game is not a final, so none are counted: "${note}"`);
+      const why = g.isForfeit ? 'a forfeit' : 'not a final';
+      warnings.push(`${where}: the note names stats but the game is ${why}, so none are counted: "${note}"`);
       continue;
     }
     for (const piece of parsed.unread) warnings.push(`${where}: could not read "${piece}" in the note "${note}"`);
 
     const ours: NoteCredit[] = [];
-    const credit = (named: NotedName, kind: 'goals' | 'saves') => {
+    const credit = (named: NotedName, kind: NoteStatKind) => {
       // The note is the contest's, not one team's: a name counts for whichever roster it is on.
       const hits = (['home', 'away'] as const).flatMap((s) => {
         const teamSlug = g[s].slug;
@@ -282,27 +467,33 @@ export function noteStatsFor(slug: TeamSlug, sources: NoteSources = defaultSourc
           fullName: player.fullName,
           jersey: player.jersey,
           goals: 0,
+          assists: 0,
           saves: 0,
         } satisfies NoteCredit);
       line[kind] += named.count;
       if (!existing) ours.push(line);
     };
-    for (const named of parsed.goals) credit(named, 'goals');
-    for (const named of parsed.saves) credit(named, 'saves');
+    for (const kind of NOTE_STAT_KINDS) for (const named of parsed[kind]) credit(named, kind);
 
     const noted = ours.reduce((n, c) => n + c.goals, 0);
     if (noted > us.score!) {
       warnings.push(`${where}: the note credits ${noted} goals but ${us.name} scored ${us.score}; its goals are not counted`);
       for (const c of ours) c.goals = 0;
     }
-    credits.push(...ours.filter((c) => c.goals > 0 || c.saves > 0));
+    // Every assist is on a goal: no more of them than goals scored either.
+    const assists = ours.reduce((n, c) => n + c.assists, 0);
+    if (assists > us.score!) {
+      warnings.push(`${where}: the note credits ${assists} assists but ${us.name} scored ${us.score}; its assists are not counted`);
+      for (const c of ours) c.assists = 0;
+    }
+    credits.push(...ours.filter((c) => total(c) > 0));
   }
   return { slug, credits, goalsFor, warnings };
 }
 
 // ---------------------------------------------------------------- merging into MaxPreps' numbers
 
-/** A team's MaxPreps stats with its noted goals and saves added, and the credits that were. */
+/** A team's MaxPreps stats with its noted goals, assists and saves added, and the credits that were. */
 export type NotedTeamPlayerStats = TeamPlayerStats & {
   /** What the notes added, one entry per player per game; empty when nothing was. */
   noteCredits: NoteCredit[];
@@ -321,13 +512,37 @@ function shortNameOf(fullName: string): string {
   return parts.length > 1 ? `${parts[0][0]}. ${parts.slice(1).join(' ')}` : fullName;
 }
 
+const STAT_WORD: Record<NoteStatKind, string> = { goals: 'goals', assists: 'assists', saves: 'saves' };
+
+/**
+ * What the coach entered on MaxPreps for each noted game, when it is known: a team with no stats
+ * at all entered nothing, a team whose per-game totals were read entered what they say.
+ */
+function enteredFor(team: TeamPlayerStats, contestId: string): Record<NoteStatKind, number> | null {
+  if (team.status === 'none') return { goals: 0, assists: 0, saves: 0 };
+  return team.gameTotals?.find((r) => r.contestId === contestId) ?? null;
+}
+
 /**
  * Add `notes` to `team`'s MaxPreps numbers. Pure: neither argument is changed. A player the stats
  * sheet does not list gets a line of their own, with only the noted stats filled.
  */
 export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): NotedTeamPlayerStats {
   const warnings = [...team.warnings, ...notes.warnings];
-  let credits = notes.credits;
+  let credits = notes.credits.map((c) => ({ ...c }));
+
+  // A noted game whose stat the coach entered on the sheet as well adds none of it.
+  for (const c of credits) {
+    const entered = enteredFor(team, c.contestId);
+    if (!entered) continue;
+    for (const kind of NOTE_STAT_KINDS) {
+      if (c[kind] === 0 || entered[kind] === 0) continue;
+      const already = `${c.dateKey} vs ${c.opponent}: MaxPreps has ${entered[kind]} ${STAT_WORD[kind]} entered for the game`;
+      if (!warnings.some((w) => w.startsWith(already))) warnings.push(`${already}, so the note's are not added`);
+      c[kind] = 0;
+    }
+  }
+  credits = credits.filter((c) => total(c) > 0);
 
   const maxprepsGoals =
     team.totals.field.goals ?? team.players.reduce((n, p) => n + (p.field?.goals ?? 0), 0);
@@ -337,7 +552,7 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
       `game notes credit ${notedGoals} goals, but MaxPreps already has ${maxprepsGoals} of the ${notes.goalsFor} ` +
         'scored: some are probably entered there too, so no noted goal is added',
     );
-    credits = credits.map((c) => ({ ...c, goals: 0 })).filter((c) => c.saves > 0);
+    credits = credits.map((c) => ({ ...c, goals: 0 })).filter((c) => total(c) > 0);
   }
   if (credits.length === 0) return { ...team, warnings, noteCredits: [], noteTracked: { field: [], goalkeeping: [] } };
 
@@ -345,6 +560,11 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
   const field = new Set(team.tracked.field);
   const goalie = new Set(team.tracked.goalkeeping);
   const totals = structuredClone(team.totals);
+  const addField = (line: PlayerStatLine, key: 'goals' | 'assists' | 'points', n: number) => {
+    line.field ??= emptyField();
+    line.field[key] = (line.field[key] ?? 0) + n;
+    totals.field[key] = (totals.field[key] ?? 0) + n;
+  };
 
   for (const c of credits) {
     let line = players.find(
@@ -366,13 +586,13 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
     }
     if (c.goals > 0) {
       field.add('goals');
-      line.field ??= emptyField();
-      line.field.goals = (line.field.goals ?? 0) + c.goals;
-      totals.field.goals = (totals.field.goals ?? 0) + c.goals;
-      if (field.has('points')) {
-        line.field.points = (line.field.points ?? 0) + 2 * c.goals;
-        totals.field.points = (totals.field.points ?? 0) + 2 * c.goals;
-      }
+      addField(line, 'goals', c.goals);
+      if (field.has('points')) addField(line, 'points', 2 * c.goals);
+    }
+    if (c.assists > 0) {
+      field.add('assists');
+      addField(line, 'assists', c.assists);
+      if (field.has('points')) addField(line, 'points', c.assists);
     }
     if (c.saves > 0) {
       goalie.add('saves');
@@ -397,18 +617,4 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
       goalkeeping: GOALIE_STAT_KEYS.filter((k) => goalie.has(k) && !team.tracked.goalkeeping.includes(k)),
     },
   };
-}
-
-// ---------------------------------------------------------------- read API
-
-/** `slug`'s MaxPreps stats with its game notes added; undefined for a slug that is no team. */
-export function getTeamPlayerStatsWithNotes(slug: TeamSlug): NotedTeamPlayerStats | undefined {
-  const team = getTeamPlayerStats(slug);
-  return team ? withNoteStats(team, noteStatsFor(slug)) : undefined;
-}
-
-/** Every team's MaxPreps stats with its game notes added, in the file's order. */
-export function getAllPlayerStatsWithNotes(): NotedTeamPlayerStats[] {
-  const sources = defaultSources();
-  return getPlayerStats().teams.map((t) => withNoteStats(t, noteStatsFor(t.slug, sources)));
 }

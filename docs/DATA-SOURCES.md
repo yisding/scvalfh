@@ -1044,8 +1044,10 @@ as `<dir>/stats-<slug>.json`, so a drifted or non-JSON answer is captured too an
 page makes from the browser (page `/team/stats`, function `eM` in that build); the page itself
 server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
 (`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
-the same chunk, not used: `team-season-stats/rollup/v1`, `team-season-game-stats/rollup/v1`,
-`team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the rollup to league games.
+the same chunk: `team-season-game-stats/rollup/v1` (the team's stats game by game, read only for a
+team a game note credits; see "Stats in the game note" below), and, not used,
+`team-season-stats/rollup/v1` and `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the
+rollup to league games.
 `lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
 `data/player-stats.json`.
 
@@ -1106,27 +1108,38 @@ Gotchas, all **[V]**:
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
 - **Stats in the game note.** Some coaches type stats into the contest's 50-character `location`
   note (§1.1, `splitLocation`) instead of the stats sheet. On 2026-10-06 that is Homestead alone,
-  out of 46 notes in the snapshot: "Lacey played 3Q had 7 saves. Noa played last…" (Sep 28 at Saint
-  Francis; MaxPreps cut it at 50 characters), "goals scored Gabby Molly, Emry Borges" (Sep 30 vs
-  Fremont) and "tied in OT 1:1  goal scored by Emery Borges" (Oct 5 vs Cupertino). Homestead's stats
-  sheet held the same four one-goal scorers (Anton, Ouyang, Leyton Bravo, Moll) on Sep 28, Oct 3 and
-  Oct 6 while the team scored 15, and no goalkeeping at all, so the noted goals are not on it.
-  `lib/note-stats.ts` reads goal and save statements from notes on finals, credits a name only when
-  it resolves to one player on one of the two rosters (full name, a curated alias in
-  `lib/name-aliases.ts`: Emery Borges = Emry Borges, Gabby Molly = Gabrielle Moll; or a first or last
-  name only one player has: Lacey = Lacey Sebastian Carattini), and adds the credits to the MaxPreps
-  numbers the team page and /leaders read (2 points a goal). It never credits more goals in a game
-  than the team scored, and adds none for a team whose MaxPreps goals plus noted goals would pass
-  its goals scored (the sign the coach has since entered them). The team page marks each changed
-  row and card and lists every noted game with its note. MaxPreps' game pages carry no box score,
-  but the sibling `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game
-  by game **[V]** 2026-10-06: Homestead's four goals are entered on Lynbrook (3) and Los Altos (1, in
-  a game Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves. That call is
-  not made by any script yet, so the goals-scored cap, and a check of that call or of the stats'
-  git history when a new team's notes start counting, are what keep a goal from counting twice. Not
-  read: the Oct 5 note's "in OT" (the snapshot has `otPeriods` 0 and `decider` REG; a tie scores
-  the same 1 point either way, Article IV), and who played the last quarter in goal on Sep 28,
-  which the note's cut-off leaves without a number.
+  out of 46 notes in the snapshot (and every note in its git history and the corpus captures):
+  "Lacey played 3Q had 7 saves. Noa played last…" (Sep 28 at Saint Francis; MaxPreps cut it at 50
+  characters), "goals scored Gabby Molly, Emry Borges" (Sep 30 vs Fremont) and "tied in OT 1:1  goal
+  scored by Emery Borges" (Oct 5 vs Cupertino). `lib/note-stats.ts` reads such notes on **every**
+  team's finals and adds what they credit to the MaxPreps numbers the team page and /leaders read:
+  - **What it reads:** goals, assists and saves, in the forms coaches write them: a list after a
+    lead-in ("goals scored (by) A, B", "goals: A (2), B", "scorers: …", "assists: …", a goal with its
+    assist as "A from B" or "A (assist B)"), a statement per comma-separated piece ("A scored twice",
+    "A 2 goals", "A had an assist", "A hat trick", "hat trick for A"), and saves ("Lacey … 7 saves",
+    "7 saves by Lacey"). A piece that mentions goals, assists, saves or scoring but fits none of
+    these is reported in the team's warnings, never guessed at.
+  - **Names:** credited only when the name fits exactly one player on exactly one of the two
+    rosters: the full name; a curated alias (`lib/name-aliases.ts`: Emery Borges = Emry Borges,
+    confirmed by the site owner); a full name whose first name is a common nickname of the roster's
+    (Gabby = Gabrielle), or whose first or last name is one letter off (Emery/Emry, Molly/Moll; 4+
+    letters only), or whose last name is part of a longer one (Lacey Carattini = Lacey Sebastian
+    Carattini); or a lone first or last name only one roster player has (Lacey).
+  - **Not counting twice:** MaxPreps' game pages carry no box score, but the sibling
+    `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game by game **[V]**
+    2026-10-06: Homestead's four sheet goals are entered on Lynbrook (3) and Los Altos (1, in a game
+    Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves.
+    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps-game-stats.ts`, into the team's
+    `gameTotals`) for each team a note credits — one call on 2026-10-06 — and a noted game whose
+    goals, assists or saves the coach also entered adds none of that stat. A note never credits more
+    goals or assists in a game than the team scored, and no noted goal is added where MaxPreps' goals
+    plus the noted ones would pass the team's goals scored (the only check left when the per-game
+    call fails). A team with no MaxPreps stats at all (status `none`) entered nothing, so its notes
+    all count.
+  - The team page marks each changed row and card and lists every noted game with its note.
+  - Not read: the Oct 5 note's "in OT" (the snapshot has `otPeriods` 0 and `decider` REG; a tie
+    scores the same 1 point either way, Article IV), and who played the last quarter in goal on
+    Sep 28, which the note's cut-off leaves without a number.
 - Coverage on 2026-10-04 with the six EAL teams (`fetchedAt` 2026-10-04T13:04:10.832Z): 33 of the
   49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
   Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same
@@ -1136,6 +1149,7 @@ Gotchas, all **[V]**:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
   (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
   script leaves the file untouched when only its `fetchedAt` stamps would move.
+  Each team a game note credits costs one more call, the per-game totals (above): one on 2026-10-06.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
 (`lib/prior-season-schema.ts`, loaded by `lib/prior-season.ts`), built once a season by

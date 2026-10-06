@@ -19,14 +19,15 @@
  * coach's "opponent shots on goal" below saves plus goals against (Leland, 2026-10-03: 10 shots
  * on goal, 36 saves, 9 against). The card says the figures disagree instead.
  *
- * Some coaches write goals and saves in MaxPreps' game note rather than on the stats sheet
+ * Some coaches write goals, assists and saves in MaxPreps' game note rather than on the stats sheet
  * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/note-stats.ts adds those to the
  * MaxPreps numbers; every row or card they changed is marked, and the section lists each noted
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
 import { listWords, numberWord, shortDate } from '../../lib/format';
-import { getTeamPlayerStatsWithNotes, type NoteCredit } from '../../lib/note-stats';
+import type { NoteCredit, NoteStatKind } from '../../lib/note-stats';
+import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
@@ -146,10 +147,10 @@ export function savePercent(saves: number, goalsAgainst: number): string | null 
 }
 
 /** The credits' players, by the keys a stat line carries. */
-function notedKeys(credits: readonly NoteCredit[], kind: 'goals' | 'saves'): Set<string> {
+function notedKeys(credits: readonly NoteCredit[], kinds: ReadonlyArray<NoteStatKind>): Set<string> {
   return new Set(
     credits
-      .filter((c) => c[kind] > 0)
+      .filter((c) => kinds.some((k) => c[k] > 0))
       .flatMap((c) => [c.careerId, c.athleteId].filter((k): k is string => k !== null)),
   );
 }
@@ -158,12 +159,18 @@ const isNoted = (keys: Set<string>, p: PlayerStatLine) =>
   (p.careerId !== null && keys.has(p.careerId)) || (p.athleteId !== null && keys.has(p.athleteId));
 
 function count(n: number, one: string, many: string): string {
-  return n === 1 ? `a ${one}` : `${numberWord(n)} ${many}`;
+  return n === 1 ? `${/^[aeiou]/.test(one) ? 'an' : 'a'} ${one}` : `${numberWord(n)} ${many}`;
 }
 
+const KIND_WORDS: Record<NoteStatKind, [string, string]> = {
+  goals: ['goal', 'goals'],
+  assists: ['assist', 'assists'],
+  saves: ['save', 'saves'],
+};
+
 /** "a goal each for A and B", "two goals for A", "seven saves for C". */
-function addedWords(credits: readonly NoteCredit[], kind: 'goals' | 'saves'): string | null {
-  const [one, many] = kind === 'goals' ? ['goal', 'goals'] : ['save', 'saves'];
+function addedWords(credits: readonly NoteCredit[], kind: NoteStatKind): string | null {
+  const [one, many] = KIND_WORDS[kind];
   const byCount = new Map<number, string[]>();
   for (const c of credits) if (c[kind] > 0) byCount.set(c[kind], [...(byCount.get(c[kind]) ?? []), c.fullName]);
   const parts = [...byCount].map(([n, names]) =>
@@ -183,7 +190,9 @@ export function notedGames(credits: readonly NoteCredit[]): NotedGame[] {
       return {
         key: first.contestId,
         game: `${shortDate(first.dateKey)} ${first.site === 'away' ? 'at' : 'vs'} ${first.opponent}`,
-        added: listWords([addedWords(cs, 'goals'), addedWords(cs, 'saves')].filter((w): w is string => w !== null)),
+        added: listWords(
+          (['goals', 'assists', 'saves'] as const).map((k) => addedWords(cs, k)).filter((w): w is string => w !== null),
+        ),
         note: first.note,
       };
     });
@@ -333,16 +342,16 @@ export function buildPlayerStatsView(
 ): PlayerStatsView | null {
   if (!team) return null;
   const credits = team.noteCredits ?? [];
-  const notedGoals = notedKeys(credits, 'goals');
-  const notedSaves = notedKeys(credits, 'saves');
+  const notedScoring = notedKeys(credits, ['goals', 'assists']);
+  const notedSaves = notedKeys(credits, ['saves']);
 
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
   const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
-  const scoring = table(team, SCORING, field, () => true, notedGoals);
+  const scoring = table(team, SCORING, field, () => true, notedScoring);
   // The "more" table lists only players with at least one of its numbers above zero. Notes add
-  // goals only, which are on the scoring table, so nothing here is marked.
+  // goals and assists only, which are on the scoring table, so nothing here is marked.
   const more = table(team, MORE, field, (values) => values.some((v) => v !== null && v > 0));
 
   const goalies = team.players
