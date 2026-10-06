@@ -538,7 +538,7 @@ an NCSA slug with an unguessed nickname stays unfound.
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
 DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
 recruiting profiles on 2026-10-05, and a Southern California sweep on 2026-10-06, not a script: nothing fetches or refreshes it. It holds 28 youth field hockey clubs (13 from 2026-10-03, 3 from
-2026-10-04, 12 from 2026-10-06) and 169 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 75 from 2026-10-06), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+2026-10-04, 12 from 2026-10-06) and 170 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one
 factual sentence, its teams and programs (each with a short detail and the page it was read from;
 the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
@@ -767,7 +767,7 @@ sites. It added 8 ties for five players.
   current).
 
 The file then held 94 affiliations for 80 players at 25 schools; thirteen players were tied to more
-than one club (with the Southern California sweep: 169 for 147 players at 48 schools, twenty players
+than one club (with the Southern California sweep: 170 for 148 players at 48 schools, twenty players
 tied to more than one club). The sweep met three clubs near the EAL teams' schools, and all three were added on
 2026-10-04: D-City FHC (Davis) and Roseville FHC, in the region `sacramento` (shown as the
 Sacramento area), and Chico Hotshots, in the new region `north-state` (the North State). Neither
@@ -839,11 +839,12 @@ own sources, and the four recruiting-profile sweeps (§1.1j) recorded every club
   §1.1j links, which gave ten more leads (earlier Coastal Clash and Myto seasons, Knights FHC).
 Every candidate (72 ties and 10 leads) was re-opened by a checker that applied the rule and rewrote
 the record, and separately by a refuter told to break it; only ties both kept are in the file. 75 ties
-for 67 players at 23 schools were kept: HTC 28 (24 current), RUSH 15 (13), Myto 15 (13), Coastal Clash
-7 (2 current, 4 past), VCRD 6 (all current), Knights FHC 3 (2) and West Coast Riptide 1 (unknown); 60
-current, 6 past and 9 unknown; 63 high and 12 medium. They rest on 171 source entries on 115 URLs:
-SportsRecruits 79 on 63, other (MAX Field Hockey) 34 on 12, event (the watchlists, USA Field Hockey)
-20 on 4, `maxpreps-career` 15 on 15, `club-site` (RUSH's directory) 12 on 12, NCSA 8 on 7 and
+for 67 players at 23 schools were kept, and a 76th under the revised nickname rule (below): HTC 28 (24
+current), RUSH 16 (14), Myto 15 (13), Coastal Clash
+7 (2 current, 4 past), VCRD 6 (all current), Knights FHC 3 (2) and West Coast Riptide 1 (unknown); with the 76th,
+61 current, 6 past and 9 unknown, 63 high and 13 medium. They rest on 173 source entries on 117 URLs:
+SportsRecruits 80 on 64, other (MAX Field Hockey) 34 on 12, event (the watchlists, USA Field Hockey)
+20 on 4, `maxpreps-career` 15 on 15, `club-site` (RUSH's directory) 13 on 13, NCSA 8 on 7 and
 FieldLevel 3 on 2. By school, the most at Bishop's (10 players), Torrey Pines (7), Scripps Ranch and
 University City (5 each). The club pages show the SoCal regions under the NorCal/SoCal switcher.
 
@@ -864,7 +865,12 @@ Southern California gotchas, all **[V]** on 2026-10-06:
 - **Common names need a school or a hometown.** Gabriella Jones (Myto) and Lucy Miller (RUSH) meet the
   rule as written (class year plus a San Diego club) but no page names their school or hometown, and
   the refuter could not rule out another player: both are left out. Abigail Karlander's pages say
-  "Abby" and name no school, so the nickname rule leaves her out.
+  "Abby" and name no school, so the nickname rule as it then stood left her out; under the revised
+  rule (a nickname backed by more than the name) she is tied to RUSH at medium: RUSH's directory and
+  her SportsRecruits profile both give "Abby Karlander", class of 2029, San Diego, RUSH's directory
+  has one Karlander, and no other Abby or Abigail Karlander plays field hockey on SportsRecruits, the
+  watchlists or FH College Path. A fresh checker and refuter both kept it; its weak point is that the
+  second page names only the joint "Rush Devils" squad.
 - **A bare team card is not a club tie**: Dylan Rietti's HTC profile also shows an "SF Hawks U19" card
   with no club label or date, beside a Northern California event; it is not recorded.
 - **The Los Angeles, Orange County and Ventura clubs publish no player rosters**, so ties there rest on
@@ -895,8 +901,8 @@ so other JV players may have club ties no page here records.
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
 round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools), not
-a script: nothing fetches or refreshes it. It holds 27 commitments (16 in field hockey, 9 in lacrosse,
-1 in soccer, 1 in basketball) and the 21 colleges they are to, with 24 programs (UC Davis, Cal and
+a script: nothing fetches or refreshes it. It holds 28 commitments (17 in field hockey, 9 in lacrosse,
+1 in soccer, 1 in basketball) and the 22 colleges they are to, with 25 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
 rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
@@ -940,7 +946,7 @@ or a news story names teammates and other recruits who are not on the rosters.
 | Bishop's | Emerson Davis (2028) | Lacrosse | Harvard | NCAA Division I | Her own SportsRecruits lacrosse profile (TEAMS names The Bishops School); SportsRecruits' Harvard lacrosse page. Undated |
 | Cathedral Catholic | Lia Palecek (2028) | Lacrosse | Oregon | NCAA Division I | Her own SportsRecruits lacrosse profile (names Cathedral Catholic High School); SportsRecruits' Oregon lacrosse page. The row has no grade: every page says 2028. Undated |
 
-*Sources, by kind (43 entries on 36 URLs; the Southern California eleven add 35 entries on 29 URLs: `sportsrecruits` 18 on 18, the players' own profiles and SportsRecruits' college pages; `event` 8 on 3, FH College Path's 2027 and 2028 lists and Play College Field Hockey's sheet; `news` 6 on 5, the Falconer, the Union-Tribune and Scripps Ranch News; `club-site` 3 on 3, RUSH's player pages).* `sportsrecruits` 23 on 23: fourteen of the players' own
+*Sources, by kind (43 entries on 36 URLs; the Southern California twelve add 38 entries on 31 URLs: `sportsrecruits` 18 on 18, the players' own profiles and SportsRecruits' college pages; `event` 9 on 3, FH College Path's 2027 and 2028 lists and Play College Field Hockey's sheet; `news` 6 on 5, the Falconer, the Union-Tribune and Scripps Ranch News; `club-site` 4 on 4, RUSH's player pages; `maxpreps` 1, Sami Lee's own career page).* `sportsrecruits` 23 on 23: fourteen of the players' own
 profiles, one per sport subdomain (`nfhca.` for field hockey, `iwlca.` for lacrosse, `my.` for
 soccer: `/athlete/<slug>`, where the meta description reads "… • <city>, CA • Committed to
 <College>"), and nine of SportsRecruits' college pages
@@ -1112,7 +1118,16 @@ in lacrosse (the table above). A checker re-opened every source (rendering each 
 for its TEAMS block), kept only quotes it found verbatim, rewrote each `basis` and read each college's
 level and conference; a refuter, separately, tried to break each one (a sibling, another sport, a
 namesake, a stale or reversed commitment, a class year that disagrees) and re-read every program's
-conference. Both kept all eleven. Each new college's division and conference was read from its
+conference. Both kept all eleven. A twelfth was added the same day under the owner's revised nickname
+rule (§1.1j2, *The rule*): Sami Lee (Canyon Hills) to Columbia, field hockey, medium. FH College
+Path's class of 2027 list has one line "SAMANTHA LEE CA DEF-MID RUSH FH COLUMBIA", RUSH's page for
+"Samantha Lee" (2027) shows a Columbia logo as her commitment, and her own MaxPreps career page (the
+roster row's careerid) names Canyon Hills, the class of 2027 and club RUSH, U19, which is what backs the
+given name. A second Canyon Hills "Samantha Lee" MaxPreps page (careerid 8eght4kgmcg66) holds only the
+2023-24 season, with the jersey number Sami's page carries in 2024-25, and the two never share a roster:
+both verifiers read it as her own older page. Columbia (NCAA Division I, Ivy League) was read from
+NCAA.com and the Ivy League's standings and schedule; its athletics site refuses plain requests and a
+headless browser. A fresh checker and refuter both kept it. Each new college's division and conference was read from its
 athletics site's Sidearm metadata (Johns Hopkins, Muhlenberg), the conference's standings (the Big
 Ten for Michigan, Michigan State and Oregon lacrosse; the Ivy League for Harvard), or, where those
 sites refuse plain requests and a headless browser (Richmond, Cal, Harvard, Michigan), a headline on
@@ -1128,10 +1143,7 @@ Southern California gotchas, all **[V]** on 2026-10-06:
   Commitment:"; they corroborate class year and club, never the college alone.
 - **Two Roldans, two Paleceks.** Larissa Roldan, a Canyon Hills graduate on UC Davis's roster, is not
   Reese; Lyla Palecek, class of 2026, is Lia's older sister.
-- **Near misses**, none a commitment: Sami Lee (Canyon Hills; FH College Path lists "Samantha Lee, CA,
-  Rush FH, Columbia", but no page that names her school names the college, so a given name is not
-  matched to the roster's nickname, and MaxPreps has a second Canyon Hills Samantha Lee career page);
-  Sophie Sant (Torrey Pines; only Play College Field Hockey's sheet, name and college, lists her for
+- **Near misses**, none a commitment: Sophie Sant (Torrey Pines; only Play College Field Hockey's sheet, name and college, lists her for
   Bowdoin); a soccer commit named Camila Haro whose profiles give Fairmont Prep, not Southwest; a swim
   commit named Julia Reed whose post gives no school and a class that disagrees; and 62 SportsRecruits
   profiles under rostered names that show a commitment but another class year or state.
@@ -1214,8 +1226,8 @@ Gotchas, found in the research:
   working path is `womens-field-hockey`. A profile address that does not exist answers HTTP 200 with
   a "Page Not Found" title, so a probe must read the title, not the status.
 
-*Recall is partial.* On 2026-10-06, 27 of the 1,653 varsity rows have a commitment, at 16 of the 102
-schools: Southern California's 11 at 7 (Torrey Pines 2, Canyon Hills 3, Bishop's 2, Harvard-Westlake,
+*Recall is partial.* On 2026-10-06, 28 of the 1,653 varsity rows have a commitment, at 16 of the 102
+schools: Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
 Scripps Ranch, San Dieguito Academy and Cathedral Catholic 1 each), whose rows each had two web
 searches and a SportsRecruits probe in every sport, but no SportsRecruits athlete search. On 2026-10-04, 16 of the 811 varsity rows had a commitment, at 9 of the 49
 schools: SCVAL 9 at 4 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1 each), BVAL 2 at

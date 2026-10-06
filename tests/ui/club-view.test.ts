@@ -273,7 +273,7 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(line('infinity')).toBe('9 players: 2 current, 7 earlier or not known to be current');
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
     expect(line('htc')).toBe('30 players: 26 current, 4 earlier or not known to be current');
-    expect(line('rush')).toBe('15 players: 13 current, 2 earlier or not known to be current');
+    expect(line('rush')).toBe('16 players: 14 current, 2 earlier or not known to be current');
     expect(line('myto')).toBe('15 players: 13 current, 2 earlier or not known to be current');
     expect(line('vcrd')).toBe('6 current players');
     expect(line('bulldogs')).toBe('No player from these rosters found');
@@ -300,9 +300,9 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([147, 48, 28, 15]);
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([148, 48, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 147 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (32) and HTC (30).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 148 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (32) and HTC (30).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');

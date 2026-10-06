@@ -4039,7 +4039,8 @@ checker and, separately, by a refuter, and only what both kept is in the files.
   55 SportsRecruits, 14 FieldLevel). The SoCal entries stop being stubs: each holds its profiles and
   per-team notes, and, like the EAL's, no coaches or sources, so a SoCal team page still says other
   public sources have not been checked. The roster shows a FieldLevel link as it shows the others.
-- **Clubs** (`data/clubs.json`): twelve club records and 75 ties for 67 players at 23 schools. Five
+- **Clubs** (`data/clubs.json`): twelve club records and 76 ties for 68 players at 23 schools (one, Abigail Karlander's, on the
+  revised nickname rule below). Five
   club regions join `CLUB_REGIONS` after the North State, `ventura`, `los-angeles`, `orange-county`,
   `inland-empire` and `san-diego` ("Ventura County", "Los Angeles", "Orange County", "the Inland
   Empire", "San Diego"), and all five join `SEARCHED_REGIONS`: the Inland Empire, which holds no club,
@@ -4052,15 +4053,18 @@ checker and, separately, by a refuter, and only what both kept is in the files.
   `RegionSwitcher` row below the page header (the §24.3 pattern), so a reader sees their own half's
   clubs; `elsewhere` would show under both. Without JavaScript every section renders, NorCal's first.
   The first section of each half takes the first section's top margin. The lede, the count line and
-  `#how-matched` stay site-wide (the lede now reads "147 players from 48 schools are tied to 15 of these
+  `#how-matched` stay site-wide (the lede now reads "148 players from 48 schools are tied to 15 of these
   28 clubs, the most to SF Hawks (32) and HTC (30)").
-- **Commitments** (`data/commits.json`): eleven, nine in field hockey and two in lacrosse, at seven
-  schools, to seven new colleges (Richmond, Johns Hopkins, Michigan, Michigan State, Muhlenberg,
-  Harvard, Oregon) and a new field hockey program at Cal. `/commits` is not region-scoped: one list by
+- **Commitments** (`data/commits.json`): twelve, ten in field hockey and two in lacrosse, at seven
+  schools, to eight new colleges (Richmond, Johns Hopkins, Michigan, Michigan State, Muhlenberg,
+  Harvard, Oregon, Columbia) and a new field hockey program at Cal. Sami Lee's (Columbia) is on the
+  revised nickname rule. `/commits` is not region-scoped: one list by
   class year, each row naming the school, as before.
 - **Copy.** The rule sentence on `/clubs` and `/commits` (`#how-matched`) no longer says "a Northern
   California location": it reads "a location in the school’s half of the state, Northern or Southern
-  California".
+  California". It also says when a nickname counts (owner decision, 2026-10-06): when the page
+  otherwise meets the rule and a second page, or the player's own, backs the match (before, only on a
+  page naming the school).
 
 Not built: the school-athletics roster sweep for the 53 teams (grades, heights, numbers, positions,
 coaches), SportsRecruits' athlete search for their rows, and a club record for Poway Mystix, whose site

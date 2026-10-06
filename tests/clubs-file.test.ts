@@ -368,7 +368,7 @@ describe('data/clubs.json', () => {
         eal: [9, 3],
         sunset: [7, 3],
         city: [33, 9],
-        'north-county': [19, 8],
+        'north-county': [20, 8],
         metro: [4, 2],
         independents: [4, 1],
       });
@@ -379,32 +379,35 @@ describe('data/clubs.json', () => {
     const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league));
 
-    it('adds 12 clubs and 75 ties: 67 of the 842 varsity rows, at 23 of the 53 schools', () => {
+    it('adds 12 clubs and 76 ties: 68 of the 842 varsity rows, at 23 of the 53 schools', () => {
       expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
       expect(raw.clubs).toHaveLength(28);
-      expect(socal).toHaveLength(75);
-      expect(raw.affiliations).toHaveLength(169);
-      expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(67);
+      expect(socal).toHaveLength(76);
+      expect(raw.affiliations).toHaveLength(170);
+      expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
       expect(raw.affiliations.length - socal.length).toBe(94);
     });
 
-    it('counts 60 current, 6 past and 9 unknown; 63 high and 12 medium', () => {
-      expect(countBy(socal, (a) => a.status)).toEqual({ current: 60, past: 6, unknown: 9 });
-      expect(countBy(socal, (a) => a.confidence)).toEqual({ high: 63, medium: 12 });
+    it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {
+      expect(countBy(socal, (a) => a.status)).toEqual({ current: 61, past: 6, unknown: 9 });
+      expect(countBy(socal, (a) => a.confidence)).toEqual({ high: 63, medium: 13 });
+      // The one tie on the revised nickname rule (2026-10-06): pages say "Abby", the roster Abigail.
+      const abby = socal.find((a) => a.fullName === 'Abigail Karlander')!;
+      expect([abby.club, abby.confidence, abby.sources.map((s) => s.statedSchool)]).toEqual(['rush', 'medium', [null, null]]);
     });
 
-    it('rests on 171 source entries on 115 distinct URLs, by kind', () => {
+    it('rests on 173 source entries on 117 distinct URLs, by kind', () => {
       const sources = socal.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(171);
-      expect(new Set(sources.map((s) => s.url)).size).toBe(115);
+      expect(sources).toHaveLength(173);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(117);
       expect(countBy(sources, (s) => s.kind)).toEqual({
-        sportsrecruits: 79,
+        sportsrecruits: 80,
         other: 34,
         event: 20,
         'maxpreps-career': 15,
-        'club-site': 12,
+        'club-site': 13,
         ncsa: 8,
         fieldlevel: 3,
       });
@@ -418,7 +421,7 @@ describe('data/clubs.json', () => {
       }
       expect(byClub).toEqual({
         htc: { current: 24, past: 0, unknown: 4 },
-        rush: { current: 13, past: 1, unknown: 1 },
+        rush: { current: 14, past: 1, unknown: 1 },
         myto: { current: 13, past: 1, unknown: 1 },
         vcrd: { current: 6, past: 0, unknown: 0 },
         'wc-riptide': { current: 0, past: 0, unknown: 1 },
@@ -523,8 +526,8 @@ describe('lib/clubs.ts', () => {
       'socal-strikers',
       'hb-surfers',
       'htc',
-      'myto',
       'rush',
+      'myto',
       'coastal-clash',
       'knights-fhc',
     ]);
