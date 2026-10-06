@@ -96,6 +96,18 @@ export const PlayerStatLineSchema = z.object({
 
 export const TeamPlayerStatsStatus = z.enum(['ok', 'none', 'carried-forward', 'error', 'pending']);
 
+/**
+ * One game of MaxPreps' per-game TEAM totals (`team-season-game-stats/rollup/v1`): what the coach
+ * entered for that game, 0 where nothing was. lib/note-stats.ts reads it to tell whether a goal,
+ * assist or save a game note names is already on the stats sheet.
+ */
+export const GameTotalSchema = z.object({
+  contestId: z.string().min(1),
+  goals: z.number().int().min(0),
+  assists: z.number().int().min(0),
+  saves: z.number().int().min(0),
+});
+
 export const TeamPlayerStatsSchema = z
   .object({
     slug: teamSlug,
@@ -122,6 +134,11 @@ export const TeamPlayerStatsSchema = z
       goalkeeping: z.partialRecord(goalieKey, z.number().min(0)),
     }),
     players: z.array(PlayerStatLineSchema),
+    /**
+     * Per-game team totals, read only for a team a game note credits with stats (lib/note-stats.ts
+     * teamsCreditedByNotes); absent when not read, or when the read failed.
+     */
+    gameTotals: z.array(GameTotalSchema).optional(),
     warnings: z.array(z.string()),
     /** When THESE rows were read — older than the file's stamp when carried forward. */
     fetchedAt: z.string().nullable(),
@@ -194,6 +211,7 @@ export const PlayerStatsFileSchema = PlayerStatsPartialSchema.refine(
   `expected one entry per registry team (${PLAYER_STATS_TEAM_COUNT})`,
 );
 
+export type GameTotal = z.infer<typeof GameTotalSchema>;
 export type PlayerStatLine = z.infer<typeof PlayerStatLineSchema>;
 export type TeamPlayerStats = z.infer<typeof TeamPlayerStatsSchema>;
 export type PlayerStatsCounts = z.infer<typeof PlayerStatsCountsSchema>;

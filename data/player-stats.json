@@ -1552,6 +1552,74 @@
     {
       "error": null,
       "fetchedAt": "2026-10-05T21:23:12.682Z",
+      "gameTotals": [
+        {
+          "assists": 0,
+          "contestId": "59392bb6-f046-4742-9e0a-eb736a77a1fa",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "30e15701-fddc-4695-9f1c-148e19f58ca5",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "a70e7c6a-6bb0-4bbd-b14c-c84b0da51564",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "ce18e5df-ec0b-4dad-b488-13cb02fbdc74",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "ed85ac7a-4f01-413a-86a2-7674922b90df",
+          "goals": 3,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "d6ec9aac-f2f7-482d-8a2e-3370cbf0c96d",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "4c02fa58-29a8-46d3-9820-2883a8c9d065",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "fd403fcf-68d7-4105-b68e-cc19df94e580",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "0e514547-6fda-4d35-a6ee-98c47c3a0e34",
+          "goals": 0,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "5b12bb6f-b724-42ce-8c14-8b12882c1164",
+          "goals": 1,
+          "saves": 0
+        },
+        {
+          "assists": 0,
+          "contestId": "6862d67f-d523-4e18-8cb5-ffda51d7e4ff",
+          "goals": 0,
+          "saves": 0
+        }
+      ],
       "lastUpdated": "2026-10-03T09:15:52",
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",

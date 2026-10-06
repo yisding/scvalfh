@@ -40,7 +40,7 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
-import { getPlayerStats } from '../../lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { computeRatings, getRatings } from '../../lib/ratings';
@@ -99,7 +99,8 @@ function expectRanked(board: LeaderBoard): void {
 
 describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
-  const stats = getPlayerStats().teams;
+  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+  const stats = getAllPlayerStatsWithNotes();
   /** A board's id without its region suffix: the same board in either region. */
   const unsuffixed = (id: string) => id.replace(/-socal$/, '');
   const teamsOf = (region: string) => getTeams().filter((t) => regionOf(t.league) === region);

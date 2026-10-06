@@ -25,12 +25,11 @@ import {
   type PlayerStatsView,
 } from '../../components/teams/player-stats-view';
 import { buildTeamPageView } from '../../components/teams/team-view';
-import { getPlayerStats } from '../../lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import type {
   GoalieStatKey,
   PlayerStatLine,
-  PlayerStatsFile,
   TeamPlayerStats as TeamStats,
 } from '../../lib/player-stats-schema';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
@@ -44,17 +43,18 @@ interface Case {
   view: PlayerStatsView;
 }
 
-function casesFor(file: PlayerStatsFile): Case[] {
+function casesFor(teams: readonly TeamStats[]): Case[] {
   return TEAMS.map((t) => {
     const page = buildTeamPageView(t.slug)!;
     const games = [...page.leagueLog, ...page.nonLeagueLog];
-    const data = file.teams.find((x) => x.slug === t.slug)!;
+    const data = teams.find((x) => x.slug === t.slug)!;
     return { slug: t.slug, data, games, view: buildPlayerStatsView(t.slug, games, data)! };
   });
 }
 
-const live = casesFor(getPlayerStats());
-const fixture = casesFor(buildFixturePlayerStats());
+// The pages read MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+const live = casesFor(getAllPlayerStatsWithNotes());
+const fixture = casesFor(buildFixturePlayerStats().teams);
 const at = (slug: string) => fixture.find((c) => c.slug === slug)!;
 
 describe('buildPlayerStatsView — rules, over the committed file', () => {

@@ -1,5 +1,5 @@
 {
-  "note": "Provenance of the roster-<slug>.html and stats-<slug>.json captures. The fifteen SCVAL teams were captured 2026-10-02; a deliberate sample of the other three leagues 2026-10-03. Every roster page is trimmed the same way (see the comment at the top of each file); each stats file is the rollup response as served.",
+  "note": "Provenance of the roster-<slug>.html, stats-<slug>.json and game-stats-<slug>.json captures. The fifteen SCVAL teams were captured 2026-10-02; a deliberate sample of the other three leagues 2026-10-03. Every roster page is trimmed the same way (see the comment at the top of each file); each stats file is the rollup response as served.",
   "scval": {
     "capturedAt": "2026-10-02T04:55:55Z (rosters), 2026-10-02T18:58:27Z (stats)",
     "teams": "all 15 SCVAL teams"
@@ -23,6 +23,12 @@
       "berkeley": "MCAL, the 400 no-data envelope, a team with a roster",
       "del-mar": "BVAL, the 400 no-data envelope, a team with no roster",
       "monterey": "PCAL, the 400 no-data envelope, a team with no roster"
+    }
+  },
+  "gameStats": {
+    "capturedAt": "2026-10-06T13:50:00Z",
+    "teams": {
+      "homestead": "SCVAL, the per-game team totals (team-season-game-stats rollup) as served: four goals on Lynbrook and Los Altos, none on the three games its notes name"
     }
   }
 }
