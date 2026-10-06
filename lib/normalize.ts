@@ -195,7 +195,8 @@ export function splitLocation(raw: string | null | undefined): {
 /**
  * The overtime periods a game note says were played: 2 for "double OT" / "2OT", 1 for any other
  * mention of overtime ("tied in OT 1:1", "won in overtime"), 0 for none. "OT" counts only in
- * capitals and as a word of its own (never "OTHS"); "no OT" and "no overtime" are not overtime.
+ * capitals and as a word of its own (never "OTHS"); a mention right after "no", "not", "without"
+ * or "never" ("no OT", "not overtime", "without OT") is not overtime.
  * Homestead–Cupertino (Oct 5): MaxPreps records 0 overtime periods, the coach's note "tied in OT
  * 1:1  goal scored by Emery Borges".
  */
@@ -212,9 +213,10 @@ export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
     // "OT2". A "2" that is part of a score ("3-2 OT", "OT 2-1") does not.
     const counted = /\b(?:double|two)[\s-]?$/i.exec(before) ?? /(?:^|[\s(])2[\s-]?$/.exec(before);
     const doubled = counted !== null || /^2(?![\d:\-–])/.test(after);
-    // "no OT", "no double OT": negated whatever counts it.
+    // "no OT", "not OT", "without overtime", "never OT", "no double OT": negated whatever counts
+    // it. Only a negation right before the mention: "no goals in OT" still says there was one.
     const stem = counted ? before.slice(0, before.length - counted[0].length) : before;
-    if (/\bno\s*$/i.test(stem)) continue;
+    if (/\b(?:no|not|without|never)\s*$/i.test(stem)) continue;
     periods = doubled ? 2 : periods === 2 ? 2 : 1;
   }
   return periods;

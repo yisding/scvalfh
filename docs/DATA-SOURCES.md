@@ -1143,7 +1143,7 @@ Gotchas, all **[V]**:
     shots-on-goal check: the note's game is not in the goals against and shots the coach entered.
   - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
     overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
-    its own, or "overtime", never after "no" (`overtimeFromNote` in `lib/normalize.ts`, the same
+    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/normalize.ts`, the same
     place the "reschedul…" note already marks a postponement). Only a level score or a one-goal
     margin can come out of sudden victory, so a note on any other score is reported, not read. The
     game keeps the note in `provenance.overtimeNote`, and its page says the OT is the note's.
