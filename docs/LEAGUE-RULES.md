@@ -346,7 +346,7 @@ standings are not available (`/history/2025-26`): the EAL published none.
 
 ---
 
-## Sunset — Sunset Field Hockey League (CIF Southern Section)
+## Sunset — Sunset field hockey league (CIF Southern Section)
 
 Tags: **[V]** read on the page or document named, 2026-10-06; **[U]** not verified (the reason is given).
 
@@ -355,7 +355,8 @@ Riverside counties: Bonita (La Verne), Chaminade (West Hills), Chaparral, Great 
 (Temecula), Edison, Huntington Beach and Marina (Huntington Beach), Fountain Valley (Fountain Valley)
 and Newport Harbor (Newport Beach). It is **not** the all-sports Sunset League, an Orange County league with different
 members (Los Alamitos and Corona del Mar among them) [U: from a search snippet, not a league document];
-the site names it "Sunset Field Hockey League" and its copy never writes "Sunset League" except beside
+the site names it "Sunset field hockey league", in lower case because no source gives the grouping a
+title (MaxPreps and si.com say "Sunset"), and its copy never writes "Sunset League" except beside
 "all-sports". The ten are exactly MaxPreps' 2024-25 (`c538c7d2-…`) and 2025-26 (`1ab67ce6-…`) Sunset
 tables [V]. No Sunset website, bylaws, schedule or standings document exists that we could find [U: not
 found, not proven absent]. For 2026-27, MaxPreps' Sunset table (`aa46adc4-…`) lists five (Great Oak,
@@ -377,9 +378,10 @@ as league games than MaxPreps does [V], so its Sunset records differ from ours.
 **Points and order.** No league document awards points or orders the table, so the order is this site's
 own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citing a league rule.
 
-**Ties in a game.** Blue Book Article 200 adopts the NFHS rules and says nothing on overtime [V]. Sunset
-games have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11 [V]) and have been
-decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
+**Ties in a game.** Blue Book Article 200 adopts the NFHS rules and says nothing on overtime [V]. Games
+between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11 [V];
+MaxPreps marks neither as a league game, so neither is a Sunset game here), and a Sunset league game has
+been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
 recorded as it is reported: `leagueOvertime: 'none'` (D2 rule 4c, a phantom si.com 0-0, applies). The
 Southern Section has no shootout rule (`SectionConfig.shootout` null).
 
@@ -436,7 +438,7 @@ AVOCADO, NC PALOMAR, NC VALLEY, MESA and SOUTH BAY].
 **Which games count.** The divisions play a double round robin: every pair of division-mates is
 scheduled to meet twice on MaxPreps' schedules (leaving out contestType 2 and 4) [V: inventory
 2026-10-06], (teams − 1) × 2 games a team: 10, 10, 10, 12, 10, 8 and 6. One pair is short of that:
-on 2026-10-06 MaxPreps shows Metro Mesa with 19 of its 20 meetings, Bonita Vista and Helix meeting once
+on 2026-10-05 (Pacific) MaxPreps shows Metro Mesa with 19 of its 20 meetings, Bonita Vista and Helix meeting once
 (Oct 23, `b9d43b5d-5000-4bdc-a50e-00c22f1544c4`) [V: the 2026-10-06 SoCal corpus], so unless a second
 meeting is added, Bonita Vista and Helix play 7 league games, not 8. No league schedule exists to say
 whether the second meeting is missing from MaxPreps or was never scheduled [U]. MaxPreps' league flag misses many of them (Patrick Henry 0 of 10 flagged, San
@@ -444,9 +446,11 @@ Pasqual 3, Vista 4, Mt. Carmel 4, Escondido 5, Southwest 2 of 6) [V], so these d
 classification `membership`: a game counts for a division when both sides are its members, neither row is
 contestType 2 or 4, and it is dated inside league play, whatever MaxPreps' flag says. A game MaxPreps flags
 between two divisions of one conference (Mission Bay's five against City Eastern teams [V]) counts in
-neither table. Two duplicate Palomar rows (Poway v Fallbrook on Oct 9 with no time, duplicating Oct 13;
-Mission Vista v Fallbrook on Oct 30 with no time, duplicating Oct 29) are excluded in
-`DATA_QUALITY.excludedContestIds`. League play starts at each division's first game between two members
+neither table. Two stray Palomar rows are excluded in
+`DATA_QUALITY.excludedContestIds`: Poway v Fallbrook on Oct 9 with no time, a third MaxPreps row for a
+pair that already has both of its Palomar meetings on the schedule (Sep 15, `67865f1e`; Oct 13,
+`0b3cfb7d`), and Mission Vista v Fallbrook on Oct 30 with no time, duplicating Oct 29 (the same home
+side). League play starts at each division's first game between two members
 (City Western Sep 1, City Eastern Sep 15, Palomar Sep 9, Avocado, Valley and Metro Mesa Sep 28, Metro South
 Bay Oct 7) [V: inventory] and ends Oct 30, the Master Calendar's last contest [V]. **Conflict:** the San
 Diego Field Hockey Officials Association's calendar ends the regular season on Thu Oct 29 [V]; the
@@ -461,15 +465,22 @@ enter; they are not league standings and are not used.
 to the preseason minutes (Bylaw 2000.1, special rule 3) [V], which are a Canva bulletin we could not read
 [U]. The officials' association's 2026 Mercy & Overtime Procedures [V] are the operative text: varsity
 regular season, a 10-minute 7 v 7 sudden-victory period, then a set of five 1 v 1 shootouts, then
-sudden-victory shootouts; "a total of one goal is awarded for the winner of the set". So a varsity game
-never ends level, across all three conferences. **MaxPreps often records such a win as a level score
-marked W and L** (eight 2026 finals, all with overtimePeriodsPlayed 0: Clairemont–Eastlake Sep 1,
+sudden-victory shootouts; "a total of one goal is awarded for the winner of the set". So a league,
+non-league or playoff varsity game does not end level, across all three conferences. The procedures are
+headed "Varsity Overtime (regular season)" and "(Playoffs)" and do not cover invitational tournaments,
+where seven games between San Diego teams (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T; the site
+leaves a tournament row level (`SectionConfig.shootout.coversTournaments: false`). **MaxPreps often
+records a game outside a tournament as a level score marked W and L** (eight 2026 finals, all with overtimePeriodsPlayed 0: Clairemont–Eastlake Sep 1,
 Escondido–El Capitan Sep 1, Canyon Crest–San Pasqual Sep 4, Mt. Carmel–Poway Sep 11, San Pasqual–San
 Dieguito Sep 14, Canyon Crest–Cathedral Sep 22, University City–Rancho Bernardo Sep 22, Westview–San
 Pasqual Oct 2) [V]; the Section's own power-rankings site is inconsistent ("W (0-0)" and "W (2-0)") [V].
-The site counts the flags as a win and marks the game "SO", for any two San Diego teams: the rule is the
-Section's (`SectionConfig.shootout`), not a conference's. How each source encodes a shootout in general
-is [U]. The rule is a varsity rule: the same procedures say "JV—No overtime", and the officials'
+No box score carries a tally, and si.com and the Section's power rankings both record Mt. Carmel–Poway
+(Sep 11) as 2-0 where MaxPreps has 0-0 marked W and L [V], so whether each of these was settled by a
+shootout is [U]. The site counts the flagged team's win, for any two San Diego teams: the rule is the
+Section's (`SectionConfig.shootout`), not a conference's. It shows MaxPreps' level score with no decider
+tag and says only that the team was credited with the win on a level score, never that a shootout
+decided it (`SectionConfig.shootout.inference: 'unverified'`; the EAL's 'verified' rests on the Chico–Davis
+box score's "SO Win" column). How each source encodes a shootout in general is [U]. The rule is a varsity rule: the same procedures say "JV—No overtime", and the officials'
 association's game format says of JV and frosh games "Teams tied at the end of regulation, game over"
 [V], so a level JV final stays a tie, and the JV pipeline (`pnpm fetch-jv`, `level: 'jv'` in
 `lib/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
@@ -501,8 +512,8 @@ places for its 20. Dates: Master Calendar playoffs Nov 2–12, finals Nov 14 [V]
 [V page, not a Section document]: play-ins (if necessary) Mon Nov 2; first round Tue Nov 3 (Division II)
 and Wed Nov 4 (Division I); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue
 Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I), 6:00 (Open).
-The site attributes them to the association in the same sentence. The ladder: 1st, "League champion: at
-least a play-in" (the designated champion, which the league names, not this table); 2nd or lower, "No
+The site attributes them to the association in the same sentence. The ladder: 1st, "1st: at least a play-in if
+named league champion" (the designated champion, which the league names, not this table); 2nd or lower, "No
 league route" (badge "Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
 
 **Official sources.** cifsds.org/sports/fh/index links the 2026 Divisions sheet, the League Alignment
@@ -516,7 +527,7 @@ Patrick Henry and lists Madison (no 2026 varsity game); its Avocado table leaves
 Bernardo; it has no Valley table at all (`maxprepsLeagueId: null`, the cross-check is skipped); its "Metro-
 South Bay" table holds the five Metro Mesa teams; its "Grossmont" table holds El Capitan, Granite Hills
 and Santana (no 2026 varsity game) and lists no league for Hilltop or Southwest. MaxPreps counts Mission
-Bay's five games against City Eastern teams as league games, so its Mission Bay record (3-5-0 on Oct 6)
+Bay's five games against City Eastern teams as league games, so its Mission Bay record (3-5-0 on Oct 5)
 is not a City Western record. Every San Diego table is labelled informational. Madison, Santana, Castle
 Park, Chula Vista, Montgomery and Sweetwater have a 2026-27 MaxPreps team but no game there or in the
 power rankings [V]; search names each.

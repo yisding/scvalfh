@@ -79,7 +79,7 @@ for (const name of INDEPENDENTS.names) {
 }
 
 /**
- * The noun a league's own name puts after its short name, lower-cased: 'Sunset Field Hockey League' →
+ * The noun a league's own name puts after its short name, lower-cased: 'Sunset field hockey league' →
  * 'field hockey league', 'City Conference' → 'conference'; null when the name does not start with the
  * short name (SCVAL is the 'Santa Clara Valley Athletic League').
  */

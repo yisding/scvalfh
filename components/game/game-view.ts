@@ -744,17 +744,36 @@ function scoreNoteFor(
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
-      const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
-      notes.push(
-        `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
-      );
+      if (section.shootout.inference === 'unverified') {
+        // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
+        // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
+        // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
+        // what the other sources record (`disagreement`). "Outside a tournament": the SDFHOA procedures do
+        // not cover invitational tournaments (coversTournaments false), and lib/normalize.ts reads no 'SO'
+        // from a tournament row.
+        const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
+        notes.push(
+          `MaxPreps lists ${display.home.glyph}\u2013${display.away.glyph} with no tally and marks ${winner} the winner; a level ${group} varsity game${scope} goes to a sudden-victory period and then ${section.shootout.words} (${source}), so this site counts it as ${winner}\u2019s win.${
+            section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
+          }`,
+        );
+      } else {
+        const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
+        notes.push(
+          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
+        );
+      }
     }
   }
   if (overtimeInDoubt(game)) {
     // Both sections with a shootout rule play one 10-minute overtime period before it (NS Guidelines
-    // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both.
+    // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both. overtimeInDoubt leaves out
+    // postseason games and, where the rule does not reach them, tournament rows; the San Diego sentence
+    // says so ("in a regular-season game outside a tournament": the SDFHOA playoff procedure plays two
+    // 10-minute periods). The EAL's sentence is unchanged.
+    const scope = section.shootout.coversTournaments ? '' : ' in a regular-season game outside a tournament';
     notes.push(
-      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${group} plays one 10-minute overtime period and then ${section.shootout.words} (${source}), so MaxPreps may have recorded ${phrases.win} as a goal. The score is shown as MaxPreps has it.`,
+      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${group} plays one 10-minute overtime period and then ${section.shootout.words}${scope} (${source}), so MaxPreps may have recorded ${phrases.win} as a goal. The score is shown as MaxPreps has it.`,
     );
   }
   return notes.length > 0 ? notes.join(' ') : null;

@@ -150,6 +150,19 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(SECTIONS.map((s) => [s.id, s.shootout?.words ?? null])).toEqual([
       ['ccs', null], ['ncs', null], ['ns', '1 v 1s'], ['ss', null], ['sds', 'a shootout'],
     ]);
+    // The Northern Section's 1 v 1 wins are confirmed by a box score's 'SO Win' column; the San Diego
+    // Section's level W/L finals are not (si.com and the power rankings record Mt. Carmel–Poway as 2-0).
+    expect(SECTIONS.map((s) => [s.id, s.shootout?.inference ?? null])).toEqual([
+      ['ccs', null], ['ncs', null], ['ns', 'verified'], ['ss', null], ['sds', 'unverified'],
+    ]);
+    // The SDFHOA procedures do not cover invitational tournaments; §VII.E.4 makes no such exception.
+    expect(SECTIONS.map((s) => [s.id, s.shootout?.coversTournaments ?? null])).toEqual([
+      ['ccs', null], ['ncs', null], ['ns', true], ['ss', null], ['sds', false],
+    ]);
+    expect(getSection('ns').shootout?.disagreement).toBeNull();
+    expect(getSection('sds').shootout?.disagreement).toBe(
+      'si.com and the Section’s power rankings record some of these games with a decisive score (Mt. Carmel–Poway, Sep 11: 2-0).',
+    );
     expect(getSection('ns').shootout?.citation).toBe(
       'Northern Section Field Hockey Guidelines §VII.E.4 (one 10-minute sudden-victory period, then 1 v 1s)',
     );
@@ -755,7 +768,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
       const r = getLeague('mcal').rules as { leagueOvertime: string };
       const s = getSection('ncs') as { shootout: SectionConfig['shootout'] };
       r.leagueOvertime = 'shootout';
-      s.shootout = { words: '1 v 1s', citation: 'a rule' };
+      s.shootout = { words: '1 v 1s', citation: 'a rule', inference: 'verified', disagreement: null, coversTournaments: true };
       return () => { r.leagueOvertime = 'none'; s.shootout = null; };
     }, /leagueOvertime 'shootout' needs classification 'contest-type' or 'membership'/);
     expectViolation(() => {
@@ -825,7 +838,7 @@ describe('leagues: the Sunset (Southern Section)', () => {
 
   it('is a field hockey grouping of ten, named apart from the all-sports Sunset League', () => {
     expect(sunset).toMatchObject({
-      sectionId: 'ss', name: 'Sunset Field Hockey League', shortName: 'Sunset',
+      sectionId: 'ss', name: 'Sunset field hockey league', shortName: 'Sunset',
       cities: 'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills',
       officialUrl: 'https://cifss.org/sports/field-hockey/',
       sblive: { leagueSlugs: ['4249-sunset'], backfill: true },
@@ -852,7 +865,7 @@ describe('leagues: the Sunset (Southern Section)', () => {
     });
     expect(division.maxprepsMissing).toEqual(['edison', 'fountain-valley', 'huntington-beach', 'marina', 'newport-harbor']);
     expect(division.official.mode === 'none' && division.official.note).toBe(
-      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight, putting Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
+      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight of them, plus Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
     );
     expect(division.knownCause).toBe(
       'MaxPreps’ Sunset table lists five of the ten teams and orders them by winning percentage. This site orders all ten by 3-1-0 points. si.com marks more games as league games than MaxPreps does, so its Sunset records differ from ours.',
@@ -865,7 +878,7 @@ describe('leagues: the Sunset (Southern Section)', () => {
       pointsShort: 'site 3-1-0',
       order: 'no league document orders the table; this site orders it by its own 3-1-0 points',
       doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the ten that MaxPreps marks as a league game',
-      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Sunset games have ended level and have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported.',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Games between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11; MaxPreps marks neither as a league game), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
       coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
       stages: { 'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is' },
     });
@@ -933,7 +946,7 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
       for (const d of l.divisions) {
         expect(d.official).toEqual({
           mode: 'none',
-          note: 'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; its members play each other home and away, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.',
+          note: 'We found no schedule or standings published by a San Diego Section league. Members come from the Section’s 2026-27 League Alignment, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.',
         });
         expect(d.reportedTrust, d.id).toBe('informational');
         expect(d.home, d.id).toEqual({ miniRows: d.expectedTeams, lineAfter: null, lineLabel: null });
@@ -952,7 +965,12 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
       ['metro-south-bay', 'ca8e2856-b13d-4aa7-8c15-37cb50a55c60', 'Grossmont', 'grossmont', 3, ['hilltop', 'southwest'], ['1125d6e8-e661-4190-a41d-5722364dee38']],
     ]);
     expect(getDivision('valley').knownCause).toBeNull();
-    expect(getDivision('metro-mesa').knownCause).toBe('MaxPreps files these five teams under ‘Metro- South Bay’.');
+    expect(getDivision('metro-mesa').knownCause).toBe(
+      'MaxPreps files these five teams under ‘Metro- South Bay’. On Oct 5 MaxPreps listed Bonita Vista and Helix meeting once (Oct 23), so unless a second meeting is added each ends a game short of the eight.',
+    );
+    expect(getDivision('city-eastern').knownCause).toBe(
+      'MaxPreps’ table leaves out Patrick Henry and lists Madison, which has no varsity game; MaxPreps marks none of Patrick Henry’s league games as league games. MaxPreps also counts the City Eastern teams’ games against Mission Bay as league games; the alignment puts Mission Bay in City Western, so they count in neither table here.',
+    );
     expect(getDivision('city-western').knownCause).toMatch(/Mission Bay’s five games against City Eastern teams/);
     expect(getDivision('palomar').knownCause).toMatch(/also lists Rancho Buena Vista under Valley/);
   });
@@ -960,10 +978,10 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
   it('cites the officials’ association’s overtime procedures and paraphrases the Green Book where its words are banned', () => {
     for (const l of sds) {
       expect(l.rules.citations.overtime).toBe(
-        'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
+        'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a league, non-league or playoff varsity game does not end level (the procedures do not cover invitational tournaments, and several tournament games this season have ended level). MaxPreps records such a game as a level score marked W and L with no tally, and this site counts it as the flagged team’s win',
       );
       expect(l.rules.citations.doubleRoundRobin).toBe(
-        'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 6 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
+        'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 5 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
       );
       expect(l.rules.citations.points).toBe('this site’s 3-1-0 points (the league publishes no points rule)');
       expect(l.rules.citations.coChampions).toMatch(/^the league designates its champion/);
@@ -983,8 +1001,8 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
         powerRankingsUrl: 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings',
       });
       expect(ps.ladder.map((r) => [r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
-        [[1, 1], 'tournament', 'League champion: at least a play-in', 'at least a play-in as league champion', '1st',
-          '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not.'],
+        [[1, 1], 'tournament', '1st: at least a play-in if named league champion', 'at least a play-in if named league champion', '1st',
+          '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not'],
         [[2, 99], 'selection', 'No league route', 'no league route into the playoffs', 'Selection only',
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
@@ -1013,8 +1031,11 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
     }
   });
 
-  it('excludes the two duplicate Palomar rows', () => {
-    expect(DATA_QUALITY.excludedContestIds['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a']).toMatch(/^Poway vs Fallbrook, Oct 9 .*Oct 13 \(0b3cfb7d\)/);
+  it('excludes the two stray Palomar rows', () => {
+    // c7dbdbcc has Poway at home, as in the Sep 15 meeting, while Fallbrook hosts Oct 13: the note ties it to neither.
+    expect(DATA_QUALITY.excludedContestIds['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a']).toBe(
+      'Poway vs Fallbrook, Oct 9 with no time: a third MaxPreps row for the pair, which already has both of its Palomar meetings on the schedule (Sep 15, 67865f1e; Oct 13, 0b3cfb7d)',
+    );
     expect(DATA_QUALITY.excludedContestIds['9c027452-e21e-4e47-9eac-d2e800bfb42c']).toMatch(/^Mission Vista vs Fallbrook, Oct 30 .*Oct 29 \(5067646d\)/);
   });
 });
@@ -1110,9 +1131,37 @@ describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
     expectViolation(() => {
       const s = getSection('sds') as { shootout: SectionConfig['shootout'] };
       const before = s.shootout;
-      s.shootout = { words: ' ', citation: 'x' };
+      s.shootout = { words: ' ', citation: 'x', inference: 'unverified', disagreement: 'x', coversTournaments: false };
       return () => { s.shootout = before; };
     }, /sds: shootout needs words and a citation/);
+    expectViolation(() => {
+      const s = getSection('sds') as { shootout: SectionConfig['shootout'] };
+      const before = s.shootout;
+      s.shootout = { words: 'a shootout', citation: 'x', inference: 'maybe' as 'verified', disagreement: null, coversTournaments: false };
+      return () => { s.shootout = before; };
+    }, /sds: shootout\.inference must be one of verified, unverified/);
+    expectViolation(() => {
+      const s = getSection('sds') as { shootout: SectionConfig['shootout'] };
+      const before = s.shootout;
+      s.shootout = { ...before!, disagreement: null };
+      return () => { s.shootout = before; };
+    }, /sds: shootout\.disagreement is set exactly when the inference is 'unverified'/);
+  });
+
+  it('a date correction names a contest GUID, a real date in a season window, and a source', () => {
+    const overrides = DATA_QUALITY.contestDateOverrides as Record<string, { dateKey: string; timeTba: true; source: string }>;
+    const id = 'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0';
+    const set = (key: string, value: { dateKey: string; timeTba: true; source: string }) => () => {
+      const before = overrides[key];
+      overrides[key] = value;
+      return () => { if (before) overrides[key] = before; else delete overrides[key]; };
+    };
+    const ok = overrides[id];
+    expectViolation(set('fc8be1f8', ok), /contestDateOverrides: fc8be1f8 is not a contest GUID/);
+    expectViolation(set(id, { ...ok, dateKey: '2026-09-31' }), /dateKey 2026-09-31 is not a valid YYYY-MM-DD date/);
+    expectViolation(set(id, { ...ok, dateKey: '2027-03-01' }), /2027-03-01 is outside every section's season window/);
+    expectViolation(set(id, { ...ok, source: ' ' }), /contestDateOverrides fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0: needs a source/);
+    expectViolation(set('c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', ok), /c7dbdbcc-5f41-4192-b8b2-eb79cca2523a: the contest is excluded/);
   });
 
   it('a section’s shootout rule and its leagues’ leagueOvertime agree both ways', () => {

@@ -328,7 +328,7 @@ describe('the /standings overview', () => {
       'h2 Northern Section',
       'h3 EAL — Eastern Athletic League',
       'h2 Southern Section',
-      'h3 Sunset — Sunset Field Hockey League',
+      'h3 Sunset — Sunset field hockey league',
       'h2 San Diego Section',
       'h3 City — City Conference',
       'h4 City Western',
@@ -558,6 +558,55 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     const text = textOf(await renderLeague('north-county'));
     expect(text).toContain('MaxPreps publishes no table for this division, so there is nothing to compare these records with.');
     expect(text).not.toMatch(/at-large|automatic qualifier|lowest-seeded|eliminat/i);
+    // With no MaxPreps table, no "MaxPreps’ table leaves out" line (review 2026-10-06): the six Valley
+    // slugs stay in maxprepsMissing for the count invariant, and the no-table sentence alone speaks.
+    expect(valley.comparison.leftOut, `${SV} Valley leftOut`).toEqual([]);
+    expect(text).not.toMatch(/MaxPreps’ table leaves out (Escondido|Mission Hills|Sage Creek|San Pasqual|Vista|Westview)\./);
+    // Avocado has a MaxPreps table that leaves two out: those lines stay.
+    expect(page.views.find((v) => v.division === 'avocado')!.comparison.leftOut).toEqual([
+      'MaxPreps’ table leaves out Mt. Carmel.',
+      'MaxPreps’ table leaves out Rancho Bernardo.',
+    ]);
+  });
+
+  it('says a team is in a table "as MaxPreps lists it" only when MaxPreps’ table for that division lists it', async () => {
+    // This corpus has no SoCal games, so every Sunset and Metro team is a no-results row.
+    const metro = textOf(await renderLeague('metro'));
+    const sunset = textOf(await renderLeague('sunset'));
+    for (const name of ['Hilltop', 'Southwest', 'El Capitan', 'Granite Hills']) {
+      expect(metro, `${name}`).not.toContain(`${name} is in the Metro South Bay table as MaxPreps lists it`);
+      expect(metro).toContain(
+        `${name} is a Metro South Bay team (the CIF-SDS 2026-27 League Alignment) but has no results in the source table — no record is invented for them.`,
+      );
+    }
+    // MaxPreps' "Metro- South Bay" table is the Metro Mesa one, so Metro Mesa is named by the alignment too.
+    expect(metro).not.toMatch(/as MaxPreps lists it/);
+    expect(sunset).not.toContain('Newport Harbor is in the Sunset table as MaxPreps lists it');
+    expect(sunset).toContain(
+      'Newport Harbor is a Sunset team (MaxPreps’ 2024-25 and 2025-26 Sunset tables) but has no results in the source table — no record is invented for them.',
+    );
+    // Great Oak is one of the five rows of MaxPreps' 2026-27 Sunset table, so that wording is true for it.
+    expect(sunset).toContain('Great Oak is in the Sunset table as MaxPreps lists it but has no results in the source table');
+  });
+
+  it('a San Diego caption says "league standings", never "Division" (the Section’s playoff tiers)', async () => {
+    const html = await renderLeague('north-county');
+    expect(html).toContain('Palomar league standings');
+    expect(html).not.toMatch(/(Avocado|Palomar|Valley) Division league standings/);
+    expect(await renderLeague('bval')).toContain('Mt. Hamilton Division league standings');
+  });
+
+  it('prints no "biggest goal difference" for a division where every goal difference is 0', async () => {
+    // No SoCal game is in this corpus: every Metro goal difference is 0 and gdDomain is the bar floor 1.
+    expect(sd.buildStandingsPageView('metro').views.every((v) => v.gdDomain === 1)).toBe(true);
+    const text = textOf(await renderLeague('metro'));
+    expect(text).not.toMatch(/biggest goal difference \(|’s is 1\b|'s is 1\b/);
+    expect(text).toContain(
+      "Bars are scaled to each division's own biggest goal difference, so bars in different divisions are not comparable.",
+    );
+    expect(text).not.toContain('GD bars are per division, scaled');
+    // A division with results keeps the figure.
+    expect(textOf(await renderLeague('scval'))).toMatch(/De Anza’s biggest goal difference \(\d+\)/);
   });
 
   it('a league page’s chips are its own region’s leagues plus All', async () => {

@@ -187,7 +187,12 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const crossCheck =
     `Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for ${leagueGame}, or its row is clearly wrong, we publish si.com\u2019s score and mark it; when both have a score and disagree, we publish MaxPreps\u2019 and show the disagreement rather than choosing quietly.` +
     (shootout?.shootout
-      ? ` A level si.com score between two ${shootoutGroupName(shootout)} teams is never used: a varsity game there is ${
+      ? ` A level si.com score between two ${shootoutGroupName(shootout)} teams is never used: a varsity game there${
+          // The SDFHOA procedures do not cover invitational tournaments (SectionConfig.shootout.
+          // coversTournaments false), where San Diego games have ended level; the EAL's sentence is unchanged.
+          shootout.shootout.coversTournaments ? '' : ' outside a tournament'
+        } is ${
+          // The rule, not this game: 'decided by a shootout' whatever the section's inference.
           shootoutPhrases(shootout.shootout.words).decidedOn
         }, and si.com does not say who won ${shootoutPhrases(shootout.shootout.words).pronoun}.`
       : '');

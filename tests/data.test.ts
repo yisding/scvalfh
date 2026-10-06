@@ -730,7 +730,10 @@ describe('data: Southern California tables with results', () => {
       expect(c.maxPts).toBeNull();
     }
     expect(socal.getStandingContext('sunset').get(socal.getTeamBySlug('bonita')!.id)!.counted).toBe(3);
-    expect(socal.getGamesPlayedSpread('sunset')).toEqual({ min: 1, max: 3, scheduled: null });
+    // Every member is in the spread, a team with no counted game at 0: the table lists it with GP 0, so a
+    // sentence starting from the lowest team with a result ('between 1 and …') would be false under it.
+    expect(socal.getStandings('sunset').some((r) => r.computed.gp === 0)).toBe(true);
+    expect(socal.getGamesPlayedSpread('sunset')).toEqual({ min: 0, max: 3, scheduled: null });
   });
 
   it('writes the San Diego postseason line from the qualification line, never a "top N"', () => {
@@ -738,7 +741,7 @@ describe('data: Southern California tables with results', () => {
     if (city.postseason.kind !== 'section-playoffs') throw new Error('City plays the San Diego Section playoffs');
     const first = socal.getTeamPostseasonLine('la-jolla')!;
     // Two teams are level on 3 points at the top, so the first place spans 1st and 2nd.
-    expect(first.label).toBe('League champion: at least a play-in or no league route into the playoffs');
+    expect(first.label).toBe('1st: at least a play-in if named league champion or no league route into the playoffs');
     expect(first.sentence).toBe(
       `${city.postseason.qualificationLine} The Section lists La Jolla in Division I; Open Division teams are drawn from Division I at the end of the regular season.`,
     );

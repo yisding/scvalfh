@@ -32,7 +32,7 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  * A server component over plain data; every row link carries `prefetch={false}`.
  */
 
-/** 'NorCal' | 'SoCal', for a row with no game in the region. */
+/** 'NorCal' | 'SoCal', for each region's count on an every-game-day row. */
 function regionShort(id: RegionId): string {
   return REGIONS.find((r) => r.id === id)?.shortName ?? id;
 }
@@ -51,9 +51,35 @@ function cardLine(card: LeagueCardData): string {
   return parts.join(' · ');
 }
 
-function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: number; headingId: string }) {
+/**
+ * The accessible name of a SoCal copy of a Recent, Next or day section: 'Recent, Southern California'.
+ * With JS off both regions render, so the NorCal and SoCal sections shared the names "Recent", "Next"
+ * and each date (axe landmark-unique, review 2026-10-06); naming the second copy's region makes every
+ * name unique and leaves the NorCal sections as they were (labelled by their headings), as /leaders
+ * names its region sections.
+ */
+function socalLabel(idSuffix: string, words: string): string | undefined {
+  return idSuffix === '' ? undefined : `${words}, ${REGIONS.find((r) => r.id === 'socal')?.name ?? 'Southern California'}`;
+}
+
+function DayBlock({
+  day,
+  perLeague,
+  headingId,
+  idSuffix,
+}: {
+  day: IndexDay;
+  perLeague: number;
+  headingId: string;
+  idSuffix: string;
+}) {
+  const label = socalLabel(idSuffix, longDate(day.date));
   return (
-    <section aria-labelledby={headingId} className="mt-6 first:mt-4">
+    <section
+      aria-labelledby={label ? undefined : headingId}
+      aria-label={label}
+      className="mt-6 first:mt-4"
+    >
       <div className="flex min-h-12 items-center gap-2">
         <h3 id={headingId} className="m-0 text-body font-semibold text-ink">
           <time dateTime={day.date}>
@@ -126,19 +152,39 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
           </ul>
 
           {region.recent.length > 0 ? (
-            <section aria-labelledby={`schedule-recent${region.idSuffix}`} className="mt-section md:mt-section-lg">
+            <section
+              aria-labelledby={socalLabel(region.idSuffix, 'Recent') ? undefined : `schedule-recent${region.idSuffix}`}
+              aria-label={socalLabel(region.idSuffix, 'Recent')}
+              className="mt-section md:mt-section-lg"
+            >
               <SectionHeader id={`schedule-recent${region.idSuffix}`} kicker="Recent" />
               {region.recent.map((day) => (
-                <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`recent-${day.date}${region.idSuffix}`} />
+                <DayBlock
+                  key={day.date}
+                  day={day}
+                  perLeague={perLeague}
+                  headingId={`recent-${day.date}${region.idSuffix}`}
+                  idSuffix={region.idSuffix}
+                />
               ))}
             </section>
           ) : null}
 
           {region.next.length > 0 ? (
-            <section aria-labelledby={`schedule-next${region.idSuffix}`} className="mt-section md:mt-section-lg">
+            <section
+              aria-labelledby={socalLabel(region.idSuffix, 'Next') ? undefined : `schedule-next${region.idSuffix}`}
+              aria-label={socalLabel(region.idSuffix, 'Next')}
+              className="mt-section md:mt-section-lg"
+            >
               <SectionHeader id={`schedule-next${region.idSuffix}`} kicker="Next" />
               {region.next.map((day) => (
-                <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`next-${day.date}${region.idSuffix}`} />
+                <DayBlock
+                  key={day.date}
+                  day={day}
+                  perLeague={perLeague}
+                  headingId={`next-${day.date}${region.idSuffix}`}
+                  idSuffix={region.idSuffix}
+                />
               ))}
             </section>
           ) : null}
@@ -159,12 +205,14 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
                   <time dateTime={day.date} className="font-semibold">
                     {shortDate(day.date)}
                   </time>
-                  {/* One count line per region; the scope stylesheet shows the reader's. */}
+                  {/* One count line per region; the scope stylesheet shows the reader's. Each names its
+                      region ('NorCal: 4 games · SCVAL 1 …'): with JS off both show inside one link, and an
+                      unlabelled second count was ambiguous (review 2026-10-06). */}
                   {day.byRegion.map((r) => (
                     <span key={r.region} data-region-scope={r.region} className="text-ink-2">
                       {r.total === 0
                         ? ` · no ${regionShort(r.region)} games`
-                        : `${` · ${plural(r.total, 'game')}`}${r.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}`}
+                        : `${` · ${regionShort(r.region)}: ${plural(r.total, 'game')}`}${r.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}`}
                     </span>
                   ))}
                 </span>

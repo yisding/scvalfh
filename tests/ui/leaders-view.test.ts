@@ -892,6 +892,18 @@ describe('LeaderBoardTable and the /leaders page', () => {
     expect(html.indexOf('href="#schools"')).toBeLessThan(html.indexOf('href="#players"'));
     expect(html).toContain('<h1');
     expect(html).not.toMatch(/eliminat/i);
+    // With JS off all four pills show: each names its region to a screen reader, visible text first.
+    for (const [id, words] of [
+      ['schools', 'Schools, Northern California'],
+      ['players', 'Players, Northern California'],
+      ['schools-socal', 'Schools, Southern California'],
+      ['players-socal', 'Players, Southern California'],
+    ] as const) {
+      const pill = html.match(new RegExp(`<a href="#${id}"[^>]*>([\\s\\S]*?)</a>`))![1];
+      // textOf puts a space where each tag was: 'Schools , Southern California'.
+      expect(textOf(pill).replace(/\s+/g, ' ').replace(/ ,/g, ',').trim(), `app/leaders/page.tsx #${id}`).toBe(words);
+      expect(pill).toContain(`<span class="sr-only">${words.slice(words.indexOf(','))}</span>`);
+    }
   });
 
   it('counts the leagues from config: nine on one Elo scale, five NorCal and four SoCal on the boards', () => {

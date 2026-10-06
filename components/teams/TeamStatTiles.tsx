@@ -114,7 +114,12 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
           {`League figures count only the games that count toward the ${view.scopeLabel} table: ${view.league.doubleRoundRobin}. ${
             view.leagueScheduled === null
               ? 'GP is counted results; with no fixed number of league games there is no MAX. '
-              : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `
+              : view.league.classification === 'membership'
+                ? // The San Diego leagues publish no schedule: the N is what a full home-and-away schedule
+                  // gives each team, which stays true where MaxPreps lists one meeting fewer (Bonita Vista
+                  // and Helix, Metro Mesa: 7 of 8 on Oct 5; review 2026-10-06), never "N scheduled".
+                  `GP is counted results out of the ${view.leagueScheduled} a full home-and-away schedule gives each team; MAX is the points total if every remaining game were won. `
+                : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `
           }`}
           A real 0 shows as{' '}
           <span className="sx-num">0</span>; a number we do not have shows as{' '}

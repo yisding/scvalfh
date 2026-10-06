@@ -565,7 +565,7 @@ describe('backfill: a level si.com score in a 1 v 1 league (EAL)', () => {
 
 describe('backfill: the Southern California leagues (DESIGN-socal §2.1.3)', () => {
   const SDS_LEVEL_NOTE =
-    'si.com has a level score, but a varsity San Diego Section game is decided by a shootout and si.com does not say who won it, so it is not used.';
+    'si.com has a level score, but a varsity San Diego Section game outside a tournament is decided by a shootout and si.com does not say who won it, so it is not used.';
 
   it('rule 3 never fills a San Diego game from a level si.com score, across conferences too (the section’s shootout)', () => {
     for (const [home, away] of [['la-jolla', 'scripps-ranch'], ['clairemont', 'eastlake']] as const) {

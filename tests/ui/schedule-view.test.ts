@@ -186,6 +186,47 @@ describe('the /schedule index', () => {
     for (const kicker of ['Recent', 'Next', 'Every game day']) expect(text).toContain(kicker);
   });
 
+  it('names the region wherever both regions’ copies would otherwise read the same with JS off', async () => {
+    const html = renderIndex();
+    // The SoCal Recent / Next / day sections carry 'Southern California' in their names; the NorCal
+    // ones keep their headings (axe landmark-unique, review 2026-10-06).
+    expect(html, 'components/schedule/ScheduleIndex.tsx').not.toMatch(/<section aria-labelledby="[^"]*-socal"/);
+    const labels = [...html.matchAll(/<section aria-label="([^"]+)"/g)].map((m) => m[1]);
+    for (const label of labels) expect(label, 'components/schedule/ScheduleIndex.tsx').toMatch(/, Southern California$/);
+    expect(new Set(labels).size, 'components/schedule/ScheduleIndex.tsx unique').toBe(labels.length);
+    // The corpus has no SoCal game day, so the SoCal copies are rendered here from a hand-built view.
+    const { ScheduleIndex } = await import('../../components/schedule/ScheduleIndex');
+    const day = (date: string) => ({ date, total: 0, leagues: [] });
+    const both = renderToStaticMarkup(
+      createElement(ScheduleIndex, {
+        cards: [],
+        recent: [],
+        next: [],
+        days: [],
+        regions: [
+          { id: 'norcal', idSuffix: '', recent: [day('2026-10-02')], next: [day('2026-10-06')] },
+          { id: 'socal', idSuffix: '-socal', recent: [day('2026-10-02')], next: [day('2026-10-06')] },
+        ],
+      }),
+    );
+    expect([...both.matchAll(/<section aria-label="([^"]+)"/g)].map((m) => m[1])).toEqual([
+      'Recent, Southern California',
+      'Friday, October 2, Southern California',
+      'Next, Southern California',
+      'Tuesday, October 6, Southern California',
+    ]);
+    expect(both).toContain('<section aria-labelledby="schedule-recent"');
+    expect(both).toContain('<section aria-labelledby="recent-2026-10-02"');
+    // Every game day: each region's count names its region ('NorCal: 4 games · SCVAL 1 …').
+    const rows = [...html.matchAll(/<li id="\d{4}-\d{2}-\d{2}">([\s\S]*?)<\/li>/g)].map((m) => textOf(m[1]));
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(row, 'components/schedule/ScheduleIndex.tsx day row').not.toMatch(/· \d+ games?\b/);
+      expect(row).toMatch(/· (NorCal: \d+ games?|no NorCal games)\b/);
+      expect(row).toMatch(/· (SoCal: \d+ games?|no SoCal games)\b/);
+    }
+  });
+
   it('builds Recent and Next around today, at most three rows per league, and per-league day counts', () => {
     const today = data.getToday();
     const built = index.buildScheduleIndex({

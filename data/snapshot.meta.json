@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +1 · MCAL +0 · EAL +0 · Sunset +11 · City +14 · North County +28 · Metro +5",
-  "contentHash": "b912dd913c96fcae3460b03d0d32c5c47aa6a9e6edf7415839f7e0daad210f53",
+  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North County +1 · Metro +0",
+  "contentHash": "52116f630f183047b0fd26e6a9f678f058083e538a752a42ceb45100e52b7879",
   "counts": {
     "byLeague": {
       "bval": {
@@ -12,7 +12,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 111,
+        "finals": 112,
         "games": 164,
         "leagueGames": 60,
         "teams": 12
@@ -40,7 +40,7 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 159,
+        "finals": 160,
         "games": 244,
         "leagueGames": 102,
         "teams": 19
@@ -54,9 +54,9 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 100,
-        "games": 158,
-        "leagueGames": 96,
+        "finals": 101,
+        "games": 159,
+        "leagueGames": 97,
         "teams": 15
       },
       "sunset": {
@@ -67,25 +67,25 @@
         "teams": 10
       }
     },
-    "finals": 531,
-    "games": 871,
-    "leagueGames": 505,
-    "mismatches": 15,
-    "pending": 11,
+    "finals": 534,
+    "games": 872,
+    "leagueGames": 506,
+    "mismatches": 17,
+    "pending": 12,
     "teams": 99
   },
   "crossCheck": {
-    "agreements": 148,
+    "agreements": 152,
     "backfilled": 2,
-    "compared": 220,
+    "compared": 221,
     "conflicts": 6,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-06T03:19:11.008Z",
+  "fetchedAt": "2026-10-06T05:04:27.483Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 48,
+      "countedFinals": 49,
       "finalsDelta": 1,
       "id": "scval",
       "missingPast": 2,
@@ -104,7 +104,7 @@
     {
       "backfilled": 2,
       "countedFinals": 22,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 0,
       "reasons": [],
@@ -131,7 +131,7 @@
     {
       "backfilled": 0,
       "countedFinals": 11,
-      "finalsDelta": 11,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
       "reasons": [],
@@ -139,8 +139,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 14,
-      "finalsDelta": 14,
+      "countedFinals": 15,
+      "finalsDelta": 1,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -148,8 +148,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 28,
-      "finalsDelta": 28,
+      "countedFinals": 29,
+      "finalsDelta": 1,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -158,14 +158,14 @@
     {
       "backfilled": 0,
       "countedFinals": 5,
-      "finalsDelta": 5,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 8,
+  "officialFixturesUnmatched": 7,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 128,
@@ -225,12 +225,12 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 16,
+      "rowCount": 18,
       "status": "ok"
     },
     {
       "label": "homestead schedule",
-      "rowCount": 18,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -985,7 +985,7 @@
     },
     {
       "label": "palo-alto school calendar",
-      "rowCount": 15,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -1000,7 +1000,7 @@
     }
   ],
   "today": "2026-10-05",
-  "warnings": 51,
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",

@@ -684,14 +684,18 @@ export function getMissingOfficialResults(division: DivisionId, asOf?: string): 
 }
 
 /**
- * Spread of games played among teams with results in a division (uneven-GP footnote when max − min ≥ 2;
+ * Spread of games played across EVERY member of a division (uneven-GP footnote when max − min ≥ 2;
  * lib/standings.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
  * (the Sunset), whose sentence then has no "of N".
+ *
+ * A member with no counted game is in the spread at 0. The sentence says "Teams have played between {min}
+ * and {max}", and the table it sits under lists that member with GP 0: leaving it out printed "between 1 and
+ * 5" over a Sunset table whose Newport Harbor row reads 0 (its four finals against Sunset teams, Aug 26 –
+ * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/standings.ts),
+ * so the old filter only ever dropped zeros.
  */
 export function getGamesPlayedSpread(division: DivisionId): { min: number; max: number; scheduled: number | null } {
-  const gps = getStandings(division)
-    .filter((s) => s.hasReportedResults)
-    .map((s) => s.computed.gp);
+  const gps = getStandings(division).map((s) => s.computed.gp);
   return {
     min: gps.length ? Math.min(...gps) : 0,
     max: gps.length ? Math.max(...gps) : 0,

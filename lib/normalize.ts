@@ -9,7 +9,8 @@
  *   3. a missing score is pending, NEVER 0-0
  *   4. home/away from teams[].homeAwayType (0/1/2), never from contestType and never from row order
  *   5. league flag from teams[].contestType === 0
- *   6. store both date forms (naive local + UTC)
+ *   6. store both date forms (naive local + UTC); a contest in DATA_QUALITY.contestDateOverrides takes
+ *      the override's date, with no time, before the date key is taken and the games are sorted
  *   7. opponent identity by GUID; a non-member is a name only
  *
  * SPEC §7.6 adds, in pipeline order (all pure):
@@ -21,8 +22,8 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { byDateThenId, shootoutPhrases } from './format';
-import { getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
+import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
+import { DATA_QUALITY, getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,
@@ -58,6 +59,8 @@ export interface NormalizeOptions {
    * winner flagged is not worth a warning.
    */
   level?: 'varsity' | 'jv';
+  /** Per-contest date corrections (default DATA_QUALITY.contestDateOverrides); tests pass their own. */
+  dateOverrides?: DataQualityConfig['contestDateOverrides'];
 }
 
 export interface NormalizeResult {
@@ -105,6 +108,44 @@ function statusFromContestState(state: number, isLive: boolean): GameStatus {
 /** YYYY-MM-DD from a naive local timestamp — no Date involved, so no zone can shift it. */
 export function dateKeyOf(dateLocal: string): string {
   return dateLocal.slice(0, 10);
+}
+
+/**
+ * The UTC instant of midnight, America/Los_Angeles, on a date key: the `dateUtc` every time-TBA row
+ * carries (MaxPreps stores such a row at local midnight, e.g. '2026-09-29T00:00:00' ↔ '2026-09-29T07:00:00Z').
+ * Midnight is never inside a DST jump in this zone (the clocks change at 2 AM), so one of the two offsets fits.
+ */
+export function pacificMidnightUtc(dateKey: string): string {
+  for (const hours of [7, 8]) {
+    const iso = `${dateKey}T0${hours}:00:00Z`;
+    if (toLocalTimestamp(iso) === `${dateKey}T00:00:00`) return iso;
+  }
+  throw new Error(`normalize: no Pacific midnight for ${dateKey}`);
+}
+
+/**
+ * A contest's date moved to a better source's (DataQualityConfig.contestDateOverrides): the date key, a
+ * time-TBA local midnight and its UTC instant, consistent with every other time-TBA row, and the
+ * provenance the game page prints (MaxPreps' own date and the override's source). The result, sides and
+ * flags are untouched.
+ */
+export function applyDateOverride(
+  game: Game,
+  override: DataQualityConfig['contestDateOverrides'][ContestId] | undefined,
+): Game {
+  if (!override) return game;
+  return {
+    ...game,
+    dateLocal: `${override.dateKey}T00:00:00`,
+    dateUtc: pacificMidnightUtc(override.dateKey),
+    dateKey: override.dateKey,
+    isDateTba: false,
+    isTimeTba: true,
+    provenance: {
+      ...game.provenance,
+      dateCorrection: { maxprepsDateLocal: game.dateLocal, maxprepsTimeTba: game.isTimeTba, source: override.source },
+    },
+  };
 }
 
 /** `calculatedFields.contestDateInGMT` is UTC but unsuffixed; make it explicit. */
@@ -293,13 +334,15 @@ export function normalizeGames(
   }
 
   const games: Game[] = [];
+  const dateOverrides = opts.dateOverrides ?? DATA_QUALITY.contestDateOverrides;
   for (const [id, row] of best) {
     const game = toGame(row, copies.get(id) ?? [row], opts, warnings);
     if (!game) {
       stats.dropped.malformed += 1;
       continue;
     }
-    games.push(game);
+    // Before the sort, so the corrected date orders schedules, last-5 and streaks.
+    games.push(applyDateOverride(game, dateOverrides[id]));
   }
 
   // Stable order: by local date, then by contestId so the JSON diff is small.
@@ -415,17 +458,25 @@ function toGame(
   // Both sides teams of one section that ends a level varsity game with a shootout (SectionConfig.shootout):
   // the Northern Section (the EAL's 1 v 1s, NS Guidelines §VII.E.4) and the San Diego Section (SDFHOA 2026
   // Mercy & Overtime Procedures). Keyed on the SECTION, not on one shared league, because the San Diego rule
-  // covers every varsity game in the Section: of the eight level W/L finals in the 2026-10-06 inventory,
+  // covers every varsity game in the Section: of the eight level W/L finals in the inventory read Mon Oct 5 Pacific,
   // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
   // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
   // level finals stay ties or contradictions. lib/snapshot-schema.ts checks the same rule.
   // A JV row never qualifies (NormalizeOptions.level): the sections' shootout rules are varsity rules.
+  // Nor does a tournament row (contestType 2 on either side) in a section whose rule does not reach
+  // tournaments (SectionConfig.shootout.coversTournaments false: the SDFHOA procedures cover the regular
+  // season and the playoffs, not invitational tournaments). Seven games between two San Diego teams at
+  // tournaments (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T: a tie there is a tie, so it raises no
+  // "no shootout winner flagged" warning, and a level W/L tournament final is left as a contradiction
+  // rather than read as a shootout win the procedures do not provide for.
   const pairSection: SectionConfig | null =
     homeTeam && awayTeam && homeTeam.section === awayTeam.section && getSection(homeTeam.section).shootout !== null
       ? getSection(homeTeam.section)
       : null;
   const isJv = opts.level === 'jv';
-  const shootoutSection: SectionConfig | null = isJv ? null : pairSection;
+  const isTournamentRow = c.teams.some((t) => t.contestType === 2);
+  const shootoutSection: SectionConfig | null =
+    isJv || (isTournamentRow && pairSection?.shootout?.coversTournaments === false) ? null : pairSection;
 
   const isForfeit = c.teams.some((t) => t.isForfeit);
 

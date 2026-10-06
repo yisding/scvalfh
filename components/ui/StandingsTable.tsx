@@ -2,13 +2,14 @@ import Link from 'next/link';
 
 import type { StandingContext } from '../../lib/data';
 import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '../../lib/format';
-import { divisionHeading, getDivision, leagueOfDivision } from '../../lib/leagues';
+import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
 import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
+import { articleFor, membershipSource } from './membership-words';
 import PlaceMark from './PlaceMark';
 import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
@@ -130,6 +131,17 @@ function gpTitle(fixed: boolean): string {
 }
 
 /** The division as a reader names it: its heading, or the league's short name for a one-table league. */
+/**
+ * The biggest |goal difference| among `gds`, 0 when there is none. Not `getGoalDiffDomain`
+ * (lib/data.ts), which floors at 1 so a bar never divides by zero: that floor is a scale, never a
+ * fact to print. Every place that prints "biggest goal difference (N)" asks this first and leaves the
+ * clause out when it is 0 (StandingsTable's legend, DivisionStandings, MiniStandings, the standings
+ * page's disclosure).
+ */
+export function biggestGoalDiff(gds: readonly number[]): number {
+  return Math.max(0, ...gds.map((gd) => Math.abs(gd)));
+}
+
 function tableName(division: DivisionId): string {
   return divisionHeading(division) ?? leagueOfDivision(division).shortName;
 }
@@ -244,10 +256,15 @@ export function collectStandingsNotes(
   const specific: React.ReactNode[] = [];
   const { rows, gdDomain, division, variant } = props;
   if (variant !== 'archive') {
+    // The scale names the division's biggest goal difference only when there is one: `gdDomain` is
+    // floored at 1 for the bar arithmetic, and "(1)" printed for a division where every |GD| is 0
+    // (Metro South Bay before its first game) stated a goal difference nobody has (review 2026-10-06).
+    const scale =
+      biggestGoalDiff(rows.map((r) => r.standing.computed.gd)) > 0
+        ? `, to ${tableName(division)}’s biggest goal difference (${gdDomain})`
+        : '';
     legend.push(
-      `GD = league goals for minus goals against. Bars are scaled per division, to ${tableName(
-        division,
-      )}’s biggest goal difference (${gdDomain}), so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
+      `GD = league goals for minus goals against. Bars are scaled per division${scale}, so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     );
     legend.push(`PTS: ${leagueOfDivision(division).rules.citations.points}.`);
   }
@@ -268,14 +285,20 @@ export function collectStandingsNotes(
   for (const note of sharedGroups.values()) specific.push(note);
   for (const row of rows) {
     if (!row.standing.hasReportedResults) {
-      // A league with no documents of its own (`official.mode: 'none'`, the EAL) publishes no
-      // alignment: its teams are the ones MaxPreps lists in its table, so nothing says "official".
-      const where =
-        getDivision(row.team.division).official.mode === 'none'
-          ? `the ${tableName(row.team.division)} table as MaxPreps lists it`
-          : `the official ${tableName(row.team.division)} alignment`;
+      // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment, so
+      // nothing says "official". "As MaxPreps lists it" only where MaxPreps' table for this division
+      // lists the team (the EAL); otherwise the league's membership source is named (Newport
+      // Harbor, Hilltop, Southwest: components/ui/membership-words.ts).
+      const table = tableName(row.team.division);
+      const source = membershipSource(row.team.division, [row.team.slug]);
+      const is =
+        source.kind === 'maxpreps'
+          ? `is in the ${table} table as MaxPreps lists it`
+          : source.kind === 'official'
+            ? `is in the official ${table} alignment`
+            : `is ${articleFor(table)} ${table} team (${source.source})`;
       specific.push(
-        `${row.team.name} is in ${where} but has no results in the source table — no record is invented for them.`,
+        `${row.team.name} ${is} but has no results in the source table — no record is invented for them.`,
       );
     }
     if (row.standing.mismatch && !props.statedElsewhere?.includes(row.team.slug)) {

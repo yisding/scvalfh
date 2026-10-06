@@ -67,7 +67,7 @@ describe('buildSearchIndex', () => {
       'league:metro', 'division:metro-mesa', 'division:metro-south-bay',
     ]);
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'sunset')).toMatchObject({
-      label: 'Sunset', detail: 'Sunset Field Hockey League · SS · 10 teams', href: '/standings/sunset',
+      label: 'Sunset', detail: 'Sunset field hockey league · SS · 10 teams', href: '/standings/sunset',
     });
     expect(INDEX.groups.find((g) => g.id === 'palomar')).toMatchObject({
       label: 'Palomar', detail: 'North County division · 7 teams', href: '/standings/north-county#palomar',

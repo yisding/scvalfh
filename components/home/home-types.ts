@@ -182,13 +182,18 @@ export interface LeagueCardView {
 
 /**
  * A ladder rung as the pinned card's one 320px line shows it. Most labels fit whole ('Automatic
- * qualifier', 'No section playoffs'). A label written "<who>: <what>" (the San Diego Section's 'League
- * champion: at least a play-in', 303px with the lead at 14px against 288px) is shown as its badge and
- * its <what> ('1st, at least a play-in'); the full label stays the line's accessible text and title.
+ * qualifier', 'No section playoffs'). A label written "<who>: <what>" is shown as its badge and its
+ * <what>; the full label stays the line's accessible text and title.
+ *
+ * The San Diego Section's first rung is '1st: at least a play-in if named league champion' (the
+ * league names its champion, not the table: Green Book 2000.1; review 2026-10-06), and "Today: 1st,
+ * at least a play-in if named league champion" is 387px at 14px against the card's 288px. The card
+ * says "if champion" (283px), which keeps the condition; the full label is the title.
  */
 export function rungCardText(label: string, badge: string): string {
   const colon = label.lastIndexOf(': ');
-  return colon < 0 ? label : `${badge}, ${label.slice(colon + 2)}`;
+  if (colon < 0) return label;
+  return `${badge}, ${label.slice(colon + 2).replace(/\bif named league champion$/, 'if champion')}`;
 }
 
 /** The postseason line's lead, full (the accessible text, SPEC §10.1) and as the card shows it. */

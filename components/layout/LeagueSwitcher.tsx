@@ -264,8 +264,9 @@ export interface RegionSwitcherProps {
  * `html[data-region]` (`[data-region-option]`, components/layout/league-scope-css.ts); after, aria-pressed
  * does. Hidden without JS (`sx-js-only`: both regions are on the page then, NorCal first) and
  * `disabled` until hydrated. A polite live region says what a tap did ("Showing Southern California.").
- * `setRegion` writes `scvalfh.region` and, when the remembered league is in the other region, resets it
- * to 'All' (components/ui/use-league.ts). Not in the SiteHeader: a page renders it under its header.
+ * `setRegion` writes `scvalfh.region` and, when the effective league is in the other region, removes the
+ * remembered league (never writes 'All'), so a pinned team's league returns with its region
+ * (components/ui/use-league.ts). Not in the SiteHeader: a page renders it under its header.
  */
 export function RegionSwitcher({ className, label = 'Region', separated = false }: RegionSwitcherProps) {
   const { region, ready } = useEffectiveRegion();

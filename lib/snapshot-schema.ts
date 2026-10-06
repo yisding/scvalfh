@@ -230,6 +230,9 @@ export const GameSchema = z
       hostConflict: z.string().optional(),
       resultConflict: z.string().optional(),
       classificationNote: z.string().optional(),
+      dateCorrection: z
+        .object({ maxprepsDateLocal: z.string().min(10), maxprepsTimeTba: z.boolean(), source: z.string().min(1) })
+        .optional(),
     }),
   })
   // 1. A final game must have two numbers.
@@ -732,6 +735,9 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
       const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
       if (!section?.shootout) {
         issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
+      } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
+        // The San Diego procedures do not cover invitational tournaments; lib/normalize.ts reads no 'SO' there.
+        issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
       }
       if (g.shootout === null) {
         const flags = [g.home.result, g.away.result].sort().join('');

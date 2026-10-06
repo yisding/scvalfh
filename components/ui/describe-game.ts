@@ -16,7 +16,7 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
-import { LEAGUES, findDivision, findLeague, getSection, leagueOfDivision, type SectionConfig } from '../../lib/leagues';
+import { LEAGUES, findDivision, findLeague, getSection, type SectionConfig, type ShootoutInference } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -53,15 +53,20 @@ export interface GameDisplay {
   statusTone: StatusTone;
   /** The body sentence under a row that needs one, e.g. the unreported promise. */
   note: string | null;
-  /** Mono superscript tags after the score: 'OT', '2 OT', 'SO', 'F'. 'SO' is any section's shootout win. */
+  /**
+   * Mono superscript tags after the score: 'OT', '2 OT', 'SO', 'F'. 'SO' is a shootout win in a section
+   * whose shootouts are verified (SectionConfig.shootout.inference 'verified': the EAL's 1 v 1s). A San
+   * Diego Section level final MaxPreps marks W and L carries no tag: no source confirms a shootout decided
+   * it, so the row shows the level score and the W/L chips, and the sentence says the win is credited.
+   */
   deciderTag: string | null;
   /**
    * The words a screen reader hears for an 'SO' `deciderTag`, in the words of the section whose rule
    * decided the game (SectionConfig.shootout.words through `shootoutPhrases(…).decidedOn`): 'decided
    * on 1 v 1s' for an EAL game (the Northern Section's 1 v 1s, the string StatusLabel has always
-   * read), 'decided by a shootout' for a game between two San Diego Section teams. Resolved here, on
-   * the server, because StatusLabel is client-safe and cannot read the registry; the home My-team card
-   * carries it through its slim marks. null whenever `deciderTag` is not 'SO'.
+   * read). Resolved here, on the server, because StatusLabel is client-safe and cannot read the
+   * registry; the home My-team card carries it through its slim marks. null whenever `deciderTag` is not
+   * 'SO', so null for every San Diego Section game (its inference is 'unverified').
    */
   shootoutLabel: string | null;
   /** '(4–3 SO)' — never produced by this league (By-Laws Article IV) but modelled. */
@@ -255,16 +260,39 @@ export function shootoutCitationParts(citation: string): { source: string; proce
 }
 
 /**
- * true when MaxPreps' overtime count cannot be right for the game's section: a counted game in a
- * section that plays one overtime period and then a shootout (SectionConfig.shootout: the EAL's
- * 1 v 1s, the San Diego Section's shootout) with more than one overtime period recorded. MaxPreps
- * may have stored the shootout win as a goal, so the view shows the score as MaxPreps has it with
- * no overtime tag and no "after overtime".
+ * The section whose shootout rule covers this game: `shootoutSectionOf`, unless the game is a tournament
+ * row (contestType 2 on either side) and the rule does not reach tournaments (SectionConfig.shootout.
+ * coversTournaments false: the SDFHOA procedures cover the regular season and the playoffs only). The
+ * same rule lib/normalize.ts reads 'SO' by.
+ */
+export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contestTypes'>): SectionConfig | null {
+  const section = shootoutSectionOf(game);
+  if (!section?.shootout) return null;
+  const tournament = game.contestTypes?.home === 2 || game.contestTypes?.away === 2;
+  return tournament && !section.shootout.coversTournaments ? null : section;
+}
+
+/**
+ * true when MaxPreps' overtime count cannot be right for the game: a regular-season game between two
+ * teams of a section that plays one overtime period and then a shootout (`shootoutRuleSectionOf`: the
+ * EAL's 1 v 1s; the San Diego Section's shootout, outside a tournament) with more than one overtime period
+ * recorded. MaxPreps may have stored the shootout win as a goal, so the view shows the score as MaxPreps
+ * has it with no overtime tag and no "after overtime".
+ *
+ * Keyed on the section, as lib/normalize.ts keys 'SO', not on the table the game counts in: Mission Hills
+ * 1, Del Norte 2 (Sep 14, 59b0f6a5, Valley v Palomar, countsFor null) has 2 overtime periods recorded and
+ * read '(2 OT)', which the San Diego rule of one period then a shootout cannot give. A postseason-tagged
+ * game is left alone: the SDFHOA playoff procedure is one full 10-minute period, then a 10-minute
+ * sudden-victory period, so a San Diego playoff game can show '2 OT'.
  */
 export function overtimeInDoubt(game: Game): boolean {
-  if (game.countsFor === null || game.otPeriods <= 1) return false;
-  const division = findDivision(game.countsFor);
-  return division !== undefined && getSection(leagueOfDivision(division.id).sectionId).shootout !== null;
+  if (game.otPeriods <= 1 || (game.postseason !== null && game.postseason !== undefined)) return false;
+  return shootoutRuleSectionOf(game) !== null;
+}
+
+/** The section's shootout inference for an 'SO' game ('verified' when no section rule is found). */
+function shootoutInferenceOf(game: Pick<Game, 'home' | 'away'>): ShootoutInference {
+  return shootoutSectionOf(game)?.shootout?.inference ?? 'verified';
 }
 
 /**
@@ -279,9 +307,9 @@ function shootoutLabelFor(game: Game, deciderTag: string | null): string | null 
 
 function deciderTagFor(game: Game): string | null {
   if (game.isForfeit || game.decider === 'FORFEIT') return 'F';
-  // A shootout win with no stored tally (an EAL 1 v 1 win, a San Diego shootout win); a game with a
-  // tally prints it as `shootoutText` instead.
-  if (game.decider === 'SO') return game.shootout ? null : 'SO';
+  // A shootout win with no stored tally (an EAL 1 v 1 win); a game with a tally prints it as
+  // `shootoutText` instead. A San Diego level W/L final gets no tag: the shootout is not verified.
+  if (game.decider === 'SO') return game.shootout || shootoutInferenceOf(game) === 'unverified' ? null : 'SO';
   if (overtimeInDoubt(game)) return null;
   if (game.decider === '2OT') return '2 OT';
   if (game.decider === 'OT') return 'OT';
@@ -331,6 +359,7 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     sentence: scoreSentence(game, {
       quietOvertime: overtimeInDoubt(game),
       shootoutWords: shootoutSectionOf(game)?.shootout?.words ?? null,
+      shootoutInference: shootoutSectionOf(game)?.shootout?.inference ?? null,
     }),
   };
 

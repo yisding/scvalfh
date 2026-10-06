@@ -45,6 +45,7 @@ import {
   getLeague,
   ladderFor,
   leagueStandingsUrl,
+  regionOf,
   sectionOf,
   statusesOf,
   type DivisionConfig,
@@ -508,9 +509,17 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
       url: row.url,
     }));
 
-  const leftOut = config.maxprepsMissing.map(
-    (slug) => `MaxPreps’ table leaves out ${input.teams.find((t) => t.slug === slug)?.name ?? slug}.`,
-  );
+  // "MaxPreps’ table leaves out X" only where MaxPreps HAS a table for the division. The San Diego
+  // Section's Valley has none (`crossCheckSkipReason`), yet all six of its teams sit in
+  // maxprepsMissing, which the count invariant in lib/leagues.ts needs (maxprepsTeamCount 0 + 6 = 6);
+  // six "leaves out" lines followed by "MaxPreps publishes no table" contradicted each other (review
+  // 2026-10-06). The no-table sentence alone says it.
+  const leftOut =
+    crossCheckSkipReason(input.division) !== null
+      ? []
+      : config.maxprepsMissing.map(
+          (slug) => `MaxPreps’ table leaves out ${input.teams.find((t) => t.slug === slug)?.name ?? slug}.`,
+        );
   const agrees =
     config.reportedTrust !== 'informational' && config.maxprepsMissing.length === 0 && mismatches.length === 0;
   const comparison: ComparisonView = {
@@ -529,7 +538,15 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
 
   const through = input.throughDate ? shortDate(input.throughDate) : null;
   const meta = through ? `League games only · through ${through}` : 'League games only · none played yet';
-  const tableWords = heading ? `${heading} Division league standings` : `${league.shortName} league standings`;
+  // "Division" only for NorCal, where the leagues call their groupings divisions (SCVAL's De Anza,
+  // BVAL's Mt. Hamilton). The San Diego Section's alignment calls City Western or Palomar a league
+  // inside a conference, and its own "Division I" / "Division II" are playoff tiers, so a SoCal
+  // caption reads "Palomar league standings" (review 2026-10-06).
+  const tableWords = heading
+    ? regionOf(league.id) === 'socal'
+      ? `${heading} league standings`
+      : `${heading} Division league standings`
+    : `${league.shortName} league standings`;
   const caption = through
     ? `${tableWords}, league games only, through ${through}. Computed from published results; unofficial.`
     : `${tableWords}. No league game has been reported yet.`;

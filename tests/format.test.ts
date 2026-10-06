@@ -314,6 +314,33 @@ describe('shootoutPhrases', () => {
   });
 });
 
+describe('shootoutPhrases: an unverified section (San Diego)', () => {
+  it('describes one game without claiming a shootout decided it; the rule words stay the rule’s', () => {
+    expect(shootoutPhrases('a shootout', 'unverified')).toEqual({
+      noun: 'shootout',
+      onPhrase: 'on a level score',
+      wonOn: 'credited with the win',
+      decidedOn: 'credited as a win on a level score',
+      decidedIt: 'MaxPreps credits the win on a level score',
+      win: 'a shootout win',
+      tally: 'the shootout tally',
+      pronoun: 'it',
+    });
+    // The default is 'verified': every existing caller, and every EAL string, unchanged.
+    expect(shootoutPhrases('1 v 1s')).toEqual(shootoutPhrases('1 v 1s', 'verified'));
+    expect(shootoutPhrases('a shootout').decidedOn).toBe('decided by a shootout');
+  });
+
+  it('says in the score sentence what MaxPreps lists instead of naming a shootout', () => {
+    const g = game({ home: 'mt-carmel', away: 'poway', hs: 0, as: 0, league: false, date: '2026-09-11', results: { home: 'W', away: 'L' } });
+    expect(g.decider).toBe('SO');
+    expect(scoreSentence(g, { shootoutWords: 'a shootout', shootoutInference: 'unverified' })).toBe(
+      `Mt. Carmel 0, Poway 0, final; Mt. Carmel credited with the win (MaxPreps lists 0${EN_DASH}0 with no tally).`,
+    );
+    expect(scoreSentence(g, { shootoutWords: 'a shootout' })).toBe('Mt. Carmel 0, Poway 0, final; Mt. Carmel won in a shootout.');
+  });
+});
+
 describe('numberWord and dateSpan', () => {
   it('words zero to ten and prints anything else as digits', () => {
     expect([0, 1, 6, 10].map(numberWord)).toEqual(['zero', 'one', 'six', 'ten']);

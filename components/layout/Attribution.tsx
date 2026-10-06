@@ -27,8 +27,9 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
  * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with
  * alignment. A league whose table this site orders by its own 3-1-0 points (`rules.orderScope ===
  * 'site'`: the Sunset and the three San Diego leagues, DESIGN-socal §2.1.7) publishes no rules at all,
- * so it is not credited with rules either: per section, "Sunset: no league rules are published;
- * Southern Section rules from the CIF Southern Section", the section linked to the document its rules
+ * so it is not credited with rules either: per section, "Sunset: we found no published league rules;
+ * Southern Section rules from the CIF Southern Section" (what we found, not a claim that none exist:
+ * review 2026-10-06), the section linked to the document its rules
  * are in (SectionConfig.rulesSource: the Blue Book's Article 200, the Green Book's Bylaw 2000.1). The
  * not-affiliated line names every league and every section (CIF-CCS … CIF-SS, CIF-SDS) from config.
  *
@@ -141,7 +142,7 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             ))}
             {noRulesBySection().map(({ section, leagues }) => (
               <Fragment key={section.id}>
-                ; {listWords(leagues.map((l) => l.shortName))}: no league rules are published;{' '}
+                ; {listWords(leagues.map((l) => l.shortName))}: we found no published league rules;{' '}
                 {section.name} rules from the{' '}
                 <ExternalLink href={section.rulesSource.url} arrow={false}>
                   CIF {section.name}

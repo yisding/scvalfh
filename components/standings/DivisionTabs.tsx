@@ -35,8 +35,12 @@ export interface DivisionTabsProps {
    * `region` (optional) puts `data-region-scope` on the pill, so the scope stylesheet shows only the
    * reader's region's pills (/leaders and /history, whose SoCal anchors carry the `-socal` suffix:
    * DESIGN-socal §2.4). Pills with no region always show.
+   *
+   * `srSuffix` (optional) follows the visible label in an sr-only span (', Southern California'), so
+   * two pills with the same visible text and different targets have different accessible names when
+   * JS is off and both regions' pills show (WCAG 2.4.9; the visible text comes first, 2.5.3).
    */
-  tabs: Array<{ href: string; label: string; region?: 'norcal' | 'socal' }>;
+  tabs: Array<{ href: string; label: string; region?: 'norcal' | 'socal'; srSuffix?: string }>;
   variant?: 'bar' | 'inline';
   /** Names the nav landmark for a screen reader. */
   label?: string;
@@ -65,6 +69,7 @@ export function DivisionTabs({
         >
           <span className="sx-indicator inline-flex h-9 items-center rounded-full bg-surface px-4 text-body font-medium text-ink shadow-[var(--sx-ring)] hover:bg-surface-2 group-active:bg-surface-3 forced-colors:border">
             {tab.label}
+            {tab.srSuffix ? <span className="sr-only">{tab.srSuffix}</span> : null}
           </span>
         </a>
       ))}

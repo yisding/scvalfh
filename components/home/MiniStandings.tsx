@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { GoalDiffCell } from '../ui/GoalDiffBar';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
-import { NoGoalDiff } from '../ui/StandingsTable';
+import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords } from '../../lib/format';
+import { getDivision, regionOf } from '../../lib/leagues';
 import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
@@ -88,8 +89,12 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
   );
   const lineAt = lineAfter === null ? -1 : lineAfter - 1;
   const kicker = showDivisionLabel && division.heading ? division.heading : 'League table';
+  // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its
+  // "Division I" / "Division II" are playoff tiers (standings-view.ts tableWords, review 2026-10-06).
   const subject = showDivisionLabel && division.heading
-    ? `${division.heading} Division league standings`
+    ? regionOf(getDivision(division.id).leagueId) === 'socal'
+      ? `${division.heading} league standings`
+      : `${division.heading} Division league standings`
     : `${division.leagueShort} league standings`;
   return (
     <section className={className}>
@@ -143,10 +148,13 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
         <div className="px-gutter md:px-0">
           <p className="mt-2 mb-0 text-meta text-ink-3">
             Top {shown.length} of {division.total}
-            <span className="hidden @min-[23.4375rem]:inline">
-              {' '}
-              &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
-            </span>
+            {/* Only when some team has a goal difference: gdDomain's floor of 1 is a scale, not a fact. */}
+            {biggestGoalDiff(division.rows.map((r) => r.gd)) > 0 ? (
+              <span className="hidden @min-[23.4375rem]:inline">
+                {' '}
+                &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
+              </span>
+            ) : null}
           </p>
           {legend ? (
             <details className="sx-disclosure mt-3">

@@ -12,7 +12,8 @@
  * Result flags follow the score unless `results` overrides them, and the decider is set the way
  * lib/normalize.ts sets it: a level final flagged {W, L} between two teams of a section whose
  * `shootout` rule is set (the Northern Section's EAL, the San Diego Section, across its conferences)
- * is 'SO' (no tally); otherwise forfeit, then the overtime count. A 'membership' division (San Diego)
+ * is 'SO' (no tally) unless it is a tournament row the section's rule does not cover; otherwise forfeit,
+ * then the overtime count. A 'membership' division (San Diego)
  * counts by membership and date, so its games need no stamp; a game MaxPreps flags between two
  * divisions of one such league carries lib/classify.ts's cross-division note, as classifyGames sets it.
  */
@@ -98,7 +99,12 @@ export function game(spec: GameSpec): Game {
 
   const homeResult: Outcome | null = final ? (spec.results?.home ?? (hs! > as! ? 'W' : hs! < as! ? 'L' : 'T')) : null;
   const awayResult: Outcome | null = final ? (spec.results?.away ?? (as! > hs! ? 'W' : as! < hs! ? 'L' : 'T')) : null;
-  const shootoutSection = home.section === away.section && getSection(home.section).shootout !== null;
+  // As lib/normalize.ts: a tournament row (contestType 2 on either side) is outside a section rule that does
+  // not cover tournaments (the San Diego Section's, SectionConfig.shootout.coversTournaments false).
+  const rule = home.section === away.section ? getSection(home.section).shootout : null;
+  const types = spec.contestTypes ?? (league ? { home: 0, away: 0 } : { home: 1, away: 1 });
+  const tournamentRow = types.home === 2 || types.away === 2;
+  const shootoutSection = rule !== null && !(tournamentRow && !rule.coversTournaments);
   const oneVOne =
     shootoutSection &&
     hs === as &&

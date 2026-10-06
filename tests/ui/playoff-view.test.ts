@@ -204,6 +204,42 @@ describe('buildDivisionProjection — SCVAL', () => {
     expect(text, 'components/playoffs/PlayoffProjection.tsx').not.toMatch(/\bofficial\s+(EAL\s+)?alignment/i);
   });
 
+  it('says "as MaxPreps lists it" only where MaxPreps’ table for the division lists the teams (Metro South Bay, Sunset)', async () => {
+    // The corpus has no SoCal games, so every row is a no-results row. MaxPreps' table for Metro South
+    // Bay is 'Grossmont' (El Capitan, Granite Hills) and leaves out Hilltop and Southwest.
+    const rowsOf = (division: string) =>
+      data.getTeams().filter((t) => t.division === division).map((team) => ({
+        team,
+        standing: data.getStandingFor(team.id)!,
+        status: 'out' as PlayoffStatus,
+        statuses: ['out'] as PlayoffStatus[],
+        label: 'x',
+        shared: false,
+      }));
+    const facts = { aqPlaces: 0, playInPlace: null, playInDate: null, atLargePlace: null, line: null, unresolved: '' };
+    const msb = view.buildDivisionProjection('metro-south-bay', 'Metro South Bay', rowsOf('metro-south-bay'), facts);
+    expect(msb.notes[0], VIEW).toBe(
+      'No Metro South Bay league results have been reported yet, so there is nothing to project here. The rows below are the Metro South Bay teams (the CIF-SDS 2026-27 League Alignment).',
+    );
+    const sunsetRows = rowsOf('sunset');
+    const partial = sunsetRows.map((r) =>
+      r.team.slug === 'great-oak' ? { ...r, standing: { ...r.standing, hasReportedResults: true } } : r,
+    );
+    const { PlayoffProjection } = await import('../../components/playoffs/PlayoffProjection');
+    const text = textOf(
+      renderToStaticMarkup(
+        PlayoffProjection({
+          projection: view.buildDivisionProjection('sunset', 'Sunset', partial, facts),
+          heading: 'League table',
+          asOfLabel: 'so far',
+          standingsHref: '/standings/sunset',
+        }),
+      ),
+    );
+    expect(text, 'components/playoffs/PlayoffProjection.tsx').not.toContain('as MaxPreps lists it');
+    expect(text).toContain('are Sunset teams (MaxPreps’ 2024-25 and 2025-26 Sunset tables) but have no reported results');
+  });
+
   it('reproduces the corpus table: De Anza’s shared 3rd holds three berths among four teams', () => {
     const da = build('de-anza', liveRows('de-anza'));
     expect(da.autoRows.map((r) => r.team.slug), VIEW).toEqual(['saint-francis', 'st-ignatius', 'los-altos', 'valley-christian']);

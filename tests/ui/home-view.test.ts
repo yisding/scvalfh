@@ -173,6 +173,18 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         }
         expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
         expect(division.href, `${HV}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
+        // "Division" only for NorCal: San Diego's "Division I/II" are playoff tiers (review 2026-10-06).
+        if (division.heading !== null) {
+          expect(html, `components/home/MiniStandings.tsx: ${division.id} caption`).toContain(
+            panel.region === 'socal' ? `${division.heading} league standings` : `${division.heading} Division league standings`,
+          );
+        }
+        if (panel.region === 'socal') expect(html).not.toMatch(/ Division league standings/);
+        // The scale is named only when some team has a goal difference: the floor of 1 is not a fact.
+        const realMax = Math.max(0, ...division.rows.map((r) => Math.abs(r.gd)));
+        expect(textOf(html).includes('biggest goal difference'), `components/home/MiniStandings.tsx: ${division.id} GD`).toBe(
+          realMax > 0,
+        );
       }
     }
     // The points legend: once per league, under its last table, citing the league's own rule.

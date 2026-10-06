@@ -507,6 +507,8 @@ export default function AboutPage() {
   // Leagues that publish no points rule or standings at all (the Sunset, the San Diego leagues): this site
   // applies its own 3-1-0 and says so, never that their rules require it (DESIGN-socal §2.1.7).
   const siteOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'site');
+  // A division MaxPreps publishes no table for (crossCheckSkipReason), whose cross-check is skipped.
+  const anyTableless = leagues.some((l) => getLeague(l.id).divisions.some((d) => crossCheckSkipReason(d.id) !== null));
   const ruleLeagues = leagues.filter((l) => getLeague(l.id).rules.orderScope !== 'site');
   // The sections whose level varsity games end in a shootout (the Northern Section's 1 v 1s, the San Diego
   // Section's shootouts: SectionConfig.shootout), each with its leagues.
@@ -614,6 +616,22 @@ export default function AboutPage() {
   const historyAvailable = getAvailableHistoryLeagues();
   const historyUnavailable = getUnavailableHistoryLeagues();
   const historyPublishedOnly = historyUnavailable.filter((l) => (l.entry.alsoPublished?.length ?? 0) > 0);
+  // What was published officially, by PUBLISHER and once per document: a league with no site of its own
+  // links its section's document (the San Diego Section's 2025 bracket sheet for City, North County and
+  // Metro), so the section is named, as app/history/2025-26/page.tsx names it on each card. Crediting
+  // the sheet to the three conferences and listing it three times was the review's finding (2026-10-06).
+  const historyPublishers = new Map<string, Map<string, string>>();
+  for (const l of historyPublishedOnly) {
+    const league = getLeague(l.id);
+    const section = getSection(league.sectionId);
+    const publisher = league.officialUrl !== section.officialUrl ? league.shortName : `the ${section.name}`;
+    const docs = historyPublishers.get(publisher) ?? new Map<string, string>();
+    for (const doc of l.entry.alsoPublished ?? []) docs.set(doc.url, doc.label);
+    historyPublishers.set(publisher, docs);
+  }
+  const historyPublishedDocs = [
+    ...new Map([...historyPublishers.values()].flatMap((docs) => [...docs])).values(),
+  ];
 
   return (
     // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
@@ -900,10 +918,8 @@ export default function AboutPage() {
             {historyPublishedOnly.length > 0 ? (
               <>
                 {' '}
-                The archive links what {listWords(historyPublishedOnly.map((l) => getLeague(l.id).shortName))}{' '}
-                did publish officially (
-                {listWords(historyPublishedOnly.flatMap((l) => (l.entry.alsoPublished ?? []).map((d) => d.label)))}
-                ), without reproducing it.
+                The archive links what {listWords([...historyPublishers.keys()])} did publish officially (
+                {listWords(historyPublishedDocs)}), without reproducing it.
               </>
             ) : null}
           </p>
@@ -941,9 +957,14 @@ export default function AboutPage() {
           <SectionHeader size="lg" kicker="Standings, points &amp; tiebreaks" />
           <div className="sx-prose">
             <p>
+              {/* The qualifiers appear only when they are needed, so a NorCal-only site reads as before:
+                  a league that publishes no rules is ordered by this site's stated rules, and a division
+                  MaxPreps has no table for (the San Diego Section's Valley) has nothing to compare. */}
               Each league&rsquo;s standings are computed from individual game results by that
-              league&rsquo;s own rules, then compared field by field against MaxPreps&rsquo; own
-              published table (see{' '}
+              league&rsquo;s own rules
+              {siteOrdered.length > 0 ? ' where it publishes them (otherwise by this site’s stated rules below)' : ''},
+              then compared field by field against MaxPreps&rsquo; own published table
+              {anyTableless ? ' wherever MaxPreps publishes one' : ''} (see{' '}
               <a href="#cross-check" className="text-accent hover:underline">
                 the cross-check log
               </a>
@@ -1024,15 +1045,29 @@ export default function AboutPage() {
               <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
               {/* One item per section with a shootout rule (SectionConfig.shootout): the Northern Section's
                   1 v 1s (the EAL's sentence, unchanged), the San Diego Section's shootouts. */}
+              {/* An 'unverified' section (San Diego) never says a shootout decided a level W/L final: no box
+                  score carries a tally, and si.com and the Section's power rankings record Mt. Carmel–Poway
+                  (Sep 11) as 2-0 where MaxPreps has 0-0 (SectionConfig.shootout.inference). */}
               {shootoutSections.map((g) => (
                 <li key={g.section.id}>
                   {g.leagues.length === 1
                     ? `A level ${g.leagues[0].shortName} league game`
                     : `A level game between two ${g.section.name} teams`}{' '}
-                  that MaxPreps marks as won was decided on {g.section.shootout!.words}: it shows the level score
-                  with an SO tag and counts as the winner&rsquo;s win. The{' '}
-                  {/* '1 v 1s' → '1 v 1', 'a shootout' → 'shootout'. */}
-                  {g.section.shootout!.words.replace(/^a /, '').replace(/s$/, '')} tally is not shown.
+                  {g.section.shootout!.inference === 'verified' ? (
+                    <>
+                      that MaxPreps marks as won was decided on {g.section.shootout!.words}: it shows the level score
+                      with an SO tag and counts as the winner&rsquo;s win. The{' '}
+                      {/* '1 v 1s' → '1 v 1', 'a shootout' → 'shootout'. */}
+                      {g.section.shootout!.words.replace(/^a /, '').replace(/s$/, '')} tally is not shown.
+                    </>
+                  ) : (
+                    <>
+                      that MaxPreps marks as won is counted as the flagged team&rsquo;s win (under the
+                      Section&rsquo;s procedures a level game outside a tournament is settled in overtime or
+                      by a shootout; si.com and the Section&rsquo;s power rankings record some such games
+                      with the shootout goal added): it shows MaxPreps&rsquo; score with no decider tag.
+                    </>
+                  )}
                 </li>
               ))}
               <li>
@@ -1121,7 +1156,11 @@ export default function AboutPage() {
               {shootoutSections.map((g) => (
                 <span key={g.section.id}>
                   A level si.com score between two {shootoutTeamsWho(g)}{' '}
-                  teams is never used: a varsity game there is decided on {g.section.shootout!.words}, and si.com does not say
+                  teams is never used: a varsity game there
+                  {/* The San Diego procedures do not cover invitational tournaments (coversTournaments false),
+                      where level finals stand: seven San Diego pairs' tournament games are 0-0. */}
+                  {g.section.shootout!.coversTournaments ? '' : ' outside a tournament'} is decided on{' '}
+                  {g.section.shootout!.words}, and si.com does not say
                   who won {g.section.shootout!.words.endsWith('s') ? 'them' : 'it'}.{' '}
                 </span>
               ))}

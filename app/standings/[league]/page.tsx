@@ -12,6 +12,7 @@ import { buildStandingsPageView } from '../../../components/standings/standings-
 import { leaderClause } from '../../../components/standings/standings-view';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
+import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
@@ -78,11 +79,16 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   // The page disclosure: the GD paragraph and each generic per-division sentence once. The GD
   // scale is in words ("De Anza's is 36"), not "|GD| max 36"; a single-division league names no
   // division (SPEC §10.3).
+  // A division where every |GD| is 0 (Metro South Bay before its first game) is left out of the
+  // list: its `gdDomain` is the bar floor of 1, not a goal difference (StandingsTable biggestGoalDiff).
+  const scaled = data.views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
   const gdScale = multi
-    ? `Bars are scaled to each division's own biggest goal difference (${data.views
-        .map((v) => `${v.label}'s is ${v.gdDomain}`)
-        .join(', ')}), so bars in different divisions are not comparable.`
-    : `Bars are scaled to the league's biggest goal difference (${data.views[0]?.gdDomain ?? 0}).`;
+    ? `Bars are scaled to each division's own biggest goal difference${
+        scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}'s is ${v.gdDomain}`).join(', ')})` : ''
+      }, so bars in different divisions are not comparable.`
+    : `Bars are scaled to the league's biggest goal difference${
+        scaled.length > 0 ? ` (${scaled[0]!.gdDomain})` : ''
+      }.`;
   const legend = [
     `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.

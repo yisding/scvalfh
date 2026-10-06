@@ -692,9 +692,13 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         if (shootout?.shootout && s.home === s.away) {
           // '…a varsity EAL game is decided on 1 v 1s and si.com does not say who won them…' (unchanged for the
           // EAL); '…a varsity San Diego Section game is decided by a shootout and si.com does not say who won it…'.
+          // The rule's words, whatever the section's inference, with 'outside a tournament' where the rule does
+          // not reach tournaments (the SDFHOA procedures), so the note never says a tournament game cannot end
+          // level. The D24 rule itself is unchanged: no level si.com score between two such teams is written.
           const { decidedOn, pronoun } = shootoutPhrases(shootout.shootout.words);
+          const scope = shootout.shootout.coversTournaments ? '' : ' outside a tournament';
           skipped.push(
-            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootoutGroupName(shootout)} game is ${decidedOn} and si.com does not say who won ${pronoun}, so it is not used.`),
+            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootoutGroupName(shootout)} game${scope} is ${decidedOn} and si.com does not say who won ${pronoun}, so it is not used.`),
           );
           return g;
         }

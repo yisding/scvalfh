@@ -9,6 +9,7 @@ import { postseasonTagOf } from '../components/ui/describe-game';
 import {
   classifyGame,
   classifyGames,
+  contradictedRecap,
   crossDivisionNote,
   isLeagueGame,
   leaguesOf,
@@ -255,7 +256,7 @@ describe('classify: San Diego (membership, DESIGN-socal §2.1.7)', () => {
     });
     expect(unflagged.isLeague).toBe(false);
     expect(unflagged.countsFor).toBe('city-western');
-    // Patrick Henry: MaxPreps flags none of its league games (inventory 2026-10-06).
+    // Patrick Henry: MaxPreps flags none of its league games (inventory read Mon Oct 5 Pacific).
     const henry = game({ home: 'patrick-henry', away: 'point-loma', hs: 0, as: 3, date: '2026-09-22', league: false });
     expect(henry.countsFor).toBe('city-eastern');
     expect(henry.official).toBeUndefined();
@@ -281,6 +282,40 @@ describe('classify: San Diego (membership, DESIGN-socal §2.1.7)', () => {
     const g = game({ home: 'escondido', away: 'vista', date: '2026-10-12', league: false });
     expect(g.status).toBe('scheduled');
     expect(g.countsFor).toBe('valley');
+  });
+
+  it('drops a MaxPreps recap that calls a membership-counted game non-conference, and never rewrites one', () => {
+    // fb944ba7's shape: Westview–San Pasqual, a Valley game by the alignment, with MaxPreps' own recap.
+    const recap = 'San Pasqual won their away non-conference game against Westview.';
+    const valley = game({ home: 'westview', away: 'san-pasqual', hs: 0, as: 1, date: '2026-09-30', league: false });
+    expect(valley.countsFor).toBe('valley');
+    expect(contradictedRecap({ ...valley, recap })).toBe(true);
+    const [out] = classifyGames([{ ...valley, recap }]);
+    expect(out.countsFor).toBe('valley');
+    expect(out.recap).toBeNull();
+    // "non-league" is the same claim; the match is case-blind and whole-word.
+    expect(classifyGames([{ ...valley, recap: 'Westview won their home Non-League game.' }])[0].recap).toBeNull();
+    // A recap that does not contradict the count is kept word for word.
+    const kept = 'San Pasqual won their away conference game against Westview by a score of 1-0.';
+    expect(classifyGames([{ ...valley, recap: kept }])[0].recap).toBe(kept);
+    // A game that counts nowhere keeps its recap: "non-conference" is then not a contradiction.
+    const early = game({ home: 'westview', away: 'san-pasqual', hs: 0, as: 1, date: '2026-09-01', league: false });
+    expect(early.countsFor).toBeNull();
+    expect(classifyGames([{ ...early, recap }])[0].recap).toBe(recap);
+    // A tournament row between the same pair counts nowhere either, and keeps its recap.
+    const tourney = game({ home: 'westview', away: 'san-pasqual', hs: 0, as: 1, date: '2026-09-30', contestTypes: { home: 2, away: 2 } });
+    expect(classifyGames([{ ...tourney, recap }])[0].recap).toBe(recap);
+  });
+
+  it('keeps the recap of a non-membership league game (BVAL’s Prospect at Live Oak, 258b9301)', () => {
+    const recap = 'Prospect won their away non-conference game against Live Oak by a score of 6-0.';
+    const g = game({
+      home: 'live-oak', away: 'prospect', hs: 0, as: 6, date: '2026-09-29',
+      league: false, contestTypes: { home: 1, away: 1 },
+    });
+    expect(g.countsFor).toBe('santa-teresa');
+    expect(contradictedRecap({ ...g, recap })).toBe(false);
+    expect(classifyGames([{ ...g, recap }])[0].recap).toBe(recap);
   });
 
   it('counts a game MaxPreps flags between two City divisions in neither table, and says why', () => {

@@ -22,6 +22,7 @@ import { teamJvStanding } from '../../../components/standings/jv-standings-view'
 import { buildTeamJvView } from '../../../components/teams/jv-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+import { regionIdSuffix } from '../../../components/leaders/leaders-view';
 import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -33,10 +34,10 @@ import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
-import { getTeamSlugs } from '../../../lib/data';
+import { getTeamSlugs, getToday } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
-import { divisionHeading, leagueOfDivision } from '../../../lib/leagues';
+import { divisionHeading, leagueOfDivision, regionOf } from '../../../lib/leagues';
 import type { DivisionId, LeagueId } from '../../../lib/types';
 
 /**
@@ -234,6 +235,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const jvStanding = teamJvStanding(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
+  // A team whose every league game is still to come (Metro South Bay before Oct 7, Newport Harbor before
+  // Oct 13) has no league result for MaxPreps to have either, so its empty state names the first game
+  // instead of "MaxPreps may have results we have not picked up yet" (review 2026-10-06). That hedge stays
+  // for a league game dated on or before the snapshot's Pacific day that has no score.
+  const today = getToday();
+  const earliestLeague = leagueLog.reduce<(typeof leagueLog)[number] | null>(
+    (first, g) => (first === null || g.dateLocal < first.dateLocal ? g : first),
+    null,
+  );
+  const firstLeagueGame = earliestLeague !== null && earliestLeague.dateKey > today ? earliestLeague : null;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
@@ -363,13 +374,25 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         ) : (
           <section className="min-w-0 md:col-span-2">
             <SectionHeader kicker="Form and goal margin" />
-            <EmptyState
-              heading={`No league results reported for ${team.name}.`}
-              action={maxprepsAction}
-            >
-              Their schedule is below, and MaxPreps may have results we have not picked up yet. We
-              do not fill the gap with zeroes.
-            </EmptyState>
+            {firstLeagueGame ? (
+              <EmptyState
+                heading={`${team.name} has not played a ${view.scopeLabel} game yet.`}
+                action={maxprepsAction}
+              >
+                The first is {shortDate(firstLeagueGame.dateLocal)}{' '}
+                {firstLeagueGame.away.slug === team.slug && firstLeagueGame.site !== 'neutral' ? 'at' : 'vs'}{' '}
+                {firstLeagueGame.away.slug === team.slug ? firstLeagueGame.home.name : firstLeagueGame.away.name}. Their
+                schedule is below.
+              </EmptyState>
+            ) : (
+              <EmptyState
+                heading={`No league results reported for ${team.name}.`}
+                action={maxprepsAction}
+              >
+                Their schedule is below, and MaxPreps may have results we have not picked up yet. We
+                do not fill the gap with zeroes.
+              </EmptyState>
+            )}
           </section>
         )}
 
@@ -556,7 +579,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <SectionHeader
               kicker="Player stats"
               meta="This season, from MaxPreps"
-              action={{ href: '/leaders#players', label: 'Site leaders' }}
+              action={{ href: `/leaders#players${regionIdSuffix(regionOf(team.league))}`, label: 'Site leaders' }}
             />
             <TeamPlayerStats view={playerStats} />
           </section>

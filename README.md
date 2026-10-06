@@ -25,7 +25,7 @@ Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture"
 | PCAL — Pacific Coast Athletic League | NorCal | CCS | one division (7) | 7 |
 | MCAL — Marin County Athletic League | NorCal | NCS | one division (9) | 9 |
 | EAL — Eastern Athletic League | NorCal | NS | one division (6) | 6 |
-| Sunset — Sunset Field Hockey League | SoCal | SS | one division (10) | 10 |
+| Sunset — Sunset field hockey league | SoCal | SS | one division (10) | 10 |
 | City — City Conference | SoCal | SDS | City Western (6), City Eastern (6) | 12 |
 | North County — North County Conference | SoCal | SDS | Avocado (6), Palomar (7), Valley (6) | 19 |
 | Metro — Metro Conference | SoCal | SDS | Metro Mesa (5), Metro South Bay (4) | 9 |
@@ -65,9 +65,14 @@ could find, so the site orders their tables by its own 3-1-0 points and says so 
 Sunset is a field-hockey-only grouping of ten Southern Section schools in Orange, Los Angeles and
 Riverside counties (not the all-sports Sunset League); its league games are the games MaxPreps marks as
 league games, and there is no round robin, so the site shows games played without "of N". In the San
-Diego Section every pair of division-mates is scheduled twice, and a game counts for a division when
-both sides are its members, whatever MaxPreps' league flag says (the flag misses many of them). A level
-San Diego varsity game is decided by a shootout, as in the EAL. See "How standings are computed".
+Diego Section every pair of division-mates is scheduled twice except, on 2026-10-05 (Pacific), Metro
+Mesa's Bonita Vista and Helix, who meet once, and a game counts for a division when both sides are its
+members, whatever MaxPreps' league flag says (the flag misses many of them). Under the Section's
+officials' procedures a level varsity game outside a tournament goes to overtime and then a shootout;
+MaxPreps records many of these as a level score marked W and L, and the site counts the flagged team's
+win but prints no decider tag and never says a shootout decided it (no box score carries a tally, and
+si.com and the Section's power rankings record some of these games with the shootout goal added). See
+"How standings are computed".
 
 People pick what they want to see in three ways: a NorCal/SoCal switcher picks the region, the home
 page remembers a league (chips and a "Show <league> here" button, applied before first paint, which
@@ -475,7 +480,9 @@ scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagr
 stopping the run, writes nothing outside the season window unless `--force`, leaves the file alone
 when only its stamps would change, takes `--leagues`, and scopes failures to the team and the
 source (a failed MaxPreps feed or si.com page keeps that school's previous rows, `carried-forward`).
-Cost per run: 99 small MaxPreps calls through the MaxPreps client's gate and up to 98 si.com pages,
+The previous file is salvaged row by row, as for rosters and stats: each team row, game and si.com row
+is held to its own schema and one that fails costs only itself, so a registry that grew (which fails
+the whole-file schema) no longer sends every team outside a `--leagues` run to `pending`. Cost per run: 99 small MaxPreps calls through the MaxPreps client's gate and up to 98 si.com pages,
 one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 98 now take at least 98 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
 a JV-only date (Aug 18 in 2026) is on the team pages alone.
 
@@ -962,7 +969,8 @@ Regional, Oct 30-31 (top six EAL/SRL schools, format and site not published, no 
 
 ### Sunset
 
-The Sunset Field Hockey League is a field-hockey-only grouping of ten Southern Section schools
+The Sunset (the site calls it the Sunset field hockey league; MaxPreps and si.com call it "Sunset") is
+a field-hockey-only grouping of ten Southern Section schools
 (Bonita, Chaminade, Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport
 Harbor and Temecula Valley; exactly MaxPreps' 2024-25 and 2025-26 Sunset tables), not the all-sports
 Sunset League, which has different members. No Sunset website, schedule, standings or rules document
@@ -973,8 +981,9 @@ Section's last allowable contest. There is no round robin (of the 45 pairs, 9 me
 maximum-points column, and when teams' counts differ by two or more the table says points favour
 teams that have played more. **Points:** no league rule is published, so this site applies its own
 3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the NFHS rules and says
-nothing on overtime, and Sunset games have both ended level and been decided in overtime, so each is
-recorded as reported. **Tiebreaks:** none is published, so teams level on points share a place; teams
+nothing on overtime. Games between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain
+Valley 1-1 Marina, Sep 11; MaxPreps marks neither as a league game) and a Sunset league game has been
+decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so each game is recorded as reported. **Tiebreaks:** none is published, so teams level on points share a place; teams
 level at the top read "Sunset co-leaders" once league play is over. **Postseason:** none. The Southern
 Section holds no field hockey playoffs (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no
 regional or state championship, so a Sunset team's season ends with its last game. MaxPreps' 2026-27
@@ -992,15 +1001,21 @@ tournament or postseason contest, and it falls inside league play (from each div
 between two members to Oct 30, the Section's last regular-season day), whatever MaxPreps' league flag
 says. The flag misses many of them (Patrick Henry 0 of 10, San Pasqual 3, Vista 4, Mt. Carmel 4).
 Every pair of division-mates is scheduled to meet twice on MaxPreps: 10, 10, 10, 12, 10, 8 and 6 games
-a team. The exception, on 2026-10-06, is Metro Mesa's Bonita Vista and Helix, who meet once. A game
+a team. The exception, on 2026-10-05 (Pacific), is Metro Mesa's Bonita Vista and Helix, who meet once
+(Oct 23), so unless a second meeting is added each plays a game short of the eight. A game
 MaxPreps flags between two divisions of one conference (Mission Bay's five against City Eastern
 teams) counts in neither table, with a note. **Points:** no league rule is published, so this site
-applies its own 3-1-0. **A level game** never ends level: the San Diego Field Hockey Officials
-Association's 2026 procedures give a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts, and
-credit the winner one goal. MaxPreps often records such a win as a level score marked W and L, so the
-site counts the flags and marks the game "SO", for any two San Diego teams (the rule is the
-Section's, not a conference's), and does not show the shootout tally. The rule is varsity only: a
-level JV game stays a tie. **Tiebreaks:** the Green Book leaves them to the Section's preseason
+applies its own 3-1-0. **A level game:** the San Diego Field Hockey Officials Association's 2026
+procedures give a league, non-league or playoff varsity game a 10-minute 7 v 7 sudden-victory period,
+then 1 v 1 shootouts, and credit the shootout winner one goal; they do not cover invitational
+tournaments, and several tournament games between San Diego teams have ended level and stay level here.
+MaxPreps often records a game outside a tournament as a level score marked W and L, with no tally. The
+site counts the flagged team's win, for any two San Diego teams (the rule is the Section's, not a
+conference's), shows MaxPreps' score with no decider tag, and never says a shootout decided the game:
+no box score carries a tally, and si.com and the Section's power rankings both record Mt. Carmel–Poway
+(Sep 11) as 2-0 where MaxPreps has 0-0 marked W and L (`SectionConfig.shootout.inference`
+'unverified'; the EAL's is 'verified' by the 2026-09-28 Chico–Davis box score's "SO Win" column). The
+rule is varsity only: a level JV game stays a tie. **Tiebreaks:** the Green Book leaves them to the Section's preseason
 minutes, which are not published in a form we could read, so teams level on points share a place; the
 league designates its own champion, and teams level at the top read "{conference} co-leaders" once
 league play is over. **Postseason:** the San Diego Section playoffs, Nov 2-14, finals Nov 14 at La Jolla
@@ -1099,7 +1114,8 @@ at once, at every build, starting from last season's:
 - **What counts.** Every final between two of the 99 teams, league or not, postseason included,
   with its published score (a si.com backfill too). Forfeits, finals without a score and games
   against schools outside the nine leagues are left out, last season's included. The fit uses goals,
-  so an EAL game decided on 1 v 1s, or a San Diego game decided by a shootout, counts as level there.
+  so an EAL game decided on 1 v 1s, or a level San Diego game MaxPreps marks W and L, counts as level
+  there.
   The model's constants (the 5-goal cap, the one-game weight of last season, 175 points a goal) were
   set on NorCal seasons and have not been tested on Southern California's.
 - **The board.** A team needs half the median team's counted games this season, in its own region,

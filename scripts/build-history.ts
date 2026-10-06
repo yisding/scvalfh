@@ -354,11 +354,13 @@ async function main(argv: readonly string[]): Promise<number> {
       'A web search for a Sunset field hockey league website, bylaws, schedule or standings (none found)',
     ],
   };
+  // The reason says what we found, not that nothing exists: a league could have posted standings somewhere
+  // the sources below do not reach (the Sunset's reason is worded the same way).
   const sds = (id: 'city' | 'north-county' | 'metro') => ({
     status: 'unavailable',
     league: getLeague(id).name,
     reason:
-      'No 2025-26 final league standings were published. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+      'We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
     checkedOn: '2026-10-06',
     checked: [
       'https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)',

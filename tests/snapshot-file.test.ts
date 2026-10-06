@@ -203,12 +203,19 @@ describeIfPresent('the committed snapshot: official fixtures', () => {
    * window escaped this gate once: the Sep 9 grid slot for ST. IGNATIUS @ LOS ALTOS was published
    * as unplayed while the site listed the contest on Oct 8. (The two-phase matcher of the other
    * leagues matches legs one by one, so this property is SCVAL's.)
+   *
+   * "Meet" means a game not already matched to another fixture: the two legs of a round robin are
+   * two fixtures, and a pair whose second leg was played on its grid date (matched, `official` set)
+   * while the first leg is postponed with no make-up date yet does meet in the snapshot — once — and
+   * still leaves the first fixture unmatched honestly (Homestead and Cupertino on 2026-10-05, the
+   * Sep 9 leg unplayed). Only a game with NO official stamp could have matched the fixture by pair.
    */
   it('marks every unmatched SCVAL fixture as one whose TEAMS never meet in the snapshot', () => {
     const fixtures = (snapshot.officialFixtures ?? []).filter((f) => f.league === 'scval');
     if (fixtures.length === 0) return;
     const pairs = new Map<string, string[]>();
     for (const g of snapshot.games) {
+      if (g.official) continue;
       const key = [g.home.slug, g.away.slug].sort().join('~');
       const list = pairs.get(key);
       const row = `${g.dateKey} ${g.away.name} @ ${g.home.name}`;

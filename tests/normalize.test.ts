@@ -6,11 +6,13 @@ import { describe, expect, it } from 'vitest';
 import { sideOutcome } from '../lib/format';
 import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
 import {
+  applyDateOverride,
   applyExclusions,
   cleanRecap,
   dateKeyOf,
   dedupePhantomPairs,
   normalizeGames,
+  pacificMidnightUtc,
   seasonWindowOf,
   splitLocation,
   toUtcIso,
@@ -627,11 +629,12 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     home: [slug: string, score: number, result: string | null],
     away: [slug: string, score: number, result: string | null],
     ot = 0,
+    contestTypes: { home: number; away: number } = { home: 0, away: 0 },
   ): ScheduleRow {
     const row = editTeams(template, (t) => {
       const [slug, score, result] = t.homeAwayType === 0 ? home : away;
       const team = getTeamBySlug(slug)!;
-      return { teamId: team.id, name: team.name, score, result, contestType: 0 };
+      return { teamId: team.id, name: team.name, score, result, contestType: t.homeAwayType === 0 ? contestTypes.home : contestTypes.away };
     });
     return {
       ...row,
@@ -733,6 +736,37 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     expect(same.warnings).toContain(`contest ${id}: a level North County final with no shootout winner flagged`);
   });
 
+  // The SDFHOA procedures cover the regular season and the playoffs, not invitational tournaments
+  // (SectionConfig.shootout.coversTournaments false): seven SDS-v-SDS tournament games are recorded 0-0, T and T.
+  it('reads nothing into a level San Diego tournament final (contestType 2 on either row): no SO, no warning', () => {
+    const id = 'eeeeeeee-0000-4000-8000-0000000000b1';
+    // Eastlake 0, La Costa Canyon 0, Aug 21 (16947736…): a tie, and no "no shootout winner flagged" line.
+    const tie = one([pairRow(id, ['eastlake', 0, 'T'], ['la-costa-canyon', 0, 'T'], 0, { home: 2, away: 2 })]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.games[0].provenance.resultConflict).toBeUndefined();
+    expect(tie.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // Either row's type is enough.
+    const half = one([pairRow(id, ['canyon-crest-academy', 0, 'T'], ['san-pasqual', 0, 'T'], 0, { home: 1, away: 2 })]);
+    expect(half.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // A level tournament final flagged W/L is not read as a shootout win the procedures do not provide for:
+    // the flags stay a contradiction and the score's tie stands.
+    const flagged = one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'], 0, { home: 2, away: 2 })]);
+    expect(flagged.games[0].decider).toBe('REG');
+    expect(flagged.games[0].provenance.resultConflict).toBe('MaxPreps marks Mt. Carmel W and Poway L on a 0-0 score.');
+    expect(sideOutcome(flagged.games[0], 'home')).toBe('T');
+    // The same pair outside a tournament is unchanged: SO, and the level warning without a flag.
+    expect(one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'], 0, { home: 1, away: 1 })]).games[0].decider).toBe('SO');
+    expect(one([pairRow(id, ['eastlake', 0, 'T'], ['la-costa-canyon', 0, 'T'], 0, { home: 1, away: 1 })]).warnings).toContain(
+      `contest ${id}: a level San Diego Section final with no shootout winner flagged`,
+    );
+  });
+
+  it('keeps reading an EAL tournament final flagged W/L as a 1 v 1 win (§VII.E.4 makes no tournament exception)', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000b2', ['chico', 1, 'W'], ['davis', 1, 'L'], 0, { home: 2, away: 2 })]).games;
+    expect(g.decider).toBe('SO');
+    expect(g.provenance.resultConflict).toBeUndefined();
+  });
+
   it('keeps a level Sunset final a tie, and a level Sunset final flagged W/L a contradiction (no Southern Section rule)', () => {
     // Bonita 1-1 Marina, Aug 18: recorded as reported.
     const tie = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a3', ['bonita', 1, 'T'], ['marina', 1, 'T'])]);
@@ -816,5 +850,63 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
       expect(res.games[0].decider, `flag ${flag}`).toBe('FORFEIT');
       expect(res.warnings).not.toContain(noWinnerNote(id));
     }
+  });
+});
+
+describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contestDateOverrides)', () => {
+  // Valley Center 0 @ Fallbrook 11: MaxPreps dates it Sep 25 at 4:00 PM, Fallbrook's slot against Rancho
+  // Buena Vista; the Section's power-rankings details for both schools list it on 09/29 with no time.
+  const id = 'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0';
+  const dir = path.join(corpusDir('socal-2026-10-06'), 'maxpreps', 'schedule');
+  const rowsOf = (slug: string) =>
+    ScheduleResponseSchema.parse(JSON.parse(readFileSync(path.join(dir, `${slug}.json`), 'utf8')) as unknown).data;
+  const rows = [...rowsOf('fallbrook'), ...rowsOf('valley-center')];
+  const at = '2026-10-06T03:19:11.008Z';
+
+  it('is configured for the one contest, with its source', () => {
+    expect(Object.keys(DATA_QUALITY.contestDateOverrides)).toEqual([id]);
+    expect(DATA_QUALITY.contestDateOverrides[id]).toEqual({
+      dateKey: '2026-09-29',
+      timeTba: true,
+      source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
+    });
+  });
+
+  it('moves the game to Sep 29 with no time, before the sort, and records what MaxPreps had', () => {
+    const raw = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games.find((g) => g.contestId === id)!;
+    expect([raw.dateLocal, raw.dateKey, raw.isTimeTba]).toEqual(['2026-09-25T16:00:00', '2026-09-25', false]);
+    const { games } = normalizeGames(rows, { fetchedAt: at });
+    const g = games.find((x) => x.contestId === id)!;
+    expect(g.dateLocal).toBe('2026-09-29T00:00:00');
+    expect(g.dateUtc).toBe('2026-09-29T07:00:00Z');
+    expect(g.dateKey).toBe('2026-09-29');
+    expect([g.isTimeTba, g.isDateTba]).toEqual([true, false]);
+    expect(g.provenance.dateCorrection).toEqual({
+      maxprepsDateLocal: '2026-09-25T16:00:00',
+      maxprepsTimeTba: false,
+      source: DATA_QUALITY.contestDateOverrides[id].source,
+    });
+    // Everything but the date is MaxPreps' as before.
+    expect({ ...g, dateLocal: raw.dateLocal, dateUtc: raw.dateUtc, dateKey: raw.dateKey, isTimeTba: raw.isTimeTba, provenance: raw.provenance }).toEqual(raw);
+    // Sorted by the corrected date: after every Sep 25-28 game of the two schools, before Sep 30.
+    expect(games.map((x) => x.contestId)).toEqual([...games].sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId)).map((x) => x.contestId));
+    const i = games.indexOf(g);
+    expect(games.slice(0, i).every((x) => x.dateKey <= '2026-09-29')).toBe(true);
+    expect(games.slice(i + 1).every((x) => x.dateKey >= '2026-09-29')).toBe(true);
+    // Fallbrook no longer hosts two games in the same Sep 25 slot.
+    expect(games.filter((x) => x.dateLocal === '2026-09-25T16:00:00' && x.home.name === 'Fallbrook')).toHaveLength(1);
+  });
+
+  it('leaves every other contest alone, and applies nothing to a game with no override', () => {
+    const plain = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games;
+    const fixed = normalizeGames(rows, { fetchedAt: at }).games;
+    expect(fixed.filter((g) => g.contestId !== id)).toEqual(plain.filter((g) => g.contestId !== id));
+    expect(applyDateOverride(plain[0], undefined)).toBe(plain[0]);
+  });
+
+  it('puts a time-TBA date at Pacific midnight, in daylight and in standard time', () => {
+    expect(pacificMidnightUtc('2026-09-29')).toBe('2026-09-29T07:00:00Z');
+    expect(pacificMidnightUtc('2026-11-02')).toBe('2026-11-02T08:00:00Z');
+    expect(pacificMidnightUtc('2026-11-01')).toBe('2026-11-01T07:00:00Z');
   });
 });

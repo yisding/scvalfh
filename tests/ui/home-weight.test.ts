@@ -11,13 +11,18 @@
  * the full live fetch existed, would have been 93 % used. The corpus snapshot (all-2026-10-02,
  * NorCal games only) measures 65,819 (54 %).
  *
- * The HARD budget is checked on the offline corpus snapshot (deterministic): a page-weight
- * regression in code fails here, in every run. The bundled data/snapshot.json (whatever the last
- * live fetch produced) is checked too, but it only FAILS where `CI_GATE` is set — ci.yml's test
- * step — and otherwise warns past 90 %: this suite also gates update-data.yml's commit, and a
- * view that grows with the season (link chips, form, postseason lines) must never stop the day's
- * scores from being published. Failures route to components/home/home-view.ts, which builds the
- * views.
+ * Two checks, and what each one catches:
+ *  - The DETERMINISTIC check runs in every run on the offline corpus snapshot (all-2026-10-02, NorCal
+ *    games only), against its own budget: CORPUS_BUDGET = 73 KiB = 74,752, the corpus's 65,819 × 1.12
+ *    rounded down to whole KiB (88 % used). It catches a code change that grows every view by about
+ *    12 % or more. Against BUDGET it would have let views grow by 84 % unnoticed (review 2026-10-06).
+ *    It cannot catch growth that only SoCal games or later-season data produce: the corpus has neither.
+ *  - The LIVE check runs on the bundled data/snapshot.json (whatever the last live fetch produced,
+ *    both regions) against BUDGET. It only FAILS where `CI_GATE` is set — ci.yml's test step — and
+ *    otherwise warns past 90 %: this suite also gates update-data.yml's commit, and a view that grows
+ *    with the season (link chips, form, postseason lines) must never stop the day's scores from being
+ *    published. So data-driven growth fails a CI run, never the data cron.
+ * Failures route to components/home/home-view.ts, which builds the views.
  */
 
 import { describe, expect, it, vi } from 'vitest';
@@ -25,6 +30,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { corpusSnapshotPath } from '../helpers';
 
 const BUDGET = 118 * 1024;
+/** all-2026-10-02 measured 65,819 B on 2026-10-06; × 1.12 = 73,717, so 73 KiB = 74,752. */
+const CORPUS_BUDGET = 73 * 1024;
 const WARN_AT = 0.9;
 
 /** ci.yml sets CI_GATE on its test step; update-data.yml (which also sets CI) does not. */
@@ -42,10 +49,13 @@ async function teamViewBytes(snapshotPath: string | undefined): Promise<{ bytes:
 }
 
 describe('home team views weight (components/home/home-view.ts)', () => {
-  it('stays ≤ 118 KiB on the corpus snapshot', async () => {
+  it('stays ≤ 73 KiB on the corpus snapshot (deterministic)', async () => {
     const { bytes, count } = await teamViewBytes(corpusSnapshotPath('all-2026-10-02'));
     expect(count, 'components/home/home-view.ts: one view per team').toBe(99);
-    expect(bytes, `components/home/home-view.ts: serialized teamViews are ${bytes} bytes`).toBeLessThanOrEqual(BUDGET);
+    expect(
+      bytes,
+      `components/home/home-view.ts: serialized teamViews are ${bytes} bytes on the corpus (budget ${CORPUS_BUDGET})`,
+    ).toBeLessThanOrEqual(CORPUS_BUDGET);
   }, 600_000);
 
   it('stays ≤ 118 KiB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {

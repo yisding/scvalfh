@@ -51,10 +51,11 @@ export default function LeadersPage() {
   const view = buildLeadersView();
   // Each region's pills go to its own suffixed anchors (DESIGN-socal §2.4): `#schools`/`#players` for
   // NorCal, as always, and `#schools-socal`/`#players-socal` for SoCal; the scope stylesheet shows the
-  // reader's pair.
+  // reader's pair. With JS off all four show, so each carries its region in sr-only text ('Schools,
+  // Southern California'): the same visible words go to different boards (review 2026-10-06).
   const tabs = view.regions.flatMap((region) => [
-    { href: `#${region.schoolsId}`, label: 'Schools', region: region.region },
-    { href: `#${region.playersId}`, label: 'Players', region: region.region },
+    { href: `#${region.schoolsId}`, label: 'Schools', region: region.region, srSuffix: `, ${region.name}` },
+    { href: `#${region.playersId}`, label: 'Players', region: region.region, srSuffix: `, ${region.name}` },
   ]);
 
   return (

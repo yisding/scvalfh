@@ -360,6 +360,12 @@ export interface Game {
     resultConflict?: string;
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
     classificationNote?: string;
+    /**
+     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/leagues.ts) moved this contest off MaxPreps' date:
+     * MaxPreps' own `dateLocal` and the override's source sentence, so the game page can say the date was
+     * corrected, from what, and on whose word.
+     */
+    dateCorrection?: { maxprepsDateLocal: string; maxprepsTimeTba: boolean; source: string };
   };
 }
 

@@ -33,6 +33,13 @@ export interface RegionConfig {
   shortName: 'NorCal' | 'SoCal';
 }
 
+/**
+ * Whether a source confirms that a level final MaxPreps marks W and L was decided by the section's shootout
+ * (SectionConfig.shootout.inference): 'verified' prints the shootout, 'unverified' only the credited win.
+ */
+export const SHOOTOUT_INFERENCES = ['verified', 'unverified'] as const;
+export type ShootoutInference = (typeof SHOOTOUT_INFERENCES)[number];
+
 export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
@@ -65,9 +72,35 @@ export interface SectionConfig {
    * nonetheless records many such wins as a level score marked W and L, e.g. Mt. Carmel 0-0 Poway, Sep 11).
    * Keyed on the section, not the league, because the San Diego rule covers games between its three
    * conferences too. `words` is the noun phrase copy prints ('won on {words}'), `citation` the source.
-   * assertLeagues: set exactly when every league of the section has `leagueOvertime` 'shootout'.
+   *
+   * `inference` says whether a source shows that such a level final WAS a shootout, which decides what copy
+   * may print about it. 'verified' (the Northern Section): the 2026-09-28 Chico 1, Davis 1 box score carries an
+   * 'SO Win' column (docs/DATA-SOURCES.md §1.1b), so copy says 'won on {words}' and the chip carries 'SO'.
+   * 'unverified' (the San Diego Section): no box score or tally confirms one, and the other sources disagree
+   * with MaxPreps' level score: si.com and the Section's power rankings both record Mt. Carmel–Poway (Sep 11)
+   * as 2-0, where MaxPreps has 0-0 marked W and L. The site keeps MaxPreps' score and counts the flagged win,
+   * but copy says only that the team was credited with the win on a level score (lib/format.ts
+   * shootoutPhrases), never that a shootout decided it, and the chip carries no decider tag.
+   * `disagreement` is the sentence the game page adds to an 'unverified' section's level-score note: what
+   * the other sources record instead (null for a 'verified' section; assertLeagues checks both ways).
+   *
+   * `coversTournaments` says whether the rule reaches a tournament row (MaxPreps contestType 2 on either side).
+   * true (the Northern Section): §VII.E.4 governs a varsity game, with no exception for tournaments. false
+   * (the San Diego Section): the SDFHOA procedures have a "Varsity Overtime (regular season)" and a
+   * "(Playoffs)" heading and do not cover invitational tournaments, where seven games between two San Diego
+   * teams (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T. lib/normalize.ts then reads no 'SO' from a
+   * tournament row and raises no level-final warning for one, and copy that states the rule says "outside a
+   * tournament".
+   * assertLeagues: set exactly when every league of the section has `leagueOvertime` 'shootout', and every
+   * shootout rule names an inference.
    */
-  shootout: { words: string; citation: string } | null;
+  shootout: {
+    words: string;
+    citation: string;
+    inference: ShootoutInference;
+    disagreement: string | null;
+    coversTournaments: boolean;
+  } | null;
   /** Inclusive local dates the cron expects data in (the fetch season-window guard is their union). */
   seasonWindow: { start: string; end: string };
   /** An NCS-style reader note, shown wherever a reader would otherwise look for a section bracket; null where the section holds the postseason. */
@@ -108,7 +141,7 @@ export interface DivisionConfig {
   /**
    * First and last league date. From the league's official schedule where there is one; otherwise the
    * first league game on MaxPreps' schedules (the Sunset: Aug 18; each San Diego division: its earliest
-   * game between two members, inventory 2026-10-06) and the section's last allowed league date.
+   * game between two members, in the inventory read Mon Oct 5 Pacific) and the section's last allowed league date.
    */
   leaguePlay: { first: string; last: string };
   /**
@@ -178,9 +211,9 @@ export interface LeagueRules {
    * What makes a game a league game. 'contest-type' = MaxPreps' league flag (contestType 0 on either row)
    * between two members (SCVAL, EAL, Sunset); 'official-fixtures' = a fixture in the league's own schedule
    * (BVAL, PCAL, MCAL); 'membership' = any game between two members of one division dated inside its
-   * leaguePlay, whatever MaxPreps' flag says (the San Diego divisions: every pair of division-mates meets
-   * exactly twice on MaxPreps' schedules, a double round robin, while MaxPreps flags as few as 0 of Patrick
-   * Henry's 10). Under all three, excludeContestTypes rows never count; 'membership' needs official mode
+   * leaguePlay, whatever MaxPreps' flag says (the San Diego divisions: on MaxPreps' schedules division-mates
+   * meet twice, a double round robin, except Metro Mesa's Bonita Vista and Helix, listed once, while MaxPreps
+   * flags as few as 0 of Patrick Henry's 10). Under all three, excludeContestTypes rows never count; 'membership' needs official mode
    * 'none' (asserted).
    */
   classification: 'contest-type' | 'official-fixtures' | 'membership';
@@ -211,10 +244,11 @@ export interface LeagueRules {
   /**
    * How a tied league game ends. 'sudden-victory' (SCVAL Art. IV, BVAL §1a): a 7-minute golden-goal period may
    * decide it. 'none' (PCAL [U] §1.6.4 for double round robin, MCAL: no regular-season overtime; the Sunset:
-   * no league or Southern Section rule is published, and its games have ended level and in overtime, so each
-   * is recorded as reported): ties stand. 'shootout' (EAL, NS Guidelines §VII.E.4; the San Diego leagues,
-   * SDFHOA 2026 procedures): overtime, then a shootout to a winner; a varsity game never ends level, and the
-   * section's SectionConfig.shootout says how (asserted both ways). D2 rule 4c (phantom tie) applies only
+   * no league or Southern Section rule is published; games between Sunset teams have ended level, and a Sunset
+   * league game has been decided in overtime, so each is recorded as reported): ties stand. 'shootout' (EAL, NS
+   * Guidelines §VII.E.4; the San Diego leagues, SDFHOA 2026 procedures, which do not cover invitational
+   * tournaments): overtime, then a shootout to a winner, so a league game does not end level, and the section's
+   * SectionConfig.shootout says how (asserted both ways). D2 rule 4c (phantom tie) applies only
    * when 'none'.
    */
   leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
@@ -418,6 +452,14 @@ export interface DataQualityConfig {
   /** Documented and asserted never requested. */
   ignoredMaxprepsLeagueIds: Readonly<Record<string, string>>;
   /**
+   * A contest whose MaxPreps date a better source contradicts, moved to that source's date in lib/normalize.ts
+   * (before the date key is taken and the games are sorted, so schedules, last-5 and streaks read the corrected
+   * order). `timeTba` true: the source gives no start time, so none is invented and the game reads "time TBA".
+   * `source` is one sentence naming the source, what it says, and what MaxPreps says; the game page prints it
+   * (Game.provenance.dateCorrection). Keys are contest GUIDs, `dateKey` a YYYY-MM-DD (assertLeagues).
+   */
+  contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
+  /**
    * Search "not covered" entries (exact-key matches only). `reason` is printed verbatim as a whole sentence
    * (components/search/TeamFinder.tsx), so each is one: never 'inactive', 'withdrew', 'dropped' or
    * 'cancelled' for a school whose only fact is that it has no games.
@@ -510,6 +552,11 @@ export const SECTIONS = [
     shootout: {
       words: '1 v 1s',
       citation: 'Northern Section Field Hockey Guidelines §VII.E.4 (one 10-minute sudden-victory period, then 1 v 1s)',
+      // The 2026-09-28 Chico 1, Davis 1 box score carries an 'SO Win' column (docs/DATA-SOURCES.md §1.1b).
+      inference: 'verified',
+      disagreement: null,
+      // §VII.E.4 governs a varsity game; the Guidelines make no exception for tournaments.
+      coversTournaments: true,
     },
     // The start matches the CCS/NCS windows. The end is OUR choice, not a Section date: one week after the Super
     // Regional's last day (Oct 31), so a late result still lands.
@@ -527,8 +574,9 @@ export const SECTIONS = [
     holdsFieldHockeyChampionship: false,
     officialUrl: SS_FIELD_HOCKEY_URL,
     rulesSource: { name: 'CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', url: SS_BLUE_BOOK_FH_URL, format: 'PDF' },
-    // Article 200 adopts the NFHS rules and says nothing on overtime; Sunset games have ended level (Bonita 1-1
-    // Marina, Aug 18) and in overtime (Great Oak 2-1 Temecula Valley, Oct 2). No shootout rule.
+    // Article 200 adopts the NFHS rules and says nothing on overtime; games between Sunset teams have ended level
+    // (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11; neither marked a league game), and a Sunset
+    // league game has gone to overtime (Great Oak 2-1 Temecula Valley, Oct 2). No shootout rule.
     shootout: null,
     // The start matches the other windows. The end is OUR choice, as for the Northern Section: one week after
     // the Section's last allowable contest (Oct 31), so a late result still lands.
@@ -552,6 +600,16 @@ export const SECTIONS = [
     shootout: {
       words: 'a shootout',
       citation: 'San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures (a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal)',
+      // si.com and the Section's power rankings both record Mt. Carmel–Poway (Sep 11) as 2-0 where MaxPreps has
+      // 0-0 marked W and L, and no box score carries a tally: the flagged win counts, the shootout is not asserted.
+      inference: 'unverified',
+      // [V] cifsdshome power-rankings details, school 699 (Poway): 09/11/2026 Mt. Carmel "W (2-0)"; school 713
+      // (Mt. Carmel): "L (0-2)". 2-0 is not MaxPreps' 0-0 plus the one goal a shootout credits, so the
+      // sentence says only that the score is decisive, not how it was reached.
+      disagreement: 'si.com and the Section’s power rankings record some of these games with a decisive score (Mt. Carmel–Poway, Sep 11: 2-0).',
+      // The procedures' two varsity headings are the regular season and the playoffs; invitational tournaments
+      // are not covered, and seven SDS-v-SDS tournament games this season are recorded level (T and T).
+      coversTournaments: false,
     },
     // The start matches the other windows; the end is one week after the Nov 14 finals (OUR choice).
     seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
@@ -1123,7 +1181,7 @@ const SUNSET: LeagueConfig = {
   // 2024-25 (c538c7d2-…) and 2025-26 (1ab67ce6-…) Sunset tables; no Sunset site, bylaws, schedule or standings
   // document was found [U: not found] (research-cifss.md §2).
   id: 'sunset', sectionId: 'ss',
-  name: 'Sunset Field Hockey League', shortName: 'Sunset',
+  name: 'Sunset field hockey league', shortName: 'Sunset',
   cities: 'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills',
   alignmentSource: 'MaxPreps’ 2024-25 and 2025-26 Sunset tables',
   officialUrl: SS_FIELD_HOCKEY_URL,
@@ -1146,14 +1204,14 @@ const SUNSET: LeagueConfig = {
       // by conference winning percentage; the five Orange County schools carry the zero-GUID league this season.
       maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297',
       maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
-      // No fixed schedule: the 45 pairs meet {2: 9, 1: 30, 0: 6} times (inventory 2026-10-06), so no "of N".
+      // No fixed schedule: the 45 pairs meet {2: 9, 1: 30, 0: 6} times (inventory read Mon Oct 5 Pacific), so no "of N".
       expectedTeams: 10, gamesPerTeam: null,
       // First: Bonita–Marina and Chaminade–Fountain Valley, Aug 18 (the first games between two of the ten).
       // Last: the Section's last allowable contest, Sat Oct 31 (Blue Book Bylaw 2006; 2026-27 Sports Calendar).
       leaguePlay: { first: '2026-08-18', last: '2026-10-31' },
       official: {
         mode: 'none',
-        note: 'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight, putting Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
+        note: 'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The ten teams here are the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26. For 2026-27, MaxPreps’ table lists five of them and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists eight of them, plus Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. A Sunset game here is a game between two of the ten that MaxPreps marks as a league game, so teams play different numbers.',
       },
       // 5 rows + the 5 Orange County schools MaxPreps assigns to no league − 0 = 10.
       maxprepsTeamCount: 5,
@@ -1178,7 +1236,7 @@ const SUNSET: LeagueConfig = {
     citations: {
       ...SITE_POINTS_CITATIONS,
       doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is a game between two of the ten that MaxPreps marks as a league game',
-      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Sunset games have ended level and have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported.',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Games between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain Valley 1-1 Marina, Sep 11; MaxPreps marks neither as a league game), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
       coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
       stages: {
         'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is',
@@ -1208,7 +1266,7 @@ const SUNSET: LeagueConfig = {
 
 /** Every San Diego division's official note (DESIGN-socal §2.1.6, verbatim). */
 const SDS_OFFICIAL_NOTE =
-  'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; its members play each other home and away, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.';
+  'We found no schedule or standings published by a San Diego Section league. Members come from the Section’s 2026-27 League Alignment, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.';
 
 const SDS_LINKS: LeagueConfig['links'] = [
   { label: 'CIF San Diego Section field hockey', href: SDS_FIELD_HOCKEY_URL },
@@ -1222,9 +1280,12 @@ function sdsOfficial(): DivisionConfig['official'] {
 }
 
 /**
- * A San Diego league's rules (City, North County, Metro: one Section rule for all three). 'membership': every
- * pair of division-mates meets exactly twice on MaxPreps' schedules (contestType 2 and 4 left out), a double
- * round robin, while MaxPreps flags as few as 0 of Patrick Henry's 10 as league games (inventory 2026-10-06).
+ * A San Diego league's rules (City, North County, Metro: one Section rule for all three). 'membership': on
+ * MaxPreps' schedules (contestType 2 and 4 left out) every pair of division-mates meets twice, a double round
+ * robin, except Metro Mesa's Bonita Vista and Helix, listed once (Oct 23), while MaxPreps flags as few as 0 of
+ * Patrick Henry's 10 as league games (inventory read Mon Oct 5 Pacific). The overtime citation says what the
+ * SDFHOA procedures cover ("Varsity Overtime (regular season)" and "(Playoffs)"): not invitational tournaments,
+ * where seven SDS-v-SDS games (contestType 2: Aug 21, Aug 22, Sep 12) have ended 0-0.
  */
 function sdsRules(shortName: string): LeagueRules {
   return {
@@ -1237,8 +1298,8 @@ function sdsRules(shortName: string): LeagueRules {
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',
     citations: {
       ...SITE_POINTS_CITATIONS,
-      doubleRoundRobin: 'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 6 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
-      overtime: 'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
+      doubleRoundRobin: 'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 5 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
+      overtime: 'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a league, non-league or playoff varsity game does not end level (the procedures do not cover invitational tournaments, and several tournament games this season have ended level). MaxPreps records such a game as a level score marked W and L with no tally, and this site counts it as the flagged team’s win',
       // Paraphrased: the Green Book's own words name the champion an "automatic qualifier", a phrase no
       // non-CCS page may print (scripts/assert-copy.ts forbidCcs).
       coChampions: 'the league designates its champion (CIF-SDS Green Book: with a tie for first place, the league designates which team goes forward); this table shows teams level on points as level',
@@ -1265,9 +1326,9 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
     divisions: [{ name: 'Open', teams: 8 }, { name: 'Division I', teams: 12 }, { name: 'Division II', teams: 12 }],
     playoffDivisionOf,
     ladder: [
-      { divisions: '*', places: [1, 1], status: 'tournament', label: 'League champion: at least a play-in',
-        phrase: 'at least a play-in as league champion', badge: '1st',
-        legend: '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not.' },
+      { divisions: '*', places: [1, 1], status: 'tournament', label: '1st: at least a play-in if named league champion',
+        phrase: 'at least a play-in if named league champion', badge: '1st',
+        legend: '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not' },
       { divisions: '*', places: [2, 99], status: 'selection', label: 'No league route',
         phrase: 'no league route into the playoffs', badge: 'Selection only',
         legend: '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)' },
@@ -1358,7 +1419,7 @@ const CITY: LeagueConfig = {
         'fef1da70-bea2-4958-a60b-9962851f6a1d': 'Madison: a 0-0-0 row; Madison has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings',
       },
       reportedTrust: 'informational',
-      knownCause: 'MaxPreps’ table leaves out Patrick Henry and lists Madison, which has no varsity game; MaxPreps marks none of Patrick Henry’s league games as league games.',
+      knownCause: 'MaxPreps’ table leaves out Patrick Henry and lists Madison, which has no varsity game; MaxPreps marks none of Patrick Henry’s league games as league games. MaxPreps also counts the City Eastern teams’ games against Mission Bay as league games; the alignment puts Mission Bay in City Western, so they count in neither table here.',
       home: { miniRows: 6, lineAfter: null, lineLabel: null },
       ladderLine: { after: 1, label: 'Champion line' },
     },
@@ -1474,7 +1535,7 @@ const METRO: LeagueConfig = {
       leaguePlay: { first: '2026-09-28', last: SDS_LEAGUE_PLAY_LAST },
       official: sdsOfficial(),
       maxprepsTeamCount: 5, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
-      knownCause: 'MaxPreps files these five teams under ‘Metro- South Bay’. On Oct 6 MaxPreps listed Bonita Vista and Helix meeting once (Oct 23), so unless a second meeting is added each ends a game short of the eight.',
+      knownCause: 'MaxPreps files these five teams under ‘Metro- South Bay’. On Oct 5 MaxPreps listed Bonita Vista and Helix meeting once (Oct 23), so unless a second meeting is added each ends a game short of the eight.',
       home: { miniRows: 5, lineAfter: null, lineLabel: null },
       ladderLine: { after: 1, label: 'Champion line' },
     },
@@ -1552,9 +1613,12 @@ export const DATA_QUALITY: DataQualityConfig = {
   excludedContestIds: {
     '5b9ff911-a640-4947-b9fd-8a629e775b33': 'Tamalpais vs the Del Norte (Crescent City) ghost; duplicates a05bedf5 (Tamalpais vs Del Norte, San Diego)',
     '5cf5e3df-6e72-4f44-9b8d-e69da30b85c5': 'Archie Williams at Marin Academy, Aug 18: not on the official MCAL schedule; a spurious unscored row',
-    // Two duplicate Palomar rows (inventory 2026-10-06): each sits on a date with no time, and the pair already has
-    // its two meetings, so counting either would add a third game and a false "league result missing" row.
-    'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a second MaxPreps row for their Palomar game on Oct 13 (0b3cfb7d); both of the pair’s meetings are on the schedule',
+    // Two stray Palomar rows (MaxPreps schedules read Mon Oct 5 Pacific): each sits on a date with no time, and its
+    // pair already has its two meetings, so counting either would add a third game and a false "league result
+    // missing" row. c7dbdbcc (Oct 9) has Poway at home, as in the Sep 15 meeting (67865f1e), while Fallbrook hosts
+    // the Oct 13 one (0b3cfb7d), so no source ties it to either meeting and its note names neither as the original.
+    // 9c027452 (Oct 30) has Mission Vista at home, as in 5067646d (Oct 29), one day earlier.
+    'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a third MaxPreps row for the pair, which already has both of its Palomar meetings on the schedule (Sep 15, 67865f1e; Oct 13, 0b3cfb7d)',
     '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); both of the pair’s meetings are on the schedule',
   },
   sbliveIgnoredTeamIds: {
@@ -1567,6 +1631,19 @@ export const DATA_QUALITY: DataQualityConfig = {
   },
   ignoredMaxprepsLeagueIds: {
     '6e1f97d4-5211-4d98-bf59-282cd754bc5c': 'Pacific Coast - Mission: 0 teams, standings HTTP 400',
+  },
+  contestDateOverrides: {
+    // Valley Center 0 @ Fallbrook 11 (Palomar). MaxPreps dates it Fri Sep 25, 4:00 PM, the same home slot as
+    // Fallbrook's game against Rancho Buena Vista (f96f16e7, 3-0), on a day Valley Center also played at Del
+    // Norte (cb79ab02, 6:00 PM): two games for each school at once. [V] the Section's power-rankings detail
+    // pages (cifsdshome.org, read Mon Oct 5 Pacific) both list it on 09/29/2026, with no time, and both list
+    // the RBV and Del Norte games on 09/25; MaxPreps' own Fallbrook feed also has a deleted row for the pair
+    // (91f3b7e0) dated 09/29. The result and the W-L are unchanged; only the date and the row order move.
+    'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0': {
+      dateKey: '2026-09-29',
+      timeTba: true,
+      source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
+    },
   },
   notCovered: [
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
@@ -1909,6 +1986,17 @@ export function assertLeagues(): void {
     if (s.shootout !== null && !(s.shootout.words.trim() && s.shootout.citation.trim())) {
       fail(`${s.id}: shootout needs words and a citation (use null for none)`);
     }
+    // What copy may say about a level W/L final turns on the inference (lib/format.ts shootoutPhrases), so
+    // every shootout rule names one: a typo or a missing value would silently print the 'verified' wording.
+    if (s.shootout !== null && !(SHOOTOUT_INFERENCES as readonly string[]).includes(s.shootout.inference)) {
+      fail(`${s.id}: shootout.inference must be one of ${SHOOTOUT_INFERENCES.join(', ')}`);
+    }
+    if (s.shootout !== null && (s.shootout.inference === 'unverified') !== Boolean(s.shootout.disagreement?.trim())) {
+      fail(`${s.id}: shootout.disagreement is set exactly when the inference is 'unverified'`);
+    }
+    if (s.shootout !== null && typeof s.shootout.coversTournaments !== 'boolean') {
+      fail(`${s.id}: shootout.coversTournaments must say whether the rule reaches a tournament game`);
+    }
     // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
     // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).
     for (const l of LEAGUES) {
@@ -2236,6 +2324,20 @@ export function assertLeagues(): void {
   // 8. ignored MaxPreps leagues are never configured
   for (const id of Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)) {
     if (ALL_DIVISIONS.some((d) => d.maxprepsLeagueId === id)) fail(`ignored MaxPreps league ${id} is configured`);
+  }
+  // A date correction names its contest by GUID, a real date inside a season window, and its source; a
+  // contest is never both corrected and excluded (the correction would be for nothing).
+  for (const [id, o] of Object.entries(DATA_QUALITY.contestDateOverrides)) {
+    if (!GUID_RE.test(id)) fail(`contestDateOverrides: ${id} is not a contest GUID`);
+    const valid = DATE_PATTERN.test(o.dateKey) && !Number.isNaN(Date.parse(`${o.dateKey}T12:00:00Z`)) &&
+      new Date(`${o.dateKey}T12:00:00Z`).toISOString().slice(0, 10) === o.dateKey;
+    if (!valid) fail(`contestDateOverrides ${id}: dateKey ${o.dateKey} is not a valid YYYY-MM-DD date`);
+    else if (!SECTIONS.some((s) => o.dateKey >= s.seasonWindow.start && o.dateKey <= s.seasonWindow.end)) {
+      fail(`contestDateOverrides ${id}: ${o.dateKey} is outside every section's season window`);
+    }
+    if (o.timeTba !== true) fail(`contestDateOverrides ${id}: timeTba must be true (no source gives a time)`);
+    if (!o.source.trim()) fail(`contestDateOverrides ${id}: needs a source`);
+    if (id in DATA_QUALITY.excludedContestIds) fail(`contestDateOverrides ${id}: the contest is excluded`);
   }
 }
 

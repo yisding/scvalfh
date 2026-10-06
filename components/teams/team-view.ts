@@ -530,8 +530,8 @@ export function earlierMeeting(
   const theirs = mineIsHome ? display.away : display.home;
   const verb = outcome === 'W' ? 'won' : outcome === 'L' ? 'lost' : 'tied';
   // A shootout win is worded in the words of the section whose rule decided it ('lost 1–1 on 1 v 1s'
-  // for an EAL meeting, as this line has always read; 'won 0–0 in a shootout' for two San Diego
-  // Section teams). Every 'SO' game has a shootout section; 'a shootout' is the generic fallback.
+  // for an EAL meeting, as this line has always read). Only a 'verified' section's game carries the
+  // 'SO' tag here; a San Diego one is worded below. 'a shootout' is the generic fallback.
   const decider =
     display.deciderTag === 'F'
       ? ' by forfeit'
@@ -542,6 +542,17 @@ export function earlierMeeting(
           : '';
   const where =
     game.site === 'neutral' ? 'at a neutral site' : mineIsHome ? 'at home' : 'away';
+  // A section whose shootout is 'unverified' (San Diego: no tally anywhere, and si.com and the Section's
+  // power rankings record Mt. Carmel–Poway, Sep 11, as 2-0 where MaxPreps has 0-0 marked W and L) gets no
+  // 'SO' tag from describeGame, and this line never says a shootout decided it: "credited with the win
+  // on a level 0–0 score" (shootoutPhrases(words, 'unverified')).
+  const rule = game.decider === 'SO' ? shootoutSectionOf(game)?.shootout ?? null : null;
+  if (rule?.inference === 'unverified' && outcome !== 'T') {
+    const phrases = shootoutPhrases(rule.words, rule.inference);
+    const level = `a level ${mine.glyph}\u2013${theirs.glyph} score`;
+    const what = outcome === 'W' ? `${phrases.wonOn} on ${level}` : `lost on ${level}`;
+    return { contestId: game.contestId, outcome, text: `Earlier: ${what} ${where}, ${monthDay(game.dateLocal)}` };
+  }
   return {
     contestId: game.contestId,
     outcome,

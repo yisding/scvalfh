@@ -848,7 +848,7 @@ describe('sunsetLeagueClaims / SUNSET_LEAGUE_CLAIM: "Sunset League" only beside 
     'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
     'the Southern Section’s Sunset field hockey league',
     'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games.',
-    'Sunset Field Hockey League',
+    'Sunset field hockey league',
     'Sunset co-leaders',
   ])('lets %j through', (text) => {
     expect(sunsetLeagueClaims(text)).toEqual([]);

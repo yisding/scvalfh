@@ -6,7 +6,7 @@ import { ALL_LEAGUES, LEAGUE_KEY, PREFS_RESTAMP, REGION_KEY, REGION_OF, STAMPLES
 import { PINNED_TEAM_KEY } from '../layout/pinned-team-script';
 import type { LeagueId, RegionId } from '../../lib/types';
 
-import { UNAVAILABLE, subscribeStore, useIsHydrated, useStoredValue, writeStored } from './local-store';
+import { UNAVAILABLE, notifyStore, subscribeStore, useIsHydrated, useStoredValue, writeStored } from './local-store';
 
 /**
  * The remembered league and region, the client half (SPEC §8.2; DESIGN-socal §2.4).
@@ -76,12 +76,7 @@ function restampFromStorage(event: StorageEvent): void {
   if (event.key !== null && event.key !== LEAGUE_KEY && event.key !== PINNED_TEAM_KEY && event.key !== REGION_KEY) {
     return;
   }
-  try {
-    const restamp = (window as unknown as Record<string, unknown>)[PREFS_RESTAMP];
-    if (typeof restamp === 'function') (restamp as () => void)();
-  } catch {
-    /* the page keeps its current stamp */
-  }
+  restamp();
 }
 
 function subscribe(onChange: () => void): () => void {
@@ -185,15 +180,44 @@ export function setLeague(id: LeagueId | typeof ALL_LEAGUES, opts?: { focus?: Le
 }
 
 /**
- * Remember a region (the region switcher): stamps `html[data-region]`, writes `scvalfh.region`, and
- * when the effective league (the `data-league` stamp, stored or pin-derived) is in the OTHER region,
- * also `setLeague('all')`: a league of the hidden region would leave the home page with no panel
- * shown. A league of the chosen region is kept. Focus is not moved: the switcher's buttons stay
- * rendered in both regions.
+ * Re-run the prefs script's own stamp (`window.__sxPrefs`) from what storage now holds, so the
+ * precedence (a stored league, else the stored region with the pin's league only when it is in that
+ * region, else the pin) lives in one place. A no-op when the script never ran.
+ */
+function restamp(): void {
+  try {
+    const run = (window as unknown as Record<string, unknown>)[PREFS_RESTAMP];
+    if (typeof run === 'function') (run as () => void)();
+  } catch {
+    /* the page keeps its current stamp */
+  }
+}
+
+/**
+ * Remember a region (the region switcher): stamps `html[data-region]` and writes `scvalfh.region`.
+ * When the effective league (the `data-league` stamp, stored or pin-derived) is in the OTHER region,
+ * it un-stamps the league and REMOVES `scvalfh.league` (it never writes `'all'`): a league of the
+ * hidden region would leave the home page with no panel shown, but `'all'` is the reader's own
+ * choice, and the prefs script treats a stored `'all'` as "never derive a league from the pin". With
+ * the key removed, the stored region decides, and the pinned team's league comes back as soon as the
+ * reader returns to its region: pin Leigh (BVAL), tap SoCal, tap NorCal, and the BVAL panel is back,
+ * also after a reload (review 2026-10-06; tests/ui/use-league-region.test.ts). A league of the chosen
+ * region is kept, and an explicit `'all'` is never touched (it stamps no league, so nothing is
+ * dropped).
+ *
+ * Then, only when every write succeeded, the prefs script re-stamps from storage, so the pin-derived
+ * league reappears by the script's one precedence rather than a second copy of it here, and the store
+ * is notified again so subscribers read the final stamps. When storage threw nothing is re-run: the
+ * script would read empty storage and undo the stamps made above, which are this page view's state.
+ * Focus is not moved: the switcher's buttons stay rendered in both regions.
  */
 export function setRegion(region: RegionId): void {
   stampRegion(region);
-  writeStored(REGION_KEY, region);
   const league = readStamp();
-  if (league !== null && regionOfLeague(league) !== region) setLeague(ALL_LEAGUES);
+  const drop = league !== null && regionOfLeague(league) !== region;
+  if (drop) stampLeague(ALL_LEAGUES);
+  const ok = writeStored(REGION_KEY, region) && (!drop || writeStored(LEAGUE_KEY, null));
+  if (!ok) return;
+  restamp();
+  notifyStore();
 }

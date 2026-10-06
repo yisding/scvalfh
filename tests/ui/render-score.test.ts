@@ -188,9 +188,11 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
     expect(forfeit, 'components/ui/StatusLabel.tsx forfeit label').toContain('<span class="sr-only">by forfeit</span>');
   });
 
-  it('says a San Diego Section shootout in the Section’s words, never the EAL’s 1 v 1s (StatusLabel)', async () => {
-    // Clairemont 0, Eastlake 0 flagged L/W (Sep 1): two San Diego Section teams, so the SDFHOA
-    // procedure decided it — 'a shootout' (SectionConfig.shootout.words), not the EAL's 1 v 1s.
+  it('credits a San Diego level W/L final as a win with no SO tag and no shootout claim (StatusLabel)', async () => {
+    // Clairemont 0, Eastlake 0 flagged L/W (Sep 1): two San Diego Section teams. The Section's inference is
+    // 'unverified' (si.com and the power rankings record Mt. Carmel–Poway, Sep 11, as 2-0 where MaxPreps has
+    // 0-0 W/L), so the row keeps the level score and the W/L chips but neither tags 'SO' nor says a shootout
+    // decided it; the sentence says the win is credited and what MaxPreps lists.
     const sds = final(0, 0, {
       countsFor: null,
       leagueDivision: null,
@@ -199,13 +201,17 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
       away: { teamId: 'eastlake-id', slug: 'eastlake', name: 'Eastlake', score: 0, result: 'W' },
     });
     const d = describeGame(sds);
-    expect(d.deciderTag).toBe('SO');
-    expect(d.shootoutLabel, 'components/ui/describe-game.ts shootoutLabelFor').toBe('decided by a shootout');
+    expect(d.deciderTag, 'components/ui/describe-game.ts deciderTagFor').toBeNull();
+    expect(d.shootoutLabel, 'components/ui/describe-game.ts shootoutLabelFor').toBeNull();
+    expect([d.home.chip, d.away.chip]).toEqual(['L', 'W']);
+    expect(d.sentence).toBe(`Clairemont 0, Eastlake 0, final; Eastlake credited with the win (MaxPreps lists 0${EN_DASH}0 with no tally).`);
+    expect(describeGame(eal('W')).deciderTag, 'the EAL tag, unchanged').toBe('SO');
     expect(describeGame(eal('W')).shootoutLabel, 'the EAL string, unchanged').toBe('decided on 1 v 1s');
     expect(describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })).shootoutLabel).toBeNull();
     const { StatusLabel } = await import('../../components/ui/StatusLabel');
     const html = renderToStaticMarkup(createElement(StatusLabel, { display: d }));
-    expect(html, 'components/ui/StatusLabel.tsx SO label').toContain('<span class="sr-only">decided by a shootout</span>');
+    expect(html).not.toContain('shootout');
+    expect(html).not.toContain('>SO<');
     expect(html).not.toContain('1 v 1');
   });
 
@@ -242,15 +248,66 @@ describe('§5.2 row 4c — an overtime count the league’s rules cannot produce
     expect(d.away.chip).toBe('W');
   });
 
-  it('changes nothing for one EAL overtime period, an uncounted game or another league', () => {
+  it('is keyed on the section, as normalize keys SO: an uncounted game between two EAL teams is in doubt too', () => {
+    // The section's rule covers every varsity game between its teams, not only the ones a table counts.
+    expect(overtimeInDoubt(threeOt(null)), 'components/ui/describe-game.ts overtimeInDoubt').toBe(true);
+    expect(describeGame(threeOt(null)).deciderTag).toBeNull();
+  });
+
+  it('changes nothing for one overtime period, a postseason game, two sections or a section with no shootout rule', () => {
     const one = { ...threeOt('eal'), decider: 'OT' as const, otPeriods: 1 };
     expect(overtimeInDoubt(one)).toBe(false);
     expect(describeGame(one).deciderTag).toBe('OT');
-    expect(overtimeInDoubt(threeOt(null))).toBe(false);
-    expect(describeGame(threeOt(null)).deciderTag).toBe('2 OT');
-    expect(overtimeInDoubt(threeOt('de-anza'))).toBe(false);
-    expect(describeGame(threeOt('de-anza')).deciderTag).toBe('2 OT');
-    expect(describeGame(threeOt('de-anza')).sentence).toContain('after overtime');
+    // The EAL Super Regional: a postseason tag leaves MaxPreps' count alone.
+    const superRegional = { ...threeOt(null), postseason: { kind: 'league-postseason' as const, leagueId: 'eal' as const, via: 'contest-type-4' as const } };
+    expect(overtimeInDoubt(superRegional)).toBe(false);
+    expect(describeGame(superRegional).deciderTag).toBe('2 OT');
+    // Chico against a CCS team: two sections, no shared rule.
+    const cross = final(0, 1, {
+      countsFor: null, leagueDivision: null, decider: '2OT', isOt: true, otPeriods: 3,
+      home: { teamId: 'chico-id', slug: 'chico', name: 'Chico', score: 0, result: 'L' },
+      away: { teamId: 'gilroy-id', slug: 'gilroy', name: 'Gilroy', score: 1, result: 'W' },
+    });
+    expect(overtimeInDoubt(cross)).toBe(false);
+    expect(describeGame(cross).deciderTag).toBe('2 OT');
+    // Two SCVAL teams (the CCS has no shootout rule): MaxPreps' count stands.
+    const scval = final(0, 1, { decider: '2OT', isOt: true, otPeriods: 3 });
+    expect(overtimeInDoubt(scval)).toBe(false);
+    expect(describeGame(scval).deciderTag).toBe('2 OT');
+    expect(describeGame(scval).sentence).toContain('after overtime');
+  });
+
+  describe('San Diego Section (one 10-minute period, then a shootout, outside tournaments)', () => {
+    // Mission Hills 1, Del Norte 2 (Sep 14, 59b0f6a5): Valley v Palomar, counted in neither table, with
+    // 2 overtime periods recorded. The San Diego rule cannot give a second period.
+    const twoOt = (extra: Partial<Game> = {}) =>
+      final(1, 2, {
+        countsFor: null, leagueDivision: null, decider: '2OT', isOt: true, otPeriods: 2,
+        contestTypes: { home: 1, away: 1 },
+        home: { teamId: 'mission-hills-id', slug: 'mission-hills', name: 'Mission Hills', score: 1, result: 'L' },
+        away: { teamId: 'del-norte-id', slug: 'del-norte', name: 'Del Norte', score: 2, result: 'W' },
+        ...extra,
+      });
+
+    it('drops the 2 OT tag on an uncounted regular-season game', () => {
+      expect(overtimeInDoubt(twoOt())).toBe(true);
+      const d = describeGame(twoOt());
+      expect(d.deciderTag).toBeNull();
+      expect(d.sentence).toBe('Mission Hills 1, Del Norte 2, final.');
+    });
+
+    it('keeps 2 OT on a Section playoff game (the playoff procedure plays two 10-minute periods)', () => {
+      const playoff = twoOt({ postseason: { kind: 'section-playoffs', leagueId: null, via: 'section-postseason-window' } });
+      expect(overtimeInDoubt(playoff)).toBe(false);
+      expect(describeGame(playoff).deciderTag).toBe('2 OT');
+      expect(describeGame(playoff).sentence).toContain('after overtime');
+    });
+
+    it('keeps 2 OT on a tournament row (the procedures do not cover invitational tournaments)', () => {
+      const tourney = twoOt({ contestTypes: { home: 2, away: 2 } });
+      expect(overtimeInDoubt(tourney)).toBe(false);
+      expect(describeGame(tourney).deciderTag).toBe('2 OT');
+    });
   });
 });
 

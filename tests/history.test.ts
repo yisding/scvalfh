@@ -681,7 +681,7 @@ describe('history: the league-aware read API', () => {
       const entry = h.getHistoryLeagues().find((l) => l.id === id)!.entry;
       if (entry.status !== 'unavailable') throw new Error(`${id} should be unavailable`);
       expect(entry.reason).toBe(
-        'No 2025-26 final league standings were published. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+        'We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
       );
       expect(entry.checkedOn).toBe('2026-10-06');
       // The power rankings checked are 2025-26's (year_id 175 on the cifsdshome widget), not this season's.

@@ -400,41 +400,55 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     C = await loadModules();
   }, 600_000);
 
-  it('a San Diego shootout win: SO, the winner named in the Section’s words, its rule cited', async () => {
+  it('a San Diego level final MaxPreps marks W/L: the win credited, no SO tag, the rule cited, no shootout asserted', () => {
+    // SectionConfig.shootout.inference 'unverified': si.com and the Section's power rankings record
+    // Mt. Carmel–Poway (Sep 11) as 2-0 where MaxPreps has 0-0 marked W/L, so no view says a shootout decided
+    // this game. (A team page's "Earlier:" line is components/teams/team-view.ts, pinned with it.)
     const model = C.m.buildGameView(shootoutWin.contestId)!;
-    // The decider in words, wherever a view prints it: the screen-reader label of the SO tag and a team
-    // page's "Earlier:" line say the Section's shootout, never the EAL's 1 v 1s.
-    expect(model.display.shootoutLabel, 'components/ui/describe-game.ts shootoutLabel').toBe('decided by a shootout');
-    const { earlierMeeting } = await import('../../components/teams/team-view');
-    const { getTeamBySlug } = await import('../../lib/teams');
-    expect(
-      earlierMeeting(getTeamBySlug('eastlake')!, getTeamBySlug('clairemont')!, '2026-12-01')?.text,
-      'components/teams/team-view.ts earlierMeeting',
-    ).toBe('Earlier: won 0–0 in a shootout away, Sep 1');
-    expect(earlierMeeting(getTeamBySlug('clairemont')!, getTeamBySlug('eastlake')!, '2026-12-01')?.text).toBe(
-      'Earlier: lost 0–0 in a shootout at home, Sep 1',
-    );
     expect(model.game.decider).toBe('SO');
-    expect(model.display.deciderTag, 'components/ui/describe-game.ts').toBe('SO');
+    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTagFor').toBeNull();
+    expect(model.display.shootoutLabel, 'components/ui/describe-game.ts shootoutLabel').toBeNull();
+    expect([model.display.home.chip, model.display.away.chip]).toEqual(['L', 'W']);
     expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
-      'Clairemont 0, Eastlake 0, final; Eastlake won in a shootout.',
+      'Clairemont 0, Eastlake 0, final; Eastlake credited with the win (MaxPreps lists 0–0 with no tally).',
     );
     expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
-      'Level at 0–0; MaxPreps marks Eastlake the winner, which under the San Diego Section’s rules means a shootout decided it (a level varsity game goes to a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal: San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures). This site counts it as Eastlake’s win and does not show the shootout tally.',
+      'MaxPreps lists 0–0 with no tally and marks Eastlake the winner; a level San Diego Section varsity game outside a tournament goes to a sudden-victory period and then a shootout (San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures), so this site counts it as Eastlake’s win. si.com and the Section’s power rankings record some of these games with a decisive score (Mt. Carmel–Poway, Sep 11: 2-0).',
     );
-    expect(model.scoreNote).not.toContain('1 v 1s decided it');
+    expect(model.scoreNote).not.toMatch(/decided it|1 v 1s/);
+    expect(C.m.gameTitle(model)).not.toContain('(SO)');
+    expect(C.m.gameKicker(model)).not.toContain('SO');
   });
 
   it('the D24 sentence names the San Diego Section and its shootout (components/game/GameSources.tsx)', async () => {
     const { GameElsewhere } = await import('../../components/game/GameSources');
     const html = renderToStaticMarkup(createElement(GameElsewhere, { model: C.m.buildGameView(shootoutWin.contestId)! }));
     expect(textOf(html)).toContain(
-      'A level si.com score between two San Diego Section teams is never used: a varsity game there is decided by a shootout, and si.com does not say who won it.',
+      'A level si.com score between two San Diego Section teams is never used: a varsity game there outside a tournament is decided by a shootout, and si.com does not say who won it.',
     );
     expect(textOf(html)).not.toContain('1 v 1s');
     // A Sunset pair has no shootout rule: no such sentence.
     const sunset = renderToStaticMarkup(createElement(GameElsewhere, { model: C.m.buildGameView(sunsetTie.contestId)! }));
     expect(textOf(sunset)).not.toMatch(/never used: a varsity game there/);
+  });
+
+  it('says under When that a date was corrected, from what, and on whose word (components/game/GameDetails.tsx)', async () => {
+    const { GameDetails } = await import('../../components/game/GameDetails');
+    const model = C.m.buildGameView(counted.contestId)!;
+    const plain = textOf(renderToStaticMarkup(createElement(GameDetails, { model })));
+    expect(plain).not.toContain('Date corrected');
+    const source = 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista';
+    const corrected = {
+      ...model,
+      game: {
+        ...model.game,
+        dateLocal: '2026-09-29T00:00:00', dateUtc: '2026-09-29T07:00:00Z', dateKey: '2026-09-29', isTimeTba: true,
+        provenance: { ...model.game.provenance, dateCorrection: { maxprepsDateLocal: '2026-09-25T16:00:00', maxprepsTimeTba: false, source } },
+      },
+    };
+    const text = textOf(renderToStaticMarkup(createElement(GameDetails, { model: corrected })));
+    expect(text).toContain('Time TBA');
+    expect(text).toContain(`Date corrected from MaxPreps’ Sep 25 — ${source}.`);
   });
 
   it('a San Diego Section playoff game: one label, whether or not the sides share a conference', () => {

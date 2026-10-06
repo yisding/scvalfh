@@ -573,7 +573,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
       const card = v.nextCard;
       if (card.kind === 'game' && card.earlier) {
         expect(card.earlier.text, `components/teams/team-view.ts ${team.slug} earlier`).toMatch(
-          /^Earlier: (won|lost|tied) \d+–\d+/,
+          /^Earlier: ((won|lost|tied) \d+–\d+|(credited with the win|lost) on a level \d+–\d+ score)/,
         );
       }
       if (card.kind !== 'none') expect(card.record ?? '').not.toContain('0-0-0');
