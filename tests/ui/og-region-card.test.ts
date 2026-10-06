@@ -105,10 +105,10 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {
     const { rootCardProps, standingsCardProps } = await import('../../components/layout/og-region-card');
     const root = rootCardProps();
-    expect(root.title).toBe('California HS Field Hockey · 2026');
+    expect(root.title).toBe('NorCal HS Field Hockey · 2026');
     expect(root.footer).toMatch(/^9 leagues · \d+ teams · (results through \S.*|no results yet) · unofficial$/);
     const standings = standingsCardProps();
-    expect(standings.eyebrow).toBe('California HS Field Hockey');
+    expect(standings.eyebrow).toBe('NorCal HS Field Hockey');
     expect(standings.title).toBe('Standings — every league');
     expect(standings.footer).toMatch(/^9 leagues · \d+ teams( · results through \S.*)? · unofficial$/);
   });

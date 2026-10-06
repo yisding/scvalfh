@@ -55,7 +55,7 @@ export default function HomePage() {
     <div className="pb-section-lg">
       <div data-scope="all">
         <PageHeader
-          title="California High School Field Hockey Teams"
+          title="NorCal High School Field Hockey Teams"
           srTitle={` — girls varsity scores, standings and playoff pictures for ${LEAGUE_LIST}`}
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues

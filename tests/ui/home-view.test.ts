@@ -390,8 +390,11 @@ describe('the rendered home page (app/page.tsx)', () => {
     );
     expect(textOf(pageHtml)).toContain('Find your team');
     expect(pageHtml, 'app/page.tsx: My-team slot').toMatch(/<section data-scope="all" class="sx-myteam-slot[^"]*" aria-labelledby="my-team-heading"/);
-    expect(pageHtml, 'app/page.tsx: h1').toContain('California High School Field Hockey Teams');
-    expect(pageHtml, 'app/page.tsx: h1').not.toContain('NorCal High School Field Hockey Teams');
+    // One h1, always NorCal (owner decision, 2026-10-06): the brand stays NorCal, and with SoCal
+    // selected the "Southern California" region heading below it says what is shown.
+    expect(pageHtml.split('<h1').length - 1, 'app/page.tsx: one h1').toBe(1);
+    expect(pageHtml, 'app/page.tsx: h1').toMatch(/<h1[^>]*>NorCal High School Field Hockey Teams/);
+    expect(pageHtml, 'app/page.tsx: h1').not.toContain('California High School Field Hockey Teams');
     // The status line, one per region: its own latest day, its teams and its leagues.
     expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
       /Results through \w{3} \w{3} \d{1,2} · 49 NorCal teams · SCVAL · BVAL · PCAL · MCAL · EAL/,

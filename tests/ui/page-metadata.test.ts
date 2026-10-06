@@ -1,7 +1,7 @@
 /**
  * The og:title rule (components/layout/site.ts OG_BASE): every page states its own og:title, the
  * page's own words with no site-name suffix, because og:site_name carries the brand. A page that
- * left `openGraph.title` out would inherit the TEMPLATED `<title>` (`… — California High School
+ * left `openGraph.title` out would inherit the TEMPLATED `<title>` (`… — NorCal High School
  * Field Hockey`) on the Next build and not on vinext, which is how the suffix once came and went page by
  * page. One page per route family, its metadata read the way Next reads it (`metadata` or
  * `generateMetadata` with a real param), on the corpus snapshot. Then the league list the site's
@@ -85,12 +85,15 @@ describe('the league list in the site descriptions (components/layout/site.ts le
     expect(leaguesBySectionWords('short')).toBe(
       'SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section) and City, North County and Metro (San Diego Section)',
     );
+    // Per region (SITE_DESCRIPTION's two clauses).
+    expect(leaguesBySectionWords('short', 'norcal')).toBe('SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section)');
+    expect(leaguesBySectionWords('short', 'socal')).toBe('Sunset (Southern Section) and City, North County and Metro (San Diego Section)');
   });
 
-  it('SITE_DESCRIPTION and the scope note name the nine leagues and five sections from config', async () => {
+  it('SITE_DESCRIPTION (NorCal first, per region) and the scope note name the nine leagues and five sections from config', async () => {
     const { SITE_DESCRIPTION, SITE_SCOPE_NOTE } = await import('../../components/layout/site');
     expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
-      'Scores, standings, schedules and playoff pictures for 99 girls varsity field hockey teams in nine leagues across five CIF sections: SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section) and City, North County and Metro (San Diego Section). Rebuilt twice daily from MaxPreps; unofficial.',
+      'Scores, standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 50 Southern California teams in Sunset (Southern Section) and City, North County and Metro (San Diego Section). Rebuilt twice daily from MaxPreps; unofficial.',
     );
     // DESIGN-socal §2.4, verbatim.
     expect(SITE_SCOPE_NOTE, 'components/layout/site.ts SITE_SCOPE_NOTE').toBe(
@@ -98,11 +101,11 @@ describe('the league list in the site descriptions (components/layout/site.ts le
     );
   });
 
-  it('the identity is neutral: no region in the name, the wordmark or the short name', async () => {
+  it('the brand stays NorCal (owner decision, 2026-10-06): the name, the wordmark and the short name', async () => {
     const { SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } = await import('../../components/layout/site');
-    expect(SITE_NAME).toBe('California High School Field Hockey');
-    expect(SITE_WORDMARK).toBe('California HS Field Hockey');
-    expect(SITE_SHORT_NAME).toBe('CA HS FH');
+    expect(SITE_NAME).toBe('NorCal High School Field Hockey');
+    expect(SITE_WORDMARK).toBe('NorCal HS Field Hockey');
+    expect(SITE_SHORT_NAME).toBe('NorCal FH');
     expect(SITE_SHORT_NAME.length).toBeLessThanOrEqual(12);
   });
 

@@ -8,8 +8,18 @@
 import type { Metadata } from 'next';
 
 import { listWords, numberWord } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES, SECTIONS, getSection, type LeagueConfig, type SectionConfig } from '../../lib/leagues';
-import type { SectionId } from '../../lib/types';
+import {
+  DATA_QUALITY,
+  LEAGUES,
+  REGIONS,
+  SECTIONS,
+  getSection,
+  regionOf,
+  sectionsInRegion,
+  type LeagueConfig,
+  type SectionConfig,
+} from '../../lib/leagues';
+import type { RegionId, SectionId } from '../../lib/types';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
@@ -25,33 +35,35 @@ import { OG_SIZE } from './og-theme';
 export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
 /**
- * Branding (SPEC §11; DESIGN-socal §2.4). The site covers both halves of the state since the Southern
- * California amendment, so the brand is neutral: "California", never a region. A per-region wordmark
- * was rejected (design-review UI §4): the header is rendered once in the root layout and cannot know
- * a page's region on the server, a JS-free render would print both, and a first visit from search to a
- * San Diego team's page would read "NorCal". The scope note (footer and /about) names exactly what is
- * covered. The repo name, the Worker name, the `scvalfh.*` storage keys and the `SCVAL_*` env names
- * deliberately stay as they are.
+ * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
+ * for Monterey, Salinas and Greenfield, and "CCS" is false for MCAL and EAL. The scope note (footer and
+ * /about) names exactly what is covered. The repo name, the Worker name, the `scvalfh.*` storage
+ * keys and the `SCVAL_*` env names deliberately stay as they are.
+ *
+ * The brand stays NorCal after the Southern California amendment (owner decision, 2026-10-06; DESIGN
+ * §24.1): the site is NorCal Field Hockey ("ncfh", its forum's name too) and covers Southern
+ * California's results behind the NorCal/SoCal toggle, whose default is NorCal. A neutral
+ * "California" brand was built and reverted the same day. What a reader is told about the second
+ * region is in the words that describe the site rather than the name: SITE_DESCRIPTION names both
+ * regions, NorCal first, and SITE_SCOPE_NOTE names every section and league covered.
  */
-export const SITE_NAME = 'California High School Field Hockey';
-/**
- * The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. Below 1280px
- * the header shows the short form 'CA HS FH' (components/layout/SiteHeader.tsx), and the OG cards print
- * it at 44px as their title.
- */
-export const SITE_WORDMARK = 'California HS Field Hockey';
+export const SITE_NAME = 'NorCal High School Field Hockey';
+/** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
+export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
-export const SITE_SHORT_NAME = 'CA HS FH';
+export const SITE_SHORT_NAME = 'NorCal FH';
 
 /**
  * Every league, grouped by its section in config order, each group followed by its section in a
  * parenthesis: `SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL
  * (Northern Section)` with `'name'`, or each section's `briefLabel` with `'short'` (`… (CCS), MCAL
  * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES, so a league added or dropped in the
- * config changes every description that names them.
+ * config changes every description that names them. `region` limits it to that region's sections
+ * (`'socal'`, short: `Sunset (Southern Section) and City, North County and Metro (San Diego Section)`);
+ * omitted, it names all nine leagues in config order, NorCal first.
  */
-export function leaguesBySectionWords(style: 'name' | 'short'): string {
-  const groups = SECTIONS.flatMap((section) => {
+export function leaguesBySectionWords(style: 'name' | 'short', region?: RegionId): string {
+  const groups = (region === undefined ? SECTIONS : sectionsInRegion(region)).flatMap((section) => {
     const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
     if (leagues.length === 0) return [];
     const label = style === 'name' ? section.name : section.briefLabel;
@@ -103,7 +115,26 @@ function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[
   return `${lead}’s ${names}${noun === null ? '' : ` ${noun}${leagues.length > 1 ? 's' : ''}`}`;
 }
 
-export const SITE_DESCRIPTION = `Scores, standings, schedules and playoff pictures for ${TEAMS.length} girls varsity field hockey teams in ${numberWord(LEAGUES.length)} leagues across ${numberWord(SECTIONS.length)} CIF sections: ${leaguesBySectionWords('short')}. Rebuilt twice daily from MaxPreps; unofficial.`;
+/**
+ * The site's meta description (root layout, manifest), one clause per region in REGIONS order, so NorCal
+ * leads (owner decision, 2026-10-06: the brand and the focus stay NorCal; DESIGN §24.1): "Scores,
+ * standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL,
+ * BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 50 Southern California teams
+ * in Sunset (Southern Section) and City, North County and Metro (San Diego Section). Rebuilt twice daily
+ * from MaxPreps; unofficial." The counts are the registry's (TEAMS by its league's region), the league
+ * lists leaguesBySectionWords('short', region): a team or league added in the config changes the
+ * sentence. The lead region carries the full noun phrase under its short name, the brand's word; the
+ * second names its region in full, as the owner's wording of the sentence does.
+ */
+export const SITE_DESCRIPTION = (() => {
+  const clauses = REGIONS.map((region, i) => {
+    const count = TEAMS.filter((t) => regionOf(t.league) === region.id).length;
+    const noun = i === 0 ? `${region.shortName} girls varsity field hockey teams` : `${region.name} teams`;
+    return `the ${count} ${noun} in ${leaguesBySectionWords('short', region.id)}`;
+  });
+  // Two regions: 'for A, and for B'. The comma keeps the second 'for' from reading as part of A's list.
+  return `Scores, standings, schedules and playoff pictures for ${clauses.join(', and for ')}. Rebuilt twice daily from MaxPreps; unofficial.`;
+})();
 
 /**
  * What the site covers, in one paragraph for the footer and /about (SPEC §11; DESIGN-socal §2.4), built
@@ -148,7 +179,7 @@ export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, 
  * og:title never carries the site-name suffix: `siteName` (og:site_name) names the site on every
  * page, so the title is the page's own (`Season leaders`, `MCAL tournament`, a team's record; the
  * home page's is SITE_NAME), and every page states it. A page that leaves `openGraph.title` out
- * inherits its TEMPLATED `<title>`, `… — California High School Field Hockey`
+ * inherits its TEMPLATED `<title>`, `… — NorCal High School Field Hockey`
  * (node_modules/next/dist/lib/metadata/resolve-metadata.js `inheritFromMetadata`), which is how the
  * suffix used to appear on some pages and not others. An `openGraph.title.template` in the root
  * layout is no way out: vinext's metadata shim (node_modules/vinext/dist/shims/metadata.js) applies

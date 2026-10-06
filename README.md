@@ -1,11 +1,12 @@
-# California High School Field Hockey (repo: scvalfh)
+# NorCal High School Field Hockey (repo: scvalfh)
 
-Scores, standings, schedules and playoff pictures for the 99 girls varsity field hockey teams of
-nine leagues in five CIF sections and two regions. Northern California (49 teams): SCVAL, BVAL and
-PCAL in the Central Coast Section, MCAL in the North Coast Section and the Northern Section's EAL.
-Southern California (50 teams): the Southern Section's Sunset field hockey league and the San Diego
-Section's City, North County and Metro conferences. A NorCal/SoCal toggle shows one region at a time,
-NorCal by default; the browser remembers the choice, and without JavaScript both regions show.
+Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
+Northern California's five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in
+the North Coast Section and the Northern Section's EAL. The site also covers Southern California's
+50 teams (the Southern Section's Sunset field hockey league and the San Diego Section's City, North
+County and Metro conferences) behind a NorCal/SoCal toggle whose default is NorCal, because the
+owner keeps the NorCal focus (2026-10-06); the browser remembers the choice, and without JavaScript
+both regions show, NorCal first.
 Teams outside these nine leagues, including the Southern Section's Glendora, Harvard-Westlake and
 Thousand Oaks, appear only as opponents (this is the site's scope note, `SITE_SCOPE_NOTE` in
 `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
@@ -1274,13 +1275,11 @@ at once, at every build, starting from last season's:
   PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
   stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a
   JV team (York, PCAL's JV-only member, appears only as an opponent). See "JV games".
-- **The header wordmark was measured, the spelled-out form was not.** Measured in Chromium on
-  2026-10-06 (DESIGN §24.3): "CA HS FH" is 84 px with its padding below 1280 px (the old "NorCal HS FH"
-  was 115 px) and "California HS FH" 136 px from 1280 px (the old full wordmark was 193 px), so every
-  margin grew. The spelled-out "California HS Field Hockey" was not tried in a browser; the estimate in
-  `components/layout/SiteHeader.tsx` (about 18 px too wide at 1280 beside the "Report an error" pill)
-  is why the header shows the initials there. The home row with the region switcher was measured at
-  320, 360 and 390 px (DESIGN §24.3): it costs one 48 px row, and the §15.6 fold targets are missed.
+- **The header wordmark is NorCal again, and its 2026-10-04 measurements apply.** The site name,
+  wordmark, home h1 and manifest stay NorCal (owner decision, 2026-10-06; DESIGN §24.1), so the widths
+  measured in Chromium on 2026-10-04 and recorded in `components/layout/SiteHeader.tsx` stand ("NorCal HS FH" 115 px with its padding below 1280 px, the full wordmark 193 px from
+  1280 px). The home row with the region switcher was measured at 320, 360 and 390 px (DESIGN §24.3):
+  it costs one 48 px row, and the §15.6 fold targets are missed.
 - **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
   `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
   and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this

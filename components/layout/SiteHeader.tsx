@@ -5,7 +5,7 @@ import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
-import { DATA_CORRECTIONS_URL, SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } from './site';
+import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from './site';
 import ThemeToggle from './ThemeToggle';
 import TopNav from './TopNav';
 
@@ -14,7 +14,7 @@ import TopNav from './TopNav';
  * border and no translucency. No league switcher here: the league is chosen on the pages that are
  * about a league, never in the chrome.
  *
- * Phone: 48px, one line: the "CA HS FH" wordmark, the freshness stamp (from 360px), the theme
+ * Phone: 48px, one line: the "NorCal HS FH" wordmark, the freshness stamp (from 360px), the theme
  * toggle. The stamp lives INSIDE the bar rather than occupying its own row, which returns that
  * row's height to the fold on every page. Past 36 hours it becomes the stale pill instead
  * (LastUpdated), so a failing scheduled update shows at the top of every page, not only in the
@@ -22,49 +22,27 @@ import TopNav from './TopNav';
  * stays a plain date (`seasonComplete`).
  *
  * From 768px: 64px, the wordmark + the seven nav links + the toggle. 768–895 drops the stamp so
- * the nav fits; it comes back from 896 in its short month-day form, with the weekday from 1024.
- * Below 1280 the wordmark is SITE_SHORT_NAME, "CA HS FH"; from 1280 it is "California HS FH".
- *
- * MEASURED in Chromium (2026-10-04, with the old wordmark "NorCal HS Field Hockey", no badge; the
- * seven links of DESIGN §18 and the widest stamp, "Updated Wed Nov 30 12:48 PM", forced in): the
- * short wordmark's link ("NorCal HS FH", 4px apart) was 115px wide with its padding, the full one
- * (8px apart) 193px; the gap from the wordmark to the stamp was ≈ 12px at 360, of which 8px is the
- * row's own gap, so 4px was spare; the nav cleared the toggle by ≈ 63px at 768; the stamp left
- * ≈ 28px at 896 (56rem) and ≈ 90px at 1024 with its weekday; with the "Report an error" pill (from
- * 1120) the nav cleared the stamp by 30px at 1120 and by 16px from 1280, where the content box stops
- * growing (1200px max) and the full wordmark took 78px back.
- *
- * ESTIMATED, not measured, for the neutral wordmark (DESIGN-socal §2.4; 2026-10-06): no browser was
- * available, so the new labels were sized with tests/ui/text-metrics.ts (Geist, 12px / 500, kerned)
- * scaled to the bar's 16px and then by the ratio the old labels' estimates bore to their Chromium
- * widths (115 / 123.7 and 193 / 209.5, ≈ 0.93 and 0.92; bold renders a little wider than 500, which
- * the ratio absorbs). "CA HS FH" ≈ 85px with padding, ≈ 30px narrower than "NorCal HS FH": ≈ 34px
- * spare at 360 (was 4px) and every narrower-than-1280 figure above improves by as much. "California
- * HS" + "FH" ≈ 134px: from 1280 it is ≈ 59px narrower than the old full wordmark, so ≈ 75px spare
- * beside the pill. The spelled-out "California HS Field Hockey" is NOT shown: ≈ 211px, ≈ 18px wider
- * than the old full form against the 16px that was spare from 1280 (the design review's "172px of
- * spare room" left the 141px pill out). "California HS" + "FH" would not fit 360 either (≈ 134px
- * against ≈ 119px of room), which is why the short form is the initials. Re-measure in Chromium with
- * scripts/a11y-axe.mjs's `layout:` lines before changing either label.
+ * the nav fits; it comes back from 896 in its short month-day form, with the weekday from 1024; the
+ * spelled-out wordmark waits until 1280; below that, "FH" stands in for "Field Hockey". Measured in
+ * Chromium (2026-10-04, the wordmark "NorCal HS Field Hockey" with no badge; the seven links of
+ * DESIGN §18 and the widest stamp, "Updated Wed Nov 30 12:48 PM", forced in): the short wordmark's
+ * link ("NorCal HS FH", 4px apart) is 115px wide with its padding, the full one (8px apart) 193px;
+ * the gap from the wordmark to the stamp is ≈ 12px at 360, of which 8px is the row's own gap, so
+ * 4px is spare; the nav clears the toggle by ≈ 63px at 768; the stamp leaves ≈ 28px at 896 (56rem),
+ * ≈ 90px at 1024 with its weekday and ≈ 172px at 1280 beside the full wordmark. The full wordmark
+ * at 1024 would leave ≈ 12px, which is why it still waits for 1280. The 4px between "NorCal HS" and
+ * "FH" is what fits 360: at 8px the widest stamp had 0.1px to spare. The stale pill ("Updated 12
+ * days ago") is narrower than the widest stamp. (Eight links, DESIGN §16, needed tighter capsules
+ * and a later stamp; §18's merge of Standings into Teams gave the room back.)
  *
  * The corrections thread (DATA_CORRECTIONS_URL) rides with the bar. From 1120px (70rem) it is a
  * ringed "Report an error ↗" pill beside the stamp; below that it is a second line under the bar,
  * "See something missing? Report a data error ↗", which is not sticky and scrolls away with the
  * page.
  *
- * The home link's accessible name always starts with its visible label: "CA HS FH California High
- * School Field Hockey" below 1280px (SITE_SHORT_NAME, then SITE_NAME sr-only), "California HS FH
- * Field Hockey" from 1280px (SITE_WORDMARK's first two words and its initials, then the tail sr-only).
+ * The home link's accessible name always starts with its visible label: "NorCal HS FH Field Hockey"
+ * below 1280px, SITE_WORDMARK ("NorCal HS Field Hockey") from 1280px.
  * Content is capped at 1200px, with the same 16 / 24 / 32px gutter as <main>.
- *
- * Measured in Chromium 141 on 2026-10-06 (Playwright against `next start`, the stamp of that day
- * "Updated Oct 5 8:19 PM": 137px on a phone, 166px with its weekday, narrower than the widest stamp
- * the estimates above assume): the short wordmark link "CA HS FH" is 84px with its padding at every
- * width below 1280 (the old "NorCal HS FH" was 115px, so every margin below 1280 grew by 31px); the
- * gap from the wordmark to the stamp is 61px at 360; the nav clears the stamp by 76px at 896 and
- * 139px at 1024, and the pill by 8px at 1120; from 1280 "California HS FH" is 136px (the old full
- * wordmark was 193px), with 8px to the pill and 99px to the stamp. The spelled-out "California HS
- * Field Hockey" was not tried in a browser; its ≈ 211px above is still an estimate.
  */
 export interface SiteHeaderProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
@@ -75,23 +53,12 @@ export interface SiteHeaderProps {
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
 
-/**
- * 'California HS' / 'Field Hockey': the visible lead of the 1280px wordmark and the half it shows only
- * as initials ('FH'), from SITE_WORDMARK. Below 1280 the visible label is SITE_SHORT_NAME, split the
- * same way ('CA HS' bold, 'FH' medium), so the two-tone mark reads the same at every width.
- */
+/** 'NorCal HS' / 'Field Hockey': the visible short wordmark and the half that waits for 1280px. */
 const WORDMARK_WORDS = SITE_WORDMARK.split(' ');
-const WORDMARK_LEAD = WORDMARK_WORDS.slice(0, 2).join(' ');
+const WORDMARK_SHORT = WORDMARK_WORDS.slice(0, 2).join(' ');
 const WORDMARK_TAIL = WORDMARK_WORDS.slice(2).join(' ');
-/** 'FH': the tail's initials, shown in its place. */
+/** 'FH': the tail's initials, shown in its place below 1280px. */
 const WORDMARK_TAIL_ABBR = WORDMARK_WORDS.slice(2).map((word) => word[0]).join('');
-const SHORT_WORDS = SITE_SHORT_NAME.split(' ');
-/** 'CA HS' / 'FH'. */
-const SHORT_LEAD = SHORT_WORDS.slice(0, -1).join(' ');
-const SHORT_TAIL = SHORT_WORDS.slice(-1).join(' ');
-if (SHORT_TAIL !== WORDMARK_TAIL_ABBR) {
-  throw new Error(`SiteHeader: SITE_SHORT_NAME must end in ${WORDMARK_TAIL_ABBR}, got ${JSON.stringify(SITE_SHORT_NAME)}`);
-}
 
 export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
   // After every league's season ends the scheduled update stops on purpose; the stale pill would
@@ -102,35 +69,34 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
       <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">
         <div className="mx-auto flex h-topbar max-w-content items-center gap-2 px-gutter md:h-topbar-lg md:px-gutter-lg xl:px-gutter-xl">
           {/* The wordmark is the home link. `h-full` makes it the height of the bar, so the whole
-              left end of the chrome is a 48/64px target. Below 1280px the visible label is "CA HS
-              FH" and SITE_NAME follows sr-only, so the name is "CA HS FH California High School
-              Field Hockey"; from 1280px it is "California HS FH" with "Field Hockey" sr-only, so the
-              name is "California HS FH Field Hockey". Either way the visible label is the start of
-              the name (WCAG 2.5.3), so "click CA HS FH" works for voice control. The leading spaces
-              keep the computed name from running words together. The spelled-out "Field Hockey"
-              no longer shows at 1280 (≈ 18px too wide; see the comment above). The 6px of padding,
-              cancelled by the negative margin, is room for the focus ring INSIDE the link: drawn
-              outside, it ran into the screen edge. */}
+              left end of the chrome is a 48/64px target. The "Field Hockey" half is sr-only below
+              1280px (it overflowed the 768–843 nav, and at 1024 it would crowd out the stamp) and
+              "FH" stands in for it. "FH" stays in the accessible name: the visible label has to be
+              part of the name (WCAG 2.5.3) so "click NorCal HS FH" works for voice control, and the
+              sr-only tail still spells it out, so the name is "NorCal HS FH Field Hockey" below 1280px
+              and "NorCal HS Field Hockey" from 1280px. The leading spaces keep the computed name from
+              reading "NorCal HSFH" or "NorCal HSField Hockey". The 6px of padding, cancelled by the negative margin, is
+              room for the focus ring INSIDE the link: drawn outside, it ran into the screen edge. */}
           <Link
             href="/"
             prefetch={false}
-            className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-1 rounded-chip px-1.5 text-ink no-underline focus-visible:-outline-offset-2"
+            className="-mx-1.5 inline-flex h-full shrink-0 items-center gap-1 rounded-chip px-1.5 xl:gap-2 text-ink no-underline focus-visible:-outline-offset-2"
           >
-            <span className="text-body font-bold tracking-[-0.01em] xl:hidden">{SHORT_LEAD}</span>
-            <span className="hidden text-body font-bold tracking-[-0.01em] xl:inline">{WORDMARK_LEAD}</span>
-            <span className="text-body font-medium tracking-[-0.01em] text-ink-2">
+            <span className="text-body font-bold tracking-[-0.01em]">{WORDMARK_SHORT}</span>
+            <span className="text-body font-medium tracking-[-0.01em] text-ink-2 xl:hidden">
               {' '}
               {WORDMARK_TAIL_ABBR}
             </span>
-            <span className="sr-only xl:hidden"> {SITE_NAME}</span>
-            <span className="hidden xl:sr-only xl:inline"> {WORDMARK_TAIL}</span>
+            <span className="sr-only xl:not-sr-only xl:text-body xl:font-medium xl:tracking-[-0.01em] xl:text-ink-2">
+              {' '}
+              {WORDMARK_TAIL}
+            </span>
           </Link>
           <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
           <span className="ml-auto flex shrink-0 items-center gap-2">
             {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
                 where the seven nav links need the room; back from 896 (56rem, ≈ 33px to spare at the
-                widest stamp with the old "NorCal HS FH", measured; ≈ 30px more with "CA HS FH",
-                estimated). The breakpoints are in rem, not px: Tailwind orders
+                widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
                 min-width variants by value only within one unit, and every px one sorts BEFORE
                 `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
                 font size, as `md` and `lg` do: at a 24px default the phone stamp starts at 540px,
@@ -143,9 +109,8 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
               className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
             />
             {/* The corrections thread, from 1120px (70rem). Measured in Chromium with the widest
-                stamp: the pill is 141px, and with it the nav cleared the stamp by 30px at 1120 and
-                16px from 1280 beside the old full wordmark (both measured; with "CA HS FH" and
-                "California HS FH" ≈ 60px and ≈ 75px, estimated); at 1088 it would not fit.
+                stamp: the pill is 141px, and with it the nav clears the stamp by 30px at 1120 and
+                16px from 1280, where the full wordmark takes 78px back; at 1088 it would not fit.
                 Below 70rem it is the second line under the bar instead. The short label is what
                 fits: "Report a data error" is 27px wider. The ringed pill, not the accent wash,
                 which is the lit nav capsule's fill. */}

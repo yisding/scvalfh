@@ -9,7 +9,7 @@ import { ROOT_OG_ALT } from '../components/layout/site';
  * third-party image request — the same constraint that made TeamMonogram a color square instead of a
  * hotlinked mascot.
  *
- * `California HS Field Hockey · 2026` at 44px, then two region columns (Northern California, Southern
+ * `NorCal HS Field Hockey · 2026` at 44px, then two region columns (Northern California, Southern
  * California), each with one row per league in config order: `SCVAL  De Anza: St. Ignatius 18 pts ·
  * El Camino: Los Gatos 21 pts` — the leader(s) of each division with their points. A single-division
  * league has no division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with

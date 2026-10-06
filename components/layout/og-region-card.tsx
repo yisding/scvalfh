@@ -195,7 +195,7 @@ export const REGION_CARD_SIZE = OG_SIZE;
 // 03-file-conventions/01-metadata/opengraph-image.md, "Config exports"), and the test needs these too.
 
 /**
- * The root card (app/opengraph-image.tsx): `California HS Field Hockey · 2026` (SITE_WORDMARK, shorter
+ * The root card (app/opengraph-image.tsx): `NorCal HS Field Hockey · 2026` (SITE_WORDMARK, shorter
  * than SITE_NAME, so one line at 44px) and `9 leagues · 99 teams · results through Oct 2 · unofficial`.
  */
 export function rootCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
