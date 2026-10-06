@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import JvStandings from '../../components/standings/JvStandings';
@@ -8,11 +9,13 @@ import { buildJvTablesView } from '../../components/standings/jv-standings-view'
 import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords } from '../../lib/format';
-import { LEAGUES } from '../../lib/leagues';
+import { LEAGUES, leaguesInRegion, regionOf } from '../../lib/leagues';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv-standings.ts) and
- * unofficial: one section per league (`#scval`, …), one block per division (`#de-anza`, …).
+ * unofficial: one section per league (`#scval`, …), one block per division (`#de-anza`, …). Each
+ * league's section carries its region's `data-region-scope` (DESIGN-socal §2.4), so the reader's region
+ * shows; a deep link into the other region opens it (components/layout/league-scope-css.ts).
  *
  * Its own page rather than a section of `/standings/<league>`: those pages carry the varsity tables
  * at their weight budget, and the JV tables are a different kind of claim (no league publishes one
@@ -40,6 +43,8 @@ export default function JvStandingsPage() {
         title={PAGE_TITLE}
         description="Junior varsity league games only · computed from published results · unofficial"
       />
+      {/* The region control, its own row (DESIGN-socal §2.4); each league's section is region-scoped. */}
+      <RegionSwitcher className="mt-4" />
       <p className="m-0 mt-4 max-w-prose text-body text-ink-2">
         No league publishes JV standings during the season, so these are computed: a JV game counts when
         its varsity counterpart (the same two schools within three days) counts for the varsity table, or
@@ -50,12 +55,18 @@ export default function JvStandingsPage() {
           How JV tables are built <Arrow />
         </Link>
       </p>
-      {LEAGUES.map((league, index) => (
+      {LEAGUES.map((league) => (
         <section
           key={league.id}
           id={league.id}
+          data-region-scope={regionOf(league.id)}
           aria-labelledby={`${league.id}-heading`}
-          className={index === 0 ? 'mt-8 scroll-mt-24 md:mt-10' : 'mt-section scroll-mt-24 md:mt-section-lg'}
+          // The first league of each region takes the smaller gap: the other region's may be hidden.
+          className={
+            leaguesInRegion(regionOf(league.id))[0]?.id === league.id
+              ? 'mt-8 scroll-mt-24 md:mt-10'
+              : 'mt-section scroll-mt-24 md:mt-section-lg'
+          }
         >
           <SectionHeader
             id={`${league.id}-heading`}

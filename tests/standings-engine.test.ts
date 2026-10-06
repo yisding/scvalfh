@@ -11,6 +11,8 @@ import { sixthPlaceRule } from '../lib/postseason';
 import {
   buildCrossCheck,
   computeStandings,
+  crossCheckSkipReason,
+  unevenGamesSentence,
   lastSpotOutcome,
   leaguePairings,
   missingOfficialResults,
@@ -850,6 +852,74 @@ describe('cross-check trust levels (§5.8)', () => {
     expect(place('saint-francis')).toBe('place (we order on points, Art. VI §2; MaxPreps orders on win pct)');
     expect(place('leigh')).toBe('place (we order on points, BVAL by-laws §6a; MaxPreps orders on win pct)');
     expect(place('leigh')).not.toMatch(/Art\. VI/);
+  });
+});
+
+describe('Southern California: ladders, the cross-check skip, uneven games (DESIGN-socal §2.1.7)', () => {
+  it('maps every Sunset place to no-postseason, and San Diego 1st to tournament, 2nd and below to selection', () => {
+    for (const place of [1, 5, 10, 99]) expect(playoffStatusFor('sunset', place)).toBe('no-postseason');
+    for (const d of ['city-western', 'city-eastern', 'avocado', 'palomar', 'valley', 'metro-mesa', 'metro-south-bay']) {
+      expect(playoffStatusFor(d, 1), d).toBe('tournament');
+      expect(playoffStatusFor(d, 2), d).toBe('selection');
+      expect(playoffStatusFor(d, 7), d).toBe('selection');
+    }
+    expect(statusBadge('sunset', 'no-postseason')).toBe('No playoffs');
+    expect(statusBadge('palomar', 'selection')).toBe('Selection only');
+    expect(playoffOutcomeLabel('valley', ['tournament', 'selection'])).toBe(
+      'League champion: at least a play-in or no league route into the playoffs',
+    );
+    expect(statusLegend('sunset', 'no-postseason')).toBe('The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)');
+  });
+
+  it('places a Sunset or San Diego table on site points, and never says the rules require it', () => {
+    const games = finals([['la-jolla', 'scripps-ranch', 2, 0], ['bonita', 'marina', 1, 0]]);
+    const rows = computeStandings(games);
+    const lj = rows.find((r) => r.slug === 'la-jolla')!;
+    expect(lj.tiebreak.note).toBe(
+      '3 points (3 per win, 1 per tie) — placed on points alone, no league document orders the table; this site orders it by its own 3-1-0 points.',
+    );
+    const idle = rows.find((r) => r.slug === 'mission-bay')!;
+    expect(idle.tiebreak.note).toBe(
+      'No division games counted for Mission Bay yet, so it is listed last; City Western order is the order of team points (no league document orders the table; this site orders it by its own 3-1-0 points).',
+    );
+    expect(rows.find((r) => r.slug === 'edison')!.tiebreak.note).toMatch(/^No league games counted for Edison yet, /);
+    for (const r of rows.filter((x) => ['sunset', 'city-western'].includes(x.division))) {
+      expect(r.tiebreak.note).not.toMatch(/rules require|results reported/);
+    }
+  });
+
+  it('skips the MaxPreps comparison for Valley, which has no MaxPreps table, and says why', () => {
+    expect(crossCheckSkipReason('valley')).toBe('MaxPreps publishes no table for this division');
+    expect(crossCheckSkipReason('palomar')).toBeNull();
+    expect(crossCheckSkipReason('de-anza')).toBeNull();
+    const games = finals([['escondido', 'vista', 1, 0], ['del-norte', 'poway', 1, 0]]);
+    const ids = ['escondido', 'del-norte'].map((slug) => computeStandings(games).find((r) => r.slug === slug)!.teamId);
+    const rows = computeStandings(games, { reported: new Map(ids.map((id) => [id, {
+      conferenceWins: 9, conferenceLosses: 9, conferenceTies: 9, overallWins: 9, overallLosses: 9, overallTies: 9,
+      conferencePoints: 99, conferencePointsAgainst: 99, points: 0, pointsAgainst: 0,
+      conferenceContestsPlayed: 0, overallContestsPlayed: 0, conferenceStandingPlacement: 9,
+      conferenceWinningPercentage: 0.999, winningPercentage: 0, streak: 0, streakResult: null,
+      homeWins: 0, homeLosses: 0, homeTies: 0, awayWins: 0, awayLosses: 0, awayTies: 0,
+      neutralWins: 0, neutralLosses: 0, neutralTies: 0, modifiedOn: '2026-10-01T00:00:00',
+    }])) });
+    const check = buildCrossCheck(rows);
+    expect(check.filter((r) => r.slug === 'escondido')).toEqual([]);
+    // Palomar is 'informational': its league record only, with its known cause and its MaxPreps page.
+    const palomar = check.filter((r) => r.slug === 'del-norte');
+    expect(palomar.map((r) => r.field)).toEqual(['league record']);
+    expect(palomar[0].url).toMatch(/leagueid=e4a7e9c3/);
+    expect(palomar[0].knownCause).toMatch(/Rancho Buena Vista/);
+  });
+
+  it('words an uneven games-played spread with "of N" for a fixed schedule and without it for the Sunset', () => {
+    expect(unevenGamesSentence('mcal', { min: 9, max: 12, scheduled: 16 })).toBe(
+      'Teams have played between 9 and 12 of 16 league games, so points favour teams that have played more.',
+    );
+    expect(unevenGamesSentence('sunset', { min: 2, max: 7, scheduled: null })).toBe(
+      'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games, and there is no fixed league schedule, so points favour teams that have played more.',
+    );
+    expect(unevenGamesSentence('sunset', { min: 2, max: 3, scheduled: null })).toBeNull();
+    expect(unevenGamesSentence('palomar', { min: 4, max: 5, scheduled: 12 })).toBeNull();
   });
 });
 

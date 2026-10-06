@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 49
- * schools, and si.com's JV team page for the 48 that have one (lib/jv-teams.ts).
+ * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 99
+ * schools, and si.com's JV team page for the 98 that have one (lib/jv-teams.ts).
  *
- *   pnpm fetch-jv                       live: 49 MaxPreps JSON calls + up to 48 si.com pages
+ *   pnpm fetch-jv                       live: 99 MaxPreps JSON calls + up to 98 si.com pages
  *   pnpm fetch-jv --leagues scval,bval  only these leagues; the others keep their previous rows
  *   pnpm fetch-jv --no-sblive           MaxPreps only; si.com rows are carried from the previous file
  *   pnpm fetch-jv --fixtures <dir>      offline: read jv-sched-<slug>.json and jv-sblive-<slug>.html captures
@@ -52,7 +52,7 @@ import {
   type JvTeam,
 } from '../lib/jv-schema';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv-teams';
-import { seasonWindowBounds } from '../lib/leagues';
+import { LEAGUES, seasonWindowBounds } from '../lib/leagues';
 import { normalizeGames } from '../lib/normalize';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import { formatIssues } from '../lib/schema-primitives';
@@ -111,7 +111,7 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 const NOTES = [
-  'One entry per registry school, all five leagues. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.',
+  `One entry per registry school, all ${LEAGUES.length} leagues. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.`,
   'The site shows lib/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.',
   'A si.com JV side is one of ours only by its si.com JV team id (lib/jv-teams.ts), never by name.',
   'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.',

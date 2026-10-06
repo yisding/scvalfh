@@ -60,7 +60,11 @@ function writeVariant(files: Record<string, unknown>, manifest: Record<string, u
 function everyKey(): ResourceKey[] {
   const keys: ResourceKey[] = [{ kind: 'maxpreps-bootstrap' }];
   for (const d of ALL_DIVISIONS) {
-    keys.push({ kind: 'maxpreps-league-meta', division: d.id }, { kind: 'maxpreps-standings', division: d.id });
+    // A division MaxPreps publishes no table for (maxprepsLeagueId null: the San Diego Valley) is
+    // never requested: steps 03 and 04 skip it, so the cron cannot ask for these two keys.
+    if (d.maxprepsLeagueId !== null) {
+      keys.push({ kind: 'maxpreps-league-meta', division: d.id }, { kind: 'maxpreps-standings', division: d.id });
+    }
     if (d.official.mode === 'live-pdf') keys.push({ kind: 'scval-pdf-text', division: d.id });
     if (d.official.mode === 'bundled' && d.official.revisionCheckUrl) keys.push({ kind: 'official-revision', division: d.id });
   }
@@ -156,14 +160,24 @@ describe('the live resource map', () => {
     expect(resourceUrl({ kind: 'sblive-team-games', team: 'carmel' })).toBe(getTeamBySlug('carmel')?.external.sbliveGamesUrl);
   });
 
-  it('the live MaxPreps sweep is 64 resources: 1 bootstrap + 7 metas + 7 tables + 49 schedules', () => {
+  it('the live MaxPreps sweep is 128 resources: 1 bootstrap + 14 metas + 14 tables + 99 schedules', () => {
     const maxpreps = everyKey().filter((k) => k.kind.startsWith('maxpreps-'));
     const count = (kind: ResourceKey['kind']) => maxpreps.filter((k) => k.kind === kind).length;
+    // 15 divisions, of which one (the San Diego Valley) has no MaxPreps table (DESIGN-socal §2.1.7).
+    const withTable = ALL_DIVISIONS.filter((d) => d.maxprepsLeagueId !== null);
+    expect(ALL_DIVISIONS.map((d) => d.id).filter((id) => !withTable.some((d) => d.id === id))).toEqual(['valley']);
     expect([count('maxpreps-bootstrap'), count('maxpreps-league-meta'), count('maxpreps-standings'), count('maxpreps-schedule')]).toEqual([
-      1, 7, 7, 49,
+      1, 14, 14, 99,
     ]);
-    expect(maxpreps.length).toBe(64);
-    expect(maxpreps.length).toBe(1 + ALL_DIVISIONS.length * 2 + TEAMS.length);
+    expect(maxpreps.length).toBe(128);
+    expect(maxpreps.length).toBe(1 + withTable.length * 2 + TEAMS.length);
+  });
+
+  it('refuses to build a MaxPreps URL for a division with no table (never /leagues/null/v1)', () => {
+    expect(getDivision('valley').maxprepsLeagueId).toBeNull();
+    for (const kind of ['maxpreps-league-meta', 'maxpreps-standings'] as const) {
+      expect(() => resourceUrl({ kind, division: 'valley' })).toThrow(/MaxPreps publishes no table for valley/);
+    }
   });
 
   it('has no official URL for a division whose league publishes no schedule (EAL)', () => {

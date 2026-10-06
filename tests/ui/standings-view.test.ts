@@ -243,7 +243,8 @@ describe('GP, LEFT and MAX', () => {
     expect(html).toMatch(/>Max<\/th>/);
     const ctx = data.getStandingContext('marin-county');
     for (const c of ctx.values()) {
-      expect(c.remaining, 'lib/data.ts getStandingContext').toBe(Math.max(0, c.scheduled - c.counted));
+      expect(c.scheduled, 'lib/data.ts getStandingContext: MCAL has a fixed schedule').not.toBeNull();
+      expect(c.remaining, 'lib/data.ts getStandingContext').toBe(Math.max(0, c.scheduled! - c.counted));
       expect(html, 'components/ui/StandingsTable.tsx GP').toContain(`${c.counted}/${c.scheduled}`);
     }
   });
@@ -326,8 +327,42 @@ describe('the /standings overview', () => {
       'h3 MCAL — Marin County Athletic League',
       'h2 Northern Section',
       'h3 EAL — Eastern Athletic League',
+      'h2 Southern Section',
+      'h3 Sunset — Sunset Field Hockey League',
+      'h2 San Diego Section',
+      'h3 City — City Conference',
+      'h4 City Western',
+      'h4 City Eastern',
+      'h3 North County — North County Conference',
+      'h4 Avocado',
+      'h4 Palomar',
+      'h4 Valley',
+      'h3 Metro — Metro Conference',
+      'h4 Metro Mesa',
+      'h4 Metro South Bay',
     ]);
     expect(html).toMatch(/<h4 class="m-0 mb-3 text-lead text-ink">/);
+  });
+
+  it('wraps each region’s sections in <div id="norcal|socal" data-region-scope> (DESIGN-socal §2.4)', () => {
+    const html = renderOverview();
+    const norcal = html.indexOf('<div id="norcal" data-region-scope="norcal">');
+    const socal = html.indexOf('<div id="socal" data-region-scope="socal">');
+    expect(norcal, 'app/standings/page.tsx #norcal').toBeGreaterThan(0);
+    expect(socal, 'app/standings/page.tsx #socal').toBeGreaterThan(norcal);
+    // The NorCal sections sit before the SoCal wrapper, the SoCal ones after it.
+    expect(html.indexOf('id="ns"')).toBeLessThan(socal);
+    expect(html.indexOf('id="ss"')).toBeGreaterThan(socal);
+    expect(html.indexOf('id="sds"')).toBeGreaterThan(socal);
+    // The Sunset's membership note under its heading; the region control under the header.
+    expect(textOf(html)).toContain(
+      'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+    );
+    expect(html, 'app/standings/page.tsx region control').toContain('data-region-option="socal"');
+    // The points sentence names the 'site' leagues and never says their rules require anything.
+    expect(textOf(html)).toContain('(Sunset, City, North County and Metro publish no points rule, so there the order is this site’s own points)');
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/standings/page.tsx duplicate ids').toEqual([]);
   });
 
   it('draws the labelled ladder line, links each full table, and has no sticky head', () => {
@@ -421,7 +456,9 @@ describe('OG card rows (standings-view.ts leaderClause over standings-page-view.
 describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)', () => {
   const SPV = 'components/standings/standings-page-view.ts buildNotice';
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
-    for (const id of data.getLeagueIds().filter((l) => l !== 'eal')) {
+    // The corpus predates the Southern California leagues too: they load with no games at all.
+    const empty = ['eal', 'sunset', 'city', 'north-county', 'metro'];
+    for (const id of data.getLeagueIds().filter((l) => !empty.includes(l))) {
       expect(sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
     }
     // This corpus predates the EAL's league games, so its tables have no counted final yet.
@@ -429,6 +466,7 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
       heading: 'EAL league play starts Mon Aug 24.',
       body: 'These tables count league games only, so every record reads 0-0-0 until the first league result is published. The 4 non-league games played so far are on the schedule.',
     });
+    expect(sd.buildStandingsPageView('metro').notice?.heading, `${SPV}: metro`).toBe('Metro league play starts Mon Sep 28.');
   });
 
   it('dates league play from config and counts the non-league games played so far', () => {
@@ -451,5 +489,83 @@ describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
     expect(view.ladderLineAfter(rows(null, null, null), 3), `${LL}: no results`).toBeNull();
     expect(view.ladderLineAfter(rows(1, 2, 3), 6), `${LL}: every row above`).toBeNull();
     expect(view.ladderLineAfter(rows(1, 2, 3), null), `${LL}: no line`).toBeNull();
+  });
+});
+
+describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)', () => {
+  const SV = 'components/standings/standings-view.ts';
+
+  it('a ‘site’ league says the order is this site’s points, never that its rules require it', () => {
+    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
+      const league = data.getLeagueSummary(id)!;
+      const page = sd.buildStandingsPageView(id);
+      for (const v of page.views) {
+        expect(v.rankRule, `${SV} rankRuleText ${id}`).toBe(
+          `The order is this site’s 3-1-0 points; no ${league.shortName} rule orders the table.`,
+        );
+        expect(v.legendNotes.join(' '), `${SV} orderLegendText ${id}`).toContain(
+          `${league.shortName} publishes no standings and no points rule, so the order is this site’s 3-1-0 points.`,
+        );
+      }
+    }
+    const uneven = view.unevenGpFootnote('city', { min: 2, max: 6, scheduled: 10 })!;
+    expect(uneven, `${SV} unevenGpFootnote city`).toContain('The order is this site’s 3-1-0 points; no City rule orders the table.');
+    expect(uneven).toContain('LEFT is league games');
+    expect(uneven).not.toMatch(/rules require/);
+  });
+
+  it('the Sunset: no fixed schedule (no LEFT, MAX or "of N") and no postseason band', async () => {
+    const sunset = sd.buildStandingsPageView('sunset').views[0];
+    expect(sunset.fixedSchedule, `${SV} fixedSchedule`).toBe(false);
+    expect(sunset.statusGroups, `${SV} no band groups`).toEqual([]);
+    expect(sunset.noPostseason?.sourceLabel).toBe('CIF-SS Blue Book 2026-27');
+    expect(sunset.noPostseason?.note).toMatch(/^The CIF Southern Section holds no field hockey playoffs/);
+    expect(sunset.playoffsHref).toBe('/playoffs#sunset');
+    expect(sunset.statusIntro).toBeNull();
+    const uneven = view.unevenGpFootnote('sunset', { min: 2, max: 7, scheduled: null });
+    expect(uneven, `${SV} unevenGpFootnote sunset`).toBe(
+      'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games, and there is no fixed league schedule, so points favour teams that have played more. The order is this site’s 3-1-0 points; no Sunset rule orders the table.',
+    );
+    const html = await renderLeague('sunset');
+    expect(html, 'components/standings/DivisionStandings.tsx Sunset: no Left/Max').not.toMatch(/>Left<\/th>|>Max<\/th>/);
+    expect(textOf(html)).toContain('GP is league games counted. Sunset has no fixed league schedule, so there is no LEFT or MAX column.');
+    expect(textOf(html)).not.toMatch(/\d+\/null/);
+    // Copy rules: 'Sunset League' only beside 'all-sports'; 'Sunset teams', never schools or members.
+    for (const sentence of textOf(html).split(/(?<=[.!?])\s+/)) {
+      if (/\bSunset League\b/.test(sentence)) expect(sentence).toContain('all-sports');
+      expect(sentence).not.toMatch(/\bSunset (school|member)s?\b/);
+      expect(sentence).not.toMatch(/rules require|at-large|automatic qualifier|eliminat/i);
+    }
+  });
+
+  it('a San Diego league: the band reads the Section line and the champion rung; Valley has no MaxPreps table', async () => {
+    const page = sd.buildStandingsPageView('north-county');
+    for (const v of page.views) {
+      expect(v.statusIntro, `${SV} statusIntro ${v.division}`).toMatch(/^San Diego Section playoffs, Nov 2–14/);
+      expect(v.statusHeading).toBe('San Diego Section playoffs: the league route, as things stand');
+      expect(v.playoffsHref).toBe('/playoffs#north-county');
+      expect(v.fixedSchedule).toBe(true);
+      expect(v.ladderLineLabel).toBe('Champion line');
+    }
+    const valley = page.views.find((v) => v.division === 'valley')!;
+    expect(valley.sourceUrl, `${SV} Valley has no MaxPreps table`).toBeNull();
+    expect(valley.sourceSkipped).toBe('MaxPreps publishes no table for this division');
+    expect(page.views.find((v) => v.division === 'palomar')!.sourceUrl).toMatch(/^https:\/\/www\.maxpreps\.com\//);
+    // Every game between two members is a league game here ('membership'), and the Notes say so.
+    expect(valley.scheduledPer).toBe(
+      'League games are every game between two division members on MaxPreps’ schedules (North County publishes no schedule)',
+    );
+    const text = textOf(await renderLeague('north-county'));
+    expect(text).toContain('MaxPreps publishes no table for this division, so there is nothing to compare these records with.');
+    expect(text).not.toMatch(/at-large|automatic qualifier|lowest-seeded|eliminat/i);
+  });
+
+  it('a league page’s chips are its own region’s leagues plus All', async () => {
+    const html = await renderLeague('city');
+    const nav = html.match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
+    const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs).toEqual(['/standings', '/standings/sunset', '/standings/city', '/standings/north-county', '/standings/metro']);
+    const scval = (await renderLeague('scval')).match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
+    expect(scval).not.toContain('/standings/city');
   });
 });

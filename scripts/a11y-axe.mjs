@@ -28,20 +28,28 @@
  *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
  *     sources through axe with no player rows (/clubs/pac-heights today).
  *  2. `/` once per remembered league: an init script sets localStorage['scvalfh.league'] to each
- *     league id of data/snapshot.json and to 'all' (the no-league run is `/` in 1), and once with
- *     only scvalfh.pinnedTeam = 'tamalpais'. axe skips `display:none` subtrees, so each league panel
- *     is checked only in its own run; each run also asserts the pre-paint stamp (html[data-league],
- *     html[data-pin]) the run was meant to produce.
- *  3. `/teams` with "mar" typed into the finder (the filtered list and the live region).
+ *     league id of data/snapshot.json (plus 'city', so a SoCal league runs even on a snapshot written
+ *     before the SoCal leagues were added) and to 'all' (the no-league run is `/` in 1), once with
+ *     only scvalfh.pinnedTeam = 'tamalpais', and the region runs (DESIGN-socal §2.4): scvalfh.region =
+ *     'socal' alone (the SoCal first-visit view), and with a NorCal pin (the pin kept, no league from
+ *     it). axe skips `display:none` subtrees, so each league panel and each region is checked only in
+ *     its own run; each run also asserts the pre-paint stamp (html[data-league], html[data-pin],
+ *     html[data-region]) the run was meant to produce.
+ *  3. `/teams` with "mar" typed into the finder (the filtered list and the live region), and with
+ *     "la jolla" typed under the default (NorCal) region: the /teams lift must show the SoCal team's
+ *     tile (rendered, not display:none) while the finder searches.
  *  4. A keyboard probe on `/` with no stored league: Tab to "Show BVAL here", press Enter, and
- *     document.activeElement must be inside [data-scope="bval"] (WCAG 2.4.3; SPEC §8.2).
+ *     document.activeElement must be inside [data-scope="bval"] (WCAG 2.4.3; SPEC §8.2). And the
+ *     region probe: Tab to the "SoCal" button of the region switcher, press Enter: it is pressed, the
+ *     page is stamped data-region="socal" and a [data-region-scope="socal"] element is rendered.
  *  5. The SPEC §10.1 fold targets at 390×664 and 390×844 (pinned card; Latest rows), measured and
  *     PRINTED (`fold:` lines): DESIGN §15 states the targets; a miss is reported, not failed.
- *  6. The first-visit `/` (no stored league) at 320, 360 and 390 px wide: the league switcher (All
- *     plus one chip per league, in one list per section) and the "Find your team" league cards
- *     (two-up from 390 px, the last of an odd count spanning both columns), measured and PRINTED
- *     (`layout:` lines) for DESIGN §22.3: how many rows the chips wrap to, where each card sits and
- *     ends, and what is above the fold at 664 and 844 px tall. Reported, never failed.
+ *  6. The first-visit `/` (no stored league) at 320, 360 and 390 px wide: the region switcher and the
+ *     league switcher (All plus one chip per league of the region, in one list per section) and the
+ *     "Find your team" league cards (two-up from 390 px, the last of an odd count spanning both
+ *     columns), measured and PRINTED (`layout:` lines) for DESIGN §22.3 and DESIGN-socal §2.4: where
+ *     the region switcher sits, how many rows the scope row wraps to, where each card sits and ends,
+ *     and what is above the fold at 664 and 844 px tall. Reported, never failed.
  *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
@@ -64,10 +72,22 @@ function readSnapshot() {
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
 }
 const snapshot = readSnapshot();
-const LEAGUES = snapshot ? snapshot.season.leagues.map((l) => l.id) : ['scval', 'bval', 'pcal', 'mcal', 'eal'];
+const LEAGUES = snapshot
+  ? snapshot.season.leagues.map((l) => l.id)
+  : ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro'];
+/**
+ * The SoCal leagues (DESIGN-socal §2.1.5), for the expected `data-region` stamp. Spelled out: this
+ * script runs on plain node and reads no TypeScript config; tests/ui/prefs-script.test.ts holds the
+ * prefs script's own map to lib/leagues.ts.
+ */
+const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro']);
+/** The region a stored league stamps: 'socal', or null (no data-region: NorCal). */
+const regionStampOf = (league) => (league && SOCAL_LEAGUES.has(league) ? 'socal' : null);
 /** The pinned team of the pin run (an MCAL team) and the league the prefs script derives from it. */
 const PIN = 'tamalpais';
 const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal';
+/** A San Diego Section team the /teams lift probe searches for under the default region. */
+const SOCAL_QUERY = 'la jolla';
 
 /**
  * The clubs of data/clubs.json no affiliation names: their pages show the empty state. Read like
@@ -89,13 +109,16 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/standings/bval',
   '/standings/mcal',
   '/standings/eal',
+  '/standings/city',
   '/schedule',
   '/schedule/pcal',
   '/schedule/eal',
+  '/schedule/sunset',
   '/teams',
   '/teams/leigh',
   '/teams/tamalpais',
   '/teams/davis',
+  '/teams/la-jolla',
   '/playoffs',
   '/playoffs/mcal',
   '/leaders',
@@ -281,13 +304,54 @@ for (const theme of ['light', 'dark']) {
       }
       await teams.close();
     }
+
+    // /teams with a SoCal team typed under the default (NorCal) region: the lift
+    // (`[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]`) must show the
+    // SoCal list, so the tile the finder's live region announces is rendered, not display:none.
+    const lift = await open(context, '/teams');
+    if (lift) {
+      const input = lift.locator('input[type="search"]').first();
+      if ((await input.count()) === 0) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'no search field');
+      else {
+        await input.fill(SOCAL_QUERY);
+        await lift.waitForTimeout(400);
+        const shown = await lift.evaluate(() => {
+          const scope = document.querySelector('#team-list [data-region-scope="socal"]');
+          const tile = document.querySelector('#team-list [data-team-slug="la-jolla"]');
+          return {
+            region: document.documentElement.getAttribute('data-region'),
+            scope: scope ? getComputedStyle(scope).display : null,
+            tile: tile ? tile.getClientRects().length > 0 : null,
+          };
+        });
+        if (shown.region !== null) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, `stamped data-region=${shown.region}, expected none (NorCal)`);
+        if (shown.scope === null) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'no [data-region-scope="socal"] list in #team-list');
+        else if (shown.scope === 'none') failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'the SoCal list stays display:none while the finder searches');
+        if (shown.tile === false) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'the la-jolla tile is not rendered');
+        await check(lift, `/teams (typed "${SOCAL_QUERY}", NorCal region) ${tag}`);
+      }
+      await lift.close();
+    }
     await context.close();
 
-    // `/` under each remembered league, 'all', and a pin alone (the prefs script derives the league).
+    // `/` under each remembered league, 'all', a pin alone (the prefs script derives the league), and
+    // the region runs (DESIGN-socal §2.4).
     const runs = [
-      ...LEAGUES.map((id) => ({ label: `league=${id}`, storage: { 'scvalfh.league': id }, league: id, pin: null })),
-      { label: 'league=all', storage: { 'scvalfh.league': 'all' }, league: null, pin: null },
-      { label: `pinnedTeam=${PIN}`, storage: { 'scvalfh.pinnedTeam': PIN }, league: PIN_LEAGUE, pin: PIN },
+      ...[...new Set([...LEAGUES, 'city'])].map((id) => ({
+        label: `league=${id}`, storage: { 'scvalfh.league': id }, league: id, pin: null, region: regionStampOf(id),
+      })),
+      { label: 'league=all', storage: { 'scvalfh.league': 'all' }, league: null, pin: null, region: null },
+      { label: `pinnedTeam=${PIN}`, storage: { 'scvalfh.pinnedTeam': PIN }, league: PIN_LEAGUE, pin: PIN, region: regionStampOf(PIN_LEAGUE) },
+      // The SoCal first-visit view: no league, region SoCal.
+      { label: 'region=socal', storage: { 'scvalfh.region': 'socal' }, league: null, pin: null, region: 'socal' },
+      // A stored region beats a pin of the other region: the pin is kept, no league comes from it.
+      {
+        label: `region=socal, pinnedTeam=${PIN}`,
+        storage: { 'scvalfh.region': 'socal', 'scvalfh.pinnedTeam': PIN },
+        league: regionStampOf(PIN_LEAGUE) === 'socal' ? PIN_LEAGUE : null,
+        pin: PIN,
+        region: 'socal',
+      },
     ];
     for (const run of runs) {
       const ctx = await newContext({ theme, width, storage: run.storage });
@@ -296,9 +360,14 @@ for (const theme of ['light', 'dark']) {
         const stamp = await page.evaluate(() => ({
           league: document.documentElement.getAttribute('data-league'),
           pin: document.documentElement.getAttribute('data-pin'),
+          region: document.documentElement.getAttribute('data-region'),
         }));
-        if (stamp.league !== run.league || stamp.pin !== run.pin) {
-          failRun(`/ (${run.label}) ${tag}`, `stamped data-league=${stamp.league} data-pin=${stamp.pin}, expected ${run.league} / ${run.pin}`);
+        if (stamp.league !== run.league || stamp.pin !== run.pin || stamp.region !== run.region) {
+          failRun(
+            `/ (${run.label}) ${tag}`,
+            `stamped data-league=${stamp.league} data-pin=${stamp.pin} data-region=${stamp.region}, ` +
+              `expected ${run.league} / ${run.pin} / ${run.region}`,
+          );
         }
         await check(page, `/ (${run.label}) ${tag}`);
         await page.close();
@@ -334,6 +403,46 @@ for (const theme of ['light', 'dark']) {
       }));
       if (!focus.inside) failRun(label, `focus is on ${focus.what}, not inside [data-scope="bval"]`);
       else console.log(`${label}: focus moved to ${focus.what} inside [data-scope="bval"]`);
+    }
+    await page.close();
+  }
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------- 4b: keyboard: the region switcher
+{
+  const label = 'keyboard: / (no stored region) Tab to "SoCal", Enter';
+  const ctx = await newContext({ width: 390, height: 844 });
+  const page = await open(ctx, '/');
+  if (page) {
+    const selector = '[role="group"][aria-label="Region"] button[data-region-option="socal"]';
+    await page.waitForFunction((sel) => document.querySelector(sel)?.disabled === false, selector, { timeout: 5000 })
+      .catch(() => undefined);
+    let reached = false;
+    for (let i = 0; i < 300 && !reached; i += 1) {
+      await page.keyboard.press('Tab');
+      reached = await page.evaluate((sel) => document.activeElement === document.querySelector(sel), selector);
+    }
+    if (!reached) failRun(label, 'Tab never reached the SoCal button');
+    else {
+      await page.keyboard.press('Enter');
+      await page.waitForFunction(() => document.documentElement.getAttribute('data-region') === 'socal', null, { timeout: 3000 })
+        .catch(() => undefined);
+      const after = await page.evaluate((sel) => ({
+        region: document.documentElement.getAttribute('data-region'),
+        pressed: document.querySelector(sel)?.getAttribute('aria-pressed'),
+        focusKept: document.activeElement === document.querySelector(sel),
+        rendered: [...document.querySelectorAll('[data-region-scope="socal"]')].some((el) => el.getClientRects().length > 0),
+        norcalShown: [...document.querySelectorAll('[data-region-scope="norcal"]')].some((el) => el.getClientRects().length > 0),
+      }), selector);
+      if (after.region !== 'socal') failRun(label, `stamped data-region=${after.region}, expected socal`);
+      if (after.pressed !== 'true') failRun(label, `aria-pressed=${after.pressed}, expected true`);
+      if (!after.rendered) failRun(label, 'no [data-region-scope="socal"] element is rendered');
+      if (after.norcalShown) failRun(label, 'a [data-region-scope="norcal"] element is still rendered');
+      if (!after.focusKept) failRun(label, 'focus left the SoCal button');
+      if (after.region === 'socal' && after.pressed === 'true' && after.rendered && !after.norcalShown) {
+        console.log(`${label}: data-region=socal, the SoCal blocks rendered, the NorCal ones hidden, focus kept`);
+      }
     }
     await page.close();
   }
@@ -410,14 +519,29 @@ async function measureLayout(width, height) {
       const bar = document.querySelector('nav.sx-chrome-bottom');
       const fold = bar && getComputedStyle(bar).display !== 'none' ? bar.getBoundingClientRect().top : window.innerHeight;
       const group = document.querySelector('[role="group"][aria-label="Your league"]');
-      const chips = group ? [...group.querySelectorAll('button[data-league-option]')].map((b) => b.getBoundingClientRect()) : [];
+      // Rendered chips only: the other region's lists are display:none.
+      const chips = group
+        ? [...group.querySelectorAll('button[data-league-option]')].filter((b) => b.getClientRects().length > 0).map((b) => b.getBoundingClientRect())
+        : [];
       const groupRect = group?.getBoundingClientRect() ?? null;
-      const cards = [...document.querySelectorAll('section[data-scope="none"] ul.grid > li')].map((li) => li.getBoundingClientRect());
+      const region = document.querySelector('[role="group"][aria-label="Region"]');
+      const regionRect = region && region.getClientRects().length > 0 ? region.getBoundingClientRect() : null;
+      // Rendered cards only: the card grid is one list per region, the other region's display:none.
+      const cards = [...document.querySelectorAll('section[data-scope="none"] ul.grid > li')]
+        .filter((li) => li.getClientRects().length > 0)
+        .map((li) => li.getBoundingClientRect());
       return {
         fold: Math.round(fold),
         chips: chips.length,
         chipRows: new Set(chips.map((r) => Math.round(r.top))).size,
         switcherBottom: groupRect ? Math.round(groupRect.bottom) : null,
+        region: regionRect
+          ? { top: Math.round(regionRect.top), bottom: Math.round(regionRect.bottom), width: Math.round(regionRect.width) }
+          : null,
+        rowTops: [...new Set([
+          ...(regionRect ? [Math.round(regionRect.top)] : []),
+          ...chips.map((r) => Math.round(r.top)),
+        ])].length,
         cards: cards.map((r) => ({ top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) })),
         cardsAbove: cards.filter((r) => r.bottom <= fold).length,
       };
@@ -433,7 +557,9 @@ for (const width of [320, 360, 390]) {
     if (!m) continue;
     const rows = [...new Set(m.cards.map((c) => c.top))].length;
     console.log(
-      `layout: / (first visit) at ${width}×${height}: fold ${m.fold}px; switcher ${m.chips} chips in ${m.chipRows} row(s), ` +
+      `layout: / (first visit) at ${width}×${height}: fold ${m.fold}px; region switcher ` +
+        `${m.region ? `${m.region.top}–${m.region.bottom} w${m.region.width}` : '—'}; switcher ${m.chips} chips in ${m.chipRows} row(s) ` +
+        `(${m.rowTops} row(s) with the region switcher), ` +
         `bottom ${m.switcherBottom ?? '—'}px; ${m.cards.length} league cards in ${rows} row(s) ` +
         `[${m.cards.map((c) => `${c.top}–${c.bottom} w${c.width}`).join(', ')}] → ${m.cardsAbove} wholly above the fold`,
     );

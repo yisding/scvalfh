@@ -29,8 +29,8 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues';
-import type { DivisionId, Game, LeagueId } from '../../lib/types';
+import { REGIONS, getLeague, leagueOfDivision, leaguePlayStarts, type RegionConfig } from '../../lib/leagues';
+import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -164,10 +164,21 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
 
 // ---------------------------------------------------------------- the /standings overview
 
+/** One region's half of /standings (DESIGN-socal §2.4): its sections, wrapped in `<div id="<region>">`. */
+export interface StandingsOverviewRegion {
+  id: RegionId;
+  name: RegionConfig['name'];
+  shortName: RegionConfig['shortName'];
+  leagues: LeagueSummary[];
+  sections: OverviewSection[];
+}
+
 export interface StandingsOverviewView {
   asOf: string;
   leagues: LeagueSummary[];
   sections: OverviewSection[];
+  /** NorCal, then SoCal: the same sections, split by region for the page's region wrappers. */
+  regions: StandingsOverviewRegion[];
   /** Per league, each table's leaders (OG card, metadata). */
   leaders: Array<{ league: LeagueSummary; lines: LeaderLine[] }>;
   throughDate: string | null;
@@ -190,6 +201,17 @@ export function buildStandingsOverviewView(): StandingsOverviewView {
     asOf: getFetchedAt(),
     leagues,
     sections,
+    regions: REGIONS.map((region) => {
+      const mine = leagues.filter((l) => l.region === region.id);
+      const ids = new Set<string>(mine.map((l) => l.section.id));
+      return {
+        id: region.id,
+        name: region.name,
+        shortName: region.shortName,
+        leagues: mine,
+        sections: sections.filter((s) => ids.has(s.id)),
+      };
+    }),
     leaders: leagues.map((league) => ({
       league,
       lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),

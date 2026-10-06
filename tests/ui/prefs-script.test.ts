@@ -7,13 +7,21 @@ import vm from 'node:vm';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUE_KEY, PREFS_RESTAMP, buildPrefsScript } from '../../components/layout/prefs-script';
+import {
+  LEAGUE_KEY,
+  PREFS_RESTAMP,
+  REGION_KEY,
+  REGION_OF,
+  buildPrefsScript,
+} from '../../components/layout/prefs-script';
 import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/layout/pinned-team-script';
 import { TEAMS } from '../../lib/teams';
-import { LEAGUE_IDS } from '../../lib/leagues';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../../lib/leagues';
 
 const SLUG_LEAGUE = Object.fromEntries(TEAMS.map((t) => [t.slug, t.league]));
-const SCRIPT = buildPrefsScript({ leagueIds: LEAGUE_IDS, slugLeague: SLUG_LEAGUE });
+const LEAGUE_REGION = Object.fromEntries(LEAGUE_IDS.map((id) => [id, regionOf(id)]));
+const INPUT = { leagueIds: LEAGUE_IDS, slugLeague: SLUG_LEAGUE, leagueRegion: LEAGUE_REGION, defaultRegion: DEFAULT_REGION };
+const SCRIPT = buildPrefsScript(INPUT);
 
 class FakeHtml {
   attrs = new Map<string, string>();
@@ -46,11 +54,22 @@ function run(stored: Record<string, string> | 'throws', html = new FakeHtml()) {
 const scvalSlug = TEAMS.find((t) => t.league === 'scval')!.slug;
 const bvalSlug = TEAMS.find((t) => t.league === 'bval')!.slug;
 const mcalSlug = TEAMS.find((t) => t.league === 'mcal')!.slug;
+const sunsetSlug = TEAMS.find((t) => t.league === 'sunset')!.slug;
+const metroSlug = TEAMS.find((t) => t.league === 'metro')!.slug;
 
 describe('buildPrefsScript', () => {
-  it('stays within 2 KB including the 49-entry slug map', () => {
-    expect(TEAMS.length).toBe(49);
-    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(2048);
+  // The line was 2,048 B for 49 teams and 5 leagues (1,317 B measured). With 99 teams, the
+  // league→region map and the region precedence it measured 2,454 B on 2026-10-06 (the design
+  // estimated 2.2–2.4 KB), so the line is 3,072 B: 80% used, room for a few more teams, not for
+  // another map.
+  it('stays within 3 KB including the 99-entry slug map', () => {
+    expect(TEAMS.length).toBe(99);
+    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
+  });
+
+  it('ships the region map once, non-default regions only: R={"socal":"sunset city north-county metro"}', () => {
+    expect(SCRIPT).toContain('R={"socal":"sunset city north-county metro"}');
+    expect(SCRIPT).not.toContain('"norcal":');
   });
 
   it('has no character that could close the <script>', () => {
@@ -129,9 +148,135 @@ describe('buildPrefsScript', () => {
   });
 
   it('rejects an id or slug that could break out of the string', () => {
-    expect(() => buildPrefsScript({ leagueIds: ["x'y"], slugLeague: {} })).toThrow();
-    expect(() => buildPrefsScript({ leagueIds: ['scval'], slugLeague: { 'a</script>': 'scval' } })).toThrow();
-    expect(() => buildPrefsScript({ leagueIds: ['scval'], slugLeague: { a: 'nope' } })).toThrow();
+    const base = { leagueRegion: { scval: 'norcal' }, defaultRegion: 'norcal' };
+    expect(() => buildPrefsScript({ ...base, leagueIds: ["x'y"], slugLeague: {} })).toThrow();
+    expect(() => buildPrefsScript({ ...base, leagueIds: ['scval'], slugLeague: { 'a</script>': 'scval' } })).toThrow();
+    expect(() => buildPrefsScript({ ...base, leagueIds: ['scval'], slugLeague: { a: 'nope' } })).toThrow();
+    // A league with no region, a region that could break out, a default other than the stampless one.
+    expect(() => buildPrefsScript({ ...base, leagueIds: ['scval', 'bval'], slugLeague: {} })).toThrow();
+    expect(() =>
+      buildPrefsScript({ ...base, leagueIds: ['scval'], slugLeague: {}, leagueRegion: { scval: 'x"y' } }),
+    ).toThrow();
+    expect(() => buildPrefsScript({ ...base, leagueIds: ['scval'], slugLeague: {}, defaultRegion: 'socal' })).toThrow();
+  });
+});
+
+/**
+ * The region stamp (DESIGN-socal §2.4): `data-region="socal"` only, absent = NorCal. Precedence: a
+ * valid stored league wins (its region); else a valid stored region (the pin's league only if it is
+ * in that region); else a valid pin; else NorCal.
+ */
+describe('buildPrefsScript: the region', () => {
+  it('a stored SoCal league stamps its league and data-region="socal"', () => {
+    expect(run({ [LEAGUE_KEY]: 'city' }).attrs).toEqual({ 'data-js': '', 'data-league': 'city', 'data-region': 'socal' });
+    expect(run({ [LEAGUE_KEY]: 'sunset' }).attrs).toEqual({
+      'data-js': '',
+      'data-league': 'sunset',
+      'data-region': 'socal',
+    });
+  });
+
+  it('a stored league beats a stored region, both ways', () => {
+    expect(run({ [LEAGUE_KEY]: 'metro', [REGION_KEY]: 'norcal' }).attrs).toEqual({
+      'data-js': '',
+      'data-league': 'metro',
+      'data-region': 'socal',
+    });
+    expect(run({ [LEAGUE_KEY]: 'bval', [REGION_KEY]: 'socal' }).attrs).toEqual({ 'data-js': '', 'data-league': 'bval' });
+  });
+
+  it('a stored region socal with a NorCal pin: SoCal, the pin kept, no league from it', () => {
+    expect(run({ [REGION_KEY]: 'socal', [PINNED_TEAM_KEY]: scvalSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-pin': scvalSlug,
+      'data-region': 'socal',
+    });
+  });
+
+  it('a stored region with a pin in that region: the pin’s league', () => {
+    expect(run({ [REGION_KEY]: 'socal', [PINNED_TEAM_KEY]: metroSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-league': 'metro',
+      'data-pin': metroSlug,
+      'data-region': 'socal',
+    });
+    expect(run({ [REGION_KEY]: 'norcal', [PINNED_TEAM_KEY]: sunsetSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-pin': sunsetSlug,
+    });
+  });
+
+  it('a SoCal pin and nothing else: its league and region; with "all" stored, its region only', () => {
+    expect(run({ [PINNED_TEAM_KEY]: sunsetSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-league': 'sunset',
+      'data-pin': sunsetSlug,
+      'data-region': 'socal',
+    });
+    expect(run({ [LEAGUE_KEY]: 'all', [PINNED_TEAM_KEY]: sunsetSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-pin': sunsetSlug,
+      'data-region': 'socal',
+    });
+    expect(run({ [LEAGUE_KEY]: 'all', [REGION_KEY]: 'socal' }).attrs).toEqual({ 'data-js': '', 'data-region': 'socal' });
+  });
+
+  it('an unknown or prototype-key stored region is ignored', () => {
+    expect(run({ [REGION_KEY]: 'mars' }).attrs).toEqual({ 'data-js': '' });
+    expect(run({ [REGION_KEY]: 'constructor' }).attrs).toEqual({ 'data-js': '' });
+    expect(run({ [REGION_KEY]: 'mars', [PINNED_TEAM_KEY]: metroSlug }).attrs).toEqual({
+      'data-js': '',
+      'data-league': 'metro',
+      'data-pin': metroSlug,
+      'data-region': 'socal',
+    });
+  });
+
+  it('leaves window.__sxRegionOf: a league’s region, null for anything else', () => {
+    const { context } = run({});
+    const regionOfLeague = context[REGION_OF] as (l: string) => string | null;
+    for (const id of LEAGUE_IDS) expect(regionOfLeague(id)).toBe(regionOf(id));
+    expect(regionOfLeague('all')).toBeNull();
+    expect(regionOfLeague('constructor')).toBeNull();
+  });
+
+  /**
+   * Pinning a team of the other region while storage throws (design-review UI §5): setLeague stamps
+   * data-league and data-region from __sxRegionOf BEFORE its writes fail, and nothing re-runs the
+   * stamp from (empty) storage. Here the same sequence against the script's globals: storage throws,
+   * the reader is in the default view, and a SoCal team's league is stamped with its region.
+   */
+  it('a cross-region pin with storage throwing: the region comes from __sxRegionOf, not storage', () => {
+    const { context, html } = run('throws');
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '' });
+    const regionOfLeague = context[REGION_OF] as (l: string) => string | null;
+    const team = TEAMS.find((t) => t.slug === metroSlug)!;
+    // What components/ui/use-league.ts setLeague does, in order: stamp the league, stamp its region.
+    html.setAttribute('data-league', team.league);
+    const region = regionOfLeague(team.league);
+    expect(region).toBe('socal');
+    if (region === 'socal') html.setAttribute('data-region', region);
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '', 'data-league': 'metro', 'data-region': 'socal' });
+    // A cross-tab restamp with storage still throwing clears both, as it does for the league alone:
+    // nothing was saved, so the next page view is the default one.
+    (context[PREFS_RESTAMP] as () => void)();
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '' });
+  });
+
+  it('the cross-tab restamp follows a region written in another tab', () => {
+    const stored: Record<string, string> = {};
+    const html = new FakeHtml();
+    const localStorage = { getItem: (k: string) => (k in stored ? stored[k] : null) };
+    const context: Record<string, unknown> = { document: { documentElement: html }, localStorage };
+    context.window = context;
+    vm.runInNewContext(SCRIPT, context);
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '' });
+    stored[REGION_KEY] = 'socal';
+    (context[PREFS_RESTAMP] as () => void)();
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '', 'data-region': 'socal' });
+    stored[REGION_KEY] = 'norcal';
+    (context[PREFS_RESTAMP] as () => void)();
+    expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '' });
   });
 });
 

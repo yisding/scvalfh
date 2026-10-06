@@ -172,3 +172,24 @@ describe('AwardsBlock', () => {
     expect(html).not.toMatch(/\d(st|nd|rd|th)\sgrade/);
   });
 });
+
+describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal §2.4)', () => {
+  it('scopes each league section and pill by region, and names the Section as the SoCal documents’ publisher', async () => {
+    const { default: HistoryPage } = await import('../../app/history/2025-26/page');
+    const html = renderToStaticMarkup(createElement(HistoryPage));
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) {
+      expect(html, `#${id}`).toMatch(new RegExp(`<section id="${id}" data-region-scope="norcal"`));
+    }
+    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
+      expect(html, `#${id}`).toMatch(new RegExp(`<section id="${id}" data-region-scope="socal"`));
+      expect(html, `pill #${id}`).toMatch(new RegExp(`href="#${id}" data-region-scope="socal"`));
+    }
+    expect(html, 'region control').toContain('data-region-option="socal"');
+    const text = html.replace(/<[^>]+>/g, '');
+    expect(text).toContain('Official, from the San Diego Section: 2025 CIFSDS playoff brackets (Google Sheet)');
+    expect(text).toContain('year_id=175');
+    // An unavailable SoCal card never claims a champion, a place or a record from the documents it links.
+    const socal = html.slice(html.indexOf('<section id="sunset"'));
+    expect(socal.replace(/<[^>]+>/g, '')).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
+  });
+});

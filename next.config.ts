@@ -35,6 +35,15 @@ const nextConfig: NextConfig = {
    * that total (326,022,866 bytes); 384 MB (2.5 ×) still meets it and covers the rest of the season,
    * whose game, date and recap pages are still to come. (On 2026-10-02, with 43 teams and 364 games,
    * it was 127,990,691 bytes.) Actual use is bounded by the content size, not by this ceiling.
+   *
+   * PENDING (the Southern California amendment, DESIGN-socal §2.2; design-review budgets §8): 99 teams
+   * in nine leagues roughly double the game, date and team pages (the SoCal inventory holds 502 live
+   * contests) and every index page grows, so 2 × the new folder will very likely pass 384 MB. Not
+   * raised blind: after the 99-team snapshot exists, run `pnpm build:vinext`, then
+   * `du -sb dist/server/prerendered-routes` (and the .html / .rsc / .route split, as above), and set
+   * this to at least 2 × that total, rounded UP to a multiple of 128 MB, with the measurement written
+   * here in the shape of the 2026-10-04 paragraph. scripts/smoke-server.sh (`x-nextjs-cache: MISS`)
+   * is the check that it was enough.
    */
   cacheMaxMemorySize: 384 * 1024 * 1024,
 

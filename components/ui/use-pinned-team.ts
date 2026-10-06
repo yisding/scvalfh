@@ -115,18 +115,25 @@ function isRendered(el: Element): boolean {
  * Where focus goes after an unpin when the team's own tile is not rendered (SPEC §8.2, WCAG 2.4.3):
  * the My-team slot's finder field; else — the slot is hidden, e.g. a pin with "All" remembered,
  * where unpinning leaves no slot at all — the first-visit block's finder (`[data-scope="none"]`,
- * shown exactly when the slot hides); else that block's heading (`#find-your-team`, made
- * programmatically focusable). Shared by `focus: 'auto'` and MyTeamCard's own target.
+ * shown exactly when the slot hides); else that block's heading (`#find-your-team`, or its SoCal copy
+ * `#find-your-team-socal` if a region block repeats it — whichever is rendered — made programmatically
+ * focusable). Every lookup takes the first RENDERED match, so the hidden region's copy is never chosen.
+ * Shared by `focus: 'auto'` and MyTeamCard's own target.
  */
 export function unpinFallbackTarget(): HTMLElement | null {
   for (const selector of ['.sx-myteam-slot input[type="search"]', '[data-scope="none"] input[type="search"]']) {
     const field = [...document.querySelectorAll<HTMLElement>(selector)].find(isRendered);
     if (field) return field;
   }
-  const heading = document.getElementById('find-your-team');
-  if (heading && isRendered(heading)) {
-    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
-    return heading;
+  // The heading of the region on screen: NorCal keeps today's id, a SoCal copy of a repeated id
+  // takes the `-socal` suffix (DESIGN-socal §2.4 id rule). `getElementById` alone returns the first
+  // copy, which is display:none in the SoCal view (design-review UI §1), so take the first RENDERED.
+  for (const id of ['find-your-team', 'find-your-team-socal']) {
+    const heading = document.getElementById(id);
+    if (heading && isRendered(heading)) {
+      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+      return heading;
+    }
   }
   return null;
 }

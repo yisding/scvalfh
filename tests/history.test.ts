@@ -647,16 +647,58 @@ describe('history: the league-aware read API', () => {
       ['pcal', 'unavailable'],
       ['mcal', 'unavailable'],
       ['eal', 'unavailable'],
+      ['sunset', 'unavailable'],
+      ['city', 'unavailable'],
+      ['north-county', 'unavailable'],
+      ['metro', 'unavailable'],
     ]);
-    expect(h.getHistoryLeagues()).toHaveLength(5);
+    expect(h.getHistoryLeagues()).toHaveLength(9);
     expect(h.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
-    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pcal', 'mcal', 'eal']);
+    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([
+      'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro',
+    ]);
     expect(h.hasHistory('eal')).toBe(false);
     expect(h.getHistoryChampions('eal')).toEqual([]);
     expect(h.hasHistory('bval')).toBe(true);
     expect(h.hasHistory('pcal')).toBe(false);
     expect(h.getHistoryProvenance('mcal')).toBeNull();
     expect(h.getHistoryChampions('pcal')).toEqual([]);
+  });
+
+  it('says why each Southern California league has no 2025-26 table, and what was checked (DESIGN-socal §2.2)', async () => {
+    const h = await import('../lib/history');
+    const sunset = h.getHistoryLeagues().find((l) => l.id === 'sunset')!.entry;
+    if (sunset.status !== 'unavailable') throw new Error('sunset should be unavailable');
+    // The design's reason, verbatim: no league document, no playoffs, and the scores site's table is SBLive's.
+    expect(sunset.reason).toBe(
+      'We found no Sunset league website or standings document for 2025-26. The Southern Section holds no field hockey playoffs, and the Sunset table on its scores site (scores.cifss.org) is SBLive’s, built from game labels coaches enter. We do not show standings from third-party sites.',
+    );
+    expect(sunset.checkedOn).toBe('2026-10-06');
+    expect(sunset.checked.some((c) => c.startsWith('https://cifss.org/sports/field-hockey/'))).toBe(true);
+    expect(sunset.checked.some((c) => c.startsWith('https://scores.cifss.org/brackets'))).toBe(true);
+    expect(sunset.alsoPublished).toBeUndefined();
+    for (const id of ['city', 'north-county', 'metro'] as const) {
+      const entry = h.getHistoryLeagues().find((l) => l.id === id)!.entry;
+      if (entry.status !== 'unavailable') throw new Error(`${id} should be unavailable`);
+      expect(entry.reason).toBe(
+        'No 2025-26 final league standings were published. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+      );
+      expect(entry.checkedOn).toBe('2026-10-06');
+      // The power rankings checked are 2025-26's (year_id 175 on the cifsdshome widget), not this season's.
+      expect(entry.checked.some((c) => c.includes('cifsdshome.org/widget/power-rankings') && c.includes('year_id=175'))).toBe(true);
+      expect(entry.checked.some((c) => c.startsWith('https://www.cifsds.org/sports/fh/index'))).toBe(true);
+      // The bracket sheet is linked, labelled without the words an unavailable card may not print.
+      expect(entry.alsoPublished).toEqual([
+        {
+          label: '2025 CIFSDS playoff brackets (Google Sheet)',
+          url: 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing',
+        },
+      ]);
+      expect(entry.alsoPublished![0].label).not.toMatch(/champion/i);
+      expect(h.hasHistory(id)).toBe(false);
+      expect(h.getHistoryChampions(id)).toEqual([]);
+    }
+    expect(h.hasHistory('sunset')).toBe(false);
   });
 
   it('serves BVAL tables and champions by division', async () => {

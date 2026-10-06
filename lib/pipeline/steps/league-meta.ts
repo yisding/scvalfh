@@ -1,6 +1,7 @@
 /**
  * Step 03 (SPEC §7.4, §7.5 trigger a): one league metadata read per configured division of every
- * league in the run. Asserts `sportSeasonId`, `year` AND `sectionId === section.maxprepsSectionId`;
+ * league in the run that MaxPreps publishes a table for (a division with `maxprepsLeagueId: null` is
+ * skipped with no request, NO_MAXPREPS_TABLE_REASON). Asserts `sportSeasonId`, `year` AND `sectionId === section.maxprepsSectionId`;
  * a mismatch FREEZES that league (its rows from a mismatched season are never published), never the
  * run. A canonical URL slug that differs from config only warns. A read error records the
  * division's meta as 'error' and nothing else.
@@ -121,9 +122,24 @@ async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueI
   setMeta('ok');
 }
 
+/**
+ * The reason a division's MaxPreps reads are skipped: config sets `maxprepsLeagueId: null` for a
+ * division MaxPreps publishes no table for (the San Diego Section's Valley division in 2026-27: none
+ * of its six members carries a MaxPreps league, DESIGN-socal §1). Steps 03 and 04 make no request for
+ * it (never `/leagues/null/v1`), record its meta and reported table as 'skipped', and log this sentence;
+ * the division's cross-check reads the same fact from config (lib/standings.ts buildCrossCheck).
+ */
+export const NO_MAXPREPS_TABLE_REASON = 'MaxPreps publishes no table for this division';
+
 export async function stepLeagueMeta(ctx: PipelineContext, state: RunState): Promise<void> {
   for (const leagueId of ctx.leaguesInRun()) {
     for (const division of getLeague(leagueId).divisions) {
+      if (division.maxprepsLeagueId === null) {
+        const info = state.divisions.get(division.id);
+        if (info) info.meta = 'skipped';
+        ctx.log(`  league metadata ${division.id}: skipped (${NO_MAXPREPS_TABLE_REASON})`);
+        continue;
+      }
       await readMeta(ctx, state, leagueId, division.id);
     }
   }

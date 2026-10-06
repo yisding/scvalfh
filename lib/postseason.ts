@@ -17,9 +17,15 @@
  * (lib/standings.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
  * so its contenders are exactly the teams the table shows sharing 6th with `resolvedBy: 'play-in'`.
  *
- * Only a 'league-tournament' league (MCAL) reaches this module. Of the five leagues, SCVAL, BVAL and PCAL go
+ * Only a 'league-tournament' league (MCAL) reaches this module. Of the nine leagues, SCVAL, BVAL and PCAL go
  * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
- * bracket, so none is drawn for it.
+ * bracket, so none is drawn for it. The two Southern California kinds get no projection either, and their
+ * standings statuses come from their ladders alone (lib/standings.ts playoffStatusFor): the Sunset
+ * ('no-postseason': the CIF Southern Section holds no field hockey playoffs, Blue Book 2026-27 Bylaws
+ * 2011.1 and 3500.2) has one rung, 'no-postseason', for every place; the San Diego leagues
+ * ('section-playoffs': the Section places Open 8, Division I 12 and Division II 12 from its power
+ * rankings, Green Book 2026-27 Bylaw 2000.1) have 'tournament' for 1st (a designated champion's
+ * guaranteed play-in) and 'selection' below, and no bracket is drawn before the Section publishes one.
  *
  * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types.
  */

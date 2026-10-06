@@ -7,8 +7,9 @@
  */
 import type { Metadata } from 'next';
 
-import { listWords } from '../../lib/format';
-import { LEAGUES, SECTIONS } from '../../lib/leagues';
+import { listWords, numberWord } from '../../lib/format';
+import { DATA_QUALITY, LEAGUES, SECTIONS, getSection, type LeagueConfig, type SectionConfig } from '../../lib/leagues';
+import type { SectionId } from '../../lib/types';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
@@ -24,16 +25,23 @@ import { OG_SIZE } from './og-theme';
 export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
 /**
- * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
- * for Monterey, Salinas and Greenfield, and "CCS" is false for MCAL and EAL. The scope note (footer and
- * /about) names exactly what is covered. The repo name, the Worker name, the `scvalfh.*` storage
- * keys and the `SCVAL_*` env names deliberately stay as they are.
+ * Branding (SPEC §11; DESIGN-socal §2.4). The site covers both halves of the state since the Southern
+ * California amendment, so the brand is neutral: "California", never a region. A per-region wordmark
+ * was rejected (design-review UI §4): the header is rendered once in the root layout and cannot know
+ * a page's region on the server, a JS-free render would print both, and a first visit from search to a
+ * San Diego team's page would read "NorCal". The scope note (footer and /about) names exactly what is
+ * covered. The repo name, the Worker name, the `scvalfh.*` storage keys and the `SCVAL_*` env names
+ * deliberately stay as they are.
  */
-export const SITE_NAME = 'NorCal High School Field Hockey';
-/** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
-export const SITE_WORDMARK = 'NorCal HS Field Hockey';
+export const SITE_NAME = 'California High School Field Hockey';
+/**
+ * The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. Below 1280px
+ * the header shows the short form 'CA HS FH' (components/layout/SiteHeader.tsx), and the OG cards print
+ * it at 44px as their title.
+ */
+export const SITE_WORDMARK = 'California HS Field Hockey';
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
-export const SITE_SHORT_NAME = 'NorCal FH';
+export const SITE_SHORT_NAME = 'CA HS FH';
 
 /**
  * Every league, grouped by its section in config order, each group followed by its section in a
@@ -52,9 +60,70 @@ export function leaguesBySectionWords(style: 'name' | 'short'): string {
   return listWords(groups);
 }
 
-export const SITE_DESCRIPTION = `Scores, standings, schedules and playoff pictures for ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('short')}. Rebuilt twice daily from MaxPreps; unofficial.`;
-export const SITE_SCOPE_NOTE =
-  'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues appear only as opponents.';
+/**
+ * The independents the scope note names (DESIGN-socal §2.4): Southern Section schools with games against
+ * covered teams but no league of their own to cover — each is the only field hockey team in its all-sports
+ * MaxPreps league (League B, Marmonte, Palomares; research-cifss.md §2a). A small constant rather than a
+ * filter over DATA_QUALITY.notCovered's sentences, so a reworded reason cannot drop a school silently;
+ * each name must be a notCovered entry (checked at module load, so a school removed there fails the build
+ * rather than staying in the footer). Alphabetical, as the note lists them.
+ */
+const INDEPENDENTS: { section: SectionId; names: readonly string[] } = {
+  section: 'ss',
+  names: ['Glendora', 'Harvard-Westlake', 'Thousand Oaks'],
+};
+for (const name of INDEPENDENTS.names) {
+  if (!DATA_QUALITY.notCovered.some((n) => n.name === name)) {
+    throw new Error(`components/layout/site.ts: independent ${name} is not a DATA_QUALITY.notCovered entry`);
+  }
+}
+
+/**
+ * The noun a league's own name puts after its short name, lower-cased: 'Sunset Field Hockey League' →
+ * 'field hockey league', 'City Conference' → 'conference'; null when the name does not start with the
+ * short name (SCVAL is the 'Santa Clara Valley Athletic League').
+ */
+function leagueNoun(league: LeagueConfig): string | null {
+  const prefix = `${league.shortName} `;
+  return league.name.startsWith(prefix) ? league.name.slice(prefix.length).toLowerCase() : null;
+}
+
+/**
+ * One section's part of the scope note, from LEAGUES: `the CIF Central Coast Section (SCVAL, BVAL,
+ * PCAL)` when it has several leagues with no shared noun (the form the note always used for the CCS),
+ * else `the North Coast Section’s MCAL`, `the Southern Section’s Sunset field hockey league`, `the San
+ * Diego Section’s City, North County and Metro conferences`. `cif` prefixes the first part only.
+ */
+function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[], cif: boolean): string {
+  const lead = `the ${cif ? 'CIF ' : ''}${section.name}`;
+  const nouns = new Set(leagues.map(leagueNoun));
+  const noun = nouns.size === 1 ? [...nouns][0] : null;
+  if (leagues.length > 1 && noun === null) return `${lead} (${leagues.map((l) => l.shortName).join(', ')})`;
+  const names = listWords(leagues.map((l) => l.shortName));
+  return `${lead}’s ${names}${noun === null ? '' : ` ${noun}${leagues.length > 1 ? 's' : ''}`}`;
+}
+
+export const SITE_DESCRIPTION = `Scores, standings, schedules and playoff pictures for ${TEAMS.length} girls varsity field hockey teams in ${numberWord(LEAGUES.length)} leagues across ${numberWord(SECTIONS.length)} CIF sections: ${leaguesBySectionWords('short')}. Rebuilt twice daily from MaxPreps; unofficial.`;
+
+/**
+ * What the site covers, in one paragraph for the footer and /about (SPEC §11; DESIGN-socal §2.4), built
+ * from SECTIONS and LEAGUES in config order: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL),
+ * the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey
+ * league and the San Diego Section’s City, North County and Metro conferences. Teams outside these nine
+ * leagues, including the Southern Section’s Glendora, Harvard-Westlake and Thousand Oaks, appear only as
+ * opponents."
+ */
+export const SITE_SCOPE_NOTE = (() => {
+  const parts = SECTIONS.flatMap((section, i) => {
+    const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+    return leagues.length === 0 ? [] : [sectionCoverage(section, leagues, i === 0)];
+  });
+  const independents = `the ${getSection(INDEPENDENTS.section).name}’s ${listWords(INDEPENDENTS.names)}`;
+  return (
+    `Covers ${listWords(parts)}. Teams outside these ${numberWord(LEAGUES.length)} leagues, including ` +
+    `${independents}, appear only as opponents.`
+  );
+})();
 
 /**
  * Where readers report a wrong score, date, name or record: the "Data errors" thread on the site's
@@ -79,7 +148,7 @@ export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, 
  * og:title never carries the site-name suffix: `siteName` (og:site_name) names the site on every
  * page, so the title is the page's own (`Season leaders`, `MCAL tournament`, a team's record; the
  * home page's is SITE_NAME), and every page states it. A page that leaves `openGraph.title` out
- * inherits its TEMPLATED `<title>`, `… — NorCal High School Field Hockey`
+ * inherits its TEMPLATED `<title>`, `… — California High School Field Hockey`
  * (node_modules/next/dist/lib/metadata/resolve-metadata.js `inheritFromMetadata`), which is how the
  * suffix used to appear on some pages and not others. An `openGraph.title.template` in the root
  * layout is no way out: vinext's metadata shim (node_modules/vinext/dist/shims/metadata.js) applies

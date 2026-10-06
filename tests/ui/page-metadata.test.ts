@@ -1,8 +1,8 @@
 /**
  * The og:title rule (components/layout/site.ts OG_BASE): every page states its own og:title, the
  * page's own words with no site-name suffix, because og:site_name carries the brand. A page that
- * left `openGraph.title` out would inherit the TEMPLATED `<title>` (`… — NorCal High School Field
- * Hockey`) on the Next build and not on vinext, which is how the suffix once came and went page by
+ * left `openGraph.title` out would inherit the TEMPLATED `<title>` (`… — California High School
+ * Field Hockey`) on the Next build and not on vinext, which is how the suffix once came and went page by
  * page. One page per route family, its metadata read the way Next reads it (`metadata` or
  * `generateMetadata` with a real param), on the corpus snapshot. Then the league list the site's
  * descriptions build from config (leaguesBySectionWords), pinned to the words the literals had.
@@ -80,23 +80,45 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   it('builds both styles from SECTIONS and LEAGUES, in config order', async () => {
     const { leaguesBySectionWords } = await import('../../components/layout/site');
     expect(leaguesBySectionWords('name')).toBe(
-      'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section)',
+      'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section), EAL (Northern Section), Sunset (Southern Section) and City, North County and Metro (San Diego Section)',
     );
-    expect(leaguesBySectionWords('short')).toBe('SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section)');
+    expect(leaguesBySectionWords('short')).toBe(
+      'SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section) and City, North County and Metro (San Diego Section)',
+    );
   });
 
-  it('SITE_DESCRIPTION and the home and /teams descriptions read as they did when they were literals', async () => {
-    const { SITE_DESCRIPTION } = await import('../../components/layout/site');
+  it('SITE_DESCRIPTION and the scope note name the nine leagues and five sections from config', async () => {
+    const { SITE_DESCRIPTION, SITE_SCOPE_NOTE } = await import('../../components/layout/site');
+    expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
+      'Scores, standings, schedules and playoff pictures for 99 girls varsity field hockey teams in nine leagues across five CIF sections: SCVAL, BVAL and PCAL (CCS), MCAL (NCS), EAL (Northern Section), Sunset (Southern Section) and City, North County and Metro (San Diego Section). Rebuilt twice daily from MaxPreps; unofficial.',
+    );
+    // DESIGN-socal §2.4, verbatim.
+    expect(SITE_SCOPE_NOTE, 'components/layout/site.ts SITE_SCOPE_NOTE').toBe(
+      'Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North County and Metro conferences. Teams outside these nine leagues, including the Southern Section’s Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents.',
+    );
+  });
+
+  it('the identity is neutral: no region in the name, the wordmark or the short name', async () => {
+    const { SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } = await import('../../components/layout/site');
+    expect(SITE_NAME).toBe('California High School Field Hockey');
+    expect(SITE_WORDMARK).toBe('California HS Field Hockey');
+    expect(SITE_SHORT_NAME).toBe('CA HS FH');
+    expect(SITE_SHORT_NAME.length).toBeLessThanOrEqual(12);
+  });
+
+  // The pages' own sentences are app/page.tsx's and app/teams/page.tsx's; this pins only what they
+  // take from config: the registry count (home: TEAMS.length; /teams counts the snapshot it is
+  // handed, the 49-team corpus here) and the league list.
+  it('the home and /teams descriptions carry the league list from config', async () => {
+    const { leaguesBySectionWords } = await import('../../components/layout/site');
     const home = (await import('../../app/page')).metadata;
     const teams = (await import('../../app/teams/page')).metadata;
-    expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
-      'Scores, standings, schedules and playoff pictures for 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section). Rebuilt twice daily from MaxPreps; unofficial.',
-    );
-    expect(home.description, 'app/page.tsx description').toBe(
-      'Scores, standings and playoff pictures for the 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section). Unofficial, updated twice daily.',
-    );
-    expect(teams.description, 'app/teams/page.tsx description').toBe(
-      'All 49 girls varsity field hockey teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. Find your school.',
-    );
+    expect(home.description, 'app/page.tsx description').toContain('99 girls varsity field hockey teams');
+    for (const [path, d] of [
+      ['app/page.tsx', home.description],
+      ['app/teams/page.tsx', teams.description],
+    ] as const) {
+      expect(d, `${path} description`).toContain(leaguesBySectionWords('name'));
+    }
   });
 });

@@ -10,20 +10,27 @@ import { ResultRow } from './LatestScores';
 
 /**
  * The first-visit "what just happened" (SPEC §10.1, `data-scope="none"`): the latest results day
- * across every league, at most two rows per league, each league under its short name, then
- * `All N →` to /scores/[date]. The day is always named.
+ * across every league of one region, at most two rows per league, each league under its short name,
+ * then `All N →` to /scores/[date]. The day is always named.
+ *
+ * Rendered once per region (DESIGN-socal §2.4): the section carries `data-region-scope`, so the scope
+ * stylesheet shows the reader's region (both, NorCal first, without JS), and the SoCal copy's heading id
+ * takes the `-socal` suffix (`latest-every-league-socal`) while NorCal keeps today's id.
  */
 export interface CrossLeagueLatestProps {
   view: CrossLeagueLatestView | null;
+  /** The region this block summarises: its `data-region-scope`, and the words of its kicker. */
+  region: { id: 'norcal' | 'socal'; shortName: string; idSuffix: '' | '-socal' };
   className?: string;
 }
 
-export function CrossLeagueLatest({ view, className }: CrossLeagueLatestProps) {
+export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatestProps) {
+  const headingId = `latest-every-league${region.idSuffix}`;
   return (
-    <section data-scope="none" aria-labelledby="latest-every-league" className={className}>
+    <section data-scope="none" data-region-scope={region.id} aria-labelledby={headingId} className={className}>
       <SectionHeader
-        id="latest-every-league"
-        kicker="Latest from every league"
+        id={headingId}
+        kicker={`Latest from every ${region.shortName} league`}
         meta={view ? shortDate(view.date) : undefined}
         action={view ? { href: `/scores/${view.date}`, label: `All ${view.total}` } : undefined}
       />

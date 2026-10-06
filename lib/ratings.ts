@@ -1,6 +1,15 @@
 /**
  * Team ratings on the Elo scale (DESIGN §20): one number per team that says how strong its results
- * have been, opponents and margins included, comparable across all five leagues.
+ * have been, opponents and margins included, comparable across all nine leagues and both regions.
+ *
+ * One fit over all 99 registry teams, NorCal and SoCal together (DESIGN-socal §2.3): nothing here knows
+ * a region. What makes the two regions one scale is the finals between them, which are few (on
+ * 2026-10-06, 7 NorCal–San Diego finals with 8 more scheduled Oct 16–17, and 11 last season through
+ * Leigh, Gilroy and Mitty), while the Sunset and the San Diego Section are linked by 38 finals; so
+ * /leaders prints how many link the regions (components/leaders/leaders-view.ts crossRegionFinals,
+ * counted at build time) and calls a NorCal–SoCal comparison rough. The model's constants below were
+ * set on NorCal seasons only; they are not refitted for SoCal, whose teams' games look the same to
+ * the model (a goal margin, a host or not).
  *
  * Not game-by-game Elo. Classic Elo nudges two ratings after each game, so one season of about ten
  * games a team leaves it mostly where it started. Instead every counted final is fitted at once:
@@ -11,8 +20,9 @@
  * holds best over the whole season, by least squares with each margin capped at MARGIN_CAP (so a
  * score run up past five goals earns nothing more). The home edge applies only where a game has a
  * host (`site: 'home'`), never at a neutral site. One linear solve, in a fixed order, so a given
- * snapshot always builds the same numbers. Elo fits goals, so an EAL 1 v 1 game (level on goals,
- * decided on 1 v 1s: decider 'SO') is level there, though the standings count it as a win.
+ * snapshot always builds the same numbers. Elo fits goals, so a shootout win MaxPreps records as a
+ * level score (an EAL 1 v 1 game, a San Diego Section shootout: decider 'SO') is level there, though
+ * the standings count it as a win.
  *
  * Seeded from last season. Each team starts from the strength the same fit gives it over last
  * season's finals (data/prior-season.json, lib/prior-season.ts), carried over in full (CARRYOVER),
@@ -36,7 +46,7 @@
  *
  * Counted: every final between two registry teams, league or not, postseason included, with its
  * published score (a si.com backfill too). Left out: forfeits (no goals, as in the standings),
- * finals without a score, and games against schools outside the five leagues: a one-game opponent
+ * finals without a score, and games against schools outside the nine leagues: a one-game opponent
  * nothing else connects to says nothing about the strength of the team it played.
  *
  * Pure: `computeRatings` reads only its arguments; `getRatings` is it over the bundled snapshot

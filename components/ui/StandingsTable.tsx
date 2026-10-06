@@ -115,9 +115,18 @@ function BackfillMark({ context }: { context: StandingContext | undefined }) {
   );
 }
 
-/** `6/12` games counted of the division's scheduled league games. */
+/**
+ * `6/12` games counted of the division's scheduled league games, or the bare count (`6`) in a league
+ * with no fixed schedule (the Sunset, `scheduled` null: DESIGN-socal §2.1.7), which has no "of N".
+ */
 function gpText(context: StandingContext | undefined): string {
-  return context ? `${context.counted}/${context.scheduled}` : EM_DASH;
+  if (!context) return EM_DASH;
+  return context.scheduled === null ? `${context.counted}` : `${context.counted}/${context.scheduled}`;
+}
+
+/** The GP head's title: "of those scheduled" only where there is a schedule to count against. */
+function gpTitle(fixed: boolean): string {
+  return fixed ? 'League games counted of those scheduled' : 'League games counted';
 }
 
 /** The division as a reader names it: its heading, or the league's short name for a one-table league. */
@@ -394,6 +403,8 @@ export function StandingsTable(props: StandingsTableProps) {
   const columns = new Set<StandingsColumn>(context ? (props.columns ?? []) : []);
   const showGp = columns.has('gp');
   const ctx = (row: StandingsRowData) => context?.get(row.team.id);
+  // Every row of a table shares its division's schedule, so one null `scheduled` means none is fixed.
+  const fixedSchedule = props.rows.every((row) => ctx(row)?.scheduled !== null);
   const cols = desktopCols(showGp, columns.has('left'), columns.has('max'));
   const rows = variant === 'mini' ? props.rows.slice(0, props.limit ?? 4) : props.rows;
   const showNotes = variant !== 'mini' && (props.notes ?? 'inline') === 'inline';
@@ -685,7 +696,7 @@ export function StandingsTable(props: StandingsTableProps) {
                       <th
                         key={col}
                         scope="col"
-                        title={head.title}
+                        title={col === 'gp' ? gpTitle(fixedSchedule) : head.title}
                         className={head.right ? 'text-right' : undefined}
                       >
                         {head.long ? <Abbr short={head.label} long={head.long} /> : head.label}
@@ -710,9 +721,9 @@ export function StandingsTable(props: StandingsTableProps) {
                           </td>
                         );
                       case 'left':
-                        return <td key={col} className="sx-num text-right text-ink-2">{c ? c.remaining : EM_DASH}</td>;
+                        return <td key={col} className="sx-num text-right text-ink-2">{c?.remaining ?? EM_DASH}</td>;
                       case 'max':
-                        return <td key={col} className="sx-num text-right text-ink-2">{c ? c.maxPts : EM_DASH}</td>;
+                        return <td key={col} className="sx-num text-right text-ink-2">{c?.maxPts ?? EM_DASH}</td>;
                       case 'league':
                         return (
                           <td key={col} className="sx-num text-right font-medium text-ink">
@@ -837,7 +848,7 @@ export function StandingsTable(props: StandingsTableProps) {
                   </th>
                   <th scope="col">Team</th>
                   {showGp ? (
-                    <th scope="col" className="w-9 text-right" title="League games counted of those scheduled">
+                    <th scope="col" className="w-9 text-right" title={gpTitle(fixedSchedule)}>
                       GP
                     </th>
                   ) : null}

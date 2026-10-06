@@ -58,9 +58,18 @@ beforeAll(async () => {
 describe('trigger d: the league is not in args.leagues', () => {
   it('no previous data: frozen, no games, "<SHORT> was not fetched in this run."', async () => {
     const { snapshot } = await snapshotOf({ corpus: 'scval' });
-    expect(snapshot.teams.length).toBe(49);
+    expect(snapshot.teams.length).toBe(99);
     expect(health(snapshot, 'scval')?.state).toBe('fresh');
-    for (const [id, short] of [['bval', 'BVAL'], ['pcal', 'PCAL'], ['mcal', 'MCAL'], ['eal', 'EAL']] as const) {
+    for (const [id, short] of [
+      ['bval', 'BVAL'],
+      ['pcal', 'PCAL'],
+      ['mcal', 'MCAL'],
+      ['eal', 'EAL'],
+      ['sunset', 'Sunset'],
+      ['city', 'City'],
+      ['north-county', 'North County'],
+      ['metro', 'Metro'],
+    ] as const) {
       const h = health(snapshot, id);
       expect(h?.state, id).toBe('frozen');
       expect(h?.reasons, id).toEqual([`${short} was not fetched in this run.`]);
@@ -263,6 +272,10 @@ describe('frozen-league re-classification', () => {
     expect(divisionClassification(getLeague('bval'), 'mt-hamilton', degraded)).toBe('fallback-contest-type');
     expect(divisionClassification(getLeague('bval'), 'santa-teresa', degraded)).toBe('official-fixtures');
     expect(divisionClassification(getLeague('eal'), 'eal', degraded)).toBe('contest-type');
+    // The San Diego divisions count every game between two members (DESIGN-socal §2.1.7): 'membership',
+    // never 'official-fixtures' (they have no document) and never a fallback.
+    expect(divisionClassification(getLeague('north-county'), 'valley', new Set(['valley']))).toBe('membership');
+    expect(divisionClassification(getLeague('sunset'), 'sunset', degraded)).toBe('contest-type');
   });
 });
 

@@ -31,6 +31,8 @@ describe('parseLeaguesFlag', () => {
   it('reads a comma list, drops blanks and repeats', () => {
     expect(parseLeaguesFlag('scval,bval')).toEqual(['scval', 'bval']);
     expect(parseLeaguesFlag(' mcal , ,mcal')).toEqual(['mcal']);
+    // The Southern California ids, hyphenated ones included (update-data.yml validates ^[a-z0-9,-]+$).
+    expect(parseLeaguesFlag('sunset,city,north-county,metro')).toEqual(['sunset', 'city', 'north-county', 'metro']);
   });
 
   it('refuses an unknown league and an empty list, naming the flag', () => {
@@ -69,7 +71,7 @@ describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
 });
 
 describe('scope', () => {
-  it('covers all 49 teams, in registry order, by default', () => {
+  it('covers all 99 teams, in registry order, by default', () => {
     expect(teamsInScope(null)).toEqual(TEAMS);
     expect(TEAMS.every((t) => inScope(t, null))).toBe(true);
   });
@@ -92,11 +94,19 @@ describe('summarizeByLeague', () => {
       ['pcal', 7, 0],
       ['mcal', 9, 0],
       ['eal', 6, 0],
+      ['sunset', 10, 0],
+      ['city', 12, 0],
+      ['north-county', 19, 0],
+      ['metro', 9, 0],
     ]);
     // BVAL's rows are failures in the file, but a run that did not cover BVAL did not fail them.
     const scoped = summarizeByLeague(teams, ['scval']);
-    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0]);
-    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6]);
+    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 10, 12, 19, 9]);
+    // A Southern California run (the leagues WP3 fetched rosters, stats and JV for on 2026-10-06).
+    const socal = summarizeByLeague(teams, ['sunset', 'city', 'north-county', 'metro']);
+    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0]);
+    expect(runExitCode(socal)).toBe(0);
   });
 
   it('formats one line per league', () => {
@@ -112,7 +122,7 @@ describe('summarizeByLeague', () => {
     const dropped = new Set([leigh.slug, delMar.slug, 'st-ignatius']);
     const byLeague = summarizeByLeague(teams, ['scval'], dropped);
     // A covered team's dropped row is the fetch's business (re-read, or an error): not listed here.
-    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], []]);
+    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], [], [], [], [], []]);
     expect(formatLeagueSummary(byLeague[1])).toBe(
       `BVAL  12 teams · not in this run · 10 kept as they were · 2 pending, previous row dropped (${leigh.slug}, ${delMar.slug})`,
     );
@@ -245,7 +255,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
       expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
       const log = describePrevious(p, 'data/rosters.json');
       expect(log).toHaveLength(1);
-      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its 49 row(s) are ignored, as if absent`)).toBe(true);
+      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its ${TEAMS.length} row(s) are ignored, as if absent`)).toBe(true);
     }
   });
 

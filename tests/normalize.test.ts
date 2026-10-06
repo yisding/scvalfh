@@ -293,6 +293,13 @@ const corpusRows = [...feeds.values()].flat();
 const corpus = normalizeGames(corpusRows, { fetchedAt: FETCHED_AT });
 const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
+/**
+ * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
+ * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
+ * applyExclusions reports both as unused there.
+ */
+const SDS_DUPLICATE_ROWS = ['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c'];
+
 const TBA_CONTESTS = [
   '64c8188b-db94-44ff-8477-d60b4e3db218', // Ann Sobrato, 2026-09-12
   '55207683-8dd2-41c6-aa1b-02919d6bb261', // Stevenson, 2026-10-03
@@ -497,7 +504,8 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     expect(res.dropped).toHaveLength(2);
     expect(res.games).toHaveLength(corpus.games.length - 2);
     expect(res.games).toEqual(corpus.games.filter((g) => !res.dropped.some((d) => d.contestId === g.contestId)));
-    expect(res.unused).toEqual([]);
+    // The two duplicate Palomar rows (San Diego, inventory 2026-10-06) are not in this NorCal corpus.
+    expect(res.unused).toEqual(SDS_DUPLICATE_ROWS);
   });
 
   it('reports an excluded id that no longer appears, and leaves the input alone', () => {
@@ -508,7 +516,8 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     };
     const before = corpus.games.length;
     const r = applyExclusions(corpus.games, dq);
-    expect(r.unused).toEqual(['gone-0000']);
+    // Config order: the San Diego duplicates (absent from this NorCal corpus), then the added id.
+    expect(r.unused).toEqual([...SDS_DUPLICATE_ROWS, 'gone-0000']);
     // Without the ghost list, 5b9ff911 is caught by its own exclusion entry.
     expect(r.dropped.map((d) => [d.contestId.slice(0, 8), d.reason])).toEqual([
       ['5cf5e3df', 'excluded-by-config'],
@@ -525,7 +534,15 @@ describe('dedupePhantomPairs (SPEC §7.6 step 4)', () => {
   const crossDivision = clean.find(
     (g) => g.home.slug && g.away.slug && g.leagueDivision === null && g.status === 'final',
   )!;
-  const nonMember = clean.find((g) => !g.home.slug || !g.away.slug)!;
+  // Every opponent in the 2026-10-02 corpus that was not one of the 49 is a San Diego school, and all of
+  // them are registry teams now (99), so the non-member game is the cross-division one with its away side
+  // swapped for a school outside the registry.
+  const nonMember =
+    clean.find((g) => !g.home.slug || !g.away.slug) ??
+    variant(crossDivision, {
+      away: { teamId: 'eeeeeeee-0000-4000-8000-00000000000e', slug: null, name: 'Outside School', score: crossDivision.away.score, result: crossDivision.away.result },
+      leagueDivision: null,
+    });
 
   it('drops nothing on the 2026-10-02 corpus', () => {
     const res = dedupePhantomPairs(clean);
@@ -659,6 +676,49 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     const [g] = one([pairRow('eeeeeeee-0000-4000-8000-000000000003', ['chico', 1, 'W'], ['tamalpais', 1, 'L'])]).games;
     expect(g.decider).toBe('REG');
     expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks Chico W and Tamalpais L on a 1-1 score\.$/);
+  });
+
+  // The 'SO' rule is keyed on the SECTION (SectionConfig.shootout), not one shared league (DESIGN-socal
+  // §2.1.3): the San Diego Section's shootout covers its three conferences, the Southern Section has no rule.
+  it('reads a San Diego cross-conference 0-0 flagged W/L as a shootout win (Clairemont–Eastlake, Sep 1)', () => {
+    // City Eastern v Metro Mesa: two conferences, one section whose rule ends a level game with a shootout.
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a1';
+    const res = one([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
+    const [g] = res.games;
+    expect(g.decider).toBe('SO');
+    expect(g.shootout).toBeNull();
+    expect(g.leagueDivision).toBeNull();
+    expect(g.provenance.resultConflict).toBeUndefined();
+    expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // Within one conference too (Mt. Carmel–Poway, Sep 11: Avocado v Palomar of North County).
+    const [nc] = one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'])]).games;
+    expect(nc.decider).toBe('SO');
+  });
+
+  it('logs a level San Diego final with no shootout winner by the section when the sides span two conferences', () => {
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a2';
+    const res = one([pairRow(id, ['escondido', 1, 'T'], ['el-capitan', 1, 'T'])]);
+    expect(res.games[0].decider).toBe('REG');
+    expect(res.warnings).toContain(`contest ${id}: a level San Diego Section final with no shootout winner flagged`);
+    const same = one([pairRow(id, ['escondido', 1, 'T'], ['vista', 1, 'T'])]);
+    expect(same.warnings).toContain(`contest ${id}: a level North County final with no shootout winner flagged`);
+  });
+
+  it('keeps a level Sunset final a tie, and a level Sunset final flagged W/L a contradiction (no Southern Section rule)', () => {
+    // Bonita 1-1 Marina, Aug 18: recorded as reported.
+    const tie = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a3', ['bonita', 1, 'T'], ['marina', 1, 'T'])]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.games[0].provenance.resultConflict).toBeUndefined();
+    expect(tie.warnings.filter((w) => w.includes('level'))).toEqual([]);
+    const [flagged] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a4', ['bonita', 1, 'W'], ['marina', 1, 'L'])]).games;
+    expect(flagged.decider).toBe('REG');
+    expect(flagged.provenance.resultConflict).toBe('MaxPreps marks Bonita W and Marina L on a 1-1 score.');
+  });
+
+  it('never reads a Sunset team against a San Diego team, level and flagged W/L, as a shootout win (two sections)', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a5', ['great-oak', 0, 'W'], ['torrey-pines', 0, 'L'])]).games;
+    expect(g.decider).toBe('REG');
+    expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks Great Oak W and Torrey Pines L on a 0-0 score\.$/);
   });
 
   it('keeps MaxPreps’ overtime count on a decided EAL game, never clamped', () => {

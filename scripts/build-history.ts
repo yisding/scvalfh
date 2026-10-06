@@ -338,10 +338,46 @@ async function main(argv: readonly string[]): Promise<number> {
     ],
   };
 
+  // ---- The Sunset and the three San Diego Section leagues (DESIGN-socal §2.2): no official final standings.
+  // Checked 2026-10-06: cifss.org's field hockey page and its scores site (scores.cifss.org, SBLive's), and
+  // cifsds.org's field hockey page and the Section's 2025-26 power rankings (cifsdshome widget, year_id=175).
+  const sunset = {
+    status: 'unavailable',
+    league: getLeague('sunset').name,
+    reason:
+      'We found no Sunset league website or standings document for 2025-26. The Southern Section holds no field hockey playoffs, and the Sunset table on its scores site (scores.cifss.org) is SBLive’s, built from game labels coaches enter. We do not show standings from third-party sites.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://cifss.org/sports/field-hockey/ (the Section’s field hockey page: season preview, Blue Book and rules links, and a schedules-and-results link to its scores site; no league standings)',
+      'https://scores.cifss.org/brackets?genderSport=FIELD_HOCKEY (“No Brackets Found”: the Section holds no field hockey playoffs)',
+      'https://scores.cifss.org/teams/458746/standings (the Section’s scores site, run by SBLive: its Sunset table is si.com’s, built from the game labels coaches enter)',
+      'A web search for a Sunset field hockey league website, bylaws, schedule or standings (none found)',
+    ],
+  };
+  const sds = (id: 'city' | 'north-county' | 'metro') => ({
+    status: 'unavailable',
+    league: getLeague(id).name,
+    reason:
+      'No 2025-26 final league standings were published. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)',
+      'https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=175&sport_id=30 (the Section’s 2025-26 power rankings: 40 schools with points, league records and overall records; the Division 1 and Division 2 lists hold 20 each and the Open list is empty; no league tables)',
+      'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings (the page that embeds those power rankings)',
+    ],
+    // Labelled without 'champion': an unavailable card links documents and claims nothing from them.
+    alsoPublished: [
+      {
+        label: '2025 CIFSDS playoff brackets (Google Sheet)',
+        url: 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing',
+      },
+    ],
+  });
+
   const history = {
     season: '2025-26',
     sport: 'Girls Field Hockey',
-    leagues: { scval, bval, pcal, mcal, eal },
+    leagues: { scval, bval, pcal, mcal, eal, sunset, city: sds('city'), 'north-county': sds('north-county'), metro: sds('metro') },
   };
   const divisions = [...scvalDivisions, ...bvalDivisions];
   for (const p of problems.slice(scvalProblems)) console.warn(`WARN ${p}`);
@@ -356,7 +392,7 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     console.log(`  ${d.standings.varsity.map((r) => `${r.name} ${r.leagueRecord}`).join(' · ')}`);
   }
-  console.log('PCAL, MCAL, EAL: unavailable (see reasons in the file)');
+  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro: unavailable (see reasons in the file)');
 
   // Validate against the contract before anything is written. lib/history-schema.ts does not load
   // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild

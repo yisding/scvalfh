@@ -188,6 +188,27 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
     expect(forfeit, 'components/ui/StatusLabel.tsx forfeit label').toContain('<span class="sr-only">by forfeit</span>');
   });
 
+  it('says a San Diego Section shootout in the Section’s words, never the EAL’s 1 v 1s (StatusLabel)', async () => {
+    // Clairemont 0, Eastlake 0 flagged L/W (Sep 1): two San Diego Section teams, so the SDFHOA
+    // procedure decided it — 'a shootout' (SectionConfig.shootout.words), not the EAL's 1 v 1s.
+    const sds = final(0, 0, {
+      countsFor: null,
+      leagueDivision: null,
+      decider: 'SO',
+      home: { teamId: 'clairemont-id', slug: 'clairemont', name: 'Clairemont', score: 0, result: 'L' },
+      away: { teamId: 'eastlake-id', slug: 'eastlake', name: 'Eastlake', score: 0, result: 'W' },
+    });
+    const d = describeGame(sds);
+    expect(d.deciderTag).toBe('SO');
+    expect(d.shootoutLabel, 'components/ui/describe-game.ts shootoutLabelFor').toBe('decided by a shootout');
+    expect(describeGame(eal('W')).shootoutLabel, 'the EAL string, unchanged').toBe('decided on 1 v 1s');
+    expect(describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })).shootoutLabel).toBeNull();
+    const { StatusLabel } = await import('../../components/ui/StatusLabel');
+    const html = renderToStaticMarkup(createElement(StatusLabel, { display: d }));
+    expect(html, 'components/ui/StatusLabel.tsx SO label').toContain('<span class="sr-only">decided by a shootout</span>');
+    expect(html).not.toContain('1 v 1');
+  });
+
   it('names the EAL postseason by its event', () => {
     const d = describeGame(
       final(2, 1, { countsFor: null, postseason: { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' } }),

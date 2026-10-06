@@ -212,13 +212,17 @@ export function checkSystemic(ctx: PipelineContext, state: RunState): void {
 /**
  * A division's DivisionHealth.classification this run: its league's rule, with an official-fixtures
  * division whose fixture set is missing or invalid (`degraded`) falling back to contest-type.
+ * Exhaustive over LeagueRules.classification (the switch-like ifs return for every member).
  */
 export function divisionClassification(
   league: LeagueConfig,
   divisionId: DivisionId,
   degraded: ReadonlySet<DivisionId>,
 ): DivisionHealth['classification'] {
+  // 'contest-type' (EAL, Sunset) and 'membership' (the San Diego divisions: both sides members of the
+  // division, whatever MaxPreps' league flag says) need no document, so they never fall back.
   if (league.rules.classification === 'contest-type') return 'contest-type';
+  if (league.rules.classification === 'membership') return 'membership';
   return degraded.has(divisionId) ? 'fallback-contest-type' : 'official-fixtures';
 }
 

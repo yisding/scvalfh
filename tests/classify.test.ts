@@ -9,6 +9,7 @@ import { postseasonTagOf } from '../components/ui/describe-game';
 import {
   classifyGame,
   classifyGames,
+  crossDivisionNote,
   isLeagueGame,
   leaguesOf,
   postseasonTag,
@@ -239,6 +240,120 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
     // SCVAL excludes no contest type: a contestType 2 row MaxPreps also flags 0 still counts.
     const ct2 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, contestTypes: { home: 0, away: 2 } });
     expect(ct2.countsFor).toBe('de-anza');
+  });
+});
+
+describe('classify: San Diego (membership, DESIGN-socal §2.1.7)', () => {
+  // City Western's leaguePlay is Sep 1 – Oct 30; every pair of division-mates meets twice on MaxPreps'
+  // schedules, flagged by MaxPreps or not.
+  it('counts a game between two City Western teams whether or not MaxPreps flags it a league game', () => {
+    const flagged = game({ home: 'la-jolla', away: 'scripps-ranch', hs: 2, as: 1, date: '2026-09-15' });
+    expect(flagged.countsFor).toBe('city-western');
+    const unflagged = game({
+      home: 'la-jolla', away: 'scripps-ranch', hs: 2, as: 1, date: '2026-09-15',
+      league: false, contestTypes: { home: 1, away: 1 },
+    });
+    expect(unflagged.isLeague).toBe(false);
+    expect(unflagged.countsFor).toBe('city-western');
+    // Patrick Henry: MaxPreps flags none of its league games (inventory 2026-10-06).
+    const henry = game({ home: 'patrick-henry', away: 'point-loma', hs: 0, as: 3, date: '2026-09-22', league: false });
+    expect(henry.countsFor).toBe('city-eastern');
+    expect(henry.official).toBeUndefined();
+  });
+
+  it('never counts a tournament (contestType 2) or postseason (4) row, on either side', () => {
+    for (const types of [{ home: 2, away: 2 }, { home: 0, away: 2 }, { home: 1, away: 4 }]) {
+      const g = game({ home: 'la-jolla', away: 'scripps-ranch', hs: 1, as: 0, date: '2026-09-15', contestTypes: types });
+      expect(g.countsFor, JSON.stringify(types)).toBeNull();
+    }
+  });
+
+  it('counts only inside the division’s leaguePlay (Metro South Bay from Oct 7, every division to Oct 30)', () => {
+    expect(game({ home: 'hilltop', away: 'southwest', hs: 1, as: 0, date: '2026-10-06' }).countsFor).toBeNull();
+    expect(game({ home: 'hilltop', away: 'southwest', hs: 1, as: 0, date: '2026-10-07' }).countsFor).toBe('metro-south-bay');
+    expect(game({ home: 'hilltop', away: 'southwest', hs: 1, as: 0, date: '2026-10-30' }).countsFor).toBe('metro-south-bay');
+    const late = game({ home: 'hilltop', away: 'southwest', hs: 1, as: 0, date: '2026-10-31' });
+    expect(late.postseason).toBeNull();
+    expect(late.countsFor).toBeNull();
+  });
+
+  it('counts a scheduled division game too (a missing league result is any past one without a score)', () => {
+    const g = game({ home: 'escondido', away: 'vista', date: '2026-10-12', league: false });
+    expect(g.status).toBe('scheduled');
+    expect(g.countsFor).toBe('valley');
+  });
+
+  it('counts a game MaxPreps flags between two City divisions in neither table, and says why', () => {
+    // Mission Bay (City Western) played five City Eastern teams that MaxPreps marks as league games.
+    const g = game({ home: 'mission-bay', away: 'clairemont', hs: 1, as: 2, date: '2026-09-16' });
+    expect(g.leagueDivision).toBeNull();
+    expect(g.countsFor).toBeNull();
+    const note = 'MaxPreps marks this as a league game; it is between two divisions of the City Conference, so it counts in neither table.';
+    expect(g.provenance.classificationNote).toBe(note);
+    expect(crossDivisionNote(g)).toBe(note);
+    expect(classifyGames([{ ...g, provenance: { ...g.provenance, classificationNote: undefined } }])[0].provenance.classificationNote).toBe(note);
+    // Unflagged, it is a plain non-league game: no note.
+    const plain = game({ home: 'mission-bay', away: 'clairemont', hs: 1, as: 2, date: '2026-09-16', league: false });
+    expect(plain.provenance.classificationNote).toBeUndefined();
+    // Two conferences are two leagues: no note either.
+    expect(game({ home: 'mission-bay', away: 'eastlake', hs: 1, as: 2, date: '2026-09-16' }).provenance.classificationNote).toBeUndefined();
+  });
+
+  it('never notes a cross-division game of a fixture-backed league (SCVAL: golden-gated)', () => {
+    const g = game({ home: 'fremont', away: 'mitty', hs: 0, as: 3, date: '2026-09-16' });
+    expect(g.countsFor).toBeNull();
+    expect(g.provenance.classificationNote).toBeUndefined();
+    expect(crossDivisionNote(g)).toBeNull();
+  });
+
+  it('keeps an existing classification note (the official match’s own)', () => {
+    const g = game({ home: 'mission-bay', away: 'clairemont', hs: 1, as: 2, date: '2026-09-16' });
+    const own = { ...g, provenance: { ...g.provenance, classificationNote: 'Not on the official schedule; not counted.' } };
+    expect(classifyGames([own])[0].provenance.classificationNote).toBe('Not on the official schedule; not counted.');
+  });
+});
+
+describe('classify: the San Diego Section playoffs tag (section-playoffs)', () => {
+  it('tags a contestType 4 game between two San Diego teams, sharing a conference or not', () => {
+    const same = game({ home: 'la-jolla', away: 'scripps-ranch', hs: 1, as: 0, date: '2026-11-04', contestTypes: { home: 4, away: 4 } });
+    expect(same.postseason).toEqual({ kind: 'section-playoffs', leagueId: 'city', via: 'contest-type-4' });
+    expect(same.countsFor).toBeNull();
+    const across = game({ home: 'la-jolla', away: 'torrey-pines', hs: 1, as: 0, date: '2026-11-04', contestTypes: { home: 0, away: 4 } });
+    expect(across.postseason).toEqual({ kind: 'section-playoffs', leagueId: null, via: 'contest-type-4' });
+    expect(postseasonTagOf(across)).toBe('San Diego Section playoffs');
+    expect(postseasonTagOf(same)).toBe('San Diego Section playoffs');
+  });
+
+  it('tags a game between two San Diego teams on or after Nov 2 by date, never as one league’s postseason', () => {
+    const same = game({ home: 'la-jolla', away: 'scripps-ranch', hs: 3, as: 1, date: '2026-11-02' });
+    expect(same.postseason).toEqual({ kind: 'section-playoffs', leagueId: 'city', via: 'section-postseason-window' });
+    expect(same.countsFor).toBeNull();
+    const across = game({ home: 'eastlake', away: 'torrey-pines', hs: 0, as: 0, date: '2026-11-14', results: { home: 'L', away: 'W' } });
+    expect(across.postseason).toEqual({ kind: 'section-playoffs', leagueId: null, via: 'section-postseason-window' });
+    expect(across.decider).toBe('SO');
+    expect(game({ home: 'la-jolla', away: 'scripps-ranch', hs: 3, as: 1, date: '2026-11-01' }).postseason).toBeNull();
+  });
+
+  it('never tags a San Diego team against a team of another section as the Section playoffs', () => {
+    const sunset = game({ home: 'torrey-pines', away: 'great-oak', hs: 1, as: 0, date: '2026-11-05', contestTypes: { home: 4, away: 4 } });
+    expect(sunset.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
+    expect(game({ home: 'torrey-pines', away: 'great-oak', hs: 1, as: 0, date: '2026-11-05' }).postseason).toBeNull();
+  });
+});
+
+describe('classify: Sunset (contest-type, no postseason)', () => {
+  it('counts only a game MaxPreps flags between two of the ten', () => {
+    expect(game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' }).countsFor).toBe('sunset');
+    expect(game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18', league: false }).countsFor).toBeNull();
+    expect(
+      game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18', contestTypes: { home: 0, away: 2 } }).countsFor,
+    ).toBeNull();
+  });
+
+  it('tags a contestType 4 Sunset game other: the Southern Section holds no playoffs', () => {
+    const g = game({ home: 'edison', away: 'marina', hs: 2, as: 1, date: '2026-10-20', contestTypes: { home: 4, away: 4 } });
+    expect(g.postseason).toEqual({ kind: 'other', leagueId: 'sunset', via: 'contest-type-4' });
+    expect(g.countsFor).toBeNull();
   });
 });
 

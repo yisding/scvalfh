@@ -23,20 +23,27 @@ import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
 import {
   BOARD_PLACES,
   EXPANDED_PLACES,
+  buildEloBoard,
   buildLeadersView,
+  crossRegionFinals,
+  getEloBoard,
+  getEloBoardForTeam,
   qualifyingMinimum,
   rankBoard,
   type LeaderBoard,
   type LeaderSources,
+  type LeadersView,
+  type RegionLeadersView,
 } from '../../components/leaders/leaders-view';
 import { statText } from '../../components/teams/player-stats-view';
 import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
+import { regionOf } from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { getRatings } from '../../lib/ratings';
+import { computeRatings, getRatings } from '../../lib/ratings';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -54,6 +61,11 @@ import { textOf } from './html-text';
 
 const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets', 'elo-rating'];
+
+/** A view's NorCal half: the synthetic seasons below are NorCal teams' (SoCal's boards are empty there). */
+const nc = (v: LeadersView): RegionLeadersView => v.regions.find((r) => r.region === 'norcal')!;
+/** A view's SoCal half. */
+const sc = (v: LeadersView): RegionLeadersView => v.regions.find((r) => r.region === 'socal')!;
 
 /** The board's ranked cell, as printed. */
 const ranked = (board: LeaderBoard, i: number) => board.rows[i].cells[board.rankedBy].text;
@@ -88,20 +100,39 @@ function expectRanked(board: LeaderBoard): void {
 describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
   const stats = getPlayerStats().teams;
+  /** A board's id without its region suffix: the same board in either region. */
+  const unsuffixed = (id: string) => id.replace(/-socal$/, '');
+  const teamsOf = (region: string) => getTeams().filter((t) => regionOf(t.league) === region);
 
-  it('builds the four player boards and the six school boards, the Elo board last, with unique anchors', () => {
-    expect(view.players.map((b) => b.id)).toEqual(PLAYER_IDS);
-    expect(view.schools.map((b) => b.id)).toEqual(SCHOOL_IDS);
+  it('builds one half per region, NorCal first, each with four player boards and six school boards, the Elo board last', () => {
+    expect(view.regions.map((r) => [r.region, r.shortName, r.idSuffix, r.schoolsId, r.playersId, r.leagueCount])).toEqual([
+      ['norcal', 'NorCal', '', 'schools', 'players', 5],
+      ['socal', 'SoCal', '-socal', 'schools-socal', 'players-socal', 4],
+    ]);
+    for (const r of view.regions) {
+      expect(r.players.map((b) => b.id)).toEqual(PLAYER_IDS.map((id) => `${id}${r.idSuffix}`));
+      expect(r.schools.map((b) => b.id)).toEqual(SCHOOL_IDS.map((id) => `${id}${r.idSuffix}`));
+      const teams = teamsOf(r.region);
+      expect(r.teamCount).toBe(teams.length);
+      expect(r.statTeams).toBe(stats.filter((t) => t.players.length > 0 && teams.some((x) => x.slug === t.slug)).length);
+    }
     expect(view.teamCount).toBe(getTeams().length);
-    expect(view.statTeams).toBe(stats.filter((t) => t.players.length > 0).length);
+    // One page renders both halves: every id is unique across them.
+    const ids = view.regions.flatMap((r) => [r.schoolsId, r.playersId, ...r.players.map((b) => b.id), ...r.schools.map((b) => b.id)]);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('ranks every board with shared places and keeps to its cap', () => {
-    for (const board of [...view.players, ...view.schools]) {
-      expectRanked(board);
-      expect(board.columns[board.rankedBy], board.id).toBeDefined();
-      for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
-        expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
+  it('ranks every board with shared places, keeps to its cap, and lists only its own region’s teams', () => {
+    for (const r of view.regions) {
+      const slugs = new Set(teamsOf(r.region).map((t) => t.slug));
+      for (const board of [...r.players, ...r.schools]) {
+        expectRanked(board);
+        expect(board.columns[board.rankedBy], board.id).toBeDefined();
+        expect(board.caption, board.id).toContain(`in all ${r.leagueCount === 5 ? 'five' : 'four'} ${r.shortName} leagues, this season`);
+        for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
+          expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
+          expect(slugs.has(row.team.slug), `${board.id}: ${row.team.slug} is a ${r.shortName} team`).toBe(true);
+        }
       }
     }
   });
@@ -113,28 +144,31 @@ describe('buildLeadersView — rules, over the committed data', () => {
       'most-saves': { block: 'goalkeeping', key: 'saves' },
       'most-clean-sheets': { block: 'goalkeeping', key: 'shutouts' },
     };
-    for (const board of view.players) {
-      const { block, key } = stat[board.id];
-      const tracking = stats.filter(
-        (t) => t.players.length > 0 && (t.tracked[block] as string[]).includes(key),
-      );
-      expect(board.meta, board.id).toBe(`From ${tracking.length} ${tracking.length === 1 ? 'team' : 'teams'}`);
-      [...board.rows, ...(board.extra?.rows ?? [])].forEach((row) => {
-        const team = stats.find((t) => t.slug === row.team.slug)!;
-        expect((team.tracked[block] as string[]).includes(key), `${board.id}: ${row.team.slug} tracks ${key}`).toBe(true);
-        const player = team.players.find((p) => p.fullName === row.name)!;
-        expect(player, `${board.id}: ${row.name}`).toBeDefined();
-        const value = (player[block] as Record<string, number | null> | null)?.[key] ?? null;
-        expect(value, `${board.id}: ${row.name}`).toBeGreaterThan(0);
-        expect(row.cells[board.rankedBy].text, `${board.id}: ${row.name}`).toBe(statText(value));
-        expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
-      });
+    for (const r of view.regions) {
+      const regionSlugs = new Set(teamsOf(r.region).map((t) => t.slug));
+      for (const board of r.players) {
+        const { block, key } = stat[unsuffixed(board.id)];
+        const tracking = stats.filter(
+          (t) => regionSlugs.has(t.slug) && t.players.length > 0 && (t.tracked[block] as string[]).includes(key),
+        );
+        expect(board.meta, board.id).toBe(`From ${tracking.length} ${tracking.length === 1 ? 'team' : 'teams'}`);
+        [...board.rows, ...(board.extra?.rows ?? [])].forEach((row) => {
+          const team = stats.find((t) => t.slug === row.team.slug)!;
+          expect((team.tracked[block] as string[]).includes(key), `${board.id}: ${row.team.slug} tracks ${key}`).toBe(true);
+          const player = team.players.find((p) => p.fullName === row.name)!;
+          expect(player, `${board.id}: ${row.name}`).toBeDefined();
+          const value = (player[block] as Record<string, number | null> | null)?.[key] ?? null;
+          expect(value, `${board.id}: ${row.name}`).toBeGreaterThan(0);
+          expect(row.cells[board.rankedBy].text, `${board.id}: ${row.name}`).toBe(statText(value));
+          expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
+        });
+      }
     }
   });
 
   it("prints each player's grade and position exactly as the team page's roster has them", () => {
     let withFacts = 0;
-    for (const board of view.players) {
+    for (const board of view.regions.flatMap((r) => r.players)) {
       for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
         const line = stats.find((t) => t.slug === row.team.slug)!.players.find((p) => p.fullName === row.name)!;
         const rosterRow = getEnrichedTeamRoster(row.team.slug)!.players.find(
@@ -154,56 +188,83 @@ describe('buildLeadersView — rules, over the committed data', () => {
     expect(withFacts).toBeGreaterThan(0);
   });
 
-  it("prints each school's record as its standings row has it, and only for a school past the minimum", () => {
-    const record = view.schools.find((b) => b.id === 'best-record')!;
-    const league = view.schools.find((b) => b.id === 'best-league-record')!;
+  it("prints each school's record as its standings row has it, and only for a school past its region's minimum", () => {
     const minOf = (board: LeaderBoard) => Number(/At least (\d+)/.exec(board.meta)![1]);
-    for (const row of record.rows) {
-      const s = getStandingFor(row.team.slug)!;
-      expect(row.cells[0].text, row.team.slug).toBe(recordString(s.overall));
-      expect(s.overall.gp, row.team.slug).toBeGreaterThanOrEqual(minOf(record));
-    }
-    for (const row of league.rows) {
-      const s = getStandingFor(row.team.slug)!;
-      expect(row.cells[0].text, row.team.slug).toBe(recordString(s.computed));
-      expect(s.computed.gp, row.team.slug).toBeGreaterThanOrEqual(minOf(league));
+    for (const r of view.regions) {
+      const record = r.schools.find((b) => unsuffixed(b.id) === 'best-record')!;
+      const league = r.schools.find((b) => unsuffixed(b.id) === 'best-league-record')!;
+      // The minimum is the region's: half the median of its own teams' games.
+      const gps = teamsOf(r.region).map((t) => getStandingFor(t.slug)!.overall.gp);
+      expect(minOf(record), r.region).toBe(qualifyingMinimum(gps).min);
+      for (const row of record.rows) {
+        const s = getStandingFor(row.team.slug)!;
+        expect(row.cells[0].text, row.team.slug).toBe(recordString(s.overall));
+        expect(s.overall.gp, row.team.slug).toBeGreaterThanOrEqual(minOf(record));
+      }
+      for (const row of league.rows) {
+        const s = getStandingFor(row.team.slug)!;
+        expect(row.cells[0].text, row.team.slug).toBe(recordString(s.computed));
+        expect(s.computed.gp, row.team.slug).toBeGreaterThanOrEqual(minOf(league));
+      }
     }
   });
 
   it('counts a school clean sheet from the finals, forfeits left out', () => {
-    const board = view.schools.find((b) => b.id === 'school-clean-sheets')!;
-    for (const row of board.rows) {
-      const team = getTeamBySlug(row.team.slug)!;
-      const shutouts = getGames({ teamId: team.slug, status: 'final' }).filter((g) => {
-        const theirs = g.home.teamId === team.id ? g.away : g.home;
-        return !g.isForfeit && theirs.score === 0;
-      }).length;
-      expect(row.cells[board.rankedBy].text, row.team.slug).toBe(String(shutouts));
+    for (const board of view.regions.map((r) => r.schools.find((b) => unsuffixed(b.id) === 'school-clean-sheets')!)) {
+      for (const row of board.rows) {
+        const team = getTeamBySlug(row.team.slug)!;
+        const shutouts = getGames({ teamId: team.slug, status: 'final' }).filter((g) => {
+          const theirs = g.home.teamId === team.id ? g.away : g.home;
+          return !g.isForfeit && theirs.score === 0;
+        }).length;
+        expect(row.cells[board.rankedBy].text, row.team.slug).toBe(String(shutouts));
+      }
     }
   });
 
-  it('prints each school’s Elo rating as lib/ratings.ts has it, only past the minimum, linking to its card', () => {
-    const board = view.schools.find((b) => b.id === 'elo-rating')!;
-    const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+  it('prints each school’s Elo rating from the ONE table over all 99, only past its region’s minimum, linking to its card', () => {
     const bySlug = new Map(getRatings().ratings.map((r) => [r.slug, r]));
-    expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Elo']);
-    for (const row of board.rows) {
-      const r = bySlug.get(row.team.slug)!;
-      expect(row.cells.map((c) => c.text), row.team.slug).toEqual([String(r.games), String(r.elo)]);
-      expect(r.games, row.team.slug).toBeGreaterThanOrEqual(min);
-      expect(row.team.href, row.team.slug).toBe(`/teams/${row.team.slug}#elo`);
-    }
-    // Every rated team under the minimum is named in the notes, with its games.
-    const below = getRatings().ratings.filter((r) => r.games > 0 && r.games < min);
-    const note = view.schoolNotes.find((n) => n.startsWith('The Elo board needs'));
-    if (below.length > 0) {
-      for (const r of below) expect(note, r.slug).toContain(`${getTeamBySlug(r.slug)!.name} (${r.games})`);
+    for (const r of view.regions) {
+      const board = r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!;
+      expect(board.id).toBe(`elo-rating${r.idSuffix}`);
+      const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+      expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Elo']);
+      for (const row of board.rows) {
+        const rating = bySlug.get(row.team.slug)!;
+        expect(row.cells.map((c) => c.text), row.team.slug).toEqual([String(rating.games), String(rating.elo)]);
+        expect(rating.games, row.team.slug).toBeGreaterThanOrEqual(min);
+        expect(row.team.href, row.team.slug).toBe(`/teams/${row.team.slug}#elo`);
+      }
+      // Every rated team of the region under the minimum is named in the region's notes, with its games.
+      const slugs = new Set(teamsOf(r.region).map((t) => t.slug));
+      const below = getRatings().ratings.filter((x) => slugs.has(x.slug) && x.games > 0 && x.games < min);
+      const note = r.schoolNotes.find((n) => n.startsWith('The Elo board needs'));
+      for (const x of below) expect(note, x.slug).toContain(`${getTeamBySlug(x.slug)!.name} (${x.games})`);
+      // The bundled board each team page reads its place from is this one.
+      expect(getEloBoard(r.region).board).toEqual(board);
+      expect(board.note, r.region).toContain(view.crossRegion.sentence);
     }
   });
 
-  it('names every team with no player stats, so no player board reads as all 49', () => {
-    const none = getTeams().filter((t) => !stats.some((s) => s.slug === t.slug && s.players.length > 0));
-    for (const team of none) expect(view.playerNotes[0], team.slug).toContain(team.name);
+  it('counts the finals that link NorCal and SoCal at build time, this season and last', () => {
+    const teams = getTeams();
+    const region = new Map(teams.map((t) => [t.id, regionOf(t.league)]));
+    const across = (a: string | null, b: string | null) => a !== null && b !== null && region.has(a) && region.has(b) && region.get(a) !== region.get(b);
+    const thisSeason = getGames({ status: 'final' }).filter(
+      (g) => !g.isForfeit && g.home.score !== null && g.away.score !== null && across(g.home.teamId, g.away.teamId),
+    ).length;
+    const lastSeason = getPriorSeason()!.games.filter((g) => across(g.homeId, g.awayId)).length;
+    expect([view.crossRegion.thisSeason, view.crossRegion.lastSeason]).toEqual([thisSeason, lastSeason]);
+    expect(view.crossRegion.sentence).toBe(
+      `The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on ${thisSeason} final${thisSeason === 1 ? '' : 's'} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+    );
+  });
+
+  it('names every team of a region with no player stats, so no player board reads as all of them', () => {
+    for (const r of view.regions) {
+      const none = teamsOf(r.region).filter((t) => !stats.some((s) => s.slug === t.slug && s.players.length > 0));
+      for (const team of none) expect(r.playerNotes[0], team.slug).toContain(team.name);
+    }
   });
 });
 
@@ -345,7 +406,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     game({ home: 'stevenson', away: 'mitty', hs: 1, as: 0, league: false, forfeit: true, date: '2026-09-21' }),
   ];
   const view = buildLeadersView(sources(games));
-  const board = (id: string) => view.schools.find((b) => b.id === id)!;
+  const board = (id: string) => nc(view).schools.find((b) => b.id === id)!;
 
   it('leaves a school under the minimum off the record and rate boards, and names it', () => {
     const record = board('best-record');
@@ -353,7 +414,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(record.meta).toBe('At least 4 games');
     expect(record.rows.map((r) => r.team.slug)).not.toContain('del-mar');
     expect(board('most-goals').rows.map((r) => r.team.slug)).not.toContain('del-mar');
-    expect(view.schoolNotes[0]).toContain('Del Mar (1)');
+    expect(nc(view).schoolNotes[0]).toContain('Del Mar (1)');
     // Mitty won all six it played on the field and lost the forfeit: 6-1-0.
     expect(record.rows[0]).toMatchObject({ rank: 1, tied: false, name: 'Archbishop Mitty' });
     expect(record.rows[0].cells.map((c) => c.text)).toEqual(['6-1-0', '.857', '+12']);
@@ -367,8 +428,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.meta).toBe('At least 3 games');
     expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
     expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
-    expect(view.schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
-      'The Elo board needs at least 3 games against the five leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
+    expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
+      'The Elo board needs at least 3 games against the nine leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
     // No prior season in these sources: every team starts at average, and the note says nothing of one.
@@ -395,20 +456,20 @@ describe('buildLeadersView — schools, over synthetic games', () => {
         },
       ],
     };
-    const note = buildLeadersView({ ...sources(base), prior }).schools.find((b) => b.id === 'elo-rating')!.note;
+    const note = nc(buildLeadersView({ ...sources(base), prior })).schools.find((b) => b.id === 'elo-rating')!.note;
     expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it had no counted 2025-26 final;');
     // The committed season seeds every rated team, so its note makes no such claim.
-    expect(buildLeadersView().schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
+    expect(nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
   });
 
   it('starts the committed board from last season, and says so', () => {
-    const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
+    const board = nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!;
     expect(board.note).toContain(`started the season from its ${getPriorSeason().season} rating`);
   });
 
   it('shares an Elo place between equal ratings', () => {
     const v = buildLeadersView(sources(roundRobin(four, () => [2, 2])));
-    const elo = v.schools.find((b) => b.id === 'elo-rating')!;
+    const elo = nc(v).schools.find((b) => b.id === 'elo-rating')!;
     expect(elo.rows.map((r) => [r.rank, r.tied, r.cells[1].text])).toEqual([
       [1, true, '1500'],
       [1, true, '1500'],
@@ -432,7 +493,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     // Every team concedes 2 a game when every score is 2-2.
     const even = roundRobin(four, () => [2, 2]);
     const v = buildLeadersView(sources(even));
-    const allowed = v.schools.find((b) => b.id === 'fewest-goals-allowed')!;
+    const allowed = nc(v).schools.find((b) => b.id === 'fewest-goals-allowed')!;
     expect(allowed.rows.map((r) => [r.rank, r.tied])).toEqual([
       [1, true],
       [1, true],
@@ -441,7 +502,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     ]);
     expect(allowed.rows.map((r) => r.name)).toEqual([...allowed.rows.map((r) => r.name)].sort((a, b) => a.localeCompare(b)));
     // A season of draws keeps no clean sheet at all: the board says so instead of an empty table.
-    const cs = v.schools.find((b) => b.id === 'school-clean-sheets')!;
+    const cs = nc(v).schools.find((b) => b.id === 'school-clean-sheets')!;
     expect(cs.rows).toEqual([]);
     expect(cs.empty).toBe('No team has kept a clean sheet yet.');
   });
@@ -477,7 +538,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     }),
   ];
   const view = buildLeadersView(sources(games, stats));
-  const board = (id: string) => view.players.find((b) => b.id === id)!;
+  const board = (id: string) => nc(view).players.find((b) => b.id === id)!;
 
   it('ranks on the stat, shares equal values, and never lists a 0', () => {
     const points = board('most-points');
@@ -513,11 +574,11 @@ describe('buildLeadersView — players, over synthetic stats', () => {
   });
 
   it('names the teams with no stats and the ones whose totals are behind', () => {
-    expect(view.statTeams).toBe(3);
-    expect(view.playerNotes[0]).toContain(`3 of the ${TEAMS.length} teams have entered some.`);
-    expect(view.playerNotes[0]).toContain('Los Gatos');
-    expect(view.playerNotes[0]).not.toContain('Saint Francis');
-    expect(view.playerNotes[1]).toBe(
+    expect(nc(view).statTeams).toBe(3);
+    expect(nc(view).playerNotes[0]).toContain('3 of the 49 teams have entered some.');
+    expect(nc(view).playerNotes[0]).toContain('Los Gatos');
+    expect(nc(view).playerNotes[0]).not.toContain('Saint Francis');
+    expect(nc(view).playerNotes[1]).toBe(
       'Totals lag the scores where a coach has not entered the latest games: Archbishop Mitty (1 game since Sat Sep 19).',
     );
   });
@@ -537,7 +598,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       ],
     });
     const facts = (id: string) =>
-      Object.fromEntries(v.players.find((b) => b.id === id)!.rows.map((r) => [r.name, r.facts]));
+      Object.fromEntries(nc(v).players.find((b) => b.id === id)!.rows.map((r) => [r.name, r.facts]));
     expect(facts('most-points')).toEqual({
       'Dee Dunn': [],
       'Ana Ames': ['Senior', 'Forward / Midfield'],
@@ -548,7 +609,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     // Printed after the school and league, each part kept whole, as the roster prints them: on a
     // line of their own below 640px (the first dot hidden there), on the school's line from it.
     const html = renderToStaticMarkup(
-      createElement(LeaderBoardTable, { board: v.players.find((b) => b.id === 'most-points')! }),
+      createElement(LeaderBoardTable, { board: nc(v).players.find((b) => b.id === 'most-points')! }),
     );
     expect(html).toContain(
       '<span class="whitespace-nowrap">SCVAL</span><span class="block sm:inline">' +
@@ -557,17 +618,17 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     );
     // No rosters given: no facts, never a guess.
     expect(board('most-points').rows.every((r) => r.facts.length === 0)).toBe(true);
-    for (const b of v.schools) for (const r of b.rows) expect(r.facts, b.id).toEqual([]);
+    for (const b of nc(v).schools) for (const r of b.rows) expect(r.facts, b.id).toEqual([]);
   });
 
   it('says why a board is empty rather than drawing an empty table', () => {
     const v = buildLeadersView(sources([], []));
-    for (const b of v.players) {
+    for (const b of nc(v).players) {
       expect(b.rows, b.id).toEqual([]);
       expect(b.empty, b.id).toMatch(/^No team enters .+ on MaxPreps yet\.$/);
     }
-    expect(v.schoolNotes).toEqual([]);
-    expect(v.resultsThrough).toBeNull();
+    expect(nc(v).schoolNotes).toEqual([]);
+    expect(nc(v).resultsThrough).toBeNull();
   });
 });
 
@@ -587,7 +648,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     ];
     const v = buildLeadersView(sources(games));
     const rows = (id: string) =>
-      v.schools.find((b) => b.id === id)!.rows.map((r) => [r.rank, r.tied, r.team.slug, r.cells[0].text]);
+      nc(v).schools.find((b) => b.id === id)!.rows.map((r) => [r.rank, r.tied, r.team.slug, r.cells[0].text]);
     expect(rows('fewest-goals-allowed')).toEqual([
       [1, false, 'mitty', '4'],
       [2, false, 'stevenson', '2'],
@@ -603,7 +664,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
       [3, true, 'tamalpais', '2'],
     ]);
     for (const id of ['most-goals', 'fewest-goals-allowed']) {
-      expect(v.schools.find((b) => b.id === id)!.note, id).toContain('Equal rates are split by more games played.');
+      expect(nc(v).schools.find((b) => b.id === id)!.note, id).toContain('Equal rates are split by more games played.');
     }
   });
 
@@ -619,16 +680,16 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
       game({ home: 'del-mar', away: 'tamalpais', hs: 1, as: 0, league: false, official: null, forfeit: true, date: '2026-10-04' }),
     ];
     const v = buildLeadersView(sources(games));
-    const slugs = (id: string) => v.schools.find((b) => b.id === id)!.rows.map((r) => r.team.slug);
+    const slugs = (id: string) => nc(v).schools.find((b) => b.id === id)!.rows.map((r) => r.team.slug);
     // gp: the four 7 each, Del Mar 4 → median 7, minimum 4.
-    expect(v.schools.find((b) => b.id === 'best-record')!.meta).toBe('At least 4 games');
+    expect(nc(v).schools.find((b) => b.id === 'best-record')!.meta).toBe('At least 4 games');
     expect(slugs('best-record')).toContain('del-mar');
     expect(slugs('most-goals')).not.toContain('del-mar');
     expect(slugs('fewest-goals-allowed')).not.toContain('del-mar');
-    expect(v.schoolNotes).toContain(
+    expect(nc(v).schoolNotes).toContain(
       'Records need at least 4 results, half the median of 7.',
     );
-    expect(v.schoolNotes).toContain(
+    expect(nc(v).schoolNotes).toContain(
       'Goals per game need at least 4 games with goals counted (a forfeit has none); not there yet: Del Mar (3).',
     );
   });
@@ -637,7 +698,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const games = roundRobin(['mitty', 'leigh', 'stevenson'], () => [2, 1]);
     games.push(game({ home: 'del-mar', away: 'mitty', hs: 1, as: 3, league: false, official: null, date: '2026-10-01' }));
     const v = buildLeadersView(sources(games));
-    expect(v.schoolNotes[0]).toBe(
+    expect(nc(v).schoolNotes[0]).toBe(
       // 4 games each for the three, 1 for Del Mar: median 4, minimum 2.
       'Records and goals per game need at least 2 results, half the median of 4; not there yet: Del Mar (1).',
     );
@@ -646,7 +707,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
   it('says which part of the most-goals minimum is missing when the board is empty', () => {
     // Nobody has scored: every team qualifies on games, none has a goal.
     const scoreless = roundRobin(['mitty', 'leigh', 'stevenson'], () => [0, 0]);
-    const goals = (g: Game[]) => buildLeadersView(sources(g)).schools.find((b) => b.id === 'most-goals')!;
+    const goals = (g: Game[]) => nc(buildLeadersView(sources(g))).schools.find((b) => b.id === 'most-goals')!;
     expect(goals(scoreless).rows).toEqual([]);
     expect(goals(scoreless).empty).toBe('None of the teams with at least 2 games has scored yet.');
     expect(goals([]).empty).toBe('No team has played 1 game yet.');
@@ -660,7 +721,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const v = buildLeadersView(
       sources([], [teamStats('mitty', { goalkeeping: ['gamesPlayed', 'shutouts'], players: keepers })]),
     );
-    const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
+    const cs = nc(v).players.find((b) => b.id === 'most-clean-sheets')!;
     expect(cs.rows.map((r) => [r.rank, r.tied])).toEqual(Array(31).fill([1, true]));
     expect(cs.extra).toBeNull();
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: cs }));
@@ -680,7 +741,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const v = buildLeadersView(
       sources([], [teamStats('mitty', { goalkeeping: ['gamesPlayed', 'shutouts'], players: keepers })]),
     );
-    const cs = v.players.find((b) => b.id === 'most-clean-sheets')!;
+    const cs = nc(v).players.find((b) => b.id === 'most-clean-sheets')!;
     expectRanked(cs);
     expect(cs.rows.map((r) => r.name)).toEqual(['Ace Able', ...keepers.slice(1).map((k) => k.name)]);
     expect(cs.rows.slice(1).every((r) => r.rank === 2 && r.tied)).toBe(true);
@@ -693,7 +754,7 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     const ring = slugs.map((home, i) =>
       game({ home, away: slugs[(i + 1) % 16], hs: 1, as: 0, league: false, date: `2026-09-${String(i + 1).padStart(2, '0')}` }),
     );
-    const cs = buildLeadersView(sources(ring)).schools.find((b) => b.id === 'school-clean-sheets')!;
+    const cs = nc(buildLeadersView(sources(ring))).schools.find((b) => b.id === 'school-clean-sheets')!;
     expectRanked(cs);
     expect(cs.rows.map((r) => [r.rank, r.tied, r.cells[cs.rankedBy].text])).toEqual(Array(16).fill([1, true, '1']));
   });
@@ -714,7 +775,7 @@ describe('buildLeadersView — player boards past 10th', () => {
           }),
         ],
       ),
-    ).players.find((b) => b.id === 'most-points')!;
+    ).regions[0].players.find((b) => b.id === 'most-points')!;
 
   it(`lists the top ${BOARD_PLACES} and keeps the places to ${EXPANDED_PLACES} behind "Show N more"`, () => {
     const board = pointsBoard(Array.from({ length: 30 }, (_, i) => 30 - i));
@@ -722,7 +783,7 @@ describe('buildLeadersView — player boards past 10th', () => {
     expect(board.rows.map((r) => r.rank)).toEqual(Array.from({ length: BOARD_PLACES }, (_, i) => i + 1));
     expect(board.extra).toMatchObject({
       summary: 'Show 15 more players',
-      caption: 'Most points, players in all five leagues, this season, continued',
+      caption: 'Most points, players in all five NorCal leagues, this season, continued',
     });
     expect(board.extra!.rows.map((r) => [r.rank, r.name, r.cells[board.rankedBy].text])).toEqual(
       Array.from({ length: 15 }, (_, i) => [i + 11, `Player ${i + 11}`, String(20 - i)]),
@@ -778,7 +839,7 @@ describe('buildLeadersView — player boards past 10th', () => {
     const [top, rest] = html.split('<details');
     expect(top).toContain('Player 10');
     expect(top).not.toContain('Player 11');
-    expect(rest).toContain('<caption class="sr-only">Most points, players in all five leagues, this season, continued</caption>');
+    expect(rest).toContain('<caption class="sr-only">Most points, players in all five NorCal leagues, this season, continued</caption>');
     expect(rest).toContain('Player 11');
     expect(rest).toContain('Player 25');
     expect(rest).not.toContain('Player 26');
@@ -804,9 +865,9 @@ describe('LeaderBoardTable and the /leaders page', () => {
         teamStats('leigh', { field: ['goals', 'points'], players: [{ name: 'Dee Dunn', field: { goals: 1, points: 2 } }] }),
       ]),
     );
-    const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: view.players[0] }));
+    const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: nc(view).players[0] }));
     expect(html).toContain('<section id="most-points"');
-    expect(html).toContain('<caption class="sr-only">Most points, players in all five leagues, this season</caption>');
+    expect(html).toContain('<caption class="sr-only">Most points, players in all five NorCal leagues, this season</caption>');
     expect(html).toContain('<span aria-hidden="true">T1</span><span class="sr-only">tied for 1st</span>');
     expect(html).toContain('data-team-slug="leigh"');
     expect(html).toContain('<span class="sx-pin-note">Your team’s player. </span>');
@@ -815,12 +876,16 @@ describe('LeaderBoardTable and the /leaders page', () => {
     expect(html).toContain('href="/teams/leigh#player-stats"');
   });
 
-  it('renders both sections, the schools first, and every board anchor in order', () => {
+  it('renders each region’s two sections, NorCal first, the schools first in each, every board anchor in order', () => {
+    // The page is app/leaders/page.tsx's (DESIGN-socal §2.4): both regions render, NorCal first (the reading
+    // order with JavaScript off), each region's ids suffixed as buildLeadersView names them.
     const html = renderToStaticMarkup(LeadersPage());
-    expect(html).toMatch(/<section id="players"/);
-    expect(html).toMatch(/<section id="schools"/);
+    const view = buildLeadersView();
     const at = (id: string) => html.indexOf(`<section id="${id}"`);
-    const order = ['schools', ...SCHOOL_IDS, 'players', ...PLAYER_IDS];
+    const order = view.regions.flatMap((r) => [
+      r.schoolsId, ...r.schools.map((b) => b.id), r.playersId, ...r.players.map((b) => b.id),
+    ]);
+    expect(order.slice(0, 2)).toEqual(['schools', ...SCHOOL_IDS.slice(0, 1)]);
     for (const id of order) expect(at(id), id).toBeGreaterThanOrEqual(0);
     expect(order.map(at)).toEqual(order.map(at).sort((a, b) => a - b));
     // The jump links follow the sections.
@@ -829,12 +894,107 @@ describe('LeaderBoardTable and the /leaders page', () => {
     expect(html).not.toMatch(/eliminat/i);
   });
 
-  it('counts the leagues from config: five, with the EAL named', () => {
+  it('counts the leagues from config: nine on one Elo scale, five NorCal and four SoCal on the boards', () => {
     const text = textOf(renderToStaticMarkup(LeadersPage()));
-    expect(text, 'app/leaders/page.tsx eyebrow').toContain('All five leagues');
-    expect(text, 'app/leaders/page.tsx').toContain('across SCVAL, BVAL, PCAL, MCAL and EAL');
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/four leagues/);
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues, this season/);
+    expect(text, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues');
+    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues/);
+  });
+});
+
+// ---------------------------------------------------------------- per region (DESIGN-socal §2.3)
+
+describe('buildLeadersView — each region its own boards, one Elo scale', () => {
+  // NorCal: Mitty, Leigh and Stevenson play each other twice (4 games each). SoCal: La Jolla, Torrey Pines,
+  // Bonita and Marina play once each pair (3 each), and Great Oak plays Bonita once. One final links the
+  // regions: Mitty at La Jolla.
+  const norcal = roundRobin(['mitty', 'leigh', 'stevenson'], (h, a) => (h === 'mitty' ? [3, 0] : a === 'mitty' ? [0, 2] : [1, 1]));
+  const socalTeams = ['la-jolla', 'torrey-pines', 'bonita', 'marina'];
+  const socal: Game[] = [];
+  let day = 1;
+  for (let i = 0; i < socalTeams.length; i += 1) {
+    for (let j = i + 1; j < socalTeams.length; j += 1) {
+      socal.push(game({ home: socalTeams[i], away: socalTeams[j], hs: 2, as: 1, league: false, date: `2026-10-${String(day++).padStart(2, '0')}` }));
+    }
+  }
+  socal.push(game({ home: 'great-oak', away: 'bonita', hs: 0, as: 1, league: false, date: '2026-10-20' }));
+  const bridge = game({ home: 'la-jolla', away: 'mitty', hs: 1, as: 4, league: false, date: '2026-10-21' });
+  const games = [...norcal, ...socal, bridge];
+  const view = buildLeadersView(sources(games));
+
+  it('ranks each region’s schools on its own boards, with suffixed ids and its own captions', () => {
+    const north = nc(view);
+    const south = sc(view);
+    const record = south.schools.find((b) => b.id === 'best-record-socal')!;
+    expect(record.caption).toBe('Best record, schools in all four SoCal leagues, this season');
+    expect(record.rows.map((r) => r.team.slug).sort()).toEqual(['bonita', 'la-jolla', 'marina', 'torrey-pines']);
+    expect(north.schools.find((b) => b.id === 'best-record')!.rows.map((r) => r.team.slug).sort()).toEqual(['leigh', 'mitty', 'stevenson']);
+    expect(south.players.map((b) => b.id)).toEqual(PLAYER_IDS.map((id) => `${id}-socal`));
+    expect(south.teamCount).toBe(50);
+    expect(north.teamCount).toBe(49);
+  });
+
+  it('sets each region’s minimum from its own teams', () => {
+    // NorCal: Mitty 5 (with the bridge), Leigh 4, Stevenson 4 → median 4, minimum 2.
+    expect(nc(view).schools.find((b) => b.id === 'best-record')!.meta).toBe('At least 2 games');
+    // SoCal: La Jolla 4, Torrey Pines 3, Bonita 4, Marina 3, Great Oak 1 → median 3, minimum 2; Great Oak waits.
+    const south = sc(view);
+    expect(south.schools.find((b) => b.id === 'best-record-socal')!.meta).toBe('At least 2 games');
+    expect(south.schoolNotes[0]).toBe('Records and goals per game need at least 2 results, half the median of 3; not there yet: Great Oak (1).');
+    expect(south.resultsThrough).toBe('Wed Oct 21');
+  });
+
+  it('reads both Elo boards off one fit over every team, and says how few finals link the regions', () => {
+    const table = computeRatings(TEAMS, games, null);
+    const bySlug = new Map(table.ratings.map((r) => [r.slug, r]));
+    for (const r of view.regions) {
+      const board = r.schools.find((b) => b.id === `elo-rating${r.idSuffix}`)!;
+      expect(board.rows.length, r.region).toBeGreaterThan(0);
+      for (const row of board.rows) {
+        expect(row.cells[1].text, row.team.slug).toBe(String(bySlug.get(row.team.slug)!.elo));
+        expect(regionOf(getTeamBySlug(row.team.slug)!.league)).toBe(r.region);
+      }
+      expect(board.note).toContain(
+        'The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on 1 final between the regions this season and 0 last season, so treat them as rough.',
+      );
+      expect(board.note).toContain('Every final between two of the 99 teams, league or not, fitted at once');
+    }
+    expect(view.crossRegion).toMatchObject({ thisSeason: 1, lastSeason: 0 });
+    // The rating La Jolla's board prints is the one the unified table gives it, not a SoCal-only refit.
+    const alone = computeRatings(TEAMS, socal, null);
+    expect(alone.ratings.find((x) => x.slug === 'la-jolla')!.elo).not.toBe(bySlug.get('la-jolla')!.elo);
+  });
+
+  it('counts last season’s cross-region finals from the prior season, between registry teams only', () => {
+    const mitty = getTeamBySlug('mitty')!;
+    const lj = getTeamBySlug('la-jolla')!;
+    const leigh = getTeamBySlug('leigh')!;
+    const prior = {
+      ...getPriorSeason()!,
+      games: [
+        { contestId: 'p1', date: '2025-09-10', homeId: mitty.id, homeSlug: 'mitty', awayId: lj.id, awaySlug: 'la-jolla', homeScore: 2, awayScore: 0, site: 'home' as const },
+        { contestId: 'p2', date: '2025-09-11', homeId: mitty.id, homeSlug: 'mitty', awayId: leigh.id, awaySlug: 'leigh', homeScore: 2, awayScore: 0, site: 'home' as const },
+      ],
+    };
+    expect(crossRegionFinals(TEAMS, games, prior)).toMatchObject({ thisSeason: 1, lastSeason: 1 });
+    expect(crossRegionFinals(TEAMS, games, null)).toMatchObject({ thisSeason: 1, lastSeason: 0 });
+  });
+
+  it('builds a single-region board with no cross-region sentence when the sources hold one region only', () => {
+    const nor = TEAMS.filter((t) => regionOf(t.league) === 'norcal');
+    const v = buildLeadersView({ ...sources(norcal), teams: nor, stats: [] });
+    expect(v.regions.map((r) => r.region)).toEqual(['norcal']);
+    expect(nc(v).schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('NorCal and SoCal');
+    const elo = buildEloBoard(nor, computeRatings(nor, norcal, null));
+    expect(elo.board.id).toBe('elo-rating');
+    expect(elo.board.note).not.toContain('NorCal and SoCal');
+  });
+
+  it('gives a team page its own region’s bundled board', () => {
+    expect(getEloBoardForTeam(getTeamBySlug('la-jolla')!)).toBe(getEloBoard('socal'));
+    expect(getEloBoardForTeam(getTeamBySlug('mitty')!)).toBe(getEloBoard('norcal'));
+    expect(getEloBoard('socal').board.id).toBe('elo-rating-socal');
   });
 });

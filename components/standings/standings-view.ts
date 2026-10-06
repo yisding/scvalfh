@@ -10,10 +10,20 @@
  *
  * Everything it decides is a by-law, not a preference:
  *
- *  - Order and points are the league's (3 for a win, 1 for a tie in all five) — lib/standings has
- *    already ranked the rows, so this module never re-sorts them. The EAL uses its points only to
- *    decide its title and publishes no standings (`rules.orderScope: 'title'`); the site orders its
- *    table by the same points and says so.
+ *  - Order and points are the league's (3 for a win, 1 for a tie in all five NorCal leagues) —
+ *    lib/standings has already ranked the rows, so this module never re-sorts them. The EAL uses its
+ *    points only to decide its title and publishes no standings (`rules.orderScope: 'title'`); the
+ *    site orders its table by the same points and says so. The Sunset and the three San Diego
+ *    leagues publish no points rule and no standings at all (`orderScope: 'site'`, DESIGN-socal
+ *    §2.1.7): the order is this site's own 3-1-0 points, and every sentence here says exactly that,
+ *    never that a league rule requires it.
+ *  - A league with no fixed schedule (`gamesPerTeam` null: the Sunset, whose ten teams meet 0, 1 or
+ *    2 times) has no "of N", so no LEFT or MAX column and no sentence explaining them.
+ *  - A league with no postseason (`postseason.kind` 'no-postseason': the Sunset, CIF-SS Blue Book
+ *    Bylaws 2011.1 and 3500.2) draws no status band and no ladder line; its card says why, from
+ *    config. A league in its section's own playoffs ('section-playoffs': the San Diego Section,
+ *    Green Book Bylaw 2000.1) shows one rung that a league place decides (1st: the designated
+ *    champion's play-in) and says the rest is the Section's selection, never a projected seed.
  *  - A league with no schedule document (`official.mode: 'none'`, the EAL) gets no official
  *    schedule link, and its missing results are the past games MaxPreps marks as league games with
  *    no counted result: no sentence calls them "official".
@@ -40,7 +50,14 @@ import {
   type DivisionConfig,
   type LeagueConfig,
 } from '../../lib/leagues';
-import { outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend } from '../../lib/standings';
+import {
+  crossCheckSkipReason,
+  outcomesFor,
+  playoffOutcomeLabel,
+  statusBadge,
+  statusLegend,
+  unevenGamesSentence,
+} from '../../lib/standings';
 import type {
   CrossCheckRow,
   DivisionId,
@@ -147,6 +164,21 @@ export interface DivisionView {
   statusGroups: StatusGroup[];
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
   statusHeading: string;
+  /**
+   * The band's lead sentence, from config: the San Diego Section's `qualificationLine` (who the Section
+   * places, and the one place a league table decides). null for every other kind.
+   */
+  statusIntro: string | null;
+  /**
+   * A league with no postseason (the Sunset): the band is replaced by this note (`postseason.note`) and
+   * its source link; null for every other league, which draws its band.
+   */
+  noPostseason: { note: string; sourceLabel: string; sourceUrl: string } | null;
+  /**
+   * The league has a fixed number of league games per team (`gamesPerTeam` set): GP reads "6/12" and
+   * LEFT and MAX are shown. false for the Sunset: GP is the bare count and LEFT and MAX are not drawn.
+   */
+  fixedSchedule: boolean;
   /** Why a ladder line is not settled, when a shared place straddles two rungs. */
   statusCaveat: string | null;
   /**
@@ -188,7 +220,10 @@ export interface DivisionView {
    * (`rankRuleText`, from config).
    */
   rankRule: string;
-  sourceUrl: string;
+  /** MaxPreps' table for this division; null when MaxPreps publishes none (the San Diego Section's Valley). */
+  sourceUrl: string | null;
+  /** Why there is no MaxPreps table to link or compare (`crossCheckSkipReason`), or null. */
+  sourceSkipped: string | null;
   throughDate: string | null;
   leagueFinals: number;
   pendingLeagueGames: number;
@@ -227,10 +262,17 @@ export function officialScheduleLabel(source: OfficialSourceId): string {
   return `Official schedule (${officialSourceFormat(source)})`;
 }
 
+/** `3-1-0`: the league's points for a win, a tie and a loss, from config (never typed into copy). */
+export function pointsWords(league: LeagueConfig): string {
+  const { win, tie, loss } = league.rules.points;
+  return `${win}-${tie}-${loss}`;
+}
+
 /**
  * `SCVAL ranks by points (Art. VI §2), and so do we.` — from the league's citations. A league that
  * uses points only for its title (`orderScope: 'title'`, the EAL) publishes no standings, so the
- * sentence says the order is the site's.
+ * sentence says the order is the site's. A league with no points rule at all (`'site'`: the Sunset and
+ * the San Diego leagues) gets the site's own points, said as the site's, never as a league rule.
  */
 export function rankRuleText(league: LeagueConfig): string {
   const { shortName: short } = league;
@@ -240,6 +282,8 @@ export function rankRuleText(league: LeagueConfig): string {
       return `${short} ranks by points (${cite}), and so do we.`;
     case 'title':
       return `${short} decides its title on points (${cite}) and publishes no standings; this site orders the whole table by the same points.`;
+    case 'site':
+      return `The order is this site’s ${pointsWords(league)} points; no ${short} rule orders the table.`;
   }
 }
 
@@ -255,21 +299,31 @@ function orderLegendText(league: LeagueConfig): string {
     }
     case 'title':
       return `This order is our computation from published results, not a league ruling: ${short} publishes no standings.`;
+    case 'site':
+      return `This order is our computation from published results, not a league ruling: ${short} publishes no standings and no points rule, so the order is this site’s ${pointsWords(league)} points.`;
   }
 }
 
-/** The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from. */
+/**
+ * The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from:
+ * MaxPreps' league flag (the EAL, the Sunset: 'contest-type'), or every game between two division members
+ * on MaxPreps' schedules (the San Diego leagues: 'membership', whose flag misses many league games).
+ */
 function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
-  return official.mode === 'none'
-    ? `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`
-    : `Scheduled per ${league.shortName}`;
+  if (official.mode !== 'none') return `Scheduled per ${league.shortName}`;
+  return league.rules.classification === 'membership'
+    ? `League games are every game between two division members on MaxPreps’ schedules (${league.shortName} publishes no schedule)`
+    : `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`;
 }
 
-/** The intro of the missing-results list, by whether the league has a schedule document. */
-function missingIntroText(league: LeagueConfig, official: DivisionConfig['official']): string {
-  return official.mode === 'none'
-    ? `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`
-    : `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
+/** The intro of the missing-results list, by whether the league has a schedule document, and by its classification. */
+function missingIntroText(league: LeagueConfig, official: DivisionConfig['official'], label: string): string {
+  if (official.mode !== 'none') {
+    return `On ${league.name}’s official schedule for a date that has passed, with no counted result yet:`;
+  }
+  return league.rules.classification === 'membership'
+    ? `Games between two ${label} teams on MaxPreps’ schedules, dated before today, with no counted result yet:`
+    : `Marked by MaxPreps as ${league.shortName} league games, dated before today, with no counted result yet:`;
 }
 
 /**
@@ -293,7 +347,9 @@ export function backfillFootnoteText(n: number): string {
 /**
  * The postseason block's heading and link, from the league's postseason kind (no CCS for NCS or NS).
  * An unbracketed tournament (the EAL's Super Regional) has no bracket page: it links its card on
- * /playoffs.
+ * /playoffs, as do the two Southern California kinds (the Sunset's card says there are no playoffs; a
+ * San Diego league's card sits in the Section's block). A 'no-postseason' league draws no band, so its
+ * heading is only the card's link words.
  */
 function postseasonLinks(league: LeagueConfig): { heading: string; href: string; linkText: string } {
   const ps = league.postseason;
@@ -304,6 +360,10 @@ function postseasonLinks(league: LeagueConfig): { heading: string; href: string;
       return { heading: `${ps.name}, as things stand`, href: `/playoffs#${league.id}`, linkText: 'Postseason' };
     case 'ccs-ladder':
       return { heading: 'CCS qualifying, as things stand', href: `/playoffs#${league.id}`, linkText: 'Playoff picture' };
+    case 'no-postseason':
+      return { heading: 'Postseason', href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+    case 'section-playoffs':
+      return { heading: `${ps.name}: the league route, as things stand`, href: `/playoffs#${league.id}`, linkText: ps.name };
   }
 }
 
@@ -316,6 +376,10 @@ function postseasonCitation(league: LeagueConfig): string {
     case 'league-tournament':
       return ps.citations.format;
     case 'unbracketed-tournament':
+      return ps.citations.qualification;
+    case 'no-postseason':
+      return ps.citations.noPlayoffs;
+    case 'section-playoffs':
       return ps.citations.qualification;
   }
 }
@@ -390,8 +454,10 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   // rungs at once; grouping on `playoffStatus` alone would make a rung (the play-in, say) vanish.
   const statusGroups: StatusGroup[] = [];
   const divisionStatuses = new Set(ladderFor(input.division).map((r) => r.status));
+  // A league with no postseason draws no band (its card says why), so it groups nothing.
+  const noPostseason = league.postseason.kind === 'no-postseason';
   for (const status of statusesOf(league.id)) {
-    if (!divisionStatuses.has(status)) continue;
+    if (noPostseason || !divisionStatuses.has(status)) continue;
     const teams = ranked
       .filter((r) => outcomesFor(r.standing).includes(status))
       .map((r) => ({
@@ -514,6 +580,16 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     ladderLineLabel: line?.label ?? null,
     statusGroups,
     statusHeading: links.heading,
+    statusIntro: league.postseason.kind === 'section-playoffs' ? league.postseason.qualificationLine : null,
+    noPostseason:
+      league.postseason.kind === 'no-postseason'
+        ? {
+            note: league.postseason.note,
+            sourceLabel: league.postseason.sourceLabel,
+            sourceUrl: league.postseason.sourceUrl,
+          }
+        : null,
+    fixedSchedule: config.gamesPerTeam !== null,
     statusCaveat,
     playoffsHref: links.href,
     playoffsLinkText: links.linkText,
@@ -522,7 +598,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     comparison,
     missing,
     postponed,
-    missingIntro: missingIntroText(league, config.official),
+    missingIntro: missingIntroText(league, config.official, label),
     missingBanner:
       missing.length > 0 ? missingBannerText(missing.length, { official: config.official.mode !== 'none' }) : null,
     missingId: `missing-${input.division}`,
@@ -535,6 +611,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     scheduledPer: scheduledPerText(league, config.official),
     rankRule: rankRuleText(league),
     sourceUrl: leagueStandingsUrl(input.division),
+    sourceSkipped: crossCheckSkipReason(input.division),
     throughDate: input.throughDate,
     leagueFinals: input.leagueFinals,
     pendingLeagueGames: input.pendingLeagueGames,
@@ -612,22 +689,38 @@ export function rulesFootnote(leagueId: LeagueId): string {
   return `PTS: ${citations.points}. Ties: ${ties}${cites ? ` (${cites})` : ''}.`;
 }
 
+/** The uneven-GP footnote's last sentence: whose order the table is, by `rules.orderScope`. */
+function unevenOrderSentence(league: LeagueConfig): string {
+  switch (league.rules.orderScope) {
+    case 'table':
+      return `The order is points, as ${league.shortName} rules require.`;
+    case 'title':
+      return `The order is points, which ${league.shortName} uses to decide its title.`;
+    case 'site':
+      // Never "rules require": no Southern California league publishes a points rule (copy-rules).
+      return `The order is this site’s ${pointsWords(league)} points; no ${league.shortName} rule orders the table.`;
+  }
+}
+
 /**
  * The uneven-GP footnote (SPEC §10.3), or null when every team has played within one game of the
  * others. MCAL adds its incomplete-schedule rule; a league whose points decide only its title (EAL)
- * does not say its rules require the order.
+ * does not say its rules require the order, and a 'site' league says the order is the site's. A league
+ * with no fixed schedule (`scheduled` null: the Sunset) has no LEFT or MAX column, so its footnote
+ * explains neither; its first sentence is lib/standings.ts unevenGamesSentence's no-"of N" variant.
  */
 export function unevenGpFootnote(
   leagueId: LeagueId,
-  spread: { min: number; max: number; scheduled: number },
+  spread: { min: number; max: number; scheduled: number | null },
 ): string | null {
-  if (spread.max - spread.min < 2) return null;
+  const games = unevenGamesSentence(leagueId, spread);
+  if (games === null) return null;
   const league = getLeague(leagueId);
-  const base = `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. ${
-    league.rules.orderScope === 'title'
-      ? `The order is points, which ${league.shortName} uses to decide its title.`
-      : `The order is points, as ${league.shortName} rules require.`
-  }`;
+  const columns =
+    spread.scheduled === null
+      ? ''
+      : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them.';
+  const base = `${games}${columns} ${unevenOrderSentence(league)}`;
   const incomplete = league.rules.citations.incomplete;
   return incomplete
     ? `${base} If the season ends with games unplayed, ${incomplete}; we will show that order then.`

@@ -20,12 +20,40 @@
  *                          there is none) is drawn selected, with its aria-hidden ✓ shown, before
  *                          hydration. Never colour alone: fill + ring + the ✓.
  *
+ * The region half (DESIGN-socal §2.4), keyed off `data-region` (stamped `"socal"` only; absent =
+ * NorCal):
+ *
+ * - `[data-region-scope="socal"]`  hidden unless the region is SoCal — but only once JS has run
+ *                          (`html[data-js]`): with JS off both regions render, NorCal first, so the
+ *                          DOM order is the reading order and every link works (CLS 0).
+ * - `[data-region-scope="norcal"]` hidden when the region is SoCal (only JS can stamp that).
+ * - `[data-region-option="<region>"]` the region switcher's two buttons: the effective region's is
+ *                          drawn selected (the same accent wash, ink ring and ✓ as a chip) before
+ *                          hydration.
+ * - a deep link opens its region: a region block that IS the `:target` (`/standings#socal`) or holds
+ *                          it (`/leaders#elo-rating-socal`) is shown whatever the stamp says.
+ *                          `display:block`, so it is meant for block wrappers: a region-scoped flex or
+ *                          grid list must not hold an anchor target (wrap it in a div that does).
+ * - the /teams lift: while the finder on /teams is searching (`search[data-searching]`, a sibling of
+ *                          `#team-list`, components/search/TeamFinder.tsx), both regions' team lists
+ *                          show, so a match the live region announces is never a hidden tile
+ *                          (design-review UI §6). Scoped to `[data-teams-page]` so the home finder,
+ *                          which also sets `data-searching`, lifts nothing. Placed after the hide rules
+ *                          and more specific than both (an id), so it needs no `!important`.
+ *
  * No league hue anywhere (DESIGN §6.4): every selected state is the one accent wash.
  * `display: none` also removes a hidden panel from the accessibility tree; DOM order stays the
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
 
 const ID = /^[a-z0-9-]+$/;
+
+/**
+ * The two regions, spelled out: this module is imported by the root layout only, but it mirrors the
+ * prefs script, which stamps `data-region="socal"` and nothing for NorCal (STAMPLESS_REGION).
+ */
+const SOCAL = 'socal';
+const NORCAL = 'norcal';
 
 /** The selected chip: accent-wash fill, accent ink, weight 600, a 1.5 px ink ring. */
 const SELECTED =
@@ -56,5 +84,17 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   }
   rules.push(`html:not([data-league]) [data-league-option="all"]{${SELECTED}}`);
   rules.push('html:not([data-league]) [data-league-option="all"] .sx-chip-check{display:inline}');
+  // The region half (DESIGN-socal §2.4), verbatim from the design.
+  rules.push(`html[data-js]:not([data-region="${SOCAL}"]) [data-region-scope="${SOCAL}"]{display:none}`);
+  rules.push(`html[data-region="${SOCAL}"] [data-region-scope="${NORCAL}"]{display:none}`);
+  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"]{${SELECTED}}`);
+  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{display:inline}`);
+  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
+  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{display:inline}`);
+  rules.push('[data-region-scope]:has(:target){display:block!important}');
+  // Not in the design's list: `:has()` never matches the element itself, so a link to the region
+  // wrapper's own id (`/standings#socal`, the jump links) needs its own rule to open that region.
+  rules.push('[data-region-scope]:target{display:block!important}');
+  rules.push('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
   return rules.join('\n');
 }

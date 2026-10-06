@@ -18,16 +18,18 @@
  *   8. budget: planBackfill picks the few team pages that cover what the scoreboard did not (cap 8).
  *  10. supersede and carry-forward.
  *
- * A level si.com score between two members of a league that decides a level varsity game on 1 v 1s (the EAL,
- * `rules.leagueOvertime === 'shootout'`) is never written by rules 3, 4a or 4b: si.com does not say who won
- * the 1 v 1s. Rule 3 records it as skipped; a decisive si.com score is used as for any league.
+ * A level si.com score between two teams of a section that ends a level varsity game with a shootout
+ * (SectionConfig.shootout: the Northern Section's EAL, 1 v 1s; the San Diego Section, a shootout, across its
+ * three conferences) is never written by rules 3, 4a or 4b: si.com does not say who won the shootout. Rule 3
+ * records it as skipped; a decisive si.com score is used as for any league. Rule 4c stays with the leagues whose
+ * level games stand (`rules.leagueOvertime === 'none'`: PCAL, MCAL and the Sunset).
  *
  * Every rule requires BOTH sides resolved via 'team-id' or 'school-id' (never 'name'), a si.com status
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { dayDiff, monthDay, shiftDateKey, toLocalTimestamp } from './format';
-import { getLeague, leagueOfDivision, type LeagueConfig } from './leagues';
+import { dayDiff, monthDay, shiftDateKey, shootoutPhrases, toLocalTimestamp } from './format';
+import { LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from './leagues';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
@@ -292,19 +294,31 @@ function sameLeagueOf(g: Pick<Game, 'home' | 'away'>): string | null {
 }
 
 /**
- * The league `g`'s two sides both belong to when it decides a level varsity game on 1 v 1s
- * (`rules.leagueOvertime === 'shootout'`, the EAL), else null.
+ * The section `g`'s two sides are both teams of when it ends a level varsity game with a shootout
+ * (SectionConfig.shootout set: the Northern Section, the San Diego Section), else null. Keyed on the section
+ * as lib/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too.
  */
-function shootoutLeagueOf(g: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
-  const league = sameLeagueOf(g);
-  if (league === null) return null;
-  const config = getLeague(league);
-  return config.rules.leagueOvertime === 'shootout' ? config : null;
+function shootoutSectionOf(g: Pick<Game, 'home' | 'away'>): SectionConfig | null {
+  const h = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
+  const a = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
+  if (!h || !a || h.section !== a.section) return null;
+  const section = getSection(h.section);
+  return section.shootout ? section : null;
 }
 
-/** A level si.com score in a 1 v 1 league says nothing about who won, so no rule writes it. */
+/**
+ * Who the D24 skip note names: the section's one covered league when it has just one ('a varsity EAL game',
+ * as the note always read), else the section ('a varsity San Diego Section game': its rule covers its three
+ * conferences alike). components/ui/describe-game.ts shootoutGroupName is the same rule for the game page.
+ */
+function shootoutGroupName(section: SectionConfig): string {
+  const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+  return leagues.length === 1 ? leagues[0].shortName : section.name;
+}
+
+/** A level si.com score in a shootout section says nothing about who won, so no rule writes it. */
 function isUnusableLevelScore(g: Pick<Game, 'home' | 'away'>, s: { home: number; away: number }): boolean {
-  return s.home === s.away && shootoutLeagueOf(g) !== null;
+  return s.home === s.away && shootoutSectionOf(g) !== null;
 }
 
 /** 4b: matched its fixture only in pass 3, more than 7 days from the official date. */
@@ -313,7 +327,23 @@ function offScheduleDate(g: Game): string | null {
   return Math.abs(dayDiff(g.official.scheduledDate, g.dateKey)) > OFF_SCHEDULE_DAYS ? g.official.scheduledDate : null;
 }
 
-/** 4c: a 0-0 final with both results T, between two members of a league whose league games have no overtime. */
+/**
+ * Rule 4c's published note. PCAL and MCAL have a written rule (no regular-season overtime), so their note says
+ * the league's games have none. The Sunset keeps rule 4c (`leagueOvertime` 'none': a level game is recorded
+ * as reported) but publishes no rule at all, and its games HAVE been decided in overtime (Great Oak 2-1
+ * Temecula Valley, Oct 2), so its note claims no rule: only that si.com has a decided final the same day. A
+ * 'site' league (orderScope, lib/leagues.ts) is exactly one that publishes no rules.
+ */
+function phantomTieNote(short: string, noPublishedRules: boolean): string {
+  return noPublishedRules
+    ? `MaxPreps shows a 0-0 tie, but si.com has a decided final the same day and no published ${short} rule says a game ends level, so si.com’s score is published.`
+    : `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a decided final, so si.com’s score is published.`;
+}
+
+/**
+ * 4c: a 0-0 final with both results T, between two members of a league whose level games stand
+ * (`leagueOvertime` 'none': PCAL and MCAL by rule, the Sunset by the absence of one).
+ */
 function isPhantomTieCandidate(g: Game): boolean {
   if (g.status !== 'final' || g.home.score !== 0 || g.away.score !== 0) return false;
   if (g.home.result !== 'T' || g.away.result !== 'T') return false;
@@ -552,7 +582,7 @@ function overrideGame(
     status: 'final',
     ...(rule === 'score-pending' ? { otPeriods: 0, isOt: false, isForfeit: false, forfeitBy: null, decider: 'REG' as const } : {}),
     ...(rule !== 'score-pending' && g.decider === null ? { decider: 'REG' as const } : {}),
-    // 'SO' with no tally is MaxPreps' level score flagged W/L (a 1 v 1 win). si.com's decisive score
+    // 'SO' with no tally is MaxPreps' level score flagged W/L (a shootout win). si.com's decisive score
     // says the game was decided in play, so the decider is MaxPreps' overtime count, as normalize sets it.
     ...(rule !== 'score-pending' && g.decider === 'SO' && score.home !== score.away
       ? { decider: overtimeDecider(g.otPeriods), shootout: null }
@@ -658,10 +688,13 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         }
         const s = scoreFor(pick.row, g.home.slug, g.away.slug);
         if (!s || !pick.row.url) return g;
-        const shootout = shootoutLeagueOf(g);
-        if (shootout && s.home === s.away) {
+        const shootout = shootoutSectionOf(g);
+        if (shootout?.shootout && s.home === s.away) {
+          // '…a varsity EAL game is decided on 1 v 1s and si.com does not say who won them…' (unchanged for the
+          // EAL); '…a varsity San Diego Section game is decided by a shootout and si.com does not say who won it…'.
+          const { decidedOn, pronoun } = shootoutPhrases(shootout.shootout.words);
           skipped.push(
-            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootout.shortName} game is decided on 1 v 1s and si.com does not say who won them, so it is not used.`),
+            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootoutGroupName(shootout)} game is ${decidedOn} and si.com does not say who won ${pronoun}, so it is not used.`),
           );
           return g;
         }
@@ -721,7 +754,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         if (pick.kind === 'one') {
           const s = scoreFor(pick.row, g.home.slug, g.away.slug);
           if (s && pick.row.url && s.home !== s.away) {
-            const short = getLeague(sameLeagueOf(g)!).shortName;
+            const league = getLeague(sameLeagueOf(g)!);
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
             return overrideGame(
@@ -729,7 +762,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
               pick.row,
               s,
               'phantom-tie',
-              `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a decided final, so si.com’s score is published.`,
+              phantomTieNote(league.shortName, league.rules.orderScope === 'site'),
             );
           }
         }

@@ -1,13 +1,13 @@
 /**
- * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all five leagues
- * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 49-team registry.
+ * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all nine leagues
+ * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 99-team registry.
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
  * same split as lib/snapshot-schema.ts / lib/data.ts.
  *
  * Invariants:
- *   1. exactly one team per registry team (49), unique slugs, each with its registry id and division
+ *   1. exactly one team per registry team (99), unique slugs, each with its registry id and division
  *   2. grade and its label are set together or null together, and agree
  *   3. position is exactly positions joined with ", " (what MaxPreps' table prints)
  *   4. height and heightInches are set together or null together
@@ -24,10 +24,10 @@ import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
-/** Rosters cover every registry team, all five leagues: one entry per team of TEAMS. */
+/** Rosters cover every registry team, all nine leagues: one entry per team of TEAMS. */
 const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d.id));
-/** How many teams a rosters file holds: TEAMS.length (49). */
+/** How many teams a rosters file holds: TEAMS.length (99). */
 export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
 
 const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');

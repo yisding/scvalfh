@@ -21,8 +21,8 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { byDateThenId } from './format';
-import { getLeague, type DataQualityConfig } from './leagues';
+import { byDateThenId, shootoutPhrases } from './format';
+import { getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,
@@ -188,7 +188,7 @@ function scoreLine(row: ScheduleRow): string {
   return row.contest.teams.map((t) => `${t.name ?? 'TBA'} ${t.score ?? '–'}`).join(', ');
 }
 
-/** A level score whose result flags are complementary W and L (either order): a 1 v 1 win's shape. */
+/** A level score whose result flags are complementary W and L (either order): a shootout win's shape (an EAL 1 v 1 win). */
 function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
   return (
     home.score !== null &&
@@ -200,19 +200,19 @@ function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
 /**
  * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
  * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
- * disagree on the score. One plain sentence, or undefined. In a shootout league (EAL) a level score
- * flagged W/L on a final that is not a forfeit is how MaxPreps records a 1 v 1 win, so that one shape
- * is not a contradiction there (the caller passes `shootoutLeague` false for a forfeit); the
- * feed-disagreement note still applies.
+ * disagree on the score. One plain sentence, or undefined. Between two teams of a shootout section (the
+ * Northern Section's EAL, the San Diego Section) a level score flagged W/L on a final that is not a
+ * forfeit is how MaxPreps records a shootout win, so that one shape is not a contradiction there (the
+ * caller passes `shootoutSection` false for a forfeit); the feed-disagreement note still applies.
  */
 function resultConflictOf(
   home: GameSide,
   away: GameSide,
   copies: readonly ScheduleRow[],
-  opts: { shootoutLeague: boolean },
+  opts: { shootoutSection: boolean },
 ): string | undefined {
   const notes: string[] = [];
-  if (home.score !== null && away.score !== null && !(opts.shootoutLeague && isLevelWithWinner(home, away))) {
+  if (home.score !== null && away.score !== null && !(opts.shootoutSection && isLevelWithWinner(home, away))) {
     const wrong = [
       { side: home, own: home.score, other: away.score },
       { side: away, own: away.score, other: home.score },
@@ -392,23 +392,30 @@ function toGame(
   const away = sideOf(second, second.name, keepScores ? awayScore : null);
 
   // --- 7 + leagueDivision: set only when BOTH sides are registry members of the same division.
-  // Resolved before the result check: whether a level W/L final is a 1 v 1 win depends on the league.
+  // Resolved before the result check: whether a level W/L final is a shootout win depends on the section.
   const homeTeam = resolveTeam(first.teamId);
   const awayTeam = resolveTeam(second.teamId);
   const leagueDivision: DivisionId | null =
     homeTeam && awayTeam && homeTeam.division === awayTeam.division ? homeTeam.division : null;
-  // Both sides members of one league that decides a level game on 1 v 1s (the EAL).
-  const sharedLeague =
-    homeTeam && awayTeam && homeTeam.league === awayTeam.league ? getLeague(homeTeam.league) : null;
-  const shootoutLeague = sharedLeague?.rules.leagueOvertime === 'shootout';
+  // Both sides teams of one section that ends a level varsity game with a shootout (SectionConfig.shootout):
+  // the Northern Section (the EAL's 1 v 1s, NS Guidelines §VII.E.4) and the San Diego Section (SDFHOA 2026
+  // Mercy & Overtime Procedures). Keyed on the SECTION, not on one shared league, because the San Diego rule
+  // covers every varsity game in the Section: of the eight level W/L finals in the 2026-10-06 inventory,
+  // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
+  // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
+  // level finals stay ties or contradictions. lib/snapshot-schema.ts checks the same rule.
+  const shootoutSection: SectionConfig | null =
+    homeTeam && awayTeam && homeTeam.section === awayTeam.section && getSection(homeTeam.section).shootout !== null
+      ? getSection(homeTeam.section)
+      : null;
 
   const isForfeit = c.teams.some((t) => t.isForfeit);
 
-  // --- D2 rule 4a evidence, on finals only. A forfeit is never a 1 v 1 win (D7.1), so its level
-  // score flagged W/L stays a contradiction even in a shootout league.
+  // --- D2 rule 4a evidence, on finals only. A forfeit is never a shootout win (D7.1), so its level
+  // score flagged W/L stays a contradiction even in a shootout section.
   const resultConflict =
     status === 'final'
-      ? resultConflictOf(home, away, copies, { shootoutLeague: shootoutLeague && !isForfeit })
+      ? resultConflictOf(home, away, copies, { shootoutSection: shootoutSection !== null && !isForfeit })
       : undefined;
   if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
 
@@ -424,18 +431,24 @@ function toGame(
   let decider: Decider | null = null;
   if (status === 'final') {
     // SCVAL By-Laws Article IV: one 7-minute sudden-victory period, then the game ends in a tie.
-    // No SCVAL, BVAL, PCAL or MCAL league game has a shootout (`rules.leagueOvertime` is
-    // 'sudden-victory' or 'none'), so none of them produces 'SO'. The EAL decides a level varsity
-    // game on 1 v 1s (NS Guidelines §VII.E.4): a level final MaxPreps flags W/L between two EAL
-    // teams is a 1 v 1 win, 'SO' with no tally stored. Otherwise the decider is MaxPreps' overtime
-    // count as recorded (never clamped: 3 periods stays '2OT'; the view adds a caveat).
+    // No CCS, NCS or Southern Section game has a shootout (their sections' `shootout` is null), so
+    // none of them produces 'SO'. The Northern Section decides a level varsity game on 1 v 1s (NS
+    // Guidelines §VII.E.4) and the San Diego Section by a shootout (SDFHOA 2026 procedures): a level
+    // final MaxPreps flags W/L between two teams of one of those sections is a shootout win, 'SO'
+    // with no tally stored. Otherwise the decider is MaxPreps' overtime count as recorded (never
+    // clamped: 3 periods stays '2OT'; the view adds a caveat).
     if (isForfeit) decider = 'FORFEIT';
-    else if (shootoutLeague && isLevelWithWinner(home, away)) decider = 'SO';
+    else if (shootoutSection !== null && isLevelWithWinner(home, away)) decider = 'SO';
     else decider = otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
-    if (!isForfeit && shootoutLeague && home.score === away.score && decider !== 'SO') {
-      warnings.push(
-        `contest ${c.contestId}: a level ${sharedLeague?.shortName} final with no 1 v 1 winner flagged`,
-      );
+    if (!isForfeit && shootoutSection && home.score === away.score && decider !== 'SO') {
+      // Named by the league the pair shares (the EAL's warning, as it always read), else by the section:
+      // a San Diego pair may span two conferences.
+      const where =
+        homeTeam && awayTeam && homeTeam.league === awayTeam.league
+          ? getLeague(homeTeam.league).shortName
+          : shootoutSection.name;
+      const { noun } = shootoutPhrases(shootoutSection.shootout?.words ?? '');
+      warnings.push(`contest ${c.contestId}: a level ${where} final with no ${noun} winner flagged`);
     }
   }
 

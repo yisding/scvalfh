@@ -1,5 +1,8 @@
+import Link from 'next/link';
+
 import { ordinal } from '../../lib/format';
 import { leagueOfDivision } from '../../lib/leagues';
+import ExternalLink from '../ui/ExternalLink';
 import LeagueHealthNote from '../ui/LeagueHealthNote';
 import SectionHeader from '../ui/SectionHeader';
 import StandingsTable, { collectStandingsNotes, type StandingsTableProps } from '../ui/StandingsTable';
@@ -47,10 +50,12 @@ export function DivisionStandings({
     gdDomain: view.gdDomain,
     caption: view.caption,
     footnotes: view.footnotes,
-    sourceUrl: view.sourceUrl,
+    ...(view.sourceUrl ? { sourceUrl: view.sourceUrl } : {}),
     notes: 'none',
     context: view.context,
-    columns: ['gp', 'left', 'max'],
+    // LEFT and MAX need a fixed number of league games; the Sunset has none (gamesPerTeam null), so its
+    // table shows GP as a bare count and neither column (DESIGN-socal §2.1.7).
+    columns: view.fixedSchedule ? ['gp', 'left', 'max'] : ['gp'],
     // ⚑ marks a row only in a `full` division (SPEC §5.8): elsewhere MaxPreps differs for a known
     // reason, which the Notes block states instead of an alarm on every row.
     flaggedSlugs: view.comparison.flag ? view.mismatches.map((m) => m.slug) : [],
@@ -99,28 +104,54 @@ export function DivisionStandings({
           missing={view.missing}
           postponed={view.postponed}
           footnotes={view.footnotes}
-          sourceUrl={view.sourceUrl}
+          {...(view.sourceUrl ? { sourceUrl: view.sourceUrl } : {})}
+          sourceSkipped={view.sourceSkipped}
           officialSchedule={view.officialSchedule}
           scheduledPer={view.scheduledPer}
           rankRule={view.rankRule}
         />
-        <PlayoffStatusBand
-          divisionLabel={view.label}
-          heading={view.statusHeading}
-          href={view.playoffsHref}
-          linkText={view.playoffsLinkText}
-          groups={view.statusGroups}
-          caveat={view.statusCaveat}
-          unrankedTeams={view.unrankedTeams}
-          // A band with no ladder line (the unbracketed EAL) has nothing to align to the Notes
-          // card's bottom edge, so it keeps its own height rather than stretching to blank space.
-          className={[
-            'sx-card flex flex-col p-5 md:p-6',
-            view.ladderLineLabel === null ? 'lg:self-start' : null,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        />
+        {view.noPostseason ? (
+          // No postseason (the Sunset, CIF-SS Blue Book 2011.1 and 3500.2): no band, no ladder, and no
+          // place leads anywhere, so the card says that, from config, with its source.
+          <div className="sx-card flex flex-col p-5 md:p-6 lg:self-start">
+            <h3 className="m-0 text-lead text-ink">
+              <span className="sr-only">{view.label}: </span>
+              {view.statusHeading}
+            </h3>
+            <p className="mt-2 mb-0 max-w-prose text-meta text-ink-2">{view.noPostseason.note}</p>
+            <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-4">
+              <ExternalLink href={view.noPostseason.sourceUrl} className="sx-action gap-1 text-meta font-medium">
+                {view.noPostseason.sourceLabel}
+              </ExternalLink>
+              <Link
+                href={view.playoffsHref}
+                prefetch={false}
+                className="sx-action text-meta font-medium text-accent hover:underline"
+              >
+                {view.playoffsLinkText}
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <PlayoffStatusBand
+            divisionLabel={view.label}
+            heading={view.statusHeading}
+            intro={view.statusIntro}
+            href={view.playoffsHref}
+            linkText={view.playoffsLinkText}
+            groups={view.statusGroups}
+            caveat={view.statusCaveat}
+            unrankedTeams={view.unrankedTeams}
+            // A band with no ladder line (the unbracketed EAL) has nothing to align to the Notes
+            // card's bottom edge, so it keeps its own height rather than stretching to blank space.
+            className={[
+              'sx-card flex flex-col p-5 md:p-6',
+              view.ladderLineLabel === null ? 'lg:self-start' : null,
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          />
+        )}
       </div>
     </section>
   );

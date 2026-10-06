@@ -26,8 +26,18 @@
  * member(s)". The EAL's pages (`standings/eal`, `schedule/eal`, its team pages and the `/playoffs`
  * card) print no seed word ("top seed", "No. 2 seed", "the sixth seed", "#1 seed", "seeded
  * third"), in their text or their attributes: its seeding is quoted, never applied.
- * On every page: no claim that rosters or player stats are SCVAL-only (both now cover all five
- * leagues), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
+ * The same text of every page never says "Sunset League" in a sentence without "all-sports" (the
+ * Sunset is a field hockey grouping of ten Southern Section schools, not the all-sports league) and
+ * never "Sunset school(s)" or "Sunset member(s)" (DESIGN-socal §2.4).
+ * The SoCal leagues are non-CCS leagues: their pages' `<main>` get the same bans (no "automatic
+ * qualifier", no "at-large"; the San Diego copy says "by selection" / "placed by the Section"). Every
+ * league with no bracket or page of its own has a `<div id="<league>">` card on `/playoffs`: the EAL
+ * ('unbracketed-tournament'), City, North County and Metro ('section-playoffs') and the Sunset
+ * ('no-postseason'); each card gets the non-CCS bans, and it and its league's pages the seed-word
+ * ban. The pages and card of a league whose table order is this site's own (`orderScope 'site'`:
+ * every SoCal league) never say "rules require".
+ * On every page: no claim that rosters or player stats are SCVAL-only (both now cover every
+ * league), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
  * no affiliation's `basis` and no fragment of a source's verbatim `quote`, whole or excerpted, beyond
  * the public names scripts/public-terms.ts lists (`affiliationLeaks` in scripts/copy-rules.ts, which
@@ -54,10 +64,11 @@
  *  - an unavailable league's section has no table and names no champion, winner or award, so
  *    nothing is shown for it that we could not read from an official source;
  *  - an available league's tables are the data's: every varsity row's league record is on the page.
- * `leaders.html` (the site-wide leaderboards):
- *  - has `id="schools"`, then `id="players"`, and the anchor of every board the view model builds;
+ * `leaders.html` (the site-wide leaderboards, one half per region):
+ *  - has `id="schools"`, then `id="players"` (SoCal: `schools-socal`, `players-socal`), and the
+ *    anchor of every board the view model builds;
  *  - names every team that has entered no player stats, so no player board reads as if it covered
- *    all 49 teams.
+ *    every team.
  * And: each `playoffs/<league>.html` names its league's section (`playoffs/mcal.html`: "North Coast
  * Section"); `standings.html` keeps the old anchors `id="de-anza"` and `id="el-camino"`.
  *
@@ -75,18 +86,23 @@ import { getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import {
   LEAGUES,
+  NO_POSTSEASON_LEAGUE_IDS,
+  SECTION_PLAYOFFS_LEAGUE_IDS,
   TOURNAMENT_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
   divisionLabel,
   getSection,
   isSingleDivision,
+  regionOf,
 } from '../lib/leagues';
 import type { LeagueId } from '../lib/types';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,
+  RULES_REQUIRE_CLAIM,
   SCVAL_ONLY_CLAIM,
   SEED_CLAIM,
+  SUNSET_SCHOOL_CLAIM,
   affiliationLeaks,
   around,
   attributeText,
@@ -96,6 +112,7 @@ import {
   mainElement,
   nonMemberSectionClaims,
   sectionById,
+  sunsetLeagueClaims,
   umpireOfficialClaims,
   visibleText,
   withoutLink,
@@ -188,6 +205,11 @@ for (const file of files) {
     for (const c of nonMemberSectionClaims(text)) fail(file, `calls Davis or Bella Vista a Northern Section school${where} — “${c}”`);
     forbid(file, text, RED_BLUFF_STATUS_CLAIM, `says more about Red Bluff than "not fielding a varsity team in 2026"${where}`);
     forbid(file, text, EAL_SCHOOL_CLAIM, `says "EAL school(s)" or "EAL member(s)"${where} (the field hockey EAL is not the all-sports league; say "EAL teams")`);
+    // The Sunset (DESIGN-socal §2.4): a field hockey grouping of ten, not the all-sports Sunset League.
+    for (const c of sunsetLeagueClaims(text)) {
+      fail(file, `says "Sunset League" without setting it apart as the all-sports league${where} — “${c}”`);
+    }
+    forbid(file, text, SUNSET_SCHOOL_CLAIM, `says "Sunset school(s)" or "Sunset member(s)"${where} (say "Sunset teams")`);
   }
 }
 
@@ -229,18 +251,26 @@ for (const league of nonCcsLeagues) {
   if (existsSync(p) && !readFileSync(p, 'utf8').includes(section)) fail(file, `does not say "${section}"`);
 }
 
-// ---------------------------------------------------------------- the EAL: its /playoffs card, and no seed words
-// /playoffs stays the CCS page; an unbracketed league (EAL) gets a card there with its league id,
-// which the league chip and jump link target. The card is that league's copy, so it gets the
-// non-CCS bans; it, the league's own pages and its team pages get the seed-word ban (its seeding
-// criteria are quoted, never applied).
+// ---------------------------------------------------------------- the /playoffs cards, and no seed words
+// /playoffs keeps the CCS content in its NorCal block; every league with no bracket or page of its own
+// gets a card there with its league id, which the league chip, the nav (components/layout/
+// nav-targets.ts) and the jump link target: the EAL ('unbracketed-tournament'), the three San Diego
+// leagues ('section-playoffs': City, North County, Metro) and the Sunset ('no-postseason'). Each card
+// is that league's copy, so it gets the non-CCS bans; it, the league's own pages and its team pages get
+// the seed-word ban (the EAL's and the San Diego Section's seeding is quoted or described, never
+// applied; the Sunset has no playoffs to seed). "seeding meeting" and "power rankings" pass.
 const playoffsMain = existsSync(path.join(APP, 'playoffs.html'))
   ? mainOf('playoffs.html', readFileSync(path.join(APP, 'playoffs.html'), 'utf8'))
   : '';
 /** What a reader sees or is read out: the body text and the title, description and attribute text. */
 const readableText = (html: string): string => `${visibleText(html)}\n${attributeText(html)}`;
-let unbracketedPages = 0;
-for (const id of UNBRACKETED_LEAGUE_IDS) {
+const CARD_LEAGUE_IDS: readonly LeagueId[] = [
+  ...UNBRACKETED_LEAGUE_IDS,
+  ...SECTION_PLAYOFFS_LEAGUE_IDS,
+  ...NO_POSTSEASON_LEAGUE_IDS,
+];
+let cardLeaguePages = 0;
+for (const id of CARD_LEAGUE_IDS) {
   const card = elementById(playoffsMain, id, 'div');
   if (!card) fail('playoffs.html', `no <div id="${id}"> card (the /playoffs#${id} chip and jump link resolve to it)`);
   forbidCcs('playoffs.html', card, `the #${id} card`);
@@ -248,8 +278,25 @@ for (const id of UNBRACKETED_LEAGUE_IDS) {
   for (const file of leaguePages(id)) {
     const p = path.join(APP, file);
     if (!existsSync(p)) continue; // reported above, with the other non-CCS pages
-    forbid(file, readableText(readFileSync(p, 'utf8')), SEED_CLAIM, `a page of an unbracketed league (${id}) prints a seed word`);
-    unbracketedPages += 1;
+    forbid(file, readableText(readFileSync(p, 'utf8')), SEED_CLAIM, `a page of a ${id} league with no bracket of its own prints a seed word`);
+    cardLeaguePages += 1;
+  }
+}
+
+// ---------------------------------------------------------------- orderScope 'site': no "rules require"
+// The Sunset and the San Diego leagues publish no rule that orders their tables; this site orders them
+// by its own 3-1-0 points (DESIGN-socal §2.1.7). So none of their pages, nor their /playoffs card, may
+// say "rules require" (the order sentence of a league that does publish one: "as SCVAL rules require").
+const siteOrderedLeagues = LEAGUES.filter((l) => l.rules.orderScope === 'site');
+let siteOrderedPages = 0;
+for (const league of siteOrderedLeagues) {
+  const card = elementById(playoffsMain, league.id, 'div');
+  if (card) forbid('playoffs.html', readableText(card), RULES_REQUIRE_CLAIM, `the #${league.id} card says "rules require" (no ${league.shortName} rule orders the table)`);
+  for (const file of leaguePages(league.id)) {
+    const p = path.join(APP, file);
+    if (!existsSync(p)) continue; // reported above, with the other non-CCS pages
+    forbid(file, readableText(readFileSync(p, 'utf8')), RULES_REQUIRE_CLAIM, `says "rules require" on a page of ${league.shortName}, whose table order is this site's own`);
+    siteOrderedPages += 1;
   }
 }
 
@@ -274,26 +321,32 @@ if (!existsSync(historyPath)) {
     fail(file, 'not prerendered');
   } else {
     const main = mainOf(file, readFileSync(p, 'utf8'));
-    const view = buildLeadersView();
-    for (const id of ['players', 'schools', ...[...view.players, ...view.schools].map((b) => b.id)]) {
-      if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
-    }
-    // The Players section only: a team with no stats can still be named on a school board, which
-    // says nothing about its players. It follows the Schools section (DESIGN §23).
-    const players = sectionById(main, 'players');
-    const schools = sectionById(main, 'schools');
-    if (!players) fail(file, 'no <section id="players">');
-    if (!schools) fail(file, 'no <section id="schools">');
-    if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
-      fail(file, 'the Schools section does not come before the Players section (DESIGN §23)');
-    }
-    if (players) {
-      // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
-      const playersText = players.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
-      const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
-      for (const team of snapshot.teams) {
-        if (statSlugs.has(team.slug)) continue;
-        if (!playersText.includes(team.name)) fail(file, `${team.name} has no player stats, and the Players section does not say so`);
+    // One half per region (DESIGN-socal §2.4 id rule): NorCal keeps `#schools`, `#players` and the
+    // board ids, SoCal repeats them with the `-socal` suffix (the view model says which: playersId,
+    // schoolsId and each board's id).
+    for (const region of buildLeadersView().regions) {
+      for (const id of [region.playersId, region.schoolsId, ...[...region.players, ...region.schools].map((b) => b.id)]) {
+        if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
+      }
+      // The Players section only: a team with no stats can still be named on a school board, which
+      // says nothing about its players. It follows the Schools section (DESIGN §23).
+      const players = sectionById(main, region.playersId);
+      const schools = sectionById(main, region.schoolsId);
+      if (!players) fail(file, `no <section id="${region.playersId}">`);
+      if (!schools) fail(file, `no <section id="${region.schoolsId}">`);
+      if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
+        fail(file, `the ${region.shortName} Schools section does not come before its Players section (DESIGN §23)`);
+      }
+      if (players) {
+        // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
+        const playersText = players.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
+        const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
+        for (const team of snapshot.teams) {
+          if (regionOf(team.league) !== region.region || statSlugs.has(team.slug)) continue;
+          if (!playersText.includes(team.name)) {
+            fail(file, `${team.name} has no player stats, and the ${region.shortName} Players section does not say so`);
+          }
+        }
       }
     }
   }
@@ -307,8 +360,9 @@ for (const id of ['de-anza', 'el-camino']) {
 
 console.log(
   `assert-copy: ${files.length} HTML files scanned (the EAL claims over the visible and attribute text of each); ` +
-    `${nonCcsPages.length} non-CCS pages checked inside <main>; ${UNBRACKETED_LEAGUE_IDS.length} /playoffs card(s) ` +
-    `and ${unbracketedPages} pages of unbracketed leagues checked for seed words; ` +
+    `${nonCcsPages.length} non-CCS pages checked inside <main>; ${CARD_LEAGUE_IDS.length} /playoffs card(s) ` +
+    `and ${cardLeaguePages} pages of their leagues checked for seed words; ` +
+    `${siteOrderedPages} pages of the ${siteOrderedLeagues.length} site-ordered leagues checked for "rules require"; ` +
     `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
     `college commitments looked for on every page`,
 );

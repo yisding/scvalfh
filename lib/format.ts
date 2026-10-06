@@ -406,9 +406,10 @@ export function streakString(streak: { count: number; result: Outcome } | null):
  * One side's W/L/T in a final, or null unless the game is final with both scores. THE single
  * derivation every outcome on the site goes through (standings, form, chips, series summaries):
  * a stored shootout tally decides when present; a decider 'SO' with complementary result flags
- * {W, L} (an EAL 1 v 1 win: level on goals, no tally stored) takes that side's flag; anything
- * else is read off the score. League-free on purpose: `decider` 'SO' is only ever written by
- * lib/normalize.ts for two members of a shootout league, so nothing here needs the config.
+ * {W, L} (an EAL 1 v 1 win, or a San Diego Section shootout win MaxPreps records as a level score:
+ * no tally stored) takes that side's flag; anything else is read off the score. Section-free on
+ * purpose: `decider` 'SO' is only ever written by lib/normalize.ts for two teams of a section whose
+ * `shootout` rule is set, so nothing here needs the config.
  */
 export function sideOutcome(
   game: Pick<Game, 'status' | 'home' | 'away' | 'decider' | 'shootout'>,
@@ -457,18 +458,88 @@ export function renderScore(g: Game): ScoreView {
 }
 
 /**
- * 'Saint Francis 7, Homestead 0, final.' — the screen-reader sentence (DESIGN §10.6). A final
- * decided on 1 v 1s with no stored tally (decider 'SO') names the winner instead:
- * 'Chico 1, Davis 1, final; Chico won on 1 v 1s.' `quietOvertime` drops " after overtime" (the
- * view sets it when MaxPreps' overtime count cannot be right for the league).
+ * The phrases copy builds around a section's shootout words (SectionConfig.shootout.words in
+ * lib/leagues.ts, which this client-safe module cannot import, so callers pass the words in):
+ *
+ *   words        noun        onPhrase          wonOn               decidedOn               decidedIt               win               tally
+ *   '1 v 1s'     '1 v 1'     'on 1 v 1s'       'won on 1 v 1s'     'decided on 1 v 1s'     '1 v 1s decided it'     'a 1 v 1 win'     'the 1 v 1 tally'
+ *   'a shootout' 'shootout'  'in a shootout'   'won in a shootout' 'decided by a shootout' 'a shootout decided it' 'a shootout win'  'the shootout tally'
+ *
+ * The Northern Section's words are a plural series of duels ("1 v 1s", NS Guidelines §VII.E.4), so a
+ * team wins ON them, as every EAL string has always said (pinned by tests); the San Diego Section's
+ * are one event with its article ("a shootout", SDFHOA 2026 procedures), so a team wins IN it. The
+ * article is what tells the two apart: no other preposition table is needed while those are the only
+ * two shapes, and a third section's words would be one of them.
  */
-export function scoreSentence(g: Game, opts: { quietOvertime?: boolean } = {}): string {
+export interface ShootoutPhrases {
+  /** '1 v 1' | 'shootout': the thing itself, singular, no article ('no 1 v 1 winner flagged'). */
+  noun: string;
+  /**
+   * 'on 1 v 1s' | 'in a shootout': the phrase that follows a verb and a score, for a line that says
+   * who won or lost without the word 'won' ('Earlier: lost 1–1 on 1 v 1s at home',
+   * components/teams/team-view.ts). `wonOn` is 'won ' + this.
+   */
+  onPhrase: string;
+  wonOn: string;
+  decidedOn: string;
+  decidedIt: string;
+  win: string;
+  tally: string;
+  /** 'them' (the 1 v 1s) | 'it' (the shootout): 'si.com does not say who won them'. */
+  pronoun: 'it' | 'them';
+}
+
+export function shootoutPhrases(words: string): ShootoutPhrases {
+  const single = /^an? /.exec(words);
+  if (single) {
+    const noun = words.slice(single[0].length);
+    return {
+      noun,
+      onPhrase: `in ${words}`,
+      wonOn: `won in ${words}`,
+      decidedOn: `decided by ${words}`,
+      decidedIt: `${words} decided it`,
+      win: `${single[0]}${noun} win`,
+      tally: `the ${noun} tally`,
+      pronoun: 'it',
+    };
+  }
+  const noun = words.replace(/s$/, '');
+  return {
+    noun,
+    onPhrase: `on ${words}`,
+    wonOn: `won on ${words}`,
+    decidedOn: `decided on ${words}`,
+    decidedIt: `${words} decided it`,
+    win: `a ${noun} win`,
+    tally: `the ${noun} tally`,
+    pronoun: 'them',
+  };
+}
+
+/** The words a sentence uses when its caller names no section ('a shootout': true of every 'SO' game). */
+const GENERIC_SHOOTOUT_WORDS = 'a shootout';
+
+/**
+ * 'Saint Francis 7, Homestead 0, final.' — the screen-reader sentence (DESIGN §10.6). A final
+ * decided by a shootout with no stored tally (decider 'SO') names the winner instead, in the words
+ * of the section's rule (`shootoutWords`, SectionConfig.shootout.words: components/ui/describe-game.ts
+ * passes them): 'Chico 1, Davis 1, final; Chico won on 1 v 1s.' for the EAL, '<home> 0, <away> 0,
+ * final; <winner> won in a shootout.' for the San Diego Section. A caller that names no section
+ * gets the generic 'won in a shootout', true of every 'SO' game. `quietOvertime` drops " after
+ * overtime" (the view sets it when MaxPreps' overtime count cannot be right for the league).
+ */
+export function scoreSentence(
+  g: Game,
+  opts: { quietOvertime?: boolean; shootoutWords?: string | null } = {},
+): string {
   const view = renderScore(g);
   switch (view.kind) {
     case 'final': {
       const head = `${g.home.name} ${view.home}, ${g.away.name} ${view.away}, final`;
       if (view.decider === 'SO' && view.shootout === null && view.outcome !== 'T') {
-        return `${head}; ${view.outcome === 'W' ? g.home.name : g.away.name} won on 1 v 1s.`;
+        const { wonOn } = shootoutPhrases(opts.shootoutWords ?? GENERIC_SHOOTOUT_WORDS);
+        return `${head}; ${view.outcome === 'W' ? g.home.name : g.away.name} ${wonOn}.`;
       }
       return `${head}${
         !opts.quietOvertime && (view.decider === 'OT' || view.decider === '2OT') ? ' after overtime' : ''

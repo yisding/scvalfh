@@ -333,7 +333,10 @@ describe('row copy', () => {
 describe('/playoffs (rendered)', () => {
   it('has the league anchors, key dates and bracket anchors, each id once', () => {
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
-    for (const id of ['scval', 'bval', 'pcal', 'eal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa']) {
+    for (const id of [
+      'scval', 'bval', 'pcal', 'eal', 'key-dates', 'bracket', 'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa',
+      'norcal', 'socal', 'sunset', 'city', 'north-county', 'metro',
+    ]) {
       expect(ids.filter((x) => x === id), `${PAGE}: #${id}`).toHaveLength(1);
     }
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
@@ -385,5 +388,55 @@ describe('/playoffs (rendered)', () => {
     expect(html, PAGE).not.toMatch(/eliminat/i);
     expect(html, PAGE).not.toContain('Gabilan');
     expect(textOf(html), PAGE).not.toContain('0-0-0');
+  });
+});
+
+describe('/playoffs by region (DESIGN-socal §2.4)', () => {
+  it('a neutral header, then the NorCal block (CCS, MCAL pointer, EAL card) and the SoCal block', () => {
+    expect(html, PAGE).toMatch(/<h1[^>]*>Playoffs<\/h1>/);
+    expect(html, PAGE).toContain('data-region-option="socal"');
+    const norcal = html.indexOf('<div id="norcal" data-region-scope="norcal">');
+    const socal = html.indexOf('<div id="socal" data-region-scope="socal">');
+    expect(norcal, PAGE).toBeGreaterThan(0);
+    expect(socal, PAGE).toBeGreaterThan(norcal);
+    for (const id of ['scval', 'eal', 'bracket', 'at-large']) {
+      const at = html.indexOf(`id="${id}"`);
+      expect(at > norcal && at < socal, `${PAGE}: #${id} in the NorCal block`).toBe(true);
+    }
+    for (const id of ['sds-playoffs', 'city', 'north-county', 'metro', 'sunset']) {
+      expect(html.indexOf(`id="${id}"`), `${PAGE}: #${id} in the SoCal block`).toBeGreaterThan(socal);
+    }
+    // The CCS description moved into its block; the header names every league's postseason.
+    expect(textOf(html), PAGE).toContain(
+      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset and the San Diego Section playoffs (City, North County and Metro).',
+    );
+  });
+
+  it('the San Diego block states the Section’s rule from config and draws no bracket or seed', () => {
+    const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal">'));
+    const text = textOf(socal);
+    const city = leagues.getLeague('city').postseason;
+    if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
+    expect(text, PAGE).toContain(city.qualificationLine);
+    expect(text, PAGE).toContain(city.citations.roundDates);
+    expect(text, PAGE).toContain('The Section publishes its brackets after its Sat Oct 31 seeding meeting; until then this site draws no bracket and projects no places.');
+    expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
+    expect(text, PAGE).toContain(city.sourceLabel);
+    // Each team's playoff division, per division, from config.
+    expect(text, PAGE).toMatch(/City Western[\s\S]*Division I:/);
+    expect(text, PAGE).toContain('Division II:');
+    // The Sunset's card: its note and its source, labelled from config.
+    const sunset = leagues.getLeague('sunset').postseason;
+    if (sunset.kind !== 'no-postseason') throw new Error('sunset: no-postseason');
+    expect(text, PAGE).toContain(sunset.note);
+    expect(socal, PAGE).toContain(`href="${sunset.sourceUrl}"`);
+    expect(text, PAGE).toContain(sunset.sourceLabel);
+    // Copy rules for SoCal pages.
+    expect(text, PAGE).not.toMatch(/at-large|automatic qualifier|lowest-seeded|\bseed(ed|s)?\b(?! ?ing meeting)|eliminat/i);
+    for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+      if (/\bSunset League\b/.test(sentence)) expect(sentence).toContain('all-sports');
+      expect(sentence).not.toMatch(/\bSunset (school|member)s?\b/);
+    }
+    expect(socal, PAGE).not.toMatch(/PlayoffBracket|sx-bracket/);
   });
 });

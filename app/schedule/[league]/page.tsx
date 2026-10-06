@@ -99,13 +99,14 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
         }
       />
 
+      {/* The page league's region only, plus All → the index (DESIGN-socal §2.4). */}
       <LeagueSwitcher
         mode="link"
         includeAll
         label="Leagues"
-        leagues={leagueChips()}
+        leagues={leagueChips(summary.region)}
         current={summary.id}
-        hrefs={leagueHrefs('/schedule')}
+        hrefs={leagueHrefs('/schedule', summary.region)}
         className="mt-4"
       />
 

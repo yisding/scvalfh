@@ -4,6 +4,7 @@ import Link from 'next/link';
 import AwardsBlock from '../../../components/history/AwardsBlock';
 import HistoryStandingsTable from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
+import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import TeamMonogram from '../../../components/ui/TeamMonogram';
@@ -23,12 +24,15 @@ import {
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
 import { listWords } from '../../../lib/format';
-import { getDivision, getLeague, getSection } from '../../../lib/leagues';
+import { getDivision, getLeague, getSection, regionOf } from '../../../lib/leagues';
 import type { LeagueId } from '../../../lib/types';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
- * per league (`#scval #bval #pcal #mcal #eal`). A league whose own end-of-season documents we could
+ * per league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro`), each carrying its
+ * region's `data-region-scope`, as do the jump pills (DESIGN-socal §2.4). The four Southern California
+ * leagues are unavailable: no league published 2025-26 standings (data/history-2025-26.json says what
+ * was checked). A league whose own end-of-season documents we could
  * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
  * record-only tables and the all-league awards; a league we found no official 2025-26 final
  * standings for (PCAL, MCAL, EAL) says so, with the reason, links any official document it did publish
@@ -127,7 +131,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
   const p = entry.provenance;
 
   return (
-    <section id={leagueId} aria-label={league.name} className="min-w-0 scroll-mt-24">
+    <section id={leagueId} data-region-scope={regionOf(leagueId)} aria-label={league.name} className="min-w-0 scroll-mt-24">
       <SectionHeader
         size="lg"
         kicker={`${league.shortName} · ${league.name}`}
@@ -257,8 +261,16 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
   const league = getLeague(leagueId);
   // A league with no website of its own (EAL) links its section's field hockey page instead.
   const ownSite = league.officialUrl !== getSection(league.sectionId).officialUrl;
+  // A document a league with no site of its own links is its section's (the San Diego Section's 2025
+  // bracket sheet for its three conferences), so the card names the section as its publisher.
+  const publisher = ownSite ? league.shortName : `the ${getSection(league.sectionId).name}`;
   return (
-    <section id={leagueId} aria-label={league.name} className="min-w-0 scroll-mt-24">
+    <section
+      id={leagueId}
+      data-region-scope={regionOf(leagueId)}
+      aria-label={league.name}
+      className="min-w-0 scroll-mt-24"
+    >
       <SectionHeader
         size="lg"
         kicker={`${league.shortName} · ${league.name}`}
@@ -269,7 +281,7 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
         <p className="m-0 mt-2 max-w-prose text-body text-ink-2">{entry.reason}</p>
         {entry.alsoPublished?.length ? (
           <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
-            Official, from {league.shortName}:{' '}
+            Official, from {publisher}:{' '}
             {entry.alsoPublished.map((doc, i) => (
               <span key={doc.url}>
                 {i > 0 ? ' · ' : ''}
@@ -295,7 +307,8 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
 }
 
 export default function HistoryPage() {
-  const tabs = HISTORY_LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id) }));
+  // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
+  const tabs = HISTORY_LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id), region: regionOf(id) }));
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
 
   return (
@@ -319,6 +332,9 @@ export default function HistoryPage() {
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a league" />}
         asideClassName="hidden md:block lg:hidden"
       />
+
+      {/* The region control, its own row above the sticky jump bar (DESIGN-socal §2.4). */}
+      <RegionSwitcher className="mt-4" />
 
       {/* Jump bar: a long page with a section per league to reach. Sticky under the top bar below
           md; at md the pills sit in the title row; from lg they are not shown. */}

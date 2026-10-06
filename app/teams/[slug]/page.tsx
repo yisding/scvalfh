@@ -119,7 +119,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * every page, so no MCAL URL carries a CCS concept either.
  */
 
-/** All 49 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 99 prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -141,7 +141,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   );
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonKicker(view)}.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -165,7 +165,11 @@ function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null):
   return parts.map((p) => `${p}, `).join('');
 }
 
-/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL), by `postseason.kind`. */
+/**
+ * `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL) |
+ * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset, which has
+ * none: CIF-SS Blue Book 2011.1, 3500.2, so there is no picture to draw), by `postseason.kind`.
+ */
 function postseasonKicker(view: TeamPageView): string {
   const { postseasonKind, postseasonName, shortName } = view.league;
   switch (postseasonKind) {
@@ -174,8 +178,16 @@ function postseasonKicker(view: TeamPageView): string {
     case 'league-tournament':
       return `${shortName} tournament picture`;
     case 'unbracketed-tournament':
+    case 'section-playoffs':
       return `${postseasonName} picture`;
+    case 'no-postseason':
+      return 'Postseason';
   }
+}
+
+/** The meta description's last words: the kicker, except where there is no postseason to picture. */
+function postseasonDescription(view: TeamPageView): string {
+  return view.league.postseasonKind === 'no-postseason' ? 'why there are no playoffs' : postseasonKicker(view);
 }
 
 /**
@@ -328,19 +340,20 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <section className="min-w-0 md:max-lg:col-span-2 lg:row-span-2">
               <SectionHeader kicker="Margin by league game" meta={`${leaguePlayed} played`} />
               {/* `slots`: the team's real league slate (`leagueScheduled`, from the official
-                  schedule or the league's games per team). */}
+                  schedule or the league's games per team). A league with no fixed schedule (the
+                  Sunset) has no slate to draw ahead, so its axis is the games it has: no `?` slots. */}
               <div className="sx-card p-4 md:p-5">
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
-                  slots={leagueScheduled}
+                  slots={leagueScheduled ?? marginEntries.length}
                   className="hidden md:block"
                   height={200}
                 />
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
-                  slots={leagueScheduled}
+                  slots={leagueScheduled ?? marginEntries.length}
                   className="md:hidden"
                   height={160}
                 />
@@ -388,7 +401,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         >
           <SectionHeader
             kicker="League game log"
-            meta={`${leaguePlayed} of ${leagueScheduled}`}
+            meta={leagueScheduled === null ? `${leaguePlayed} played` : `${leaguePlayed} of ${leagueScheduled}`}
             action={{ href: view.standingsHref, label: 'Standings' }}
           />
           <TeamGameLog
@@ -396,13 +409,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             perspective={team.slug}
             emptyHeading={`No league games are published for ${team.name}.`}
             emptyBody={
-              view.officialScheduleUrl
+              view.officialScheduleUrl && leagueScheduled !== null
                 ? `The official ${view.league.shortName} schedule has ${plural(
                     leagueScheduled,
                     `${view.league.gamesWord} game`,
                   )} for them; none of those fixtures has a contest in any data source.`
-                : // No official schedule to compare with: the league games are the ones MaxPreps marks.
-                  `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
+                : view.league.classification === 'membership'
+                  ? // The San Diego leagues: every game between two division members is a league game.
+                    `No game between ${team.name} and another ${view.scopeLabel} team is on MaxPreps’ schedules yet.`
+                  : // No official schedule to compare with: the league games are the ones MaxPreps marks.
+                    `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
             }
           />
         </section>

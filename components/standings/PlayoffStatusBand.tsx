@@ -46,6 +46,11 @@ export interface PlayoffStatusBandProps {
   divisionLabel: string;
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
   heading: string;
+  /**
+   * A lead sentence under the heading, from config: the San Diego Section's `qualificationLine`, which says
+   * the Section places teams and a league table decides only its champion's play-in. null elsewhere.
+   */
+  intro?: string | null;
   /** `/playoffs#<league>` (a CCS league, or an unbracketed tournament's card) or `/playoffs/<league>`. */
   href: string;
   linkText: string;
@@ -59,6 +64,7 @@ export interface PlayoffStatusBandProps {
 export function PlayoffStatusBand({
   divisionLabel,
   heading,
+  intro = null,
   href,
   linkText,
   groups,
@@ -72,6 +78,7 @@ export function PlayoffStatusBand({
         <span className="sr-only">{divisionLabel}: </span>
         {heading}
       </h3>
+      {intro ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-2">{intro}</p> : null}
       <dl className="mt-2 mb-0 divide-y divide-divider">
         {/* Two columns (status | teams) where the band spans the content width (768-1023). The
             term column is 16rem there (256px of the 672px card at 768), a balance between two

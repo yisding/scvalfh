@@ -67,7 +67,9 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.hasReportedResults, s.slug).toBe(false);
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
-      expect(s.tiebreak.note, s.slug).toMatch(/^No (division|league) results reported for /);
+      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
+      // tiebreakNote: SoCal copy avoids the word 'results').
+      expect(s.tiebreak.note, s.slug).toMatch(/^No (division|league) (results reported|games counted) for /);
     }
     const leigh = migrated.standings.find((s) => s.slug === 'leigh')!;
     expect(leigh.tiebreak.note).toMatch(/^No division results reported for Leigh, so it is listed last; Mt\. Hamilton order/);

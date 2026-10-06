@@ -1,7 +1,7 @@
 /**
  * The team finder (components/search/TeamFinder.tsx, SPEC §9.3): its initial markup in both modes
  * (react-dom/server), its wiring to lib/search.ts, the pin-mode buttons' accessible names for all
- * 49 teams, and unique `useId` ids when a page renders two finders.
+ * 99 teams, and unique `useId` ids when a page renders two finders.
  */
 import { Fragment, createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -14,6 +14,7 @@ import {
   TeamResultLink,
   finderView,
   pinResultDetail,
+  resultDetail,
 } from '../../components/search/TeamFinder';
 import { getTeamSearchIndex } from '../../lib/data';
 import { pinLabel } from '../../lib/pin-label';
@@ -83,8 +84,8 @@ describe('TeamFinder initial markup', () => {
 });
 
 describe('TeamFinder wiring to lib/search.ts', () => {
-  it('has the 49-team index', () => {
-    expect(index.teams).toHaveLength(49);
+  it('has the 99-team index', () => {
+    expect(index.teams).toHaveLength(99);
   });
 
   it('filter mode matches every team searchTeams matches, in its order, and lists none itself', () => {
@@ -120,14 +121,15 @@ describe('TeamFinder wiring to lib/search.ts', () => {
         ? `${teams} teams and 1 division match "santa".`
         : `${teams} teams, 1 division and ${leagues} ${leagues === 1 ? 'league' : 'leagues'} match "santa".`,
     );
-    expect(finderView(index, 'Carmel', 'pin').message).toBe('1 team matches "Carmel".');
+    // Carmel (PCAL) and Mt. Carmel (North County): the San Diego school's name holds the word too.
+    expect(finderView(index, 'Carmel', 'pin').message).toBe('2 teams match "Carmel".');
     expect(finderView(index, 'santa teresa', 'pin').message).toBe('1 division matches "santa teresa".');
     expect(finderView(index, 'wildcats', 'pin').message).toBe('4 teams match "wildcats".');
   });
 
   it('says what search covers when nothing matches, and the not-covered reason when that matches', () => {
     expect(finderView(index, 'xyz', 'pin').message).toBe(
-      'No team matches "xyz". Search covers the 49 teams in SCVAL, BVAL, PCAL, MCAL and EAL.',
+      'No team matches "xyz". Search covers the 99 teams in SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North County and Metro.',
     );
     const york = finderView(index, 'york', 'filter');
     expect(york.notCovered).toHaveLength(1);
@@ -153,7 +155,7 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 });
 
 describe('pin-mode result buttons', () => {
-  it('every one of the 49: no aria-label, the name is the pin label, the visible text is inside it in order', () => {
+  it('every one of the 99: no aria-label, the name is the pin label (plus a SoCal team’s section), the visible text is inside it in order', () => {
     for (const entry of index.teams) {
       const html = renderToStaticMarkup(createElement(PinResult, { entry, onPick: () => {} }));
       expect(html.startsWith('<button type="button"'), entry.slug).toBe(true);
@@ -166,12 +168,15 @@ describe('pin-mode result buttons', () => {
         divisionHeading: entry.divisionLabel,
         leagueShort: entry.leagueShort,
       });
-      expect(name, entry.slug).toBe(label);
+      // A SoCal result's visible line names its section too (DESIGN-socal §2.4), so its name does.
+      const section = resultDetail(entry).slice(pinResultDetail(entry).length);
+      expect(name, entry.slug).toBe(`${label}${section}`);
       expect(name.startsWith('Pin '), entry.slug).toBe(true);
+      expect(section === '', entry.slug).toBe(entry.sectionShort !== 'SS' && entry.sectionShort !== 'SDS');
 
       const [line1, line2] = visibleLines(html);
       expect(line1, entry.slug).toBe(entry.shortName);
-      expect(line2, entry.slug).toBe(pinResultDetail(entry));
+      expect(line2, entry.slug).toBe(resultDetail(entry));
       // Label in name (WCAG 2.5.3): the visible words appear in the name, in order.
       const at1 = name.indexOf(line1);
       expect(at1, entry.slug).toBeGreaterThan(0);
@@ -186,6 +191,11 @@ describe('pin-mode result buttons', () => {
     expect(pinResultDetail(leigh)).toBe('Mt. Hamilton · BVAL');
     const tam = index.teams.find((t) => t.slug === 'tamalpais')!;
     expect(pinResultDetail(tam)).toBe('MCAL');
+    expect(resultDetail(tam), 'NorCal: the line is unchanged').toBe('MCAL');
+    const palomar = index.teams.find((t) => t.slug === 'poway')!;
+    expect(resultDetail(palomar)).toBe('Palomar · North County · San Diego Section');
+    const bonita = index.teams.find((t) => t.slug === 'bonita')!;
+    expect(resultDetail(bonita)).toBe('Sunset · Southern Section');
   });
 });
 
@@ -195,7 +205,7 @@ describe('pin-mode results when this browser stores nothing', () => {
       const html = renderToStaticMarkup(createElement(TeamResultLink, { entry }));
       expect(html, entry.slug).toMatch(new RegExp(`^<a [^>]*href="/teams/${entry.slug}"`));
       expect(html, entry.slug).not.toContain('<button');
-      expect(textOf(html), entry.slug).toBe(`${entry.shortName}${pinResultDetail(entry)}`);
+      expect(textOf(html), entry.slug).toBe(`${entry.shortName}${resultDetail(entry)}`);
       expect(textOf(html).startsWith('Pin '), entry.slug).toBe(false);
     }
   });

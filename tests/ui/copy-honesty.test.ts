@@ -4,7 +4,7 @@
  * scripts/assert-copy.ts):
  *
  *   components/home/home-view.ts                  buildHomeView(): league panels, league cards, the
- *                                                 49 team views
+ *                                                 team views (one per registry team)
  *   components/standings/standings-page-view.ts   buildStandingsPageView(league) (division views
  *                                                 built by components/standings/standings-view.ts)
  *   components/teams/team-view.ts                 buildTeamPageView(slug), buildTeamsByLeague()
@@ -14,7 +14,8 @@
  * Rules (every string VALUE in the model, keys excluded):
  *  1. no "Gabilan" in any case, except the lowercase slug inside a MaxPreps URL;
  *  2. no /eliminat/i;
- *  3. in every view of a league outside the Central Coast Section (MCAL, EAL): no "automatic
+ *  3. in every view of a league outside the Central Coast Section (MCAL, EAL and the four SoCal
+ *     leagues: Sunset, City, North County, Metro): no "automatic
  *     qualifier", "at-large", "CCS Division", "CCS picture", no BerthMeter label ("holds <n> of
  *     16"), and "CCS" only in the `CCS playoffs (SCVAL, BVAL, PCAL) →` link or as a bare tag value;
  *  4. a missing score is never "0-0": no "0-0" in the model of a game that is not final, nor in
@@ -26,7 +27,12 @@
  *  7. the EAL claims of scripts/copy-rules.ts (DESIGN §22.5), in every view: the umpires' grid is
  *     never official, Davis and Bella Vista are never Northern Section schools, Red Bluff is only
  *     "not fielding a varsity team in 2026", never "EAL school(s)"; and no seed word in a view of an
- *     unbracketed league (EAL), whose seeding is quoted, never applied.
+ *     unbracketed league (EAL), whose seeding is quoted, never applied;
+ *  8. the SoCal claims (DESIGN-socal §2.4), in every view: "Sunset League" only in a sentence that
+ *     says "all-sports", never "Sunset school(s)" / "Sunset member(s)"; no seed word in a view of a
+ *     'section-playoffs' (City, North County, Metro) or 'no-postseason' (Sunset) league either; and
+ *     never "rules require" in a view of a league whose table order is this site's own
+ *     (orderScope 'site': every SoCal league).
  *
  * League-specific data comes from the offline corpora (SPEC §13.6: SCVAL_SNAPSHOT =
  * corpusSnapshotPath(...) before lib/data is imported), so a live fetch cannot move it. The
@@ -46,10 +52,13 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,
+  RULES_REQUIRE_CLAIM,
   SEED_CLAIM,
+  SUNSET_SCHOOL_CLAIM,
   attributeText,
   elementById,
   nonMemberSectionClaims,
+  sunsetLeagueClaims,
   umpireOfficialClaims,
   visibleText,
 } from '../../scripts/copy-rules';
@@ -126,7 +135,10 @@ beforeAll(async () => {
     s.push({ producer: HV, label: `teamViews[${slug}].next`, league: leagueOfSlug.get(slug) ?? null, value: tv.next, unplayed: true });
   }
   s.push({ producer: HV, label: 'status line', league: null, value: home.status });
-  s.push({ producer: HV, label: 'cross-league latest', league: null, value: home.crossLeagueLatest });
+  // One "latest from every league" block and status line per region (DESIGN-socal §2.4).
+  for (const region of home.regions) {
+    s.push({ producer: HV, label: `${region.shortName} region (status, cards, latest)`, league: null, value: region });
+  }
 
   for (const id of data.getLeagueIds()) {
     const short = leagues.getLeague(id).shortName;
@@ -288,8 +300,9 @@ function expectNone(subject: Subject, rule: string, test: (s: string) => boolean
 }
 
 /**
- * The league rules' citations that mention co-champions (lib/leagues.ts `rules.citations`, e.g. the
- * EAL's "a tie for first means co-champions (§VII.C)"). A builder that quotes one in a footnote
+ * The league rules' and postseason citations that mention co-champions (lib/leagues.ts
+ * `rules.citations`, e.g. the EAL's "a tie for first means co-champions (§VII.C)", and
+ * `postseason.citations`, e.g. the San Diego Section's "not co-champions or tri-champions"). A builder that quotes one in a footnote
  * states the rule; the co-champion rule is about declaring them, so these are taken out of a value
  * before it is read. Citations only: a label such as `coChampionsLabel` ('EAL co-champions') is what
  * a declaration prints, so it is never taken out.
@@ -301,7 +314,15 @@ function coChampionConfigText(...configs: Leagues[]): string[] {
       if (/co-champion/i.test(value)) out.add(value);
     } else if (value && typeof value === 'object') for (const v of Object.values(value)) walk(v);
   };
-  for (const l of configs) for (const league of l.LEAGUES) walk(league.rules.citations);
+  for (const l of configs) {
+    for (const league of l.LEAGUES) {
+      walk(league.rules.citations);
+      // The postseason's citations too: the San Diego Section's qualification rule (Green Book 2000.1)
+      // quotes "Designated league champions (not co-champions or tri-champions)", which a standings
+      // legend cites as the rule, not as a declaration.
+      if ('citations' in league.postseason) walk(league.postseason.citations);
+    }
+  }
   // Longest first, so a string that contains another is taken out whole.
   return [...out].sort((a, b) => b.length - a.length);
 }
@@ -314,7 +335,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
   const nonCcs = () =>
     new Set([...leagues.LEAGUES, ...eal.leagues.LEAGUES].filter((l) => l.sectionId !== 'ccs').map((l) => l.id));
 
-  it('collects view models for all five leagues from every producer', () => {
+  it('collects view models for every league from every producer', () => {
     expect(data.getLeagueIds().length, 'lib/data.ts: league ids').toBe(leagues.LEAGUES.length);
     for (const id of data.getLeagueIds()) {
       for (const producer of [HV, SPV, TV]) {
@@ -429,5 +450,28 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     const views = all().filter((s) => s.league && ids.has(s.league));
     expect(views.length, `${HV}: no unbracketed-league views collected`).toBeGreaterThan(10);
     for (const s of views) expectNone(s, 'prints a seed word', (v) => !isUrl(v) && SEED_CLAIM.test(v));
+  });
+
+  it('no seed word in a SoCal league’s views (San Diego seeding is the Section’s, never applied; the Sunset has no playoffs)', () => {
+    const ids = new Set([...leagues.SECTION_PLAYOFFS_LEAGUE_IDS, ...leagues.NO_POSTSEASON_LEAGUE_IDS]);
+    expect([...ids].sort(), 'lib/leagues.ts: section-playoffs and no-postseason leagues').toEqual(['city', 'metro', 'north-county', 'sunset']);
+    for (const s of all().filter((x) => x.league && ids.has(x.league))) {
+      expectNone(s, 'prints a seed word', (v) => !isUrl(v) && SEED_CLAIM.test(v));
+    }
+  });
+
+  it('the Sunset claims: "Sunset League" only beside "all-sports", never "Sunset school(s)" or "Sunset member(s)"', () => {
+    for (const s of all()) {
+      expectNone(s, 'says "Sunset League" without "all-sports" in the sentence', (v) => !isUrl(v) && sunsetLeagueClaims(v).length > 0);
+      expectNone(s, 'says "Sunset school(s)" or "Sunset member(s)" (say "Sunset teams")', (v) => !isUrl(v) && SUNSET_SCHOOL_CLAIM.test(v));
+    }
+  });
+
+  it('never "rules require" in the views of a league whose table order is this site’s own (orderScope "site")', () => {
+    const ids = new Set(leagues.LEAGUES.filter((l) => l.rules.orderScope === 'site').map((l) => l.id));
+    expect([...ids].sort(), 'lib/leagues.ts: orderScope "site" leagues').toEqual(['city', 'metro', 'north-county', 'sunset']);
+    for (const s of all().filter((x) => x.league && ids.has(x.league))) {
+      expectNone(s, 'says "rules require" (no league rule orders this table)', (v) => !isUrl(v) && RULES_REQUIRE_CLAIM.test(v));
+    }
   });
 });

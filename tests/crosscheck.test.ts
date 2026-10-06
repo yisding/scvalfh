@@ -66,9 +66,10 @@ describe('crosscheck: the join key', () => {
     const g = game({ home: 'los-altos', away: 'cupertino', hs: 1, as: 0 });
     const outside = {
       ...g,
-      away: { ...g.away, teamId: null, slug: null, name: "Bishop's" },
+      // Not one of the 99 (Bishop's, the example here before, is a City Western team now).
+      away: { ...g.away, teamId: null, slug: null, name: "St. Margaret's" },
     };
-    expect(gamePairKey(outside)).toBe('los-altos~name:bishops');
+    expect(gamePairKey(outside)).toBe('los-altos~name:stmargarets');
   });
 });
 
@@ -172,9 +173,9 @@ describe('crosscheck: si.com scores D2 did not publish', () => {
 
   it('names the reason: not our team, not final, dated today, not marked played', () => {
     const outside = game({ home: 'los-altos', away: 'cupertino', status: 'score-pending', date: '2026-09-28' });
-    const notOurs = { ...outside, away: { ...outside.away, teamId: null, slug: null, name: "Bishop's" } };
+    const notOurs = { ...outside, away: { ...outside.away, teamId: null, slug: null, name: 'Woodbridge' } };
     const cases: Array<[ReturnType<typeof game>, SbliveGame, string]> = [
-      [notOurs, sbGame('2026-09-28', side('los-altos', 2), side("Bishop's", 1)), NOT_PUBLISHED.notOurTeam],
+      [notOurs, sbGame('2026-09-28', side('los-altos', 2), side('Woodbridge', 1)), NOT_PUBLISHED.notOurTeam],
       [
         game({ home: 'fremont', away: 'homestead', status: 'score-pending', date: '2026-09-28' }),
         sbGame('2026-09-28', side('fremont', 2), side('homestead', 1), { isFinal: false }),
@@ -203,7 +204,7 @@ describe('crosscheck: si.com scores D2 did not publish', () => {
       [game({ home: 'los-altos', away: 'cupertino', hs: 4, as: 0, date: '2026-09-23' })],
       [
         sbGame('2026-09-25', side('fremont', 2), side('homestead', 1), { sbliveGameId: '6600001' }),
-        sbGame('2026-09-26', side('palo-alto', 3), side("Bishop's", 0), { sbliveGameId: '6600002' }),
+        sbGame('2026-09-26', side('palo-alto', 3), side('Woodbridge', 0), { sbliveGameId: '6600002' }),
         // Same pair as a MaxPreps contest two days away: a date difference, not a si.com-only score.
         sbGame('2026-09-25', side('los-altos', 4), side('cupertino', 0), { sbliveGameId: '6600003' }),
         // Not one of our teams on either side: never listed.

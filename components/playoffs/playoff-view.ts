@@ -586,7 +586,11 @@ export interface TournamentView {
 export interface TournamentInput {
   projection: LeagueTournamentProjection;
   /** The league's table in place order, with each row's team, counted/scheduled games and written status. */
-  rows: ReadonlyArray<{ team: Team; standing: Standing; counted: number; scheduled: number; label: string }>;
+  /**
+   * `scheduled` is the division's gamesPerTeam: null only for a league with no fixed schedule (the
+   * Sunset), which has no tournament, so a seed row then reads the bare count.
+   */
+  rows: ReadonlyArray<{ team: Team; standing: Standing; counted: number; scheduled: number | null; label: string }>;
   /** Slug → team, for bracket slots. */
   teamOf: (slug: TeamSlug) => Team | undefined;
   /** The league's last tournament place (MCAL 6). */
@@ -677,7 +681,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     team,
     standing,
     shared: standing.tiebreak.shared,
-    gpText: `${counted}/${scheduled} GP`,
+    gpText: scheduled === null ? `${counted} GP` : `${counted}/${scheduled} GP`,
     ptsText: standing.hasReportedResults ? `${standing.computed.pts} pts` : EM_DASH,
     label: standing.hasReportedResults ? label : 'No results reported',
   }));

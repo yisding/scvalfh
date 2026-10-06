@@ -93,7 +93,12 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
         known.tiebreak.shared ? ' (tied)' : ''
       }`
     : 'No results reported yet';
-  const gp = view.context ? `${view.context.counted}/${view.context.scheduled}` : EM_DASH;
+  // `6/12`, or the bare count where the league has no fixed schedule (the Sunset: no "of N").
+  const gp = view.context
+    ? view.context.scheduled === null
+      ? `${view.context.counted}`
+      : `${view.context.counted}/${view.context.scheduled}`
+    : EM_DASH;
   const points = known ? `${known.computed.pts}` : EM_DASH;
   const goals = known ? `${known.computed.gf} / ${known.computed.ga}` : EM_DASH;
   const diff = known ? signedGd(known.computed.gd) : EM_DASH;

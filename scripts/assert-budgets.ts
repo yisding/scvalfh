@@ -9,7 +9,7 @@
  *
  * | Measure                                                        | Limit                              |
  * |----------------------------------------------------------------|------------------------------------|
- * | data/snapshot.json raw                                         | ≤ 1.6 MB (warn > 1.2 MB)           |
+ * | data/snapshot.json raw                                         | ≤ SNAPSHOT_MAX_BYTES (warn > SNAPSHOT_WARN_BYTES), lib/pipeline/steps/assemble.ts: 3.2 MB (warn 2.4 MB) |
  * | `/` HTML gzip and RSC gzip                                     | each ≤ 2.2 × baseline `index`      |
  * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>`, `/leaders` | ≤ baseline + 20 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.0 × baseline `standings`       |
@@ -22,6 +22,32 @@
  * | `/leaders` HTML gzip                                           | ≤ 1.2 × baseline `standings`       |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 600 KB                |
  *
+ * THE SOUTHERN CALIFORNIA AMENDMENT (DESIGN-socal §2.4; design-review budgets §1) — PENDING MEASUREMENT.
+ * The 99-team, nine-league build will cross several page lines above; the design raises them
+ * deliberately, one measured line at a time, never by a uniform factor. The multipliers below are
+ * still the five-league ones on purpose: nothing can be measured until the 99-team snapshot exists
+ * (WP3's live run). The procedure, for whoever has that snapshot:
+ *   1. On the SAME snapshot, build the tree before the amendment and after it, at a fixed instant:
+ *        SCVAL_BUILD_AT=2026-10-06T12:00:00Z pnpm build && pnpm assert:budgets
+ *      and keep both tables of measured bytes (the golden baselines in
+ *      tests/golden/page-weights-main.json are NOT touched: they are the Stage-0 numbers).
+ *   2. For each line that is over (or within 5 % of) its limit, set the multiplier to
+ *        ceil10(measured × 1.12 / baseline) / 10
+ *      i.e. the measured bytes plus the usual ~12 % of headroom, rounded UP to one decimal.
+ *   3. Record before / after / limit / % in that line's inline comment (the shape of the 2026-10-03
+ *      and 2026-10-04 comments below), in this header's table, in DESIGN §15.10 and in the §24 table.
+ *   Expected (design-review budgets §1, estimates only): `/` ≈ 3.3–3.5 × (HTML and RSC), `/teams` ≈
+ *   6.5 ×, `/standings` ≈ 1.5 ×, `/schedule` ≈ 0.75 ×, `/leaders` ≈ 2.4 ×, `/playoffs` probably
+ *   still under 2.0 ×; the per-league `/standings/<id>` and `/schedule/<id>` lines (1.25 ×) and the
+ *   team pages (6.0 ×) per their measured maxima. The lines to change are the `check(...)` calls
+ *   for '/ HTML gzip', '/ RSC gzip', '/standings HTML gzip', '/schedule HTML gzip', '/teams HTML
+ *   gzip', '/playoffs HTML gzip' and '/leaders HTML gzip' (and their rows in the table above).
+ *   First-load JS keeps its "+ 20 KB" rule: the region switcher added no client module
+ *   (components/layout/LeagueSwitcher.tsx, components/ui/use-league.ts); its measured delta per
+ *   route belongs in the first-load comment below. The Worker line ("baseline + 600 KB") is raised
+ *   only if `pnpm build:cloudflare` measures it over, with the measured number and the data-file
+ *   breakdown, checked against Cloudflare's own Worker size limit.
+ *
  * The first-load JS budget is what catches config, the registry or zod leaking into the browser
  * through a 'use client' import. The Worker check reads .cloudflare/output when it exists (it is
  * reported, not failed, when the baseline is null); `--worker-only` requires it and checks nothing
@@ -33,7 +59,7 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 import { LEAGUE_IDS } from '../lib/leagues';
-import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES } from '../lib/pipeline/steps/assemble';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '../lib/pipeline/steps/assemble';
 
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';
@@ -72,8 +98,13 @@ function file(name: string): Buffer {
 if (!workerOnly) {
   // ------------------------------------------------------------ the snapshot
   const snapshotBytes = statSync(SNAPSHOT).size;
-  check('data/snapshot.json raw', snapshotBytes, SNAPSHOT_MAX_BYTES, '1.6 MB');
-  if (snapshotBytes > SNAPSHOT_WARN_BYTES) console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> 1.2 MB warning line)`);
+  // Labels from the pipeline's own constants (budgetLabel), never literals: the caps moved from 1.6 /
+  // 1.2 MB to 3.2 / 2.4 MB with the Southern California amendment, and the old literals would have
+  // printed the wrong numbers beside the right check.
+  check('data/snapshot.json raw', snapshotBytes, SNAPSHOT_MAX_BYTES, budgetLabel(SNAPSHOT_MAX_BYTES));
+  if (snapshotBytes > SNAPSHOT_WARN_BYTES) {
+    console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> ${budgetLabel(SNAPSHOT_WARN_BYTES)} warning line)`);
+  }
 
   // ------------------------------------------------------------ documents
   // 2.2 × since 2026-10-03 (it was 2.0 ×). The four-league home page reached 51.2 KB HTML gzip

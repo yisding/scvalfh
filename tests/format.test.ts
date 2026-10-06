@@ -43,6 +43,7 @@ import {
   toLocalTimestamp,
   weekdayName,
   winPct,
+  shootoutPhrases,
 } from '../lib/format';
 import { game } from './helpers';
 
@@ -258,11 +259,21 @@ describe('format: sideOutcome, the one W/L/T derivation', () => {
   });
 
   it('renders a 1 v 1 win as a level final the home side won, and says who won on 1 v 1s', () => {
+    // The section's words come from the caller (components/ui/describe-game.ts passes SectionConfig.shootout.words).
     expect(renderScore(oneVOne)).toEqual({ kind: 'final', home: 1, away: 1, outcome: 'W', decider: 'SO', shootout: null });
-    expect(scoreSentence(oneVOne)).toBe('Chico 1, Davis 1, final; Chico won on 1 v 1s.');
+    expect(scoreSentence(oneVOne, { shootoutWords: '1 v 1s' })).toBe('Chico 1, Davis 1, final; Chico won on 1 v 1s.');
     const awayWin = game({ home: 'chico', away: 'davis', hs: 1, as: 1, results: { home: 'L', away: 'W' } });
     expect(renderScore(awayWin)).toMatchObject({ kind: 'final', outcome: 'L', decider: 'SO' });
-    expect(scoreSentence(awayWin)).toBe('Chico 1, Davis 1, final; Davis won on 1 v 1s.');
+    expect(scoreSentence(awayWin, { shootoutWords: '1 v 1s' })).toBe('Chico 1, Davis 1, final; Davis won on 1 v 1s.');
+    // A caller that names no section gets the generic words, true of every 'SO' game.
+    expect(scoreSentence(oneVOne)).toBe('Chico 1, Davis 1, final; Chico won in a shootout.');
+  });
+
+  it('says a San Diego shootout win in the San Diego Section’s words (a cross-conference 0-0 flagged W/L)', () => {
+    const sds = game({ home: 'clairemont', away: 'eastlake', hs: 0, as: 0, date: '2026-09-01', results: { home: 'L', away: 'W' } });
+    expect(sds.decider).toBe('SO');
+    expect([sideOutcome(sds, 'home'), sideOutcome(sds, 'away')]).toEqual(['L', 'W']);
+    expect(scoreSentence(sds, { shootoutWords: 'a shootout' })).toBe('Clairemont 0, Eastlake 0, final; Eastlake won in a shootout.');
   });
 
   it('drops “after overtime” when asked (an overtime count that cannot be right)', () => {
@@ -272,6 +283,34 @@ describe('format: sideOutcome, the one W/L/T derivation', () => {
     expect(scoreSentence(g, { quietOvertime: true })).toBe('Chico 0, Pleasant Valley 1, final.');
     const forfeit = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 0, forfeit: true });
     expect(scoreSentence(forfeit, { quietOvertime: true })).toBe('Cupertino 1, Fremont 0, final by forfeit.');
+  });
+});
+
+describe('shootoutPhrases', () => {
+  it('words the Northern Section’s 1 v 1s exactly as every EAL string has always read', () => {
+    expect(shootoutPhrases('1 v 1s')).toEqual({
+      noun: '1 v 1',
+      onPhrase: 'on 1 v 1s',
+      wonOn: 'won on 1 v 1s',
+      decidedOn: 'decided on 1 v 1s',
+      decidedIt: '1 v 1s decided it',
+      win: 'a 1 v 1 win',
+      tally: 'the 1 v 1 tally',
+      pronoun: 'them',
+    });
+  });
+
+  it('words the San Diego Section’s shootout as one event', () => {
+    expect(shootoutPhrases('a shootout')).toEqual({
+      noun: 'shootout',
+      onPhrase: 'in a shootout',
+      wonOn: 'won in a shootout',
+      decidedOn: 'decided by a shootout',
+      decidedIt: 'a shootout decided it',
+      win: 'a shootout win',
+      tally: 'the shootout tally',
+      pronoun: 'it',
+    });
   });
 });
 

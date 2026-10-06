@@ -24,8 +24,14 @@ export interface HealthDivision {
   id: string;
   /** Division heading, or null for a single-division league (no division label). */
   heading: string | null;
-  /** MaxPreps league standings page. */
-  maxprepsUrl: string;
+  /**
+   * MaxPreps league standings page, or null where MaxPreps publishes no table for the division (the San
+   * Diego Section's Valley: lib/leagues.ts leagueStandingsUrl). The card then says so, and that the
+   * cross-check is skipped, instead of linking anything.
+   */
+  maxprepsUrl: string | null;
+  /** Why there is no table (lib/standings.ts crossCheckSkipReason); null when there is one. */
+  skipReason?: string | null;
   /**
    * The division's standings rows that carry MaxPreps' reported record: the member rows its table
    * matched, read this run or carried. Counted from the standings rather than taken from the stored
@@ -43,7 +49,7 @@ export interface HealthDivision {
         revisedOn: string | null;
       }
     | {
-        /** The league publishes no schedule (EAL). */
+        /** The league publishes no schedule (EAL, the Sunset, the San Diego leagues). */
         mode: 'none';
         /** `DivisionConfig.official.note`: where its league games come from instead. */
         note: string;
@@ -59,6 +65,8 @@ export interface LeagueHealthCardProps {
   dropped: number;
   /** Source rows for this league that were stale or failed in the last run. */
   problems: ReadonlyArray<{ label: string; status: string; error?: string }>;
+  /** The league's region: the card's `data-region-scope` on /about (DESIGN-socal §2.4). */
+  region?: 'norcal' | 'socal';
   className?: string;
 }
 
@@ -115,7 +123,7 @@ function OfficialLine({
   );
 }
 
-export function LeagueHealthCard({ shortName, name, health, divisions, dropped, problems, className }: LeagueHealthCardProps) {
+export function LeagueHealthCard({ shortName, name, health, divisions, dropped, problems, region, className }: LeagueHealthCardProps) {
   const feeds = health.teamFeeds;
   const counted = health.divisions.reduce((n, d) => n + d.countedFinals, 0);
   const backfilled = health.divisions.reduce((n, d) => n + d.backfilled, 0);
@@ -127,6 +135,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
     : ['official league result', 'official league results'];
   return (
     <article
+      data-region-scope={region}
       className={['sx-card flex flex-col p-5', className].filter(Boolean).join(' ')}
       aria-label={`${shortName} data health`}
     >
@@ -182,9 +191,16 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
             <li key={d.id}>
               <p className="m-0">
                 {where}
-                <ExternalLink href={d.maxprepsUrl}>MaxPreps table</ExternalLink>{' '}
-                {h ? TABLE_WORDS[h.reportedTable] : 'not reported'}
-                {h && h.reportedRows !== null ? ` (${plural(d.memberRows, 'member row', 'member rows')})` : ''}.
+                {d.maxprepsUrl === null ? (
+                  // No table at all (the San Diego Section's Valley): nothing to link or compare.
+                  <>{d.skipReason ?? 'MaxPreps publishes no table for this division'}; the cross-check is skipped.</>
+                ) : (
+                  <>
+                    <ExternalLink href={d.maxprepsUrl}>MaxPreps table</ExternalLink>{' '}
+                    {h ? TABLE_WORDS[h.reportedTable] : 'not reported'}
+                    {h && h.reportedRows !== null ? ` (${plural(d.memberRows, 'member row', 'member rows')})` : ''}.
+                  </>
+                )}
               </p>
               {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
               {d.official.mode === 'none' ? (

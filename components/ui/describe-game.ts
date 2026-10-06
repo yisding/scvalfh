@@ -15,8 +15,8 @@
  * kept so the §5.2 table stays implemented end to end.
  */
 
-import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, timeOfDay } from '../../lib/format';
-import { findDivision, findLeague, leagueOfDivision } from '../../lib/leagues';
+import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
+import { LEAGUES, findDivision, findLeague, getSection, leagueOfDivision, type SectionConfig } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -53,8 +53,17 @@ export interface GameDisplay {
   statusTone: StatusTone;
   /** The body sentence under a row that needs one, e.g. the unreported promise. */
   note: string | null;
-  /** Mono superscript tags after the score: 'OT', '2 OT', 'SO', 'F'. */
+  /** Mono superscript tags after the score: 'OT', '2 OT', 'SO', 'F'. 'SO' is any section's shootout win. */
   deciderTag: string | null;
+  /**
+   * The words a screen reader hears for an 'SO' `deciderTag`, in the words of the section whose rule
+   * decided the game (SectionConfig.shootout.words through `shootoutPhrases(…).decidedOn`): 'decided
+   * on 1 v 1s' for an EAL game (the Northern Section's 1 v 1s, the string StatusLabel has always
+   * read), 'decided by a shootout' for a game between two San Diego Section teams. Resolved here, on
+   * the server, because StatusLabel is client-safe and cannot read the registry; the home My-team card
+   * carries it through its slim marks. null whenever `deciderTag` is not 'SO'.
+   */
+  shootoutLabel: string | null;
   /** '(4–3 SO)' — never produced by this league (By-Laws Article IV) but modelled. */
   shootoutText: string | null;
   /**
@@ -66,8 +75,8 @@ export interface GameDisplay {
   /** The league chip (`SCVAL`, `BVAL`, …) of a counted game: the league of `countsFor`. null otherwise. */
   leagueTag: string | null;
   /**
-   * `SCVAL crossover` · `BVAL play-in` · `MCAL tournament` · `EAL Super Regional` · `CCS` when
-   * `postseason` is set.
+   * `SCVAL crossover` · `BVAL play-in` · `MCAL tournament` · `EAL Super Regional` · `San Diego Section
+   * playoffs` · `CCS` when `postseason` is set.
    */
   postseasonTag: string | null;
   /** 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. */
@@ -99,6 +108,9 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
   'mcal-tournament': 'tournament',
   // The fallback word; an unbracketed league's tag names its event instead (postseasonTagOf).
   'league-postseason': 'postseason',
+  // Never prefixed by a league: the San Diego Section's playoffs are one tournament across its three
+  // conferences, so the chip is the event's own name ('San Diego Section playoffs', postseasonTagOf).
+  'section-playoffs': 'playoffs',
   ccs: null,
   other: null,
 };
@@ -124,16 +136,38 @@ function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
 }
 
 /**
- * `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `EAL Super Regional`, `CCS`; null for no
- * or an unnamed postseason.
+ * The section-playoffs league of a tag or, when the tag names no league (a San Diego playoff game between two
+ * conferences: lib/classify.ts sets leagueId null), of a registry side; null when neither has one.
  */
-export function postseasonTagOf(game: Pick<Game, 'postseason'>): string | null {
+function sectionPlayoffsName(
+  tag: PostseasonTag,
+  game: Partial<Pick<Game, 'home' | 'away'>>,
+): string | null {
+  const leagueIds = [
+    tag.leagueId,
+    ...[game.home, game.away].map((side) => (side?.slug ? (getTeamBySlug(side.slug)?.league ?? null) : null)),
+  ];
+  for (const id of leagueIds) {
+    const league = id ? findLeague(id) : undefined;
+    if (league?.postseason.kind === 'section-playoffs') return league.postseason.name;
+  }
+  return null;
+}
+
+/**
+ * `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `EAL Super Regional`, `San Diego Section
+ * playoffs`, `CCS`; null for no or an unnamed postseason. Pass the sides too (a whole Game does): a San
+ * Diego playoff game between two conferences carries no league on its tag, and its sides name the event.
+ */
+export function postseasonTagOf(game: Pick<Game, 'postseason'> & Partial<Pick<Game, 'home' | 'away'>>): string | null {
   const tag = game.postseason;
   if (!tag) return null;
   if (tag.kind === 'ccs') return 'CCS';
+  if (tag.kind === 'section-playoffs') return sectionPlayoffsName(tag, game);
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
-  // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs' and 'other' may not.
+  // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs', 'other' and
+  // 'section-playoffs' may not.
   if (tag.leagueId === null) return null;
   const league = findLeague(tag.leagueId);
   if (!league) return null;
@@ -183,20 +217,70 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
 const LIVE_NOTE = 'A scheduled window, not a running score — we do not collect live scores.';
 
 /**
- * true when MaxPreps' overtime count cannot be right for the game's league: a counted game in a
- * league that plays one overtime period and then 1 v 1s (`leagueOvertime` 'shootout', the EAL)
- * with more than one overtime period recorded. MaxPreps may have stored a 1 v 1 win as a goal, so
- * the view shows the score as MaxPreps has it with no overtime tag and no "after overtime".
+ * The section both sides are teams of when it ends a level varsity game with a shootout
+ * (SectionConfig.shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout), else null.
+ * The same rule lib/normalize.ts writes decider 'SO' by, so every 'SO' game has one.
+ */
+export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionConfig | null {
+  const home = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
+  const away = game.away.slug ? getTeamBySlug(game.away.slug) : undefined;
+  if (!home || !away || home.section !== away.section) return null;
+  const section = getSection(home.section);
+  return section.shootout ? section : null;
+}
+
+/**
+ * What shootout copy calls the teams a section's rule covers: the section's one covered league when it
+ * has just one ('EAL': every EAL string has always said "the EAL’s rules", "two EAL teams"), else the
+ * section ('San Diego Section': its rule covers the City, North County and Metro conferences alike, and
+ * a game between two of them). lib/backfill.ts words its D24 note by the same rule.
+ */
+export function shootoutGroupName(section: Pick<SectionConfig, 'id' | 'name'>): string {
+  const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+  return leagues.length === 1 ? leagues[0].shortName : section.name;
+}
+
+/**
+ * A section shootout citation split into its source and its procedure: 'Northern Section Field Hockey
+ * Guidelines §VII.E.4 (one 10-minute sudden-victory period, then 1 v 1s)' → source 'Northern Section
+ * Field Hockey Guidelines §VII.E.4', procedure 'a 10-minute sudden-victory period, then 1 v 1s'. The
+ * procedure follows "a level varsity game goes to", so a leading count word 'one' reads as 'a' (the
+ * EAL's game-page sentence, pinned by tests, has always said "goes to a 10-minute …"). A citation
+ * without a parenthesis is all source, with no procedure.
+ */
+export function shootoutCitationParts(citation: string): { source: string; procedure: string | null } {
+  const m = /^(.*?) \((.*)\)$/.exec(citation);
+  if (!m) return { source: citation, procedure: null };
+  return { source: m[1], procedure: m[2].replace(/^one /, 'a ') };
+}
+
+/**
+ * true when MaxPreps' overtime count cannot be right for the game's section: a counted game in a
+ * section that plays one overtime period and then a shootout (SectionConfig.shootout: the EAL's
+ * 1 v 1s, the San Diego Section's shootout) with more than one overtime period recorded. MaxPreps
+ * may have stored the shootout win as a goal, so the view shows the score as MaxPreps has it with
+ * no overtime tag and no "after overtime".
  */
 export function overtimeInDoubt(game: Game): boolean {
   if (game.countsFor === null || game.otPeriods <= 1) return false;
   const division = findDivision(game.countsFor);
-  return division !== undefined && leagueOfDivision(division.id).rules.leagueOvertime === 'shootout';
+  return division !== undefined && getSection(leagueOfDivision(division.id).sectionId).shootout !== null;
+}
+
+/**
+ * The accessible words of an 'SO' decider tag (GameDisplay.shootoutLabel). Every 'SO' game has a
+ * shootout section (lib/normalize.ts writes 'SO' by the same rule), so the generic 'a shootout' — true
+ * of any shootout — is reached only by a hand-built game whose sides are outside the registry.
+ */
+function shootoutLabelFor(game: Game, deciderTag: string | null): string | null {
+  if (deciderTag !== 'SO') return null;
+  return shootoutPhrases(shootoutSectionOf(game)?.shootout?.words ?? 'a shootout').decidedOn;
 }
 
 function deciderTagFor(game: Game): string | null {
   if (game.isForfeit || game.decider === 'FORFEIT') return 'F';
-  // A 1 v 1 win with no stored tally; a game with a tally prints it as `shootoutText` instead.
+  // A shootout win with no stored tally (an EAL 1 v 1 win, a San Diego shootout win); a game with a
+  // tally prints it as `shootoutText` instead.
   if (game.decider === 'SO') return game.shootout ? null : 'SO';
   if (overtimeInDoubt(game)) return null;
   if (game.decider === '2OT') return '2 OT';
@@ -237,17 +321,22 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
   const base = {
     note: null as string | null,
     deciderTag: null as string | null,
+    shootoutLabel: null as string | null,
     shootoutText: null as string | null,
     ...chipsFor(game),
     isForfeit,
     strikeTime: false,
     liveDot: false,
     versus,
-    sentence: scoreSentence(game, { quietOvertime: overtimeInDoubt(game) }),
+    sentence: scoreSentence(game, {
+      quietOvertime: overtimeInDoubt(game),
+      shootoutWords: shootoutSectionOf(game)?.shootout?.words ?? null,
+    }),
   };
 
   switch (view.kind) {
     case 'final': {
+      const deciderTag = deciderTagFor(game);
       const homeWon = view.outcome === 'W';
       const awayWon = view.outcome === 'L';
       const tie = view.outcome === 'T';
@@ -266,7 +355,8 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
         kind: 'final',
         statusLabel: 'FINAL',
         statusTone: 'ink-3',
-        deciderTag: deciderTagFor(game),
+        deciderTag,
+        shootoutLabel: shootoutLabelFor(game, deciderTag),
         shootoutText: view.shootout
           ? `(${view.shootout.home}${EN_DASH}${view.shootout.away} SO)`
           : null,
@@ -352,6 +442,7 @@ export function describeCancelled(game: Game, note: string | null = null): GameD
     statusTone: 'ink-3',
     note,
     deciderTag: null,
+    shootoutLabel: null,
     shootoutText: null,
     ...chipsFor(game),
     sourceMark: null,

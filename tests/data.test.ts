@@ -43,9 +43,9 @@ afterAll(() => {
 describe('data: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
     expect(data.getSnapshot().schemaVersion).toBe(2);
-    expect(data.getSnapshot().teams.length).toBe(49);
+    expect(data.getSnapshot().teams.length).toBe(99);
     expect(data.getFetchedAt()).toBe('2026-10-02T10:48:51.206Z');
-    expect(data.getCounts().teams).toBe(49);
+    expect(data.getCounts().teams).toBe(99);
   });
 
   it('derives today from the snapshot stamp in America/Los_Angeles', () => {
@@ -92,9 +92,24 @@ describe('data: sections and leagues', () => {
   });
 
   it('lists route params', () => {
-    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
     expect(data.getTournamentLeagueIds()).toEqual(['mcal']);
-    expect(data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+  });
+
+  it('summarises each region: its sections, their leagues, its team count', () => {
+    const regions = data.getRegionSummaries();
+    expect(regions.map((r) => [r.region.id, r.region.shortName, r.teamCount])).toEqual([
+      ['norcal', 'NorCal', 49],
+      ['socal', 'SoCal', 50],
+    ]);
+    expect(regions.map((r) => r.sections.map((s) => [s.section.id, s.leagues.map((l) => l.id)]))).toEqual([
+      [['ccs', ['scval', 'bval', 'pcal']], ['ncs', ['mcal']], ['ns', ['eal']]],
+      [['ss', ['sunset']], ['sds', ['city', 'north-county', 'metro']]],
+    ]);
+    expect(data.getLeagueSummaries('socal').map((l) => l.id)).toEqual(['sunset', 'city', 'north-county', 'metro']);
+    expect(data.getLeagueSummaries('norcal').map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(data.getLeagueSummaries()).toHaveLength(9);
   });
 
   it('exposes league health', () => {
@@ -106,8 +121,8 @@ describe('data: sections and leagues', () => {
 });
 
 describe('data: teams', () => {
-  it('returns all 49, one division, or one league', () => {
-    expect(data.getTeams().length).toBe(49);
+  it('returns all 99, one division, or one league', () => {
+    expect(data.getTeams().length).toBe(99);
     expect(data.getTeams('de-anza').length).toBe(7);
     expect(data.getTeams({ division: 'el-camino' }).length).toBe(8);
     expect(data.getTeams({ league: 'bval' }).length).toBe(12);
@@ -116,17 +131,31 @@ describe('data: teams', () => {
     expect(data.getTeams({ league: 'eal' }).map((t) => t.slug)).toEqual([
       'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
+    expect(data.getTeams({ league: 'sunset' })).toHaveLength(10);
+    expect(data.getTeams({ league: 'north-county' })).toHaveLength(19);
+    expect(data.getTeams('valley')).toHaveLength(6);
   });
 
   it('groups section → league → division', () => {
     const grouped = data.getTeamsGrouped();
-    expect(grouped.map((g) => g.section.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(grouped.map((g) => g.section.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
     expect(grouped[0].leagues.map((l) => l.league.id)).toEqual(['scval', 'bval', 'pcal']);
     expect(grouped[1].leagues[0].divisions).toHaveLength(1);
     expect(grouped[1].leagues[0].divisions[0].heading).toBeNull();
     expect(grouped[2].leagues.map((l) => l.league.id)).toEqual(['eal']);
     expect(grouped[2].leagues[0].divisions.map((d) => [d.id, d.heading, d.teams.length])).toEqual([['eal', null, 6]]);
-    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
+    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(99);
+    // One region's sections only.
+    const norcal = data.getTeamsGrouped('norcal');
+    expect(norcal.map((g) => g.section.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(norcal.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
+    const socal = data.getTeamsGrouped('socal');
+    expect(socal.map((g) => g.section.id)).toEqual(['ss', 'sds']);
+    expect(socal[1].leagues.map((l) => [l.league.id, l.divisions.map((d) => [d.id, d.heading, d.teams.length])])).toEqual([
+      ['city', [['city-western', 'City Western', 6], ['city-eastern', 'City Eastern', 6]]],
+      ['north-county', [['avocado', 'Avocado', 6], ['palomar', 'Palomar', 7], ['valley', 'Valley', 6]]],
+      ['metro', [['metro-mesa', 'Metro Mesa', 5], ['metro-south-bay', 'Metro South Bay', 4]]],
+    ]);
   });
 
   it('looks a team up by slug or GUID', () => {
@@ -135,12 +164,12 @@ describe('data: teams', () => {
     expect(data.getTeamById(team!.id)?.slug).toBe('los-altos');
     expect(data.getTeamForm(team!.id)).toBeDefined(); // a GUID resolves as well as a slug
     expect(data.getTeamBySlug('nope')).toBeUndefined();
-    expect(data.getTeamSlugs()).toHaveLength(49);
+    expect(data.getTeamSlugs()).toHaveLength(99);
   });
 
   it('builds the search index in LEAGUES then registry order', () => {
     const index = data.getTeamSearchIndex();
-    expect(index.teams).toHaveLength(49);
+    expect(index.teams).toHaveLength(99);
     expect(index.teams.map((t) => t.slug)).toEqual(data.getTeams().map((t) => t.slug));
     expect(data.getTeamSearchIndex()).toBe(index);
   });
@@ -227,6 +256,7 @@ describe('data: standings and derived facts', () => {
     }
     expect(Object.keys(data.getAllStandings())).toEqual([
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
+      'sunset', 'city-western', 'city-eastern', 'avocado', 'palomar', 'valley', 'metro-mesa', 'metro-south-bay',
     ]);
     expect(data.getStandingFor('leigh')?.hasReportedResults).toBe(false);
   });
@@ -244,7 +274,7 @@ describe('data: standings and derived facts', () => {
       expect(c.scheduled).toBe(12);
       expect(c.counted).toBe(row.computed.gp);
       expect(c.remaining).toBe(Math.max(0, 12 - row.computed.gp));
-      expect(c.maxPts).toBe(row.computed.pts + 3 * c.remaining);
+      expect(c.maxPts).toBe(row.computed.pts + 3 * c.remaining!);
       expect(c.backfilled).toBe(0);
     }
     // The Sep 9 Homestead–Cupertino fixture MaxPreps never published is past and missing.
@@ -255,6 +285,14 @@ describe('data: standings and derived facts', () => {
     const mcal = data.getStandingContext('marin-county');
     for (const c of mcal.values()) {
       expect([c.scheduled, c.counted, c.remaining, c.maxPts]).toEqual([16, 0, 16, 48]);
+    }
+    // The Sunset has no fixed schedule (gamesPerTeam null): no "of N", no LEFT, no MAX.
+    const sunset = data.getStandingContext('sunset');
+    expect(sunset.size).toBe(10);
+    for (const c of sunset.values()) expect([c.scheduled, c.counted, c.remaining, c.maxPts]).toEqual([null, 0, null, null]);
+    // A San Diego division plays a double round robin: Palomar's seven teams play 12 each.
+    for (const c of data.getStandingContext('palomar').values()) {
+      expect([c.scheduled, c.counted, c.remaining, c.maxPts]).toEqual([12, 0, 12, 36]);
     }
   });
 
@@ -286,6 +324,7 @@ describe('data: standings and derived facts', () => {
     expect(spread.scheduled).toBe(14);
     expect(spread.max).toBeGreaterThanOrEqual(spread.min);
     expect(data.getGamesPlayedSpread('pcal')).toEqual({ min: 0, max: 0, scheduled: 12 });
+    expect(data.getGamesPlayedSpread('sunset')).toEqual({ min: 0, max: 0, scheduled: null });
   });
 });
 
@@ -319,9 +358,23 @@ describe('data: season phase per league', () => {
     expect(data.getSeasonPhase('eal', '2026-11-01T19:00:00.000Z')).toBe('complete');
   });
 
-  it('the site phase is the least advanced league', () => {
+  it('the site phase is the least advanced of the leagues that have started; complete only when all are', () => {
+    // This snapshot predates the Southern California leagues: only their games against NorCal teams are
+    // in it (City's first is Oct 2, North County's Sep 4), and the Sunset and Metro have none, so those
+    // two stay preseason; the rule no longer lets that hold the whole site in its preseason.
+    for (const id of ['sunset', 'metro']) {
+      expect(data.getSeasonPhase(id, '2026-10-26T19:00:00.000Z'), id).toBe('preseason');
+    }
+    expect(data.getSeasonPhase('city', '2026-10-26T19:00:00.000Z')).toBe('regular');
     expect(data.getSitePhase('2026-10-26T19:00:00.000Z')).toBe('regular');
-    expect(data.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('complete');
+    expect(data.getSitePhase()).toBe('regular');
+    expect(data.getSitePhase('2026-08-01T19:00:00.000Z')).toBe('preseason');
+    // NorCal is over by Christmas; the Sunset and Metro never started here, so neither SoCal nor the site
+    // is complete: every started league is, so the next thing to happen is a league's first game.
+    expect(data.getRegionPhase('norcal', '2026-12-25T19:00:00.000Z')).toBe('complete');
+    expect(data.getRegionPhase('socal', '2026-12-25T19:00:00.000Z')).toBe('preseason');
+    expect(data.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('preseason');
+    expect(data.getRegionPhase('norcal', '2026-10-30T19:00:00.000Z')).toBe('regular');
   });
 });
 
@@ -390,6 +443,28 @@ describe('data: postseason', () => {
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
     expect(data.getTeamPostseasonLine('chico')).toBeNull();
     expect(data.getTeamPostseasonLine('nope')).toBeNull();
+    // A San Diego team with no league game yet: no place, no line (never placed by merit).
+    expect(data.getTeamPostseasonLine('la-jolla')).toBeNull();
+  });
+
+  it('writes the Sunset’s no-postseason note for every Sunset team, played or not', () => {
+    const sunset = getLeague('sunset');
+    if (sunset.postseason.kind !== 'no-postseason') throw new Error('the Sunset has no postseason');
+    expect(data.getTeamPostseasonLine('edison')).toEqual({
+      label: 'No section playoffs',
+      sentence: sunset.postseason.note,
+      href: '/playoffs#sunset',
+      linkText: 'Postseason',
+    });
+    expect(data.getTeamPostseasonLine('edison')!.sentence).not.toMatch(/\btop\b/i);
+  });
+
+  it('draws neither a projection nor a bracket for the Sunset or a San Diego league', () => {
+    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
+      expect(() => data.getPlayoffProjection(id), id).toThrow(/no CCS ladder/);
+      expect(() => data.getLeagueTournament(id), id).toThrow(/runs no league tournament/);
+      expect(data.getLeaguePairings(id)).toEqual([]);
+    }
   });
 
   it('writes the play-in clause from the config, its berth ordinal from autoBerths', () => {
@@ -555,5 +630,136 @@ describe('data: an EAL table with results', () => {
       linkText: 'Postseason',
     });
     expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------- Southern California with results
+
+/**
+ * The same golden snapshot plus synthetic Southern California games, the SoCal standings, windows and
+ * counts recomputed and the file re-validated by loadSnapshot (DESIGN-socal §2.1.7). City Western:
+ * La Jolla beat Scripps Ranch (flagged) and Bishop's beat Canyon Hills in a shootout (0-0 flagged W/L,
+ * NOT flagged a league game: membership counts it anyway). City Eastern: Patrick Henry–Point Loma (Sep 29,
+ * unflagged, no score) is a missing league result. Mission Bay–Clairemont is flagged between two City
+ * divisions: neither table. North County: Mt. Carmel–Poway is an Avocado–Palomar game, no table. Metro South
+ * Bay plays its first game Oct 7. The Sunset: Bonita has played three of the ten, Marina, Edison and
+ * Chaminade one each, so the spread is 1 to 3 with no fixed schedule.
+ */
+describe('data: Southern California tables with results', () => {
+  let socal: DataModule;
+  let henry: Game;
+  let crossDivision: Game;
+
+  beforeAll(async () => {
+    const raw = JSON.parse(
+      readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
+    ) as unknown;
+    const base = loadSnapshot(raw);
+    henry = game({ home: 'patrick-henry', away: 'point-loma', date: '2026-09-29', status: 'score-pending', league: false });
+    crossDivision = game({ home: 'mission-bay', away: 'clairemont', hs: 1, as: 2, date: '2026-09-16' });
+    const added = [
+      game({ home: 'la-jolla', away: 'scripps-ranch', hs: 2, as: 1, date: '2026-09-15' }),
+      game({ home: 'bishops', away: 'canyon-hills', hs: 0, as: 0, date: '2026-09-22', league: false, results: { home: 'W', away: 'L' } }),
+      henry,
+      crossDivision,
+      game({ home: 'mt-carmel', away: 'poway', hs: 0, as: 0, date: '2026-09-11', results: { home: 'W', away: 'L' } }),
+      game({ home: 'hilltop', away: 'southwest', date: '2026-10-07' }),
+      game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' }),
+      game({ home: 'edison', away: 'bonita', hs: 0, as: 2, date: '2026-09-01' }),
+      game({ home: 'bonita', away: 'chaminade', hs: 3, as: 0, date: '2026-09-10' }),
+    ];
+    const games = [...base.games, ...added];
+    const socalLeagues = new Set(['sunset', 'city', 'north-county', 'metro']);
+    const socalDivisions = new Set(
+      [...socalLeagues].flatMap((id) => getLeague(id).divisions.map((d) => d.id)),
+    );
+    const rows = new Map(
+      computeStandings(games, { reported: new Map() })
+        .filter((r) => socalDivisions.has(r.division))
+        .map((r) => [r.teamId, r]),
+    );
+    const standings = base.standings.map((r) => rows.get(r.teamId) ?? r);
+    const season = buildSeason(games);
+    const next: Snapshot = {
+      ...base,
+      games,
+      standings,
+      season: {
+        ...base.season,
+        leagues: base.season.leagues.map((l) => (socalLeagues.has(l.id) ? season.leagues.find((x) => x.id === l.id)! : l)),
+        window: season.window,
+      },
+      counts: countsOf(games, standings),
+    };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-socal-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    socal = await import('../lib/data');
+  });
+
+  it('counts both City Western games, flagged or not, and the shootout win as a win', () => {
+    const table = socal.getStandings('city-western');
+    const rec = (slug: string) => {
+      const c = table.find((r) => r.slug === slug)!.computed;
+      return [c.gp, c.w, c.l, c.t, c.pts];
+    };
+    expect(rec('la-jolla')).toEqual([1, 1, 0, 0, 3]);
+    expect(rec('bishops')).toEqual([1, 1, 0, 0, 3]);
+    expect(rec('canyon-hills')).toEqual([1, 0, 1, 0, 0]);
+    expect(rec('mission-bay')).toEqual([0, 0, 0, 0, 0]);
+    expect(socal.getGameById(crossDivision.contestId)!.provenance.classificationNote).toBe(
+      'MaxPreps marks this as a league game; it is between two divisions of the City Conference, so it counts in neither table.',
+    );
+    // Avocado v Palomar: two divisions of North County, so neither table.
+    expect(socal.getStandings('avocado').find((r) => r.slug === 'mt-carmel')!.computed.gp).toBe(0);
+  });
+
+  it('lists an unflagged past San Diego game with no score as a missing league result', () => {
+    const missing = socal.getMissingOfficialResults('city-eastern');
+    expect(missing.map((m) => [m.kind, m.dateKey, m.game?.contestId])).toEqual([['missing', '2026-09-29', henry.contestId]]);
+    const ctx = socal.getStandingContext('city-eastern');
+    expect(ctx.get(socal.getTeamBySlug('patrick-henry')!.id)!.missingPast).toBe(1);
+    expect(socal.getMissingOfficialResults('city-western')).toEqual([]);
+  });
+
+  it('keeps the Sunset free of LEFT and MAX, and measures its spread with no "of N"', () => {
+    for (const c of socal.getStandingContext('sunset').values()) {
+      expect(c.scheduled).toBeNull();
+      expect(c.remaining).toBeNull();
+      expect(c.maxPts).toBeNull();
+    }
+    expect(socal.getStandingContext('sunset').get(socal.getTeamBySlug('bonita')!.id)!.counted).toBe(3);
+    expect(socal.getGamesPlayedSpread('sunset')).toEqual({ min: 1, max: 3, scheduled: null });
+  });
+
+  it('writes the San Diego postseason line from the qualification line, never a "top N"', () => {
+    const city = getLeague('city');
+    if (city.postseason.kind !== 'section-playoffs') throw new Error('City plays the San Diego Section playoffs');
+    const first = socal.getTeamPostseasonLine('la-jolla')!;
+    // Two teams are level on 3 points at the top, so the first place spans 1st and 2nd.
+    expect(first.label).toBe('League champion: at least a play-in or no league route into the playoffs');
+    expect(first.sentence).toBe(
+      `${city.postseason.qualificationLine} The Section lists La Jolla in Division I; Open Division teams are drawn from Division I at the end of the regular season.`,
+    );
+    expect(first.href).toBe('/playoffs#city');
+    expect(first.linkText).toBe('San Diego Section playoffs');
+    const below = socal.getTeamPostseasonLine('canyon-hills')!;
+    expect(below.label).toBe('No league route');
+    expect(below.sentence).not.toMatch(/\btop (six|\d)/i);
+    expect(socal.getTeamPostseasonLine('mission-bay')).toBeNull();
+    expect(socal.getTeamPostseasonLine('marina')!.label).toBe('No section playoffs');
+  });
+
+  it('holds the site in its regular season while Metro has not started, and completes once every league has', () => {
+    // Metro's first game is Oct 7 (Metro South Bay): on Oct 2 Metro is preseason and the rest are not.
+    expect(socal.getSeasonPhase('metro', '2026-10-02T19:00:00.000Z')).toBe('preseason');
+    expect(socal.getSitePhase('2026-10-02T19:00:00.000Z')).toBe('regular');
+    expect(socal.getRegionPhase('socal', '2026-10-02T19:00:00.000Z')).toBe('regular');
+    // The San Diego Section playoffs (Nov 2-14) are its leagues' tournament phase; the Sunset is done Oct 31.
+    expect(socal.getSeasonPhase('city', '2026-11-05T19:00:00.000Z')).toBe('tournament');
+    expect(socal.getSeasonPhase('sunset', '2026-11-05T19:00:00.000Z')).toBe('complete');
+    expect(socal.getRegionPhase('socal', '2026-11-05T19:00:00.000Z')).toBe('tournament');
+    expect(socal.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('complete');
   });
 });

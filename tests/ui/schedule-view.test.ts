@@ -112,7 +112,12 @@ describe('league scoping (/schedule/<league>)', () => {
   });
 
   it('lands the Scores tab on a date group the league’s list lays out (lib/data getScoresLandingDate)', async () => {
-    for (const id of data.getLeagueIds()) {
+    // The all-2026-10-02 corpus predates the four Southern California leagues, which it carries as
+    // "not fetched in this run" with no games, so a league with no game date in it has no landing
+    // date to check. The five leagues the corpus does cover must all be checked.
+    const covered = data.getLeagueIds().filter((id) => data.getGameDates({ league: id }).length > 0);
+    expect(covered, 'corpus leagues with games').toEqual(expect.arrayContaining(['scval', 'bval', 'pcal', 'mcal', 'eal']));
+    for (const id of covered) {
       const landing = data.getScoresLandingDate({ league: id });
       expect(landing, `lib/data.ts getScoresLandingDate(${id})`).not.toBeNull();
       expect(data.getGameDates({ league: id }), `lib/data.ts getScoresLandingDate(${id})`).toContain(landing);
@@ -209,6 +214,54 @@ describe('the /schedule index', () => {
         data.getGames({ league: card.id }).length,
       );
     }
+    // Per region (DESIGN-socal §2.4): each region's Recent and Next are its own game days, and each
+    // day row counts the games with a side in the region.
+    expect(built.regions.map((r) => [r.id, r.idSuffix])).toEqual([['norcal', ''], ['socal', '-socal']]);
+    for (const r of built.regions) {
+      for (const d of [...r.recent, ...r.next]) {
+        expect(d.leagues.length, `components/schedule/schedule-view.ts ${r.id} ${d.date}`).toBeGreaterThan(0);
+        expect(d.leagues.every((l) => l.region === r.id)).toBe(true);
+      }
+    }
+    for (const d of built.days) {
+      expect(d.byRegion.map((r) => r.region)).toEqual(['norcal', 'socal']);
+      expect(d.byRegion.reduce((n, r) => n + r.total, 0)).toBeGreaterThanOrEqual(d.total);
+    }
+  });
+
+  it('renders the cards and Recent/Next per region, one day index, and the region control', () => {
+    const html = renderIndex();
+    expect(html, 'app/schedule/page.tsx region control').toContain('data-region-option="socal"');
+    expect(html).toContain('<div data-region-scope="norcal">');
+    expect(html).toContain('<div data-region-scope="socal">');
+    // A card grid holding a jump target is never itself region-scoped (the deep-link rule would unset its grid).
+    expect(html).not.toMatch(/<ul data-region-scope[^>]*grid/);
+    for (const id of data.getLeagueIds()) expect(html, `components/schedule/ScheduleIndex.tsx #${id}`).toContain(`id="${id}"`);
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/schedule/page.tsx duplicate ids').toEqual([]);
+  });
+});
+
+describe('Southern California schedule pages (DESIGN-socal §2.4)', () => {
+  it('the rail’s postseason chip: the Section’s playoffs for a San Diego league, none for the Sunset', async () => {
+    // The rail itself, over two game days (it draws nothing for a league with no dates yet).
+    const { TimelineRail } = await import('../../components/schedule/TimelineRail');
+    const rail = (leagueId: string) =>
+      renderToStaticMarkup(createElement(TimelineRail, { dates: ['2026-09-01', '2026-10-30'], today: '2026-10-06', leagueId }));
+    const city = rail('city');
+    expect(city, 'components/schedule/TimelineRail.tsx city chip').toContain('href="/playoffs#city"');
+    expect(textOf(city)).toContain('Section playoffs Nov 2–14');
+    expect(city).toContain('San Diego Section playoffs, Monday, November 2 to Saturday, November 14');
+    const sunset = rail('sunset');
+    expect(sunset, 'components/schedule/TimelineRail.tsx no Sunset chip').not.toContain('/playoffs');
+    expect(textOf(sunset)).not.toMatch(/\bCCS\b|playoffs/);
+  });
+
+  it('a league page’s chips are its region’s leagues plus All', async () => {
+    const html = await renderLeague('sunset');
+    const nav = html.match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
+    const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs).toEqual(['/schedule', '/schedule/sunset', '/schedule/city', '/schedule/north-county', '/schedule/metro']);
   });
 });
 

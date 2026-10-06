@@ -15,7 +15,12 @@
  * strings. Team identity comes from lib/sources/sblive.ts `resolveSbliveSide` (id first).
  *
  * Only scores are compared; no W/L/T is derived here (that is lib/format.ts `sideOutcome`). So an EAL 1 v 1
- * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree.
+ * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree, as do a San
+ * Diego Section shootout win MaxPreps records 0-0 and si.com's 0-0.
+ *
+ * This is the si.com SCORE comparison only. The MaxPreps STANDINGS comparison is lib/standings.ts
+ * buildCrossCheck, which skips a division MaxPreps publishes no table for (the San Diego Section's Valley:
+ * crossCheckSkipReason); nothing here reads a MaxPreps league table, so nothing here changes for it.
  *
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */

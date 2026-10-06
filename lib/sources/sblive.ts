@@ -270,6 +270,11 @@ export const ScoreboardPropsSchema = z.looseObject({
       date: z.string(),
       games: z.looseObject({
         totalCount: z.number().nullable().optional(),
+        /** si.com serves the first 24 games of a day in the page; the rest load in the browser (see parseScoresPage). */
+        pageInfo: z
+          .looseObject({ hasNextPage: z.boolean().nullable().optional(), endCursor: z.string().nullable().optional() })
+          .nullable()
+          .optional(),
         nodes: z.array(
           z.looseObject({
             id: z.union([z.string(), z.number()]),
@@ -539,8 +544,22 @@ export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl(''), w
  */
 export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: SbliveParseWarn): SbliveGame[] {
   const props = ScoreboardPropsSchema.parse(requireBlock(html, 'games/GenderSportIndex', url));
+  const games = props.query.scoreboardDate.games;
+  // Pagination (checked 2026-10-06): the page server-renders the day's first 24 games
+  // (`pageInfo: { endCursor: 'MjQ', hasNextPage: true }`, totalCount 29 that day) and the browser loads
+  // the rest through si.com's own GraphQL client. The URL takes no page or cursor parameter (`&after=`,
+  // `&page=2` and `&cursor=` all return the same first 24), so a later page cannot be read from here.
+  // With the Southern California teams a busy day passes 24, so a truncated day is said, never silently
+  // taken for the whole day: it only lowers coverage (an uncovered game is planned for a team page, or
+  // waits for a later run; lib/backfill.ts scoreboardCoverage is positive-only), never a conclusion.
+  const total = games.totalCount ?? null;
+  if (games.pageInfo?.hasNextPage || (total !== null && total > games.nodes.length)) {
+    warn?.(
+      `si.com scoreboard lists ${games.nodes.length} of ${total ?? 'more'} games; the rest load in the browser and are not read (${url})`,
+    );
+  }
   const out: SbliveGame[] = [];
-  for (const node of props.query.scoreboardDate.games.nodes) {
+  for (const node of games.nodes) {
     if (node.gameTeams.length !== 2) continue;
     const gameId = sbliveGameIdOf(node.id);
     if (gameId === null) {

@@ -108,19 +108,26 @@ describe('vnn: opponent naming differs per school', () => {
     expect(parsed.map((e) => e.site)).toEqual(['home', 'home']);
   });
 
-  it('keeps a non-SCVAL opponent as a name with no slug', () => {
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'BEGIN:VEVENT',
-      'DTSTART:20260827T230000Z',
-      'SUMMARY:Girls Varsity Field Hockey vs La Jolla High School',
-      'LOCATION:Palo Alto High School',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-    const [e] = parseVnnIcs(ics, 'palo-alto');
-    expect(e.opponentName).toBe('La Jolla High School');
-    expect(e.opponentSlug).toBeNull();
+  // La Jolla was the outsider here until the San Diego Section joined the registry: it now resolves to
+  // its registry team, and a school outside the registry (Harvard-Westlake, a Southern Section
+  // independent covered only as an opponent) stays a bare name.
+  it('resolves a San Diego Section opponent and keeps a non-registry opponent as a name with no slug', () => {
+    const ics = (summary: string) =>
+      [
+        'BEGIN:VCALENDAR',
+        'BEGIN:VEVENT',
+        'DTSTART:20260827T230000Z',
+        `SUMMARY:Girls Varsity Field Hockey vs ${summary}`,
+        'LOCATION:Palo Alto High School',
+        'END:VEVENT',
+        'END:VCALENDAR',
+      ].join('\r\n');
+    const [laJolla] = parseVnnIcs(ics('La Jolla High School'), 'palo-alto');
+    expect(laJolla.opponentName).toBe('La Jolla High School');
+    expect(laJolla.opponentSlug).toBe('la-jolla');
+    const [outsider] = parseVnnIcs(ics('Harvard-Westlake School'), 'palo-alto');
+    expect(outsider.opponentName).toBe('Harvard-Westlake School');
+    expect(outsider.opponentSlug).toBeNull();
   });
 });
 

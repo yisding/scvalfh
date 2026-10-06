@@ -562,6 +562,48 @@ describe('backfill: a level si.com score in a 1 v 1 league (EAL)', () => {
   });
 });
 
+
+describe('backfill: the Southern California leagues (DESIGN-socal §2.1.3)', () => {
+  const SDS_LEVEL_NOTE =
+    'si.com has a level score, but a varsity San Diego Section game is decided by a shootout and si.com does not say who won it, so it is not used.';
+
+  it('rule 3 never fills a San Diego game from a level si.com score, across conferences too (the section’s shootout)', () => {
+    for (const [home, away] of [['la-jolla', 'scripps-ranch'], ['clairemont', 'eastlake']] as const) {
+      const pending = game({ home, away, date: '2026-09-29', status: 'score-pending' });
+      const row = sb('2026-09-29', [home, 0], [away, 0]);
+      const res = applyBackfill(input({ games: [pending], sblive: [row] }));
+      expect(res.games[0], `${home} ${away}`).toBe(pending);
+      expect(res.rows).toEqual([]);
+      expect(res.skipped).toEqual([expect.objectContaining({ contestId: pending.contestId, note: SDS_LEVEL_NOTE })]);
+    }
+  });
+
+  it('rule 3 fills a level si.com score between two Sunset teams (no shootout rule: a level game stands)', () => {
+    const pending = game({ home: 'edison', away: 'marina', date: '2026-09-29', status: 'score-pending' });
+    const res = applyBackfill(input({ games: [pending], sblive: [sb('2026-09-29', ['edison', 1], ['marina', 1])] }));
+    expect(res.games[0].provenance.backfill?.rule).toBe('score-pending');
+    expect([res.games[0].home.score, res.games[0].away.score]).toEqual([1, 1]);
+  });
+
+  it('4c applies to the Sunset (leagueOvertime none), and its note claims no rule the Sunset does not publish', () => {
+    const tie = game({ home: 'edison', away: 'marina', date: '2026-09-23', hs: 0, as: 0 });
+    const res = applyBackfill(input({ games: [tie], sblive: [sb('2026-09-23', ['edison', 2], ['marina', 1])] }));
+    const g = res.games[0];
+    expect(g.provenance.backfill?.rule).toBe('phantom-tie');
+    expect(g.provenance.backfill?.note).toBe(
+      'MaxPreps shows a 0-0 tie, but si.com has a decided final the same day and no published Sunset rule says a game ends level, so si.com’s score is published.',
+    );
+    expect(g.provenance.backfill?.note).not.toMatch(/no overtime/);
+  });
+
+  it('4c never applies to a San Diego game (a level game goes to a shootout)', () => {
+    const tie = game({ home: 'la-jolla', away: 'scripps-ranch', date: '2026-09-23', hs: 0, as: 0 });
+    const res = applyBackfill(input({ games: [tie], sblive: [sb('2026-09-23', ['la-jolla', 1], ['scripps-ranch', 0])] }));
+    expect(res.games[0]).toBe(tie);
+    expect(res.rows).toEqual([]);
+  });
+});
+
 describe('backfill rule 5 and the never-0-0 rule', () => {
   it('leaves a plain disagreement alone (MaxPreps stays)', () => {
     const g = game({ home: 'greenfield', away: 'stevenson', date: '2026-09-21', hs: 0, as: 8 });

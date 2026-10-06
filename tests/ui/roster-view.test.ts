@@ -25,7 +25,7 @@ const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }
 
 describe('buildRosterView', () => {
   it('builds a view for every team of every league, and null only for a slug that is no team', () => {
-    expect(views).toHaveLength(49);
+    expect(views).toHaveLength(99);
     for (const { slug, view } of views) expect(view, slug).toBeTruthy();
     for (const id of LEAGUE_IDS) {
       for (const t of teamsInLeague(id)) expect(buildRosterView(t.slug), `${id} / ${t.slug}`).not.toBeNull();
@@ -57,12 +57,15 @@ describe('buildRosterView', () => {
 
   it('prints only facts somebody published, in words', () => {
     for (const { slug, view } of views) {
-      const merged = new Map(getEnrichedTeamRoster(slug)!.players.map((p) => [p.fullName, p]));
+      // By name, every player of that name: MaxPreps can list one player twice under two careers
+      // (Granite Hills' Anaai Trujillo, once with a grade and once without), and both rows show.
+      const merged = new Map<string, NonNullable<ReturnType<typeof getEnrichedTeamRoster>>['players'][number][]>();
+      for (const p of getEnrichedTeamRoster(slug)!.players) merged.set(p.fullName, [...(merged.get(p.fullName) ?? []), p]);
       for (const row of view.rows) {
-        const p = merged.get(row.name)!;
-        const expected = (p.grade !== null ? 1 : 0) + (p.positions.length ? 1 : 0) + (p.height !== null ? 1 : 0);
-        expect(row.facts.length, `${slug} / ${row.name}`).toBe(expected);
-        expect(row.jersey?.text ?? null, `${slug} / ${row.name}`).toBe(p.jersey);
+        const same = merged.get(row.name)!;
+        const expected = same.map((p) => (p.grade !== null ? 1 : 0) + (p.positions.length ? 1 : 0) + (p.height !== null ? 1 : 0));
+        expect(expected, `${slug} / ${row.name}`).toContain(row.facts.length);
+        expect(same.map((p) => p.jersey), `${slug} / ${row.name}`).toContain(row.jersey?.text ?? null);
         for (const f of row.facts) {
           expect(f.text, `${slug} / ${row.name}`).not.toMatch(/^(null|undefined|)$/);
           // Position codes are spelled out; the raw MaxPreps letters never reach the page.
@@ -370,8 +373,12 @@ describe('TeamRoster', () => {
     }
     // Every team MaxPreps lists nobody for says what other sources showed, or that none were checked;
     // none is left to a default.
+    const socal = new Set(TEAMS.filter((t) => ['sunset', 'city', 'north-county', 'metro'].includes(t.league)).map((t) => t.slug));
     const empty = views.filter((v) => v.view.status === 'empty').map((v) => [v.slug, v.view.otherRosters.status]);
-    expect(empty).toEqual([
+    // Southern California: no school-site sweep has been done (DESIGN-socal §3), so an empty SoCal roster
+    // always says other sources were not checked.
+    for (const [slug, status] of empty.filter(([slug]) => socal.has(slug))) expect(status, slug).toBe('not-checked');
+    expect(empty.filter(([slug]) => !socal.has(slug))).toEqual([
       ['del-mar', 'none'],
       ['silver-creek', 'none'],
       ['sobrato', 'none'],

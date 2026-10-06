@@ -19,7 +19,7 @@ import {
 
 /**
  * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/search.ts) over the pre-serialized
- * 49-team index the page passes in. Two modes:
+ * 99-team index the page passes in. Two modes:
  *
  * - `filter` (/teams): the page's own server-rendered, grouped list IS the result list. This
  *   toggles `hidden` on its `[data-team-tile="<slug>"]` items (the standings tables' team rows, so
@@ -29,7 +29,7 @@ import {
  *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
  *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
- *   `Search all 49 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
+ *   `Search all 99 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
  *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
@@ -77,9 +77,26 @@ function isActiveQuery(query: string): boolean {
   return raw.length >= 2 && normalizeQuery(raw).compact.length >= 2;
 }
 
-/** 'Mt. Hamilton · BVAL' | 'MCAL' (single-division leagues show no division). */
+/** 'Mt. Hamilton · BVAL' | 'MCAL' (single-division leagues show no division). The tail of `pinLabel`. */
 export function pinResultDetail(entry: TeamSearchEntry): string {
   return entry.divisionLabel ? `${entry.divisionLabel} · ${entry.leagueShort}` : entry.leagueShort;
+}
+
+/**
+ * The Southern California sections, spelled out (this is a client module: lib/leagues stays out of the
+ * bundle). A SoCal league's short name ('City', 'Metro', 'Valley') reads like a place, not a league, to a
+ * NorCal reader searching all 99 teams, so its result line names the section too (DESIGN-socal §2.4).
+ * NorCal results keep today's line.
+ */
+const SOCAL_SECTION_WORDS: Readonly<Partial<Record<TeamSearchEntry['sectionShort'], string>>> = {
+  SS: 'Southern Section',
+  SDS: 'San Diego Section',
+};
+
+/** The visible detail line: 'Mt. Hamilton · BVAL' | 'Palomar · North County · San Diego Section'. */
+export function resultDetail(entry: TeamSearchEntry): string {
+  const section = SOCAL_SECTION_WORDS[entry.sectionShort];
+  return section ? `${pinResultDetail(entry)} · ${section}` : pinResultDetail(entry);
 }
 
 /** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
@@ -92,7 +109,7 @@ export interface FinderView {
   matches: TeamSearchEntry[];
   /** The teams this finder lists itself (pin mode: the first `limit`; filter mode: none). */
   shown: TeamSearchEntry[];
-  /** pin mode: more teams match than are shown → the "Search all 49 on Teams →" link. */
+  /** pin mode: more teams match than are shown → the "Search all 99 on Teams →" link. */
   more: boolean;
   groups: GroupSearchEntry[];
   notCovered: NotCoveredEntry[];
@@ -160,13 +177,14 @@ function pinResultParts(entry: TeamSearchEntry): { before: string; visible: stri
   const at = label.toLowerCase().indexOf(entry.shortName.toLowerCase(), 'Pin '.length);
   if (!label.startsWith('Pin ') || !label.endsWith(tail) || at < 0 || at + entry.shortName.length > label.length - tail.length) {
     // pinLabel's format changed: fall back to the plain form.
-    return { before: 'Pin ', visible: entry.shortName, after: ', ', detail };
+    return { before: 'Pin ', visible: entry.shortName, after: ', ', detail: resultDetail(entry) };
   }
   return {
     before: label.slice(0, at),
     visible: label.slice(at, at + entry.shortName.length),
     after: label.slice(at + entry.shortName.length, label.length - detail.length),
-    detail,
+    // The visible line adds a SoCal team's section (resultDetail); the label's own tail stops at the league.
+    detail: resultDetail(entry),
   };
 }
 
@@ -202,7 +220,7 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
       className="flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left no-underline"
     >
       <span className="text-body font-semibold text-accent">{entry.shortName}</span>
-      <span className="text-meta text-ink-2">{pinResultDetail(entry)}</span>
+      <span className="text-meta text-ink-2">{resultDetail(entry)}</span>
     </Link>
   );
 }

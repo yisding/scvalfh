@@ -60,8 +60,11 @@ describe('recordAsOf', () => {
       expect(side.sub, team.slug).toBe(`${fmt.recordString(standing.computed)} ${scope}`);
       checked += 1;
     }
-    // The corpus has league results for most of the 49 teams; a vacuous pass is a failure.
-    expect(checked).toBeGreaterThan(d.getTeams().length / 2);
+    // The 2026-10-02 corpus has league results for most of the 49 NorCal teams (the 50 SoCal teams have none
+    // in it: only their games against NorCal teams are there); a vacuous pass is a failure.
+    const norcal = d.getTeams().filter((t) => leagues.regionOf(t.league) === 'norcal');
+    expect(norcal).toHaveLength(49);
+    expect(checked).toBeGreaterThan(norcal.length / 2);
   });
 
   it('counts this game on a final and leaves it out of a game still to play', () => {

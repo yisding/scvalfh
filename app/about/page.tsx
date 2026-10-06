@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import BackfillTable from '../../components/about/BackfillTable';
 import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
@@ -40,10 +41,10 @@ import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeag
 import { jvTableTitle } from '../../components/standings/jv-standings-view';
 import { getJvFile, getJvMerge, getJvTables } from '../../lib/jv';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
-import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, leagueStandingsUrl } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
+import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, leagueStandingsUrl, regionOf } from '../../lib/leagues';
+import type { LeagueConfig, SectionConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
-import { statusLegend } from '../../lib/standings';
+import { crossCheckSkipReason, statusLegend } from '../../lib/standings';
 import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from '../../lib/types';
 
 /**
@@ -61,7 +62,34 @@ import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from 
  * its league games come from instead) and its `membershipNote`, its health card says it has no
  * official schedule document, and its postseason (an unbracketed tournament: the Super Regional) is
  * the written rule and dates, with no bracket.
+ *
+ * The Southern California leagues (DESIGN-socal §2.1, §2.4) are documents-free the same way: the Sunset
+ * and the three San Diego conferences publish no schedule, standings or points rule, so their source
+ * cards name the section document their rules come from (`SectionConfig.rulesSource`: the Southern
+ * Section's Blue Book, the San Diego Section's Green Book), their tables are ordered by this site's own
+ * 3-1-0 points and every sentence says so, and their postseason is the Sunset's "no playoffs" note or the
+ * San Diego Section's playoffs as the Green Book writes them. The EAL's sentences, which name the Northern
+ * Section's Guidelines, are unchanged word for word (tests/ui/eal-views.test.ts pins them); a sentence
+ * that names a section's rules document reads it from `rulesSource` (`rulesDocument`).
  */
+
+/**
+ * How a sentence names a section's rules document: 'the CIF Northern Section’s Field Hockey Guidelines
+ * 2026-28' (a document named after its section takes the possessive, as the EAL's sentences always
+ * have), 'the CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', 'the CIF-SDS Green Book 2026-27,
+ * Bylaw 2000.1 (Field Hockey)'.
+ */
+function rulesDocument(section: Pick<SectionConfig, 'name' | 'rulesSource'>): string {
+  const { name } = section.rulesSource;
+  return name.startsWith(`${section.name} `)
+    ? `the CIF ${section.name}’s ${name.slice(section.name.length + 1)}`
+    : `the ${name}`;
+}
+
+/** 'the EAL', 'the Sunset' (a one-table league is named like one), 'City' (a conference reads as a name). */
+function leagueRef(summary: Pick<LeagueSummary, 'shortName' | 'singleDivision'>): string {
+  return summary.singleDivision ? `the ${summary.shortName}` : summary.shortName;
+}
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
 
@@ -86,11 +114,12 @@ const QUOTE =
 /** A sub-heading inside a league's rules block (the league itself is the h3). */
 const H4 = 'm-0 mt-8 text-body font-semibold text-ink';
 
-function toc(leagues: readonly LeagueSummary[]) {
+/** The jump list; a league's rules entry carries its region, so the reader's region's entries show. */
+function toc(leagues: readonly LeagueSummary[]): Array<{ id: string; label: string; region?: LeagueSummary['region'] }> {
   return [
     { id: 'sources', label: 'Data sources' },
     { id: 'standings', label: 'Standings, points & tiebreaks' },
-    ...leagues.map((l) => ({ id: `rules-${l.id}`, label: `${l.shortName} rules` })),
+    ...leagues.map((l) => ({ id: `rules-${l.id}`, label: `${l.shortName} rules`, region: l.region })),
     { id: 'health', label: 'Data health, by league' },
     { id: 'conventions', label: 'How a score is shown' },
     { id: 'cross-check', label: 'Cross-check log' },
@@ -158,12 +187,23 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
   // lone 'no-rule') has nothing to apply, so the paragraph would describe a procedure the rules lack.
   const anyStepSeparates = bucketStarts.length > 0 || rules.tiebreaks.default.some((s) => s !== 'no-rule');
   const unit = rules.gamesWord;
-  // Only a league without a schedule document reaches the contest-type branch (EAL; SCVAL, the other
-  // contest-type league, is quoted by QuotedRules instead).
+  // Only a league without a schedule document reaches the contest-type branch (EAL, the Sunset; SCVAL,
+  // the other contest-type league, is quoted by QuotedRules instead). A San Diego league counts every game
+  // between two members of a division ('membership', DESIGN-socal §2.1.7), whatever MaxPreps' flag says.
   const postseasonNoun =
-    postseason.kind === 'unbracketed-tournament' ? `${postseason.name} games` : 'tournament games';
+    postseason.kind === 'unbracketed-tournament' || postseason.kind === 'section-playoffs'
+      ? `${postseason.name} games`
+      : 'tournament games';
   const counts =
-    rules.classification === 'contest-type'
+    rules.classification === 'membership'
+      ? `A game counts when both teams are members of the same ${unit} (${league.alignmentSource}), whether or not MaxPreps marks it a league game${
+          rules.excludeContestTypes.length ? '; MaxPreps’ tournament and postseason games never count' : ''
+        }.${
+          rules.postseasonFrom
+            ? ` Games between two ${league.shortName} teams on or after ${shortDate(rules.postseasonFrom)} are ${postseasonNoun}.`
+            : ''
+        }`
+      : rules.classification === 'contest-type'
       ? `A game counts when MaxPreps marks it a league game and both teams belong to the same ${unit}${
           rules.excludeContestTypes.length ? '; MaxPreps’ tournament and postseason games never count' : ''
         }.${
@@ -283,6 +323,42 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
             <li>{postseason.citations.noFurtherPath}.</li>
           </ul>
           <p>{postseason.note}</p>
+        </>
+      );
+    case 'no-postseason':
+      // The Sunset: the Section's bylaws, quoted in the citation, and the note; no ladder to explain.
+      return (
+        <>
+          <ul className="list-disc">
+            <li>{postseason.citations.noPlayoffs}.</li>
+          </ul>
+          <p>
+            {postseason.note} <ExternalLink href={postseason.sourceUrl}>{postseason.sourceLabel}</ExternalLink>
+          </p>
+        </>
+      );
+    case 'section-playoffs':
+      // The San Diego Section's playoffs: the Green Book's rule and the ladder's two rungs. No bracket and
+      // no seed is computed; `seeding` is the config's paraphrase (the bylaw's play-in sentence is never quoted).
+      return (
+        <>
+          <p>{postseason.qualificationLine}</p>
+          <ul className="list-disc">
+            <li>{postseason.citations.qualification}.</li>
+            <li>{postseason.citations.seeding}.</li>
+            <li>{postseason.citations.format}.</li>
+            {league.divisions
+              .slice(0, 1)
+              .flatMap((d) => postseason.ladder.map((r) => <li key={`${d.id}-${r.status}`}>{statusLegend(d.id, r.status)}.</li>))}
+          </ul>
+          <p>
+            {postseason.note} {postseason.citations.roundDates}
+          </p>
+          <p>
+            <Link href={`/playoffs#${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
+              {postseason.name} <Arrow />
+            </Link>
+          </p>
         </>
       );
   }
@@ -428,8 +504,21 @@ export default function AboutPage() {
   // Leagues that use their points only to decide a title and publish no standings (EAL).
   const titleOnly = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'title');
   const tableOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'table');
-  // Leagues whose level varsity games end on 1 v 1s (EAL).
-  const shootoutLeagues = leagues.filter((l) => getLeague(l.id).rules.leagueOvertime === 'shootout');
+  // Leagues that publish no points rule or standings at all (the Sunset, the San Diego leagues): this site
+  // applies its own 3-1-0 and says so, never that their rules require it (DESIGN-socal §2.1.7).
+  const siteOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'site');
+  const ruleLeagues = leagues.filter((l) => getLeague(l.id).rules.orderScope !== 'site');
+  // The sections whose level varsity games end in a shootout (the Northern Section's 1 v 1s, the San Diego
+  // Section's shootouts: SectionConfig.shootout), each with its leagues.
+  const shootoutSections = sections
+    .filter((s) => s.shootout !== null)
+    .map((section) => ({ section, leagues: leagues.filter((l) => l.section.id === section.id) }))
+    .filter((g) => g.leagues.length > 0);
+  /** 'EAL' (a one-league section names its league) | 'San Diego Section' (several name the section). */
+  const shootoutTeamsWho = (g: (typeof shootoutSections)[number]) =>
+    g.leagues.length === 1 ? g.leagues[0].shortName : g.section.name;
+  // Every section with no unbracketed league but a SoCal league in it gets its own rules card.
+  const socalSections = sections.filter((s) => s.region === 'socal' && leagues.some((l) => l.section.id === s.id));
 
   const perLeague = leagues.map((summary) => {
     const config = getLeague(summary.id);
@@ -454,6 +543,7 @@ export default function AboutPage() {
       id: d.id,
       heading: summary.divisions.find((x) => x.id === d.id)?.heading ?? null,
       maxprepsUrl: leagueStandingsUrl(d.id),
+      skipReason: crossCheckSkipReason(d.id),
       memberRows: (standingsByDivision[d.id] ?? []).filter((s) => s.reported !== null).length,
       knownCause: d.knownCause,
       official:
@@ -492,9 +582,26 @@ export default function AboutPage() {
   // files" sentence names their section's Guidelines for them instead. The "own standings" sentence
   // names the scores their schools report for seeding, which the Guidelines say are used for it
   // (§VII.J): the Guidelines are rules, not a record of results.
-  const noDocumentLeagues = perLeague.filter((p) => p.noDocument).map((p) => p.summary);
+  // NorCal only (the EAL): its two sentences below are unchanged word for word. The Southern California
+  // leagues, which publish no schedule or standings either, get sentences of their own (socalNoDocument).
+  const noDocumentLeagues = perLeague.filter((p) => p.noDocument && regionOf(p.summary.id) === 'norcal').map((p) => p.summary);
   const noDocumentWho = listWords(noDocumentLeagues.map((l) => `the ${l.shortName}`));
   const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
+  const socalNoDocument = perLeague.filter((p) => p.noDocument && regionOf(p.summary.id) === 'socal').map((p) => p.summary);
+  const socalNoDocumentWho = listWords(socalNoDocument.map(leagueRef));
+  const socalRulesDocuments = listWords([
+    ...new Set(socalNoDocument.map((l) => rulesDocument(getSection(l.section.id)))),
+  ]);
+  // The disclaimer's Southern California sentence: those leagues publish no standings, so what decides
+  // anything competitive is each section's (its playoffs placed from its power rankings, or none at all).
+  const socalSectionFacts = [...new Set(socalNoDocument.map((l) => l.section.id))].map((id) => {
+    const ps = getLeague(socalNoDocument.find((l) => l.section.id === id)!.id).postseason;
+    const name = getSection(id).name;
+    return ps.kind === 'section-playoffs'
+      ? `the ${name} places its playoff teams from its own power rankings`
+      : `the ${name} holds no field hockey playoffs`;
+  });
+  const socalCompetitive = `For ${socalNoDocumentWho}, which publish no standings, this site’s tables are its own count: ${listWords(socalSectionFacts)}.`;
 
   const TOC = toc(leagues);
   const jvFile = getJvFile();
@@ -524,7 +631,7 @@ export default function AboutPage() {
         <nav aria-label="On this page">
           <ul className="m-0 list-none p-0">
             {TOC.map((item) => (
-              <li key={item.id}>
+              <li key={item.id} data-region-scope={item.region}>
                 <a href={`#${item.id}`} className="sx-action min-h-11 text-meta text-ink-2 hover:text-accent hover:underline">
                   {item.label}
                 </a>
@@ -542,7 +649,7 @@ export default function AboutPage() {
           <p className="m-0 text-micro font-medium text-ink-3">On this page</p>
           <ul className="m-0 mt-2 list-none p-0">
             {TOC.map((item) => (
-              <li key={item.id}>
+              <li key={item.id} data-region-scope={item.region}>
                 <a href={`#${item.id}`} className="sx-action min-h-8 text-meta text-ink-2 hover:text-accent hover:underline">
                   {item.label}
                 </a>
@@ -553,6 +660,11 @@ export default function AboutPage() {
       </nav>
 
       <div className="mt-8 md:mt-10 lg:col-start-1 lg:row-start-2">
+        {/* The region control (DESIGN-socal §2.4): the first row of the content column, so the page's
+            three-child grid keeps its placement. Each league's source card, rules, health card and
+            cross-check carry its region's `data-region-scope`; the site-wide sections show for both. */}
+        <RegionSwitcher className="mb-8" />
+
         {/* ---------------------------------------------------------------- sources */}
         <section id="sources">
           <SectionHeader size="lg" kicker="Data sources" />
@@ -610,7 +722,7 @@ export default function AboutPage() {
               </dd>
             </div>
             {perLeague.map(({ summary, config, noDocument, officialNotes }) => (
-              <div key={summary.id} className="sx-card flex flex-col p-5">
+              <div key={summary.id} data-region-scope={summary.region} className="sx-card flex flex-col p-5">
                 <dt>
                   <span className="block text-lead text-ink">{summary.shortName}</span>
                   <span className="mt-0.5 block text-meta text-ink-3">
@@ -624,7 +736,7 @@ export default function AboutPage() {
                       <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
                         {summary.shortName} rules
                       </a>{' '}
-                      come from the CIF {summary.section.name}&rsquo;s Field Hockey Guidelines 2026-28.{' '}
+                      come from {rulesDocument(getSection(summary.section.id))}.{' '}
                       {officialNotes.join(' ')}
                       {config.membershipNote ? ` ${config.membershipNote}` : ''}
                     </span>
@@ -668,7 +780,7 @@ export default function AboutPage() {
                 </dd>
               </div>
             ))}
-            <div className="sx-card flex flex-col p-5 md:col-span-2">
+            <div data-region-scope="norcal" className="sx-card flex flex-col p-5 md:col-span-2">
               <dt>
                 <span className="block text-lead text-ink">CIF-CCS</span>
                 <span className="mt-0.5 block text-meta text-ink-3">Playoff dates &amp; format</span>
@@ -703,7 +815,7 @@ export default function AboutPage() {
                 ),
               ];
               return (
-                <div key={section.id} className="sx-card flex flex-col p-5 md:col-span-2">
+                <div key={section.id} data-region-scope={section.region} className="sx-card flex flex-col p-5 md:col-span-2">
                   <dt>
                     <span className="block text-lead text-ink">CIF {section.name}</span>
                     <span className="mt-0.5 block text-meta text-ink-3">Rules &amp; postseason dates</span>
@@ -726,6 +838,36 @@ export default function AboutPage() {
                           Field Hockey Guidelines (PDF)
                         </ExternalLink>
                       ))}
+                    </span>
+                  </dd>
+                </div>
+              );
+            })}
+            {/* One card per Southern California section (DESIGN-socal §2.4): the document its leagues'
+                rules come from (`rulesSource`), and its postseason in one sentence from config. */}
+            {socalSections.map((section) => {
+              const sectionLeagues = leagues.filter((l) => l.section.id === section.id);
+              return (
+                <div key={section.id} data-region-scope={section.region} className="sx-card flex flex-col p-5 md:col-span-2">
+                  <dt>
+                    <span className="block text-lead text-ink">CIF {section.name}</span>
+                    <span className="mt-0.5 block text-meta text-ink-3">Rules &amp; postseason</span>
+                  </dt>
+                  <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                    <span className="block">
+                      {`${rulesDocument(section)[0].toUpperCase()}${rulesDocument(section).slice(1)}`} sets the
+                      section&rsquo;s rules for {listWords(sectionLeagues.map(leagueRef))}; we found no league
+                      rules, schedule or standings document for {sectionLeagues.length === 1 ? 'it' : 'them'}.{' '}
+                      {section.noChampionshipNote ??
+                        `The ${section.name} holds its own field hockey playoffs; see Postseason below.`}
+                    </span>
+                    <span className="mt-auto flex flex-wrap gap-2 pt-3">
+                      <ExternalLink href={section.officialUrl} className="sx-pill">
+                        {section.shortName} field hockey
+                      </ExternalLink>
+                      <ExternalLink href={section.rulesSource.url} className="sx-pill">
+                        {`${section.rulesSource.name} (${section.rulesSource.format})`}
+                      </ExternalLink>
                     </span>
                   </dd>
                 </div>
@@ -805,8 +947,14 @@ export default function AboutPage() {
               <a href="#cross-check" className="text-accent hover:underline">
                 the cross-check log
               </a>
-              ). A team with no reported results is never shown as a fabricated 0-0-0 record. All{' '}
-              {numberWord(leagues.length)} leagues award 3 points for a win and 1 for a tie
+              ). A team with no reported results is never shown as a fabricated 0-0-0 record.{' '}
+              {/* DESIGN-socal §2.1.7: the Southern California leagues publish no points rule, so the
+                  sentence names the leagues that do award points, then says this site applies the same
+                  3-1-0 to the rest (never that their rules require it). */}
+              {siteOrdered.length > 0
+                ? listWords(ruleLeagues.map((l) => l.shortName))
+                : `All ${numberWord(leagues.length)} leagues`}{' '}
+              award 3 points for a win and 1 for a tie
               {titleOnly.length === 0 ? (
                 ' and order their tables by points'
               ) : (
@@ -818,11 +966,20 @@ export default function AboutPage() {
                   the same points
                 </>
               )}
+              {siteOrdered.length > 0
+                ? `; ${listWords(siteOrdered.map(leagueRef))} publish no points rule, so this site applies the same 3-1-0`
+                : null}
               ; they differ in which games count and how ties are broken.
             </p>
           </div>
           {perLeague.map(({ summary, config }) => (
-            <section key={summary.id} id={`rules-${summary.id}`} className="mt-section" aria-labelledby={`rules-${summary.id}-heading`}>
+            <section
+              key={summary.id}
+              id={`rules-${summary.id}`}
+              data-region-scope={summary.region}
+              className="mt-section"
+              aria-labelledby={`rules-${summary.id}-heading`}
+            >
               <SectionHeader as="h3" id={`rules-${summary.id}-heading`} kicker={`${summary.shortName} — ${summary.name}`} />
               {isQuotedLeague(config) ? <QuotedRules league={config} /> : <GeneratedRules league={config} />}
             </section>
@@ -840,6 +997,7 @@ export default function AboutPage() {
             {perLeague.map((l) => (
               <LeagueHealthCard
                 key={l.summary.id}
+                region={l.summary.region}
                 shortName={l.summary.shortName}
                 name={l.summary.name}
                 health={l.health}
@@ -864,13 +1022,19 @@ export default function AboutPage() {
             </p>
             <ul className="list-disc">
               <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
-              {shootoutLeagues.length > 0 ? (
-                <li>
-                  A level {listWords(shootoutLeagues.map((l) => l.shortName))} league game that MaxPreps
-                  marks as won was decided on 1 v 1s: it shows the level score with an SO tag and counts as
-                  the winner&rsquo;s win. The 1 v 1 tally is not shown.
+              {/* One item per section with a shootout rule (SectionConfig.shootout): the Northern Section's
+                  1 v 1s (the EAL's sentence, unchanged), the San Diego Section's shootouts. */}
+              {shootoutSections.map((g) => (
+                <li key={g.section.id}>
+                  {g.leagues.length === 1
+                    ? `A level ${g.leagues[0].shortName} league game`
+                    : `A level game between two ${g.section.name} teams`}{' '}
+                  that MaxPreps marks as won was decided on {g.section.shootout!.words}: it shows the level score
+                  with an SO tag and counts as the winner&rsquo;s win. The{' '}
+                  {/* '1 v 1s' → '1 v 1', 'a shootout' → 'shootout'. */}
+                  {g.section.shootout!.words.replace(/^a /, '').replace(/s$/, '')} tally is not shown.
                 </li>
-              ) : null}
+              ))}
               <li>
                 A forfeit counts in win-loss-tie but not in goals for/against/differential &mdash; marked
                 with a dagger everywhere a total would otherwise be misleading.
@@ -903,7 +1067,7 @@ export default function AboutPage() {
             known reason, those rows are listed separately under the reason.
           </p>
           {perLeague.map((l) => (
-            <div key={l.summary.id} className="mt-section">
+            <div key={l.summary.id} data-region-scope={l.summary.region} className="mt-section">
               <h3 className="m-0 mb-3 text-lead text-ink">
                 {l.summary.shortName} vs. MaxPreps&rsquo; {l.summary.singleDivision ? 'table' : 'tables'}
               </h3>
@@ -954,13 +1118,13 @@ export default function AboutPage() {
               </li>
             </ul>
             <p>
-              {shootoutLeagues.length > 0 ? (
-                <>
-                  A level si.com score between two {listWords(shootoutLeagues.map((l) => l.shortName))}{' '}
-                  teams is never used: a varsity game there is decided on 1 v 1s, and si.com does not say
-                  who won them.{' '}
-                </>
-              ) : null}
+              {shootoutSections.map((g) => (
+                <span key={g.section.id}>
+                  A level si.com score between two {shootoutTeamsWho(g)}{' '}
+                  teams is never used: a varsity game there is decided on {g.section.shootout!.words}, and si.com does not say
+                  who won {g.section.shootout!.words.endsWith('s') ? 'them' : 'it'}.{' '}
+                </span>
+              ))}
               Any other disagreement keeps MaxPreps&rsquo; score and is listed in the cross-check log.
               A backfilled score counts in the standings like any other final. si.com never decides
               league membership, league records or the standings order.
@@ -1136,11 +1300,30 @@ export default function AboutPage() {
               if (ps.kind !== 'unbracketed-tournament') return null;
               return (
                 <p key={l.id}>
+                  {/* The EAL's link words, byte for byte (tests/ui/eal-views.test.ts). */}
                   {l.section.name}: {ps.note}{' '}
                   <ExternalLink href={ps.sourceUrl}>{l.section.name} Field Hockey Guidelines (PDF)</ExternalLink>
                 </p>
               );
             })}
+            {/* The Southern California postseasons, from config: the Sunset's "no playoffs" note and the San
+                Diego Section's playoffs, each with its source labelled `postseason.sourceLabel`. */}
+            {[...new Map(
+              leagues
+                .map((l) => ({ l, ps: getLeague(l.id).postseason }))
+                .filter(({ ps }) => ps.kind === 'no-postseason' || ps.kind === 'section-playoffs')
+                .map(({ l, ps }) => [`${l.section.id}:${ps.kind}`, { l, ps }] as const),
+            ).values()].map(({ l, ps }) =>
+              ps.kind === 'no-postseason' || ps.kind === 'section-playoffs' ? (
+                <p key={`${l.section.id}-${ps.kind}`}>
+                  {l.section.name}: {ps.note}{' '}
+                  <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>{' '}
+                  <Link href={`/playoffs#${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
+                    Playoffs page
+                  </Link>
+                </p>
+              ) : null,
+            )}
             <h3>CCS key dates</h3>
             {/* The dates sit inside sentences, so they stay in the prose's sans with tabular
                 figures (`tabular-nums`), not mono `sx-num`: mono is for digits that stack in a
@@ -1187,8 +1370,9 @@ export default function AboutPage() {
           <SectionHeader size="lg" kicker="Privacy &amp; accessibility" />
           <div className="sx-prose">
             <p>
-              This site stores exactly three things, all only in your browser: a theme choice, a pinned
-              team and the league you chose to see on the home page. All three live in{' '}
+              This site stores exactly four things, all only in your browser: a theme choice, a pinned
+              team, the league you chose to see on the home page, and the region you chose (Northern or
+              Southern California). All four live in{' '}
               <code>localStorage</code> and none is ever sent anywhere &mdash; there are no accounts, no
               analytics, no tracking cookies and no third-party requests of any kind on any page. School
               colors come from data already in the snapshot, never a hotlinked image, and fonts are
@@ -1221,7 +1405,10 @@ export default function AboutPage() {
               Before posting, it is worth comparing against the primary source &mdash; every team,
               standings table and game on this site links back to its MaxPreps page, and the league
               documents above link straight to each league&rsquo;s own files
-              {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}. Most
+              {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}
+              {socalNoDocument.length > 0 &&
+                `; for ${socalNoDocumentWho}, which publish no schedule or standings, they link ${socalRulesDocuments}`}
+              . Most
               scores here come from MaxPreps, so if MaxPreps has it wrong too, the school can correct it
               there and the next update picks it up. If a number here disagrees with one of those
               sources, check{' '}
@@ -1249,6 +1436,7 @@ export default function AboutPage() {
                 ` (or, for ${noDocumentWho}, which ${noDocumentLeagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${noDocumentLeagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${noDocumentGuidelines})`}{' '}
               are always the
               source of truth for anything that matters competitively, such as playoff seeding.
+              {socalNoDocument.length > 0 ? ` ${socalCompetitive}` : null}
             </p>
           </div>
         </section>

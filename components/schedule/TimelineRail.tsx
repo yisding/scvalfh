@@ -132,9 +132,11 @@ function spanWords(first: string, last: string): string {
 
 /**
  * The rail's last chip: the league's postseason, from config. An unbracketed tournament (the EAL's
- * Super Regional) has no bracket page, so its chip goes to the league's card on /playoffs.
+ * Super Regional) has no bracket page, so its chip goes to the league's card on /playoffs, as does a
+ * San Diego league's ('Section playoffs Nov 2–14'). A league with no postseason (the Sunset: CIF-SS Blue
+ * Book 2011.1, 3500.2) gets no chip at all: there is no event to jump to.
  */
-function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } {
+function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: string } | null {
   const league = getLeague(leagueId);
   const ps = league.postseason;
   switch (ps.kind) {
@@ -160,6 +162,15 @@ function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: 
         href: `/playoffs#${league.id}`,
         sr: `CCS playoffs, ${longDate(CCS.keyDates.quarterfinals)} to ${longDate(CCS.keyDates.finals)}`,
       };
+    case 'section-playoffs':
+      // 'Section playoffs Nov 2–14' (DESIGN-socal §2.4): short enough for the rail; the spoken form names it in full.
+      return {
+        label: `Section playoffs ${span(ps.dates.first, ps.dates.last)}`,
+        href: `/playoffs#${league.id}`,
+        sr: `${ps.name}, ${longDate(ps.dates.first)} to ${longDate(ps.dates.last)}`,
+      };
+    case 'no-postseason':
+      return null;
   }
 }
 
@@ -206,17 +217,19 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
             </a>
           </li>
         ))}
-        <li className="flex h-11 shrink-0 items-center">
-          <Link
-            href={chip.href}
-            prefetch={false}
-            className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
-          >
-            <span aria-hidden="true">{chip.label}</span>
-            <Arrow />
-            <span className="sr-only">{chip.sr}</span>
-          </Link>
-        </li>
+        {chip ? (
+          <li className="flex h-11 shrink-0 items-center">
+            <Link
+              href={chip.href}
+              prefetch={false}
+              className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
+            >
+              <span aria-hidden="true">{chip.label}</span>
+              <Arrow />
+              <span className="sr-only">{chip.sr}</span>
+            </Link>
+          </li>
+        ) : null}
       </ol>
     </nav>
   );

@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
+import { listWords } from '../../lib/format';
 import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
@@ -24,7 +25,12 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
  * the CIF Northern Section" and can never drift from the config. A league with no document of its
  * own (every division `official.mode === 'none'`: the EAL) takes its rules from its section's
  * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with
- * alignment.
+ * alignment. A league whose table this site orders by its own 3-1-0 points (`rules.orderScope ===
+ * 'site'`: the Sunset and the three San Diego leagues, DESIGN-socal §2.1.7) publishes no rules at all,
+ * so it is not credited with rules either: per section, "Sunset: no league rules are published;
+ * Southern Section rules from the CIF Southern Section", the section linked to the document its rules
+ * are in (SectionConfig.rulesSource: the Blue Book's Article 200, the Green Book's Bylaw 2000.1). The
+ * not-affiliated line names every league and every section (CIF-CCS … CIF-SS, CIF-SDS) from config.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
@@ -39,9 +45,22 @@ export interface AttributionProps {
   className?: string;
 }
 
-/** Leagues that publish no schedule or standings document of their own (the EAL). */
+/** Leagues that publish no schedule or standings document of their own (the EAL, and every SoCal league). */
 function hasNoDocument(league: LeagueConfig): boolean {
   return league.divisions.every((d) => d.official.mode === 'none');
+}
+
+/** Leagues that publish no rules this site follows: the table order is the site's own (orderScope 'site'). */
+function hasNoRules(league: LeagueConfig): boolean {
+  return league.rules.orderScope === 'site';
+}
+
+/** The orderScope 'site' leagues grouped by section, config order: [[SS, [Sunset]], [SDS, [City, …]]]. */
+function noRulesBySection() {
+  return SECTIONS.flatMap((section) => {
+    const leagues = LEAGUES.filter((l) => l.sectionId === section.id && hasNoRules(l));
+    return leagues.length === 0 ? [] : [{ section, leagues }];
+  });
 }
 
 /** 'A, B, C and D' */
@@ -112,11 +131,20 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
                 </ExternalLink>
               )),
             )}
-            {LEAGUES.filter(hasNoDocument).map((l) => (
+            {LEAGUES.filter((l) => hasNoDocument(l) && !hasNoRules(l)).map((l) => (
               <Fragment key={l.id}>
                 ; {l.shortName} rules from the{' '}
                 <ExternalLink href={l.officialUrl} arrow={false}>
                   CIF {getSection(l.sectionId).name}
+                </ExternalLink>
+              </Fragment>
+            ))}
+            {noRulesBySection().map(({ section, leagues }) => (
+              <Fragment key={section.id}>
+                ; {listWords(leagues.map((l) => l.shortName))}: no league rules are published;{' '}
+                {section.name} rules from the{' '}
+                <ExternalLink href={section.rulesSource.url} arrow={false}>
+                  CIF {section.name}
                 </ExternalLink>
               </Fragment>
             ))}

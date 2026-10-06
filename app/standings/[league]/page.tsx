@@ -15,6 +15,7 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
+import { getLeague } from '../../../lib/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -53,7 +54,9 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
     .sort()
     .at(-1);
   const title = `${summary.shortName} standings`;
-  const description = `${summary.name}, ordered on points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
+  // A 'site' league publishes no points rule (the Sunset, the San Diego leagues): the points are this site's.
+  const site = getLeague(summary.id).rules.orderScope === 'site';
+  const description = `${summary.name}, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
     through ? ` League games through ${shortDate(through)}.` : ''
   } Computed from published results; unofficial.`;
   return {
@@ -82,7 +85,10 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
     : `Bars are scaled to the league's biggest goal difference (${data.views[0]?.gdDomain ?? 0}).`;
   const legend = [
     `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
-    'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.',
+    // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.
+    data.views.every((view) => view.fixedSchedule)
+      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.'
+      : `GP is league games counted. ${summary.shortName} has no fixed league schedule, so there is no LEFT or MAX column.`,
     ...new Set(data.views.flatMap((view) => view.legendNotes)),
   ];
 
@@ -108,13 +114,14 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
         <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{data.membershipNote}</p>
       ) : null}
 
+      {/* The page league's region only, plus All → the index (DESIGN-socal §2.4). */}
       <LeagueSwitcher
         mode="link"
         includeAll
         label="Leagues"
-        leagues={leagueChips()}
+        leagues={leagueChips(summary.region)}
         current={summary.id}
-        hrefs={leagueHrefs('/standings')}
+        hrefs={leagueHrefs('/standings', summary.region)}
         className="mt-4"
       />
 

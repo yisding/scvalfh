@@ -359,15 +359,23 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     if (table.length !== players.length) {
       fail(`rendered table has ${table.length} rows, athleteData has ${players.length} undeleted rows`);
     }
-    const byHref = new Map<string, RosterTableRow>();
+    // One career link can sit on two rows: MaxPreps lists Huntington Beach's Valentina D'Angelo twice
+    // (2026-10-06: one row "D'Angelo" Sr. F, one row "D'angelo" with no grade, both linking the same
+    // career page, both rendered). A link therefore maps to its rows in table order, and a player takes
+    // the unused one with her exact name first, else the first unused; the field checks below still
+    // hold each pair to the same name, jersey, grade, position and height, and the duplicate career id
+    // is reported as a warning (never merged, never dropped).
+    const byHref = new Map<string, RosterTableRow[]>();
     const byName = new Map<string, RosterTableRow[]>();
     for (const t of table) {
-      if (t.href) byHref.set(urlPath(t.href), t);
+      if (t.href) byHref.set(urlPath(t.href), [...(byHref.get(urlPath(t.href)) ?? []), t]);
       byName.set(t.name, [...(byName.get(t.name) ?? []), t]);
     }
     const used = new Set<RosterTableRow>();
     for (const p of players) {
-      let t = p.careerUrl ? byHref.get(urlPath(p.careerUrl)) : undefined;
+      const linked = p.careerUrl ? (byHref.get(urlPath(p.careerUrl)) ?? []) : [];
+      let t: RosterTableRow | undefined =
+        linked.find((row) => !used.has(row) && row.name === p.fullName) ?? linked.find((row) => !used.has(row)) ?? linked[0];
       if (!t) t = (byName.get(p.fullName) ?? []).find((row) => !used.has(row));
       if (!t) fail(`${p.fullName} (${p.careerUrl ?? 'no link'}) is in athleteData but not in the rendered table`);
       if (used.has(t!)) fail(`${p.fullName}: two athleteData rows map to one table row`);

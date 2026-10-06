@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
 import { officialDocumentOf } from '../lib/official/schema';
-import { SNAPSHOT_MAX_BYTES, SOURCES_MAX } from '../lib/pipeline/steps/assemble';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '../lib/pipeline/steps/assemble';
 import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
@@ -36,6 +36,19 @@ if (present) {
   snapshot = loadSnapshot(raw);
 }
 
+// The budgets were raised deliberately for the Southern California amendment (DESIGN-socal §2.2): a
+// change to them is a decision, so it is pinned here, with the labels printed from the constants.
+describe('the snapshot budgets', () => {
+  it('are 3.2 MB (warn 2.4 MB) and 280 source rows', () => {
+    expect([SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX]).toEqual([3_200_000, 2_400_000, 280]);
+    expect([budgetLabel(SNAPSHOT_MAX_BYTES), budgetLabel(SNAPSHOT_WARN_BYTES), budgetLabel(1_600_000)]).toEqual([
+      '3.2 MB',
+      '2.4 MB',
+      '1.6 MB',
+    ]);
+  });
+});
+
 describeIfPresent('the committed snapshot', () => {
   it('loads through loadSnapshot as schema version 2 with the whole registry', () => {
     expect(snapshot.schemaVersion).toBe(2);
@@ -46,11 +59,11 @@ describeIfPresent('the committed snapshot', () => {
     expect(snapshot.leagueHealth.map((h) => h.leagueId)).toEqual(LEAGUES.map((l) => l.id));
   });
 
-  it('stays within the 1.6 MB budget', () => {
+  it(`stays within the ${budgetLabel(SNAPSHOT_MAX_BYTES)} budget`, () => {
     expect(statSync(SNAPSHOT_PATH).size).toBeLessThanOrEqual(SNAPSHOT_MAX_BYTES);
   });
 
-  it('stays within the sources budget', () => {
+  it(`stays within the ${SOURCES_MAX}-row sources budget`, () => {
     expect(snapshot.sources.length).toBeLessThanOrEqual(SOURCES_MAX);
   });
 

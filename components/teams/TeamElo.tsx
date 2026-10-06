@@ -14,8 +14,9 @@ import type { TeamEloView } from './team-view';
  * to). `#elo` is the `<details>` itself, so a link from the /leaders board lands on the summary in
  * every browser.
  *
- * Opened, it reads "<rating> points · <where it stands>": the team's place on the /leaders Elo
- * board when the board lists it (its top 10), "preseason" for a team rated from last season
+ * Opened, it reads "<rating> points · <where it stands>": the team's place on its region's /leaders
+ * Elo board when the board lists it (its top 10; `#elo-rating` for NorCal, `#elo-rating-socal` for
+ * SoCal, DESIGN-socal §2.3: the numbers are one fit over every covered team, the boards per region), "preseason" for a team rated from last season
  * alone, "provisional" for one with fewer games than the board needs, otherwise how many games the
  * rating counts. Then what the number means, and `How it is computed` → the board, whose note says
  * the rest. No team page names a place below the board's top 10, and a team with neither a final
@@ -32,7 +33,7 @@ export function TeamElo({ elo, className }: TeamEloProps) {
     elo.elo === null
       ? 'no counted results yet'
       : boardPlace
-        ? `${placeWords(boardPlace.rank, boardPlace.tied)} on the Elo board`
+        ? `${placeWords(boardPlace.rank, boardPlace.tied)} on the ${elo.boardRegion} Elo board`
         : elo.preseason
           ? `preseason, from ${elo.seededFrom}`
           : elo.provisional
@@ -44,7 +45,7 @@ export function TeamElo({ elo, className }: TeamEloProps) {
       ? `A rating needs at least one final against another of the ${LEAGUE_COUNT} leagues’ teams. `
       : elo.preseason
         ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, fitted to last season’s finals. ${scale}`
-        : `Fitted to every final between two of the ${LEAGUE_COUNT} leagues’ teams this season, so each opponent’s strength counts as well as each goal margin.${
+        : `Fitted to every final between two of the ${LEAGUE_COUNT} leagues’ teams this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each goal margin.${
             elo.seeded
               ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
               : elo.seededFrom
@@ -71,7 +72,7 @@ export function TeamElo({ elo, className }: TeamEloProps) {
           {elo.provisional
             ? `The Elo board waits for ${plural(elo.minGames, 'game')}, so this one is provisional. `
             : null}
-          <Link href="/leaders#elo-rating" prefetch={false} className="text-accent hover:underline">
+          <Link href={elo.boardHref} prefetch={false} className="text-accent hover:underline">
             How it is computed
           </Link>
         </p>

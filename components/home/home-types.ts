@@ -13,7 +13,7 @@
 
 import type { SectionConfig } from '../../lib/leagues';
 import type { TeamSearchEntry } from '../../lib/search';
-import type { LeagueId, Outcome, TeamColors } from '../../lib/types';
+import type { LeagueId, Outcome, RegionId, TeamColors } from '../../lib/types';
 import type { GameDisplay, SideView } from '../ui/describe-game';
 
 /**
@@ -23,7 +23,7 @@ import type { GameDisplay, SideView } from '../ui/describe-game';
 export type HomeColors = Pick<TeamColors, 'primary' | 'onPrimary'>;
 
 /**
- * The identity fields the pinned card renders. They come from the 49-team search index the card
+ * The identity fields the pinned card renders. They come from the 99-team search index the card
  * already receives for its finder (`TeamSearchEntry`), joined on `HomeTeamView.slug`, so the page
  * does not ship every team's name, short name and colors twice.
  */
@@ -52,6 +52,8 @@ export interface HomeLastDisplay {
     strikeTime: true;
     isNonLeague: true;
     deciderTag: string;
+    /** GameDisplay.shootoutLabel: the section's words for an 'SO' tag ('decided by a shootout'). */
+    shootoutLabel: string;
     shootoutText: string;
     sourceMark: 'si.com';
     leagueTag: string;
@@ -130,7 +132,7 @@ export interface HomeTeamView {
   /**
    * Only for a place shared across two rungs, whose full label carries a tiebreak citation: the
    * card line as the rungs' badges ('Today: Play-in or No AQ route (tied)'). Absent otherwise (the
-   * card derives its line with `postseasonCardLine`), so 49 views do not ship the line twice.
+   * card derives its line with `postseasonCardLine`), so 99 views do not ship the line twice.
    */
   postseasonShort?: string;
   /** `/standings/<league>#<division>` */
@@ -167,12 +169,26 @@ export interface LeagueCardView {
   shortName: string;
   name: string;
   sectionShort: SectionConfig['shortName'];
-  region: string;
+  /** The NorCal/SoCal half of the page the card sits in (DESIGN-socal §2.4). */
+  regionId: RegionId;
+  /** Where the league's schools are, in plain words (LeagueConfig.cities). */
+  cities: string;
   /** '12 teams' */
   teamsLine: string;
   /** Division labels; empty for a single-division league. */
   divisions: string[];
   standingsHref: string;
+}
+
+/**
+ * A ladder rung as the pinned card's one 320px line shows it. Most labels fit whole ('Automatic
+ * qualifier', 'No section playoffs'). A label written "<who>: <what>" (the San Diego Section's 'League
+ * champion: at least a play-in', 303px with the lead at 14px against 288px) is shown as its badge and
+ * its <what> ('1st, at least a play-in'); the full label stays the line's accessible text and title.
+ */
+export function rungCardText(label: string, badge: string): string {
+  const colon = label.lastIndexOf(': ');
+  return colon < 0 ? label : `${badge}, ${label.slice(colon + 2)}`;
 }
 
 /** The postseason line's lead, full (the accessible text, SPEC §10.1) and as the card shows it. */

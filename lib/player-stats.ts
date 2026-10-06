@@ -7,7 +7,7 @@
  * scope, so a bad file fails at import time rather than half-way through a render.
  * `SCVAL_PLAYER_STATS` swaps in another file through node:fs (Node only; never set it on a Worker).
  *
- * The file holds one entry per registry team (49, all five leagues), so getTeamPlayerStats
+ * The file holds one entry per registry team (99, all nine leagues), so getTeamPlayerStats
  * returns undefined only for a string that is not a registry slug. A team no run has covered yet is
  * status 'pending'; one whose coach entered nothing is status 'none'.
  */

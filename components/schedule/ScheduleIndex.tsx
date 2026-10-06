@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { longDate, plural, shortDate } from '../../lib/format';
+import { REGIONS } from '../../lib/leagues';
+import type { RegionId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
@@ -19,8 +21,21 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  *  - `Every game day`: one row per date with `id="YYYY-MM-DD"`, so an old `/schedule#2026-09-24`
  *    link lands on that day's row, which links `/scores/2026-09-24`.
  *
+ * Regions (DESIGN-socal §2.4): the cards, Recent and Next are rendered once per region inside a
+ * `data-region-scope` block (the SoCal blocks' ids take the `-socal` suffix), and the scope stylesheet
+ * shows the reader's; Recent and Next are each region's OWN last and next game days. The every-game-day
+ * index stays one list, so each `id="YYYY-MM-DD"` exists once, and each row's counts are scoped per
+ * region. A card grid sits inside a plain region `<div>`: the jump links target a card's id, and a
+ * region-scoped grid holding the target would be forced to `display:block` by the deep-link rule
+ * (components/layout/league-scope-css.ts).
+ *
  * A server component over plain data; every row link carries `prefetch={false}`.
  */
+
+/** 'NorCal' | 'SoCal', for a row with no game in the region. */
+function regionShort(id: RegionId): string {
+  return REGIONS.find((r) => r.id === id)?.shortName ?? id;
+}
 export interface ScheduleIndexProps extends ScheduleIndexView {
   /** Rows per league in Recent and Next. */
   perLeague?: number;
@@ -87,44 +102,48 @@ function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: num
   );
 }
 
-export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: ScheduleIndexProps) {
+export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleIndexProps) {
   return (
     <>
-      <ul className="m-0 mt-8 grid list-none gap-3 p-0 md:mt-10 md:grid-cols-2">
-        {cards.map((card) => (
-          <li key={card.id} id={card.id} className="flex">
-            <Link
-              href={`/schedule/${card.id}`}
-              prefetch={false}
-              className="sx-card sx-lift flex w-full flex-col gap-1 p-4 no-underline md:p-5"
-            >
-              <span className="text-lead font-semibold text-ink">{card.shortName}</span>
-              <span className="text-meta text-ink-3">{card.name}</span>
-              <span className="text-body text-ink-2">
-                {cardLine(card)} <Arrow />
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {regions.map((region) => (
+        <div key={region.id} data-region-scope={region.id}>
+          <ul className="m-0 mt-8 grid list-none gap-3 p-0 md:mt-10 md:grid-cols-2">
+            {cards.filter((card) => card.region === region.id).map((card) => (
+              <li key={card.id} id={card.id} className="flex">
+                <Link
+                  href={`/schedule/${card.id}`}
+                  prefetch={false}
+                  className="sx-card sx-lift flex w-full flex-col gap-1 p-4 no-underline md:p-5"
+                >
+                  <span className="text-lead font-semibold text-ink">{card.shortName}</span>
+                  <span className="text-meta text-ink-3">{card.name}</span>
+                  <span className="text-body text-ink-2">
+                    {cardLine(card)} <Arrow />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-      {recent.length > 0 ? (
-        <section aria-labelledby="schedule-recent" className="mt-section md:mt-section-lg">
-          <SectionHeader id="schedule-recent" kicker="Recent" />
-          {recent.map((day) => (
-            <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`recent-${day.date}`} />
-          ))}
-        </section>
-      ) : null}
+          {region.recent.length > 0 ? (
+            <section aria-labelledby={`schedule-recent${region.idSuffix}`} className="mt-section md:mt-section-lg">
+              <SectionHeader id={`schedule-recent${region.idSuffix}`} kicker="Recent" />
+              {region.recent.map((day) => (
+                <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`recent-${day.date}${region.idSuffix}`} />
+              ))}
+            </section>
+          ) : null}
 
-      {next.length > 0 ? (
-        <section aria-labelledby="schedule-next" className="mt-section md:mt-section-lg">
-          <SectionHeader id="schedule-next" kicker="Next" />
-          {next.map((day) => (
-            <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`next-${day.date}`} />
-          ))}
-        </section>
-      ) : null}
+          {region.next.length > 0 ? (
+            <section aria-labelledby={`schedule-next${region.idSuffix}`} className="mt-section md:mt-section-lg">
+              <SectionHeader id={`schedule-next${region.idSuffix}`} kicker="Next" />
+              {region.next.map((day) => (
+                <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`next-${day.date}${region.idSuffix}`} />
+              ))}
+            </section>
+          ) : null}
+        </div>
+      ))}
 
       <section aria-labelledby="schedule-days" className="mt-section md:mt-section-lg">
         <SectionHeader id="schedule-days" kicker="Every game day" />
@@ -140,10 +159,14 @@ export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: Sche
                   <time dateTime={day.date} className="font-semibold">
                     {shortDate(day.date)}
                   </time>
-                  <span className="text-ink-2">
-                    {` · ${plural(day.total, 'game')}`}
-                    {day.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}
-                  </span>
+                  {/* One count line per region; the scope stylesheet shows the reader's. */}
+                  {day.byRegion.map((r) => (
+                    <span key={r.region} data-region-scope={r.region} className="text-ink-2">
+                      {r.total === 0
+                        ? ` · no ${regionShort(r.region)} games`
+                        : `${` · ${plural(r.total, 'game')}`}${r.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}`}
+                    </span>
+                  ))}
                 </span>
                 <Arrow className="shrink-0 text-ink-3" />
               </Link>

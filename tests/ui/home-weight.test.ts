@@ -1,7 +1,15 @@
 /**
- * The home page's serialized team views stay within budget (SPEC §10.1: serialized `teamViews`
- * ≤ 60 KB). All 49 pinned-card views ship in the page (the pin, and so the league, is known only in
- * the browser), so a view that grows a field grows every phone's download.
+ * The home page's serialized team views stay within budget (SPEC §10.1; raised for the Southern
+ * California amendment, DESIGN-socal §2.4). All 99 pinned-card views ship in the page (the pin, and so
+ * the league, is known only in the browser), so a view that grows a field grows every phone's download.
+ *
+ * The budget, measured 2026-10-06 (DESIGN-socal §2.4: measured × 1.12): before the amendment the 49
+ * views were 50,569 bytes on data/snapshot.json against 60 KB. No snapshot with both regions' live
+ * data existed when this was set, so the measurement is the sum of two halves, each from the snapshot
+ * that has it: the NorCal 49 on data/snapshot.json (50,569 bytes; its SoCal teams have no games) and
+ * the SoCal 50 on the pipeline's SoCal-only live run of 2026-10-06 (54,473 bytes), 105,042 in all.
+ * × 1.12 = 117,647, rounded up to whole KiB: 115 KiB = 117,760. The corpus snapshot (NorCal games
+ * only) measures 65,819. Re-measure on the first full live snapshot and record it here.
  *
  * The HARD budget is checked on the offline corpus snapshot (deterministic): a page-weight
  * regression in code fails here, in every run. The bundled data/snapshot.json (whatever the last
@@ -16,7 +24,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { corpusSnapshotPath } from '../helpers';
 
-const BUDGET = 60 * 1024;
+const BUDGET = 115 * 1024;
 const WARN_AT = 0.9;
 
 /** ci.yml sets CI_GATE on its test step; update-data.yml (which also sets CI) does not. */
@@ -34,15 +42,15 @@ async function teamViewBytes(snapshotPath: string | undefined): Promise<{ bytes:
 }
 
 describe('home team views weight (components/home/home-view.ts)', () => {
-  it('stays ≤ 60 KB on the corpus snapshot', async () => {
+  it('stays ≤ 115 KiB on the corpus snapshot', async () => {
     const { bytes, count } = await teamViewBytes(corpusSnapshotPath('all-2026-10-02'));
-    expect(count, 'components/home/home-view.ts: one view per team').toBe(49);
+    expect(count, 'components/home/home-view.ts: one view per team').toBe(99);
     expect(bytes, `components/home/home-view.ts: serialized teamViews are ${bytes} bytes`).toBeLessThanOrEqual(BUDGET);
   }, 600_000);
 
-  it('stays ≤ 60 KB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {
+  it('stays ≤ 115 KiB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {
     const { bytes, count } = await teamViewBytes(undefined);
-    expect(count, 'components/home/home-view.ts: one view per team').toBe(49);
+    expect(count, 'components/home/home-view.ts: one view per team').toBe(99);
     const message = `components/home/home-view.ts: serialized teamViews are ${bytes} bytes on the bundled snapshot (budget ${BUDGET})`;
     if (liveBudgetGates(process.env)) {
       expect(bytes, message).toBeLessThanOrEqual(BUDGET);

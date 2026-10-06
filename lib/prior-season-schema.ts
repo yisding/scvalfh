@@ -11,7 +11,7 @@
  * listed twice or against itself, and every date inside the season the file names.
  *
  * `priorGamesFromFeeds` is the script's normalization, kept here so tests can run it on synthetic
- * rows: one game per contest id from all 49 teams' feeds, finals only, both sides registry teams,
+ * rows: one game per contest id from all 99 teams' feeds, finals only, both sides registry teams,
  * no forfeit (a forfeit has no goals, as in the standings), and the site from MaxPreps'
  * homeAwayType (2 on either side is neutral). A contest whose two feeds disagree on the score or
  * the host is reported, never guessed.

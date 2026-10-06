@@ -13,8 +13,8 @@ const rules = css.split('\n');
 const count = (re: RegExp) => rules.filter((r) => re.test(r)).length;
 
 describe('buildLeagueScopeCss', () => {
-  it('covers the five configured leagues', () => {
-    expect(LEAGUE_IDS.length).toBe(5);
+  it('covers the nine configured leagues', () => {
+    expect(LEAGUE_IDS.length).toBe(9);
   });
 
   it('has the first-visit and none rules', () => {
@@ -46,7 +46,8 @@ describe('buildLeagueScopeCss', () => {
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \[data-scope\]:not/)).toBe(n);
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \.sx-jump-/)).toBe(n);
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \[data-league-option="[a-z0-9-]+"\]\{/)).toBe(n);
-    expect(count(/\.sx-chip-check\{display:inline\}$/)).toBe(n + 1);
+    // n leagues + the All chip + the two region options.
+    expect(count(/\.sx-chip-check\{display:inline\}$/)).toBe(n + 3);
   });
 
   it('has the fixed rules: jump base, js-only, my-team slot, the All chip', () => {
@@ -57,9 +58,34 @@ describe('buildLeagueScopeCss', () => {
     expect(rules).toContain('html:not([data-league]) [data-league-option="all"] .sx-chip-check{display:inline}');
   });
 
+  it('has the region rules verbatim (DESIGN-socal §2.4)', () => {
+    // SoCal blocks hide only once JS has run: without it both regions render, NorCal first.
+    expect(rules).toContain('html[data-js]:not([data-region="socal"]) [data-region-scope="socal"]{display:none}');
+    expect(rules).toContain('html[data-region="socal"] [data-region-scope="norcal"]{display:none}');
+    expect(rules.filter((r) => r.startsWith('html:not([data-region="socal"]) [data-region-option="norcal"]{'))).toHaveLength(1);
+    expect(rules.filter((r) => r.startsWith('html[data-region="socal"] [data-region-option="socal"]{'))).toHaveLength(1);
+    expect(rules).toContain('html:not([data-region="socal"]) [data-region-option="norcal"] .sx-chip-check{display:inline}');
+    expect(rules).toContain('html[data-region="socal"] [data-region-option="socal"] .sx-chip-check{display:inline}');
+    // A deep link opens its region: the block holding the target, and the block that is the target.
+    expect(rules).toContain('[data-region-scope]:has(:target){display:block!important}');
+    expect(rules).toContain('[data-region-scope]:target{display:block!important}');
+    // The /teams lift, scoped to the /teams root so the home finder lifts nothing.
+    expect(rules).toContain('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
+    expect(css).not.toMatch(/(?:^|[\s,])\[data-searching\]/m);
+  });
+
+  it('puts the /teams lift after both region hide rules (it wins on specificity and order)', () => {
+    const lift = rules.indexOf('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
+    const hides = rules.flatMap((r, i) => (r.includes('[data-region-scope="') && r.endsWith('{display:none}') ? [i] : []));
+    expect(hides).toHaveLength(2);
+    for (const i of hides) expect(lift).toBeGreaterThan(i);
+  });
+
   it('draws the selected chip with the accent wash, accent ink, 600 and a 1.5px ink ring — no league hue', () => {
-    const selected = rules.filter((r) => r.includes('[data-league-option=') && !r.includes('.sx-chip-check'));
-    expect(selected).toHaveLength(LEAGUE_IDS.length + 1);
+    const selected = rules.filter(
+      (r) => (r.includes('[data-league-option=') || r.includes('[data-region-option=')) && !r.includes('.sx-chip-check'),
+    );
+    expect(selected).toHaveLength(LEAGUE_IDS.length + 1 + 2);
     for (const r of selected) {
       expect(r).toContain('background:var(--sx-accent-wash)');
       expect(r).toContain('color:var(--sx-accent-ink)');

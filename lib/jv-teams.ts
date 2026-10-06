@@ -8,8 +8,9 @@
  * si.com gives each JV team its own team id and web path, distinct from the varsity one in the
  * registry. Each path below was read on 2026-10-05 from the level switcher (`level.name` "Junior
  * Varsity", `webPath`) on that school's varsity si.com games page, never guessed (DATA-SOURCES
- * §1.2 caveat 5). Marin Academy has no si.com page at all, so it has no JV path. A JV side is
- * identified only by these ids, never by name: si.com names a JV team as it names the varsity one.
+ * §1.2 caveat 5); the 50 Southern California paths were read the same way on 2026-10-06. Marin
+ * Academy has no si.com page at all, so it has no JV path. A JV side is identified only by these
+ * ids, never by name: si.com names a JV team as it names the varsity one.
  *
  * Pure config: no I/O.
  */
@@ -70,6 +71,60 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   davis: '458606-davis-blue-devils-jv',
   lassen: '490252-lassen-grizzlies-jv',
   'pleasant-valley': '458565-pleasant-valley-vikings-jv',
+  // Southern California (the Sunset and the San Diego Section's City, North County and Metro
+  // conferences): each path read on 2026-10-06 from the "Junior Varsity" entry of `otherTeams` on that
+  // school's varsity si.com games page (the registry's sbliveGamesUrl), never guessed. Every one of the
+  // 50 lists a JV team there; si.com names Southwest's "Southwest SD", as it names the varsity.
+  bonita: '458495-bonita-bearcats-jv',
+  chaminade: '483205-chaminade-eagles-jv',
+  chaparral: '484041-chaparral-pumas-jv',
+  edison: '468928-edison-chargers-jv',
+  'fountain-valley': '482354-fountain-valley-barons-jv',
+  'great-oak': '459146-great-oak-wolfpack-jv',
+  'huntington-beach': '458745-huntington-beach-oilers-jv',
+  marina: '483032-marina-vikings-jv',
+  'newport-harbor': '482406-newport-harbor-sailors-jv',
+  'temecula-valley': '480762-temecula-valley-golden-bears-jv',
+  bishops: '480763-bishops-knights-jv',
+  'canyon-hills': '459035-canyon-hills-rattlers-jv',
+  'cathedral-catholic': '458203-cathedral-catholic-dons-jv',
+  'la-jolla': '459020-la-jolla-vikings-jv',
+  'mission-bay': '459026-mission-bay-buccaneers-jv',
+  'scripps-ranch': '459031-scripps-ranch-falcons-jv',
+  clairemont: '459018-clairemont-chieftains-jv',
+  'la-jolla-country-day': '456864-la-jolla-country-day-torreys-jv',
+  'mira-mesa': '459024-mira-mesa-marauders-jv',
+  'patrick-henry': '480713-patrick-henry-patriots-jv',
+  'point-loma': '459030-point-loma-pointers-jv',
+  'university-city': '459036-university-city-centurions-jv',
+  'canyon-crest-academy': '459040-canyon-crest-academy-ravens-jv',
+  'la-costa-canyon': '459044-la-costa-canyon-mavericks-jv',
+  'mt-carmel': '458940-mt-carmel-sundevils-jv',
+  'rancho-bernardo': '458944-rancho-bernardo-broncos-jv',
+  'san-marcos': '459067-san-marcos-knights-jv',
+  'torrey-pines': '459048-torrey-pines-falcons-jv',
+  'del-norte': '458936-del-norte-nighthawks-jv',
+  fallbrook: '458654-fallbrook-warriors-jv',
+  'mission-vista': '484580-mission-vista-timberwolves-jv',
+  poway: '458941-poway-titans-jv',
+  'rancho-buena-vista': '459175-rancho-buena-vista-longhorns-jv',
+  'san-dieguito-academy': '459046-san-dieguito-academy-mustangs-jv',
+  'valley-center': '459168-valley-center-jaguars-jv',
+  escondido: '458640-escondido-cougars-jv',
+  'mission-hills': '459064-mission-hills-grizzlies-jv',
+  'sage-creek': '464865-sage-creek-bobcats-jv',
+  'san-pasqual': '458645-san-pasqual-golden-eagles-jv',
+  vista: '464778-vista-panthers-jv',
+  westview: '458948-westview-wolverines-jv',
+  'bonita-vista': '459120-bonita-vista-barons-jv',
+  eastlake: '459129-eastlake-titans-jv',
+  helix: '458714-helix-highlanders-jv',
+  olympian: '483313-olympian-eagles-jv',
+  'otay-ranch': '459135-otay-ranch-mustangs-jv',
+  'el-capitan': '458710-el-capitan-vaqueros-jv',
+  'granite-hills': '458712-granite-hills-eagles-jv',
+  hilltop: '459132-hilltop-lancers-jv',
+  southwest: '459139-southwest-sd-raiders-jv',
 };
 
 /** The numeric si.com JV team id of a registry team, or null. */
